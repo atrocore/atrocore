@@ -1,6 +1,6 @@
 # Views and Panels
 
-The TreoCore system comes with a user-friendly configurable [interface](./user-interface-core.md) that includes a number of views and panels, where **entity records** are displayed and managed. 
+The AtroCore system comes with a user-friendly configurable [interface](./user-interface-core.md) that includes a number of views and panels, where **entity records** are displayed and managed. 
 
 Views can be shown in the main or pop-up window. They consist of the panels, which can be configured by the administrator. Usually these are structured in a way to provide you with key information on the record management.
 
@@ -52,7 +52,7 @@ Mass actions are to be applied to several (or all) selected entity records, i.e.
 
 ![Select all option](../../_assets/views-and-panels/select-all-option.jpg)
 
-The following mass actions are available in the TreoCore system: 
+The following mass actions are available in the AtroCore system: 
 
 ![Mass Actions](../../_assets/views-and-panels/mass-actions.jpg)
 
@@ -67,7 +67,7 @@ The following mass actions are available in the TreoCore system:
 
 > To modify the mass actions list, please, contact your administrator.
 
-*For more advanced export features, please, use the **Export Feeds** module. You can find the details on this module in our [store](https://treopim.com/store/export-feeds).*
+*For more advanced export features, please, use the **Export Feeds** module. You can find the details on this module in our [store](https://atropim.com/store/export-feeds).*
 
 ### Single Record Actions
 
@@ -169,7 +169,7 @@ The following information is available by default on the side view panel:
 
 The `Owner`, `Assigned user`, and `Teams` fields are enabled/disabled by the administrator.
 
-Other modules can add more panels to the side view panel. Please, visit our [store](https://treopim.com/store) to learn more about modules available for you.
+Other modules can add more panels to the side view panel. Please, visit our [store](https://atropim.com/store) to learn more about modules available for you.
 
 ## Create View
 
@@ -183,7 +183,7 @@ In all other cases, i.e. when the `+` button is used, you will be taken to the [
 
 ## Quick Create View
 
-The quick create view is shown in a pop-up window and uses the layout of the [quick detail view](#quick-detail-view-small-detail-view) page. It is usually applicable for creating records for the related entities or appears when the [quick create](./user-interface-core.md#quick-create) button is used on any TreoCore page:
+The quick create view is shown in a pop-up window and uses the layout of the [quick detail view](#quick-detail-view-small-detail-view) page. It is usually applicable for creating records for the related entities or appears when the [quick create](./user-interface-core.md#quick-create) button is used on any AtroCore page:
 
 ![Quick create view](../../_assets/views-and-panels/quick-create-view.jpg)
 
