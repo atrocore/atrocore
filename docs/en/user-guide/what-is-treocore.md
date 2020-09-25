@@ -1,8 +1,8 @@
-# What is TreoCore
+# What is AtroCore
 
-TreoCore is an open-source software ecosystem developed by [TreoLabs GmbH](https://treolabs.com/) and distributed under GPLv3 License for free. TreCore is designed for rapid development of web-based responsive business applications of any kind (ERP, PIM, CRM, DMS, MDM, DAM, etc.). It has a lot of features right out-of-the box and thus is an excellent tool for cost-effective and timely application development.
+AtroCore is an open-source software ecosystem distributed under GPLv3 License for free. AtroCore is designed for rapid development of web-based responsive business applications of any kind (ERP, PIM, CRM, DMS, MDM, DAM, etc.). It has a lot of features right out-of-the box and thus is an excellent tool for cost-effective and timely application development.
 
-TreoCore is a single page application (SPA) with an API-centric, service-oriented architecture, and flexible data model based on configurable entities and relations. You can organize any data and business-related processes directly in AtroCore, many of them via a simple and user-friendly configuration.
+AtroCore is a single page application (SPA) with an API-centric, service-oriented architecture, and flexible data model based on configurable entities and relations. You can organize any data and business-related processes directly in AtroCore, many of them via a simple and user-friendly configuration.
 
 ## For Whom
 
