@@ -1,12 +1,12 @@
 # Stream
 
-Stream is a separate TreoCore [entity](./what-is-treocore.md#concept-of-entity), which is used to display the entries of the [user activity](#user-activity-stream) and [entity records](#entity-records-stream).
+Stream is a separate AtroCore [entity](./what-is-atrocore.md#concept-of-entity), which is used to display the entries of the [user activity](#user-activity-stream) and [entity records](#entity-records-stream).
 
 > The stream display is enabled/disabled by the administrator for each entity separately, so if this feature is missing on any entity [detail view](./views-and-panels-core.md#detail-view) page, please, contact your administrator.
 
-TreoCore supports the following **types** of stream entries:
+AtroCore supports the following **types** of stream entries:
 - **Posts** – messages assigned to the current user by other system users, as well as his own messages posted in the stream, irregardless of the assignee.
-- **Updates** – notifications about changes in the [audited](./what-is-treocore-core.md#concept-of-data-auditing) fields of the user-related entries. *Please, note that entity fields are made audited only by the administrator.*
+- **Updates** – notifications about changes in the [audited](./what-is-atrocore-core.md#concept-of-data-auditing) fields of the user-related entries. *Please, note that entity fields are made audited only by the administrator.*
 - **All** – general changes in the user- or entity-related actions.
 
 ## User Activity Stream
@@ -77,7 +77,7 @@ Posts and updates from the entity records stream can be removed via the correspo
 
 ![Stream panel post removing](../../_assets/stream/stream-panel-remove-post.jpg)
 
-*Please, note that the stream functionality can be further extended with the help of the **"Revisions"** module, which allows you to view the field changes history in the pop-up and restore previous values from the change history. Go to our [store](https://treopim.com/store/revisions) to learn more about the "Revisions" module.*
+*Please, note that the stream functionality can be further extended with the help of the **"Revisions"** module, which allows you to view the field changes history in the pop-up and restore previous values from the change history. Go to our [store](https://atropim.com/store/revisions) to learn more about the "Revisions" module.*
 
 
 
