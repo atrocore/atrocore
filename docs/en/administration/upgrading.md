@@ -1,12 +1,12 @@
 ## Upgrading
 
-TreoCore system provides two ways of upgrading – from user interface and terminal.
+AtroCore system provides two ways of upgrading – from user interface and terminal.
 
 #### Upgrade from UI
 
-Steps to upgrade your TreoCore using UI:
+Steps to upgrade your AtroCore using UI:
 
-1. Check your current version of TreoCore
+1. Check your current version of AtroCore
 
     Go to the Administration > Upgrade page.
 
@@ -14,13 +14,13 @@ Steps to upgrade your TreoCore using UI:
         
     ![upgrade_page_available](../../_assets/upgrading/upgrade_page_available_en.png)
         
-    If your version of TreoCore is up-to-date you will get a corresponding message.
+    If your version of AtroCore is up-to-date you will get a corresponding message.
             
     ![upgrade_page_updated](../../_assets/upgrading/upgrade_page_upgdated_en.png)
     
 2. Run upgrade
 
-    Click "Upgrade" button to start upgrade process of your TreoCore system. When process started you can view real time upgrade information in logs.
+    Click "Upgrade" button to start upgrade process of your AtroCore system. When process started you can view real time upgrade information in logs.
 
     ![upgrade_page_logs](../../_assets/upgrading/upgrade_page_logs_en.png)
 
