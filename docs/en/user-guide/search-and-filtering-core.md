@@ -105,7 +105,7 @@ Depending of the field type, you can apply the following filtering criteria:
 
 ## Automatic Search Mask Recognition *(in development)*
 
-TreoPIM has automatic search mask recognition. This can be considered as a quick search function, i.e. when you start typing, TreoPIM automatically determines the search mask type of your search string. Automatic search mask recognition is available for the following fields: Text, Number, Date, and Time.
+AtroPIM has automatic search mask recognition. This can be considered as a quick search function, i.e. when you start typing, AtroPIM automatically determines the search mask type of your search string. Automatic search mask recognition is available for the following fields: Text, Number, Date, and Time.
 
 Depending on the search mask type, the system searches through all entity fields of the appropriate field type. A pop-up with auto-suggestions appears with the information about field name and amount of search results for this field, i.e. "Address: 3 results", and the text link(s) to show the results.
 
@@ -115,8 +115,8 @@ After clicking on the search results, the appropriate filter will be set automat
 
 |   **Search Mask Type**  |        **Field Types to Be Searched**        | **Applied Filter Criteria** |
 |:-----------------------|:--------------------------------------------|:---------------------------|
-| Теxt, e.g. "treo 123"   | Address, Number, Varchar, Text, URL, Wysiwyg | Starts with                 |
-| %Text, e.g. "%treo 123" | Address, Number, Varchar, Text, URL, Wysiwyg | Consists                    |
+| Теxt, e.g. "atro 123"   | Address, Number, Varchar, Text, URL, Wysiwyg | Starts with                 |
+| %Text, e.g. "%atro 123" | Address, Number, Varchar, Text, URL, Wysiwyg | Consists                    |
 | Numbers, e.g. "123"     | Address, Number, Varchar, Text, URL, Wysiwyg | Starts with                 |
 | Numbers, e.g. "123"     | Auto-increment, Currency, Integer, Float     | Is                          |
 | Date, e.g. "12.12.2018" | Date, DateTime                               | On                          |
