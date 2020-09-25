@@ -1,6 +1,6 @@
 # Dashboards and Dashlets
 
-Dashboards are designed for quick navigation within the TreoCore entities data displayed on separate dashlets. The dashboard is the starting page of TreoCore that can be reached any time via clicking the `TreoCore` logo located in the upper left corner of the TreoCore pages:
+Dashboards are designed for quick navigation within the AtroCore entities data displayed on separate dashlets. The dashboard is the starting page of AtroCore that can be reached any time via clicking the `AtroCore` logo located in the upper left corner of the AtroCore pages:
 
 ![Dashboard](../../_assets/dashboards-and-dashlets/dashboard-interface.jpg)
 
@@ -8,11 +8,11 @@ Both dashboards and dashlets are [user customizable](./user-interface-core.md#us
 
 ## Dashboards
 
-The `My TreoCore` dashboard comes out-of-the-box and is displayed on the TreoCore starting page by default. It can be customized by adding the desired [dashlets](#dashlets) and configuring them. 
+The `My AtroCore` dashboard comes out-of-the-box and is displayed on the AtroCore starting page by default. It can be customized by adding the desired [dashlets](#dashlets) and configuring them. 
 
 ### Creating a Dashboard
 
-It is also possible to create custom boards. To do this, click the pencil icon on the TreoCore starting page and enter the desired dashboard name in the editing pop-up that appears and hit `Enter`:
+It is also possible to create custom boards. To do this, click the pencil icon on the AtroCore starting page and enter the desired dashboard name in the editing pop-up that appears and hit `Enter`:
 
 ![New dashboard](../../_assets/dashboards-and-dashlets/dashboard-new-core.jpg)
 
@@ -34,7 +34,7 @@ In the given pop-up you can also remove the desired dashboard (or dashboards) by
 
 ### Switching between Dashboards
 
-In order to switch between dashboards available in the system, click the button with the desired dashboard name located in the upper right corner of the TreoCore starting page:
+In order to switch between dashboards available in the system, click the button with the desired dashboard name located in the upper right corner of the AtroCore starting page:
 
 ![Custom board](../../_assets/dashboards-and-dashlets/custom-board.jpg)
 
@@ -56,7 +56,7 @@ The added dashlets can be resized using the double-headed arrow in the bottom ri
 
 ### Available Dashlets
 
-The following dashlets are available in TreoCore out-of-the-box:
+The following dashlets are available in AtroCore out-of-the-box:
 - My Inbox
 - Record List
 - [Stream](./stream-core.md)
@@ -77,6 +77,6 @@ To remove the dashlet from the dashboard, select the `Remove` option in the give
 
 ![Dashlet remove](../../_assets/dashboards-and-dashlets/dashlet-remove-core.jpg)
 
-TreoCore also allows you to create entity records right from the corresponding dashlet using the `Create 'entity'` option of the actions menu:
+AtroCore also allows you to create entity records right from the corresponding dashlet using the `Create 'entity'` option of the actions menu:
 
 ![Create record option](../../_assets/dashboards-and-dashlets/create-record-option.jpg)
