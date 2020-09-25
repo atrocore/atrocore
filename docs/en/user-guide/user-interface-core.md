@@ -1,16 +1,16 @@
 # User Interface (UI)
 
-The user interface (UI) includes all visible elements users see and interact with while using TreoCore. This article contains the overview of all the main elements of user interface, which are the same for all entities in the system, as well as gives details on how to perform common tasks or operations in the system.
+The user interface (UI) includes all visible elements users see and interact with while using AtroCore. This article contains the overview of all the main elements of user interface, which are the same for all entities in the system, as well as gives details on how to perform common tasks or operations in the system.
 
 > Please, make sure to contact your administrator in order to have access to a whole set of options described in this user guide.
 
-The following elements make up the TreoCore user interface:
+The following elements make up the AtroCore user interface:
 
 - [**Navigation Menu**](#navigation-menu) – to navigate through available entities.
-- [**Taskbar**](#taskbar) – to help the user interact with the TreoCore system in a more efficient way; additional information or actions are displayed here. 
+- [**Taskbar**](#taskbar) – to help the user interact with the AtroCore system in a more efficient way; additional information or actions are displayed here. 
 - [**Search and Filtering Panel**](./search-and-filtering-core.md) – to search and filter within one entity or its related entities.
 
-Within the TreoCore system your information may be presented in various ways:
+Within the AtroCore system your information may be presented in various ways:
 
 - [**List View**](./views-and-panels-core.md#list-view) – to view the lists of entity records.
 - [**Detail View**](./views-and-panels-core.md#detail-view) – to view the entity record details.
@@ -22,7 +22,7 @@ Within the TreoCore system your information may be presented in various ways:
 
 ## Navigation Menu
 
-The navigation menu in the default TreoCore theme is the menu placed on the left side of your user interface. It allows you to open list views for all entities in the system.
+The navigation menu in the default AtroCore theme is the menu placed on the left side of your user interface. It allows you to open list views for all entities in the system.
 
 > The navigation menu can be configured by your administrator according to your needs.
 
@@ -34,11 +34,11 @@ Here select the `Custom Tab List` option and add the desired tabs using the `Add
 
 ## Taskbar
 
-Taskbar is a top panel of the TreoCore user interface:
+Taskbar is a top panel of the AtroCore user interface:
 
 ![Taskbar](../../_assets/user-interface/taskbar.jpg)
 
-A taskbar consists of a [global search](#global-search) field and some functional icons that help you work and collaborate within the TreoPIM system, namely:
+A taskbar consists of a [global search](#global-search) field and some functional icons that help you work and collaborate within the AtroPIM system, namely:
 - [Desktop notifications](#desktop-notifications); 
 - [Queue Manager](#queue-manager);
 - [Quick create](#quick-create);
@@ -46,7 +46,7 @@ A taskbar consists of a [global search](#global-search) field and some functiona
 
 ### Global Search
 
-You can [search](./search-and-filtering-core.md) all the records existing in the TreoCore system using the global search functionality. Use the search form on the taskbar for it:
+You can [search](./search-and-filtering-core.md) all the records existing in the AtroCore system using the global search functionality. Use the search form on the taskbar for it:
 
 ![Global Search](../../_assets/user-interface/global-search.jpg)
 
@@ -54,7 +54,7 @@ You can [search](./search-and-filtering-core.md) all the records existing in the
 
 ### Desktop Notifications
 
-TreoCore uses two types of notifications: email notifications and system notifications (desktop notifications). Generally, email and desktop notifications are configured globally, for all users.
+AtroCore uses two types of notifications: email notifications and system notifications (desktop notifications). Generally, email and desktop notifications are configured globally, for all users.
 
 User can receive notifications in case when:
 
@@ -71,13 +71,13 @@ Queue Manager is opened in the pop-up window for each operation executed display
 
 ![Queue Manager](../../_assets/user-interface/queue-manager.jpg)
 
-In the Queue Manager pop-up, the most recent TreoCore operations, which were executed in the background mode, are displayed. Additionally, the information on the data import performed with the help of import feeds is shown in the Queue Manager pop-up. To learn more about the ["Import Feeds"](https://treopim.com/store/import-feeds) module, please, visit our store.
+In the Queue Manager pop-up, the most recent AtroCore operations, which were executed in the background mode, are displayed. Additionally, the information on the data import performed with the help of import feeds is shown in the Queue Manager pop-up. To learn more about the ["Import Feeds"](https://atropim.com/store/import-feeds) module, please, visit our store.
 
 To view the details of the performed operations, click `View List` in the upper right corner of the Queue Manager.
 
 ### Quick Create
 
-To create new records from anywhere, click the quick create button located in the upper right corner of the taskbar on any TreoCore page and choose the entity for the record to be created:
+To create new records from anywhere, click the quick create button located in the upper right corner of the taskbar on any AtroCore page and choose the entity for the record to be created:
 
 ![Quick Create](../../_assets/user-interface/quick-create.jpg)
 
@@ -111,7 +111,7 @@ Click the `Save` button to apply the changes or `Cancel` to abort them.
 
 > If there is no `Edit` button on your user profile page, please, contact the administrator.
 
-On the user profile page, click the `Access` button to view your current permissions within the TreoCore system on the scope and field levels in the pop-up window that appears:
+On the user profile page, click the `Access` button to view your current permissions within the AtroCore system on the scope and field levels in the pop-up window that appears:
 
 ![User Access Window](../../_assets/user-interface/user-access-window.jpg)
 
@@ -129,7 +129,7 @@ To change your user password, select the corresponding option in the actions dro
 
 ![User Password Change](../../_assets/user-interface/user-change-paswd.jpg)
 
-If you forget your password, it can be recovered using the `Forgot Password?` link on the TreoCore login page.
+If you forget your password, it can be recovered using the `Forgot Password?` link on the AtroCore login page.
 
 You can also manage your team and access control, if you have the corresponding permissions.
 
@@ -141,7 +141,7 @@ You can manage the types of activity to be displayed here in the corresponding a
 
 ![User profile stream menu](../../_assets/user-interface/user-profile-stream-menu.jpg)
 
-Recent updates and comments about certain entity records are displayed on the activity stream panel, making it an excellent way to keep track of the changes in TreoCore. 
+Recent updates and comments about certain entity records are displayed on the activity stream panel, making it an excellent way to keep track of the changes in AtroCore. 
 
 You can also create a post in the corresponding message box right on the `STREAM` panel:
 
@@ -169,7 +169,7 @@ Select the `Custom Tab List` checkbox to enable a custom navigation menu. Using 
 
 ![Dashboard settings](../../_assets/user-interface/ui-dashboard.jpg)
 
-The same options are available on the TreoCore starting page:
+The same options are available on the AtroCore starting page:
 
 ![Dashboard editing](../../_assets/user-interface/dashboard-edit.jpg)
 
@@ -185,11 +185,11 @@ To rearrange your dashboard view, drag-and-drop the dashlets right on the `USER 
 
 ![Dashlets order](../../_assets/user-interface/dashlets-order.jpg)
 
-Alternatively, you can customize your [dashboard](./dashboards-and-dashlets-core.md#dashboards) view in the same way on the TreoCore starting page.
+Alternatively, you can customize your [dashboard](./dashboards-and-dashlets-core.md#dashboards) view in the same way on the AtroCore starting page.
 
 #### Email Accounts
 
-TreoCore works with IMAP mail accounts, with or without SSL protection. TreoCore is able to send emails via SMTP Server, also with or without SSL protection, which can be enabled or not.
+AtroCore works with IMAP mail accounts, with or without SSL protection. AtroCore is able to send emails via SMTP Server, also with or without SSL protection, which can be enabled or not.
 
 To open your personal email accounts, click the `Email Accounts` button on the user profile page; the list of the existing accounts, if any, will be displayed on the "Personal Email Accounts" page:
 
@@ -209,13 +209,13 @@ Here and fill in the required fields (marked with an asterisk) and configure the
 
 ### Last Viewed
 
-Select the `Last Viewed` option from the user drop-down menu to see the history of your visited pages within the TreoCore system:
+Select the `Last Viewed` option from the user drop-down menu to see the history of your visited pages within the AtroCore system:
 
 ![Last viewed](../../_assets/user-interface/last-viewed.jpg)
 
 ### Clear Local Cache
 
-TreoCore is a single page application (SPA). To improve the page loading time, it actively uses cache for content as well as for the user interface.
+AtroCore is a single page application (SPA). To improve the page loading time, it actively uses cache for content as well as for the user interface.
 
 If you want to be sure in getting the latest information and application functions, please use the `Clear Local Cache` option from the user drop-down menu:
 
@@ -223,6 +223,6 @@ If you want to be sure in getting the latest information and application functio
 
 ## Breadcrumb Navigation
 
-TreoCore comes with breadcrumb navigation on each page in the system. Breadcrumb navigation is a form of a path-style clickable navigation, which links the user back to the prior website page in the overall online route. It reveals the path the user took to arrive to the given page. The `>` symbol separates out the hierarchical search order from beginning to end and may look something like:
+AtroCore comes with breadcrumb navigation on each page in the system. Breadcrumb navigation is a form of a path-style clickable navigation, which links the user back to the prior website page in the overall online route. It reveals the path the user took to arrive to the given page. The `>` symbol separates out the hierarchical search order from beginning to end and may look something like:
 `Home Page > Section Page > Subsection Page`.
 
