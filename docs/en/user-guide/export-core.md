@@ -1,8 +1,8 @@
 # Export
 
-The data exporting feature comes with the TreoCore system out of the box and is available on any entity [list view](./views-and-panels-core.md#list-view) page. It allows you to export the desired data fields in the XLSX (Excel) or CSV format.
+The data exporting feature comes with the AtroCore system out of the box and is available on any entity [list view](./views-and-panels-core.md#list-view) page. It allows you to export the desired data fields in the XLSX (Excel) or CSV format.
 
-> To have more advanced export options (e.g. export product attribute values, product images/assets, channels, etc.), get the **"Export Feeds" module**. The details are available in the [TreoPIM store](https://treopim.com/store/export-feeds).
+> To have more advanced export options (e.g. export product attribute values, product images/assets, channels, etc.), get the **"Export Feeds" module**. The details are available in the [AtroPIM store](https://atropim.com/store/export-feeds).
 
 ## Setup
 
@@ -24,7 +24,7 @@ To start exporting the data, click the `Export` button in the setup pop-up – t
 
 ## Export Permissions
 
-By default, data export is enabled for all TreoCore users. However, export permissions can be disabled by the administrator. In this case, the `Export` option will not be shown in the mass actions menu:
+By default, data export is enabled for all AtroCore users. However, export permissions can be disabled by the administrator. In this case, the `Export` option will not be shown in the mass actions menu:
 
 ![Export option disabled](../../_assets/export/export-option-disabled.jpg)
 
