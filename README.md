@@ -1,12 +1,12 @@
-## What Is TreoCore?
+## What Is AtroCore?
 
-TreoCore is an open-source software ecosystem developed by TreoLabs GmbH and distributed under GPLv3 License for free. TreoCore is designed for rapid development of web-based responsive business applications of any kind (ERP, PIM, CRM, DMS, MDM, DAM, etc.). It is an excellent tool for cost-effective and timely application development that comes with the powerful out-of-the-box functionality.
+AtroCore is an open-source software ecosystem distributed under GPLv3 License for free. AtroCore is designed for rapid development of web-based responsive business applications of any kind (ERP, PIM, CRM, DMS, MDM, DAM, etc.). It is an excellent tool for cost-effective and timely application development that comes with the powerful out-of-the-box functionality.
 
-TreoCore is a single page application (SPA) with an API-centric, service-oriented architecture, and flexible data model based on configurable entities and relations. You can organize any data and business-related processes directly in TreoCore, many of them via a simple and user-friendly configuration.
+AtroCore is a single page application (SPA) with an API-centric, service-oriented architecture, and flexible data model based on configurable entities and relations. You can organize any data and business-related processes directly in AtroCore, many of them via a simple and user-friendly configuration.
 
-### For Whom Is TreoCore?
+### For Whom Is AtroCore?
 
-TreoCore is the best fit **for businesses**, who want to:
+AtroCore is the best fit **for businesses**, who want to:
 
 * solve custom business problems;
 * store data and organize business processes;
@@ -14,18 +14,18 @@ TreoCore is the best fit **for businesses**, who want to:
 * create added value and best experience for their employees, customers, and partners;
 * extend the functionality of the existing software infrastructure.
 
-### What Are TreoCore Add-Ons?
+### What Are AtroCore Add-Ons?
 
-The following add-on applications are available on the TreoCore basis:
-* TreoPIM
-* TreoCRM
-* TreoDAM
+The following add-on applications are available on the AtroCore basis:
+* AtroPIM
+* AtroCRM
+* AtroDAM
 
 Each application may be used as a single instance and/or may be extended with numerous modules.
 
 ### What Is On Board?
 
-Here is a TreoCore package description in detail:
+Here is a AtroCore package description in detail:
 
 | Feature                     | Description                                                   |
 | --------------------------- | ------------------------------------------------------------ |
@@ -67,7 +67,7 @@ Here is a TreoCore package description in detail:
 
 ### What Technologies Is It Based On?
 
-TreoCore was created based on EspoCRM. It uses:
+AtroCore was created based on TreoCore and EspoCRM. It uses:
 
 * PHP7 – pure PHP, without any frameworks to achieve the best possible performance,
 * backbone.js – framework for SPA Frontend,
@@ -78,11 +78,11 @@ TreoCore was created based on EspoCRM. It uses:
 
 ### Integrations
 
-TreoCore has a REST API and can be integrated with any third-party system. You can also use import and export functions or use our modules (import feeds and export feeds) to get even more flexibility.
+AtroCore has a REST API and can be integrated with any third-party system. You can also use import and export functions or use our modules (import feeds and export feeds) to get even more flexibility.
 
 ### Documentation
 
-- We are working on documentation. The current version is available [here](https://treopim.com/help).
+- We are working on documentation. The current version is available [here](https://atropim.com/help).
 - Documentation for administrators is available [here](docs/en/administration/).
 
 ### Requirements
@@ -100,17 +100,17 @@ TreoCore has a REST API and can be integrated with any third-party system. You c
 
 > Installation guide is based on **Linux Mint OS**. Of course, you can use any unix-based system, but make sure that your OS supports the following commands.<br/>
 
-To create your new TreoCore application, first make sure you're using PHP 7.1 or above and have [Composer](https://getcomposer.org/) installed.
+To create your new AtroCore application, first make sure you're using PHP 7.1 or above and have [Composer](https://getcomposer.org/) installed.
 
 1. Create your new project by running:
    ```
-   composer create-project treolabs/skeleton my-treocore-project
+   composer create-project atrocore/skeleton my-atrocore-project
    ```
-   > **my-treocore-project** – project name
+   > **my-atrocore-project** – project name
    
 2. Change recursively the user and group ownership for project files: 
    ```
-   chown -R webserver_user:webserver_user my-treocore-project/
+   chown -R webserver_user:webserver_user my-atrocore-project/
    ```
    >**webserver_user** – depends on your webserver and can be one of the following: www, www-data, apache, etc.
 
@@ -122,16 +122,14 @@ To create your new TreoCore application, first make sure you're using PHP 7.1 or
       ```
    3.2. Add the following configuration:
       ```
-      * * * * * /usr/bin/php /var/www/my-treocore-project/index.php cron 
+      * * * * * /usr/bin/php /var/www/my-atrocore-project/index.php cron 
       ```
-4. Install TreoCore following the installation wizard in web interface. Go to http://YOUR_PROJECT/
+4. Install AtroCore following the installation wizard in web interface. Go to http://YOUR_PROJECT/
 
 ### License
 
-TreoCore is published under the GNU GPLv3 [license](LICENSE.txt).
+AtroCore is published under the GNU GPLv3 [license](LICENSE.txt).
 
 ### Support
 
-- TreoCore is developed and supported by [TreoLabs GmbH](https://treolabs.com/).
-- Feel free to join [our Community](https://community.treolabs.com/).
-- To contact us, please visit [our Website](https://treolabs.com/).
+- For support please contact us - visit [our Website](https://atropim.com/).
