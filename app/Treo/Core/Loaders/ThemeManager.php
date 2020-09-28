@@ -11,7 +11,7 @@ use Treo\Core\Utils\Metadata;
 /**
  * ThemeManager loader
  *
- * @author r.ratsun@treolabs.com
+ * @author r.ratsun@gmail.com
  */
 class ThemeManager extends Base
 {

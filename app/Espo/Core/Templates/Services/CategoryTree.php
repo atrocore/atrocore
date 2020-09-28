@@ -9,7 +9,7 @@ use Espo\Services\RecordTree;
 /**
  * Class CategoryTree
  *
- * @author r.ratsun@treolabs.com
+ * @author r.ratsun@gmail.com
  */
 class CategoryTree extends RecordTree
 {

@@ -10,7 +10,7 @@ use Treo\Core\Container;
 /**
  * Manager class
  *
- * @author r.ratsun <r.ratsun@treolabs.com>
+ * @author r.ratsun <r.ratsun@gmail.com>
  */
 class Manager extends EventDispatcher
 {

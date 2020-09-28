@@ -9,7 +9,7 @@ use Treo\Core\EventManager\Event;
 /**
  * Class Schema
  *
- * @author r.ratsun r.ratsun@treolabs.com
+ * @author r.ratsun r.ratsun@gmail.com
  */
 class Schema extends \Espo\Core\Utils\Database\Schema\Schema
 {

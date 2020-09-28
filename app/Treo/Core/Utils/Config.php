@@ -9,7 +9,7 @@ use Espo\Core\Utils\Config as Base;
 /**
  * Class of Config
  *
- * @author r.ratsun <r.ratsun@treolabs.com>
+ * @author r.ratsun <r.ratsun@gmail.com>
  */
 class Config extends Base
 {

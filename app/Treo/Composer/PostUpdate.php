@@ -16,7 +16,7 @@ use Treo\Services\Composer as ComposerService;
 /**
  * Class PostUpdate
  *
- * @author r.ratsun <r.ratsun@treolabs.com>
+ * @author r.ratsun <r.ratsun@gmail.com>
  */
 class PostUpdate
 {

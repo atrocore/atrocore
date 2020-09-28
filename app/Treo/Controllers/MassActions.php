@@ -12,7 +12,7 @@ use Treo\Core\EventManager\Event;
 /**
  * Class MassActions
  *
- * @author r.ratsun <r.ratsun@treolabs.com>
+ * @author r.ratsun <r.ratsun@gmail.com>
  */
 class MassActions extends \Espo\Core\Controllers\Base
 {

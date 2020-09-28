@@ -11,7 +11,7 @@ use Treo\Core\EventManager\Event;
 /**
  * Class TreoCleanup
  *
- * @author r.ratsun <r.ratsun@treolabs.com>
+ * @author r.ratsun <r.ratsun@gmail.com>
  */
 class TreoCleanup extends Base
 {

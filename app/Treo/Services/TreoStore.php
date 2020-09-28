@@ -9,7 +9,7 @@ use Espo\Core\Templates\Services\Base;
 /**
  * Class TreoStore
  *
- * @author r.ratsun <r.ratsun@treolabs.com>
+ * @author r.ratsun <r.ratsun@gmail.com>
  */
 class TreoStore extends Base
 {

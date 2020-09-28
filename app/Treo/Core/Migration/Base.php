@@ -8,7 +8,7 @@ use Treo\Core\Utils\Config;
 /**
  * Base class
  *
- * @author r.ratsun <r.ratsun@treolabs.com>
+ * @author r.ratsun <r.ratsun@gmail.com>
  */
 class Base
 {
@@ -81,7 +81,7 @@ class Base
     protected function updateCoreVersion(string $version): void
     {
         $data = json_decode(file_get_contents('composer.json'), true);
-        $data['require']['treolabs/treocore'] = $version;
+        $data['require']['atrocore/core'] = $version;
         file_put_contents('composer.json', json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
         copy('composer.json', 'data/stable-composer.json');
     }

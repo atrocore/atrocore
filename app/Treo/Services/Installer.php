@@ -17,7 +17,7 @@ use Treo\Core\EventManager\Event;
 /**
  * Service Installer
  *
- * @author r.ratsun <r.ratsun@treolabs.com>
+ * @author r.ratsun <r.ratsun@gmail.com>
  */
 class Installer extends AbstractService
 {

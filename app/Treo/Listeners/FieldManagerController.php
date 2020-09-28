@@ -11,7 +11,7 @@ use Treo\Core\EventManager\Event;
 /**
  * Class FieldManagerController
  *
- * @author r.ratsun@treolabs.com
+ * @author r.ratsun@gmail.com
  */
 class FieldManagerController extends AbstractListener
 {

@@ -12,7 +12,7 @@ use Treo\Services\Composer;
 /**
  * Class Daemon
  *
- * @author r.ratsun <r.ratsun@treolabs.com>
+ * @author r.ratsun <r.ratsun@gmail.com>
  */
 class Daemon extends AbstractConsole
 {

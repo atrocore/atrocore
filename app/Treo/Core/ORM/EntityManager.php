@@ -9,7 +9,7 @@ use Treo\ORM\DB\MysqlMapper;
 /**
  * Class EntityManager
  *
- * @author r.ratsun <r.ratsun@treolabs.com>
+ * @author r.ratsun <r.ratsun@gmail.com>
  */
 class EntityManager extends \Espo\Core\ORM\EntityManager
 {

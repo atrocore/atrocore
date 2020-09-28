@@ -9,7 +9,7 @@ use Treo\Core\Container;
 /**
  * Class ContainerTrait
  *
- * @author r.ratsun <r.ratsun@treolabs.com>
+ * @author r.ratsun <r.ratsun@gmail.com>
  */
 trait ContainerTrait
 {

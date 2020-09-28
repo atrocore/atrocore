@@ -9,7 +9,7 @@ use Espo\ORM\Entity;
 /**
  * Class Base
  *
- * @author r.ratsun@treolabs.com
+ * @author r.ratsun@gmail.com
  */
 class Base extends \Espo\Core\Acl\Base
 {

@@ -9,7 +9,7 @@ use Treo\Core\Utils\Language as Instance;
 /**
  * DefaultLanguage loader
  *
- * @author r.ratsun@treolabs.com
+ * @author r.ratsun@gmail.com
  */
 class DefaultLanguage extends Base
 {

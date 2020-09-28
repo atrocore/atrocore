@@ -10,7 +10,7 @@ use Treo\Core\Interfaces\ServiceInterface;
 /**
  * ServiceFactory class
  *
- * @author r.ratsun <r.ratsun@treolabs.com>
+ * @author r.ratsun <r.ratsun@gmail.com>
  */
 class ServiceFactory
 {

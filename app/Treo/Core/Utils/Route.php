@@ -13,7 +13,7 @@ use Treo\Core\ModuleManager\Manager as ModuleManager;
 /**
  * Class Route
  *
- * @author r.ratsun r.ratsun@treolabs.com
+ * @author r.ratsun r.ratsun@gmail.com
  */
 class Route extends Base
 {

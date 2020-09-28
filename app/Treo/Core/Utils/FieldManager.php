@@ -12,7 +12,7 @@ use Treo\Traits\ContainerTrait;
 /**
  * FieldManager util
  *
- * @author r.ratsun <r.ratsun@treolabs.com>
+ * @author r.ratsun <r.ratsun@gmail.com>
  */
 class FieldManager extends EspoFieldManager
 {

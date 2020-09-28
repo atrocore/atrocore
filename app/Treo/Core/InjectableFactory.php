@@ -7,7 +7,7 @@ namespace Treo\Core;
 /**
  * Class InjectableFactory
  *
- * @author r.zablodskiy@treolabs.com
+ * @author r.ratsun@gmail.com
  */
 class InjectableFactory extends \Espo\Core\InjectableFactory
 {

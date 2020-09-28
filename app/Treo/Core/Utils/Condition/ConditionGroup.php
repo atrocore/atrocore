@@ -6,9 +6,8 @@ namespace Treo\Core\Utils\Condition;
 
 /**
  * Class ConditionGroup
- * @package Treo\Core\Utils\DynamicLogic
  *
- * @author Maksim Kokhanskyi <m.kokhanskyi@treolabs.com>
+ * @author r.ratsun <r.ratsun@gmail.com>
  */
 class ConditionGroup
 {

@@ -12,7 +12,7 @@ use Treo\Core\EventManager\Manager as EventManager;
 /**
  * Class Language
  *
- * @author r.ratsun <r.ratsun@treolabs.com>
+ * @author r.ratsun <r.ratsun@gmail.com>
  */
 class Language extends Base
 {

@@ -12,7 +12,7 @@ use Espo\Core\Controllers\Base;
 /**
  * Class DashletController
  *
- * @author r.ratsun <r.ratsun@treolabs.com>
+ * @author r.ratsun <r.ratsun@gmail.com>
  */
 class Dashlet extends Base
 {

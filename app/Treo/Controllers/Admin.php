@@ -10,7 +10,7 @@ use Espo\Core\Exceptions\NotFound;
 /**
  * Controller Admin
  *
- * @author r.ratsun r.ratsun@treolabs.com
+ * @author r.ratsun r.ratsun@gmail.com
  */
 class Admin extends Base
 {

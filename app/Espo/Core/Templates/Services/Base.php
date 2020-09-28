@@ -9,7 +9,7 @@ use Espo\Services\Record;
 /**
  * Class Base
  *
- * @author r.ratsun@treolabs.com
+ * @author r.ratsun@gmail.com
  */
 class Base extends Record
 {

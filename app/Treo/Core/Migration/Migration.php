@@ -9,7 +9,7 @@ use Treo\Composer\PostUpdate;
 /**
  * Migration
  *
- * @author r.ratsun <r.ratsun@treolabs.com>
+ * @author r.ratsun <r.ratsun@gmail.com>
  */
 class Migration
 {

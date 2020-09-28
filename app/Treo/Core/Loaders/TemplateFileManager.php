@@ -7,7 +7,7 @@ namespace Treo\Core\Loaders;
 /**
  * Class TemplateFileManager
  *
- * @author r.ratsun@treolabs.com
+ * @author r.ratsun@gmail.com
  */
 class TemplateFileManager extends Base
 {

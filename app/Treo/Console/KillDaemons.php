@@ -7,7 +7,7 @@ namespace Treo\Console;
 /**
  * Class KillDaemons
  *
- * @author r.ratsun <r.ratsun@treolabs.com>
+ * @author r.ratsun <r.ratsun@gmail.com>
  */
 class KillDaemons extends AbstractConsole
 {

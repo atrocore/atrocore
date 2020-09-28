@@ -9,7 +9,7 @@ use Espo\Core\Repositories\CategoryTree as Base;
 /**
  * Class CategoryTree
  *
- * @author r.ratsun@treolabs.com
+ * @author r.ratsun@gmail.com
  */
 class CategoryTree extends Base
 {

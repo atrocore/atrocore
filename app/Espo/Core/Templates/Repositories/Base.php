@@ -9,7 +9,7 @@ use Espo\Core\ORM\Repositories\RDB;
 /**
  * Class Base
  *
- * @author r.ratsun@treolabs.com
+ * @author r.ratsun@gmail.com
  */
 class Base extends RDB
 {

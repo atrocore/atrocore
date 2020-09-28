@@ -9,7 +9,7 @@ use Treo\Migrations\V3Dot25Dot20;
 /**
  * Installer listener
  *
- * @author r.ratsun@treolabs.com
+ * @author r.ratsun@gmail.com
  */
 class Installer extends AbstractListener
 {

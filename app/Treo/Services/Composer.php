@@ -13,7 +13,7 @@ use Treo\Core\ModuleManager\Manager as TreoModuleManager;
 /**
  * Composer service
  *
- * @author r.ratsun <r.ratsun@treolabs.com>
+ * @author r.ratsun <r.ratsun@gmail.com>
  */
 class Composer extends AbstractService
 {
@@ -81,7 +81,7 @@ class Composer extends AbstractService
             $data = json_decode(file_get_contents(self::$composerLock), true);
             if (!empty($data['packages'])) {
                 foreach ($data['packages'] as $package) {
-                    if ($package['name'] == 'treolabs/treocore') {
+                    if ($package['name'] == 'atrocore/core') {
                         return $package['version'];
                     }
                 }
@@ -226,7 +226,7 @@ class Composer extends AbstractService
                     'id'             => 'TreoCore',
                     'name'           => $this->translate('Core'),
                     'description'    => $this->translate('Core', 'descriptions'),
-                    'settingVersion' => self::getComposerJson()['require']['treolabs/treocore'],
+                    'settingVersion' => self::getComposerJson()['require']['atrocore/core'],
                     'currentVersion' => self::getCoreVersion(),
                     'versions'       => [],
                     'isSystem'       => true,

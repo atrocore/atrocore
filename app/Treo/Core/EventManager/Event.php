@@ -7,7 +7,7 @@ namespace Treo\Core\EventManager;
 /**
  * Class Event
  *
- * @author r.ratsun <r.ratsun@treolabs.com>
+ * @author r.ratsun <r.ratsun@gmail.com>
  */
 class Event extends \Symfony\Contracts\EventDispatcher\Event
 {

@@ -7,7 +7,7 @@ namespace Treo\Core\Utils;
 /**
  * Class ScheduledJob
  *
- * @author r.ratsun r.ratsun@treolabs.com
+ * @author r.ratsun r.ratsun@gmail.com
  */
 class ScheduledJob extends \Espo\Core\Utils\ScheduledJob
 {

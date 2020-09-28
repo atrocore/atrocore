@@ -9,7 +9,7 @@ use Espo\ORM\DB\MysqlMapper as Base;
 /**
  * Class MysqlMapper
  *
- * @author r.ratsun <r.ratsun@treolabs.com>
+ * @author r.ratsun <r.ratsun@gmail.com>
  */
 class MysqlMapper extends Base
 {

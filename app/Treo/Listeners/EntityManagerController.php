@@ -9,7 +9,7 @@ use Treo\Core\EventManager\Event;
 /**
  * Class EntityManagerController
  *
- * @author r.ratsun <r.ratsun@treolabs.com>
+ * @author r.ratsun <r.ratsun@gmail.com>
  */
 class EntityManagerController extends AbstractListener
 {

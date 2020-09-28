@@ -7,7 +7,7 @@ namespace Treo\Core\Loaders;
 /**
  * Class EmailFilterManager
  *
- * @author r.ratsun@treolabs.com
+ * @author r.ratsun@gmail.com
  */
 class EmailFilterManager extends Base
 {

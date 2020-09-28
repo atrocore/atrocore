@@ -11,7 +11,7 @@ use Treo\Services\Composer;
 /**
  * Class Manager
  *
- * @author r.ratsun <r.ratsun@treolabs.com>
+ * @author r.ratsun <r.ratsun@gmail.com>
  */
 class Manager
 {

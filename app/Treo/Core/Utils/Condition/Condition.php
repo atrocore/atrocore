@@ -13,9 +13,8 @@ use Exception;
 
 /**
  * Class Condition
- * @package Treo\Core\Utils
  *
- * @author Maksim Kokhanskyi <m.kokhanskyi@treolabs.com>
+ * @author r.ratsun <r.ratsun@gmail.com>
  */
 class Condition
 {

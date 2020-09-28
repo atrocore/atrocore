@@ -10,7 +10,7 @@ use Treo\Core\Container;
 /**
  * Base loader class
  *
- * @author r.ratsun@treolabs.com
+ * @author r.ratsun@gmail.com
  */
 abstract class Base implements Loader
 {

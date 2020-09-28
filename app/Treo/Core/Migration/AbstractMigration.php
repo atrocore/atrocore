@@ -8,7 +8,7 @@ use Treo\Core\ORM\EntityManager;
 /**
  * AbstractMigration class
  *
- * @author     r.ratsun <r.ratsun@treolabs.com>
+ * @author     r.ratsun <r.ratsun@gmail.com>
  *
  * @deprecated We will remove it after 01.01.2021
  */

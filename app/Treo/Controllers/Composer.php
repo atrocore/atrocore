@@ -12,7 +12,7 @@ use Treo\Services\Composer as ComposerService;
 /**
  * Composer controller
  *
- * @author r.ratsun@treolabs.com
+ * @author r.ratsun@gmail.com
  */
 class Composer extends Base
 {
@@ -82,7 +82,7 @@ class Composer extends Base
      *               'id': 'Revisions',
      *               'name': 'Revisions',
      *               'version': '1.0.0',
-     *               'description': 'Module Revisions for TreoPIM.',
+     *               'description': 'Module Revisions.',
      *               'required': [],
      *               'isActive': true
      *           }

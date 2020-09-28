@@ -12,7 +12,7 @@ use Treo\Core\EventManager\Event;
 /**
  * Class AppController
  *
- * @author y.haiduchyk <y.haiduchyk@treolabs.com>
+ * @author r.ratsun <r.ratsun@gmail.com>
  */
 class AppController extends AbstractListener
 {

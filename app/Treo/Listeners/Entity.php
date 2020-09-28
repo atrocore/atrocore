@@ -10,7 +10,7 @@ use Treo\Core\EventManager\Event;
 /**
  * Class Entity
  *
- * @author r.ratsun <r.ratsun@treolabs.com>
+ * @author r.ratsun <r.ratsun@gmail.com>
  */
 class Entity extends AbstractListener
 {

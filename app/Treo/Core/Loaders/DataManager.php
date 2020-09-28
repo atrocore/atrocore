@@ -6,7 +6,7 @@ namespace Treo\Core\Loaders;
 /**
  * DataManager loader
  *
- * @author r.ratsun@treolabs.com
+ * @author r.ratsun@gmail.com
  */
 class DataManager extends Base
 {

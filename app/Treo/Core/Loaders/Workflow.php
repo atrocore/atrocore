@@ -15,7 +15,7 @@ use Treo\Core\Workflow\MarkingStore\MethodMarkingStore;
 /**
  * Class Workflow
  *
- * @author r.ratsun@treolabs.com
+ * @author r.ratsun@gmail.com
  */
 class Workflow extends Base
 {

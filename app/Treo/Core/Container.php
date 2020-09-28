@@ -20,7 +20,7 @@ use Treo\Core\Utils\Metadata;
 /**
  * Class Container
  *
- * @author r.ratsun@treolabs.com
+ * @author r.ratsun@gmail.com
  */
 class Container
 {

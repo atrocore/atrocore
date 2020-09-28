@@ -9,7 +9,7 @@ use Treo\Core\ServiceFactory;
 /**
  * Class Notification
  *
- * @author r.ratsun <r.ratsun@treolabs.com>
+ * @author r.ratsun <r.ratsun@gmail.com>
  */
 class Notification extends AbstractConsole
 {

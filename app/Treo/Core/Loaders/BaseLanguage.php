@@ -8,7 +8,7 @@ use Treo\Core\Utils\Language;
 /**
  * BaseLanguage loader
  *
- * @author r.ratsun@treolabs.com
+ * @author r.ratsun@gmail.com
  */
 class BaseLanguage extends Base
 {

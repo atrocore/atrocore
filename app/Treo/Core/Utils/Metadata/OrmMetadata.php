@@ -9,7 +9,7 @@ use Espo\Core\Utils\Metadata\OrmMetadata as Base;
 /**
  * Class OrmMetadata
  *
- * @author r.ratsun <r.ratsun@treolabs.com>
+ * @author r.ratsun <r.ratsun@gmail.com>
  */
 class OrmMetadata extends Base
 {

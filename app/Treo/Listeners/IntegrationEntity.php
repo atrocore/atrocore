@@ -9,7 +9,7 @@ use Treo\Core\EventManager\Event;
 /**
  * Class IntegrationEntity
  *
- * @author r.ratsun@treolabs.com
+ * @author r.ratsun@gmail.com
  */
 class IntegrationEntity extends AbstractListener
 {

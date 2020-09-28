@@ -9,7 +9,7 @@ use Espo\Core\Entities\CategoryTreeItem;
 /**
  * Class CategoryTree
  *
- * @author r.ratsun@treolabs.com
+ * @author r.ratsun@gmail.com
  */
 class CategoryTree extends CategoryTreeItem
 {

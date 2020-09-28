@@ -55,7 +55,7 @@
     "canceledModuleInstall": "Module install has been canceled",
     "Log": "Log",
     "confirmRun": "After update action all users would logout from system. Are you sure you want to do that action?",
-    "daemonDisabled": "<b>The composer daemon is not running!</b><br>Probably the daemon is reloading now and you should wait a minute or the crontab is not configured. Instructions on how to configure the crontab you can find <a href=\"https://github.com/treolabs/treocore#installation\" class=\"alert-link\" target=\"_blank\">here</a>",
+    "daemonDisabled": "<b>The composer daemon is not running!</b><br>Probably the daemon is reloading now and you should wait a minute or the crontab is not configured. Instructions on how to configure the crontab you can find <a href=\"https://github.com/atrocore/atrocore#installation\" class=\"alert-link\" target=\"_blank\">here</a>",
     "queueManagerRunning": "<b>The Queue Manager is running!</b><br>The ability to update modules is blocked. Please try later."
   },
   "notifications": {

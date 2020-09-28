@@ -10,7 +10,7 @@ use Symfony\Component\Workflow\MarkingStore\MarkingStoreInterface;
 /**
  * Class MethodMarkingStore
  *
- * @author r.ratsun <r.ratsun@treolabs.com>
+ * @author r.ratsun <r.ratsun@gmail.com>
  */
 final class MethodMarkingStore implements MarkingStoreInterface
 {

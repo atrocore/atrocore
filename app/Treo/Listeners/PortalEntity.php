@@ -12,7 +12,7 @@ use Treo\Core\EventManager\Event;
 /**
  * Class PortalEntity
  *
- * @author r.ratsun <r.ratsun@treolabs.com>
+ * @author r.ratsun <r.ratsun@gmail.com>
  */
 class PortalEntity extends AbstractListener
 {
