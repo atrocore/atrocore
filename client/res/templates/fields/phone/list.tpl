@@ -1,0 +1,1 @@
+{{#if doNotCall}}<s>{{/if}}{{#unless isErased}}<a href="tel:{{value}}" data-phone-number="{{value}}" data-action="dial" title="{{value}}">{{/unless}}{{value}}{{#unless isErased}}</a>{{/unless}}{{#if doNotCall}}</s>{{/if}}

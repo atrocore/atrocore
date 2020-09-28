@@ -1,0 +1,173 @@
+/*!
+ *  zaq1
+ */
+
+#header {
+  .navbar {
+    & > .navbar-header {
+      & > {
+        a.navbar-brand, a.navbar-brand:active {
+          color: $text-black;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 768px) {
+  #header a.minimizer {
+    margin-left: 11px;
+  }
+  body.minimized {
+    #header {
+      a.navbar-brand {
+        padding-top: 0;
+      }
+
+      .navbar,
+      ul.tabs {
+        width: 48px;
+      }
+
+      a {
+        &.minimizer {
+          top: 0;
+        }
+
+        &.navbar-brand {
+          width: 48px;
+
+          span.home-icon {
+            margin-left: 16px;
+          }
+        }
+      }
+
+      .navbar-right {
+        width: calc(100% - 40px);
+        padding-right: 0;
+        margin-left: 48px;
+
+        .menu-container {
+          margin-right: 12px;
+        }
+      }
+
+      .navbar-header {
+        height: 56px;
+        width: 48px;
+      }
+
+      ul.tabs {
+        overflow-x: hidden;
+        margin: 0 0 0 -8px;
+
+        & > li.tab > a,
+        .more-group > ul > li > a {
+          padding-left: 14px !important;
+        }
+
+        &::-webkit-scrollbar {
+          width: 3px;
+        }
+
+        &::-webkit-scrollbar-track {
+          background: #f1f1f1;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background: #999;
+        }
+
+        &::-webkit-scrollbar-thumb:hover {
+          background: #555;
+        }
+      }
+    }
+
+    #content {
+      margin-left: 48px;
+    }
+  }
+}
+
+body.minimized {
+  #header > #navbar .navbar-inverse {
+    .navbar-nav {
+      .more {
+        &.keep-open {
+          & > a {
+            &:after {
+              content: '';
+              display: block;
+              width: 1px;
+              height: 50%;
+              background: $text-black;
+              position: absolute;
+              left: 4px;
+              top: 19px;
+            }
+          }
+        }
+
+        & > a {
+          position: relative;
+
+          &:before {
+            content: '';
+            display: block;
+            width: 5px;
+            height: 5px;
+            background: $text-black;
+            position: absolute;
+            left: 2px;
+            top: 14px;
+            border-radius: 50%;
+          }
+        }
+
+        .dropdown-menu {
+          & > li {
+            a {
+              position: relative;
+
+              &:before,
+              &:after {
+                content: '';
+                display: block;
+                background: $text-black;
+                position: absolute;
+              }
+
+              &:before {
+                width: 1px;
+                height: 100%;
+                left: 4px;
+                top: 0;
+              }
+
+              &:after {
+                width: 5px;
+                height: 1px;
+                left: 4px;
+                top: 17px;
+              }
+            }
+
+            &:last-child {
+              a {
+                &:before {
+                  width: 1px;
+                  height: 50%;
+                  left: 4px;
+                  top: 0;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+

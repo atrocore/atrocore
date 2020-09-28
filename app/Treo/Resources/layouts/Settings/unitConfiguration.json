@@ -1,0 +1,10 @@
+[
+    {
+        "name": "measure",
+        "notSortable": true
+    },
+    {
+        "name": "units",
+        "notSortable": true
+    }
+]

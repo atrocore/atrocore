@@ -1,0 +1,179 @@
+{
+    "fields": {
+        "timeZone": {
+            "type": "enum",
+            "detault": "",
+            "view": "views/preferences/fields/time-zone"
+        },
+        "dateFormat": {
+            "type": "enum",
+            "options": ["MM/DD/YYYY", "YYYY-MM-DD", "DD.MM.YYYY", "DD/MM/YYYY"],
+            "default": "",
+            "view": "views/preferences/fields/date-format"
+        },
+        "timeFormat": {
+            "type": "enum",
+            "options": ["HH:mm", "hh:mma", "hh:mmA", "hh:mm A", "hh:mm a"],
+            "default": "",
+            "view": "views/preferences/fields/time-format"
+        },
+        "weekStart": {
+            "type": "enumInt",
+            "options": [0, 1],
+            "default": -1,
+            "view": "views/preferences/fields/week-start"
+        },
+        "defaultCurrency": {
+            "type": "enum",
+            "default": "",
+            "view": "views/preferences/fields/default-currency"
+        },
+        "thousandSeparator": {
+            "type": "varchar",
+            "default": ",",
+            "maxLength": 1,
+            "view": "views/settings/fields/thousand-separator"
+        },
+        "decimalMark": {
+            "type": "varchar",
+            "default": ".",
+            "required": true,
+            "maxLength": 1
+        },
+        "dashboardLayout": {
+            "type": "jsonArray",
+            "view": "views/settings/fields/dashboard-layout"
+        },
+        "dashletsOptions": {
+            "type": "jsonObject"
+        },
+        "sharedCalendarUserList": {
+            "type": "jsonArray"
+        },
+        "calendarViewDataList": {
+            "type": "jsonArray"
+        },
+        "presetFilters": {
+            "type": "jsonObject"
+        },
+        "smtpEmailAddress": {
+            "type": "varchar",
+            "readOnly": true,
+            "notStorable": true,
+            "view": "views/preferences/fields/smtp-email-address",
+            "trim": true
+        },
+        "smtpServer": {
+            "type": "varchar",
+            "trim": true
+        },
+        "smtpPort": {
+            "type": "int",
+            "min": 0,
+            "max": 9999,
+            "default": 25
+        },
+        "smtpAuth": {
+            "type": "bool",
+            "default": false
+        },
+        "smtpSecurity": {
+            "type": "enum",
+            "options": ["", "SSL", "TLS"]
+        },
+        "smtpUsername": {
+            "type": "varchar",
+            "required": true,
+            "trim": true
+        },
+        "smtpPassword": {
+            "type": "password"
+        },
+        "language": {
+            "type": "enum",
+            "default": "",
+            "view": "views/preferences/fields/language"
+        },
+        "exportDelimiter": {
+            "type": "varchar",
+            "default": ",",
+            "required": true,
+            "maxLength": 1
+        },
+        "receiveAssignmentEmailNotifications": {
+            "type": "bool",
+            "default": true
+        },
+        "receiveMentionEmailNotifications": {
+            "type": "bool",
+            "default": true
+        },
+        "receiveStreamEmailNotifications": {
+            "type": "bool",
+            "default": true
+        },
+        "autoFollowEntityTypeList": {
+            "type": "multiEnum",
+            "view": "views/preferences/fields/auto-follow-entity-type-list",
+            "translation": "Global.scopeNamesPlural",
+            "notStorable": true,
+            "tooltip": true
+        },
+        "signature": {
+            "type": "text",
+            "view": "views/fields/wysiwyg"
+        },
+        "theme": {
+            "type": "enum",
+            "view": "views/preferences/fields/theme",
+            "translation": "Global.themes"
+        },
+        "useCustomTabList": {
+            "type": "bool",
+            "default": false
+        },
+        "tabList": {
+            "type": "array",
+            "view": "views/preferences/fields/tab-list"
+        },
+        "emailReplyToAllByDefault": {
+            "type": "bool",
+            "default": true
+        },
+        "emailReplyForceHtml": {
+            "type": "bool",
+            "default": false
+        },
+        "isPortalUser": {
+            "type": "bool",
+            "notStorable": true
+        },
+        "doNotFillAssignedUserIfNotRequired": {
+            "type": "bool",
+            "tooltip": true
+        },
+        "followEntityOnStreamPost": {
+            "type": "bool",
+            "default": true
+        },
+        "followCreatedEntities": {
+            "type": "bool",
+            "tooltip": true
+        },
+        "followCreatedEntityTypeList": {
+            "type": "multiEnum",
+            "view": "views/preferences/fields/auto-follow-entity-type-list",
+            "translation": "Global.scopeNamesPlural",
+            "tooltip": true
+        },
+        "emailUseExternalClient": {
+            "type": "bool"
+        },
+        "scopeColorsDisabled": {
+            "type": "bool"
+        },
+        "tabColorsDisabled": {
+            "type": "bool"
+        }
+    }
+}

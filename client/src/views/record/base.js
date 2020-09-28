@@ -1,0 +1,758 @@
+
+
+Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], function (Dep, ViewRecordHelper, DynamicLogic) {
+
+    return Dep.extend({
+
+        type: 'edit',
+
+        fieldsMode: 'edit',
+
+        entityType: null,
+
+        scope: null,
+
+        isNew: false,
+
+        dependencyDefs: {},
+
+        dynamicLogicDefs: {},
+
+        fieldList: null,
+
+        mode: null,
+
+        hideField: function (name, locked) {
+            this.recordHelper.setFieldStateParam(name, 'hidden', true);
+            if (locked) {
+                this.recordHelper.setFieldStateParam(name, 'hiddenLocked', true);
+            }
+
+            var processHtml = function () {
+                var fieldView = this.getFieldView(name);
+
+                if (fieldView) {
+                    var $field = fieldView.$el;
+                    var $cell = $field.closest('.cell[data-name="' + name + '"]');
+                    var $label = $cell.find('label.control-label[data-name="' + name + '"]');
+
+                    $field.addClass('hidden');
+                    $label.addClass('hidden');
+                    $cell.addClass('hidden-cell');
+                } else {
+                    this.$el.find('.cell[data-name="' + name + '"]').addClass('hidden-cell');
+                    this.$el.find('.field[data-name="' + name + '"]').addClass('hidden');
+                    this.$el.find('label.control-label[data-name="' + name + '"]').addClass('hidden');
+                }
+            }.bind(this);
+            if (this.isRendered()) {
+                processHtml();
+            } else {
+                this.once('after:render', function () {
+                    processHtml();
+                }, this);
+            }
+
+            var view = this.getFieldView(name);
+            if (view) {
+                view.setDisabled(locked);
+            }
+        },
+
+        showField: function (name) {
+            if (this.recordHelper.getFieldStateParam(name, 'hiddenLocked')) {
+                return;
+            }
+            this.recordHelper.setFieldStateParam(name, 'hidden', false);
+
+            var processHtml = function () {
+                var fieldView = this.getFieldView(name);
+
+                if (fieldView) {
+                    var $field = fieldView.$el;
+                    var $cell = $field.closest('.cell[data-name="' + name + '"]');
+                    var $label = $cell.find('label.control-label[data-name="' + name + '"]');
+
+                    $field.removeClass('hidden');
+                    $label.removeClass('hidden');
+                    $cell.removeClass('hidden-cell');
+                } else {
+                    this.$el.find('.cell[data-name="' + name + '"]').removeClass('hidden-cell');
+                    this.$el.find('.field[data-name="' + name + '"]').removeClass('hidden');
+                    this.$el.find('label.control-label[data-name="' + name + '"]').removeClass('hidden');
+                }
+            }.bind(this);
+
+            if (this.isRendered()) {
+                processHtml();
+            } else {
+                this.once('after:render', function () {
+                    processHtml();
+                }, this);
+            }
+
+            var view = this.getFieldView(name);
+            if (view) {
+                if (!view.disabledLocked) {
+                    view.setNotDisabled();
+                }
+            }
+        },
+
+        setFieldReadOnly: function (name, locked) {
+            this.recordHelper.setFieldStateParam(name, 'readOnly', true);
+            if (locked) {
+                this.recordHelper.setFieldStateParam(name, 'readOnlyLocked', true);
+            }
+
+            var view = this.getFieldView(name);
+            if (view) {
+                view.setReadOnly(locked);
+            }
+        },
+
+        setFieldNotReadOnly: function (name) {
+            this.recordHelper.setFieldStateParam(name, 'readOnly', false);
+
+            var view = this.getFieldView(name);
+            if (view) {
+                if (view.readOnly) {
+                    view.setNotReadOnly();
+                    if (this.mode == 'edit') {
+                        if (!view.readOnlyLocked && view.mode == 'detail') {
+                            view.setMode('edit');
+                            if (view.isRendered()) {
+                                view.reRender();
+                            }
+                        }
+                    }
+                }
+            }
+        },
+
+        setFieldRequired: function (name) {
+            this.recordHelper.setFieldStateParam(name, 'required', true);
+
+            var view = this.getFieldView(name);
+            if (view) {
+                view.setRequired();
+            }
+        },
+
+        setFieldNotRequired: function (name) {
+            this.recordHelper.setFieldStateParam(name, 'required', false);
+
+            var view = this.getFieldView(name);
+            if (view) {
+                view.setNotRequired();
+            }
+        },
+
+        setFieldOptionList: function (name, list) {
+            this.recordHelper.setFieldOptionList(name, list);
+
+            var view = this.getFieldView(name);
+            if (view) {
+                if ('setOptionList' in view) {
+                    view.setOptionList(list);
+                }
+            }
+        },
+
+        resetFieldOptionList: function (name) {
+            this.recordHelper.clearFieldOptionList(name);
+
+            var view = this.getFieldView(name);
+            if (view) {
+                if ('resetOptionList' in view) {
+                    view.resetOptionList();
+                }
+            }
+        },
+
+        showPanel: function (name) {
+            this.recordHelper.setPanelStateParam(name, 'hidden', false);
+            if (this.isRendered()) {
+                this.$el.find('.panel[data-name="'+name+'"]').removeClass('hidden');
+            }
+        },
+
+        hidePanel: function (name) {
+            this.recordHelper.setPanelStateParam(name, 'hidden', true);
+            if (this.isRendered()) {
+                this.$el.find('.panel[data-name="'+name+'"]').addClass('hidden');
+            }
+        },
+
+        setConfirmLeaveOut: function (value) {
+            this.getRouter().confirmLeaveOut = value;
+        },
+
+        getFieldViews: function () {
+            var fields = {};
+            this.fieldList.forEach(function (item) {
+                var view = this.getFieldView(item);
+                if (view) {
+                    fields[item] = view;
+                }
+            }, this);
+            return fields;
+        },
+
+        getFields: function () {
+            return this.getFieldViews();
+        },
+
+        getFieldView: function (name) {
+            var view =  this.getView(name + 'Field') || null;
+
+            // TODO remove
+            if (!view) {
+                view = this.getView(name) || null;
+            }
+            return view;
+        },
+
+        getField: function (name) {
+            return this.getFieldView(name);
+        },
+
+        getFieldList: function () {
+            var fieldViews = this.getFieldViews();
+            return Object.keys(fieldViews);
+        },
+
+        data: function () {
+            return {
+                scope: this.scope,
+                entityType: this.entityType,
+                hiddenPanels: this.recordHelper.getHiddenPanels(),
+                hiddenFields: this.recordHelper.getHiddenFields()
+            };
+        },
+
+        // TODO remove
+        handleDataBeforeRender: function (data) {
+            this.getFieldList().forEach(function (field) {
+                var viewKey = field + 'Field';
+                data[field] = data[viewKey];
+            }, this);
+        },
+
+        setup: function () {
+            if (typeof this.model === 'undefined') {
+                throw new Error('Model has not been injected into record view.');
+            }
+
+            this.recordHelper = new ViewRecordHelper();
+
+            this.once('remove', function () {
+                if (this.isChanged) {
+                    this.resetModelChanges();
+                }
+                this.setIsNotChanged();
+            }, this);
+
+            this.events = this.events || {};
+
+            this.entityType = this.model.name;
+            this.scope = this.options.scope || this.entityType;
+
+            this.fieldList = this.options.fieldList || this.fieldList || [];
+
+            this.numId = Math.floor((Math.random() * 10000) + 1);
+            this.id = Espo.Utils.toDom(this.entityType) + '-' + Espo.Utils.toDom(this.type) + '-' + this.numId;
+
+            if (this.model.isNew()) {
+                this.isNew = true;
+            }
+
+            this.setupBeforeFinal();
+        },
+
+        setupBeforeFinal: function () {
+            this.attributes = this.model.getClonedAttributes();
+
+            this.listenTo(this.model, 'change', function () {
+                if (this.mode == 'edit') {
+                    this.setIsChanged();
+                }
+            }, this);
+
+            if (this.options.attributes) {
+                this.model.set(this.options.attributes);
+            }
+
+            this.listenTo(this.model, 'sync', function () {
+                this.attributes = this.model.getClonedAttributes();
+            }, this);
+
+            this.initDependancy();
+            this.initDynamicLogic();
+        },
+
+        setInitalAttributeValue: function (attribute, value) {
+            this.attributes[attribute] = value;
+        },
+
+        checkAttributeIsChanged: function (name) {
+            return !_.isEqual(this.attributes[name], this.model.get(name));
+        },
+
+        resetModelChanges: function () {
+            var attributes = this.model.attributes;
+            for (var attr in attributes) {
+                if (!(attr in this.attributes)) {
+                    this.model.unset(attr);
+                }
+            }
+
+            this.model.set(this.attributes);
+        },
+
+        initDynamicLogic: function () {
+            this.dynamicLogicDefs = Espo.Utils.clone(this.dynamicLogicDefs || {});
+            this.dynamicLogicDefs.fields = Espo.Utils.clone(this.dynamicLogicDefs.fields);
+            this.dynamicLogicDefs.panels = Espo.Utils.clone(this.dynamicLogicDefs.panels);
+
+            this.dynamicLogic = new DynamicLogic(this.dynamicLogicDefs, this);
+
+            this.listenTo(this.model, 'change', this.processDynamicLogic, this);
+            this.processDynamicLogic();
+        },
+
+        processDynamicLogic: function () {
+            this.dynamicLogic.process();
+        },
+
+        applyDependancy: function () {
+            this._handleDependencyAttributes();
+        },
+
+        initDependancy: function () {
+            Object.keys(this.dependencyDefs || {}).forEach(function (attr) {
+                this.listenTo(this.model, 'change:' + attr, function () {
+                    this._handleDependencyAttribute(attr);
+                }, this);
+            }, this);
+            this._handleDependencyAttributes();
+        },
+
+        setupFieldLevelSecurity: function () {
+            var forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'read');
+            forbiddenFieldList.forEach(function (field) {
+                this.hideField(field, true);
+            }, this);
+
+            var readOnlyFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit');
+            readOnlyFieldList.forEach(function (field) {
+                this.setFieldReadOnly(field, true);
+            }, this);
+        },
+
+        setIsChanged: function () {
+            this.isChanged = true;
+        },
+
+        setIsNotChanged: function () {
+            this.isChanged = false;
+        },
+
+        validate: function () {
+            var notValid = false;
+            var fields = this.getFields();
+            for (var i in fields) {
+                if (fields[i].mode == 'edit') {
+                    if (!fields[i].disabled && !fields[i].readOnly) {
+                        notValid = fields[i].validate() || notValid;
+                    }
+                }
+            };
+            return notValid
+        },
+
+        afterSave: function () {
+            if (this.isNew) {
+                this.notify('Created', 'success');
+            } else {
+                this.notify('Saved', 'success');
+            }
+            this.setIsNotChanged();
+        },
+
+        beforeBeforeSave: function () {
+
+        },
+
+        beforeSave: function () {
+            this.notify('Saving...');
+        },
+
+        afterSaveError: function () {
+        },
+
+        afterNotModified: function () {
+            var msg = this.translate('notModified', 'messages');
+            Espo.Ui.warning(msg, 'warning');
+            this.setIsNotChanged();
+        },
+
+        afterNotValid: function () {
+            this.notify('Not valid', 'error');
+        },
+
+        save: function (callback, skipExit) {
+            this.beforeBeforeSave();
+
+            var data = this.fetch();
+
+            var self = this;
+            var model = this.model;
+
+            var initialAttributes = this.attributes;
+
+            var beforeSaveAttributes = this.model.getClonedAttributes();
+
+            data = _.extend(Espo.Utils.cloneDeep(beforeSaveAttributes), data);
+
+            var attrs = false;
+            if (model.isNew()) {
+                attrs = data;
+            } else {
+                for (var name in data) {
+                    if (_.isEqual(initialAttributes[name], data[name])) {
+                        continue;
+                    }
+                    (attrs || (attrs = {}))[name] = data[name];
+                }
+            }
+
+            if (!attrs) {
+                this.trigger('cancel:save');
+                this.afterNotModified();
+                return true;
+            }
+
+            model.set(attrs, {silent: true});
+
+            if (this.validate()) {
+                model.attributes = beforeSaveAttributes;
+                this.trigger('cancel:save');
+                this.afterNotValid();
+                return;
+            }
+
+            this.beforeSave();
+
+            this.trigger('before:save');
+            model.trigger('before:save');
+
+            model.save(attrs, {
+                success: function () {
+                    this.afterSave();
+                    var isNew = self.isNew;
+                    if (self.isNew) {
+                        self.isNew = false;
+                    }
+                    this.trigger('after:save');
+                    model.trigger('after:save');
+
+                    if (!callback) {
+                        if (!skipExit) {
+                            if (isNew) {
+                                this.exit('create');
+                            } else {
+                                this.exit('save');
+                            }
+                        }
+                    } else {
+                        callback(this);
+                    }
+                }.bind(this),
+                error: function (e, xhr) {
+                    var r = xhr.getAllResponseHeaders();
+                    var response = null;
+
+                    if (~[409, 500].indexOf(xhr.status)) {
+                        var statusReasonHeader = xhr.getResponseHeader('X-Status-Reason');
+                        if (statusReasonHeader) {
+                            try {
+                                var response = JSON.parse(statusReasonHeader);
+                            } catch (e) {
+                                console.error('Could not parse X-Status-Reason header');
+                            }
+                        }
+                    }
+
+                    if (xhr.status == 400) {
+                        if (!this.isNew) {
+                            this.resetModelChanges();
+                        }
+                    }
+
+                    if (response && response.reason) {
+                        var methodName = 'errorHandler' + Espo.Utils.upperCaseFirst(response.reason.toString());
+                        if (methodName in this) {
+                            xhr.errorIsHandled = true;
+                            this[methodName](response.data);
+                        }
+                    }
+
+                    this.afterSaveError();
+
+                    model.attributes = beforeSaveAttributes;
+                    self.trigger('cancel:save');
+
+                }.bind(this),
+                patch: !model.isNew()
+            });
+            return true;
+        },
+
+        fetch: function () {
+            var data = {};
+            var fieldViews = this.getFieldViews();
+            for (var i in fieldViews) {
+                var view = fieldViews[i];
+                if (view.mode == 'edit') {
+                    if (!view.disabled && !view.readOnly && view.isFullyRendered()) {
+                        _.extend(data, view.fetch());
+                    }
+                }
+            };
+            return data;
+        },
+
+        populateDefaults: function () {
+            this.model.populateDefaults();
+
+            var defaultHash = {};
+
+            if (!this.getUser().get('portalId')) {
+                if (this.model.hasField('assignedUser') || this.model.hasField('assignedUsers')) {
+                    var assignedUserField = 'assignedUser';
+                    if (this.model.hasField('assignedUsers')) {
+                        assignedUserField = 'assignedUsers';
+                    }
+                    var fillAssignedUser = true;
+                    if (this.getPreferences().get('doNotFillAssignedUserIfNotRequired')) {
+                        fillAssignedUser = false;
+                        if (this.model.getFieldParam(assignedUserField, 'required')) {
+                            fillAssignedUser = true;
+                        } else if (this.getAcl().get('assignmentPermission') === 'no') {
+                            fillAssignedUser = true;
+                        } else if (this.getAcl().get('assignmentPermission') === 'team' && !this.getUser().get('defaultTeamId')) {
+                            fillAssignedUser = true;
+                        } else if (~this.getAcl().getScopeForbiddenFieldList(this.model.name, 'edit').indexOf(assignedUserField)) {
+                            fillAssignedUser = true;
+                        }
+                    }
+                    if (fillAssignedUser) {
+                        if (assignedUserField === 'assignedUsers') {
+                            defaultHash['assignedUsersIds'] = [this.getUser().id];
+                            defaultHash['assignedUsersNames'] = {};
+                            defaultHash['assignedUsersNames'][this.getUser().id] = this.getUser().get('name');
+                        } else {
+                            defaultHash['assignedUserId'] = this.getUser().id;
+                            defaultHash['assignedUserName'] = this.getUser().get('name');
+                        }
+                    }
+                }
+                var defaultTeamId = this.getUser().get('defaultTeamId');
+                if (defaultTeamId) {
+                    if (this.model.hasField('teams') && !this.model.getFieldParam('teams', 'default')) {
+                        defaultHash['teamsIds'] = [defaultTeamId];
+                        defaultHash['teamsNames'] = {};
+                        defaultHash['teamsNames'][defaultTeamId] = this.getUser().get('defaultTeamName');
+                    }
+                }
+            }
+
+            if (this.getUser().get('portalId')) {
+                if (this.model.hasField('account') && ~['belongsTo', 'hasOne'].indexOf(this.model.getLinkType('account'))) {
+                    if (this.getUser().get('accountId')) {
+                        defaultHash['accountId'] =  this.getUser().get('accountId');
+                        defaultHash['accountName'] = this.getUser().get('accountName');
+                    }
+                }
+                if (this.model.hasField('contact') && ~['belongsTo', 'hasOne'].indexOf(this.model.getLinkType('contact'))) {
+                    if (this.getUser().get('contactId')) {
+                        defaultHash['contactId'] = this.getUser().get('contactId');
+                        defaultHash['contactName'] = this.getUser().get('contactName');
+                    }
+                }
+                if (this.model.hasField('parent') && this.model.getLinkType('parent') === 'belongsToParent') {
+                    if (!this.getConfig().get('b2cMode')) {
+                        if (this.getUser().get('accountId')) {
+                            if (~(this.model.getFieldParam('parent', 'entityList') || []).indexOf('Account')) {
+                                defaultHash['parentId'] = this.getUser().get('accountId');
+                                defaultHash['parentName'] = this.getUser().get('accountName');
+                                defaultHash['parentType'] = 'Account';
+                            }
+                        }
+                    } else {
+                        if (this.getUser().get('contactId')) {
+                            if (~(this.model.getFieldParam('parent', 'entityList') || []).indexOf('Contact')) {
+                                defaultHash['contactId'] = this.getUser().get('contactId');
+                                defaultHash['parentName'] = this.getUser().get('contactName');
+                                defaultHash['parentType'] = 'Contact';
+                            }
+                        }
+                    }
+                }
+                if (this.model.hasField('accounts') && this.model.getLinkType('accounts') === 'hasMany') {
+                    if (this.getUser().get('accountsIds')) {
+                        defaultHash['accountsIds'] = this.getUser().get('accountsIds');
+                        defaultHash['accountsNames'] = this.getUser().get('accountsNames');
+                    }
+                }
+                if (this.model.hasField('contacts') && this.model.getLinkType('contacts') === 'hasMany') {
+                    if (this.getUser().get('contactId')) {
+                        defaultHash['contactsIds'] = [this.getUser().get('contactId')];
+                        var names = {};
+                        names[this.getUser().get('contactId')] = this.getUser().get('contactName');
+                        defaultHash['contactsNames'] = names;
+                    }
+                }
+            }
+
+            for (var attr in defaultHash) {
+                if (this.model.has(attr)) {
+                    delete defaultHash[attr];
+                }
+            }
+
+            this.model.set(defaultHash, {silent: true});
+        },
+
+        errorHandlerDuplicate: function (duplicates) {
+        },
+
+        _handleDependencyAttributes: function () {
+            Object.keys(this.dependencyDefs || {}).forEach(function (attr) {
+                this._handleDependencyAttribute(attr);
+            }, this);
+        },
+
+        _handleDependencyAttribute: function (attr) {
+            var data = this.dependencyDefs[attr];
+            var value = this.model.get(attr);
+            if (value in (data.map || {})) {
+                (data.map[value] || []).forEach(function (item) {
+                    this._doDependencyAction(item);
+                }, this);
+            } else {
+                if ('default' in data) {
+                    (data.default || []).forEach(function (item) {
+                        this._doDependencyAction(item);
+                    }, this);
+                }
+            }
+        },
+
+        _doDependencyAction: function (data) {
+            var action = data.action;
+
+            var methodName = 'dependencyAction' + Espo.Utils.upperCaseFirst(action);
+            if (methodName in this && typeof this.methodName == 'function') {
+                this.methodName(data);
+                return;
+            }
+
+            var fieldList = data.fieldList || data.fields || [];
+            var panelList = data.panelList || data.panels || [];
+
+            switch (action) {
+                case 'hide':
+                    panelList.forEach(function (item) {
+                        this.hidePanel(item);
+                    }, this);
+                    fieldList.forEach(function (item) {
+                        this.hideField(item);
+                    }, this);
+                    break;
+                case 'show':
+                    panelList.forEach(function (item) {
+                        this.showPanel(item);
+                    }, this);
+                    fieldList.forEach(function (item) {
+                        this.showField(item);
+                    }, this);
+                    break;
+                case 'setRequired':
+                    fieldList.forEach(function (field) {
+                        this.setFieldRequired(field);
+                    }, this);
+                    break;
+                case 'setNotRequired':
+                    fieldList.forEach(function (field) {
+                        this.setFieldNotRequired(field);
+                    }, this);
+                    break;
+                case 'setReadOnly':
+                    fieldList.forEach(function (field) {
+                        this.setFieldReadOnly(field);
+                    }, this);
+                    break;
+                case 'setNotReadOnly':
+                    fieldList.forEach(function (field) {
+                        this.setFieldNotReadOnly(field);
+                    }, this);
+                    break;
+            }
+        },
+
+        createField: function (name, view, params, mode, readOnly, options) {
+            var o = {
+                model: this.model,
+                mode: mode || 'edit',
+                el: this.options.el + ' .field[data-name="' + name + '"]',
+                defs: {
+                    name: name,
+                    params: params || {}
+                }
+            };
+            if (readOnly) {
+                o.readOnly = true;
+            }
+
+            view = view || this.model.getFieldParam(name, 'view');
+
+            if (!view) {
+                var type = this.model.getFieldType(name) || 'base';
+                view = this.getFieldManager().getViewName(type);
+            }
+
+            if (options) {
+                for (var param in options) {
+                    o[param] = options[param];
+                }
+            }
+
+            if (this.recordHelper.getFieldStateParam(name, 'hidden')) {
+                o.disabled = true;
+            }
+            if (this.recordHelper.getFieldStateParam(name, 'readOnly')) {
+                o.readOnly = true;
+            }
+            if (this.recordHelper.getFieldStateParam(name, 'required') !== null) {
+                o.defs.params.required = this.recordHelper.getFieldStateParam(name, 'required');
+            }
+            if (this.recordHelper.hasFieldOptionList(name)) {
+                o.customOptionList = this.recordHelper.getFieldOptionList(name);
+            }
+
+            var viewKey = name + 'Field';
+
+            this.createView(viewKey, view, o);
+
+            if (!~this.fieldList.indexOf(name)) {
+                this.fieldList.push(name);
+            }
+        },
+
+        exit: function (after) {}
+
+    });
+
+});

@@ -1,0 +1,54 @@
+{
+    "controller": "controllers/record",
+    "defaultSidePanelFieldLists": {
+        "detail": [
+            {
+                "name": "assignedUser"
+            },
+            {
+                "name": "teams"
+            },
+            {
+                "name": "portalUser"
+            }
+        ],
+        "detailSmall": [
+            {
+                "name": "assignedUser"
+            },
+            {
+                "name": "teams"
+            },
+            {
+                "name": "portalUser"
+            }
+        ]
+    },
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "additionalLayouts": {
+        "listForAccount": {
+            "type": "listSmall"
+        }
+    },
+    "filterList": [
+        "portalUsers"
+    ],
+    "dynamicLogic": {
+        "fields": {
+            "title": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isNotEmpty",
+                            "attribute": "accountId"
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "color": "#a4c5e0",
+    "iconClass": "fas fa-id-badge"
+}

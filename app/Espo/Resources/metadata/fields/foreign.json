@@ -1,0 +1,22 @@
+{
+   "params":[
+      {
+         "name":"link",
+         "type":"varchar",
+         "view": "views/admin/field-manager/fields/foreign/link",
+         "required": true
+      },
+      {
+         "name":"field",
+         "type":"varchar",
+         "view": "views/admin/field-manager/fields/foreign/field",
+         "required": true
+      }
+   ],
+   "fieldTypeList": ["varchar", "enum", "enumInt", "enumFloat", "int", "float", "website", "date", "datetime", "text", "number", "bool"],
+   "filter": true,
+   "notCreatable": false,
+   "fieldDefs": {
+      "readOnly": true
+   }
+}

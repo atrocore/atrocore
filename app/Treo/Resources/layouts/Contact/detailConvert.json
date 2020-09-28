@@ -1,0 +1,12 @@
+[
+    {
+        "label":"Overview",
+        "rows": [
+            [{"name":"name"}, false],
+            [{"name":"emailAddress"},{"name":"phoneNumber"}],
+            [{"name":"title"}, {"name":"doNotCall"}],
+            [{"name":"address"}, false],
+            [{"name":"description", "fullWidth": true}]
+        ]
+    }
+]

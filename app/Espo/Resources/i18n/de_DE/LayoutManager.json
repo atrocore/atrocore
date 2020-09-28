@@ -1,0 +1,26 @@
+{
+  "fields": {
+    "width": "Breite (%)",
+    "notSortable": "Nicht sortierbar",
+    "align": "Ausrichten",
+    "sticked": "Gepinnt",
+    "isLarge": "Große Schriftgröße",
+    "dynamicLogicVisible": "Bedingungen, die das Panel sichtbar machen"
+  },
+  "options": {
+    "align": {
+      "left": "Links",
+      "right": "Rechts"
+    },
+    "style": {
+      "default": "Standard",
+      "success": "Erfolgreich",
+      "danger": "Gefahr",
+      "warning": "Warnung",
+      "primary": "Primär"
+    }
+  },
+  "labels": {
+    "New panel": "Neues Panel"
+  }
+}

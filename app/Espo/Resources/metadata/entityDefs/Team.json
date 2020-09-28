@@ -1,0 +1,52 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "maxLength": 100,
+            "trim": true
+        },
+        "roles": {
+            "type": "linkMultiple",
+            "tooltip": true
+        },
+        "positionList": {
+            "type": "array",
+            "tooltip": true
+        },
+        "userRole": {
+            "type": "varchar",
+            "notStorable": true,
+            "disabled": true
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        }
+    },
+    "links": {
+        "users": {
+            "type": "hasMany",
+            "entity": "User",
+            "foreign": "teams"
+        },
+        "roles": {
+            "type": "hasMany",
+            "entity": "Role",
+            "foreign": "teams"
+        },
+        "notes": {
+            "type": "hasMany",
+            "entity": "Note",
+            "foreign": "teams"
+        },
+        "inboundEmails": {
+            "type": "hasMany",
+            "entity": "InboundEmail",
+            "foreign": "teams"
+        }
+    },
+    "collection": {
+        "sortBy": "name",
+        "asc": true
+    }
+}

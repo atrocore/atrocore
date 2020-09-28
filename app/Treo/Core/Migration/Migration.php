@@ -1,0 +1,176 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Treo\Core\Migration;
+
+use Treo\Composer\PostUpdate;
+
+/**
+ * Migration
+ *
+ * @author r.ratsun <r.ratsun@treolabs.com>
+ */
+class Migration
+{
+    use \Treo\Traits\ContainerTrait;
+
+    /**
+     * Migrate action
+     *
+     * @param string $module
+     * @param string $from
+     * @param string $to
+     *
+     * @return bool
+     */
+    public function run(string $module, string $from, string $to): bool
+    {
+        // get module migration versions
+        if (empty($migrations = $this->getModuleMigrationVersions($module))) {
+            return false;
+        }
+
+        // prepare message
+        $message = sprintf('Migrate %s %s -> %s ... ', ($module == 'Treo') ? 'Core' : $module, $from, $to);
+
+        // prepare versions
+        $from = $this->prepareVersion($from);
+        $to = $this->prepareVersion($to);
+
+        // prepare data
+        $data = $migrations;
+        $data[] = $from;
+        $data[] = $to;
+        $data = array_unique($data);
+
+        // sort
+        natsort($data);
+
+        $data = array_values($data);
+
+        // prepare keys
+        $keyFrom = array_search($from, $data);
+        $keyTo = array_search($to, $data);
+
+        if ($keyFrom == $keyTo) {
+            return false;
+        }
+
+        PostUpdate::renderLine($message);
+
+        // prepare increment
+        if ($keyFrom < $keyTo) {
+            // go UP
+            foreach ($data as $k => $className) {
+                if ($k >= $keyFrom
+                    && $keyTo >= $k
+                    && $from != $className
+                    && in_array($className, $migrations)
+                    && !empty($migration = $this->createMigration($module, $className))) {
+                    $migration->up();
+                }
+            }
+        } else {
+            // go DOWN
+            foreach (array_reverse($data, true) as $k => $className) {
+                if ($k >= $keyTo
+                    && $keyFrom >= $k
+                    && $to != $className
+                    && in_array($className, $migrations)
+                    && !empty($migration = $this->createMigration($module, $className))) {
+                    $migration->down();
+                }
+            }
+        }
+
+        PostUpdate::renderLine('Migration done!');
+
+        return true;
+    }
+
+    /**
+     * Prepare version
+     *
+     * @param string $version
+     *
+     * @return int
+     */
+    protected function prepareVersion(string $version)
+    {
+        // prepare version
+        $version = str_replace('v', '', $version);
+
+        if (preg_match_all('/^(.*)\.(.*)\.(.*)$/', $version, $matches)) {
+            // prepare data
+            $major = (int)$matches[1][0];
+            $version = (int)$matches[2][0];
+            $patch = (int)$matches[3][0];
+
+            return "V{$major}Dot{$version}Dot{$patch}";
+        }
+    }
+
+    /**
+     * Get module migration versions
+     *
+     * @param string $module
+     *
+     * @return array
+     */
+    protected function getModuleMigrationVersions(string $module): array
+    {
+        // prepare result
+        $result = [];
+
+        // prepare path
+        $path = sprintf('data/migrations/%s/Migrations/', $module);
+
+        if (file_exists($path) && is_dir($path)) {
+            foreach (scandir($path) as $file) {
+                // prepare file name
+                $file = str_replace('.php', '', $file);
+                if (preg_match('/^V(.*)Dot(.*)Dot(.*)$/', $file)) {
+                    $result[] = $file;
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param string $module
+     * @param string $className
+     *
+     * @return null|Base
+     */
+    protected function createMigration(string $module, string $className): ?Base
+    {
+        // prepare class name
+        $className = sprintf('\\%s\\Migrations\\%s', $module, $className);
+
+        if (!class_exists($className)) {
+            return null;
+        }
+
+        $migration = new $className($this->getContainer()->get('entityManager')->getPDO(), $this->getContainer()->get('config'));
+
+        if (!$migration instanceof Base) {
+            return null;
+        }
+
+        /**
+         * @deprecated We will remove it after 01.01.2021
+         */
+        if ($migration instanceof AbstractMigration) {
+            if (empty($this->isRebuilded)) {
+                $this->isRebuilded = true;
+                $this->getContainer()->get('dataManager')->rebuild();
+            }
+            $migration->setContainer($this->getContainer());
+        }
+
+        return $migration;
+    }
+}

@@ -1,0 +1,57 @@
+/*!
+ *  zaq1
+ */
+
+
+#content,
+.modal-content {
+  .completeness {
+    position: relative;
+    border: 0;
+    background: none;
+    border-radius: 0;
+    float: none;
+    clear: none;
+    padding: 0;
+  }
+
+  .table .completeness {
+    width: 100px;
+
+    &.red .progress-value {
+      color: #000;
+    }
+  }
+
+  .completeness .progress-value {
+    position: absolute;
+    left: 5px;
+    top: 0;
+    color: #ddd;
+  }
+
+  .completeness .progress-value.none {
+    color: #000;
+  }
+
+  .progress {
+    box-shadow: none;
+    height: 20px;
+    margin-bottom: 5px;
+    border-radius: 3px;
+    background: #E6F1FF;
+  }
+
+  .progress-bar {
+    box-shadow: none;
+    border-radius: 3px;
+    background: #0081d1;
+  }
+
+  .progress-bar-success,
+  .progress-bar-warning {
+    min-width: 24px;
+  }
+
+}
+

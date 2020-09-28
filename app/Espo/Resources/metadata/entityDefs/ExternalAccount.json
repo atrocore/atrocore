@@ -1,0 +1,14 @@
+{
+    "fields": {
+        "id": {
+            "type": "id",
+            "maxLength": 64
+        },
+        "data": {
+            "type": "jsonObject"
+        },
+        "enabled": {
+            "type": "bool"
+        }
+    }
+}

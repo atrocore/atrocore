@@ -1,0 +1,10 @@
+{
+  "createDisabled": true,
+  "controller": "controllers/record",
+  "boolFilterList": [
+    "onlyMy"
+  ],
+  "iconClass": "fas fa-hospital-alt",
+  "kanbanViewMode": false,
+  "color": null
+}

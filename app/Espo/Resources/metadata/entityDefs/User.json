@@ -1,0 +1,269 @@
+{
+    "fields": {
+        "isAdmin": {
+            "type": "bool",
+            "tooltip": true
+        },
+        "userName": {
+            "type": "varchar",
+            "maxLength": 50,
+            "required": true,
+            "view": "views/user/fields/user-name",
+            "tooltip": true
+        },
+        "name": {
+            "type": "personName",
+            "view": "views/user/fields/name"
+        },
+        "password": {
+            "type": "password",
+            "maxLength": 150,
+            "internal": true,
+            "disabled": true
+        },
+        "passwordConfirm": {
+            "type": "password",
+            "maxLength": 150,
+            "internal": true,
+            "disabled": true,
+            "notStorable": true
+        },
+        "salutationName": {
+            "type": "enum",
+            "options": ["", "Mr.", "Ms.", "Mrs.", "Dr."]
+        },
+        "firstName": {
+            "type": "varchar",
+            "maxLength": 100,
+            "default":"",
+            "trim": true
+        },
+        "lastName": {
+            "type": "varchar",
+            "maxLength": 100,
+            "required": true,
+            "default":"",
+            "trim": true
+        },
+        "isActive": {
+            "type": "bool",
+            "tooltip": true,
+            "default": true
+        },
+        "isPortalUser": {
+            "type": "bool",
+            "layoutMassUpdateDisabled": true
+        },
+        "isSuperAdmin": {
+            "type": "bool",
+            "default": false,
+            "disabled": true
+        },
+        "title": {
+            "type": "varchar",
+            "maxLength": 100,
+            "trim": true
+        },
+        "position": {
+            "type": "varchar",
+            "maxLength": 100,
+            "notStorable": true,
+            "where": {
+                "LIKE": {
+                    "leftJoins": [["teams", "teamsPosition"]],
+                    "sql": "teamsPositionMiddle.role LIKE {value}",
+                    "distinct": true
+                },
+                "=": {
+                    "leftJoins": [["teams", "teamsPosition"]],
+                    "sql": "teamsPositionMiddle.role = {value}",
+                    "distinct": true
+                },
+                "<>": {
+                    "leftJoins": [["teams", "teamsPosition"]],
+                    "sql": "teamsPositionMiddle.role <> {value}",
+                    "distinct": true
+                },
+                "IS NULL": {
+                    "leftJoins": [["teams", "teamsPosition"]],
+                    "sql": "teamsPositionMiddle.role IS NULL",
+                    "distinct": true
+                },
+                "IS NOT NULL": {
+                    "leftJoins": [["teams", "teamsPosition"]],
+                    "sql": "teamsPositionMiddle.role IS NOT NULL",
+                    "distinct": true
+                }
+            },
+            "trim": true,
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "textFilterDisabled": true
+        },
+        "emailAddress": {
+            "type": "email",
+            "required": false
+        },
+        "phoneNumber": {
+            "type": "phone",
+            "typeList": ["Mobile", "Office", "Home", "Fax", "Other"],
+            "defaultType": "Mobile"
+        },
+        "token": {
+            "type": "varchar",
+            "notStorable": true,
+            "disabled": true
+        },
+        "authTokenId": {
+            "type": "varchar",
+            "notStorable": true,
+            "disabled": true
+        },
+        "authLogRecordId": {
+            "type": "varchar",
+            "notStorable": true,
+            "disabled": true
+        },
+        "ipAddress": {
+            "type": "varchar",
+            "notStorable": true,
+            "disabled": true
+        },
+        "defaultTeam": {
+            "type": "link",
+            "tooltip": true
+        },
+        "acceptanceStatus": {
+            "type": "varchar",
+            "notStorable": true,
+            "exportDisabled": true,
+            "disabled": true
+        },
+        "teamRole": {
+            "type": "varchar",
+            "notStorable": true,
+            "disabled": true
+        },
+        "teams": {
+            "type": "linkMultiple",
+            "tooltip": true,
+            "columns": {
+                "role": "userRole"
+            },
+            "view": "views/user/fields/teams",
+            "default": "javascript: return {teamsIds: []}"
+        },
+        "roles": {
+            "type": "linkMultiple",
+            "tooltip": true
+        },
+        "portals": {
+            "type": "linkMultiple",
+            "tooltip": true
+        },
+        "portalRoles": {
+            "type": "linkMultiple",
+            "tooltip": true
+        },
+        "portal": {
+            "type": "link",
+            "notStorable": true,
+            "readOnly": true,
+            "disabled": true
+        },
+        "avatar": {
+            "type": "image",
+            "view": "views/user/fields/avatar",
+            "previewSize": "small"
+        },
+        "sendAccessInfo": {
+            "type": "bool",
+            "notStorable": true,
+            "disabled": true
+        },
+        "gender": {
+            "type": "enum",
+            "options": ["", "Male", "Female", "Neutral"],
+            "default": ""
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true,
+            "view": "views/fields/user"
+        },
+        "lastAccess": {
+            "type": "datetime",
+            "notStorable": true,
+            "readOnly": true,
+            "layoutListDisabled": true,
+            "layoutFiltersDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "layoutDetailDisabled": true,
+            "directAccessDisabled": true
+        }
+    },
+    "links": {
+        "defaultTeam": {
+            "type": "belongsTo",
+            "entity": "Team"
+        },
+        "teams": {
+            "type": "hasMany",
+            "entity": "Team",
+            "foreign": "users",
+            "additionalColumns": {
+                "role": {
+                    "type": "varchar",
+                    "len": 100
+                }
+            },
+            "layoutRelationshipsDisabled": true
+        },
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "roles": {
+            "type": "hasMany",
+            "entity": "Role",
+            "foreign": "users",
+            "layoutRelationshipsDisabled": true
+        },
+        "portals": {
+            "type": "hasMany",
+            "entity": "Portal",
+            "foreign": "users",
+            "layoutRelationshipsDisabled": true
+        },
+        "portalRoles": {
+            "type": "hasMany",
+            "entity": "PortalRole",
+            "foreign": "users",
+            "layoutRelationshipsDisabled": true
+        },
+        "preferences": {
+            "type": "hasOne",
+            "entity": "Preferences"
+        },
+        "emails": {
+            "type": "hasMany",
+            "entity": "Email",
+            "foreign": "users"
+        },
+        "notes": {
+            "type": "hasMany",
+            "entity": "Note",
+            "foreign": "users",
+            "layoutRelationshipsDisabled": true
+        }
+    },
+    "collection": {
+        "sortBy": "userName",
+        "asc": true,
+        "textFilterFields": ["name", "userName"]
+    }
+}

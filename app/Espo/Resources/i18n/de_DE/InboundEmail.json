@@ -1,0 +1,75 @@
+{
+  "fields": {
+    "emailAddress": "E-Mail Adresse",
+    "assignToUser": "Mit Benutzer verknüpfen",
+    "username": "Benutzername",
+    "password": "Passwort",
+    "monitoredFolders": "Überwachte Ordner",
+    "trashFolder": "Papierkorb",
+    "createCase": "Fall erstellen",
+    "reply": "Autoantwort",
+    "caseDistribution": "Fall Verteilung",
+    "replyEmailTemplate": "Vorlage E-Mail Antwort",
+    "replyFromAddress": "Rückantwortadresse",
+    "replyToAddress": "Antwort an Adresse",
+    "replyFromName": "Absendername für Rückantwort",
+    "targetUserPosition": "Position Zielbenutzer",
+    "fetchSince": "Holen seit",
+    "addAllTeamUsers": "Für alle Teambenutzer",
+    "team": "Zielteam",
+    "teams": "Zielteams",
+    "sentFolder": "Gesendeter Ordner",
+    "storeSentEmails": "Gesendete E-Mails speichern",
+    "useSmtp": "SMTP verwenden",
+    "smtpHost": "SMTP-Host",
+    "smtpPort": "SMTP-Port",
+    "smtpAuth": "SMTP-Authentifizierung",
+    "smtpSecurity": "SMTP-Sicherheit",
+    "smtpUsername": "SMTP-Benutzername",
+    "smtpPassword": "SMTP-Passwort",
+    "fromName": "Absendername",
+    "smtpIsShared": "SMTP ist freigegeben",
+    "smtpIsForMassEmail": "SMTP ist für Massen-E-Mails",
+    "useImap": "E-Mails abholen"
+  },
+  "tooltips": {
+    "reply": "Benachrichtigt E-Mail Empfänger beim Empfang der Nachrichten.\n\n Nur eine E-Mail pro Empfänger wird zu einer Zeit versendet um eine Endlosschleife zu verhindern.",
+    "createCase": "Fall aus eingehender E-Mail automatisch erstellen.",
+    "replyToAddress": "Geben Sie die E-Mail Adresse dieser Mailbox an um Antworten hier zu empfangen.",
+    "caseDistribution": "Wie Fälle zugewiesen werden. Entweder direkt dem Benutzer oder im Team.",
+    "assignToUser": "Benutzerfälle werden zugewiesen.",
+    "team": "Teamfälle werden zugewiesen.",
+    "teams": "E-Mails des Teams werden zugewiesen.",
+    "addAllTeamUsers": "E-Mails werden im Posteingang aller Benutzer bestimmter Teams angezeigt.",
+    "targetUserPosition": "Bestimmen Sie die Position der Benutzer die Fälle zugewiesen bekommen.",
+    "monitoredFolders": "Mehrere Ordner sollten durch ein Komma getrennt sein.",
+    "smtpIsShared": "Wenn diese Option aktiviert ist, können Benutzer E-Mails über dieses SMTP senden. Die Verfügbarkeit wird von Rollen über die Gruppen-E-Mail-Konto-Berechtigung gesteuert.",
+    "smtpIsForMassEmail": "Wenn diese Option aktiviert ist, steht SMTP für Massen-E-Mail zur Verfügung.",
+    "storeSentEmails": "Gesendete E-Mails werden auf dem IMAP-Server gespeichert."
+  },
+  "links": {
+    "filters": "Filter",
+    "emails": "E-Mails",
+    "assignToUser": "Mit Benutzer verknüpfen"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktiv",
+      "Inactive": "Inaktiv"
+    },
+    "caseDistribution": {
+      "": "Kein(e)",
+      "Direct-Assignment": "Direkte Zuordnung",
+      "Round-Robin": "Umlauf-Verfahren",
+      "Least-Busy": "Geringste Auslastung"
+    }
+  },
+  "labels": {
+    "Create InboundEmail": "E-Mail Konto erstellen",
+    "Actions": "Aktionen",
+    "Main": "Hauptteil"
+  },
+  "messages": {
+    "couldNotConnectToImap": "Kann keine Verbindung zum IMAP Server herstellen"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true,
+      "readOnly": true
+    },
+    "description": {
+      "type": "text",
+      "readOnly": true
+    },
+    "packageId": {
+      "type": "varchar",
+      "readOnly": true
+    },
+    "tags": {
+      "type": "multiEnum",
+      "storeArrayValues": true,
+      "fontSize": 1,
+      "options": []
+    }
+  },
+  "collection": {
+    "sortBy": "name",
+    "asc": false,
+    "textFilterFields": [
+      "name"
+    ],
+    "fullTextSearch": false
+  },
+  "indexes": {
+    "name": {
+      "columns": [
+        "name",
+        "deleted"
+      ]
+    },
+    "assignedUser": {
+      "columns": [
+        "deleted"
+      ]
+    }
+  }
+}

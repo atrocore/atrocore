@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "status": "Status"
+  },
+  "options": {
+    "status": {
+      "available": "Available",
+      "buyable": "Buyable"
+    }
+  },
+  "labels": {
+    "installModule": "Install"
+  }
+}

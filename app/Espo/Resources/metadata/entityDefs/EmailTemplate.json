@@ -1,0 +1,91 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": true,
+            "trim": true
+        },
+        "subject": {
+            "type": "varchar"
+        },
+        "body": {
+            "type": "text",
+            "view": "views/fields/wysiwyg",
+            "useIframe": true
+        },
+        "isHtml": {
+            "type": "bool",
+            "default": true
+        },
+        "oneOff": {
+            "type": "bool",
+            "default": false,
+            "tooltip": true
+        },
+        "attachments": {
+            "type": "attachmentMultiple"
+        },
+        "category": {
+            "type": "link",
+            "view": "views/fields/link-category-tree"
+        },
+        "assignedUser": {
+            "type": "link"
+        },
+        "teams": {
+            "type": "linkMultiple"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true,
+            "view": "views/fields/user"
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true,
+            "view": "views/fields/user"
+        }
+    },
+    "links": {
+        "attachments": {
+            "type": "hasChildren",
+            "entity": "Attachment",
+            "foreign": "parent"
+        },
+        "category": {
+            "type": "belongsTo",
+            "foreign": "emailTemplates",
+            "entity": "EmailTemplateCategory"
+        },
+        "teams": {
+            "type": "hasMany",
+            "entity": "Team",
+            "relationName": "entityTeam"
+        },
+        "assignedUser": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        }
+    },
+    "collection": {
+        "sortBy": "createdAt",
+        "asc": false,
+        "textFilterFields": ["name", "bodyPlain", "body", "subject"]
+    }
+}

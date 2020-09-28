@@ -1,0 +1,456 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": true,
+            "trim": true
+        },
+        "subject": {
+            "type": "varchar",
+            "required": true,
+            "notStorable": true,
+            "view": "views/email/fields/subject",
+            "disabled": true,
+            "trim": true
+        },
+        "fromName": {
+            "type": "varchar"
+        },
+        "fromString": {
+            "type": "varchar"
+        },
+        "replyToString": {
+            "type": "varchar"
+        },
+        "addressNameMap": {
+            "type": "jsonObject",
+            "disabled": true,
+            "readOnly": true
+        },
+        "from": {
+            "type": "varchar",
+            "notStorable": true,
+            "required": true,
+            "view": "views/email/fields/from-address-varchar",
+            "textFilterDisabled": true
+        },
+        "to": {
+            "type": "varchar",
+            "notStorable": true,
+            "required": true,
+            "view": "views/email/fields/email-address-varchar",
+            "textFilterDisabled": true
+        },
+        "cc": {
+            "type": "varchar",
+            "notStorable": true,
+            "view": "views/email/fields/email-address-varchar",
+            "textFilterDisabled": true
+        },
+        "bcc": {
+            "type": "varchar",
+            "notStorable": true,
+            "view": "views/email/fields/email-address-varchar",
+            "textFilterDisabled": true
+        },
+        "replyTo": {
+            "type": "varchar",
+            "notStorable": true,
+            "view": "views/email/fields/email-address-varchar",
+            "textFilterDisabled": true
+        },
+        "personStringData": {
+            "type": "varchar",
+            "notStorable": true,
+            "disabled": true,
+            "view": "views/email/fields/person-string-data"
+        },
+        "isRead": {
+            "type": "bool",
+            "notStorable": true,
+            "default": true,
+            "readOnly": true
+        },
+        "isNotRead": {
+            "type": "bool",
+            "notStorable": true,
+            "layoutListDisabled": true,
+            "layoutDetailDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "readOnly": true
+        },
+        "isReplied": {
+            "type": "bool",
+            "readOnly": true
+        },
+        "isNotReplied": {
+            "type": "bool",
+            "notStorable": true,
+            "layoutListDisabled": true,
+            "layoutDetailDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "readOnly": true
+        },
+        "isImportant": {
+            "type": "bool",
+            "notStorable": true,
+            "default": false
+        },
+        "inTrash": {
+            "type": "bool",
+            "notStorable": true,
+            "default": false
+        },
+        "folderId": {
+            "type": "varchar",
+            "notStorable": true,
+            "default": false,
+            "textFilterDisabled": true
+        },
+        "isUsers": {
+            "type": "bool",
+            "notStorable": true,
+            "default": false
+        },
+        "folder": {
+            "type": "link",
+            "notStorable": true,
+            "readOnly": true
+        },
+        "nameHash": {
+            "type": "text",
+            "notStorable": true,
+            "readOnly": true,
+            "disabled": true
+        },
+        "typeHash": {
+            "type": "text",
+            "notStorable": true,
+            "readOnly": true,
+            "disabled": true
+        },
+        "idHash": {
+            "type": "text",
+            "notStorable": true,
+            "readOnly": true,
+            "disabled": true
+        },
+        "messageId": {
+            "type": "varchar",
+            "maxLength": 255,
+            "readOnly": true,
+            "index": true
+        },
+        "messageIdInternal": {
+            "type": "varchar",
+            "maxLength": 300,
+            "readOnly": true,
+            "textFilterDisabled": true
+        },
+        "emailAddress": {
+            "type": "base",
+            "notStorable": true,
+            "view": "views/email/fields/email-address"
+        },
+        "fromEmailAddress": {
+            "type": "link",
+            "view": "views/email/fields/from-email-address",
+            "textFilterDisabled": true
+        },
+        "toEmailAddresses": {
+            "type": "linkMultiple"
+        },
+        "ccEmailAddresses": {
+            "type": "linkMultiple"
+        },
+        "replyToEmailAddresses": {
+            "type": "linkMultiple"
+        },
+        "bodyPlain": {
+            "type": "text",
+            "seeMoreDisabled": true,
+            "clientReadOnly": true
+        },
+        "body": {
+            "type": "wysiwyg",
+            "view": "views/email/fields/body",
+            "attachmentField": "attachments",
+            "useIframe": true
+        },
+        "isHtml": {
+            "type": "bool",
+            "default": true
+        },
+        "status": {
+            "type": "enum",
+            "options": ["Draft", "Sending", "Sent", "Archived", "Failed"],
+            "default": "Archived",
+            "clientReadOnly": true
+        },
+        "attachments": {
+            "type": "attachmentMultiple",
+            "sourceList": ["Document"]
+        },
+        "hasAttachment": {
+            "type": "bool",
+            "readOnly": true
+        },
+        "parent": {
+            "type": "linkParent"
+        },
+        "dateSent": {
+            "type": "datetime"
+        },
+        "deliveryDate": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true,
+            "view": "views/fields/user"
+        },
+        "sentBy": {
+            "type": "link",
+            "readOnly": true,
+            "noLoad": true
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true,
+            "view": "views/fields/user"
+        },
+        "assignedUser": {
+            "type": "link",
+            "required": false,
+            "view": "views/fields/assigned-user"
+        },
+        "replied": {
+            "type": "link",
+            "noJoin": true,
+            "readOnly": true
+        },
+        "replies": {
+            "type": "linkMultiple",
+            "readOnly": true,
+            "orderBy": "dateSent"
+        },
+        "isSystem": {
+            "type": "bool",
+            "default": false,
+            "readOnly": true
+        },
+        "isJustSent": {
+            "type": "bool",
+            "default": false,
+            "disabled": true,
+            "notStorable": true
+        },
+        "isBeingImported": {
+            "type": "bool",
+            "disabled": true,
+            "notStorable": true
+        },
+        "teams": {
+            "type": "linkMultiple",
+            "view": "views/fields/teams"
+        },
+        "users": {
+            "type": "linkMultiple",
+            "noLoad": true,
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "readOnly": true,
+            "columns": {
+                "inTrash": "inTrash",
+                "folderId": "folderId"
+            }
+        },
+        "assignedUsers": {
+            "type": "linkMultiple",
+            "layoutListDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "readOnly": true
+        },
+        "inboundEmails": {
+            "type": "linkMultiple",
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "noLoad": true
+        },
+        "emailAccounts": {
+            "type": "linkMultiple",
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "noLoad": true
+        }
+    },
+    "links": {
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "assignedUser": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "teams": {
+            "type": "hasMany",
+            "entity": "Team",
+            "relationName": "entityTeam"
+        },
+        "assignedUsers": {
+            "type": "hasMany",
+            "entity": "User",
+            "relationName": "entityUser"
+        },
+        "users": {
+            "type": "hasMany",
+            "entity": "User",
+            "foreign": "emails",
+            "additionalColumns": {
+                "isRead": {
+                    "type": "bool",
+                    "default": false
+                },
+                "isImportant": {
+                    "type": "bool",
+                    "default": false
+                },
+                "inTrash": {
+                    "type": "bool",
+                    "default": false
+                },
+                "folderId": {
+                    "type": "varchar",
+                    "default": null,
+                    "maxLength": 24
+                }
+            }
+        },
+        "sentBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "attachments": {
+            "type": "hasChildren",
+            "entity": "Attachment",
+            "foreign": "parent",
+            "relationName": "attachments"
+        },
+        "parent": {
+            "type": "belongsToParent",
+            "entityList": [],
+            "foreign": "emails"
+        },
+        "replied": {
+            "type": "belongsTo",
+            "entity": "Email",
+            "foreign": "replies"
+        },
+        "replies": {
+            "type": "hasMany",
+            "entity": "Email",
+            "foreign": "replied"
+        },
+        "fromEmailAddress": {
+            "type": "belongsTo",
+            "entity": "EmailAddress"
+        },
+        "toEmailAddresses": {
+            "type": "hasMany",
+            "entity": "EmailAddress",
+            "relationName": "emailEmailAddress",
+            "conditions": {
+                "addressType": "to"
+            },
+            "additionalColumns": {
+                "addressType": {
+                    "type": "varchar",
+                    "len": "4"
+                }
+            }
+        },
+        "ccEmailAddresses": {
+            "type": "hasMany",
+            "entity": "EmailAddress",
+            "relationName": "emailEmailAddress",
+            "conditions": {
+                "addressType": "cc"
+            },
+            "additionalColumns": {
+                "addressType": {
+                    "type": "varchar",
+                    "len": "4"
+                }
+            }
+        },
+        "bccEmailAddresses": {
+            "type": "hasMany",
+            "entity": "EmailAddress",
+            "relationName": "emailEmailAddress",
+            "conditions": {
+                "addressType": "bcc"
+            },
+            "additionalColumns": {
+                "addressType": {
+                    "type": "varchar",
+                    "len": "4"
+                }
+            }
+        },
+        "replyToEmailAddresses": {
+            "type": "hasMany",
+            "entity": "EmailAddress",
+            "relationName": "emailEmailAddress",
+            "conditions": {
+                "addressType": "rto"
+            },
+            "additionalColumns": {
+                "addressType": {
+                    "type": "varchar",
+                    "len": "4"
+                }
+            }
+        },
+        "inboundEmails": {
+            "type": "hasMany",
+            "entity": "InboundEmail",
+            "foreign": "emails"
+        },
+        "emailAccounts": {
+            "type": "hasMany",
+            "entity": "EmailAccount",
+            "foreign": "emails"
+        }
+    },
+    "collection": {
+        "sortBy": "dateSent",
+        "asc": false,
+        "textFilterFields": ["name", "bodyPlain", "body"],
+        "fullTextSearch": true
+    },
+    "indexes": {
+        "dateSent": {
+            "columns": ["dateSent", "deleted"]
+        },
+        "dateSentStatus": {
+            "columns": ["dateSent", "status", "deleted"]
+        }
+    }
+}

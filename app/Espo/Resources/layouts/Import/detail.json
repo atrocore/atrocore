@@ -1,0 +1,15 @@
+[
+    {
+        "rows": [
+            [
+                {"name": "entityType"}
+            ],
+            [
+                {"name": "file"}
+            ],
+            [
+                {"name": "status"}
+            ]
+        ]
+    }
+]

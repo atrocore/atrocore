@@ -1,0 +1,100 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "readOnly": true,
+      "trim": true,
+      "view": "treo-core:views/queue-manager/fields/name"
+    },
+    "serviceName": {
+      "type": "varchar",
+      "required": true,
+      "readOnly": true
+    },
+    "stream": {
+      "type": "int",
+      "required": true,
+      "default": 0
+    },
+    "data": {
+      "type": "jsonObject",
+      "readOnly": true
+    },
+    "sortOrder": {
+      "type": "int",
+      "required": true,
+      "readOnly": true,
+      "default": 0
+    },
+    "status": {
+      "type": "enum",
+      "readOnly": true,
+      "default": "Pending",
+      "options": [
+        "Pending",
+        "Running",
+        "Success",
+        "Failed",
+        "Canceled",
+        "Closed"
+      ],
+      "optionColors": {
+        "Pending": "00AFFF",
+        "Running": "FFE208",
+        "Success": "1DFF08",
+        "Failed": "FF0000",
+        "Canceled": "4F4F4F",
+        "Closed": "6E6E6E"
+      }
+    },
+    "actions": {
+      "type": "jsonObject",
+      "notStorable": true,
+      "layoutDetailDisabled": true,
+      "layoutFiltersDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "layoutListDisabled": true
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    }
+  },
+  "links": {
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    }
+  },
+  "collection": {
+    "sortBy": "sortOrder",
+    "asc": true
+  },
+  "indexes": {
+    "name": {
+      "columns": [
+        "name",
+        "deleted"
+      ]
+    }
+  }
+}

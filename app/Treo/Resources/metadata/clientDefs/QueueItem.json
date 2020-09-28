@@ -1,0 +1,30 @@
+{
+  "createDisabled": true,
+  "iconClass": "fas fa-tasks",
+  "controller": "controllers/record",
+  "boolFilterList": [
+    "onlyMy"
+  ],
+  "views": {
+    "detail": "treo-core:views/queue-manager/detail"
+  },
+  "recordViews": {
+    "detail": "treo-core:views/queue-manager/record/detail"
+  },
+  "queueActions": {
+    "cancel": {
+      "view": "treo-core:views/queue-manager/actions/cancel",
+      "acl": "edit"
+    },
+    "close": {
+      "view": "treo-core:views/queue-manager/actions/close",
+      "acl": "edit"
+    },
+    "show-message": {
+      "view": "treo-core:views/queue-manager/actions/show-message"
+    },
+    "download": {
+      "view": "treo-core:views/queue-manager/actions/download"
+    }
+  }
+}

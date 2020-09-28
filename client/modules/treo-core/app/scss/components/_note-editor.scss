@@ -1,0 +1,36 @@
+/*!
+ *  zaq1
+ */
+
+.note-editor {
+  .panel-heading {
+    & > .btn-group {
+      position: relative;
+
+      .btn {
+        background-color: #f7f7f7;
+        border-color: #ccc;
+        border-radius: 0;
+
+        &.btn-default {
+          width: auto;
+          height: auto;
+          padding: 4px 8px;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .detail {
+    .panel-default {
+      .note-editor {
+        .panel-heading {
+          margin: 0;
+          box-shadow: none;
+        }
+      }
+    }
+  }
+}

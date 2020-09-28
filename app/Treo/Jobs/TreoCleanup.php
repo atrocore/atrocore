@@ -1,0 +1,169 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Treo\Jobs;
+
+use Espo\Core\Jobs\Base;
+use Treo\Core\Container;
+use Treo\Core\EventManager\Event;
+
+/**
+ * Class TreoCleanup
+ *
+ * @author r.ratsun <r.ratsun@treolabs.com>
+ */
+class TreoCleanup extends Base
+{
+    /**
+     * @var string
+     */
+    private $date;
+
+    /**
+     * @var string
+     */
+    private $db;
+
+    /**
+     * @inheritDoc
+     */
+    public function __construct(Container $container)
+    {
+        parent::__construct($container);
+
+        $this->date = (new \DateTime())->modify("-3 month")->format('Y-m-d');
+        $this->db = $this->getConfig()->get('database')['dbname'];
+    }
+
+    /**
+     * Run cron job
+     *
+     * @return bool
+     */
+    public function run(): bool
+    {
+        $this->cleanupJobs();
+        $this->cleanupScheduledJobLog();
+        $this->cleanupUniqueIds();
+        $this->cleanupAuthLog();
+        $this->cleanupActionHistory();
+        $this->cleanupNotifications();
+        $this->cleanupDeleted();
+        $this->cleanupAttachments();
+        $this->cleanupDbSchema();
+
+        // dispatch an event
+        $this->getContainer()->get('eventManager')->dispatch('TreoCleanupJob', 'run', new Event());
+
+        return true;
+    }
+
+    /**
+     * Cleanup jobs
+     */
+    protected function cleanupJobs(): void
+    {
+        $this->exec("DELETE FROM job WHERE DATE(execute_time)<'{$this->date}' AND status IN ('Success','Failed')");
+    }
+
+    /**
+     * Cleanup scheduled job logs
+     */
+    protected function cleanupScheduledJobLog(): void
+    {
+        $this->exec("DELETE FROM scheduled_job_log_record WHERE DATE(execution_time)<'{$this->date}'");
+    }
+
+    /**
+     * Cleanup deleted
+     */
+    protected function cleanupDeleted(): void
+    {
+        $tables = $this->getEntityManager()->nativeQuery('show tables')->fetchAll(\PDO::FETCH_COLUMN);
+        foreach ($tables as $table) {
+            if ($table == 'attachment') {
+                continue 1;
+            }
+            $columns = $this->getEntityManager()->nativeQuery("SHOW COLUMNS FROM {$this->db}.$table")->fetchAll(\PDO::FETCH_COLUMN);
+            if (!in_array('deleted', $columns)) {
+                continue 1;
+            }
+            if (!in_array('modified_at', $columns)) {
+                $this->exec("DELETE FROM {$this->db}.$table WHERE deleted=1");
+            } else {
+                $this->exec("DELETE FROM {$this->db}.$table WHERE deleted=1 AND DATE(modified_at)<'{$this->date}'");
+            }
+        }
+    }
+
+    /**
+     * Cleanup unique ids
+     */
+    protected function cleanupUniqueIds(): void
+    {
+        $date = date('Y-m-d H:i:s');
+        $this->exec("DELETE FROM `unique_id` WHERE terminate_at IS NOT NULL AND terminate_at<'$date'");
+    }
+
+    /**
+     * Cleanup auth log
+     */
+    protected function cleanupAuthLog(): void
+    {
+        $this->exec("DELETE FROM `auth_log_record` WHERE DATE(created_at)<'{$this->date}'");
+    }
+
+    /**
+     * Cleanup action history
+     */
+    protected function cleanupActionHistory(): void
+    {
+        $this->exec("DELETE FROM `action_history_record` WHERE DATE(created_at)<'{$this->date}'");
+    }
+
+    /**
+     * Cleanup notifications
+     */
+    protected function cleanupNotifications(): void
+    {
+        $this->exec("DELETE FROM `notification` WHERE DATE(created_at)<'{$this->date}'");
+    }
+
+    /**
+     * Cleanup attachments
+     *
+     * @todo will be developed soon
+     */
+    protected function cleanupAttachments(): void
+    {
+    }
+
+    /**
+     * Cleanup DB schema
+     */
+    protected function cleanupDbSchema(): void
+    {
+        try {
+            $queries = $this->getContainer()->get('schema')->getDiffQueries();
+        } catch (\Throwable $e) {
+            $queries = [];
+        }
+
+        foreach ($queries as $query) {
+            $this->exec($query);
+        }
+    }
+
+    /**
+     * @param string $sql
+     */
+    protected function exec(string $sql): void
+    {
+        try {
+            $this->getEntityManager()->nativeQuery($sql);
+        } catch (\PDOException $e) {
+            $GLOBALS['log']->error('TreoCleanup: ' . $e->getMessage() . ' | ' . $sql);
+        }
+    }
+}

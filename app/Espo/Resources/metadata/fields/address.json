@@ -1,0 +1,47 @@
+{
+   "actualFields":[
+      "street",
+      "city",
+      "state",
+      "country",
+      "postalCode"
+   ],
+   "fields":{
+      "street":{
+          "type": "text",
+          "maxLength": 255,
+          "dbType": "varchar"
+      },
+      "city":{
+         "type":"varchar",
+         "trim": true
+      },
+      "state":{
+         "type":"varchar",
+         "trim": true
+      },
+      "country":{
+         "type":"varchar",
+         "trim": true
+      },
+      "postalCode":{
+         "type":"varchar",
+         "trim": true
+      },
+      "map": {
+         "type": "map",
+         "notStorable": true,
+         "readOnly": true,
+         "layoutListDisabled": true,
+         "provider": "Google",
+         "height": 300,
+         "exportDisabled": true,
+         "importDisabled": true
+      }
+   },
+   "notMergeable":true,
+   "notCreatable": false,
+   "filter": true,
+   "skipOrmDefs": true,
+   "personalData": true
+}

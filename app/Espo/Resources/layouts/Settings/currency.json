@@ -1,0 +1,15 @@
+[
+    {
+        "label": "Currency Settings",
+        "rows": [
+            [{"name": "defaultCurrency"}, {"name": "currencyFormat"}],
+            [{"name": "currencyList"}, {"name": "currencyDecimalPlaces"}]
+        ]
+    },
+    {
+        "label": "Currency Rates",
+        "rows": [
+            [{"name": "baseCurrency"}, {"name": "currencyRates"}]
+        ]
+    }
+]

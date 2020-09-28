@@ -1,0 +1,108 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true,
+      "view": "views/attachment/fields/name"
+    },
+    "type": {
+      "type": "varchar",
+      "maxLength": 100
+    },
+    "size": {
+      "type": "int",
+      "min": 0
+    },
+    "parent": {
+      "type": "linkParent",
+      "view": "views/attachment/fields/parent"
+    },
+    "related": {
+      "type": "linkParent",
+      "noLoad": true,
+      "view": "views/attachment/fields/parent"
+    },
+    "sourceId": {
+      "type": "varchar",
+      "maxLength": 36,
+      "readOnly": true,
+      "disabled": true,
+      "index": true
+    },
+    "field": {
+      "type": "varchar",
+      "disabled": true
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true
+    },
+    "contents": {
+      "type": "text",
+      "notStorable": true
+    },
+    "role": {
+      "type": "enum",
+      "maxLength": 36,
+      "options": [
+        "Attachment",
+        "Inline Attachment",
+        "Import File",
+        "Export File",
+        "Mail Merge",
+        "Mass Pdf"
+      ]
+    },
+    "storage": {
+      "type": "varchar",
+      "maxLength": 24,
+      "default": null
+    },
+    "storageFilePath": {
+      "type": "varchar",
+      "maxLength": 260,
+      "default": null
+    },
+    "global": {
+      "type": "bool",
+      "default": false
+    },
+    "tmpPath": {
+      "type": "varchar",
+      "default": null
+    }
+  },
+  "links": {
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "parent": {
+      "type": "belongsToParent",
+      "foreign": "attachments"
+    },
+    "related": {
+      "type": "belongsToParent"
+    }
+  },
+  "collection": {
+    "sortBy": "createdAt",
+    "asc": false
+  },
+  "indexes": {
+    "parent": {
+      "columns": [
+        "parentType",
+        "parentId"
+      ]
+    }
+  },
+  "sourceList": [
+    "Document"
+  ]
+}

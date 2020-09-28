@@ -1,0 +1,33 @@
+{
+   "params":[
+      {
+         "name":"required",
+         "type":"bool",
+         "default":false
+      },
+      {
+         "name":"default",
+         "type":"float"
+      },
+      {
+         "name":"min",
+         "type":"float"
+      },
+      {
+         "name":"max",
+         "type":"float"
+      },
+      {
+         "name":"audited",
+         "type":"bool"
+      },
+      {
+         "name":"readOnly",
+         "type":"bool"
+      }
+   ],
+   "filter": true,
+   "fieldDefs":{
+      "notNull":false
+   }
+}

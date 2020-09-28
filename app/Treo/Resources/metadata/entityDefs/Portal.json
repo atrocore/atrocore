@@ -1,0 +1,7 @@
+{
+  "fields": {
+    "url": {
+      "readOnly": false
+    }
+  }
+}

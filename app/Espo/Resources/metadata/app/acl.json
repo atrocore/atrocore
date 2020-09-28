@@ -1,0 +1,158 @@
+{
+    "mandatory": {
+        "scopeLevel": {
+            "Note": {
+                "read": "own",
+                "edit": "own",
+                "delete": "own",
+                "create": "yes"
+            },
+            "Portal": {
+                "read": "all",
+                "edit": "no",
+                "delete": "no",
+                "create": "no"
+            },
+            "Attachment": {
+                "read": "own",
+                "edit": "own",
+                "delete": "own",
+                "create": "yes"
+            },
+            "EmailAccount": {
+                "read": "own",
+                "edit": "own",
+                "delete": "own",
+                "create": "yes"
+            },
+            "EmailFilter": {
+                "read": "own",
+                "edit": "own",
+                "delete": "own",
+                "create": "yes"
+            },
+            "EmailFolder": {
+                "read": "own",
+                "edit": "own",
+                "delete": "own",
+                "create": "yes"
+            },
+            "Preferences": {
+                "read": "own",
+                "edit": "own",
+                "delete": "no",
+                "create": "no"
+            },
+            "Notification": {
+                "read": "own",
+                "edit": "no",
+                "delete": "own",
+                "create": "no"
+            },
+            "ActionHistoryRecord": {
+                "read": "no",
+                "edit": "no",
+                "delete": "no",
+                "create": "no"
+            },
+            "Role": false,
+            "PortalRole": false
+        },
+        "fieldLevel": {
+        },
+        "scopeFieldLevel": {
+            "Attachment": {
+                "parent": false
+            },
+            "EmailFolder": {
+                "assignedUser": false
+            },
+            "Email": {
+                "inboundEmails": false,
+                "emailAccounts": false
+            },
+            "User": {
+                "password": false,
+                "passwordConfirm": false
+            }
+        }
+    },
+    "default": {
+        "scopeLevel": {
+            "User": {
+                "read": "all",
+                "edit": "no"
+            },
+            "Import": false
+        },
+        "fieldLevel": {
+        },
+        "scopeFieldLevel": {
+            "User": {
+                "gender": false
+            }
+        }
+    },
+    "strictDefault": {
+        "scopeLevel": {
+            "User": {
+                "read": "own",
+                "edit": "no"
+            },
+            "Import": false
+        },
+        "fieldLevel": {
+        },
+        "scopeFieldLevel": {
+            "User": {
+                "gender": false
+            }
+        }
+    },
+    "valuePermissionList": [
+        "assignmentPermission",
+        "userPermission",
+        "portalPermission",
+        "groupEmailAccountPermission",
+        "exportPermission",
+        "dataPrivacyPermission"
+    ],
+    "valuePermissionHighestLevels": {
+        "assignmentPermission": "all",
+        "userPermission": "all",
+        "portalPermission": "yes",
+        "groupEmailAccountPermission": "all",
+        "exportPermission": "yes",
+        "dataPrivacyPermission": "yes"
+    },
+    "permissionsDefaults": {
+        "assignmentPermission": "all",
+        "userPermission": "all",
+        "portalPermission": "no",
+        "groupEmailAccountPermission": "no",
+        "exportPermission": "yes",
+        "dataPrivacyPermission": "no"
+    },
+    "permissionsStrictDefaults": {
+        "assignmentPermission": "no",
+        "userPermission": "no",
+        "portalPermission": "no",
+        "groupEmailAccountPermission": "no",
+        "exportPermission": "no",
+        "dataPrivacyPermission": "no"
+    },
+    "scopeLevelTypesDefaults": {
+        "boolean": true,
+        "record": {
+            "read": "all",
+            "stream": "all",
+            "edit": "all",
+            "delete": "no",
+            "create": "yes"
+        }
+    },
+    "scopeLevelTypesStrictDefaults": {
+        "boolean": false,
+        "record": false
+    }
+}

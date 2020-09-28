@@ -1,0 +1,16 @@
+{
+  "fields": {
+    "treoId": "ID",
+    "isStreamSide": "Is stream in side",
+    "isStreamPanelFirst": "Is stream panel first",
+    "unitsOfMeasure": "Units Of Measure"
+  },
+  "tooltips": {
+    "isStreamSide": "If enabled: Stream panel will be shown in side.",
+    "isStreamPanelFirst": "If enabled: Stream panel will be shown right after overview."
+  },
+  "labels": {
+    "Representation": "Representation",
+    "System Notifications": "System Notifications"
+  }
+}

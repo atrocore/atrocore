@@ -1,0 +1,225 @@
+{
+    "itemTypes": {
+        "and": {
+            "view": "views/admin/dynamic-logic/conditions-string/group-base",
+            "operator": "and"
+        },
+        "or": {
+            "view": "views/admin/dynamic-logic/conditions-string/group-base",
+            "operator": "or"
+        },
+        "not": {
+            "view": "views/admin/dynamic-logic/conditions-string/group-not",
+            "operator": "not"
+        },
+        "equals": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-base",
+            "operatorString": "="
+        },
+        "notEquals": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-base",
+            "operatorString": "&ne;"
+        },
+        "greaterThan": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-base",
+            "operatorString": "&gt;"
+        },
+        "lessThan": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-base",
+            "operatorString": "&lt;"
+        },
+        "greaterThanOrEquals": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-base",
+            "operatorString": "&ge;"
+        },
+        "lessThanOrEquals": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-base",
+            "operatorString": "&le;"
+        },
+        "isEmpty": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-operator-only-base",
+            "operatorString": "= &empty;"
+        },
+        "isNotEmpty": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-operator-only-base",
+            "operatorString": "&ne; &empty;"
+        },
+        "isTrue": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-operator-only-base",
+            "operatorString": "= 1"
+        },
+        "isFalse": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-operator-only-base",
+            "operatorString": "= 0"
+        },
+        "in": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-multiple-values-base",
+            "operatorString": "&isin;"
+        },
+        "notIn": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-multiple-values-base",
+            "operatorString": "&notin;"
+        },
+        "isToday": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-is-today",
+            "operatorString": "="
+        },
+        "inFuture": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-in-future",
+            "operatorString": "&isin;"
+        },
+        "inPast": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-in-past",
+            "operatorString": "&isin;"
+        },
+        "contains": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-value-link",
+            "operatorString": "&niv;"
+        },
+        "notContains": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-value-link",
+            "operatorString": "&notni;"
+        },
+        "has": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-value-enum",
+            "operatorString": "&niv;"
+        },
+        "notHas": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-value-enum",
+            "operatorString": "&notni;"
+        }
+    },
+    "fieldTypes": {
+        "bool": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/base",
+            "typeList": ["isTrue", "isFalse"]
+        },
+        "varchar": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/base",
+            "typeList": ["equals", "notEquals", "isEmpty", "isNotEmpty"]
+        },
+        "email": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/base",
+            "typeList": ["isEmpty", "isNotEmpty"]
+        },
+        "phone": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/base",
+            "typeList": ["isEmpty", "isNotEmpty"]
+        },
+        "text": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/base",
+            "typeList": ["isEmpty", "isNotEmpty"]
+        },
+        "int": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/base",
+            "typeList": ["isEmpty", "isNotEmpty", "equals", "notEquals", "greaterThan", "lessThan", "greaterThanOrEquals", "lessThanOrEquals"]
+        },
+        "float": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/base",
+            "typeList": ["isEmpty", "isNotEmpty", "equals", "notEquals", "greaterThan", "lessThan", "greaterThanOrEquals", "lessThanOrEquals"]
+        },
+        "date": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/date",
+            "typeList": ["isEmpty", "isNotEmpty", "isToday", "inFuture", "inPast", "equals", "notEquals"]
+        },
+        "datetime": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/date",
+            "typeList": ["isEmpty", "isNotEmpty", "isToday", "inFuture", "inPast"]
+        },
+        "datetimeOptional": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/date",
+            "typeList": ["isEmpty", "isNotEmpty", "isToday", "inFuture", "inPast"]
+        },
+        "enum": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/enum",
+            "typeList": ["equals", "notEquals", "isEmpty", "isNotEmpty", "in", "notIn"]
+        },
+        "link": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/link",
+            "typeList": ["isEmpty", "isNotEmpty", "equals", "notEquals"]
+        },
+        "linkParent": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/link-parent",
+            "typeList": ["isEmpty", "isNotEmpty", "equals", "notEquals"]
+        },
+        "linkMultiple": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/link-multiple",
+            "typeList": ["isEmpty", "isNotEmpty", "contains", "notContains"]
+        },
+        "foreign": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/base",
+            "typeList": ["equals", "notEquals", "isEmpty", "isNotEmpty"]
+        },
+        "id": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/enum",
+            "typeList": ["isEmpty", "isNotEmpty"]
+        },
+        "multiEnum": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/multi-enum",
+            "typeList": ["isEmpty", "isNotEmpty", "has", "notHas"]
+        },
+        "array": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/multi-enum",
+            "typeList": ["isEmpty", "isNotEmpty", "has", "notHas"]
+        }
+    },
+    "conditionTypes": {
+        "isTrue": {
+            "valueType": "empty"
+        },
+        "isFalse": {
+            "valueType": "empty"
+        },
+        "isEmpty": {
+            "valueType": "empty"
+        },
+        "isNotEmpty": {
+            "valueType": "empty"
+        },
+        "equals": {
+            "valueType": "field"
+        },
+        "notEquals": {
+            "valueType": "field"
+        },
+        "greaterThan": {
+            "valueType": "field"
+        },
+        "lessThan": {
+            "valueType": "field"
+        },
+        "greaterThanOrEquals": {
+            "valueType": "field"
+        },
+        "lessThanOrEquals": {
+            "valueType": "field"
+        },
+        "in": {
+            "valueType": "field"
+        },
+        "notIn": {
+            "valueType": "field"
+        },
+        "contains": {
+            "valueType": "custom"
+        },
+        "notContains": {
+            "valueType": "custom"
+        },
+        "inPast": {
+            "valueType": "empty"
+        },
+        "isFuture": {
+            "valueType": "empty"
+        },
+        "isToday": {
+            "valueType": "empty"
+        },
+        "has": {
+            "valueType": "field"
+        },
+        "notHas": {
+            "valueType": "field"
+        }
+    }
+}

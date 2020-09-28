@@ -1,0 +1,13 @@
+{
+  "collection": "collections/note",
+  "recordViews":{
+    "edit":"views/note/record/edit",
+    "editQuick":"views/note/record/edit"
+  },
+  "modalViews": {
+    "edit": "views/note/modals/edit"
+  },
+  "itemViews": {
+    "Post": "views/stream/notes/post"
+  }
+}

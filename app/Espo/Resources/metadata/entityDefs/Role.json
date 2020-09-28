@@ -1,0 +1,74 @@
+{
+    "fields": {
+        "name": {
+            "maxLength": 150,
+            "required": true,
+            "type": "varchar",
+            "trim": true
+        },
+        "assignmentPermission": {
+            "type": "enum",
+            "options": ["not-set", "all", "team", "no"],
+            "default": "not-set",
+            "tooltip": true,
+            "translation": "Role.options.levelList"
+        },
+        "userPermission": {
+            "type": "enum",
+            "options": ["not-set", "all", "team", "no"],
+            "default": "not-set",
+            "tooltip": true,
+            "translation": "Role.options.levelList"
+        },
+        "portalPermission": {
+            "type": "enum",
+            "options": ["not-set", "yes", "no"],
+            "default": "not-set",
+            "tooltip": true,
+            "translation": "Role.options.levelList"
+        },
+        "groupEmailAccountPermission": {
+            "type": "enum",
+            "options": ["not-set", "all", "team", "no"],
+            "default": "not-set",
+            "tooltip": true,
+            "translation": "Role.options.levelList"
+        },
+        "exportPermission": {
+            "type": "enum",
+            "options": ["not-set", "yes", "no"],
+            "default": "not-set",
+            "tooltip": true,
+            "translation": "Role.options.levelList"
+        },
+        "dataPrivacyPermission": {
+            "type": "enum",
+            "options": ["not-set", "yes", "no"],
+            "default": "not-set",
+            "tooltip": true,
+            "translation": "Role.options.levelList"
+        },
+        "data": {
+            "type": "jsonObject"
+        },
+        "fieldData": {
+            "type": "jsonObject"
+        }
+    },
+    "links": {
+        "users": {
+            "type": "hasMany",
+            "entity": "User",
+            "foreign": "roles"
+        },
+        "teams": {
+            "type": "hasMany",
+            "entity": "Team",
+            "foreign": "roles"
+        }
+    },
+    "collection": {
+        "sortBy": "name",
+        "asc": true
+    }
+}

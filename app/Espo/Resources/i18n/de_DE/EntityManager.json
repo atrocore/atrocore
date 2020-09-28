@@ -1,0 +1,70 @@
+{
+  "labels": {
+    "Fields": "Felder",
+    "Relationships": "Beziehungen",
+    "Schedule": "Geplant",
+    "Formula": "Formel"
+  },
+  "fields": {
+    "type": "Typ",
+    "labelSingular": "Bezeichnung Einzahl",
+    "labelPlural": "Bezeichnung Mehrzahl",
+    "stream": "Aktivitäten",
+    "label": "Bezeichnung",
+    "linkType": "Relationstyp",
+    "entityForeign": "Fremdentität",
+    "linkForeign": "Fremdrelation",
+    "labelForeign": "Fremdbezeichnung",
+    "sortBy": "Standardmäßig sortieren nach",
+    "sortDirection": "Standardmäßig sortieren in Reihenfolge",
+    "relationName": "Mittlerer Tabellenname",
+    "linkMultipleField": "Mehrere Felder verlinken",
+    "linkMultipleFieldForeign": "Fremdlink mehrere Felder",
+    "disabled": "Inaktiv",
+    "textFilterFields": "Textfilter Felder",
+    "audited": "überprüft",
+    "auditedForeign": "fremd geprüft",
+    "statusField": "Status Feld",
+    "beforeSaveCustomScript": "vor dem Speicher benutzerdefiniertes Script",
+    "color": "Farbe",
+    "kanbanViewMode": "Kanban-Ansicht",
+    "kanbanStatusIgnoreList": "Ignorierte Gruppen in der Kanban-Ansicht",
+    "fullTextSearch": "Volltextsuche"
+  },
+  "options": {
+    "type": {
+      "": "Kein(e)",
+      "Base": "Basis",
+      "CategoryTree": "Kategoriebaum",
+      "Event": "Ereignis",
+      "BasePlus": "Basis Plus",
+      "Company": "Firma"
+    },
+    "linkType": {
+      "manyToMany": "n:n",
+      "oneToMany": "1:n",
+      "manyToOne": "n:1",
+      "parentToChildren": "Eltern zu Kind",
+      "childrenToParent": "Kind zu Eltern"
+    },
+    "sortDirection": {
+      "asc": "Aufsteigend",
+      "desc": "Absteigend"
+    }
+  },
+  "messages": {
+    "entityCreated": "Entität wurde erstellt",
+    "linkAlreadyExists": "Relationsnamenkonflikt",
+    "linkConflict": "Eine Relation mit diesem Namen existiert bereits"
+  },
+  "tooltips": {
+    "statusField": "Updates dieses Feldes werden im Stream protokolliert.",
+    "textFilterFields": "Von der Textsuche verwendete Felder.",
+    "stream": "Ob die Entity einen Stream hat.",
+    "disabled": "Überprüfen Sie, ob Sie diese Entität nicht in Ihrem System benötigen.",
+    "linkAudited": "Das Erstellen eines verknüpften Datensatzes und das Verknüpfen mit dem vorhandenen Datensatz wird in Stream protokolliert.",
+    "linkMultipleField": "verlinken mehrere Felder bietet eine praktische Möglichkeit Beziehungen zu bearbeiten. Nicht benutzen wenn Sie eine große Anzahl von Verknüpfungen haben.",
+    "entityType": "Base Plus - enthält Aktivitäten, Verlaufs- und Aufgabenfelder. \n\nEvent - verfügbar im Fenster \"Kalender und Aktivitäten\".",
+    "fullTextSearch": "Ausführung der Wiederherstellung ist erforderlich."
+  }
+}

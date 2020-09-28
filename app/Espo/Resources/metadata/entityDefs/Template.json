@@ -1,0 +1,139 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": true,
+            "trim": true
+        },
+        "body": {
+            "type": "text",
+            "view": "views/fields/wysiwyg"
+        },
+        "header": {
+            "type": "text",
+            "view": "views/fields/wysiwyg"
+        },
+        "footer": {
+            "type": "text",
+            "view": "views/fields/wysiwyg",
+            "tooltip": true
+        },
+        "entityType": {
+            "type": "enum",
+            "required": true,
+            "translation": "Global.scopeNames",
+            "view": "views/fields/entity-type"
+        },
+        "leftMargin": {
+            "type": "float",
+            "default": 10
+        },
+        "rightMargin": {
+            "type": "float",
+            "default": 10
+        },
+        "topMargin": {
+            "type": "float",
+            "default": 10
+        },
+        "bottomMargin": {
+            "type": "float",
+            "default": 25
+        },
+        "printFooter": {
+            "type": "bool"
+        },
+        "footerPosition": {
+            "type": "float",
+            "default": 15
+        },
+        "teams": {
+            "type": "linkMultiple"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "variables": {
+            "type": "base",
+            "notStorable": true,
+            "tooltip": true
+        },
+        "pageOrientation": {
+            "type": "enum",
+            "options": ["Portrait", "Landscape"],
+            "default": "Portrait"
+        },
+        "pageFormat": {
+            "type": "enum",
+            "options": ["A3", "A4", "A5", "A6", "A7"],
+            "default": "A4"
+        },
+        "fontFace": {
+            "type": "enum",
+            "options": [
+                "",
+                "aealarabiya",
+                "aefurat",
+                "cid0cs",
+                "cid0ct",
+                "cid0jp",
+                "cid0kr",
+                "courier",
+                "dejavusans",
+                "dejavusanscondensed",
+                "dejavusansextralight",
+                "dejavusansmono",
+                "dejavuserif",
+                "dejavuserifcondensed",
+                "freemono",
+                "freesans",
+                "freeserif",
+                "helvetica",
+                "hysmyeongjostdmedium",
+                "kozgopromedium",
+                "kozminproregular",
+                "msungstdlight",
+                "pdfacourier",
+                "pdfahelvetica",
+                "pdfasymbol",
+                "pdfatimes",
+                "stsongstdlight",
+                "symbol",
+                "times"
+            ],
+            "default": ""
+        }
+    },
+    "links": {
+        "teams": {
+            "type": "hasMany",
+            "entity": "Team",
+            "relationName": "entityTeam"
+        },
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        }
+    },
+    "collection": {
+        "sortBy": "name",
+        "asc": true
+    }
+}

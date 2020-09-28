@@ -1,0 +1,25 @@
+[
+    {
+        "label": "In-app Notifications",
+        "rows": [
+            [{"name": "assignmentNotificationsEntityList"}, false],
+            [{"name": "notificationSoundsDisabled"}, false]
+        ]
+    },
+    {
+        "label": "Email Notifications",
+        "rows": [
+            [{"name": "assignmentEmailNotifications"}, {"name": "mentionEmailNotifications"}],
+            [{"name": "assignmentEmailNotificationsEntityList"}, false],
+            [{"name": "streamEmailNotifications"}, {"name": "portalStreamEmailNotifications"}],
+            [{"name": "streamEmailNotificationsEntityList"}, {"name": "streamEmailNotificationsTypeList"}]
+        ]
+    },
+    {
+        "label": "Admin Notifications",
+        "rows": [
+            [{"name": "adminNotifications"}, false],
+            [{"name": "adminNotificationsNewVersion"}, {"name": "adminNotificationsNewExtensionVersion"}]
+        ]
+    }
+]

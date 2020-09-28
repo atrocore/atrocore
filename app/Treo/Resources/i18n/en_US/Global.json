@@ -1,0 +1,218 @@
+{
+  "scopeNames": {
+    "QueueItem": "Queue Item",
+    "TreoStore": "Store"
+  },
+  "scopeNamesPlural": {
+    "QueueItem": "Queue Manager",
+    "TreoStore": "Store"
+  },
+  "options": {
+    "language": {
+      "af_ZA": "Afrikaans (af_ZA)",
+      "az_AZ": "Azerbaijani (az_AZ)",
+      "be_BY": "Belarusian (be_BY)",
+      "bg_BG": "Bulgarian (bg_BG)",
+      "bn_IN": "Bengali (bn_IN)",
+      "bs_BA": "Bosnian (bs_BA)",
+      "ca_ES": "Catalan (ca_ES)",
+      "cs_CZ": "Czech (cs_CZ)",
+      "cy_GB": "Welsh (cy_GB)",
+      "da_DK": "Danish (da_DK)",
+      "de_DE": "German (de_DE)",
+      "el_GR": "Greek (el_GR)",
+      "en_GB": "English (en_GB)",
+      "es_MX": "Spanish (es_MX)",
+      "en_US": "English (en_US)",
+      "es_ES": "Spanish (es_ES)",
+      "et_EE": "Estonian (et_EE)",
+      "eu_ES": "Basque (eu_ES)",
+      "fa_IR": "Persian (fa_IR)",
+      "fi_FI": "Finnish (fi_FI)",
+      "fo_FO": "Faroese (fo_FO)",
+      "fr_CA": "French (fr_CA)",
+      "fr_FR": "French (fr_FR)",
+      "ga_IE": "Irish (ga_IE)",
+      "gl_ES": "Galician (gl_ES)",
+      "gn_PY": "Guarani (gn_PY)",
+      "he_IL": "Hebrew (he_IL)",
+      "hi_IN": "Hindi (hi_IN)",
+      "hr_HR": "Croatian (hr_HR)",
+      "hu_HU": "Hungarian (hu_HU)",
+      "hy_AM": "Armenian (hy_AM)",
+      "id_ID": "Indonesian (id_ID)",
+      "is_IS": "Icelandic (is_IS)",
+      "it_IT": "Italian (it_IT)",
+      "ja_JP": "Japanese (ja_JP)",
+      "ka_GE": "Georgian (ka_GE)",
+      "km_KH": "Khmer (km_KH)",
+      "ko_KR": "Korean (ko_KR)",
+      "ku_TR": "Kurdish (ku_TR)",
+      "lt_LT": "Lithuanian (lt_LT)",
+      "lv_LV": "Latvian (lv_LV)",
+      "mk_MK": "Macedonian (mk_MK)",
+      "ml_IN": "Malayalam (ml_IN)",
+      "ms_MY": "Malay (ms_MY)",
+      "nb_NO": "Norwegian Bokmål (nb_NO)",
+      "nn_NO": "Norwegian Nynorsk (nn_NO)",
+      "ne_NP": "Nepali (ne_NP)",
+      "nl_NL": "Dutch (nl_NL)",
+      "pa_IN": "Punjabi (pa_IN)",
+      "pl_PL": "Polish (pl_PL)",
+      "ps_AF": "Pashto (ps_AF)",
+      "pt_BR": "Portuguese (pt_BR)",
+      "pt_PT": "Portuguese (pt_PT)",
+      "ro_RO": "Romanian (ro_RO)",
+      "ru_RU": "Russian (ru_RU)",
+      "sk_SK": "Slovak (sk_SK)",
+      "sl_SI": "Slovene (sl_SI)",
+      "sq_AL": "Albanian (sq_AL)",
+      "sr_RS": "Serbian (sr_RS)",
+      "sv_SE": "Swedish (sv_SE)",
+      "sw_KE": "Swahili (sw_KE)",
+      "ta_IN": "Tamil (ta_IN)",
+      "te_IN": "Telugu (te_IN)",
+      "th_TH": "Thai (th_TH)",
+      "tl_PH": "Tagalog (tl_PH)",
+      "tr_TR": "Turkish (tr_TR)",
+      "uk_UA": "Ukrainian (uk_UA)",
+      "ur_PK": "Urdu (ur_PK)",
+      "vi_VN": "Vietnamese (vi_VN)",
+      "zh_CN": "Simplified Chinese (zh_CN)",
+      "zh_HK": "Traditional Chinese (zh_HK)",
+      "zh_TW": "Traditional Chinese (zh_TW)"
+    },
+    "fieldsFilter": {
+      "": "All Fields",
+      "empty": "Empty Fields",
+      "emptyAndRequired": "Empty Required Fields"
+    },
+    "localesFilter": {
+      "": "All Locales",
+      "showGenericFields": "Show Generic Fields"
+    }
+  },
+  "measure": {
+    "Length": "Length",
+    "Mass": "Mass",
+    "Time": "Time",
+    "Electric Current": "Electric Current",
+    "Thermodynamic Temperature": "Thermodynamic Temperature",
+    "Amount Of Substance": "Amount Of Substance",
+    "Luminous Intensity": "Luminous Intensity"
+  },
+  "unit Length": {
+    "mm": "mm",
+    "cm": "cm",
+    "dm": "dm",
+    "m": "m",
+    "km": "km"
+  },
+  "unit Mass": {
+    "mg": "mg",
+    "g": "g",
+    "kg": "kg"
+  },
+  "unit Time": {
+    "s": "s",
+    "m": "m",
+    "h": "h"
+  },
+  "unit Electric Current": {
+    "A": "A"
+  },
+  "unit Thermodynamic Temperature": {
+    "K": "K",
+    "C": "C"
+  },
+  "unit Amount Of Substance": {
+    "mol": "mol"
+  },
+  "unit Luminous Intensity": {
+    "cd": "cd"
+  },
+  "fields": {
+    "addressCity": "City",
+    "addressStreet": "Street",
+    "addressCountry": "Country",
+    "addressState": "State",
+    "addressPostalCode": "Postal Code",
+    "addressMap": "Map",
+    "billingAddressCity": "City",
+    "billingAddressCountry": "Country",
+    "billingAddressPostalCode": "Postal Code",
+    "billingAddressState": "State",
+    "billingAddressStreet": "Street",
+    "billingAddressMap": "Map",
+    "ownerUser": "Owner",
+    "username": "Username",
+    "password": "Password",
+    "measure": "Measurement",
+    "units": "Units",
+    "shippingAddressCity": "City (Shipping)",
+    "shippingAddressStreet": "Street (Shipping)",
+    "shippingAddressCountry": "Country (Shipping)",
+    "shippingAddressState": "State (Shipping)",
+    "shippingAddressPostalCode": "Postal Code (Shipping)",
+    "shippingAddressMap": "Map (Shipping)"
+  },
+  "labels": {
+    "status": "Status",
+    "fail": "Fail",
+    "success": "Success",
+    "viewDetails": "View Details",
+    "showFullList": "Show Full List",
+    "On": "On",
+    "Off": "Off",
+    "selectedLink": "Select Entity",
+    "applyRelation": "Apply Relation",
+    "collapseAllPanels": "Collapse All",
+    "expandAllPanels": "Expand All",
+    "UnitSymbol": "Unit Symbol",
+    "Core": "Core",
+    "Mark all read": "Mark all as read",
+    "Ownership Information": "Ownership Information",
+    "New": "New"
+  },
+  "descriptions": {
+    "Core": "TreoCore is a software ecosystem, designed for rapid development of web-based responsive business applications."
+  },
+  "links": {
+    "ownerUser": "Owner"
+  },
+  "themes": {
+    "TreoDarkTheme": "Treo Dark Theme",
+    "TreoClassicTheme": "Treo Classic Theme",
+    "TreoLightTheme": "Treo Light Theme"
+  },
+  "exceptions": {
+    "URL is invalid": "URL is invalid",
+    "Such URL is already exists": "Such URL is already exists",
+    "Site URL is empty": "Site URL is empty",
+    "Code is invalid": "Code is invalid. Code should be unique. Only letters, numbers and char \"_\" expected.",
+    "notDashletService": "Service %s must implement DashletInterface"
+  },
+  "messages": {
+    "successAndReload": "Changes saved. This page will be reloaded after {value} seconds",
+    "massUpdateResult": "Updating {count} records",
+    "isRequiredAndUnique": "{field} is required and should be unique."
+  },
+  "streamMessages": {
+    "composerUpdateThis": "{user}"
+  },
+  "streamMessagesMale": {
+    "composerUpdateThis": "{user}"
+  },
+  "streamMessagesFemale": {
+    "composerUpdateThis": "{user}"
+  },
+  "massActions": {
+    "massUpdatePartial": "Mass Update (Part %s)",
+    "removePartial": "Remove (Part %s)",
+    "addRelation": "Add relation",
+    "removeRelation": "Remove relation"
+  },
+  "boolFilters": {
+    "onlyActive": "Only Active"
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "fields": {
+    "status": "Status",
+    "settingVersion": "Version einstellen",
+    "availableVersions": "Verfügbare Versionen",
+    "currentVersion": "Aktuelle Version",
+    "isActive": "Aktiv",
+    "required": "Erforderlich"
+  },
+  "exceptions": {
+    "hasRequiredsDelete": "Sie dürfen das gewünschte Modul nicht löschen, da dieses mit einem anderen verknüpft ist.",
+    "isSystem": "Sie können das System-Modul nicht ändern.",
+    "No such module": "Es gibt kein solches Modul",
+    "Such module is already installed": "Dieses Modul ist schon installiert",
+    "Module was not installed": "Das Modul wurde nicht installiert",
+    "Such module version already installed": "Diese Modul-Version ist schon installiert",
+    "No such module version": "Es gibt keine solche Modul-Version",
+    "Version in invalid": "Version ist ungültig",
+    "hasRequireds": "Das Modul hat die Anforderungen nicht erfüllt"
+  },
+  "labels": {
+    "successAndReload": "Die Änderungen wurden gespeichert. Die Seite wird in {value} Sekunden neu geladen",
+    "Installed": "Installiert",
+    "Store": "Geschäft",
+    "cancelModule": "Stornieren",
+    "settings": "Einstellungen",
+    "password": "Passwort",
+    "updateStarted": "Update wurde gestartet",
+    "version": "Version",
+    "updateInProgress": "Das Update wird bereits durchgeführt",
+    "updateFailed": "Update fehlgeschlagen. Es kann keine Verbindung zum Modulserver hergestellt werden. Bitte versuche es erneut",
+    "cancelingModuleUpdate": "Modulupdate wird abgebrochen...",
+    "canceledModuleUpdate": "Die Modulaktualisierung wurde abgebrochen",
+    "cancelingModuleInstall": "Abbrechen der Modulinstallation...",
+    "canceledModuleInstall": "Die Installation des Moduls wurde abgebrochen",
+    "confirmRun": "Nach der Aktualisierungsaktion würden sich alle Benutzer vom System abmelden. Bist du sicher, dass du diese Aktion machen willst?",
+    "anotherActionInProgress": "ein anderes Workflow ist gerade in Arbeit. Warten Sie bitte ab, bis dieses abgeschlossen ist",
+    "available": "verfügbar",
+    "canceled": "abgebrochen",
+    "canceling": "stornieren...",
+    "dependencies": "abhängigkeiten",
+    "failed": "die Aktualisierung des Moduls ist fehlgeschlagen. Weitere Informationen finden Sie in dem Protokoll",
+    "Log": "Protokoll",
+    "removeModule": "Modul löschen",
+    "Run Update": "das Update starten",
+    "settingModuleForInstalling": "Einstellung des Moduls für die Installation",
+    "settingModuleForRemoving": "Einstellung des Moduls für das Entfernen",
+    "settingModuleForUpdating": "Einstellung des Modul für die Aktualisierung",
+    "settingsText": "Sie müssen registriert sein, um TreoPIM Module installieren oder aktualisieren zu können...",
+    "updated": "wurde aktualisiert. Die Seite wird in {value} Sekunden neu geladen",
+    "updateModule": "das Modul aktualisieren",
+    "updating": "wird aktualisiert...",
+    "username": "Benutzername",
+    "settedModuleForInstalling": "Das Modul wurde für die Installation eingerichtet",
+    "settedModuleForRemoving": "Das Modul wurde zum Entfernen eingerichtet",
+    "settedModuleForUpdating": "Das Modul wurde für die Aktualisierung eingerichtet",
+    "installModule": "das Modul",
+    "daemonDisabled": "<b>Der Composer Daemon läuft nicht!</b><br>Wahrscheinlich wird der Daemon gerade neu geladen und Sie sollten eine Minute warten, oder die crontab ist nicht konfiguriert. Eine Anleitung zur Konfiguration der Crontab finden Sie <a href=\"https://github.com/treolabs/treocore#installation\" class=\"alert-link\" target=\"_blank\">hier</a>",
+    "queueManagerRunning": "<b>Der Warteschlangenmanager wird ausgeführt!</b><br>Die Möglichkeit zur Aktualisierung von Modulen ist gesperrt. Bitte versuch es später."
+  },
+  "notifications": {
+    "Module update": "Das {module} wurde aktualisiert. Von version {from} bis {to}",
+    "System update": "System wurde aktualisiert. Ab Version {from} bis {to}",
+    "Module downgrade": "Das {module} wurde degradieren. Von version {from} bis {to}",
+    "System downgrade": "Das System wurde heruntergestuft. Ab Version {from} bis {to}",
+    "Module install": "Das {module} v.{version} wurde installiert",
+    "Module delete": "Das {module} wurde gelöscht",
+    "Composer updated!": "Abhängigkeiten des Modulmanagers wurden aktualisiert! <a href=\"/#Composer/list\">Siehe Einzelheiten</a>"
+  },
+  "options": {
+    "status": {
+      "install": "installieren",
+      "update": "aktualisieren",
+      "delete": "löschen"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+    "entity": true,
+    "layouts": false,
+    "tab": true,
+    "acl": true,
+    "aclPortal": "recordAllAccountContactOwnNo",
+    "notifications": true,
+    "object": true,
+    "customizable": true,
+    "activity": true,
+    "activityStatusList": ["Draft"],
+    "historyStatusList": ["Archived", "Sent"]
+}

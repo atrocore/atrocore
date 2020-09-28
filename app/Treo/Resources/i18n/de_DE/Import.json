@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "duplicateCount": "doppelte Anzahl",
+    "importedCount": "importierte Anzahl",
+    "updatedCount": "aktualisierte Anzahl"
+  },
+  "labels": {
+    "Create Import": "Import erstellen",
+    "Header Row Value": "Wert der Kopfzeile",
+    "Person Name Format": "Format der Personnamen",
+    "Result": "Ergebnis",
+    "Single Quote": "Hochkomma"
+  },
+  "messages": {
+    "confirmRemoveImportLog": "Dadurch wird das Importprotokoll entfernt. Alle importierten Datensätze werden beibehalten. Sie können die Import-Ergebnisse nicht zurücksetzen. Sind Sie sicher?"
+  }
+}

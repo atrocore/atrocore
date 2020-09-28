@@ -1,0 +1,41 @@
+{
+  "fields": {
+    "serviceName": "Bedienung",
+    "stream": "Queue",
+    "data": "Daten",
+    "sortOrder": "Sortierreihenfolge",
+    "status": "Status"
+  },
+  "links": {
+  },
+  "labels": {
+    "Create QueueItem": "Queue Item erstellen",
+    "showMessage": "Meldung anzeigen",
+    "message": "Meldung",
+    "cancel": "abbrechen",
+    "close": "schließen",
+    "download": "herunterladen",
+    "queueManager": "Warteschlangenmanager",
+    "showDone": "Show erledigt"
+  },
+  "options": {
+    "status": {
+      "Pending": "Schwebend",
+      "Success": "Erfolg",
+      "Running": "Läuft",
+      "Failed": "Fehlgeschlagen",
+      "Canceled": "Abgebrochen",
+      "Closed": "Geschlossen"
+    }
+  },
+  "exceptions": {
+    "Queue item cannot be changed": "Warteschlangenelement kann nicht geändert werden."
+  },
+  "notificationMessages": {
+    "error": "%  ist fehlgeschlagen",
+    "success": "%  wurde erfolgreich abgeschlossen"
+  },
+  "messages": {
+    "byQueueManager": "Wird vom Warteschlangenmanager verarbeitet"
+  }
+}

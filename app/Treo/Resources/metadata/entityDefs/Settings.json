@@ -1,0 +1,32 @@
+{
+  "fields": {
+    "treoId": {
+      "type": "varchar",
+      "readOnly": true
+    },
+    "isStreamSide": {
+      "type": "bool",
+      "tooltip": true
+    },
+    "isStreamPanelFirst": {
+      "type": "bool",
+      "tooltip": true
+    },
+    "notificationNewModuleVersionDisabled": {
+      "type": "bool",
+      "default": true
+    },
+    "notificationNewSystemVersionDisabled": {
+      "type": "bool",
+      "default": true
+    },
+    "notificationInstallDeleteModuleDisabled": {
+      "type": "bool",
+      "default": true
+    },
+    "unitsOfMeasure": {
+      "type": "jsonObject",
+      "view": "treo-core:views/settings/fields/unit-configuration"
+    }
+  }
+}

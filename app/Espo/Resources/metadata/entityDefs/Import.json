@@ -1,0 +1,58 @@
+{
+    "fields": {
+        "entityType": {
+            "type": "enum",
+            "translation": "Global.scopeNames",
+            "required": true,
+            "readOnly": true
+        },
+        "status": {
+            "type": "enum",
+            "options": ["In Process", "Complete", "Failed"],
+            "readOnly": true,
+            "view": "views/fields/enum-styled",
+            "style": {
+                "Complete": "success",
+                "Failed": "danger"
+            }
+        },
+        "file": {
+            "type": "file",
+            "required": true,
+            "readOnly": true
+        },
+        "importedCount": {
+            "type": "int",
+            "readOnly": true,
+            "notStorable": true
+        },
+        "duplicateCount": {
+            "type": "int",
+            "readOnly": true,
+            "notStorable": true
+        },
+        "updatedCount": {
+            "type": "int",
+            "readOnly": true,
+            "notStorable": true
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true
+        }
+    },
+    "links": {
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        }
+    },
+    "collection": {
+        "sortBy": "createdAt",
+        "asc": false
+    }
+}

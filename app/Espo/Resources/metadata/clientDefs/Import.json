@@ -1,0 +1,34 @@
+{
+    "controller": "controllers/import",
+    "acl": "acl/import",
+    "recordViews": {
+        "list": "views/import/record/list",
+        "detail": "views/import/record/detail"
+    },
+    "views": {
+    	"list": "views/import/list",
+    	"detail": "views/import/detail"
+    },
+    "bottomPanels": {
+    	"detail": [
+	    	{
+	    		"name": "imported",
+	    		"label": "Imported",
+	    		"view": "views/import/record/panels/imported"
+	    	},
+	    	{
+	    		"name": "duplicates",
+	    		"label": "Duplicates",
+	    		"view": "views/import/record/panels/duplicates",
+                "rowActionsView": "views/import/record/row-actions/duplicates"
+	    	},
+	    	{
+	    		"name": "updated",
+	    		"label": "Updated",
+	    		"view": "views/import/record/panels/updated"
+	    	}
+	    ]
+    },
+    "searchPanelDisabled": true,
+    "iconClass": "fas fa-file-import"
+}

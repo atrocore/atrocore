@@ -1,0 +1,10 @@
+{
+   "recordViews":{
+      "edit": "views/preferences/record/edit"
+   },
+   "views":{
+      "edit": "views/preferences/edit"
+   },
+   "acl": "acl/preferences",
+   "aclPortal": "acl-portal/preferences"
+}

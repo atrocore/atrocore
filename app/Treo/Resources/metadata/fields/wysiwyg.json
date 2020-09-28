@@ -1,0 +1,51 @@
+{
+   "params":[
+      {
+         "name": "required",
+         "type": "bool",
+         "default": false
+      },
+      {
+         "name": "default",
+         "type": "text"
+      },
+      {
+         "name": "height",
+         "type": "int"
+      },
+      {
+         "name": "minHeight",
+         "type": "int"
+      },
+      {
+         "name":"showMoreDisabled",
+         "type":"bool",
+         "tooltip": true
+      },
+      {
+         "name": "displayedHeight",
+         "type": "int",
+         "default": 400,
+         "min": 1,
+         "tooltip": true
+      },
+      {
+         "name":"readOnly",
+         "type":"bool"
+      },
+      {
+         "name": "attachmentField",
+         "type": "varchar",
+         "hidden": true
+      },
+      {
+         "name": "useIframe",
+         "type": "bool",
+         "tooltip": true
+      },
+      {
+         "name":"audited",
+         "type":"bool"
+      }
+   ]
+}

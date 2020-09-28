@@ -1,0 +1,17 @@
+{
+    "hasAssignedUser": {
+        "type": "bool",
+        "default": false,
+        "tooltip": true
+    },
+    "hasTeam": {
+        "type": "bool",
+        "default": false,
+        "tooltip": true
+    },
+    "hasOwner": {
+        "type": "bool",
+        "default": false,
+        "tooltip": true
+    }
+}

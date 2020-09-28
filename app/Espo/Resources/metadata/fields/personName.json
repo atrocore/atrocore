@@ -1,0 +1,42 @@
+{
+    "actualFields":[
+        "salutation",
+        "first",
+        "last"
+    ],
+    "notActualFields": [
+        ""
+    ],
+    "params":[
+        {
+            "name":"required",
+            "type":"bool",
+            "default":false
+        }
+    ],
+    "fields":{
+        "salutation":{
+            "type":"enum"
+        },
+        "first":{
+            "type":"varchar",
+            "trim": true
+        },
+        "last":{
+            "type":"varchar",
+            "trim": true
+        }
+    },
+    "naming":"prefix",
+    "notMergeable":true,
+    "notCreatable":true,
+    "filter":true,
+    "skipOrmDefs": true,
+    "personalData": true,
+    "textFilter": true,
+    "fullTextSearch": true,
+    "fullTextSearchColumnList": [
+        "first",
+        "last"
+    ]
+}

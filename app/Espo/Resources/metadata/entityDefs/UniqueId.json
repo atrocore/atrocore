@@ -1,0 +1,39 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": true,
+            "index": true
+        },
+        "data": {
+            "type": "jsonObject"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "terminateAt": {
+            "type": "datetime"
+        },
+        "target": {
+            "type": "linkParent"
+        }
+    },
+    "links": {
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "target": {
+            "type": "belongsToParent"
+        }
+    },
+    "collection": {
+        "sortBy": "createdAt",
+        "asc": false
+    }
+}

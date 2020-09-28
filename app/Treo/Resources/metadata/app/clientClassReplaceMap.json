@@ -1,0 +1,233 @@
+{
+  "acl": [
+    "treo-core"
+  ],
+  "app": [
+    "treo-core"
+  ],
+  "view": [
+    "treo-core"
+  ],
+  "search-manager": [
+    "treo-core"
+  ],
+  "controllers/about": [
+    "treo-core"
+  ],
+  "controllers/admin": [
+    "treo-core"
+  ],
+  "views/admin/auth-log-record/list": [
+    "treo-core"
+  ],
+  "views/admin/auth-token/list": [
+    "treo-core"
+  ],
+  "views/admin/job/list": [
+    "treo-core"
+  ],
+  "views/admin/layouts/index": [
+    "treo-core"
+  ],
+  "views/detail": [
+    "treo-core"
+  ],
+  "views/modal": [
+    "treo-core"
+  ],
+  "views/main": [
+    "treo-core"
+  ],
+  "views/header": [
+    "treo-core"
+  ],
+  "views/list": [
+    "treo-core"
+  ],
+  "views/login": [
+    "treo-core"
+  ],
+  "views/dashboard": [
+    "treo-core"
+  ],
+  "views/dashlets/options/base": [
+    "treo-core"
+  ],
+  "views/modals/mass-update": [
+    "treo-core"
+  ],
+  "views/modals/select-records": [
+    "treo-core"
+  ],
+  "views/record/base": [
+    "treo-core"
+  ],
+  "views/record/detail-side": [
+    "treo-core"
+  ],
+  "views/record/detail-bottom": [
+    "treo-core"
+  ],
+  "views/record/edit": [
+    "treo-core"
+  ],
+  "views/record/edit-side": [
+    "treo-core"
+  ],
+  "views/record/list": [
+    "treo-core"
+  ],
+  "views/record/panels/bottom": [
+    "treo-core"
+  ],
+  "views/record/panels/relationship": [
+    "treo-core"
+  ],
+  "views/record/search": [
+    "treo-core"
+  ],
+  "views/record/row-actions/default": [
+    "treo-core"
+  ],
+  "views/admin/index": [
+    "treo-core"
+  ],
+  "views/admin/notifications": [
+    "treo-core"
+  ],
+  "views/admin/upgrade/index": [
+    "treo-core"
+  ],
+  "views/admin/entity-manager/modals/edit-entity": [
+    "treo-core"
+  ],
+  "views/admin/field-manager/fields/options": [
+    "treo-core"
+  ],
+  "views/admin/layouts/list-small": [
+    "treo-core"
+  ],
+  "views/admin/layouts/relationships": [
+    "treo-core"
+  ],
+  "views/fields/array": [
+    "treo-core"
+  ],
+  "views/fields/base": [
+    "treo-core"
+  ],
+  "views/fields/currency": [
+    "treo-core"
+  ],
+  "views/fields/link-parent": [
+    "treo-core"
+  ],
+  "views/fields/multi-enum": [
+    "treo-core"
+  ],
+  "views/fields/owner-user": [
+    "treo-core"
+  ],
+  "views/fields/varchar": [
+    "treo-core"
+  ],
+  "views/fields/varchar-column": [
+    "treo-core"
+  ],
+  "views/fields/text": [
+    "treo-core"
+  ],
+  "views/fields/wysiwyg": [
+    "treo-core"
+  ],
+  "views/record/detail": [
+    "treo-core"
+  ],
+  "views/preferences/record/edit": [
+    "treo-core"
+  ],
+  "views/site/header": [
+    "treo-core"
+  ],
+  "views/site/navbar": [
+    "treo-core"
+  ],
+  "views/site/footer": [
+    "treo-core"
+  ],
+  "views/site/master": [
+    "treo-core"
+  ],
+  "views/settings/fields/tab-list": [
+    "treo-core"
+  ],
+  "views/settings/record/edit": [
+    "treo-core"
+  ],
+  "views/notification/items/treo-message": [
+    "treo-core"
+  ],
+  "views/record/edit-small": [
+    "treo-core"
+  ],
+  "views/record/detail-small": [
+    "treo-core"
+  ],
+  "views/notification/badge": [
+    "treo-core"
+  ],
+  "views/scheduled-job/list": [
+    "treo-core"
+  ],
+  "views/fields/email": [
+    "treo-core"
+  ],
+  "views/import/index": [
+    "treo-core"
+  ],
+  "views/stream/panel": [
+    "treo-core"
+  ],
+  "views/stream/record/edit": [
+    "treo-core"
+  ],
+  "views/admin/layouts/detail": [
+    "treo-core"
+  ],
+  "views/admin/layouts/base": [
+    "treo-core"
+  ],
+  "views/admin/integrations/index": [
+    "treo-core"
+  ],
+  "views/admin/label-manager/index": [
+    "treo-core"
+  ],
+  "views/admin/entity-manager/index": [
+    "treo-core"
+  ],
+  "views/preferences/edit": [
+    "treo-core"
+  ],
+  "views/edit": [
+    "treo-core"
+  ],
+  "views/modals/edit": [
+    "treo-core"
+  ],
+  "views/admin/field-manager/index": [
+    "treo-core"
+  ],
+  "views/admin/link-manager/index": [
+    "treo-core"
+  ],
+  "views/fields/enum": [
+    "treo-core"
+  ],
+  "views/admin/layouts/grid": [
+    "treo-core"
+  ],
+  "views/settings/fields/quick-create-list": [
+    "treo-core"
+  ]
+}

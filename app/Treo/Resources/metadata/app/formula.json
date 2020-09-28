@@ -1,0 +1,5 @@
+{
+  "functionClassNameMap": {
+    "entity\\sumRelated": "\\Treo\\Core\\Formula\\Functions\\EntityGroup\\SumRelatedType"
+  }
+}

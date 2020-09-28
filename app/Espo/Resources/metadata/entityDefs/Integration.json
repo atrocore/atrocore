@@ -1,0 +1,10 @@
+{
+    "fields": {
+        "data": {
+            "type": "jsonObject"
+        },
+        "enabled": {
+            "type": "bool"
+        }
+    }
+}

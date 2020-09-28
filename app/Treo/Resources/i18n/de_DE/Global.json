@@ -1,0 +1,214 @@
+{
+  "options": {
+    "language": {
+      "af_ZA": "Afrikaans (af_ZA)",
+      "az_AZ": "Aserbaidschanisch (az_AZ)",
+      "be_BY": "Weissrussisch (be_BY)",
+      "bg_BG": "Bulgarisch (bg_BG)",
+      "bn_IN": "Benglaisch (bn_IN)",
+      "bs_BA": "Bosnisch (bs_BA)",
+      "ca_ES": "Katalanisch (ca_ES)",
+      "cs_CZ": "Tschechisch (cs_CZ)",
+      "cy_GB": "Walisisch (cy_GB)",
+      "da_DK": "Dänisch (da_DK)",
+      "de_DE": "Deutsch (de_DE)",
+      "el_GR": "Griechisch (el_GR)",
+      "en_GB": "Englisch (en_GB)",
+      "en_US": "Englisch (en_US)",
+      "es_ES": "Spanisch (es_ES)",
+      "et_EE": "Estnisch (et_EE)",
+      "eu_ES": "Baskisch (eu_ES)",
+      "fa_IR": "Persisch (fa_IR)",
+      "fi_FI": "Finnisch (fi_FI)",
+      "fo_FO": "Färöisch (fo_FO)",
+      "fr_CA": "Französisch (fr_CA)",
+      "fr_FR": "Französisch (fr_FR)",
+      "ga_IE": "Irisch (ga_IE)",
+      "gl_ES": "Galizisch (gl_ES)",
+      "gn_PY": "Guarani (gn_PY)",
+      "he_IL": "Hebräisch (he_IL)",
+      "hi_IN": "Hindi (hi_IN)",
+      "hr_HR": "Kroatisch (hr_HR)",
+      "hu_HU": "Ungarisch (hu_HU)",
+      "hy_AM": "Armenisch (hy_AM)",
+      "id_ID": "Indonesisch (id_ID)",
+      "is_IS": "Isländisch (is_IS)",
+      "it_IT": "Italienisch (it_IT)",
+      "ja_JP": "Japanisch (ja_JP)",
+      "ka_GE": "Georgisch (ka_GE)",
+      "km_KH": "Khmer (km_KH)",
+      "ko_KR": "Koreanisch (ko_KR)",
+      "ku_TR": "Kurdisch (ku_TR)",
+      "lt_LT": "Litauisch (lt_LT)",
+      "lv_LV": "Lettisch (lv_LV)",
+      "mk_MK": "Mazedonisch (mk_MK)",
+      "ml_IN": "Malayalam (ml_IN)",
+      "ms_MY": "Malaiisch (ms_MY)",
+      "nb_NO": "Norwegisch Bokmál (nb_NO)",
+      "nn_NO": "Norwegisch Nynorsk (nn_NO)",
+      "ne_NP": "Nepalesisch (ne_NP)",
+      "nl_NL": "Niederländisch (nl_NL)",
+      "pa_IN": "Pandschabisch (pa_IN)",
+      "pl_PL": "Polnisch (pl_PL)",
+      "ps_AF": "Paschtunisch (ps_AF)",
+      "pt_BR": "Portugiesisch (pt_BR)",
+      "pt_PT": "Portugiesisch (pt_PT)",
+      "ro_RO": "Rumänisch (ro_RO)",
+      "ru_RU": "Russisch (ru_RU)",
+      "sk_SK": "Slowakisch (sk_SK)",
+      "sl_SI": "Slowenisch (sl_SI)",
+      "sq_AL": "Albanisch (sq_AL)",
+      "sr_RS": "Serbisch (sr_RS)",
+      "sv_SE": "Schwedisch (sv_SE)",
+      "sw_KE": "Suaheli (sw_KE)",
+      "ta_IN": "Tamilisch (ta_IN)",
+      "te_IN": "Telugisch (te_IN)",
+      "th_TH": "Thailändisch (th_TH)",
+      "tl_PH": "Tagalog (tl_PH)",
+      "tr_TR": "Tükisch (tr_TR)",
+      "uk_UA": "Ukrainisch (uk_UA)",
+      "ur_PK": "Urdu (ur_PK)",
+      "vi_VN": "Vietnamesisch (vi_VN)",
+      "zh_CN": "Chinesisch vereinfacht (zh_CN)",
+      "zh_HK": "Chinesisch traditionell (zh_HK)",
+      "zh_TW": "Chinesisch traditionell (zh_TW)"
+    },
+    "fieldsFilter": {
+      "": "Alle Felder",
+      "empty": "Leerfelder",
+      "emptyAndRequired": "Leere Benötigte Felder"
+    },
+    "localesFilter": {
+      "": "Alle Locales",
+      "showGenericFields": "Generische Felder anzeigen"
+    },
+    "phoneNumber": {
+      "Other": "Andere Nummer"
+    }
+  },
+  "measure": {
+    "Length": "Länge",
+    "Mass": "Masse",
+    "Time": "Zeit",
+    "Electric Current": "Elektrischer Strom",
+    "Thermodynamic Temperature": "Thermodynamische Temperatur",
+    "Amount Of Substance": "Menge der Substanz",
+    "Luminous Intensity": "Lichtintensität"
+  },
+  "unit Length": {
+    "mm": "mm",
+    "cm": "cm",
+    "dm": "dm",
+    "m": "m",
+    "km": "km"
+  },
+  "unit Mass": {
+    "mg": "MG",
+    "g": "g",
+    "kg": "kg"
+  },
+  "unit Time": {
+    "s": "s",
+    "m": "m",
+    "h": "h"
+  },
+  "unit Electric Current": {
+    "A": "A"
+  },
+  "unit Thermodynamic Temperature": {
+    "K": "K",
+    "C": "C"
+  },
+  "unit Amount Of Substance": {
+    "mol": "mol"
+  },
+  "unit Luminous Intensity": {
+    "cd": "cd"
+  },
+  "fields": {
+    "ownerUser": "Besitzer",
+    "username": "Benutzername",
+    "password": "Passwort",
+    "measure": "Messen",
+    "units": "Einheiten",
+    "billingAddressCity": "Ort",
+    "addressCity": "Ort",
+    "billingAddressCountry": "Land",
+    "addressCountry": "Land",
+    "billingAddressPostalCode": "PLZ",
+    "addressPostalCode": "PLZ",
+    "billingAddressState": "Bundesland/Kanton",
+    "addressState": "Bundesland/Kanton",
+    "billingAddressStreet": "Straße",
+    "addressStreet": "Straße",
+    "billingAddressMap": "Karte",
+    "addressMap": "Karte",
+    "shippingAddressCity": "Ort (Lieferadresse)",
+    "shippingAddressStreet": "Straße (Lieferadresse)",
+    "shippingAddressCountry": "Land (Lieferadresse)",
+    "shippingAddressState": "Bundesland/Kanton (Versand)",
+    "shippingAddressPostalCode": "PLZ (Lieferadresse)",
+    "shippingAddressMap": "Karte (Lieferadresse)"
+  },
+  "labels": {
+    "status": "Status",
+    "fail": "Fehlgeschlagen",
+    "success": "Erfolg",
+    "viewDetails": "Details anzeigen",
+    "showFullList": "Vollständige Liste anzeigen",
+    "On": "Auf",
+    "Off": "Aus",
+    "selectedLink": "Wählen Sie Entität",
+    "applyRelation": "Beziehung anwenden",
+    "collapseAllPanels": "Alle ausblenden",
+    "expandAllPanels": "Alle anzeigen",
+    "UnitSymbol": "Einheitenzeichen",
+    "Core": "Ader",
+    "Ownership Information": "Besitzerinformationen",
+    "New": "Neu"
+  },
+  "descriptions": {
+    "Core": "TreoCore ist ein Software-Ökosystem, das für die schnelle Entwicklung webbasierter responsiver Geschäftsanwendungen entwickelt wurde."
+  },
+  "links": {
+    "ownerUser": "Besitzer"
+  },
+  "themes": {
+    "TreoDarkTheme": "Treo Dark Theme",
+    "TreoClassicTheme": "Treo Classic Theme",
+    "TreoLightTheme": "Treo Light Theme"
+  },
+  "scopeNames": {
+    "Stream": "Stream"
+  },
+  "messages": {
+    "successAndReload": "Die Änderungen wurden gespeichert. Die Seite wird in {value} Sekunden neu geladen.",
+    "massUpdateResult": "{count} Einträge werden aktualisiert",
+    "isRequiredAndUnique": "{field} Feld ist erforderlich und sollte eindeutig sein."
+  },
+  "exceptions": {
+    "URL is invalid": "Die URL ist ungültig",
+    "Such URL is already exists": "Eine solche URL ist bereits vorhanden",
+    "Site URL is empty": "Die Website-URL ist leer",
+    "Code is invalid": "Code ist ungültig. Code sollte eindeutig sein. Nur Buchstaben, Zahlen und Char \"_\" erwartet.",
+    "notDashletService": "Service %s muss DashletInterface implementieren"
+  },
+  "streamMessages": {
+    "composerUpdateThis": "{user}"
+  },
+  "streamMessagesMale": {
+    "composerUpdateThis": "{user}"
+  },
+  "streamMessagesFemale": {
+    "composerUpdateThis": "{user}"
+  },
+  "massActions": {
+    "massUpdatePartial": "Massenänderung (Teil %s)",
+    "removePartial": "Löschen (Teil %s)",
+    "addRelation": "Beziehung hinzufügen",
+    "removeRelation": "Beziehung entfernen"
+  },
+  "boolFilters": {
+    "onlyActive": "Nur aktiv"
+  }
+}

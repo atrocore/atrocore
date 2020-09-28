@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "treoId": "ID",
+    "isStreamSide": "Ist stream panel in der seite",
+    "isStreamPanelFirst": "Ist stream panel zuerst",
+    "unitsOfMeasure": "Units Of Measure"
+  },
+  "tooltips": {
+    "isStreamSide": "Wenn aktiviert, wird das Stream-Panel auf der Seite angezeigt.",
+    "isStreamPanelFirst": "Wenn aktiviert: Das Stream-Panel wird direkt nach der Übersicht angezeigt."
+  },
+  "labels": {
+    "System Notifications": "System-Meldungen"
+  }
+}

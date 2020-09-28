@@ -1,0 +1,32 @@
+/*!
+ *  zaq1
+ */
+
+.modal-open .modal {
+  padding-right: 0 !important;
+}
+
+.modal-header {
+  background-color: #273238;
+  padding-top: 16px;
+  padding-bottom: 16px
+}
+
+.modal-header a, .modal-title {
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 14px
+}
+
+.modal-header .close {
+  opacity: 1
+}
+
+.modal-header .close:hover, .modal-header .close:focus {
+  color: #fff
+}
+
+.modal-header .close > span {
+  color: #fff;
+}

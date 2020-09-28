@@ -1,0 +1,25 @@
+[
+    {
+        "rows": [
+            [
+                {"name": "name"}, {"name": "isGlobal"}
+            ],
+            [
+                {"name": "from"}, {"name": "parent"}
+            ],
+            [
+                {"name": "to"}, {"name": "action"}
+            ],
+            [
+                false, {"name": "emailFolder"}
+            ],
+            [
+                {"name": "subject", "fullWidth": true}
+            ],
+            [
+                {"name": "bodyContains"}
+            ]
+        ]
+    }
+
+]

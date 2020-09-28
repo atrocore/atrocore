@@ -1,0 +1,145 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "maxLength": 100,
+            "trim": true
+        },
+        "logo": {
+            "type": "image"
+        },
+        "url": {
+            "type": "url",
+            "notStorable": true,
+            "readOnly": true
+        },
+        "customId": {
+            "type": "varchar",
+            "maxLength": 36,
+            "view": "views/portal/fields/custom-id",
+            "trim": true,
+            "index": true
+        },
+        "isActive": {
+            "type": "bool",
+            "default": true
+        },
+        "isDefault": {
+            "type": "bool",
+            "default": false,
+            "notStorable": true
+        },
+        "portalRoles": {
+            "type": "linkMultiple"
+        },
+        "tabList": {
+            "type": "array",
+            "view": "views/portal/fields/tab-list"
+        },
+        "quickCreateList": {
+            "type": "array",
+            "translation": "Global.scopeNames",
+            "view": "views/portal/fields/quick-create-list"
+        },
+        "companyLogo": {
+            "type": "image"
+        },
+        "theme": {
+            "type": "enum",
+            "view": "views/preferences/fields/theme",
+            "translation": "Global.themes",
+            "default": ""
+        },
+        "language": {
+            "type": "enum",
+            "view": "views/preferences/fields/language",
+            "default": ""
+        },
+        "timeZone": {
+            "type": "enum",
+            "detault": "",
+            "view": "views/preferences/fields/time-zone"
+        },
+        "dateFormat": {
+            "type": "enum",
+            "options": ["MM/DD/YYYY", "YYYY-MM-DD", "DD.MM.YYYY", "DD/MM/YYYY"],
+            "default": "",
+            "view": "views/preferences/fields/date-format"
+        },
+        "timeFormat": {
+            "type": "enum",
+            "options": ["HH:mm", "hh:mma", "hh:mmA", "hh:mm A", "hh:mm a"],
+            "default": "",
+            "view": "views/preferences/fields/time-format"
+        },
+        "weekStart": {
+            "type": "enumInt",
+            "options": [0, 1],
+            "default": -1,
+            "view": "views/preferences/fields/week-start"
+        },
+        "defaultCurrency": {
+            "type": "enum",
+            "default": "",
+            "view": "views/preferences/fields/default-currency"
+        },
+        "dashboardLayout": {
+            "type": "jsonArray",
+            "view": "views/settings/fields/dashboard-layout"
+        },
+        "dashletsOptions": {
+            "type": "jsonObject",
+            "disabled": true
+        },
+        "customUrl": {
+            "type": "url"
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true,
+            "view": "views/fields/user"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true,
+            "view": "views/fields/user"
+        }
+    },
+    "links": {
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "users": {
+            "type": "hasMany",
+            "entity": "User",
+            "foreign": "portals"
+        },
+        "portalRoles": {
+            "type": "hasMany",
+            "entity": "PortalRole",
+            "foreign": "portals"
+        },
+        "notes": {
+            "type": "hasMany",
+            "entity": "Note",
+            "foreign": "portals"
+        }
+    },
+    "collection": {
+        "sortBy": "name",
+        "asc": true
+    }
+}

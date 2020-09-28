@@ -1,0 +1,5 @@
+{
+  "recordViews": {
+    "edit": "treo-core:views/user/record/edit"
+  }
+}

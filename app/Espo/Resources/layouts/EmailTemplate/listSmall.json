@@ -1,0 +1,5 @@
+[
+    {"name": "name", "link": true},
+    {"name": "assignedUser", "width": 22},
+    {"name": "createdAt", "width": 22}
+]

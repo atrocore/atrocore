@@ -1,0 +1,45 @@
+<!--
+  ~  zaq1
+  -->
+
+<!doctype html>
+<html>
+    <head>
+        <title>{{applicationName}}</title>
+        <script type="text/javascript" src="{{basePath}}client/modules/treo-core/treo.min.js?r={{cacheTimestamp}}" data-base-path="{{basePath}}"></script>
+        <link href="{{basePath}}{{stylesheet}}?r={{cacheTimestamp}}" rel="stylesheet" id='main-stylesheet'>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta content="utf-8" http-equiv="encoding">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <meta name="description" content="TreoPIM is a single page application (SPA) with an API-centric architecture and flexible data model based on entities, entity attributes and relations of all kinds among them.">
+        <link rel="shortcut icon" sizes="196x196" href="{{basePath}}client/modules/treo-core/img/favicon16x16.png">
+        <link rel="icon" href="{{basePath}}client/modules/treo-core/img/favicon16x16.png" type="image/x-icon">
+        <link rel="shortcut icon" href="{{basePath}}client/modules/treo-core/img/favicon16x16.png" type="image/x-icon">
+        <script type="text/javascript">
+            $(function () {
+                Espo.loader.cacheTimestamp = {{cacheTimestamp}};
+                Espo.loader.classReplaceMap = {{classReplaceMap}};
+                Espo.require('app-portal', function (App) {
+                    var app = new App({
+                        id: '{{portalId}}',
+                        useCache: {{useCache}},
+                        cacheTimestamp: {{cacheTimestamp}},
+                        url: 'api/v1/portal-access/{{portalId}}',
+                        basePath: '{{basePath}}'
+                    }, function (app) {
+                        {{runScript}}
+                    });
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div class="container content"></div>
+        <footer>
+            <p class="credit small">
+                &copy; {{year}} <a href="https://treolabs.com" title="TreoCore is powered by EspoCRM" target="_blank">TreoCore is powered by EspoCRM</a>
+                <span class="pull-right"></span>
+            </p>
+        </footer>
+    </body>
+</html>

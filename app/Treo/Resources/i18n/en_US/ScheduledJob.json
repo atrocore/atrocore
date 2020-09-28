@@ -1,0 +1,12 @@
+{
+  "options": {
+    "job": {
+      "TreoCleanup": "Unused data cleanup. Deleting old data and unused db tables, db columns, etc.",
+      "RestApiDocs": "Generate REST API docs",
+      "ComposerAutoUpdate": "Auto-updating of modules"
+    }
+  },
+  "exceptions": {
+    "Wrong crontab configuration": "Wrong crontab configuration"
+  }
+}

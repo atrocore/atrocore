@@ -1,0 +1,87 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": true,
+            "maxLength": 100,
+            "tooltip": true,
+            "trim": true
+        },
+        "from": {
+            "type": "varchar",
+            "maxLength": 255,
+            "tooltip": true,
+            "trim": true
+        },
+        "to": {
+            "type": "varchar",
+            "maxLength": 255,
+            "tooltip": true,
+            "trim": true
+        },
+        "subject": {
+            "type": "varchar",
+            "maxLength": 255,
+            "tooltip": true
+        },
+        "bodyContains": {
+            "type": "array",
+            "tooltip": true
+        },
+        "isGlobal": {
+            "type": "bool",
+            "tooltip": true
+        },
+        "parent": {
+            "type": "linkParent"
+        },
+        "action": {
+            "type": "enum",
+            "default": "Skip",
+            "options": ["Skip", "Move to Folder"],
+            "view": "views/email-filter/fields/action"
+        },
+        "emailFolder": {
+            "type": "link",
+            "view": "views/email-filter/fields/email-folder"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true
+        }
+    },
+    "links": {
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "parent": {
+            "type": "belongsToParent",
+            "entityList": ["User", "EmailAccount", "InboundEmail"]
+        },
+        "emailFolder": {
+            "type": "belongsTo",
+            "entity": "EmailFolder"
+        }
+    },
+    "collection": {
+        "sortBy": "createdAt",
+        "asc": false
+    }
+}

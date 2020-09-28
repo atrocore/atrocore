@@ -1,0 +1,34 @@
+[
+    {
+        "label": "Locale",
+        "rows": [
+            [{"name": "dateFormat"}, {"name": "timeZone"}],
+            [{"name": "timeFormat"}, {"name": "weekStart"}],
+            [{"name": "defaultCurrency"}, {"name": "thousandSeparator"}],
+            [false, {"name": "decimalMark"}],
+            [{"name": "language"}, false]
+        ]
+    },
+    {
+        "label": "Misc",
+        "rows": [
+            [{"name": "exportDelimiter"}, {"name":"autoFollowEntityTypeList"}]
+        ]
+    },
+    {
+        "label": "User Interface",
+        "rows": [
+            [
+                {"name":"theme"},
+                false
+            ]
+        ]
+    },
+    {
+        "label": "Notifications",
+        "name": "notifications",
+        "rows": [
+            [{"name": "receiveStreamEmailNotifications"}, false]
+        ]
+    }
+]

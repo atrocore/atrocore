@@ -1,0 +1,9 @@
+[
+    {
+        "rows": [
+            [{"name": "job"}, {"name": "status"}],
+            [{"name": "name"}, false],
+            [{"name": "scheduling"}, false]
+        ]
+    }
+]

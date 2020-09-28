@@ -1,0 +1,84 @@
+/*!
+ *  zaq1
+ */
+
+#login {
+  background: $bg-white;
+  color: $login-text;
+  margin-top: 50px;
+
+  &.panel > .panel-heading {
+    text-align: center;
+    padding: 6px;
+    background-color: $bg-header;
+    border: 1px solid $login-border-main;
+    border-bottom: 0;
+    box-shadow: 0 -8px 10px -10px;
+  }
+
+  &.panel > .panel-body {
+    border: 1px solid $login-border-main;
+  }
+}
+
+#login .logo-container {
+  display: inline-block
+}
+
+#login input.form-control {
+  padding: 6px 10px 6px 30px;
+}
+
+#login select.form-control {
+  padding: 6px 10px 6px 3px;
+}
+
+#login label[for='field-username'],
+#login label[for='login'] {
+  position: relative;
+}
+
+#login label[for='field-username']::before,
+#login label[for='login']::before {
+  position: absolute;
+  top: 31px;
+  left: 10px;
+  display: inline-block;
+  font-family: 'Glyphicons Halflings';
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#login label[for='field-username']::before {
+  content: "\e008";
+}
+
+#login label[for='login']::before {
+  content: "\e033";
+}
+
+#login #btn-login {
+  background-color: $bg-white;
+  border-color: $login-border-light;
+  color: #000;
+}
+
+#login #btn-login:hover {
+  border-color: $login-bg-header;
+}
+
+#login .btn-link {
+  color: $text-black
+}
+
+#login input:focus {
+  border-color: $login-border;
+}
+
+#login .logo-container img.logo {
+  height: 25px;
+  margin-top: 9px;
+}

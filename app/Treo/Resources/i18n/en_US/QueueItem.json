@@ -1,0 +1,41 @@
+{
+  "fields": {
+    "serviceName": "Service",
+    "stream": "Queue",
+    "data": "Data",
+    "sortOrder": "Sort order",
+    "status": "Status"
+  },
+  "links": {
+  },
+  "labels": {
+    "Create QueueItem": "Create Queue Item",
+    "showMessage": "Show Message",
+    "message": "Message",
+    "cancel": "Cancel",
+    "close": "Close",
+    "download": "Download",
+    "queueManager": "Queue Manager",
+    "showDone": "Show done"
+  },
+  "options": {
+    "status": {
+      "Pending": "Pending",
+      "Success": "Success",
+      "Running": "Running",
+      "Failed": "Failed",
+      "Canceled": "Canceled",
+      "Closed": "Closed"
+    }
+  },
+  "exceptions": {
+    "Queue item cannot be changed": "Queue item cannot be changed."
+  },
+  "notificationMessages": {
+    "success": "%s was successfully completed",
+    "error": "%s failed"
+  },
+  "messages": {
+    "byQueueManager": "Processed by Queue Manager"
+  }
+}

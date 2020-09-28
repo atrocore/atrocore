@@ -1,0 +1,26 @@
+{
+    "controller": "controllers/record-tree",
+    "collection": "collections/tree",
+    "menu": {
+        "listTree": {
+            "buttons": [
+                {
+                    "label": "List View",
+                    "link": "#{entityType}/list",
+                    "acl": "read",
+                    "style": "default"
+                }
+            ]
+        },
+        "list": {
+            "buttons": [
+                {
+                    "label": "Tree View",
+                    "link": "#{entityType}",
+                    "acl": "read",
+                    "style": "default"
+                }
+            ]
+        }
+    }
+}

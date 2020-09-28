@@ -1,0 +1,12 @@
+[
+    {
+        "label":"",
+        "rows":[
+            [{"name": "name"}, {"name":"oneOff"}],
+            [{"name": "category"}, false],
+            [{"name":"subject","fullWidth":true}],
+            [{"name":"body","fullWidth":true}],
+            [{"name":"attachments"},{"name":"isHtml"}]
+        ]
+    }
+]

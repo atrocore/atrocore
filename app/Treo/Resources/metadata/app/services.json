@@ -1,0 +1,14 @@
+{
+  "AdminNotifications": "\\Treo\\Services\\AdminNotifications",
+  "Attachment": "\\Treo\\Services\\Attachment",
+  "Email": "\\Treo\\Services\\Email",
+  "Installer": "\\Treo\\Services\\Installer",
+  "Person": "\\Treo\\Services\\Person",
+  "Portal": "\\Treo\\Services\\Portal",
+  "QueueManagerBase": "\\Treo\\Services\\QueueManagerBase",
+  "QueueManagerMassDelete": "\\Treo\\Services\\QueueManagerMassDelete",
+  "QueueManagerMassUpdate": "\\Treo\\Services\\QueueManagerMassUpdate",
+  "MassActions": "\\Treo\\Services\\MassActions",
+  "RestApiDocs": "\\Treo\\Services\\RestApiDocs",
+  "ScheduledJob": "\\Treo\\Services\\ScheduledJob"
+}

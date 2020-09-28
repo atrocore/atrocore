@@ -1,0 +1,12 @@
+{
+    "fields": {
+        "hasAssignedUser": "Zugewiesener Benutzer",
+        "hasTeam": "Team",
+        "hasOwner": "Besitzer"
+    },
+    "tooltips": {
+        "hasAssignedUser": "Hat den zugewiesenen Benutzer",
+        "hasTeam": "Hat das Team",
+        "hasOwner": "Hat den Besitzer"
+    }
+}

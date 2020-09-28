@@ -1,0 +1,23 @@
+{
+	"templates": [
+		"dashlet",
+		"detail",
+		"edit",
+		"header",
+		"list",
+		"login",
+		"modals/edit",
+		"modals/select-records",
+		"site/header",
+		"site/navbar"
+	],
+	"layoutTypes": [
+		"columns-2",
+		"record",
+		"list-row",
+		"list-row-expanded"
+	],
+	"classes": [
+
+	]
+}

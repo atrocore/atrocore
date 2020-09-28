@@ -1,0 +1,1 @@
+<label class="control-label" style="cursor: pointer;" for="custom-checkbox"><input type="checkbox" id="custom-checkbox"{{#if value}} checked{{/if}} name="{{name}}" class="main-element">&nbsp;{{label}}</label>

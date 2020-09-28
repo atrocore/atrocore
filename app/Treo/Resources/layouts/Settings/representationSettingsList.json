@@ -1,0 +1,8 @@
+[
+    {
+        "label": "Representation",
+        "rows": [
+            [{"name": "isStreamSide"}, {"name": "isStreamPanelFirst"}]
+        ]
+    }
+]

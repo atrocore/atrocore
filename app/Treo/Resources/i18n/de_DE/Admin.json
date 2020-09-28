@@ -1,0 +1,36 @@
+{
+  "fields": {
+    "dataUrl": "Daten Url"
+  },
+  "labels": {
+    "Composer": "Modul Manager",
+    "log": "log",
+    "Validate": "Bestätigen",
+    "progressLog": "Fortschritte Log",
+    "Unit": "Maßeinheit",
+    "addOption": "Option hinzufügen",
+    "addMeasureUnit": "Maßeinheit hinzufügen"
+  },
+  "fieldTypes": {
+    "unit": "Maßeinheit"
+  },
+  "descriptions": {
+    "composer": "Das Plug-In für die Verwaltung von Abhängigkeiten, das es Ihnen erlaubt, Module aus dem externen Ablage zu installieren/aktualisieren/deinstallieren. Die Abhängigkeiten zwischen den modulen sind unterstützt.",
+    "representationSettings": "Representation settings.",
+    "unit": "Einstellungen Maßeinheiten"
+  },
+  "layouts": {
+    "relationships": "Unterer Paneele",
+    "detailSmallPortal": "Detail (Klein, Portal)",
+    "listForContact": "List (für Contact)",
+    "listSmallPortal": "List (Klein, Portal)"
+  },
+  "logicalOperators": {
+    "and": "UND",
+    "not": "NIHT",
+    "or": "ODER"
+  },
+  "messages": {
+    "upgradeFailed": "Upgrade fehlgeschlagen"
+  }
+}

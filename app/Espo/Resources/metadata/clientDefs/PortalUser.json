@@ -1,0 +1,35 @@
+{
+    "controller": "controllers/portal-user",
+    "views": {
+        "detail": "views/user/detail",
+        "list": "views/portal-user/list"
+    },
+    "recordViews": {
+        "list": "views/user/record/list",
+        "detail": "views/user/record/detail",
+        "edit":"views/user/record/edit",
+        "detailSmall":"views/user/record/detail-quick",
+        "editSmall":"views/user/record/edit-quick"
+    },
+    "defaultSidePanelFieldLists": {
+        "detail": [
+            "avatar"
+        ],
+        "detailSmall": [
+            "avatar"
+        ],
+        "edit": [
+            "avatar"
+        ],
+        "editSmall": [
+            "avatar"
+        ]
+    },
+    "filterList": [
+        "activePortal"
+    ],
+    "boolFilterList": [],
+    "selectDefaultFilters": {
+        "filter": "activePortal"
+    }
+}

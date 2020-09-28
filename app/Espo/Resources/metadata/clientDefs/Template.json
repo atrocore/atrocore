@@ -1,0 +1,59 @@
+{
+    "controller": "controllers/record",
+    "recordViews": {
+        "detail": "views/template/record/detail",
+        "edit": "views/template/record/edit"
+    },
+    "formDependency": {
+        "printFooter": {
+            "map": {
+                "true" : [
+                    {
+                        "action": "show",
+                        "fields": ["footer", "footerPosition"]
+                    }
+                ]
+            },
+            "default": [
+                {
+                    "action": "hide",
+                    "fields": ["footer", "footerPosition"]
+                }
+            ]
+        }
+    },
+    "dynamicLogic": {
+        "fields": {
+            "body": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isNotEmpty",
+                            "attribute": "entityType"
+                        }
+                    ]
+                }
+            },
+            "header": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isNotEmpty",
+                            "attribute": "entityType"
+                        }
+                    ]
+                }
+            },
+            "variables": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isNotEmpty",
+                            "attribute": "entityType"
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

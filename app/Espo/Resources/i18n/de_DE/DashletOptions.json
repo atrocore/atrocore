@@ -1,0 +1,32 @@
+{
+  "fields": {
+    "title": "Titel",
+    "dateFrom": "Von Datum",
+    "dateTo": "Bis Datum",
+    "autorefreshInterval": "Aktualisierungsintervall",
+    "displayRecords": "Sätze anzeigen",
+    "isDoubleHeight": "Zweifache Höhe",
+    "mode": "Modus",
+    "enabledScopeList": "Was soll angezeigt werden",
+    "users": "Benutzer",
+    "entityType": "Entitätstyp",
+    "primaryFilter": "Primärfilter",
+    "boolFilterList": "Zusätzliche Filter",
+    "sortBy": "Reihenfolge (Feld)",
+    "sortDirection": "Reihenfolge (Richtung)",
+    "dateFilter": "Datumsfilter"
+  },
+  "options": {
+    "mode": {
+      "agendaWeek": "Woche (Agenda)",
+      "basicWeek": "Woche",
+      "month": "Monat",
+      "basicDay": "Tag",
+      "agendaDay": "Tag (Agenda)",
+      "timeline": "Zeitachse"
+    }
+  },
+  "messages": {
+    "selectEntityType": "Wählen Sie Entitätstyp in Dashlet-Optionen."
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "host": "Hostname",
+    "dbname": "Datenbankname",
+    "user": "Datenbank-Benutzername",
+    "username": "Benutzername",
+    "password": "Passwort",
+    "confirmPassword": "Passwort bestätigen"
+  },
+  "labels": {
+    "licenseAgreement": "Lizenzvereinbarung",
+    "databaseConfiguration": "Datenbank-Konfiguration",
+    "administratorSetup": "Administration",
+    "requiredSettings": "Erforderliche Einstellungen",
+    "chooseYourLanguage": "Wählen Sie bitte die Sprache",
+    "acceptTheAgreement": "Ich akzeptiere den Vertrag",
+    "hostName": "Hostname",
+    "databaseName": "Datenbankname",
+    "databaseUserName": "Datenbank-Benutzername",
+    "databaseUserPassword": "Datenbank-Benutzerpasswort",
+    "port": "Port",
+    "testConnection": "Test-Verbindung",
+    "reCheck": "Überprüfen Sie erneut",
+    "userName": "Banutzername",
+    "password": "Passwort",
+    "confirmYourPassword": "Bestätigen Sie bitte Ihr Passwort",
+    "back": "Zurück",
+    "next": "Weiter",
+    "finish": "Beenden",
+    "required": "Erforderlich",
+    "currentVersion": "Aktuelle Version",
+    "status": "Status"
+  },
+  "errors": {
+    "alreadyInstalled": "TreoCore ist schon installiert",
+    "languageNotCorrect": "Die Eingabesprache ist falsch",
+    "differentPass": "Verschiedene Passwörter",
+    "notCorrectDatabaseConfig": "Ungültige Datenbank Einstellungen"
+  },
+  "messages": {
+    "youMustAgreeToTheLicenseAgreement": "Sie müssen den Lizenzvertrag akzeptieren",
+    "fieldIsRequired": "{field} ist ein Pflichtfeld",
+    "connectionSuccessful": "Verbindung ist erfolgreich!",
+    "pleaseConfigureYourSystemToStart": "Bitte konfigurieren Sie Ihr System zu starten"
+  },
+  "requirements": {
+    "phpVersion": "PHP version",
+    "mysqlVersion": "MySQL version"
+  }
+}

@@ -1,0 +1,42 @@
+{
+   "params":[
+      {
+         "name":"required",
+         "type":"bool",
+         "default":false
+      },
+      {
+         "name":"options",
+         "type":"array",
+         "view": "views/admin/field-manager/fields/options"
+      },
+      {
+         "name":"default",
+         "type":"enum",
+         "view": "views/admin/field-manager/fields/options/default"
+      },
+      {
+         "name":"isSorted",
+         "type":"bool"
+      },
+      {
+         "name":"translation",
+         "type":"varchar",
+         "hidden": true
+      },
+      {
+         "name":"audited",
+         "type":"bool"
+      },
+      {
+         "name":"readOnly",
+         "type":"bool"
+      }
+   ],
+   "filter": true,
+   "fieldDefs":{
+      "type":"varchar"
+   },
+   "translatedOptions": true,
+   "personalData": true
+}

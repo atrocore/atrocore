@@ -1,0 +1,174 @@
+{
+    "fields": {
+        "post": {
+            "type": "text",
+            "rows": 30
+        },
+        "data": {
+            "type": "jsonObject",
+            "readOnly": true
+        },
+        "type": {
+            "type": "varchar",
+            "readOnly": true,
+            "view": "views/fields/enum",
+            "options": ["Post"]
+        },
+        "targetType": {
+            "type": "varchar"
+        },
+        "parent": {
+            "type": "linkParent",
+            "readOnly": true
+        },
+        "related": {
+            "type": "linkParent",
+            "readOnly": true
+        },
+        "attachments": {
+            "type": "attachmentMultiple",
+            "view": "views/stream/fields/attachment-multiple"
+        },
+        "number": {
+            "type": "autoincrement",
+            "index": true,
+            "readOnly": true
+        },
+        "teams": {
+            "type": "linkMultiple",
+            "noLoad": true
+        },
+        "portals": {
+            "type": "linkMultiple",
+            "noLoad": true
+        },
+        "users": {
+            "type": "linkMultiple",
+            "noLoad": true
+        },
+        "isGlobal": {
+            "type": "bool"
+        },
+        "createdByGender": {
+            "type": "foreign",
+            "link": "createdBy",
+            "field": "gender"
+        },
+        "notifiedUserIdList": {
+            "type": "jsonArray",
+            "notStorable": true,
+            "disabled": true
+        },
+        "isInternal": {
+            "type": "bool"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true
+        }
+    },
+    "links": {
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "attachments": {
+            "type": "hasChildren",
+            "entity": "Attachment",
+            "relationName": "attachments",
+            "foreign": "parent"
+        },
+        "parent": {
+            "type": "belongsToParent",
+            "foreign": "notes"
+        },
+        "superParent": {
+            "type": "belongsToParent"
+        },
+        "related": {
+            "type": "belongsToParent"
+        },
+        "teams": {
+            "type": "hasMany",
+            "entity": "Team",
+            "foreign": "notes"
+        },
+        "portals": {
+            "type": "hasMany",
+            "entity": "Portal",
+            "foreign": "notes"
+        },
+        "users": {
+            "type": "hasMany",
+            "entity": "User",
+            "foreign": "notes"
+        }
+    },
+    "collection": {
+        "sortBy": "number",
+        "asc": false
+    },
+    "statusStyles": {
+        "Lead": {
+            "Assigned" : "primary",
+            "In Process" : "primary",
+            "Converted" : "success",
+            "Recycled" : "danger",
+            "Dead" : "danger"
+        },
+        "Case": {
+            "Assigned" : "primary",
+            "Pending" : "default",
+            "Closed" : "success",
+            "Rejected" : "danger",
+            "Duplicate" : "danger"
+        },
+        "Opportunity": {
+            "Proposal": "primary",
+            "Negotiation": "primary",
+            "Closed Won" : "success",
+            "Closed Lost" : "danger"
+        },
+        "Task": {
+            "Completed": "success",
+            "Started" : "primary",
+            "Canceled" : "danger"
+        },
+        "Meeting": {
+            "Held": "success"
+        },
+        "Call": {
+            "Held": "success"
+        }
+    },
+    "indexes": {
+        "createdAt": {
+            "type": "index",
+            "columns": ["createdAt"]
+        },
+        "parent": {
+            "type": "index",
+            "columns": ["parentId", "parentType"]
+        },
+        "parentAndSuperParent": {
+            "type": "index",
+            "columns": ["parentId", "parentType", "superParentId", "superParentType"]
+        }
+    }
+}

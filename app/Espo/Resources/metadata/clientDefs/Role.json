@@ -1,0 +1,21 @@
+{
+    "recordViews":{
+        "detail":"views/role/record/detail",
+        "edit":"views/role/record/edit",
+        "editQuick":"views/role/record/edit",
+        "list":"views/role/record/list"
+    },
+    "relationshipPanels": {
+        "users":{
+            "create":false,
+            "rowActionsView": "views/record/row-actions/relationship-unlink-only"
+        },
+        "teams":{
+            "create":false,
+            "rowActionsView": "views/record/row-actions/relationship-unlink-only"
+        }
+    },
+    "views": {
+        "list": "views/role/list"
+    }
+}

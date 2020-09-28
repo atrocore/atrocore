@@ -1,0 +1,30 @@
+/*!
+ *  zaq1
+ */
+
+.panel {
+  &.dashlet {
+    .panel-heading {
+      & > .btn-group {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+      }
+    }
+
+    .panel-body {
+      border-right: 1px solid #dcdcdc;
+    }
+  }
+}
+
+.dashlets {
+  &.grid-stack {
+    & > .grid-stack-item {
+      & > .ui-resizable-se {
+        right: 15px;
+      }
+    }
+  }
+}
+

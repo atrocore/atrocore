@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "queueItem": {
+      "type": "link"
+    }
+  },
+  "links": {
+    "queueItem": {
+      "type": "belongsTo",
+      "entity": "QueueItem"
+    }
+  }
+}

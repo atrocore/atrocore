@@ -1,0 +1,31 @@
+{
+   "params":[
+      {
+         "name":"required",
+         "type":"bool",
+         "default":false
+      },
+      {
+         "name":"typeList",
+         "type":"array",
+         "default": ["Mobile", "Office", "Home", "Fax", "Other"],
+         "view": "views/admin/field-manager/fields/options"
+      },
+      {
+         "name":"defaultType",
+         "type":"varchar",
+         "default": "Mobile"
+      }
+   ],
+   "notActualFields":[
+      "data"
+   ],
+   "notCreatable": true,
+   "filter": true,
+   "fieldDefs":{
+      "notStorable":true
+   },
+   "translatedOptions": true,
+   "textFilter": true,
+   "personalData": true
+}

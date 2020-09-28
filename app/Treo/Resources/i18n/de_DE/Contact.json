@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "emailAddress": "E-Mail",
+    "title": "Funktion",
+    "accountRole": "Funktion",
+    "account": "Firma",
+    "accounts": "Firmen",
+    "phoneNumber": "Telefon",
+    "accountType": "Firmentyp",
+    "doNotCall": "Anrufe unerwünscht",
+    "address": "Adresse",
+    "description": "Beschreibung",
+    "portalUser": "Portal Benutzer",
+    "accountIsInactive": "Inaktives Konto"
+  },
+  "links": {
+    "account": "Firma (Primär)",
+    "accounts": "Firmen",
+    "portalUser": "Portal Benutzer"
+  },
+  "labels": {
+    "Create Contact": "Kontakt erstellen"
+  },
+  "presetFilters": {
+    "portalUsers": "Portal Benutzer",
+    "notPortalUsers": "Keine Portal Benutzer",
+    "accountActive": "Aktiv"
+  }
+}

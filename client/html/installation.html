@@ -1,0 +1,235 @@
+<!--
+  ~  zaq1
+  -->
+
+<!doctype html>
+<html>
+    <head>
+        <title>{{applicationName}}</title>
+        <link rel="stylesheet" href="{{basePath}}client/modules/treo-core/css/treo/treo-dark-theme.css">
+        <link rel="shortcut icon" sizes="196x196" href="{{basePath}}client/modules/treo-core/img/favicon16x16.png">
+        <link rel="icon" href="{{basePath}}client/modules/treo-core/img/favicon16x16.png" type="image/x-icon">
+        <link rel="shortcut icon" href="{{basePath}}client/modules/treo-core/img/favicon16x16.png" type="image/x-icon">
+        <script src="{{basePath}}client/lib/underscore-min.js"></script>
+        <script src="{{basePath}}client/lib/jquery-2.1.4.min.js"></script>
+        <script src="{{basePath}}client/lib/bootstrap.min.js"></script>
+        <script src="{{basePath}}client/lib/backbone-min.js"></script>
+        <script src="{{basePath}}client/modules/treo-core/install/install.js"></script>
+        <style>
+            div.container.content {
+                margin-left: auto;
+            }
+            #general-container {
+                padding: 0;
+                border: 1px solid #c0c0c0;
+            }
+            #general-container header#header {
+                width: 100%;
+            }
+            #general-container div#navbar div.navbar {
+                position: relative;
+                width: 100%;
+                height: auto;
+            }
+            #general-container div#navbar div.navbar a.logo img {
+                max-width: 92px;
+                margin: 10px 0 7px 14px;
+            }
+            #general-container .main-template {
+                min-height: 720px;
+                padding: 0;
+            }
+            #general-container #main-template .msg-box {
+                position: absolute;
+                width: 100%;
+                height: auto;
+                max-height: 90px;
+                margin-bottom: 0;
+            }
+            #general-container .main-template .modal-body {
+                min-height: 620px;
+            }
+            .stepTitle {
+                padding: 5px;
+                background-color: #ececec;
+            }
+            #license-field {
+                width: 100%;
+                resize: none
+            }
+            #license-agree {
+                margin: -2px 0 0;
+            }
+            .loader {
+                border: 5px solid #f5f5f5;
+                border-top: 5px solid #2895ea;
+                border-radius: 50%;
+                width: 27px;
+                height: 27px;
+                animation: spin 2s linear infinite;
+                float: left;
+                margin: 3px 10px;
+            }
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container content">
+            <div id="general-container" class="cols-xs-12 col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6">
+                <header id="header">
+                    <div id="navbar">
+                        <div class="navbar navbar-inverse logo-centr-outer" role="navigation" data-orientation="horizontal">
+                            <div class="logo-centr-inner">
+                                <div class="navbar-header">
+                                    <a class="navbar-brand nav-link logo" href="#"><img src="{{basePath}}client/modules/treo-core/img/treo_core_logo_white.svg"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+                <div class="panel-body body" style="padding: 0">
+                    <div id="main-template">
+                        <div class="msg-box alert hidden"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer style="margin-left: 0">
+            <p class="credit small">
+                &copy; {{year}} <a href="https://treolabs.com" title="TreoCore is powered by EspoCRM" target="_blank">TreoCore is powered by EspoCRM</a>
+                <span class="pull-right"></span>
+            </p>
+        </footer>
+        <script type="text/template" id="language-license">
+            <div class="stepTitle text-center"><%= translate.labels.licenseAgreement %></div>
+            <div class="modal-body clearfix">
+                <div class="col-md-12 clearfix" style="padding: 0;">
+                    <div class="cell cell-website pull-left">
+                        <label class="field-label-website control-label"><%= translate.labels.chooseYourLanguage %></label>
+                        <div class="field field-website">
+                            <select name="user-lang" class="form-control">
+                                <% _.each(licenseAndLanguages.languageList, function(lang) { %>
+                                <option <%= lang === licenseAndLanguages.language ? selected="selected" : '' %> value="<%= lang %>"><%= translate.labels.languages[lang] %></option>
+                                <% }); %>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12" style="padding: 0; margin-top: 10px">
+                    <div class="cell cell-website form-group">
+                        <div class="field field-website">
+                            <textarea rows="24" id="license-field" readonly="readonly"><%- licenseAndLanguages.license %></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="cell cell-website col-sm-12 form-group">
+                        <input class="btn btn-default" type="checkbox" name="license-agree" id="license-agree" value="1">
+                        <label class="point-lbl" for="license-agree"><%= translate.labels.acceptTheAgreement %></label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <footer class="modal-footer">
+                    <button class="btn btn-primary next-step" type="button"><%= translate.labels.next %></button>
+                </footer>
+            </div>
+        </script>
+        <script type="text/template" id="db-connect">
+            <div class="stepTitle text-center"><%= translate.labels.databaseConfiguration %></div>
+            <div class="col-md-12 col-lg-6 modal-body" style="margin: 10px 0">
+                <div class="form-group">
+                    <label for="host"><%= translate.labels.hostName %> *</label>
+                    <input type="text" class="form-control" id="host" value="<%= dbSettings.host %>">
+                </div>
+                <div class="form-group">
+                    <label for="dbname"><%= translate.labels.databaseName %> *</label>
+                    <input type="text" class="form-control" id="dbname" value="<%= dbSettings.dbname %>">
+                </div>
+                <div class="form-group">
+                    <label for="user"><%= translate.labels.databaseUserName %> *</label>
+                    <input type="text" class="form-control" id="user" value="<%= dbSettings.user %>">
+                </div>
+                <div class="form-group">
+                    <label for="password"><%= translate.labels.databaseUserPassword %></label>
+                    <input type="password" class="form-control" id="password" value="<%= dbSettings.password %>">
+                </div>
+                <div class="form-group">
+                    <label for="port"><%= translate.labels.port %></label>
+                    <input type="text" class="form-control" id="port" value="<%= dbSettings.port %>">
+                </div>
+                <button type="button" class="btn btn-default test-db-connection"><%= translate.labels.testConnection %></button>
+            </div>
+            <div class="col-sm-12">
+                <footer class="modal-footer">
+                    <button class="btn btn-primary back-step" type="button"><%= translate.labels.back %></button>
+                    <button class="btn btn-primary next-step" type="button"><%= translate.labels.next %></button>
+                </footer>
+            </div>
+        </script>
+        <script type="text/template" id="required-settings">
+            <div class="stepTitle text-center"><%= translate.labels.requiredSettings %></div>
+            <div class="col-sm-12 modal-body" style="margin: 10px 0">
+            <table class="table table-stripped">
+                <thead>
+                <tr>
+                    <td></td>
+                    <td><%= translate.labels.required %></td>
+                    <td><%= translate.labels.currentVersion %></td>
+                    <td><%= translate.labels.status %></td>
+                </tr>
+                </thead>
+                <tbody>
+                <% _.each(requiredSettings.list, function(item){ %>
+                    <tr>
+                        <td><span><%= item.name %></span></td>
+                        <td><span><%= item.validValue %></span></td>
+                        <td><span><%= item.value %></span></td>
+                        <td><% if (item.isValid) { %>
+                            <span class="fas fa-check" style="color: green;"></span>
+                            <% } else { %>
+                            <span class="fas fa-times"  style="color: red;"></span>
+                            <% } %>
+                        </td>
+                    </tr>
+                <% }); %>
+                </tbody>
+            </table>
+            </div>
+            <div class="col-sm-12">
+                <footer class="modal-footer">
+                    <button class="btn btn-primary back-step" type="button"><%= translate.labels.back %></button>
+                    <button type="button" class="btn btn-warning re-check-settings"><%= translate.labels.reCheck %></button>
+                    <button class="btn btn-primary next-step" type="button"><%= translate.labels.next %></button>
+                </footer>
+            </div>
+        </script>
+        <script type="text/template" id="admin-creation">
+            <div class="stepTitle text-center"><%= translate.labels.administratorSetup %></div>
+            <div class="col-sm-6 modal-body" style="margin: 10px 0">
+                <div class="form-group">
+                    <label for="username"><%= translate.labels.userName %> *</label>
+                    <input type="text" class="form-control" id="username">
+                </div>
+                <div class="form-group">
+                    <label for="password"><%= translate.labels.password %> *</label>
+                    <input type="password" class="form-control" id="password">
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword"><%= translate.labels.confirmYourPassword %> *</label>
+                    <input type="password" class="form-control" id="confirmPassword">
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <footer class="modal-footer">
+                    <div class="loader hidden"></div>
+                    <button class="btn btn-primary back-step" type="button"><%= translate.labels.back %></button>
+                    <button class="btn btn-primary next-step" type="button"><%= translate.labels.finish %></button>
+                </footer>
+            </div>
+        </script>
+    </body>
+</html>

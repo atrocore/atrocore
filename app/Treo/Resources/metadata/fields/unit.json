@@ -1,0 +1,46 @@
+{
+   "params":[
+      {
+         "name":"required",
+         "type":"bool",
+         "default":false
+      },
+      {
+         "name": "measure",
+         "type": "enum",
+         "translation": "Global.measure",
+         "view": "treo-core:views/admin/field-manager/fields/measure-options"
+      },
+      {
+         "name":"min",
+         "type":"float"
+      },
+      {
+         "name":"max",
+         "type":"float"
+      },
+      {
+         "name":"audited",
+         "type":"bool"
+      },
+      {
+         "name":"readOnly",
+         "type":"bool"
+      }
+   ],
+   "actualFields":[
+      "",
+      "unit"
+   ],
+   "fields":{
+      "unit":{
+         "type":"varchar",
+         "disabled": true
+      }
+   },
+   "filter": true,
+   "view": "treo-core:views/fields/unit",
+   "fieldDefs": {
+      "type": "float"
+   }
+}

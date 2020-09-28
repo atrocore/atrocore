@@ -1,0 +1,25 @@
+{
+  "status": {
+    "initStates": [
+      "Pending"
+    ],
+    "transitions": {
+      "Running": [
+        "Pending"
+      ],
+      "Success": [
+        "Running"
+      ],
+      "Canceled": [
+        "Pending"
+      ],
+      "Failed": [
+        "Running"
+      ],
+      "Closed": [
+        "Success",
+        "Failed"
+      ]
+    }
+  }
+}

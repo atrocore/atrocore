@@ -1,0 +1,43 @@
+{
+   "params":[
+      {
+         "name":"required",
+         "type":"bool",
+         "default":false
+      },
+      {
+         "name":"default",
+         "type":"text"
+      },
+      {
+         "name":"maxLength",
+         "type":"int"
+      },
+      {
+         "name":"seeMoreDisabled",
+         "type":"bool",
+         "tooltip": true
+      },
+      {
+         "name": "rows",
+         "type": "int",
+         "default": 30,
+         "min": 1
+      },
+      {
+         "name": "lengthOfCut",
+         "type": "int",
+         "default": 400,
+         "min": 1,
+         "tooltip": true
+      },
+      {
+         "name":"readOnly",
+         "type":"bool"
+      }
+   ],
+   "filter": true,
+   "personalData": true,
+   "textFilter": true,
+   "fullTextSearch": true
+}

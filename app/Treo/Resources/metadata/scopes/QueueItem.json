@@ -1,0 +1,19 @@
+{
+  "entity": true,
+  "layouts": true,
+  "tab": true,
+  "acl": true,
+  "aclPortal": true,
+  "aclActionList": [
+    "read",
+    "edit",
+    "delete"
+  ],
+  "type": "Base",
+  "module": "TreoCore",
+  "object": true,
+  "hasAssignedUser": true,
+  "hasTeam": true,
+  "hasOwner": true,
+  "quickCreateListDisabled": true
+}

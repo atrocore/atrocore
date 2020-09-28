@@ -1,0 +1,107 @@
+[
+    {
+        "label": "Locale",
+        "rows": [
+            [{"name": "dateFormat"}, {"name": "timeZone"}],
+            [{"name": "timeFormat"}, {"name": "weekStart"}],
+            [{"name": "defaultCurrency"}, {"name": "thousandSeparator"}],
+            [false, {"name": "decimalMark"}],
+            [{"name": "language"}, false]
+        ]
+    },
+    {
+        "label": "Misc",
+        "rows": [
+            [{"name": "exportDelimiter"}, {"name":"autoFollowEntityTypeList"}],
+            [
+                {
+                    "name": "signature",
+                    "params": {
+                        "height": 70,
+                        "toolbar": [
+                            ["style", ["bold", "italic", "underline", "clear"]],
+                            ["color", ["color"]],
+                            ["height", ["height"]],
+                            ["misc",["codeview"]]
+                        ]
+                    }
+                },
+                {
+                    "name": "defaultReminders"
+                }
+            ],
+            [
+                {
+                    "name": "emailReplyToAllByDefault"
+                },
+                {
+                    "name": "doNotFillAssignedUserIfNotRequired"
+                }
+            ],
+            [
+                {
+                    "name": "emailReplyForceHtml"
+                },
+                {
+                    "name": "followEntityOnStreamPost"
+                }
+            ],
+            [
+                {
+                    "name": "emailUseExternalClient"
+                },
+                {
+                    "name": "followCreatedEntities"
+                }
+            ],
+            [
+                false,
+                {
+                    "name": "followCreatedEntityTypeList"
+                }
+            ]
+        ]
+    },
+    {
+        "label": "User Interface",
+        "rows": [
+            [
+                {"name":"theme"},
+                false
+            ],
+            [
+                {"name":"scopeColorsDisabled"},
+                {"name":"tabColorsDisabled"}
+            ],
+            [
+                {"name":"useCustomTabList"},
+                {"name":"tabList"}
+            ],
+            [
+                {"name":"dashboardLayout", "fullWidth": true}
+            ]
+        ]
+    },
+    {
+        "label": "Notifications",
+        "name": "notifications",
+        "rows": [
+            [{"name": "receiveAssignmentEmailNotifications"}, {"name": "receiveMentionEmailNotifications"}],
+            [{"name": "receiveStreamEmailNotifications"}, false]
+        ]
+    },
+    {
+        "label": "SMTP",
+        "rows": [
+            [
+                {
+                    "name": "smtpEmailAddress"
+                }, false
+            ],
+            [{"name": "smtpServer"}, {"name": "smtpPort"}],
+            [{"name": "smtpAuth"}, {"name": "smtpSecurity"}],
+            [{"name": "smtpUsername"}, {"name": "testSend", "customLabel": null, "view": "views/preferences/fields/test-send"}],
+            [{"name": "smtpPassword"}, false]
+        ]
+    }
+]

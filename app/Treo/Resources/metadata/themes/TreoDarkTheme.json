@@ -1,0 +1,12 @@
+{
+    "stylesheet": "client/modules/treo-core/css/treo/treo-dark-theme.css",
+    "logo": "client/modules/treo-core/img/treo_core_logo_white.svg",
+    "navbarIsVertical": true,
+    "navbarStaticItemsHeight": 75,
+    "recordTopButtonsStickTop": 61,
+    "recordTopButtonsBlockHeight": 21,
+    "dashboardCellHeight": 155,
+    "dashboardCellMargin": 19,
+    "modalFooterAtTheTop": true,
+    "modalFullHeight": true
+}

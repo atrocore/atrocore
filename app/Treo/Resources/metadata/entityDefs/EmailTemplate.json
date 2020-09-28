@@ -1,0 +1,8 @@
+{
+  "fields": {
+    "insertField": {
+      "type": "jsonObject",
+      "notStorable": true
+    }
+  }
+}

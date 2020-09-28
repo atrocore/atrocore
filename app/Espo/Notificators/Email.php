@@ -1,0 +1,166 @@
+<?php
+
+namespace Espo\Notificators;
+
+use \Espo\ORM\Entity;
+
+class Email extends \Espo\Core\Notificators\Base
+{
+    const DAYS_THRESHOLD = 2;
+
+    protected function init()
+    {
+        $this->addDependency('serviceFactory');
+        $this->addDependency('aclManager');
+    }
+
+    private $streamService = null;
+
+    protected function getAclManager()
+    {
+        return $this->getInjection('aclManager');
+    }
+
+    protected function getStreamService()
+    {
+        if (empty($this->streamService)) {
+            $this->streamService = $this->getInjection('serviceFactory')->create('Stream');
+        }
+        return $this->streamService;
+    }
+
+    public function process(Entity $entity)
+    {
+        if ($entity->get('status') !== 'Archived' && $entity->get('status') !== 'Sent') {
+            return;
+        }
+
+        if ($entity->get('isJustSent')) {
+            $previousUserIdList = [];
+        } else {
+            $previousUserIdList = $entity->getFetched('usersIds');
+            if (!is_array($previousUserIdList)) {
+                $previousUserIdList = [];
+            }
+        }
+
+        $dateSent = $entity->get('dateSent');
+        if (!$dateSent) return;
+
+        $dt = null;
+        try {
+            $dt = new \DateTime($dateSent);
+        } catch (\Exception $e) {}
+        if (!$dt) return;
+
+        if ($dt->diff(new \DateTime())->days > self::DAYS_THRESHOLD) return;
+
+        $emailUserIdList = $entity->get('usersIds');
+
+        if (is_null($emailUserIdList) || !is_array($emailUserIdList)) {
+            return;
+        }
+
+        $userIdList = [];
+        foreach ($emailUserIdList as $userId) {
+            if (!in_array($userId, $userIdList) && !in_array($userId, $previousUserIdList) && $userId != $this->getUser()->id) {
+                $userIdList[] = $userId;
+            }
+        }
+
+        $data = array(
+            'emailId' => $entity->id,
+            'emailName' => $entity->get('name'),
+        );
+
+        if (!$entity->has('from')) {
+            $this->getEntityManager()->getRepository('Email')->loadFromField($entity);
+        }
+
+        if (!$entity->has('to')) {
+            $this->getEntityManager()->getRepository('Email')->loadToField($entity);
+        }
+        $person = null;
+
+        $from = $entity->get('from');
+        if ($from) {
+            $person = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddress($from, null, ['User', 'Contact', 'Lead']);
+            if ($person) {
+                $data['personEntityType'] = $person->getEntityType();
+                $data['personEntityName'] = $person->get('name');
+                $data['personEntityId'] = $person->id;
+            }
+        }
+
+        $userIdFrom = null;
+        if ($person && $person->getEntityType() == 'User') {
+            $userIdFrom = $person->id;
+        }
+
+        if (empty($data['personEntityId'])) {
+            $data['fromString'] = \Espo\Services\Email::parseFromName($entity->get('fromString'));
+            if (empty($data['fromString']) && $from) {
+                $data['fromString'] = $from;
+            }
+        }
+
+        $parent = null;
+        if ($entity->get('parentId') && $entity->get('parentType')) {
+            $parent = $this->getEntityManager()->getEntity($entity->get('parentType'), $entity->get('parentId'));
+        }
+        $account = null;
+        if ($entity->get('accountId')) {
+            $account = $this->getEntityManager()->getEntity('Account', $entity->get('accountId'));
+        }
+
+        foreach ($userIdList as $userId) {
+            if (!$userId) continue;
+            if ($userIdFrom === $userId) continue;
+            if ($entity->getLinkMultipleColumn('users', 'inTrash', $userId)) continue;
+
+            if ($entity->get('isBeingImported')) {
+                $folderId = $entity->getLinkMultipleColumn('users', 'folderId', $userId);
+                if ($folderId) {
+                    if (
+                        $this->getEntityManager()->getRepository('EmailFolder')->where(array(
+                            'id' => $folderId,
+                            'skipNotifications' => true
+                        ))->count()
+                    ) {
+                        continue;
+                    }
+                }
+            }
+
+            $user = $this->getEntityManager()->getEntity('User', $userId);
+            if (!$user) continue;
+            if ($user->get('isPortalUser')) continue;
+            if (!$this->getAclManager()->checkScope($user, 'Email')) {
+                continue;
+            }
+            if ($entity->get('status') == 'Archived') {
+                if ($parent) {
+                    if ($this->getStreamService()->checkIsFollowed($parent, $userId)) {
+                        continue;
+                    }
+                }
+                if ($account) {
+                    if ($this->getStreamService()->checkIsFollowed($account, $userId)) {
+                        continue;
+                    }
+                }
+            }
+            $notification = $this->getEntityManager()->getEntity('Notification');
+            $notification->set(array(
+                'type' => 'EmailReceived',
+                'userId' => $userId,
+                'data' => $data,
+                'relatedId' => $entity->id,
+                'relatedType' => 'Email'
+            ));
+            $this->getEntityManager()->saveEntity($notification);
+        }
+    }
+
+}
+

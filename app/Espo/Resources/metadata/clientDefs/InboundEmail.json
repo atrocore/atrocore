@@ -1,0 +1,71 @@
+{
+    "recordViews":{
+        "detail":"views/inbound-email/record/detail",
+        "edit":"views/inbound-email/record/edit",
+        "list":"views/inbound-email/record/list"
+    },
+    "formDependency": {
+        "reply": {
+            "map": {
+                "true" : [
+                    {
+                        "action": "show",
+                        "fields": ["replyEmailTemplate", "replyFromAddress", "replyFromName"]
+                    }, {
+                        "action": "setRequired",
+                        "fields": ["replyEmailTemplate"]
+                    }
+                ]
+            },
+            "default": [
+                {
+                    "action": "hide",
+                    "fields": ["replyEmailTemplate", "replyFromAddress", "replyFromName"]
+                }, {
+                    "action": "setNotRequired",
+                    "fields": ["replyEmailTemplate"]
+                }
+            ]
+        }
+    },
+    "searchPanelDisabled": true,
+    "relationshipPanels": {
+        "filters": {
+            "select": false,
+            "rowActionsView": "views/record/row-actions/relationship-edit-and-remove"
+        },
+        "emails": {
+            "select": false,
+            "create": false,
+            "rowActionsView": "views/record/row-actions/remove-only"
+        }
+    },
+    "defaultSidePanelFieldLists": {
+        "detail": [
+        ],
+        "detailSmall": [
+        ],
+        "edit": [
+        ],
+        "editSmall": [
+        ]
+    },
+    "dynamicLogic": {
+        "fields": {
+            "smtpUsername": {
+                "required": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "useSmtp"
+                        },
+                        {
+                            "type": "isTrue",
+                            "attribute": "smtpAuth"
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

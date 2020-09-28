@@ -1,0 +1,20 @@
+{
+  "exceptions": {
+    "Wrong crontab configuration": "Falsche Crontab-Konfiguration"
+  },
+  "options": {
+    "job": {
+      "CheckInboundEmails": "Gruppen E-Mail Konten überprüfen",
+      "CheckEmailAccounts": "Persönliche E-Mail Konten prüfen",
+      "SendEmailReminders": "E-Mail Erinnerungen senden",
+      "AuthTokenControl": "Auth Token-Überwachung",
+      "SendEmailNotifications": "E-Mail-Benachrichtigungen senden",
+      "CheckNewVersion": "Check for New Version",
+      "ProcessMassEmail": "Massen E-Mails senden",
+      "ControlKnowledgeBaseArticleStatus": "Wissensbasis Artikel Status kontrollieren",
+      "TreoCleanup": "Nicht verwendete Daten bereinigen. Löschen alter Daten und nicht verwendeter Datenbanktabellen, Datenbankspalten usw.",
+      "RestApiDocs": "Generieren Sie REST-API-Dokumente",
+      "ComposerAutoUpdate": "Automatische Aktualisierung von Modulen"
+    }
+  }
+}
