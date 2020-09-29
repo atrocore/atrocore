@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Treo\Listeners;
 
 use Treo\Core\EventManager\Event;
-use Treo\Migrations\V3Dot25Dot20;
 
 /**
  * Installer listener
@@ -35,9 +34,6 @@ class Installer extends AbstractListener
             include_once $file;
             unlink($file);
         }
-
-        // fill treo store table
-        (new V3Dot25Dot20($this->getEntityManager()->getPDO(), $this->getConfig()))->up();
     }
 
     /**
