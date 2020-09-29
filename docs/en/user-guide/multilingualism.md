@@ -4,7 +4,7 @@ User can work with multilingual fields in accordance with his role rights that a
 
 The possible values of the `Enum` and `Multi-Enum` fields are specified for each language by the [administrator](#administrator-functions). For the `Enum` fields the default values, assigned by the administrator, are displayed, and for the `Multi-Enum` fields, users can select the desired options from the existing values:
 
-![ML enum, multi-enum](_assets/ml-enum-multienum.jpg) 
+![ML enum, multi-enum](../../_assets/multilingualism/ml-enum-multienum.jpg) 
 
 For the fields of the `Text`, `Varchar`, and `Wysiwyg` types, the additional input fields are displayed in accordance with the [layout configuration](#multilingual-field-display-on-the-layout) for all languages that have been activated in the [module settings](#module-configuration):  
 
