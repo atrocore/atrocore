@@ -14,13 +14,13 @@ To enable the function for inputting the field values in multiple languages, sel
 
 To change the languages for which the multilingual fields must be filled (e.g. delete the previously defined locales, add new ones), also use the `Input Language List` setting.
 
-When turning off a certain language or completely removing the "Multi-Languages" module, the input field and its value will be removed both from the database and system interface. You will be notified about it with the following warning message:
+When turning off a certain language, the input field and its value will be removed both from the database and system interface. You will be notified about it with the following warning message:
 
 ![Warning](../../_assets/multilingualism/warning.jpg)
 
-If this language is turned on again or the module is re-installed, the input fields will be restored to the system interface, but with no data in them. So please, be careful with these actions.
+If this language is turned on again, the input fields will be restored to the system interface, but with no data in them. So please, be careful with these actions.
 
-On the same "Multi-Languages" module configuration page, you can automatically update the layouts for all entities to include locale fields on the ones where the main multilingual field is already displayed. To do this, click the `Update Layouts` button and confirm your decision in the pop-up that appears:
+You can automatically update the layouts for all entities to include locale fields on the ones where the main multilingual field is already displayed. To do this, click the `Update Layouts` button and confirm your decision in the pop-up that appears:
 
 ![Update layouts](../../_assets/multilingualism/update-layouts.jpg)
 
@@ -114,12 +114,10 @@ To remove the entity field with the activated `Multi-Language` checkbox, click `
 ![Field removal](../../_assets/multilingualism/ml-field-remove.jpg)
 
 Please, note that locale fields cannot be removed apart from their main multilingual field. To do this, you need to either remove the selection of the `Multi-Language` checkbox on the main field editing page or remove the main multilingual field from the system as it is described above. 
-
-> Please, note that if the "Multi-Languages" module is deactivated and/or removed from the system, *main* multilingual fields for the configured entities remain together with their values, but their *locale* fields and values disappear. Also, these fields lose their multilingual character (the `Multi-Language` checkbox is removed). When the module is activated again, all the locale multilingual fields and their values are restored. However, re-installing the module leads to restoring only locale fields, but not their values. The exception is multilingual fields of the`Varchar` type – their values are also restored for locale fields.
  
 ### Access Rights
 
-One of the advantages of the "Multi-Languages" module is that it supports the ability to grant separate roles *different* read/edit permissions to multilingual fields. To do this, go to `Administration > Roles > 'Role name'` and on the role detail view page click the `Edit` button:
+Multilingualism supports the ability to grant separate roles *different* read/edit permissions to multilingual fields. To do this, go to `Administration > Roles > 'Role name'` and on the role detail view page click the `Edit` button:
 
 ![Role editing](../../_assets/multilingualism/role-edit.jpg)  
 
