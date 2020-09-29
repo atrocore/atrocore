@@ -2,7 +2,7 @@
 
 To configure the multi-languages settings, go to `Administration > Multi-Languages`:
 
-![Default settings](_assets/default-settings.jpg)
+![Default settings](../../_assets/multilingualism/default-settings.jpg)
 
 By default, the `Is active` checkbox and the `Input Language List` field are deactivated, as shown on the screenshot above.
 
