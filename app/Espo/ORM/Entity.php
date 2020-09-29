@@ -183,6 +183,9 @@ abstract class Entity implements IEntity
                             while (in_array($value[strlen($value) - 1], ['0', '.'])) {
                                 $value = mb_substr($value, 0, -1);
                             }
+                            if (empty($value)) {
+                                $value = 0;
+                            }
                             break;
                         case self::JSON_ARRAY:
                             $value = is_string($value) ? json_decode($value) : $value;

@@ -155,7 +155,7 @@ abstract class AbstractModule
         $result = [];
 
         // prepare path
-        $path = $this->path . 'app/Services';
+        $path = $this->getAppPath() . 'Services';
 
         if (is_dir($path)) {
             foreach (scandir($path) as $item) {
@@ -177,7 +177,7 @@ abstract class AbstractModule
     {
         $metadata = $this
             ->getObjUnifier()
-            ->unify('metadata', $this->path . 'app/Resources/metadata', true);
+            ->unify('metadata', $this->getAppPath() . 'Resources/metadata', true);
         $data = DataUtil::merge($data, $metadata);
     }
 
@@ -194,7 +194,7 @@ abstract class AbstractModule
         $layout = (new Layout($this->container))->load();
 
         // prepare file path
-        $filePath = $layout->concatPath($this->path . 'app/Resources/layouts', $scope);
+        $filePath = $layout->concatPath($this->getAppPath() . 'Resources/layouts', $scope);
         $fileFullPath = $layout->concatPath($filePath, $name . '.json');
 
         if (file_exists($fileFullPath)) {
@@ -213,7 +213,7 @@ abstract class AbstractModule
      */
     public function loadRoutes(array &$data)
     {
-        $data = $this->getRouteUtil()->getAddData($data, $this->path . 'app/Resources/routes.json');
+        $data = $this->getRouteUtil()->getAddData($data, $this->getAppPath() . 'Resources/routes.json');
     }
 
     /**
@@ -224,7 +224,7 @@ abstract class AbstractModule
     public function loadListeners(array &$listeners)
     {
         // prepare path
-        $dirPath = $this->path . 'app/Listeners';
+        $dirPath = $this->getAppPath() . 'Listeners';
 
         if (file_exists($dirPath) && is_dir($dirPath)) {
             foreach (scandir($dirPath) as $file) {
@@ -246,7 +246,7 @@ abstract class AbstractModule
      */
     public function loadTranslates(array &$data)
     {
-        $data = Util::merge($data, $this->getUnifier()->unify('i18n', $this->path . 'app/Resources/i18n', true));
+        $data = Util::merge($data, $this->getUnifier()->unify('i18n', $this->getAppPath() . 'Resources/i18n', true));
     }
 
     /**
@@ -262,7 +262,7 @@ abstract class AbstractModule
         $fileList = $this
             ->container
             ->get('fileManager')
-            ->getFileList($this->path . 'app/' . $classesDir, false, '\.php$', true);
+            ->getFileList($this->getAppPath() . $classesDir, false, '\.php$', true);
 
         $result = [];
         if (!empty($fileList)) {
@@ -331,5 +331,13 @@ abstract class AbstractModule
         }
 
         return $this->routeUtil;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getAppPath(): string
+    {
+        return $this->path . 'app/';
     }
 }

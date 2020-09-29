@@ -13,10 +13,18 @@ use Treo\Core\ModuleManager\AbstractModule;
 class Module extends AbstractModule
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public static function getLoadOrder(): int
     {
-        return 5110;
+        return 1;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getAppPath(): string
+    {
+        return $this->path . 'app/Multilang/';
     }
 }
