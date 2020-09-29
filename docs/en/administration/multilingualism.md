@@ -1,3 +1,5 @@
+## Multilingualism
+
 ### Configuration 
 
 To configure the multi-languages settings, go to `Administration > Multi-Languages`:
