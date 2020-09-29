@@ -40,7 +40,9 @@
       "Espo\\Custom": "../../../custom/"
     },
     "psr-4": {
+      "ColoredFields\\": "app/ColoredFields/",
       "Espo\\": "app/Espo/",
+      "Multilang\\": "app/Multilang/",
       "Treo\\": "app/Treo/"
     }
   },

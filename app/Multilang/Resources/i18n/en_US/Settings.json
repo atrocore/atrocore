@@ -1,0 +1,13 @@
+{
+  "labels": {
+    "inputLanguage": "Input Language",
+    "сonfirmLocaleChanges": "If the locale is removed, all your data previously entered in the multi-language fields for this locale are automatically removed via the <a href=\"/#ScheduledJob\" target=\"_blank\">cron job</a>."
+  },
+  "fields": {
+    "inputLanguageList": "Input Language List",
+    "isMultilangActive": "Is Active"
+  },
+  "messages": {
+    "updateLayouts": "Are you sure you want to update the layouts and automatically add the previously missing locale fields to them?"
+  }
+}

@@ -16,6 +16,11 @@ use Treo\Services\Composer;
 class Manager
 {
     /**
+     * @var array
+     */
+    public const CORE_MODULES = ['ColoredFields', 'Multilang'];
+
+    /**
      * @var array|null
      */
     private $modules = null;
@@ -63,7 +68,7 @@ class Manager
             $path = 'data/modules.json';
 
             // parse data
-            $data = [];
+            $data = self::CORE_MODULES;
             if (file_exists($path)) {
                 $data = array_merge($data, json_decode(file_get_contents($path), true));
             }

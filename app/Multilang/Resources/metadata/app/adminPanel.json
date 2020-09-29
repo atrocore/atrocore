@@ -1,0 +1,12 @@
+{
+  "system": {
+    "itemList": [
+      "__APPEND__",
+      {
+        "url": "#Settings/inputLanguage",
+        "label": "multiLanguages",
+        "description": "multiLanguagesSettings"
+      }
+    ]
+  }
+}

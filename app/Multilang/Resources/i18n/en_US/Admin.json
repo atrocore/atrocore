@@ -1,0 +1,13 @@
+{
+  "labels": {
+    "multiLanguagesSettings": "Multi-Languages Settings",
+    "multiLanguages": "Multi-Languages"
+  },
+  "descriptions": {
+    "inputLanguage": "Input languages for translatable fields.",
+    "multiLanguagesSettings": "Multi-Languages Settings"
+  },
+  "fields": {
+    "isMultilang": "Multi-Language"
+  }
+}

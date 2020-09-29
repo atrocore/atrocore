@@ -1,0 +1,26 @@
+{
+    "params": [
+        {
+            "name": "required",
+            "type": "bool",
+            "default": false
+        },
+        {
+            "name": "default",
+            "type": "varchar"
+        },
+        {
+            "name": "audited",
+            "type": "bool"
+        },
+        {
+            "name": "readOnly",
+            "type": "bool"
+        }
+    ],
+    "filter": true,
+    "fieldDefs": {
+        "type": "varchar"
+    },
+    "view": "colored-fields:views/fields/color"
+}

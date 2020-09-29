@@ -1,0 +1,8 @@
+{
+    "fieldTypes": {
+        "color": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/base",
+            "typeList": ["equals", "notEquals", "isEmpty", "isNotEmpty"]
+        }
+    }
+}

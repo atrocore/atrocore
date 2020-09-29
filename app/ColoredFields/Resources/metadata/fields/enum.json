@@ -1,0 +1,50 @@
+{
+    "params": [
+        {
+            "name": "required",
+            "type": "bool",
+            "default": false
+        },
+        {
+            "name": "options",
+            "type": "array",
+            "view": "colored-fields:views/admin/field-manager/fields/colored-options"
+        },
+        {
+            "name": "default",
+            "type": "enum",
+            "view": "views/admin/field-manager/fields/options/default"
+        },
+        {
+            "name": "fontSize",
+            "type": "float",
+            "min": 0.7,
+            "max": 2,
+            "default": 1,
+            "tooltip": true
+        },
+        {
+            "name": "isSorted",
+            "type": "bool"
+        },
+        {
+            "name": "translation",
+            "type": "varchar",
+            "hidden": true
+        },
+        {
+            "name": "audited",
+            "type": "bool"
+        },
+        {
+            "name": "readOnly",
+            "type": "bool"
+        }
+    ],
+    "filter": true,
+    "fieldDefs": {
+        "type": "varchar"
+    },
+    "translatedOptions": true,
+    "view": "colored-fields:views/fields/colored-enum"
+}

@@ -1,0 +1,5 @@
+{
+  "tooltips": {
+    "isMultilang": "Automatische Erstellung von Feldern durch Klonen des aktuellen Felds, sofern in den Einstellungen für mehrere Sprachen Ländereinstellungen aktiviert sind."
+  }
+}

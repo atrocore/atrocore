@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "inputLanguageList": {
+      "type": "multiEnum",
+      "default": [],
+      "options": [],
+      "required": false,
+      "view": "multilang:views/admin/fields/input-language-list"
+    },
+    "isMultilangActive": {
+      "type": "bool",
+      "default": false
+    }
+  }
+}

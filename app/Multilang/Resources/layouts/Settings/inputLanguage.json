@@ -1,0 +1,11 @@
+[
+  {
+    "label": "inputLanguage",
+    "rows": [
+      [
+        {"name": "isMultilangActive"},
+        {"name": "inputLanguageList"}
+      ]
+    ]
+  }
+]

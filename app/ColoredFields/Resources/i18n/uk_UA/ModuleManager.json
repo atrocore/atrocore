@@ -1,0 +1,8 @@
+{
+    "moduleNames": {
+        "ColoredFields": "Enum та Multienum поля з кольором"
+    },
+    "moduleDescriptions": {
+        "ColoredFields": "Модуль додає Enum та MultiEnum поля з кольором. Гарно підходить для статусів сутності. Коли кожен статус має різний колір."
+    }
+}
