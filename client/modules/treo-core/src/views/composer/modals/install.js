@@ -17,6 +17,7 @@ Espo.define('treo-core:views/composer/modals/install', 'views/modal',
             this.prepareAttributes();
 
             this.createVersionView();
+            this.createDependenciesView();
 
             this.setupHeader();
             this.setupButtonList();
@@ -47,6 +48,20 @@ Espo.define('treo-core:views/composer/modals/install', 'views/modal',
                 mode: 'edit',
                 defs: {
                     name: 'settingVersion',
+                }
+            });
+        },
+
+        createDependenciesView() {
+            this.createView('dependencies', 'treo-core:views/composer/fields/dependencies', {
+                el: `${this.options.el} .field[data-name="dependencies"]`,
+                model: this.model,
+                mode: 'detail',
+                defs: {
+                    name: 'versions',
+                    params: {
+                        readOnly: true
+                    }
                 }
             });
         },

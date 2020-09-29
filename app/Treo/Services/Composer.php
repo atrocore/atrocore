@@ -8,6 +8,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Json;
 use Espo\Core\Exceptions;
 use Slim\Http\Request;
+use Treo\Core\ModuleManager\Manager;
 use Treo\Core\ModuleManager\Manager as TreoModuleManager;
 
 /**
@@ -705,7 +706,12 @@ class Composer extends AbstractService
      */
     private function getInstalledModules(): array
     {
-        return $this->getContainer()->get('moduleManager')->getModules();
+        $modules = $this->getContainer()->get('moduleManager')->getModules();
+        foreach (Manager::CORE_MODULES as $coreModule) {
+            unset($modules[$coreModule]);
+        }
+
+        return $modules;
     }
 
     /**

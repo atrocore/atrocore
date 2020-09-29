@@ -4,6 +4,9 @@
       [
         {
           "name": "name"
+        },
+        {
+          "name": "status"
         }
       ],
       [

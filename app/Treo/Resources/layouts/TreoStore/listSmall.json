@@ -8,5 +8,8 @@
   },
   {
     "name": "tags"
+  },
+  {
+    "name": "status"
   }
 ]

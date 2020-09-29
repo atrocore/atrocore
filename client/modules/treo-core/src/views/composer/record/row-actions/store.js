@@ -17,7 +17,7 @@ Espo.define('treo-core:views/composer/record/row-actions/store', 'views/record/r
         getActionList() {
             let list = [];
             let versions = this.model.get('versions');
-            if (!this.disableActions) {
+            if (!this.disableActions && versions && versions.length && this.model.get('status') === 'available') {
                 list.push({
                     action: 'installModule',
                     label: 'installModule',
