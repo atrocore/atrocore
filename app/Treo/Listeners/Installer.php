@@ -50,7 +50,7 @@ class Installer extends AbstractListener
 
         // set treo ID to packagist repository
         $composeData = json_decode(file_get_contents('composer.json'), true);
-        $composeData['repositories'][0]['url'] .= '?id=' . $treoId;
+        $composeData['repositories'][0]['url'] = str_replace('common', $treoId, $composeData['repositories'][0]['url']);
         file_put_contents('composer.json', json_encode($composeData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
     }
 

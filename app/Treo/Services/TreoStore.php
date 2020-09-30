@@ -52,7 +52,7 @@ class TreoStore extends Base
             }
 
             // save cache file
-            file_put_contents($path, json_encode(['time' => time()]));
+//            file_put_contents($path, json_encode(['time' => time()]));
         }
     }
 
@@ -69,6 +69,9 @@ class TreoStore extends Base
         $sth->execute();
 
         foreach ($data as $package) {
+            if (empty($package['name']) || empty($package['description'])) {
+                continue 1;
+            }
             $entity = $this->getEntityManager()->getEntity("TreoStore");
             $entity->id = $package['treoId'];
             $entity->set('packageId', $package['packageId']);
