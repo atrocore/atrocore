@@ -52,7 +52,7 @@ class TreoStore extends Base
             }
 
             // save cache file
-//            file_put_contents($path, json_encode(['time' => time()]));
+            file_put_contents($path, json_encode(['time' => time()]));
         }
     }
 
@@ -111,21 +111,22 @@ class TreoStore extends Base
         // get packagist url
         $url = $composerData['repositories'][0]['url'];
 
-        // get all
-        $all = self::getPathContent(explode('?', $url)[0]);
-
-        // get available
-        $available = [];
-        if (!empty($this->getConfig()->get('treoId'))) {
-            $available = self::getPathContent($url);
-        }
+        // parse url
+        $baseUrl = explode('?', $url)[0];
 
         // parse all
-        $packages = $this->parsePackages($all);
+        $packages = $this->parsePackages(self::getPathContent($baseUrl));
+
+        // parse common
+        if (!empty($common = self::getPathContent("$baseUrl?id=common"))) {
+            foreach ($this->parsePackages($common, 'available') as $id => $row) {
+                $packages[$id] = $row;
+            }
+        }
 
         // parse private
-        if (!empty($available)) {
-            foreach ($this->parsePackages($available, 'available') as $id => $row) {
+        if (!empty($private = self::getPathContent($url))) {
+            foreach ($this->parsePackages($private, 'available') as $id => $row) {
                 $packages[$id] = $row;
             }
         }
