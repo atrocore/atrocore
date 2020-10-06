@@ -1,4 +1,4 @@
-
+let isDemoInstallation = false;
 
 $(function () {
 
@@ -194,6 +194,9 @@ $(function () {
             this.getDefaultDbSettings().done(function (data) {
                 if (!this.model.has('dbSettings')) {
                     this.model.set({dbSettings: data});
+                    if (data.hasOwnProperty('isDemo')) {
+                        isDemoInstallation = true;
+                    }
                 }
                 this.render();
             }.bind(this));
@@ -375,6 +378,13 @@ $(function () {
         render() {
             this.$el.html(this.template(this.model.toJSON()));
             this.parentEl.append(this.$el);
+
+            if (isDemoInstallation) {
+                $('#username').val('demo').attr('disabled', 'disabled');
+                $('#password').val('demo').attr('disabled', 'disabled');
+                $('#confirmPassword').val('demo').attr('disabled', 'disabled');
+                this.setFieldsValuesToModel();
+            }
         },
 
         setFieldsValuesToModel() {

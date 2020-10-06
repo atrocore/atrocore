@@ -290,6 +290,9 @@ class Installer extends AbstractService
                 // create fake system user
                 $this->createFakeSystemUser();
 
+                // prepare database for installation
+                $this->prepareDataBase();
+
                 // create user
                 $user = $this->createSuperAdminUser($params['username'], $params['password']);
 
@@ -619,6 +622,28 @@ class Installer extends AbstractService
 
         // set system user to container
         $this->getContainer()->setUser($systemUser);
+    }
+
+    /**
+     * Remove all existing tables and rub rebuild
+     */
+    protected function prepareDataBase()
+    {
+        /** @var array $dbParams */
+        $dbParams = $this->getConfig()->get('database');
+
+        // get existing db tables
+        $tables = $this
+            ->getEntityManager()
+            ->nativeQuery("SELECT table_name FROM information_schema.tables WHERE table_schema='{$dbParams['dbname']}';")
+            ->fetchAll(\PDO::FETCH_ASSOC);
+
+        // drop all existing tables if it needs
+        if (!empty($tables)) {
+            foreach ($tables as $row) {
+                $this->getEntityManager()->nativeQuery("DROP TABLE `{$row['table_name']}`");
+            }
+        }
 
         // rebuild database
         $this->getContainer()->get('dataManager')->rebuild();
