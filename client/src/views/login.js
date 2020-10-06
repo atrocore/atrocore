@@ -13,6 +13,11 @@ Espo.define('views/login', 'view', function (Dep) {
             },
         },
 
+        afterRender: function () {
+            $('#field-userName').val(this.getConfig().get('demo').username);
+            $('#field-password').val(this.getConfig().get('demo').password);
+        },
+
         events: {
             'submit #login-form': function (e) {
                 this.login();

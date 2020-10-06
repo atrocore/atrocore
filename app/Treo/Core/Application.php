@@ -594,13 +594,19 @@ class Application
             );
             $this->getConfig()->set('language', !empty($_ENV['LANGUAGE']) ? $_ENV['LANGUAGE'] : 'en_US');
             $this->getConfig()->set('siteUrl', !empty($_ENV['SITE_URL']) ? $_ENV['SITE_URL'] : '');
+            $this->getConfig()->set(
+                'demo', [
+                    'username' => !empty($_ENV['ADMIN_USER']) ? $_ENV['ADMIN_USER'] : 'admin',
+                    'password' => !empty($_ENV['ADMIN_PASS']) ? $_ENV['ADMIN_PASS'] : 'admin',
+                ]
+            );
             $this->getConfig()->save();
 
             $this->getInstallerService()->createAdmin(
                 [
-                    'username'        => !empty($_ENV['ADMIN_USER']) ? $_ENV['ADMIN_USER'] : 'admin',
-                    'password'        => !empty($_ENV['ADMIN_PASS']) ? $_ENV['ADMIN_PASS'] : 'admin',
-                    'confirmPassword' => !empty($_ENV['ADMIN_PASS']) ? $_ENV['ADMIN_PASS'] : 'admin',
+                    'username'        => $this->getConfig()->get('demo.username'),
+                    'password'        => $this->getConfig()->get('demo.password'),
+                    'confirmPassword' => $this->getConfig()->get('demo.password'),
                 ]
             );
         }
