@@ -100,6 +100,9 @@ class Application
      */
     public function run()
     {
+        // try to install demo project
+        $this->installDemoProject();
+
         if (!empty($query = $this->getQuery())) {
             /** @var bool $show404 */
             $show404 = true;
@@ -570,5 +573,43 @@ class Application
         }
 
         return $query;
+    }
+
+    /**
+     * Try to install demo project
+     */
+    private function installDemoProject()
+    {
+        if (!$this->isInstalled() && isset($_ENV['DB_HOST'])) {
+            $this->getConfig()->set(
+                'database', [
+                    'driver'   => 'pdo_mysql',
+                    'host'     => $_ENV['DB_HOST'],
+                    'port'     => '',
+                    'charset'  => 'utf8mb4',
+                    'dbname'   => $_ENV['DB_NAME'],
+                    'user'     => $_ENV['DB_USER'],
+                    'password' => $_ENV['DB_PASS']
+                ]
+            );
+            $this->getConfig()->set('language', $_ENV['LANGUAGE']);
+            $this->getConfig()->save();
+
+            $this->getInstallerService()->createAdmin(
+                [
+                    'username'        => $_ENV['ADMIN_USER'],
+                    'password'        => $_ENV['ADMIN_PASS'],
+                    'confirmPassword' => $_ENV['ADMIN_PASS'],
+                ]
+            );
+        }
+    }
+
+    /**
+     * @return Installer
+     */
+    private function getInstallerService(): Installer
+    {
+        return $this->container->get('serviceFactory')->create('Installer');
     }
 }
