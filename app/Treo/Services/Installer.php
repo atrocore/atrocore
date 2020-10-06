@@ -201,6 +201,11 @@ class Installer extends AbstractService
      */
     public function getDefaultDbSettings(): array
     {
+        // for demo config
+        if (file_exists('data/demo_config.php')) {
+            return include_once 'data/demo_config.php';
+        }
+
         return $this->getConfig()->get('database');
     }
 
