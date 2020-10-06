@@ -14,8 +14,9 @@ Espo.define('views/login', 'view', function (Dep) {
         },
 
         afterRender: function () {
-            $('#field-userName').val(this.getConfig().get('demo').username);
-            $('#field-password').val(this.getConfig().get('demo').password);
+            let demo = this.getConfig().get('demo') || {"username": "", "password": ""};
+            $('#field-userName').val(demo.username);
+            $('#field-password').val(demo.password);
         },
 
         events: {
