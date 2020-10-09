@@ -117,6 +117,10 @@ Espo.define('treo-core:views/record/panels/relationship', ['class-replace!treo-c
                         this.collection.fetch();
                         this.model.trigger('after:unrelate', this.link);
                     },
+
+                    error: () => {
+                        this.collection.push(model);
+                    }
                 });
             });
         },
