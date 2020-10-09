@@ -34,6 +34,14 @@ class Language extends Base
     }
 
     /**
+     * @inheritDoc
+     */
+    public function translate($label, $category = 'labels', $scope = 'Global', $requiredOptions = null)
+    {
+        return utf8_decode(parent::translate($label, $category, $scope, $requiredOptions));
+    }
+
+    /**
      * @inheritdoc
      */
     protected function init($reload = false)
