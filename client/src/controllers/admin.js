@@ -74,16 +74,13 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
         },
 
         moduleSettings: function (options) {
-            let module = options.module || null;
+            let id = options.id;
+            let view = id.replaceAll('_', '/');
 
             let model = this.getSettingsModel();
             model.once('sync', function () {
-                model.id = 'pim-settings';
-                this.main(module + ':views/settings/edit', {
-                    model: model,
-                    headerTemplate: module + ':admin/settings/headers/settings',
-                    recordView: module + ':views/admin/settings'
-                });
+                model.id = id;
+                this.main(view, {model: model});
             }, this);
             model.fetch();
         },
