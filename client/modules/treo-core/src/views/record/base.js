@@ -79,6 +79,16 @@ Espo.define('treo-core:views/record/base', 'class-replace!treo-core:views/record
             this.trigger('before:save');
             model.trigger('before:save');
 
+            // get current page url
+            let url = window.location.href;
+
+            // parse
+            let urlParts = url.split('/view/');
+
+            if (typeof urlParts[1] !== 'undefined') {
+                attrs._mainEntityId = urlParts[1];
+            }
+
             model.save(attrs, {
                 success: function () {
                     this.afterSave();
