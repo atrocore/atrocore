@@ -1,11 +1,51 @@
 {
   "scopeNames": {
+    "Account": "Account",
+    "Country": "Country",
+    "DocumentFolder": "Document Folder",
+    "EmailTemplateCategory": "Email Template Categories",
+    "KnowledgeBaseCategory": "Knowledge Base Category",
+    "MeasuringUnit": "Measuring Unit",
+    "Template": "Template",
+    "Contact": "Contact",
+    "Composer": "Composer",
+    "Currency": "Currency",
+    "Dashlet": "Dashlet",
+    "Multilang": "Multi-Language",
+    "Note": "Note",
+    "Notification": "Notification",
+    "Pricing": "Pricing",
+    "Reminder": "Reminder",
+    "RepresentationSettings": "Representation Settings",
+    "Unit": "Unit",
     "QueueItem": "Queue Item",
     "TreoStore": "Store"
   },
   "scopeNamesPlural": {
-    "QueueItem": "Queue Manager",
-    "TreoStore": "Store"
+    "Account": "Accounts",
+    "Country": "Countries",
+    "DocumentFolder": "Document Folders",
+    "EmailTemplateCategory": "Email Template Categories",
+    "KnowledgeBaseCategory": "Knowledge Base Categories",
+    "MeasuringUnit": "Measuring Units",
+    "Template": "Templates",
+    "Contact": "Contacts",
+    "AuthFailLogRecord": "Auth Fail Log Records",
+    "AuthLogRecord": "Auth Log Records",
+    "Currency": "Currencies",
+    "Dashboard": "Dashboards",
+    "EmailAddress": "Email Addresses",
+    "Integration": "Integrations",
+    "Note": "Notes",
+    "Notification": "Notifications",
+    "PhoneNumber": "Phone Numbers",
+    "Preferences": "Preferences",
+    "ProductAttributeValue": "Product Attribute Values",
+    "Reminder": "Reminders",
+    "Rendition": "Renditions",
+    "RenditionMetaData": "Rendition Meta Data",
+    "RenditionVersion": "Rendition Versions",
+    "Stream": "Streams"
   },
   "options": {
     "language": {
@@ -99,19 +139,33 @@
     "Electric Current": "Electric Current",
     "Thermodynamic Temperature": "Thermodynamic Temperature",
     "Amount Of Substance": "Amount Of Substance",
-    "Luminous Intensity": "Luminous Intensity"
+    "Luminous Intensity": "Luminous Intensity",
+    "Long intervals of time": "Long intervals of time"
+  },
+  "unit Long intervals of time": {
+    "Year": "Year",
+    "Month": "Month",
+    "Week": "Week",
+    "Day": "Day",
+    "year": "year",
+    "month": "month",
+    "week": "week",
+    "day": "day"
   },
   "unit Length": {
     "mm": "mm",
     "cm": "cm",
     "dm": "dm",
     "m": "m",
-    "km": "km"
+    "km": "km",
+    "\"": "\"",
+    "inch": "inch"
   },
   "unit Mass": {
     "mg": "mg",
     "g": "g",
-    "kg": "kg"
+    "kg": "kg",
+    "ounces": "ounces"
   },
   "unit Time": {
     "s": "s",
@@ -119,7 +173,8 @@
     "h": "h"
   },
   "unit Electric Current": {
-    "A": "A"
+    "A": "A",
+    "W": "W"
   },
   "unit Thermodynamic Temperature": {
     "K": "K",
@@ -190,7 +245,7 @@
     "Such URL is already exists": "Such URL is already exists",
     "Site URL is empty": "Site URL is empty",
     "Code is invalid": "Code is invalid. Code should be unique. Only letters, numbers and char \"_\" expected.",
-    "notDashletService": "Service %s must implement DashletInterface"
+    "notDashletService": "Service %s must implement Dashlet Interface"
   },
   "messages": {
     "successAndReload": "Changes saved. This page will be reloaded after {value} seconds",
