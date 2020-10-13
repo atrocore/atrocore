@@ -15796,6 +15796,11 @@ table.no-margin {
     padding-right: 0
 }
 
+#notifications-panel {
+    box-shadow: 0 13px 13px rgba(0, 0, 0, 0.175);
+    background-color: white;
+}
+
 #notifications-panel .expanded-row {
     white-space: normal;
     overflow: hidden
@@ -20637,7 +20642,9 @@ td[data-name="draggableIcon"] {
     width: 700px;
     z-index: 1001;
     right: 0;
-    left: auto
+    left: auto;
+    box-shadow: 0 13px 13px rgba(0, 0, 0, 0.175);
+    background-color: white
 }
 
 .queue-panel-container > .panel {
