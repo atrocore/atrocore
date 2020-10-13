@@ -7,10 +7,25 @@ namespace Treo\Core\Utils;
 /**
  * Class LabelManager
  *
- * @author r.ratsun@gmail.com
+ * @author r.ratsun <r.ratsun@gmail.com>
  */
 class LabelManager extends \Espo\Core\Utils\LabelManager
 {
+    /**
+     * @return array
+     */
+    public function getScopeList()
+    {
+        $scopesList = [];
+        foreach (parent::getScopeList() as $k => $scope) {
+            if ($this->getMetadata()->get(['scopes', $scope, 'isCustom'], false) && !$this->getMetadata()->get(['scopes', $scope, 'disabled'], false)) {
+                $scopesList[] = $scope;
+            }
+        }
+
+        return $scopesList;
+    }
+
     /**
      * @inheritdoc
      */

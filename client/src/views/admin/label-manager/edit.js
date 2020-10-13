@@ -43,18 +43,23 @@ Espo.define('views/admin/label-manager/edit', 'view', function (Dep) {
 
             this.wait(true);
 
-            this.ajaxPostRequest('LabelManager/action/getScopeData', {
-                scope: this.scope,
-                language: this.language
-            }).then(function (data) {
-                this.scopeData = data;
+            if (this.scope !== null) {
+                this.ajaxPostRequest('LabelManager/action/getScopeData', {
+                    scope: this.scope,
+                    language: this.language
+                }).then(function (data) {
+                    this.scopeData = data;
 
-                this.scopeDataInitial = Espo.Utils.cloneDeep(this.scopeData);
-                this.wait(false);
-            }.bind(this));
+                    this.scopeDataInitial = Espo.Utils.cloneDeep(this.scopeData);
+                    this.wait(false);
+                }.bind(this));
+            }
         },
 
         getCategoryList: function () {
+            if (typeof this.scopeData === 'undefined') {
+                return [];
+            }
             var categoryList = Object.keys(this.scopeData).sort(function (v1, v2) {
                 return v1.localeCompare(v2);
             }.bind(this));

@@ -53,21 +53,10 @@ Espo.define('views/admin/label-manager/index', 'view', function (Dep) {
                     return this.translate(v1, 'scopeNamesPlural').localeCompare(this.translate(v2, 'scopeNamesPlural'));
                 }.bind(this));
 
-                this.scopeList = this.scopeList.filter(function (scope) {
-                    if (scope === 'Global') return;
-                    if (this.getMetadata().get(['scopes', scope])) {
-                        if (this.getMetadata().get(['scopes', scope, 'disabled'])) return;
-                    }
-                    return true;
-                }, this);
-
-                this.scopeList.unshift('Global');
-
                 this.wait(false);
             }.bind(this));
 
-
-            this.scope = this.options.scope || 'Global';
+            this.scope = this.options.scope || null;
             this.language = this.options.language || this.getConfig().get('language');
 
             this.once('after:render', function () {
@@ -101,18 +90,20 @@ Espo.define('views/admin/label-manager/index', 'view', function (Dep) {
         },
 
         createRecordView: function () {
-            Espo.Ui.notify(this.translate('loading', 'messages'));
+            if (this.scope !== null) {
+                Espo.Ui.notify(this.translate('loading', 'messages'));
 
-            this.createView('record', 'views/admin/label-manager/edit', {
-                el: this.getSelector() + ' .language-record',
-                scope: this.scope,
-                language: this.language,
-            }, function (view) {
-                view.render();
-                Espo.Ui.notify(false);
-                $(window).scrollTop(0);
+                this.createView('record', 'views/admin/label-manager/edit', {
+                    el: this.getSelector() + ' .language-record',
+                    scope: this.scope,
+                    language: this.language,
+                }, function (view) {
+                    view.render();
+                    Espo.Ui.notify(false);
+                    $(window).scrollTop(0);
 
-            }, this);
+                }, this);
+            }
         },
 
         updatePageTitle: function () {
