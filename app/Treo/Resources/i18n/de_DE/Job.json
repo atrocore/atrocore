@@ -1,0 +1,12 @@
+{
+  "fields": {
+    "queueItem": "Warteschlangeeinheit"
+  },
+  "labels": {
+    "Create Job": "Aufgabe erstellen"
+  },
+  "links": {
+    "queueItem": "Warteschlangeeinheit",
+    "scheduledJob": "geplante Aufgabe"
+  }
+}

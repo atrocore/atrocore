@@ -1,0 +1,28 @@
+{
+  "additionalTranslates": {
+    "exportName": "Name exportieren"
+  },
+  "fields": {
+    "column": "Spalte",
+    "createdAt": "erstellt am",
+    "createdBy": "erstellt von",
+    "csvTextQualifier": "csv Textqualifizierer",
+    "csvFieldDelimiter": "csv Feldtrennzeichen",
+    "entity": "Entität",
+    "field": "Feld",
+    "isActive": "ist aktiv",
+    "isFileHeaderRow": "Datei-Kopfzeile",
+    "modifiedAt": "geändert am",
+    "modifiedBy": "geändert von"
+  },
+  "links": {
+    "createdBy": "erstellt von",
+    "modifiedBy": "geändert von"
+  },
+  "exceptions": {
+    "exportValidationFailed": "Export-Validierung ist fehlgeschlagen"
+  },
+  "labels": {
+    "Create ExportProfile": "Export-Profil erstellen"
+  }
+}

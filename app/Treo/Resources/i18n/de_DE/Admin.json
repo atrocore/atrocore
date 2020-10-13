@@ -3,6 +3,7 @@
     "dataUrl": "Daten Url"
   },
   "labels": {
+    "Label Manager": "Label Manager"
     "Composer": "Modul Manager",
     "log": "log",
     "Validate": "Bestätigen",
@@ -20,17 +21,18 @@
     "unit": "Einstellungen Maßeinheiten"
   },
   "layouts": {
-    "relationships": "Unterer Paneele",
     "detailSmallPortal": "Detail (Klein, Portal)",
     "listForContact": "List (für Contact)",
-    "listSmallPortal": "List (Klein, Portal)"
+    "listSmallPortal": "List (Klein, Portal)",
+    "relationships": "Unterer Paneele"
   },
   "logicalOperators": {
     "and": "UND",
-    "not": "NIHT",
+    "not": "NICHT",
     "or": "ODER"
   },
   "messages": {
+    "selectExtensionPackage": "Extension package auswählen",
     "upgradeFailed": "Upgrade fehlgeschlagen"
   }
 }

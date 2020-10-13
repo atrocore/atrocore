@@ -1,15 +1,19 @@
 {
   "fields": {
+    "aclAllowDeleteCreated": "Allow to remove created records",
+    "isMultilangActive": "Aktiv",
     "treoId": "ID",
     "isStreamSide": "Ist stream panel in der seite",
     "isStreamPanelFirst": "Ist stream panel zuerst",
     "unitsOfMeasure": "Units Of Measure"
   },
   "tooltips": {
+    "aclAllowDeleteCreated": "Users will be able to remove records they created even if they don't have a delete access.",
     "isStreamSide": "Wenn aktiviert, wird das Stream-Panel auf der Seite angezeigt.",
     "isStreamPanelFirst": "Wenn aktiviert: Das Stream-Panel wird direkt nach der Übersicht angezeigt."
   },
   "labels": {
+    "Admin Notifications": "Admin Notifications",
     "System Notifications": "System-Meldungen"
   }
 }

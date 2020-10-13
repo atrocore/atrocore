@@ -1,4 +1,11 @@
 {
+  "fields": {
+    "acceptanceStatus": "Acceptance Status",
+    "isActive": "Aktiv"
+  },
+  "links": {
+    "account": "Benutzerkonto (Primär)"
+  },
   "messages": {
     "accountInfoEmailSubject": "TreoCore Benutzerzugriffsinfo"
   }

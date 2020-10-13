@@ -3,6 +3,14 @@
     "Type": "Typ"
   },
   "fieldParts": {
+    "address": {
+      "street": "Street",
+      "city": "Stadt",
+      "state": "State",
+      "country": "Country",
+      "postalCode": "Postal Code",
+      "map": "Map"
+    },
     "unit": {
       "unit": "(Maßeinheit)"
     }

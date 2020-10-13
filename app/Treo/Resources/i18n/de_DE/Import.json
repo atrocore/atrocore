@@ -1,17 +1,52 @@
 {
   "fields": {
     "duplicateCount": "doppelte Anzahl",
+    "duplicates": "doppelte Datensätze",
+    "entityType": "Entitätstyp",
+    "imported": "importierte Datensätze",
     "importedCount": "importierte Anzahl",
-    "updatedCount": "aktualisierte Anzahl"
+    "updatedCount": "aktualisierte Anzahl",
+    "updated": "aktualisierte Datensätze"
   },
   "labels": {
+    "Back": "zurück",
+    "Create and Update": "erstellen und aktualisieren",
     "Create Import": "Import erstellen",
+    "Create Only": "nur erstellen",
+    "Created": "erstellt",
+    "First Row Value": "Wert erster Zeile",
     "Header Row Value": "Wert der Kopfzeile",
+    "Imported": "importiert",
+    "importedCount": "importierte Anzahl",
+    "Next": "weiter",
     "Person Name Format": "Format der Personnamen",
+    "Remove Import Log": "Importprotokoll entfernen",
     "Result": "Ergebnis",
-    "Single Quote": "Hochkomma"
+    "Return to Import": "zurück zum Import",
+    "Set as Not Duplicate": "als keine Dublette markieren",
+    "Single Quote": "Hochkomma",
+    "Skip": "überspringen",
+    "Timezone": "Zeitzone",
+    "Update by": "aktualisieren durch",
+    "Update Only": "nur aktualisieren",
+    "Updated": "aktualisiert",
+    "updatedCount": "aktualisierte Anzahl"
   },
   "messages": {
-    "confirmRemoveImportLog": "Dadurch wird das Importprotokoll entfernt. Alle importierten Datensätze werden beibehalten. Sie können die Import-Ergebnisse nicht zurücksetzen. Sind Sie sicher?"
+    "confirmRemoveDuplicates": "Dadurch werden alle importierten Datensätze, die als Duplikate erkannt wurden, dauerhaft entfernt. Sind Sie sicher?",
+    "confirmRemoveImportLog": "Dadurch wird das Importprotokoll entfernt. Alle importierten Datensätze werden beibehalten. Sie können die Import-Ergebnisse nicht zurücksetzen. Sind Sie sicher?",
+    "confirmRevert": "Dadurch werden alle importierten Datensätze dauerhaft entfernt. Sind Sie sicher?",
+    "inIdle": "im Leerlauf (für große Datenmengen über Cron) ausführen",
+    "removeDuplicates": "Dadurch werden alle importierten Datensätze, die als Duplikate erkannt wurden, dauerhaft entfernt.",
+    "removeImportLog": "Dadurch wird das Importprotokoll entfernen. Alle importierten Datensätze werden beibehalten. Verwenden Sie es, wenn Sie sicher sind, dass der Import in Ordnung ist.",
+    "revert": "Dadurch werden alle importierten Datensätze dauerhaft entfernt.",
+    "utf8": "sollte UTF-8 kodiert sein"
+  },
+  "options": {
+    "status": {
+      "Failed": "Fehler",
+      "In Process": "in Arbeit",
+      "Complete": "fertig"
+    }
   }
 }

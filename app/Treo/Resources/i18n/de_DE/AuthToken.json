@@ -1,0 +1,14 @@
+{
+  "links": {
+    "user": "Benutzer"
+  },
+  "presetFilters": {
+    "active": "Active"
+  },
+  "massActions": {
+    "setInactive": "Set Inactive"
+  },
+  "fields": {
+    "isActive": "Aktiv"
+  }
+}

@@ -1,8 +1,8 @@
 {
-    "links": {
-        "sentBy": "Gesendet von"
-    },
-    "messages": {
-        "testEmailSubject": "TreoCore: Test Email"
-    }
+  "links": {
+    "sentBy": "Gesendet von"
+  },
+  "messages": {
+    "testEmailSubject": "AtroCore: Test Email"
+  }
 }

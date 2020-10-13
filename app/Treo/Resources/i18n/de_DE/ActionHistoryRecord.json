@@ -1,0 +1,6 @@
+{
+  "fields": {
+    "user": "Benutzer",
+    "createdAt": "Datum"
+  }
+}

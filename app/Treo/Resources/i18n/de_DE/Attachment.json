@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "type": "Typ",
+    "contents": "Inhalte",
+    "global": "Global",
+    "hash_md5": "md5 Mash",
+    "storageFilePath": "Dateipfad",
+    "tmpPath": "Vorläufiger Dateipfad"
+  },
+  "labels": {
+    "Create Attachment": "Anhang hinzufügen"
+  }
+}

@@ -1,5 +1,6 @@
 {
   "fields": {
+    "actions": "Aktionen",
     "serviceName": "Bedienung",
     "stream": "Queue",
     "data": "Daten",
@@ -9,14 +10,14 @@
   "links": {
   },
   "labels": {
-    "Create QueueItem": "Queue Item erstellen",
+    "Create QueueItem": "Warteschlangenelement erstellen",
+    "showDone": "Erledigt anzeigen",
     "showMessage": "Meldung anzeigen",
     "message": "Meldung",
     "cancel": "abbrechen",
     "close": "schließen",
     "download": "herunterladen",
-    "queueManager": "Warteschlangenmanager",
-    "showDone": "Show erledigt"
+    "queueManager": "Warteschlangenmanager"
   },
   "options": {
     "status": {

@@ -1,0 +1,8 @@
+{
+  "fields": {
+    "exportPermission": "Export Permission"
+  },
+  "tooltips": {
+    "exportPermission": "Legt fest, ob Portalbenutzer Datensätze exportieren können."
+  }
+}

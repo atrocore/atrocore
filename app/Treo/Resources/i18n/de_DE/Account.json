@@ -13,6 +13,8 @@
     "contactIsInactive": "Inaktiv"
   },
   "links": {
+    "emails": "E-Mails",
+    "emailsPrimary": "E-Mail (vorgezogen)",
     "contacts": "Kontakte",
     "portalUsers": "Portal Benutzer"
   },
@@ -73,13 +75,13 @@
     }
   },
   "labels": {
-    "Create Account": "Firma erstellen",
+    "Create Account": "Account erstellen",
     "Copy Billing": "Rechnungsadresse kopieren",
     "Set Primary": "Primär setzen"
   },
   "presetFilters": {
+    "recentlyCreated": "kürzlich erstellt",
     "customers": "Kunden",
-    "partners": "Partner",
-    "recentlyCreated": "Kürzlich erstellt"
+    "partners": "Partner"
   }
 }

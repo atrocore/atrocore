@@ -1,5 +1,6 @@
 {
   "fields": {
+    "acceptanceStatus": "Acceptance Status",
     "emailAddress": "E-Mail",
     "title": "Funktion",
     "accountRole": "Funktion",

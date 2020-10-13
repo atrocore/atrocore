@@ -1,5 +1,53 @@
 {
+  "scopeNames": {
+    "Stream": "Stream",
+    "Currency": "Währung",
+    "Contact": "Kontakt",
+    "Composer": "Composer",
+    "Dashlet": "Dashlet",
+    "KnowledgeBaseCategory": "Knowledge Base Kategorie",
+    "LastViewed": "Zuletzt angezeigt",
+    "Multilang": "Mehrsprachigkeit",
+    "Note": "Notiz",
+    "Notification": "Meldung",
+    "Pricing": "Preisgestaltung",
+    "QueueItem": "Warteschlangeeinheit",
+    "Reminder": "Erinnerung",
+    "RepresentationSettings": "Repräsentationseinstellungen",
+    "Unit": "Einheit"
+  },
+  "scopeNamesPlural": {
+    "ActionHistoryRecord": "Aktionsgeschichte",
+    "Currency": "Währungen",
+    "Dashboard": "Dashboards",
+    "EmailAddress": "E-Mail Addresse",
+    "Contact": "Kontakte",
+    "AssetVariant": "Asset Varianten",
+    "DocumentFolder": "Documentenordner",
+    "Integration": "Integrationen",
+    "KnowledgeBaseCategory": "Knowledge Base Kategorien",
+    "Note": "Notizen",
+    "Notification": "Meldungen",
+    "PhoneNumber": "Telefonnummer",
+    "Preferences": "Präferenzen",
+    "ProductAttributeValue": "Produktattributwerte",
+    "QueueItem": "Warteschlangeeinheiten",
+    "Reminder": "Erinnerungen",
+    "TreoStore": "Shop"
+  },
   "options": {
+    "varcharSearchRanges": {
+      "equals": "Gleich",
+      "like": "Teilsuche (%)",
+      "notLike": "Ist nicht wie (%)",
+      "startsWith": "Beginnt mit",
+      "endsWith": "Endet mit",
+      "contains": "Enthält",
+      "notContains": "Nicht Enthält",
+      "isEmpty": "Ist leer",
+      "isNotEmpty": "Ist nicht leer",
+      "notEquals": "Nicht gleich"
+    },
     "language": {
       "af_ZA": "Afrikaans (af_ZA)",
       "az_AZ": "Aserbaidschanisch (az_AZ)",
@@ -95,6 +143,142 @@
     "Amount Of Substance": "Menge der Substanz",
     "Luminous Intensity": "Lichtintensität"
   },
+  "fields": {
+    "amount": "Anzahl",
+    "measure": "Maß",
+    "oneGeoType": "OneGeo Typ",
+    "parent": "Parent",
+    "price": "Preis",
+    "priceCurrency": "Währung",
+    "productFamily": "Produktfamilie",
+    "productSerie": "Produktserie",
+    "billingAddressCity": "Ort (Rechnungsadresse)",
+    "billingAddressCountry": "Land (Rechnungsadresse)",
+    "billingAddressMap": "Karte (Rechnungsadresse)",
+    "billingAddressPostalCode": "PLZ (Rechnungsadresse)",
+    "billingAddressState": "Bundesland/Kanton (Rechnungsadresse)",
+    "billingAddressStreet": "Straße (Rechnungsadresse)",
+    "ownerUser": "Besitzer",
+    "username": "Benutzername",
+    "password": "Passwort",
+    "units": "Einheiten",
+    "addressCity": "Ort",
+    "addressCountry": "Land",
+    "addressPostalCode": "PLZ",
+    "addressState": "Bundesland/Kanton",
+    "addressStreet": "Straße",
+    "addressMap": "Karte",
+    "shippingAddressCity": "Ort (Lieferadresse)",
+    "shippingAddressStreet": "Straße (Lieferadresse)",
+    "shippingAddressCountry": "Land (Lieferadresse)",
+    "shippingAddressState": "Bundesland/Kanton (Versand)",
+    "shippingAddressPostalCode": "PLZ (Lieferadresse)",
+    "shippingAddressMap": "Karte (Lieferadresse)"
+  },
+  "labels": {
+    "Add Group": "Gruppe hinzufügen",
+    "Expand": "Einblenden",
+    "Manage Categories": "Kategorien verwalten",
+    "Manage Folders": "Ordner verwalten",
+    "New notifications": "Neue Benachrichtigungen",
+    "Return to Application": "Zurück zur Anwendung",
+    "you": "sie",
+    "Collapse": "Ausblenden",
+    "Core": "Kern",
+    "expandAllPanels": "Alle einblenden",
+    "Loading...": "Ladevorgang...",
+    "Merging...": "Zusammenführung...",
+    "Move Over": "Verschieben",
+    "Self-Assign": "Sich selbst zuweisen",
+    "Skip": "Überspringen",
+    "status": "Status",
+    "fail": "Fehlgeschlagen",
+    "success": "Erfolg",
+    "viewDetails": "Details anzeigen",
+    "showFullList": "Vollständige Liste anzeigen",
+    "On": "Auf",
+    "Off": "Aus",
+    "selectedLink": "Wählen Sie Entität",
+    "applyRelation": "Beziehung anwenden",
+    "collapseAllPanels": "Alle ausblenden",
+    "UnitSymbol": "Einheitenzeichen",
+    "Ownership Information": "Besitzerinformationen",
+    "New": "Neu"
+  },
+  "descriptions": {
+    "Core": "AtroCore ist ein Software-Ökosystem, das für die schnelle Entwicklung webbasierter responsiver Geschäftsanwendungen entwickelt wurde."
+  },
+  "links": {
+    "parent": "Parent",
+    "ownerUser": "Besitzer"
+  },
+  "themes": {
+    "TreoClassicTheme": "Atro Classic Theme",
+    "TreoDarkTheme": "Atro Dark Theme",
+    "TreoLightTheme": "Atro Light Theme"
+  },
+  "messages": {
+    "fieldIsUploading": "Hochladen läuft",
+    "fieldMaxFileSizeError": "Datei sollte {max} Mb nicht überschreiten",
+    "internalPostTitle": "Die Post wird nur von internen Benutzern angezeigt",
+    "loading": "Wird geladen...",
+    "saving": "Speichere ab...",
+    "clickToRefresh": "Klicken um zu aktualisieren",
+    "confirmMassFollow": "Sind Sie sicher, dass Sie die ausgewählten Datensätze abonnieren wollen?",
+    "confirmMassUnfollow": "Sind Sie sicher, dass Sie die ausgewählten Datensätze nicht mehr abonnieren wollen?",
+    "fieldBadPasswordConfirm": "{field} nicht bestätigt",
+    "fieldShouldBeFloat": "{field} muss eine gültige Fließkommazahl sein",
+    "internalPost": "Die Post kann nur von internen Benutzern gesehen werden",
+    "massFollowResult": "{count} Datensätze wurden abonniert",
+    "massFollowResultSingle": "{count} Datensatz wurde abonniert",
+    "massFollowZeroResult": "Keine Datensätze wurden abonniert",
+    "massPrintPdfMaxCountError": "Es können nicht mehr als {maxCount} Datensätze gedruckt werden.",
+    "massUnfollowResult": "{count} Datensätze werden nicht mehr abonniert",
+    "massUnfollowResultSingle": "{count} Datensatz wird nicht mehr abonniert",
+    "massUnfollowZeroResult": "Keine Datensätze wurden abbestellt",
+    "posting": "postiere...",
+    "streamPostInfo": "Schreiben Sie <strong>@username</strong> um Benutzer in der Post zu nennen.\\nVerfügbare Syntax:`<code>code</code>````<code>multiline code</code>```**<strong>strong text</strong>***<em>emphasized text</em>*~~<del>deleted text</del>~~> blockquote[link text](url)",
+    "writeMessageToSelf": "Nachricht bei eigenen Aktivitäten erfassen",
+    "writeYourCommentHere": "Notiz hier erfassen",
+    "successAndReload": "Die Änderungen wurden gespeichert. Die Seite wird in {value} Sekunden neu geladen.",
+    "massUpdateResult": "{count} Einträge werden aktualisiert",
+    "isRequiredAndUnique": "{field} Feld ist erforderlich und sollte eindeutig sein."
+  },
+  "exceptions": {
+    "notDashletService": "Service %s muss Dashlet-Interface implementieren",
+    "URL is invalid": "Die URL ist ungültig",
+    "Such URL is already exists": "Eine solche URL ist bereits vorhanden",
+    "Site URL is empty": "Die Website-URL ist leer",
+    "Code is invalid": "Code ist ungültig. Code sollte eindeutig sein. Nur Buchstaben, Zahlen und Char \"_\" erwartet."
+  },
+  "streamMessages": {
+    "composerUpdateThis": "{user}"
+  },
+  "streamMessagesMale": {
+    "composerUpdateThis": "{user}"
+  },
+  "streamMessagesFemale": {
+    "composerUpdateThis": "{user}"
+  },
+  "massActions": {
+    "massUpdatePartial": "Massenänderung (Anteil %s)",
+    "removePartial": "löschen (Anteil %s)",
+    "unfollow": "nicht abonnieren",
+    "follow": "abonnieren",
+    "export": "exportieren",
+    "merge": "zusammenführen",
+    "remove": "löschen",
+    "addRelation": "Beziehung hinzufügen",
+    "removeRelation": "Beziehung entfernen"
+  },
+  "presetFilters": {
+    "followed": "abonniert"
+  },
+  "boolFilters": {
+    "onlyMy": "Nur meine",
+    "followed": "abonniert",
+    "onlyActive": "Nur aktiv"
+  },
   "unit Length": {
     "mm": "mm",
     "cm": "cm",
@@ -125,90 +309,14 @@
   "unit Luminous Intensity": {
     "cd": "cd"
   },
-  "fields": {
-    "ownerUser": "Besitzer",
-    "username": "Benutzername",
-    "password": "Passwort",
-    "measure": "Messen",
-    "units": "Einheiten",
-    "billingAddressCity": "Ort",
-    "addressCity": "Ort",
-    "billingAddressCountry": "Land",
-    "addressCountry": "Land",
-    "billingAddressPostalCode": "PLZ",
-    "addressPostalCode": "PLZ",
-    "billingAddressState": "Bundesland/Kanton",
-    "addressState": "Bundesland/Kanton",
-    "billingAddressStreet": "Straße",
-    "addressStreet": "Straße",
-    "billingAddressMap": "Karte",
-    "addressMap": "Karte",
-    "shippingAddressCity": "Ort (Lieferadresse)",
-    "shippingAddressStreet": "Straße (Lieferadresse)",
-    "shippingAddressCountry": "Land (Lieferadresse)",
-    "shippingAddressState": "Bundesland/Kanton (Versand)",
-    "shippingAddressPostalCode": "PLZ (Lieferadresse)",
-    "shippingAddressMap": "Karte (Lieferadresse)"
-  },
-  "labels": {
-    "status": "Status",
-    "fail": "Fehlgeschlagen",
-    "success": "Erfolg",
-    "viewDetails": "Details anzeigen",
-    "showFullList": "Vollständige Liste anzeigen",
-    "On": "Auf",
-    "Off": "Aus",
-    "selectedLink": "Wählen Sie Entität",
-    "applyRelation": "Beziehung anwenden",
-    "collapseAllPanels": "Alle ausblenden",
-    "expandAllPanels": "Alle anzeigen",
-    "UnitSymbol": "Einheitenzeichen",
-    "Core": "Ader",
-    "Ownership Information": "Besitzerinformationen",
-    "New": "Neu"
-  },
-  "descriptions": {
-    "Core": "TreoCore ist ein Software-Ökosystem, das für die schnelle Entwicklung webbasierter responsiver Geschäftsanwendungen entwickelt wurde."
-  },
-  "links": {
-    "ownerUser": "Besitzer"
-  },
-  "themes": {
-    "TreoDarkTheme": "Treo Dark Theme",
-    "TreoClassicTheme": "Treo Classic Theme",
-    "TreoLightTheme": "Treo Light Theme"
-  },
-  "scopeNames": {
-    "Stream": "Stream"
-  },
-  "messages": {
-    "successAndReload": "Die Änderungen wurden gespeichert. Die Seite wird in {value} Sekunden neu geladen.",
-    "massUpdateResult": "{count} Einträge werden aktualisiert",
-    "isRequiredAndUnique": "{field} Feld ist erforderlich und sollte eindeutig sein."
-  },
-  "exceptions": {
-    "URL is invalid": "Die URL ist ungültig",
-    "Such URL is already exists": "Eine solche URL ist bereits vorhanden",
-    "Site URL is empty": "Die Website-URL ist leer",
-    "Code is invalid": "Code ist ungültig. Code sollte eindeutig sein. Nur Buchstaben, Zahlen und Char \"_\" erwartet.",
-    "notDashletService": "Service %s muss DashletInterface implementieren"
-  },
-  "streamMessages": {
-    "composerUpdateThis": "{user}"
-  },
-  "streamMessagesMale": {
-    "composerUpdateThis": "{user}"
-  },
-  "streamMessagesFemale": {
-    "composerUpdateThis": "{user}"
-  },
-  "massActions": {
-    "massUpdatePartial": "Massenänderung (Teil %s)",
-    "removePartial": "Löschen (Teil %s)",
-    "addRelation": "Beziehung hinzufügen",
-    "removeRelation": "Beziehung entfernen"
-  },
-  "boolFilters": {
-    "onlyActive": "Nur aktiv"
+  "unit Long intervals of time": {
+    "day": "Tage",
+    "Day": "Tage",
+    "month": "Monate",
+    "Month": "Monate",
+    "week": "Wochen",
+    "Week": "Wochen",
+    "year": "Jahre",
+    "Year": "Jahre"
   }
 }

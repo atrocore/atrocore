@@ -1,0 +1,11 @@
+{
+  "fields": {
+    "scheduledJob": "Geplante Aufgabe"
+  },
+  "labels": {
+    "Create ScheduledJobLogRecord": "Logeintrag für geplante Aufgabe erstellen"
+  },
+  "links": {
+    "scheduledJob": "Geplante Aufgabe"
+  }
+}

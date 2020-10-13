@@ -1,0 +1,12 @@
+{
+  "fields": {
+    "productTypePackages": "Produkttyp Pakette"
+  },
+  "labels": {
+    "Create PriceUnit": "Preiseinheit erstellen",
+    "Create Unit": "Einheit erstellen"
+  },
+  "links": {
+    "productTypePackages": "Produkttyp Pakette"
+  }
+}

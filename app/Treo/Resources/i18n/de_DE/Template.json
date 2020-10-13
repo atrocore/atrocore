@@ -1,8 +1,15 @@
 {
   "options": {
+    "placeholders": {
+      "today": "Heute (Datum)",
+      "now": "Jetzt (Datum-Uhrzeit)"
+    },
     "pageOrientation": {
       "Portrait": "Porträt",
       "Landscape": "Landschaft"
     }
+  },
+  "tooltips": {
+    "variables": "Copy-paste needed placeholder to Header, Body or Footer."
   }
 }
