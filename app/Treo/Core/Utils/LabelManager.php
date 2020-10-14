@@ -44,7 +44,7 @@ class LabelManager extends \Espo\Core\Utils\LabelManager
                 $data['fields'] = array();
             }
             foreach ($this->getMetadata()->get(['entityDefs', $scope, 'fields']) as $field => $item) {
-                if (!array_key_exists($field, $data['fields'])) {
+                if (empty($this->getMetadata()->get(['entityDefs', $scope, 'fields', $field, 'multilangField'])) && !array_key_exists($field, $data['fields'])) {
                     $data['fields'][$field] = $languageObj->get('Global.fields.' . $field);
                     if (is_null($data['fields'][$field])) {
                         $data['fields'][$field] = '';
