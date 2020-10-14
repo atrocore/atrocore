@@ -82,7 +82,7 @@ class Installer extends AbstractListener
         $this
             ->getEntityManager()
             ->nativeQuery(
-                "INSERT INTO scheduled_job (id, name, job, status, scheduling) VALUES ('RestApiDocs','Generate REST API docs','RestApiDocs','Active','0 0 * * *')"
+                "INSERT INTO scheduled_job (id, name, job, status, scheduling) VALUES ('RestApiDocs','Generate REST API docs','RestApiDocs','Active','0 */2 * * *')"
             );
     }
 }
