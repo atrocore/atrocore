@@ -156,9 +156,9 @@
     "newExtensionVersionIsAvailable": "Die neue {extensionName} Version {latestVersion} ist verfügbar."
   },
   "descriptions": {
-    "settings": "Systemeinstellungen der Applikation.",
-    "scheduledJob": "Aufgaben die durch einen Cronjob ausgeführt werden.",
-    "clearCache": "Alle Cache Dateien leeren.",
+    "settings": "Systemeinstellungen der Webanwendung.",
+    "scheduledJob": "Cronjob-Aufgaben.",
+    "clearCache": "Cache leeren.",
     "users": "Benutzerverwaltung.",
     "teams": "Teamverwaltung.",
     "roles": "Rollenverwaltung.",
