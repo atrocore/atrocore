@@ -1,13 +1,13 @@
 {
   "fields": {
-    "dataUrl": "Daten Url"
+    "dataUrl": "Daten-URL"
   },
   "labels": {
-    "Label Manager": "Label Manager",
-    "Composer": "Modul Manager",
-    "log": "log",
+    "Label Manager": "Label-Manager",
+    "Composer": "Modul-Manager",
+    "log": "Log",
     "Validate": "Bestätigen",
-    "progressLog": "Fortschritte Log",
+    "progressLog": "Prozessprotokoll",
     "Unit": "Maßeinheit",
     "addOption": "Option hinzufügen",
     "addMeasureUnit": "Maßeinheit hinzufügen"
@@ -16,15 +16,15 @@
     "unit": "Maßeinheit"
   },
   "descriptions": {
-    "composer": "Das Plug-In für die Verwaltung von Abhängigkeiten, das es Ihnen erlaubt, Module aus dem externen Ablage zu installieren/aktualisieren/deinstallieren. Die Abhängigkeiten zwischen den modulen sind unterstützt.",
-    "representationSettings": "Representation settings.",
-    "unit": "Einstellungen Maßeinheiten"
+    "composer": "Verwaltung von Abhängigkeiten - hier kann man diverse Module installieren/aktualisieren/deinstallieren. Die Abhängigkeiten zwischen den Modulen werden automatisch berücksichtigt.",
+    "representationSettings": "Darstellungseinstellungen.",
+    "unit": "Einstellungen Maßeinheiten."
   },
   "layouts": {
     "detailSmallPortal": "Detail (Klein, Portal)",
-    "listForContact": "List (für Contact)",
+    "listForContact": "List (für Kontakte)",
     "listSmallPortal": "List (Klein, Portal)",
-    "relationships": "Unterer Paneele"
+    "relationships": "Untere Paneele"
   },
   "logicalOperators": {
     "and": "UND",
@@ -32,7 +32,7 @@
     "or": "ODER"
   },
   "messages": {
-    "selectExtensionPackage": "Extension package auswählen",
+    "selectExtensionPackage": "Erweiterungspaket auswählen",
     "upgradeFailed": "Upgrade fehlgeschlagen"
   }
 }

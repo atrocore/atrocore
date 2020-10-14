@@ -7,10 +7,10 @@
   },
   "fields": {
     "type": "Typ",
-    "labelSingular": "Bezeichnung Einzahl",
-    "labelPlural": "Bezeichnung Mehrzahl",
+    "labelSingular": "Label Singular",
+    "labelPlural": "Bezeichnung PLural",
     "stream": "Aktivitäten",
-    "label": "Bezeichnung",
+    "label": "Label",
     "linkType": "Relationstyp",
     "entityForeign": "Fremdentität",
     "linkForeign": "Fremdrelation",
