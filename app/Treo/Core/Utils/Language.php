@@ -38,7 +38,13 @@ class Language extends Base
      */
     public function translate($label, $category = 'labels', $scope = 'Global', $requiredOptions = null)
     {
-        return utf8_decode(parent::translate($label, $category, $scope, $requiredOptions));
+        $result = parent::translate($label, $category, $scope, $requiredOptions);
+
+        if ($category == 'exceptions') {
+            $result = utf8_decode($result);
+        }
+
+        return $result;
     }
 
     /**
