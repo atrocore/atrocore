@@ -1,16 +1,16 @@
 {
   "fields": {
-    "aclAllowDeleteCreated": "Allow to remove created records",
+    "aclAllowDeleteCreated": "das Entfernen von eigenerstellten Datensätzen erlauben",
     "isMultilangActive": "Aktiv",
     "treoId": "ID",
-    "isStreamSide": "Ist stream panel in der seite",
-    "isStreamPanelFirst": "Ist stream panel zuerst",
-    "unitsOfMeasure": "Units Of Measure"
+    "isStreamSide": "Ist Aktivitätenpanel seitlich platziert",
+    "isStreamPanelFirst": "Ist Aktivitätenpanel zuerst",
+    "unitsOfMeasure": "Maßeinheiten"
   },
   "tooltips": {
-    "aclAllowDeleteCreated": "Users will be able to remove records they created even if they don't have a delete access.",
-    "isStreamSide": "Wenn aktiviert, wird das Stream-Panel auf der Seite angezeigt.",
-    "isStreamPanelFirst": "Wenn aktiviert: Das Stream-Panel wird direkt nach der Übersicht angezeigt."
+    "aclAllowDeleteCreated": "Benutzer können die von ihnen erstellte Datensätze entfernen, auch wenn sie keinen Löschzugriff haben.",
+    "isStreamSide": "Wenn aktiviert, wird das Aktivitätenpanel seitlich angezeigt.",
+    "isStreamPanelFirst": "Wenn aktiviert, wird das Aktivitätenpanel direkt nach der Übersicht angezeigt."
   },
   "labels": {
     "Admin Notifications": "Admin Notifications",
