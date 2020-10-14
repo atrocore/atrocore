@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Treo\Core\Utils;
 
-use Espo\Core\Utils\Language as Base;
 use Espo\Core\Exceptions\Error;
 use Treo\Core\EventManager\Event;
 use Treo\Core\EventManager\Manager as EventManager;
@@ -14,7 +13,7 @@ use Treo\Core\EventManager\Manager as EventManager;
  *
  * @author r.ratsun <r.ratsun@gmail.com>
  */
-class Language extends Base
+class Language extends \Espo\Core\Utils\Language
 {
     /**
      * @var Language|null
@@ -40,7 +39,8 @@ class Language extends Base
     {
         $result = parent::translate($label, $category, $scope, $requiredOptions);
 
-        if ($category == 'exceptions') {
+        // decode exceptions for germany umlauts
+        if ($this->getLanguage() == 'de_DE' && $category == 'exceptions') {
             $result = utf8_decode($result);
         }
 
