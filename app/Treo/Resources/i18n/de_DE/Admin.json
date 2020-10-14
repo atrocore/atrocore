@@ -3,7 +3,7 @@
     "dataUrl": "Daten Url"
   },
   "labels": {
-    "Label Manager": "Label Manager"
+    "Label Manager": "Label Manager",
     "Composer": "Modul Manager",
     "log": "log",
     "Validate": "Bestätigen",
