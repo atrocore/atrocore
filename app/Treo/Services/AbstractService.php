@@ -93,16 +93,23 @@ abstract class AbstractService implements ServiceInterface
      *
      * @return string
      */
-    protected function translate(
-        string $label,
-        string $category = 'labels',
-        string $scope = 'Global',
-        array $requiredOptions = null
-    ): string {
+    protected function translate(string $label, string $category = 'labels', string $scope = 'Global', array $requiredOptions = null): string
+    {
         return $this
             ->getContainer()
             ->get('language')
             ->translate($label, $category, $scope, $requiredOptions);
+    }
+
+    /**
+     * @param string $label
+     * @param string $scope
+     *
+     * @return string
+     */
+    protected function translateException(string $label, string $scope = 'Global'): string
+    {
+        return $this->getContainer()->get('language')->translateException($label, $scope);
     }
 
     /**

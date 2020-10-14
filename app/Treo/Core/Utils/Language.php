@@ -48,6 +48,17 @@ class Language extends \Espo\Core\Utils\Language
     }
 
     /**
+     * @param string $label
+     * @param string $scope
+     *
+     * @return string
+     */
+    public function translateException(string $label, string $scope = 'Global'): string
+    {
+        return $this->translate($label, 'exceptions', $scope);
+    }
+
+    /**
      * @inheritdoc
      */
     protected function init($reload = false)

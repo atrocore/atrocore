@@ -16,7 +16,8 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         'config',
         'fieldManagerUtil',
         'eventManager',
-        'workflow'
+        'workflow',
+        'language'
     );
 
     protected $injections = array();
@@ -564,6 +565,17 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                 }
             }
         }
+    }
+
+    /**
+     * @param string $label
+     * @param string $scope
+     *
+     * @return string
+     */
+    protected function translateException(string $label, string $scope = 'Global'): string
+    {
+        return $this->getInjection('language')->translateException($label, $scope);
     }
 
     /**

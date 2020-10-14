@@ -11,6 +11,7 @@ abstract class Base implements Injectable, ServiceInterface
         'config',
         'entityManager',
         'user',
+        'language'
     );
 
     protected $injections = array();
@@ -64,6 +65,17 @@ abstract class Base implements Injectable, ServiceInterface
     protected function getUser()
     {
         return $this->getInjection('user');
+    }
+
+    /**
+     * @param string $label
+     * @param string $scope
+     *
+     * @return string
+     */
+    protected function translateException(string $label, string $scope = 'Global'): string
+    {
+        return $this->getInjection('language')->translateException($label, $scope);
     }
 }
 
