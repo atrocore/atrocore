@@ -71,9 +71,6 @@ class PostUpdate
         // copy modules migrations
         self::copyModulesMigrations();
 
-        // drop cache
-        Util::removeDir('data/cache');
-
         // set container
         $this->container = (new App())->getContainer();
 
@@ -96,6 +93,9 @@ class PostUpdate
 
         // copy default config if it needs
         $this->copyDefaultConfig();
+
+        // drop cache
+        Util::removeDir('data/cache');
 
         // init events
         $this->initEvents();
