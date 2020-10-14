@@ -1,13 +1,13 @@
 {
   "fields": {
-    "dataUrl": "Daten Url"
+    "dataUrl": "Daten-URL"
   },
   "labels": {
-    "Label Manager": "Label Manager",
-    "Composer": "Modul Manager",
-    "log": "log",
+    "Label Manager": "Label-Manager",
+    "Composer": "Modul-Manager",
+    "log": "Log",
     "Validate": "Bestätigen",
-    "progressLog": "Fortschritte Log",
+    "progressLog": "Prozessprotokoll",
     "Unit": "Maßeinheit",
     "addOption": "Option hinzufügen",
     "addMeasureUnit": "Maßeinheit hinzufügen"
@@ -22,9 +22,9 @@
   },
   "layouts": {
     "detailSmallPortal": "Detail (Klein, Portal)",
-    "listForContact": "List (für Contact)",
+    "listForContact": "List (für Kontakte)",
     "listSmallPortal": "List (Klein, Portal)",
-    "relationships": "Unterer Paneele"
+    "relationships": "Untere Paneele"
   },
   "logicalOperators": {
     "and": "UND",
@@ -32,7 +32,7 @@
     "or": "ODER"
   },
   "messages": {
-    "selectExtensionPackage": "Extension package auswählen",
+    "selectExtensionPackage": "Erweiterungspaket auswählen",
     "upgradeFailed": "Upgrade fehlgeschlagen"
   }
 }
