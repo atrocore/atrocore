@@ -262,12 +262,12 @@
   },
   "massActions": {
     "massUpdatePartial": "Massenänderung (Anteil %s)",
-    "removePartial": "löschen (Anteil %s)",
-    "unfollow": "nicht abonnieren",
-    "follow": "abonnieren",
-    "export": "exportieren",
-    "merge": "zusammenführen",
-    "remove": "löschen",
+    "removePartial": "Löschen (Anteil %s)",
+    "unfollow": "Nicht abonnieren",
+    "follow": "Abonnieren",
+    "export": "Exportieren",
+    "merge": "Zusammenführen",
+    "remove": "Löschen",
     "addRelation": "Beziehung hinzufügen",
     "removeRelation": "Beziehung entfernen"
   },
