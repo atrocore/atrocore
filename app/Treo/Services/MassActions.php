@@ -124,18 +124,7 @@ class MassActions extends AbstractService
             }
         }
 
-        $message = "<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>";
-        if (!empty($related)) {
-            $message .= "<span>" . sprintf($this->translate('relationsAdded', 'messages'), $related) . "</span><br>";
-        }
-        if (!empty($notRelated)) {
-            $message .= "<span style=\"color: red\">" . sprintf($this->translate('relationsDidNotAdded', 'messages'), count($notRelated)) . "</span><br>";
-            foreach ($notRelated as $item) {
-                $message .= "<span style=\"margin-left: 10px; color: #000\"><a target=\"_blank\" href=\"#{$entityType}/view/{$item['id']}\">{$item['name']}</a> &#8594; <a target=\"_blank\" href=\"#{$foreignEntityType}/view/{$item['foreignId']}\">{$item['foreignName']}</a>: {$item['message']}</span><br>";
-            }
-        }
-
-        return ['message' => $message];
+        return ['message' => $this->createRelationMessage($related, $notRelated, $entityType, $foreignEntityType)];
     }
 
     /**
@@ -196,18 +185,34 @@ class MassActions extends AbstractService
             }
         }
 
+        return ['message' => $this->createRelationMessage($unRelated, $notUnRelated, $entityType, $foreignEntityType, false)];
+    }
+
+    /**
+     * @param int    $success
+     * @param array  $errors
+     * @param string $entityType
+     * @param string $foreignEntityType
+     * @param bool   $relate
+     *
+     * @return string
+     */
+    public function createRelationMessage(int $success, array $errors, string $entityType, string $foreignEntityType, bool $relate = true): string
+    {
         $message = "<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>";
-        if (!empty($unRelated)) {
-            $message .= "<span>" . sprintf($this->translate('relationsRemoved', 'messages'), $unRelated) . "</span><br>";
+        if (!empty($success)) {
+            $successMessage = $relate ? $this->translate('relationsAdded', 'messages') : $this->translate('relationsRemoved', 'messages');
+            $message .= "<span>" . sprintf($successMessage, $success) . "</span><br>";
         }
-        if (!empty($notUnRelated)) {
-            $message .= "<span style=\"color: red\">" . sprintf($this->translate('relationsDidNotRemoved', 'messages'), count($notUnRelated)) . "</span><br>";
-            foreach ($notUnRelated as $item) {
+        if (!empty($errors)) {
+            $errorMessage = $relate ? $this->translate('relationsDidNotAdded', 'messages') : $this->translate('relationsDidNotRemoved', 'messages');
+            $message .= "<span style=\"color: red\">" . sprintf($errorMessage, count($errors)) . "</span><br>";
+            foreach ($errors as $item) {
                 $message .= "<span style=\"margin-left: 10px; color: #000\"><a target=\"_blank\" href=\"#{$entityType}/view/{$item['id']}\">{$item['name']}</a> &#8594; <a target=\"_blank\" href=\"#{$foreignEntityType}/view/{$item['foreignId']}\">{$item['foreignName']}</a>: {$item['message']}</span><br>";
             }
         }
 
-        return ['message' => $message];
+        return $message;
     }
 
     /**

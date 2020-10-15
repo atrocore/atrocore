@@ -102,17 +102,6 @@ abstract class AbstractService implements ServiceInterface
     }
 
     /**
-     * @param string $label
-     * @param string $scope
-     *
-     * @return string
-     */
-    protected function translateException(string $label, string $scope = 'Global'): string
-    {
-        return $this->getContainer()->get('language')->translateException($label, $scope);
-    }
-
-    /**
      * Execute SQL query
      *
      * @param string $sql

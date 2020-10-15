@@ -82,15 +82,4 @@ abstract class AbstractListener
     {
         return $this->getContainer()->get('metadata');
     }
-
-    /**
-     * @param string $label
-     * @param string $scope
-     *
-     * @return string
-     */
-    protected function translateException(string $label, string $scope = 'Global'): string
-    {
-        return $this->getContainer()->get('language')->translateException($label, $scope);
-    }
 }
