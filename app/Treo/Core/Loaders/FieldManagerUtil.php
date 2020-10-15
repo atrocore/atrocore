@@ -41,8 +41,6 @@ use Treo\Core\Utils\Metadata;
 
 /**
  * FieldManagerUtil loader
- *
- * @author rr@atrocore.com
  */
 class FieldManagerUtil extends Base
 {

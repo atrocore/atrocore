@@ -40,8 +40,6 @@ use Espo\Core\Utils\File\ClassParser as Instance;
 
 /**
  * Class ClassParser
- *
- * @author rr@atrocore.com
  */
 class ClassParser extends Base
 {

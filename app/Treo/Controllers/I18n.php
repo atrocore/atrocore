@@ -38,8 +38,6 @@ namespace Treo\Controllers;
 
 /**
  * Controller I18n
- *
- * @author r.ratsun rr@atrocore.com
  */
 class I18n extends \Espo\Controllers\I18n
 {

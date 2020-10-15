@@ -42,8 +42,6 @@ use Treo\Traits\ContainerTrait;
 
 /**
  * AbtractConsole class
- *
- * @author rr@atrocore.com
  */
 abstract class AbstractConsole
 {

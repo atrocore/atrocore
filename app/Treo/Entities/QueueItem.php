@@ -38,8 +38,6 @@ namespace Treo\Entities;
 
 /**
  * Class QueueItem
- *
- * @author rr@atrocore.com
  */
 class QueueItem extends \Espo\Core\Templates\Entities\Base
 {

@@ -43,8 +43,6 @@ use Treo\Services\AbstractService;
 
 /**
  * Class Multilang
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Multilang extends AbstractService
 {

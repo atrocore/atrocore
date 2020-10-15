@@ -42,8 +42,6 @@ use Treo\Listeners\AbstractListener;
 
 /**
  * Class Language
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Language extends AbstractListener
 {

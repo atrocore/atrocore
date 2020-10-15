@@ -40,8 +40,6 @@ use Treo\Core\EventManager\Event;
 
 /**
  * Installer listener
- *
- * @author rr@atrocore.com
  */
 class Installer extends AbstractListener
 {

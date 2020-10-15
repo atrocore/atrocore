@@ -38,8 +38,6 @@ namespace Treo\Core;
 
 /**
  * Class of CronManager
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class CronManager extends \Espo\Core\CronManager
 {

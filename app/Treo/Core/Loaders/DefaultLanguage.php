@@ -40,8 +40,6 @@ use Treo\Core\Utils\Language as Instance;
 
 /**
  * DefaultLanguage loader
- *
- * @author rr@atrocore.com
  */
 class DefaultLanguage extends Base
 {

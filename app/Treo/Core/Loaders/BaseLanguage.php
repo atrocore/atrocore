@@ -40,8 +40,6 @@ use Treo\Core\Utils\Language;
 
 /**
  * BaseLanguage loader
- *
- * @author rr@atrocore.com
  */
 class BaseLanguage extends Base
 {

@@ -41,8 +41,6 @@ use Espo\Core\ORM\EntityManager;
 
 /**
  * MailSender loader
- *
- * @author rr@atrocore.com
  */
 class MailSender extends Base
 {

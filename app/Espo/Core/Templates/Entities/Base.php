@@ -40,8 +40,6 @@ use Espo\Core\ORM\Entity;
 
 /**
  * Class Base
- *
- * @author rr@atrocore.com
  */
 class Base extends Entity
 {

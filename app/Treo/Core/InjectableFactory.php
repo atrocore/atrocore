@@ -38,8 +38,6 @@ namespace Treo\Core;
 
 /**
  * Class InjectableFactory
- *
- * @author rr@atrocore.com
  */
 class InjectableFactory extends \Espo\Core\InjectableFactory
 {

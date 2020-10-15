@@ -40,8 +40,6 @@ use Espo\Core\Utils\Metadata\OrmMetadata as Base;
 
 /**
  * Class OrmMetadata
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class OrmMetadata extends Base
 {

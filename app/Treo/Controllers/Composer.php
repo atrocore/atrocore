@@ -44,8 +44,6 @@ use Treo\Services\Composer as ComposerService;
 
 /**
  * Composer controller
- *
- * @author rr@atrocore.com
  */
 class Composer extends Base
 {

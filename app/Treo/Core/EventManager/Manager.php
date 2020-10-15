@@ -41,8 +41,6 @@ use Treo\Core\Container;
 
 /**
  * Manager class
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Manager extends EventDispatcher
 {

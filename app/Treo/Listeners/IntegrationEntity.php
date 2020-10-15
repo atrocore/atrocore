@@ -40,8 +40,6 @@ use Treo\Core\EventManager\Event;
 
 /**
  * Class IntegrationEntity
- *
- * @author rr@atrocore.com
  */
 class IntegrationEntity extends AbstractListener
 {

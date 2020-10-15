@@ -44,8 +44,6 @@ use Treo\Core\ModuleManager\Manager as ModuleManager;
 
 /**
  * Class Route
- *
- * @author r.ratsun rr@atrocore.com
  */
 class Route extends Base
 {

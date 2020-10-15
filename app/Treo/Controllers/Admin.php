@@ -41,8 +41,6 @@ use Espo\Core\Exceptions\NotFound;
 
 /**
  * Controller Admin
- *
- * @author r.ratsun rr@atrocore.com
  */
 class Admin extends Base
 {

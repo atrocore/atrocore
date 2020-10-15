@@ -48,8 +48,6 @@ use Treo\Core\EventManager\Event;
 
 /**
  * Service Installer
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Installer extends AbstractService
 {

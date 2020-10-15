@@ -38,8 +38,6 @@ namespace Treo\Console;
 
 /**
  * ClearCache console
- *
- * @author rr@atrocore.com
  */
 class ClearCache extends AbstractConsole
 {

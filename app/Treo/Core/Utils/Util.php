@@ -41,8 +41,6 @@ use FilesystemIterator;
 
 /**
  * Class Util
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Util extends Base
 {

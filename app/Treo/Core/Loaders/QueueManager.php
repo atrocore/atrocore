@@ -40,8 +40,6 @@ use Treo\Core\QueueManager as Instance;
 
 /**
  * Class QueueManager
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class QueueManager extends Base
 {

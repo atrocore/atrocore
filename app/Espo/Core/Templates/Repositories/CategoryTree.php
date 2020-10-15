@@ -40,8 +40,6 @@ use Espo\Core\Repositories\CategoryTree as Base;
 
 /**
  * Class CategoryTree
- *
- * @author rr@atrocore.com
  */
 class CategoryTree extends Base
 {

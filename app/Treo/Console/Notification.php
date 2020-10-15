@@ -40,8 +40,6 @@ use Treo\Core\ServiceFactory;
 
 /**
  * Class Notification
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Notification extends AbstractConsole
 {

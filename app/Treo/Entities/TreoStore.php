@@ -38,8 +38,6 @@ namespace Treo\Entities;
 
 /**
  * Class TreoStore
- *
- * @author rr@atrocore.com
  */
 class TreoStore extends \Espo\Core\Templates\Entities\Base
 {

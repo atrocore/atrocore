@@ -38,8 +38,6 @@ namespace Treo\Console;
 
 /**
  * Class SqlDiff
- *
- * @author r.ratsun@teolabs.com
  */
 class SqlDiff extends AbstractConsole
 {

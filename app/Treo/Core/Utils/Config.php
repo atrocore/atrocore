@@ -40,8 +40,6 @@ use Espo\Core\Utils\Config as Base;
 
 /**
  * Class of Config
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Config extends Base
 {

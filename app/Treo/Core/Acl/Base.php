@@ -41,8 +41,6 @@ use Espo\ORM\Entity;
 
 /**
  * Class Base
- *
- * @author rr@atrocore.com
  */
 class Base extends \Espo\Core\Acl\Base
 {

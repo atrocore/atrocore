@@ -41,8 +41,6 @@ use Espo\Core\Utils\DateTime as Instance;
 
 /**
  * DateTime loader
- *
- * @author rr@atrocore.com
  */
 class DateTime extends Base
 {

@@ -40,8 +40,6 @@ use Slim\Http\Request as SlimRequest;
 
 /**
  * Request class
- *
- * @author rr@atrocore.com
  */
 class Request extends SlimRequest
 {

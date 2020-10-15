@@ -41,8 +41,6 @@ use Treo\Core\Slim\Http\Request;
 
 /**
  * Slim class
- *
- * @author rr@atrocore.com
  */
 class Slim extends EspoSlim
 {

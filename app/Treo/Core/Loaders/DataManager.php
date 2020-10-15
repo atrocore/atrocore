@@ -38,8 +38,6 @@ namespace Treo\Core\Loaders;
 
 /**
  * DataManager loader
- *
- * @author rr@atrocore.com
  */
 class DataManager extends Base
 {

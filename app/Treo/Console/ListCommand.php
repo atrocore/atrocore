@@ -40,8 +40,6 @@ use Treo\Core\ConsoleManager;
 
 /**
  * ListCommand console
- *
- * @author rr@atrocore.com
  */
 class ListCommand extends AbstractConsole
 {

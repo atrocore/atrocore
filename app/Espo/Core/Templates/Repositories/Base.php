@@ -40,8 +40,6 @@ use Espo\Core\ORM\Repositories\RDB;
 
 /**
  * Class Base
- *
- * @author rr@atrocore.com
  */
 class Base extends RDB
 {

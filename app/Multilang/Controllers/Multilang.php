@@ -42,8 +42,6 @@ use Treo\Core\Slim\Http\Request;
 
 /**
  * Class Multilang
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Multilang extends Base
 {

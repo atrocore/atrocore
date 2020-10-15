@@ -40,8 +40,6 @@ use Treo\ORM\DB\MysqlMapper;
 
 /**
  * Class EntityManager
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class EntityManager extends \Espo\Core\ORM\EntityManager
 {

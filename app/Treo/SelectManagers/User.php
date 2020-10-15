@@ -38,8 +38,6 @@ namespace Treo\SelectManagers;
 
 /**
  * User SelectManager
- *
- * @author r.ratsun rr@atrocore.com
  */
 class User extends \Espo\SelectManagers\User
 {

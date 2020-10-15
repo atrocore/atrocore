@@ -41,8 +41,6 @@ use Treo\Core\Utils\Config;
 
 /**
  * ClientManager loader
- *
- * @author rr@atrocore.com
  */
 class ClientManager extends Base
 {

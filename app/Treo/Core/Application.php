@@ -48,8 +48,6 @@ use Treo\Core\Utils\Config;
 
 /**
  * Class Application
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Application
 {

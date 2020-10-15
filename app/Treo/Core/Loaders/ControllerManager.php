@@ -40,8 +40,6 @@ use Treo\Core\ControllerManager as Instance;
 
 /**
  * ControllerManager loader
- *
- * @author rr@atrocore.com
  */
 class ControllerManager extends Base
 {

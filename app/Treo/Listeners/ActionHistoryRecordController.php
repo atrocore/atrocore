@@ -41,8 +41,6 @@ use Treo\Core\EventManager\Event;
 
 /**
  * Class ActionHistoryRecordController
- *
- * @author rr@atrocore.com
  */
 class ActionHistoryRecordController extends AbstractListener
 {

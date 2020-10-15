@@ -38,8 +38,6 @@ namespace Treo\Documentator;
 
 /**
  * Class of Extractor
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Extractor
 {

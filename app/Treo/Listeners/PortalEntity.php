@@ -43,8 +43,6 @@ use Treo\Core\EventManager\Event;
 
 /**
  * Class PortalEntity
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class PortalEntity extends AbstractListener
 {

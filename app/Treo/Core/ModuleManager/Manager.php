@@ -42,8 +42,6 @@ use Treo\Services\Composer;
 
 /**
  * Class Manager
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Manager
 {

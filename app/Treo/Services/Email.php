@@ -40,8 +40,6 @@ use Espo\ORM\Entity;
 
 /**
  * Email service
- *
- * @author r.ratsun rr@atrocore.com
  */
 class Email extends \Espo\Services\Email
 {

@@ -41,8 +41,6 @@ use Treo\Core\Utils\Config;
 
 /**
  * Crypt loader
- *
- * @author rr@atrocore.com
  */
 class Crypt extends Base
 {

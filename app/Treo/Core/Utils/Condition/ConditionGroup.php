@@ -38,8 +38,6 @@ namespace Treo\Core\Utils\Condition;
 
 /**
  * Class ConditionGroup
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class ConditionGroup
 {

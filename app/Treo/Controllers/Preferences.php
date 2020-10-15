@@ -38,8 +38,6 @@ namespace Treo\Controllers;
 
 /**
  * Controller Preferences
- *
- * @author r.ratsun rr@atrocore.com
  */
 class Preferences extends \Espo\Controllers\Preferences
 {

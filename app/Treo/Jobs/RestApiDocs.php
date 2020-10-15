@@ -40,8 +40,6 @@ use Espo\Core\Jobs\Base;
 
 /**
  * RestApiDocs job
- *
- * @author r.ratsun rr@atrocore.com
  */
 class RestApiDocs extends Base
 {

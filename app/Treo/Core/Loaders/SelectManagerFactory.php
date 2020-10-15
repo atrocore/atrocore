@@ -38,8 +38,6 @@ namespace Treo\Core\Loaders;
 
 /**
  * SelectManagerFactory loader
- *
- * @author rr@atrocore.com
  */
 class SelectManagerFactory extends Base
 {

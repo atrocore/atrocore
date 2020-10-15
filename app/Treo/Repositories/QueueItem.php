@@ -40,8 +40,6 @@ use Espo\ORM\Entity;
 
 /**
  * Class QueueItem
- *
- * @author rr@atrocore.com
  */
 class QueueItem extends \Espo\Core\Templates\Repositories\Base
 {

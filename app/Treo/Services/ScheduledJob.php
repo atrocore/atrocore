@@ -42,8 +42,6 @@ use Cron\CronExpression;
 
 /**
  * ScheduledJob service
- *
- * @author rr@atrocore.com
  */
 class ScheduledJob extends \Espo\Core\Templates\Services\Base
 {

@@ -38,8 +38,6 @@ namespace Treo\Console;
 
 /**
  * Class GenerateApidocs
- *
- * @author r.ratsun rr@atrocore.com
  */
 class GenerateApidocs extends AbstractConsole
 {

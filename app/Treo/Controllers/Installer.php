@@ -43,8 +43,6 @@ use Treo\Services\Installer as InstallerService;
 
 /**
  * Class Installer
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Installer extends Base
 {

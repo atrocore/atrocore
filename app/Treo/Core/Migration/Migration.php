@@ -40,8 +40,6 @@ use Treo\Composer\PostUpdate;
 
 /**
  * Migration
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Migration
 {

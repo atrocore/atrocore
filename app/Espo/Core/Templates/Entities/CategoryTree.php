@@ -40,8 +40,6 @@ use Espo\Core\Entities\CategoryTreeItem;
 
 /**
  * Class CategoryTree
- *
- * @author rr@atrocore.com
  */
 class CategoryTree extends CategoryTreeItem
 {

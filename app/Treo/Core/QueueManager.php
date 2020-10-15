@@ -43,8 +43,6 @@ use Treo\Services\QueueManagerServiceInterface;
 
 /**
  * Class QueueManager
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class QueueManager
 {

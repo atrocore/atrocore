@@ -40,8 +40,6 @@ use Espo\ORM\DB\MysqlMapper as Base;
 
 /**
  * Class MysqlMapper
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class MysqlMapper extends Base
 {

@@ -43,8 +43,6 @@ use Treo\Services\Composer;
 
 /**
  * Class Daemon
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Daemon extends AbstractConsole
 {

@@ -42,8 +42,6 @@ use Treo\Core\EventManager\Event;
 
 /**
  * Class TreoCleanup
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class TreoCleanup extends Base
 {

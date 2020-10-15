@@ -40,8 +40,6 @@ use Espo\ORM\EntityManager;
 
 /**
  * Class QueueItem
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class QueueItem extends AbstractConsole
 {

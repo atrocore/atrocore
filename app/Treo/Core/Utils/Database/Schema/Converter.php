@@ -38,8 +38,6 @@ namespace Treo\Core\Utils\Database\Schema;
 
 /**
  * Class Converter
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Converter extends \Espo\Core\Utils\Database\Schema\Converter
 {

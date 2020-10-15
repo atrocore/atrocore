@@ -40,8 +40,6 @@ use Espo\ORM\Entity;
 
 /**
  * Class QueueManagerBase
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class QueueManagerBase extends AbstractService implements QueueManagerServiceInterface
 {

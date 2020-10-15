@@ -38,8 +38,6 @@ namespace Treo\Console;
 
 /**
  * Rebuild console
- *
- * @author rr@atrocore.com
  */
 class Rebuild extends AbstractConsole
 {

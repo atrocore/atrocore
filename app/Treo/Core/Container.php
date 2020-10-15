@@ -51,8 +51,6 @@ use Treo\Core\Utils\Metadata;
 
 /**
  * Class Container
- *
- * @author rr@atrocore.com
  */
 class Container
 {

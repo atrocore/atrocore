@@ -41,8 +41,6 @@ use Treo\Services\Composer;
 
 /**
  * Class TreoStore
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class TreoStore extends Base
 {

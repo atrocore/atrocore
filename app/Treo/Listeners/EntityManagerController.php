@@ -40,8 +40,6 @@ use Treo\Core\EventManager\Event;
 
 /**
  * Class EntityManagerController
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class EntityManagerController extends AbstractListener
 {

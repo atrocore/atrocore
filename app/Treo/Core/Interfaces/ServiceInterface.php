@@ -38,8 +38,6 @@ namespace Treo\Core\Interfaces;
 
 /**
  * Interface Service
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 interface ServiceInterface
 {

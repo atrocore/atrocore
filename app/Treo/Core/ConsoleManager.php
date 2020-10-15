@@ -42,8 +42,6 @@ use Treo\Traits\ContainerTrait;
 
 /**
  * ConsoleManager
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class ConsoleManager
 {

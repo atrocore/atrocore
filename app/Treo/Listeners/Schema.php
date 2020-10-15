@@ -40,8 +40,6 @@ use Treo\Core\EventManager\Event;
 
 /**
  * Class Schema
- *
- * @author r.ratsun rr@atrocore.com
  */
 class Schema extends AbstractListener
 {

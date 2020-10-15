@@ -38,8 +38,6 @@ namespace Espo\Core\Exceptions;
 
 /**
  * Class Exception
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Exception extends \Exception
 {

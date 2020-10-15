@@ -41,8 +41,6 @@ use Slim\Http\Request;
 
 /**
  * Class Store
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Store extends \Espo\Core\Controllers\Base
 {

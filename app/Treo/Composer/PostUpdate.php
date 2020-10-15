@@ -47,8 +47,6 @@ use Treo\Services\Composer as ComposerService;
 
 /**
  * Class PostUpdate
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class PostUpdate
 {

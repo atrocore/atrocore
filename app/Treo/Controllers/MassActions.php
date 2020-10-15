@@ -43,8 +43,6 @@ use Treo\Core\EventManager\Event;
 
 /**
  * Class MassActions
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class MassActions extends \Espo\Core\Controllers\Base
 {

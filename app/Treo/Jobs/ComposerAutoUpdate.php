@@ -41,8 +41,6 @@ use Treo\Services\Composer;
 
 /**
  * Class ComposerAutoUpdate
- *
- * @author rr@atrocore.com
  */
 class ComposerAutoUpdate extends Base
 {

@@ -40,8 +40,6 @@ namespace Treo\Services;
  * Interface DashletInterface
  *
  * @package Treo\Services
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 interface DashletInterface
 {

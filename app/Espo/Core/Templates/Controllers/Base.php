@@ -40,8 +40,6 @@ use Espo\Core\Controllers\Record;
 
 /**
  * Class Base
- *
- * @author rr@atrocore.com
  */
 class Base extends Record
 {

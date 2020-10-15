@@ -42,8 +42,6 @@ use Treo\Core\Interfaces\ServiceInterface;
 
 /**
  * ServiceFactory class
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class ServiceFactory
 {

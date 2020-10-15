@@ -38,8 +38,6 @@ namespace Treo\Services;
 
 /**
  * Class QueueManagerMassUpdate
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class QueueManagerMassUpdate extends QueueManagerBase
 {

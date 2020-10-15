@@ -40,8 +40,6 @@ use Espo\Services\RecordTree;
 
 /**
  * Class CategoryTree
- *
- * @author rr@atrocore.com
  */
 class CategoryTree extends RecordTree
 {

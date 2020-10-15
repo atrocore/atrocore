@@ -40,8 +40,6 @@ use Treo\Core\InjectableFactory as Instance;
 
 /**
  * InjectableFactory loader
- *
- * @author rr@atrocore.com
  */
 class InjectableFactory extends Base
 {

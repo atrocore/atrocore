@@ -40,8 +40,6 @@ use Espo\Core\Utils\Api\Slim;
 
 /**
  * Output loader
- *
- * @author rr@atrocore.com
  */
 class Output extends Base
 {

@@ -45,8 +45,6 @@ use Exception;
 
 /**
  * Class Condition
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Condition
 {

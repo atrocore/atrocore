@@ -46,8 +46,6 @@ use Treo\Core\Workflow\MarkingStore\MethodMarkingStore;
 
 /**
  * Class Workflow
- *
- * @author rr@atrocore.com
  */
 class Workflow extends Base
 {

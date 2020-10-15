@@ -44,8 +44,6 @@ use Treo\Services\AbstractService;
 
 /**
  * AbstractListener class
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 abstract class AbstractListener
 {

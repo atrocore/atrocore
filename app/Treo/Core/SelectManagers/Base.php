@@ -38,8 +38,6 @@ namespace Treo\Core\SelectManagers;
 
 /**
  * Class Base
- *
- * @author r.ratsun rr@atrocore.com
  */
 class Base extends \Espo\Core\SelectManagers\Base
 {

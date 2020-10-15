@@ -38,8 +38,6 @@ namespace Treo\Core\Loaders;
 
 /**
  * ScheduledJob loader
- *
- * @author rr@atrocore.com
  */
 class ScheduledJob extends Base
 {

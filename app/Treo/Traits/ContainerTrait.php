@@ -40,8 +40,6 @@ use Treo\Core\Container;
 
 /**
  * Class ContainerTrait
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 trait ContainerTrait
 {

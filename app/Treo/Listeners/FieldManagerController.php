@@ -42,8 +42,6 @@ use Treo\Core\EventManager\Event;
 
 /**
  * Class FieldManagerController
- *
- * @author rr@atrocore.com
  */
 class FieldManagerController extends AbstractListener
 {

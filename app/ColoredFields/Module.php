@@ -40,8 +40,6 @@ use Treo\Core\ModuleManager\AbstractModule;
 
 /**
  * Class Module
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class Module extends AbstractModule
 {

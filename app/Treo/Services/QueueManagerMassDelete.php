@@ -38,8 +38,6 @@ namespace Treo\Services;
 
 /**
  * Class QueueManagerMassDelete
- *
- * @author r.ratsun <rr@atrocore.com>
  */
 class QueueManagerMassDelete extends QueueManagerBase
 {

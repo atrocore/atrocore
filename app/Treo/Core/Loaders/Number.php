@@ -40,8 +40,6 @@ use Treo\Core\Utils\Config;
 
 /**
  * Number loader
- *
- * @author rr@atrocore.com
  */
 class Number extends Base
 {

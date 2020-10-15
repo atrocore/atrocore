@@ -42,8 +42,6 @@ use Treo\Core\Utils\Util;
 
 /**
  * Class Metadata
- *
- * @author rr@atrocore.com
  */
 class Metadata extends AbstractListener
 {

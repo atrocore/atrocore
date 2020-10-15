@@ -41,8 +41,6 @@ use Treo\Core\Container;
 
 /**
  * Base loader class
- *
- * @author rr@atrocore.com
  */
 abstract class Base implements Loader
 {

@@ -40,8 +40,6 @@ use Treo\Core\Utils\FieldManager as Instance;
 
 /**
  * FieldManager loader
- *
- * @author rr@atrocore.com
  */
 class FieldManager extends Base
 {
