@@ -22,7 +22,7 @@
     "linkMultipleFieldForeign": "Fremdlink mehrere Felder",
     "disabled": "Inaktiv",
     "textFilterFields": "Textfilter Felder",
-    "audited": "überprüft",
+    "audited": "protokolliert",
     "auditedForeign": "fremd geprüft",
     "statusField": "Status Feld",
     "beforeSaveCustomScript": "vor dem Speicher benutzerdefiniertes Script",
