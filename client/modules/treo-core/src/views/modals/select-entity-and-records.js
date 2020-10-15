@@ -41,8 +41,10 @@ Espo.define('treo-core:views/modals/select-entity-and-records', 'views/modals/se
 
             Dep.prototype.setup.call(this);
 
-            this.buttonList.find(button => button.name === 'select').label = 'applyRelation';
-            this.header = this.getLanguage().translate(this.options.type, 'massActions', 'Global');
+            let actionName = this.getLanguage().translate(this.options.type, 'massActions', 'Global');
+
+            this.buttonList.find(button => button.name === 'select').label = actionName;
+            this.header = actionName;
 
             this.waitForView('selectedLink');
             this.createSelectedLinkView();
