@@ -44,7 +44,7 @@ use Treo\Services\AbstractService;
 /**
  * Class Multilang
  *
- * @author r.ratsun <r.ratsun@treolabs.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 class Multilang extends AbstractService
 {

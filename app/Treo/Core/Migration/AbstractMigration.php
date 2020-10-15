@@ -40,7 +40,7 @@ use Treo\Core\ORM\EntityManager;
 /**
  * AbstractMigration class
  *
- * @author     r.ratsun <r.ratsun@gmail.com>
+ * @author     r.ratsun <rr@atrocore.com>
  *
  * @deprecated We will remove it after 01.01.2021
  */

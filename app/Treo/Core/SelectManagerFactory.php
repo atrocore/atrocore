@@ -42,7 +42,7 @@ use Treo\Core\Container;
 /**
  * Class SelectManagerFactory
  *
- * @author r.ratsun r.ratsun@zinitsolutions.com
+ * @author r.ratsun rr@atrocore.com
  */
 class SelectManagerFactory
 {

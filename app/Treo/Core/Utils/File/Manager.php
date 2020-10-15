@@ -41,7 +41,7 @@ use Espo\Core\Exceptions\Error;
 /**
  * Class Manager
  *
- * @author r.ratsun <r.ratsun@gmail.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 class Manager extends \Espo\Core\Utils\File\Manager
 {

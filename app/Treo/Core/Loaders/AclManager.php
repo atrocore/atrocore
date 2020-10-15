@@ -39,7 +39,7 @@ namespace Treo\Core\Loaders;
 /**
  * Class AclManager
  *
- * @author r.ratsun@gmail.com
+ * @author rr@atrocore.com
  */
 class AclManager extends Base
 {

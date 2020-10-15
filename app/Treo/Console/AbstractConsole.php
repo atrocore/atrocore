@@ -43,7 +43,7 @@ use Treo\Traits\ContainerTrait;
 /**
  * AbtractConsole class
  *
- * @author r.ratsun@zinitsolutions.com
+ * @author rr@atrocore.com
  */
 abstract class AbstractConsole
 {

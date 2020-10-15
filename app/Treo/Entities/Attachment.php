@@ -39,7 +39,7 @@ use Espo\Core\ORM\Entity as Base;
 /**
  * Class Attachment
  *
- * @author r.ratsun@gmail.com
+ * @author rr@atrocore.com
  */
 class Attachment extends Base
 {

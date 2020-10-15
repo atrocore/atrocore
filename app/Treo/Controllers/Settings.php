@@ -39,7 +39,7 @@ namespace Treo\Controllers;
 /**
  * Controller Settings
  *
- * @author r.ratsun <r.ratsun@zinitsolutions.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 class Settings extends \Espo\Controllers\Settings
 {

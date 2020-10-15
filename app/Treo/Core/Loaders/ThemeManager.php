@@ -44,7 +44,7 @@ use Treo\Core\Utils\Metadata;
 /**
  * ThemeManager loader
  *
- * @author r.ratsun@gmail.com
+ * @author rr@atrocore.com
  */
 class ThemeManager extends Base
 {

@@ -45,7 +45,7 @@ use Treo\Core\Utils\Util;
 /**
  * RestApiDocs service
  *
- * @author r.ratsun <r.ratsun@zinitsolutions.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 class RestApiDocs extends Base
 {

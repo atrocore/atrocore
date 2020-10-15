@@ -39,7 +39,7 @@ namespace Treo\Core\Loaders;
 /**
  * Class FormulaManager
  *
- * @author r.ratsun@gmail.com
+ * @author rr@atrocore.com
  */
 class FormulaManager extends Base
 {

@@ -39,7 +39,7 @@ namespace Treo\Console;
 /**
  * Class Cleanup
  *
- * @author r.ratsun@gmail.com
+ * @author rr@atrocore.com
  */
 class Cleanup extends AbstractConsole
 {

@@ -39,7 +39,7 @@ namespace Treo\Core\ModuleManager;
 /**
  * Class AbstractEvent
  *
- * @author r.ratsun <r.ratsun@gmail.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 abstract class AbstractEvent
 {

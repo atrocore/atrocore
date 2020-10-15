@@ -41,7 +41,7 @@ use Espo\ORM\EntityManager;
 /**
  * Class QueueItem
  *
- * @author r.ratsun <r.ratsun@gmail.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 class QueueItem extends AbstractConsole
 {

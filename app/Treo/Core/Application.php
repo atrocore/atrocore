@@ -49,7 +49,7 @@ use Treo\Core\Utils\Config;
 /**
  * Class Application
  *
- * @author r.ratsun <r.ratsun@gmail.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 class Application
 {

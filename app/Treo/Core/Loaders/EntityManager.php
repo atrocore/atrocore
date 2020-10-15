@@ -39,7 +39,7 @@ namespace Treo\Core\Loaders;
 /**
  * Class EntityManager
  *
- * @author r.ratsun <r.ratsun@gmail.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 class EntityManager extends Base
 {

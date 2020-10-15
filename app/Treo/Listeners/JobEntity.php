@@ -41,7 +41,7 @@ use Treo\Core\EventManager\Event;
 /**
  * Class JobController
  *
- * @author r.ratsun <r.ratsun@gmail.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 class JobEntity extends AbstractListener
 {

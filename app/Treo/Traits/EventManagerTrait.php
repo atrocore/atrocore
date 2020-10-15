@@ -41,7 +41,7 @@ use Treo\Core\EventManager;
 /**
  * Class EventManagerTrait
  *
- * @author r.ratsun <r.ratsun@gmail.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 trait EventManagerTrait
 {

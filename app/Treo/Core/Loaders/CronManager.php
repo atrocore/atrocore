@@ -41,7 +41,7 @@ use Treo\Core\CronManager as Instance;
 /**
  * CronManager loader
  *
- * @author r.ratsun@zinitsolutions.com
+ * @author rr@atrocore.com
  */
 class CronManager extends Base
 {

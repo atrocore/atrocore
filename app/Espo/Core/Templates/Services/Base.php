@@ -41,7 +41,7 @@ use Espo\Services\Record;
 /**
  * Class Base
  *
- * @author r.ratsun@gmail.com
+ * @author rr@atrocore.com
  */
 class Base extends Record
 {

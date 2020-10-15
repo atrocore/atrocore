@@ -41,7 +41,7 @@ use Espo\ORM\Entity;
 /**
  * Interface QueueManagerServiceInterface
  *
- * @author r.ratsun@zinitsolutions.com
+ * @author rr@atrocore.com
  */
 interface QueueManagerServiceInterface
 {

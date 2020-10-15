@@ -41,7 +41,7 @@ use Treo\Core\Utils\Config;
 /**
  * Number loader
  *
- * @author r.ratsun@zinitsolutions.com
+ * @author rr@atrocore.com
  */
 class Number extends Base
 {

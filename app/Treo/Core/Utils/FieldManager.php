@@ -44,7 +44,7 @@ use Treo\Traits\ContainerTrait;
 /**
  * FieldManager util
  *
- * @author r.ratsun <r.ratsun@gmail.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 class FieldManager extends EspoFieldManager
 {

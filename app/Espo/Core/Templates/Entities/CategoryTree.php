@@ -41,7 +41,7 @@ use Espo\Core\Entities\CategoryTreeItem;
 /**
  * Class CategoryTree
  *
- * @author r.ratsun@gmail.com
+ * @author rr@atrocore.com
  */
 class CategoryTree extends CategoryTreeItem
 {

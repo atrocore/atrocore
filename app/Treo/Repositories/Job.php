@@ -43,7 +43,7 @@ use Treo\Core\EventManager\Event;
 /**
  * Class Job
  *
- * @author r.ratsun@gmail.com
+ * @author rr@atrocore.com
  */
 class Job extends Base
 {

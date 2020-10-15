@@ -39,7 +39,7 @@ namespace Treo\Core\Loaders;
 /**
  * DataManager loader
  *
- * @author r.ratsun@gmail.com
+ * @author rr@atrocore.com
  */
 class DataManager extends Base
 {

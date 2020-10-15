@@ -42,7 +42,7 @@ use Treo\Core\EventManager\Event;
 /**
  * Class SettingsController
  *
- * @author r.ratsun <r.ratsun@treolabs.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 class SettingsController extends AbstractListener
 {

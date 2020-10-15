@@ -44,7 +44,7 @@ use Treo\Core\Utils\Metadata\OrmMetadata as Instance;
 /**
  * OrmMetadata loader
  *
- * @author r.ratsun@zinitsolutions.com
+ * @author rr@atrocore.com
  */
 class OrmMetadata extends Base
 {

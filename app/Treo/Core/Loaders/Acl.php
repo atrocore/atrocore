@@ -42,7 +42,7 @@ use Espo\Entities\User;
 /**
  * Class Acl
  *
- * @author r.ratsun@gmail.com
+ * @author rr@atrocore.com
  */
 class Acl extends Base
 {

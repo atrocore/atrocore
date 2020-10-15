@@ -39,7 +39,7 @@ namespace Treo\Controllers;
 /**
  * Class TreoStore
  *
- * @author r.ratsun@gmail.com
+ * @author rr@atrocore.com
  */
 class TreoStore extends \Espo\Core\Templates\Controllers\Base
 {

@@ -39,7 +39,7 @@ namespace Espo\Core\Exceptions;
 /**
  * Class Exception
  *
- * @author r.ratsun <r.ratsun@gmail.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 class Exception extends \Exception
 {

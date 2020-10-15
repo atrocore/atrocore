@@ -43,7 +43,7 @@ use Treo\Core\Interfaces\ServiceInterface;
 /**
  * AbstractService class
  *
- * @author r.ratsun@zinitsolutions.com
+ * @author rr@atrocore.com
  */
 abstract class AbstractService implements ServiceInterface
 {

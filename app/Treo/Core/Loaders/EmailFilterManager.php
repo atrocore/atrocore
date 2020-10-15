@@ -39,7 +39,7 @@ namespace Treo\Core\Loaders;
 /**
  * Class EmailFilterManager
  *
- * @author r.ratsun@gmail.com
+ * @author rr@atrocore.com
  */
 class EmailFilterManager extends Base
 {

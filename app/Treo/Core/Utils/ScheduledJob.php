@@ -39,7 +39,7 @@ namespace Treo\Core\Utils;
 /**
  * Class ScheduledJob
  *
- * @author r.ratsun r.ratsun@gmail.com
+ * @author r.ratsun rr@atrocore.com
  */
 class ScheduledJob extends \Espo\Core\Utils\ScheduledJob
 {

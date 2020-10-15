@@ -41,7 +41,7 @@ namespace Treo\Services;
  *
  * @package Treo\Services
  *
- * @author r.ratsun <r.ratsun@gmail.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 interface DashletInterface
 {

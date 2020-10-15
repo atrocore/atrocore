@@ -39,7 +39,7 @@ namespace Treo\Console;
 /**
  * Cron console
  *
- * @author r.ratsun@gmail.com
+ * @author rr@atrocore.com
  */
 class Cron extends AbstractConsole
 {

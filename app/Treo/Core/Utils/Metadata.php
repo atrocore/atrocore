@@ -46,7 +46,7 @@ use Treo\Core\EventManager\Event;
 /**
  * Metadata class
  *
- * @author r.ratsun <r.ratsun@gmail.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 class Metadata extends Base
 {

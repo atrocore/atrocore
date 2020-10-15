@@ -41,7 +41,7 @@ use Espo\Repositories\User as Base;
 /**
  * Class User
  *
- * @author r.ratsun@gmail.com
+ * @author rr@atrocore.com
  */
 class User extends Base
 {

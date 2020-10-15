@@ -52,7 +52,7 @@ use Treo\Core\Utils\Metadata;
 /**
  * Class Container
  *
- * @author r.ratsun@gmail.com
+ * @author rr@atrocore.com
  */
 class Container
 {

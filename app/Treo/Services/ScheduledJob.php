@@ -43,7 +43,7 @@ use Cron\CronExpression;
 /**
  * ScheduledJob service
  *
- * @author r.ratsun@zinitsolutions.com
+ * @author rr@atrocore.com
  */
 class ScheduledJob extends \Espo\Core\Templates\Services\Base
 {

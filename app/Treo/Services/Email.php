@@ -41,7 +41,7 @@ use Espo\ORM\Entity;
 /**
  * Email service
  *
- * @author r.ratsun r.ratsun@zinitsolutions.com
+ * @author r.ratsun rr@atrocore.com
  */
 class Email extends \Espo\Services\Email
 {

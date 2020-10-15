@@ -41,7 +41,7 @@ use Treo\Core\ModuleManager\AbstractEvent;
 /**
  * Class Event
  *
- * @author r.ratsun <r.ratsun@treolabs.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 class Event extends AbstractEvent
 {

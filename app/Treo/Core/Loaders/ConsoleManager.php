@@ -41,7 +41,7 @@ use Treo\Core\ConsoleManager as Instance;
 /**
  * ConsoleManager loader
  *
- * @author r.ratsun <r.ratsun@zinitsolutions.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 class ConsoleManager extends Base
 {

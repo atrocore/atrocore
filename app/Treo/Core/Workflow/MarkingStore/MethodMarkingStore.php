@@ -42,7 +42,7 @@ use Symfony\Component\Workflow\MarkingStore\MarkingStoreInterface;
 /**
  * Class MethodMarkingStore
  *
- * @author r.ratsun <r.ratsun@gmail.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 final class MethodMarkingStore implements MarkingStoreInterface
 {

@@ -41,7 +41,7 @@ use Treo\Core\Utils\Api\Slim as Instance;
 /**
  * Slim loader
  *
- * @author r.ratsun@zinitsolutions.com
+ * @author rr@atrocore.com
  */
 class Slim extends Base
 {

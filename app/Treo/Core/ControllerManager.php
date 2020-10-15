@@ -47,7 +47,7 @@ use Treo\Core\EventManager\Event;
 /**
  * ControllerManager class
  *
- * @author r.ratsun@zinitsolutions.com
+ * @author rr@atrocore.com
  */
 class ControllerManager
 {

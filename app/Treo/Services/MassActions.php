@@ -41,7 +41,7 @@ use Espo\Core\Exceptions\BadRequest;
 /**
  * Class MassActions
  *
- * @author r.ratsun <r.ratsun@gmail.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 class MassActions extends AbstractService
 {

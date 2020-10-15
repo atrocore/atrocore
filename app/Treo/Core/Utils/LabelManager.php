@@ -39,7 +39,7 @@ namespace Treo\Core\Utils;
 /**
  * Class LabelManager
  *
- * @author r.ratsun <r.ratsun@gmail.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 class LabelManager extends \Espo\Core\Utils\LabelManager
 {

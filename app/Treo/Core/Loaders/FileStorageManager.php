@@ -42,7 +42,7 @@ use Treo\Core\FileStorage\Manager;
 /**
  * FileStorageManager loader
  *
- * @author r.ratsun@zinitsolutions.com
+ * @author rr@atrocore.com
  */
 class FileStorageManager extends Base
 {

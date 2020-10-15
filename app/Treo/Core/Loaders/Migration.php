@@ -41,7 +41,7 @@ use Treo\Core\Migration\Migration as Instance;
 /**
  * Migration Loader
  *
- * @author r.ratsun <r.ratsun@zinitsolutions.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 class Migration extends Base
 {

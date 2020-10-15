@@ -44,7 +44,7 @@ use Treo\Services\Installer as InstallerService;
 /**
  * Class Installer
  *
- * @author y.haiduchyk <y.haiduchyk@zinitsolutions.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 class Installer extends Base
 {

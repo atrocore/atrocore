@@ -42,7 +42,7 @@ use Treo\Services\Composer;
 /**
  * Class ComposerAutoUpdate
  *
- * @author r.ratsun@gmail.com
+ * @author rr@atrocore.com
  */
 class ComposerAutoUpdate extends Base
 {

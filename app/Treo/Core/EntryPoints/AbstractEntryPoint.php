@@ -52,7 +52,7 @@ use Treo\Core\Utils\Metadata;
 /**
  * Class AbstractEntryPoint
  *
- * @author r.ratsun <r.ratsun@gmail.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 abstract class AbstractEntryPoint
 {

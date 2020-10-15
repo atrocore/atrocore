@@ -39,7 +39,7 @@ namespace Treo\Controllers;
 /**
  * Controller Preferences
  *
- * @author r.ratsun r.ratsun@zinitsolutions.com
+ * @author r.ratsun rr@atrocore.com
  */
 class Preferences extends \Espo\Controllers\Preferences
 {

@@ -39,7 +39,7 @@ namespace Treo\Console;
 /**
  * Migrate console
  *
- * @author r.ratsun@zinitsolutions.com
+ * @author rr@atrocore.com
  */
 class Migrate extends AbstractConsole
 {

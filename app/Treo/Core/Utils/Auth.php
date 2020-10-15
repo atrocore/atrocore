@@ -42,7 +42,7 @@ use Espo\Core\Exceptions\Error;
 /**
  * Class Auth
  *
- * @author y.haiduchyk <y.haiduchyk@zinitsolutions.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 class Auth extends EspoAuth
 {

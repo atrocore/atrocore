@@ -43,7 +43,7 @@ use Treo\Core\EventManager\Manager as EventManager;
 /**
  * Class Language
  *
- * @author r.ratsun <r.ratsun@gmail.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 class Language extends \Espo\Core\Utils\Language
 {

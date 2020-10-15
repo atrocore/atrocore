@@ -41,7 +41,7 @@ use Espo\Core\Utils\Json;
 /**
  * Class of Layout
  *
- * @author r.ratsun <r.ratsun@zinitsolutions.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 class Layout extends \Espo\Core\Utils\Layout
 {

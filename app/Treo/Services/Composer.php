@@ -46,7 +46,7 @@ use Treo\Core\ModuleManager\Manager as TreoModuleManager;
 /**
  * Composer service
  *
- * @author r.ratsun <r.ratsun@gmail.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 class Composer extends AbstractService
 {

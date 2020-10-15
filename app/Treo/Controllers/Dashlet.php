@@ -44,7 +44,7 @@ use Espo\Core\Controllers\Base;
 /**
  * Class DashletController
  *
- * @author r.ratsun <r.ratsun@gmail.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 class Dashlet extends Base
 {

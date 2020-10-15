@@ -41,7 +41,7 @@ use Treo\Core\EventManager\Event;
 /**
  * Class Metadata
  *
- * @author r.ratsun <r.ratsun@gmail.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 class Metadata extends AbstractListener
 {

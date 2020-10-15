@@ -42,7 +42,7 @@ use FilesystemIterator;
 /**
  * Class Util
  *
- * @author r.ratsun <r.ratsun@gmail.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 class Util extends Base
 {

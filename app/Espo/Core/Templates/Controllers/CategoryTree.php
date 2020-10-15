@@ -41,7 +41,7 @@ use Espo\Core\Controllers\RecordTree;
 /**
  * Class CategoryTree
  *
- * @author r.ratsun@gmail.com
+ * @author rr@atrocore.com
  */
 class CategoryTree extends RecordTree
 {

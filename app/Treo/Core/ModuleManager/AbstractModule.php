@@ -47,7 +47,7 @@ use Treo\Core\Loaders\Layout;
 /**
  * Class AbstractModule
  *
- * @author r.ratsun <r.ratsun@gmail.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 abstract class AbstractModule
 {

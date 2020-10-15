@@ -39,7 +39,7 @@ namespace Treo\Core\Loaders;
 /**
  * Class TemplateFileManager
  *
- * @author r.ratsun@gmail.com
+ * @author rr@atrocore.com
  */
 class TemplateFileManager extends Base
 {

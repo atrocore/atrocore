@@ -42,7 +42,7 @@ use Espo\Core\Exceptions\NotFound;
 /**
  * Controller Admin
  *
- * @author r.ratsun r.ratsun@gmail.com
+ * @author r.ratsun rr@atrocore.com
  */
 class Admin extends Base
 {

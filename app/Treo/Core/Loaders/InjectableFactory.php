@@ -41,7 +41,7 @@ use Treo\Core\InjectableFactory as Instance;
 /**
  * InjectableFactory loader
  *
- * @author r.ratsun@zinitsolutions.com
+ * @author rr@atrocore.com
  */
 class InjectableFactory extends Base
 {

@@ -48,7 +48,7 @@ use Espo\Core\Utils\Metadata\OrmMetadata;
 /**
  * Schema loader
  *
- * @author r.ratsun@zinitsolutions.com
+ * @author rr@atrocore.com
  */
 class Schema extends Base
 {

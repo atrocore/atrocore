@@ -44,7 +44,7 @@ use Treo\Core\SelectManagerFactory;
 /**
  * Class SumRelatedType
  *
- * @author r.ratsun <r.ratsun@zinitsolutions.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 class SumRelatedType extends EspoSumRelatedType
 {

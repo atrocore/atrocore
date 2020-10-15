@@ -43,7 +43,7 @@ use Espo\Core\Exceptions\Error;
 /**
  * Preferences loader
  *
- * @author r.ratsun@zinitsolutions.com
+ * @author rr@atrocore.com
  */
 class Preferences extends Base
 {

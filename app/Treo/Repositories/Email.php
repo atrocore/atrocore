@@ -42,7 +42,7 @@ use Espo\ORM\Entity;
 /**
  * Class Email
  *
- * @author r.ratsun@gmail.com
+ * @author rr@atrocore.com
  */
 class Email extends EspoEmail
 {

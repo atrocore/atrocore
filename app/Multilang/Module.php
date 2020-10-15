@@ -41,7 +41,7 @@ use Treo\Core\ModuleManager\AbstractModule;
 /**
  * Class Module
  *
- * @author r.ratsun <r.ratsun@gmail.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 class Module extends AbstractModule
 {

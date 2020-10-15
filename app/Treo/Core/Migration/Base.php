@@ -40,7 +40,7 @@ use Treo\Core\Utils\Config;
 /**
  * Base class
  *
- * @author r.ratsun <r.ratsun@gmail.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 class Base
 {

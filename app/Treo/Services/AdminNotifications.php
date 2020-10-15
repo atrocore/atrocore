@@ -39,7 +39,7 @@ namespace Treo\Services;
 /**
  * AdminNotifications service
  *
- * @author r.ratsun <r.ratsun@zinitsolutions.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 class AdminNotifications extends \Espo\Core\Services\Base
 {

@@ -39,7 +39,7 @@ namespace Treo\Console;
 /**
  * Class QueueManager
  *
- * @author r.ratsun <r.ratsun@gmail.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 class QueueManager extends AbstractConsole
 {

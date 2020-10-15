@@ -39,7 +39,7 @@ namespace Treo\Console;
 /**
  * Class StoreRefresh
  *
- * @author r.ratsun@gmail.com
+ * @author rr@atrocore.com
  */
 class StoreRefresh extends AbstractConsole
 {

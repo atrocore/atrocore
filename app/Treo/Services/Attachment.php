@@ -42,7 +42,7 @@ use Espo\ORM\Entity;
 /**
  * Service Attachment
  *
- * @author r.ratsun r.ratsun@zinitsolutions.com
+ * @author r.ratsun rr@atrocore.com
  */
 class Attachment extends \Espo\Services\Attachment
 {

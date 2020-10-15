@@ -43,7 +43,7 @@ use Treo\Services\Composer;
 /**
  * Class Manager
  *
- * @author r.ratsun <r.ratsun@gmail.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 class Manager
 {

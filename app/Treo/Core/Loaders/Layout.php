@@ -44,7 +44,7 @@ use Espo\Entities\User;
 /**
  * Layout loader
  *
- * @author r.ratsun@zinitsolutions.com
+ * @author rr@atrocore.com
  */
 class Layout extends Base
 {

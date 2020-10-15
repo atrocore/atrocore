@@ -41,7 +41,7 @@ use Espo\ORM\Entity;
 /**
  * Class Base
  *
- * @author r.ratsun <r.ratsun@gmail.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 class Base extends \Espo\Core\Templates\Services\Base
 {

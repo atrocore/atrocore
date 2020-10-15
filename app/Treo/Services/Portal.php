@@ -42,7 +42,7 @@ use Treo\Core\Application as App;
 /**
  * Portal service
  *
- * @author r.ratsun <r.ratsun@zinitsolutions.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 class Portal extends \Espo\Services\Record
 {

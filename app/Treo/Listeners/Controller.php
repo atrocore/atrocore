@@ -41,7 +41,7 @@ use Treo\Core\EventManager\Event;
 /**
  * Class Controller
  *
- * @author r.ratsun <r.ratsun@gmail.com>
+ * @author r.ratsun <rr@atrocore.com>
  */
 class Controller extends AbstractListener
 {

@@ -41,7 +41,7 @@ use Espo\ORM\Entity;
 /**
  * Class QueueItem
  *
- * @author r.ratsun@zinitsolutions.com
+ * @author rr@atrocore.com
  */
 class QueueItem extends \Espo\Core\Templates\Services\Base
 {
