@@ -250,7 +250,11 @@
   "messages": {
     "successAndReload": "Changes saved. This page will be reloaded after {value} seconds",
     "massUpdateResult": "Updating {count} records",
-    "isRequiredAndUnique": "{field} is required and should be unique."
+    "isRequiredAndUnique": "{field} is required and should be unique.",
+    "relationsAdded": "%s Relations were successfully added.",
+    "relationsDidNotAdded": "%s Records were NOT added, because of the following errors:",
+    "relationsRemoved": "%s Relations were successfully removed.",
+    "relationsDidNotRemoved": "%s Records were NOT removed, because of the following errors:"
   },
   "streamMessages": {
     "composerUpdateThis": "{user}"

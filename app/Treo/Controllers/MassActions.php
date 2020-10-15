@@ -74,12 +74,12 @@ class MassActions extends \Espo\Core\Controllers\Base
      * @param \stdClass $data
      * @param Request   $request
      *
-     * @return bool
+     * @return array
      *
      * @throws BadRequest
      * @throws Forbidden
      */
-    public function actionAddRelation(array $params, \stdClass $data, Request $request): bool
+    public function actionAddRelation(array $params, \stdClass $data, Request $request): array
     {
         if (!$request->isPost()) {
             throw new BadRequest();
@@ -103,12 +103,12 @@ class MassActions extends \Espo\Core\Controllers\Base
      * @param \stdClass $data
      * @param Request   $request
      *
-     * @return bool
+     * @return array
      *
      * @throws BadRequest
      * @throws Forbidden
      */
-    public function actionRemoveRelation(array $params, \stdClass $data, Request $request): bool
+    public function actionRemoveRelation(array $params, \stdClass $data, Request $request): array
     {
         if (!$request->isDelete()) {
             throw new BadRequest();

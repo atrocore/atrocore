@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Treo\Services;
 
+use Espo\Core\Exceptions\BadRequest;
+
 /**
  * Class MassActions
  *
- * @author r.ratsun <r.ratsun@zinitsolutions.com>
+ * @author r.ratsun <r.ratsun@gmail.com>
  */
 class MassActions extends AbstractService
 {
@@ -72,13 +74,10 @@ class MassActions extends AbstractService
      * @param string $entityType
      * @param string $link
      *
-     * @return bool
+     * @return array
      */
-    public function addRelation(array $ids, array $foreignIds, string $entityType, string $link): bool
+    public function addRelation(array $ids, array $foreignIds, string $entityType, string $link): array
     {
-        // prepare result
-        $result = false;
-
         // prepare service
         $service = $this->getService($entityType);
         $methodName = 'massRelate' . ucfirst($link);
@@ -94,23 +93,49 @@ class MassActions extends AbstractService
         // find entities
         $entities = $repository->where(['id' => $ids])->find();
 
+        /** @var string $foreignEntityType */
+        $foreignEntityType = $this->getForeignEntityType($entityType, $link);
+
         // find foreign entities
         $foreignEntities = $this
-            ->getRepository($this->getForeignEntityType($entityType, $link))
+            ->getRepository($foreignEntityType)
             ->where(['id' => $foreignIds])
             ->find();
 
-        if (count($entities) > 0 && count($foreignEntities) > 0) {
+        $related = 0;
+        $notRelated = [];
+        if ($entities->count() > 0 && $foreignEntities->count() > 0) {
             foreach ($entities as $entity) {
                 foreach ($foreignEntities as $foreignEntity) {
-                    if ($repository->relate($entity, $link, $foreignEntity) && !$result) {
-                        $result = true;
+                    $related++;
+                    try {
+                        $repository->relate($entity, $link, $foreignEntity);
+                    } catch (BadRequest $e) {
+                        $related--;
+                        $notRelated[] = [
+                            'id'          => $entity->get('id'),
+                            'name'        => $entity->get('name'),
+                            'foreignId'   => $foreignEntity->get('id'),
+                            'foreignName' => $foreignEntity->get('name'),
+                            'message'     => utf8_encode($e->getMessage())
+                        ];
                     }
                 }
             }
         }
 
-        return $result;
+        $message = "<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>";
+        if (!empty($related)) {
+            $message .= "<span>" . sprintf($this->translate('relationsAdded', 'messages'), $related) . "</span><br>";
+        }
+        if (!empty($notRelated)) {
+            $message .= "<span style=\"color: red\">" . sprintf($this->translate('relationsDidNotAdded', 'messages'), count($notRelated)) . "</span><br>";
+            foreach ($notRelated as $item) {
+                $message .= "<span style=\"margin-left: 10px; color: #000\"><a target=\"_blank\" href=\"#{$entityType}/view/{$item['id']}\">{$item['name']}</a> &#8594; <a target=\"_blank\" href=\"#{$foreignEntityType}/view/{$item['foreignId']}\">{$item['foreignName']}</a>: {$item['message']}</span><br>";
+            }
+        }
+
+        return ['message' => $message];
     }
 
     /**
@@ -121,13 +146,10 @@ class MassActions extends AbstractService
      * @param string $entityType
      * @param string $link
      *
-     * @return bool
+     * @return array
      */
-    public function removeRelation(array $ids, array $foreignIds, string $entityType, string $link): bool
+    public function removeRelation(array $ids, array $foreignIds, string $entityType, string $link): array
     {
-        // prepare result
-        $result = false;
-
         // prepare service
         $service = $this->getService($entityType);
         $methodName = 'massUnrelate' . ucfirst($link);
@@ -143,23 +165,49 @@ class MassActions extends AbstractService
         // find entities
         $entities = $repository->where(['id' => $ids])->find();
 
+        /** @var string $foreignEntityType */
+        $foreignEntityType = $this->getForeignEntityType($entityType, $link);
+
         // find foreign entities
         $foreignEntities = $this
-            ->getRepository($this->getForeignEntityType($entityType, $link))
+            ->getRepository($foreignEntityType)
             ->where(['id' => $foreignIds])
             ->find();
 
-        if (count($entities) > 0 && count($foreignEntities) > 0) {
+        $unRelated = 0;
+        $notUnRelated = [];
+        if ($entities->count() > 0 && $foreignEntities->count() > 0) {
             foreach ($entities as $entity) {
                 foreach ($foreignEntities as $foreignEntity) {
-                    if ($repository->unrelate($entity, $link, $foreignEntity) && !$result) {
-                        $result = true;
+                    $unRelated++;
+                    try {
+                        $repository->unrelate($entity, $link, $foreignEntity);
+                    } catch (BadRequest $e) {
+                        $unRelated--;
+                        $notUnRelated[] = [
+                            'id'          => $entity->get('id'),
+                            'name'        => $entity->get('name'),
+                            'foreignId'   => $foreignEntity->get('id'),
+                            'foreignName' => $foreignEntity->get('name'),
+                            'message'     => utf8_encode($e->getMessage())
+                        ];
                     }
                 }
             }
         }
 
-        return $result;
+        $message = "<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>";
+        if (!empty($unRelated)) {
+            $message .= "<span>" . sprintf($this->translate('relationsRemoved', 'messages'), $unRelated) . "</span><br>";
+        }
+        if (!empty($notUnRelated)) {
+            $message .= "<span style=\"color: red\">" . sprintf($this->translate('relationsDidNotRemoved', 'messages'), count($notUnRelated)) . "</span><br>";
+            foreach ($notUnRelated as $item) {
+                $message .= "<span style=\"margin-left: 10px; color: #000\"><a target=\"_blank\" href=\"#{$entityType}/view/{$item['id']}\">{$item['name']}</a> &#8594; <a target=\"_blank\" href=\"#{$foreignEntityType}/view/{$item['foreignId']}\">{$item['foreignName']}</a>: {$item['message']}</span><br>";
+            }
+        }
+
+        return ['message' => $message];
     }
 
     /**

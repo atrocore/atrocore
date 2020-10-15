@@ -2,7 +2,7 @@
 
 namespace Espo\Core\Exceptions;
 
-class Conflict extends \Exception
+class Conflict extends Exception
 {
     protected $code = 409;
 

@@ -2,7 +2,7 @@
 
 namespace Espo\Core\Exceptions;
 
-class InternalServerError extends \Exception
+class InternalServerError extends Exception
 {
     protected $code = 500;
 

@@ -242,7 +242,11 @@
     "writeYourCommentHere": "Notiz hier erfassen",
     "successAndReload": "Die Änderungen wurden gespeichert. Die Seite wird in {value} Sekunden neu geladen.",
     "massUpdateResult": "{count} Einträge werden aktualisiert",
-    "isRequiredAndUnique": "{field} Feld ist erforderlich und sollte eindeutig sein."
+    "isRequiredAndUnique": "{field} Feld ist erforderlich und sollte eindeutig sein.",
+    "relationsAdded": "%s Beziehungen wurden erfolgreich hinzugefügt.",
+    "relationsDidNotAdded": "%s Beziehungen wurden NICHT hinzugefügt, wegen folgeder Fehler:",
+    "relationsRemoved": "%s Beziehungen wurden erfolgreich entfernt.",
+    "relationsDidNotRemoved": "%s Beziehungen wurden NICHT entfernt, wegen folgeder Fehler:"
   },
   "exceptions": {
     "notDashletService": "Service %s muss Dashlet-Interface implementieren",

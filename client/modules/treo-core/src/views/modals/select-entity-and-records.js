@@ -144,14 +144,22 @@ Espo.define('treo-core:views/modals/select-entity-and-records', 'views/modals/se
         sendDataForUpdateRelation(url, data) {
             if (this.options.type === 'addRelation') {
                 this.ajaxPostRequest(url, data).then(response => {
-                    this.notify('Linked', 'success');
+                    Espo.Ui.notify(response.message, 'success', 1000 * 60 * 60);
+                    this.initCloseNotification();
                 });
             } else if (this.options.type === 'removeRelation') {
                 data = JSON.stringify(data);
                 this.ajaxRequest(url, 'DELETE', data).then(response => {
-                    this.notify('Unlinked', 'success');
+                    Espo.Ui.notify(response.message, 'success', 1000 * 60 * 60);
+                    this.initCloseNotification();
                 });
             }
+        },
+
+        initCloseNotification() {
+            $('.close').click(function () {
+                $('#nofitication').remove();
+            });
         },
 
         createSelectedLinkView() {

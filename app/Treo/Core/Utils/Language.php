@@ -33,21 +33,6 @@ class Language extends \Espo\Core\Utils\Language
     }
 
     /**
-     * @inheritDoc
-     */
-    public function translate($label, $category = 'labels', $scope = 'Global', $requiredOptions = null)
-    {
-        $result = parent::translate($label, $category, $scope, $requiredOptions);
-
-        // decode exceptions for germany umlauts
-        if ($this->getLanguage() == 'de_DE' && $category == 'exceptions') {
-            $result = utf8_decode($result);
-        }
-
-        return $result;
-    }
-
-    /**
      * @param string $label
      * @param string $scope
      *
