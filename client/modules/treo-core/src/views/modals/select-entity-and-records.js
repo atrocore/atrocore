@@ -176,6 +176,7 @@ Espo.define('treo-core:views/modals/select-entity-and-records', 'views/modals/se
             });
 
             this.createView('selectedLink', 'views/fields/enum', {
+                prohibitedEmptyValue: true,
                 model: this.model,
                 el: `${this.options.el} .entity-container .field[data-name="selectedLink"]`,
                 defs: {
