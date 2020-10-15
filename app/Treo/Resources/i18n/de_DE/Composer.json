@@ -16,7 +16,7 @@
     "Such module version already installed": "Diese Modul-Version ist schon installiert",
     "No such module version": "Es gibt keine solche Modul-Version",
     "Version in invalid": "Version ist ungültig",
-    "hasRequireds": "Das Modul hat die Anforderungen nicht erfüllt"
+    "hasRequireds": "Modul hat die Anforderungen nicht erfüllt"
   },
   "labels": {
     "successAndReload": "Die Änderungen wurden gespeichert. Die Seite wird in {value} Sekunden neu geladen",
@@ -27,7 +27,7 @@
     "password": "Passwort",
     "updateStarted": "Update wurde gestartet",
     "version": "Version",
-    "updateInProgress": "Das Update wird bereits durchgeführt",
+    "updateInProgress": "Update wird bereits durchgeführt",
     "updateFailed": "Update fehlgeschlagen. Es kann keine Verbindung zum Modulserver hergestellt werden. Bitte versuche es erneut",
     "cancelingModuleUpdate": "Modulupdate wird abgebrochen...",
     "canceledModuleUpdate": "Die Modulaktualisierung wurde abgebrochen",
@@ -42,13 +42,13 @@
     "failed": "die Aktualisierung des Moduls ist fehlgeschlagen. Weitere Informationen finden Sie in dem Protokoll",
     "Log": "Protokoll",
     "removeModule": "Modul löschen",
-    "Run Update": "das Update starten",
+    "Run Update": "Update starten",
     "settingModuleForInstalling": "Einstellung des Moduls für die Installation",
     "settingModuleForRemoving": "Einstellung des Moduls für das Entfernen",
     "settingModuleForUpdating": "Einstellung des Modul für die Aktualisierung",
     "settingsText": "Sie müssen registriert sein, um AtroCORE Module installieren oder aktualisieren zu können...",
     "updated": "wurde aktualisiert. Die Seite wird in {value} Sekunden neu geladen",
-    "updateModule": "das Modul aktualisieren",
+    "updateModule": "Modul aktualisieren",
     "updating": "wird aktualisiert...",
     "username": "Benutzername",
     "settedModuleForInstalling": "Das Modul wurde für die Installation eingerichtet",
