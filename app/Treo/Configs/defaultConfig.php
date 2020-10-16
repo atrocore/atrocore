@@ -53,8 +53,8 @@ return [
     'decimalMark'            => '.',
     'thousandSeparator'      => ',',
     'useCache'               => true,
-    'applicationName'        => 'TreoCore',
-    'outboundEmailFromName'  => 'TreoCore',
+    'applicationName'        => 'AtroCORE',
+    'outboundEmailFromName'  => 'AtroCORE',
     'smtpPort'               => 25,
     'languageList'           => [
         'en_US',
@@ -73,7 +73,7 @@ return [
     'theme'                  => 'TreoDarkTheme',
     'dashboardLayout'        => [
         (object)[
-            'name'   => 'My TreoCore',
+            'name'   => 'My AtroCORE',
             'layout' => []
         ]
     ],
