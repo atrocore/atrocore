@@ -48,8 +48,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         'config',
         'fieldManagerUtil',
         'eventManager',
-        'workflow',
-        'language'
+        'workflow'
     );
 
     protected $injections = array();
