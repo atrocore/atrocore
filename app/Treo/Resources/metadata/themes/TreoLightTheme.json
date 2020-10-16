@@ -1,6 +1,6 @@
 {
     "stylesheet": "client/modules/treo-core/css/treo/treo-light-theme.css",
-    "logo": "client/modules/treo-core/img/treo_core_logo_dark.svg",
+    "logo": "client/modules/treo-core/img/core_logo_dark.svg",
     "navbarIsVertical": true,
     "navbarStaticItemsHeight": 83,
     "recordTopButtonsStickTop": 61,

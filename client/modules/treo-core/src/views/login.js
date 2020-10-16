@@ -67,7 +67,7 @@ Espo.define('treo-core:views/login', 'class-replace!treo-core:views/login',
         getLogoSrc: function () {
             const companyLogoId = this.getConfig().get('companyLogoId');
             if (!companyLogoId) {
-                return this.getBasePath() + 'client/modules/treo-core/img/treo_core_logo_white.svg';
+                return this.getBasePath() + 'client/modules/treo-core/img/core_logo_white.svg';
             }
             return this.getBasePath() + '?entryPoint=LogoImage&id='+companyLogoId+'&t=' + companyLogoId;
         },
