@@ -43,7 +43,7 @@ use \Espo\Core\Exceptions\NotFound;
 use \Espo\Core\Utils\Util;
 use Espo\ORM\IEntity;
 use Treo\Core\EventManager\Event;
-use Treo\Core\Exceptions\NoChange;
+use Treo\Core\Exceptions\NotModified;
 use Treo\Core\Utils\Condition\Condition;
 
 class Record extends \Espo\Core\Services\Base
@@ -2449,7 +2449,7 @@ class Record extends \Espo\Core\Services\Base
      * @param \stdClass $data
      *
      * @return bool
-     * @throws NoChange
+     * @throws NotModified
      */
     protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
     {
@@ -2487,7 +2487,7 @@ class Record extends \Espo\Core\Services\Base
         }
 
         if (!$isUpdated) {
-            throw new NoChange();
+            throw new NotModified();
         }
 
         return true;
