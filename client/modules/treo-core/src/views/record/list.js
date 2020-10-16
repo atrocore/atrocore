@@ -190,7 +190,7 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
         setupMassActionItems() {
             Dep.prototype.setupMassActionItems.call(this);
 
-            if (!this.getMetadata().get(['scopes', this.scope, 'relationDisabled'])) {
+            if (this.getMetadata().get(['scopes', this.scope, 'addRelationEnabled'])) {
                 let foreignEntities = this.getForeignEntities();
                 if (foreignEntities.length) {
                     this.massActionList = Espo.Utils.clone(this.massActionList);
