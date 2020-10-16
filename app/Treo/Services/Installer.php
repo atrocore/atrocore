@@ -332,7 +332,15 @@ class Installer extends AbstractService
                 // save config
                 $this->getConfig()->save();
 
+                // dispatch an event
                 $this->dispatch('Installer', 'afterInstallSystem', new Event());
+
+                // generate RestApiDocs
+                $this
+                    ->getContainer()
+                    ->get('serviceFactory')
+                    ->create('RestApiDocs')
+                    ->generateDocumentation();
             } catch (\Exception $e) {
                 // prepare result
                 $result = [
