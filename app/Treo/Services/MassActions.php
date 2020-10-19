@@ -231,12 +231,12 @@ class MassActions extends AbstractService
         $message = "<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>";
         if (!empty($success)) {
             $plural = $success > 1 ? 'Plural' : '';
-            $successMessage = $relate ? $this->translate('relationsAdded' . $plural, 'messages') : $this->translate('relationsRemoved', 'messages');
+            $successMessage = $relate ? $this->translate('relationsAdded' . $plural, 'messages') : $this->translate('relationsRemoved' . $plural, 'messages');
             $message .= "<span>" . sprintf($successMessage, $success) . "</span><br>";
         }
         if (!empty($errors)) {
             $plural = count($errors) > 1 ? 'Plural' : '';
-            $errorMessage = $relate ? $this->translate('relationsDidNotAdded' . $plural, 'messages') : $this->translate('relationsDidNotRemoved', 'messages');
+            $errorMessage = $relate ? $this->translate('relationsDidNotAdded' . $plural, 'messages') : $this->translate('relationsDidNotRemoved' . $plural, 'messages');
             $message .= "<span style=\"color: red\">" . sprintf($errorMessage, count($errors)) . "</span><br>";
             foreach ($errors as $item) {
                 $message .= "<span style=\"margin-left: 10px; color: #000\"><a target=\"_blank\" href=\"#{$entityType}/view/{$item['id']}\">{$item['name']}</a> &#8594; <a target=\"_blank\" href=\"#{$foreignEntityType}/view/{$item['foreignId']}\">{$item['foreignName']}</a>: {$item['message']}</span><br>";

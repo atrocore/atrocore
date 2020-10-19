@@ -255,8 +255,10 @@
     "relationsAddedPlural": "%s Relations were successfully added.",
     "relationsDidNotAdded": "Record was NOT added, because of the following errors:",
     "relationsDidNotAddedPlural": "%s Records were NOT added, because of the following errors:",
-    "relationsRemoved": "%s Relations were successfully removed.",
-    "relationsDidNotRemoved": "%s Records were NOT removed, because of the following errors:"
+    "relationsRemoved": "Relation was successfully removed.",
+    "relationsRemovedPlural": "%s Relations were successfully removed.",
+    "relationsDidNotRemoved": "Record was NOT removed, because of the following errors:",
+    "relationsDidNotRemovedPlural": "%s Records were NOT removed, because of the following errors:"
   },
   "streamMessages": {
     "composerUpdateThis": "{user}"

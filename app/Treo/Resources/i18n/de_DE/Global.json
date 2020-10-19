@@ -247,8 +247,10 @@
     "relationsAddedPlural": "%s Beziehungen wurden erfolgreich hinzugefügt.",
     "relationsDidNotAdded": "Beziehungen wurden wegen folgender Fehler NICHT hinzugefügt:",
     "relationsDidNotAddedPlural": "%s Beziehungen wurden NICHT hinzugefügt, wegen folgeder Fehler:",
-    "relationsRemoved": "%s Beziehungen wurden erfolgreich entfernt.",
-    "relationsDidNotRemoved": "%s Beziehungen wurden wegen folgender Fehler NICHT entfernt:"
+    "relationsRemoved": "Relation was successfully removed.",
+    "relationsRemovedPlural": "%s Beziehungen wurden erfolgreich entfernt.",
+    "relationsDidNotRemoved": "Record was NOT removed, because of the following errors:",
+    "relationsDidNotRemovedPlural": "%s Beziehungen wurden wegen folgender Fehler NICHT entfernt:"
   },
   "exceptions": {
     "notDashletService": "Service %s muss Dashlet-Interface implementieren",
