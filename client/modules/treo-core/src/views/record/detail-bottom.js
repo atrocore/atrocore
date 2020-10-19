@@ -253,6 +253,29 @@ Espo.define('treo-core:views/record/detail-bottom', 'class-replace!treo-core:vie
                         this.rebuildPanelHeading(pDefs);
                         view.render();
                     });
+
+                    // refresh sync panels
+                    let syncPanels = this.getMetadata().get(['clientDefs', this.scope, 'syncPanels', defs.name]) || [];
+                    if (syncPanels !== []) {
+                        let syncPanelDefs = null;
+                        syncPanels.forEach(function (panelName) {
+                            // prepare syncPanelDefs
+                            syncPanelDefs = this.panelList.filter(panel => {
+                                return panel.name === panelName;
+                            }).shift();
+                            syncPanelDefs.select = defs.select;
+                            syncPanelDefs.create = defs.create;
+                            syncPanelDefs.readOnly = defs.readOnly;
+                            syncPanelDefs.actionList = [];
+                            syncPanelDefs.buttonList = [];
+
+                            this.clearView(panelName);
+                            this.createPanelView(syncPanelDefs, (view, pDefs) => {
+                                this.rebuildPanelHeading(pDefs);
+                                view.render();
+                            });
+                        }, this);
+                    }
                 });
 
                 this.listenTo(view, 'collapsePanel', type => this.collapseBottomPanel(p.name, type));
