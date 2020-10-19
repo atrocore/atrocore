@@ -243,12 +243,12 @@
     "successAndReload": "Die Änderungen wurden gespeichert. Die Seite wird in {value} Sekunden neu geladen.",
     "massUpdateResult": "{count} Einträge werden aktualisiert",
     "isRequiredAndUnique": "{field} Feld ist erforderlich und sollte eindeutig sein.",
-    "relationsAdded": "%s Beziehung wurde erfolgreich hinzugefügt.",
+    "relationsAdded": "Beziehung wurde erfolgreich hinzugefügt.",
     "relationsAddedPlural": "%s Beziehungen wurden erfolgreich hinzugefügt.",
-    "relationsDidNotAdded": "%s Beziehung wurde wegen folgendes Fehlers NICHT hinzugefügt:",
+    "relationsDidNotAdded": "Beziehungen wurden wegen folgender Fehler NICHT hinzugefügt:",
     "relationsDidNotAddedPlural": "%s Beziehungen wurden NICHT hinzugefügt, wegen folgeder Fehler:",
     "relationsRemoved": "%s Beziehungen wurden erfolgreich entfernt.",
-    "relationsDidNotRemoved": "%s Beziehungen wurden NICHT entfernt, wegen folgeder Fehler:"
+    "relationsDidNotRemoved": "%s Beziehungen wurden wegen folgender Fehler NICHT entfernt:"
   },
   "exceptions": {
     "notDashletService": "Service %s muss Dashlet-Interface implementieren",
