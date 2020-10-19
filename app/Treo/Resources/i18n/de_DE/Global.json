@@ -247,9 +247,9 @@
     "relationsAddedPlural": "%s Beziehungen wurden erfolgreich hinzugefügt.",
     "relationsDidNotAdded": "Beziehungen wurden wegen folgender Fehler NICHT hinzugefügt:",
     "relationsDidNotAddedPlural": "%s Beziehungen wurden NICHT hinzugefügt, wegen folgeder Fehler:",
-    "relationsRemoved": "Relation was successfully removed.",
+    "relationsRemoved": "Die Beziehung wurde erfolgreich entfernt.",
     "relationsRemovedPlural": "%s Beziehungen wurden erfolgreich entfernt.",
-    "relationsDidNotRemoved": "Record was NOT removed, because of the following errors:",
+    "relationsDidNotRemoved": "Die Beziehung wurde wegen folgendes Fehlers NICHT entfernt:",
     "relationsDidNotRemovedPlural": "%s Beziehungen wurden wegen folgender Fehler NICHT entfernt:"
   },
   "exceptions": {
