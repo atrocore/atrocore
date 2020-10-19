@@ -244,9 +244,9 @@
     "massUpdateResult": "{count} Einträge werden aktualisiert",
     "isRequiredAndUnique": "{field} Feld ist erforderlich und sollte eindeutig sein.",
     "relationsAdded": "%s Beziehungen wurden erfolgreich hinzugefügt.",
-    "relationsDidNotAdded": "%s Beziehungen wurden NICHT hinzugefügt, wegen folgeder Fehler:",
+    "relationsDidNotAdded": "%s Beziehungen wurden NICHT hinzugefügt, wegen folgender Fehler:",
     "relationsRemoved": "%s Beziehungen wurden erfolgreich entfernt.",
-    "relationsDidNotRemoved": "%s Beziehungen wurden NICHT entfernt, wegen folgeder Fehler:"
+    "relationsDidNotRemoved": "%s Beziehungen wurden NICHT entfernt, wegen folgender Fehler:"
   },
   "exceptions": {
     "notDashletService": "Service %s muss Dashlet-Interface implementieren",
