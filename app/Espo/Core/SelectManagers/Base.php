@@ -531,6 +531,9 @@ class Base
         if (empty($result['joinConditions'])) {
             $result['joinConditions'] = array();
         }
+        if (!isset($result['customWhere'])) {
+            $result['customWhere'] = '';
+        }
     }
 
     protected function checkIsPortal()
