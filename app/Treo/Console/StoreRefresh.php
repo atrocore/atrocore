@@ -47,7 +47,7 @@ class StoreRefresh extends AbstractConsole
      */
     public static function getDescription(): string
     {
-        return 'Refresh TreoStore.';
+        return 'Refresh store.';
     }
 
     /**
@@ -60,7 +60,7 @@ class StoreRefresh extends AbstractConsole
         // refresh
         $this->refresh();
 
-        self::show('TreoStore refreshed successfully', self::SUCCESS);
+        self::show('Store refreshed successfully', self::SUCCESS);
     }
 
     /**
