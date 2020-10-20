@@ -252,13 +252,13 @@
     "massUpdateResult": "Updating {count} records",
     "isRequiredAndUnique": "{field} is required and should be unique.",
     "relationsAdded": "Relation was successfully added.",
-    "relationsAddedPlural": "%s Relations were successfully added.",
-    "relationsDidNotAdded": "Record was NOT added, because of the following errors:",
-    "relationsDidNotAddedPlural": "%s Records were NOT added, because of the following errors:",
+    "relationsAddedPlural": "%s relations were successfully added.",
+    "relationsDidNotAdded": "Relation was NOT added because of the following errors:",
+    "relationsDidNotAddedPlural": "%s Relations were NOT added because of the following errors:",
     "relationsRemoved": "Relation was successfully removed.",
-    "relationsRemovedPlural": "%s Relations were successfully removed.",
-    "relationsDidNotRemoved": "Record was NOT removed, because of the following errors:",
-    "relationsDidNotRemovedPlural": "%s Records were NOT removed, because of the following errors:"
+    "relationsRemovedPlural": "%s relations were successfully removed.",
+    "relationsDidNotRemoved": "Relation was NOT removed because of the following error:",
+    "relationsDidNotRemovedPlural": "%s relations were NOT removed because of the following errors:"
   },
   "streamMessages": {
     "composerUpdateThis": "{user}"
