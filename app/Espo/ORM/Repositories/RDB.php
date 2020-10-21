@@ -404,13 +404,13 @@ class RDB extends \Espo\ORM\Repository
             $result = $this->$methodName($entity, $foreign);
         } else {
             if ($foreign instanceof Entity) {
-                $result = $this->getMapper()->unrelate($entity, $relationName, $foreign);
+                $result = $this->getMapper()->unrelate($entity, $relationName, $foreign, !empty($options['force']));
             }
             if (is_string($foreign)) {
-                $result = $this->getMapper()->removeRelation($entity, $relationName, $foreign);
+                $result = $this->getMapper()->removeRelation($entity, $relationName, $foreign, !empty($options['force']));
             }
             if ($foreign === true) {
-                $result = $this->getMapper()->removeAllRelations($entity, $relationName);
+                $result = $this->getMapper()->removeAllRelations($entity, $relationName, !empty($options['force']));
             }
         }
 
@@ -423,6 +423,21 @@ class RDB extends \Espo\ORM\Repository
         }
 
         return $result;
+    }
+
+    /**
+     * @param Entity $entity
+     * @param string $relationName
+     * @param mixed  $foreign
+     * @param array  $options
+     *
+     * @return false|void
+     */
+    public function unrelateForce(Entity $entity, $relationName, $foreign, array $options = [])
+    {
+        $options['force'] = true;
+
+        return $this->unrelate($entity, $relationName, $foreign, $options);
     }
 
     protected function beforeRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = array())

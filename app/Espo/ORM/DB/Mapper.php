@@ -343,9 +343,9 @@ abstract class Mapper implements IMapper
         return $this->addRelation($entityFrom, $relationName, null, $entityTo, $data);
     }
 
-    public function unrelate(IEntity $entityFrom, $relationName, IEntity $entityTo)
+    public function unrelate(IEntity $entityFrom, $relationName, IEntity $entityTo, bool $force = false)
     {
-        return $this->removeRelation($entityFrom, $relationName, null, false, $entityTo);
+        return $this->removeRelation($entityFrom, $relationName, null, false, $entityTo, $force);
     }
 
     public function updateRelation(IEntity $entity, $relationName, $id = null, $columnData)
@@ -605,7 +605,7 @@ abstract class Mapper implements IMapper
         }
     }
 
-    public function removeRelation(IEntity $entity, $relationName, $id = null, $all = false, IEntity $relEntity = null)
+    public function removeRelation(IEntity $entity, $relationName, $id = null, $all = false, IEntity $relEntity = null, bool $force = false)
     {
         if (!is_null($relEntity)) {
             $id = $relEntity->id;
@@ -695,8 +695,12 @@ abstract class Mapper implements IMapper
                     }
                 }
 
-                $sql = $this->composeUpdateQuery($relTable, $setPart, $wherePart);
 
+                if ($force){
+                    $sql = $this->composeDeleteQuery($relTable, $wherePart);
+                }else{
+                    $sql = $this->composeUpdateQuery($relTable, $setPart, $wherePart);
+                }
                 if ($this->pdo->query($sql)) {
                     return true;
                 }
@@ -704,9 +708,9 @@ abstract class Mapper implements IMapper
         }
     }
 
-    public function removeAllRelations(IEntity $entity, $relationName)
+    public function removeAllRelations(IEntity $entity, $relationName, bool $force = false)
     {
-        $this->removeRelation($entity, $relationName, null, true);
+        $this->removeRelation($entity, $relationName, null, true, null, $force);
     }
 
     protected function quote($value)
@@ -905,6 +909,17 @@ abstract class Mapper implements IMapper
         $sql = "UPDATE `{$table}` SET {$set} WHERE {$where}";
 
         return $sql;
+    }
+
+    /**
+     * @param string $table
+     * @param string $where
+     *
+     * @return string
+     */
+    protected function composeDeleteQuery(string $table, string $where): string
+    {
+        return "DELETE FROM `{$table}` WHERE {$where}";
     }
 
     abstract protected function toDb($field);
