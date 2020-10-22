@@ -40,6 +40,7 @@ use Treo\Core\Container;
 use Treo\Core\Migration\Migration;
 use Treo\Core\ModuleManager\Manager as ModuleManager;
 use Treo\Core\ORM\EntityManager;
+use Treo\Core\Utils\Config;
 use Treo\Core\Utils\Util;
 use Treo\Core\ModuleManager\AbstractEvent;
 use Treo\Services\Composer as ComposerService;
@@ -112,6 +113,9 @@ class PostUpdate
      */
     public function run(): void
     {
+        // cache clearing
+        $this->clearCache();
+
         // logout all users
         if ($this->isInstalled()) {
             $this->logoutAll();
@@ -122,9 +126,6 @@ class PostUpdate
 
         // copy default config if it needs
         $this->copyDefaultConfig();
-
-        // drop cache
-        Util::removeDir('data/cache');
 
         // init events
         $this->initEvents();
@@ -141,6 +142,10 @@ class PostUpdate
         if ($this->byLockFile) {
             file_put_contents('data/old-composer.lock', file_get_contents(ComposerService::$composerLock));
         }
+
+        // enable use cache param
+        $this->getConfig()->set('useCache', $this->getConfig()->get('beforeUpdateUseCache', true));
+        $this->getConfig()->save();
     }
 
     /**
@@ -400,6 +405,40 @@ class PostUpdate
             }
             self::renderLine('Done!');
         }
+    }
+
+    /**
+     * Clear cache
+     */
+    protected function clearCache()
+    {
+        self::renderLine('Cache clearing...');
+
+        // keep use cache param
+        $this->getConfig()->set('beforeUpdateUseCache', $this->getConfig()->get('useCache', true));
+
+        // disabling use cache param
+        $this->getConfig()->set('useCache', false);
+        $this->getConfig()->save();
+
+        // wait for file saving
+        sleep(2);
+
+        // clear cache
+        $this->getContainer()->get('dataManager')->clearCache();
+
+        // wait for cache clearing
+        sleep(2);
+
+        self::renderLine('Done!');
+    }
+
+    /**
+     * @return Config
+     */
+    protected function getConfig(): Config
+    {
+        return $this->getContainer()->get('config');
     }
 
     /**
