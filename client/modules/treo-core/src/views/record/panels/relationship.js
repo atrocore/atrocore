@@ -1,5 +1,3 @@
-
-
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -62,6 +60,17 @@ Espo.define('treo-core:views/record/panels/relationship', ['class-replace!treo-c
 
                 this.tryReady();
             });
+
+            var select = this.actionList.find(item => item.action === (this.defs.selectAction || 'selectRelated'));
+            if (select) {
+                select.data = {
+                    link: this.link,
+                    scope: this.scope,
+                    boolFilterListCallback: 'getSelectBoolFilterList',
+                    boolFilterDataCallback: 'getSelectBoolFilterData',
+                    primaryFilterName: this.defs.selectPrimaryFilterName || null
+                };
+            }
         },
 
         actionShowFullList(data) {
@@ -155,6 +164,22 @@ Espo.define('treo-core:views/record/panels/relationship', ['class-replace!treo-c
                     }
                 });
             });
+        },
+
+        getSelectBoolFilterData(boolFilterList) {
+            let data = {};
+            if (Array.isArray(boolFilterList)) {
+                boolFilterList.forEach(item => {
+                    if (this.boolFilterData && typeof this.boolFilterData[item] === 'function') {
+                        data[item] = this.boolFilterData[item].call(this);
+                    }
+                });
+            }
+            return data;
+        },
+
+        getSelectBoolFilterList() {
+            return this.defs.selectBoolFilterList || null
         },
 
     });
