@@ -144,8 +144,10 @@ class PostUpdate
         }
 
         // enable use cache param
-        $this->getConfig()->set('useCache', $this->getConfig()->get('beforeUpdateUseCache', true));
-        $this->getConfig()->save();
+        if (!empty($config = $this->getConfig())) {
+            $config->set('useCache', $config->get('beforeUpdateUseCache', true));
+            $config->save();
+        }
     }
 
     /**
@@ -412,14 +414,18 @@ class PostUpdate
      */
     protected function clearCache()
     {
+        if (empty($config = $this->getConfig())) {
+            return;
+        }
+
         self::renderLine('Cache clearing...');
 
         // keep use cache param
-        $this->getConfig()->set('beforeUpdateUseCache', $this->getConfig()->get('useCache', true));
+        $config->set('beforeUpdateUseCache', $config->get('useCache', true));
 
         // disabling use cache param
-        $this->getConfig()->set('useCache', false);
-        $this->getConfig()->save();
+        $config->set('useCache', false);
+        $config->save();
 
         // wait for file saving
         sleep(2);
@@ -436,8 +442,12 @@ class PostUpdate
     /**
      * @return Config
      */
-    protected function getConfig(): Config
+    protected function getConfig(): ?Config
     {
+        if (!file_exists('data/config.php')) {
+            return null;
+        }
+
         return $this->getContainer()->get('config');
     }
 
