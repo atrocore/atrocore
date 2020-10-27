@@ -1,3 +1,5 @@
+![logo](docs/_assets/AtroCore_logo_color_248.png)
+
 ## What Is AtroCore?
 
 AtroCore is an open-source software ecosystem distributed under GPLv3 License for free. AtroCore is designed for rapid development of web-based responsive business applications of any kind (ERP, PIM, CRM, DMS, MDM, DAM, etc.). It is an excellent tool for cost-effective and timely application development that comes with the powerful out-of-the-box functionality.
