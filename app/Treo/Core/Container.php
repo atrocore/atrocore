@@ -199,9 +199,6 @@ class Container
             unset($this->data[$name]);
         }
 
-        // load
-        $this->load($name);
-
         return $this;
     }
 
