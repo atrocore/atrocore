@@ -1,5 +1,3 @@
-
-
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -33,9 +31,7 @@
  */
 
 Espo.define('MultiCollection', 'Collection', function (Collection) {
-    var MultiCollection = Collection.extend({
-
-        /**
+    var MultiCollection = Collection.extend({/**
          * @prop {Object} seeds Hash off model classes.
          */
         seeds: null,

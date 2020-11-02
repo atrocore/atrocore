@@ -1,5 +1,3 @@
-
-
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -172,9 +170,7 @@ Espo.define('utils', [], function () {
                 }
             }
             return data;
-        },
-
-        /**
+        },/**
          * Compose class name.
          * @param {String} module
          * @param {String} name

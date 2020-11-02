@@ -1,5 +1,3 @@
-
-
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -40,9 +38,23 @@ Espo.define('views/fields/user-with-avatar', 'views/fields/user', function (Dep)
 
         detailTemplate: 'fields/user-with-avatar/detail',
 
+        setup: function () {
+            Dep.prototype.setup.call(this);
+
+            if (this.model.has('ownerUserId') && this.model.get('ownerUserId') === null) {
+                this.model.set('ownerUserId', this.getUser().id);
+                this.model.set('ownerUserName', this.getUser().get('name'));
+            }
+
+            if (this.model.has('assignedUserId') && this.model.get('assignedUserId') === null) {
+                this.model.set('assignedUserId', this.getUser().id);
+                this.model.set('assignedUserName', this.getUser().get('name'));
+            }
+        },
+
         data: function () {
             var o = _.extend({}, Dep.prototype.data.call(this));
-            if (this.mode == 'detail') {
+            if (this.mode === 'detail') {
                 o.avatar = this.getAvatarHtml();
             }
             return o;

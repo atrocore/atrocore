@@ -1,6 +1,3 @@
-
-
-
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -31,10 +28,7 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word
  * and "AtroCore" word.
- */
-
-
-/** * Example:
+ *//** * Example:
  * Lead: {
  *   edit: 'own',
  *   read: 'team',

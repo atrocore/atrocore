@@ -1,5 +1,3 @@
-
-
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -36,23 +34,17 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
     return Dep.extend({
 
-        template: 'record/list',
-
-        /**
+        template: 'record/list',/**
          * @param {String} Type of the list. Can be 'list', 'listSmall'.
          */
         type: 'list',
 
         name: 'list',
 
-        presentationType: 'table',
-
-        /**
+        presentationType: 'table',/**
          * @param {Bool} If true checkboxes will be shown.
          */
-        checkboxes: true,
-
-        /**
+        checkboxes: true,/**
          * @param {Bool} If true clicking on the record link will trigger 'select' event with model passed.
          */
         selectable: false,
@@ -206,14 +198,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             this.trigger('check');
-        },
-
-        /**
+        },/**
          * @param {string} or {bool} ['both', 'top', 'bottom', false, true] Where to display paginations.
          */
-        pagination: false,
-
-        /**
+        pagination: false,/**
          * @param {bool} To dispaly table header with column names.
          */
         header: true,
@@ -226,9 +214,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         quickDetailDisabled: false,
 
-        quickEditDisabled: false,
-
-        /**
+        quickEditDisabled: false,/**
          * @param {array} Columns layout. Will be convered in 'Bull' typed layout for a fields rendering.
          *
          */
@@ -1128,9 +1114,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     }
                 }
             };
-        },
-
-        /**
+        },/**
          * Returns checked models.
          * @return {Array} Array of models
          */

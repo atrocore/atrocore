@@ -1,5 +1,3 @@
-
-
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -1362,10 +1360,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 });
                 return true;
             }
-        },
-
-
-        /**
+        },/**
          * Called after save or cancel.
          * By default redirects page. Can be orverriden in options.
          * @param {String} after Name of action (save, cancel, etc.) after which #exit is invoked.

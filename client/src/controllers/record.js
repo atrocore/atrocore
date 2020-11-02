@@ -1,5 +1,3 @@
-
-
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -273,9 +271,7 @@ Espo.define('controllers/record', 'controller', function (Dep) {
                     current.fetch();
                 }.bind(this));
             }.bind(this));
-        },
-
-        /**
+        },/**
          * Get collection for the current controller.
          * @param {collection}.
          */
@@ -300,9 +296,7 @@ Espo.define('controllers/record', 'controller', function (Dep) {
                 }, this);
                 callback.call(context, collection);
             }, context);
-        },
-
-        /**
+        },/**
          * Get model for the current controller.
          * @param {model}.
          */

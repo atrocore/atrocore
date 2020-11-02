@@ -1,7 +1,3 @@
-
-
-
-
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *

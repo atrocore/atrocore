@@ -1,5 +1,3 @@
-
-
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -30,9 +28,7 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word
  * and "AtroCore" word.
- */
-
-/**
+ *//**
  * Controller. Views, Models and Collections are created here.*/
 
 Espo.define('controller', [], function () {
@@ -114,9 +110,7 @@ Espo.define('controller', [], function () {
 
         getDateTime: function () {
             return this._dateTime;
-        },
-
-        /**
+        },/**
          * Get parameter of all controllers.
          * @param key
          * @return null if doesn't exist.
@@ -126,9 +120,7 @@ Espo.define('controller', [], function () {
                 return this.params[key];
             }
             return null;
-        },
-
-        /**
+        },/**
          * Set paramer for all controllers.
          * @param key Name of view.
          * @param value.
@@ -213,9 +205,7 @@ Espo.define('controller', [], function () {
             if (postMethod in this) {
                 this[postMethod].call(this, options || {});
             }
-        },
-
-        /**
+        },/**
          * Create master view, render it if not rendered and return it.
          * @param {Function} callback Master view will be argument for this.
          */
@@ -242,9 +232,7 @@ Espo.define('controller', [], function () {
             } else {
                 callback.call(this, master);
             }
-        },
-
-        /**
+        },/**
          * Create main view in master and return it.
          * @param {String} view Name of view.
          * @param {Object} options Options for view.
@@ -335,9 +323,7 @@ Espo.define('controller', [], function () {
             if (master) {
                 master.hideLoadingNotification();
             }
-        },
-
-        /**
+        },/**
          * Create view in the body tag.
          * @param {String} view Name of view.
          * @param {Object} options Options for view.

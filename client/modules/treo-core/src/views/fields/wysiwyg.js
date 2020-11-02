@@ -1,5 +1,3 @@
-
-
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -80,9 +78,7 @@ Espo.define('treo-core:views/fields/wysiwyg', 'class-replace!treo-core:views/fie
         },
 
         afterRender() {
-            Dep.prototype.afterRender.call(this);
-
-            /**
+            Dep.prototype.afterRender.call(this);/**
              *  Show html in list view
              */
             $('td.cell').each(function () {

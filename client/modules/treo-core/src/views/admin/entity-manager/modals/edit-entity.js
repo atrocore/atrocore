@@ -1,5 +1,3 @@
-
-
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -71,10 +69,7 @@ Espo.define('treo-core:views/admin/entity-manager/modals/edit-entity', 'class-re
                 } else {
                     this.additionalParamsLayout[this.additionalParamsLayout.length - 1].push(param);
                 }
-            }
-
-
-            /**
+            }/**
              * Create sortBy field
              */
             if (this.scope) {

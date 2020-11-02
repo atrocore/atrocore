@@ -1,5 +1,3 @@
-
-
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -76,9 +74,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         isRequired: function () {
             return this.params.required;
-        },
-
-        /**
+        },/**
          * Get cell element. Works only after rendered.
          * {jQuery}
          */
@@ -144,9 +140,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         setNotReadOnly: function () {
             if (this.readOnlyLocked) return;
             this.readOnly = false;
-        },
-
-        /**
+        },/**
          * Get label element. Works only after rendered.
          * {jQuery}
          */
@@ -155,9 +149,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 this.$label = this.$el.parent().children('label');
             }
             return this.$label;
-        },
-
-        /**
+        },/**
          * Hide field and label. Works only after rendered.
          */
         hide: function () {
@@ -165,9 +157,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             var $cell = this.getCellElement();
             $cell.children('label').addClass('hidden');
             $cell.addClass('hidden-cell');
-        },
-
-        /**
+        },/**
          * Show field and label. Works only after rendered.
          */
         show: function () {

@@ -1,6 +1,4 @@
-
-
- /*
+/*
  * This file is part of EspoCRM and/or AtroCore.
  *
  * EspoCRM - Open Source CRM application.
