@@ -78,7 +78,9 @@ Espo.define('treo-core:views/fields/wysiwyg', 'class-replace!treo-core:views/fie
         },
 
         afterRender() {
-            Dep.prototype.afterRender.call(this);/**
+            Dep.prototype.afterRender.call(this);
+
+            /**
              *  Show html in list view
              */
             $('td.cell').each(function () {
@@ -86,9 +88,10 @@ Espo.define('treo-core:views/fields/wysiwyg', 'class-replace!treo-core:views/fie
                 let html = el.html();
 
                 // prepare images
-                html = html.replace('{img', '<img').replace('/img}', '>');
-
-                el.html(html);
+                if (html.search("{img") > 0 && html.search("/img}") > 0) {
+                    html = html.replace('{img', '<img').replace('/img}', '>');
+                    el.html(html);
+                }
             });
 
             if (this.mode === 'detail' || this.mode === 'list') {
@@ -162,7 +165,11 @@ Espo.define('treo-core:views/fields/wysiwyg', 'class-replace!treo-core:views/fie
                 let htmlContainer = this.$el.find(`.html-container[data-name="${name}"]`);
                 if (htmlContainer.height() > this.detailMaxHeight) {
                     htmlContainer.parent().append(showMore);
-                    htmlContainer.css({maxHeight: this.detailMaxHeight + 'px', overflow: 'hidden', marginBottom: '10px'});
+                    htmlContainer.css({
+                        maxHeight: this.detailMaxHeight + 'px',
+                        overflow: 'hidden',
+                        marginBottom: '10px'
+                    });
                 }
             }
         }
