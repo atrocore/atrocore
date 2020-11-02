@@ -482,9 +482,9 @@ abstract class Base
                     continue;
                 }
                 $fieldPath = $this->getFieldPath($entity, $attribute);
-                if ($attributeType === $entity::TEXT && $maxTextColumnsLength !== null) {
-                    $fieldPath = 'LEFT(' . $fieldPath . ', '. intval($maxTextColumnsLength) . ')';
-                }
+//                if ($attributeType === $entity::TEXT && $maxTextColumnsLength !== null) {
+//                    $fieldPath = 'LEFT(' . $fieldPath . ', '. intval($maxTextColumnsLength) . ')';
+//                }
             }
 
             $arr[] = $fieldPath . ' AS `' . $attribute . '`';
