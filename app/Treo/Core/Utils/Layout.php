@@ -78,14 +78,24 @@ class Layout extends \Espo\Core\Utils\Layout
      * @param string $scope
      * @param string $name
      *
+     * @return bool
+     */
+    public function isCustom(string $scope, string $name): bool
+    {
+        return file_exists($this->concatPath($this->getLayoutPath($scope, true), $name . '.json'));
+    }
+
+    /**
+     * @param string $scope
+     * @param string $name
+     *
      * @return array
      */
     protected function compose(string $scope, string $name): array
     {
         // from custom data
-        $fileFullPath = $this->concatPath($this->getLayoutPath($scope, true), $name . '.json');
-        if (file_exists($fileFullPath)) {
-            return Json::decode($this->getFileManager()->getContents($fileFullPath), true);
+        if ($this->isCustom($scope, $name)) {
+            return Json::decode($this->getFileManager()->getContents($this->concatPath($this->getLayoutPath($scope, true), $name . '.json')), true);
         }
 
         // prepare data

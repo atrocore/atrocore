@@ -82,6 +82,19 @@ Espo.define('treo-core:views/fields/wysiwyg', 'class-replace!treo-core:views/fie
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
+            /**
+             *  Show html in list view
+             */
+            $('td.cell').each(function () {
+                let el = $(this);
+                let html = el.html();
+
+                // prepare images
+                html = html.replace('{img', '<img').replace('/img}', '>');
+
+                el.html(html);
+            });
+
             if (this.mode === 'detail' || this.mode === 'list') {
                 if ((!this.model.has('isHtml') || this.model.get('isHtml')) && !this.showMoreText && !this.showMoreDisabled) {
                     this.applyFieldPartHiding(this.name);
