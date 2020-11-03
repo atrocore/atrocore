@@ -34,6 +34,7 @@
 namespace Espo\ORM;
 
 use \Espo\Core\Exceptions\Error;
+use Treo\Core\Loaders\Pdo as PdoLoader;
 
 class EntityManager
 {
@@ -56,10 +57,7 @@ class EntityManager
 
     protected $query;
 
-    protected $driverPlatformMap = array(
-        'pdo_mysql' => 'Mysql',
-        'mysqli' => 'Mysql',
-    );
+    protected $driverPlatformMap = PdoLoader::DRIVER_PLATFORM_MAP;
 
     public function __construct($params)
     {
@@ -135,35 +133,6 @@ class EntityManager
         return $this->mappers[$className];
     }
 
-    protected function initPDO()
-    {
-        $params = $this->params;
-
-        $port = empty($params['port']) ? '' : 'port=' . $params['port'] . ';';
-
-        $platform = strtolower($params['platform']);
-
-        $options = array();
-        if (isset($params['sslCA'])) {
-            $options[\PDO::MYSQL_ATTR_SSL_CA] = $params['sslCA'];
-        }
-        if (isset($params['sslCert'])) {
-            $options[\PDO::MYSQL_ATTR_SSL_CERT] = $params['sslCert'];
-        }
-        if (isset($params['sslKey'])) {
-            $options[\PDO::MYSQL_ATTR_SSL_KEY] = $params['sslKey'];
-        }
-        if (isset($params['sslCAPath'])) {
-            $options[\PDO::MYSQL_ATTR_SSL_CAPATH] = $params['sslCAPath'];
-        }
-        if (isset($params['sslCipher'])) {
-            $options[\PDO::MYSQL_ATTR_SSL_CIPHER] = $params['sslCipher'];
-        }
-
-        $this->pdo = new \PDO($platform . ':host='.$params['host'].';'.$port.'dbname=' . $params['dbname'] . ';charset=' . $params['charset'], $params['user'], $params['password'], $options);
-        $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-    }
-
     public function getEntity($name, $id = null)
     {
         if (!$this->hasRepository($name)) {
@@ -223,8 +192,9 @@ class EntityManager
     public function getPDO()
     {
         if (empty($this->pdo)) {
-            $this->initPDO();
+            $this->pdo = $this->params['pdo'];
         }
+
         return $this->pdo;
     }
 

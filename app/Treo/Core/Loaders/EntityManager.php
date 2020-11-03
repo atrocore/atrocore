@@ -63,7 +63,8 @@ class EntityManager extends Base
             'sslCert'                    => $config->get('database.sslCert'),
             'sslKey'                     => $config->get('database.sslKey'),
             'sslCAPath'                  => $config->get('database.sslCAPath'),
-            'sslCipher'                  => $config->get('database.sslCipher')
+            'sslCipher'                  => $config->get('database.sslCipher'),
+            'pdo'                        => $this->getContainer()->get('pdo')
         ];
 
         // get class name
