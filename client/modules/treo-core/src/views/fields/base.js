@@ -72,7 +72,7 @@ Espo.define('treo-core:views/fields/base', 'class-replace!treo-core:views/fields
                 },
                 error: function () {
                     self.notify('Error occured', 'error');
-                    model.set(prev, {silent: true});
+                    model.fetch();
                     self.render()
                 },
                 patch: true
