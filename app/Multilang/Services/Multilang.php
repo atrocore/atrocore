@@ -38,6 +38,7 @@ namespace Multilang\Services;
 use Espo\Core\Utils\Json;
 use Treo\Core\Utils\Layout;
 use Treo\Core\Utils\Metadata;
+use Treo\Core\Utils\Util;
 use Treo\Services\AbstractService;
 
 /**
@@ -45,10 +46,7 @@ use Treo\Services\AbstractService;
  */
 class Multilang extends AbstractService
 {
-    /** @var array */
-    public const LAYOUTS = ['detail', 'detailSmall'];
-    /** @var array */
-    public const SKIP_ENTITIES  = ['ProductAttributeValue'];
+    public const SKIP_ENTITIES = ['ProductAttributeValue'];
 
     /**
      * @return bool
@@ -60,80 +58,82 @@ class Multilang extends AbstractService
             return false;
         }
 
-        /** @var bool $isUpdated */
-        $isUpdated = false;
-
         foreach ($this->getMetadata()->get(['entityDefs'], []) as $scope => $data) {
             if (!isset($data['fields']) || in_array($scope, self::SKIP_ENTITIES, true)) {
                 continue 1;
             }
-            $layoutFields = $this->getLayoutsFields($scope);
-            $row = [];
-            foreach ($data['fields'] as $field => $defs) {
-                if (!empty($defs['multilangLocale']) && empty($defs['isCompleteness'])) {
-                    foreach (self::LAYOUTS as $layoutName) {
-                        if ($this->isNeedAddField($field, $layoutFields[$layoutName], $defs)) {
-                            $row[$layoutName][] = ['name' => $field];
-                            if (\count($row[$layoutName]) === 2) {
-                                $this->updateLayout($scope, $layoutName, $row[$layoutName]);
-                                $isUpdated = true;
-                                $row[$layoutName] = [];
-                            }
-                        }
-                    }
-                }
-            }
-            foreach (self::LAYOUTS as $layoutName) {
-                if (!empty($row[$layoutName])) {
-                    $row[$layoutName][] = false;
-                    $this->updateLayout($scope, $layoutName, $row[$layoutName]);
-                    $isUpdated = true;
-                    $row[$layoutName] = [];
-                }
-            }
-        }
 
-        if ($isUpdated) {
-            $this->getLayout()->save();
+            $this->updateLayout($scope, 'detail');
+
+            $this->updateLayout($scope, 'detailSmall');
         }
 
         return true;
-    }
-
-    protected function isNeedAddField(string $field, array $layoutFields, array $row): bool
-    {
-       return !in_array($field, $layoutFields, true)
-         && in_array($row['multilangField'], $layoutFields, true);
     }
 
     /**
      * @param string $scope
      * @param string $layout
-     * @param string $field
      *
      * @return bool
      */
-    protected function updateLayout(string $scope, string $layout, array $row): bool
+    protected function updateLayout(string $scope, string $layout): bool
     {
-        $data = Json::decode($this->getLayout()->get($scope, $layout), true);
-        $data[0]['rows'][] = $row;
-        $this->getLayout()->set($data, $scope, $layout);
-
-        return true;
-    }
-
-    /**
-     * @param $scope
-     * @return array
-     */
-    protected function getLayoutsFields($scope): array
-    {
-        $layoutFields = [];
-        foreach (self::LAYOUTS as $layoutName) {
-            $layoutFields[$layoutName] = $this->getLayoutFields($scope, $layoutName);
+        // Find multi-lang fields
+        $multiLangFields = [];
+        foreach ($this->getMetadata()->get(['entityDefs', $scope, 'fields'], []) as $field => $data) {
+            if (!empty($data['isMultilang'])) {
+                $multiLangFields[] = $field;
+            }
         }
 
-        return $layoutFields;
+        // exit if no multi-lang fields
+        if (empty($multiLangFields)) {
+            return true;
+        }
+
+        $needSave = false;
+
+        // get exists
+        $exists = $this->getLayoutFields($scope, $layout);
+
+        // get layout data
+        $layoutData = Json::decode($this->getLayout()->get($scope, $layout), true);
+
+        $result = [];
+        foreach ($layoutData as $k => $panel) {
+            // set old data
+            $result[$k] = $panel;
+            $result[$k]['rows'] = [];
+
+            // skip if no rows
+            if (empty($panel['rows'])) {
+                continue 1;
+            }
+            foreach ($panel['rows'] as $row) {
+                // find multi-lang fields for injecting them to layout
+                $multiLangForSet = [];
+                foreach ($row as $field) {
+                    if (!empty($field['name']) && in_array($field['name'], $multiLangFields)) {
+                        $multiLangForSet[] = $field['name'];
+                    }
+                }
+                $result[$k]['rows'][] = $row;
+                if (!empty($multiLangForSet)) {
+                    foreach ($this->createLangRows($scope, $multiLangForSet, $exists) as $langRow) {
+                        $needSave = true;
+                        $result[$k]['rows'][] = $langRow;
+                    }
+                }
+            }
+        }
+
+        if ($needSave) {
+            $this->getLayout()->set($result, $scope, $layout);
+            $this->getLayout()->save();
+        }
+
+        return true;
     }
 
     /**
@@ -144,18 +144,69 @@ class Multilang extends AbstractService
      */
     protected function getLayoutFields(string $scope, string $layout): array
     {
-        $fields = [];
-        foreach (Json::decode($this->getLayout()->get($scope, $layout), true) as $row) {
-            foreach ($row['rows'] as $item) {
-                foreach ($item as $v) {
-                    if (isset($v['name'])) {
-                        $fields[] = $v['name'];
+        // get layout data
+        $layoutData = Json::decode($this->getLayout()->get($scope, $layout), true);
+
+        $result = [];
+        foreach ($layoutData as $k => $panel) {
+            // skip if no rows
+            if (empty($panel['rows'])) {
+                continue 1;
+            }
+            foreach ($panel['rows'] as $row) {
+                foreach ($row as $field) {
+                    if (!empty($field['name'])) {
+                        $result[] = $field['name'];
                     }
                 }
+
             }
         }
 
-        return $fields;
+        return $result;
+    }
+
+    /**
+     * @param string $scope
+     * @param array  $fields
+     * @param array  $exists
+     *
+     * @return array
+     */
+    protected function createLangRows(string $scope, array $fields, array $exists): array
+    {
+        // collect locales
+        $locales = [];
+        foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
+            $locales[] = ucfirst(Util::toCamelCase(strtolower($locale)));
+        }
+
+        $result = [];
+        foreach ($fields as $field) {
+            $row = [];
+            foreach ($locales as $locale) {
+                $langField = $field . $locale;
+                if (!in_array($langField, $exists)) {
+                    if (!empty($row[1]) || !empty($row[0]['fullWidth'])) {
+                        $result[] = $row;
+                        $row = [];
+                    }
+                    $row[] = [
+                        'name'      => $langField,
+                        'fullWidth' => $this->getMetadata()->get(['entityDefs', $scope, 'fields', $langField, 'type'], 'varchar') == 'wysiwyg'
+                    ];
+                }
+            }
+
+            if (!empty($row)) {
+                if (empty($row[1]) && empty($row[0]['fullWidth'])) {
+                    $row[] = false;
+                }
+                $result[] = $row;
+            }
+        }
+
+        return $result;
     }
 
     /**
