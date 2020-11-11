@@ -33,6 +33,24 @@
 Espo.define('multilang:views/admin/fields/input-language-list', 'views/fields/multi-enum',
     Dep => Dep.extend({
 
+        setup: function () {
+            Dep.prototype.setup.call(this);
+
+            this.defineMode();
+            this.listenTo(this.model, 'change:isMultilangActive', () => {
+                this.defineMode();
+                this.reRender();
+            });
+        },
+
+        defineMode: function () {
+            if (this.model.get('isMultilangActive')) {
+                this.setMode('edit');
+            } else {
+                this.setMode('detail');
+            }
+        },
+
         data() {
             return _.extend({
                 optionList: this.model.options || []
