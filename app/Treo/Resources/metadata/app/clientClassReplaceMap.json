@@ -101,9 +101,6 @@
   "views/admin/entity-manager/modals/edit-entity": [
     "treo-core"
   ],
-  "views/admin/field-manager/fields/options": [
-    "treo-core"
-  ],
   "views/admin/layouts/list-small": [
     "treo-core"
   ],

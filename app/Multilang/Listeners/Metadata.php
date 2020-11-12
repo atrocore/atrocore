@@ -86,29 +86,26 @@ class Metadata extends AbstractListener
             foreach ($rows['fields'] as $field => $params) {
                 if (!empty($params['isMultilang'])) {
                     foreach ($locales as $locale) {
+                        // prepare locale
+                        $preparedLocale = ucfirst(Util::toCamelCase(strtolower($locale)));
+
                         // prepare multi-lang field
-                        $mField = $field . ucfirst(Util::toCamelCase(strtolower($locale)));
+                        $mField = $field . $preparedLocale;
 
                         // prepare params
                         $mParams = $params;
-                        if (isset($data['entityDefs'][$scope]['fields'][$mField])) {
-                            if (in_array($mParams['type'], ['enum', 'multiEnum'])) {
-                                $data['entityDefs'][$scope]['fields'][$mField]['options'] = $mParams['options'];
-                                if (isset($mParams['optionColors'])) {
-                                    $data['entityDefs'][$scope]['fields'][$mField]['optionColors'] = $mParams['optionColors'];
-                                }
-                            }
-                            $mParams = array_merge($mParams, $data['entityDefs'][$scope]['fields'][$mField]);
-                        }
                         $mParams['isMultilang'] = false;
-                        $mParams['hideMultilang'] = true;
+                        $mParams['hideParams'] = ['isMultilang'];
                         $mParams['multilangField'] = $field;
                         $mParams['multilangLocale'] = $locale;
                         $mParams['isCustom'] = false;
                         if (in_array($mParams['type'], ['enum', 'multiEnum'])) {
-                            $mParams['layoutMassUpdateDisabled'] = true;
+                            $mParams['options'] = $mParams['options' . $preparedLocale];
+                            $mParams['default'] = null;
                             $mParams['readOnly'] = true;
                             $mParams['required'] = false;
+                            $mParams['hideParams'] = array_merge($mParams['hideParams'], ['options', 'default', 'required', 'isSorted', 'audited', 'readOnly']);
+                            $mParams['layoutMassUpdateDisabled'] = true;
                         }
 
                         $data['entityDefs'][$scope]['fields'][$mField] = $mParams;
@@ -119,5 +116,7 @@ class Metadata extends AbstractListener
 
         // set data
         $event->setArgument('data', $data);
+
+        return true;
     }
 }

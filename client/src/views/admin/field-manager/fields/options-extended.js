@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -31,20 +30,38 @@
  * and "AtroCore" word.
  */
 
-declare(strict_types=1);
+Espo.define('views/admin/field-manager/fields/options-extended', 'views/fields/array-extended', function (Dep) {
 
-namespace Treo\Core\Loaders;
+    return Dep.extend({
 
-/**
- * FieldManager loader
- */
-class FieldManager extends Base
-{
-    /**
-     * @inheritDoc
-     */
-    public function load()
-    {
-        return new \Espo\Core\Utils\FieldManager($this->getContainer());
-    }
-}
+        setup: function () {
+            Dep.prototype.setup.call(this);
+
+            this.translatedOptions = {};
+            (this.model.get(this.name) || []).forEach(function (value) {
+                this.translatedOptions[value] = value;
+            }, this);
+
+            this.model.fetchedAttributes.translatedOptions = this.translatedOptions;
+        },
+
+        fetch: function () {
+            var data = Dep.prototype.fetch.call(this);
+
+            if (!data[this.name].length) {
+                data[this.name] = false;
+                data.translatedOptions = {};
+                return data;
+            }
+
+            data.translatedOptions = {};
+            (data[this.name] || []).forEach(function (value) {
+                data.translatedOptions[value] = value;
+            }, this);
+
+            return data;
+        }
+
+    });
+
+});

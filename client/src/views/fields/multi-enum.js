@@ -155,7 +155,7 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
         },
 
         fetch: function () {
-            var list = this.$element.val().split(':,:');
+            var list = (this.$element.val() || []).split(':,:');
             if (list.length == 1 && list[0] == '') {
                 list = [];
             }

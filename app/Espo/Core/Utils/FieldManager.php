@@ -35,29 +35,45 @@ namespace Espo\Core\Utils;
 
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Conflict;
+use Espo\Core\Utils\FieldManager\Hooks\Base as BaseHook;
+use Espo\Core\Utils\Metadata\Helper;
 use Treo\Core\Container;
+use Treo\Core\EventManager\Event;
+use Treo\Core\EventManager\Manager;
 
+/**
+ * Class FieldManager
+ */
 class FieldManager
 {
-    private $metadata;
-
-    private $language;
-
-    private $metadataHelper;
+    /**
+     * @var Helper
+     */
+    protected $metadataHelper;
 
     protected $isChanged = null;
 
-    private $container;
+    /**
+     * @var Container|null
+     */
+    protected $container;
 
     protected $forbiddenFieldNameList = ['id', 'deleted'];
 
-    public function __construct(Container $container = null)
+    /**
+     * FieldManager constructor.
+     *
+     * @param Container $container
+     */
+    public function __construct(Container $container)
     {
         $this->container = $container;
-
-        $this->metadataHelper = new \Espo\Core\Utils\Metadata\Helper($this->getMetadata());
+        $this->metadataHelper = new Helper($this->getMetadata());
     }
 
+    /**
+     * @return Metadata
+     */
     protected function getMetadata()
     {
         return $this->container->get('metadata');
@@ -73,6 +89,9 @@ class FieldManager
         return $this->container->get('baseLanguage');
     }
 
+    /**
+     * @return Helper
+     */
     protected function getMetadataHelper()
     {
         return $this->metadataHelper;
@@ -112,13 +131,13 @@ class FieldManager
 
         $existingField = $this->getFieldDefs($scope, $name);
         if (isset($existingField)) {
-            throw new Conflict('Field ['.$name.'] exists in '.$scope);
+            throw new Conflict('Field [' . $name . '] exists in ' . $scope);
         }
         if ($this->getMetadata()->get(['entityDefs', $scope, 'links', $name])) {
-            throw new Conflict('Link with name ['.$name.'] exists in '.$scope);
+            throw new Conflict('Link with name [' . $name . '] exists in ' . $scope);
         }
         if (in_array($name, $this->forbiddenFieldNameList)) {
-            throw new Conflict('Field ['.$name.'] is not allowed');
+            throw new Conflict('Field [' . $name . '] is not allowed');
         }
 
         $firstLatter = $name[0];
@@ -275,6 +294,8 @@ class FieldManager
             $this->getMetadata()->set('clientDefs', $scope, $clientDefs);
         }
 
+        $oldFieldDefs = $this->getMetadata()->get(['entityDefs', $scope, 'fields', $name]);
+
         $entityDefs = $this->normalizeDefs($scope, $name, $fieldDefs);
 
         if (!empty($entityDefs)) {
@@ -284,12 +305,22 @@ class FieldManager
         }
 
         if ($metadataToBeSaved) {
+            $this
+                ->container
+                ->get('eventManager')
+                ->dispatch('FieldManager', 'beforeSave', new Event(['scope' => $scope, 'field' => $name, 'oldFieldDefs' => $oldFieldDefs]));
+
             $result &= $this->getMetadata()->save();
+
+            $this
+                ->container
+                ->get('eventManager')
+                ->dispatch('FieldManager', 'afterSave', new Event(['scope' => $scope, 'field' => $name, 'oldFieldDefs' => $oldFieldDefs]));
 
             $this->processHook('afterSave', $type, $scope, $name, $fieldDefs, array('isNew' => $isNew));
         }
 
-        return (bool) $result;
+        return (bool)$result;
     }
 
     protected function prepareClientDefsFieldsDynamicLogic(&$clientDefs, $name)
@@ -321,7 +352,7 @@ class FieldManager
     public function delete($scope, $name)
     {
         if ($this->isCore($scope, $name)) {
-            throw new Error('Cannot delete core field ['.$name.'] in '.$scope);
+            throw new Error('Cannot delete core field [' . $name . '] in ' . $scope);
         }
 
         $type = $this->getMetadata()->get(['entityDefs', $scope, 'fields', $name, 'type']);
@@ -329,16 +360,18 @@ class FieldManager
         $this->processHook('beforeRemove', $type, $scope, $name);
 
         $unsets = array(
-            'fields.'.$name,
-            'links.'.$name,
+            'fields.' . $name,
+            'links.' . $name,
         );
 
         $this->getMetadata()->delete('entityDefs', $scope, $unsets);
 
-        $this->getMetadata()->delete('clientDefs', $scope, [
-            'dynamicLogic.fields.' . $name,
-            'dynamicLogic.options.' . $name
-        ]);
+        $this->getMetadata()->delete(
+            'clientDefs', $scope, [
+                'dynamicLogic.fields.' . $name,
+                'dynamicLogic.options.' . $name
+            ]
+        );
 
         $res = $this->getMetadata()->save();
         $this->deleteLabel($scope, $name);
@@ -362,24 +395,26 @@ class FieldManager
 
         $this->processHook('afterRemove', $type, $scope, $name);
 
-        return (bool) $res;
+        return (bool)$res;
     }
 
     public function resetToDefault($scope, $name)
     {
         if (!$this->isCore($scope, $name)) {
-            throw new Error('Cannot reset to default custom field ['.$name.'] in '.$scope);
+            throw new Error('Cannot reset to default custom field [' . $name . '] in ' . $scope);
         }
 
         if (!$this->getMetadata()->get(['entityDefs', $scope, 'fields', $name])) {
-            throw new Error('Not found field ['.$name.'] in '.$scope);
+            throw new Error('Not found field [' . $name . '] in ' . $scope);
         }
 
         $this->getMetadata()->delete('entityDefs', $scope, ['fields.' . $name]);
-        $this->getMetadata()->delete('clientDefs', $scope, [
-            'dynamicLogic.fields.' . $name,
-            'dynamicLogic.options.' . $name
-        ]);
+        $this->getMetadata()->delete(
+            'clientDefs', $scope, [
+                'dynamicLogic.fields.' . $name,
+                'dynamicLogic.options.' . $name
+            ]
+        );
         $this->getMetadata()->save();
 
         $this->getLanguage()->delete($scope, 'fields', $name);
@@ -431,20 +466,21 @@ class FieldManager
 
     protected function getFieldDefs($scope, $name)
     {
-        return $this->getMetadata()->get('entityDefs'.'.'.$scope.'.fields.'.$name);
+        return $this->getMetadata()->get('entityDefs' . '.' . $scope . '.fields.' . $name);
     }
 
     protected function getLinkDefs($scope, $name)
     {
-        return $this->getMetadata()->get('entityDefs'.'.'.$scope.'.links.'.$name);
+        return $this->getMetadata()->get('entityDefs' . '.' . $scope . '.links.' . $name);
     }
 
     /**
      * Prepare input fieldDefs, remove unnecessary fields
      *
      * @param string $fieldName
-     * @param array $fieldDefs
+     * @param array  $fieldDefs
      * @param string $scope
+     *
      * @return array
      */
     protected function prepareFieldDefs($scope, $name, $fieldDefs)
@@ -465,9 +501,9 @@ class FieldManager
             }
         }
 
-        $currentOptionList = array_keys((array) $this->getFieldDefs($scope, $name));
+        $currentOptionList = array_keys((array)$this->getFieldDefs($scope, $name));
         foreach ($fieldDefs as $defName => $defValue) {
-            if ( (!isset($defValue) || $defValue === '') && !in_array($defName, $currentOptionList) ) {
+            if ((!isset($defValue) || $defValue === '') && !in_array($defName, $currentOptionList)) {
                 unset($fieldDefs[$defName]);
             }
         }
@@ -480,7 +516,8 @@ class FieldManager
      *
      * @param string $scope
      * @param string $fieldName
-     * @param array $fieldDefs
+     * @param array  $fieldDefs
+     *
      * @return array
      */
     protected function normalizeDefs($scope, $fieldName, array $fieldDefs)
@@ -499,7 +536,7 @@ class FieldManager
 
         $defs = array();
 
-        $currentFieldDefs = (array) $this->getFieldDefs($scope, $fieldName);
+        $currentFieldDefs = (array)$this->getFieldDefs($scope, $fieldName);
 
         $diffFieldDefs = $this->getDiffDefs($currentFieldDefs, $fieldDefs);
         if (!empty($diffFieldDefs)) {
@@ -552,9 +589,9 @@ class FieldManager
     /**
      * Check if changed metadata defenition for a field except 'label'
      *
-     * @param  string  $scope
-     * @param  string  $name
-     * @param  array  $fieldDefs
+     * @param string $scope
+     * @param string $name
+     * @param array  $fieldDefs
      *
      * @return boolean
      */
@@ -573,13 +610,13 @@ class FieldManager
 
     protected function isLabelChanged($scope, $category, $name, $newLabel)
     {
-         $currentLabel = $this->getLanguage()->get([$scope, $category, $name]);
+        $currentLabel = $this->getLanguage()->get([$scope, $category, $name]);
 
-         if ($newLabel != $currentLabel) {
+        if ($newLabel != $currentLabel) {
             return true;
-         }
+        }
 
-         return false;
+        return false;
     }
 
 
@@ -591,8 +628,9 @@ class FieldManager
     /**
      * Check if a field is core field
      *
-     * @param  string  $name
-     * @param  string  $scope
+     * @param string $name
+     * @param string $scope
+     *
      * @return boolean
      */
     protected function isCore($scope, $name)
@@ -605,19 +643,33 @@ class FieldManager
         return false;
     }
 
-    private function getAttributeListByType($scope, $name, $type)
+    /**
+     * Get attribute list by type
+     *
+     * @param string $scope
+     * @param string $name
+     * @param string $type
+     *
+     * @return array
+     */
+    protected function getAttributeListByType(string $scope, string $name, string $type): array
     {
         $fieldType = $this->getMetadata()->get('entityDefs.' . $scope . '.fields.' . $name . '.type');
-        if (!$fieldType) return [];
+
+        if (!$fieldType) {
+            return [];
+        }
 
         $defs = $this->getMetadata()->get('fields.' . $fieldType);
-        if (!$defs) return [];
+        if (!$defs) {
+            return [];
+        }
+
         if (is_object($defs)) {
             $defs = get_object_vars($defs);
         }
 
         $fieldList = [];
-
         if (isset($defs[$type . 'Fields'])) {
             $list = $defs[$type . 'Fields'];
             $naming = 'suffix';
@@ -642,45 +694,88 @@ class FieldManager
         return $fieldList;
     }
 
+    /**
+     * Get actual attribute list
+     *
+     * @param string $scope
+     * @param string $name
+     *
+     * @return array
+     */
     public function getActualAttributeList($scope, $name)
     {
         return $this->getAttributeListByType($scope, $name, 'actual');
     }
 
+    /**
+     * Get not actual attribute list
+     *
+     * @param string $scope
+     * @param string $name
+     *
+     * @return array
+     */
     public function getNotActualAttributeList($scope, $name)
     {
         return $this->getAttributeListByType($scope, $name, 'notActual');
     }
 
+    /**
+     * Get attribute list
+     *
+     * @param string $scope
+     * @param string $name
+     *
+     * @return array
+     */
     public function getAttributeList($scope, $name)
     {
-        return array_merge($this->getActualAttributeList($scope, $name), $this->getNotActualAttributeList($scope, $name));
+        // prepare data
+        $actualAttributeList = $this->getActualAttributeList($scope, $name);
+        $notActualAttributeList = $this->getNotActualAttributeList($scope, $name);
+
+        return array_merge($actualAttributeList, $notActualAttributeList);
     }
 
     protected function processHook($methodName, $type, $scope, $name, &$defs = null, $options = array())
     {
         $hook = $this->getHook($type);
-        if (!$hook) return;
+        if (!$hook) {
+            return;
+        }
 
-        if (!method_exists($hook, $methodName)) return;
+        if (!method_exists($hook, $methodName)) {
+            return;
+        }
 
         $hook->$methodName($scope, $name, $defs, $options);
     }
 
+    /**
+     * Get hook for fields
+     *
+     * @param string $type
+     *
+     * @return BaseHook|null
+     */
     protected function getHook($type)
     {
+        // prepare hook
+        $hook = null;
+
+        // get class name
         $className = $this->getMetadata()->get(['fields', $type, 'hookClassName']);
 
-        if (!$className) return;
-
-        if (class_exists($className)) {
+        if (!empty($className) && class_exists($className)) {
+            // create hook
             $hook = new $className();
+
+            // inject dependencies
             foreach ($hook->getDependencyList() as $name) {
                 $hook->inject($name, $this->container->get($name));
             }
-            return $hook;
         }
-        $GLOBALS['log']->error("Field Manager hook class '{$className}' does not exist.");
-        return;
+
+        return $hook;
     }
 }

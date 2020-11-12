@@ -33,8 +33,14 @@
 
 namespace Espo\Core\Interfaces;
 
+/**
+ * Interface Loader
+ */
 interface Loader
 {
+    /**
+     * @return object
+     */
     public function load();
 }
 

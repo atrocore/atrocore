@@ -245,7 +245,8 @@
     "Such URL is already exists": "Such URL is already exists",
     "Site URL is empty": "Site URL is empty",
     "Code is invalid": "Code is invalid. Code should be unique. Only letters, numbers and char \"_\" expected.",
-    "notDashletService": "Service %s must implement Dashlet Interface"
+    "notDashletService": "Service %s must implement Dashlet Interface",
+    "Field value should be unique.": "Field value should be unique."
   },
   "messages": {
     "successAndReload": "Changes saved. This page will be reloaded after {value} seconds",

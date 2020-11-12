@@ -257,7 +257,8 @@
     "URL is invalid": "Die URL ist ungültig",
     "Such URL is already exists": "Eine solche URL ist bereits vorhanden",
     "Site URL is empty": "Die Website-URL ist leer",
-    "Code is invalid": "Code ist ungültig. Code sollte eindeutig sein. Nur Buchstaben, Zahlen und Char \"_\" erwartet."
+    "Code is invalid": "Code ist ungültig. Code sollte eindeutig sein. Nur Buchstaben, Zahlen und Char \"_\" erwartet.",
+    "Field value should be unique.": "Feldwert sollte eindeutig sein."
   },
   "streamMessages": {
     "composerUpdateThis": "{user}"

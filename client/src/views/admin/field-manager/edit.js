@@ -147,7 +147,14 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                             return;
                         }
 
-                        if (!(o.name === 'isMultilang' && this.defs.hideMultilang)) {
+                        let skipParam = false;
+                        (this.defs.hideParams || []).forEach(function (name) {
+                            if (o.name === name) {
+                                skipParam = true;
+                            }
+                        });
+
+                        if (!skipParam) {
                             this.paramList.push(o);
                         }
                     }, this);
