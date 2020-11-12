@@ -105,61 +105,51 @@ class FieldManager extends AbstractListener
         $tableName = Util::toUnderScore($scope);
         $columnName = Util::toUnderScore($field);
 
-        $sql = [];
-
-        /**
-         * First, delete rows
-         */
-        foreach ($deletedPositions as $pos) {
-            foreach ($this->getTypeValuesFields($defs) as $item) {
-                // prepare column
-                $column = str_replace('options', $columnName, Util::toUnderScore($item));
-                $rowSql = "UPDATE $tableName SET $column='' WHERE $column='{$oldDefs[$item][$pos]}' AND deleted=0";
-
-                if ($item != 'options') {
-                    $rowSql .= " AND $columnName=''";
-                }
-
-                $sql[] = $rowSql;
-
-                unset($oldDefs[$item][$pos]);
-                $oldDefs[$item] = array_values($oldDefs[$item]);
-            }
+        // delete
+        foreach ($deletedPositions as $deletedPosition) {
+            unset($oldDefs['options'][$deletedPosition]);
         }
 
-
-        /**
-         * Second, update rows
-         */
-        foreach ($this->getTypeValuesFields($defs) as $item) {
-            // prepare column
-            $column = str_replace('options', $columnName, Util::toUnderScore($item));
-
-            // get fetched
-            $fetchedTypeValue = $oldDefs[$item];
-
-            // get type value and remove deleted positions
-            $typeValue = $defs[$item];
-
-            foreach ($oldDefs['options'] as $k => $value) {
-                $oldValue = isset($fetchedTypeValue[$k]) ? $fetchedTypeValue[$k] : '';
-                if ($oldValue != $typeValue[$k]) {
-                    $rowSql = "UPDATE $tableName SET $column='{$typeValue[$k]}' WHERE $column='$oldValue' AND deleted=0";
-                    if ($item != 'options') {
-                        $rowSql .= " AND $columnName='{$defs['options'][$k]}'";
-                    }
-
-                    // push
-                    $sql[] = $rowSql;
-                }
-            }
+        // prepare became values
+        $becameValues = [];
+        foreach (array_values($oldDefs['options']) as $k => $v) {
+            $becameValues[$v] = $defs['options'][$k];
         }
 
-        /**
-         * Third, set to DB
-         */
-        if (!empty($sql)) {
-            $this->getEntityManager()->nativeQuery(implode(';', $sql));
+        /** @var array $records */
+        $records = $this
+            ->getEntityManager()
+            ->getRepository($scope)
+            ->select(['id', $field])
+            ->find()
+            ->toArray();
+
+        foreach ($records as $record) {
+            $sqlValues = [];
+
+            /**
+             * First, prepare main value
+             */
+            if (!empty($record[$field])) {
+                $sqlValues[] = "{$columnName}='{$becameValues[$record[$field]]}'";
+            }
+
+            /**
+             * Second, update locales
+             */
+            if ($this->getConfig()->get('isMultilangActive', false)) {
+                foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
+                    $locale = ucfirst(Util::toCamelCase(strtolower($language)));
+                    $sqlValues[] = "{$columnName}_" . strtolower($language) . "='" . $defs['options' . $locale][array_search($record[$field], $oldDefs['options'])] . "'";
+                }
+            }
+
+            /**
+             * Third, set to DB
+             */
+            $this
+                ->getEntityManager()
+                ->nativeQuery("UPDATE {$tableName} SET " . implode(",", $sqlValues) . " WHERE id='{$record['id']}'");
         }
 
         return true;
@@ -301,8 +291,8 @@ class FieldManager extends AbstractListener
      */
     protected function isEnumTypeValueValid(array $defs): bool
     {
-        if (!empty($defs)) {
-            foreach (array_count_values($defs) as $count) {
+        if (!empty($defs['options'])) {
+            foreach (array_count_values($defs['options']) as $count) {
                 if ($count > 1) {
                     throw new BadRequest($this->exception('Field value should be unique.'));
                 }
