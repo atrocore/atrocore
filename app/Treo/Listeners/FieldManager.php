@@ -130,8 +130,10 @@ class FieldManager extends AbstractListener
             /**
              * First, prepare main value
              */
-            if (!empty($record[$field])) {
+            if (!empty($becameValues[$record[$field]])) {
                 $sqlValues[] = "{$columnName}='{$becameValues[$record[$field]]}'";
+            } else {
+                $sqlValues[] = "{$columnName}=null";
             }
 
             /**
@@ -139,8 +141,14 @@ class FieldManager extends AbstractListener
              */
             if ($this->getConfig()->get('isMultilangActive', false)) {
                 foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
-                    $locale = ucfirst(Util::toCamelCase(strtolower($language)));
-                    $sqlValues[] = "{$columnName}_" . strtolower($language) . "='" . $defs['options' . $locale][array_search($record[$field], $oldDefs['options'])] . "'";
+                    if (!empty($becameValues[$record[$field]])) {
+                        $locale = ucfirst(Util::toCamelCase(strtolower($language)));
+                        $value = "'" . $defs['options' . $locale][array_search($record[$field], $oldDefs['options'])] . "'";
+                    } else {
+                        $value = "null";
+                    }
+
+                    $sqlValues[] = "{$columnName}_" . strtolower($language) . "=$value";
                 }
             }
 
