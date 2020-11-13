@@ -8,7 +8,7 @@
   "fields": {
     "type": "Typ",
     "labelSingular": "Label Singular",
-    "labelPlural": "Bezeichnung PLural",
+    "labelPlural": "Bezeichnung Plural",
     "stream": "Aktivitäten",
     "label": "Label",
     "linkType": "Relationstyp",
