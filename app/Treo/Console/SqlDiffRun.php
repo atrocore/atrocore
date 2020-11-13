@@ -33,24 +33,48 @@
 
 declare(strict_types=1);
 
-namespace Treo\Configs;
+namespace Treo\Console;
 
-use Treo\Console;
+/**
+ * Class SqlDiffRun
+ */
+class SqlDiffRun extends AbstractConsole
+{
+    /**
+     * @inheritDoc
+     */
+    public static function getDescription(): string
+    {
+        return 'Run SQL diff.';
+    }
 
-return [
-    "list"                         => Console\ListCommand::class,
-    "clear cache"                  => Console\ClearCache::class,
-    "cleanup"                      => Console\Cleanup::class,
-    "rebuild"                      => Console\Rebuild::class,
-    "sql diff --show"              => Console\SqlDiff::class,
-    "sql diff --run"               => Console\SqlDiffRun::class,
-    "cron"                         => Console\Cron::class,
-    "store --refresh"              => Console\StoreRefresh::class,
-    "migrate <module> <from> <to>" => Console\Migrate::class,
-    "apidocs --generate"           => Console\GenerateApidocs::class,
-    "qm <stream> --run"            => Console\QueueManager::class,
-    "qm item <id> --run"           => Console\QueueItem::class,
-    "notifications --refresh"      => Console\Notification::class,
-    "kill daemons"                 => Console\KillDaemons::class,
-    "daemon <name> <id>"           => Console\Daemon::class,
-];
+    /**
+     * @inheritDoc
+     */
+    public function run(array $data): void
+    {
+        try {
+            /** @var array $queries */
+            $queries = $this->getContainer()->get('schema')->getDiffQueries();
+        } catch (\Throwable $e) {
+            echo $e->getMessage() . PHP_EOL . $e->getTraceAsString() . PHP_EOL;
+            die();
+        }
+
+        if (!empty($queries)) {
+            foreach ($queries as $query) {
+                $this->getContainer()->get('pdo')->exec($query);
+                echo $query;
+                self::show(' Done!', self::SUCCESS);
+            }
+            die();
+        }
+
+        if (empty($queries)) {
+            self::show('No database changes were detected.', self::SUCCESS, true);
+        }
+
+        echo implode(';' . PHP_EOL, $queries) . PHP_EOL;
+        die();
+    }
+}
