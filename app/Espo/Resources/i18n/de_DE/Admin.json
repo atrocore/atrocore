@@ -136,7 +136,7 @@
     "dynamicLogicRequired": "Bedingungen die ein Feld erforderlich machen",
     "dynamicLogicOptions": "Bedingungsoptionen",
     "probabilityMap": "Stufenwahrscheinlichkeiten (%)",
-    "readOnly": "nur lesen",
+    "readOnly": "Nur lesen",
     "noEmptyString": "Keine leere Zeichenkette",
     "maxFileSize": "Max. Dateigröße (Mb)",
     "isPersonalData": "Ist Persönliche Daten",
