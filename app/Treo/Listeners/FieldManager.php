@@ -50,7 +50,7 @@ class FieldManager extends AbstractListener
      *
      * @throws BadRequest
      */
-    public function beforeSave(Event $event)
+    public function afterSave(Event $event)
     {
         // get old field defs
         $oldDefs = $event->getArgument('oldFieldDefs');
@@ -75,6 +75,9 @@ class FieldManager extends AbstractListener
 
             $entityDefs['fields'][$field] = $defs;
             $this->getMetadata()->set('entityDefs', $scope, $entityDefs);
+
+            // rebuild
+            $this->getContainer()->get('dataManager')->rebuild();
 
             if ($oldDefs['type'] === 'enum') {
                 $this->updateEnumValue($scope, $field, $deletedPositions, $oldDefs, $defs);
