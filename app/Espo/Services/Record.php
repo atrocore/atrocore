@@ -432,6 +432,10 @@ class Record extends \Espo\Core\Services\Base
      */
     protected function isValid($entity)
     {
+        if ($entity->isSkippedValidation('requiredField')) {
+            return true;
+        }
+
         $hasCompleteness = !empty($this->getMetadata()->get("scopes.{$entity->getEntityType()}.hasCompleteness"))
             && !empty($this->getMetadata()->get("app.additionalEntityParams.hasCompleteness"));
         foreach ($entity->getAttributes() as $field => $data) {

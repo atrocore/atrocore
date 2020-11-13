@@ -78,6 +78,11 @@ abstract class Entity implements IEntity
 
     protected $isBeingSaved = false;
 
+    /**
+     * @var array
+     */
+    protected $skipValidations = [];
+
     public function __construct($defs = array(), EntityManager $entityManager = null)
     {
         if (empty($this->entityType)) {
@@ -177,6 +182,42 @@ abstract class Entity implements IEntity
             return true;
         }
         return false;
+    }
+
+    /**
+     * Push validation name that should skipped
+     *
+     * @param string $key
+     *
+     * @return Entity
+     */
+    public function skipValidation(string $key)
+    {
+        $this->skipValidations[] = $key;
+
+        return $this;
+    }
+
+    /**
+     * Is validation with such name should skipped?
+     *
+     * @param string $key
+     *
+     * @return bool
+     */
+    public function isSkippedValidation(string $key): bool
+    {
+        return in_array($key, $this->skipValidations);
+    }
+
+    /**
+     * Get validations names that should skipped
+     *
+     * @return array
+     */
+    public function getSkippedValidation(): array
+    {
+        return $this->skipValidations;
     }
 
     public function populateFromArray(array $arr, $onlyAccessible = true, $reset = false)
