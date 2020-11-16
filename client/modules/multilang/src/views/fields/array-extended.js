@@ -30,38 +30,35 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/admin/field-manager/fields/options-extended', 'multilang:views/fields/array-extended', function (Dep) {
+Espo.define('multilang:views/fields/array-extended', 'views/fields/array-extended',
+    Dep => Dep.extend({
 
-    return Dep.extend({
+        entityTypeWithTranslatedMultiLangOptionsList: ['enum', 'multiEnum'],
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+        validateRequired(field) {
+            let name = field || this.name;
+            const values = this.model.get(name);
+            let error = !values || !values.length;
+            values.forEach((value, i) => {
+                if (!value) {
+                    let msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate('Value'));
+                    this.showValidationMessage(msg, `input[data-name="${name}"][data-index="${i}"]`);
+                    error = true;
+                }
+            });
 
-            this.translatedOptions = {};
-            (this.model.get(this.name) || []).forEach(function (value) {
-                this.translatedOptions[value] = value;
-            }, this);
+            if (this.entityTypeWithTranslatedMultiLangOptionsList.includes(this.model.get('type'))
+                && this.model.get('isMultilang')) {
+                let langFieldNames = this.langFieldNames || [];
 
-            this.model.fetchedAttributes.translatedOptions = this.translatedOptions;
-        },
-
-        fetch: function () {
-            var data = Dep.prototype.fetch.call(this);
-
-            if (!data[this.name].length) {
-                data[this.name] = false;
-                data.translatedOptions = {};
-                return data;
+                if (!langFieldNames.includes(name)) {
+                    langFieldNames.forEach(function (item) {
+                        error = this.validateRequired(item) || error;
+                    }, this);
+                }
             }
 
-            data.translatedOptions = {};
-            (data[this.name] || []).forEach(function (value) {
-                data.translatedOptions[value] = value;
-            }, this);
-
-            return data;
-        }
-
-    });
-
-});
+            return error;
+        },
+    })
+);
