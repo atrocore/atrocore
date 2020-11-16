@@ -99,6 +99,9 @@ class Metadata extends AbstractListener
                         $mParams['multilangField'] = $field;
                         $mParams['multilangLocale'] = $locale;
                         $mParams['isCustom'] = false;
+                        if (isset($params['requiredForMultilang'])) {
+                            $mParams['required'] = $params['requiredForMultilang'];
+                        }
                         if (in_array($mParams['type'], ['enum', 'multiEnum'])) {
                             $mParams['options'] = $mParams['options' . $preparedLocale];
                             $mParams['default'] = null;
