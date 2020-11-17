@@ -373,7 +373,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
             if (view) {
                 view.disabled = true;
             }
-            this.$el.find('.cell[data-name=' + name+']').css('visibility', 'hidden');
+            this.$el.find('.cell[data-name=' + name+']').addClass('hidden');
         },
 
         showField: function (name) {
@@ -381,7 +381,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
             if (view) {
                 view.disabled = false;
             }
-            this.$el.find('.cell[data-name=' + name+']').css('visibility', 'visible');
+            this.$el.find('.cell[data-name=' + name+']').removeClass('hidden');
         },
 
         afterRender: function () {
