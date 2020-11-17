@@ -1,4 +1,4 @@
-![logo](docs/_assets/AtroCore_logo_color_248.png)
+![logo](_assets/AtroCore_logo_color_248.png)
 
 ## What Is AtroCore?
 
@@ -85,7 +85,7 @@ AtroCore has a REST API and can be integrated with any third-party system. You c
 ### Documentation
 
 - We are working on documentation. The current version is available [here](https://atropim.com/help).
-- Documentation for administrators is available [here](docs/en/administration/).
+- Documentation for administrators is available [here](https://github.com/atrocore/atrocore-docs/tree/master/en/administration).
 
 ### Requirements
 
@@ -95,8 +95,8 @@ AtroCore has a REST API and can be integrated with any third-party system. You c
 
 ### Configuration Instructions Based on Your Server
 
-* [Apache server configuration](docs/en/administration/apache-server-configuration.md)
-* [Nginx server configuration](docs/en/administration/nginx-server-configuration.md)
+* [Apache server configuration](https://github.com/atrocore/atrocore-docs/blob/master/en/administration/apache-server-configuration.md)
+* [Nginx server configuration](https://github.com/atrocore/atrocore-docs/blob/master/en/administration/nginx-server-configuration.mdd)
 
 ### Installation
 
