@@ -35,6 +35,8 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
 
         _timeouts: {},
 
+        entityTypeWithTranslatedMultiLangOptionsList: ['enum', 'multiEnum'],
+
         events: _.extend({
             'click [data-action="addNewValue"]': function (e) {
                 e.stopPropagation();
@@ -224,16 +226,28 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
             }
         },
 
-        validateRequired() {
-            const values = this.model.get(this.name);
+        validateRequired(field) {
+            let name = field || this.name;
+            const values = this.model.get(name);
             let error = !values || !values.length;
             values.forEach((value, i) => {
                 if (!value) {
                     let msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate('Value'));
-                    this.showValidationMessage(msg, `input[data-name="${this.name}"][data-index="${i}"]`);
+                    this.showValidationMessage(msg, `input[data-name="${name}"][data-index="${i}"]`);
                     error = true;
                 }
             });
+
+            if (this.entityTypeWithTranslatedMultiLangOptionsList.includes(this.model.get('type'))
+                && this.model.get('isMultilang')) {
+                let langFieldNames = this.langFieldNames || [];
+
+                if (!langFieldNames.includes(name)) {
+                    langFieldNames.forEach(function (item) {
+                        error = this.validateRequired(item) || error;
+                    }, this);
+                }
+            }
 
             return error;
         },

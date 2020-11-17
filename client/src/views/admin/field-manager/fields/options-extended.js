@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/admin/field-manager/fields/options-extended', 'multilang:views/fields/array-extended', function (Dep) {
+Espo.define('views/admin/field-manager/fields/options-extended', 'views/fields/array-extended', function (Dep) {
 
     return Dep.extend({
 
