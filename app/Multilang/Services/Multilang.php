@@ -79,18 +79,13 @@ class Multilang extends AbstractService
      */
     protected function updateLayout(string $scope, string $layout): bool
     {
-        // Find multi-lang fields
-        $multiLangFields = [];
-        foreach ($this->getMetadata()->get(['entityDefs', $scope, 'fields'], []) as $field => $data) {
-            if (!empty($data['isMultilang'])) {
-                $multiLangFields[] = $field;
-            }
-        }
-
         // exit if no multi-lang fields
-        if (empty($multiLangFields)) {
+        if (empty($multiLangFields = $this->getMultiLangFields($scope))) {
             return true;
         }
+
+        // prepare result
+        $result = [];
 
         $needSave = false;
 
@@ -100,31 +95,55 @@ class Multilang extends AbstractService
         // get layout data
         $layoutData = Json::decode($this->getLayout()->get($scope, $layout), true);
 
-        $result = [];
-        foreach ($layoutData as $k => $panel) {
-            // set old data
-            $result[$k] = $panel;
-            $result[$k]['rows'] = [];
+        // collect locales
+        $locales = $this->getPreparedLocalesCodes();
 
-            // skip if no rows
-            if (empty($panel['rows'])) {
-                continue 1;
-            }
-            foreach ($panel['rows'] as $row) {
-                // find multi-lang fields for injecting them to layout
-                $multiLangForSet = [];
-                foreach ($row as $field) {
-                    if (!empty($field['name']) && in_array($field['name'], $multiLangFields)) {
-                        $multiLangForSet[] = $field['name'];
+        foreach ($layoutData as $k => $panel) {
+            $result[$k] = $panel;
+
+            if (isset($panel['rows']) || !empty($panel['rows'])) {
+                $rows = [];
+                $addedBefore = false;
+
+                foreach ($panel['rows'] as $key => $row) {
+                    $newRow = [];
+                    $fullWidthRow = count($row) == 1;
+
+                    foreach ($row as $field) {
+                        if (!$addedBefore) {
+                            $newRow[] = $field;
+                        } else {
+                            $addedBefore = false;
+                        }
+
+                        if (is_array($field) && in_array($field['name'], $multiLangFields)) {
+                            foreach ($locales as $locale) {
+                                $multilangFieldName = $field['name'] . $locale;
+
+                                if (!in_array($multilangFieldName, $exists)) {
+                                    $multilangField = $field;
+                                    $multilangField['name'] = $multilangFieldName;
+                                    $newRow[] = $multilangField;
+
+                                    $needSave = true;
+                                }
+                            }
+                        }
                     }
-                }
-                $result[$k]['rows'][] = $row;
-                if (!empty($multiLangForSet)) {
-                    foreach ($this->createLangRows($scope, $multiLangForSet, $exists) as $langRow) {
-                        $needSave = true;
-                        $result[$k]['rows'][] = $langRow;
+
+                    if (!$fullWidthRow && count($newRow) % 2 != 0) {
+                        if ($key + 1 < count($panel['rows'])) {
+                            $newRow[] = $panel['rows'][$key + 1][0];
+                            $addedBefore = true;
+                        } else {
+                            $newRow[] = false;
+                        }
                     }
+
+                    $rows = array_merge($rows, array_chunk($newRow, $fullWidthRow ? 1 : 2));
                 }
+
+                $result[$k]['rows'] = $rows;
             }
         }
 
@@ -134,6 +153,38 @@ class Multilang extends AbstractService
         }
 
         return true;
+    }
+
+    /**
+     * @param string $scope
+     *
+     * @return array
+     */
+    protected function getMultiLangFields(string $scope): array
+    {
+        $result = [];
+
+        foreach ($this->getMetadata()->get(['entityDefs', $scope, 'fields'], []) as $field => $data) {
+            if (!empty($data['isMultilang'])) {
+                $result[] = $field;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getPreparedLocalesCodes(): array
+    {
+        $result = [];
+
+        foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
+            $result[] = ucfirst(Util::toCamelCase(strtolower($locale)));
+        }
+
+        return $result;
     }
 
     /**
@@ -160,49 +211,6 @@ class Multilang extends AbstractService
                     }
                 }
 
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param string $scope
-     * @param array  $fields
-     * @param array  $exists
-     *
-     * @return array
-     */
-    protected function createLangRows(string $scope, array $fields, array $exists): array
-    {
-        // collect locales
-        $locales = [];
-        foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
-            $locales[] = ucfirst(Util::toCamelCase(strtolower($locale)));
-        }
-
-        $result = [];
-        foreach ($fields as $field) {
-            $row = [];
-            foreach ($locales as $locale) {
-                $langField = $field . $locale;
-                if (!in_array($langField, $exists)) {
-                    if (!empty($row[1]) || !empty($row[0]['fullWidth'])) {
-                        $result[] = $row;
-                        $row = [];
-                    }
-                    $row[] = [
-                        'name'      => $langField,
-                        'fullWidth' => $this->getMetadata()->get(['entityDefs', $scope, 'fields', $langField, 'type'], 'varchar') == 'wysiwyg'
-                    ];
-                }
-            }
-
-            if (!empty($row)) {
-                if (empty($row[1]) && empty($row[0]['fullWidth'])) {
-                    $row[] = false;
-                }
-                $result[] = $row;
             }
         }
 
