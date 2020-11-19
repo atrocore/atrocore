@@ -142,7 +142,7 @@ class FieldManager extends AbstractListener
             /**
              * Second, update locales
              */
-            if ($this->getConfig()->get('isMultilangActive', false)) {
+            if (!empty($defs['isMultilang']) && $this->getConfig()->get('isMultilangActive', false)) {
                 foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
                     if (!empty($becameValues[$record[$field]])) {
                         $locale = ucfirst(Util::toCamelCase(strtolower($language)));
@@ -192,8 +192,10 @@ class FieldManager extends AbstractListener
 
         // prepare became values
         $becameValues = [];
-        foreach (array_values($oldDefs['options']) as $k => $v) {
-            $becameValues[$v] = $defs['options'][$k];
+        if (empty(!$oldDefs['options'])) {
+            foreach (array_values($oldDefs['options']) as $k => $v) {
+                $becameValues[$v] = $defs['options'][$k];
+            }
         }
 
         /** @var array $records */
@@ -223,7 +225,7 @@ class FieldManager extends AbstractListener
             /**
              * Second, update locales
              */
-            if ($this->getConfig()->get('isMultilangActive', false)) {
+            if (!empty($defs['isMultilang']) && $this->getConfig()->get('isMultilangActive', false)) {
                 foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
                     $locale = ucfirst(Util::toCamelCase(strtolower($language)));
                     $localeValues = [];
