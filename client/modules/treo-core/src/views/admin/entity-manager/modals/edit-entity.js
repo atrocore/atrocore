@@ -47,6 +47,15 @@ Espo.define('treo-core:views/admin/entity-manager/modals/edit-entity', 'class-re
 
             this.additionalParamsLayout = [];
             this.additionalParams = this.getMetadata().get(['app', 'additionalEntityParams']) || {};
+
+            // set scope specified additional params
+            const additionalScopeParams = this.getMetadata().get(['app', 'additional' + this.scope + 'Params']);
+            if (additionalScopeParams) {
+                $.each(additionalScopeParams, function (field, data) {
+                    this.additionalParams[field] = data;
+                }.bind(this));
+            }
+
             for (let param in this.additionalParams) {
                 this.model.set(param, this.getMetadata().get(['scopes', this.scope, param]) || this.additionalParams[param].default);
 

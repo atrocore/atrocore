@@ -43,11 +43,6 @@ use Treo\Core\EventManager\Event;
 class EntityManagerController extends AbstractListener
 {
     /**
-     * @var array
-     */
-    protected $scopesConfig = null;
-
-    /**
      * @param Event $event
      */
     public function afterActionCreateEntity(Event $event)
@@ -78,13 +73,10 @@ class EntityManagerController extends AbstractListener
         // prepare name
         $name = trim(ucfirst($data['name']));
 
-        $this
-            ->getContainer()
-            ->get('metadata')
-            ->set('scopes', $name, $this->getPreparedScopesData($data));
+        $this->getMetadata()->set('scopes', $name, $this->getPreparedScopesData($data));
 
         // save
-        $this->getContainer()->get('metadata')->save();
+        $this->getMetadata()->save();
     }
 
     /**
@@ -100,7 +92,7 @@ class EntityManagerController extends AbstractListener
         $scopeData = [];
 
         foreach ($data as $key => $value) {
-            if (in_array($key, $this->getScopesConfig()['edited'])) {
+            if (in_array($key, $this->getScopesConfig((string)$data['name']))) {
                 $scopeData[$key] = $value;
             }
         }
@@ -111,15 +103,15 @@ class EntityManagerController extends AbstractListener
     /**
      * Get scopes config
      *
+     * @param string $scope
+     *
      * @return array
      */
-    protected function getScopesConfig(): array
+    protected function getScopesConfig(string $scope): array
     {
-        if (is_null($this->scopesConfig)) {
-            // prepare result
-            $this->scopesConfig = include CORE_PATH . '/Treo/Configs/Scopes.php';
-        }
+        $data = $this->getMetadata()->get(['app', 'additionalEntityParams'], []);
+        $data = array_merge($data, $this->getMetadata()->get(['app', "additional{$scope}Params"], []));
 
-        return $this->scopesConfig;
+        return array_keys($data);
     }
 }
