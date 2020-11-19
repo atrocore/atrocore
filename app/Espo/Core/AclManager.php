@@ -35,6 +35,7 @@ namespace Espo\Core;
 
 use \Espo\Core\Exceptions\Error;
 
+use Espo\Core\Exceptions\Exception;
 use \Espo\ORM\Entity;
 use \Espo\Entities\User;
 use \Espo\Core\Utils\Util;
@@ -53,6 +54,8 @@ class AclManager
     protected $tableClassName = '\\Espo\\Core\\Acl\\Table';
 
     protected $userAclClassName = '\\Espo\\Core\\Acl';
+
+    protected $cacheAclDir = 'data/cache/acl';
 
     public function __construct(Container $container)
     {
@@ -305,5 +308,26 @@ class AclManager
         $className = $this->userAclClassName;
         $acl = new $className($this, $user);
         return $acl;
+    }
+
+    /**
+     * @return bool
+     *
+     * @throws Exception
+     */
+    public function clearAclCache(): bool
+    {
+        if (file_exists($this->cacheAclDir) && is_dir($this->cacheAclDir)) {
+            $result = $this
+                ->getContainer()
+                ->get('fileManager')
+                ->removeInDir($this->cacheAclDir);
+
+            if ($result == false) {
+                throw new Exception("Error while clearing acl cache");
+            }
+        }
+
+        return true;
     }
 }
