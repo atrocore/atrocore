@@ -38,26 +38,18 @@ namespace Treo\Core\Loaders;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\File\Manager;
 use Espo\Core\Utils\Config;
-use Treo\Core\Utils\Metadata\OrmMetadata as Instance;
 
 /**
  * OrmMetadata loader
  */
 class OrmMetadata extends Base
 {
-
     /**
-     * Load OrmMetadata
-     *
-     * @return \Espo\Core\Utils\Metadata\OrmMetadata
+     * @inheritDoc
      */
     public function load()
     {
-        return new Instance(
-            $this->getMetadata(),
-            $this->getFileManager(),
-            $this->getConfig()->get('useCache')
-        );
+        return new \Espo\Core\Utils\Metadata\OrmMetadata($this->getMetadata(), $this->getFileManager(), $this->getConfig());
     }
 
     /**
