@@ -65,6 +65,6 @@
     "linkAudited": "Das Erstellen eines verknüpften Datensatzes und das Verknüpfen mit dem vorhandenen Datensatz wird in Stream protokolliert.",
     "linkMultipleField": "verlinken mehrere Felder bietet eine praktische Möglichkeit Beziehungen zu bearbeiten. Nicht benutzen wenn Sie eine große Anzahl von Verknüpfungen haben.",
     "entityType": "Base Plus - enthält Aktivitäten, Verlaufs- und Aufgabenfelder. \n\nEvent - verfügbar im Fenster \"Kalender und Aktivitäten\".",
-    "fullTextSearch": "Ausführung der Wiederherstellung ist erforderlich."
+    "fullTextSearch": "Bietet die Möglichkeit an, eine viel schnellere und umfassendere Textsuche durchzuführen."
   }
 }
