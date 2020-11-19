@@ -33,9 +33,10 @@
 
 namespace Espo\Controllers;
 
-use \Espo\Core\Exceptions\BadRequest;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Utils\Util;
 
 class EntityManager extends \Espo\Core\Controllers\Base
 {
@@ -46,6 +47,15 @@ class EntityManager extends \Espo\Core\Controllers\Base
         }
     }
 
+    /**
+     * @param mixed $params
+     * @param mixed $data
+     * @param mixed $request
+     *
+     * @return bool
+     * @throws BadRequest
+     * @throws Error
+     */
     public function actionCreateEntity($params, $data, $request)
     {
         $data = get_object_vars($data);
@@ -94,7 +104,7 @@ class EntityManager extends \Espo\Core\Controllers\Base
             $params['iconClass'] = $data['iconClass'];
         }
         if (isset($data['fullTextSearch'])) {
-            $params['fullTestSearch'] = $data['fullTextSearch'];
+            $params['fullTextSearch'] = $data['fullTextSearch'];
         }
 
         $params['kanbanViewMode'] = !empty($data['kanbanViewMode']);
@@ -102,7 +112,14 @@ class EntityManager extends \Espo\Core\Controllers\Base
             $params['kanbanStatusIgnoreList'] = $data['kanbanStatusIgnoreList'];
         }
 
+        if (!empty($data['fullTextSearch'])) {
+            $this->prepareFullTextSearchFields($name, $data['textFilterFields']);
+        }
+
         $result = $this->getContainer()->get('entityManagerUtil')->create($name, $type, $params);
+
+        // update scopes
+        $this->updateScope($data);
 
         if ($result) {
             $tabList = $this->getConfig()->get('tabList', []);
@@ -112,15 +129,25 @@ class EntityManager extends \Espo\Core\Controllers\Base
                 $this->getConfig()->set('tabList', $tabList);
                 $this->getConfig()->save();
             }
-
-            $this->getContainer()->get('dataManager')->rebuild();
         } else {
             throw new Error();
         }
 
+        // run rebuild
+        $this->getContainer()->get('dataManager')->rebuild();
+
         return true;
     }
 
+    /**
+     * @param mixed $params
+     * @param mixed $data
+     * @param mixed $request
+     *
+     * @return bool
+     * @throws BadRequest
+     * @throws Error
+     */
     public function actionUpdateEntity($params, $data, $request)
     {
         $data = get_object_vars($data);
@@ -138,13 +165,23 @@ class EntityManager extends \Espo\Core\Controllers\Base
             $data['asc'] = $data['sortDirection'] === 'asc';
         }
 
+        if (!empty($data['fullTextSearch'])) {
+            $this->prepareFullTextSearchFields($name, $data['textFilterFields']);
+        }
+
         $result = $this->getContainer()->get('entityManagerUtil')->update($name, $data);
+
+        // update scopes
+        $this->updateScope($data);
 
         if ($result) {
             $this->getContainer()->get('dataManager')->clearCache();
         } else {
             throw new Error();
         }
+
+        // run rebuild
+        $this->getContainer()->get('dataManager')->rebuild();
 
         return true;
     }
@@ -351,6 +388,99 @@ class EntityManager extends \Espo\Core\Controllers\Base
 
         $this->getContainer()->get('entityManagerUtil')->resetToDefaults($data->scope);
         $this->getContainer()->get('dataManager')->clearCache();
+
+        return true;
+    }
+
+
+
+    /**
+     * Set data to scope
+     *
+     * @param array $data
+     */
+    protected function updateScope(array $data): void
+    {
+        // prepare name
+        $name = trim(ucfirst($data['name']));
+
+        $this->getMetadata()->set('scopes', $name, $this->getPreparedScopesData($data));
+
+        // save
+        $this->getMetadata()->save();
+    }
+
+    /**
+     * Get prepared scopes data
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    protected function getPreparedScopesData(array $data): array
+    {
+        // prepare result
+        $scopeData = [];
+
+        foreach ($data as $key => $value) {
+            if (in_array($key, $this->getScopesConfig((string)$data['name']))) {
+                $scopeData[$key] = $value;
+            }
+        }
+
+        return $scopeData;
+    }
+
+    /**
+     * Get scopes config
+     *
+     * @param string $scope
+     *
+     * @return array
+     */
+    protected function getScopesConfig(string $scope): array
+    {
+        $data = $this->getMetadata()->get(['app', 'additionalEntityParams'], []);
+        $data = array_merge($data, $this->getMetadata()->get(['app', "additional{$scope}Params"], []));
+
+        return array_keys($data);
+    }
+
+    /**
+     * @param string $name
+     * @param array  $fields
+     *
+     * @return bool
+     */
+    protected function prepareFullTextSearchFields(string $name, array $fields): bool
+    {
+        $oldFields = $this->getMetadata()->get(['entityDefs', $name, 'collection', 'textFilterFields'], []);
+
+        if ($oldFields != $fields) {
+            // prepare table name
+            $table = Util::toUnderScore($name);
+
+            // get charset
+            $charset = $this->getConfig()->get('database')['charset'];
+
+            foreach ($fields as $field) {
+                // prepare field
+                $field = Util::toUnderScore($field);
+
+                $fieldType = $this->getMetadata()->get(['entityDefs', $name, 'fields', $field, 'type']);
+                if ($fieldType == 'varchar') {
+                    $maxLength = $this->getMetadata()->get(['entityDefs', $name, 'fields', $field, 'maxLength'], '255');
+                    $fieldType = "varchar({$maxLength})";
+                } else {
+                    $fieldType = 'mediumtext';
+                }
+                $queries[] = "ALTER TABLE {$table} MODIFY COLUMN {$field} {$fieldType} CHARACTER SET {$charset} COLLATE {$charset}_unicode_ci";
+            }
+
+            if (!empty($queries)) {
+                $this->getContainer()->get('pdo')->exec(implode(';', $queries));
+            }
+        }
 
         return true;
     }
