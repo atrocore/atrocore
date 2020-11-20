@@ -32,5 +32,6 @@
       "storeArrayValues": true
    },
    "translatedOptions": false,
-   "personalData": true
+   "personalData": true,
+   "view": "colored-fields:views/fields/colored-multi-enum"
 }

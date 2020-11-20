@@ -71,6 +71,12 @@ class FieldManager extends AbstractListener
             // delete positions
             if (!empty($deletedPositions)) {
                 $this->deletePositions($defs, $deletedPositions);
+
+                // update metadata
+                $entityDefs = $this->getMetadata()->get(['entityDefs', $scope]);
+                $entityDefs['fields'][$field] = $defs;
+                $this->getMetadata()->set('entityDefs', $scope, $entityDefs);
+                $this->getMetadata()->save();
             }
 
             $entityDefs['fields'][$field] = $defs;
@@ -292,6 +298,7 @@ class FieldManager extends AbstractListener
                 $fields[] = 'options' . ucfirst(Util::toCamelCase(strtolower($locale)));
             }
         }
+        $fields[] = 'optionColors';
 
         return $fields;
     }

@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/admin/field-manager/fields/options-extended', 'views/fields/array-extended', function (Dep) {
+Espo.define('views/admin/field-manager/fields/options-extended', ['views/fields/array-extended', 'lib!jscolor'], function (Dep) {
 
     return Dep.extend({
 
@@ -43,6 +43,16 @@ Espo.define('views/admin/field-manager/fields/options-extended', 'views/fields/a
             }, this);
 
             this.model.fetchedAttributes.translatedOptions = this.translatedOptions;
+        },
+
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            if (this.mode === 'edit') {
+                this.$list.find('.color-input').get().forEach(item => {
+                    new jscolor(item)
+                });
+            }
         },
 
         fetch: function () {

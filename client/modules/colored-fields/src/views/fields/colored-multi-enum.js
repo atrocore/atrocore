@@ -98,7 +98,19 @@ Espo.define('colored-fields:views/fields/colored-multi-enum', 'views/fields/mult
         },
 
         getBackgroundColor(fieldValue) {
-            return '#' + ((this.model.getFieldParam(this.name, 'optionColors') || {})[fieldValue] || this.defaultBackgroundColor);
+            let options = this.model.getFieldParam(this.name, 'options') || [];
+
+            let key = 0;
+            options.forEach(function (item, k) {
+                if (fieldValue === item) {
+                    key = k;
+                    if (typeof options[0] !== 'undefined' && options[0] === '') {
+                        key--;
+                    }
+                }
+            });
+
+            return '#' + ((this.model.getFieldParam(this.name, 'optionColors') || {})[key] || this.defaultBackgroundColor);
         },
 
         getFontColor(backgroundColor) {

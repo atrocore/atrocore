@@ -38,5 +38,6 @@
       "type":"varchar"
    },
    "translatedOptions": false,
-   "personalData": true
+   "personalData": true,
+   "view": "colored-fields:views/fields/colored-enum"
 }
