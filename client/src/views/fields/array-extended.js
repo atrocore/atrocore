@@ -37,6 +37,8 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
 
         defaultColor: '333333',
 
+        isAttribute: false,
+
         entityTypeWithTranslatedMultiLangOptionsList: ['enum', 'multiEnum'],
 
         events: _.extend({
@@ -115,7 +117,10 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
             this.langFieldNames.forEach(name => {
                 this.selectedComplex[name] = Espo.Utils.cloneDeep(this.model.get(name)) || []
             });
-            this.selectedComplex['optionColors'] = Espo.Utils.cloneDeep(this.model.get('optionColors')) || [];
+
+            if (!this.isAttribute){
+                this.selectedComplex['optionColors'] = Espo.Utils.cloneDeep(this.model.get('optionColors')) || [];
+            }
         },
 
         setMode: function (mode) {
@@ -140,7 +145,9 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
             this.langFieldNames.forEach(name => {
                 data[name] = (this.selectedComplex[name] || []).concat([''])
             });
-            data['optionColors'] = (this.selectedComplex['optionColors'] || []).concat(['']);
+            if (!this.isAttribute){
+                data['optionColors'] = (this.selectedComplex['optionColors'] || []).concat(['']);
+            }
 
             this.selectedComplex = data;
             this.reRender();
@@ -159,8 +166,11 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
                 value[index] = 'todel';
                 data[name] = value;
             });
-            data['optionColors'] = this.selectedComplex['optionColors'] || [];
-            data['optionColors'][index] = 'todel';
+
+            if (!this.isAttribute){
+                data['optionColors'] = this.selectedComplex['optionColors'] || [];
+                data['optionColors'][index] = 'todel';
+            }
 
             this.selectedComplex = data;
             this.reRender();
@@ -202,7 +212,9 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
             if (this.isEnums()) {
                 const data = {};
                 data[this.name] = [];
-                data['optionColors'] = [];
+                if (!this.isAttribute){
+                    data['optionColors'] = [];
+                }
                 this.langFieldNames.forEach(name => data[name] = []);
                 this.$el.find('.option-group').each((index, element) => {
                     $(element).find('.option-item input').each((i, el) => {
@@ -328,7 +340,7 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
                             name: this.name,
                             value: item,
                             shortLang: '',
-                            colorValue: this.selectedComplex['optionColors'][index] || this.defaultColor
+                            colorValue: !this.isAttribute ? this.selectedComplex['optionColors'][index] || this.defaultColor : null
                         }
                     ];
 

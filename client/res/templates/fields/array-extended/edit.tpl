@@ -8,7 +8,7 @@
 			{{#each options}}
 			<div class="option-item" data-name="{{name}}" data-index="{{@../index}}">
 				<span class="text-muted">{{shortLang}} {{#if shortLang}}&#8250;{{/if}}</span>
-				<input class="form-control" value="{{value}}" data-name="{{name}}" data-index="{{@../index}}">
+				<input class="form-control" {{#if colorValue}} style="width: 70%" {{/if}} value="{{value}}" data-name="{{name}}" data-index="{{@../index}}">
 				{{#if colorValue}}
 				<input class="form-control color-input" value="{{colorValue}}" data-value="{{value}}">
 				{{/if}}
@@ -26,10 +26,7 @@
 		-moz-box-shadow: none;
 		box-shadow: none;
 	}
-	#options .form-control {
-		width: 70%;
-	}
 	#options .form-control.color-input {
-		width: 15%;
+		width: 19%;
 	}
 </style>
