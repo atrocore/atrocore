@@ -273,7 +273,7 @@ class Xlsx extends \Espo\Core\Injectable
                     $defs['type'] = 'base';
                 }
 
-                $type = $defs['type'];
+                $type = isset($defs['exportType']) ? $defs['exportType'] : $defs['type'];
                 $foreignField = $name;
                 $linkName = null;
                 if (strpos($name, '_') !== false) {

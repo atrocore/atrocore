@@ -1875,6 +1875,14 @@ class Record extends \Espo\Core\Services\Base
             }
         }
 
+        if (method_exists($this, 'prepareAttributeListForExport')) {
+            $this->prepareAttributeListForExport($attributeList);
+        }
+
+        if (method_exists($this, 'prepareFieldListForExport')) {
+            $this->prepareFieldListForExport($fieldList);
+        }
+
         if (method_exists($exportObj, 'addAdditionalAttributes')) {
             $exportObj->addAdditionalAttributes($this->entityType, $attributeList, $fieldList);
         }
