@@ -35,7 +35,6 @@ namespace Espo\Core;
 
 use \Espo\Core\Exceptions\Error;
 
-use Espo\Core\Exceptions\Exception;
 use \Espo\ORM\Entity;
 use \Espo\Entities\User;
 use \Espo\Core\Utils\Util;
@@ -324,7 +323,12 @@ class AclManager
                 ->removeInDir($this->cacheAclDir);
 
             if ($result == false) {
-                throw new Exception("Error while clearing acl cache");
+                throw new Error(
+                    $this
+                        ->getContainer()
+                        ->get('language')
+                        ->translate('clearAclCacheError', 'messages')
+                );
             }
         }
 

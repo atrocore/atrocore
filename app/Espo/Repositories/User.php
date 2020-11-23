@@ -33,6 +33,7 @@
 
 namespace Espo\Repositories;
 
+use Espo\Core\AclManager;
 use \Espo\ORM\Entity;
 
 use \Espo\Core\Exceptions\Error;
@@ -40,6 +41,12 @@ use \Espo\Core\Exceptions\Conflict;
 
 class User extends \Espo\Core\ORM\Repositories\RDB
 {
+    protected function init()
+    {
+        parent::init();
+        $this->addDependency('container');
+    }
+
     protected function beforeSave(Entity $entity, array $options = array())
     {
         parent::beforeSave($entity, $options);
@@ -116,5 +123,31 @@ class User extends \Espo\Core\ORM\Repositories\RDB
             return true;
         }
         return false;
+    }
+
+    /**
+     * @param Entity $entity
+     *
+     * @param array $options
+     */
+    protected function afterSave(Entity $entity, array $options = array())
+    {
+        parent::afterSave($entity, $options);
+
+        if ($entity->isAttributeChanged('teamsIds')
+            || $entity->isAttributeChanged('rolesIds')
+            || $entity->isAttributeChanged('isAdmin')) {
+            $this
+                ->getAclManager()
+                ->clearAclCache();
+        }
+    }
+
+    /**
+     * @return AclManager
+     */
+    protected function getAclManager(): AclManager
+    {
+        return $this->getInjection('container')->get('aclManager');
     }
 }
