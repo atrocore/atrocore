@@ -106,6 +106,8 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
 
             $('.color-input').on('change', function () {
                 arrayExtended.setOptionColor($(this).data('index'), $(this).val())
+            }).on('click', function () {
+                $(this).focus();
             });
         },
 
