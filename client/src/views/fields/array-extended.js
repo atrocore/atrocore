@@ -78,10 +78,6 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
                 this.setMode(this.mode);
                 this.reRender();
             });
-
-            this.listenTo(this, 'change', function () {
-                this.reRender()
-            });
         },
 
         afterRender: function () {
@@ -106,8 +102,6 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
 
             $('.color-input').on('change', function () {
                 arrayExtended.setOptionColor($(this).data('index'), $(this).val())
-            }).on('click', function () {
-                $(this).focus();
             });
         },
 
