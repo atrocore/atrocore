@@ -52,35 +52,18 @@ class FieldManager extends AbstractListener
      */
     public function afterSave(Event $event)
     {
+        $scope = $event->getArgument('scope');
+        $field = $event->getArgument('field');
+
         // get old field defs
         $oldDefs = $event->getArgument('oldFieldDefs');
 
         if (in_array($oldDefs['type'], ['enum', 'multiEnum'])) {
-            $scope = $event->getArgument('scope');
-            $field = $event->getArgument('field');
-
-            // get entity defs
-            $entityDefs = $this->getMetadata()->get(['entityDefs', $scope]);
-
             // get current field defs
-            $defs = $entityDefs['fields'][$field];
+            $defs = $this->getMetadata()->get(['entityDefs', $scope, 'fields', $field]);
 
             // get deleted positions
-            $deletedPositions = $this->getDeletedPositions($defs['options']);
-
-            // delete positions
-            if (!empty($deletedPositions)) {
-                $this->deletePositions($defs, $deletedPositions);
-
-                // update metadata
-                $entityDefs = $this->getMetadata()->get(['entityDefs', $scope]);
-                $entityDefs['fields'][$field] = $defs;
-                $this->getMetadata()->set('entityDefs', $scope, $entityDefs);
-                $this->getMetadata()->save();
-            }
-
-            $entityDefs['fields'][$field] = $defs;
-            $this->getMetadata()->set('entityDefs', $scope, $entityDefs);
+            $deletedPositions = $event->getArgument('deletedPositions');
 
             // rebuild
             $this->getContainer()->get('dataManager')->rebuild();

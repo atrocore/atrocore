@@ -39,7 +39,7 @@ use Espo\Core\Utils\FieldManager\Hooks\Base as BaseHook;
 use Espo\Core\Utils\Metadata\Helper;
 use Treo\Core\Container;
 use Treo\Core\EventManager\Event;
-use Treo\Core\EventManager\Manager;
+use Treo\Core\Utils\Util;
 
 /**
  * Class FieldManager
@@ -298,6 +298,11 @@ class FieldManager
 
         $entityDefs = $this->normalizeDefs($scope, $name, $fieldDefs);
 
+        $deletedPositions = [];
+        if (in_array($oldFieldDefs['type'], ['enum', 'multiEnum'])) {
+            $deletedPositions = $this->deletePositions($name, $entityDefs);
+        }
+
         if (!empty($entityDefs)) {
             $this->getMetadata()->set('entityDefs', $scope, $entityDefs);
             $metadataToBeSaved = true;
@@ -305,17 +310,11 @@ class FieldManager
         }
 
         if ($metadataToBeSaved) {
-            $this
-                ->container
-                ->get('eventManager')
-                ->dispatch('FieldManager', 'beforeSave', new Event(['scope' => $scope, 'field' => $name, 'oldFieldDefs' => $oldFieldDefs]));
-
             $result &= $this->getMetadata()->save();
 
-            $this
-                ->container
-                ->get('eventManager')
-                ->dispatch('FieldManager', 'afterSave', new Event(['scope' => $scope, 'field' => $name, 'oldFieldDefs' => $oldFieldDefs]));
+            $event = new Event(['scope' => $scope, 'field' => $name, 'oldFieldDefs' => $oldFieldDefs, 'deletedPositions' => $deletedPositions]);
+
+            $this->dispatch('FieldManager', 'afterSave', $event);
 
             $this->processHook('afterSave', $type, $scope, $name, $fieldDefs, array('isNew' => $isNew));
         }
@@ -777,5 +776,69 @@ class FieldManager
         }
 
         return $hook;
+    }
+
+    /**
+     * @param string $name
+     * @param array  $entityDefs
+     *
+     * @return array
+     */
+    protected function deletePositions(string $name, array &$entityDefs): array
+    {
+        if (empty($entityDefs['fields'][$name]['options'])) {
+            return [];
+        }
+
+        $deletedPositions = [];
+        foreach ($entityDefs['fields'][$name]['options'] as $pos => $value) {
+            if ($value === 'todel') {
+                $deletedPositions[] = $pos;
+            }
+        }
+
+        if (!empty($deletedPositions)) {
+            foreach ($this->getOptionsFields($entityDefs['fields'][$name]) as $field) {
+                foreach ($deletedPositions as $pos) {
+                    unset($entityDefs['fields'][$name][$field][$pos]);
+                }
+                $entityDefs['fields'][$name][$field] = array_values($entityDefs['fields'][$name][$field]);
+            }
+        }
+
+        return $deletedPositions;
+    }
+
+    /**
+     * @param array $defs
+     *
+     * @return array
+     */
+    protected function getOptionsFields(array $defs): array
+    {
+        /** @var \Treo\Core\Utils\Config $config */
+        $config = $this->container->get('config');
+
+        $fields[] = 'options';
+        if ($config->get('isMultilangActive', false)) {
+            foreach ($config->get('inputLanguageList', []) as $locale) {
+                $fields[] = 'options' . ucfirst(Util::toCamelCase(strtolower($locale)));
+            }
+        }
+        $fields[] = 'optionColors';
+
+        return $fields;
+    }
+
+    /**
+     * @param string $target
+     * @param string $action
+     * @param Event  $event
+     *
+     * @return Event
+     */
+    protected function dispatch(string $target, string $action, Event $event): Event
+    {
+        return $this->container->get('eventManager')->dispatch($target, 'beforeSave', $event);
     }
 }
