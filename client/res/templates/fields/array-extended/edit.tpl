@@ -10,7 +10,7 @@
 				<span class="text-muted">{{shortLang}} {{#if shortLang}}&#8250;{{/if}}</span>
 				<input class="form-control" {{#if colorValue}} style="width: 70%" {{/if}} value="{{value}}" data-name="{{name}}" data-index="{{@../index}}">
 				{{#if colorValue}}
-				<input class="form-control color-input" value="{{colorValue}}" data-value="{{value}}">
+				<input class="form-control color-input" value="{{colorValue}}" data-value="{{value}}" data-index="{{@../index}}">
 				{{/if}}
 			</div>
 			{{/each}}
