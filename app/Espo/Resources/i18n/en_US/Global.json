@@ -295,7 +295,8 @@
         "massFollowZeroResult": "Nothing got followed",
         "massUnfollowZeroResult": "Nothing got unfollowed",
         "erasePersonalDataConfirmation": "Checked fields will be erased permanently. Are you sure?",
-        "massPrintPdfMaxCountError": "Can't print more that {maxCount} records."
+        "massPrintPdfMaxCountError": "Can't print more that {maxCount} records.",
+        "clearAclCacheError": "ACL cache could not be cleared."
     },
     "boolFilters": {
         "onlyMy": "Only My",

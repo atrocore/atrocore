@@ -54,6 +54,8 @@ class AclManager
 
     protected $userAclClassName = '\\Espo\\Core\\Acl';
 
+    protected $cacheAclDir = 'data/cache/acl';
+
     public function __construct(Container $container)
     {
         $this->container = $container;
@@ -305,5 +307,31 @@ class AclManager
         $className = $this->userAclClassName;
         $acl = new $className($this, $user);
         return $acl;
+    }
+
+    /**
+     * @return bool
+     *
+     * @throws Exception
+     */
+    public function clearAclCache(): bool
+    {
+        if (file_exists($this->cacheAclDir) && is_dir($this->cacheAclDir)) {
+            $result = $this
+                ->getContainer()
+                ->get('fileManager')
+                ->removeInDir($this->cacheAclDir);
+
+            if ($result == false) {
+                throw new Error(
+                    $this
+                        ->getContainer()
+                        ->get('language')
+                        ->translate('clearAclCacheError', 'messages')
+                );
+            }
+        }
+
+        return true;
     }
 }

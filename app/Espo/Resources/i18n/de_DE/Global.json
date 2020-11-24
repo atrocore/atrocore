@@ -272,7 +272,8 @@
     "fieldIsUploading": "Hochladen läuft",
     "streamPostInfo": "Schreiben Sie <strong>@username</strong> um Benutzer in der Notiz hervorzuheben.\n\nVerfügbare Syntax:\n`<code>Code</code>`\n**<strong>fetter Text</strong>**\n*<em>Hervorgehobener Text</em>*\n~<del>Durchgestrichen</del>~\n> blockquote\n[text](url)",
     "erasePersonalDataConfirmation": "Überprüfte Felder werden dauerhaft gelöscht. Sind Sie sicher?",
-    "massPrintPdfMaxCountError": "Es kann nicht mehr als {maxCount} Datensätze gedruckt werden."
+    "massPrintPdfMaxCountError": "Es kann nicht mehr als {maxCount} Datensätze gedruckt werden.",
+    "clearAclCacheError": "Cache von Zugriffskontrollliste konnte nicht geleert werden."
   },
   "boolFilters": {
     "onlyMy": "Nur Meine",
