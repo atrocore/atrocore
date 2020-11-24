@@ -41,12 +41,12 @@ Espo.define('views/fields/user-with-avatar', 'views/fields/user', function (Dep)
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            if (this.model.has('ownerUserId') && this.model.get('ownerUserId') === null) {
+            if (this.model.has('ownerUserId') && this.model.get('ownerUserId') === null && this.setDefaultOwnerUser()) {
                 this.model.set('ownerUserId', this.getUser().id);
                 this.model.set('ownerUserName', this.getUser().get('name'));
             }
 
-            if (this.model.has('assignedUserId') && this.model.get('assignedUserId') === null) {
+            if (this.model.has('assignedUserId') && this.model.get('assignedUserId') === null && this.setDefaultAssignedUser()) {
                 this.model.set('assignedUserId', this.getUser().id);
                 this.model.set('assignedUserName', this.getUser().get('name'));
             }
@@ -62,7 +62,14 @@ Espo.define('views/fields/user-with-avatar', 'views/fields/user', function (Dep)
 
         getAvatarHtml: function () {
             return this.getHelper().getAvatarHtml(this.model.get(this.idName), 'small', 14, 'avatar-link');
-        }
+        },
 
+        setDefaultOwnerUser: function () {
+            return true;
+        },
+
+        setDefaultAssignedUser: function () {
+            return true;
+        }
     });
 });
