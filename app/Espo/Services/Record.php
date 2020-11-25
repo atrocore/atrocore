@@ -452,6 +452,9 @@ class Record extends \Espo\Core\Services\Base
         if (!$this->isPermittedAssignedUser($entity)) {
             return false;
         }
+        if (!$this->isPermittedOwnerUser($entity)) {
+            return false;
+        }
         if (!$this->isPermittedTeams($entity)) {
             return false;
         }
@@ -517,6 +520,61 @@ class Record extends \Espo\Core\Services\Base
                     if (!$this->getEntityManager()->getRepository('User')->checkBelongsToAnyOfTeams($userId, $teamIdList)) {
                         return false;
                     }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param Entity $entity
+     *
+     * @return bool
+     */
+    public function isPermittedOwnerUser(Entity $entity): bool
+    {
+        if (!$entity->hasAttribute('ownerUserId')) {
+            return true;
+        }
+
+        $ownerUserId = $entity->get('ownerUserId');
+
+        if ($this->getUser()->isPortal()) {
+            if (!$entity->isAttributeChanged('ownerUserId') && empty($ownerUserId)) {
+                return true;
+            }
+        }
+
+        $assignmentPermission = $this->getAcl()->get('assignmentPermission');
+
+        if ($assignmentPermission === true || $assignmentPermission === 'yes' || !in_array($assignmentPermission, ['team', 'no'])) {
+            return true;
+        }
+
+        if (!$entity->isNew()) {
+            if ($entity->isAttributeChanged('ownerUserId')) {
+                $toProcess = true;
+            }
+        } else {
+            $toProcess = true;
+        }
+
+        if ($toProcess) {
+            if (empty($ownerUserId)) {
+                if ($assignmentPermission == 'no') {
+                    return false;
+                }
+                return true;
+            }
+            if ($assignmentPermission == 'no') {
+                if ($this->getUser()->id != $ownerUserId) {
+                    return false;
+                }
+            } else if ($assignmentPermission == 'team') {
+                $teamIdList = $this->getUser()->get('teamsIds');
+                if (!$this->getEntityManager()->getRepository('User')->checkBelongsToAnyOfTeams($ownerUserId, $teamIdList)) {
+                    return false;
                 }
             }
         }

@@ -45,7 +45,7 @@ Espo.define('treo-core:views/record/detail-side', 'class-replace!treo-core:views
                 fieldList: [
                     {
                         name: 'ownerUser',
-                        view: 'views/fields/user-with-avatar'
+                        view: 'views/fields/owner-user'
                     },
                     {
                         name: ':assignedUser'
