@@ -106,6 +106,11 @@ class Multilang extends AbstractService
                 $addedBefore = false;
 
                 foreach ($panel['rows'] as $key => $row) {
+                    if (empty(array_diff($row, [false]))) {
+                        $needSave = true;
+                        continue;
+                    }
+
                     $newRow = [];
                     $fullWidthRow = count($row) == 1;
 
