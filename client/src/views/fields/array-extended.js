@@ -35,7 +35,7 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
 
         _timeouts: {},
 
-        defaultColor: 'FFFFFF',
+        defaultColor: 'ECECEC',
 
         isAttribute: false,
 
