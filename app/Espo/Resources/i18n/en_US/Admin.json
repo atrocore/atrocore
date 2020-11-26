@@ -105,6 +105,7 @@
         "url": "Url",
         "varchar": "Varchar",
         "file": "File",
+        "asset": "Asset",
         "image": "Image",
         "multiEnum": "Multi-Enum",
         "attachmentMultiple": "Attachment Multiple",
@@ -119,6 +120,7 @@
         "jsonObject": "Json Object"
     },
     "fields": {
+        "assetType": "Asset Type",
         "type": "Type",
         "name": "Name",
         "label": "Label",

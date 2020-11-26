@@ -89,6 +89,7 @@
     "varchar": "Text (max. 255)",
     "file": "Datei",
     "image": "Bild",
+    "asset": "Asset",
     "multiEnum": "Mehrfachauswahl",
     "attachmentMultiple": "Mehrfach Anhänge",
     "rangeInt": "Bereich Ganzzahl",
@@ -105,6 +106,7 @@
     "datetimeOptional": "Datum/Datum-Uhrzeit"
   },
   "fields": {
+    "assetType": "Asset Typ",
     "type": "Typ",
     "label": "Label",
     "required": "Erforderlich",

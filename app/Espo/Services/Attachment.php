@@ -43,7 +43,7 @@ class Attachment extends Record
 {
     protected $notFilteringAttributeList = ['contents'];
 
-    protected $attachmentFieldTypeList = ['file', 'image', 'attachmentMultiple'];
+    protected $attachmentFieldTypeList = ['file', 'image', 'attachmentMultiple', 'asset'];
 
     protected $inlineAttachmentFieldTypeList = ['text', 'wysiwyg'];
 

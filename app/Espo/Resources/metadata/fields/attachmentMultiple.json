@@ -36,6 +36,7 @@
       "layoutRelationshipsDisabled": true,
       "relationName": "attachments"
    },
+   "notCreatable": true,
    "notSortable": true,
    "filter": true,
    "hookClassName": "\\Espo\\Core\\Utils\\FieldManager\\Hooks\\AttachmentMultipleType",
