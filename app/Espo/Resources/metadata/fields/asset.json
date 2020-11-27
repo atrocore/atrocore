@@ -1,0 +1,48 @@
+{
+  "params": [
+    {
+      "name": "required",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "assetType",
+      "type": "enum",
+      "view": "views/admin/field-manager/fields/asset-types"
+    },
+    {
+      "name": "previewSize",
+      "type": "enum",
+      "default": "small",
+      "prohibitedEmptyValue": true,
+      "view": "views/fields/enum",
+      "options": [
+        "x-small",
+        "small",
+        "medium",
+        "large"
+      ]
+    },
+    {
+      "name": "audited",
+      "type": "bool"
+    }
+  ],
+  "actualFields": [
+    "id"
+  ],
+  "notActualFields": [
+    "name"
+  ],
+  "filter": true,
+  "linkDefs": {
+    "type": "belongsTo",
+    "entity": "Attachment",
+    "skipOrmDefs": true
+  },
+  "personalData": true,
+  "typeNatures": {
+    "File": "File",
+    "Image": "Image"
+  }
+}

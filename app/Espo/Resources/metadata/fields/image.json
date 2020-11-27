@@ -28,6 +28,7 @@
    "notActualFields":[
       "name"
    ],
+   "notCreatable": true,
    "filter": true,
    "linkDefs": {
       "type": "belongsTo",
