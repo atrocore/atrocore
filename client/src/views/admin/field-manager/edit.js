@@ -291,10 +291,10 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
         },
 
         togglePreviewSize: function () {
-            if (this.model.get('assetType') && this.getMetadata().get('entityDefs.Asset.typeNatures.' + this.model.get('assetType')) !== 'Image') {
-                this.hideField('previewSize');
-            } else {
+            if (this.model.get('assetType') && this.getMetadata().get('fields.asset.typeNatures.' + this.model.get('assetType')) === 'Image') {
                 this.showField('previewSize');
+            } else {
+                this.hideField('previewSize');
             }
         },
 

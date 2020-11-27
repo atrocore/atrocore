@@ -40,5 +40,9 @@
     "entity": "Attachment",
     "skipOrmDefs": true
   },
-  "personalData": true
+  "personalData": true,
+  "typeNatures": {
+    "File": "File",
+    "Image": "Image"
+  }
 }
