@@ -291,7 +291,15 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
         },
 
         togglePreviewSize: function () {
-            if (this.model.get('assetType') && this.getMetadata().get('fields.asset.typeNatures.' + this.model.get('assetType')) === 'Image') {
+            let assetType = this.model.get('assetType');
+            if (!assetType) {
+                $.each(this.getMetadata().get('fields.asset.typeNatures') || [], function (name, nature) {
+                    assetType = name;
+                    return false;
+                });
+            }
+
+            if (this.getMetadata().get('fields.asset.typeNatures.' + assetType) === 'Image') {
                 this.showField('previewSize');
             } else {
                 this.hideField('previewSize');
