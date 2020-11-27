@@ -30,7 +30,28 @@
  * and "AtroCore" word.
  */
 
-Espo.define('treo-core:views/fields/owner-user', 'views/fields/user-with-avatar', function (Dep) {
-    return Dep.extend({});
+Espo.define('views/fields/owner-user', 'views/fields/user-with-avatar', function (Dep) {
+
+    return Dep.extend({
+
+        init: function () {
+            this.assignmentPermission = this.getAcl().get('assignmentPermission');
+            if (this.assignmentPermission == 'no') {
+                this.setReadOnly(true);
+            }
+            Dep.prototype.init.call(this);
+        },
+
+        getSelectBoolFilterList: function () {
+            if (this.assignmentPermission == 'team') {
+                return ['onlyMyTeam'];
+            }
+        },
+
+        getSelectPrimaryFilterName: function () {
+            return 'active';
+        }
+
+    });
 });
 
