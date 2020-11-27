@@ -48,7 +48,7 @@ Espo.define('views/fields/asset', 'views/fields/file', function (Dep) {
 
         isImage: function () {
             const assetType = this.getMetadata().get('entityDefs.' + this.model.urlRoot + '.fields.' + this.defs.name + '.assetType');
-            return this.getMetadata().get('entityDefs.Asset.typeNatures.' + assetType) === 'Image';
+            return this.getMetadata().get('fields.asset.typeNatures.' + assetType) === 'Image';
         },
 
     });
