@@ -372,7 +372,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             if (!$entity->isAttributeChanged($attribute)) continue;
 
             $attachment = $this->getEntityManager()->getEntity('Attachment', $entity->get($attribute));
-            if (!$attachment) continue;
+            if (!$attachment || !empty($attachment->get('relatedId'))) continue;
             $attachment->set(array(
                 'relatedId' => $entity->id,
                 'relatedType' => $entity->getEntityType()
