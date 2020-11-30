@@ -103,10 +103,10 @@ class Multilang extends AbstractService
 
             if (isset($panel['rows']) || !empty($panel['rows'])) {
                 $rows = [];
-                $addedBefore = false;
 
                 foreach ($panel['rows'] as $key => $row) {
                     if (empty(array_diff($row, [false]))) {
+                        $rows[] = $row;
                         $needSave = true;
                         continue;
                     }
@@ -115,11 +115,7 @@ class Multilang extends AbstractService
                     $fullWidthRow = count($row) == 1;
 
                     foreach ($row as $field) {
-                        if (!$addedBefore) {
-                            $newRow[] = $field;
-                        } else {
-                            $addedBefore = false;
-                        }
+                        $newRow[] = $field;
 
                         if (is_array($field) && in_array($field['name'], $multiLangFields)) {
                             foreach ($locales as $locale) {
@@ -137,9 +133,8 @@ class Multilang extends AbstractService
                     }
 
                     if (!$fullWidthRow && count($newRow) % 2 != 0) {
-                        if ($key + 1 < count($panel['rows'])) {
-                            $newRow[] = $panel['rows'][$key + 1][0];
-                            $addedBefore = true;
+                        if ($newRow[count($newRow) - 1] === false) {
+                            array_pop($newRow);
                         } else {
                             $newRow[] = false;
                         }
