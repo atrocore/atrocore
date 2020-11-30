@@ -162,7 +162,14 @@ class Attachment extends Record
         $attachment->md5 = md5($attachment->contents);
         $attachment->size = mb_strlen($attachment->contents);
 
-        $entity = $this->getRepository()->where(['md5' => $attachment->md5])->findOne();
+        $duplicateParam = $this->getConfig()->get('attachmentDuplicates', 'notAllowByContent');
+
+        if ($duplicateParam == 'notAllowByContent') {
+            $entity = $this->getRepository()->where(['md5' => $attachment->md5])->findOne();
+        } elseif ($duplicateParam == 'notAllowByContentAndName') {
+            $entity = $this->getRepository()->where(['md5' => $attachment->md5, 'name' => $attachment->name])->findOne();
+        }
+
         if (empty($entity)) {
             $entity = parent::createEntity(clone $attachment);
         }
