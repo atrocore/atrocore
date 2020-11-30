@@ -38,6 +38,8 @@ Espo.define('treo-core:views/record/detail', 'class-replace!treo-core:views/reco
 
         panelNavigationView: 'treo-core:views/record/panel-navigation',
 
+        fetchOnModelAfterSaveError: true,
+
         events: _.extend({
             'click a[data-action="collapseAllPanels"]': function (e) {
                 this.collapseAllPanels('hide');
@@ -94,7 +96,9 @@ Espo.define('treo-core:views/record/detail', 'class-replace!treo-core:views/reco
         afterSaveError: function () {
             Dep.prototype.afterSaveError.call(this);
 
-            this.model.fetch();
+            if (this.fetchOnModelAfterSaveError) {
+                this.model.fetch();
+            }
         },
 
         applyOverviewFilters() {
