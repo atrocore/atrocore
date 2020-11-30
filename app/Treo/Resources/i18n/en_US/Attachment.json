@@ -1,25 +1,28 @@
 {
-    "fields": {
-        "global": "Global",
-        "hash_md5": "md5 Hash",
-        "storageFilePath": "Storage File Path",
-        "tmpPath": "Temp Path",
-        "contents": "Contents"
-    },
-    "labels": {
-        "Create Attachment": "Create Attachment"
-    },
-    "links": {
-        "related": "Related"
-    },
-    "options": {
-        "role": {
-            "Attachment": "Attachment",
-            "Inline Attachment": "Inline Attachment",
-            "Import File": "Import File",
-            "Export File": "Export File",
-            "Mail Merge": "Mail Merge",
-            "Mass Pdf": "Mass PDF"
-        }
+  "fields": {
+    "global": "Global",
+    "md5": "md5 Hash",
+    "storageFilePath": "Storage File Path",
+    "tmpPath": "Temp Path",
+    "contents": "Contents"
+  },
+  "labels": {
+    "Create Attachment": "Create Attachment"
+  },
+  "links": {
+    "related": "Related"
+  },
+  "options": {
+    "role": {
+      "Attachment": "Attachment",
+      "Inline Attachment": "Inline Attachment",
+      "Import File": "Import File",
+      "Export File": "Export File",
+      "Mail Merge": "Mail Merge",
+      "Mass Pdf": "Mass PDF"
     }
+  },
+  "exceptions": {
+    "File uploading failed.": "File uploading failed."
+  }
 }

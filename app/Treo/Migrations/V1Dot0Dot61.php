@@ -33,11 +33,42 @@
 
 declare(strict_types=1);
 
-namespace Treo\Repositories;
+namespace Treo\Migrations;
+
+use Treo\Core\Migration\Base;
 
 /**
- * Class Attachment
+ * Class V1Dot0Dot61
  */
-class Attachment extends \Espo\Repositories\Attachment
+class V1Dot0Dot61 extends Base
 {
+    /**
+     * @inheritDoc
+     */
+    public function up(): void
+    {
+        $this->execute("ALTER TABLE `attachment` ADD md5 VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
+        $this->execute("CREATE INDEX IDX_MD5 ON `attachment` (md5)");
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function down(): void
+    {
+        $this->execute("DROP INDEX IDX_MD5 ON `attachment`");
+        $this->execute("ALTER TABLE `attachment` DROP md5");
+    }
+
+    /**
+     * @param string $sql
+     */
+    protected function execute(string $sql)
+    {
+        try {
+            $this->getPDO()->exec($sql);
+        } catch (\Throwable $e) {
+            // ignore all
+        }
+    }
 }
