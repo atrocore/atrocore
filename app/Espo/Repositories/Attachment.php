@@ -202,7 +202,7 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
     {
         parent::afterRemove($entity, $options);
 
-        $duplicateCount = $this->where(['OR' => [['sourceId' => $entity->getSourceId()], ['id' => $entity->getSourceId()]],])->count();
+        $duplicateCount = $this->where(['OR' => [['sourceId' => $entity->getSourceId()], ['id' => $entity->getSourceId()]]])->count();
         if ($duplicateCount === 0) {
             $this->getFileStorageManager()->unlink($entity);
         }
