@@ -5,7 +5,8 @@
     "treoId": "ID",
     "isStreamSide": "Ist Aktivitätenpanel seitlich platziert",
     "isStreamPanelFirst": "Ist Aktivitätenpanel zuerst",
-    "unitsOfMeasure": "Maßeinheiten"
+    "unitsOfMeasure": "Maßeinheiten",
+    "attachmentDuplicates": "Asset-Duplikat"
   },
   "tooltips": {
     "aclAllowDeleteCreated": "Benutzer können die von ihnen erstellte Datensätze entfernen, auch wenn sie keinen Löschzugriff haben.",
@@ -14,6 +15,9 @@
   },
   "labels": {
     "Admin Notifications": "Admin Notifications",
-    "System Notifications": "System-Meldungen"
+    "System Notifications": "System-Meldungen",
+    "notAllowByContent": "Nicht zulassen, nach Dateiinhalt prüfen",
+    "notAllowByContentAndName": "Nicht zulassen, nach Dateinamen + Dateiinhalt prüfen",
+    "allow": "Zulassen"
   }
 }

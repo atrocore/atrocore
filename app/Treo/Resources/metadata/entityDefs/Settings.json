@@ -27,6 +27,15 @@
     "unitsOfMeasure": {
       "type": "jsonObject",
       "view": "treo-core:views/settings/fields/unit-configuration"
+    },
+    "attachmentDuplicates": {
+      "type": "enum",
+      "default": "notAllowByContent",
+      "options": [
+        "notAllowByContent",
+        "notAllowByContentAndName",
+        "allow"
+      ]
     }
   }
 }

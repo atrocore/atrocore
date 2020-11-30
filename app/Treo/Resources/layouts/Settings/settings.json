@@ -5,7 +5,7 @@
             [{"name": "treoId"}, {"name": "useCache"}],
             [{"name": "exportDisabled"}, {"name": "siteUrl"}],
             [{"name": "followCreatedEntities"}, {"name": "globalSearchEntityList"}],
-            [{"name": "aclStrictMode"}, false],
+            [{"name": "aclStrictMode"}, {"name": "attachmentDuplicates"}],
             [{"name": "textFilterUseContainsForVarchar"}, {"name": "aclAllowDeleteCreated"}]
         ]
     },

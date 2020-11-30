@@ -68,6 +68,15 @@ class Attachment extends Record
         return $attachment;
     }
 
+    /**
+     * @param \stdClass $attachment
+     *
+     * @return mixed
+     *
+     * @throws BadRequest
+     * @throws Error
+     * @throws Forbidden
+     */
     public function createEntity($attachment)
     {
         if (!empty($attachment->file)) {
@@ -146,7 +155,24 @@ class Attachment extends Record
             }
         }
 
-        $entity = parent::createEntity(clone $attachment);
+        if (empty($attachment->contents)) {
+            throw new BadRequest($this->getInjection('language')->translate('File uploading failed.', 'exceptions', 'Attachment'));
+        }
+
+        $attachment->md5 = md5($attachment->contents);
+        $attachment->size = mb_strlen($attachment->contents);
+
+        $duplicateParam = $this->getConfig()->get('attachmentDuplicates', 'notAllowByContent');
+
+        if ($duplicateParam == 'notAllowByContent') {
+            $entity = $this->getRepository()->where(['md5' => $attachment->md5])->findOne();
+        } elseif ($duplicateParam == 'notAllowByContentAndName') {
+            $entity = $this->getRepository()->where(['md5' => $attachment->md5, 'name' => $attachment->name])->findOne();
+        }
+
+        if (empty($entity)) {
+            $entity = parent::createEntity(clone $attachment);
+        }
 
         if (!empty($attachment->file)) {
             $entity->clear('contents');
@@ -169,6 +195,16 @@ class Attachment extends Record
         if ($storage && !$this->getMetadata()->get(['app', 'fileStorage', 'implementationClassNameMap', $storage])) {
             $entity->clear('storage');
         }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('language');
     }
 }
 
