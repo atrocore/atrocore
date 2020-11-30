@@ -147,25 +147,7 @@ class UploadDir extends Base
             $attachment->set('storageFilePath', $storage);
         }
 
-        // prepare path
-        $path = self::BASE_PATH . "{$storage}/" . $attachment->get('name');
-
-        // move old files to new dirs if it needs
-        if (!file_exists($path) && !$attachment->isNew()) {
-            // prepare id
-            $id = $attachment->get('id');
-
-            // prepare old path
-            $oldPath = "data/upload/$id";
-
-            if (file_exists($oldPath) && $this->getFileManager()->move($oldPath, $path)) {
-                $this
-                    ->getInjection('entityManager')
-                    ->nativeQuery("UPDATE attachment SET storage='UploadDir', storage_file_path='$storage' WHERE id='$id'");
-            }
-        }
-
-        return $path;
+        return self::BASE_PATH . "{$storage}/" . $attachment->get('name');
     }
 
     /**

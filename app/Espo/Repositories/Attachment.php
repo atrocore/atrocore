@@ -35,7 +35,6 @@ declare(strict_types=1);
 
 namespace Espo\Repositories;
 
-use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 use Treo\Core\FilePathBuilder;
 use Treo\Core\FileStorage\Storages\UploadDir;
@@ -57,19 +56,6 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
         $storage = $entity->get('storage');
         if (!$storage) {
             $entity->set('storage', $this->getConfig()->get('defaultFileStorage', null));
-        }
-
-        if ($entity->isNew()) {
-            if (!$entity->has("contents")) {
-                throw new BadRequest($this->translate('File uploading failed.', 'exceptions', 'Attachment'));
-            }
-
-            $contents = $entity->get('contents');
-
-            $entity->set('md5', md5($contents));
-            if (!$entity->has('size')) {
-                $entity->set('size', mb_strlen($contents));
-            }
         }
     }
 
@@ -193,7 +179,6 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
         $this->addDependency('filePathBuilder');
         $this->addDependency('fileManager');
     }
-
 
     /**
      * @inheritDoc
