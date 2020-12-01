@@ -15359,7 +15359,8 @@ ul.dropdown-menu > li.checkbox:last-child {
     border-top-width: 0
 }
 
-.list-group-item:first-child {
+.list-group-item:first-child,
+.list-group > .list-group-item.hidden + .list-group-item:not(.hidden)  {
     border-top-width: 1px
 }
 

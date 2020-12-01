@@ -93,7 +93,7 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
 
             let deletedRow = $("input[value=todel]").parents('.list-group-item');
             deletedRow.find('a[data-action=removeGroup]').remove();
-            deletedRow.hide();
+            deletedRow.addClass('hidden');
 
             let removeGroupButtons = $('a[data-action=removeGroup]');
             if (removeGroupButtons.length === 1) {
