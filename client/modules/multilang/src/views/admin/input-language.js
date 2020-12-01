@@ -41,10 +41,7 @@ Espo.define('multilang:views/admin/input-language', 'views/settings/record/edit'
             this.buttonList.push({name: 'updateLayouts', label: 'Update Layouts', style: 'warning'});
 
             this.listenTo(this.model, 'after:save', function () {
-                Espo.Ui.success(this.translate('successAndReload', 'messages', 'Global').replace('{value}', 2));
-                setTimeout(function () {
-                    window.location.reload(true);
-                }, 2000);
+                Espo.Ui.success(this.translate('successAndReload', 'messages', 'Global'));
             }.bind(this));
         },
 
@@ -77,10 +74,7 @@ Espo.define('multilang:views/admin/input-language', 'views/settings/record/edit'
                 cancelText: this.translate('Cancel', 'labels', 'Global')
             }, () => {
                 this.ajaxPostRequest('Multilang/action/updateLayouts').then(response => {
-                    this.notify(this.translate('successAndReload', 'messages', 'Global').replace('{value}', 2), 'success', 3000);
-                    setTimeout(function () {
-                        window.location.reload(true);
-                    }, 2000);
+                    this.notify(this.translate('successAndReload', 'messages', 'Global'), 'success', 3000);
                 });
             })
         }
