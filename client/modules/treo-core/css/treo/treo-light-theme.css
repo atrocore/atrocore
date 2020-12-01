@@ -19982,9 +19982,9 @@ select.input-sm {
 }
 
 select {
-  -webkit-appearance: button;
-  -moz-appearance: button;
-  appearance: button;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
   background-image: url("../../img/arrow-down.png") !important;
   background-position: center right 5px;
   background-repeat: no-repeat;
