@@ -21036,10 +21036,6 @@ body,
   border-top-width: 1px;
 }
 
-.form-group {
-  margin-bottom: 6px;
-}
-
 .detail .record-buttons ~ .edit-buttons.hidden ~ .row .panel-body .form-group .field {
   padding-bottom: 8px;
   border-bottom: 1px solid #EEEEEE;
@@ -21057,6 +21053,10 @@ body,
 
 .nav-pills > li + li {
   margin-left: 5px;
+}
+
+.entity-container .cell {
+  padding: 0;
 }
 
 .cell label,
