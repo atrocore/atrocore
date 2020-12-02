@@ -48,6 +48,12 @@ Espo.define('views/admin/field-manager/list', 'view', function (Dep) {
                 }
             });
 
+            if (this.scope === 'Asset') {
+                this.typeList = this.typeList.filter(function (type) {
+                    return type !== 'asset';
+                });
+            }
+
             return {
                 scope: this.scope,
                 fieldDefsArray: fieldDefsArray,
