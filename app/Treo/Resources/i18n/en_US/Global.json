@@ -249,7 +249,7 @@
     "Field value should be unique.": "Field value should be unique."
   },
   "messages": {
-    "successAndReload": "Changes saved. This page will be reloaded after {value} seconds",
+    "successAndReload": "Changes saved. Please refresh the page!",
     "massUpdateResult": "Updating {count} records",
     "isRequiredAndUnique": "{field} is required and should be unique.",
     "relationsAdded": "Relation was successfully added.",
