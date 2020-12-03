@@ -123,12 +123,12 @@
     },
     "fieldsFilter": {
       "": "Alle Felder",
-      "empty": "Leerfelder",
-      "emptyAndRequired": "Leere Benötigte Felder"
+      "empty": "Leere Felder",
+      "emptyAndRequired": "Leere Pflichtfelder"
     },
     "localesFilter": {
       "": "Alle Locales",
-      "showGenericFields": "Generische Felder anzeigen"
+      "showGenericFields": "Hauptsprachfelder anzeigen"
     },
     "phoneNumber": {
       "Other": "Andere Nummer"
@@ -240,7 +240,7 @@
     "streamPostInfo": "Schreiben Sie <strong>@username</strong> um Benutzer in der Post zu nennen.\\nVerfügbare Syntax:`<code>code</code>````<code>multiline code</code>```**<strong>strong text</strong>***<em>emphasized text</em>*~~<del>deleted text</del>~~> blockquote[link text](url)",
     "writeMessageToSelf": "Nachricht bei eigenen Aktivitäten erfassen",
     "writeYourCommentHere": "Notiz hier erfassen",
-    "successAndReload": "Die Änderungen wurden gespeichert. Die Seite wird in {value} Sekunden neu geladen.",
+    "successAndReload": "Die Änderungen wurden gespeichert. Bitte aktualisieren Sie die Seite!",
     "massUpdateResult": "{count} Einträge werden aktualisiert",
     "isRequiredAndUnique": "{field} Feld ist erforderlich und sollte eindeutig sein.",
     "relationsAdded": "Die Beziehung wurde erfolgreich hinzugefügt.",
