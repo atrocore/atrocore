@@ -128,7 +128,7 @@
     },
     "localesFilter": {
       "": "Alle Locales",
-      "showGenericFields": "Generische Felder anzeigen"
+      "showGenericFields": "Hauptsprachfelder anzeigen"
     },
     "phoneNumber": {
       "Other": "Andere Nummer"
