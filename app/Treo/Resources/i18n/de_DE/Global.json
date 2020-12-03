@@ -123,8 +123,8 @@
     },
     "fieldsFilter": {
       "": "Alle Felder",
-      "empty": "Leerfelder",
-      "emptyAndRequired": "Leere Benötigte Felder"
+      "empty": "Leere Felder",
+      "emptyAndRequired": "Leere Pflichtfelder"
     },
     "localesFilter": {
       "": "Alle Locales",
