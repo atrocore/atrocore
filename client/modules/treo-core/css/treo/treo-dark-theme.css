@@ -19698,7 +19698,6 @@ button.category:focus {
         padding-right: 0;
         padding-left: 0;
         min-height: 79.6vh;
-        border-right: 1px solid #dcdcdc;
     }
 
     .modal-dialog .edit > .row > .overview.col-sm-12,
