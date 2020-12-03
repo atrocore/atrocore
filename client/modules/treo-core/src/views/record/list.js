@@ -180,7 +180,7 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
             }
 
             if (this.dragableListRows) {
-                this.listenTo(this.collection, 'listSorted', () => this.collection.fetch());
+                // this.listenTo(this.collection, 'listSorted', () => this.collection.fetch());
             }
         },
 
