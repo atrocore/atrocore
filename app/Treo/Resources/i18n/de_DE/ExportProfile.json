@@ -4,20 +4,20 @@
   },
   "fields": {
     "column": "Spalte",
-    "createdAt": "erstellt am",
-    "createdBy": "erstellt von",
-    "csvTextQualifier": "csv Textqualifizierer",
-    "csvFieldDelimiter": "csv Feldtrennzeichen",
+    "createdAt": "Erstellt am",
+    "createdBy": "Erstellt von",
+    "csvTextQualifier": "CSV Textqualifizierer",
+    "csvFieldDelimiter": "CSV Feldtrennzeichen",
     "entity": "Entität",
     "field": "Feld",
-    "isActive": "ist aktiv",
+    "isActive": "Ist aktiv",
     "isFileHeaderRow": "Datei-Kopfzeile",
-    "modifiedAt": "geändert am",
-    "modifiedBy": "geändert von"
+    "modifiedAt": "Geändert am",
+    "modifiedBy": "Geändert von"
   },
   "links": {
-    "createdBy": "erstellt von",
-    "modifiedBy": "geändert von"
+    "createdBy": "Erstellt von",
+    "modifiedBy": "Geändert von"
   },
   "exceptions": {
     "exportValidationFailed": "Export-Validierung ist fehlgeschlagen"
