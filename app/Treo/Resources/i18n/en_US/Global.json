@@ -129,7 +129,7 @@
     },
     "localesFilter": {
       "": "All Locales",
-      "showGenericFields": "Show Generic Fields"
+      "showGenericFields": "Show Main Locale Fields"
     }
   },
   "measure": {
