@@ -14671,6 +14671,7 @@ blockquote {
 
 .form-group.hidden-cell {
   margin-bottom: 0;
+  min-height: 0 !important;
 }
 
 .hidden-cell div.field {
