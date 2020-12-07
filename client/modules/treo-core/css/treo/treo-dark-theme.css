@@ -19213,20 +19213,12 @@ ul.dropdown-menu > li.checkbox {
 }
 
 .page-header .header-buttons .filter-cell .dropdown-enum-menu {
-    width: 100%;
     min-width: 180px;
-    overflow-y: auto;
     max-height: 50vh;
 }
 
 .page-header .header-buttons .filter-cell .dropdown-enum-menu > li > a {
     padding: 10px 15px;
-}
-
-.page-header .header-buttons .filter-cell .dropdown-enum-menu > li > a,
-.page-header .header-buttons .filter-cell .dropdown-enum-menu > li > a > .field {
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .page-header .header-buttons .filter-cell .dropdown-enum-menu > li > a > .field[data-name="showGenericFields"] .control-label,
