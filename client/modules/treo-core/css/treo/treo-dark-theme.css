@@ -14896,7 +14896,8 @@ blockquote {
 }
 
 .form-group.hidden-cell {
-    margin-bottom: 0
+    margin-bottom: 0;
+    min-height: 0 !important;
 }
 
 .hidden-cell div.field {
@@ -19212,20 +19213,12 @@ ul.dropdown-menu > li.checkbox {
 }
 
 .page-header .header-buttons .filter-cell .dropdown-enum-menu {
-    width: 100%;
     min-width: 180px;
-    overflow-y: auto;
     max-height: 50vh;
 }
 
 .page-header .header-buttons .filter-cell .dropdown-enum-menu > li > a {
     padding: 10px 15px;
-}
-
-.page-header .header-buttons .filter-cell .dropdown-enum-menu > li > a,
-.page-header .header-buttons .filter-cell .dropdown-enum-menu > li > a > .field {
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .page-header .header-buttons .filter-cell .dropdown-enum-menu > li > a > .field[data-name="showGenericFields"] .control-label,
@@ -19704,6 +19697,7 @@ button.category:focus {
     .modal-dialog .edit > .row > .overview.col-sm-12,
     .modal-dialog .detail > .row > .overview.col-sm-12  {
         min-height: unset;
+        border-right: 0;
     }
 
     #main .edit > .row,
