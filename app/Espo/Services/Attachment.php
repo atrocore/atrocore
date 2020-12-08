@@ -172,10 +172,10 @@ class Attachment extends Record
 
         if (empty($entity)) {
             $entity = parent::createEntity(clone $attachment);
-        }
 
-        if (!empty($attachment->file)) {
-            $entity->clear('contents');
+            if (!empty($attachment->file)) {
+                $entity->clear('contents');
+            }
         }
 
         return $entity;
