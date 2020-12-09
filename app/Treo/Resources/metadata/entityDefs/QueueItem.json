@@ -39,14 +39,14 @@
         "Canceled",
         "Closed"
       ],
-      "optionColors": {
-        "Pending": "00AFFF",
-        "Running": "FFE208",
-        "Success": "1DFF08",
-        "Failed": "FF0000",
-        "Canceled": "4F4F4F",
-        "Closed": "6E6E6E"
-      }
+      "optionColors": [
+        "00AFFF",
+        "FFE208",
+        "1DFF08",
+        "FF0000",
+        "4F4F4F",
+        "6E6E6E"
+      ]
     },
     "actions": {
       "type": "jsonObject",

@@ -25,10 +25,10 @@
         "buyable",
         "available"
       ],
-      "optionColors": {
-        "buyable": "FFFF00",
-        "available": "00FF00"
-      },
+      "optionColors": [
+        "FFFF00",
+        "00FF00"
+      ],
       "default": "buyable",
       "readOnly": true
     },
