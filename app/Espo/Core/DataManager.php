@@ -85,6 +85,9 @@ class DataManager
             throw new Exceptions\Error("Error while clearing cache");
         }
 
+        // create metadata cache
+        $this->getContainer()->get('metadata')->createCache();
+
         $this->updateCacheTimestamp();
 
         return $result;

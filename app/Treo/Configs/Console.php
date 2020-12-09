@@ -41,7 +41,6 @@ return [
     "list"                         => Console\ListCommand::class,
     "clear cache"                  => Console\ClearCache::class,
     "cleanup"                      => Console\Cleanup::class,
-    "rebuild"                      => Console\Rebuild::class,
     "sql diff --show"              => Console\SqlDiff::class,
     "sql diff --run"               => Console\SqlDiffRun::class,
     "cron"                         => Console\Cron::class,

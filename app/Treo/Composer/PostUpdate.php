@@ -142,12 +142,6 @@ class PostUpdate
         if ($this->byLockFile) {
             file_put_contents('data/old-composer.lock', file_get_contents(ComposerService::$composerLock));
         }
-
-        // enable use cache param
-        if (!empty($config = $this->getConfig())) {
-            $config->set('useCache', $config->get('beforeUpdateUseCache', true));
-            $config->save();
-        }
     }
 
     /**
@@ -420,21 +414,8 @@ class PostUpdate
 
         self::renderLine('Cache clearing...');
 
-        // keep use cache param
-        $config->set('beforeUpdateUseCache', $config->get('useCache', true));
-
-        // disabling use cache param
-        $config->set('useCache', false);
-        $config->save();
-
-        // wait for file saving
-        sleep(2);
-
         // clear cache
         $this->getContainer()->get('dataManager')->clearCache();
-
-        // wait for cache clearing
-        sleep(2);
 
         self::renderLine('Done!');
     }

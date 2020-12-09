@@ -220,23 +220,31 @@ class Metadata extends Base
     }
 
     /**
+     * Caching metadata
+     */
+    public function createCache()
+    {
+        $this->objInit(true);
+
+        // create metadata cache file
+        file_put_contents($this->treoCacheFile, json_encode($this->objData));
+    }
+
+    /**
      * @param bool $reload
      */
     protected function objInit($reload = false)
     {
         // prepare reload
-        if (!$this->useCache) {
+        if (!$this->useCache || substr(php_sapi_name(), 0, 3) == 'cli') {
             $reload = true;
         }
 
         if (!$reload && file_exists($this->treoCacheFile)) {
             $this->objData = json_decode(file_get_contents($this->treoCacheFile));
         } else {
-            // load espo
-            $content = $this->unify(CORE_PATH . '/Espo/Resources/metadata');
-
-            // load treo
-            $content = DataUtil::merge($content, $this->unify(CORE_PATH . '/Treo/Resources/metadata'));
+            // load core
+            $content = DataUtil::merge($this->unify(CORE_PATH . '/Espo/Resources/metadata'), $this->unify(CORE_PATH . '/Treo/Resources/metadata'));
 
             // load modules
             foreach ($this->getModules() as $module) {
@@ -247,16 +255,6 @@ class Metadata extends Base
             $content = DataUtil::merge($content, $this->unify('custom/Espo/Custom/Resources/metadata'));
 
             $this->objData = $this->addAdditionalFieldsObj($content);
-
-            if ($this->useCache) {
-                // create cache dir
-                if (!file_exists('data/cache')) {
-                    mkdir('data/cache');
-                }
-
-                // create metadata cache file
-                file_put_contents($this->treoCacheFile, json_encode($this->objData));
-            }
         }
 
         // dispatch an event
