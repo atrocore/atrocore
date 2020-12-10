@@ -1,11 +1,11 @@
 {
   "labels": {
-    "multiLanguagesSettings": "Einstellungen für Mehrsprachigkeit.",
+    "multiLanguagesSettings": "Einstellungen für Mehrsprachigkeit",
     "multiLanguages": "Mehrsprachigkeit"
   },
   "descriptions": {
     "inputLanguage": "Spracheingabe für übersetzbare Felder.",
-    "multiLanguagesSettings": "Einstellungen für Mehrsprachigkeit."
+    "multiLanguagesSettings": "Einstellungen für Mehrsprachigkeit"
   },
   "fields": {
     "isMultilang": "Mehrsprachig"
