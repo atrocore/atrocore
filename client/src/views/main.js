@@ -90,6 +90,7 @@ Espo.define('views/main', 'view', function (Dep) {
                         }
                         item.name = item.name || item.action;
                         item.action = item.action || this.name;
+                        item.cssStyle = item.cssStyle || '';
                     }, this);
                 }, this);
             }
