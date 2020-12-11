@@ -1,7 +1,6 @@
 {
   "fields": {
     "aclAllowDeleteCreated": "das Entfernen von eigenerstellten Datensätzen erlauben",
-    "isMultilangActive": "Aktiv",
     "treoId": "ID",
     "isStreamSide": "Ist Aktivitätenpanel seitlich platziert",
     "isStreamPanelFirst": "Ist Aktivitätenpanel zuerst",
