@@ -103,8 +103,14 @@ class Multilang extends AbstractService
 
             if (isset($panel['rows']) || !empty($panel['rows'])) {
                 $rows = [];
+                $skip = false;
 
                 foreach ($panel['rows'] as $key => $row) {
+                    if ($skip) {
+                        $skip = false;
+                        continue;
+                    }
+
                     if (empty(array_diff($row, [false]))) {
                         $rows[] = $row;
                         $needSave = true;
@@ -118,16 +124,38 @@ class Multilang extends AbstractService
                         $newRow[] = $field;
 
                         if (is_array($field) && in_array($field['name'], $multiLangFields)) {
-                            foreach ($locales as $locale) {
-                                $multilangFieldName = $field['name'] . $locale;
+                            $localeFields = $this->getMultiLangLocalesFields($field['name']);
 
-                                if (!in_array($multilangFieldName, $exists)) {
-                                    $multilangField = $field;
-                                    $multilangField['name'] = $multilangFieldName;
-                                    $newRow[] = $multilangField;
+                            if (!empty($needToAdd = array_diff($localeFields, $exists))) {
+                                $nextRow = $key != count($panel['rows']) - 1 ? $panel['rows'][$key + 1] : null;
 
-                                    $needSave = true;
+                                if (!$fullWidthRow && !empty($nextRow)) {
+                                    if (in_array(false, $nextRow)) {
+                                        $item = null;
+                                        foreach ($nextRow as $f) {
+                                            if (is_array($f)) {
+                                                $item = $f;
+                                            }
+                                        }
+
+                                        if (in_array($item['name'], $localeFields)) {
+                                            $newField = $field;
+                                            $newField['name'] = array_shift($needToAdd);
+                                            $newRow[] = $newField;
+                                            $newRow[] = $item;
+
+                                            $skip = true;
+                                        }
+                                    }
                                 }
+
+                                foreach ($needToAdd as $item) {
+                                    $newField = $field;
+                                    $newField['name'] = $item;
+                                    $newRow[] = $newField;
+                                }
+
+                                $needSave = true;
                             }
                         }
                     }
@@ -168,6 +196,22 @@ class Multilang extends AbstractService
             if (!empty($data['isMultilang'])) {
                 $result[] = $field;
             }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param string $fieldName
+     *
+     * @return array
+     */
+    protected function getMultiLangLocalesFields(string $fieldName): array
+    {
+        $result = [];
+
+        foreach ($this->getPreparedLocalesCodes() as $locale) {
+            $result[] = $fieldName . $locale;
         }
 
         return $result;
