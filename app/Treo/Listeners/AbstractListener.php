@@ -35,6 +35,7 @@ declare(strict_types=1);
 
 namespace Treo\Listeners;
 
+use Espo\Core\Exceptions\Error;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Services\Base as BaseService;
 use Treo\Core\Utils\Config;
@@ -96,9 +97,14 @@ abstract class AbstractListener
      * Get language
      *
      * @return Language
+     * @throws Error
      */
     protected function getLanguage(): Language
     {
+        if (is_null($this->getContainer()->get('preferences'))) {
+            throw new Error('No preferences defined');
+        }
+
         return $this->getContainer()->get('language');
     }
 
