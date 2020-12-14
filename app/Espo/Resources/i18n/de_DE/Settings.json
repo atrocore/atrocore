@@ -1,6 +1,6 @@
 {
   "fields": {
-    "useCache": "Benutzer Cache",
+    "useCache": "Cache nutzen",
     "dateFormat": "Datumsformat",
     "timeFormat": "Zeitformat",
     "timeZone": "Zeitzone",
