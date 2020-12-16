@@ -41,8 +41,13 @@
     "skipOrmDefs": true
   },
   "personalData": true,
-  "typeNatures": {
-    "File": "File",
-    "Image": "Image"
-  }
+  "types": [
+    "File"
+  ],
+  "hasPreviewExtensions": [
+    "jpg",
+    "jpeg",
+    "gif",
+    "png"
+  ]
 }

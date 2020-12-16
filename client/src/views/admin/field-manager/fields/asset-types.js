@@ -37,13 +37,9 @@ Espo.define('views/admin/field-manager/fields/asset-types', 'views/fields/enum',
         prohibitedEmptyValue: true,
 
         setupOptions: function () {
-            const options = [];
-            $.each(this.getMetadata().get('fields.asset.typeNatures') || [], function(key, value) {
-                options.push(key);
-            });
-
-            this.params.options = options;
+            this.params.options = this.getMetadata().get('fields.asset.types') || [];
         }
+
     });
 
 });
