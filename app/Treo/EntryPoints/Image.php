@@ -64,7 +64,7 @@ class Image extends AbstractEntryPoint
         }
 
         $type = $_GET['type'] ?? 'attachment';
-        $size = !empty($_GET['size']) ? $_GET['size'] : null;
+        $size = $_GET['size'] ?? null;
 
         $this->show($_GET['id'], $type, $size);
     }
