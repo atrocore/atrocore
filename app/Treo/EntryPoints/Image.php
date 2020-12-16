@@ -73,20 +73,19 @@ class Image extends AbstractEntryPoint
      * @param mixed  $id
      * @param string $type
      * @param mixed  $size
-     * @param bool   $disableAccessCheck
      *
      * @throws Error
      * @throws Forbidden
      * @throws NotFound
      */
-    protected function show($id, $type, $size, $disableAccessCheck = false)
+    protected function show($id, $type, $size)
     {
         $attachment = $this->getAttachment($type, $id);
         if (empty($attachment)) {
             throw new NotFound();
         }
 
-        if (!$disableAccessCheck && !$this->checkAttachment($attachment)) {
+        if (empty($attachment->get('tmpPath')) && !$this->checkAttachment($attachment)) {
             throw new Forbidden();
         }
 
