@@ -63,10 +63,10 @@ class Image extends AbstractEntryPoint
             throw new BadRequest();
         }
 
-        // prepare size
+        $type = $_GET['type'] ?? 'attachment';
         $size = !empty($_GET['size']) ? $_GET['size'] : null;
 
-        $this->show($_GET['id'], $_GET['type'] ?? 'attachment', $size);
+        $this->show($_GET['id'], $type, $size);
     }
 
     /**
