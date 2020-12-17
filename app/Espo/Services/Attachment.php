@@ -170,6 +170,10 @@ class Attachment extends Record
             $entity = $this->getRepository()->where(['md5' => $attachment->md5, 'tmpPath' => null, 'name' => $attachment->name])->findOne();
         }
 
+        if (!empty($entity) && ($attachment->parentType == 'Asset' || $attachment->relatedType == 'Asset') && $attachment->field == 'file') {
+            throw new BadRequest($this->getInjection('language')->translate('Such asset already exists.', 'exceptions', 'Asset'));
+        }
+
         if (empty($entity)) {
             $entity = parent::createEntity(clone $attachment);
 
