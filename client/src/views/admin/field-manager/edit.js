@@ -290,29 +290,7 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
             }.bind(this));
         },
 
-        togglePreviewSize: function () {
-            let assetType = this.model.get('assetType');
-            if (!assetType) {
-                $.each(this.getMetadata().get('fields.asset.typeNatures') || [], function (name, nature) {
-                    assetType = name;
-                    return false;
-                });
-            }
-
-            if (this.getMetadata().get('fields.asset.typeNatures.' + assetType) === 'Image') {
-                this.showField('previewSize');
-            } else {
-                this.hideField('previewSize');
-            }
-        },
-
         afterRender: function () {
-            if (this.model.get('type') === 'asset') {
-                this.togglePreviewSize();
-                this.getView('assetType').on('change', function (m) {
-                    this.togglePreviewSize();
-                }, this);
-            }
             this.getView('name').on('change', function (m) {
                 var name = this.model.get('name');
                 var label = name;

@@ -30,25 +30,44 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/fields/asset', 'views/fields/file', function (Dep) {
+Espo.define('views/fields/asset', 'views/fields/image', function (Dep) {
 
     return Dep.extend({
 
+        accept: false,
+
         setup: function () {
-
-            if (this.isImage()) {
-                this.type = 'image';
-                this.showPreview = true;
-                this.accept = ['image/*'];
-                this.defaultType = 'image/jpeg';
-            }
-
             Dep.prototype.setup.call(this);
+
+            this.switchPreview();
+
+            this.listenTo(this.model, 'after:save', function () {
+                this.switchPreview();
+                this.reRender();
+            }, this);
         },
 
-        isImage: function () {
-            const assetType = this.getMetadata().get('entityDefs.' + this.model.urlRoot + '.fields.' + this.defs.name + '.assetType');
-            return this.getMetadata().get('fields.asset.typeNatures.' + assetType) === 'Image';
+        hasPreview: function () {
+            const hasPreviewExtensions = this.getMetadata().get('fields.asset.hasPreviewExtensions') || [];
+            const fileExt = (this.model.get(this.name + 'Name') || '').split('.').pop().toLowerCase();
+
+            return $.inArray(fileExt, hasPreviewExtensions) !== -1;
+        },
+
+        getEditPreview: function (name, type, id) {
+            return name;
+        },
+
+        switchPreview: function () {
+            if (this.hasPreview()) {
+                this.type = 'image';
+                this.showPreview = true;
+                this.defaultType = 'image/jpeg';
+            } else {
+                this.type = 'file';
+                this.showPreview = false;
+                this.defaultType = false;
+            }
         },
 
     });

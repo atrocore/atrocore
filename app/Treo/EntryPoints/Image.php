@@ -43,8 +43,6 @@ use Treo\Entities\Attachment;
 
 /**
  * Class Image
- *
- * @package Treo\EntryPoints
  */
 class Image extends AbstractEntryPoint
 {
@@ -65,32 +63,37 @@ class Image extends AbstractEntryPoint
             throw new BadRequest();
         }
 
-        // prepare size
-        $size = !empty($_GET['size']) ? $_GET['size'] : null;
+        $type = $_GET['type'] ?? 'attachment';
+        $size = $_GET['size'] ?? null;
 
-        $this->show($_GET['id'], $size);
+        $this->show($_GET['id'], $type, $size);
     }
 
     /**
-     * @param mixed $id
-     * @param mixed $size
-     * @param bool  $disableAccessCheck
+     * @param mixed  $id
+     * @param string $type
+     * @param mixed  $size
      *
      * @throws Error
      * @throws Forbidden
      * @throws NotFound
      */
-    protected function show($id, $size, $disableAccessCheck = false)
+    protected function show($id, $type, $size)
     {
-        $attachment = $this->getEntityManager()->getEntity('Attachment', $id);
-
-        if (!$attachment) {
+        $attachment = $this->getAttachment($type, $id);
+        if (empty($attachment)) {
             throw new NotFound();
         }
 
-        if (!$disableAccessCheck && !$this->checkAttachment($attachment)) {
+        if (empty($attachment->get('tmpPath')) && !$this->checkAttachment($attachment)) {
             throw new Forbidden();
         }
+
+        // delegate to DAM
+        if (class_exists('\Dam\Core\Preview\Base')) {
+            return \Dam\Core\Preview\Base::init($attachment, $size, $this->getContainer())->show();
+        }
+
         $filePath = $this->getEntityManager()->getRepository('Attachment')->getFilePath($attachment);
 
         $fileType = $attachment->get('type');
@@ -321,5 +324,25 @@ class Image extends AbstractEntryPoint
         $sizes = $this->getMetadata()->get(['app', 'imageSizes'], []);
 
         return isset($sizes[$size]) ? $sizes[$size] : null;
+    }
+
+    /**
+     * @param string $type
+     * @param string $id
+     *
+     * @return Attachment|null
+     * @throws Error
+     */
+    protected function getAttachment($type, $id): ?Attachment
+    {
+        switch ($type) {
+            case "attachment" :
+                return $this->getEntityManager()->getEntity("Attachment", $id);
+                break;
+            case "asset":
+            default:
+                $asset = $this->getEntityManager()->getEntity("Asset", $id);
+                return $asset->get("file");
+        }
     }
 }
