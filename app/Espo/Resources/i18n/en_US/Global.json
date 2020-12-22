@@ -164,7 +164,6 @@
         "Update": "Update",
         "Save": "Save",
         "Edit": "Edit",
-        "View": "View",
         "Cancel": "Cancel",
         "Apply": "Apply",
         "Unlink": "Unlink",
@@ -237,7 +236,10 @@
         "View Personal Data": "View Personal Data",
         "Personal Data": "Personal Data",
         "Erase": "Erase",
-        "Move Over": "Move Over"
+        "Move Over": "Move Over",
+        "oneToMany": "One-to-Many",
+        "manyToOne": "Many-to-One",
+        "manyToMany": "Many-to-Many"
     },
     "messages": {
         "pleaseWait": "Please wait...",

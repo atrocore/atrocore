@@ -214,7 +214,10 @@
     "Convert to": "Umgewandelt zu",
     "View Personal Data": "Persönliche Daten anzeigen",
     "Personal Data": "Persönliche Daten",
-    "Erase": "Löschen"
+    "Erase": "Löschen",
+    "oneToMany": "One-to-Many",
+    "manyToOne": "Many-to-One",
+    "manyToMany": "Many-to-Many"
   },
   "messages": {
     "pleaseWait": "Bitte warten...",
