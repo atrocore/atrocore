@@ -178,10 +178,16 @@ class Layout extends \Espo\Core\Utils\Layout
                     break;
                 case 'detail':
                 case 'detailSmall':
-                    foreach ($data[0]['rows'] as $key => $row) {
-                        foreach ($row as $fieldKey => $fieldData) {
+                    for ($key = 0; $key < count($data[0]['rows']); $key++) {
+                        foreach ($data[0]['rows'][$key] as $fieldKey => $fieldData) {
                             if (isset($fieldData['name']) && !in_array($fieldData['name'], $fields)) {
                                 $data[0]['rows'][$key][$fieldKey] = false;
+
+                                if (empty(array_diff($data[0]['rows'][$key], [false]))) {
+                                    array_splice($data[0]['rows'], $key,1);
+                                    $key--;
+                                    continue 2;
+                                }
                             }
                         }
                     }

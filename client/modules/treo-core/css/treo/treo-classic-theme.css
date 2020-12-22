@@ -20926,14 +20926,19 @@ select.input-sm {
     line-height: normal;
 }
 
+select,
+.page-header .header-buttons .filter-cell .field .selected-element {
+    background-image: url("../../img/arrow-down.png") !important;
+    background-position: center right 5px;
+    background-repeat: no-repeat;
+    -webkit-background-size: 12px 12px;
+    background-size: 12px;
+}
+
 select {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    background-image: url("../../img/arrow-down.png") !important;
-    background-position: center right 5px;
-    background-repeat: no-repeat;
-    background-size: 12px;
     padding-right: 20px !important;
 }
 
