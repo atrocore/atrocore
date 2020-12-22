@@ -141,9 +141,9 @@ Espo.define('treo-core:views/record/detail-side', 'class-replace!treo-core:views
             let scopeDefs = this.getMetadata().get(['scopes', this.scope]) || {};
 
             this.defaultPanelDefs.options.fieldList = this.defaultPanelDefs.options.fieldList.filter(fieldDefs => {
-                return (scopeDefs.hasOwner && fieldDefs.name === 'ownerUser')
-                    || (scopeDefs.hasAssignedUser && fieldDefs.name === ':assignedUser')
-                    || (scopeDefs.hasTeam && fieldDefs.name === 'teams');
+                return (scopeDefs.hasOwner && fieldDefs.name === 'ownerUser' && this.getAcl().check('User', 'read'))
+                    || (scopeDefs.hasAssignedUser && fieldDefs.name === ':assignedUser' && this.getAcl().check('User', 'read'))
+                    || (scopeDefs.hasTeam && fieldDefs.name === 'teams' && this.getAcl().check('Team', 'read'));
             });
 
             let hasAnyField = (this.defaultPanelDefs.options.fieldList || []).some(fieldDefs => this.model.hasLink(fieldDefs.name));
