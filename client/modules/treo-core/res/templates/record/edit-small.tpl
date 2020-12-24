@@ -23,8 +23,10 @@
             <div class="extra">{{{extra}}}</div>
             <div class="bottom">{{{bottom}}}</div>
         </div>
-        <div class="side col-sm-12">
-            {{{side}}}
-        </div>
+        {{#if side}}
+            <div class="side col-sm-12">
+                {{{side}}}
+            </div>
+        {{/if}}
     </div>
 </div>
