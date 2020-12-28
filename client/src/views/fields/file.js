@@ -261,17 +261,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
         },
 
         getEditPreview: function (name, type, id) {
-            name = Handlebars.Utils.escapeExpression(name);
-            var preview = name;
-
-            switch (type) {
-                case 'image/png':
-                case 'image/jpeg':
-                case 'image/gif':
-                    preview = '<img src="' + this.getImageUrl(id, 'small') + '" title="' + name + '">';
-            }
-
-            return preview;
+            return name;
         },
 
         getValueForDisplay: function () {
@@ -296,13 +286,12 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
         },
 
         getImageUrl: function (id, size) {
-            let field = this.nameName.replace('Name', 'Path');
-
+            let path = this.model.get(this.nameName.replace('Name', 'Path'));
             if (size) {
-                field = field + 'Preview' + size.charAt(0).toUpperCase() + size.slice(1);
+                path = this.model.get(this.nameName.replace('Name', 'Previews'))[size];
             }
 
-            return this.getBasePath() + '/' + this.model.get(field);
+            return this.getBasePath() + '/' + path;
         },
 
         getDownloadUrl: function (id) {
@@ -388,7 +377,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                         attachment.set('file', result);
                         attachment.set('field', this.name);
 
-                        attachment.save({}, {timeout: 0}).then(function () {
+                        attachment.save({}, {timeout: 0}).then(function (response) {
                             this.isUploading = false;
                             if (!isCanceled) {
                                 $attachmentBox.trigger('ready');

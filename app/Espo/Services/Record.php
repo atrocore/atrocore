@@ -395,10 +395,12 @@ class Record extends \Espo\Core\Services\Base
                 // prepare path to image
                 $path = $attachmentRepository->prepareFilePath($entity->get("{$field}Path"), $entity->get("{$field}Name"));
 
-                $entity->set("{$field}PathPreviewXSmall", $attachmentRepository->prepareThumbPath($entity->get("{$field}Path"), $entity->get("{$field}Name"), $entity->get("{$field}Id"), "x-small"));
-                $entity->set("{$field}PathPreviewSmall", $attachmentRepository->prepareThumbPath($entity->get("{$field}Path"), $entity->get("{$field}Name"), $entity->get("{$field}Id"), "small"));
-                $entity->set("{$field}PathPreviewMedium", $attachmentRepository->prepareThumbPath($entity->get("{$field}Path"), $entity->get("{$field}Name"), $entity->get("{$field}Id"), "medium"));
-                $entity->set("{$field}PathPreviewLarge", $attachmentRepository->prepareThumbPath($entity->get("{$field}Path"), $entity->get("{$field}Name"), $entity->get("{$field}Id"), "large"));
+                $previewData = [];
+                foreach ($this->getMetadata()->get(['app', 'imageSizes'], []) as $size => $params) {
+                    $previewData[$size] = $attachmentRepository->prepareThumbPath($entity->get("{$field}Path"), $entity->get("{$field}Name"), $entity->get("{$field}Id"), $size);
+                }
+
+                $entity->set("{$field}Previews", $previewData);
                 $entity->set("{$field}Path", $path);
             }
         }
@@ -919,6 +921,7 @@ class Record extends \Espo\Core\Services\Base
         if ($this->storeEntity($entity)) {
             $this->afterUpdateEntity($entity, $data);
             $this->prepareEntityForOutput($entity);
+            $this->loadPreview($entity);
 
             $this->processActionHistoryRecord('update', $entity);
 

@@ -52,20 +52,8 @@ class File extends Base
                     $fieldName.'Path' => array(
                         'type' => 'foreign'
                     ),
-                    $fieldName.'PathPreviewXsmall' => array(
-                        'type'        => 'varchar',
-                        'notStorable' => true
-                    ),
-                    $fieldName.'PathPreviewSmall' => array(
-                        'type'        => 'varchar',
-                        'notStorable' => true
-                    ),
-                    $fieldName.'PathPreviewMedium' => array(
-                        'type'        => 'varchar',
-                        'notStorable' => true
-                    ),
-                    $fieldName.'PathPreviewLarge' => array(
-                        'type'        => 'varchar',
+                    $fieldName.'Previews' => array(
+                        'type'        => 'jsonObject',
                         'notStorable' => true
                     )
                 )
