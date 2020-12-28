@@ -34,6 +34,7 @@
 namespace Treo\Core\FileStorage\Storages;
 
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Utils\Config;
 use Treo\Core\FilePathBuilder;
 use Treo\Entities\Attachment;
 
@@ -44,8 +45,6 @@ use Treo\Entities\Attachment;
  */
 class UploadDir extends Base
 {
-    const BASE_PATH = "data/upload/files/";
-    const BASE_THUMB_PATH = "data/upload/thumbs/";
     /**
      * @var array
      */
@@ -130,6 +129,7 @@ class UploadDir extends Base
     {
         parent::init();
 
+        $this->addDependency('config');
         $this->addDependency('entityManager');
     }
 
@@ -147,7 +147,7 @@ class UploadDir extends Base
             $attachment->set('storageFilePath', $storage);
         }
 
-        return self::BASE_PATH . "{$storage}/" . $attachment->get('name');
+        return $this->getInjection('entityManager')->getRepository('Attachment')->prepareFilePath($storage, $attachment->get('name'));
     }
 
     /**
@@ -164,5 +164,13 @@ class UploadDir extends Base
     protected function getFileManager()
     {
         return $this->getInjection('fileManager');
+    }
+
+    /**
+     * @return Config
+     */
+    protected function getConfig(): Config
+    {
+        return $this->getInjection('config');
     }
 }

@@ -377,11 +377,37 @@ class Record extends \Espo\Core\Services\Base
         $this->loadEmailAddressField($entity);
         $this->loadPhoneNumberField($entity);
         $this->loadNotJoinedLinkFields($entity);
+        $this->loadPreview($entity);
+    }
+
+    /**
+     * Load image preview
+     *
+     * @param Entity $entity
+     */
+    public function loadPreview(Entity $entity): void
+    {
+        /** @var \Espo\Repositories\Attachment $attachmentRepository */
+        $attachmentRepository = $this->getEntityManager()->getRepository('Attachment');
+
+        foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []) as $field => $data) {
+            if (in_array($data['type'], ['asset', 'image', 'file']) && !empty($entity->get("{$field}Path"))) {
+                // prepare path to image
+                $path = $attachmentRepository->prepareFilePath($entity->get("{$field}Path"), $entity->get("{$field}Name"));
+
+                $entity->set("{$field}PathPreviewXSmall", $attachmentRepository->prepareThumbPath($entity->get("{$field}Path"), $entity->get("{$field}Name"), $entity->get("{$field}Id"), "x-small"));
+                $entity->set("{$field}PathPreviewSmall", $attachmentRepository->prepareThumbPath($entity->get("{$field}Path"), $entity->get("{$field}Name"), $entity->get("{$field}Id"), "small"));
+                $entity->set("{$field}PathPreviewMedium", $attachmentRepository->prepareThumbPath($entity->get("{$field}Path"), $entity->get("{$field}Name"), $entity->get("{$field}Id"), "medium"));
+                $entity->set("{$field}PathPreviewLarge", $attachmentRepository->prepareThumbPath($entity->get("{$field}Path"), $entity->get("{$field}Name"), $entity->get("{$field}Id"), "large"));
+                $entity->set("{$field}Path", $path);
+            }
+        }
     }
 
     public function loadAdditionalFieldsForList(Entity $entity)
     {
         $this->loadParentNameFields($entity);
+        $this->loadPreview($entity);
     }
 
     public function loadAdditionalFieldsForExport(Entity $entity)
@@ -1271,27 +1297,30 @@ class Record extends \Espo\Core\Services\Base
             $selectParams['skipTextColumns'] = $recordService->isSkipSelectTextAttributes();
         }
 
+        $total = 0;
         $collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
 
-        foreach ($collection as $e) {
-            $recordService->loadAdditionalFieldsForList($e);
-            if (!empty($params['loadAdditionalFields'])) {
-                $recordService->loadAdditionalFields($e);
+        if (!empty($collection) && count($collection) > 0) {
+            foreach ($collection as $e) {
+                $recordService->loadAdditionalFieldsForList($e);
+                if (!empty($params['loadAdditionalFields'])) {
+                    $recordService->loadAdditionalFields($e);
+                }
+                if (!empty($selectAttributeList)) {
+                    $this->loadLinkMultipleFieldsForList($e, $selectAttributeList);
+                }
+                $recordService->prepareEntityForOutput($e);
             }
-            if (!empty($selectAttributeList)) {
-                $this->loadLinkMultipleFieldsForList($e, $selectAttributeList);
-            }
-            $recordService->prepareEntityForOutput($e);
-        }
 
-        if (!$disableCount) {
-            $total = $this->getRepository()->countRelated($entity, $link, $selectParams);
-        } else {
-            if ($maxSize && count($collection) > $maxSize) {
-                $total = -1;
-                unset($collection[count($collection) - 1]);
+            if (!$disableCount) {
+                $total = $this->getRepository()->countRelated($entity, $link, $selectParams);
             } else {
-                $total = -2;
+                if ($maxSize && count($collection) > $maxSize) {
+                    $total = -1;
+                    unset($collection[count($collection) - 1]);
+                } else {
+                    $total = -2;
+                }
             }
         }
 
@@ -2437,11 +2466,6 @@ class Record extends \Espo\Core\Services\Base
             return $this->selectAttributeList;
         }
 
-        // TODO remove in 5.5.0
-        if (in_array($this->getEntityType(), ['Report', 'Workflow', 'ReportPanel'])) {
-            return null;
-        }
-
         $seed = $this->getEntityManager()->getEntity($this->getEntityType());
 
         if (array_key_exists('select', $params)) {
@@ -2471,6 +2495,13 @@ class Record extends \Espo\Core\Services\Base
             foreach ($passedAttributeList as $attribute) {
                 if (!in_array($attribute, $attributeList) && $seed->hasAttribute($attribute)) {
                     $attributeList[] = $attribute;
+                }
+            }
+
+            // add image path to $attributeList
+            foreach ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields'], []) as $field => $data) {
+                if (in_array($data['type'], ['asset', 'image', 'file'])) {
+                    $attributeList[] = "{$field}Path";
                 }
             }
 

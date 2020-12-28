@@ -37,6 +37,7 @@ use Monolog\Logger;
 class StreamHandler extends \Monolog\Handler\StreamHandler
 {
     protected $fileManager;
+    private $errorMessage;
 
     protected $maxErrorMessageLength = 5000;
 

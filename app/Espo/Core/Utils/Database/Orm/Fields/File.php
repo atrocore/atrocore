@@ -48,6 +48,25 @@ class File extends Base
                     ),
                     $fieldName.'Name' => array(
                         'type' => 'foreign'
+                    ),
+                    $fieldName.'Path' => array(
+                        'type' => 'foreign'
+                    ),
+                    $fieldName.'PathPreviewXsmall' => array(
+                        'type'        => 'varchar',
+                        'notStorable' => true
+                    ),
+                    $fieldName.'PathPreviewSmall' => array(
+                        'type'        => 'varchar',
+                        'notStorable' => true
+                    ),
+                    $fieldName.'PathPreviewMedium' => array(
+                        'type'        => 'varchar',
+                        'notStorable' => true
+                    ),
+                    $fieldName.'PathPreviewLarge' => array(
+                        'type'        => 'varchar',
+                        'notStorable' => true
                     )
                 )
             ),
@@ -60,6 +79,7 @@ class File extends Base
         if (!empty($fieldParams['notStorable'])) {
             $data[$entityName]['fields'][$fieldName.'Id']['notStorable'] = true;
             $data[$entityName]['fields'][$fieldName.'Name']['type'] = 'varchar';
+            $data[$entityName]['fields'][$fieldName.'Path']['type'] = 'varchar';
         }
 
         if (!empty($fieldParams['defaultAttributes']) && array_key_exists($fieldName.'Id', $fieldParams['defaultAttributes'])) {
@@ -69,6 +89,8 @@ class File extends Base
         if (empty($fieldParams['notStorable'])) {
             $data[$entityName]['fields'][$fieldName . 'Name']['relation'] = $fieldName;
             $data[$entityName]['fields'][$fieldName . 'Name']['foreign'] = 'name';
+            $data[$entityName]['fields'][$fieldName . 'Path']['relation'] = $fieldName;
+            $data[$entityName]['fields'][$fieldName . 'Path']['foreign'] = 'storageFilePath';
 
             $linkName = $fieldName;
             $data[$entityName]['relations'] = array();

@@ -103,7 +103,7 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
 
         $sourcePath = $this->getFilePath($source);
         $destPath = $this->getDestPath(FilePathBuilder::UPLOAD);
-        $fullDestPath = UploadDir::BASE_PATH . $destPath;
+        $fullDestPath = $this->getConfig()->get('publicFilesPath', 'upload/public/') . $destPath;
 
         if ($this->getFileManager()->copy($sourcePath, $fullDestPath, false, null, true)) {
             return $destPath;
@@ -153,7 +153,7 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
     public function moveFromTmp(Entity $entity)
     {
         $destPath = $this->getDestPath(FilePathBuilder::UPLOAD);
-        $fullPath = UploadDir::BASE_PATH . $destPath . "/" . $entity->get('name');
+        $fullPath = $this->getConfig()->get('publicFilesPath', 'upload/public/') . $destPath . "/" . $entity->get('name');
 
         if ($this->getFileManager()->move($entity->get('tmpPath'), $fullPath, false)) {
             $entity->set("tmpPath", null);
@@ -163,6 +163,36 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
         }
 
         return false;
+    }
+
+    /**
+     * @param string $storageFilePath
+     * @param string $name
+     *
+     * @return string
+     */
+    public function prepareFilePath(string $storageFilePath, string $name): string
+    {
+        return $this->getConfig()->get('publicFilesPath', 'upload/public/') . $storageFilePath . '/' . $name;
+    }
+
+    /**
+     * @param string $storageFilePath
+     * @param string $fileName
+     * @param string $attachmentId
+     * @param string $size
+     *
+     * @return string
+     */
+    public function prepareThumbPath(string $storageFilePath, string $fileName, string $attachmentId, string $size): string
+    {
+        $i = 0;
+        while (!empty($str = substr(md5($storageFilePath), $i, 4))) {
+            $parts[] = $str;
+            $i = $i + 4;
+        }
+
+        return $this->getConfig()->get('thumbsPath', 'upload/thumbs/') . implode('/', $parts) . '/' . $attachmentId . '/' . $size . '/' . $fileName;
     }
 
     /**

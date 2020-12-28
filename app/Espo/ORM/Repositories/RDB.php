@@ -71,7 +71,7 @@ class RDB extends \Espo\ORM\Repository
 
         $this->entityFactory = $entityFactory;
         $this->seed = $this->entityFactory->create($entityType);
-        $this->entityClassName = get_class($this->seed);
+        $this->entityClassName = is_string($this->seed) ? get_class($this->seed) : null;
         $this->entityManager = $entityManager;
     }
 

@@ -39,6 +39,7 @@ use Espo\Core\Utils\Api\Auth as ApiAuth;
 use Espo\Core\Utils\Json;
 use Espo\Core\EntryPointManager;
 use Espo\Entities\Portal;
+use Treo\Core\Preview\Image;
 use Treo\Services\Installer;
 use Treo\Core\Utils\Auth;
 use Treo\Core\Utils\Route;
@@ -150,6 +151,9 @@ class Application
             }
 
             if ($show404) {
+                // create preview if it needs
+                $this->createPreview($query);
+
                 header('HTTP/1.0 404 Not Found');
                 exit();
             }
@@ -228,6 +232,36 @@ class Application
         $this->initRoutes($baseRoute);
         $this->getSlim()->run();
         exit;
+    }
+
+    /**
+     * Create preview if it needs
+     *
+     * @param string $path
+     */
+    protected function createPreview(string $path)
+    {
+        if (!$this->isInstalled() || strpos($path, $this->getConfig()->get('thumbsPath', 'upload/thumbs/')) === false) {
+            return;
+        }
+
+        $pathParts = explode('/', $path);
+
+        $fileName = array_pop($pathParts);
+        $size = array_pop($pathParts);
+        $attachmentId = array_pop($pathParts);
+
+        $attachment = $this->getContainer()->get('entityManager')->getEntity("Attachment", $attachmentId);
+        if (empty($attachment)) {
+            return;
+        }
+
+        /** @var Image $preview */
+        $preview = $this->getContainer()->get('Preview');
+
+        if ($preview->createThumb($attachment->getFilePath(), $path, $size)) {
+            $preview->displayImage($path, $fileName);
+        }
     }
 
     /**

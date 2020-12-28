@@ -31,41 +31,22 @@
  * and "AtroCore" word.
  */
 
-namespace Treo\Entities;
+declare(strict_types=1);
 
-use Espo\Core\ORM\Entity as Base;
+namespace Treo\Core\Loaders;
+
+use Treo\Core\Preview\Image;
 
 /**
- * Class Attachment
+ * Class Preview
  */
-class Attachment extends Base
+class Preview extends Base
 {
     /**
-     * @return mixed|null
+     * @inheritdoc
      */
-    public function getSourceId()
+    public function load()
     {
-        $sourceId = $this->get('sourceId');
-        if (!$sourceId) {
-            $sourceId = $this->id;
-        }
-
-        return $sourceId;
-    }
-
-    /**
-     * @return string
-     */
-    public function _getStorage()
-    {
-        return $this->valuesContainer['storage'] ? $this->valuesContainer['storage'] : "UploadDir";
-    }
-
-    /**
-     * @return string
-     */
-    public function getFilePath(): string
-    {
-        return $this->entityManager->getRepository($this->getEntityType())->getFilePath($this);
+        return new Image($this->getContainer());
     }
 }

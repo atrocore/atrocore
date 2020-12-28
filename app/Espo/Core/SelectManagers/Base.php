@@ -79,7 +79,7 @@ class Base
     /**
      * @var bool
      */
-    protected $isSubQuery = false;
+    public $isSubQuery = false;
 
     private $config;
 

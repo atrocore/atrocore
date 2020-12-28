@@ -262,10 +262,10 @@ class Container
     {
         $config = $this->get('config');
 
-        $path = $config->get('logger.path', 'data/logs/espo.log');
+        $path = $config->get('logger.path', 'data/logs/log.log');
         $rotation = $config->get('logger.rotation', true);
 
-        $log = new Log('Espo');
+        $log = new Log('Log');
         $levelCode = $log->getLevelCode($config->get('logger.level', 'WARNING'));
 
         if ($rotation) {

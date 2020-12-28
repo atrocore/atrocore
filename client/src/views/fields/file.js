@@ -255,7 +255,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 case 'image/png':
                 case 'image/jpeg':
                 case 'image/gif':
-                    preview = '<a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="'+this.getBasePath()+'?entryPoint=image&size='+this.previewSize+'&id=' + id + '" class="image-preview"></a>';
+                    preview = '<a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="' + this.getImageUrl(id, this.previewSize) + '" class="image-preview"></a>';
             }
             return preview;
         },
@@ -296,14 +296,13 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
         },
 
         getImageUrl: function (id, size) {
-            var url = this.getBasePath() + '?entryPoint=image&id=' + id;
+            let field = this.nameName.replace('Name', 'Path');
+
             if (size) {
-                url += '&size=' + size;
+                field = field + 'Preview' + size.charAt(0).toUpperCase() + size.slice(1);
             }
-            if (this.getUser().get('portalId')) {
-                url += '&portalId=' + this.getUser().get('portalId');
-            }
-            return url;
+
+            return this.getBasePath() + '/' + this.model.get(field);
         },
 
         getDownloadUrl: function (id) {
