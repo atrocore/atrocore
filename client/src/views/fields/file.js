@@ -290,6 +290,12 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             let data = this.model.get(this.namePathsData);
             let path = data['download'];
             if (size) {
+                // for list size always small
+                const type = this.getParentView().getParentView().type || null;
+                if (type === 'list') {
+                    size = 'small';
+                }
+
                 path = data.thumbs[size];
             }
 
