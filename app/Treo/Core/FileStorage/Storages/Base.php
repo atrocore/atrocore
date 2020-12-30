@@ -34,7 +34,7 @@
 namespace Treo\Core\FileStorage\Storages;
 
 use \Espo\Core\Interfaces\Injectable;
-use Treo\Entities\Attachment;
+use Espo\Entities\Attachment;
 
 /**
  * Class Base

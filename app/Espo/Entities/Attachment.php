@@ -31,13 +31,69 @@
  * and "AtroCore" word.
  */
 
-declare(strict_types=1);
+namespace Espo\Entities;
 
-namespace Treo\Repositories;
+use Espo\Core\ORM\Entity as Base;
 
 /**
  * Class Attachment
  */
-class Attachment extends \Espo\Repositories\Attachment
+class Attachment extends Base
 {
+    /**
+     * @return mixed|null
+     */
+    public function getSourceId()
+    {
+        $sourceId = $this->get('sourceId');
+        if (!$sourceId) {
+            $sourceId = $this->id;
+        }
+
+        return $sourceId;
+    }
+
+    /**
+     * @return string
+     */
+    public function _getStorage()
+    {
+        return $this->valuesContainer['storage'] ? $this->valuesContainer['storage'] : "UploadDir";
+    }
+
+    /**
+     * @return string
+     */
+    public function getFilePath(): string
+    {
+        return $this->entityManager->getRepository($this->getEntityType())->getFilePath($this);
+    }
+
+    /**
+     * @param string $size
+     *
+     * @return string
+     */
+    public function getThumbPath(string $size): string
+    {
+        $data = $this->entityManager->getRepository($this->getEntityType())->getAttachmentPathsData($this);
+
+        return !empty($data['thumbs'][$size]) ? $data['thumbs'][$size] : '';
+    }
+
+    /**
+     * @return string
+     */
+    public function getStorageFilePath(): string
+    {
+        return (string)$this->get('storageFilePath');
+    }
+
+    /**
+     * @return string
+     */
+    public function getStorageThumbPath(): string
+    {
+        return empty($this->get('storageThumbPath')) ? $this->getStorageFilePath() : (string)$this->get('storageThumbPath');
+    }
 }

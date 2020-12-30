@@ -37,6 +37,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
+use Espo\Entities\Attachment;
 
 /**
  * Class Image
@@ -60,24 +61,26 @@ class Image extends AbstractEntryPoint
             throw new BadRequest();
         }
 
-        $this->show((string)$_GET['id']);
+        $this->show($_GET['id'], $_GET['size'] ?? null);
     }
 
     /**
-     * @param string $id
+     * @param string      $id
+     * @param string|null $size
      *
      * @throws Error
      * @throws Forbidden
      * @throws NotFound
      */
-    protected function show(string $id): void
+    protected function show($id, $size)
     {
+        /** @var Attachment $attachment */
         $attachment = $this->getEntityManager()->getEntity("Attachment", $id);
         if (empty($attachment)) {
             throw new NotFound();
         }
 
-        if (!$this->getAcl()->checkEntity($attachment)) {
+        if (!$this->checkAttachment($attachment)) {
             throw new Forbidden();
         }
 
@@ -89,6 +92,17 @@ class Image extends AbstractEntryPoint
         $fileType = $attachment->get('type');
         if (!in_array($fileType, $this->allowedFileTypes)) {
             throw new Error();
+        }
+
+        if (!empty($size)) {
+            if (empty($this->getImageSize($size))) {
+                throw new NotFound();
+            }
+
+            $filePath = $attachment->getThumbPath($size);
+            if (!file_exists($filePath)) {
+                $this->getContainer()->get('Thumb')->createThumb($attachment, $size);
+            }
         }
 
         $content = file_get_contents($filePath);
@@ -105,5 +119,25 @@ class Image extends AbstractEntryPoint
         }
         echo $content;
         exit;
+    }
+
+    /**
+     * @param Attachment $attachment
+     *
+     * @return bool
+     */
+    protected function checkAttachment(Attachment $attachment): bool
+    {
+        return $this->getAcl()->checkEntity($attachment);
+    }
+
+    /**
+     * @param string $size
+     *
+     * @return array|null
+     */
+    protected function getImageSize(string $size): ?array
+    {
+        return $this->getMetadata()->get(['app', 'imageSizes', $size], null);
     }
 }

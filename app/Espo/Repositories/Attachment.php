@@ -35,27 +35,37 @@ declare(strict_types=1);
 
 namespace Espo\Repositories;
 
+use Espo\Core\Exceptions\InternalServerError;
 use Espo\ORM\Entity;
+use Espo\Core\ORM\Repositories\RDB;
 use Treo\Core\FilePathBuilder;
 use Treo\Core\Utils\Config;
 use Treo\Core\Utils\Util;
-use Treo\Entities\Attachment as AttachmentEntity;
+use Espo\Entities\Attachment as AttachmentEntity;
 
 /**
  * Class Attachment
  */
-class Attachment extends \Espo\Core\ORM\Repositories\RDB
+class Attachment extends RDB
 {
     /**
      * @inheritDoc
      */
-    public function beforeSave(Entity $entity, array $options = array())
+    public function beforeSave(Entity $entity, array $options = [])
     {
         parent::beforeSave($entity, $options);
 
         $storage = $entity->get('storage');
         if (!$storage) {
-            $entity->set('storage', $this->getConfig()->get('defaultFileStorage', null));
+            $entity->set('storage', $this->getConfig()->get('defaultFileStorage', 'UploadDir'));
+        }
+
+        if (!$entity->isNew()) {
+            if ($entity->get('sourceId')) {
+                $this->copyFile($entity);
+            } elseif ($entity->isAttributeChanged("relatedId") || $entity->isAttributeChanged("relatedType")) {
+                $this->moveFromTmp($entity);
+            }
         }
     }
 
@@ -71,16 +81,16 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
 
         $attachment->set(
             [
-                'sourceId'        => $entity->getSourceId(),
-                'name'            => $entity->get('name'),
-                'type'            => $entity->get('type'),
-                'size'            => $entity->get('size'),
-                'role'            => $entity->get('role'),
-                'storageFilePath' => $entity->get('storageFilePath'),
+                'sourceId'         => $entity->getSourceId(),
+                'name'             => $entity->get('name'),
+                'type'             => $entity->get('type'),
+                'size'             => $entity->get('size'),
+                'role'             => $entity->get('role'),
+                'storageFilePath'  => $entity->get('storageFilePath'),
                 'storageThumbPath' => $entity->get('storageThumbPath'),
-                'relatedType'     => $entity->get('relatedType'),
-                'relatedId'       => $entity->get('relatedId'),
-                'md5'             => $entity->get('md5')
+                'relatedType'      => $entity->get('relatedType'),
+                'relatedId'        => $entity->get('relatedId'),
+                'md5'              => $entity->get('md5')
             ]
         );
 
@@ -305,5 +315,25 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
     protected function getDestPath(string $type): string
     {
         return $this->getPathBuilder()->createPath($type);
+    }
+
+    /**
+     * @param Entity $entity
+     *
+     * @throws InternalServerError
+     */
+    protected function copyFile(Entity $entity): void
+    {
+        $path = $this->copy($entity);
+        if (!$path) {
+            throw new InternalServerError($this->translate("Can't copy file", 'exceptions', 'Global'));
+        }
+
+        $entity->set(
+            [
+                'sourceId'        => null,
+                'storageFilePath' => $path,
+            ]
+        );
     }
 }

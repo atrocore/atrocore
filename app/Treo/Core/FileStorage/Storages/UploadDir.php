@@ -33,12 +33,10 @@
 
 namespace Treo\Core\FileStorage\Storages;
 
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
-use Espo\ORM\Entity;
-use Treo\Core\FilePathBuilder;
-use Treo\Entities\Attachment;
+use Espo\Entities\Attachment;
+use Espo\Entities\User;
 
 /**
  * Class UploadDir
@@ -109,8 +107,12 @@ class UploadDir extends Base
     public function getDownloadUrl(Attachment $attachment): string
     {
         $url = '?entryPoint=download&id=' . $attachment->get('id');
-        if (!empty($this->getInjection('user')->get('portalId'))) {
-            $url .= '&portalId=' . $this->getInjection('user')->get('portalId');
+
+        /** @var User $user */
+        $user = $this->getInjection('entityManager')->getUser();
+
+        if (!empty($user) && !empty($user->get('portalId'))) {
+            $url .= '&portalId=' . $user->get('portalId');
         }
 
         return $url;
@@ -147,7 +149,6 @@ class UploadDir extends Base
         $this->addDependency('config');
         $this->addDependency('entityManager');
         $this->addDependency('Thumb');
-        $this->addDependency('user');
         $this->addDependency('metadata');
     }
 

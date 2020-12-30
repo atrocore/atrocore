@@ -65,7 +65,7 @@ class Email extends \Espo\Core\ORM\Entity
         return $this->get('status') === 'Archived' && $this->get('createdById') !== 'system';
     }
 
-    public function addAttachment(\Treo\Entities\Attachment $attachment)
+    public function addAttachment(\Espo\Entities\Attachment $attachment)
     {
         if (!empty($this->id)) {
             $attachment->set('parentId', $this->id);

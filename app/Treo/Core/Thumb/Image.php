@@ -42,7 +42,7 @@ use Treo\Core\Container;
 use Treo\Core\Utils\Config;
 use Treo\Core\Utils\File\Manager;
 use Treo\Core\Utils\Metadata;
-use Treo\Entities\Attachment;
+use Espo\Entities\Attachment;
 
 /**
  * Class Image

@@ -35,7 +35,7 @@ namespace Treo\Core\FileStorage;
 
 use Espo\Core\Exceptions\Error;
 use Treo\Core\Container;
-use Treo\Entities\Attachment;
+use Espo\Entities\Attachment;
 
 /**
  * Class Manager
