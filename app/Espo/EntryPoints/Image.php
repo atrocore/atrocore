@@ -44,10 +44,7 @@ use Espo\Entities\Attachment;
  */
 class Image extends AbstractEntryPoint
 {
-    /**
-     * @var array
-     */
-    protected $allowedFileTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    public const TYPES = ['image/jpeg', 'image/png', 'image/gif'];
 
     /**
      * @throws BadRequest
@@ -90,7 +87,7 @@ class Image extends AbstractEntryPoint
         }
 
         $fileType = $attachment->get('type');
-        if (!in_array($fileType, $this->allowedFileTypes)) {
+        if (!in_array($fileType, self::TYPES)) {
             throw new Error();
         }
 

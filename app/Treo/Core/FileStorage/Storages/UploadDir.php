@@ -121,14 +121,6 @@ class UploadDir extends Base
     /**
      * @inheritDoc
      */
-    public function hasDownloadUrl(Attachment $attachment): bool
-    {
-        return true;
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function getThumbs(Attachment $attachment): array
     {
         $result = [];

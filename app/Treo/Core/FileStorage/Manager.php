@@ -159,17 +159,6 @@ class Manager
      * @return mixed
      * @throws Error
      */
-    public function hasDownloadUrl(Attachment $attachment)
-    {
-        $implementation = $this->getImplementation($attachment->get('storage'));
-        return $implementation->hasDownloadUrl($attachment);
-    }
-
-    /**
-     * @param Attachment $attachment
-     * @return mixed
-     * @throws Error
-     */
     public function getDownloadUrl(Attachment $attachment)
     {
         $implementation = $this->getImplementation($attachment->get('storage'));

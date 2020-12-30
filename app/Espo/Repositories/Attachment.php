@@ -171,8 +171,11 @@ class Attachment extends RDB
             $entity->set("storageFilePath", $destPath);
             $entity->set("storageThumbPath", $this->getDestPath(FilePathBuilder::UPLOAD));
 
-            foreach ($this->getMetadata()->get(['app', 'imageSizes'], []) as $size => $params) {
-                $this->getInjection('Thumb')->createThumb($entity, $size);
+            // create thumbs for image
+            if (in_array($entity->get('type'), \Espo\EntryPoints\Image::TYPES)) {
+                foreach ($this->getMetadata()->get(['app', 'imageSizes'], []) as $size => $params) {
+                    $this->getInjection('Thumb')->createThumb($entity, $size);
+                }
             }
 
             return true;
@@ -186,12 +189,19 @@ class Attachment extends RDB
      *
      * @return array
      */
-    public function getAttachmentPathsData(AttachmentEntity $attachment): array
+    public function getAttachmentPathsData($attachment): array
     {
-        return [
-            'download' => $this->getFileStorageManager()->getDownloadUrl($attachment),
-            'thumbs'   => $this->getFileStorageManager()->getThumbs($attachment),
+        $result = [
+            'download' => null,
+            'thumbs'   => [],
         ];
+
+        if (!empty($attachment)) {
+            $result['download'] = $this->getFileStorageManager()->getDownloadUrl($attachment);
+            $result['thumbs'] = $this->getFileStorageManager()->getThumbs($attachment);
+        }
+
+        return $result;
     }
 
     /**

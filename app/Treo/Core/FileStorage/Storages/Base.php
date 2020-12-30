@@ -114,13 +114,6 @@ abstract class Base implements Injectable
     /**
      * @param Attachment $attachment
      *
-     * @return bool
-     */
-    abstract public function hasDownloadUrl(Attachment $attachment): bool;
-
-    /**
-     * @param Attachment $attachment
-     *
      * @return string
      */
     abstract public function getDownloadUrl(Attachment $attachment): string;
