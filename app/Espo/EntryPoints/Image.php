@@ -33,24 +33,47 @@
 
 namespace Espo\EntryPoints;
 
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
 
-class Attachment extends AbstractEntryPoint
+/**
+ * Class Image
+ */
+class Image extends AbstractEntryPoint
 {
-    public static $authRequired = true;
+    /**
+     * @var array
+     */
+    protected $allowedFileTypes = ['image/jpeg', 'image/png', 'image/gif'];
 
+    /**
+     * @throws BadRequest
+     * @throws Error
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function run()
     {
-        $id = $_GET['id'];
-        if (empty($id)) {
+        if (empty($_GET['id'])) {
             throw new BadRequest();
         }
 
-        $attachment = $this->getEntityManager()->getEntity('Attachment', $id);
+        $this->show((string)$_GET['id']);
+    }
 
-        if (!$attachment) {
+    /**
+     * @param string $id
+     *
+     * @throws Error
+     * @throws Forbidden
+     * @throws NotFound
+     */
+    protected function show(string $id): void
+    {
+        $attachment = $this->getEntityManager()->getEntity("Attachment", $id);
+        if (empty($attachment)) {
             throw new NotFound();
         }
 
@@ -58,20 +81,29 @@ class Attachment extends AbstractEntryPoint
             throw new Forbidden();
         }
 
-        $fileName = $this->getEntityManager()->getRepository('Attachment')->getFilePath($attachment);
-
-        if (!file_exists($fileName)) {
+        $filePath = $this->getEntityManager()->getRepository('Attachment')->getFilePath($attachment);
+        if (!file_exists($filePath)) {
             throw new NotFound();
         }
 
-        if ($attachment->get('type')) {
-            header('Content-Type: ' . $attachment->get('type'));
+        $fileType = $attachment->get('type');
+        if (!in_array($fileType, $this->allowedFileTypes)) {
+            throw new Error();
         }
 
+        $content = file_get_contents($filePath);
+
+        header('Content-Disposition:inline;filename="' . $attachment->get('name') . '"');
+        if (!empty($fileType)) {
+            header('Content-Type: ' . $fileType);
+        }
         header('Pragma: public');
-        header('Content-Length: ' . filesize($fileName));
-        readfile($fileName);
+        header('Cache-Control: max-age=360000, must-revalidate');
+        $fileSize = mb_strlen($content, "8bit");
+        if ($fileSize) {
+            header('Content-Length: ' . $fileSize);
+        }
+        echo $content;
         exit;
     }
 }
-

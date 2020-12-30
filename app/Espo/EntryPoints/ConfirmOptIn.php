@@ -35,7 +35,6 @@ namespace Espo\EntryPoints;
 
 use \Espo\Core\Exceptions\BadRequest;
 use \Espo\Core\Exceptions\Error;
-use Treo\Core\EntryPoints\AbstractEntryPoint;
 
 class ConfirmOptIn extends AbstractEntryPoint
 {
