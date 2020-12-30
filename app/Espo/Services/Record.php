@@ -2506,6 +2506,7 @@ class Record extends \Espo\Core\Services\Base
             foreach ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields'], []) as $field => $data) {
                 if (in_array($data['type'], ['asset', 'image', 'file'])) {
                     $attributeList[] = "{$field}Path";
+                    $attributeList[] = "{$field}PathThumb";
                 }
             }
 

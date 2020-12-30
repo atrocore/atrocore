@@ -37,8 +37,10 @@ namespace Treo\Core\Thumb;
 
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
+use Espo\ORM\EntityManager;
 use Gumlet\ImageResize;
 use Treo\Core\Container;
+use Treo\Core\Utils\Config;
 use Treo\Core\Utils\File\Manager;
 use Treo\Core\Utils\Metadata;
 use Treo\Entities\Attachment;
@@ -67,6 +69,40 @@ class Image
     {
         $this->container = $container;
         $this->imageSizes = $this->getMetadata()->get(['app', 'imageSizes'], []);
+    }
+
+    /**
+     * @param string $path
+     *
+     * @return Attachment|null
+     * @throws Error
+     * @throws \Gumlet\ImageResizeException
+     */
+    public function createThumbByPath(string $path): ?Attachment
+    {
+        $thumbsPath = $this->getConfig()->get('thumbsPath', 'upload/thumbs/');
+        if (strpos($path, $thumbsPath) === false) {
+            return null;
+        }
+
+        $pathParts = explode('/', $path);
+
+        $fileName = array_pop($pathParts);
+        $size = array_pop($pathParts);
+        $storageThumbPath = str_replace([$thumbsPath, '/' . $size, '/' . $fileName], ['', '', ''], $path);
+
+        $attachmentRepository = $this->getEntityManager()->getRepository("Attachment");
+
+        $attachment = $attachmentRepository->where(['storageThumbPath' => $storageThumbPath])->findOne();
+        if (empty($attachment)) {
+            return null;
+        }
+
+        if ($this->createThumb($attachment, $size)) {
+            return $attachment;
+        }
+
+        return null;
     }
 
     /**
@@ -110,5 +146,23 @@ class Image
     protected function getFileManager(): Manager
     {
         return $this->container->get('fileManager');
+    }
+
+    /**
+     * @return EntityManager
+     */
+    protected function getEntityManager(): EntityManager
+    {
+        return $this->container->get('entityManager');
+    }
+
+    /**
+     * Get config
+     *
+     * @return Config
+     */
+    protected function getConfig(): Config
+    {
+        return $this->container->get('config');
     }
 }

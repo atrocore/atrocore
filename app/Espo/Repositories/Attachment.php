@@ -38,6 +38,7 @@ namespace Espo\Repositories;
 use Espo\ORM\Entity;
 use Treo\Core\FilePathBuilder;
 use Treo\Core\FileStorage\Storages\UploadDir;
+use Treo\Core\Thumb\Image;
 use Treo\Core\Utils\Config;
 use Treo\Core\Utils\Util;
 
@@ -161,6 +162,13 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
             $entity->set("storageFilePath", $destPath);
             $entity->set("storageThumbPath", $this->getDestPath(FilePathBuilder::UPLOAD));
 
+            /** @var Image $thumb */
+            $thumb = $this->getInjection('Thumb');
+
+            foreach ($this->getMetadata()->get(['app', 'imageSizes'], []) as $size => $params) {
+                $thumb->createThumb($entity, $size);
+            }
+
             return true;
         }
 
@@ -212,6 +220,7 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
         $this->addDependency('fileStorageManager');
         $this->addDependency('filePathBuilder');
         $this->addDependency('fileManager');
+        $this->addDependency('Thumb');
     }
 
     /**

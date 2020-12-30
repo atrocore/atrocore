@@ -152,8 +152,7 @@ class Application
             }
 
             if ($show404) {
-                // create thumb if it needs
-                $this->createThumb($query);
+                $this->createAndDisplayThumb($query);
 
                 header('HTTP/1.0 404 Not Found');
                 exit();
@@ -236,37 +235,29 @@ class Application
     }
 
     /**
-     * Create thumb if it needs
+     * Create and display thumb if it needs
      *
      * @param string $path
      */
-    protected function createThumb(string $path)
+    protected function createAndDisplayThumb(string $path): void
     {
-        $thumbsPath = $this->getConfig()->get('thumbsPath', 'upload/thumbs/');
-        if (!$this->isInstalled() || strpos($path, $thumbsPath) === false) {
-            return;
-        }
+        if ($this->isInstalled() && !empty($attachment = $this->getContainer()->get('Thumb')->createThumbByPath($path))) {
+            $content = file_get_contents($path);
+            $fileType = $attachment->get('type');
+            $fileName = $attachment->get('name');
 
-        $pathParts = explode('/', $path);
-
-        $fileName = array_pop($pathParts);
-        $size = array_pop($pathParts);
-        $storageThumbPath = str_replace([$thumbsPath, '/' . $size, '/' . $fileName], ['', '', ''], $path);
-
-        /** @var Attachment $attachmentRepository */
-        $attachmentRepository = $this->getContainer()->get('entityManager')->getRepository("Attachment");
-
-        $attachment = $attachmentRepository->where(['storageThumbPath' => $storageThumbPath])->findOne();
-        if (empty($attachment)) {
-            return;
-        }
-
-        /** @var Image $thumb */
-        $thumb = $this->getContainer()->get('Thumb');
-
-        if ($thumb->createThumb($attachment, $size)) {
-            header("Refresh:0");
-            exit();
+            header('Content-Disposition:inline;filename="' . $fileName . '"');
+            if (!empty($fileType)) {
+                header('Content-Type: ' . $fileType);
+            }
+            header('Pragma: public');
+            header('Cache-Control: max-age=360000, must-revalidate');
+            $fileSize = mb_strlen($content, "8bit");
+            if ($fileSize) {
+                header('Content-Length: ' . $fileSize);
+            }
+            echo $content;
+            exit;
         }
     }
 
