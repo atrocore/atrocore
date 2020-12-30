@@ -175,4 +175,15 @@ class Manager
         $implementation = $this->getImplementation($attachment->get('storage'));
         return $implementation->getDownloadUrl($attachment);
     }
+
+    /**
+     * @param Attachment $attachment
+     *
+     * @return array
+     * @throws Error
+     */
+    public function getThumbs(Attachment $attachment): array
+    {
+        return $this->getImplementation($attachment->get('storage'))->getThumbs($attachment);
+    }
 }

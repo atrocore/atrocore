@@ -88,7 +88,7 @@ Espo.define('views/modals/image-preview', 'views/modal', function (Dep) {
                 type: 'GET',
                 async: false,
             }).done(function (response) {
-                path = response.pathsData.path;
+                path = response.pathsData.download;
             });
 
             return this.getBasePath() + '/' + path;

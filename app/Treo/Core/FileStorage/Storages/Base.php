@@ -113,15 +113,17 @@ abstract class Base implements Injectable
 
     /**
      * @param Attachment $attachment
-     * @return mixed
+     *
+     * @return bool
      */
-    abstract public function hasDownloadUrl(Attachment $attachment);
+    abstract public function hasDownloadUrl(Attachment $attachment): bool;
 
     /**
      * @param Attachment $attachment
-     * @return mixed
+     *
+     * @return string
      */
-    abstract public function getDownloadUrl(Attachment $attachment);
+    abstract public function getDownloadUrl(Attachment $attachment): string;
 
     /**
      * @param Attachment $attachment
@@ -153,4 +155,11 @@ abstract class Base implements Injectable
      * @return mixed
      */
     abstract public function getLocalFilePath(Attachment $attachment);
+
+    /**
+     * @param Attachment $attachment
+     *
+     * @return array
+     */
+    abstract public function getThumbs(Attachment $attachment): array;
 }

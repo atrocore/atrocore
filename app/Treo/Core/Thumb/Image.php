@@ -94,7 +94,10 @@ class Image
 
         $attachment = $attachmentRepository->where(['storageThumbPath' => $storageThumbPath])->findOne();
         if (empty($attachment)) {
-            return null;
+            $attachment = $attachmentRepository->where(['storageFilePath' => $storageThumbPath])->findOne();
+            if (empty($attachment)){
+                return null;
+            }
         }
 
         if ($this->createThumb($attachment, $size)) {

@@ -395,6 +395,7 @@ class Record extends \Espo\Core\Services\Base
                 if (!empty($entity->get("{$field}Path"))) {
                     // prepare attachment
                     $attachment = $attachmentRepository->get();
+                    $attachment->id = $entity->get("{$field}Id");
                     $attachment->set('name', $entity->get("{$field}Name"));
                     $attachment->set('storageFilePath', $entity->get("{$field}Path"));
                     $attachment->set('storageThumbPath', $entity->get("{$field}PathThumb"));

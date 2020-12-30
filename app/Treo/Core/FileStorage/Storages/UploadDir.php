@@ -35,6 +35,8 @@ namespace Treo\Core\FileStorage\Storages;
 
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
+use Espo\ORM\Entity;
 use Treo\Core\FilePathBuilder;
 use Treo\Entities\Attachment;
 
@@ -102,24 +104,37 @@ class UploadDir extends Base
     }
 
     /**
-     * @param Attachment $attachment
-     *
-     * @return mixed|void
-     * @throws Error
+     * @inheritDoc
      */
-    public function getDownloadUrl(Attachment $attachment)
+    public function getDownloadUrl(Attachment $attachment): string
     {
-        throw new Error();
+        $url = '?entryPoint=download&id=' . $attachment->get('id');
+        if (!empty($this->getInjection('user')->get('portalId'))) {
+            $url .= '&portalId=' . $this->getInjection('user')->get('portalId');
+        }
+
+        return $url;
     }
 
     /**
-     * @param Attachment $attachment
-     *
-     * @return bool|mixed
+     * @inheritDoc
      */
-    public function hasDownloadUrl(Attachment $attachment)
+    public function hasDownloadUrl(Attachment $attachment): bool
     {
-        return false;
+        return true;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getThumbs(Attachment $attachment): array
+    {
+        $result = [];
+        foreach ($this->getMetadata()->get(['app', 'imageSizes'], []) as $size => $params) {
+            $result[$size] = $this->getConfig()->get('thumbsPath', 'upload/thumbs/') . $attachment->getStorageThumbPath() . '/' . $size . '/' . $attachment->get("name");
+        }
+
+        return $result;
     }
 
     /**
@@ -131,6 +146,9 @@ class UploadDir extends Base
 
         $this->addDependency('config');
         $this->addDependency('entityManager');
+        $this->addDependency('Thumb');
+        $this->addDependency('user');
+        $this->addDependency('metadata');
     }
 
     /**
@@ -140,14 +158,7 @@ class UploadDir extends Base
      */
     protected function getFilePath(Attachment $attachment): string
     {
-        $storage = $attachment->get('storageFilePath');
-
-        if (!$storage) {
-            $storage = $this->getPathBuilder()->createPath(FilePathBuilder::UPLOAD);
-            $attachment->set('storageFilePath', $storage);
-        }
-
-        return (string)$this->getInjection('entityManager')->getRepository('Attachment')->getAttachmentPathsData($attachment)['origin'];
+        return $this->getConfig()->get('filesPath', 'upload/files/') . $attachment->getStorageFilePath() . '/' . $attachment->get("name");
     }
 
     /**
@@ -172,5 +183,13 @@ class UploadDir extends Base
     protected function getConfig(): Config
     {
         return $this->getInjection('config');
+    }
+
+    /**
+     * @return Metadata
+     */
+    protected function getMetadata(): Metadata
+    {
+        return $this->getInjection('metadata');
     }
 }

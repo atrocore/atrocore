@@ -182,6 +182,8 @@ class Attachment extends Record
             }
         }
 
+        $entity->set('pathsData', $this->getRepository()->getAttachmentPathsData($entity));
+
         return $entity;
     }
 

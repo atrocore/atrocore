@@ -37,10 +37,9 @@ namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
 use Treo\Core\FilePathBuilder;
-use Treo\Core\FileStorage\Storages\UploadDir;
-use Treo\Core\Thumb\Image;
 use Treo\Core\Utils\Config;
 use Treo\Core\Utils\Util;
+use Treo\Entities\Attachment as AttachmentEntity;
 
 /**
  * Class Attachment
@@ -162,11 +161,8 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
             $entity->set("storageFilePath", $destPath);
             $entity->set("storageThumbPath", $this->getDestPath(FilePathBuilder::UPLOAD));
 
-            /** @var Image $thumb */
-            $thumb = $this->getInjection('Thumb');
-
             foreach ($this->getMetadata()->get(['app', 'imageSizes'], []) as $size => $params) {
-                $thumb->createThumb($entity, $size);
+                $this->getInjection('Thumb')->createThumb($entity, $size);
             }
 
             return true;
@@ -176,34 +172,15 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
     }
 
     /**
-     * @param Entity $entity
+     * @param AttachmentEntity $attachment
      *
      * @return array
      */
-    public function getAttachmentPathsData(Entity $entity): array
+    public function getAttachmentPathsData(AttachmentEntity $attachment): array
     {
-        if (empty($entity->getStorageFilePath())) {
-            return [
-                'origin' => null,
-                'path'   => null,
-                'thumbs' => null
-            ];
-        }
-
-        $thumbs = [];
-        foreach ($this->getMetadata()->get(['app', 'imageSizes'], []) as $size => $params) {
-            $thumbs[$size] = $this->getConfig()->get('thumbsPath', 'upload/thumbs/') . $entity->getStorageThumbPath() . '/' . $size . '/' . $entity->get("name");
-        }
-
-        $origin = $this->getConfig()->get('filesPath', 'upload/files/') . $entity->getStorageFilePath() . '/' . $entity->get("name");
-
-        // @todo change it soon
-        $path = $origin;
-
         return [
-            'origin' => $origin,
-            'path'   => $origin,
-            'thumbs' => $thumbs
+            'download' => $this->getFileStorageManager()->getDownloadUrl($attachment),
+            'thumbs'   => $this->getFileStorageManager()->getThumbs($attachment),
         ];
     }
 

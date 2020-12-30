@@ -288,7 +288,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
 
         getImageUrl: function (id, size) {
             let data = this.model.get(this.namePathsData);
-            let path = data['path'];
+            let path = data['download'];
             if (size) {
                 path = data.thumbs[size];
             }
@@ -297,7 +297,20 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
         },
 
         getDownloadUrl: function (id) {
-            return this.getBasePath() + this.model.get(this.namePathsData)['path'];
+            let path = null;
+            if (!this.model.get(this.namePathsData)) {
+                $.ajax({
+                    url: 'Attachment/' + id,
+                    type: 'GET',
+                    async: false,
+                }).done(function (response) {
+                    path = response.pathsData.download;
+                });
+            } else {
+                path = this.model.get(this.namePathsData)['download'];
+            }
+
+            return this.getBasePath() + path;
         },
 
         deleteAttachment: function () {
