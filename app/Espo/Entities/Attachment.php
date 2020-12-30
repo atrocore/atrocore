@@ -96,4 +96,12 @@ class Attachment extends Base
     {
         return empty($this->get('storageThumbPath')) ? $this->getStorageFilePath() : (string)$this->get('storageThumbPath');
     }
+
+    /**
+     * @return bool
+     */
+    public function isPrivate(): bool
+    {
+        return $this->entityManager->getRepository($this->getEntityType())->isPrivate($this);
+    }
 }

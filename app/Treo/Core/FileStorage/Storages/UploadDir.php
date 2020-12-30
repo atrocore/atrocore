@@ -37,6 +37,7 @@ use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\Attachment;
 use Espo\Entities\User;
+use Espo\EntryPoints\Image;
 
 /**
  * Class UploadDir
@@ -106,12 +107,20 @@ class UploadDir extends Base
      */
     public function getDownloadUrl(Attachment $attachment): string
     {
-        $url = '?entryPoint=download&id=' . $attachment->get('id');
+        if (!$attachment->isPrivate()) {
+            return $this->getFilePath($attachment);
+        }
 
-        /** @var User $user */
-        $user = $this->getInjection('entityManager')->getUser();
+        $url = '?entryPoint=';
+        if (in_array($attachment->get('type'), Image::TYPES)) {
+            $url .= 'image';
+        } else {
+            $url .= 'download';
+        }
+        $url .= "&id={$attachment->get('id')}";
 
-        if (!empty($user) && !empty($user->get('portalId'))) {
+        // for portal
+        if (!empty($user = $this->getInjection('entityManager')->getUser()) && !empty($user->get('portalId'))) {
             $url .= '&portalId=' . $user->get('portalId');
         }
 
