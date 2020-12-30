@@ -72,7 +72,7 @@ class FilePathBuilder
     public function folderPath()
     {
         return [
-            "upload" => $this->container->get('config')->get('publicFilesPath', 'upload/public/'),
+            "upload" => $this->container->get('config')->get('filesPath', 'upload/files/'),
         ];
     }
 

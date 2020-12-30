@@ -39,7 +39,8 @@ use Espo\Core\Utils\Api\Auth as ApiAuth;
 use Espo\Core\Utils\Json;
 use Espo\Core\EntryPointManager;
 use Espo\Entities\Portal;
-use Treo\Core\Preview\Image;
+use Treo\Core\Thumb\Image;
+use Treo\Repositories\Attachment;
 use Treo\Services\Installer;
 use Treo\Core\Utils\Auth;
 use Treo\Core\Utils\Route;
@@ -151,8 +152,8 @@ class Application
             }
 
             if ($show404) {
-                // create preview if it needs
-                $this->createPreview($query);
+                // create thumb if it needs
+                $this->createThumb($query);
 
                 header('HTTP/1.0 404 Not Found');
                 exit();
@@ -235,13 +236,14 @@ class Application
     }
 
     /**
-     * Create preview if it needs
+     * Create thumb if it needs
      *
      * @param string $path
      */
-    protected function createPreview(string $path)
+    protected function createThumb(string $path)
     {
-        if (!$this->isInstalled() || strpos($path, $this->getConfig()->get('thumbsPath', 'upload/thumbs/')) === false) {
+        $thumbsPath = $this->getConfig()->get('thumbsPath', 'upload/thumbs/');
+        if (!$this->isInstalled() || strpos($path, $thumbsPath) === false) {
             return;
         }
 
@@ -249,18 +251,22 @@ class Application
 
         $fileName = array_pop($pathParts);
         $size = array_pop($pathParts);
-        $attachmentId = array_pop($pathParts);
+        $storageThumbPath = str_replace([$thumbsPath, '/' . $size, '/' . $fileName], ['', '', ''], $path);
 
-        $attachment = $this->getContainer()->get('entityManager')->getEntity("Attachment", $attachmentId);
+        /** @var Attachment $attachmentRepository */
+        $attachmentRepository = $this->getContainer()->get('entityManager')->getRepository("Attachment");
+
+        $attachment = $attachmentRepository->where(['storageThumbPath' => $storageThumbPath])->findOne();
         if (empty($attachment)) {
             return;
         }
 
-        /** @var Image $preview */
-        $preview = $this->getContainer()->get('Preview');
+        /** @var Image $thumb */
+        $thumb = $this->getContainer()->get('Thumb');
 
-        if ($preview->createThumb($attachment->getFilePath(), $path, $size)) {
-            $preview->displayImage($path, $fileName);
+        if ($thumb->createThumb($attachment, $size)) {
+            header("Refresh:0");
+            exit();
         }
     }
 

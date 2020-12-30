@@ -67,22 +67,31 @@ Espo.define('views/modals/image-preview', 'views/modal', function (Dep) {
         },
 
         getImageUrl: function () {
-            var url = this.getBasePath() + '?entryPoint=image&id=' + this.options.id;
-            if (this.size) {
-                url += '&size=' + this.size;
-            }
-            if (this.getUser().get('portalId')) {
-                url += '&portalId=' + this.getUser().get('portalId');
-            }
-            return url;
+            let path = null;
+
+            $.ajax({
+                url: 'Attachment/' + this.options.id,
+                type: 'GET',
+                async: false,
+            }).done(function (response) {
+                path = response.pathsData.thumbs['large'];
+            });
+
+            return this.getBasePath() + '/' + path;
         },
 
         getOriginalImageUrl: function () {
-            var url = this.getBasePath() + '?entryPoint=image&id=' + this.options.id;
-            if (this.getUser().get('portalId')) {
-                url += '&portalId=' + this.getUser().get('portalId');
-            }
-            return url;
+            let path = null;
+
+            $.ajax({
+                url: 'Attachment/' + this.options.id,
+                type: 'GET',
+                async: false,
+            }).done(function (response) {
+                path = response.pathsData.path;
+            });
+
+            return this.getBasePath() + '/' + path;
         },
 
         afterRender: function () {

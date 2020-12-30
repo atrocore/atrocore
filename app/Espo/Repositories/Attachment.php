@@ -77,6 +77,7 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
                 'size'            => $entity->get('size'),
                 'role'            => $entity->get('role'),
                 'storageFilePath' => $entity->get('storageFilePath'),
+                'storageThumbPath' => $entity->get('storageThumbPath'),
                 'relatedType'     => $entity->get('relatedType'),
                 'relatedId'       => $entity->get('relatedId'),
                 'md5'             => $entity->get('md5')
@@ -103,7 +104,7 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
 
         $sourcePath = $this->getFilePath($source);
         $destPath = $this->getDestPath(FilePathBuilder::UPLOAD);
-        $fullDestPath = $this->getConfig()->get('publicFilesPath', 'upload/public/') . $destPath;
+        $fullDestPath = $this->getConfig()->get('filesPath', 'upload/files/') . $destPath;
 
         if ($this->getFileManager()->copy($sourcePath, $fullDestPath, false, null, true)) {
             return $destPath;
@@ -153,11 +154,12 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
     public function moveFromTmp(Entity $entity)
     {
         $destPath = $this->getDestPath(FilePathBuilder::UPLOAD);
-        $fullPath = $this->getConfig()->get('publicFilesPath', 'upload/public/') . $destPath . "/" . $entity->get('name');
+        $fullPath = $this->getConfig()->get('filesPath', 'upload/files/') . $destPath . "/" . $entity->get('name');
 
         if ($this->getFileManager()->move($entity->get('tmpPath'), $fullPath, false)) {
             $entity->set("tmpPath", null);
             $entity->set("storageFilePath", $destPath);
+            $entity->set("storageThumbPath", $this->getDestPath(FilePathBuilder::UPLOAD));
 
             return true;
         }
@@ -166,33 +168,35 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
     }
 
     /**
-     * @param string $storageFilePath
-     * @param string $name
+     * @param Entity $entity
      *
-     * @return string
+     * @return array
      */
-    public function prepareFilePath(string $storageFilePath, string $name): string
+    public function getAttachmentPathsData(Entity $entity): array
     {
-        return $this->getConfig()->get('publicFilesPath', 'upload/public/') . $storageFilePath . '/' . $name;
-    }
-
-    /**
-     * @param string $storageFilePath
-     * @param string $fileName
-     * @param string $attachmentId
-     * @param string $size
-     *
-     * @return string
-     */
-    public function prepareThumbPath(string $storageFilePath, string $fileName, string $attachmentId, string $size): string
-    {
-        $i = 0;
-        while (!empty($str = substr(md5($storageFilePath), $i, 4))) {
-            $parts[] = $str;
-            $i = $i + 4;
+        if (empty($entity->getStorageFilePath())) {
+            return [
+                'origin' => null,
+                'path'   => null,
+                'thumbs' => null
+            ];
         }
 
-        return $this->getConfig()->get('thumbsPath', 'upload/thumbs/') . implode('/', $parts) . '/' . $attachmentId . '/' . $size . '/' . $fileName;
+        $thumbs = [];
+        foreach ($this->getMetadata()->get(['app', 'imageSizes'], []) as $size => $params) {
+            $thumbs[$size] = $this->getConfig()->get('thumbsPath', 'upload/thumbs/') . $entity->getStorageThumbPath() . '/' . $size . '/' . $entity->get("name");
+        }
+
+        $origin = $this->getConfig()->get('filesPath', 'upload/files/') . $entity->getStorageFilePath() . '/' . $entity->get("name");
+
+        // @todo change it soon
+        $path = $origin;
+
+        return [
+            'origin' => $origin,
+            'path'   => $origin,
+            'thumbs' => $thumbs
+        ];
     }
 
     /**

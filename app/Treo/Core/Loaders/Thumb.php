@@ -35,12 +35,12 @@ declare(strict_types=1);
 
 namespace Treo\Core\Loaders;
 
-use Treo\Core\Preview\Image;
+use Treo\Core\Thumb\Image;
 
 /**
- * Class Preview
+ * Class Thumb
  */
-class Preview extends Base
+class Thumb extends Base
 {
     /**
      * @inheritdoc

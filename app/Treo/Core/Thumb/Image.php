@@ -33,7 +33,7 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core\Preview;
+namespace Treo\Core\Thumb;
 
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
@@ -70,17 +70,20 @@ class Image
     }
 
     /**
-     * @param string $filePath
-     * @param string $thumbFilePath
-     * @param string $size
+     * @param Attachment $attachment
+     * @param string     $size
      *
      * @return bool
      * @throws Error
      * @throws \Gumlet\ImageResizeException
      */
-    public function createThumb(string $filePath, string $thumbFilePath, string $size): bool
+    public function createThumb(Attachment $attachment, string $size): bool
     {
-        $image = new ImageResize($filePath);
+        if (empty($attachment->getThumbPath($size)) || empty($attachment->getFilePath())) {
+            return false;
+        }
+
+        $image = new ImageResize($attachment->getFilePath());
 
         if (!$this->imageSizes[$size]) {
             throw new Error('Wrong file size');
@@ -90,26 +93,7 @@ class Image
 
         $image->resizeToBestFit($w, $h);
 
-        return $this->getFileManager()->putContents($thumbFilePath, $image->getImageAsString());
-    }
-
-    /**
-     * Display image
-     *
-     * @param string $path
-     * @param string $fileName
-     */
-    public function displayImage(string $path, string $fileName): void
-    {
-        header("Content-Disposition:inline;filename=\"{$fileName}\"");
-        header('Pragma: public');
-        header('Cache-Control: max-age=360000, must-revalidate');
-        $fileSize = filesize($path);
-        if ($fileSize) {
-            header('Content-Length: ' . $fileSize);
-        }
-        readfile($path);
-        exit;
+        return $this->getFileManager()->putContents($attachment->getThumbPath($size), $image->getImageAsString());
     }
 
     /**

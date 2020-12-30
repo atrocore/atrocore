@@ -56,8 +56,28 @@ class Metadata extends AbstractListener
         // add onlyActive bool filter
         $data = $this->addOnlyActiveFilter($data);
 
+        // set thumbs sizes to options of asset field type
+        $data = $this->setAssetThumbSize($data);
+
         // set data
         $event->setArgument('data', $data);
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return array
+     */
+    protected function setAssetThumbSize(array $data): array
+    {
+        foreach ($data['fields']['asset']['params'] as $k => $row) {
+            if ($row['name'] === 'previewSize') {
+                $data['fields']['asset']['params'][$k]['options'] = empty($data['app']['imageSizes']) ? [] : array_keys($data['app']['imageSizes']);
+                break;
+            }
+        }
+
+        return $data;
     }
 
     /**

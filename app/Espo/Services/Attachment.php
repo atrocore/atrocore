@@ -185,6 +185,16 @@ class Attachment extends Record
         return $entity;
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function prepareEntityForOutput(Entity $entity)
+    {
+        parent::prepareEntityForOutput($entity);
+
+        $entity->set('pathsData', $this->getRepository()->getAttachmentPathsData($entity));
+    }
+
     protected function beforeCreateEntity(Entity $entity, $data)
     {
         $storage = $entity->get('storage');

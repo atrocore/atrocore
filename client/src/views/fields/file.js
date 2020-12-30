@@ -153,8 +153,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
 
         setup: function () {
             this.nameName = this.name + 'Name';
-            this.namePath = this.name + 'Path';
-            this.namePreviews = this.name + 'Previews';
+            this.namePathsData = this.name + 'PathsData';
             this.idName = this.name + 'Id';
             this.typeName = this.name + 'Type';
             this.foreignScope = 'Attachment';
@@ -288,16 +287,17 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
         },
 
         getImageUrl: function (id, size) {
-            let path = this.model.get(this.namePath);
+            let data = this.model.get(this.namePathsData);
+            let path = data['path'];
             if (size) {
-                path = this.model.get(this.namePreviews)[size];
+                path = data.thumbs[size];
             }
 
             return this.getBasePath() + '/' + path;
         },
 
         getDownloadUrl: function (id) {
-            return this.getBasePath() + this.model.get(this.namePath);
+            return this.getBasePath() + this.model.get(this.namePathsData)['path'];
         },
 
         deleteAttachment: function () {

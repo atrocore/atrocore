@@ -147,7 +147,7 @@ class UploadDir extends Base
             $attachment->set('storageFilePath', $storage);
         }
 
-        return $this->getInjection('entityManager')->getRepository('Attachment')->prepareFilePath($storage, $attachment->get('name'));
+        return (string)$this->getInjection('entityManager')->getRepository('Attachment')->getAttachmentPathsData($attachment)['origin'];
     }
 
     /**
