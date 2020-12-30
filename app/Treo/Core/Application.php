@@ -39,8 +39,6 @@ use Espo\Core\Utils\Api\Auth as ApiAuth;
 use Espo\Core\Utils\Json;
 use Espo\Core\EntryPointManager;
 use Espo\Entities\Portal;
-use Treo\Core\Thumb\Image;
-use Treo\Repositories\Attachment;
 use Treo\Services\Installer;
 use Treo\Core\Utils\Auth;
 use Treo\Core\Utils\Route;

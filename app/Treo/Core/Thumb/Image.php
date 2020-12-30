@@ -36,7 +36,6 @@ declare(strict_types=1);
 namespace Treo\Core\Thumb;
 
 use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\NotFound;
 use Espo\ORM\EntityManager;
 use Gumlet\ImageResize;
 use Treo\Core\Container;
