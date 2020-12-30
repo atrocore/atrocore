@@ -97,14 +97,12 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         setRequired: function () {
             this.params.required = true;
 
-            if (this.mode === 'edit') {
-                if (this.isRendered()) {
+            if (this.isRendered()) {
+                this.showRequiredSign();
+            } else {
+                this.once('after:render', function () {
                     this.showRequiredSign();
-                } else {
-                    this.once('after:render', function () {
-                        this.showRequiredSign();
-                    }, this);
-                }
+                }, this);
             }
         },
 
@@ -259,16 +257,10 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }, this);
 
             this.on('after:render', function () {
-                if (this.mode === 'edit') {
-                    if (this.hasRequiredMarker()) {
-                        this.showRequiredSign();
-                    } else {
-                        this.hideRequiredSign();
-                    }
+                if (this.hasRequiredMarker()) {
+                    this.showRequiredSign();
                 } else {
-                    if (this.hasRequiredMarker()) {
-                        this.hideRequiredSign();
-                    }
+                    this.hideRequiredSign();
                 }
 
             }, this);
