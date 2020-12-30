@@ -387,23 +387,28 @@ class Record extends \Espo\Core\Services\Base
      */
     public function loadPreview(Entity $entity): void
     {
+        $fields = [];
+        foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []) as $field => $data) {
+            if (in_array($data['type'], ['asset', 'image', 'file']) && !empty($entity->get("{$field}Id"))) {
+                $fields[$entity->get("{$field}Id")] = $field;
+            }
+        }
+
+        if (empty($fields)) {
+            return;
+        }
+
         /** @var \Espo\Repositories\Attachment $attachmentRepository */
         $attachmentRepository = $this->getEntityManager()->getRepository('Attachment');
 
-        foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []) as $field => $data) {
-            if (in_array($data['type'], ['asset', 'image', 'file']) && !empty($entity->get("{$field}Id"))) {
-                if (!empty($entity->get("{$field}Path"))) {
-                    // prepare attachment
-                    $attachment = $attachmentRepository->get();
-                    $attachment->id = $entity->get("{$field}Id");
-                    $attachment->set('name', $entity->get("{$field}Name"));
-                    $attachment->set('storageFilePath', $entity->get("{$field}Path"));
-                    $attachment->set('storageThumbPath', $entity->get("{$field}PathThumb"));
-                } else {
-                    $attachment = $attachmentRepository->get($entity->get("{$field}Id"));
-                }
+        $attachments = $attachmentRepository
+            ->where(['id' => array_keys($fields)])
+            ->find();
 
-                $entity->set("{$field}PathsData", $attachmentRepository->getAttachmentPathsData($attachment));
+        if (!empty($attachments) && count($attachments) > 0) {
+            foreach ($attachments as $attachment) {
+                $fieldName = $fields[$attachment->get('id')];
+                $entity->set("{$fieldName}PathsData", $attachmentRepository->getAttachmentPathsData($attachment));
             }
         }
     }
@@ -852,6 +857,7 @@ class Record extends \Espo\Core\Services\Base
             $this->afterCreateEntity($entity, $attachment);
             $this->afterCreateProcessDuplicating($entity, $attachment);
             $this->prepareEntityForOutput($entity);
+            $this->loadPreview($entity);
 
             $this->processActionHistoryRecord('create', $entity);
 
@@ -2500,14 +2506,6 @@ class Record extends \Espo\Core\Services\Base
             foreach ($passedAttributeList as $attribute) {
                 if (!in_array($attribute, $attributeList) && $seed->hasAttribute($attribute)) {
                     $attributeList[] = $attribute;
-                }
-            }
-
-            // add image path to $attributeList
-            foreach ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields'], []) as $field => $data) {
-                if (in_array($data['type'], ['asset', 'image', 'file'])) {
-                    $attributeList[] = "{$field}Path";
-                    $attributeList[] = "{$field}PathThumb";
                 }
             }
 

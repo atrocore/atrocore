@@ -173,9 +173,7 @@ class Attachment extends RDB
 
             // create thumbs for image
             if (in_array($entity->get('type'), \Espo\EntryPoints\Image::TYPES)) {
-                foreach ($this->getMetadata()->get(['app', 'imageSizes'], []) as $size => $params) {
-                    $this->getInjection('Thumb')->createThumb($entity, $size);
-                }
+                $this->getInjection('queueManager')->push('Create thumbs', 'QueueManagerCreateThumbs', ['id' => $entity->get('id')], 1);
             }
 
             return true;
@@ -218,6 +216,7 @@ class Attachment extends RDB
         $this->addDependency('filePathBuilder');
         $this->addDependency('fileManager');
         $this->addDependency('Thumb');
+        $this->addDependency('queueManager');
     }
 
     /**

@@ -297,20 +297,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
         },
 
         getDownloadUrl: function (id) {
-            let path = null;
-            if (!this.model.get(this.namePathsData)) {
-                $.ajax({
-                    url: 'Attachment/' + id,
-                    type: 'GET',
-                    async: false,
-                }).done(function (response) {
-                    path = response.pathsData.download;
-                });
-            } else {
-                path = this.model.get(this.namePathsData)['download'];
-            }
-
-            return this.getBasePath() + path;
+            return this.getBasePath() + this.model.get(this.namePathsData)['download'];
         },
 
         deleteAttachment: function () {
