@@ -79,7 +79,7 @@ class Image
      */
     public function createThumbByPath(string $path): ?Attachment
     {
-        $thumbsPath = $this->getConfig()->get('thumbsPath', 'upload/thumbs/');
+        $thumbsPath = $this->getConfig()->get('thumbnailsPath', 'upload/thumbnails/');
         if (strpos($path, $thumbsPath) === false) {
             return null;
         }

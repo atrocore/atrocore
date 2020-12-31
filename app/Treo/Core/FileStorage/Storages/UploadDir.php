@@ -173,7 +173,7 @@ class UploadDir extends Base
      */
     protected function getThumbsDirPath(Attachment $attachment): string
     {
-        return $this->getConfig()->get('thumbsPath', 'upload/thumbs/') . $attachment->getStorageThumbPath();
+        return $this->getConfig()->get('thumbnailsPath', 'upload/thumbnails/') . $attachment->getStorageThumbPath();
     }
 
     /**
