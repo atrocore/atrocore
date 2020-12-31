@@ -33,7 +33,7 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core\Thumb;
+namespace Treo\Core\Thumbnail;
 
 use Espo\Core\Exceptions\Error;
 use Espo\ORM\EntityManager;

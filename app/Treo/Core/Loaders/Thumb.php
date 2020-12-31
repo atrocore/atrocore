@@ -35,7 +35,7 @@ declare(strict_types=1);
 
 namespace Treo\Core\Loaders;
 
-use Treo\Core\Thumb\Image;
+use Treo\Core\Thumbnail\Image;
 
 /**
  * Class Thumb
