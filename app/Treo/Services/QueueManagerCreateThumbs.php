@@ -56,7 +56,7 @@ class QueueManagerCreateThumbs extends QueueManagerBase
 
         foreach ($this->getContainer()->get('metadata')->get(['app', 'imageSizes'], []) as $size => $params) {
             try {
-                $this->getContainer()->get('Thumb')->createThumb($attachment, $size);
+                $this->getContainer()->get('Thumbnail')->createThumbnail($attachment, $size);
             } catch (\Throwable $e) {
                 // ignore all errors
             }

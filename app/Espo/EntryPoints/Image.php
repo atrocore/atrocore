@@ -98,7 +98,7 @@ class Image extends AbstractEntryPoint
 
             $filePath = $attachment->getThumbPath($size);
             if (!file_exists($filePath)) {
-                $this->getContainer()->get('Thumb')->createThumb($attachment, $size);
+                $this->getContainer()->get('Thumbnail')->createThumbnail($attachment, $size);
             }
         }
 

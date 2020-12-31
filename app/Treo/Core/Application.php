@@ -239,7 +239,7 @@ class Application
      */
     protected function createAndDisplayThumb(string $path): void
     {
-        if ($this->isInstalled() && !empty($attachment = $this->getContainer()->get('Thumb')->createThumbByPath($path))) {
+        if ($this->isInstalled() && !empty($attachment = $this->getContainer()->get('Thumbnail')->createThumbnailByPath($path))) {
             $content = file_get_contents($path);
             $fileType = $attachment->get('type');
             $fileName = $attachment->get('name');

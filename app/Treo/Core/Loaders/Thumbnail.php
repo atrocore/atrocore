@@ -38,9 +38,9 @@ namespace Treo\Core\Loaders;
 use Treo\Core\Thumbnail\Image;
 
 /**
- * Class Thumb
+ * Class Thumbnail
  */
-class Thumb extends Base
+class Thumbnail extends Base
 {
     /**
      * @inheritdoc

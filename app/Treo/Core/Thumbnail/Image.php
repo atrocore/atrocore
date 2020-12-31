@@ -77,7 +77,7 @@ class Image
      * @throws Error
      * @throws \Gumlet\ImageResizeException
      */
-    public function createThumbByPath(string $path): ?Attachment
+    public function createThumbnailByPath(string $path): ?Attachment
     {
         $thumbsPath = $this->getConfig()->get('thumbnailsPath', 'upload/thumbnails/');
         if (strpos($path, $thumbsPath) === false) {
@@ -100,7 +100,7 @@ class Image
             }
         }
 
-        if ($this->createThumb($attachment, $size)) {
+        if ($this->createThumbnail($attachment, $size)) {
             return $attachment;
         }
 
@@ -115,7 +115,7 @@ class Image
      * @throws Error
      * @throws \Gumlet\ImageResizeException
      */
-    public function createThumb(Attachment $attachment, string $size): bool
+    public function createThumbnail(Attachment $attachment, string $size): bool
     {
         if (empty($attachment->getThumbPath($size)) || empty($attachment->getFilePath())) {
             return false;
