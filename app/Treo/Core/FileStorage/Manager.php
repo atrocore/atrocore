@@ -35,7 +35,7 @@ namespace Treo\Core\FileStorage;
 
 use Espo\Core\Exceptions\Error;
 use Treo\Core\Container;
-use Treo\Entities\Attachment;
+use Espo\Entities\Attachment;
 
 /**
  * Class Manager
@@ -159,20 +159,20 @@ class Manager
      * @return mixed
      * @throws Error
      */
-    public function hasDownloadUrl(Attachment $attachment)
-    {
-        $implementation = $this->getImplementation($attachment->get('storage'));
-        return $implementation->hasDownloadUrl($attachment);
-    }
-
-    /**
-     * @param Attachment $attachment
-     * @return mixed
-     * @throws Error
-     */
     public function getDownloadUrl(Attachment $attachment)
     {
         $implementation = $this->getImplementation($attachment->get('storage'));
         return $implementation->getDownloadUrl($attachment);
+    }
+
+    /**
+     * @param Attachment $attachment
+     *
+     * @return array
+     * @throws Error
+     */
+    public function getThumbs(Attachment $attachment): array
+    {
+        return $this->getImplementation($attachment->get('storage'))->getThumbs($attachment);
     }
 }

@@ -33,11 +33,27 @@
 
 declare(strict_types=1);
 
-namespace Treo\Repositories;
+namespace Treo\SelectManagers;
+
+use Espo\Core\SelectManagers\Base;
 
 /**
- * Class Attachment
+ * Class QueueItem
  */
-class Attachment extends \Espo\Repositories\Attachment
+class QueueItem extends Base
 {
+    /**
+     * @inheritdoc
+     */
+    public function getSelectParams(array $params, $withAcl = false, $checkWherePermission = false)
+    {
+        // parent
+        $result = parent::getSelectParams($params, $withAcl, $checkWherePermission);
+
+        $result['whereClause'][] = [
+            'stream' => 0
+        ];
+
+        return $result;
+    }
 }

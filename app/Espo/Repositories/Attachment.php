@@ -35,28 +35,48 @@ declare(strict_types=1);
 
 namespace Espo\Repositories;
 
+use Espo\Core\Exceptions\InternalServerError;
 use Espo\ORM\Entity;
+use Espo\Core\ORM\Repositories\RDB;
 use Treo\Core\FilePathBuilder;
-use Treo\Core\FileStorage\Storages\UploadDir;
 use Treo\Core\Utils\Config;
 use Treo\Core\Utils\Util;
+use Espo\Entities\Attachment as AttachmentEntity;
 
 /**
  * Class Attachment
  */
-class Attachment extends \Espo\Core\ORM\Repositories\RDB
+class Attachment extends RDB
 {
     /**
      * @inheritDoc
      */
-    public function beforeSave(Entity $entity, array $options = array())
+    public function beforeSave(Entity $entity, array $options = [])
     {
         parent::beforeSave($entity, $options);
 
         $storage = $entity->get('storage');
         if (!$storage) {
-            $entity->set('storage', $this->getConfig()->get('defaultFileStorage', null));
+            $entity->set('storage', $this->getConfig()->get('defaultFileStorage', 'UploadDir'));
         }
+
+        if (!$entity->isNew()) {
+            if ($entity->get('sourceId')) {
+                $this->copyFile($entity);
+            } elseif ($entity->isAttributeChanged("relatedId") || $entity->isAttributeChanged("relatedType")) {
+                $this->moveFromTmp($entity);
+            }
+        }
+    }
+
+    /**
+     * @param Entity $entity
+     *
+     * @return bool
+     */
+    public function isPrivate(Entity $entity): bool
+    {
+        return $this->getConfig()->get('isUploadsPrivate', true);
     }
 
     /**
@@ -71,15 +91,16 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
 
         $attachment->set(
             [
-                'sourceId'        => $entity->getSourceId(),
-                'name'            => $entity->get('name'),
-                'type'            => $entity->get('type'),
-                'size'            => $entity->get('size'),
-                'role'            => $entity->get('role'),
-                'storageFilePath' => $entity->get('storageFilePath'),
-                'relatedType'     => $entity->get('relatedType'),
-                'relatedId'       => $entity->get('relatedId'),
-                'md5'             => $entity->get('md5')
+                'sourceId'         => $entity->getSourceId(),
+                'name'             => $entity->get('name'),
+                'type'             => $entity->get('type'),
+                'size'             => $entity->get('size'),
+                'role'             => $entity->get('role'),
+                'storageFilePath'  => $entity->get('storageFilePath'),
+                'storageThumbPath' => $entity->get('storageThumbPath'),
+                'relatedType'      => $entity->get('relatedType'),
+                'relatedId'        => $entity->get('relatedId'),
+                'md5'              => $entity->get('md5')
             ]
         );
 
@@ -103,7 +124,7 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
 
         $sourcePath = $this->getFilePath($source);
         $destPath = $this->getDestPath(FilePathBuilder::UPLOAD);
-        $fullDestPath = UploadDir::BASE_PATH . $destPath;
+        $fullDestPath = $this->getConfig()->get('filesPath', 'upload/files/') . $destPath;
 
         if ($this->getFileManager()->copy($sourcePath, $fullDestPath, false, null, true)) {
             return $destPath;
@@ -153,16 +174,42 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
     public function moveFromTmp(Entity $entity)
     {
         $destPath = $this->getDestPath(FilePathBuilder::UPLOAD);
-        $fullPath = UploadDir::BASE_PATH . $destPath . "/" . $entity->get('name');
+        $fullPath = $this->getConfig()->get('filesPath', 'upload/files/') . $destPath . "/" . $entity->get('name');
 
         if ($this->getFileManager()->move($entity->get('tmpPath'), $fullPath, false)) {
             $entity->set("tmpPath", null);
             $entity->set("storageFilePath", $destPath);
+            $entity->set("storageThumbPath", $this->getDestPath(FilePathBuilder::UPLOAD));
+
+            // create thumbs for image
+            if (in_array($entity->get('type'), \Espo\EntryPoints\Image::TYPES)) {
+                $this->getInjection('queueManager')->push('Create thumbs', 'QueueManagerCreateThumbs', ['id' => $entity->get('id')], 1);
+            }
 
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * @param AttachmentEntity $attachment
+     *
+     * @return array
+     */
+    public function getAttachmentPathsData($attachment): array
+    {
+        $result = [
+            'download' => null,
+            'thumbs'   => [],
+        ];
+
+        if (!empty($attachment)) {
+            $result['download'] = $this->getFileStorageManager()->getDownloadUrl($attachment);
+            $result['thumbs'] = $this->getFileStorageManager()->getThumbs($attachment);
+        }
+
+        return $result;
     }
 
     /**
@@ -178,6 +225,8 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
         $this->addDependency('fileStorageManager');
         $this->addDependency('filePathBuilder');
         $this->addDependency('fileManager');
+        $this->addDependency('Thumb');
+        $this->addDependency('queueManager');
     }
 
     /**
@@ -285,5 +334,25 @@ class Attachment extends \Espo\Core\ORM\Repositories\RDB
     protected function getDestPath(string $type): string
     {
         return $this->getPathBuilder()->createPath($type);
+    }
+
+    /**
+     * @param Entity $entity
+     *
+     * @throws InternalServerError
+     */
+    protected function copyFile(Entity $entity): void
+    {
+        $path = $this->copy($entity);
+        if (!$path) {
+            throw new InternalServerError($this->translate("Can't copy file", 'exceptions', 'Global'));
+        }
+
+        $entity->set(
+            [
+                'sourceId'        => null,
+                'storageFilePath' => $path,
+            ]
+        );
     }
 }

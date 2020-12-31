@@ -48,6 +48,10 @@ class File extends Base
                     ),
                     $fieldName.'Name' => array(
                         'type' => 'foreign'
+                    ),
+                    $fieldName.'PathsData' => array(
+                        'type'        => 'jsonObject',
+                        'notStorable' => true
                     )
                 )
             ),

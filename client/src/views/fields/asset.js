@@ -54,10 +54,6 @@ Espo.define('views/fields/asset', 'views/fields/image', function (Dep) {
             return $.inArray(fileExt, hasPreviewExtensions) !== -1;
         },
 
-        getEditPreview: function (name, type, id) {
-            return name;
-        },
-
         switchPreview: function () {
             if (this.hasPreview()) {
                 this.type = 'image';

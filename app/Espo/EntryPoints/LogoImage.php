@@ -34,7 +34,6 @@
 namespace Espo\EntryPoints;
 
 use Espo\Core\Exceptions\NotFound;
-use Treo\EntryPoints\Image;
 
 class LogoImage extends Image
 {

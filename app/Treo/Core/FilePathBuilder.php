@@ -69,10 +69,10 @@ class FilePathBuilder
     /**
      * @return array
      */
-    public static function folderPath()
+    public function folderPath()
     {
         return [
-            "upload" => UploadDir::BASE_PATH,
+            "upload" => $this->container->get('config')->get('filesPath', 'upload/files/'),
         ];
     }
 
@@ -86,7 +86,7 @@ class FilePathBuilder
      */
     public function createPath(string $type, ?string $route = null): string
     {
-        $baseFolder = static::folderPath()[$type];
+        $baseFolder = $this->folderPath()[$type];
         $lastPath = $this->getFromFile($baseFolder, $route);
 
         if (!$lastPath) {
@@ -157,7 +157,7 @@ class FilePathBuilder
      */
     protected function buildPath(string $type, string $path, ?string $subType)
     {
-        $basePath = static::folderPath()[$type];
+        $basePath = $this->folderPath()[$type];
         $folderInfo = $this->getMeta()->get(['app', 'fileStorage', $type]);
         $iter = 0;
         $backIter = 0;

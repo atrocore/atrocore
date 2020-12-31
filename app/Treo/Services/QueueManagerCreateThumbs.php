@@ -31,39 +31,37 @@
  * and "AtroCore" word.
  */
 
-namespace Espo\EntryPoints;
+declare(strict_types=1);
 
-use \Espo\Core\Exceptions\BadRequest;
-use \Espo\Core\Exceptions\Error;
+namespace Treo\Services;
 
-class ConfirmOptIn extends AbstractEntryPoint
+/**
+ * Class QueueManagerCreateThumbs
+ */
+class QueueManagerCreateThumbs extends QueueManagerBase
 {
-    public static $authRequired = false;
-
-    public function run()
+    /**
+     * @inheritdoc
+     */
+    public function run(array $data = []): bool
     {
-        if (empty($_GET['id'])) throw new BadRequest();
-
-        $id = $_GET['id'];
-
-        $data = $this->getServiceFactory()->create('LeadCapture')->confirmOptIn($id);
-
-        if ($data->status === 'success') {
-            $action = 'optInConfirmationSuccess';
-        } else if ($data->status === 'expired') {
-            $action = 'optInConfirmationExpired';
-        } else {
-            throw new Error();
+        if (empty($data['id'])) {
+            return false;
         }
 
-        $runScript = "
-            Espo.require('controllers/lead-capture-opt-in-confirmation', function (Controller) {
-                var controller = new Controller(app.baseController.params, app.getControllerInjection());
-                controller.masterView = app.masterView;
-                controller.doAction('".$action."', ".json_encode($data).");
-            });
-        ";
+        $attachment = $this->getEntityManager()->getEntity('Attachment', $data['id']);
+        if (empty($attachment)) {
+            return false;
+        }
 
-        $this->getClientManager()->display($runScript);
+        foreach ($this->getContainer()->get('metadata')->get(['app', 'imageSizes'], []) as $size => $params) {
+            try {
+                $this->getContainer()->get('Thumb')->createThumb($attachment, $size);
+            } catch (\Throwable $e) {
+                // ignore all errors
+            }
+        }
+
+        return true;
     }
 }

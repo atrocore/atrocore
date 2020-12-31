@@ -34,7 +34,7 @@
 namespace Treo\Core\FileStorage\Storages;
 
 use \Espo\Core\Interfaces\Injectable;
-use Treo\Entities\Attachment;
+use Espo\Entities\Attachment;
 
 /**
  * Class Base
@@ -113,15 +113,10 @@ abstract class Base implements Injectable
 
     /**
      * @param Attachment $attachment
-     * @return mixed
+     *
+     * @return string
      */
-    abstract public function hasDownloadUrl(Attachment $attachment);
-
-    /**
-     * @param Attachment $attachment
-     * @return mixed
-     */
-    abstract public function getDownloadUrl(Attachment $attachment);
+    abstract public function getDownloadUrl(Attachment $attachment): string;
 
     /**
      * @param Attachment $attachment
@@ -153,4 +148,11 @@ abstract class Base implements Injectable
      * @return mixed
      */
     abstract public function getLocalFilePath(Attachment $attachment);
+
+    /**
+     * @param Attachment $attachment
+     *
+     * @return array
+     */
+    abstract public function getThumbs(Attachment $attachment): array;
 }

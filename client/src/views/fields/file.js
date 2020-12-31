@@ -153,6 +153,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
 
         setup: function () {
             this.nameName = this.name + 'Name';
+            this.namePathsData = this.name + 'PathsData';
             this.idName = this.name + 'Id';
             this.typeName = this.name + 'Type';
             this.foreignScope = 'Attachment';
@@ -255,23 +256,13 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 case 'image/png':
                 case 'image/jpeg':
                 case 'image/gif':
-                    preview = '<a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="'+this.getBasePath()+'?entryPoint=image&size='+this.previewSize+'&id=' + id + '" class="image-preview"></a>';
+                    preview = '<a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="' + this.getImageUrl(id, this.previewSize) + '" class="image-preview"></a>';
             }
             return preview;
         },
 
         getEditPreview: function (name, type, id) {
-            name = Handlebars.Utils.escapeExpression(name);
-            var preview = name;
-
-            switch (type) {
-                case 'image/png':
-                case 'image/jpeg':
-                case 'image/gif':
-                    preview = '<img src="' + this.getImageUrl(id, 'small') + '" title="' + name + '">';
-            }
-
-            return preview;
+            return name;
         },
 
         getValueForDisplay: function () {
@@ -296,22 +287,31 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
         },
 
         getImageUrl: function (id, size) {
-            var url = this.getBasePath() + '?entryPoint=image&id=' + id;
+            let data = this.model.get(this.namePathsData);
+            if (!data) {
+                return '';
+            }
+
+            let path = data['download'];
             if (size) {
-                url += '&size=' + size;
+                // for list size always small
+                const type = this.getParentView().getParentView().type || null;
+                if (type === 'list') {
+                    size = 'small';
+                }
+
+                path = data.thumbs[size];
             }
-            if (this.getUser().get('portalId')) {
-                url += '&portalId=' + this.getUser().get('portalId');
-            }
-            return url;
+
+            return this.getBasePath() + '/' + path;
         },
 
         getDownloadUrl: function (id) {
-            var url = this.getBasePath() + '?entryPoint=download&id=' + id;
-            if (this.getUser().get('portalId')) {
-                url += '&portalId=' + this.getUser().get('portalId');
+            if (!this.model.get(this.namePathsData)) {
+                return '';
             }
-            return url;
+
+            return this.getBasePath() + this.model.get(this.namePathsData)['download'];
         },
 
         deleteAttachment: function () {
@@ -389,7 +389,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                         attachment.set('file', result);
                         attachment.set('field', this.name);
 
-                        attachment.save({}, {timeout: 0}).then(function () {
+                        attachment.save({}, {timeout: 0}).then(function (response) {
                             this.isUploading = false;
                             if (!isCanceled) {
                                 $attachmentBox.trigger('ready');

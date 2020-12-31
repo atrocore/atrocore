@@ -377,11 +377,46 @@ class Record extends \Espo\Core\Services\Base
         $this->loadEmailAddressField($entity);
         $this->loadPhoneNumberField($entity);
         $this->loadNotJoinedLinkFields($entity);
+        $this->loadPreview($entity);
+    }
+
+    /**
+     * Load image preview
+     *
+     * @param Entity $entity
+     */
+    public function loadPreview(Entity $entity): void
+    {
+        $fields = [];
+        foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []) as $field => $data) {
+            if (in_array($data['type'], ['asset', 'image', 'file']) && !empty($entity->get("{$field}Id"))) {
+                $fields[$entity->get("{$field}Id")] = $field;
+            }
+        }
+
+        if (empty($fields)) {
+            return;
+        }
+
+        /** @var \Espo\Repositories\Attachment $attachmentRepository */
+        $attachmentRepository = $this->getEntityManager()->getRepository('Attachment');
+
+        $attachments = $attachmentRepository
+            ->where(['id' => array_keys($fields)])
+            ->find();
+
+        if (!empty($attachments) && count($attachments) > 0) {
+            foreach ($attachments as $attachment) {
+                $fieldName = $fields[$attachment->get('id')];
+                $entity->set("{$fieldName}PathsData", $attachmentRepository->getAttachmentPathsData($attachment));
+            }
+        }
     }
 
     public function loadAdditionalFieldsForList(Entity $entity)
     {
         $this->loadParentNameFields($entity);
+        $this->loadPreview($entity);
     }
 
     public function loadAdditionalFieldsForExport(Entity $entity)
@@ -822,6 +857,7 @@ class Record extends \Espo\Core\Services\Base
             $this->afterCreateEntity($entity, $attachment);
             $this->afterCreateProcessDuplicating($entity, $attachment);
             $this->prepareEntityForOutput($entity);
+            $this->loadPreview($entity);
 
             $this->processActionHistoryRecord('create', $entity);
 
@@ -893,6 +929,7 @@ class Record extends \Espo\Core\Services\Base
         if ($this->storeEntity($entity)) {
             $this->afterUpdateEntity($entity, $data);
             $this->prepareEntityForOutput($entity);
+            $this->loadPreview($entity);
 
             $this->processActionHistoryRecord('update', $entity);
 
@@ -1271,27 +1308,30 @@ class Record extends \Espo\Core\Services\Base
             $selectParams['skipTextColumns'] = $recordService->isSkipSelectTextAttributes();
         }
 
+        $total = 0;
         $collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
 
-        foreach ($collection as $e) {
-            $recordService->loadAdditionalFieldsForList($e);
-            if (!empty($params['loadAdditionalFields'])) {
-                $recordService->loadAdditionalFields($e);
+        if (!empty($collection) && count($collection) > 0) {
+            foreach ($collection as $e) {
+                $recordService->loadAdditionalFieldsForList($e);
+                if (!empty($params['loadAdditionalFields'])) {
+                    $recordService->loadAdditionalFields($e);
+                }
+                if (!empty($selectAttributeList)) {
+                    $this->loadLinkMultipleFieldsForList($e, $selectAttributeList);
+                }
+                $recordService->prepareEntityForOutput($e);
             }
-            if (!empty($selectAttributeList)) {
-                $this->loadLinkMultipleFieldsForList($e, $selectAttributeList);
-            }
-            $recordService->prepareEntityForOutput($e);
-        }
 
-        if (!$disableCount) {
-            $total = $this->getRepository()->countRelated($entity, $link, $selectParams);
-        } else {
-            if ($maxSize && count($collection) > $maxSize) {
-                $total = -1;
-                unset($collection[count($collection) - 1]);
+            if (!$disableCount) {
+                $total = $this->getRepository()->countRelated($entity, $link, $selectParams);
             } else {
-                $total = -2;
+                if ($maxSize && count($collection) > $maxSize) {
+                    $total = -1;
+                    unset($collection[count($collection) - 1]);
+                } else {
+                    $total = -2;
+                }
             }
         }
 
@@ -2435,11 +2475,6 @@ class Record extends \Espo\Core\Services\Base
 
         if ($this->selectAttributeList) {
             return $this->selectAttributeList;
-        }
-
-        // TODO remove in 5.5.0
-        if (in_array($this->getEntityType(), ['Report', 'Workflow', 'ReportPanel'])) {
-            return null;
         }
 
         $seed = $this->getEntityManager()->getEntity($this->getEntityType());

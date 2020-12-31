@@ -34,7 +34,6 @@
 namespace Espo\EntryPoints;
 
 use Espo\Core\Exceptions\BadRequest;
-use Treo\EntryPoints\Image;
 
 class Avatar extends Image
 {

@@ -33,7 +33,7 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core\EntryPoints;
+namespace Espo\EntryPoints;
 
 use Espo\Core\Acl;
 use Espo\Core\Utils\ClientManager;

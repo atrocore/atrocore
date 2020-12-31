@@ -54,6 +54,7 @@ return [
     'useCache'               => true,
     'applicationName'        => 'AtroCORE',
     'outboundEmailFromName'  => 'AtroCORE',
+    'isUploadsPrivate'       => true,
     'smtpPort'               => 25,
     'languageList'           => [
         'en_US',

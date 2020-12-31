@@ -36,7 +36,6 @@ namespace Espo\EntryPoints;
 use \Espo\Core\Exceptions\NotFound;
 use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\BadRequest;
-use Treo\Core\EntryPoints\AbstractEntryPoint;
 
 class Download extends AbstractEntryPoint
 {
@@ -71,12 +70,6 @@ class Download extends AbstractEntryPoint
         }
 
         $sourceId = $attachment->getSourceId();
-
-        if ($this->getEntityManager()->getRepository('Attachment')->hasDownloadUrl($attachment)) {
-            $downloadUrl = $this->getEntityManager()->getRepository('Attachment')->getDownloadUrl($attachment);
-            header('Location: ' . $downloadUrl);
-            exit;
-        }
 
         $fileName = $this->getEntityManager()->getRepository('Attachment')->getFilePath($attachment);
 

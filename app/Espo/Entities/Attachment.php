@@ -31,7 +31,7 @@
  * and "AtroCore" word.
  */
 
-namespace Treo\Entities;
+namespace Espo\Entities;
 
 use Espo\Core\ORM\Entity as Base;
 
@@ -59,5 +59,49 @@ class Attachment extends Base
     public function _getStorage()
     {
         return $this->valuesContainer['storage'] ? $this->valuesContainer['storage'] : "UploadDir";
+    }
+
+    /**
+     * @return string
+     */
+    public function getFilePath(): string
+    {
+        return $this->entityManager->getRepository($this->getEntityType())->getFilePath($this);
+    }
+
+    /**
+     * @param string $size
+     *
+     * @return string
+     */
+    public function getThumbPath(string $size): string
+    {
+        $data = $this->entityManager->getRepository($this->getEntityType())->getAttachmentPathsData($this);
+
+        return !empty($data['thumbs'][$size]) ? $data['thumbs'][$size] : '';
+    }
+
+    /**
+     * @return string
+     */
+    public function getStorageFilePath(): string
+    {
+        return (string)$this->get('storageFilePath');
+    }
+
+    /**
+     * @return string
+     */
+    public function getStorageThumbPath(): string
+    {
+        return empty($this->get('storageThumbPath')) ? $this->getStorageFilePath() : (string)$this->get('storageThumbPath');
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPrivate(): bool
+    {
+        return $this->entityManager->getRepository($this->getEntityType())->isPrivate($this);
     }
 }

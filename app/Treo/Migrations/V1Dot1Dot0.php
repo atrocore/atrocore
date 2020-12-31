@@ -33,61 +33,42 @@
 
 declare(strict_types=1);
 
-namespace Treo\Listeners;
+namespace Treo\Migrations;
 
-use Espo\Core\Exceptions\InternalServerError;
-use Espo\ORM\Entity;
-use Treo\Core\EventManager\Event;
+use Treo\Core\Migration\Base;
 
 /**
- * Class AssetEntity
+ * Migration for version 1.1.0
  */
-class AttachmentEntity extends AbstractListener
+class V1Dot1Dot0 extends Base
 {
     /**
-     * @param Event $event
-     *
-     * @throws InternalServerError
+     * @inheritDoc
      */
-    public function beforeSave(Event $event)
+    public function up(): void
     {
-        $entity = $event->getArgument('entity');
-        if (!$entity->isNew()) {
-            if ($entity->get('sourceId')) {
-                $this->copyFile($entity);
-            } elseif (($entity->isAttributeChanged("relatedId") || $entity->isAttributeChanged("relatedType")) && !in_array($entity->get("relatedType"), $this->skipTypes())) {
-                $this->getService($entity->getEntityType())->moveFromTmp($entity);
-            }
-        }
+        $this->execute("ALTER TABLE `attachment` ADD storage_thumb_path VARCHAR(260) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
+        exec('mv data/upload/ .');
     }
 
     /**
-     * @return array
+     * @inheritDoc
      */
-    protected function skipTypes()
+    public function down(): void
     {
-        return $this->getMetadata()->get(['attachment', 'skipEntities']) ?? [];
+        $this->execute("ALTER TABLE `attachment` DROP storage_thumb_path");
+        exec('mv upload/ data/');
     }
 
     /**
-     * @param Entity $entity
-     *
-     * @throws InternalServerError
+     * @param string $sql
      */
-    protected function copyFile(Entity $entity): void
+    protected function execute(string $sql)
     {
-        $repository = $this->getEntityManager()->getRepository($entity->getEntityType());
-        $path = $repository->copy($entity);
-
-        if (!$path) {
-            throw new InternalServerError($this->getLanguage()->translate("Can't copy file", 'exceptions', 'Global'));
+        try {
+            $this->getPDO()->exec($sql);
+        } catch (\Throwable $e) {
+            // ignore all
         }
-
-        $entity->set(
-            [
-                'sourceId'        => null,
-                'storageFilePath' => $path,
-            ]
-        );
     }
 }
