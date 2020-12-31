@@ -288,6 +288,10 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
 
         getImageUrl: function (id, size) {
             let data = this.model.get(this.namePathsData);
+            if (!data) {
+                return '';
+            }
+
             let path = data['download'];
             if (size) {
                 // for list size always small
@@ -303,6 +307,10 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
         },
 
         getDownloadUrl: function (id) {
+            if (!this.model.get(this.namePathsData)) {
+                return '';
+            }
+
             return this.getBasePath() + this.model.get(this.namePathsData)['download'];
         },
 

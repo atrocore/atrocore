@@ -36,8 +36,8 @@ namespace Treo\Core\FileStorage\Storages;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\Attachment;
-use Espo\Entities\User;
 use Espo\EntryPoints\Image;
+use Treo\Core\Utils\Util;
 
 /**
  * Class UploadDir
@@ -58,6 +58,9 @@ class UploadDir extends Base
      */
     public function unlink(Attachment $attachment)
     {
+        // remove thumbs
+        Util::removeDir($this->getThumbsDirPath($attachment));
+
         return $this->getFileManager()->unlink($this->getFilePath($attachment));
     }
 
@@ -134,7 +137,7 @@ class UploadDir extends Base
     {
         $result = [];
         foreach ($this->getMetadata()->get(['app', 'imageSizes'], []) as $size => $params) {
-            $result[$size] = $this->getConfig()->get('thumbsPath', 'upload/thumbs/') . $attachment->getStorageThumbPath() . '/' . $size . '/' . $attachment->get("name");
+            $result[$size] = $this->getThumbsDirPath($attachment) . '/' . $size . '/' . $attachment->get("name");
         }
 
         return $result;
@@ -161,6 +164,16 @@ class UploadDir extends Base
     protected function getFilePath(Attachment $attachment): string
     {
         return $this->getConfig()->get('filesPath', 'upload/files/') . $attachment->getStorageFilePath() . '/' . $attachment->get("name");
+    }
+
+    /**
+     * @param Attachment $attachment
+     *
+     * @return string
+     */
+    protected function getThumbsDirPath(Attachment $attachment): string
+    {
+        return $this->getConfig()->get('thumbsPath', 'upload/thumbs/') . $attachment->getStorageThumbPath();
     }
 
     /**
