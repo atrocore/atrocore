@@ -262,6 +262,13 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
         },
 
         getEditPreview: function (name, type, id) {
+            if (!name) {
+                const attachment = this.getAttachmentById(id);
+                if (attachment) {
+                    name = attachment.name;
+                }
+            }
+
             return name;
         },
 
@@ -286,17 +293,48 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             }
         },
 
-        getImageUrl: function (id, size) {
+        getAttachmentById: function (id) {
+            let result = null;
+            $.ajax({
+                url: 'Attachment/' + id,
+                type: 'GET',
+                async: false,
+            }).done(function (response) {
+                result = response;
+            });
+
+            return result;
+        },
+
+        getAttachmentPathsData: function (id) {
             let data = this.model.get(this.namePathsData);
             if (!data) {
-                return '';
+                const attachment = this.getAttachmentById(id);
+                if (attachment) {
+                    data = attachment.pathsData;
+                }
             }
 
+            return data;
+        },
+
+        isCalledForList: function () {
+            let view = this.getParentView();
+            if (view) {
+                view = view.getParentView();
+                if (view && view.type === 'list') {
+                    return true;
+                }
+            }
+
+            return false;
+        },
+
+        getImageUrl: function (id, size) {
+            let data = this.getAttachmentPathsData(id);
             let path = data['download'];
             if (size) {
-                // for list size always small
-                const type = this.getParentView().getParentView().type || null;
-                if (type === 'list') {
+                if (this.isCalledForList()) {
                     size = 'small';
                 }
 
@@ -307,11 +345,9 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
         },
 
         getDownloadUrl: function (id) {
-            if (!this.model.get(this.namePathsData)) {
-                return '';
-            }
+            let data = this.getAttachmentPathsData(id);
 
-            return this.getBasePath() + this.model.get(this.namePathsData)['download'];
+            return this.getBasePath() + data['download'];
         },
 
         deleteAttachment: function () {
