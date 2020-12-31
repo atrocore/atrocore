@@ -71,7 +71,7 @@ class RDB extends \Espo\ORM\Repository
 
         $this->entityFactory = $entityFactory;
         $this->seed = $this->entityFactory->create($entityType);
-        $this->entityClassName = is_string($this->seed) ? get_class($this->seed) : null;
+        $this->entityClassName = is_object($this->seed) ? get_class($this->seed) : null;
         $this->entityManager = $entityManager;
     }
 
@@ -224,7 +224,7 @@ class RDB extends \Espo\ORM\Repository
             $this->handleSelectParams($params);
         }
 
-        $dataArr = $this->getMapper()->select($this->seed, $params);
+        $dataArr = !empty($this->seed) ? $this->getMapper()->select($this->seed, $params) : [];
 
         $collection = new EntityCollection($dataArr, $this->entityType, $this->entityFactory);
         $collection->setAsFetched();
