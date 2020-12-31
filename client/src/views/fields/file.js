@@ -332,7 +332,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
 
         getImageUrl: function (id, size) {
             let data = this.getAttachmentPathsData(id);
-            if (!data){
+            if (!data) {
                 return '';
             }
 
@@ -350,7 +350,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
 
         getDownloadUrl: function (id) {
             let data = this.getAttachmentPathsData(id);
-            if (!data){
+            if (!data) {
                 return '';
             }
 
