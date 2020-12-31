@@ -48,6 +48,7 @@ class V1Dot1Dot0 extends Base
     public function up(): void
     {
         $this->execute("ALTER TABLE `attachment` ADD storage_thumb_path VARCHAR(260) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
+        exec('mv data/upload/ .');
     }
 
     /**
@@ -56,6 +57,7 @@ class V1Dot1Dot0 extends Base
     public function down(): void
     {
         $this->execute("ALTER TABLE `attachment` DROP storage_thumb_path");
+        exec('mv upload/ data/');
     }
 
     /**
