@@ -95,7 +95,7 @@ class Image
         $attachment = $attachmentRepository->where(['storageThumbPath' => $storageThumbPath])->findOne();
         if (empty($attachment)) {
             $attachment = $attachmentRepository->where(['storageFilePath' => $storageThumbPath])->findOne();
-            if (empty($attachment)){
+            if (empty($attachment)) {
                 return null;
             }
         }
@@ -121,7 +121,7 @@ class Image
             return false;
         }
 
-        $image = new ImageResize($attachment->getFilePath());
+        $image = new ImageResize($this->getImageFilePath($attachment));
 
         if (!$this->imageSizes[$size]) {
             throw new Error('Wrong file size');
@@ -132,6 +132,16 @@ class Image
         $image->resizeToBestFit($w, $h);
 
         return $this->getFileManager()->putContents($attachment->getThumbPath($size), $image->getImageAsString());
+    }
+
+    /**
+     * @param Attachment $attachment
+     *
+     * @return string
+     */
+    protected function getImageFilePath(Attachment $attachment): string
+    {
+        return $attachment->getFilePath();
     }
 
     /**
