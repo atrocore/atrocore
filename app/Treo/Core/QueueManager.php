@@ -36,6 +36,7 @@ declare(strict_types=1);
 namespace Treo\Core;
 
 use Espo\Core\Exceptions\Error;
+use Espo\Entities\User;
 use Espo\Orm\EntityManager;
 use Treo\Entities\QueueItem;
 use Treo\Services\QueueManagerServiceInterface;
@@ -122,19 +123,28 @@ class QueueManager
      */
     protected function createQueueItem(string $name, string $serviceName, array $data, int $stream): bool
     {
+        /** @var User $user */
+        $user = $this->getContainer()->get('user');
+
         $item = $this->getEntityManager()->getEntity('QueueItem');
         $item->set(
             [
-                'name'        => $name,
-                'serviceName' => $serviceName,
-                'stream'      => $stream,
-                'data'        => $data,
-                'sortOrder'   => $this->getNextSortOrder(),
-                'createdById' => $this->getContainer()->get('user')->get('id'),
-                'createdAt'   => date("Y-m-d H:i:s")
+                'name'           => $name,
+                'serviceName'    => $serviceName,
+                'stream'         => $stream,
+                'data'           => $data,
+                'sortOrder'      => $this->getNextSortOrder(),
+                'createdById'    => $user->get('id'),
+                'ownerUserId'    => $user->get('id'),
+                'assignedUserId' => $user->get('id'),
+                'createdAt'      => date("Y-m-d H:i:s")
             ]
         );
         $this->getEntityManager()->saveEntity($item, ['skipAll' => true]);
+
+        foreach ($user->get('teams')->toArray() as $row) {
+            $this->getEntityManager()->getRepository('QueueItem')->relate($item, 'teams', $row['id']);
+        }
 
         // prepare file data
         $fileData = $this->getFileData($stream);
