@@ -38,7 +38,7 @@
     "available": "verfügbar",
     "canceled": "abgebrochen",
     "canceling": "stornieren...",
-    "dependencies": "abhängigkeiten",
+    "dependencies": "Abhängigkeiten",
     "failed": "die Aktualisierung des Moduls ist fehlgeschlagen. Weitere Informationen finden Sie in dem Protokoll",
     "Log": "Protokoll",
     "removeModule": "Modul löschen",
