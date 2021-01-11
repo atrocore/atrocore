@@ -135,9 +135,17 @@ class UploadDir extends Base
      */
     public function getThumbs(Attachment $attachment): array
     {
+        // parse name
+        $nameParts = explode('.', $attachment->get("name"));
+
+        $ext = array_pop($nameParts);
+
+        // prepare name
+        $name = implode('.', $nameParts) . '.png';
+
         $result = [];
         foreach ($this->getMetadata()->get(['app', 'imageSizes'], []) as $size => $params) {
-            $result[$size] = $this->getThumbsDirPath($attachment) . '/' . $size . '/' . $attachment->get("name");
+            $result[$size] = $this->getThumbsDirPath($attachment) . '/' . $size . '/' . $name;
         }
 
         return $result;

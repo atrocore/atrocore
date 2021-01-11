@@ -193,12 +193,16 @@ class Attachment extends RDB
     }
 
     /**
-     * @param AttachmentEntity $attachment
+     * @param AttachmentEntity|string $attachment
      *
      * @return array
      */
     public function getAttachmentPathsData($attachment): array
     {
+        if (is_string($attachment)) {
+            $attachment = $this->get($attachment);
+        }
+
         $result = [
             'download' => null,
             'thumbs'   => [],
