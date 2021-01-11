@@ -191,7 +191,6 @@
   },
   "options": {
     "previewSize": {
-      "x-small": "Sehr klein",
       "small": "Klein",
       "medium": "Mittel",
       "large": "Groß"

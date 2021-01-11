@@ -20,7 +20,7 @@
          "name": "previewSize",
          "type": "enum",
          "default": "medium",
-         "options": ["", "x-small", "small", "medium", "large"]
+         "options": ["", "small", "medium", "large"]
       }
    ],
    "actualFields":[

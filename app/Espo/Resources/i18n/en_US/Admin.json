@@ -214,7 +214,6 @@
     },
     "options": {
         "previewSize": {
-            "x-small": "X-Small",
             "small": "Small",
             "medium": "Medium",
             "large": "Large"

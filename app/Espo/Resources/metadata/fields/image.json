@@ -9,7 +9,7 @@
          "name":"previewSize",
          "type":"enum",
          "default":"small",
-         "options": ["x-small", "small", "medium", "large"]
+         "options": ["small", "medium", "large"]
       },
       {
          "name": "maxFileSize",

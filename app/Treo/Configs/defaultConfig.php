@@ -54,7 +54,10 @@ return [
     'useCache'               => true,
     'applicationName'        => 'AtroCORE',
     'outboundEmailFromName'  => 'AtroCORE',
-    'isUploadsPrivate'       => true,
+    'defaultFileStorage'     => 'UploadDir',
+    'filesPath'              => 'upload/files/',
+    'thumbnailsPath'         => 'upload/thumbnails/',
+    'isUploadPrivate'        => true,
     'smtpPort'               => 25,
     'languageList'           => [
         'en_US',
