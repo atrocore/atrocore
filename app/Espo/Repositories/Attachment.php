@@ -173,6 +173,10 @@ class Attachment extends RDB
      */
     public function moveFromTmp(Entity $entity)
     {
+        if (empty($entity->get('tmpPath'))) {
+            return false;
+        }
+
         $destPath = $this->getDestPath(FilePathBuilder::UPLOAD);
         $fullPath = $this->getConfig()->get('filesPath', 'upload/files/') . $destPath . "/" . $entity->get('name');
 
@@ -264,16 +268,6 @@ class Attachment extends RDB
     public function getFilePath(Entity $entity): ?string
     {
         return $this->getFileStorageManager()->getLocalFilePath($entity);
-    }
-
-    /**
-     * @param Entity $entity
-     *
-     * @return bool
-     */
-    public function hasDownloadUrl(Entity $entity): bool
-    {
-        return $this->getFileStorageManager()->hasDownloadUrl($entity);
     }
 
     /**
