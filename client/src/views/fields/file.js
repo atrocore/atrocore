@@ -195,6 +195,12 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             }.bind(this));
         },
 
+        initInlineActions: function () {
+            this.listenTo(this, 'after:render', this.initDownloadIcon, this);
+
+            Dep.prototype.initInlineActions.call(this);
+        },
+
         afterRender: function () {
             if (this.mode == 'edit') {
                 this.$attachment = this.$el.find('div.attachment');
@@ -241,6 +247,36 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                     }.bind(this));
                 }
             }
+        },
+
+        initDownloadIcon: function () {
+            const $cell = this.getCellElement();
+
+            $cell.find('.fa-download').parent().remove();
+
+            const id = this.model.get(this.idName);
+            if (!id) {
+                return;
+            }
+
+            const $editLink = $('<a href="' + this.getDownloadUrl(id) + '" target="_blank" class="pull-right hidden"><span class="fas fa-download fa-sm"></span></a>');
+
+            $cell.prepend($editLink);
+
+            $cell.on('mouseenter', function (e) {
+                e.stopPropagation();
+                if (this.disabled || this.readOnly) {
+                    return;
+                }
+                if (this.mode === 'detail') {
+                    $editLink.removeClass('hidden');
+                }
+            }.bind(this)).on('mouseleave', function (e) {
+                e.stopPropagation();
+                if (this.mode === 'detail') {
+                    $editLink.addClass('hidden');
+                }
+            }.bind(this));
         },
 
         handleResize: function () {

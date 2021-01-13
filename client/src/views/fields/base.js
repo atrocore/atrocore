@@ -292,9 +292,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }
 
             if (this.mode == 'detail') {
-                if (!this.inlineEditDisabled) {
-                    this.listenToOnce(this, 'after:render', this.initInlineEdit, this);
-                }
+                this.initInlineActions();
             }
 
             if (this.mode != 'search') {
@@ -323,6 +321,12 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                     var attributes = this.fetch();
                     this.model.set(attributes, {ui: true});
                 });
+            }
+        },
+
+        initInlineActions: function () {
+            if (!this.inlineEditDisabled) {
+                this.listenTo(this, 'after:render', this.initInlineEdit, this);
             }
         },
 
@@ -362,7 +366,10 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         initInlineEdit: function () {
             var $cell = this.getCellElement();
-            var $editLink = $('<a href="javascript:" class="pull-right inline-edit-link hidden"><span class="fas fa-pencil-alt fa-sm"></span></a>');
+
+            $cell.find('.fa-pencil-alt').parent().remove();
+
+            var $editLink = $('<a href="javascript:" class="pull-right inline-edit-link hidden" style="margin-left: 7px"><span class="fas fa-pencil-alt fa-sm"></span></a>');
 
             if ($cell.size() == 0) {
                 this.listenToOnce(this, 'after:render', this.initInlineEdit, this);

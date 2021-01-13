@@ -2,7 +2,7 @@
     <img src="{{url}}" style="max-width: 100%;">
 </div>
 
-{{#if size}}
+{{#if originalUrl}}
 <div class="margin">
 {{translate 'Original'}}: <a href="{{originalUrl}}" target="_blank">{{name}}</a>
 </div>
