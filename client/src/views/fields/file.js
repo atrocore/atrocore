@@ -259,7 +259,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 return;
             }
 
-            const $editLink = $('<a href="' + this.getDownloadUrl(id) + '" target="_blank" class="pull-right hidden"><span class="fas fa-download fa-sm"></span></a>');
+            const $editLink = $('<a href="' + this.getDownloadUrl(id) + '" class="pull-right hidden" download><span class="fas fa-download fa-sm"></span></a>');
 
             $cell.prepend($editLink);
 
