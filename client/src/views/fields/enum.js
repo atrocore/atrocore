@@ -218,7 +218,7 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             Dep.prototype.afterRender.call(this);
 
             if (this.mode === 'edit') {
-                if (this.options.defs.params.isMultilang) {
+                if (this.options.defs && this.options.defs.params && this.options.defs.params.isMultilang) {
                     this.listenTo(this.model, 'change:' + this.name, function (model, value) {
                         this.updateLocaleFields(model, value);
                     }.bind(this));

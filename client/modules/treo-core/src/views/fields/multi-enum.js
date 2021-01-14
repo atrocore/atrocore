@@ -65,7 +65,7 @@ Espo.define('treo-core:views/fields/multi-enum', 'class-replace!treo-core:views/
 
         afterRender: function () {
             if (this.mode === 'edit') {
-                if (this.options.defs.params.isMultilang) {
+                if (this.options.defs && this.options.defs.params && this.options.defs.params.isMultilang) {
                     this.listenTo(this.model, 'change:' + this.name, function (model, value) {
                         this.updateLocaleFields(model, value);
                     }.bind(this));
