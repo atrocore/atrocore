@@ -224,10 +224,7 @@ class Metadata extends Base
      */
     public function createCache()
     {
-        $this->objInit(true);
-
-        // create metadata cache file
-        file_put_contents($this->treoCacheFile, json_encode($this->objData));
+        file_put_contents($this->treoCacheFile, json_encode($this->loadData()));
     }
 
     /**
@@ -235,26 +232,21 @@ class Metadata extends Base
      */
     protected function objInit($reload = false)
     {
-        // prepare reload
-        if (!$this->useCache || substr(php_sapi_name(), 0, 3) == 'cli') {
-            $reload = true;
+        $useCache = $this->useCache;
+
+        // for CLI
+        if (substr(php_sapi_name(), 0, 3) == 'cli') {
+            $useCache = false;
         }
 
-        if (!$reload && file_exists($this->treoCacheFile)) {
+        if ($reload && $useCache) {
+            $this->createCache();
+        }
+
+        if ($useCache && file_exists($this->treoCacheFile)) {
             $this->objData = json_decode(file_get_contents($this->treoCacheFile));
         } else {
-            // load core
-            $content = DataUtil::merge($this->unify(CORE_PATH . '/Espo/Resources/metadata'), $this->unify(CORE_PATH . '/Treo/Resources/metadata'));
-
-            // load modules
-            foreach ($this->getModules() as $module) {
-                $module->loadMetadata($content);
-            }
-
-            // load custom
-            $content = DataUtil::merge($content, $this->unify('custom/Espo/Custom/Resources/metadata'));
-
-            $this->objData = $this->addAdditionalFieldsObj($content);
+            $this->objData = $this->loadData();
         }
 
         // dispatch an event
@@ -267,6 +259,25 @@ class Metadata extends Base
 
         // clearing metadata
         $this->clearingMetadata();
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function loadData()
+    {
+        // load core
+        $content = DataUtil::merge($this->unify(CORE_PATH . '/Espo/Resources/metadata'), $this->unify(CORE_PATH . '/Treo/Resources/metadata'));
+
+        // load modules
+        foreach ($this->getModules() as $module) {
+            $module->loadMetadata($content);
+        }
+
+        // load custom
+        $content = DataUtil::merge($content, $this->unify('custom/Espo/Custom/Resources/metadata'));
+
+        return $this->addAdditionalFieldsObj($content);
     }
 
     /**
