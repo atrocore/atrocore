@@ -217,11 +217,12 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            if (this.options.defs.params.isMultilang) {
-                this.updateLocaleFields(this.model, this.model.get(this.name));
-                this.listenTo(this.model, 'change:' + this.name, function (model, value) {
-                    this.updateLocaleFields(model, value);
-                }.bind(this));
+            if (this.mode === 'edit') {
+                if (this.options.defs.params.isMultilang) {
+                    this.listenTo(this.model, 'change:' + this.name, function (model, value) {
+                        this.updateLocaleFields(model, value);
+                    }.bind(this));
+                }
             }
 
             if (this.mode == 'search') {

@@ -53,7 +53,10 @@ Espo.define('colored-fields:views/fields/colored-multi-enum', 'views/fields/mult
 
         setSelectizeColors() {
             window.setTimeout(() => {
-                let values = this.$element[0].selectize.currentResults.items || [];
+                let values = [];
+                if (this.$element[0].selectize.currentResults){
+                    values = this.$element[0].selectize.currentResults.items || [];
+                }
                 values.forEach(item => {
                     let internalValue = item.id.replace(/-quote-/g, '"').replace(/-backslash-/g, '\\');
                     this.$element[0].selectize.$dropdown_content.find(`.option[data-value='${item.id}']`).css(this.getFieldStyles(internalValue));

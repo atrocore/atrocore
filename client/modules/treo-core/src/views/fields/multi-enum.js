@@ -33,8 +33,44 @@
 Espo.define('treo-core:views/fields/multi-enum', 'class-replace!treo-core:views/fields/multi-enum',
     Dep => Dep.extend({
 
+        updateLocaleFields: function (model, value) {
+            if (!this.getConfig().get('isMultilangActive')) {
+                return;
+            }
+
+            let keys = [];
+            if (value) {
+                value.forEach(function (item) {
+                    (this.options.defs.params.options || []).forEach(function (v, k) {
+                        if (v === item) {
+                            keys.push(k)
+                        }
+                    }, this);
+                }, this);
+            }
+
+            let locales = this.getConfig().get('inputLanguageList') || [];
+            locales.forEach(function (v, k) {
+                let localeField = this.name + v.charAt(0).toUpperCase() + v.charAt(1) + v.charAt(3) + v.charAt(4).toLowerCase();
+                let localeFieldOptions = this.model.getFieldParam(localeField, 'options');
+
+                let localeValue = [];
+                keys.forEach(function (key) {
+                    localeValue.push(localeFieldOptions[key]);
+                });
+
+                this.model.set(localeField, localeValue);
+            }, this);
+        },
+
         afterRender: function () {
             if (this.mode === 'edit') {
+                if (this.options.defs.params.isMultilang) {
+                    this.listenTo(this.model, 'change:' + this.name, function (model, value) {
+                        this.updateLocaleFields(model, value);
+                    }.bind(this));
+                }
+
                 this.$element = this.$el.find('[name="' + this.name + '"]');
 
                 var data = [];
