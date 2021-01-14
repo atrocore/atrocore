@@ -405,9 +405,16 @@ class Record extends \Espo\Core\Services\Base
             ->where(['id' => array_keys($fields)])
             ->find();
 
+        foreach ($fields as $field) {
+            $entity->set("{$field}Id", null);
+            $entity->set("{$field}Name", null);
+        }
+
         if (!empty($attachments) && count($attachments) > 0) {
             foreach ($attachments as $attachment) {
                 $fieldName = $fields[$attachment->get('id')];
+                $entity->set("{$fieldName}Id", $attachment->get('id'));
+                $entity->set("{$fieldName}Name", $attachment->get('name'));
                 $entity->set("{$fieldName}PathsData", $attachmentRepository->getAttachmentPathsData($attachment));
             }
         }
