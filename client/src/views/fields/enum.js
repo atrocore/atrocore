@@ -194,8 +194,35 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             }
         },
 
+        updateLocaleFields: function (model, value) {
+            if (!this.getConfig().get('isMultilangActive')) {
+                return;
+            }
+
+            let key = null;
+            (this.options.defs.params.options || []).forEach(function (v, k) {
+                if (v === value) {
+                    key = k;
+                }
+            }, this);
+
+            let locales = this.getConfig().get('inputLanguageList') || [];
+            locales.forEach(function (v, k) {
+                let localeField = this.name + v.charAt(0).toUpperCase() + v.charAt(1) + v.charAt(3) + v.charAt(4).toLowerCase();
+                let localeFieldOptions = this.model.getFieldParam(localeField, 'options');
+                this.model.set(localeField, localeFieldOptions[key]);
+            }, this);
+        },
+
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
+
+            if (this.options.defs.params.isMultilang) {
+                this.updateLocaleFields(this.model, this.model.get(this.name));
+                this.listenTo(this.model, 'change:' + this.name, function (model, value) {
+                    this.updateLocaleFields(model, value);
+                }.bind(this));
+            }
 
             if (this.mode == 'search') {
 
@@ -267,7 +294,7 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
         },
 
         fetchSearch: function () {
-            var type = this.$el.find('[name="'+this.name+'-type"]').val();
+            var type = this.$el.find('[name="' + this.name + '-type"]').val();
 
             var list = this.$element.val().split(':,:');
             if (list.length === 1 && list[0] == '') {
