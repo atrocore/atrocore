@@ -250,7 +250,8 @@
     "relationsRemoved": "Die Beziehung wurde erfolgreich entfernt.",
     "relationsRemovedPlural": "%s Beziehungen wurden erfolgreich entfernt.",
     "relationsDidNotRemoved": "Die Beziehung wurde wegen folgendes Fehlers NICHT entfernt:",
-    "relationsDidNotRemovedPlural": "%s Beziehungen wurden wegen folgender Fehler NICHT entfernt:"
+    "relationsDidNotRemovedPlural": "%s Beziehungen wurden wegen folgender Fehler NICHT entfernt:",
+    "whiteCannotBeChosen": "Weiß kann nicht gewählt werden."
   },
   "exceptions": {
     "notDashletService": "Service %s muss Dashlet-Interface implementieren",
