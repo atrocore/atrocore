@@ -41,6 +41,8 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
 
         entityTypeWithTranslatedMultiLangOptionsList: ['enum', 'multiEnum'],
 
+        disabledColors: ['FFFFFF'],
+
         events: _.extend({
             'click [data-action="addNewValue"]': function (e) {
                 e.stopPropagation();
@@ -101,7 +103,19 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
             }
 
             $('.color-input').on('change', function () {
-                arrayExtended.setOptionColor($(this).data('index'), $(this).val())
+                let color = $(this).val(),
+                    index = $(this).data('index');
+
+                if (!arrayExtended.disabledColors.includes(color)) {
+                    arrayExtended.setOptionColor(index, $(this).val())
+                } else {
+                    let previousColor = arrayExtended.model.get('optionColors')[index],
+                        picker = this._jscLinkedInstance,
+                        msg = arrayExtended.translate('whiteCannotBeChosen', 'messages');
+
+                    picker.fromString(previousColor);
+                    Espo.Ui.warning(msg);
+                }
             });
         },
 
