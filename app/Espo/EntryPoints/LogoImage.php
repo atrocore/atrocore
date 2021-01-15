@@ -56,7 +56,7 @@ class LogoImage extends Image
             $size = $_GET['size'];
         }
 
-        $this->show($id, 'attachment', $size);
+        $this->show($id, $size);
     }
 
     /**
