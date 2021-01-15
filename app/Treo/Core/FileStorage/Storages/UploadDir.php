@@ -171,6 +171,10 @@ class UploadDir extends Base
      */
     protected function getFilePath(Attachment $attachment): string
     {
+        if (!empty($attachment->get('tmpPath'))) {
+            return $attachment->get('tmpPath') . '/' . $attachment->get("name");
+        }
+
         return $this->getConfig()->get('filesPath', 'upload/files/') . $attachment->getStorageFilePath() . '/' . $attachment->get("name");
     }
 

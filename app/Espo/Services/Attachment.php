@@ -203,8 +203,22 @@ class Attachment extends Record
             $entity = $this->getRepository()->where(['md5' => $attachment->md5, 'tmpPath' => null, 'name' => $attachment->name])->findOne();
         }
 
-        if (!empty($entity) && ($attachment->parentType == 'Asset' || $attachment->relatedType == 'Asset') && $attachment->field == 'file') {
-            throw new BadRequest($this->getInjection('language')->translate('Such asset already exists.', 'exceptions', 'Asset'));
+        // if DAM installed
+        if (!empty($entity) && get_class($entity) === 'Dam\Entities\Attachment') {
+            if (($attachment->parentType == 'Asset' || $attachment->relatedType == 'Asset') && $attachment->field == 'file') {
+                throw new BadRequest($this->getInjection('language')->translate('Such asset already exists.', 'exceptions', 'Asset'));
+            }
+
+            // get asset type
+            $type = $this->getMetadata()->get(['entityDefs', $attachment->relatedType, 'fields', $attachment->field, 'assetType'], 'File');
+
+            // get asset type config
+            $config = $this->getInjection("ConfigManager")->getByType([\Dam\Core\ConfigManager::getType($type)]);
+
+            // validate
+            foreach ($config['validations'] as $type => $value) {
+                $this->getInjection('Validator')->validate($type, $entity, ($value['private'] ?? $value));
+            }
         }
 
         if (empty($entity)) {
@@ -254,6 +268,8 @@ class Attachment extends Record
         parent::init();
 
         $this->addDependency('language');
+        $this->addDependency('ConfigManager');
+        $this->addDependency('Validator');
     }
 }
 
