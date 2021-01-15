@@ -74,13 +74,13 @@ Espo.define('views/user/fields/avatar', 'views/fields/image', function (Dep) {
                 var imgHtml;
 
                 if (this.mode == 'detail') {
-                    imgHtml = '<img src="'+this.getBasePath()+'?entryPoint=avatar&size=' + this.previewSize + '&id=' + userId + '&t=' + t + '&attachmentId=' + ( id || 'false') + '">';
+                    imgHtml = '<img src="'+this.getBasePath()+'?entryPoint=avatar&size=' + this.previewSize + '&id=' + userId + '&attachmentId=' + ( id || 'false') + '">';
                 } else {
                     var cache = this.getCache();
                     if (cache) {
                         t = cache.get('app', 'timestamp');
                     }
-                    imgHtml = '<img width="16" src="'+this.getBasePath()+'?entryPoint=avatar&size=' + this.previewSize + '&id=' + userId + '&t=' + t + '">';
+                    imgHtml = '<img width="16" src="'+this.getBasePath()+'?entryPoint=avatar&size=' + this.previewSize + '&id=' + userId + '">';
                     return imgHtml;
                 }
 
