@@ -103,7 +103,6 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
             }
 
             $('.color-input').on('change', function () {
-                debugger;
                 let color = $(this).val(),
                     index = $(this).data('index');
 
