@@ -259,7 +259,8 @@
     "relationsRemoved": "Relation was successfully removed.",
     "relationsRemovedPlural": "%s relations were successfully removed.",
     "relationsDidNotRemoved": "Relation was NOT removed because of the following error:",
-    "relationsDidNotRemovedPlural": "%s relations were NOT removed because of the following errors:"
+    "relationsDidNotRemovedPlural": "%s relations were NOT removed because of the following errors:",
+    "whiteCannotBeChosen": "White cannot be chosen."
   },
   "streamMessages": {
     "composerUpdateThis": "{user}"
