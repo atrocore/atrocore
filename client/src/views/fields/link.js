@@ -103,6 +103,16 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             this.foreignScope = this.options.foreignScope || this.foreignScope;
             this.foreignScope = this.foreignScope || this.model.getFieldParam(this.name, 'entity') || this.model.getLinkParam(this.name, 'entity');
 
+            // prepare default value
+            let foreignId = this.model.get(this.idName);
+            if (this.mode === 'edit' && !this.model.get('id') && foreignId && this.foreignScope) {
+                this.model.set(this.idName, null);
+                this.model.set(this.nameName, null);
+                this.ajaxGetRequest(this.foreignScope + '/' + foreignId, {silent: true}).then(function (response) {
+                    this.model.set(this.nameName, response.name);
+                }.bind(this));
+            }
+
             if ('createDisabled' in this.options) {
                 this.createDisabled = this.options.createDisabled;
             }
