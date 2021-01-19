@@ -109,6 +109,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 this.model.set(this.idName, null);
                 this.model.set(this.nameName, null);
                 this.ajaxGetRequest(this.foreignScope + '/' + foreignId, {silent: true}).then(function (response) {
+                    this.model.set(this.idName, response.id);
                     this.model.set(this.nameName, response.name);
                 }.bind(this));
             }
