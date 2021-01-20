@@ -1,8 +1,0 @@
-{
-    "moduleNames": {
-        "ColoredFields": "Enum and MultiEnum with colors"
-    },
-    "moduleDescriptions": {
-        "ColoredFields": "Module add new colored field type for TreoCRM"
-    }
-}

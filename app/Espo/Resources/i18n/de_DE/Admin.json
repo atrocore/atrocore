@@ -1,5 +1,7 @@
 {
   "labels": {
+    "multiLanguagesSettings": "Einstellungen für Mehrsprachigkeit",
+    "multiLanguages": "Mehrsprachigkeit",
     "Label Manager": "Label-Manager",
     "Composer": "Modul-Manager",
     "log": "Log",
@@ -79,6 +81,7 @@
     "listForAccount": "Liste (für Firma)"
   },
   "fieldTypes": {
+    "color": "Farbe",
     "unit": "Maßeinheit",
     "address": "Adresse",
     "array": "Liste",
@@ -119,6 +122,8 @@
     "datetimeOptional": "Datum/Datum-Uhrzeit"
   },
   "fields": {
+    "isMultilang": "Mehrsprachig",
+    "fontSize": "Schriftgröße",
     "assetType": "Asset Typ",
     "type": "Typ",
     "label": "Label",
@@ -174,6 +179,8 @@
     "newExtensionVersionIsAvailable": "Die neue {extensionName} Version {latestVersion} ist verfügbar."
   },
   "descriptions": {
+    "inputLanguage": "Spracheingabe für übersetzbare Felder.",
+    "multiLanguagesSettings": "Einstellungen für Mehrsprachigkeit.",
     "composer": "Verwaltung von Abhängigkeiten - hier kann man diverse Module installieren/aktualisieren/deinstallieren. Die Abhängigkeiten zwischen den Modulen werden automatisch berücksichtigt.",
     "representationSettings": "Darstellungseinstellungen.",
     "unit": "Einstellungen Maßeinheiten.",

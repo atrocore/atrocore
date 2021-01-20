@@ -57,7 +57,7 @@ Espo.define('multilang:views/admin/input-language', 'views/settings/record/edit'
             }
 
             if (hasDeletedElements) {
-                Espo.Ui.confirm(this.translate('сonfirmLocaleChanges', 'labels', 'Settings'), {
+                Espo.Ui.confirm(this.translate('confirmLocaleChanges', 'labels', 'Settings'), {
                     confirmText: this.translate('Apply', 'labels', 'Global'),
                     cancelText: this.translate('Cancel', 'labels', 'Global')
                 }, () => {

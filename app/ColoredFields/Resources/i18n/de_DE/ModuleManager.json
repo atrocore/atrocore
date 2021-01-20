@@ -1,8 +1,0 @@
-{
-    "moduleNames": {
-        "ColoredFields": "Farbiges Auswahl- und Mehrfachauswahlfeld"
-    },
-    "moduleDescriptions": {
-        "ColoredFields": "Das Modul fügt farbige Auswahl- und Mehrfachauswahlfelder ein und ist für Entity-Stati gut geeignet. Jeder Status ist dann anderer Farbe."
-    }
-}

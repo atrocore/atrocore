@@ -1,5 +1,7 @@
 {
   "fields": {
+    "isMultilangActive": "Active",
+    "inputLanguageList": "Input Language List",
     "treoId": "ID",
     "isStreamSide": "Is stream in side",
     "isStreamPanelFirst": "Is stream panel first",
@@ -172,6 +174,8 @@
     "cleanupDeletedRecords": "Removed records will be deleted from database after a while."
   },
   "labels": {
+    "inputLanguage": "Input Language",
+    "confirmLocaleChanges": "If the locale is removed, all your data previously entered in the multi-language fields for this locale are automatically removed via the <a href=\"/#ScheduledJob\" target=\"_blank\">cron job</a>.",
     "Representation": "Representation",
     "System Notifications": "System Notifications",
     "notAllowByContent": "Not allow, check by file content",
@@ -192,6 +196,7 @@
     "Admin Notifications": "Admin Notifications"
   },
   "messages": {
+    "updateLayouts": "Are you sure you want to update the layouts and automatically add the previously missing locale fields to them?",
     "ldapTestConnection": "The connection successfully established."
   }
 }

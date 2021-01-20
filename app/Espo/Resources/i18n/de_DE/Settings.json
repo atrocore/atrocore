@@ -1,5 +1,7 @@
 {
   "fields": {
+    "isMultilangActive": "Aktiv",
+    "inputLanguageList": "Spracheingabe Liste",
     "aclAllowDeleteCreated": "das Entfernen von eigenerstellten Datensätzen erlauben",
     "treoId": "ID",
     "isStreamSide": "Ist Aktivitätenpanel seitlich platziert",
@@ -154,6 +156,8 @@
     "emailAddressIsOptedOutByDefault": "Beim Erstellen eines neuen Datensatzes wird die E-Mail-Adresse als Opt-Out  markiert."
   },
   "labels": {
+    "inputLanguage": "Spracheingabe",
+    "confirmLocaleChanges": "Wenn das Locale entfernt wird, werden alle Daten, die Sie zuvor in die mehrsprachigen Felder für dieses Locale eingegeben haben, automatisch über den <a href=\"/#ScheduledJob\" target=\"_blank\">Cron-Job</a> entfernt.",
     "Admin Notifications": "Admin Notifications",
     "System Notifications": "System-Meldungen",
     "notAllowByContent": "Nicht zulassen, nach Dateiinhalt prüfen",
@@ -171,6 +175,7 @@
     "Activities": "Aktivitäten"
   },
   "messages": {
+    "updateLayouts": "Möchten Sie die Layouts wirklich aktualisieren und die zuvor fehlenden Gebietsschemafelder automatisch hinzufügen?",
     "ldapTestConnection": "Die Verbindung wurde erfolgreich hergestellt."
   }
 }
