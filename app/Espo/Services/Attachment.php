@@ -189,7 +189,7 @@ class Attachment extends Record
         }
 
         if (empty($attachment->contents)) {
-            throw new BadRequest($this->getInjection('language')->translate('File uploading failed.', 'exceptions', 'Attachment'));
+            throw new BadRequest($this->getInjection('language')->translate('fileUploadingFailed', 'exceptions', 'Attachment'));
         }
 
         $attachment->md5 = md5($attachment->contents);

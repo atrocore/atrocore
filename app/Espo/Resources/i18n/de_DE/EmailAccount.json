@@ -1,5 +1,6 @@
 {
   "fields": {
+    "fetchData": "Holen Daten",
     "username": "Benutzername",
     "password": "Passwort",
     "monitoredFolders": "Überwachte Ordner",
@@ -16,6 +17,7 @@
     "useImap": "E-Mails abholen"
   },
   "links": {
+    "emailFolder": "In Ordner ablegen",
     "filters": "Filter",
     "emails": "E-Mails"
   },

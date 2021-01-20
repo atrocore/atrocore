@@ -1,5 +1,6 @@
 {
   "fields": {
+    "smtpPassword": "SMTP Passwort",
     "emailAddress": "E-Mail Adresse",
     "assignToUser": "Mit Benutzer verknüpfen",
     "username": "Benutzername",
@@ -26,13 +27,13 @@
     "smtpAuth": "SMTP-Authentifizierung",
     "smtpSecurity": "SMTP-Sicherheit",
     "smtpUsername": "SMTP-Benutzername",
-    "smtpPassword": "SMTP-Passwort",
     "fromName": "Absendername",
     "smtpIsShared": "SMTP ist freigegeben",
     "smtpIsForMassEmail": "SMTP ist für Massen-E-Mails",
     "useImap": "E-Mails abholen"
   },
   "tooltips": {
+    "addAllTeamUsers": "Emails will be appearing in Inbox of all users of specified teams.",
     "reply": "Benachrichtigt E-Mail Empfänger beim Empfang der Nachrichten.\n\n Nur eine E-Mail pro Empfänger wird zu einer Zeit versendet um eine Endlosschleife zu verhindern.",
     "createCase": "Fall aus eingehender E-Mail automatisch erstellen.",
     "replyToAddress": "Geben Sie die E-Mail Adresse dieser Mailbox an um Antworten hier zu empfangen.",
@@ -40,7 +41,6 @@
     "assignToUser": "Benutzerfälle werden zugewiesen.",
     "team": "Teamfälle werden zugewiesen.",
     "teams": "E-Mails des Teams werden zugewiesen.",
-    "addAllTeamUsers": "E-Mails werden im Posteingang aller Benutzer bestimmter Teams angezeigt.",
     "targetUserPosition": "Bestimmen Sie die Position der Benutzer die Fälle zugewiesen bekommen.",
     "monitoredFolders": "Mehrere Ordner sollten durch ein Komma getrennt sein.",
     "smtpIsShared": "Wenn diese Option aktiviert ist, können Benutzer E-Mails über dieses SMTP senden. Die Verfügbarkeit wird von Rollen über die Gruppen-E-Mail-Konto-Berechtigung gesteuert.",

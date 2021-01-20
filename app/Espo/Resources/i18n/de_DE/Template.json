@@ -24,8 +24,8 @@
   },
   "options": {
     "pageOrientation": {
-      "Portrait": "Hochformat",
-      "Landscape": "Querformat"
+      "Portrait": "Porträt",
+      "Landscape": "Landschaft"
     },
     "placeholders": {
       "today": "Heute (Datum)",

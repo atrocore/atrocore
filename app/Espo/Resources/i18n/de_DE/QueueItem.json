@@ -30,7 +30,7 @@
     }
   },
   "exceptions": {
-    "Queue item cannot be changed": "Warteschlangenelement kann nicht geändert werden."
+    "queueItemCannotBeChanged": "Warteschlangenelement kann nicht geändert werden."
   },
   "notificationMessages": {
     "error": "%  ist fehlgeschlagen",

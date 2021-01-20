@@ -1,7 +1,7 @@
 {
   "fields": {
     "portalRoles": "Rollen",
-    "isActive": "Ist aktiv",
+    "isActive": "Aktiv",
     "isDefault": "Ist Standard",
     "tabList": "Menüoptionen",
     "quickCreateList": "Liste Schnellerstellung",

@@ -1,5 +1,6 @@
 {
   "fields": {
+    "queueItem": "Warteschlangeeinheit",
     "executeTime": "Ausführen um",
     "attempts": "Verbleibende Versuche",
     "failedAttempts": "Fehlgeschlagene Versuche",
@@ -16,5 +17,12 @@
       "Running": "Läuft",
       "Failed": "Fehlgeschlagen"
     }
+  },
+  "labels": {
+    "Create Job": "Aufgabe erstellen"
+  },
+  "links": {
+    "queueItem": "Warteschlangeeinheit",
+    "scheduledJob": "geplante Aufgabe"
   }
 }

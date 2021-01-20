@@ -1,8 +1,0 @@
-{
-  "fields": {
-    "smtpPassword": "SMTP Passwort"
-  },
-  "tooltips": {
-    "addAllTeamUsers": "Emails will be appearing in Inbox of all users of specified teams."
-  }
-}

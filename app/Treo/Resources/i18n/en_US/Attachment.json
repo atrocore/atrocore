@@ -23,6 +23,6 @@
     }
   },
   "exceptions": {
-    "File uploading failed.": "File uploading failed."
+    "fileUploadingFailed": "File uploading failed."
   }
 }

@@ -297,7 +297,7 @@ class FieldManager extends AbstractListener
         if (!empty($defs['options'])) {
             foreach (array_count_values($defs['options']) as $count) {
                 if ($count > 1) {
-                    throw new BadRequest($this->exception('Field value should be unique.'));
+                    throw new BadRequest($this->exception('fieldValueShouldBeUnique'));
                 }
             }
         }

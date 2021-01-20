@@ -1,5 +1,7 @@
 {
   "fields": {
+    "acceptanceStatus": "Acceptance Status",
+    "isActive": "Aktiv",
     "userName": "Benutzername",
     "title": "Funktion",
     "isAdmin": "Ist Admin",
@@ -14,7 +16,6 @@
     "passwordConfirm": "Passwort bestätigen",
     "newPassword": "Neues Passwort",
     "newPasswordConfirm": "Neues Passwort bestätigen",
-    "isActive": "Ist aktiv",
     "isPortalUser": "Ist Portal Benutzer",
     "contact": "Kontakt",
     "accounts": "Firmen",
@@ -28,13 +29,13 @@
     "lastAccess": "Letzter Zugriff"
   },
   "links": {
+    "account": "Benutzerkonto (Primär)",
     "roles": "Rollen",
     "notes": "Notizen",
     "portals": "Portale",
     "portalRoles": "Portal Rollen",
     "contact": "Kontakt",
     "accounts": "Firmen",
-    "account": "Benutzerkonto (Primär)",
     "tasks": "Aufgaben"
   },
   "labels": {
@@ -63,8 +64,8 @@
     "portals": "Portale auf die der Benutzer Zugriff hat."
   },
   "messages": {
+    "accountInfoEmailSubject": "AtroCore Benutzerzugriffsinfo",
     "passwordWillBeSent": "Das Passwort wird an die E-Mail Adresse des Benutzers gesendet",
-    "accountInfoEmailSubject": "EspoCRM Benutzerzugriffsinfo",
     "accountInfoEmailBody": "Ihre EspoCRM Zugriffsinformation:\n\nBenutzername: {userName}\nPasswort: {password}\n\n{siteUrl}",
     "passwordChangeLinkEmailSubject": "Anforderung zur Passwortänderung",
     "passwordChanged": "Das Passwort wurde geändert",

@@ -1,5 +1,6 @@
 {
   "fields": {
+    "data": "Daten",
     "roles": "Rollen",
     "assignmentPermission": "Zuweisungsberechtigung",
     "userPermission": "Benutzerberechtigung",

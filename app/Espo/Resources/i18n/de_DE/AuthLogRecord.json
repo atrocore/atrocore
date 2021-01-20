@@ -1,20 +1,20 @@
 {
   "fields": {
+    "user": "Benutzer",
     "username": "Benutzername",
     "ipAddress": "IP Adresse",
     "requestTime": "Anforderungszeit",
     "createdAt": "Angefordert bei",
     "isDenied": "ist verweigert",
     "denialReason": "Verweigerungsgrund",
-    "user": "Benutzer",
     "authToken": "Auth Token erstellt",
     "requestUrl": "Anforderungs-URL",
     "requestMethod": "Anforderungsmethode",
     "authTokenIsActive": "Auth Token ist aktiv"
   },
   "links": {
-    "authToken": "Auth Token erstellt",
     "user": "Benutzer",
+    "authToken": "Auth Token erstellt",
     "actionHistoryRecords": "Aktionsverlauf"
   },
   "presetFilters": {

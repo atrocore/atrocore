@@ -10,12 +10,12 @@
   "exceptions": {
     "hasRequiredsDelete": "Sie dürfen das gewünschte Modul nicht löschen, da dieses mit einem anderen verknüpft ist.",
     "isSystem": "Sie können das System-Modul nicht ändern.",
-    "No such module": "Es gibt kein solches Modul",
-    "Such module is already installed": "Dieses Modul ist schon installiert",
-    "Module was not installed": "Das Modul wurde nicht installiert",
-    "Such module version already installed": "Diese Modul-Version ist schon installiert",
-    "No such module version": "Es gibt keine solche Modul-Version",
-    "Version in invalid": "Version ist ungültig",
+    "noSuchModule": "Es gibt kein solches Modul",
+    "suchModuleIsAlreadyInstalled": "Dieses Modul ist schon installiert",
+    "moduleWasNotInstalled": "Das Modul wurde nicht installiert",
+    "suchModuleVersionAlreadyInstalled": "Diese Modul-Version ist schon installiert",
+    "noSuchModuleVersion": "Es gibt keine solche Modul-Version",
+    "versionIsInvalid": "Version ist ungültig",
     "hasRequireds": "Modul hat die Anforderungen nicht erfüllt"
   },
   "labels": {

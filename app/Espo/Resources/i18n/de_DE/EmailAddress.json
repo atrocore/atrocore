@@ -1,5 +1,6 @@
 {
   "labels": {
+    "invalid": "Ungültig",
     "Primary": "Primär",
     "Opted Out": "Opt-Out gesetzt",
     "Invalid": "Ungültig"

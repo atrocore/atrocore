@@ -92,7 +92,7 @@ class PortalEntity extends AbstractListener
         $siteUrl = $this->getConfig()->get('siteUrl');
 
         if (empty($siteUrl)) {
-            throw new BadRequest($this->translate('Site URL is empty', 'exceptions'));
+            throw new BadRequest($this->translate('siteUrlEmpty', 'exceptions'));
         }
 
         // get domain
@@ -134,13 +134,13 @@ class PortalEntity extends AbstractListener
         // validate url
         if (!filter_var($url, FILTER_VALIDATE_URL)
         ) {
-            throw new BadRequest($this->translate('URL is invalid', 'exceptions'));
+            throw new BadRequest($this->translate('urlIsInvalid', 'exceptions'));
         }
 
         if (preg_match_all('/^(http|https)\:\/\/(.*)\/(.*)$/', $url, $matches)) {
             if (!empty($path = $matches[3][0])) {
                 if (!preg_match('/^[a-z0-9\-]*$/', $path)) {
-                    throw new BadRequest($this->translate('URL is invalid', 'exceptions'));
+                    throw new BadRequest($this->translate('urlIsInvalid', 'exceptions'));
                 }
             }
         }
@@ -151,7 +151,7 @@ class PortalEntity extends AbstractListener
         // validate by unique
         if (in_array($url, $urls)) {
             if (array_search($url, $urls) != $entity->get('id')) {
-                throw new BadRequest($this->translate('Such URL is already exists', 'exceptions'));
+                throw new BadRequest($this->translate('suchUrlExists', 'exceptions'));
             }
         }
 

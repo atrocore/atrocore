@@ -12,6 +12,6 @@
     "exportPermission": "Exportberechtigung"
   },
   "tooltips": {
-    "exportPermission": "Definiert, ob Portalbenutzer Datensätze exportieren können."
+    "exportPermission": "Legt fest, ob Portalbenutzer Datensätze exportieren können."
   }
 }

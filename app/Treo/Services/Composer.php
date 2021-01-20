@@ -354,13 +354,13 @@ class Composer extends AbstractService
 
         // validation
         if (empty($package = $this->getPackage($id))) {
-            throw new Exceptions\Error($this->translateError('No such module'));
+            throw new Exceptions\Error($this->translateError('noSuchModule'));
         }
         if (!empty($this->getInstalledModule($id))) {
-            throw new Exceptions\Error($this->translateError('Such module is already installed'));
+            throw new Exceptions\Error($this->translateError('suchModuleIsAlreadyInstalled'));
         }
         if (!$this->isVersionValid($version)) {
-            throw new Exceptions\Error($this->translateError('Version in invalid'));
+            throw new Exceptions\Error($this->translateError('versionIsInvalid'));
         }
 
         // update composer.json
@@ -385,13 +385,13 @@ class Composer extends AbstractService
 
         // validation
         if (empty($this->getPackage($id))) {
-            throw new Exceptions\Error($this->translateError('No such module'));
+            throw new Exceptions\Error($this->translateError('noSuchModule'));
         }
         if (empty($package)) {
-            throw new Exceptions\Error($this->translateError('Module was not installed'));
+            throw new Exceptions\Error($this->translateError('moduleWasNotInstalled'));
         }
         if (!$this->isVersionValid($version)) {
-            throw new Exceptions\Error($this->translateError('Version in invalid'));
+            throw new Exceptions\Error($this->translateError('versionIsInvalid'));
         }
 
         // update composer.json
@@ -420,7 +420,7 @@ class Composer extends AbstractService
 
         // validation
         if (empty($package)) {
-            throw new Exceptions\Error($this->translateError('No such module'));
+            throw new Exceptions\Error($this->translateError('noSuchModule'));
         }
 
         // update composer.json

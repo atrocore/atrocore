@@ -84,7 +84,7 @@ class ScheduledJob extends \Espo\Core\Templates\Services\Base
                 $cronExpression = CronExpression::factory($entity->get('scheduling'));
             } catch (\Exception $e) {
                 // prepare key
-                $key = 'Wrong crontab configuration';
+                $key = 'wrongCrontabConfiguration';
 
                 // prepare message
                 $message = $this

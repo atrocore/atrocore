@@ -6,6 +6,10 @@
     "Formula": "Formel"
   },
   "fields": {
+    "statusField": "Statusfeld",
+    "hasAssignedUser": "Zugewiesener Benutzer",
+    "hasTeam": "Team",
+    "hasOwner": "Besitzer",
     "type": "Typ",
     "labelSingular": "Label Singular",
     "labelPlural": "Bezeichnung Plural",
@@ -24,7 +28,6 @@
     "textFilterFields": "Textfilter Felder",
     "audited": "protokolliert",
     "auditedForeign": "fremd geprüft",
-    "statusField": "Status Feld",
     "beforeSaveCustomScript": "vor dem Speicher benutzerdefiniertes Script",
     "color": "Farbe",
     "kanbanViewMode": "Kanban-Ansicht",
@@ -58,10 +61,13 @@
     "linkConflict": "Eine Relation mit diesem Namen existiert bereits"
   },
   "tooltips": {
+    "disabled": "Überprüfen Sie, ob Sie diese Entität in Ihrem System nicht benötigen.",
+    "hasAssignedUser": "Hat den zugewiesenen Benutzer",
+    "hasTeam": "Hat das Team",
+    "hasOwner": "Hat den Besitzer",
     "statusField": "Updates dieses Feldes werden im Stream protokolliert.",
     "textFilterFields": "Von der Textsuche verwendete Felder.",
     "stream": "Ob die Entity einen Stream hat.",
-    "disabled": "Überprüfen Sie, ob Sie diese Entität nicht in Ihrem System benötigen.",
     "linkAudited": "Das Erstellen eines verknüpften Datensatzes und das Verknüpfen mit dem vorhandenen Datensatz wird in Stream protokolliert.",
     "linkMultipleField": "verlinken mehrere Felder bietet eine praktische Möglichkeit Beziehungen zu bearbeiten. Nicht benutzen wenn Sie eine große Anzahl von Verknüpfungen haben.",
     "entityType": "Base Plus - enthält Aktivitäten, Verlaufs- und Aufgabenfelder. \n\nEvent - verfügbar im Fenster \"Kalender und Aktivitäten\".",

@@ -3,14 +3,22 @@
     "Document": "Dokument einfügen"
   },
   "fields": {
+    "type": "Typ",
+    "contents": "Inhalte",
+    "global": "Global",
+    "md5": "md5 Mash",
+    "storageFilePath": "Dateipfad",
+    "tmpPath": "Vorläufiger Dateipfad",
     "role": "Rolle",
     "related": "Verbunden",
     "file": "Datei",
-    "type": "Typ",
     "field": "Feld",
     "sourceId": "Quell-ID",
     "storage": "Speicher",
     "size": "Größe (Bytes)"
+  },
+  "labels": {
+    "Create Attachment": "Anhang hinzufügen"
   },
   "options": {
     "role": {
@@ -24,5 +32,8 @@
   },
   "presetFilters": {
     "orphan": "Waise"
+  },
+  "exceptions": {
+    "fileUploadingFailed": "Hochladen der Datei ist fehlgeschlagen."
   }
 }

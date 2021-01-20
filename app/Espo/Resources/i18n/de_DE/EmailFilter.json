@@ -8,8 +8,11 @@
     "isGlobal": "Ist global",
     "emailFolder": "Ordner"
   },
+  "links": {
+    "emailFolder": "Ordner"
+  },
   "labels": {
-    "Create EmailFilter": "E.Mail Filter erstellen",
+    "Create EmailFilter": "E-Mail Filter erstellen",
     "Emails": "E-Mails"
   },
   "tooltips": {

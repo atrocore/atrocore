@@ -1,12 +1,12 @@
 {
   "fields": {
-    "user": "Benutzer",
     "action": "Aktion",
-    "createdAt": "Datum",
     "target": "Ziel",
     "targetType": "Zieltyp",
     "ipAddress": "IP-Adresse",
-    "authLogRecord": "Auth Log-Datensatz"
+    "authLogRecord": "Auth Log-Datensatz",
+    "user": "Benutzer",
+    "createdAt": "Datum"
   },
   "links": {
     "user": "Benutzer",

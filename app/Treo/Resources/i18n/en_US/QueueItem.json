@@ -29,7 +29,7 @@
     }
   },
   "exceptions": {
-    "Queue item cannot be changed": "Queue item cannot be changed."
+    "queueItemCannotBeChanged": "Queue item cannot be changed."
   },
   "notificationMessages": {
     "success": "%s was successfully completed",

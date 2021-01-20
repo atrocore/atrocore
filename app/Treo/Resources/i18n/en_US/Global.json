@@ -241,12 +241,12 @@
     "TreoLightTheme": "Atro Light Theme"
   },
   "exceptions": {
-    "URL is invalid": "URL is invalid",
-    "Such URL is already exists": "Such URL is already exists",
-    "Site URL is empty": "Site URL is empty",
-    "Code is invalid": "Code is invalid. Code should be unique. Only letters, numbers and char \"_\" expected.",
+    "urlIsInvalid": "URL is invalid",
+    "suchUrlExists": "Such URL is already exists",
+    "siteUrlEmpty": "Site URL is empty",
+    "codeInvalid": "Code is invalid. Code should be unique. Only letters, numbers and char \"_\" expected.",
     "notDashletService": "Service %s must implement Dashlet Interface",
-    "Field value should be unique.": "Field value should be unique."
+    "fieldValueShouldBeUnique": "Field value should be unique."
   },
   "messages": {
     "successAndReload": "Changes saved. Please refresh the page!",

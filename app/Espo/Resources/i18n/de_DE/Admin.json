@@ -1,5 +1,13 @@
 {
   "labels": {
+    "Label Manager": "Label-Manager",
+    "Composer": "Modul-Manager",
+    "log": "Log",
+    "Validate": "Bestätigen",
+    "progressLog": "Prozessprotokoll",
+    "Unit": "Maßeinheit",
+    "addOption": "Option hinzufügen",
+    "addMeasureUnit": "Maßeinheit hinzufügen",
     "Enabled": "Aktiv",
     "Disabled": "Inaktiv",
     "Users": "Benutzer",
@@ -43,30 +51,35 @@
     "Email Filters": "E-Mail Filter",
     "Portal Users": "Portal Benutzer",
     "Action History": "Aktionsverlauf",
-    "Label Manager": "Label Manager",
     "Auth Log": "Auth-Protokoll",
     "Lead Capture": "Erfassung des Interessenten",
     "Attachments": "Anhänge"
   },
+  "logicalOperators": {
+    "and": "UND",
+    "not": "NICHT",
+    "or": "ODER"
+  },
   "layouts": {
+    "detailSmallPortal": "Detail (Klein, Portal)",
+    "listForContact": "List (für Kontakte)",
+    "listSmallPortal": "List (Klein, Portal)",
+    "relationships": "Untere Paneele",
     "list": "Liste",
     "listSmall": "Liste (Klein)",
     "detailSmall": "Detail (Klein)",
     "filters": "Suchfilter",
     "massUpdate": "Massenänderung",
-    "relationships": "Beziehungen",
     "sidePanelsDetail": "Seitenleisten (Detail)",
     "sidePanelsEdit": "Seitenleisten (Bearbeiten)",
     "sidePanelsDetailSmall": "Seitenleisten (Detail klein)",
     "sidePanelsEditSmall": "Seitenleisten (Bearbeiten klein)",
-    "detailSmallPortal": "Detail (Klein, Portal)",
-    "listSmallPortal": "Liste (Klein, Portal)",
     "listPortal": "Liste (Portal)",
     "relationshipsPortal": "Beziehungen (Portal)",
-    "listForAccount": "Liste (für Firma)",
-    "listForContact": "Liste (für Kontakt)"
+    "listForAccount": "Liste (für Firma)"
   },
   "fieldTypes": {
+    "unit": "Maßeinheit",
     "address": "Adresse",
     "array": "Liste",
     "foreign": "Fremdbezug",
@@ -143,9 +156,12 @@
     "maxFileSize": "Max. Dateigröße (Mb)",
     "isPersonalData": "Ist Persönliche Daten",
     "useIframe": "Iframe verwenden",
-    "useNumericFormat": "Verwenden Sie das numerische Format"
+    "useNumericFormat": "Verwenden Sie das numerische Format",
+    "dataUrl": "Daten-URL"
   },
   "messages": {
+    "selectExtensionPackage": "Erweiterungspaket auswählen",
+    "upgradeFailed": "Upgrade fehlgeschlagen",
     "selectEntityType": "Entitätstyp im linken Menü auswählen.",
     "selectLayout": "Layout zum Editieren links auswählen",
     "extensionInstalled": "Erweiterung {name} {version} wurde installiert.",
@@ -158,6 +174,9 @@
     "newExtensionVersionIsAvailable": "Die neue {extensionName} Version {latestVersion} ist verfügbar."
   },
   "descriptions": {
+    "composer": "Verwaltung von Abhängigkeiten - hier kann man diverse Module installieren/aktualisieren/deinstallieren. Die Abhängigkeiten zwischen den Modulen werden automatisch berücksichtigt.",
+    "representationSettings": "Darstellungseinstellungen.",
+    "unit": "Einstellungen Maßeinheiten.",
     "settings": "Systemeinstellungen der Webanwendung.",
     "scheduledJob": "Cronjob-Aufgaben.",
     "clearCache": "Cache leeren.",

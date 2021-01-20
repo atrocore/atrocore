@@ -1,5 +1,0 @@
-{
-  "tooltips": {
-    "doNotFillAssignedUserIfNotRequired": "When create record assigned user won't be filled with own user unless the field is required."
-  }
-}

@@ -8,6 +8,9 @@
     "oneOff": "Ein-Aus",
     "category": "Kategorie"
   },
+  "links": {
+    "attachments": "Anhänge"
+  },
   "labels": {
     "Create EmailTemplate": "E-Mail Vorlage erstellen",
     "Available placeholders": "Verfügbare Platzhalter"

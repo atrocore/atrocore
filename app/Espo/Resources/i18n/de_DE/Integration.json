@@ -1,5 +1,6 @@
 {
   "fields": {
+    "data": "Daten",
     "enabled": "Aktiv",
     "clientSecret": "Client Geheimnis",
     "redirectUri": "Weiterleitungs URI"

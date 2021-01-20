@@ -1,5 +1,8 @@
 {
   "fields": {
+    "isInternal": "Ist intern",
+    "job": "Aufgabe",
+    "lastRun": "Zuletzt ausgeführt",
     "scheduling": "Planung"
   },
   "links": {
@@ -16,7 +19,10 @@
       "SendEmailReminders": "E-Mail Erinnerungen senden",
       "AuthTokenControl": "Auth Token-Überwachung",
       "SendEmailNotifications": "E-Mail-Benachrichtigungen senden",
-      "CheckNewVersion": "Nach neuer Version suchen"
+      "CheckNewVersion": "Check for New Version",
+      "ProcessMassEmail": "Massen E-Mails senden",
+      "ControlKnowledgeBaseArticleStatus": "Wissensbasis Artikel Status kontrollieren",
+      "ModuleAutoUpdate": "Alle installierten Module automatisch aktualisieren"
     },
     "cronSetup": {
       "linux": "Hinweis: Fügen Sie diese Zeile zu Ihrer Crontab Datei hinzu, um geplante Aufgaben durchführen zu können:",
@@ -31,5 +37,8 @@
   },
   "tooltips": {
     "scheduling": "Definiert wann und wie oft ein Job läuft\n\n*/5 * * * * - alle 5 Minuten\n\n0 */2 * * * - alle 2 Stunden\n\n30 1 * * * - um 01:30 einmal am Tag\n\n0 0 1 * * - am ersten Tag des Monats"
+  },
+  "exceptions": {
+    "wrongCrontabConfiguration": "Falsche Crontab-Konfiguration"
   }
 }

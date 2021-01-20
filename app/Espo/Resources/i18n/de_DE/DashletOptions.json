@@ -1,20 +1,22 @@
 {
   "fields": {
-    "title": "Titel",
-    "dateFrom": "Von Datum",
-    "dateTo": "Bis Datum",
-    "autorefreshInterval": "Aktualisierungsintervall",
-    "displayRecords": "Sätze anzeigen",
-    "isDoubleHeight": "Zweifache Höhe",
-    "mode": "Modus",
-    "enabledScopeList": "Was soll angezeigt werden",
-    "users": "Benutzer",
+    "autorefreshInterval": "Auto-Refresh-Intervall",
+    "boolFilterList": "Bool Filterliste",
+    "dateFilter": "Datum Filter",
+    "dateFrom": "vom Datum",
+    "dateTo": "bis Datum",
+    "displayRecords": "Datensätze anzeigen",
+    "enabledScopeList": "aktivierte Scope Liste",
     "entityType": "Entitätstyp",
-    "primaryFilter": "Primärfilter",
-    "boolFilterList": "Zusätzliche Filter",
-    "sortBy": "Reihenfolge (Feld)",
-    "sortDirection": "Reihenfolge (Richtung)",
-    "dateFilter": "Datumsfilter"
+    "expandedLayout": "erweitertes Layout",
+    "futureDays": "nächste Tage",
+    "isDoubleHeight": "zweifache Höhe",
+    "primaryFilter": "primärer Filter",
+    "sortBy": "sortieren nach",
+    "sortDirection": "Bestellung (Richtung)",
+    "title": "Titel",
+    "mode": "Modus",
+    "users": "Benutzer"
   },
   "options": {
     "mode": {
@@ -27,6 +29,6 @@
     }
   },
   "messages": {
-    "selectEntityType": "Wählen Sie Entitätstyp in Dashlet-Optionen."
+    "selectEntityType": "Wählen Sie Entitätstyp in Dashlet-Optionen"
   }
 }

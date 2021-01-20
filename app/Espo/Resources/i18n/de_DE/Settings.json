@@ -1,5 +1,11 @@
 {
   "fields": {
+    "aclAllowDeleteCreated": "das Entfernen von eigenerstellten Datensätzen erlauben",
+    "treoId": "ID",
+    "isStreamSide": "Ist Aktivitätenpanel seitlich platziert",
+    "isStreamPanelFirst": "Ist Aktivitätenpanel zuerst",
+    "unitsOfMeasure": "Maßeinheiten",
+    "attachmentDuplicates": "Asset-Duplikat",
     "useCache": "Cache nutzen",
     "dateFormat": "Datumsformat",
     "timeFormat": "Zeitformat",
@@ -81,7 +87,6 @@
     "currencyDecimalPlaces": "Dezimalstellen der Währung",
     "aclStrictMode": "ACL Strict-Modus",
     "followCreatedEntities": "Eigene Einträge abonnieren",
-    "aclAllowDeleteCreated": "Erlauben erstellten Einträge zu löschen",
     "adminNotifications": "Systembenachrichtigungen im Administrationsbereich",
     "adminNotificationsNewVersion": "Benachrichtigung anzeigen, wenn eine neue EspoCRM-Version verfügbar ist",
     "massEmailMaxPerHourCount": "Max. Anzahl E-Mails pro Stunde",
@@ -108,6 +113,9 @@
     }
   },
   "tooltips": {
+    "aclAllowDeleteCreated": "Benutzer können die von ihnen erstellte Datensätze entfernen, auch wenn sie keinen Löschzugriff haben.",
+    "isStreamSide": "Wenn aktiviert, wird das Aktivitätenpanel seitlich angezeigt.",
+    "isStreamPanelFirst": "Wenn aktiviert, wird das Aktivitätenpanel direkt nach der Übersicht angezeigt.",
     "recordsPerPage": "Anzahl Sätze In Listenansichten (Standard) ",
     "recordsPerPageSmall": "Anzahl Sätze in Beziehungssubpanels",
     "followCreatedEntities": "Benutzer abonnieren automatisch alle Einträge, die sie selbst erstellen.",
@@ -140,13 +148,17 @@
     "currencyDecimalPlaces": "Anzahl der Dezimalstellen. Wenn das Feld leer ist, werden alle nicht leeren Dezimalstellen angezeigt.",
     "aclStrictMode": "Aktiviert: Der Zugriff auf Bereiche ist verboten, wenn er nicht in Rollen angegeben ist.\n\nDeaktiviert: Der Zugriff auf Bereiche ist zulässig, wenn er nicht in Rollen angegeben ist.",
     "outboundEmailIsShared": "Benutzern gestatten, E-Mails über dieses SMTP Konto zu senden",
-    "aclAllowDeleteCreated": "Benutzer können Datensätze löschen, die sie erstellt haben, auch wenn sie keinen Löschzugriff haben.",
     "textFilterUseContainsForVarchar": "Wenn nicht aktiviert, wird der Operator \"beginnt mit\" verwendet. Sie können den Platzhalter '%' verwenden.",
     "streamEmailNotificationsEntityList": "E-Mail-Benachrichtigungen über neuen Aktivitäten von gefolgten Datensätzen. Benutzer erhalten E-Mail-Benachrichtigungen nur für bestimmte Entitätstypen.",
     "authTokenPreventConcurrent": "Benutzer können nicht gleichzeitig auf mehreren Geräten angemeldet sein.",
     "emailAddressIsOptedOutByDefault": "Beim Erstellen eines neuen Datensatzes wird die E-Mail-Adresse als Opt-Out  markiert."
   },
   "labels": {
+    "Admin Notifications": "Admin Notifications",
+    "System Notifications": "System-Meldungen",
+    "notAllowByContent": "Nicht zulassen, nach Dateiinhalt prüfen",
+    "notAllowByContentAndName": "Nicht zulassen, nach Dateinamen + Dateiinhalt prüfen",
+    "allow": "Zulassen",
     "Locale": "Lokale Einstellungen",
     "Configuration": "Konfiguration",
     "In-app Notifications": "In-App Benachrichtigungen",
@@ -156,8 +168,7 @@
     "Mass Email": "Massen E-Mails",
     "Test Connection": "Verbindung prüfen",
     "Connecting": "Verbinde...",
-    "Activities": "Aktivitäten",
-    "Admin Notifications": "Admin-Benachrichtigungen"
+    "Activities": "Aktivitäten"
   },
   "messages": {
     "ldapTestConnection": "Die Verbindung wurde erfolgreich hergestellt."

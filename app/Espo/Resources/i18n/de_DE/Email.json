@@ -45,12 +45,12 @@
     "replyToEmailAddresses": "Antwort-an E-Mail Adressen"
   },
   "links": {
+    "sentBy": "Gesendet von",
     "replied": "Beantwortet",
     "replies": "Antworten",
     "inboundEmails": "Gruppenkonten",
     "emailAccounts": "Persönliche Konten",
     "assignedUsers": "Zugewiesene Benutzer",
-    "sentBy": "Gesendet von",
     "attachments": "Anhänge",
     "fromEmailAddress": "Von der E-Mail Adresse",
     "toEmailAddresses": "An E-Mail Adressen",
@@ -97,6 +97,7 @@
     "Folders": "Ordner"
   },
   "messages": {
+    "testEmailSubject": "AtroCore: Test Email",
     "noSmtpSetup": "Keine SMTP Einstellungen {link}.",
     "testEmailSent": "Eine Test E-Mail wurde gesendet",
     "emailSent": "E-Mail wurde gesendet",

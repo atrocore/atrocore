@@ -16,12 +16,12 @@
     "hasRequireds": "Module has not satisfied requireds",
     "hasRequiredsDelete": "You cann't delete required module",
     "isSystem": "You can not modify system module.",
-    "No such module": "No such module",
-    "Such module is already installed": "Such module is already installed",
-    "Module was not installed": "Module was not installed",
-    "Such module version already installed": "Such module version already installed",
-    "No such module version": "No such module version",
-    "Version in invalid": "Version in invalid"
+    "noSuchModule": "No such module",
+    "suchModuleIsAlreadyInstalled": "Such module is already installed",
+    "moduleWasNotInstalled": "Module was not installed",
+    "suchModuleVersionAlreadyInstalled": "Such module version already installed",
+    "noSuchModuleVersion": "No such module version",
+    "versionIsInvalid": "Version is invalid"
   },
   "labels": {
     "successAndReload": "Changes saved. This page will be reloaded after {value} seconds",
