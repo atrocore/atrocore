@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "host": "Host Name",
+    "dbname": "Database Name",
+    "user": "Database User Name",
+    "username": "User Name",
+    "password": "Password",
+    "confirmPassword": "Confirm Password"
+  },
+  "labels": {
+    "licenseAgreement": "License Agreement",
+    "databaseConfiguration": "Database configuration",
+    "administratorSetup": "Administrator Setup",
+    "requiredSettings": "Required Settings",
+    "chooseYourLanguage": "Choose your language",
+    "acceptTheAgreement": "I accept the agreement",
+    "hostName": "Host Name",
+    "databaseName": "Database Name",
+    "databaseUserName": "Database User Name",
+    "databaseUserPassword": "Database User Password",
+    "port": "Port",
+    "testConnection": "Test Connection",
+    "reCheck": "Re-Check",
+    "userName": "User Name",
+    "password": "Password",
+    "confirmYourPassword": "Confirm Your Password",
+    "back": "Back",
+    "next": "Next",
+    "finish": "Finish",
+    "required": "Required",
+    "currentVersion": "Current Version",
+    "status": "Status"
+  },
+  "errors": {
+    "alreadyInstalled": "TreoCore already installed",
+    "languageNotCorrect": "Input language is not correct",
+    "differentPass": "Different passwords",
+    "notCorrectDatabaseConfig": "Invalid database settings"
+  },
+  "messages": {
+    "youMustAgreeToTheLicenseAgreement": "You must agree to the license agreement",
+    "fieldIsRequired": "{field} is required",
+    "connectionSuccessful": "Connection successful!",
+    "pleaseConfigureYourSystemToStart": "Please configure your system to start"
+  },
+  "requirements": {
+    "phpVersion": "PHP version",
+    "mysqlVersion": "MySQL version"
+  }
+}

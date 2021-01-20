@@ -1,0 +1,19 @@
+{
+    "fields": {
+        "exportPermission": "Export Permission"
+    },
+    "links": {
+        "users": "Users"
+    },
+    "tooltips": {
+    },
+    "labels": {
+        "Access": "Access",
+        "Create PortalRole": "Create Portal Role",
+        "Scope Level": "Scope Level",
+        "Field Level": "Field Level"
+    },
+    "tooltips": {
+        "exportPermission": "Defines whether portal users have an ability to export records."
+    }
+}

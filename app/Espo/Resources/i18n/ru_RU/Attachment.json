@@ -1,0 +1,42 @@
+{
+  "fields": {
+    "global": "Global",
+    "md5": "md5 Hash",
+    "storageFilePath": "Storage File Path",
+    "tmpPath": "Temp Path",
+    "contents": "Contents",
+    "role": "Role",
+    "related": "Related",
+    "file": "File",
+    "type": "Type",
+    "field": "Field",
+    "sourceId": "Source ID",
+    "storage": "Storage",
+    "size": "Size (bytes)"
+  },
+  "labels": {
+    "Create Attachment": "Create Attachment"
+  },
+  "links": {
+    "related": "Related"
+  },
+  "options": {
+    "role": {
+      "Attachment": "Attachment",
+      "Inline Attachment": "Inline Attachment",
+      "Import File": "Import File",
+      "Export File": "Export File",
+      "Mail Merge": "Mail Merge",
+      "Mass Pdf": "Mass PDF"
+    }
+  },
+  "insertFromSourceLabels": {
+    "Document": "Insert Document"
+  },
+  "presetFilters": {
+    "orphan": "Orphan"
+  },
+  "exceptions": {
+    "fileUploadingFailed": "File uploading failed."
+  }
+}

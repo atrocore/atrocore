@@ -1,0 +1,31 @@
+{
+    "fields": {
+        "width": "Width (%)",
+        "link": "Link",
+        "notSortable": "Not Sortable",
+        "align": "Align",
+        "panelName": "Panel Name",
+        "style": "Style",
+        "sticked": "Sticked",
+        "isLarge": "Large font size",
+        "dynamicLogicVisible": "Conditions making panel visible"
+    },
+    "options": {
+        "align": {
+            "left": "Left",
+            "right": "Right"
+        },
+        "style": {
+            "default": "Default",
+            "success": "Success",
+            "danger": "Danger",
+            "info": "Info",
+            "warning": "Warning",
+            "primary": "Primary"
+        }
+    },
+    "labels": {
+        "New panel": "New panel",
+        "Layout": "Layout"
+    }
+}
