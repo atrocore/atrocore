@@ -39,6 +39,22 @@ Espo.define('views/admin/field-manager/fields/link/default', 'views/fields/link'
             var nameValue = defaultAttributes[this.options.field + 'Name'] || null;
             var idValue = defaultAttributes[this.options.field + 'Id'] || null;
 
+            if (idValue) {
+                const id = idValue;
+
+                idValue = null;
+                nameValue = null;
+
+                $.ajax({
+                    url: this.foreignScope + '/' + id + '?silent=true',
+                    type: 'GET',
+                    async: false,
+                }).done(function (response) {
+                    idValue = response.id;
+                    nameValue = response.name;
+                });
+            }
+
             var data = Dep.prototype.data.call(this);
 
             data.nameValue = nameValue;
