@@ -735,7 +735,7 @@ class Composer extends AbstractService
      */
     private function getInstalledModules(): array
     {
-        $modules = $this->getContainer()->get('moduleManager')->getModules();
+        $modules = $this->getContainer()->get('moduleManager')->getModules(true);
         foreach (Manager::CORE_MODULES as $coreModule) {
             unset($modules[$coreModule]);
         }

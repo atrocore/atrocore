@@ -84,12 +84,18 @@ class Manager
     /**
      * Get modules
      *
+     * @param bool $reload ;
+     *
      * @return array
      * @throws Error
      * @throws \ReflectionException
      */
-    public function getModules(): array
+    public function getModules(bool $reload = false): array
     {
+        if ($reload) {
+            $this->modules = null;
+        }
+
         if (is_null($this->modules)) {
             $this->modules = [];
 
