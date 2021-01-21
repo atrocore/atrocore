@@ -141,6 +141,9 @@ class PostUpdate
         // store composer.lock file
         if ($this->byLockFile) {
             file_put_contents('data/old-composer.lock', file_get_contents(ComposerService::$composerLock));
+
+            // wait
+            sleep(3);
         }
     }
 
