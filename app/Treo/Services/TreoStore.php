@@ -36,7 +36,7 @@ declare(strict_types=1);
 namespace Treo\Services;
 
 use Espo\Core\Templates\Services\Base;
-use Treo\Core\Utils\Util;
+use Espo\Core\Utils\Json;
 
 /**
  * Class TreoStore
@@ -48,85 +48,43 @@ class TreoStore extends Base
      */
     public function findEntities($params)
     {
-        // update store cache
-        $this->updateStoreCache();
+        // update store data
+        $this->updateStoreData();
 
         return parent::findEntities($params);
     }
 
     /**
-     * Update store cache if it needs
+     * Update store data
      */
-    protected function updateStoreCache(): void
+    protected function updateStoreData(): void
     {
-        // prepare cache path
-        $path = 'data/cache/store-last-update-time.json';
-
-        // prepare last update
-        $lastUpdate = strtotime('2019-01-01 00:00:00');
-        if (file_exists($path)) {
-            $lastUpdate = json_decode(file_get_contents($path), true)['time'];
-        }
-
-        // get diff in minutes
-        $minutes = (time() - $lastUpdate) / 60;
-
-        if ($minutes > 120 && !empty($packages = $this->getRemotePackages())) {
-            // caching
-            $this->caching($packages);
-
-            // create dir if it needs
-            if (!file_exists('data/cache')) {
-                mkdir('data/cache', 0777, true);
-            }
-
-            // save cache file
-            file_put_contents($path, json_encode(['time' => time()]));
+        if (!empty($packages = $this->getRemotePackages())) {
+            $this->savePackages($packages);
         }
     }
 
     /**
      * @param array $data
      */
-    protected function caching(array $data): void
+    protected function savePackages(array $data): void
     {
-        // delete all
-        $sth = $this
-            ->getEntityManager()
-            ->getPDO()
-            ->prepare("DELETE FROM treo_store");
-        $sth->execute();
+        $sql = ["DELETE FROM treo_store WHERE 1"];
 
         foreach ($data as $package) {
             if (empty($package['name']) || empty($package['description'])) {
                 continue 1;
             }
-            $entity = $this->getEntityManager()->getEntity("TreoStore");
-            $entity->id = $package['treoId'];
-            $entity->set('packageId', $package['packageId']);
-            $entity->set('url', $package['url']);
-            $entity->set('status', $package['status']);
-            $entity->set('versions', $package['versions']);
-            foreach ($package['name'] as $locale => $value) {
-                if ($locale == 'default') {
-                    $entity->set('name', $value);
-                } else {
-                    $entity->set('name' . Util::toCamelCase(strtolower($locale), "_", true), $value);
-                }
-            }
-            foreach ($package['description'] as $locale => $value) {
-                if ($locale == 'default') {
-                    $entity->set('description', $value);
-                } else {
-                    $entity->set('description' . Util::toCamelCase(strtolower($locale), "_", true), $value);
-                }
-            }
-            if (!empty($package['tags']) && is_array($package['tags'])) {
-                $entity->set('tags', $package['tags']);
-            }
 
-            $this->getEntityManager()->saveEntity($entity, ['skipAll' => true]);
+            $name = $package['name']['default'];
+            $description = $package['description']['default'];
+            $versions = Json::encode($package['versions']);
+            $tags = Json::encode($package['tags']);
+
+            $sql[] = "INSERT INTO `treo_store` (`id`,`package_id`,`url`,`status`,`versions`,`name`,`description`,`tags`) VALUES ('{$package['treoId']}','{$package['packageId']}','{$package['url']}','{$package['status']}','{$versions}','{$name}','{$description}','{$tags}')";
         }
+
+        $this->getEntityManager()->nativeQuery(implode(';', $sql));
     }
 
     /**
