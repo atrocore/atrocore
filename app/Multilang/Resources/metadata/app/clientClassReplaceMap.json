@@ -1,6 +1,0 @@
-{
-  "views/admin/field-manager/edit": [
-    "__APPEND__",
-    "multilang"
-  ]
-}

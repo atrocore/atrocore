@@ -36,6 +36,7 @@ declare(strict_types=1);
 namespace Treo\Listeners;
 
 use Espo\Hooks\Common;
+use Espo\ORM\Entity as OrmEntity;
 use Treo\Core\EventManager\Event;
 
 /**
@@ -50,6 +51,9 @@ class Entity extends AbstractListener
     {
         // delegate an event
         $this->dispatch($event->getArgument('entityType') . 'Entity', 'beforeSave', $event);
+
+        // call multi-lang event
+        $this->multiLang($event);
 
         // call hooks
         if (empty($event->getArgument('hooksDisabled')) && empty($event->getArgument('options')['skipHooks'])) {
@@ -219,6 +223,54 @@ class Entity extends AbstractListener
     protected function dispatch(string $target, string $action, Event $event)
     {
         $this->getContainer()->get('eventManager')->dispatch($target, $action, $event);
+    }
+
+    /**
+     * @param Event $event
+     */
+    protected function multiLang(Event $event)
+    {
+        /** @var OrmEntity $entity */
+        $entity = $event->getArgument('entity');
+
+        // get fields
+        $fields = $this->getContainer()->get('metadata')->get(['entityDefs', $entity->getEntityType(), 'fields'], []);
+
+        foreach ($fields as $field => $data) {
+            if ($data['type'] == 'enum' && !empty($data['isMultilang']) && $entity->isAttributeChanged($field)) {
+                // find key
+                $key = array_search($entity->get($field), $data['options']);
+                foreach ($fields as $mField => $mData) {
+                    if (isset($mData['multilangField']) && $mData['multilangField'] == $field) {
+                        if ($entity->get($field) == '') {
+                            $value = $entity->get($field);
+                        } elseif (isset($mData['options'][$key])) {
+                            $value = $mData['options'][$key];
+                        }
+
+                        if (isset($value)) {
+                            $entity->set($mField, $value);
+                        }
+                    }
+                }
+            }
+
+            if ($data['type'] == 'multiEnum' && !empty($data['isMultilang']) && $entity->isAttributeChanged($field)) {
+                $keys = [];
+                foreach ($entity->get($field) as $value) {
+                    $keys[] = array_search($value, $data['options']);
+                }
+                foreach ($fields as $mField => $mData) {
+                    if (isset($mData['multilangField']) && $mData['multilangField'] == $field) {
+                        $values = [];
+                        foreach ($keys as $key) {
+                            $values[] = $mData['options'][$key];
+                        }
+                        $entity->set($mField, $values);
+                    }
+                }
+            }
+        }
     }
 
     /**

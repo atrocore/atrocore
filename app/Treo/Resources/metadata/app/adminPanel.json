@@ -51,6 +51,11 @@
         "url": "#Composer/list",
         "label": "Composer",
         "description": "composer"
+      },
+      {
+        "url": "#Settings/inputLanguage",
+        "label": "multiLanguages",
+        "description": "multiLanguagesSettings"
       }
     ],
     "order": 0

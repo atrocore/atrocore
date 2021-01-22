@@ -10,7 +10,7 @@
   "stream": false,
   "disabled": false,
   "type": "Base",
-  "module": "Multilang",
+  "module": "TreoCore",
   "object": false,
   "hasOwner": false,
   "hasAssignedUser": false,

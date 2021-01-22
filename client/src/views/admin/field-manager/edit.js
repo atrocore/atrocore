@@ -308,6 +308,14 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                 }
                 this.model.set('name', name);
             }, this);
+
+            if (this.defs.hideMultilang) {
+                $('div[data-name="readOnly"]').remove();
+                $('div[data-name="required"]').remove();
+                $('a[data-action="removeValue"]').remove();
+                $('.array-control-container').remove();
+                $('input[name="coloredValue"]').remove();
+            }
         },
 
         readOnlyControl: function () {

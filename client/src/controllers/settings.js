@@ -30,6 +30,28 @@
  * and "AtroCore" word.
  */
 
-Espo.define('treo-core:controllers/settings', 'controllers/admin',
-    Dep => Dep.extend({})
+Espo.define('controllers/settings', ['controllers/admin', 'models/settings'],
+    (Dep, Settings) => Dep.extend({
+
+        inputLanguage() {
+            let model = this.getSettingsModel();
+
+            model.once('sync', () => {
+                model.id = '1';
+                this.main('views/settings/edit', {
+                    model: model,
+                    headerTemplate: 'admin/settings/headers/input-language',
+                    recordView: 'views/admin/input-language'
+                });
+            }, this);
+            model.fetch();
+        },
+
+        getSettingsModel() {
+            let model = new Settings(null);
+            model.defs = this.getMetadata().get('entityDefs.Settings');
+            return model;
+        },
+
+    })
 );

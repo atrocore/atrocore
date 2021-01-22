@@ -36,6 +36,17 @@
         "notAllowByContentAndName",
         "allow"
       ]
+    },
+    "inputLanguageList": {
+      "type": "multiEnum",
+      "default": [],
+      "options": [],
+      "required": false,
+      "view": "views/admin/fields/input-language-list"
+    },
+    "isMultilangActive": {
+      "type": "bool",
+      "default": false
     }
   }
 }

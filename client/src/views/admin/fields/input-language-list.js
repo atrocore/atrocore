@@ -30,28 +30,37 @@
  * and "AtroCore" word.
  */
 
-Espo.define('multilang:controllers/settings', ['treo-core:controllers/settings', 'multilang:models/settings'],
-    (Dep, Settings) => Dep.extend({
+Espo.define('views/admin/fields/input-language-list', 'views/fields/multi-enum',
+    Dep => Dep.extend({
 
-        inputLanguage() {
-            let model = this.getSettingsModel();
+        setup: function () {
+            Dep.prototype.setup.call(this);
 
-            model.once('sync', () => {
-                model.id = '1';
-                this.main('views/settings/edit', {
-                    model: model,
-                    headerTemplate: 'multilang:admin/settings/headers/input-language',
-                    recordView: 'multilang:views/admin/input-language'
-                });
-            }, this);
-            model.fetch();
+            this.defineMode();
+            this.listenTo(this.model, 'change:isMultilangActive', () => {
+                this.defineMode();
+                this.reRender();
+            });
         },
 
-        getSettingsModel() {
-            let model = new Settings(null);
-            model.defs = this.getMetadata().get('entityDefs.Settings');
-            return model;
+        defineMode: function () {
+            if (this.model.get('isMultilangActive')) {
+                this.setMode('edit');
+            } else {
+                this.setMode('detail');
+            }
+        },
+
+        data() {
+            return _.extend({
+                optionList: this.model.options || []
+            }, Dep.prototype.data.call(this));
+        },
+
+        setupOptions() {
+            this.params.options = Espo.Utils.clone(this.getMetadata().get(['multilang', 'languageList']));
+            this.translatedOptions = Espo.Utils.clone(this.getLanguage().translate('language', 'options') || {});
         }
 
     })
-);  
+);

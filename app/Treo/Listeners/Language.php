@@ -33,11 +33,10 @@
 
 declare(strict_types=1);
 
-namespace Multilang\Listeners;
+namespace Treo\Listeners;
 
 use Treo\Core\EventManager\Event;
 use Treo\Core\Utils\Util;
-use Treo\Listeners\AbstractListener;
 
 /**
  * Class Language

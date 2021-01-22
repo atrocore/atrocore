@@ -1,3 +1,4 @@
+<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -30,10 +31,25 @@
  * and "AtroCore" word.
  */
 
-Espo.define('multilang:models/settings', 'models/settings',
-    Dep => Dep.extend({
+declare(strict_types=1);
 
-        name: 'Settings',
+namespace Treo\Listeners;
 
-    })
-);
+use Treo\Core\EventManager\Event;
+
+/**
+ * Class SettingsController
+ */
+class SettingsController extends AbstractListener
+{
+    /**
+     * @param Event $event
+     */
+    public function afterActionUpdate(Event $event): void
+    {
+        // regenerate multilang fields
+        if (isset($event->getArgument('data')->inputLanguageList) || !empty($event->getArgument('data')->isMultilangActive)) {
+            $this->getContainer()->get('dataManager')->rebuild();
+        }
+    }
+}

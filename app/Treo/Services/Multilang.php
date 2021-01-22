@@ -33,13 +33,12 @@
 
 declare(strict_types=1);
 
-namespace Multilang\Services;
+namespace Treo\Services;
 
 use Espo\Core\Utils\Json;
 use Treo\Core\Utils\Layout;
 use Treo\Core\Utils\Metadata;
 use Treo\Core\Utils\Util;
-use Treo\Services\AbstractService;
 
 /**
  * Class Multilang

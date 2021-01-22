@@ -43,7 +43,6 @@
     },
     "psr-4": {
       "Espo\\": "app/Espo/",
-      "Multilang\\": "app/Multilang/",
       "Treo\\": "app/Treo/"
     }
   },

@@ -36,6 +36,7 @@ declare(strict_types=1);
 namespace Treo\Listeners;
 
 use Treo\Core\EventManager\Event;
+use Treo\Core\Utils\Util;
 
 /**
  * Class Metadata
@@ -59,8 +60,84 @@ class Metadata extends AbstractListener
         // set thumbs sizes to options of asset field type
         $data = $this->setAssetThumbSize($data);
 
+        // prepare multi-lang
+        $data = $this->prepareMultiLang($data);
+
         // set data
         $event->setArgument('data', $data);
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return array
+     */
+    protected function prepareMultiLang(array $data): array
+    {
+        // is multi-lang activated
+        if (empty($this->getConfig()->get('isMultilangActive'))) {
+            return $data;
+        }
+
+        // get locales
+        if (empty($locales = $this->getConfig()->get('inputLanguageList', []))) {
+            return $data;
+        }
+
+        /**
+         * Set multi-lang params to few fields
+         */
+        $fields = ['bool', 'enum', 'multiEnum', 'text', 'varchar', 'wysiwyg'];
+        foreach ($fields as $field) {
+            $data['fields'][$field]['params'][] = [
+                'name'    => 'isMultilang',
+                'type'    => 'bool',
+                'tooltip' => true
+            ];
+        }
+
+        /**
+         * Set multi-lang fields to entity defs
+         */
+        foreach ($data['entityDefs'] as $scope => $rows) {
+            if (!isset($rows['fields']) || !is_array($rows['fields'])) {
+                continue 1;
+            }
+            foreach ($rows['fields'] as $field => $params) {
+                if (!empty($params['isMultilang'])) {
+                    foreach ($locales as $locale) {
+                        // prepare locale
+                        $preparedLocale = ucfirst(Util::toCamelCase(strtolower($locale)));
+
+                        // prepare multi-lang field
+                        $mField = $field . $preparedLocale;
+
+                        // prepare params
+                        $mParams = $params;
+                        $mParams['isMultilang'] = false;
+                        $mParams['hideParams'] = ['isMultilang'];
+                        $mParams['multilangField'] = $field;
+                        $mParams['multilangLocale'] = $locale;
+                        $mParams['isCustom'] = false;
+                        if (isset($params['requiredForMultilang'])) {
+                            $mParams['required'] = $params['requiredForMultilang'];
+                        }
+                        if (in_array($mParams['type'], ['enum', 'multiEnum'])) {
+                            $mParams['options'] = $mParams['options' . $preparedLocale];
+                            $mParams['default'] = null;
+                            $mParams['readOnly'] = true;
+                            $mParams['required'] = false;
+                            $mParams['hideParams'] = array_merge($mParams['hideParams'], ['options', 'default', 'required', 'isSorted', 'audited', 'readOnly']);
+                            $mParams['layoutMassUpdateDisabled'] = true;
+                        }
+
+                        $data['entityDefs'][$scope]['fields'][$mField] = $mParams;
+                    }
+                }
+            }
+        }
+
+        return $data;
     }
 
     /**
