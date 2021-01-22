@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -31,30 +30,23 @@
  * and "AtroCore" word.
  */
 
-declare(strict_types=1);
+Espo.define('views/fields/color', ['views/fields/varchar', 'lib!jscolor'],
+    Dep => Dep.extend({
 
-namespace ColoredFields;
+        detailTemplate: 'fields/base/edit',
 
-use Treo\Core\ModuleManager\AbstractModule;
+        listTemplate: 'fields/base/edit',
 
-/**
- * Class Module
- */
-class Module extends AbstractModule
-{
-    /**
-     * @inheritDoc
-     */
-    public static function getLoadOrder(): int
-    {
-        return 1;
-    }
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+            let input = this.$el.find('input').get(0);
+            let picker = new jscolor(input);
 
-    /**
-     * @return string
-     */
-    protected function getAppPath(): string
-    {
-        return $this->path . 'app/ColoredFields/';
-    }
-}
+            if (this.mode !== 'edit') {
+                input.readOnly = true;
+                picker.showOnClick = false;
+            }
+        }
+
+    })
+);

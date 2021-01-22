@@ -30,13 +30,13 @@
  * and "AtroCore" word.
  */
 
-Espo.define('colored-fields:views/fields/colored-multi-enum', 'views/fields/multi-enum', function (Dep) {
+Espo.define('views/fields/colored-multi-enum', 'views/fields/multi-enum', function (Dep) {
 
     return Dep.extend({
 
-        listTemplate: 'colored-fields:fields/colored-multi-enum/detail',
+        listTemplate: 'fields/colored-multi-enum/detail',
 
-        detailTemplate: 'colored-fields:fields/colored-multi-enum/detail',
+        detailTemplate: 'fields/colored-multi-enum/detail',
 
         defaultBackgroundColor: 'ececec',
 

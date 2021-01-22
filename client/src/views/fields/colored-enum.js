@@ -30,15 +30,15 @@
  * and "AtroCore" word.
  */
 
-Espo.define('colored-fields:views/fields/colored-enum', 'views/fields/enum', function (Dep) {
+Espo.define('views/fields/colored-enum', 'views/fields/enum', function (Dep) {
 
     return Dep.extend({
 
-        listTemplate: 'colored-fields:fields/colored-enum/detail',
+        listTemplate: 'fields/colored-enum/detail',
 
-        detailTemplate: 'colored-fields:fields/colored-enum/detail',
+        detailTemplate: 'fields/colored-enum/detail',
 
-        editTemplate: 'colored-fields:fields/colored-enum/edit',
+        editTemplate: 'fields/colored-enum/edit',
 
         defaultBackgroundColor: 'ececec',
 

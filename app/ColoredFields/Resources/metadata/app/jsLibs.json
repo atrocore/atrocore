@@ -1,7 +1,0 @@
-{
-  "jscolor": {
-    "path": "client/modules/colored-fields/lib/jscolor.min.js",
-    "exportsTo": "window",
-    "exportsAs": "jscolor"
-  }
-}

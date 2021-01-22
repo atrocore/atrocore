@@ -39,5 +39,5 @@
    },
    "translatedOptions": false,
    "personalData": true,
-   "view": "colored-fields:views/fields/colored-enum"
+   "view": "views/fields/colored-enum"
 }

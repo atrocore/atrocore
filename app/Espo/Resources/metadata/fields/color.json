@@ -22,5 +22,5 @@
     "fieldDefs": {
         "type": "varchar"
     },
-    "view": "colored-fields:views/fields/color"
+    "view": "views/fields/color"
 }

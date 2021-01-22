@@ -47,7 +47,7 @@ class Manager
     /**
      * @var array
      */
-    public const CORE_MODULES = ['ColoredFields', 'Multilang'];
+    public const CORE_MODULES = ['Multilang'];
 
     /**
      * @var array|null

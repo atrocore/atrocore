@@ -161,6 +161,10 @@
         "array": {
             "view": "views/admin/dynamic-logic/conditions/field-types/multi-enum",
             "typeList": ["isEmpty", "isNotEmpty", "has", "notHas"]
+        },
+        "color": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/base",
+            "typeList": ["equals", "notEquals", "isEmpty", "isNotEmpty"]
         }
     },
     "conditionTypes": {
