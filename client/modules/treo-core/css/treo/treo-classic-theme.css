@@ -21038,3 +21038,40 @@ select {
 .entity-container .cell {
     padding: 0;
 }
+
+.drag-and-drop-files .attach-file-label{
+    width: 100%;
+}
+
+.drag-and-drop-files .attach-file-label .btn-default {
+    width: 100%;
+    height: 140px;
+    background-color: #ececec;
+}
+
+.drag-and-drop-files .attach-file-label .btn-default:hover {
+    border-color: #e0e0e0;
+}
+
+.drag-and-drop-files .attach-file-label .btn-default .btn-text {
+    width: 100%;
+    float: left;
+    font-size: 26px;
+    color: #8e8e8e;
+    margin-top: 10px;
+}
+
+.drag-and-drop-files .attach-file-label .btn-default .btn-text-small {
+    font-size: 14px;
+    margin-top: 0;
+}
+
+.drag-and-drop-files .attach-file-label .btn-default .btn-upload {
+    width: 100%;
+    float: left;
+    margin-top: 7px;
+}
+
+.form-group[data-name="files"]>label {
+    display: none;
+}
