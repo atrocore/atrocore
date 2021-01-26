@@ -31,8 +31,61 @@
  * and "AtroCore" word.
  */
 
+declare(strict_types=1);
+
 namespace Espo\Controllers;
 
-class Attachment extends \Espo\Core\Controllers\Record
+use Espo\Core\Controllers\Record;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\ORM\Entity;
+
+/**
+ * Class Attachment
+ */
+class Attachment extends Record
 {
+    /**
+     * @param array     $params
+     * @param \stdClass $data
+     * @param object    $request
+     *
+     * @return bool
+     * @throws BadRequest
+     * @throws Forbidden
+     */
+    public function actionCreateChunks($params, $data, $request): bool
+    {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($this->name, 'create')) {
+            throw new Forbidden();
+        }
+
+        return $this->getRecordService()->createChunks($data);
+    }
+
+    /**
+     * @param array     $params
+     * @param \stdClass $data
+     * @param object    $request
+     *
+     * @return \stdClass
+     * @throws BadRequest
+     * @throws Forbidden
+     */
+    public function actionCreateByChunks($params, $data, $request)
+    {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($this->name, 'create')) {
+            throw new Forbidden();
+        }
+
+        return $this->getRecordService()->createByChunks($data)->getValueMap();
+    }
 }

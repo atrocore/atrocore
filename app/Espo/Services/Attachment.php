@@ -39,9 +39,13 @@ use \Espo\ORM\Entity;
 use \Espo\Core\Exceptions\BadRequest;
 use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\Error;
+use Treo\Core\EventManager\Event;
+use Treo\Core\Utils\Util;
 
 class Attachment extends Record
 {
+    protected const CHUNKS_DIR = 'data/chunks/';
+
     protected $notFilteringAttributeList = ['contents'];
 
     protected $attachmentFieldTypeList = ['file', 'image', 'attachmentMultiple', 'asset'];
@@ -104,6 +108,80 @@ class Attachment extends Record
     /**
      * @param \stdClass $attachment
      *
+     * @return bool
+     */
+    public function createChunks(\stdClass $attachment): bool
+    {
+        $contents = $this->parseInputFileContent($attachment->piece);
+
+        $path = self::CHUNKS_DIR . $attachment->chunkId;
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
+        file_put_contents($path . '/' . $attachment->start, $contents);
+
+        return true;
+    }
+
+    /**
+     * @param \stdClass $attachment
+     *
+     * @return Entity
+     */
+    public function createByChunks(\stdClass $attachment): Entity
+    {
+        $attachment = $this
+            ->dispatchEvent('beforeCreateEntity', new Event(['attachment' => $attachment]))
+            ->getArgument('attachment');
+
+        $dirPath = self::CHUNKS_DIR . $attachment->chunkId . '/';
+
+        if (!file_exists($dirPath) || !is_dir($dirPath)){
+            throw new NotFound();
+        }
+
+        $files = scandir($dirPath);
+        sort($files);
+
+        $filePath = $dirPath . $attachment->name;
+
+        $md5 = '';
+        file_put_contents($filePath, '');
+        foreach ($files as $file) {
+            if (!in_array($file, ['.', '..', $attachment->name])) {
+                $md5 = md5($md5 . $file);
+                file_put_contents($filePath, file_get_contents($dirPath . $file), FILE_APPEND);
+            }
+        }
+
+        $attachment->tmpPath = $filePath;
+        $attachment->md5 = $md5;
+
+        $duplicateParam = $this->getConfig()->get('attachmentDuplicates', 'notAllowByContent');
+        if ($duplicateParam == 'notAllowByContent') {
+            $entity = $this->getRepository()->where(['md5' => $attachment->md5, 'tmpPath' => null])->findOne();
+        } elseif ($duplicateParam == 'notAllowByContentAndName') {
+            $entity = $this->getRepository()->where(['md5' => $attachment->md5, 'tmpPath' => null, 'name' => $attachment->name])->findOne();
+        }
+
+        if (empty($entity)) {
+            $entity = parent::createEntity(clone $attachment);
+            $entity->isNew = true;
+        }
+
+        // remove chunk dir
+        Util::removeDir($dirPath);
+
+        $entity->set('pathsData', $this->getRepository()->getAttachmentPathsData($entity));
+
+        return $this
+            ->dispatchEvent('afterCreateEntity', new Event(['attachment' => $attachment, 'entity' => $entity]))
+            ->getArgument('entity');
+    }
+
+    /**
+     * @param \stdClass $attachment
+     *
      * @return mixed
      *
      * @throws BadRequest
@@ -113,14 +191,7 @@ class Attachment extends Record
     public function createEntity($attachment)
     {
         if (!empty($attachment->file)) {
-            $arr = explode(',', $attachment->file);
-            $contents = '';
-            if (count($arr) > 1) {
-                $contents = $arr[1];
-            }
-
-            $contents = base64_decode($contents);
-            $attachment->contents = $contents;
+            $attachment->contents = $this->parseInputFileContent($attachment->file);
 
             $relatedEntityType = null;
             $field = null;
@@ -157,7 +228,7 @@ class Attachment extends Record
                 throw new Forbidden("No access to field '" . $field . "'.");
             }
 
-            $size = mb_strlen($contents, '8bit');
+            $size = mb_strlen($attachment->contents, '8bit');
 
             if ($role === 'Attachment') {
                 if (!in_array($fieldType, $this->attachmentFieldTypeList)) {
@@ -193,7 +264,10 @@ class Attachment extends Record
         }
 
         $attachment->md5 = md5($attachment->contents);
-        $attachment->size = mb_strlen($attachment->contents);
+
+        if (empty($attachment->size)) {
+            $attachment->size = mb_strlen($attachment->contents);
+        }
 
         $duplicateParam = $this->getConfig()->get('attachmentDuplicates', 'notAllowByContent');
 
@@ -241,6 +315,22 @@ class Attachment extends Record
         if ($storage && !$this->getMetadata()->get(['app', 'fileStorage', 'implementationClassNameMap', $storage])) {
             $entity->clear('storage');
         }
+    }
+
+    /**
+     * @param string $fileContent
+     *
+     * @return string
+     */
+    protected function parseInputFileContent(string $fileContent): string
+    {
+        $arr = explode(',', $fileContent);
+        $contents = '';
+        if (count($arr) > 1) {
+            $contents = $arr[1];
+        }
+
+        return base64_decode($contents);
     }
 
     /**

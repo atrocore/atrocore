@@ -393,15 +393,10 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
         },
 
         uploadFile: function (file) {
-            var isCanceled = false;
+            const maxFileSize = this.getMaxUploadSize();
 
-            var exceedsMaxFileSize = false;
-
-            var maxFileSize = this.params.maxFileSize || 0;
-            var appMaxUploadSize = this.getHelper().getAppParam('maxUploadSize') || 0;
-            if (!maxFileSize || maxFileSize > appMaxUploadSize) {
-                maxFileSize = appMaxUploadSize;
-            }
+            let isCanceled = false;
+            let exceedsMaxFileSize = false;
 
             if (maxFileSize) {
                 if (file.size > maxFileSize * 1024 * 1024) {
@@ -409,10 +404,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 }
             }
             if (exceedsMaxFileSize) {
-                var msg = this.translate('fieldMaxFileSizeError', 'messages')
-                          .replace('{field}', this.getLabelText())
-                          .replace('{max}', maxFileSize);
-                this.showValidationMessage(msg, '.attachment-button label');
+                this.chunkUploadFile(file);
                 return;
             }
 
@@ -456,6 +448,92 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 }.bind(this);
                 fileReader.readAsDataURL(file);
             }, this);
+        },
+
+        getMaxUploadSize: function () {
+            let maxFileSize = this.params.maxFileSize || 0;
+            let appMaxUploadSize = this.getHelper().getAppParam('maxUploadSize') || 0;
+            if (!maxFileSize || maxFileSize > appMaxUploadSize) {
+                maxFileSize = appMaxUploadSize;
+            }
+
+            return maxFileSize;
+        },
+
+        chunkUploadFile: function (file) {
+            const size = file.size;
+            const maxFileSize = this.getMaxUploadSize();
+            const sliceSize = maxFileSize * 1024 * 1024;
+            const piecesTotal = Math.ceil(size / sliceSize);
+            const self = this;
+
+            let pieceNumber = 0;
+            let start = 0;
+
+            let chunkId = this.createUniqueString();
+
+            setTimeout(loop, 1);
+
+            function loop() {
+                let end = start + sliceSize;
+
+                if (size - end < 0) {
+                    end = size;
+                }
+
+                let s = slice(file, start, end);
+
+                send(s, start, end);
+
+                if (end < size) {
+                    start += sliceSize;
+                    setTimeout(loop, 1);
+                }
+            }
+
+            function slice(file, start, end) {
+                let slice = file.mozSlice ? file.mozSlice : file.webkitSlice ? file.webkitSlice : file.slice ? file.slice : noop;
+                return slice.bind(file)(start, end);
+            }
+
+            function send(piece, start, end) {
+                const reader = new FileReader();
+                reader.readAsDataURL(piece);
+                reader.onloadend = function () {
+                    $.ajax({
+                        type: 'POST',
+                        url: 'Attachment/action/CreateChunks',
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            chunkId: chunkId,
+                            start: start,
+                            piece: reader.result,
+                        }),
+                    }).done(function (data) {
+                        pieceNumber++;
+                        if (pieceNumber >= piecesTotal) {
+                            $.ajax({
+                                type: 'POST',
+                                url: 'Attachment/action/CreateByChunks',
+                                contentType: "application/json",
+                                data: JSON.stringify({
+                                    chunkId: chunkId,
+                                    name: file.name,
+                                    type: file.type || 'text/plain',
+                                    size: file.size,
+                                    role: 'Attachment',
+                                    relatedType: self.model.name,
+                                    field: self.name,
+                                }),
+                            }).done(function (data) {
+                                self.model.set(self.namePathsData, data.pathData);
+                                self.model.set(self.nameName, data.name);
+                                self.model.set(self.idName, data.id);
+                            });
+                        }
+                    });
+                }
+            }
         },
 
         handleFileUpload: function (file, contents, callback) {
@@ -573,7 +651,11 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             var data = {};
             data[this.idName] = this.model.get(this.idName);
             return data;
-        }
+        },
+
+        createUniqueString: function () {
+            return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        },
 
     });
 });
