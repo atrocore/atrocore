@@ -518,7 +518,10 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             return slice.bind(file)(start, end);
         },
 
-        setProgressMessage: function (current, total) {
+        setProgressMessage: function (current, piecesTotal) {
+            // prepare total
+            const total = piecesTotal + 1;
+
             let percent = current / total * 100;
             $('.uploading-progress-message').html(percent.toFixed(0) + '%');
         },
