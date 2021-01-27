@@ -465,38 +465,50 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
         },
 
         chunkUploadFile: function (file) {
-            var $attachmentBox = this.addAttachmentBox(file.name, file.type);
+            const $attachmentBox = this.addAttachmentBox(file.name, file.type);
             this.$el.find('.attachment-button').addClass('hidden');
             $attachmentBox.find('.remove-attachment').on('click.uploading', function () {
                 this.$el.find('.attachment-button').removeClass('hidden');
+                this.isUploading = false;
             }.bind(this));
 
-            const chunkId = this.createUniqueString();
+            this.$el.parent().find('.inline-cancel-link').click(function (){
+                this.isUploading = false;
+            }.bind(this));
+            this.$el.parent().find('.inline-save-link').click(function (){
+                this.isUploading = false;
+            }.bind(this));
+
+            const chunkId = this.createChunkId();
             const size = file.size;
             const maxFileSize = this.getMaxUploadSize();
             const sliceSize = maxFileSize * 1024 * 1024;
-            const self = this;
 
             this.piecesTotal = Math.ceil(size / sliceSize);
             this.pieceNumber = 0;
+            this.isUploading = true;
 
-            self.setProgressMessage(this.pieceNumber, this.piecesTotal);
+            this.setProgressMessage(this.pieceNumber, this.piecesTotal);
 
             let start = 0;
 
-            setTimeout(loop, 1);
+            setTimeout(loop.bind(this), 1);
 
             function loop() {
+                if (!this.isUploading) {
+                    return;
+                }
+
                 let end = start + sliceSize;
                 if (size - end < 0) {
                     end = size;
                 }
 
-                self.sendChunk(file, self.slice(file, start, end), start, chunkId);
+                this.sendChunk(file, this.slice(file, start, end), start, chunkId);
 
                 if (end < size) {
                     start += sliceSize;
-                    setTimeout(loop, 1);
+                    setTimeout(loop.bind(this), 1000);
                 }
             }
         },
@@ -669,7 +681,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             return data;
         },
 
-        createUniqueString: function () {
+        createChunkId: function () {
             return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
         },
 
