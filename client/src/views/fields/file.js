@@ -508,7 +508,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
 
                 if (end < size) {
                     start += sliceSize;
-                    setTimeout(loop.bind(this), 1000);
+                    setTimeout(loop.bind(this), 650);
                 }
             }
         },
@@ -558,6 +558,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                             self.model.set(self.namePathsData, data.pathData);
                             self.model.set(self.nameName, data.name);
                             self.model.set(self.idName, data.id);
+                            self.isUploading = false;
                         });
                     }
                 });

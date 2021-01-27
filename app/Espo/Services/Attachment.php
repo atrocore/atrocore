@@ -112,12 +112,21 @@ class Attachment extends Record
      */
     public function createChunks(\stdClass $attachment): bool
     {
+        $this->clearChunksTrash();
+
         $contents = $this->parseInputFileContent($attachment->piece);
 
         $path = self::CHUNKS_DIR . $attachment->chunkId;
         if (!file_exists($path)) {
+            $path .= '/' . time();
             mkdir($path, 0777, true);
+        } else {
+            foreach (Util::scanDir($path) as $dir) {
+                $path .= '/' . $dir;
+                break;
+            }
         }
+
         file_put_contents($path . '/' . $attachment->start, $contents);
 
         return true;
@@ -127,6 +136,9 @@ class Attachment extends Record
      * @param \stdClass $attachment
      *
      * @return Entity
+     * @throws Error
+     * @throws Forbidden
+     * @throws NotFound
      */
     public function createByChunks(\stdClass $attachment): Entity
     {
@@ -134,13 +146,20 @@ class Attachment extends Record
             ->dispatchEvent('beforeCreateEntity', new Event(['attachment' => $attachment]))
             ->getArgument('attachment');
 
+        $this->clearChunksTrash();
+
         $dirPath = self::CHUNKS_DIR . $attachment->chunkId . '/';
 
         if (!file_exists($dirPath) || !is_dir($dirPath)){
             throw new NotFound();
         }
 
-        $files = scandir($dirPath);
+        foreach (Util::scanDir($dirPath) as $dir) {
+            $dirPath .= '/' . $dir;
+            break;
+        }
+
+        $files = Util::scanDir($dirPath);
         sort($files);
 
         $filePath = $dirPath . $attachment->name;
@@ -148,7 +167,7 @@ class Attachment extends Record
         $md5 = '';
         file_put_contents($filePath, '');
         foreach ($files as $file) {
-            if (!in_array($file, ['.', '..', $attachment->name])) {
+            if ($file !== $attachment->name) {
                 $md5 = md5($md5 . $file);
                 file_put_contents($filePath, file_get_contents($dirPath . $file), FILE_APPEND);
             }
@@ -170,7 +189,7 @@ class Attachment extends Record
         }
 
         // remove chunk dir
-        Util::removeDir($dirPath);
+        Util::removeDir(self::CHUNKS_DIR . $attachment->chunkId);
 
         $entity->set('pathsData', $this->getRepository()->getAttachmentPathsData($entity));
 
@@ -190,6 +209,8 @@ class Attachment extends Record
      */
     public function createEntity($attachment)
     {
+        $this->clearChunksTrash();
+
         if (!empty($attachment->file)) {
             $attachment->contents = $this->parseInputFileContent($attachment->file);
 
@@ -289,6 +310,23 @@ class Attachment extends Record
         $entity->set('pathsData', $this->getRepository()->getAttachmentPathsData($entity));
 
         return $entity;
+    }
+
+    /**
+     * Remove old chunk dirs
+     */
+    public function clearChunksTrash(): void
+    {
+        $today = (new \DateTime())->modify('-1 day')->getTimestamp();
+        foreach (Util::scanDir(self::CHUNKS_DIR) as $chunkId) {
+            $path = self::CHUNKS_DIR . '/' . $chunkId;
+            foreach (Util::scanDir($path) as $timestamp) {
+                if ($timestamp < $today) {
+                    Util::removeDir($path);
+                    break 1;
+                }
+            }
+        }
     }
 
     /**
