@@ -11,7 +11,7 @@
       "maxLength": 100
     },
     "size": {
-      "type": "int",
+      "type": "float",
       "min": 0
     },
     "parent": {

@@ -281,6 +281,16 @@ class Attachment extends RDB
     }
 
     /**
+     * @param string $type
+     *
+     * @return string
+     */
+    public function getDestPath(string $type): string
+    {
+        return $this->getPathBuilder()->createPath($type);
+    }
+
+    /**
      * @return Config
      */
     protected function getConfig()
@@ -322,16 +332,6 @@ class Attachment extends RDB
     protected function getFileManager()
     {
         return $this->getInjection('fileManager');
-    }
-
-    /**
-     * @param string $type
-     *
-     * @return string
-     */
-    protected function getDestPath(string $type): string
-    {
-        return $this->getPathBuilder()->createPath($type);
     }
 
     /**

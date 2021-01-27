@@ -33,59 +33,40 @@
 
 declare(strict_types=1);
 
-namespace Espo\Controllers;
+namespace Treo\Migrations;
 
-use Espo\Core\Controllers\Record;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\ORM\Entity;
+use Treo\Core\Migration\Base;
 
 /**
- * Class Attachment
+ * Migration for version 1.1.5
  */
-class Attachment extends Record
+class V1Dot1Dot5 extends Base
 {
     /**
-     * @param array     $params
-     * @param \stdClass $data
-     * @param object    $request
-     *
-     * @return bool
-     * @throws BadRequest
-     * @throws Forbidden
+     * @inheritDoc
      */
-    public function actionCreateChunks($params, $data, $request): bool
+    public function up(): void
     {
-        if (!$request->isPost()) {
-            throw new BadRequest();
-        }
-
-        if (!$this->getAcl()->check($this->name, 'create')) {
-            throw new Forbidden();
-        }
-
-        return $this->getRecordService()->createChunks($data);
+        $this->execute("ALTER TABLE `attachment` CHANGE `size` size DOUBLE PRECISION DEFAULT NULL COLLATE utf8mb4_unicode_ci");
     }
 
     /**
-     * @param array     $params
-     * @param \stdClass $data
-     * @param object    $request
-     *
-     * @return \stdClass
-     * @throws BadRequest
-     * @throws Forbidden
+     * @inheritDoc
      */
-    public function actionCreateByChunks($params, $data, $request)
+    public function down(): void
     {
-        if (!$request->isPost()) {
-            throw new BadRequest();
-        }
+        $this->execute("ALTER TABLE `attachment` CHANGE `size` size INT DEFAULT NULL COLLATE utf8mb4_unicode_ci");
+    }
 
-        if (!$this->getAcl()->check($this->name, 'create')) {
-            throw new Forbidden();
+    /**
+     * @param string $sql
+     */
+    protected function execute(string $sql)
+    {
+        try {
+            $this->getPDO()->exec($sql);
+        } catch (\Throwable $e) {
+            // ignore all
         }
-
-        return $this->getRecordService()->createByChunks($data)->getValueMap();
     }
 }

@@ -39,9 +39,14 @@ use \Espo\ORM\Entity;
 use \Espo\Core\Exceptions\BadRequest;
 use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\Error;
+use Treo\Core\EventManager\Event;
+use Treo\Core\FilePathBuilder;
+use Treo\Core\Utils\Util;
 
 class Attachment extends Record
 {
+    protected const CHUNKS_DIR = 'data/chunks/';
+
     protected $notFilteringAttributeList = ['contents'];
 
     protected $attachmentFieldTypeList = ['file', 'image', 'attachmentMultiple', 'asset'];
@@ -104,6 +109,105 @@ class Attachment extends Record
     /**
      * @param \stdClass $attachment
      *
+     * @return bool
+     */
+    public function createChunks(\stdClass $attachment): bool
+    {
+        $this->clearChunksTrash();
+
+        $contents = $this->parseInputFileContent($attachment->piece);
+
+        $path = self::CHUNKS_DIR . $attachment->chunkId;
+        if (!file_exists($path)) {
+            $path .= '/' . time();
+            mkdir($path, 0777, true);
+        } else {
+            foreach (Util::scanDir($path) as $dir) {
+                $path .= '/' . $dir;
+                break;
+            }
+        }
+
+        file_put_contents($path . '/' . $attachment->start, $contents);
+
+        return true;
+    }
+
+    /**
+     * @param \stdClass $attachment
+     *
+     * @return Entity
+     * @throws Error
+     * @throws Forbidden
+     * @throws NotFound
+     */
+    public function createByChunks(\stdClass $attachment): Entity
+    {
+        $attachment = $this
+            ->dispatchEvent('beforeCreateEntity', new Event(['attachment' => $attachment]))
+            ->getArgument('attachment');
+
+        $this->clearChunksTrash();
+
+        $dirPath = self::CHUNKS_DIR . $attachment->chunkId . '/';
+
+        if (!file_exists($dirPath) || !is_dir($dirPath)) {
+            throw new NotFound();
+        }
+
+        foreach (Util::scanDir($dirPath) as $dir) {
+            $dirPath .= $dir . '/';
+            break;
+        }
+
+        $files = Util::scanDir($dirPath);
+        sort($files);
+
+        $destPath = $this->getRepository()->getDestPath(FilePathBuilder::UPLOAD);
+
+        $fullPath = $this->getConfig()->get('filesPath', 'upload/files/') . $destPath;
+        if (!file_exists($fullPath)) {
+            mkdir($fullPath, 0777, true);
+        }
+
+        $filePath = $fullPath . "/" . $attachment->name;
+
+        $md5 = '';
+        file_put_contents($filePath, '');
+        foreach ($files as $file) {
+            $md5 = md5($md5 . $file);
+            file_put_contents($filePath, file_get_contents($dirPath . $file), FILE_APPEND);
+        }
+
+        $attachment->md5 = $md5;
+        $attachment->storageFilePath = $destPath;
+        $attachment->storageThumbPath = $this->getRepository()->getDestPath(FilePathBuilder::UPLOAD);
+
+        $duplicateParam = $this->getConfig()->get('attachmentDuplicates', 'notAllowByContent');
+        if ($duplicateParam == 'notAllowByContent') {
+            $entity = $this->getRepository()->where(['md5' => $attachment->md5, 'tmpPath' => null])->findOne();
+        } elseif ($duplicateParam == 'notAllowByContentAndName') {
+            $entity = $this->getRepository()->where(['md5' => $attachment->md5, 'tmpPath' => null, 'name' => $attachment->name])->findOne();
+        }
+
+        if (empty($entity)) {
+            $entity = parent::createEntity(clone $attachment);
+            $entity->isNew = true;
+        }
+
+        // remove chunk dir
+        Util::removeDir(self::CHUNKS_DIR . $attachment->chunkId);
+
+        $entity->set('pathsData', $this->getRepository()->getAttachmentPathsData($entity));
+
+        return $this
+            ->dispatchEvent('afterCreateEntity', new Event(['attachment' => $attachment, 'entity' => $entity]))
+            ->getArgument('entity');
+    }
+
+    /**
+     * @param \stdClass $attachment
+     *
      * @return mixed
      *
      * @throws BadRequest
@@ -112,15 +216,10 @@ class Attachment extends Record
      */
     public function createEntity($attachment)
     {
-        if (!empty($attachment->file)) {
-            $arr = explode(',', $attachment->file);
-            $contents = '';
-            if (count($arr) > 1) {
-                $contents = $arr[1];
-            }
+        $this->clearChunksTrash();
 
-            $contents = base64_decode($contents);
-            $attachment->contents = $contents;
+        if (!empty($attachment->file)) {
+            $attachment->contents = $this->parseInputFileContent($attachment->file);
 
             $relatedEntityType = null;
             $field = null;
@@ -157,7 +256,7 @@ class Attachment extends Record
                 throw new Forbidden("No access to field '" . $field . "'.");
             }
 
-            $size = mb_strlen($contents, '8bit');
+            $size = mb_strlen($attachment->contents, '8bit');
 
             if ($role === 'Attachment') {
                 if (!in_array($fieldType, $this->attachmentFieldTypeList)) {
@@ -193,7 +292,10 @@ class Attachment extends Record
         }
 
         $attachment->md5 = md5($attachment->contents);
-        $attachment->size = mb_strlen($attachment->contents);
+
+        if (empty($attachment->size)) {
+            $attachment->size = mb_strlen($attachment->contents);
+        }
 
         $duplicateParam = $this->getConfig()->get('attachmentDuplicates', 'notAllowByContent');
 
@@ -215,6 +317,23 @@ class Attachment extends Record
         $entity->set('pathsData', $this->getRepository()->getAttachmentPathsData($entity));
 
         return $entity;
+    }
+
+    /**
+     * Remove old chunk dirs
+     */
+    public function clearChunksTrash(): void
+    {
+        $today = (new \DateTime())->modify('-1 day')->getTimestamp();
+        foreach (Util::scanDir(self::CHUNKS_DIR) as $chunkId) {
+            $path = self::CHUNKS_DIR . '/' . $chunkId;
+            foreach (Util::scanDir($path) as $timestamp) {
+                if ($timestamp < $today) {
+                    Util::removeDir($path);
+                    break 1;
+                }
+            }
+        }
     }
 
     /**
@@ -241,6 +360,22 @@ class Attachment extends Record
         if ($storage && !$this->getMetadata()->get(['app', 'fileStorage', 'implementationClassNameMap', $storage])) {
             $entity->clear('storage');
         }
+    }
+
+    /**
+     * @param string $fileContent
+     *
+     * @return string
+     */
+    protected function parseInputFileContent(string $fileContent): string
+    {
+        $arr = explode(',', $fileContent);
+        $contents = '';
+        if (count($arr) > 1) {
+            $contents = $arr[1];
+        }
+
+        return base64_decode($contents);
     }
 
     /**

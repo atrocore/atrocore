@@ -60,6 +60,10 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
 
         searchTypeList: ['isNotEmpty', 'isEmpty'],
 
+        pieceNumber: 0,
+
+        piecesTotal: 0,
+
         events: {
             'click a.remove-attachment': function (e) {
                 var $div = $(e.currentTarget).parent();
@@ -393,15 +397,10 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
         },
 
         uploadFile: function (file) {
-            var isCanceled = false;
+            const maxFileSize = this.getMaxUploadSize();
 
-            var exceedsMaxFileSize = false;
-
-            var maxFileSize = this.params.maxFileSize || 0;
-            var appMaxUploadSize = this.getHelper().getAppParam('maxUploadSize') || 0;
-            if (!maxFileSize || maxFileSize > appMaxUploadSize) {
-                maxFileSize = appMaxUploadSize;
-            }
+            let isCanceled = false;
+            let exceedsMaxFileSize = false;
 
             if (maxFileSize) {
                 if (file.size > maxFileSize * 1024 * 1024) {
@@ -409,10 +408,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 }
             }
             if (exceedsMaxFileSize) {
-                var msg = this.translate('fieldMaxFileSizeError', 'messages')
-                          .replace('{field}', this.getLabelText())
-                          .replace('{max}', maxFileSize);
-                this.showValidationMessage(msg, '.attachment-button label');
+                this.chunkUploadFile(file);
                 return;
             }
 
@@ -458,6 +454,120 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             }, this);
         },
 
+        getMaxUploadSize: function () {
+            let maxFileSize = this.params.maxFileSize || 0;
+            let appMaxUploadSize = this.getHelper().getAppParam('maxUploadSize') || 0;
+            if (!maxFileSize || maxFileSize > appMaxUploadSize) {
+                maxFileSize = appMaxUploadSize;
+            }
+
+            return maxFileSize;
+        },
+
+        chunkUploadFile: function (file) {
+            const $attachmentBox = this.addAttachmentBox(file.name, file.type);
+            this.$el.find('.attachment-button').addClass('hidden');
+            $attachmentBox.find('.remove-attachment').on('click.uploading', function () {
+                this.$el.find('.attachment-button').removeClass('hidden');
+                this.isUploading = false;
+            }.bind(this));
+
+            this.$el.parent().find('.inline-cancel-link').click(function (){
+                this.isUploading = false;
+            }.bind(this));
+            this.$el.parent().find('.inline-save-link').click(function (){
+                this.isUploading = false;
+            }.bind(this));
+
+            const chunkId = this.createChunkId();
+            const size = file.size;
+            const maxFileSize = this.getMaxUploadSize();
+            const sliceSize = maxFileSize * 1024 * 1024;
+
+            this.piecesTotal = Math.ceil(size / sliceSize);
+            this.pieceNumber = 0;
+            this.isUploading = true;
+
+            this.setProgressMessage(this.pieceNumber, this.piecesTotal);
+
+            let start = 0;
+
+            setTimeout(loop.bind(this), 1);
+
+            function loop() {
+                if (!this.isUploading) {
+                    return;
+                }
+
+                let end = start + sliceSize;
+                if (size - end < 0) {
+                    end = size;
+                }
+
+                this.sendChunk(file, this.slice(file, start, end), start, chunkId);
+
+                if (end < size) {
+                    start += sliceSize;
+                    setTimeout(loop.bind(this), 650);
+                }
+            }
+        },
+
+        slice: function (file, start, end) {
+            let slice = file.mozSlice ? file.mozSlice : file.webkitSlice ? file.webkitSlice : file.slice ? file.slice : noop;
+            return slice.bind(file)(start, end);
+        },
+
+        setProgressMessage: function (current, piecesTotal) {
+            // prepare total
+            const total = piecesTotal + 1;
+
+            let percent = current / total * 100;
+            $('.uploading-progress-message').html(percent.toFixed(0) + '%');
+        },
+
+        sendChunk: function (file, piece, start, chunkId) {
+            const self = this;
+            const reader = new FileReader();
+            reader.readAsDataURL(piece);
+            reader.onloadend = function () {
+                $.ajax({
+                    type: 'POST',
+                    url: 'Attachment/action/CreateChunks',
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        chunkId: chunkId,
+                        start: start,
+                        piece: reader.result,
+                    }),
+                }).done(function (data) {
+                    self.pieceNumber++;
+                    self.setProgressMessage(self.pieceNumber, self.piecesTotal);
+                    if (self.pieceNumber >= self.piecesTotal) {
+                        $.ajax({
+                            type: 'POST',
+                            url: 'Attachment/action/CreateByChunks',
+                            contentType: "application/json",
+                            data: JSON.stringify({
+                                chunkId: chunkId,
+                                name: file.name,
+                                type: file.type || 'text/plain',
+                                size: file.size,
+                                role: 'Attachment',
+                                relatedType: self.model.name,
+                                field: self.name,
+                            }),
+                        }).done(function (data) {
+                            self.model.set(self.namePathsData, data.pathData);
+                            self.model.set(self.nameName, data.name);
+                            self.model.set(self.idName, data.id);
+                            self.isUploading = false;
+                        });
+                    }
+                });
+            }
+        },
+
         handleFileUpload: function (file, contents, callback) {
             var params = {
                 name: file.name,
@@ -489,7 +599,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             this.$attachment.append($container);
 
             if (!id) {
-                var $loading = $('<span class="small uploading-message">' + this.translate('Uploading...') + '</span>');
+                var $loading = $('<span class="small uploading-message">' + this.translate('Uploading...') + ' <span class="uploading-progress-message"></span></span>');
                 $container.append($loading);
                 $att.on('ready', function () {
                     $loading.html(self.translate('Ready'));
@@ -573,7 +683,11 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             var data = {};
             data[this.idName] = this.model.get(this.idName);
             return data;
-        }
+        },
+
+        createChunkId: function () {
+            return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        },
 
     });
 });
