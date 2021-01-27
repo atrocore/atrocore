@@ -435,6 +435,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                         attachment.set('relatedType', this.model.name);
                         attachment.set('file', result);
                         attachment.set('field', this.name);
+                        attachment.set('modelAttributes', this.model.attributes);
 
                         attachment.save({}, {timeout: 0}).then(function (response) {
                             this.isUploading = false;
@@ -504,7 +505,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                     end = size;
                 }
 
-                this.sendChunk(file, this.slice(file, start, end), start, chunkId);
+                this.sendChunk(file, this.slice(file, start, end), start, chunkId, $attachmentBox);
 
                 if (end < size) {
                     start += sliceSize;
@@ -526,7 +527,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             $('.uploading-progress-message').html(percent.toFixed(0) + '%');
         },
 
-        sendChunk: function (file, piece, start, chunkId) {
+        sendChunk: function (file, piece, start, chunkId, $attachmentBox) {
             const self = this;
             const reader = new FileReader();
             reader.readAsDataURL(piece);
@@ -556,14 +557,25 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                                 role: 'Attachment',
                                 relatedType: self.model.name,
                                 field: self.name,
+                                modelAttributes: self.model.attributes
                             }),
                         }).done(function (data) {
                             self.model.set(self.namePathsData, data.pathData);
                             self.model.set(self.nameName, data.name);
                             self.model.set(self.idName, data.id);
                             self.isUploading = false;
+                        }).error(function (data) {
+                            $attachmentBox.remove();
+                            self.$el.find('.uploading-message').remove();
+                            self.$el.find('.attachment-button').removeClass('hidden');
+                            self.isUploading = false;
                         });
                     }
+                }).error(function (data) {
+                    $attachmentBox.remove();
+                    self.$el.find('.uploading-message').remove();
+                    self.$el.find('.attachment-button').removeClass('hidden');
+                    self.isUploading = false;
                 });
             }
         },

@@ -192,7 +192,6 @@ class Attachment extends Record
 
         if (empty($entity)) {
             $entity = parent::createEntity(clone $attachment);
-            $entity->isNew = true;
         }
 
         // remove chunk dir
@@ -307,7 +306,6 @@ class Attachment extends Record
 
         if (empty($entity)) {
             $entity = parent::createEntity(clone $attachment);
-            $entity->isNew = true;
 
             if (!empty($attachment->file)) {
                 $entity->clear('contents');
