@@ -60,6 +60,10 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
 
         searchTypeList: ['isNotEmpty', 'isEmpty'],
 
+        pieceNumber: 0,
+
+        piecesTotal: 0,
+
         events: {
             'click a.remove-attachment': function (e) {
                 var $div = $(e.currentTarget).parent();
@@ -461,78 +465,90 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
         },
 
         chunkUploadFile: function (file) {
+            var $attachmentBox = this.addAttachmentBox(file.name, file.type);
+            this.$el.find('.attachment-button').addClass('hidden');
+            $attachmentBox.find('.remove-attachment').on('click.uploading', function () {
+                this.$el.find('.attachment-button').removeClass('hidden');
+            }.bind(this));
+
+            const chunkId = this.createUniqueString();
             const size = file.size;
             const maxFileSize = this.getMaxUploadSize();
             const sliceSize = maxFileSize * 1024 * 1024;
-            const piecesTotal = Math.ceil(size / sliceSize);
             const self = this;
 
-            let pieceNumber = 0;
-            let start = 0;
+            this.piecesTotal = Math.ceil(size / sliceSize);
+            this.pieceNumber = 0;
 
-            let chunkId = this.createUniqueString();
+            self.setProgressMessage(this.pieceNumber, this.piecesTotal);
+
+            let start = 0;
 
             setTimeout(loop, 1);
 
             function loop() {
                 let end = start + sliceSize;
-
                 if (size - end < 0) {
                     end = size;
                 }
 
-                let s = slice(file, start, end);
-
-                send(s, start, end);
+                self.sendChunk(file, self.slice(file, start, end), start, chunkId);
 
                 if (end < size) {
                     start += sliceSize;
                     setTimeout(loop, 1);
                 }
             }
+        },
 
-            function slice(file, start, end) {
-                let slice = file.mozSlice ? file.mozSlice : file.webkitSlice ? file.webkitSlice : file.slice ? file.slice : noop;
-                return slice.bind(file)(start, end);
-            }
+        slice: function (file, start, end) {
+            let slice = file.mozSlice ? file.mozSlice : file.webkitSlice ? file.webkitSlice : file.slice ? file.slice : noop;
+            return slice.bind(file)(start, end);
+        },
 
-            function send(piece, start, end) {
-                const reader = new FileReader();
-                reader.readAsDataURL(piece);
-                reader.onloadend = function () {
-                    $.ajax({
-                        type: 'POST',
-                        url: 'Attachment/action/CreateChunks',
-                        contentType: "application/json",
-                        data: JSON.stringify({
-                            chunkId: chunkId,
-                            start: start,
-                            piece: reader.result,
-                        }),
-                    }).done(function (data) {
-                        pieceNumber++;
-                        if (pieceNumber >= piecesTotal) {
-                            $.ajax({
-                                type: 'POST',
-                                url: 'Attachment/action/CreateByChunks',
-                                contentType: "application/json",
-                                data: JSON.stringify({
-                                    chunkId: chunkId,
-                                    name: file.name,
-                                    type: file.type || 'text/plain',
-                                    size: file.size,
-                                    role: 'Attachment',
-                                    relatedType: self.model.name,
-                                    field: self.name,
-                                }),
-                            }).done(function (data) {
-                                self.model.set(self.namePathsData, data.pathData);
-                                self.model.set(self.nameName, data.name);
-                                self.model.set(self.idName, data.id);
-                            });
-                        }
-                    });
-                }
+        setProgressMessage: function (current, total) {
+            let percent = current / total * 100;
+            $('.uploading-progress-message').html(percent.toFixed(0) + '%');
+        },
+
+        sendChunk: function (file, piece, start, chunkId) {
+            const self = this;
+            const reader = new FileReader();
+            reader.readAsDataURL(piece);
+            reader.onloadend = function () {
+                $.ajax({
+                    type: 'POST',
+                    url: 'Attachment/action/CreateChunks',
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        chunkId: chunkId,
+                        start: start,
+                        piece: reader.result,
+                    }),
+                }).done(function (data) {
+                    self.pieceNumber++;
+                    self.setProgressMessage(self.pieceNumber, self.piecesTotal);
+                    if (self.pieceNumber >= self.piecesTotal) {
+                        $.ajax({
+                            type: 'POST',
+                            url: 'Attachment/action/CreateByChunks',
+                            contentType: "application/json",
+                            data: JSON.stringify({
+                                chunkId: chunkId,
+                                name: file.name,
+                                type: file.type || 'text/plain',
+                                size: file.size,
+                                role: 'Attachment',
+                                relatedType: self.model.name,
+                                field: self.name,
+                            }),
+                        }).done(function (data) {
+                            self.model.set(self.namePathsData, data.pathData);
+                            self.model.set(self.nameName, data.name);
+                            self.model.set(self.idName, data.id);
+                        });
+                    }
+                });
             }
         },
 
@@ -567,7 +583,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             this.$attachment.append($container);
 
             if (!id) {
-                var $loading = $('<span class="small uploading-message">' + this.translate('Uploading...') + '</span>');
+                var $loading = $('<span class="small uploading-message">' + this.translate('Uploading...') + ' <span class="uploading-progress-message"></span></span>');
                 $container.append($loading);
                 $att.on('ready', function () {
                     $loading.html(self.translate('Ready'));
