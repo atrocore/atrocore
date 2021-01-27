@@ -40,6 +40,7 @@ use \Espo\Core\Exceptions\BadRequest;
 use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\Error;
 use Treo\Core\EventManager\Event;
+use Treo\Core\FilePathBuilder;
 use Treo\Core\Utils\Util;
 
 class Attachment extends Record
@@ -150,31 +151,37 @@ class Attachment extends Record
 
         $dirPath = self::CHUNKS_DIR . $attachment->chunkId . '/';
 
-        if (!file_exists($dirPath) || !is_dir($dirPath)){
+        if (!file_exists($dirPath) || !is_dir($dirPath)) {
             throw new NotFound();
         }
 
         foreach (Util::scanDir($dirPath) as $dir) {
-            $dirPath .= '/' . $dir;
+            $dirPath .= $dir . '/';
             break;
         }
 
         $files = Util::scanDir($dirPath);
         sort($files);
 
-        $filePath = $dirPath . $attachment->name;
+        $destPath = $this->getRepository()->getDestPath(FilePathBuilder::UPLOAD);
+
+        $fullPath = $this->getConfig()->get('filesPath', 'upload/files/') . $destPath;
+        if (!file_exists($fullPath)) {
+            mkdir($fullPath, 0777, true);
+        }
+
+        $filePath = $fullPath . "/" . $attachment->name;
 
         $md5 = '';
         file_put_contents($filePath, '');
         foreach ($files as $file) {
-            if ($file !== $attachment->name) {
-                $md5 = md5($md5 . $file);
-                file_put_contents($filePath, file_get_contents($dirPath . $file), FILE_APPEND);
-            }
+            $md5 = md5($md5 . $file);
+            file_put_contents($filePath, file_get_contents($dirPath . $file), FILE_APPEND);
         }
 
-        $attachment->tmpPath = $filePath;
         $attachment->md5 = $md5;
+        $attachment->storageFilePath = $destPath;
+        $attachment->storageThumbPath = $this->getRepository()->getDestPath(FilePathBuilder::UPLOAD);
 
         $duplicateParam = $this->getConfig()->get('attachmentDuplicates', 'notAllowByContent');
         if ($duplicateParam == 'notAllowByContent') {
