@@ -54,14 +54,14 @@ Espo.define('treo-core:views/composer/modals/install', 'views/modal',
         },
 
         setupHeader() {
-            this.header = this.translate('installModule', 'labels', 'Store');
+            this.header = this.translate('installModule', 'labels', 'TreoStore');
         },
 
         setupButtonList() {
             this.buttonList = [
                 {
                     name: 'save',
-                    label: this.translate('installModule', 'labels', 'Store'),
+                    label: this.translate('installModule', 'labels', 'TreoStore'),
                     style: 'primary',
                 },
                 {
