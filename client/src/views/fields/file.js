@@ -60,6 +60,10 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
 
         searchTypeList: ['isNotEmpty', 'isEmpty'],
 
+        streams: 3,
+
+        pieces: [],
+
         pieceNumber: 0,
 
         piecesTotal: 0,
@@ -161,6 +165,8 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             this.idName = this.name + 'Id';
             this.typeName = this.name + 'Type';
             this.foreignScope = 'Attachment';
+            this.streams = this.getConfig().get('fileUploadStreamsCount') || 3;
+            this.pieces = [];
 
             this.previewSize = this.options.previewSize || this.params.previewSize || this.previewSize;
 
@@ -471,13 +477,16 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             $attachmentBox.find('.remove-attachment').on('click.uploading', function () {
                 this.$el.find('.attachment-button').removeClass('hidden');
                 this.isUploading = false;
+                this.pieces = [];
             }.bind(this));
 
-            this.$el.parent().find('.inline-cancel-link').click(function (){
+            this.$el.parent().find('.inline-cancel-link').click(function () {
                 this.isUploading = false;
+                this.pieces = [];
             }.bind(this));
-            this.$el.parent().find('.inline-save-link').click(function (){
+            this.$el.parent().find('.inline-save-link').click(function () {
                 this.isUploading = false;
+                this.pieces = [];
             }.bind(this));
 
             const chunkId = this.createChunkId();
@@ -490,8 +499,48 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
 
             this.setProgressMessage(this.pieceNumber, this.piecesTotal);
 
-            let start = 0;
-            this.sendChunk(file, start, chunkId, $attachmentBox, sliceSize);
+            // create file pieces
+            this.createFilePieces(file, sliceSize, 0, 1);
+
+            let promiseList = [];
+            promiseList.push(new Promise(function (resolve) {
+                let stream = 1;
+                while (stream <= this.streams) {
+                    let pieces = [];
+                    this.pieces.forEach(function (row) {
+                        if (row.stream === stream) {
+                            pieces.push(row);
+                        }
+                    });
+                    this.sendChunk(resolve, file, pieces, chunkId, $attachmentBox);
+                    stream++;
+                }
+            }.bind(this)));
+
+            Promise.all(promiseList).then(function () {
+                this.createByChunks(file, chunkId, $attachmentBox);
+            }.bind(this));
+        },
+
+        createFilePieces: function (file, sliceSize, start, stream) {
+            let end = start + sliceSize;
+
+            if (file.size - end < 0) {
+                end = file.size;
+            }
+
+            this.pieces.push({stream: stream, start: start, piece: this.slice(file, start, end)});
+
+            if (end < file.size) {
+                start += sliceSize;
+
+                stream++;
+                if (stream > this.streams){
+                    stream = 1;
+                }
+
+                this.createFilePieces(file, sliceSize, start, stream);
+            }
         },
 
         slice: function (file, start, end) {
@@ -507,21 +556,16 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             $('.uploading-progress-message').html(percent.toFixed(0) + '%');
         },
 
-        sendChunk: function (file, start, chunkId, $attachmentBox, sliceSize) {
+        sendChunk: function (resolve, file, pieces, chunkId, $attachmentBox) {
             if (!this.isUploading) {
                 return;
             }
 
+            const item = pieces.shift();
+
             const reader = new FileReader();
+            reader.readAsDataURL(item.piece);
 
-            let end = start + sliceSize;
-            if (file.size - end < 0) {
-                end = file.size;
-            }
-
-            let piece = this.slice(file, start, end);
-
-            reader.readAsDataURL(piece);
             reader.onloadend = function () {
                 $.ajax({
                     type: 'POST',
@@ -529,24 +573,27 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                     contentType: "application/json",
                     data: JSON.stringify({
                         chunkId: chunkId,
-                        start: start,
+                        start: item.start,
                         piece: reader.result,
                     }),
                 }).done(function (data) {
                     this.pieceNumber++;
                     this.setProgressMessage(this.pieceNumber, this.piecesTotal);
 
-                    if (this.pieceNumber < this.piecesTotal) {
-                        start += sliceSize;
-                        this.sendChunk(file, start, chunkId, $attachmentBox, sliceSize);
-                    } else {
-                        this.createByChunks(file, chunkId, $attachmentBox);
+                    if (pieces.length > 0) {
+                        this.sendChunk(resolve, file, pieces, chunkId, $attachmentBox);
+                    }
+
+                    if (this.pieceNumber === this.piecesTotal) {
+                        resolve();
                     }
                 }.bind(this)).error(function (data) {
                     $attachmentBox.remove();
                     this.$el.find('.uploading-message').remove();
                     this.$el.find('.attachment-button').removeClass('hidden');
                     this.isUploading = false;
+                    this.pieces = [];
+                    resolve();
                 }.bind(this));
             }.bind(this)
         },
@@ -571,11 +618,13 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 this.model.set(this.nameName, data.name);
                 this.model.set(this.idName, data.id);
                 this.isUploading = false;
+                this.pieces = [];
             }.bind(this)).error(function (data) {
                 $attachmentBox.remove();
                 this.$el.find('.uploading-message').remove();
                 this.$el.find('.attachment-button').removeClass('hidden');
                 this.isUploading = false;
+                this.pieces = [];
             }.bind(this));
         },
 
