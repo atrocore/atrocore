@@ -57,7 +57,7 @@ return [
     'defaultFileStorage'     => 'UploadDir',
     'filesPath'              => 'upload/files/',
     'thumbnailsPath'         => 'upload/thumbnails/',
-    'fileUploadStreamsCount' => 3,
+    'fileUploadStreamCount'  => 3,
     'isUploadPrivate'        => true,
     'smtpPort'               => 25,
     'languageList'           => [

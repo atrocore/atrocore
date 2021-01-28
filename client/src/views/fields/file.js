@@ -165,7 +165,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             this.idName = this.name + 'Id';
             this.typeName = this.name + 'Type';
             this.foreignScope = 'Attachment';
-            this.streams = this.getConfig().get('fileUploadStreamsCount') || 3;
+            this.streams = this.getConfig().get('fileUploadStreamCount') || 3;
             this.pieces = [];
 
             this.previewSize = this.options.previewSize || this.params.previewSize || this.previewSize;
