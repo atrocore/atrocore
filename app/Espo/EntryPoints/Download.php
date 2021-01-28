@@ -96,8 +96,17 @@ class Download extends AbstractEntryPoint
         header('Cache-Control: must-revalidate');
         header('Pragma: public');
         header('Content-Length: ' . filesize($fileName));
+        header('Content-Transfer-Encoding: binary');
 
-        readfile($fileName);
+        $chunkSize = 1024 * 1024;
+        $handle = fopen($fileName, 'rb');
+        while (!feof($handle)) {
+            $buffer = fread($handle, $chunkSize);
+            echo $buffer;
+            ob_flush();
+            flush();
+        }
+        fclose($handle);
         exit;
     }
 }
