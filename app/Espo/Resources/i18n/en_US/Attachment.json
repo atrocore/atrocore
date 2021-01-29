@@ -37,6 +37,7 @@
     "orphan": "Orphan"
   },
   "exceptions": {
-    "fileUploadingFailed": "File uploading failed."
+    "fileUploadingFailed": "File uploading failed.",
+    "chunkUploadFailed": "Error occurred, please re-upload."
   }
 }

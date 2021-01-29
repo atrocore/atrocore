@@ -57,6 +57,7 @@ return [
     'defaultFileStorage'     => 'UploadDir',
     'filesPath'              => 'upload/files/',
     'thumbnailsPath'         => 'upload/thumbnails/',
+    'chunkFileSize'          => 2,
     'fileUploadStreamCount'  => 3,
     'isUploadPrivate'        => true,
     'smtpPort'               => 25,

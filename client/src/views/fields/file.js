@@ -490,8 +490,8 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             }.bind(this));
 
             const chunkId = this.createChunkId();
-            const maxFileSize = this.getMaxUploadSize();
-            const sliceSize = maxFileSize * 1024 * 1024;
+            const chunkFileSize = this.getConfig().get('chunkFileSize') || 2;
+            const sliceSize = chunkFileSize * 1024 * 1024;
 
             this.piecesTotal = Math.ceil(file.size / sliceSize);
             this.pieceNumber = 0;
@@ -561,6 +561,10 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 return;
             }
 
+            if (pieces.length === 0){
+                return;
+            }
+
             const item = pieces.shift();
 
             const reader = new FileReader();
@@ -588,11 +592,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                         resolve();
                     }
                 }.bind(this)).error(function (data) {
-                    $attachmentBox.remove();
-                    this.$el.find('.uploading-message').remove();
-                    this.$el.find('.attachment-button').removeClass('hidden');
-                    this.isUploading = false;
-                    this.pieces = [];
+                    this.chunkUploadFailed($attachmentBox);
                     resolve();
                 }.bind(this));
             }.bind(this)
@@ -620,12 +620,19 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 this.isUploading = false;
                 this.pieces = [];
             }.bind(this)).error(function (data) {
-                $attachmentBox.remove();
-                this.$el.find('.uploading-message').remove();
-                this.$el.find('.attachment-button').removeClass('hidden');
-                this.isUploading = false;
-                this.pieces = [];
+                this.chunkUploadFailed($attachmentBox);
             }.bind(this));
+        },
+
+        chunkUploadFailed: function ($attachmentBox) {
+            $attachmentBox.remove();
+            this.$el.find('.uploading-message').remove();
+            this.$el.find('.attachment-button').removeClass('hidden');
+
+            Espo.Ui.notify(this.translate('chunkUploadFailed', 'exceptions', 'Attachment'), 'error', 1000 * 120, true);
+
+            this.isUploading = false;
+            this.pieces = [];
         },
 
         handleFileUpload: function (file, contents, callback) {
