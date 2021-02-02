@@ -40,11 +40,14 @@ Espo.define('views/fields/color', ['views/fields/varchar', 'lib!jscolor'],
         afterRender() {
             Dep.prototype.afterRender.call(this);
             let input = this.$el.find('input').get(0);
-            let picker = new jscolor(input);
 
-            if (this.mode !== 'edit') {
-                input.readOnly = true;
-                picker.showOnClick = false;
+            if (input) {
+                let picker = new jscolor(input);
+
+                if (this.mode !== 'edit') {
+                    input.readOnly = true;
+                    picker.showOnClick = false;
+                }
             }
         }
 
