@@ -76,6 +76,7 @@ class Attachment extends Record
 
     /**
      * @param Entity $entity
+     *
      * @return mixed
      * @throws NotFound
      */
@@ -94,6 +95,7 @@ class Attachment extends Record
 
     /**
      * @param Entity $entity
+     *
      * @return bool
      * @throws NotFound
      */
@@ -113,7 +115,7 @@ class Attachment extends Record
      */
     public function createChunks(\stdClass $attachment): bool
     {
-        $this->clearChunksTrash();
+        $this->clearTrash();
 
         $contents = $this->parseInputFileContent($attachment->piece);
 
@@ -147,7 +149,7 @@ class Attachment extends Record
             ->dispatchEvent('beforeCreateEntity', new Event(['attachment' => $attachment]))
             ->getArgument('attachment');
 
-        $this->clearChunksTrash();
+        $this->clearTrash();
 
         $dirPath = self::CHUNKS_DIR . $attachment->chunkId . '/';
 
@@ -215,7 +217,7 @@ class Attachment extends Record
      */
     public function createEntity($attachment)
     {
-        $this->clearChunksTrash();
+        $this->clearTrash();
 
         if (!empty($attachment->file)) {
             $attachment->contents = $this->parseInputFileContent($attachment->file);
@@ -225,8 +227,10 @@ class Attachment extends Record
             $role = 'Attachment';
             if (isset($attachment->parentType)) {
                 $relatedEntityType = $attachment->parentType;
-            } else if (isset($attachment->relatedType)) {
-                $relatedEntityType = $attachment->relatedType;
+            } else {
+                if (isset($attachment->relatedType)) {
+                    $relatedEntityType = $attachment->relatedType;
+                }
             }
             if (isset($attachment->field)) {
                 $field = $attachment->field;
@@ -245,8 +249,7 @@ class Attachment extends Record
 
             if (
                 !$this->getAcl()->checkScope($relatedEntityType, 'create')
-                &&
-                !$this->getAcl()->checkScope($relatedEntityType, 'edit')
+                && !$this->getAcl()->checkScope($relatedEntityType, 'edit')
             ) {
                 throw new Forbidden("No access to " . $relatedEntityType . ".");
             }
@@ -271,18 +274,20 @@ class Attachment extends Record
                     }
                 }
 
-            } else if ($role === 'Inline Attachment') {
-                if (!in_array($fieldType, $this->inlineAttachmentFieldTypeList)) {
-                    throw new Error("Field '{$field}' is not allowed to have inline attachment.");
-                }
-                $inlineAttachmentUploadMaxSize = $this->getConfig()->get('inlineAttachmentUploadMaxSize');
-                if ($inlineAttachmentUploadMaxSize) {
-                    if ($size > $inlineAttachmentUploadMaxSize * 1024 * 1024) {
-                        throw new Error("File size should not exceed {$inlineAttachmentUploadMaxSize}Mb.");
-                    }
-                }
             } else {
-                throw new BadRequest("Not supported attachment role.");
+                if ($role === 'Inline Attachment') {
+                    if (!in_array($fieldType, $this->inlineAttachmentFieldTypeList)) {
+                        throw new Error("Field '{$field}' is not allowed to have inline attachment.");
+                    }
+                    $inlineAttachmentUploadMaxSize = $this->getConfig()->get('inlineAttachmentUploadMaxSize');
+                    if ($inlineAttachmentUploadMaxSize) {
+                        if ($size > $inlineAttachmentUploadMaxSize * 1024 * 1024) {
+                            throw new Error("File size should not exceed {$inlineAttachmentUploadMaxSize}Mb.");
+                        }
+                    }
+                } else {
+                    throw new BadRequest("Not supported attachment role.");
+                }
             }
         }
 
@@ -320,18 +325,25 @@ class Attachment extends Record
     /**
      * Remove old chunk dirs
      */
-    public function clearChunksTrash(): void
+    public function clearTrash(): void
     {
-        $today = (new \DateTime())->modify('-1 day')->getTimestamp();
+        $checkDate = (new \DateTime())->modify('-1 day');
+
+        // Remove old chunk dirs
         foreach (Util::scanDir(self::CHUNKS_DIR) as $chunkId) {
             $path = self::CHUNKS_DIR . '/' . $chunkId;
             foreach (Util::scanDir($path) as $timestamp) {
-                if ($timestamp < $today) {
+                if ($timestamp < $checkDate->getTimestamp()) {
                     Util::removeDir($path);
                     break 1;
                 }
             }
         }
+
+        // Remove old records from DB table
+        $this
+            ->getEntityManager()
+            ->nativeQuery("DELETE FROM attachment WHERE created_at < '{$checkDate->format('Y-m-d H:i:s')}' AND tmp_path IS NOT NULL");
     }
 
     /**

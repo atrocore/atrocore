@@ -223,6 +223,25 @@ class Attachment extends RDB
     /**
      * @inheritDoc
      */
+    public function remove(Entity $entity, array $options = [])
+    {
+        $result = parent::remove($entity, $options);
+
+        $duplicateCount = $this->where(['OR' => [['sourceId' => $entity->getSourceId()], ['id' => $entity->getSourceId()]]])->count();
+        if ($duplicateCount === 0) {
+            // unlink file
+            $this->getFileStorageManager()->unlink($entity);
+
+            // remove record from DB table
+            $this->deleteFromDb($entity->get('id'));
+        }
+
+        return $result;
+    }
+
+    /**
+     * @inheritDoc
+     */
     protected function init()
     {
         parent::init();
@@ -235,19 +254,6 @@ class Attachment extends RDB
         $this->addDependency('fileManager');
         $this->addDependency('Thumbnail');
         $this->addDependency('queueManager');
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function afterRemove(Entity $entity, array $options = array())
-    {
-        parent::afterRemove($entity, $options);
-
-        $duplicateCount = $this->where(['OR' => [['sourceId' => $entity->getSourceId()], ['id' => $entity->getSourceId()]]])->count();
-        if ($duplicateCount === 0) {
-            $this->getFileStorageManager()->unlink($entity);
-        }
     }
 
     /**
