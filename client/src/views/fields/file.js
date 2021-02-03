@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
+Espo.define('views/fields/file', ['views/fields/link', 'lib!MD5'], function (Dep, MD5) {
 
     return Dep.extend({
 
@@ -489,13 +489,14 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 this.pieces = [];
             }.bind(this));
 
-            const chunkId = this.createChunkId();
+            const chunkId = this.createFileUniqueHash(file);
             const chunkFileSize = this.getConfig().get('chunkFileSize') || 2;
             const sliceSize = chunkFileSize * 1024 * 1024;
 
             this.piecesTotal = Math.ceil(file.size / sliceSize);
             this.pieceNumber = 0;
             this.isUploading = true;
+            this.uploadedChunks = [];
 
             this.setProgressMessage(this.pieceNumber, this.piecesTotal);
 
@@ -571,31 +572,40 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             reader.readAsDataURL(item.piece);
 
             reader.onloadend = function () {
-                $.ajax({
-                    type: 'POST',
-                    url: 'Attachment/action/CreateChunks',
-                    contentType: "application/json",
-                    data: JSON.stringify({
-                        chunkId: chunkId,
-                        start: item.start,
-                        piece: reader.result,
-                    }),
-                }).done(function (data) {
-                    this.pieceNumber++;
-                    this.setProgressMessage(this.pieceNumber, this.piecesTotal);
-
-                    if (pieces.length > 0) {
-                        this.sendChunk(resolve, file, pieces, chunkId, $attachmentBox);
-                    }
-
-                    if (this.pieceNumber === this.piecesTotal) {
+                if (this.uploadedChunks.indexOf(item.start.toString()) !== -1) {
+                    this.onChunkSaved(file, resolve, pieces, chunkId, $attachmentBox);
+                } else {
+                    $.ajax({
+                        type: 'POST',
+                        url: 'Attachment/action/CreateChunks?silent=true',
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            chunkId: chunkId,
+                            start: item.start,
+                            piece: reader.result,
+                        }),
+                    }).done(function (data) {
+                        this.uploadedChunks = data.chunks;
+                        this.onChunkSaved(file, resolve, pieces, chunkId, $attachmentBox);
+                    }.bind(this)).error(function (data) {
+                        this.chunkUploadFailed($attachmentBox);
                         resolve();
-                    }
-                }.bind(this)).error(function (data) {
-                    this.chunkUploadFailed($attachmentBox);
-                    resolve();
-                }.bind(this));
+                    }.bind(this));
+                }
             }.bind(this)
+        },
+
+        onChunkSaved: function (file, resolve, pieces, chunkId, $attachmentBox) {
+            this.pieceNumber++;
+            this.setProgressMessage(this.pieceNumber, this.piecesTotal);
+
+            if (pieces.length > 0) {
+                this.sendChunk(resolve, file, pieces, chunkId, $attachmentBox);
+            }
+
+            if (this.pieceNumber === this.piecesTotal) {
+                resolve();
+            }
         },
 
         createByChunks: function (file, chunkId, $attachmentBox) {
@@ -752,8 +762,8 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             return data;
         },
 
-        createChunkId: function () {
-            return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        createFileUniqueHash: function (file) {
+            return MD5(`${file.name}_${file.size}`);
         },
 
     });

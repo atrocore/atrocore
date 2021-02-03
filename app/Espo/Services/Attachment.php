@@ -113,7 +113,7 @@ class Attachment extends Record
      *
      * @return bool
      */
-    public function createChunks(\stdClass $attachment): bool
+    public function createChunks(\stdClass $attachment): array
     {
         $this->clearTrash();
 
@@ -132,7 +132,7 @@ class Attachment extends Record
 
         file_put_contents($path . '/' . $attachment->start, $contents);
 
-        return true;
+        return ['chunks' => Util::scanDir($path)];
     }
 
     /**
@@ -195,9 +195,6 @@ class Attachment extends Record
         if (empty($entity)) {
             $entity = parent::createEntity(clone $attachment);
         }
-
-        // remove chunk dir
-        Util::removeDir(self::CHUNKS_DIR . $attachment->chunkId);
 
         $entity->set('pathsData', $this->getRepository()->getAttachmentPathsData($entity));
 

@@ -50,11 +50,11 @@ class Attachment extends Record
      * @param \stdClass $data
      * @param object    $request
      *
-     * @return bool
+     * @return array
      * @throws BadRequest
      * @throws Forbidden
      */
-    public function actionCreateChunks($params, $data, $request): bool
+    public function actionCreateChunks($params, $data, $request): array
     {
         if (!$request->isPost()) {
             throw new BadRequest();
