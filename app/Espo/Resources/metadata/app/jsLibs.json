@@ -43,5 +43,10 @@
     "path": "client/lib/jscolor.min.js",
     "exportsTo": "window",
     "exportsAs": "jscolor"
+  },
+  "MD5": {
+    "path": "client/lib/jquery.md5.min.js",
+    "exportsTo": "$",
+    "exportsAs": "MD5"
   }
 }
