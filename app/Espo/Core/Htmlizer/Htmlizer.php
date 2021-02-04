@@ -40,8 +40,6 @@ use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\DateTime;
 use Espo\Core\Utils\NumberUtil;
 
-require('vendor/zordius/lightncandy/src/lightncandy.php');
-
 class Htmlizer
 {
     protected $fileManager;
@@ -194,8 +192,8 @@ class Htmlizer
 
     public function render(Entity $entity, $template, $id = null, $additionalData = array(), $skipLinks = false)
     {
-        $code = \LightnCandy::compile($template, [
-            'flags' => \LightnCandy::FLAG_HANDLEBARSJS,
+        $code = \LightnCandy\LightnCandy::compile($template, [
+            'flags' => \LightnCandy\LightnCandy::FLAG_HANDLEBARSJS,
             'helpers' => [
                 'file' => function ($context, $options) {
                     if (count($context) && $context[0]) {
@@ -263,7 +261,7 @@ class Htmlizer
 
         $fileName = 'data/cache/templates/' . $id . '.php';
 
-        $this->fileManager->putContents($fileName, $code);
+        $this->fileManager->putContents($fileName, '<?php ' . $code);
         $renderer = $this->fileManager->getPhpContents($fileName);
 
         if ($toRemove) {
