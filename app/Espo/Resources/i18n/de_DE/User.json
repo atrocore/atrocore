@@ -80,6 +80,9 @@
     "passwordChangeLinkEmailBody": "Sie können Ihr Passwort über diesen Link {link} ändern. Diese eindeutige URL ist nur für kurze Zeit gültig.",
     "userNameExists": "Benutzername existiert bereits"
   },
+  "exceptions": {
+    "demoAdminUserNamePasswordBlocked": "Eine Passwortänderung in der Demoversion ist nicht möglich."
+  },
   "boolFilters": {
     "onlyMyTeam": "Nur mein Team"
   },

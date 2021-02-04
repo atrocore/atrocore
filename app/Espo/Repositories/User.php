@@ -34,6 +34,7 @@
 namespace Espo\Repositories;
 
 use Espo\Core\AclManager;
+use Espo\Core\Exceptions\BadRequest;
 use \Espo\ORM\Entity;
 
 use \Espo\Core\Exceptions\Error;
@@ -45,6 +46,7 @@ class User extends \Espo\Core\ORM\Repositories\RDB
     {
         parent::init();
         $this->addDependency('container');
+        $this->addDependency('language');
     }
 
     protected function beforeSave(Entity $entity, array $options = array())
@@ -77,6 +79,12 @@ class User extends \Espo\Core\ORM\Repositories\RDB
                 ))->findOne();
                 if ($user) {
                     throw new Conflict(json_encode(['reason' => 'userNameExists']));
+                }
+            }
+
+            if ($entity->get('id') == 1 && !empty($this->getConfig()->get('demo'))) {
+                if ($entity->isAttributeChanged('password') || $entity->isAttributeChanged('userName')) {
+                    throw new BadRequest($this->getInjection('language')->translate('demoAdminUserNamePasswordBlocked', 'exceptions', 'User'));
                 }
             }
         }

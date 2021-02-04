@@ -85,6 +85,9 @@
     "setupSmtpBefore": "You need to setup <a href=\"{url}\">SMTP settings</a> to make the system be able to send password in email.",
     "userNameExists": "User Name already exists"
   },
+  "exceptions": {
+    "demoAdminUserNamePasswordBlocked": "Password change in the demo version is not possible."
+  },
   "options": {
     "gender": {
       "": "Not Set",
