@@ -186,7 +186,7 @@ class Attachment extends RDB
             $entity->set("storageThumbPath", $this->getDestPath(FilePathBuilder::UPLOAD));
 
             // create thumbs for image
-            if (in_array($entity->get('type'), \Espo\EntryPoints\Image::TYPES)) {
+            if (in_array($entity->get('type'), $this->getMetadata()->get(['app', 'typesWithThumbnails'], []))) {
                 $this->getInjection('queueManager')->push('Create thumbs', 'QueueManagerCreateThumbs', ['id' => $entity->get('id')], 1);
             }
 
