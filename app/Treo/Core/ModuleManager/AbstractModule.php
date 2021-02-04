@@ -37,10 +37,10 @@ namespace Treo\Core\ModuleManager;
 
 use Espo\Core\Utils\DataUtil;
 use Espo\Core\Utils\File\Unifier;
-use Treo\Core\Container;
 use Espo\Core\Utils\Json;
+use Espo\Core\Utils\Route;
+use Treo\Core\Container;
 use Treo\Core\Utils\Util;
-use Treo\Core\Utils\Route;
 use Treo\Core\Loaders\Layout;
 
 /**
@@ -351,12 +351,7 @@ abstract class AbstractModule
     protected function getRouteUtil(): Route
     {
         if (is_null($this->routeUtil)) {
-            $this->routeUtil = new Route(
-                $this->container->get('config'),
-                $this->container->get('metadata'),
-                $this->container->get('fileManager'),
-                $this->container->get('moduleManager')
-            );
+            $this->routeUtil = new Route($this->container->get('fileManager'), $this->container->get('moduleManager'));
         }
 
         return $this->routeUtil;

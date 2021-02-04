@@ -65,12 +65,6 @@ class Notification extends \Espo\Core\Controllers\Record
         );
     }
 
-    public function actionNotReadCount()
-    {
-        $userId = $this->getUser()->id;
-        return $this->getService('Notification')->getNotReadCount($userId);
-    }
-
     public function postActionMarkAllRead($params, $data, $request)
     {
         $userId = $this->getUser()->id;

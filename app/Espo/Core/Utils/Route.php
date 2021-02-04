@@ -33,48 +33,52 @@
 
 namespace Espo\Core\Utils;
 
+use Treo\Core\ModuleManager\Manager as ModuleManager;
+
+/**
+ * Class Route
+ */
 class Route
 {
+    private const CUSTOM_PATH = 'custom/Espo/Custom/Resources/routes.json';
+
+    /**
+     * @var File\Manager
+     */
+    private $fileManager;
+
+    /**
+     * @var ModuleManager
+     */
+    private $moduleManager;
+
+    /**
+     * @var null|array
+     */
     protected $data = null;
 
-    private $fileManager;
-    private $config;
-    private $metadata;
-
-    protected $cacheFile = 'data/cache/application/routes.php';
-
-    protected $paths = array(
-        'corePath' => CORE_PATH . '/Espo/Resources/routes.json',
-        'modulePath' => CORE_PATH . '/Espo/Modules/{*}/Resources/routes.json',
-        'customPath' => 'custom/Espo/Custom/Resources/routes.json',
-    );
-
-    public function __construct(Config $config, Metadata $metadata, File\Manager $fileManager)
+    /**
+     * Route constructor.
+     *
+     * @param File\Manager  $fileManager
+     * @param ModuleManager $moduleManager
+     */
+    public function __construct(File\Manager $fileManager, ModuleManager $moduleManager)
     {
-        $this->config = $config;
-        $this->metadata = $metadata;
         $this->fileManager = $fileManager;
+        $this->moduleManager = $moduleManager;
     }
 
-    protected function getConfig()
-    {
-        return $this->config;
-    }
-
-    protected function getFileManager()
-    {
-        return $this->fileManager;
-    }
-
-    protected function getMetadata()
-    {
-        return $this->metadata;
-    }
-
+    /**
+     * @param string $key
+     * @param array  $returns
+     *
+     * @return array
+     */
     public function get($key = '', $returns = null)
     {
         if (!isset($this->data)) {
-            $this->init();
+            $this->data = $this->unify();
         }
 
         if (empty($key)) {
@@ -84,7 +88,7 @@ class Route
         $keys = explode('.', $key);
 
         $lastRoute = $this->data;
-        foreach($keys as $keyName) {
+        foreach ($keys as $keyName) {
             if (isset($lastRoute[$keyName]) && is_array($lastRoute)) {
                 $lastRoute = $lastRoute[$keyName];
             } else {
@@ -95,25 +99,34 @@ class Route
         return $lastRoute;
     }
 
+    /**
+     * @return array
+     */
     public function getAll()
     {
         return $this->get();
     }
 
-    protected function init()
+    /**
+     * @param array  $currData
+     * @param string $routeFile
+     *
+     * @return array
+     */
+    public function getAddData($currData, $routeFile)
     {
-        if (file_exists($this->cacheFile) && $this->getConfig()->get('useCache')) {
-            $this->data = $this->getFileManager()->getPhpContents($this->cacheFile);
-        } else {
-            $this->data = $this->unify();
-
-            if ($this->getConfig()->get('useCache')) {
-                $result = $this->getFileManager()->putPhpContents($this->cacheFile, $this->data);
-                if ($result == false) {
-                    throw new \Espo\Core\Exceptions\Error('Route - Cannot save unified routes');
-                }
+        if (file_exists($routeFile)) {
+            $content = $this->fileManager->getContents($routeFile);
+            $arrayContent = Json::getArrayData($content);
+            if (empty($arrayContent)) {
+                $GLOBALS['log']->error('Route::unify() - Empty file or syntax error - [' . $routeFile . ']');
+                return $currData;
             }
+
+            $currData = $this->addToData($currData, $arrayContent);
         }
+
+        return $currData;
     }
 
     /**
@@ -124,40 +137,25 @@ class Route
     protected function unify()
     {
         // for custom
-        $data = $this->getAddData([], $this->paths['customPath']);
+        $data = $this->getAddData([], self::CUSTOM_PATH);
 
-        // for module
-        $moduleData = [];
-        foreach ($this->getMetadata()->getModules() as $moduleName => $module) {
-            $modulePath = str_replace(CORE_PATH . '/Espo/Modules/{*}', $moduleName, $this->paths['modulePath']);
-            foreach ($this->getAddData([], $modulePath) as $row) {
-                $moduleData[$row['method'].$row['route']] = $row;
-            }
+        // for modules
+        foreach ($this->moduleManager->getModules() as $module) {
+            $module->loadRoutes($data);
         }
-        $data = array_merge($data, array_values($moduleData));
 
         // for core
-        $data = $this->getAddData($data, $this->paths['corePath']);
+        $data = $this->getAddData($data, CORE_PATH . '/Espo/Resources/routes.json');
 
         return $data;
     }
 
-    public function getAddData($currData, $routeFile)
-    {
-        if (file_exists($routeFile)) {
-            $content = $this->getFileManager()->getContents($routeFile);
-            $arrayContent = Json::getArrayData($content);
-            if (empty($arrayContent)) {
-                $GLOBALS['log']->error('Route::unify() - Empty file or syntax error - ['.$routeFile.']');
-                return $currData;
-            }
-
-            $currData = $this->addToData($currData, $arrayContent);
-        }
-
-        return $currData;
-    }
-
+    /**
+     * @param array $data
+     * @param array $newData
+     *
+     * @return array
+     */
     protected function addToData($data, $newData)
     {
         if (!is_array($newData)) {
@@ -183,8 +181,8 @@ class Route
     {
         $routePath = trim($routePath);
 
-        if (substr($routePath,0,1) != '/') {
-            return '/'.$routePath;
+        if (substr($routePath, 0, 1) != '/') {
+            return '/' . $routePath;
         }
 
         return $routePath;

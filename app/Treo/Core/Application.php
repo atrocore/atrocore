@@ -39,9 +39,9 @@ use Espo\Core\Utils\Api\Auth as ApiAuth;
 use Espo\Core\Utils\Json;
 use Espo\Core\EntryPointManager;
 use Espo\Entities\Portal;
+use Espo\Core\Utils\Route;
 use Treo\Services\Installer;
 use Treo\Core\Utils\Auth;
-use Treo\Core\Utils\Route;
 use Treo\Core\Utils\Metadata;
 use Treo\Core\Utils\Config;
 
@@ -363,12 +363,7 @@ class Application
      */
     protected function getRouteList()
     {
-        $routes = new Route(
-            $this->getConfig(),
-            $this->getMetadata(),
-            $this->getContainer()->get('fileManager'),
-            $this->getContainer()->get('moduleManager')
-        );
+        $routes = new Route($this->getContainer()->get('fileManager'), $this->getContainer()->get('moduleManager'));
         $routeList = $routes->getAll();
 
         if (!empty($this->getContainer()->get('portal'))) {
