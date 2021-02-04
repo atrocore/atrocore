@@ -403,17 +403,9 @@ Espo.define('views/fields/file', ['views/fields/link', 'lib!MD5'], function (Dep
         },
 
         uploadFile: function (file) {
-            const maxFileSize = this.getMaxUploadSize();
-
             let isCanceled = false;
-            let exceedsMaxFileSize = false;
 
-            if (maxFileSize) {
-                if (file.size > maxFileSize * 1024 * 1024) {
-                    exceedsMaxFileSize = true;
-                }
-            }
-            if (exceedsMaxFileSize) {
+            if (file.size > this.getMaxUploadSize()) {
                 this.chunkUploadFile(file);
                 return;
             }
@@ -462,13 +454,7 @@ Espo.define('views/fields/file', ['views/fields/link', 'lib!MD5'], function (Dep
         },
 
         getMaxUploadSize: function () {
-            let maxFileSize = this.params.maxFileSize || 0;
-            let appMaxUploadSize = this.getHelper().getAppParam('maxUploadSize') || 0;
-            if (!maxFileSize || maxFileSize > appMaxUploadSize) {
-                maxFileSize = appMaxUploadSize;
-            }
-
-            return maxFileSize;
+            return (this.getConfig().get('chunkFileSize') || 2) * 1024 * 1024;
         },
 
         chunkUploadFile: function (file) {
@@ -490,8 +476,7 @@ Espo.define('views/fields/file', ['views/fields/link', 'lib!MD5'], function (Dep
             }.bind(this));
 
             const chunkId = this.createFileUniqueHash(file);
-            const chunkFileSize = this.getConfig().get('chunkFileSize') || 2;
-            const sliceSize = chunkFileSize * 1024 * 1024;
+            const sliceSize = this.getMaxUploadSize();
 
             this.piecesTotal = Math.ceil(file.size / sliceSize);
             this.pieceNumber = 0;
