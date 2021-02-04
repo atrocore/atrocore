@@ -46,7 +46,6 @@ class User extends \Espo\Core\ORM\Repositories\RDB
     {
         parent::init();
         $this->addDependency('container');
-        $this->addDependency('language');
     }
 
     protected function beforeSave(Entity $entity, array $options = array())
@@ -84,7 +83,7 @@ class User extends \Espo\Core\ORM\Repositories\RDB
 
             if ($entity->get('id') == 1 && !empty($this->getConfig()->get('demo'))) {
                 if ($entity->isAttributeChanged('password') || $entity->isAttributeChanged('userName')) {
-                    throw new BadRequest($this->getInjection('language')->translate('demoAdminUserNamePasswordBlocked', 'exceptions', 'User'));
+                    throw new BadRequest('Password change in the demo version is not possible.');
                 }
             }
         }
