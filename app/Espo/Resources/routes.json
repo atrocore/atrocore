@@ -1,151 +1,8 @@
 [
   {
-    "route": "/Composer/list",
-    "method": "get",
-    "params": {
-      "controller": "Composer",
-      "action": "list"
-    }
-  },
-  {
-    "route": "/Composer/installModule",
-    "method": "post",
-    "params": {
-      "controller": "Composer",
-      "action": "installModule"
-    }
-  },
-  {
-    "route": "/Composer/updateModule",
-    "method": "put",
-    "params": {
-      "controller": "Composer",
-      "action": "updateModule"
-    }
-  },
-  {
-    "route": "/Composer/deleteModule",
-    "method": "delete",
-    "params": {
-      "controller": "Composer",
-      "action": "deleteModule"
-    }
-  },
-  {
-    "route": "/Composer/cancel",
-    "method": "post",
-    "params": {
-      "controller": "Composer",
-      "action": "cancel"
-    }
-  },
-  {
-    "route": "/Composer/logs",
-    "method": "get",
-    "params": {
-      "controller": "Composer",
-      "action": "logs"
-    }
-  },
-  {
-    "route": "/Composer/runUpdate",
-    "method": "post",
-    "params": {
-      "controller": "Composer",
-      "action": "runUpdate"
-    }
-  },
-  {
-    "route": "/Composer/cancelUpdate",
-    "method": "delete",
-    "params": {
-      "controller": "Composer",
-      "action": "cancelUpdate"
-    }
-  },
-  {
-    "route": "/Job/action/massUpdate",
-    "method": "put",
-    "params": {
-      "controller": "Job",
-      "action": "massUpdate"
-    }
-  },
-  {
-    "route": "/QueueItem/action/massUpdate",
-    "method": "put",
-    "params": {
-      "controller": "QueueItem",
-      "action": "massUpdate"
-    }
-  },
-  {
-    "route": "/:controller/action/massUpdate",
-    "method": "put",
-    "params": {
-      "controller": "MassActions",
-      "action": "massUpdate",
-      "scope": ":controller"
-    }
-  },
-  {
-    "route": "/Job/action/massDelete",
-    "method": "post",
-    "params": {
-      "controller": "Job",
-      "action": "massDelete"
-    }
-  },
-  {
-    "route": "/QueueItem/action/massDelete",
-    "method": "post",
-    "params": {
-      "controller": "QueueItem",
-      "action": "massDelete"
-    }
-  },
-  {
-    "route": "/:controller/action/massDelete",
-    "method": "post",
-    "params": {
-      "controller": "MassActions",
-      "action": "massDelete",
-      "scope": ":controller"
-    }
-  },
-  {
-    "route": "/:controller/:link/relation",
-    "method": "post",
-    "params": {
-      "controller": "MassActions",
-      "action": "addRelation",
-      "scope": ":controller",
-      "link": ":link"
-    }
-  },
-  {
-    "route": "/:controller/:link/relation",
-    "method": "delete",
-    "params": {
-      "controller": "MassActions",
-      "action": "removeRelation",
-      "scope": ":controller",
-      "link": ":link"
-    }
-  },
-  {
-    "route": "Dashlet/:dashletName",
-    "method": "get",
-    "params": {
-      "controller": "Dashlet",
-      "action": "GetDashlet",
-      "dashletName": ":dashletName"
-    }
-  },
-  {
     "route": "/",
     "method": "get",
-    "params": "<h1>AtroCore REST API<\/h1>"
+    "params": "REST API"
   },
   {
     "route": "/App/user",
@@ -480,6 +337,149 @@
       "action": "removeLink",
       "id": ":id",
       "link": ":link"
+    }
+  },
+  {
+    "route": "/Composer/list",
+    "method": "get",
+    "params": {
+      "controller": "Composer",
+      "action": "list"
+    }
+  },
+  {
+    "route": "/Composer/installModule",
+    "method": "post",
+    "params": {
+      "controller": "Composer",
+      "action": "installModule"
+    }
+  },
+  {
+    "route": "/Composer/updateModule",
+    "method": "put",
+    "params": {
+      "controller": "Composer",
+      "action": "updateModule"
+    }
+  },
+  {
+    "route": "/Composer/deleteModule",
+    "method": "delete",
+    "params": {
+      "controller": "Composer",
+      "action": "deleteModule"
+    }
+  },
+  {
+    "route": "/Composer/cancel",
+    "method": "post",
+    "params": {
+      "controller": "Composer",
+      "action": "cancel"
+    }
+  },
+  {
+    "route": "/Composer/logs",
+    "method": "get",
+    "params": {
+      "controller": "Composer",
+      "action": "logs"
+    }
+  },
+  {
+    "route": "/Composer/runUpdate",
+    "method": "post",
+    "params": {
+      "controller": "Composer",
+      "action": "runUpdate"
+    }
+  },
+  {
+    "route": "/Composer/cancelUpdate",
+    "method": "delete",
+    "params": {
+      "controller": "Composer",
+      "action": "cancelUpdate"
+    }
+  },
+  {
+    "route": "/Job/action/massUpdate",
+    "method": "put",
+    "params": {
+      "controller": "Job",
+      "action": "massUpdate"
+    }
+  },
+  {
+    "route": "/QueueItem/action/massUpdate",
+    "method": "put",
+    "params": {
+      "controller": "QueueItem",
+      "action": "massUpdate"
+    }
+  },
+  {
+    "route": "/:controller/action/massUpdate",
+    "method": "put",
+    "params": {
+      "controller": "MassActions",
+      "action": "massUpdate",
+      "scope": ":controller"
+    }
+  },
+  {
+    "route": "/Job/action/massDelete",
+    "method": "post",
+    "params": {
+      "controller": "Job",
+      "action": "massDelete"
+    }
+  },
+  {
+    "route": "/QueueItem/action/massDelete",
+    "method": "post",
+    "params": {
+      "controller": "QueueItem",
+      "action": "massDelete"
+    }
+  },
+  {
+    "route": "/:controller/action/massDelete",
+    "method": "post",
+    "params": {
+      "controller": "MassActions",
+      "action": "massDelete",
+      "scope": ":controller"
+    }
+  },
+  {
+    "route": "/:controller/:link/relation",
+    "method": "post",
+    "params": {
+      "controller": "MassActions",
+      "action": "addRelation",
+      "scope": ":controller",
+      "link": ":link"
+    }
+  },
+  {
+    "route": "/:controller/:link/relation",
+    "method": "delete",
+    "params": {
+      "controller": "MassActions",
+      "action": "removeRelation",
+      "scope": ":controller",
+      "link": ":link"
+    }
+  },
+  {
+    "route": "Dashlet/:dashletName",
+    "method": "get",
+    "params": {
+      "controller": "Dashlet",
+      "action": "GetDashlet",
+      "dashletName": ":dashletName"
     }
   }
 ]
