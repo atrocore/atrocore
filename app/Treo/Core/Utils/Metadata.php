@@ -232,7 +232,7 @@ class Metadata extends Base
         $this->objData = $this->dataManager->getCacheData('metadata');
         if ($this->objData === null || $reload) {
             $this->objData = Json::decode(Json::encode($this->loadData()), true);
-            $this->dataManager->cachingData('metadata', $this->objData);
+            $this->dataManager->setCacheData('metadata', $this->objData);
         }
 
         // dispatch an event

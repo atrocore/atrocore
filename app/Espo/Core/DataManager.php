@@ -72,24 +72,6 @@ class DataManager
     }
 
     /**
-     * @param string $name
-     * @param mixed  $data
-     *
-     * @return bool
-     */
-    public function cachingData(string $name, $data): bool
-    {
-        if (!$this->getConfig()->get('useCache', false) || substr(php_sapi_name(), 0, 3) == 'cli' || $this->getConfig()->get('cacheTimestamp', 0) + 10 > time()) {
-            return false;
-        }
-
-        self::createCacheDir();
-        file_put_contents(self::CACHE_DIR_PATH . "/{$name}.json", Json::encode($data));
-
-        return true;
-    }
-
-    /**
      * Update cache timestamp
      *
      * @return bool
@@ -110,6 +92,24 @@ class DataManager
     public function isCacheExist(string $name): bool
     {
         return file_exists(self::CACHE_DIR_PATH . "/{$name}.json");
+    }
+
+    /**
+     * @param string $name
+     * @param mixed  $data
+     *
+     * @return bool
+     */
+    public function setCacheData(string $name, $data): bool
+    {
+        if (!$this->getConfig()->get('useCache', false) || substr(php_sapi_name(), 0, 3) == 'cli' || $this->getConfig()->get('cacheTimestamp', 0) + 10 > time()) {
+            return false;
+        }
+
+        self::createCacheDir();
+        file_put_contents(self::CACHE_DIR_PATH . "/{$name}.json", Json::encode($data));
+
+        return true;
     }
 
     /**
@@ -151,8 +151,6 @@ class DataManager
      * Clear a cache
      *
      * @return bool
-     *
-     * @deprecated Please, use DataManager::updateCacheTimestamp() instead
      */
     public function clearCache()
     {

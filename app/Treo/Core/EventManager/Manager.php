@@ -162,7 +162,7 @@ class Manager extends EventDispatcher
             }
 
             // caching
-            $dataManager->cachingData('listeners', $data);
+            $dataManager->setCacheData('listeners', $data);
         }
 
         return $data;

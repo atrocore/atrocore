@@ -89,7 +89,7 @@ class Route
             $this->data = $this->dataManager->getCacheData('route');
             if ($this->data === null) {
                 $this->data = $this->unify();
-                $this->dataManager->cachingData('route', $this->data);
+                $this->dataManager->setCacheData('route', $this->data);
             }
         }
 

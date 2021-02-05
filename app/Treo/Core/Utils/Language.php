@@ -67,11 +67,8 @@ class Language extends \Espo\Core\Utils\Language
     protected function init($reload = false)
     {
         if ($reload || !file_exists($this->getLangCacheFile()) || !$this->useCache) {
-            // load espo
+            // load core
             $fullData = $this->unify(CORE_PATH . '/Espo/Resources/i18n');
-
-            // load treo
-            $fullData = Util::merge($fullData, $this->unify(CORE_PATH . '/Treo/Resources/i18n'));
 
             // load modules
             foreach ($this->getMetadata()->getModules() as $module) {

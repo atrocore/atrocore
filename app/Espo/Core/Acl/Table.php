@@ -116,7 +116,7 @@ class Table
         $cacheName = $this->getCacheName();
         if (empty($this->data = $this->metadata->getDataManager()->getCacheData($cacheName, false))) {
             $this->load();
-            $this->metadata->getDataManager()->cachingData($cacheName, $this->data);
+            $this->metadata->getDataManager()->setCacheData($cacheName, $this->data);
         }
     }
 
@@ -240,6 +240,7 @@ class Table
             }
         }
 
+        $this->data = new \stdClass();
         $this->data->table = $aclTable;
         $this->data->fieldTable = $fieldTable;
 
