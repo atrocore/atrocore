@@ -35,6 +35,8 @@ declare(strict_types=1);
 
 namespace Treo\Core\Utils;
 
+use Espo\Core\DataManager;
+use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Metadata as Base;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\DataUtil;
@@ -58,26 +60,29 @@ class Metadata extends Base
     private $eventManager;
 
     /**
-     * @var string
+     * @var DataManager
      */
-    private $treoCacheFile = 'data/cache/metadata.json';
+    private $dataManager;
 
     /**
      * Metadata constructor.
      *
      * @param FileManager   $fileManager
+     * @param DataManager   $dataManager
      * @param ModuleManager $moduleManager
      * @param EventManager  $eventManager
      * @param bool          $useCache
      */
     public function __construct(
         FileManager $fileManager,
+        DataManager $dataManager,
         ModuleManager $moduleManager,
         EventManager $eventManager,
         bool $useCache = false
     ) {
         parent::__construct($fileManager, $useCache);
 
+        $this->dataManager = $dataManager;
         $this->moduleManager = $moduleManager;
         $this->eventManager = $eventManager;
 
@@ -90,15 +95,7 @@ class Metadata extends Base
      */
     public function isCached()
     {
-        if (!$this->useCache) {
-            return false;
-        }
-
-        if (file_exists($this->treoCacheFile)) {
-            return true;
-        }
-
-        return false;
+        return $this->dataManager->isCacheExist('metadata');
     }
 
     /**
@@ -220,42 +217,23 @@ class Metadata extends Base
     }
 
     /**
-     * Caching metadata
-     */
-    public function createCache()
-    {
-        file_put_contents($this->treoCacheFile, json_encode($this->loadData()));
-    }
-
-    /**
      * @param bool $reload
      */
     protected function objInit($reload = false)
     {
-        $useCache = $this->useCache;
-
-        // for CLI
-        if (substr(php_sapi_name(), 0, 3) == 'cli') {
-            $useCache = false;
-        }
-
-        if ($reload && $useCache) {
-            $this->createCache();
-        }
-
-        if ($useCache && file_exists($this->treoCacheFile)) {
-            $this->objData = json_decode(file_get_contents($this->treoCacheFile));
-        } else {
-            $this->objData = $this->loadData();
+        $this->objData = $this->dataManager->getCacheData('metadata');
+        if ($this->objData === null || $reload) {
+            $this->objData = Json::decode(Json::encode($this->loadData()), true);
+            $this->dataManager->cachingData('metadata', $this->objData);
         }
 
         // dispatch an event
         $event = $this
             ->getEventManager()
-            ->dispatch('Metadata', 'modify', new Event(['data' => json_decode(json_encode($this->objData), true)]));
+            ->dispatch('Metadata', 'modify', new Event(['data' => $this->objData]));
 
         // set object data
-        $this->objData = json_decode(json_encode($event->getArgument('data')));
+        $this->objData = Json::decode(Json::encode($event->getArgument('data')));
 
         // clearing metadata
         $this->clearingMetadata();

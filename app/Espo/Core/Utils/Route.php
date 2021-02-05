@@ -33,6 +33,7 @@
 
 namespace Espo\Core\Utils;
 
+use Espo\Core\DataManager;
 use Treo\Core\ModuleManager\Manager as ModuleManager;
 
 /**
@@ -53,6 +54,11 @@ class Route
     private $moduleManager;
 
     /**
+     * @var DataManager
+     */
+    private $dataManager;
+
+    /**
      * @var null|array
      */
     protected $data = null;
@@ -62,11 +68,13 @@ class Route
      *
      * @param File\Manager  $fileManager
      * @param ModuleManager $moduleManager
+     * @param DataManager   $dataManager
      */
-    public function __construct(File\Manager $fileManager, ModuleManager $moduleManager)
+    public function __construct(File\Manager $fileManager, ModuleManager $moduleManager, DataManager $dataManager)
     {
         $this->fileManager = $fileManager;
         $this->moduleManager = $moduleManager;
+        $this->dataManager = $dataManager;
     }
 
     /**
@@ -78,7 +86,11 @@ class Route
     public function get($key = '', $returns = null)
     {
         if (!isset($this->data)) {
-            $this->data = $this->unify();
+            $this->data = $this->dataManager->getCacheData('route');
+            if ($this->data === null) {
+                $this->data = $this->unify();
+                $this->dataManager->cachingData('route', $this->data);
+            }
         }
 
         if (empty($key)) {

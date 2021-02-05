@@ -33,6 +33,8 @@
 
 namespace Espo\Core\Utils;
 
+use Espo\Core\DataManager;
+
 class Config
 {
     /**
@@ -196,10 +198,6 @@ class Config
     {
         $values = $this->changedData;
 
-        if (!isset($values[$this->cacheTimestamp])) {
-            $values = array_merge($this->updateCacheTimestamp(true), $values);
-        }
-
         $removeData = empty($this->removeData) ? null : $this->removeData;
 
         $data = include($this->configPath);
@@ -297,25 +295,6 @@ class Config
         }
 
         return $this->set($values);
-    }
-
-    /**
-     * Update cache timestamp
-     *
-     * @param $onlyValue - If need to return just timestamp array
-     * @return bool | array
-     */
-    public function updateCacheTimestamp($onlyValue = false)
-    {
-        $timestamp = array(
-            $this->cacheTimestamp => time(),
-        );
-
-        if ($onlyValue) {
-            return $timestamp;
-        }
-
-        return $this->set($timestamp);
     }
 
     /**

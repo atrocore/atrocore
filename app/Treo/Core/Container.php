@@ -36,6 +36,7 @@ declare(strict_types=1);
 namespace Treo\Core;
 
 use Espo\Core\AclManager;
+use Espo\Core\DataManager;
 use Espo\Entities\Portal;
 use Espo\Entities\User;
 use Espo\Core\Utils\Log;
@@ -246,10 +247,21 @@ class Container
     {
         return new Metadata(
             $this->get('fileManager'),
+            $this->get('dataManager'),
             $this->get('moduleManager'),
             $this->get('eventManager'),
             $this->get('config')->get('useCache', false)
         );
+    }
+
+    /**
+     * Load DataManager
+     *
+     * @return DataManager
+     */
+    protected function loadDataManager(): DataManager
+    {
+        return new DataManager($this);
     }
 
     /**

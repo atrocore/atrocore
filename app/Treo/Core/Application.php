@@ -363,7 +363,7 @@ class Application
      */
     protected function getRouteList()
     {
-        $routes = new Route($this->getContainer()->get('fileManager'), $this->getContainer()->get('moduleManager'));
+        $routes = new Route($this->getContainer()->get('fileManager'), $this->getContainer()->get('moduleManager'), $this->getContainer()->get('dataManager'));
         $routeList = $routes->getAll();
 
         if (!empty($this->getContainer()->get('portal'))) {

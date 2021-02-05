@@ -351,7 +351,7 @@ abstract class AbstractModule
     protected function getRouteUtil(): Route
     {
         if (is_null($this->routeUtil)) {
-            $this->routeUtil = new Route($this->container->get('fileManager'), $this->container->get('moduleManager'));
+            $this->routeUtil = new Route($this->container->get('fileManager'), $this->container->get('moduleManager'), $this->container->get('dataManager'));
         }
 
         return $this->routeUtil;

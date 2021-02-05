@@ -33,23 +33,97 @@
 
 namespace Espo\Core;
 
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Json;
 use Treo\Core\Container;
+use Treo\Core\Utils\Util;
 
+/**
+ * Class DataManager
+ */
 class DataManager
 {
+    public const CACHE_DIR_PATH = 'data/cache';
+
+    /**
+     * @var Container
+     */
     private $container;
 
-    private $cachePath = 'data/cache';
-
-
+    /**
+     * DataManager constructor.
+     *
+     * @param Container $container
+     */
     public function __construct(Container $container)
     {
         $this->container = $container;
     }
 
-    protected function getContainer()
+    /**
+     * Create cache dir
+     */
+    public static function createCacheDir(): void
     {
-        return $this->container;
+        if (!file_exists(self::CACHE_DIR_PATH)) {
+            mkdir(self::CACHE_DIR_PATH, 0777, true);
+            sleep(1);
+        }
+    }
+
+    /**
+     * @param string $name
+     * @param array  $data
+     *
+     * @return bool
+     */
+    public function cachingData(string $name, array $data): bool
+    {
+        if (!$this->getConfig()->get('useCache', false) || substr(php_sapi_name(), 0, 3) == 'cli' || $this->getConfig()->get('cacheTimestamp', 0) + 10 > time()) {
+            return false;
+        }
+
+        self::createCacheDir();
+        file_put_contents(self::CACHE_DIR_PATH . "/{$name}.json", Json::encode($data));
+
+        return true;
+    }
+
+    /**
+     * Update cache timestamp
+     *
+     * @return bool
+     */
+    public function updateCacheTimestamp()
+    {
+        $this->getConfig()->set('cacheTimestamp', time());
+        $this->getConfig()->save();
+
+        return true;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function isCacheExist(string $name): bool
+    {
+        return file_exists(self::CACHE_DIR_PATH . "/{$name}.json");
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return array|null
+     */
+    public function getCacheData(string $name): ?array
+    {
+        if (!$this->getConfig()->get('useCache', false) || !$this->isCacheExist($name)) {
+            return null;
+        }
+
+        return Json::decode(file_get_contents(self::CACHE_DIR_PATH . "/{$name}.json"), true);
     }
 
     /**
@@ -76,21 +150,17 @@ class DataManager
      * Clear a cache
      *
      * @return bool
+     *
+     * @deprecated Please, use DataManager::updateCacheTimestamp() instead
      */
     public function clearCache()
     {
-        $result = $this->getContainer()->get('fileManager')->removeInDir($this->cachePath);
-
-        if ($result != true) {
-            throw new Exceptions\Error("Error while clearing cache");
-        }
-
-        // create metadata cache
-        $this->getContainer()->get('metadata')->createCache();
+        Util::removeDir(self::CACHE_DIR_PATH);
+        self::createCacheDir();
 
         $this->updateCacheTimestamp();
 
-        return $result;
+        return true;
     }
 
     /**
@@ -101,10 +171,10 @@ class DataManager
     public function rebuildDatabase($entityList = null)
     {
         try {
-            $result = $this->getContainer()->get('schema')->rebuild($entityList);
+            $result = $this->container->get('schema')->rebuild($entityList);
         } catch (\Exception $e) {
             $result = false;
-            $GLOBALS['log']->error('Fault to rebuild database schema'.'. Details: '.$e->getMessage());
+            $GLOBALS['log']->error('Fault to rebuild database schema' . '. Details: ' . $e->getMessage());
         }
 
         if ($result != true) {
@@ -123,34 +193,41 @@ class DataManager
      */
     public function rebuildMetadata()
     {
-        $metadata = $this->getContainer()->get('metadata');
+        $metadata = $this->container->get('metadata');
 
         $metadata->init(true);
 
-        $ormData = $this->getContainer()->get('ormMetadata')->getData(true);
+        $ormData = $this->container->get('ormMetadata')->getData(true);
 
         $this->updateCacheTimestamp();
 
         return empty($ormData) ? false : true;
     }
 
+    /**
+     * Rebuild scheduledJobs
+     */
     public function rebuildScheduledJobs()
     {
-        $metadata = $this->getContainer()->get('metadata');
-        $entityManager = $this->getContainer()->get('entityManager');
+        $metadata = $this->container->get('metadata');
+        $entityManager = $this->container->get('entityManager');
 
         $jobs = $metadata->get(['entityDefs', 'ScheduledJob', 'jobs'], array());
 
         foreach ($jobs as $jobName => $defs) {
             if ($jobName && !empty($defs['isSystem']) && !empty($defs['scheduling'])) {
-                if (!$entityManager->getRepository('ScheduledJob')->where(array(
-                    'job' => $jobName,
-                    'status' => 'Active',
-                    'scheduling' => $defs['scheduling']
-                ))->findOne()) {
-                    $job = $entityManager->getRepository('ScheduledJob')->where(array(
-                        'job' => $jobName
-                    ))->findOne();
+                if (!$entityManager->getRepository('ScheduledJob')->where(
+                    array(
+                        'job'        => $jobName,
+                        'status'     => 'Active',
+                        'scheduling' => $defs['scheduling']
+                    )
+                )->findOne()) {
+                    $job = $entityManager->getRepository('ScheduledJob')->where(
+                        array(
+                            'job' => $jobName
+                        )
+                    )->findOne();
                     if ($job) {
                         $entityManager->removeEntity($job);
                     }
@@ -159,13 +236,15 @@ class DataManager
                         $name = $defs['name'];
                     }
                     $job = $entityManager->getEntity('ScheduledJob');
-                    $job->set(array(
-                        'job' => $jobName,
-                        'status' => 'Active',
-                        'scheduling' => $defs['scheduling'],
-                        'isInternal' => true,
-                        'name' => $name
-                    ));
+                    $job->set(
+                        array(
+                            'job'        => $jobName,
+                            'status'     => 'Active',
+                            'scheduling' => $defs['scheduling'],
+                            'isInternal' => true,
+                            'name'       => $name
+                        )
+                    );
                     $entityManager->saveEntity($job);
                 }
             }
@@ -173,22 +252,11 @@ class DataManager
     }
 
     /**
-     * Update cache timestamp
-     *
-     * @return bool
+     * Populate config parameters
      */
-    public function updateCacheTimestamp()
-    {
-        $this->getContainer()->get('config')->updateCacheTimestamp();
-        $this->getContainer()->get('config')->save();
-        return true;
-    }
-
     protected function populateConfigParameters()
     {
-        $config = $this->getContainer()->get('config');
-
-        $pdo = $this->getContainer()->get('entityManager')->getPDO();
+        $pdo = $this->container->get('pdo');
         $query = "SHOW VARIABLES LIKE 'ft_min_word_len'";
         $sth = $pdo->prepare($query);
         $sth->execute();
@@ -200,8 +268,15 @@ class DataManager
             }
         }
 
-        $config->set('fullTextSearchMinLength', $fullTextSearchMinLength);
+        $this->getConfig()->set('fullTextSearchMinLength', $fullTextSearchMinLength);
+        $this->getConfig()->save();
+    }
 
-        $config->save();
+    /**
+     * @return Config
+     */
+    protected function getConfig(): Config
+    {
+        return $this->container->get('config');
     }
 }
