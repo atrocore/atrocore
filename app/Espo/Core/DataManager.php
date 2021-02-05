@@ -73,11 +73,11 @@ class DataManager
 
     /**
      * @param string $name
-     * @param array  $data
+     * @param mixed  $data
      *
      * @return bool
      */
-    public function cachingData(string $name, array $data): bool
+    public function cachingData(string $name, $data): bool
     {
         if (!$this->getConfig()->get('useCache', false) || substr(php_sapi_name(), 0, 3) == 'cli' || $this->getConfig()->get('cacheTimestamp', 0) + 10 > time()) {
             return false;
@@ -114,16 +114,17 @@ class DataManager
 
     /**
      * @param string $name
+     * @param bool   $isArray
      *
-     * @return array|null
+     * @return mixed
      */
-    public function getCacheData(string $name): ?array
+    public function getCacheData(string $name, $isArray = true)
     {
         if (!$this->getConfig()->get('useCache', false) || !$this->isCacheExist($name)) {
             return null;
         }
 
-        return Json::decode(file_get_contents(self::CACHE_DIR_PATH . "/{$name}.json"), true);
+        return Json::decode(file_get_contents(self::CACHE_DIR_PATH . "/{$name}.json"), $isArray);
     }
 
     /**

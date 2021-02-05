@@ -217,6 +217,14 @@ class Metadata extends Base
     }
 
     /**
+     * @return DataManager
+     */
+    public function getDataManager(): DataManager
+    {
+        return $this->dataManager;
+    }
+
+    /**
      * @param bool $reload
      */
     protected function objInit($reload = false)

@@ -71,19 +71,11 @@ class Table extends \Espo\Core\Acl\Table
     }
 
     /**
-     * @inheritDoc
+     * @return string
      */
-    protected function initCacheFilePath()
+    protected function getCacheName(): string
     {
-        // prepare portal cache dir
-        $dir = 'data/cache/acl/portal/' . $this->getPortal()->id;
-
-        // create cache dir
-        if (!file_exists($dir)) {
-            mkdir($dir, 0777, true);
-        }
-
-        $this->cacheFilePath = $dir . '/' . $this->getUser()->id . '.json';
+        return 'acl_' . $this->getUser()->id . '_portal_' . $this->getPortal()->id;
     }
 
     protected function getRoleList()

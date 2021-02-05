@@ -113,32 +113,19 @@ class Table
         $this->valuePermissionList = $this->metadata->get(['app', $this->type, 'valuePermissionList'], []);
         $this->valuePermissionHighestLevels = $this->metadata->get(['app', $this->type, 'valuePermissionHighestLevels'], array());
 
-        $this->initCacheFilePath();
-
-        if ($config && $config->get('useCache') && file_exists($this->cacheFilePath)) {
-            $this->data = json_decode(file_get_contents($this->cacheFilePath));
-        } else {
+        $cacheName = $this->getCacheName();
+        if (empty($this->data = $this->metadata->getDataManager()->getCacheData($cacheName, false))) {
             $this->load();
-            if ($config && $fileManager && $config->get('useCache')) {
-                $this->buildCache();
-            }
+            $this->metadata->getDataManager()->cachingData($cacheName, $this->data);
         }
     }
 
     /**
-     * Ini cache file path
+     * @return string
      */
-    protected function initCacheFilePath()
+    protected function getCacheName(): string
     {
-        // prepare portal cache dir
-        $dir = 'data/cache/acl';
-
-        // create cache dir
-        if (!file_exists($dir)) {
-            mkdir($dir, 0777, true);
-        }
-
-        $this->cacheFilePath = $dir . '/' . $this->getUser()->id . '.json';
+        return 'acl_' . $this->getUser()->id;
     }
 
     protected function getUser()
@@ -723,11 +710,6 @@ class Table
         }
 
         return $data;
-    }
-
-    private function buildCache()
-    {
-        file_put_contents($this->cacheFilePath, json_encode($this->data));
     }
 
     protected function applyReadOnlyFields(&$fieldTable)

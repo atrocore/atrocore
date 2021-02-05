@@ -35,6 +35,7 @@ declare(strict_types=1);
 
 namespace Treo\Core\EventManager;
 
+use Espo\Core\DataManager;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Treo\Core\Container;
 
@@ -123,15 +124,10 @@ class Manager extends EventDispatcher
      */
     protected function getClassNames(): array
     {
-        // get useCache param
-        $useCache = $this->container->get('config')->get('useCache', false);
+        /** @var DataManager $dataManager */
+        $dataManager = $this->container->get('dataManager');
 
-        // prepare path
-        $path = 'data/cache/listeners.json';
-
-        if ($useCache && file_exists($path)) {
-            $data = json_decode(file_get_contents($path), true);
-        } else {
+        if (empty($data = $dataManager->getCacheData('listeners'))) {
             // prepare listeners
             $listeners = [];
 
@@ -165,15 +161,8 @@ class Manager extends EventDispatcher
                 }
             }
 
-            if ($useCache) {
-                // create dir if it needs
-                if (!file_exists('data/cache')) {
-                    mkdir('data/cache', 0777, true);
-                }
-
-                // save cache file
-                file_put_contents($path, json_encode($data));
-            }
+            // caching
+            $dataManager->cachingData('listeners', $data);
         }
 
         return $data;
