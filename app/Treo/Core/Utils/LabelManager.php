@@ -35,6 +35,8 @@ declare(strict_types=1);
 
 namespace Treo\Core\Utils;
 
+use Espo\Core\Utils\Language;
+
 /**
  * Class LabelManager
  */
@@ -177,7 +179,7 @@ class LabelManager extends \Espo\Core\Utils\LabelManager
     public function saveLabels($language, $scope, $labels)
     {
         $languageObj = new Language($language, $this->getFileManager(), $this->getMetadata());
-        $languageOriginalObj = new Language($language, $this->getFileManager(), $this->getMetadata(), false, true);
+        $languageOriginalObj = new Language($language, $this->getFileManager(), $this->getMetadata(), null, true);
 
         $returnDataHash = array();
 

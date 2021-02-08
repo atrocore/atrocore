@@ -37,6 +37,7 @@ namespace Treo\Core;
 
 use Espo\Core\AclManager;
 use Espo\Core\DataManager;
+use Espo\Core\Utils\Language;
 use Espo\Entities\Portal;
 use Espo\Entities\User;
 use Espo\Core\Utils\Log;
@@ -262,6 +263,51 @@ class Container
     protected function loadDataManager(): DataManager
     {
         return new DataManager($this);
+    }
+
+    /**
+     * Load Language
+     *
+     * @return Language
+     */
+    protected function loadLanguage(): Language
+    {
+        return new Language(
+            Language::detectLanguage($this->get('config'), $this->get('preferences')),
+            $this->get('fileManager'),
+            $this->get('metadata'),
+            $this->get('eventManager')
+        );
+    }
+
+    /**
+     * Load BaseLanguage
+     *
+     * @return Language
+     */
+    protected function loadBaseLanguage(): Language
+    {
+        return new Language(
+            Language::DEFAULT_LANGUAGE,
+            $this->get('fileManager'),
+            $this->get('metadata'),
+            $this->get('eventManager')
+        );
+    }
+
+    /**
+     * Load DefaultLanguage
+     *
+     * @return Language
+     */
+    protected function loadDefaultLanguage(): Language
+    {
+        return new Language(
+            Language::detectLanguage($this->get('config')),
+            $this->get('fileManager'),
+            $this->get('metadata'),
+            $this->get('eventManager')
+        );
     }
 
     /**
