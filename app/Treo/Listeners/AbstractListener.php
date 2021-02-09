@@ -38,8 +38,8 @@ namespace Treo\Listeners;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Services\Base as BaseService;
+use Espo\Core\Utils\Language;
 use Treo\Core\Utils\Config;
-use Treo\Core\Utils\Language;
 use Treo\Services\AbstractService;
 
 /**

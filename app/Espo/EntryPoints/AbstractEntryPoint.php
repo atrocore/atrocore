@@ -39,13 +39,13 @@ use Espo\Core\Acl;
 use Espo\Core\Utils\ClientManager;
 use Espo\Core\Utils\DateTime;
 use Espo\Core\Utils\NumberUtil;
+use Espo\Core\Utils\Language;
 use Espo\Entities\User;
 use Treo\Core\Container;
 use Treo\Core\ORM\EntityManager;
 use Treo\Core\ServiceFactory;
 use Treo\Core\Utils\Config;
 use Treo\Core\Utils\File\Manager;
-use Treo\Core\Utils\Language;
 use Treo\Core\Utils\Metadata;
 
 /**
