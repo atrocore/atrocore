@@ -60,12 +60,10 @@ class Attachment extends RDB
             $entity->set('storage', $this->getConfig()->get('defaultFileStorage', 'UploadDir'));
         }
 
-        if (!$entity->isNew()) {
-            if ($entity->get('sourceId')) {
-                $this->copyFile($entity);
-            } elseif ($entity->isAttributeChanged("relatedId") || $entity->isAttributeChanged("relatedType")) {
-                $this->moveFromTmp($entity);
-            }
+        $this->moveFromTmp($entity);
+
+        if (!$entity->isNew() && $entity->get('sourceId')) {
+            $this->copyFile($entity);
         }
     }
 

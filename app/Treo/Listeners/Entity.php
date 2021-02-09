@@ -155,15 +155,6 @@ class Entity extends AbstractListener
     {
         // delegate an event
         $this->dispatch($event->getArgument('entityType') . 'Entity', 'beforeRelate', $event);
-
-        //for move multiple attachments
-        if ($this->isMultipleAttachment($event)) {
-            $attachment = $this->getEntityManager()
-                               ->getEntity("Attachment", $event->getArgument("foreign"));
-            if ($attachment) {
-                $this->getService("Attachment")->moveMultipleAttachment($attachment);
-            }
-        }
     }
 
     /**
@@ -327,26 +318,5 @@ class Entity extends AbstractListener
             'relationData'  => $event->getArgument('relationData'),
             'foreignEntity' => $foreign,
         ];
-    }
-
-    /**
-     * @param Event $event
-     * @return bool
-     */
-    private function isMultipleAttachment(Event $event)
-    {
-        $metaData = $this->getMetadata()
-                         ->get([
-                             "entityDefs",
-                             $event->getArgument("entityType"),
-                             "links",
-                             $event->getArgument("relationName"),
-                         ]);
-
-        if ($metaData['type'] === "hasChildren" && $metaData['entity'] === "Attachment") {
-            return true;
-        }
-
-        return false;
     }
 }
