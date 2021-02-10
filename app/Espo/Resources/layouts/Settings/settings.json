@@ -2,8 +2,8 @@
     {
         "label": "System",
         "rows": [
-            [{"name": "treoId"}, false],
-            [{"name": "useCache"}, {"name": "siteUrl"}],
+            [{"name": "treoId"}, {"name": "useCache"}],
+            [false, {"name": "siteUrl"}],
             [{"name": "followCreatedEntities"}, {"name": "globalSearchEntityList"}],
             [{"name": "aclStrictMode"}, {"name": "attachmentDuplicates"}],
             [{"name": "textFilterUseContainsForVarchar"}, {"name": "aclAllowDeleteCreated"}]

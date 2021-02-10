@@ -23,7 +23,8 @@
       }
    ],
    "actualFields":[
-      "id"
+      "id",
+      "link"
    ],
    "notActualFields":[
       "name"
