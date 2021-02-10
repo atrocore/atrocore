@@ -1,4 +1,5 @@
 {
+    "iconClass": "fas fa-envelope-square",
     "controller": "controllers/record",
     "views": {
         "list": "views/email-template/list"

@@ -9,7 +9,7 @@
    "recordViews":{
       "detail":"views/user/record/detail",
       "detailSmall":"views/user/record/detail-quick",
-      "edit":"views/user/record/edit",
+      "edit": "treo-core:views/user/record/edit",
       "editSmall":"views/user/record/edit-quick",
       "list":"views/user/record/list"
    },

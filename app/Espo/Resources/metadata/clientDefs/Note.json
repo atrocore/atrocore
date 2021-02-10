@@ -1,13 +1,19 @@
 {
   "collection": "collections/note",
-  "recordViews":{
-    "edit":"views/note/record/edit",
-    "editQuick":"views/note/record/edit"
+  "recordViews": {
+    "edit": "views/note/record/edit",
+    "editQuick": "views/note/record/edit"
   },
   "modalViews": {
     "edit": "views/note/modals/edit"
   },
   "itemViews": {
-    "Post": "views/stream/notes/post"
+    "Post": "views/stream/notes/post",
+    "Update": "treo-core:views/stream/notes/update",
+    "updateModule": "treo-core:views/stream/notes/update-module",
+    "installModule": "treo-core:views/stream/notes/install-module",
+    "deleteModule": "treo-core:views/stream/notes/delete-module",
+    "composerUpdate": "treo-core:views/stream/notes/composer-update",
+    "updateModuleActivation": "treo-core:views/stream/notes/update-module-activation"
   }
 }

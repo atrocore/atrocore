@@ -1,4 +1,5 @@
 {
+    "iconClass": "fas fa-file-pdf",
     "controller": "controllers/record",
     "recordViews": {
         "detail": "views/template/record/detail",

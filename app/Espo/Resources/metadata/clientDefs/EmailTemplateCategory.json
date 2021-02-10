@@ -1,4 +1,5 @@
 {
+    "iconClass": "far fa-envelope",
     "controller": "controllers/record-tree",
     "collection": "collections/tree",
     "menu": {
