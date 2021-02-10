@@ -167,7 +167,7 @@ class FieldManagerController extends AbstractListener
      */
     protected function updateEnumDefaultMultilang(string $entityName, array $data): void
     {
-        if ($data['type'] = ['enum'] && $data['isMultilang'] ?? false && $this->getConfig()->get('isMultilangActive', false)) {
+        if ($data['type'] == 'enum' && $data['isMultilang'] ?? false && $this->getConfig()->get('isMultilangActive', false)) {
             $default = $data['default'];
             $defaultPosition = array_search($default, $data['options']);
 
