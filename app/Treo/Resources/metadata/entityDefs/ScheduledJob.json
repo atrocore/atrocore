@@ -1,7 +1,0 @@
-{
-  "jobSchedulingMap": {
-    "TreoCleanup": "0 3 1 * *",
-    "RestApiDocs": "0 */2 * * *",
-    "ComposerAutoUpdate": "0 5 * * SUN"
-  }
-}

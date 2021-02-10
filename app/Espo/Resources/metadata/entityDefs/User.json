@@ -1,5 +1,17 @@
 {
     "fields": {
+        "contact": {
+            "type": "link",
+            "view": "views/user/fields/contact"
+        },
+        "accounts": {
+            "type": "linkMultiple"
+        },
+        "account": {
+            "type": "link",
+            "notStorable": true,
+            "readOnly": true
+        },
         "isAdmin": {
             "type": "bool",
             "tooltip": true
@@ -207,6 +219,17 @@
         }
     },
     "links": {
+        "contact": {
+            "type": "belongsTo",
+            "entity": "Contact",
+            "foreign": "portalUser"
+        },
+        "accounts": {
+            "type": "hasMany",
+            "entity": "Account",
+            "foreign": "portalUsers",
+            "relationName": "AccountPortalUser"
+        },
         "defaultTeam": {
             "type": "belongsTo",
             "entity": "Team"

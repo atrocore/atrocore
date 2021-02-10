@@ -66,11 +66,9 @@
         "asc": true
     },
     "jobSchedulingMap": {
-        "CheckInboundEmails": "*/2 * * * *",
-        "CheckEmailAccounts": "*/1 * * * *",
-        "SendEmailReminders": "*/2 * * * *",
-        "Cleanup": "1 1 * * 0",
-        "AuthTokenControl": "*/6 * * * *",
-        "SendEmailNotifications": "*/2 * * * *"
+        "SendEmailNotifications": "*/2 * * * *",
+        "TreoCleanup": "0 3 1 * *",
+        "RestApiDocs": "0 */2 * * *",
+        "ComposerAutoUpdate": "0 5 * * SUN"
     }
 }

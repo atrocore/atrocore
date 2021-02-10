@@ -1,5 +1,9 @@
 {
     "fields": {
+        "insertField": {
+            "type": "jsonObject",
+            "notStorable": true
+        },
         "name": {
             "type": "varchar",
             "required": true,
