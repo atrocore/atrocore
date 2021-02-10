@@ -191,11 +191,15 @@ class FieldManagerController extends AbstractListener
                     }
                 }
 
-                $sth = $this
-                    ->getEntityManager()
-                    ->getPDO()
-                    ->prepare($sql);
-                $sth->execute();
+                try {
+                    $sth = $this
+                        ->getEntityManager()
+                        ->getPDO()
+                        ->prepare($sql);
+                    $sth->execute();
+                } catch (\Exception $e) {
+
+                }
             }
         }
     }
