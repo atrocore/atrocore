@@ -39,7 +39,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\ORM\EntityManager;
 use Gumlet\ImageResize;
 use Treo\Core\Container;
-use Treo\Core\Utils\Config;
+use Espo\Core\Utils\Config;
 use Treo\Core\Utils\File\Manager;
 use Treo\Core\Utils\Metadata;
 use Espo\Entities\Attachment;

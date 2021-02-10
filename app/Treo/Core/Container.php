@@ -40,13 +40,13 @@ use Espo\Core\DataManager;
 use Espo\Core\Utils\Language;
 use Espo\Entities\Portal;
 use Espo\Entities\User;
+use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Log;
 use Espo\Core\Utils\Log\Monolog\Handler\RotatingFileHandler;
 use Espo\Core\Utils\Log\Monolog\Handler\StreamHandler;
 use Monolog\ErrorHandler;
 use Treo\Core\EventManager\Manager as EventManager;
 use Treo\Core\ModuleManager\Manager as ModuleManager;
-use Treo\Core\Utils\Config;
 use Treo\Core\Utils\File\Manager as FileManager;
 use Treo\Core\Utils\Metadata;
 

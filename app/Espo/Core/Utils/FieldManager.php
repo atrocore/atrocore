@@ -816,7 +816,7 @@ class FieldManager
      */
     protected function getOptionsFields(array $defs): array
     {
-        /** @var \Treo\Core\Utils\Config $config */
+        /** @var \Espo\Core\Utils\Config $config */
         $config = $this->container->get('config');
 
         $fields[] = 'options';

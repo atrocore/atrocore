@@ -34,7 +34,7 @@
 namespace Treo\Core\Migration;
 
 use PDO;
-use Treo\Core\Utils\Config;
+use Espo\Core\Utils\Config;
 
 /**
  * Base class

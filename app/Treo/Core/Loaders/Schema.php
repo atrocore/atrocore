@@ -37,7 +37,7 @@ namespace Treo\Core\Loaders;
 
 use Treo\Core\Utils\Database\Schema\Converter;
 use Treo\Core\Utils\Database\Schema\Schema as Instance;
-use Treo\Core\Utils\Config;
+use Espo\Core\Utils\Config;
 use Treo\Core\Utils\Metadata;
 use Espo\Core\Utils\File\ClassParser;
 use Espo\Core\Utils\File\Manager;

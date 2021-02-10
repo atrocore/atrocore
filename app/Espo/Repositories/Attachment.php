@@ -36,12 +36,12 @@ declare(strict_types=1);
 namespace Espo\Repositories;
 
 use Espo\Core\Exceptions\InternalServerError;
+use Espo\Core\Utils\Config;
+use Espo\Entities\Attachment as AttachmentEntity;
 use Espo\ORM\Entity;
 use Espo\Core\ORM\Repositories\RDB;
 use Treo\Core\FilePathBuilder;
-use Treo\Core\Utils\Config;
 use Treo\Core\Utils\Util;
-use Espo\Entities\Attachment as AttachmentEntity;
 
 /**
  * Class Attachment

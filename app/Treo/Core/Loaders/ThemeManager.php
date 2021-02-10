@@ -37,7 +37,7 @@ namespace Treo\Core\Loaders;
 
 use Espo\Entities\Portal;
 use Treo\Core\ORM\EntityManager;
-use Treo\Core\Utils\Config;
+use Espo\Core\Utils\Config;
 use Treo\Core\Utils\Metadata;
 
 /**

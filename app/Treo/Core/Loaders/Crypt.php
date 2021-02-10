@@ -36,7 +36,7 @@ declare(strict_types=1);
 namespace Treo\Core\Loaders;
 
 use Espo\Core\Utils\Crypt as Instance;
-use Treo\Core\Utils\Config;
+use Espo\Core\Utils\Config;
 
 /**
  * Crypt loader

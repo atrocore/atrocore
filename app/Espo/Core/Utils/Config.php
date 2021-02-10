@@ -49,8 +49,6 @@ class Config
 
     protected $configPath = 'data/config.php';
 
-    private $cacheTimestamp = 'cacheTimestamp';
-
     /**
      * Array of admin items
      *
@@ -105,6 +103,10 @@ class Config
      */
     public function get($name, $default = null)
     {
+        if ($name == 'isUpdating') {
+            return file_exists(COMPOSER_LOG);
+        }
+
         $keys = explode('.', $name);
 
         $lastBranch = $this->loadConfig();

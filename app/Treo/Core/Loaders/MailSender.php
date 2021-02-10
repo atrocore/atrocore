@@ -35,7 +35,7 @@ declare(strict_types=1);
 
 namespace Treo\Core\Loaders;
 
-use Treo\Core\Utils\Config;
+use Espo\Core\Utils\Config;
 use Espo\Core\ORM\EntityManager;
 
 /**

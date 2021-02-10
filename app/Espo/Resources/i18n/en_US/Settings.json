@@ -72,7 +72,6 @@
     "portalStreamEmailNotifications": "Notifications about updates in Stream for portal users",
     "streamEmailNotificationsEntityList": "Stream email notifications scopes",
     "streamEmailNotificationsTypeList": "What to notify about",
-    "b2cMode": "B2C Mode",
     "avatarsDisabled": "Disable Avatars",
     "followCreatedEntities": "Follow created records",
     "displayListViewRecordCount": "Display Total Count (on List View)",

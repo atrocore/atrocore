@@ -36,7 +36,7 @@ declare(strict_types=1);
 namespace Treo\Console;
 
 use Treo\Core\Utils\Metadata;
-use Treo\Core\Utils\Config;
+use Espo\Core\Utils\Config;
 use Treo\Traits\ContainerTrait;
 
 /**

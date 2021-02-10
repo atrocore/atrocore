@@ -44,7 +44,7 @@ use Espo\Entities\User;
 use Treo\Core\Container;
 use Treo\Core\ORM\EntityManager;
 use Treo\Core\ServiceFactory;
-use Treo\Core\Utils\Config;
+use Espo\Core\Utils\Config;
 use Treo\Core\Utils\File\Manager;
 use Treo\Core\Utils\Metadata;
 

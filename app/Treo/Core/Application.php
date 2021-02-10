@@ -43,7 +43,7 @@ use Espo\Core\Utils\Route;
 use Treo\Services\Installer;
 use Treo\Core\Utils\Auth;
 use Treo\Core\Utils\Metadata;
-use Treo\Core\Utils\Config;
+use Espo\Core\Utils\Config;
 
 /**
  * Class Application
