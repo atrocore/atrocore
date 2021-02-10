@@ -41,7 +41,6 @@ class Preferences extends \Espo\Core\ORM\Repository
     protected $defaultAttributeListFromSettings = [
         'decimalMark',
         'thousandSeparator',
-        'exportDelimiter',
         'followCreatedEntities'
     ];
 

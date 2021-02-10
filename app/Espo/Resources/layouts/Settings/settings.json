@@ -2,12 +2,11 @@
     {
         "label": "System",
         "rows": [
+            [{"name": "treoId"}, false],
             [{"name": "useCache"}, {"name": "siteUrl"}],
-            [{"name": "exportDisabled"}, {"name": "globalSearchEntityList"}],
-            [{"name": "followCreatedEntities"}, {"name": "b2cMode"}],
-            [{"name": "aclStrictMode"}, {"name": "aclAllowDeleteCreated"}],
-            [{"name": "textFilterUseContainsForVarchar"}, {"name": "emailAddressIsOptedOutByDefault"}],
-            [{"name": "cleanupDeletedRecords"}, false]
+            [{"name": "followCreatedEntities"}, {"name": "globalSearchEntityList"}],
+            [{"name": "aclStrictMode"}, {"name": "attachmentDuplicates"}],
+            [{"name": "textFilterUseContainsForVarchar"}, {"name": "aclAllowDeleteCreated"}]
         ]
     },
     {
@@ -18,13 +17,7 @@
             [{"name": "timeFormat"},  {"name": "thousandSeparator"}],
             [{"name": "addressFormat"}, {"name": "decimalMark"}],
             [{"name": "addressPreview"}, false]
-        ]
-    },
-    {
-        "label": "Activities",
-        "rows": [
-            [{"name": "calendarEntityList"}, {"name": "activitiesEntityList"}],
-            [false, {"name": "historyEntityList"}]
+
         ]
     }
 ]

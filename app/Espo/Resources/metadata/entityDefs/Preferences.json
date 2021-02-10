@@ -94,12 +94,6 @@
             "default": "",
             "view": "views/preferences/fields/language"
         },
-        "exportDelimiter": {
-            "type": "varchar",
-            "default": ",",
-            "required": true,
-            "maxLength": 1
-        },
         "receiveAssignmentEmailNotifications": {
             "type": "bool",
             "default": true

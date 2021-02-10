@@ -15,7 +15,6 @@
     "emailAddress": "E-Mail",
     "smtpPassword": "Passwort",
     "smtpEmailAddress": "E-Mail Adresse",
-    "exportDelimiter": "Export Trennzeichen",
     "signature": "E-Mail Signatur",
     "dashboardTabList": "Menüliste",
     "tabList": "Menüliste",

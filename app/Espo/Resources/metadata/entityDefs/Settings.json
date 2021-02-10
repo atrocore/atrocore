@@ -134,12 +134,6 @@
             "translation": "Global.scopeNames",
             "view": "views/settings/fields/global-search-entity-list"
         },
-        "exportDelimiter": {
-            "type": "varchar",
-            "default": ",",
-            "required": true,
-            "maxLength": 1
-        },
         "companyLogo": {
             "type": "image"
         },

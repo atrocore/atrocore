@@ -2,27 +2,80 @@
     {
         "label": "Locale",
         "rows": [
-            [{"name": "dateFormat"}, {"name": "timeZone"}],
-            [{"name": "timeFormat"}, {"name": "weekStart"}],
-            [{"name": "defaultCurrency"}, {"name": "thousandSeparator"}],
-            [false, {"name": "decimalMark"}],
-            [{"name": "language"}, false]
+            [
+                {
+                    "name": "dateFormat"
+                },
+                {
+                    "name": "timeZone"
+                }
+            ],
+            [
+                {
+                    "name": "timeFormat"
+                },
+                {
+                    "name": "weekStart"
+                }
+            ],
+            [
+                {
+                    "name": "decimalMark"
+                },
+                {
+                    "name": "thousandSeparator"
+                }
+            ],
+            [
+                {
+                    "name": "language"
+                },
+                false
+            ]
         ]
     },
     {
         "label": "Misc",
         "rows": [
-            [{"name": "exportDelimiter"}, {"name":"autoFollowEntityTypeList"}],
+            [
+                {
+                    "name": "autoFollowEntityTypeList"
+                },
+                false
+            ],
             [
                 {
                     "name": "signature",
                     "params": {
                         "height": 70,
                         "toolbar": [
-                            ["style", ["bold", "italic", "underline", "clear"]],
-                            ["color", ["color"]],
-                            ["height", ["height"]],
-                            ["misc",["codeview"]]
+                            [
+                                "style",
+                                [
+                                    "bold",
+                                    "italic",
+                                    "underline",
+                                    "clear"
+                                ]
+                            ],
+                            [
+                                "color",
+                                [
+                                    "color"
+                                ]
+                            ],
+                            [
+                                "height",
+                                [
+                                    "height"
+                                ]
+                            ],
+                            [
+                                "misc",
+                                [
+                                    "codeview"
+                                ]
+                            ]
                         ]
                     }
                 },
@@ -66,19 +119,32 @@
         "label": "User Interface",
         "rows": [
             [
-                {"name":"theme"},
+                {
+                    "name": "theme"
+                },
                 false
             ],
             [
-                {"name":"scopeColorsDisabled"},
-                {"name":"tabColorsDisabled"}
+                {
+                    "name": "scopeColorsDisabled"
+                },
+                {
+                    "name": "tabColorsDisabled"
+                }
             ],
             [
-                {"name":"useCustomTabList"},
-                {"name":"tabList"}
+                {
+                    "name": "useCustomTabList"
+                },
+                {
+                    "name": "tabList"
+                }
             ],
             [
-                {"name":"dashboardLayout", "fullWidth": true}
+                {
+                    "name": "dashboardLayout",
+                    "fullWidth": true
+                }
             ]
         ]
     },
@@ -86,8 +152,20 @@
         "label": "Notifications",
         "name": "notifications",
         "rows": [
-            [{"name": "receiveAssignmentEmailNotifications"}, {"name": "receiveMentionEmailNotifications"}],
-            [{"name": "receiveStreamEmailNotifications"}, false]
+            [
+                {
+                    "name": "receiveAssignmentEmailNotifications"
+                },
+                {
+                    "name": "receiveMentionEmailNotifications"
+                }
+            ],
+            [
+                {
+                    "name": "receiveStreamEmailNotifications"
+                },
+                false
+            ]
         ]
     },
     {
@@ -96,12 +174,41 @@
             [
                 {
                     "name": "smtpEmailAddress"
-                }, false
+                },
+                false
             ],
-            [{"name": "smtpServer"}, {"name": "smtpPort"}],
-            [{"name": "smtpAuth"}, {"name": "smtpSecurity"}],
-            [{"name": "smtpUsername"}, {"name": "testSend", "customLabel": null, "view": "views/preferences/fields/test-send"}],
-            [{"name": "smtpPassword"}, false]
+            [
+                {
+                    "name": "smtpServer"
+                },
+                {
+                    "name": "smtpPort"
+                }
+            ],
+            [
+                {
+                    "name": "smtpAuth"
+                },
+                {
+                    "name": "smtpSecurity"
+                }
+            ],
+            [
+                {
+                    "name": "smtpUsername"
+                },
+                {
+                    "name": "testSend",
+                    "customLabel": null,
+                    "view": "views/preferences/fields/test-send"
+                }
+            ],
+            [
+                {
+                    "name": "smtpPassword"
+                },
+                false
+            ]
         ]
     }
 ]

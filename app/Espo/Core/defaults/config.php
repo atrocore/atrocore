@@ -60,7 +60,6 @@ return [
         'rotation'      => true,
         'maxFileNumber' => 30,
     ],
-    'exportDisabled'                         => false,
     'adminNotifications'                     => true,
     'adminNotificationsNewVersion'           => true,
     'adminNotificationsCronIsNotConfigured'  => true,
@@ -144,7 +143,6 @@ return [
     'webMassUpdateMax'                       => 200, // count of max massUpdate items for WEB
     'cronMassUpdateMax'                      => 3000, // count of max massUpdate items for CRON
     'developMode'                            => false,
-    'exportDelimiter'                        => ';',
     'timeZone'                               => 'UTC',
     'unitsOfMeasure'                         => (object)[
         'Length'                    => (object)[

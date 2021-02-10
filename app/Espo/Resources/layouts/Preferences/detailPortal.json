@@ -2,24 +2,56 @@
     {
         "label": "Locale",
         "rows": [
-            [{"name": "dateFormat"}, {"name": "timeZone"}],
-            [{"name": "timeFormat"}, {"name": "weekStart"}],
-            [{"name": "defaultCurrency"}, {"name": "thousandSeparator"}],
-            [false, {"name": "decimalMark"}],
-            [{"name": "language"}, false]
+            [
+                {
+                    "name": "dateFormat"
+                },
+                {
+                    "name": "timeZone"
+                }
+            ],
+            [
+                {
+                    "name": "timeFormat"
+                },
+                {
+                    "name": "weekStart"
+                }
+            ],
+            [
+                {
+                    "name": "decimalMark"
+                },
+                {
+                    "name": "thousandSeparator"
+                }
+            ],
+            [
+                {
+                    "name": "language"
+                },
+                false
+            ]
         ]
     },
     {
         "label": "Misc",
         "rows": [
-            [{"name": "exportDelimiter"}, {"name":"autoFollowEntityTypeList"}]
+            [
+                {
+                    "name": "autoFollowEntityTypeList"
+                },
+                false
+            ]
         ]
     },
     {
         "label": "User Interface",
         "rows": [
             [
-                {"name":"theme"},
+                {
+                    "name": "theme"
+                },
                 false
             ]
         ]
@@ -28,7 +60,12 @@
         "label": "Notifications",
         "name": "notifications",
         "rows": [
-            [{"name": "receiveStreamEmailNotifications"}, false]
+            [
+                {
+                    "name": "receiveStreamEmailNotifications"
+                },
+                false
+            ]
         ]
     }
 ]

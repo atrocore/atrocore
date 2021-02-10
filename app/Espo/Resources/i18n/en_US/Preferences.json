@@ -17,7 +17,6 @@
         "emailAddress": "Email",
         "smtpPassword": "Password",
         "smtpEmailAddress": "Email Address",
-        "exportDelimiter": "Export Delimiter",
         "receiveAssignmentEmailNotifications": "Email notifications upon assignment",
         "receiveMentionEmailNotifications": "Email notifications about mentions in posts",
         "receiveStreamEmailNotifications": "Email notifications about posts and status updates",
