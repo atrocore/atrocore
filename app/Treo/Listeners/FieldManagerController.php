@@ -36,6 +36,7 @@ declare(strict_types=1);
 namespace Treo\Listeners;
 
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Utils\Json;
 use Treo\Core\Utils\Util;
 use Treo\Core\EventManager\Event;
 
@@ -51,6 +52,16 @@ class FieldManagerController extends AbstractListener
     {
         // is default value valid ?
         $this->isDefaultValueValid($event->getArgument('data')->type, $event->getArgument('data')->default);
+    }
+
+    /**
+     * @param Event $event
+     */
+    public function afterPostActionCreate(Event $event)
+    {
+        $data = Json::decode(Json::encode($event->getArgument('data')), true);
+
+        $this->updateEnumDefaultMultilang($event->getArgument('params')['scope'], $data);
     }
 
     /**
@@ -148,5 +159,44 @@ class FieldManagerController extends AbstractListener
         }
 
         return true;
+    }
+
+    /**
+     * @param string $entityName
+     * @param array $data
+     */
+    protected function updateEnumDefaultMultilang(string $entityName, array $data): void
+    {
+        if ($data['type'] = ['enum'] && $data['isMultilang'] ?? false && $this->getConfig()->get('isMultilangActive', false)) {
+            $default = $data['default'];
+            $defaultPosition = array_search($default, $data['options']);
+
+            if ($defaultPosition !== false) {
+                $entityName = Util::toUnderScore($entityName);
+                $fieldName = $data['name'];
+                $sql = "UPDATE $entityName SET ";
+
+                foreach ($this->getConfig()->get('inputLanguageList', []) as $key => $locale) {
+                    $camelCaseLocale = Util::toCamelCase(strtolower($locale), '_', true);
+                    $multilangOptions = 'options' . $camelCaseLocale;
+
+                    if (isset($data[$multilangOptions]) && isset($data[$multilangOptions][$defaultPosition])) {
+                        $multilangFieldName = $fieldName . '_' . strtolower($locale);
+                        $multilangValue = $data[$multilangOptions][$defaultPosition];
+
+                        if ($key != 0) {
+                            $sql .= ",";
+                        }
+                        $sql .= "$multilangFieldName = '$multilangValue'";
+                    }
+                }
+
+                $sth = $this
+                    ->getEntityManager()
+                    ->getPDO()
+                    ->prepare($sql);
+                $sth->execute();
+            }
+        }
     }
 }
