@@ -117,7 +117,7 @@ class Image
      */
     public function createThumbnail(Attachment $attachment, string $size): bool
     {
-        if (empty($attachment->getThumbPath($size)) || empty($attachment->getFilePath())) {
+        if (empty($attachment->getThumbPath($size)) || file_exists($attachment->getThumbPath($size)) || empty($attachment->getFilePath())) {
             return false;
         }
 
