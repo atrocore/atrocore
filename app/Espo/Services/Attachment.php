@@ -352,10 +352,22 @@ class Attachment extends Record
         return base64_decode($contents);
     }
 
+    /**
+     * @param Entity $entity
+     */
     protected function createThumbnails(Entity $entity): void
     {
-        if (in_array($entity->get('type'), $this->getMetadata()->get(['app', 'typesWithThumbnails'], []))) {
-            $this->getInjection('queueManager')->push('Create thumbs', 'QueueManagerCreateThumbs', ['id' => $entity->get('id')], 1);
+        if (!in_array($entity->get('type'), $this->getMetadata()->get(['app', 'typesWithThumbnails'], []))) {
+            return;
+        }
+        // increase timeout
+        \set_time_limit(60 * 5);
+
+        try {
+            $this->getInjection('Thumbnail')->createThumbnail($entity, 'small');
+            $this->getInjection('queueManager')->push('Create thumbnails', 'QueueManagerCreateThumbnails', ['id' => $entity->get('id')], 1);
+        } catch (\Throwable $e) {
+            // ignore all errors
         }
     }
 
@@ -368,6 +380,7 @@ class Attachment extends Record
 
         $this->addDependency('language');
         $this->addDependency('queueManager');
+        $this->addDependency('Thumbnail');
     }
 }
 

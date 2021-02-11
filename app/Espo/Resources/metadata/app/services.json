@@ -7,7 +7,7 @@
   "QueueManagerBase": "\\Treo\\Services\\QueueManagerBase",
   "QueueManagerMassDelete": "\\Treo\\Services\\QueueManagerMassDelete",
   "QueueManagerMassUpdate": "\\Treo\\Services\\QueueManagerMassUpdate",
-  "QueueManagerCreateThumbs": "\\Treo\\Services\\QueueManagerCreateThumbs",
+  "QueueManagerCreateThumbnails": "\\Treo\\Services\\QueueManagerCreateThumbnails",
   "MassActions": "\\Treo\\Services\\MassActions",
   "RestApiDocs": "\\Treo\\Services\\RestApiDocs",
   "ScheduledJob": "\\Treo\\Services\\ScheduledJob"

@@ -36,9 +36,9 @@ declare(strict_types=1);
 namespace Treo\Services;
 
 /**
- * Class QueueManagerCreateThumbs
+ * Class QueueManagerCreateThumbnails
  */
-class QueueManagerCreateThumbs extends QueueManagerBase
+class QueueManagerCreateThumbnails extends QueueManagerBase
 {
     /**
      * @inheritdoc
