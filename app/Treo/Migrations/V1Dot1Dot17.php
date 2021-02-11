@@ -47,6 +47,7 @@ class V1Dot1Dot17 extends Base
      */
     public function up(): void
     {
+        $this->execute("DELETE FROM `attachment` WHERE tmp_path IS NOT NULL");
         $this->execute("ALTER TABLE `attachment` DROP tmp_path");
     }
 

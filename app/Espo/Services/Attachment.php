@@ -308,11 +308,6 @@ class Attachment extends Record
                 }
             }
         }
-
-        // Remove old records from DB table
-        $this
-            ->getEntityManager()
-            ->nativeQuery("DELETE FROM attachment WHERE created_at < '{$checkDate->format('Y-m-d H:i:s')}' AND tmp_path IS NOT NULL");
     }
 
     /**
