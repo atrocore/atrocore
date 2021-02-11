@@ -284,54 +284,6 @@ class Record extends Base
         throw new Error();
     }
 
-    public function actionExport($params, $data, $request)
-    {
-        if (!$request->isPost()) {
-            throw new BadRequest();
-        }
-
-        if ($this->getConfig()->get('exportDisabled') && !$this->getUser()->isAdmin()) {
-            throw new Forbidden();
-        }
-
-        if ($this->getAcl()->get('exportPermission') !== 'yes' && !$this->getUser()->isAdmin()) {
-            throw new Forbidden();
-        }
-
-        if (!$this->getAcl()->check($this->name, 'read')) {
-            throw new Forbidden();
-        }
-
-        $ids = isset($data->ids) ? $data->ids : null;
-        $where = isset($data->where) ? json_decode(json_encode($data->where), true) : null;
-        $byWhere = isset($data->byWhere) ? $data->byWhere : false;
-        $selectData = isset($data->selectData) ? json_decode(json_encode($data->selectData), true) : null;
-
-        $params = array();
-        if ($byWhere) {
-            $params['selectData'] = $selectData;
-            $params['where'] = $where;
-        } else {
-            $params['ids'] = $ids;
-        }
-
-        if (isset($data->attributeList)) {
-            $params['attributeList'] = $data->attributeList;
-        }
-
-        if (isset($data->fieldList)) {
-            $params['fieldList'] = $data->fieldList;
-        }
-
-        if (isset($data->format)) {
-            $params['format'] = $data->format;
-        }
-
-        return array(
-            'id' => $this->getRecordService()->export($params)
-        );
-    }
-
     public function actionMassUpdate($params, $data, $request)
     {
         if (!$request->isPut()) {

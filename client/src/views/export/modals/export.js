@@ -61,19 +61,14 @@ Espo.define('views/export/modals/export', ['views/modal', 'model'], function (De
 
             this.scope = this.options.scope;
 
-            if (this.options.fieldList) {
-                this.model.set('fieldList', this.options.fieldList);
-                this.model.set('exportAllFields', false);
-            } else {
-                this.model.set('exportAllFields', true);
-            }
-            this.model.set('format', this.getMetadata().get('app.export.formatList')[0]);
-
-            this.createView('record', 'views/export/record/record', {
-                scope: this.scope,
-                model: this.model,
-                el: this.getSelector() + ' .record'
-            });
+            this.ajaxGetRequest('ExportFeed', {select: 'id,name', entity: this.scope}, {async: false}).then(function (data) {
+                this.createView('record', 'views/export/record/record', {
+                    scope: this.scope,
+                    model: this.model,
+                    exportFeeds: data.list,
+                    el: this.getSelector() + ' .record'
+                });
+            }.bind(this));
         },
 
         actionExport: function () {

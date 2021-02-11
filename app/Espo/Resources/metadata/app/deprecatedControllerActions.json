@@ -23,7 +23,6 @@
     "Report": {
         "actionPopulateTargetList": true,
         "actionSyncTargetListWithReports": true,
-        "postActionExportList": true,
         "postActionGetEmailAttributes": true
     },
     "Voip": {

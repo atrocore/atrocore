@@ -74,7 +74,6 @@ class Converter
         'maxLength' => 'len',
         'len' => 'len',
         'notNull' => 'notNull',
-        'exportDisabled' => 'notExportable',
         'autoincrement' => 'autoincrement',
         'entity' => 'entity',
         'notStorable' => 'notStorable',

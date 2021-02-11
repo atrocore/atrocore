@@ -133,12 +133,6 @@
             }
         }
     },
-    "valuePermissionList": [
-        "exportPermission"
-    ],
-    "permissionsStrictDefaults": {
-        "exportPermission": "no"
-    },
     "scopeLevelTypesStrictDefaults": {
         "boolean": false,
         "record": false

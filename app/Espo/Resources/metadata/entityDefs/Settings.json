@@ -860,10 +860,6 @@
       "tooltip": true,
       "entity": "PortalRole"
     },
-    "exportDisabled": {
-      "type": "bool",
-      "default": false
-    },
     "assignmentEmailNotifications": {
       "type": "bool",
       "default": false

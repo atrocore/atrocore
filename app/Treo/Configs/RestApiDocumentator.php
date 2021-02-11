@@ -160,30 +160,6 @@ return [
                 ]
             ]
         ],
-        'actionExport'                     => [
-            'ApiResponseCode' => [
-                ['sample' => "[200,401,403,404,500]"]
-            ],
-            'ApiDescription'  => [
-                ['description' => 'Export %s data']
-            ],
-            'ApiMethod'       => [
-                ['type' => 'POST']
-            ],
-            'ApiRoute'        => [
-                ['name' => '/%s/action/export']
-            ],
-            'ApiBody'         => [
-                [
-                    'sample' => "{'ids': 'array'}"
-                ]
-            ],
-            'ApiReturn'       => [
-                [
-                    'sample' => "{'id': 'string'}"
-                ]
-            ]
-        ],
         'actionMassDelete'                 => [
             'ApiResponseCode' => [
                 ['sample' => "[200,401,403,404,500]"]

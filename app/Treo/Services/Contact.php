@@ -49,12 +49,7 @@ class Contact extends Person
         'inboundEmailId',
         'portalUserId'
     ];
-    /**
-     * @var array
-     */
-    protected $exportAllowedAttributeList = [
-        'title'
-    ];
+
     /**
      * @var array
      */

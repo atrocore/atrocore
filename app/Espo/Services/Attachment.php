@@ -162,6 +162,9 @@ class Attachment extends Record
             $entity = parent::createEntity(clone $attachment);
         }
 
+        // create thumbnails
+        $this->createThumbnails($entity);
+
         $entity->set('pathsData', $this->getRepository()->getAttachmentPathsData($entity));
 
         return $this
@@ -280,6 +283,9 @@ class Attachment extends Record
             }
         }
 
+        // create thumbnails
+        $this->createThumbnails($entity);
+
         $entity->set('pathsData', $this->getRepository()->getAttachmentPathsData($entity));
 
         return $entity;
@@ -351,6 +357,13 @@ class Attachment extends Record
         return base64_decode($contents);
     }
 
+    protected function createThumbnails(Entity $entity): void
+    {
+        if (in_array($entity->get('type'), $this->getMetadata()->get(['app', 'typesWithThumbnails'], []))) {
+            $this->getInjection('queueManager')->push('Create thumbs', 'QueueManagerCreateThumbs', ['id' => $entity->get('id')], 1);
+        }
+    }
+
     /**
      * @inheritDoc
      */
@@ -359,6 +372,7 @@ class Attachment extends Record
         parent::init();
 
         $this->addDependency('language');
+        $this->addDependency('queueManager');
     }
 }
 

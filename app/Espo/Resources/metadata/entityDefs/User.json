@@ -148,7 +148,6 @@
         "acceptanceStatus": {
             "type": "varchar",
             "notStorable": true,
-            "exportDisabled": true,
             "disabled": true
         },
         "teamRole": {

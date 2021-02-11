@@ -114,7 +114,6 @@
         "userPermission",
         "portalPermission",
         "groupEmailAccountPermission",
-        "exportPermission",
         "dataPrivacyPermission"
     ],
     "valuePermissionHighestLevels": {
@@ -122,7 +121,6 @@
         "userPermission": "all",
         "portalPermission": "yes",
         "groupEmailAccountPermission": "all",
-        "exportPermission": "yes",
         "dataPrivacyPermission": "yes"
     },
     "permissionsDefaults": {
@@ -130,7 +128,6 @@
         "userPermission": "all",
         "portalPermission": "no",
         "groupEmailAccountPermission": "no",
-        "exportPermission": "yes",
         "dataPrivacyPermission": "no"
     },
     "permissionsStrictDefaults": {
@@ -138,7 +135,6 @@
         "userPermission": "no",
         "portalPermission": "no",
         "groupEmailAccountPermission": "no",
-        "exportPermission": "no",
         "dataPrivacyPermission": "no"
     },
     "scopeLevelTypesDefaults": {

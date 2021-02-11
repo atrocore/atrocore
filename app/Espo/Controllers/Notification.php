@@ -71,11 +71,6 @@ class Notification extends \Espo\Core\Controllers\Record
         return $this->getService('Notification')->markAllRead($userId);
     }
 
-    public function actionExport($params, $data, $request)
-    {
-        throw new Error();
-    }
-
     public function actionMassUpdate($params, $data, $request)
     {
         throw new Error();

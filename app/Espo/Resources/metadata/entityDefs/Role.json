@@ -34,13 +34,6 @@
             "tooltip": true,
             "translation": "Role.options.levelList"
         },
-        "exportPermission": {
-            "type": "enum",
-            "options": ["not-set", "yes", "no"],
-            "default": "not-set",
-            "tooltip": true,
-            "translation": "Role.options.levelList"
-        },
         "dataPrivacyPermission": {
             "type": "enum",
             "options": ["not-set", "yes", "no"],

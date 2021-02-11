@@ -208,9 +208,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         showMore: true,
 
-        massActionList: ['remove', 'merge', 'massUpdate', 'export'],
+        massActionList: ['remove', 'merge', 'massUpdate'],
 
-        checkAllResultMassActionList: ['remove', 'massUpdate', 'export'],
+        checkAllResultMassActionList: ['remove', 'massUpdate'],
 
         quickDetailDisabled: false,
 
@@ -338,48 +338,48 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
         },
 
-        export: function (data, url, fieldList) {
-            if (!data) {
-                data = {};
-                if (this.allResultIsChecked) {
-                    data.where = this.collection.getWhere();
-                    data.selectData = this.collection.data || {};
-                    data.byWhere = true;
-                } else {
-                    data.ids = this.checkedList;
-                }
+        export: function () {
+            let data = {};
+            if (this.allResultIsChecked) {
+                data.where = this.collection.getWhere();
+                data.selectData = this.collection.data || {};
+                data.byWhere = true;
+            } else {
+                data.ids = this.checkedList;
             }
-
-            var url = url || this.entityType + '/action/export';
 
             var o = {
                 scope: this.entityType
             };
-            if (fieldList) {
-                o.fieldList = fieldList;
-            } else {
-                var layoutFieldList = [];
-                (this.listLayout || []).forEach(function (item) {
-                    if (item.name) {
-                        layoutFieldList.push(item.name);
-                    }
-                }, this);
-                o.fieldList = layoutFieldList;
-            }
+
+            var layoutFieldList = [];
+            (this.listLayout || []).forEach(function (item) {
+                if (item.name) {
+                    layoutFieldList.push(item.name);
+                }
+            }, this);
+            o.fieldList = layoutFieldList;
 
             this.createView('dialogExport', 'views/export/modals/export', o, function (view) {
                 view.render();
                 this.listenToOnce(view, 'proceed', function (dialogData) {
-                    if (!dialogData.exportAllFields) {
-                        data.attributeList = dialogData.attributeList;
-                        data.fieldList = dialogData.fieldList;
-                    }
-                    data.format = dialogData.format;
-                    this.ajaxPostRequest(url, data, {timeout: 0}).then(function (data) {
-                        if ('id' in data) {
-                            window.location = this.getBasePath() + '?entryPoint=download&id=' + data.id;
-                        }
-                    }.bind(this));
+
+
+
+
+                    // if (!dialogData.exportAllFields) {
+                    //     data.attributeList = dialogData.attributeList;
+                    //     data.fieldList = dialogData.fieldList;
+                    // }
+                    // data.format = dialogData.format;
+
+
+
+                    // this.ajaxPostRequest(url, data, {timeout: 0}).then(function (data) {
+                    //     if ('id' in data) {
+                    //         window.location = this.getBasePath() + '?entryPoint=download&id=' + data.id;
+                    //     }
+                    // }.bind(this));
                 }, this);
             }, this);
         },
@@ -686,9 +686,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         massActionExport: function () {
-            if (!this.getConfig().get('exportDisabled') || this.getUser().get('isAdmin')) {
-                this.export();
-            }
+            this.export();
         },
 
         removeMassAction: function (item) {
@@ -727,6 +725,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
             if (!this.getAcl().checkScope(this.entityType, 'edit')) {
                 this.removeMassAction('massUpdate');
                 this.removeMassAction('merge');
+            }
+
+            if (!this.getMetadata().get('scopes.ExportFeed') || !this.getAcl().checkScope('ExportFeed', 'view')) {
+                this.removeMassAction('export');
+                this.removeMassAction('export');
             }
 
             (this.getMetadata().get(['clientDefs', this.scope, 'massActionList']) || []).forEach(function (item) {
@@ -776,14 +779,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     this.checkAllResultMassActionList.push(item);
                 }
             }, this);
-
-            if (
-                this.getConfig().get('exportDisabled') && !this.getUser().get('isAdmin')
-                ||
-                this.getAcl().get('exportPermission') === 'no'
-            ) {
-                this.removeMassAction('export');
-            }
 
             if (
                 !this.massFollowDisabled &&

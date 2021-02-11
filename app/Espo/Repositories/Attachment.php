@@ -183,11 +183,6 @@ class Attachment extends RDB
             $entity->set("storageFilePath", $destPath);
             $entity->set("storageThumbPath", $this->getDestPath(FilePathBuilder::UPLOAD));
 
-            // create thumbs for image
-            if (in_array($entity->get('type'), $this->getMetadata()->get(['app', 'typesWithThumbnails'], []))) {
-                $this->getInjection('queueManager')->push('Create thumbs', 'QueueManagerCreateThumbs', ['id' => $entity->get('id')], 1);
-            }
-
             return true;
         }
 
@@ -251,7 +246,6 @@ class Attachment extends RDB
         $this->addDependency('filePathBuilder');
         $this->addDependency('fileManager');
         $this->addDependency('Thumbnail');
-        $this->addDependency('queueManager');
     }
 
     /**
