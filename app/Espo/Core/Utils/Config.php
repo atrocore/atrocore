@@ -99,7 +99,7 @@ class Config
      *
      * @param string $name
      * @param string $default
-     * @return string | array
+     * @return mixed
      */
     public function get($name, $default = null)
     {

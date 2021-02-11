@@ -35,6 +35,7 @@ declare(strict_types=1);
 
 namespace Espo\Repositories;
 
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\InternalServerError;
 use Espo\Core\Utils\Config;
 use Espo\Entities\Attachment as AttachmentEntity;
@@ -55,12 +56,9 @@ class Attachment extends RDB
     {
         parent::beforeSave($entity, $options);
 
-        $storage = $entity->get('storage');
-        if (!$storage) {
+        if (empty($entity->get('storage'))) {
             $entity->set('storage', $this->getConfig()->get('defaultFileStorage', 'UploadDir'));
         }
-
-        $this->moveFromTmp($entity);
 
         if (!$entity->isNew() && $entity->get('sourceId')) {
             $this->copyFile($entity);
@@ -136,57 +134,23 @@ class Attachment extends RDB
      */
     public function save(Entity $entity, array $options = [])
     {
-        $isNew = $entity->isNew();
-
-        if ($isNew) {
+        if ($entity->isNew()) {
             if (!$entity->has("id")) {
                 $entity->id = Util::generateId();
             }
-            $storeResult = false;
-
             if (!empty($entity->id) && $entity->has('contents')) {
-                $contents = $entity->get('contents');
-                if ($entity->get('role') === "Attachment") {
-                    $temp = $this->getFileManager()->createOnTemp($contents);
-                    if ($temp) {
-                        $entity->set("tmpPath", $temp);
-                        $storeResult = true;
-                    }
-                } else {
-                    $storeResult = $this->getFileStorageManager()->putContents($entity, $contents);
-                }
+                $storeResult = $this->getFileStorageManager()->putContents($entity, $entity->get('contents'));
+
                 if ($storeResult === false) {
-                    throw new \Espo\Core\Exceptions\Error("Could not store the file");
+                    throw new Error("Could not store the file");
                 }
+
+                $entity->set("storageFilePath", $this->getDestPath(FilePathBuilder::UPLOAD));
+                $entity->set("storageThumbPath", $this->getDestPath(FilePathBuilder::UPLOAD));
             }
         }
 
         return parent::save($entity, $options);
-    }
-
-    /**
-     * @param Entity $entity
-     *
-     * @return bool
-     */
-    public function moveFromTmp(Entity $entity)
-    {
-        if (empty($entity->get('tmpPath'))) {
-            return false;
-        }
-
-        $destPath = $this->getDestPath(FilePathBuilder::UPLOAD);
-        $fullPath = $this->getConfig()->get('filesPath', 'upload/files/') . $destPath . "/" . $entity->get('name');
-
-        if ($this->getFileManager()->move($entity->get('tmpPath'), $fullPath, false)) {
-            $entity->set("tmpPath", null);
-            $entity->set("storageFilePath", $destPath);
-            $entity->set("storageThumbPath", $this->getDestPath(FilePathBuilder::UPLOAD));
-
-            return true;
-        }
-
-        return false;
     }
 
     /**

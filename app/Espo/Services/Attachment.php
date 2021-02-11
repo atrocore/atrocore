@@ -153,9 +153,9 @@ class Attachment extends Record
 
         $duplicateParam = $this->getConfig()->get('attachmentDuplicates', 'notAllowByContent');
         if ($duplicateParam == 'notAllowByContent') {
-            $entity = $this->getRepository()->where(['md5' => $attachment->md5, 'tmpPath' => null])->findOne();
+            $entity = $this->getRepository()->where(['md5' => $attachment->md5])->findOne();
         } elseif ($duplicateParam == 'notAllowByContentAndName') {
-            $entity = $this->getRepository()->where(['md5' => $attachment->md5, 'tmpPath' => null, 'name' => $attachment->name])->findOne();
+            $entity = $this->getRepository()->where(['md5' => $attachment->md5, 'name' => $attachment->name])->findOne();
         }
 
         if (empty($entity)) {
@@ -270,9 +270,9 @@ class Attachment extends Record
         $duplicateParam = $this->getConfig()->get('attachmentDuplicates', 'notAllowByContent');
 
         if ($duplicateParam == 'notAllowByContent') {
-            $entity = $this->getRepository()->where(['md5' => $attachment->md5, 'tmpPath' => null])->findOne();
+            $entity = $this->getRepository()->where(['md5' => $attachment->md5])->findOne();
         } elseif ($duplicateParam == 'notAllowByContentAndName') {
-            $entity = $this->getRepository()->where(['md5' => $attachment->md5, 'tmpPath' => null, 'name' => $attachment->name])->findOne();
+            $entity = $this->getRepository()->where(['md5' => $attachment->md5, 'name' => $attachment->name])->findOne();
         }
 
         if (empty($entity)) {
