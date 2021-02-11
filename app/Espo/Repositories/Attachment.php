@@ -139,14 +139,13 @@ class Attachment extends RDB
                 $entity->id = Util::generateId();
             }
             if (!empty($entity->id) && $entity->has('contents')) {
-                $storeResult = $this->getFileStorageManager()->putContents($entity, $entity->get('contents'));
+                $entity->set("storageFilePath", $this->getDestPath(FilePathBuilder::UPLOAD));
+                $entity->set("storageThumbPath", $this->getDestPath(FilePathBuilder::UPLOAD));
 
+                $storeResult = $this->getFileStorageManager()->putContents($entity, $entity->get('contents'));
                 if ($storeResult === false) {
                     throw new Error("Could not store the file");
                 }
-
-                $entity->set("storageFilePath", $this->getDestPath(FilePathBuilder::UPLOAD));
-                $entity->set("storageThumbPath", $this->getDestPath(FilePathBuilder::UPLOAD));
             }
         }
 
