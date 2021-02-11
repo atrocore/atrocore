@@ -120,7 +120,10 @@ class Attachment extends Record
         $dirPath = self::CHUNKS_DIR . $attachment->chunkId . '/';
 
         if (!file_exists($dirPath) || !is_dir($dirPath)) {
-            throw new NotFound();
+            sleep(1);
+            if (!file_exists($dirPath) || !is_dir($dirPath)) {
+                throw new Error();
+            }
         }
 
         foreach (Util::scanDir($dirPath) as $dir) {
