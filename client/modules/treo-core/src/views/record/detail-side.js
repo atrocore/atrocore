@@ -147,7 +147,7 @@ Espo.define('treo-core:views/record/detail-side', 'class-replace!treo-core:views
             });
 
             let hasAnyField = (this.defaultPanelDefs.options.fieldList || []).some(fieldDefs => {
-                if (fieldDefs.name === ':assignedUser' && (this.model.hasField('assignedUsers') || this.model.hasField('assignedUser'))) {
+                if (fieldDefs.name === ':assignedUser' && (this.model.hasLink('assignedUsers') || this.model.hasLink('assignedUser'))) {
                     return true;
                 } else {
                     return this.model.hasLink(fieldDefs.name)
