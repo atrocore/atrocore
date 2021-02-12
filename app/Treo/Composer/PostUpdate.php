@@ -657,7 +657,7 @@ class PostUpdate
 
         if (!file_exists($path)) {
             // get default data
-            $data = include CORE_PATH . '/Treo/Configs/defaultConfig.php';
+            $data = include CORE_PATH . '/Espo/Core/defaults/config.php';
 
             // prepare salt
             $data['passwordSalt'] = mb_substr(md5((string)time()), 0, 9);
