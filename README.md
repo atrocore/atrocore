@@ -19,8 +19,8 @@ AtroCore is the best fit **for businesses**, who want to:
 ### What Are AtroCore Extensions?
 
 The following extensions are available on the AtroCore basis:
-* AtroPIM
-* AtroDAM
+* [AtroPIM](https://github.com/atrocore/atropim)
+* [AtroDAM](https://github.com/atrocore/atrodam)
 * and many others extending the functionality of PIM and DAM.
 
 Thanks to the configurable data model and layouts the application can be used as a Master Data Mangement System (MDM), if no extension is installed.
