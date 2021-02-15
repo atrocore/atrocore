@@ -16,16 +16,18 @@ AtroCore is the best fit **for businesses**, who want to:
 * create added value and best experience for their employees, customers, and partners;
 * extend the functionality of the existing software infrastructure.
 
-### What Are AtroCore Add-Ons?
+### What Are AtroCore Extensions?
 
-The following add-on applications are available on the AtroCore basis:
-* AtroPIM
-* AtroCRM
-* AtroDAM
+The following extensions are available on the AtroCore basis:
+* [AtroPIM](https://github.com/atrocore/atropim)
+* [AtroDAM](https://github.com/atrocore/atrodam)
+* and many others extending the functionality of PIM and DAM.
 
-Each application may be used as a single instance and/or may be extended with numerous modules.
+Thanks to the configurable data model and layouts the application can be used as a Master Data Mangement System (MDM), if no extension is installed.
 
 ### What Is On Board?
+
+AtroCore is a Platform for Rapid Application Development (RAD).
 
 Here is a AtroCore package description in detail:
 
