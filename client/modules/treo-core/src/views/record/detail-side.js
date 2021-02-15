@@ -146,7 +146,13 @@ Espo.define('treo-core:views/record/detail-side', 'class-replace!treo-core:views
                     || (scopeDefs.hasTeam && fieldDefs.name === 'teams' && this.getAcl().check('Team', 'read'));
             });
 
-            let hasAnyField = (this.defaultPanelDefs.options.fieldList || []).some(fieldDefs => this.model.hasLink(fieldDefs.name));
+            let hasAnyField = (this.defaultPanelDefs.options.fieldList || []).some(fieldDefs => {
+                if (fieldDefs.name === ':assignedUser' && (this.model.hasLink('assignedUsers') || this.model.hasLink('assignedUser'))) {
+                    return true;
+                } else {
+                    return this.model.hasLink(fieldDefs.name)
+                }
+            });
             if (this.mode === 'detail' || hasAnyField) {
                 Dep.prototype.setupDefaultPanel.call(this);
             }
