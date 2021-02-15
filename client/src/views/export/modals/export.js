@@ -80,7 +80,7 @@ Espo.define('views/export/modals/export', ['views/modal', 'model'], function (De
             let data = {
                 id: this.model.get('exportFeed'),
                 ignoreFilter: this.model.get('ignoreFilter'),
-                entityFilterData: this.options.data
+                entityFilterData: this.options.entityFilterData
             };
 
             this.ajaxPostRequest('ExportFeed/action/exportFile', data).then(response => {

@@ -350,7 +350,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             let o = {
                 scope: this.entityType,
-                data: data
+                entityFilterData: data
             };
 
             var layoutFieldList = [];
