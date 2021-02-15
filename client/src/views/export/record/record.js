@@ -41,16 +41,35 @@ Espo.define('views/export/record/record', 'views/record/base', function (Dep) {
 
             this.scope = this.options.scope;
 
-            let options = [];
-            let translatedOptions = {};
+            let exportFeedOptions = [];
+            let exportFeedTranslatedOptions = {};
             this.options.exportFeeds.forEach(function (row) {
-                options.push(row.id);
-                translatedOptions[row.id] = row.name;
+                exportFeedOptions.push(row.id);
+                exportFeedTranslatedOptions[row.id] = row.name;
+                if (!this.model.get('exportFeed')) {
+                    this.model.set('exportFeed', row.id)
+                }
+            }, this);
+
+            this.createView('exportFeed', 'views/fields/enum', {
+                prohibitedEmptyValue: true,
+                model: this.model,
+                el: `${this.options.el} .field[data-name="exportFeed"]`,
+                defs: {
+                    name: 'exportFeed',
+                    params: {
+                        options: exportFeedOptions,
+                        translatedOptions: exportFeedTranslatedOptions
+                    }
+                },
+                mode: 'edit'
             });
 
-            this.createField('exportFeed', 'views/fields/enum', {
-                options: options,
-                translatedOptions: translatedOptions
+            this.model.set('ignoreFilter', true);
+            this.createField('ignoreFilter', 'views/fields/bool', {
+                model: this.model,
+                el: `${this.options.el} .field[data-name="ignoreFilter"]`,
+                mode: 'edit'
             });
         },
 

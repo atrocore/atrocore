@@ -208,9 +208,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         showMore: true,
 
-        massActionList: ['remove', 'merge', 'massUpdate'],
+        massActionList: ['remove', 'merge', 'massUpdate', 'export'],
 
-        checkAllResultMassActionList: ['remove', 'massUpdate'],
+        checkAllResultMassActionList: ['remove', 'massUpdate', 'export'],
 
         quickDetailDisabled: false,
 
@@ -348,8 +348,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 data.ids = this.checkedList;
             }
 
-            var o = {
-                scope: this.entityType
+            let o = {
+                scope: this.entityType,
+                data: data
             };
 
             var layoutFieldList = [];
@@ -362,25 +363,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             this.createView('dialogExport', 'views/export/modals/export', o, function (view) {
                 view.render();
-                this.listenToOnce(view, 'proceed', function (dialogData) {
-
-
-
-
-                    // if (!dialogData.exportAllFields) {
-                    //     data.attributeList = dialogData.attributeList;
-                    //     data.fieldList = dialogData.fieldList;
-                    // }
-                    // data.format = dialogData.format;
-
-
-
-                    // this.ajaxPostRequest(url, data, {timeout: 0}).then(function (data) {
-                    //     if ('id' in data) {
-                    //         window.location = this.getBasePath() + '?entryPoint=download&id=' + data.id;
-                    //     }
-                    // }.bind(this));
-                }, this);
             }, this);
         },
 

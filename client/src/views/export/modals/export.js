@@ -61,7 +61,7 @@ Espo.define('views/export/modals/export', ['views/modal', 'model'], function (De
 
             this.scope = this.options.scope;
 
-            this.ajaxGetRequest('ExportFeed', {select: 'id,name', entity: this.scope}, {async: false}).then(function (data) {
+            this.ajaxGetRequest('ExportFeed', {select: 'id,name', exportEntity: this.scope}, {async: false}).then(function (data) {
                 this.createView('record', 'views/export/record/record', {
                     scope: this.scope,
                     model: this.model,
@@ -72,37 +72,26 @@ Espo.define('views/export/modals/export', ['views/modal', 'model'], function (De
         },
 
         actionExport: function () {
-            var data = this.getView('record').fetch();
-            this.model.set(data);
-            if (this.getView('record').validate()) return;
-
-            var returnData = {
-                exportAllFields: data.exportAllFields,
-                format: data.format
-            };
-
-            if (!data.exportAllFields) {
-                var attributeList = [];
-                data.fieldList.forEach(function (item) {
-                    if (item === 'id') {
-                        attributeList.push('id');
-                        return;
-                    }
-                    var type = this.getMetadata().get(['entityDefs', this.scope, 'fields', item, 'type']);
-                    if (type) {;
-                        this.getFieldManager().getAttributeList(type, item).forEach(function (attribute) {
-                            attributeList.push(attribute);
-                        }, this);
-                    }
-                    if (~item.indexOf('_')) {
-                        attributeList.push(item);
-                    }
-                }, this);
-                returnData.attributeList = attributeList;
-                returnData.fieldList = data.fieldList;
+            if (!this.model.get('exportFeed')) {
+                this.notify(this.translate('noExportFeedSelected', 'messages', 'ExportFeed'), 'error');
+                return
             }
 
-            this.trigger('proceed', returnData);
+            let data = {
+                id: this.model.get('exportFeed'),
+                ignoreFilter: this.model.get('ignoreFilter'),
+                entityFilterData: this.options.data
+            };
+
+            this.ajaxPostRequest('ExportFeed/action/exportFile', data).then(response => {
+                if (response) {
+                    this.notify(this.translate('jobCreated', 'additionalTranslates', 'ExportFeed'), 'success');
+                    Backbone.trigger('showQueuePanel');
+                } else {
+                    this.notify(this.translate('jobNotCreated', 'additionalTranslates', 'ExportFeed'), 'danger');
+                }
+            });
+
             this.close();
         }
 
