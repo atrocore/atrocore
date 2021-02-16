@@ -57,16 +57,6 @@ class FieldManagerController extends AbstractListener
     /**
      * @param Event $event
      */
-    public function afterPostActionCreate(Event $event)
-    {
-        $data = Json::decode(Json::encode($event->getArgument('data')), true);
-
-        $this->updateEnumDefaultMultilang($event->getArgument('params')['scope'], $data);
-    }
-
-    /**
-     * @param Event $event
-     */
     public function beforePatchActionUpdate(Event $event)
     {
         $this->beforePostActionCreate($event);
@@ -159,48 +149,5 @@ class FieldManagerController extends AbstractListener
         }
 
         return true;
-    }
-
-    /**
-     * @param string $entityName
-     * @param array $data
-     */
-    protected function updateEnumDefaultMultilang(string $entityName, array $data): void
-    {
-        if ($data['type'] == 'enum' && $data['isMultilang'] ?? false && $this->getConfig()->get('isMultilangActive', false)) {
-            $default = $data['default'];
-            $defaultPosition = array_search($default, $data['options']);
-
-            if ($defaultPosition !== false) {
-                $entityName = Util::toUnderScore($entityName);
-                $fieldName = $data['name'];
-                $sql = "UPDATE $entityName SET ";
-
-                foreach ($this->getConfig()->get('inputLanguageList', []) as $key => $locale) {
-                    $camelCaseLocale = Util::toCamelCase(strtolower($locale), '_', true);
-                    $multilangOptions = 'options' . $camelCaseLocale;
-
-                    if (isset($data[$multilangOptions]) && isset($data[$multilangOptions][$defaultPosition])) {
-                        $multilangFieldName = $fieldName . '_' . strtolower($locale);
-                        $multilangValue = $data[$multilangOptions][$defaultPosition];
-
-                        if ($key != 0) {
-                            $sql .= ",";
-                        }
-                        $sql .= "$multilangFieldName = '$multilangValue'";
-                    }
-                }
-
-                try {
-                    $sth = $this
-                        ->getEntityManager()
-                        ->getPDO()
-                        ->prepare($sql);
-                    $sth->execute();
-                } catch (\Exception $e) {
-
-                }
-            }
-        }
     }
 }
