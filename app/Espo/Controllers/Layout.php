@@ -33,12 +33,10 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\DataManager;
-use Espo\Core\Utils as Utils;
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\BadRequest;
 
 class Layout extends \Espo\Core\Controllers\Base
 {
@@ -73,7 +71,7 @@ class Layout extends \Espo\Core\Controllers\Base
             throw new Error("Error while saving layout.");
         }
 
-        DataManager::updateCacheTimestamp();
+        $this->getContainer()->get('dataManager')->updateCacheTimestamp();
 
         return $layoutManager->get($params['scope'], $params['name']);
     }
