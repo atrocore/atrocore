@@ -119,59 +119,73 @@ Espo.define('treo-core:views/record/base', 'class-replace!treo-core:views/record
                 attrs._mainEntityId = urlParts[1];
             }
 
+            let _prev = {};
+            $.each(attrs, function (field, value) {
+                _prev[field] = initialAttributes[field];
+            });
+
+            attrs['_prev'] = _prev;
+            attrs['_silentMode'] = true;
+
             model.save(attrs, {
                 success: function () {
-                    this.afterSave();
-                    var isNew = self.isNew;
+                    self.afterSave();
+                    let isNew = self.isNew;
                     if (self.isNew) {
                         self.isNew = false;
                     }
-                    this.trigger('after:save');
+                    self.trigger('after:save');
                     model.trigger('after:save');
 
                     if (!callback) {
                         if (!skipExit) {
                             if (isNew) {
-                                this.exit('create');
+                                self.exit('create');
                             } else {
-                                this.exit('save');
+                                self.exit('save');
                             }
                         }
                     } else {
-                        callback(this);
+                        callback(self);
                     }
-                }.bind(this),
+                },
                 error: function (e, xhr) {
-                    var r = xhr.getAllResponseHeaders();
-                    var response = null;
+                    if (xhr.status === 409) {
+                        self.notify(false);
+                        Espo.Ui.confirm(self.translate('editedByAnotherUser', 'exceptions', 'Global'), {
+                            confirmText: self.translate('Apply'),
+                            cancelText: self.translate('Cancel')
+                        }, function () {
+                            attrs['_prev'] = null;
+                            attrs['_silentMode'] = false;
+                            model.save(attrs, {
+                                success: function () {
+                                    self.afterSave();
+                                    self.isNew = false;
+                                    self.trigger('after:save');
+                                    model.trigger('after:save');
+                                    if (!callback) {
+                                        if (!skipExit) {
+                                            self.exit('save');
+                                        }
+                                    } else {
+                                        callback(self);
+                                    }
+                                },
+                                patch: true
+                            });
+                        })
+                    } else {
+                        self.enableButtons();
+                        self.trigger('cancel:save');
 
-                    if (~[409, 500].indexOf(xhr.status)) {
-                        var statusReasonHeader = xhr.getResponseHeader('X-Status-Reason');
-                        if (statusReasonHeader) {
-                            try {
-                                var response = JSON.parse(statusReasonHeader);
-                            } catch (e) {
-                                console.error('Could not parse X-Status-Reason header');
-                            }
-                        }
+                        let statusReason = xhr.getResponseHeader('X-Status-Reason') || '';
+                        Espo.Ui.notify(`${self.translate("Error")} ${xhr.status}: ${statusReason}`, "error", 1000 * 60 * 60 * 2, true);
                     }
-
-                    if (response && response.reason) {
-                        var methodName = 'errorHandler' + Espo.Utils.upperCaseFirst(response.reason.toString());
-                        if (methodName in this) {
-                            xhr.errorIsHandled = true;
-                            this[methodName](response.data);
-                        }
-                    }
-
-                    this.afterSaveError();
-
-                    model.attributes = beforeSaveAttributes;
-                    self.trigger('cancel:save');
-
-                }.bind(this),
+                },
                 patch: !model.isNew()
             });
+
             return true;
         }
 

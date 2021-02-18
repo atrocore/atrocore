@@ -222,6 +222,7 @@ return [
 
             ]
         ]
-    ]
+    ],
+    'checkForConflicts'                      => true
 ];
 

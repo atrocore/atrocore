@@ -63,21 +63,49 @@ Espo.define('treo-core:views/fields/base', 'class-replace!treo-core:views/fields
                 return;
             }
 
+            let _prev = {};
+            $.each(attrs, function (field, value) {
+                _prev[field] = prev[field];
+            });
+
+            attrs['_prev'] = _prev;
+            attrs['_silentMode'] = true;
+
             this.notify('Saving...');
             model.save(attrs, {
                 success: function () {
                     self.trigger('after:save');
                     model.trigger('after:save');
                     self.notify('Saved', 'success');
+                    self.inlineEditClose(true);
                 },
-                error: function () {
-                    self.notify('Error occured', 'error');
-                    model.fetch();
-                    self.render()
+                error: function (e, xhr) {
+                    if (xhr.status === 409) {
+                        self.notify(false);
+                        Espo.Ui.confirm(self.translate('editedByAnotherUser', 'exceptions', 'Global'), {
+                            confirmText: self.translate('Apply'),
+                            cancelText: self.translate('Cancel')
+                        }, function () {
+                            attrs['_prev'] = null;
+                            attrs['_silentMode'] = false;
+
+                            model.save(attrs, {
+                                success: function () {
+                                    self.trigger('after:save');
+                                    model.trigger('after:save');
+                                    self.notify('Saved', 'success');
+                                    self.inlineEditClose(true);
+                                },
+                                patch: true
+                            });
+                        })
+                    } else {
+                        let statusReason = xhr.getResponseHeader('X-Status-Reason') || '';
+                        Espo.Ui.notify(`${self.translate("Error")} ${xhr.status}: ${statusReason}`, "error", 1000 * 60 * 60 * 2, true);
+                    }
                 },
                 patch: true
             });
-            this.inlineEditClose(true);
         },
 
         showValidationMessage: function (message, target) {
