@@ -2341,6 +2341,9 @@ class Record extends \Espo\Core\Services\Base
         unset($data['_silentMode']);
 
         foreach ($data as $field => $newValue) {
+            if ($field == 'data'){
+                continue 1;
+            }
             if ($entity->has($field) && $entity->get($field) != $prev[$field]) {
                 return true;
             }
