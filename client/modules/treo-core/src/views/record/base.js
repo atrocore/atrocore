@@ -152,6 +152,8 @@ Espo.define('treo-core:views/record/base', 'class-replace!treo-core:views/record
                 error: function (e, xhr) {
                     if (xhr.status === 409) {
                         self.notify(false);
+                        self.enableButtons();
+                        self.trigger('cancel:save');
                         Espo.Ui.confirm(self.translate('editedByAnotherUser', 'exceptions', 'Global'), {
                             confirmText: self.translate('Apply'),
                             cancelText: self.translate('Cancel')
