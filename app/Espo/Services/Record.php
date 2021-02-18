@@ -61,7 +61,8 @@ class Record extends \Espo\Core\Services\Base
         'fileStorageManager',
         'injectableFactory',
         'fieldManagerUtil',
-        'eventManager'
+        'eventManager',
+        'language'
     );
 
     protected $getEntityBeforeUpdate = false;
@@ -885,7 +886,6 @@ class Record extends \Espo\Core\Services\Base
 
         unset($data->modifiedById);
         unset($data->modifiedByName);
-        unset($data->modifiedAt);
         unset($data->createdById);
         unset($data->createdByName);
         unset($data->createdAt);
@@ -904,8 +904,13 @@ class Record extends \Espo\Core\Services\Base
             throw new Forbidden();
         }
 
-        // is entity updated ?
-        $this->isEntityUpdated($entity, $data);
+        if (!$this->isEntityUpdated($entity, $data)) {
+            throw new NotModified();
+        }
+
+        if ($this->getConfig()->get('checkForConflicts', true) && $this->isDataConflictExist($entity, $data)) {
+            throw new Conflict($this->getInjection('language')->translate('editedByAnotherUser', 'exceptions', 'Global'));
+        }
 
         $entity->set($data);
 
@@ -2276,7 +2281,6 @@ class Record extends \Espo\Core\Services\Base
      * @param \stdClass $data
      *
      * @return bool
-     * @throws NotModified
      */
     protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
     {
@@ -2313,11 +2317,39 @@ class Record extends \Espo\Core\Services\Base
             }
         }
 
-        if (!$isUpdated) {
-            throw new NotModified();
+        return $isUpdated;
+    }
+
+    /**
+     * @param Entity    $entity
+     * @param \stdClass $data
+     *
+     * @return bool
+     */
+    protected function isDataConflictExist(Entity $entity, \stdClass $data): bool
+    {
+        // prepare data
+        $data = json_decode(json_encode($data, JSON_PRESERVE_ZERO_FRACTION | JSON_NUMERIC_CHECK), true);
+        
+        if (empty($data['_prev'])) {
+            return false;
         }
 
-        return true;
+        $prev = $data['_prev'];
+
+        unset($data['_prev']);
+        unset($data['_silentMode']);
+
+        foreach ($data as $field => $newValue) {
+            if ($field == 'data'){
+                continue 1;
+            }
+            if ($entity->has($field) && $entity->get($field) != $prev[$field]) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
