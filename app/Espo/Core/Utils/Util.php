@@ -70,6 +70,33 @@ class Util
         return preg_replace("/[\/\\\]/", $delim, $name);
     }
 
+    /**
+     * @param mixed $value
+     *
+     * @return string
+     */
+    public static function toString($value): string
+    {
+        if (is_array($value)) {
+            $value = Json::encode(array_map('strval', $value));
+        }
+
+        if (is_object($value)) {
+            $value = serialize($value);
+        }
+
+        return (string)$value;
+    }
+
+    /**
+     * @param mixed $value
+     *
+     * @return string
+     */
+    public static function toMd5($value): string
+    {
+        return md5(self::toString($value));
+    }
 
     /**
      * Convert name to Camel Case format, ex. camel_case to camelCase

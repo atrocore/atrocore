@@ -2330,7 +2330,7 @@ class Record extends \Espo\Core\Services\Base
     {
         // prepare data
         $data = json_decode(json_encode($data, JSON_PRESERVE_ZERO_FRACTION | JSON_NUMERIC_CHECK), true);
-        
+
         if (empty($data['_prev'])) {
             return false;
         }
@@ -2341,10 +2341,11 @@ class Record extends \Espo\Core\Services\Base
         unset($data['_silentMode']);
 
         foreach ($data as $field => $newValue) {
-            if ($field == 'data'){
+            if ($field == 'data') {
                 continue 1;
             }
-            if ($entity->has($field) && $entity->get($field) != $prev[$field]) {
+
+            if ($entity->has($field) && Util::toMd5($entity->get($field)) != Util::toMd5($prev[$field])) {
                 return true;
             }
         }
