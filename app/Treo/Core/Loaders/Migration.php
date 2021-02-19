@@ -35,21 +35,16 @@ declare(strict_types=1);
 
 namespace Treo\Core\Loaders;
 
-use Treo\Core\Migration\Migration as Instance;
-
 /**
- * Migration Loader
+ * Class Migration
  */
 class Migration extends Base
 {
-
     /**
-     * Load Migration
-     *
-     * @return Instance
+     * @inheritDoc
      */
     public function load()
     {
-        return (new Instance())->setContainer($this->getContainer());
+        return new \Treo\Core\Migration\Migration($this->getContainer()->get('pdo'), $this->getContainer()->get('config'));
     }
 }

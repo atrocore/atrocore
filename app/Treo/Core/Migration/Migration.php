@@ -35,6 +35,7 @@ declare(strict_types=1);
 
 namespace Treo\Core\Migration;
 
+use Espo\Core\Utils\Config;
 use Treo\Composer\PostUpdate;
 
 /**
@@ -42,7 +43,27 @@ use Treo\Composer\PostUpdate;
  */
 class Migration
 {
-    use \Treo\Traits\ContainerTrait;
+    /**
+     * @var \PDO
+     */
+    private $pdo;
+
+    /**
+     * @var Config
+     */
+    private $config;
+
+    /**
+     * Migration constructor.
+     *
+     * @param \PDO   $pdo
+     * @param Config $config
+     */
+    public function __construct(\PDO $pdo, Config $config)
+    {
+        $this->pdo = $pdo;
+        $this->config = $config;
+    }
 
     /**
      * Migrate action
@@ -123,9 +144,9 @@ class Migration
      *
      * @param string $version
      *
-     * @return int
+     * @return string|null
      */
-    protected function prepareVersion(string $version)
+    protected function prepareVersion(string $version): ?string
     {
         // prepare version
         $version = str_replace('v', '', $version);
@@ -138,6 +159,8 @@ class Migration
 
             return "V{$major}Dot{$version}Dot{$patch}";
         }
+
+        return null;
     }
 
     /**
@@ -179,27 +202,10 @@ class Migration
         // prepare class name
         $className = sprintf('\\%s\\Migrations\\%s', $module, $className);
 
-        if (!class_exists($className)) {
+        if (!class_exists($className) || !is_a($className, Base::class, true)) {
             return null;
         }
 
-        $migration = new $className($this->getContainer()->get('entityManager')->getPDO(), $this->getContainer()->get('config'));
-
-        if (!$migration instanceof Base) {
-            return null;
-        }
-
-        /**
-         * @deprecated We will remove it after 01.01.2021
-         */
-        if ($migration instanceof AbstractMigration) {
-            if (empty($this->isRebuilded)) {
-                $this->isRebuilded = true;
-                $this->getContainer()->get('dataManager')->rebuild();
-            }
-            $migration->setContainer($this->getContainer());
-        }
-
-        return $migration;
+        return new $className($this->pdo, $this->config);
     }
 }

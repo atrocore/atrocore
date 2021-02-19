@@ -1,3 +1,4 @@
+<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -30,22 +31,30 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/import/list', 'views/list', function (Dep) {
+declare(strict_types=1);
 
-    return Dep.extend({
+namespace Treo\Migrations;
 
-        createButton: false,
+use Treo\Core\Migration\Base;
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+/**
+ * Migration for version 1.1.22
+ */
+class V1Dot1Dot22 extends Base
+{
+    /**
+     * @inheritDoc
+     */
+    public function up(): void
+    {
+        $this->getPDO()->exec("ALTER TABLE `attachment` CHANGE `role` role VARCHAR(36) DEFAULT 'Attachment' COLLATE utf8mb4_unicode_ci");
+    }
 
-            this.menu.buttons.unshift({
-                html: 'New Import',
-                link: '#Import',
-                style: 'primary',
-                acl: 'edit'
-            });
-        }
-
-    });
-});
+    /**
+     * @inheritDoc
+     */
+    public function down(): void
+    {
+        $this->getPDO()->exec("ALTER TABLE `attachment` CHANGE `role` role VARCHAR(36) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
+    }
+}

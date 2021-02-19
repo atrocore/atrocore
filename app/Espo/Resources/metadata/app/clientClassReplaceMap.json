@@ -176,9 +176,6 @@
   "views/fields/email": [
     "treo-core"
   ],
-  "views/import/index": [
-    "treo-core"
-  ],
   "views/stream/panel": [
     "treo-core"
   ],

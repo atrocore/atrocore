@@ -176,13 +176,7 @@
   },
   "data": {
     "label": "Data",
-    "itemList": [
-      {
-        "url": "#Import",
-        "label": "Import",
-        "description": "import"
-      }
-    ],
+    "itemList": [],
     "order": 50
   }
 }

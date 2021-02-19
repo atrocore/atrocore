@@ -49,11 +49,10 @@
     "role": {
       "type": "enum",
       "maxLength": 36,
+      "default": "Attachment",
       "options": [
         "Attachment",
         "Inline Attachment",
-        "Import File",
-        "Export File",
         "Mail Merge",
         "Mass Pdf"
       ]

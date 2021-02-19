@@ -19,16 +19,6 @@
   "links": {
     "related": "Related"
   },
-  "options": {
-    "role": {
-      "Attachment": "Attachment",
-      "Inline Attachment": "Inline Attachment",
-      "Import File": "Import File",
-      "Export File": "Export File",
-      "Mail Merge": "Mail Merge",
-      "Mass Pdf": "Mass PDF"
-    }
-  },
   "insertFromSourceLabels": {
     "Document": "Insert Document"
   },

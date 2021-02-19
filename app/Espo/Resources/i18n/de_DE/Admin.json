@@ -196,7 +196,6 @@
     "groupEmailAccounts": "IMAP Gruppenkonten. E-Mail Import und E-Mails für Fälle.",
     "personalEmailAccounts": "E-Mail Konten der Benutzer.",
     "emailTemplates": "Vorlagen für ausgehende E-Mails.",
-    "import": "Datenimport aus CSV Datei.",
     "layoutManager": "Layouts anpassen (Liste, Detailansicht, Bearbeitungsansicht, Suche, Massenaktualisierung).",
     "userInterface": "Benutzeroberfläche konfigurieren.",
     "authTokens": "Aktive Auth Sessions. IP Adresse und letztes Zugriffsdatum.",
