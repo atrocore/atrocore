@@ -19123,8 +19123,7 @@ button.category:focus {
     float: right;
   }
   .record .middle .panel-body,
-  .record .bottom .panel-body,
-  .home-content > .row.dashlets .panel-body {
+  .record .bottom .panel-body {
     padding: 0;
   }
   .panel-body > div > .list {
