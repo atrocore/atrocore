@@ -2,7 +2,7 @@
   "fields": {
     "actions": "Aktionen",
     "serviceName": "Bedienung",
-    "stream": "Queue",
+    "stream": "Warteschlange",
     "data": "Daten",
     "sortOrder": "Sortierreihenfolge",
     "status": "Status"
@@ -14,16 +14,16 @@
     "showDone": "Erledigt anzeigen",
     "showMessage": "Meldung anzeigen",
     "message": "Meldung",
-    "cancel": "abbrechen",
-    "close": "schließen",
-    "download": "herunterladen",
+    "cancel": "Abbrechen",
+    "close": "Schließen",
+    "download": "Herunterladen",
     "queueManager": "Warteschlangenmanager"
   },
   "options": {
     "status": {
-      "Pending": "Schwebend",
+      "Pending": "Steht aus",
       "Success": "Erfolg",
-      "Running": "Läuft",
+      "Running": "In Arbeit",
       "Failed": "Fehlgeschlagen",
       "Canceled": "Abgebrochen",
       "Closed": "Geschlossen"
