@@ -35,20 +35,18 @@ declare(strict_types=1);
 
 namespace Treo\Services;
 
+use Espo\ORM\Entity;
+
 /**
  * Class QueueManagerBase
- *
- * @deprecated deprecated from 22.02.2021!
  */
-class QueueManagerBase extends AbstractService implements QueueManagerServiceInterface
+abstract class QueueManagerBase extends AbstractService implements QueueManagerServiceInterface
 {
     /**
-     * @param array $data
-     *
-     * @return bool
+     * @inheritDoc
      */
-    public function run(array $data = []): bool
+    public function getNotificationMessage(Entity $queueItem): string
     {
-        return true;
+        return sprintf($this->translate('queueItemDone', 'notificationMessages', 'QueueItem'), $queueItem->get('name'), $queueItem->get('status'));
     }
 }

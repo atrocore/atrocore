@@ -35,6 +35,8 @@ declare(strict_types=1);
 
 namespace Treo\Services;
 
+use Espo\ORM\Entity;
+
 /**
  * Interface QueueManagerServiceInterface
  */
@@ -46,4 +48,11 @@ interface QueueManagerServiceInterface
      * @return bool
      */
     public function run(array $data = []): bool;
+
+    /**
+     * @param Entity $queueItem
+     *
+     * @return string
+     */
+    public function getNotificationMessage(Entity $queueItem): string;
 }

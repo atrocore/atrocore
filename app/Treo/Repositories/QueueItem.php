@@ -36,11 +36,14 @@ declare(strict_types=1);
 namespace Treo\Repositories;
 
 use Espo\ORM\Entity;
+use Espo\Core\Templates\Repositories\Base;
+use Treo\Services\QueueManagerServiceInterface;
+
 
 /**
  * Class QueueItem
  */
-class QueueItem extends \Espo\Core\Templates\Repositories\Base
+class QueueItem extends Base
 {
     /**
      * @inheritdoc
@@ -55,7 +58,7 @@ class QueueItem extends \Espo\Core\Templates\Repositories\Base
             $this->unsetItem((int)$entity->get('stream'), (string)$entity->get('id'));
         }
 
-        if (!in_array(!$entity->get('status'), ['Pending', 'Running'])) {
+        if (!in_array($entity->get('status'), ['Pending', 'Running'])) {
             $this->notify($entity);
         }
     }
@@ -82,6 +85,7 @@ class QueueItem extends \Espo\Core\Templates\Repositories\Base
 
         $this->addDependency('queueManager');
         $this->addDependency('language');
+        $this->addDependency('serviceFactory');
     }
 
     /**
@@ -89,20 +93,22 @@ class QueueItem extends \Espo\Core\Templates\Repositories\Base
      */
     protected function notify(Entity $entity): void
     {
-        // prepare message
-        $message = sprintf($this->getInjection('language')->translate('queueItemDone', 'notificationMessages', 'QueueItem'), $entity->get('name'), $entity->get('status'));
-        if (!empty($entity->get('data')->notificationMessage)) {
-            $message .= ' ' . $entity->get('data')->notificationMessage;
+        try {
+            $service = $this->getInjection('serviceFactory')->create($entity->get('serviceName'));
+        } catch (\Throwable $e) {
+            $GLOBALS['log']->error('Notification Error: ' . $e->getMessage());
+            return;
         }
 
-        // create notification
-        $notification = $this->getEntityManager()->getEntity('Notification');
-        $notification->set('type', 'Message');
-        $notification->set('relatedType', 'QueueItem');
-        $notification->set('relatedId', $entity->get('id'));
-        $notification->set('message', $message);
-        $notification->set('userId', $this->getEntityManager()->getUser()->get('id'));
-        $this->getEntityManager()->saveEntity($notification);
+        if ($service instanceof QueueManagerServiceInterface) {
+            $notification = $this->getEntityManager()->getEntity('Notification');
+            $notification->set('type', 'Message');
+            $notification->set('relatedType', 'QueueItem');
+            $notification->set('relatedId', $entity->get('id'));
+            $notification->set('message', $service->getNotificationMessage($entity));
+            $notification->set('userId', $this->getEntityManager()->getUser()->get('id'));
+            $this->getEntityManager()->saveEntity($notification);
+        }
     }
 
     /**

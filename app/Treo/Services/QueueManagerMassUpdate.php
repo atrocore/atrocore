@@ -38,7 +38,7 @@ namespace Treo\Services;
 /**
  * Class QueueManagerMassUpdate
  */
-class QueueManagerMassUpdate extends AbstractService implements QueueManagerServiceInterface
+class QueueManagerMassUpdate extends QueueManagerBase
 {
     /**
      * @inheritdoc
