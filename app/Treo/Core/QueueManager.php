@@ -242,6 +242,9 @@ class QueueManager
         $this->getContainer()->setUser($item->get('createdBy'));
         $this->getEntityManager()->setUser($item->get('createdBy'));
 
+        // reload language
+        $this->getContainer()->reload('language');
+
         // running
         $this->setStatus($item, 'Running');
 
