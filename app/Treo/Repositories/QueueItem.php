@@ -35,6 +35,7 @@ declare(strict_types=1);
 
 namespace Treo\Repositories;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 use Espo\Core\Templates\Repositories\Base;
 use Treo\Services\QueueManagerServiceInterface;
@@ -61,6 +62,21 @@ class QueueItem extends Base
         if (!in_array($entity->get('status'), ['Pending', 'Running'])) {
             $this->notify($entity);
         }
+    }
+
+    /**
+     * @param Entity $entity
+     * @param array  $options
+     *
+     * @throws BadRequest
+     */
+    protected function beforeRemove(Entity $entity, array $options = [])
+    {
+        if ($entity->get('status') == 'Running') {
+            throw new BadRequest($this->getInjection('language')->translate('jobIsRunning', 'exceptions', 'QueueItem'));
+        }
+
+        parent::beforeRemove($entity, $options);
     }
 
     /**
