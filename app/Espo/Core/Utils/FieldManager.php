@@ -839,6 +839,6 @@ class FieldManager
      */
     protected function dispatch(string $target, string $action, Event $event): Event
     {
-        return $this->container->get('eventManager')->dispatch($target, 'beforeSave', $event);
+        return $this->container->get('eventManager')->dispatch($target, $action, $event);
     }
 }
