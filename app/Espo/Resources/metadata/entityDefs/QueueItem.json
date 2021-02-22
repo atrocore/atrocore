@@ -15,6 +15,7 @@
     "stream": {
       "type": "int",
       "required": true,
+      "readOnly": true,
       "default": 0
     },
     "data": {
@@ -36,16 +37,14 @@
         "Running",
         "Success",
         "Failed",
-        "Canceled",
-        "Closed"
+        "Canceled"
       ],
       "optionColors": [
         "00AFFF",
         "FFE208",
         "1DFF08",
         "FF0000",
-        "4F4F4F",
-        "6E6E6E"
+        "4F4F4F"
       ]
     },
     "actions": {

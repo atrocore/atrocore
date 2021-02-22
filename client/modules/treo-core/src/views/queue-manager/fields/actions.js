@@ -41,7 +41,7 @@ Espo.define('treo-core:views/queue-manager/fields/actions', 'views/fields/base',
 
         data() {
             return {
-                actions: this.model.get(this.name) || []
+                actions: [{type: "cancel"}]
             };
         },
 
@@ -50,12 +50,12 @@ Espo.define('treo-core:views/queue-manager/fields/actions', 'views/fields/base',
         },
 
         buildActions() {
-            (this.model.get(this.name) || []).forEach(action => {
-                let actionDefs = this.getMetadata().get(['clientDefs', 'QueueItem', 'queueActions', action.type]) || this.defaultActionDefs;
+            if (this.model.get('status') === 'Pending' || this.model.get('status') === 'Running') {
+                let actionDefs = this.getMetadata().get(['clientDefs', 'QueueItem', 'queueActions', 'cancel']) || this.defaultActionDefs;
                 if (actionDefs.view && this.getAcl().check(this.model, actionDefs.acl)) {
-                    this.createView(action.type, actionDefs.view, {
-                        el: `${this.options.el} .queue-manager-action[data-type="${action.type}"]`,
-                        actionData: action.data,
+                    this.createView('cancel', actionDefs.view, {
+                        el: `${this.options.el} .queue-manager-action[data-type="cancel"]`,
+                        actionData: {},
                         model: this.model
                     }, view => {
                         this.listenTo(view, 'reloadList', () => {
@@ -64,7 +64,7 @@ Espo.define('treo-core:views/queue-manager/fields/actions', 'views/fields/base',
                         view.render();
                     });
                 }
-            });
+            }
         }
 
     })

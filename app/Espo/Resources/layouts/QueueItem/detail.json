@@ -19,9 +19,11 @@
       ],
       [
         {
-          "name": "data"
+          "name": "stream"
         },
-        false
+        {
+          "name": "data"
+        }
       ]
     ],
     "style": "default",

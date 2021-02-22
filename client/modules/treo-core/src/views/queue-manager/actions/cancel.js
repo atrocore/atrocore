@@ -30,22 +30,27 @@
  * and "AtroCore" word.
  */
 
-Espo.define('treo-core:views/queue-manager/actions/cancel', 'treo-core:views/queue-manager/actions/close',
+Espo.define('treo-core:views/queue-manager/actions/cancel', 'treo-core:views/queue-manager/actions/abstract-action',
     Dep => Dep.extend({
 
         buttonLabel: 'cancel',
-
-        getSaveData () {
-            return {
-                status: 'Canceled'
-            };
-        },
 
         setup() {
             Dep.prototype.setup.call(this);
 
             this.disabled = this.model.get('status') === 'Running';
-        }
+        },
+
+        getSaveData() {
+            return {
+                status: 'Canceled'
+            };
+        },
+
+        runAction() {
+            this.ajaxPutRequest(`${this.model.name}/${this.model.id}`, this.getSaveData())
+                .then(() => this.model.trigger('reloadList'));
+        },
 
     })
 );

@@ -7,6 +7,9 @@
         "name": "status"
     },
     {
+        "name": "stream"
+    },
+    {
         "name": "createdBy"
     },
     {

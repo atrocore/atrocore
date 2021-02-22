@@ -16,15 +16,8 @@
       "view": "treo-core:views/queue-manager/actions/cancel",
       "acl": "edit"
     },
-    "close": {
-      "view": "treo-core:views/queue-manager/actions/close",
-      "acl": "edit"
-    },
     "show-message": {
       "view": "treo-core:views/queue-manager/actions/show-message"
-    },
-    "download": {
-      "view": "treo-core:views/queue-manager/actions/download"
     }
   }
 }

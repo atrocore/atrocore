@@ -47,8 +47,6 @@ Espo.define('treo-core:views/queue-manager/panel', 'view', function (Dep) {
                 e.preventDefault();
                 e.stopPropagation();
 
-                this.showDone = this.$showDone.is(':checked');
-                this.getStorage().set('list', 'showDone', this.showDone);
                 this.collection.where = this.getWhere();
                 this.collection.fetch();
             },
@@ -62,25 +60,20 @@ Espo.define('treo-core:views/queue-manager/panel', 'view', function (Dep) {
         }, Dep.prototype.events),
 
         data() {
-            return {
-                showDone: this.showDone
-            };
+            return {};
         },
 
         setup() {
             this.queueCheckInterval = this.getConfig().get('queueCheckInterval') || this.queueCheckInterval;
 
-            this.showDone = !(this.getStorage().get('list', 'showDone') === 'false');
-
             this.wait(true);
             this.getCollectionFactory().create('QueueItem', collection => {
                 this.collection = collection;
-                this.collection.maxSize = 200;
+                this.collection.maxSize = 20;
                 this.collection.url = 'QueueItem';
                 this.collection.sortBy = 'sortOrder';
                 this.collection.asc = true;
                 this.collection.where = this.getWhere();
-                this.collection.whereAdditional = this.getWhereAdditional();
 
                 this.listenTo(this.collection, 'reloadList', () => {
                     this.collection.fetch();
@@ -130,28 +123,14 @@ Espo.define('treo-core:views/queue-manager/panel', 'view', function (Dep) {
         },
 
         getWhere() {
-            if (this.showDone) {
-                return [];
-            } else {
-                return [
-                    {
-                        field: 'status',
-                        type: 'in',
-                        value: ['Running', 'Pending']
-                    }
-                ];
-            }
-        },
-
-        getWhereAdditional() {
             return [
                 {
                     field: 'status',
-                    type: 'notIn',
-                    value: ['Canceled', 'Closed']
+                    type: 'in',
+                    value: ['Running', 'Pending']
                 }
             ];
-        }
+        },
 
     });
 

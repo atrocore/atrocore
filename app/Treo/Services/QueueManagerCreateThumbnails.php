@@ -38,7 +38,7 @@ namespace Treo\Services;
 /**
  * Class QueueManagerCreateThumbnails
  */
-class QueueManagerCreateThumbnails extends QueueManagerBase
+class QueueManagerCreateThumbnails extends AbstractService implements QueueManagerServiceInterface
 {
     /**
      * @inheritdoc

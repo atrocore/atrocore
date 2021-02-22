@@ -42,18 +42,4 @@ use Espo\Core\SelectManagers\Base;
  */
 class QueueItem extends Base
 {
-    /**
-     * @inheritdoc
-     */
-    public function getSelectParams(array $params, $withAcl = false, $checkWherePermission = false)
-    {
-        // parent
-        $result = parent::getSelectParams($params, $withAcl, $checkWherePermission);
-
-        $result['whereClause'][] = [
-            'stream' => 0
-        ];
-
-        return $result;
-    }
 }

@@ -15,10 +15,6 @@
       ],
       "Failed": [
         "Running"
-      ],
-      "Closed": [
-        "Success",
-        "Failed"
       ]
     }
   }
