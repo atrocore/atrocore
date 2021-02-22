@@ -31,7 +31,7 @@
   },
   "exceptions": {
     "queueItemCannotBeChanged": "Warteschlangenelement kann nicht geändert werden.",
-    "jobIsRunning": "Ein laufendes Warteschlangenelement kann nicht entfernt werden."
+    "jobIsRunning": "Eine laufende Aufgabe kann nicht entfernt werden."
   },
   "notificationMessages": {
     "error": "%  ist fehlgeschlagen",
