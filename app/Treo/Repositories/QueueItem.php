@@ -51,8 +51,12 @@ class QueueItem extends \Espo\Core\Templates\Repositories\Base
         parent::afterSave($entity, $options);
 
         // unset
-        if (in_array($entity->get('status'), ['Canceled', 'Closed'])) {
+        if ($entity->get('status') === 'Canceled') {
             $this->unsetItem((int)$entity->get('stream'), (string)$entity->get('id'));
+        }
+
+        if (!in_array(!$entity->get('status'), ['Pending', 'Running'])) {
+            $this->notify($entity);
         }
     }
 
@@ -77,6 +81,28 @@ class QueueItem extends \Espo\Core\Templates\Repositories\Base
         parent::init();
 
         $this->addDependency('queueManager');
+        $this->addDependency('language');
+    }
+
+    /**
+     * @param Entity $entity
+     */
+    protected function notify(Entity $entity): void
+    {
+        // prepare message
+        $message = sprintf($this->getInjection('language')->translate('queueItemDone', 'notificationMessages', 'QueueItem'), $entity->get('name'), $entity->get('status'));
+        if (!empty($entity->get('data')->notificationMessage)) {
+            $message .= ' ' . $entity->get('data')->notificationMessage;
+        }
+
+        // create notification
+        $notification = $this->getEntityManager()->getEntity('Notification');
+        $notification->set('type', 'Message');
+        $notification->set('relatedType', 'QueueItem');
+        $notification->set('relatedId', $entity->get('id'));
+        $notification->set('message', $message);
+        $notification->set('userId', $this->getEntityManager()->getUser()->get('id'));
+        $this->getEntityManager()->saveEntity($notification);
     }
 
     /**

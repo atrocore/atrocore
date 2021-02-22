@@ -80,6 +80,9 @@ Espo.define('treo-core:views/notification/badge', 'class-replace!treo-core:views
 
         checkPopupNotifications: function (name) {
             var data = this.popupNotificationsData[name] || {};
+
+            console.log(data);
+
             var url = 'data/popupNotifications.json?time=' + $.now();
             var interval = data.interval;
             var disabled = data.disabled || false;
