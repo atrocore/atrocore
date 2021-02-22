@@ -55,9 +55,11 @@ Espo.define('treo-core:views/fields/multi-enum', 'class-replace!treo-core:views/
                 let localeFieldOptions = this.model.getFieldParam(localeField, 'options');
 
                 let localeValue = [];
-                keys.forEach(function (key) {
-                    localeValue.push(typeof localeFieldOptions[key] === 'undefined' ? null : localeFieldOptions[key]);
-                });
+                if (localeFieldOptions) {
+                    keys.forEach(function (key) {
+                        localeValue.push(typeof localeFieldOptions[key] === 'undefined' ? null : localeFieldOptions[key]);
+                    });
+                }
 
                 this.model.set(localeField, localeValue);
             }, this);
