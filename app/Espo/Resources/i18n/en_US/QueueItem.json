@@ -30,7 +30,7 @@
   },
   "exceptions": {
     "queueItemCannotBeChanged": "Queue item cannot be changed.",
-    "jobIsRunning": "A running task cannot be removed."
+    "jobIsRunning": "A running queue item cannot be removed."
   },
   "notificationMessages": {
     "success": "%s was successfully completed",
