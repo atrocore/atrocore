@@ -37,10 +37,8 @@ namespace Treo\Listeners;
 
 use Espo\Core\Exceptions\Error;
 use Espo\Core\ORM\EntityManager;
-use Espo\Core\Services\Base as BaseService;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Config;
-use Treo\Services\AbstractService;
 
 /**
  * AbstractListener class
@@ -59,7 +57,7 @@ abstract class AbstractListener
      *
      * @param string $name
      *
-     * @return BaseService|AbstractService
+     * @return object
      */
     protected function getService(string $name)
     {
