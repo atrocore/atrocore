@@ -368,7 +368,7 @@ class Attachment extends Record
 
         try {
             $this->getInjection('Thumbnail')->createThumbnail($entity, 'small');
-            $this->getInjection('queueManager')->push('Create thumbnails', 'QueueManagerCreateThumbnails', ['id' => $entity->get('id')], 1);
+            $this->getInjection('queueManager')->push('Create thumbnails', 'QueueManagerCreateThumbnails', ['id' => $entity->get('id')]);
         } catch (\Throwable $e) {
             // ignore all errors
         }

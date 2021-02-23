@@ -293,7 +293,7 @@ class MassActions extends AbstractService
                 ];
 
                 // push
-                $this->qmPush($name, "QueueManagerMassUpdate", $data);
+                $this->qmPush($name, "QueueManagerMassUpdate", $data, true);
             }
         } else {
             // prepare data
@@ -305,7 +305,7 @@ class MassActions extends AbstractService
             ];
 
             // push
-            $this->qmPush($name, "QueueManagerMassUpdate", $data);
+            $this->qmPush($name, "QueueManagerMassUpdate", $data, true);
         }
     }
 
@@ -460,15 +460,16 @@ class MassActions extends AbstractService
      * @param string $name
      * @param string $serviceName
      * @param array  $data
+     * @param bool   $isWriting
      *
      * @return bool
      */
-    private function qmPush(string $name, string $serviceName, array $data): bool
+    private function qmPush(string $name, string $serviceName, array $data, bool $isWriting = false): bool
     {
         return $this
             ->getContainer()
             ->get('queueManager')
-            ->push($name, $serviceName, $data);
+            ->push($name, $serviceName, $data, $isWriting);
     }
 
     /**
