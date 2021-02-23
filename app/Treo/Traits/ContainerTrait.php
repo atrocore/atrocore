@@ -39,6 +39,8 @@ use Espo\Core\Container;
 
 /**
  * Class ContainerTrait
+ *
+ * @deprecated from 23.02.2021
  */
 trait ContainerTrait
 {

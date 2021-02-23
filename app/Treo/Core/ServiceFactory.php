@@ -110,7 +110,7 @@ class ServiceFactory
                     $service->inject($name, $this->container->get($name));
                 }
             }
-            if ($service instanceof \Treo\Services\AbstractService) {
+            if ($service instanceof \Espo\Services\AbstractService) {
                 $service->setContainer($this->container);
             }
 

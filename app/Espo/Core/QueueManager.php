@@ -37,18 +37,16 @@ namespace Espo\Core;
 
 use Espo\Core\Exceptions\Error;
 use Espo\Entities\User;
+use Espo\ORM\Entity;
 use Espo\Orm\EntityManager;
-use Treo\Core\ServiceFactory;
-use Espo\Entities\QueueItem;
 use Espo\Services\QueueManagerServiceInterface;
+use Treo\Core\ServiceFactory;
 
 /**
  * Class QueueManager
  */
 class QueueManager
 {
-    const QUEUE_PATH = 'data/qm-items-%s.json';
-
     /**
      * @var Container
      */
@@ -72,70 +70,43 @@ class QueueManager
      */
     public function run(int $stream): bool
     {
-        // get data
-        $data = $this->getFileData($stream);
-
-        if (!isset($data[0])) {
-            return false;
-        }
-
-        return $this->runJob($stream, (string)$data[0]);
+        return $this->runJob($stream);
     }
 
     /**
-     * @param string $name
-     * @param string $serviceName
-     * @param array  $data
-     * @param int    $stream
+     * @param string   $name
+     * @param string   $serviceName
+     * @param array    $data
+     * @param bool|int $isWriting
      *
      * @return bool
      * @throws Error
      */
-    public function push(string $name, string $serviceName, array $data = [], int $stream = 0): bool
+    public function push(string $name, string $serviceName, array $data = [], $isWriting = false): bool
     {
         // validation
-        if (!$this->isService($serviceName) || $stream < 0 || $stream > 9) {
+        if (!$this->isService($serviceName)) {
             return false;
         }
 
-        return $this->createQueueItem($name, $serviceName, $data, $stream);
-    }
-
-    /**
-     * Unset item
-     *
-     * @param int    $stream
-     * @param string $id
-     */
-    public function unsetItem(int $stream, string $id): void
-    {
-        $data = $this->getFileData($stream);
-        foreach ($data as $k => $item) {
-            if ($item == $id) {
-                unset($data[$k]);
-            }
+        // @todo $isWriting should be bool only !
+        if (is_int($isWriting)) {
+            $isWriting = $isWriting === 1;
         }
 
-        // prepare path
-        $path = sprintf(self::QUEUE_PATH, $stream);
-
-        if (empty($data) && file_exists($path)) {
-            unlink($path);
-        } else {
-            file_put_contents($path, json_encode(array_values($data)));
-        }
+        return $this->createQueueItem($name, $serviceName, $data, $isWriting);
     }
 
     /**
      * @param string $name
      * @param string $serviceName
      * @param array  $data
-     * @param int    $stream
+     * @param bool   $isWriting
      *
      * @return bool
      * @throws Error
      */
-    protected function createQueueItem(string $name, string $serviceName, array $data, int $stream): bool
+    protected function createQueueItem(string $name, string $serviceName, array $data, bool $isWriting): bool
     {
         /** @var User $user */
         $user = $this->getContainer()->get('user');
@@ -145,7 +116,7 @@ class QueueManager
             [
                 'name'           => $name,
                 'serviceName'    => $serviceName,
-                'stream'         => $stream,
+                'isWriting'      => $isWriting,
                 'data'           => $data,
                 'sortOrder'      => $this->getNextSortOrder(),
                 'createdById'    => $user->get('id'),
@@ -159,18 +130,6 @@ class QueueManager
         foreach ($user->get('teams')->toArray() as $row) {
             $this->getEntityManager()->getRepository('QueueItem')->relate($item, 'teams', $row['id']);
         }
-
-        // prepare file data
-        $fileData = $this->getFileData($stream);
-
-        // push new item
-        $fileData[] = $item->get('id');
-
-        // prepare path
-        $path = sprintf(self::QUEUE_PATH, $stream);
-
-        // save
-        file_put_contents($path, json_encode($fileData));
 
         return true;
     }
@@ -203,7 +162,7 @@ class QueueManager
      * @return bool
      * @throws Error
      */
-    protected function isService(string $serviceName)
+    protected function isService(string $serviceName): bool
     {
         if (!$this->getServiceFactory()->checkExists($serviceName)) {
             throw new Error("No such service '$serviceName'");
@@ -219,37 +178,21 @@ class QueueManager
     /**
      * @param int $stream
      *
-     * @return array
-     */
-    protected function getFileData(int $stream): array
-    {
-        $data = [];
-
-        // prepare path
-        $path = sprintf(self::QUEUE_PATH, $stream);
-
-        if (file_exists($path)) {
-            $data = json_decode(file_get_contents($path), true);
-        }
-
-        return $data;
-    }
-
-    /**
-     * @param int    $stream
-     * @param string $id
-     *
      * @return bool
      * @throws Error
      */
-    protected function runJob(int $stream, string $id): bool
+    protected function runJob(int $stream): bool
     {
-        // unset
-        $this->unsetItem($stream, $id);
-
-        // get item
-        if (empty($item = $this->getItem($id))) {
+        if (!empty($item = $this->getRepository()->getRunningItemForStream($stream))) {
+            $this->setStatus($item, 'Failed');
+            $GLOBALS['log']->error("QM failed: The item was not completed in the previous run.");
             return false;
+        }
+
+        $item = $this->getRepository()->getPendingItemForStream();
+
+        if (empty($item) || (!empty($item->get('isWriting')) && $stream !== 1)) {
+            return true;
         }
 
         // auth
@@ -260,6 +203,7 @@ class QueueManager
         $this->getContainer()->reload('language');
 
         // running
+        $item->set('stream', $stream);
         $this->setStatus($item, 'Running');
 
         // service validation
@@ -291,23 +235,13 @@ class QueueManager
     }
 
     /**
-     * @param QueueItem $item
-     * @param string    $status
+     * @param Entity $item
+     * @param string $status
      */
-    protected function setStatus(QueueItem $item, string $status): void
+    protected function setStatus(Entity $item, string $status): void
     {
         $item->set('status', $status);
         $this->getEntityManager()->saveEntity($item);
-    }
-
-    /**
-     * @param string $id
-     *
-     * @return null|QueueItem
-     */
-    protected function getItem(string $id): ?QueueItem
-    {
-        return $this->getEntityManager()->getRepository('QueueItem')->get($id);
     }
 
     /**
@@ -332,5 +266,10 @@ class QueueManager
     protected function getContainer(): Container
     {
         return $this->container;
+    }
+
+    protected function getRepository(): \Espo\Repositories\QueueItem
+    {
+        return $this->getEntityManager()->getRepository('QueueItem');
     }
 }

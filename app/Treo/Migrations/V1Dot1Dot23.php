@@ -33,22 +33,30 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core\Loaders;
-
-use Treo\Core\QueueManager as Instance;
+namespace Treo\Migrations;
 
 /**
- * Class QueueManager
+ * Migration for version 1.1.23
  */
-class QueueManager extends Base
+class V1Dot1Dot23 extends V1Dot1Dot17
 {
     /**
-     * Load QueueManager
-     *
-     * @return Instance
+     * @inheritDoc
      */
-    public function load()
+    public function up(): void
     {
-        return (new Instance())->setContainer($this->getContainer());
+        $this->execute("ALTER TABLE `queue_item` ADD is_writing TINYINT(1) DEFAULT '0' NOT NULL COLLATE utf8mb4_unicode_ci");
+        $this->execute("ALTER TABLE `queue_item` CHANGE `stream` stream INT DEFAULT NULL COLLATE utf8mb4_unicode_ci");
+        file_put_contents('data/process-kill.txt', '1');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function down(): void
+    {
+        $this->execute("ALTER TABLE `queue_item` DROP is_writing");
+        $this->execute("ALTER TABLE `queue_item` CHANGE `stream` stream INT DEFAULT '0' COLLATE utf8mb4_unicode_ci");
+        file_put_contents('data/process-kill.txt', '1');
     }
 }

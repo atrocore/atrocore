@@ -37,7 +37,6 @@ namespace Treo\Console;
 
 use Espo\Entities\User;
 use Treo\Core\ORM\EntityManager;
-use Treo\Core\QueueManager;
 use Treo\Services\Composer;
 
 /**
@@ -140,9 +139,7 @@ class Daemon extends AbstractConsole
                 break;
             }
 
-            if (file_exists(sprintf(QueueManager::QUEUE_PATH, $stream))) {
-                exec($this->getPhp() . " index.php qm $stream --run");
-            }
+            exec($this->getPhp() . " index.php qm $stream --run");
 
             sleep(1);
         }

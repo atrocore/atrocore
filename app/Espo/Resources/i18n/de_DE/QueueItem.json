@@ -3,6 +3,7 @@
     "actions": "Aktionen",
     "serviceName": "Bedienung",
     "stream": "Warteschlange",
+    "isWriting": "Ist Update Job?",
     "data": "Daten",
     "sortOrder": "Sortierreihenfolge",
     "status": "Status"

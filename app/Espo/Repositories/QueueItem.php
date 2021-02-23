@@ -47,17 +47,30 @@ use Espo\Services\QueueManagerServiceInterface;
 class QueueItem extends Base
 {
     /**
+     * @param int $stream
+     *
+     * @return \Espo\Entities\QueueItem|null
+     */
+    public function getRunningItemForStream(int $stream): ?Entity
+    {
+        return $this->select(['id'])->where(['stream' => $stream, 'status' => 'Running'])->order('sortOrder', 'ASC')->findOne();
+    }
+
+    /**
+     * @return Entity
+     */
+    public function getPendingItemForStream(): ?Entity
+    {
+        return $this->where(['stream' => null, 'status' => 'Pending'])->order('sortOrder', 'ASC')->findOne();
+    }
+
+    /**
      * @inheritdoc
      */
     protected function afterSave(Entity $entity, array $options = [])
     {
         // call parent
         parent::afterSave($entity, $options);
-
-        // unset
-        if ($entity->get('status') === 'Canceled') {
-            $this->unsetItem((int)$entity->get('stream'), (string)$entity->get('id'));
-        }
 
         if (!in_array($entity->get('status'), ['Pending', 'Running'])) {
             $this->notify($entity);
@@ -77,18 +90,6 @@ class QueueItem extends Base
         }
 
         parent::beforeRemove($entity, $options);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected function afterRemove(Entity $entity, array $options = [])
-    {
-        // call parent
-        parent::afterRemove($entity, $options);
-
-        // unset
-        $this->unsetItem((int)$entity->get('stream'), (string)$entity->get('id'));
     }
 
     /**
@@ -125,14 +126,5 @@ class QueueItem extends Base
             $notification->set('userId', $this->getEntityManager()->getUser()->get('id'));
             $this->getEntityManager()->saveEntity($notification);
         }
-    }
-
-    /**
-     * @param int    $stream
-     * @param string $id
-     */
-    protected function unsetItem(int $stream, string $id): void
-    {
-        $this->getInjection('queueManager')->unsetItem($stream, $id);
     }
 }

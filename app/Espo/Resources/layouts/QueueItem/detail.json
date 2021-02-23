@@ -19,11 +19,17 @@
       ],
       [
         {
-          "name": "stream"
+          "name": "isWriting"
         },
         {
-          "name": "data"
+          "name": "stream"
         }
+      ],
+      [
+        {
+          "name": "data"
+        },
+        false
       ]
     ],
     "style": "default",

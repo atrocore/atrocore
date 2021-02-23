@@ -12,11 +12,15 @@
       "required": true,
       "readOnly": true
     },
+    "isWriting": {
+      "type": "bool",
+      "readOnly": true,
+      "default": false
+    },
     "stream": {
       "type": "int",
-      "required": true,
       "readOnly": true,
-      "default": 0
+      "default": null
     },
     "data": {
       "type": "jsonObject",
