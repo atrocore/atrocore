@@ -35,12 +35,14 @@ declare(strict_types=1);
 
 namespace Espo\Services;
 
+use Espo\Core\Container;
+use Espo\Core\Services\Base;
 use Espo\ORM\Entity;
 
 /**
  * Class QueueManagerBase
  */
-abstract class QueueManagerBase extends AbstractService implements QueueManagerServiceInterface
+abstract class QueueManagerBase extends Base implements QueueManagerServiceInterface
 {
     /**
      * @inheritDoc
@@ -48,5 +50,35 @@ abstract class QueueManagerBase extends AbstractService implements QueueManagerS
     public function getNotificationMessage(Entity $queueItem): string
     {
         return sprintf($this->translate('queueItemDone', 'notificationMessages', 'QueueItem'), $queueItem->get('name'), $queueItem->get('status'));
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('container');
+    }
+
+    /**
+     * @return Container
+     */
+    protected function getContainer(): Container
+    {
+        return $this->getInjection('container');
+    }
+
+    /**
+     * @param string $label
+     * @param string $category
+     * @param string $scope
+     *
+     * @return string
+     */
+    protected function translate(string $label, string $category = 'labels', string $scope = 'Global'): string
+    {
+        return $this->getInjection('language')->translate($label, $category, $scope);
     }
 }

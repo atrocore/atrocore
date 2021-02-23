@@ -33,44 +33,75 @@
 
 namespace Espo\Core\Services;
 
-use \Espo\Core\Interfaces\Injectable;
-use Treo\Core\Interfaces\ServiceInterface;
+use Espo\Core\Interfaces\Injectable;
+use Espo\Core\Utils\Config;
+use Espo\Entities\User;
+use Espo\ORM\EntityManager;
 
-abstract class Base implements Injectable, ServiceInterface
+/**
+ * Class Base
+ */
+abstract class Base implements Injectable
 {
-    protected $dependencies = array(
-        'config',
-        'entityManager',
-        'user',
-        'language'
-    );
+    /**
+     * @var string[]
+     */
+    protected $dependencies = ['config', 'entityManager', 'user', 'language'];
 
-    protected $injections = array();
+    /**
+     * @var array
+     */
+    protected $injections = [];
 
+    /**
+     * @param string $name
+     * @param object $object
+     */
     public function inject($name, $object)
     {
         $this->injections[$name] = $object;
     }
 
+    /**
+     * Base constructor.
+     */
     public function __construct()
     {
         $this->init();
     }
 
+    /**
+     * Init
+     */
     protected function init()
     {
     }
 
+    /**
+     * @param string $name
+     *
+     * @return mixed
+     */
     protected function getInjection($name)
     {
         return $this->injections[$name];
     }
 
+    /**
+     * @param string $name
+     *
+     * @return void
+     */
     protected function addDependency($name)
     {
         $this->dependencies[] = $name;
     }
 
+    /**
+     * @param array $list
+     *
+     * @return void
+     */
     protected function addDependencyList(array $list)
     {
         foreach ($list as $item) {
@@ -78,21 +109,33 @@ abstract class Base implements Injectable, ServiceInterface
         }
     }
 
+    /**
+     * @return string[]
+     */
     public function getDependencyList()
     {
         return $this->dependencies;
     }
 
+    /**
+     * @return EntityManager
+     */
     protected function getEntityManager()
     {
         return $this->getInjection('entityManager');
     }
 
+    /**
+     * @return Config
+     */
     protected function getConfig()
     {
         return $this->getInjection('config');
     }
 
+    /**
+     * @return User
+     */
     protected function getUser()
     {
         return $this->getInjection('user');

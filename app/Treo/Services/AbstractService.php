@@ -37,14 +37,13 @@ use Espo\Core\Utils\Config;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
 use Treo\Core\EventManager\Event;
-use Treo\Core\Interfaces\ServiceInterface;
 
 /**
  * Class AbstractService
  *
  * @deprecated from 23.02.2021
  */
-abstract class AbstractService implements ServiceInterface
+abstract class AbstractService
 {
     use \Treo\Traits\ContainerTrait;
 
@@ -104,11 +103,11 @@ abstract class AbstractService implements ServiceInterface
      * @param string $action
      * @param Event  $event
      *
-     * @return array
+     * @return mixed
      */
     protected function dispatch(string $target, string $action, Event $event)
     {
-        $this
+        return $this
             ->getContainer()
             ->get('eventManager')
             ->dispatch($target, $action, $event);

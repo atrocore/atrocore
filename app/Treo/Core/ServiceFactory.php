@@ -37,7 +37,6 @@ namespace Treo\Core;
 
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Interfaces\Injectable;
-use Treo\Core\Interfaces\ServiceInterface;
 
 /**
  * ServiceFactory class
@@ -89,27 +88,26 @@ class ServiceFactory
     /**
      * @param string $name
      *
-     * @return ServiceInterface
+     * @return mixed
      * @throws Error
      */
-    public function create(string $name): ServiceInterface
+    public function create(string $name)
     {
         if (!isset($this->services[$name])) {
-            /** @var string $className */
             $className = $this->getClassName($name);
 
             // create service
             $service = new $className();
-
-            if (!$service instanceof ServiceInterface) {
-                throw new Error("Service '$name' doesn't support");
-            }
 
             if ($service instanceof Injectable) {
                 foreach ($service->getDependencyList() as $name) {
                     $service->inject($name, $this->container->get($name));
                 }
             }
+
+            /**
+             * @deprecated from 23.02.2021
+             */
             if ($service instanceof \Treo\Services\AbstractService) {
                 $service->setContainer($this->container);
             }
