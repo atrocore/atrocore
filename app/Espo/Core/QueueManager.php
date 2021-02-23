@@ -185,7 +185,7 @@ class QueueManager
     {
         if (!empty($item = $this->getRepository()->getRunningItemForStream($stream))) {
             $this->setStatus($item, 'Failed');
-            $GLOBALS['log']->error("QM failed: The item was not completed in the previous run.");
+            $GLOBALS['log']->error("QM failed: The item '{$item->get('id')}' was not completed in the previous run.");
             return false;
         }
 

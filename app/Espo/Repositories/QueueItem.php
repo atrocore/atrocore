@@ -53,7 +53,7 @@ class QueueItem extends Base
      */
     public function getRunningItemForStream(int $stream): ?Entity
     {
-        return $this->select(['id'])->where(['stream' => $stream, 'status' => 'Running'])->order('sortOrder', 'ASC')->findOne();
+        return $this->where(['stream' => $stream, 'status' => 'Running'])->order('sortOrder', 'ASC')->findOne();
     }
 
     /**
@@ -123,7 +123,7 @@ class QueueItem extends Base
             $notification->set('relatedType', 'QueueItem');
             $notification->set('relatedId', $entity->get('id'));
             $notification->set('message', $service->getNotificationMessage($entity));
-            $notification->set('userId', $this->getEntityManager()->getUser()->get('id'));
+            $notification->set('userId', $entity->get('createdById'));
             $this->getEntityManager()->saveEntity($notification);
         }
     }
