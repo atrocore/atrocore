@@ -10,7 +10,6 @@
     "delete"
   ],
   "type": "Base",
-  "module": "TreoCore",
   "object": true,
   "hasAssignedUser": true,
   "hasTeam": true,

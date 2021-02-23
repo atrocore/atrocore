@@ -33,35 +33,44 @@
 
 declare(strict_types=1);
 
-namespace Treo\Services;
+namespace Espo\Services;
 
 /**
- * Class QueueManagerCreateThumbnails
+ * Class QueueManagerMassDelete
  */
-class QueueManagerCreateThumbnails extends QueueManagerBase
+class QueueManagerMassDelete extends QueueManagerBase
 {
     /**
      * @inheritdoc
      */
     public function run(array $data = []): bool
     {
-        if (empty($data['id'])) {
-            return false;
+        // prepare result
+        $result = false;
+
+        // call mass remove method
+        if (isset($data["entityType"]) && !empty($data["ids"]) && is_array($data["ids"])) {
+            $this->massRemove($data["entityType"], ["ids" => $data["ids"]]);
+
+            // prepare result
+            $result = true;
         }
 
-        $attachment = $this->getEntityManager()->getEntity('Attachment', $data['id']);
-        if (empty($attachment)) {
-            return false;
-        }
+        return $result;
+    }
 
-        foreach ($this->getContainer()->get('metadata')->get(['app', 'imageSizes'], []) as $size => $params) {
-            try {
-                $this->getContainer()->get('Thumbnail')->createThumbnail($attachment, $size);
-            } catch (\Throwable $e) {
-                // ignore all errors
-            }
-        }
-
-        return true;
+    /**
+     * @param string $entityType
+     * @param array  $ids
+     *
+     * @return array
+     */
+    protected function massRemove(string $entityType, array $data): array
+    {
+        return $this
+            ->getContainer()
+            ->get('serviceFactory')
+            ->create($entityType)
+            ->massRemove($data);
     }
 }

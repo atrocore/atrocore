@@ -4,10 +4,9 @@
   "Installer": "\\Treo\\Services\\Installer",
   "Person": "\\Treo\\Services\\Person",
   "Portal": "\\Treo\\Services\\Portal",
-  "QueueManagerBase": "\\Treo\\Services\\QueueManagerBase",
-  "QueueManagerMassDelete": "\\Treo\\Services\\QueueManagerMassDelete",
-  "QueueManagerMassUpdate": "\\Treo\\Services\\QueueManagerMassUpdate",
-  "QueueManagerCreateThumbnails": "\\Treo\\Services\\QueueManagerCreateThumbnails",
+  "QueueManagerMassDelete": "\\Espo\\Services\\QueueManagerMassDelete",
+  "QueueManagerMassUpdate": "\\Espo\\Services\\QueueManagerMassUpdate",
+  "QueueManagerCreateThumbnails": "\\Espo\\Services\\QueueManagerCreateThumbnails",
   "MassActions": "\\Treo\\Services\\MassActions",
   "RestApiDocs": "\\Treo\\Services\\RestApiDocs",
   "ScheduledJob": "\\Treo\\Services\\ScheduledJob"

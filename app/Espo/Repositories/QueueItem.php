@@ -33,12 +33,12 @@
 
 declare(strict_types=1);
 
-namespace Treo\Repositories;
+namespace Espo\Repositories;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 use Espo\Core\Templates\Repositories\Base;
-use Treo\Services\QueueManagerServiceInterface;
+use Espo\Services\QueueManagerServiceInterface;
 
 
 /**

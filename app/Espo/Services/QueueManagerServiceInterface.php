@@ -33,7 +33,7 @@
 
 declare(strict_types=1);
 
-namespace Treo\Services;
+namespace Espo\Services;
 
 use Espo\ORM\Entity;
 

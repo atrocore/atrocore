@@ -39,8 +39,8 @@ use Espo\Core\Exceptions\Error;
 use Espo\Entities\User;
 use Espo\Orm\EntityManager;
 use Treo\Core\ServiceFactory;
-use Treo\Entities\QueueItem;
-use Treo\Services\QueueManagerServiceInterface;
+use Espo\Entities\QueueItem;
+use Espo\Services\QueueManagerServiceInterface;
 
 /**
  * Class QueueManager

@@ -33,13 +33,20 @@
 
 declare(strict_types=1);
 
-namespace Treo\Services;
+namespace Espo\Controllers;
 
-use Espo\Core\Templates\Services\Base;
+use Espo\Core\Exceptions\NotFound;
 
 /**
  * Class QueueItem
  */
-class QueueItem extends Base
+class QueueItem extends \Espo\Core\Templates\Controllers\Base
 {
+    /**
+     * @inheritdoc
+     */
+    public function actionCreate($params, $data, $request)
+    {
+        throw new NotFound();
+    }
 }

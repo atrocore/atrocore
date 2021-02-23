@@ -33,13 +33,13 @@
 
 declare(strict_types=1);
 
-namespace Treo\Services;
+namespace Espo\Services;
+
+use Espo\Core\Templates\Services\Base;
 
 /**
- * Class QueueManagerBase
- *
- * @deprecated from 23.02.2021
+ * Class QueueItem
  */
-abstract class QueueManagerBase extends \Espo\Services\QueueManagerBase
+class QueueItem extends Base
 {
 }

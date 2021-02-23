@@ -33,20 +33,35 @@
 
 declare(strict_types=1);
 
-namespace Treo\Controllers;
-
-use Espo\Core\Exceptions\NotFound;
+namespace Espo\Services;
 
 /**
- * Class QueueItem
+ * Class QueueManagerCreateThumbnails
  */
-class QueueItem extends \Espo\Core\Templates\Controllers\Base
+class QueueManagerCreateThumbnails extends QueueManagerBase
 {
     /**
      * @inheritdoc
      */
-    public function actionCreate($params, $data, $request)
+    public function run(array $data = []): bool
     {
-        throw new NotFound();
+        if (empty($data['id'])) {
+            return false;
+        }
+
+        $attachment = $this->getEntityManager()->getEntity('Attachment', $data['id']);
+        if (empty($attachment)) {
+            return false;
+        }
+
+        foreach ($this->getContainer()->get('metadata')->get(['app', 'imageSizes'], []) as $size => $params) {
+            try {
+                $this->getContainer()->get('Thumbnail')->createThumbnail($attachment, $size);
+            } catch (\Throwable $e) {
+                // ignore all errors
+            }
+        }
+
+        return true;
     }
 }

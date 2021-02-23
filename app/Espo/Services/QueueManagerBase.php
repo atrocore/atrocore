@@ -33,44 +33,20 @@
 
 declare(strict_types=1);
 
-namespace Treo\Services;
+namespace Espo\Services;
+
+use Espo\ORM\Entity;
 
 /**
- * Class QueueManagerMassDelete
+ * Class QueueManagerBase
  */
-class QueueManagerMassDelete extends QueueManagerBase
+abstract class QueueManagerBase extends AbstractService implements QueueManagerServiceInterface
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function run(array $data = []): bool
+    public function getNotificationMessage(Entity $queueItem): string
     {
-        // prepare result
-        $result = false;
-
-        // call mass remove method
-        if (isset($data["entityType"]) && !empty($data["ids"]) && is_array($data["ids"])) {
-            $this->massRemove($data["entityType"], ["ids" => $data["ids"]]);
-
-            // prepare result
-            $result = true;
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param string $entityType
-     * @param array  $ids
-     *
-     * @return array
-     */
-    protected function massRemove(string $entityType, array $data): array
-    {
-        return $this
-            ->getContainer()
-            ->get('serviceFactory')
-            ->create($entityType)
-            ->massRemove($data);
+        return sprintf($this->translate('queueItemDone', 'notificationMessages', 'QueueItem'), $queueItem->get('name'), $queueItem->get('status'));
     }
 }
