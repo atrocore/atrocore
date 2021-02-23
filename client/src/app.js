@@ -616,6 +616,9 @@ Espo.define(
             });
 
             $(document).ajaxError(function (event, xhr, options) {
+                if (options.url.indexOf('silent=true') >= 0 || (typeof options.attrs !== 'undefined' && typeof options.attrs._silentMode !== 'undefined' && options.attrs._silentMode)) {
+                    xhr.errorIsHandled = true;
+                }
                 if (xhr.errorIsHandled) {
                     return;
                 }
