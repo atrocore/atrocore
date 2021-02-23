@@ -35,7 +35,6 @@ namespace Espo\Core;
 
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Json;
-use Treo\Core\Container;
 use Treo\Core\Utils\Util;
 
 /**

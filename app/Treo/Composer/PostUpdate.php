@@ -37,7 +37,7 @@ namespace Treo\Composer;
 
 use Espo\Core\Utils\Config;
 use Treo\Core\Application as App;
-use Treo\Core\Container;
+use Espo\Core\Container;
 use Treo\Core\Migration\Migration;
 use Treo\Core\ModuleManager\Manager as ModuleManager;
 use Treo\Core\ORM\EntityManager;

@@ -38,7 +38,6 @@ use \Espo\Core\Exceptions\Error;
 use \Espo\ORM\Entity;
 use \Espo\Entities\User;
 use \Espo\Core\Utils\Util;
-use Treo\Core\Container;
 
 class AclManager
 {

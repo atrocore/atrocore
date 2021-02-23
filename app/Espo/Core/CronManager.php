@@ -62,7 +62,7 @@ class CronManager
 
     protected $lastRunTime = 'data/cache/application/cronLastRunTime.php';
 
-    public function __construct(\Treo\Core\Container $container)
+    public function __construct(\Espo\Core\Container $container)
     {
         $this->container = $container;
 

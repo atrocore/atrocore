@@ -41,7 +41,7 @@ use Espo\Core\Utils\DateTime;
 use Espo\Core\Utils\NumberUtil;
 use Espo\Core\Utils\Language;
 use Espo\Entities\User;
-use Treo\Core\Container;
+use Espo\Core\Container;
 use Treo\Core\ORM\EntityManager;
 use Treo\Core\ServiceFactory;
 use Espo\Core\Utils\Config;

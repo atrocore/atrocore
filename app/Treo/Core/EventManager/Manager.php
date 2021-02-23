@@ -35,9 +35,9 @@ declare(strict_types=1);
 
 namespace Treo\Core\EventManager;
 
+use Espo\Core\Container;
 use Espo\Core\DataManager;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Treo\Core\Container;
 
 /**
  * Manager class

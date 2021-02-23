@@ -58,7 +58,7 @@ class Auth
 
     private $portal;
 
-    public function __construct(\Treo\Core\Container $container, $allowAnyAccess = false)
+    public function __construct(\Espo\Core\Container $container, $allowAnyAccess = false)
     {
         $this->container = $container;
 

@@ -36,7 +36,7 @@ declare(strict_types=1);
 namespace Treo\Jobs;
 
 use Espo\Core\Jobs\Base;
-use Treo\Core\Container;
+use Espo\Core\Container;
 use Treo\Core\EventManager\Event;
 
 /**

@@ -35,7 +35,7 @@ declare(strict_types=1);
 
 namespace Treo\Traits;
 
-use Treo\Core\Container;
+use Espo\Core\Container;
 
 /**
  * Class ContainerTrait

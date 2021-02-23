@@ -72,7 +72,7 @@ class ScheduledJob
         'default' => '* * * * * cd {DOCUMENT_ROOT}; {PHP-BIN-DIR} -f {CRON-FILE} > /dev/null 2>&1',
     );
 
-    public function __construct(\Treo\Core\Container $container)
+    public function __construct(\Espo\Core\Container $container)
     {
         $this->container = $container;
         $this->systemUtil = new \Espo\Core\Utils\System();

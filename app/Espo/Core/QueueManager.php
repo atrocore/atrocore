@@ -33,11 +33,12 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core;
+namespace Espo\Core;
 
 use Espo\Core\Exceptions\Error;
 use Espo\Entities\User;
 use Espo\Orm\EntityManager;
+use Treo\Core\ServiceFactory;
 use Treo\Entities\QueueItem;
 use Treo\Services\QueueManagerServiceInterface;
 
@@ -46,9 +47,22 @@ use Treo\Services\QueueManagerServiceInterface;
  */
 class QueueManager
 {
-    use \Treo\Traits\ContainerTrait;
-
     const QUEUE_PATH = 'data/qm-items-%s.json';
+
+    /**
+     * @var Container
+     */
+    private $container;
+
+    /**
+     * QueueManager constructor.
+     *
+     * @param Container $container
+     */
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
 
     /**
      * @param int $stream
@@ -310,5 +324,13 @@ class QueueManager
     protected function getServiceFactory(): ServiceFactory
     {
         return $this->getContainer()->get('serviceFactory');
+    }
+
+    /**
+     * @return Container
+     */
+    protected function getContainer(): Container
+    {
+        return $this->container;
     }
 }

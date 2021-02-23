@@ -36,7 +36,7 @@ declare(strict_types=1);
 namespace Treo\Core\Loaders;
 
 use Espo\Core\Interfaces\Loader;
-use Treo\Core\Container;
+use Espo\Core\Container;
 
 /**
  * Base loader class
