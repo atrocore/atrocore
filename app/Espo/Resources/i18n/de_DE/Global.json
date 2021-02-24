@@ -306,7 +306,7 @@
     "whiteCannotBeChosen": "Weiß kann nicht gewählt werden.",
     "pleaseWait": "Bitte warten...",
     "confirmLeaveOutMessage": "Sind Sie sicher, dass Sie das Formular verlassen wollen?",
-    "notModified": "Sie haben keine Änderungen am Datensatz vorgenommen",
+    "notModified": "Sie haben keine Änderungen am Datensatz vorgenommen.",
     "fieldIsRequired": "{field} wird benötigt",
     "fieldShouldAfter": "{field} muss nach {otherField} sein",
     "fieldShouldBefore": "{field} muss vor {otherField} sein",

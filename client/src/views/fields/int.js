@@ -194,7 +194,7 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
 
         parse: function (value) {
             value = (value !== '') ? value : null;
-            if (value !== null) {
+            if (value) {
                 value = value.split(this.thousandSeparator).join('');
                 if (value.indexOf('.') !== -1 || value.indexOf(',') !== -1) {
                     value = NaN;

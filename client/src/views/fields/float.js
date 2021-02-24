@@ -85,7 +85,7 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
 
         parse: function (value) {
             value = (value !== '') ? value : null;
-            if (value !== null) {
+            if (value) {
                 value = value.split(this.thousandSeparator).join('');
                 value = value.split(this.decimalMark).join('.');
                 value = parseFloat(value);

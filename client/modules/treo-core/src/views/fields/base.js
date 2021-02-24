@@ -100,8 +100,12 @@ Espo.define('treo-core:views/fields/base', 'class-replace!treo-core:views/fields
                             });
                         })
                     } else {
-                        let statusReason = xhr.getResponseHeader('X-Status-Reason') || '';
-                        Espo.Ui.notify(`${self.translate("Error")} ${xhr.status}: ${statusReason}`, "error", 1000 * 60 * 60 * 2, true);
+                        if (xhr.status === 304) {
+                            Espo.Ui.notify(self.translate('notModified', 'messages'), 'warning', 1000 * 60 * 60 * 2, true);
+                        } else {
+                            let statusReason = xhr.getResponseHeader('X-Status-Reason') || '';
+                            Espo.Ui.notify(`${self.translate("Error")} ${xhr.status}: ${statusReason}`, "error", 1000 * 60 * 60 * 2, true);
+                        }
                     }
                 },
                 patch: true
