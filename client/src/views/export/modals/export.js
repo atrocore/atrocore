@@ -86,7 +86,6 @@ Espo.define('views/export/modals/export', ['views/modal', 'model'], function (De
             this.ajaxPostRequest('ExportFeed/action/exportFile', data).then(response => {
                 if (response) {
                     this.notify(this.translate('jobCreated', 'additionalTranslates', 'ExportFeed'), 'success');
-                    Backbone.trigger('showQueuePanel');
                 } else {
                     this.notify(this.translate('jobNotCreated', 'additionalTranslates', 'ExportFeed'), 'danger');
                 }
