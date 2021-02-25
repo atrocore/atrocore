@@ -81,13 +81,13 @@ Espo.define('treo-core:views/composer/list', 'views/list',
 
             if (!this.getConfig().get('isUpdating')) {
                 this.ajaxPostRequest('Composer/action/check').then(response => {
-                    let alertEl = $('#composer-alert');
+                    let alertEl = $('.progress-status');
                     alertEl.html('');
                     if (response.status) {
                         $('.composer-action').removeAttr('disabled');
                     } else {
                         alertEl.html(response.message);
-                        alertEl.fadeIn();
+                        alertEl.addClass('text-alert');
                     }
                 });
             }

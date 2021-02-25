@@ -1524,6 +1524,10 @@ mark, .mark {
     padding: .2em
 }
 
+.progress-status a {
+    text-decoration: underline;
+}
+
 .text-left {
     text-align: left
 }
@@ -1570,6 +1574,10 @@ a.text-primary:hover, a.text-primary:focus {
 
 .text-success {
     color: #3c763d
+}
+
+.text-alert {
+    color: #a94442;
 }
 
 a.text-success:hover, a.text-success:focus {
@@ -20550,9 +20558,8 @@ td[data-name="draggableIcon"] {
 }
 
 .content .progress-log-wrapper {
-    display: inline-block;
-    margin-top: 6px;
-    padding: 0 9px;
+    clear: both;
+    padding-top: 9px;
 }
 
 .content .progress-log-wrapper .spinner {
