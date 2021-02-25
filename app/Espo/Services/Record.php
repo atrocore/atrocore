@@ -474,7 +474,9 @@ class Record extends \Espo\Core\Services\Base
         foreach ($entity->getAttributes() as $field => $data) {
             if (!$hasCompleteness && (!empty($data['required']) || $this->isRequiredField($field, $entity, 'required'))
                 && $this->isNullField($entity, $field)) {
-                throw new BadRequest("Validation failed. '$field' is required");
+                $label = $this->getInjection('language')->translate($field, 'fields', $entity->getEntityType());
+                $label = htmlentities($label);
+                throw new BadRequest("Validation failed. '$label' is required");
             }
         }
         return true;
