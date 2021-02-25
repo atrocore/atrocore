@@ -55,7 +55,7 @@
     "settedModuleForRemoving": "Das Modul wurde zum Entfernen eingerichtet",
     "settedModuleForUpdating": "Das Modul wurde für die Aktualisierung eingerichtet",
     "installModule": "das Modul",
-    "daemonDisabled": "<b>Der Composer Daemon läuft nicht!</b><br>Wahrscheinlich wird der Daemon gerade neu geladen und Sie sollten eine Minute warten, oder die crontab ist nicht konfiguriert. Eine Anleitung zur Konfiguration der Crontab finden Sie <a href=\"https://github.com/atrocore/core#installation\" class=\"alert-link\" target=\"_blank\">hier</a>",
+    "daemonDisabled": "<b>Der Composer Daemon läuft nicht!</b><br>Wahrscheinlich wird der Daemon gerade neu geladen und Sie sollten eine Minute warten, oder die crontab ist nicht konfiguriert. Eine Anleitung zur Konfiguration der Crontab finden Sie <a href=\"https://github.com/atrocore/core#installation\" class=\"alert-link\" target=\"_blank\">hier</a>.",
     "queueManagerRunning": "<b>Der Warteschlangenmanager wird ausgeführt!</b><br>Die Möglichkeit zur Aktualisierung von Modulen ist gesperrt. Bitte versuch es später."
   },
   "notifications": {

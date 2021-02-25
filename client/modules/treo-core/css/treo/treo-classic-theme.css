@@ -1576,6 +1576,10 @@ a.text-success:hover, a.text-success:focus {
     color: #2b542c
 }
 
+.text-alert {
+    color: #a94442;
+}
+
 .text-info {
     color: #31708f
 }
@@ -20567,9 +20571,8 @@ td[data-name="draggableIcon"] {
 }
 
 .content .progress-log-wrapper {
-    display: inline-block;
-    margin-top: 6px;
-    padding: 0 9px;
+    clear: both;
+    padding-top: 9px;
 }
 
 .content .progress-log-wrapper .spinner {
@@ -20611,6 +20614,10 @@ td[data-name="draggableIcon"] {
           -webkit-transform: scale(1.0);
           transform: scale(1.0);
       }
+}
+
+.progress-status a {
+    text-decoration: underline;
 }
 
 .bottom .panel-heading > .panel-title > .collapser {

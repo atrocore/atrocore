@@ -38,7 +38,6 @@
 <div class="page-header">{{{header}}}</div>
 <div class="detail-button-container button-container record-buttons clearfix">
     <div class="btn-group pull-left" role="group">
-        <div id="composer-alert" class="alert alert-danger" role="alert" style="display: none"></div>
         <button class="btn btn-primary action composer-action" data-action="runUpdate" type="button" disabled>{{translate 'Run Update' scope='Composer' category='labels'}}</button>
         <button class="btn btn-default action composer-action" data-action="cancelUpdate" type="button" disabled style="display: none;">{{translate 'Cancel'}}</button>
     </div>
