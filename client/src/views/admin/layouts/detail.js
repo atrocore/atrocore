@@ -70,13 +70,27 @@ Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (
             }
         },
 
-        defaultPanelFieldList: ['modifiedAt', 'createdAt', 'modifiedBy', 'createdBy', 'assignedUser', 'teams'],
+        defaultPanelFieldList: ['modifiedAt', 'createdAt', 'modifiedBy', 'createdBy', 'assignedUser', 'ownerUser', 'teams'],
 
         setup: function () {
             Dep.prototype.setup.call(this);
 
             this.panelDataAttributesDefs = Espo.Utils.cloneDeep(this.panelDataAttributesDefs);
             this.panelDataAttributesDefs.dynamicLogicVisible.scope = this.scope;
+
+            this.defaultPanelFieldList.forEach(item => {
+                if (this.getConfig().get('isMultilangActive')) {
+                    let isMultilang = this.getMetadata().get(['entityDefs', this.scope, 'fields', item, 'isMultilang']) || null;
+
+                    if (isMultilang) {
+                        (this.getConfig().get('inputLanguageList') || []).forEach(curr => {
+                            let field = curr.split('_').reduce((prev, curr) => prev + Espo.Utils.upperCaseFirst(curr.toLocaleLowerCase()), item);
+
+                            this.defaultPanelFieldList.push(field);
+                        });
+                    }
+                }
+            });
 
             this.wait(true);
             this.loadLayout(function () {
