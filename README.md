@@ -118,7 +118,7 @@ To create your new AtroCore application, first make sure you're using PHP 7.1 or
    ```
    >**webserver_user** – depends on your webserver and can be one of the following: www, www-data, apache, etc.
 
-3. Change recursively the permissions for project files: 
+3. Change the permissions for project files: 
    ```
     find . -type d -exec chmod 755 {} + && find . -type f -exec chmod 644 {} +;
     find data custom -type d -exec chmod 775 {} + && find data custom -type f -exec chmod 664 {}
