@@ -98,13 +98,13 @@ AtroCore has a REST API and can be integrated with any third-party system. You c
 ### Configuration Instructions Based on Your Server
 
 * [Apache server configuration](https://github.com/atrocore/atrocore-docs/blob/master/en/administration/apache-server-configuration.md)
-* [Nginx server configuration](https://github.com/atrocore/atrocore-docs/blob/master/en/administration/nginx-server-configuration.mdd)
+* [Nginx server configuration](https://github.com/atrocore/atrocore-docs/blob/master/en/administration/nginx-server-configuration.md)
 
 ### Installation
 
-> Installation guide is based on **Linux Mint OS**. Of course, you can use any unix-based system, but make sure that your OS supports the following commands.<br/>
+> Installation guide is based on **Ubuntu**. Of course, you can use any unix-based system, but make sure that your OS supports the following commands.<br/>
 
-To create your new AtroCore application, first make sure you're using PHP 7.1 or above and have [Composer](https://getcomposer.org/) installed.
+To create your new AtroCore application, first make sure you're using PHP 7.1 or above and have [Composer](https://getcomposer.org/download/) installed.
 
 1. Create your new project by running:
    ```
