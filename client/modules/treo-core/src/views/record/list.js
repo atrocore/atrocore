@@ -344,6 +344,8 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
                             type = 'success';
                         }
                         this.notify(statusMsg, type, 3000);
+                    }, error => {
+                        this.collection.fetch();
                     })
                     .always(() => this.collection.trigger('listSorted'));
             } else {
