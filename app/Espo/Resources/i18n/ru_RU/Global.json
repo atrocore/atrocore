@@ -363,7 +363,8 @@
     "massUnfollowZeroResult": "Nothing got unfollowed",
     "erasePersonalDataConfirmation": "Checked fields will be erased permanently. Are you sure?",
     "massPrintPdfMaxCountError": "Can't print more that {maxCount} records.",
-    "clearAclCacheError": "ACL cache could not be cleared."
+    "clearAclCacheError": "ACL cache could not be cleared.",
+    "emptyMultilangOptions": "Options list cannot be empty while multi-language option is activated."
   },
   "boolFilters": {
     "onlyActive": "Only Active",

@@ -256,8 +256,16 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
 
         validateRequired(field) {
             let name = field || this.name;
-            const values = this.model.get(name);
-            let error = !values || !values.length;
+            const values = this.model.get(name) || [];
+            let error = !values,
+                isMultilang = this.model.get('isMultilang');
+
+            if (!values.length && isMultilang) {
+                let msg = this.translate('emptyMultilangOptions', 'messages');
+                this.showValidationMessage(msg, '[data-action="addNewValue"]', true);
+                return true;
+            }
+
             values.forEach((value, i) => {
                 if (!value) {
                     let msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate('Value'));
@@ -280,10 +288,11 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
             return error;
         },
 
-        showValidationMessage: function (message, target) {
+        showValidationMessage: function (message, target, isOption) {
             var $el;
 
             target = target || '.array-control-container';
+            isOption = isOption || false;
 
             if (typeof target === 'string' || target instanceof String) {
                 $el = this.$el.find(target);
@@ -295,10 +304,12 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
                 $el = this.$element;
             }
 
-            $el.css('border-color', '#a94442');
-            $el.css('-webkit-box-shadow', 'inset 0 1px 1px rgba(0, 0, 0, 0.075)');
-            $el.css('-moz-box-shadow', 'inset 0 1px 1px rgba(0, 0, 0, 0.075)');
-            $el.css('box-shadow', 'inset 0 1px 1px rgba(0, 0, 0, 0.075)');
+            if (!isOption) {
+                $el.css('border-color', '#a94442');
+                $el.css('-webkit-box-shadow', 'inset 0 1px 1px rgba(0, 0, 0, 0.075)');
+                $el.css('-moz-box-shadow', 'inset 0 1px 1px rgba(0, 0, 0, 0.075)');
+                $el.css('box-shadow', 'inset 0 1px 1px rgba(0, 0, 0, 0.075)');
+            }
 
             $el.popover({
                 placement: 'bottom',
