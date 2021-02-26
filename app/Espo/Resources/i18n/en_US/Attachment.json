@@ -14,7 +14,8 @@
     "size": "Size (bytes)"
   },
   "labels": {
-    "Create Attachment": "Create Attachment"
+    "Create Attachment": "Create Attachment",
+    "createThumbnailsNotification": "Create thumbnails for %s"
   },
   "links": {
     "related": "Related"

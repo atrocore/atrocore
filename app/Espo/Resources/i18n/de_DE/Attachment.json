@@ -17,7 +17,8 @@
     "size": "Größe (Bytes)"
   },
   "labels": {
-    "Create Attachment": "Anhang hinzufügen"
+    "Create Attachment": "Anhang hinzufügen",
+    "createThumbnailsNotification": "Erstellen Sie Miniaturansichten für %s"
   },
   "presetFilters": {
     "orphan": "Waise"

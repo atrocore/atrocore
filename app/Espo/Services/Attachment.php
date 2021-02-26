@@ -366,9 +366,11 @@ class Attachment extends Record
         // increase timeout
         \set_time_limit(60 * 5);
 
+        $name = sprintf($this->getInjection('language')->translate('createThumbnailsNotification', 'labels', 'Attachment'), $entity->get('name'));
+
         try {
             $this->getInjection('Thumbnail')->createThumbnail($entity, 'small');
-            $this->getInjection('queueManager')->push('Create thumbnails', 'QueueManagerCreateThumbnails', ['id' => $entity->get('id')]);
+            $this->getInjection('queueManager')->push($name, 'QueueManagerCreateThumbnails', ['id' => $entity->get('id')]);
         } catch (\Throwable $e) {
             // ignore all errors
         }
