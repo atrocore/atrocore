@@ -910,13 +910,8 @@ class Record extends \Espo\Core\Services\Base
             throw new NotModified();
         }
 
-        if ($this->getConfig()->get('checkForConflicts', true) && !empty($fieldsThatConflict = $this->getFieldsThatConflict($entity, $data))) {
-            foreach ($fieldsThatConflict as &$fieldThatConflict) {
-                $fieldThatConflict = $this->getInjection('language')->translate($fieldThatConflict, 'fields', $this->entityName);
-            }
-            unset($fieldThatConflict);
-
-            throw new Conflict(sprintf($this->getInjection('language')->translate('editedByAnotherUser', 'exceptions', 'Global'), implode(', ', $fieldsThatConflict)));
+        if ($this->getConfig()->get('checkForConflicts', true) && !empty($conflicts = $this->getFieldsThatConflict($entity, $data))) {
+            throw (new Conflict(sprintf($this->getInjection('language')->translate('editedByAnotherUser', 'exceptions', 'Global'), implode(', ', $conflicts))))->setFields($conflicts);
         }
 
         $entity->set($data);
@@ -2362,11 +2357,11 @@ class Record extends \Espo\Core\Services\Base
                     }
                 }
 
-                $fieldsThatConflict[] = $field;
+                $fieldsThatConflict[$field] = $this->getInjection('language')->translate($field, 'fields', $this->entityName);
             }
         }
 
-        return array_unique($fieldsThatConflict);
+        return $fieldsThatConflict;
     }
 
     /**

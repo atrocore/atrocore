@@ -33,9 +33,39 @@
 
 namespace Espo\Core\Exceptions;
 
+/**
+ * Class Conflict
+ */
 class Conflict extends Exception
 {
+    /**
+     * @var int
+     */
     protected $code = 409;
 
+    /**
+     * @var array
+     */
+    protected $fields = [];
+
+    /**
+     * @param array $fields
+     *
+     * @return Conflict
+     */
+    public function setFields(array $fields): Conflict
+    {
+        $this->fields = $fields;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFields(): array
+    {
+        return $this->fields;
+    }
 }
 
