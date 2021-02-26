@@ -910,8 +910,13 @@ class Record extends \Espo\Core\Services\Base
             throw new NotModified();
         }
 
-        if ($this->getConfig()->get('checkForConflicts', true) && $this->isDataConflictExist($entity, $data)) {
-            throw new Conflict($this->getInjection('language')->translate('editedByAnotherUser', 'exceptions', 'Global'));
+        if ($this->getConfig()->get('checkForConflicts', true) && !empty($fieldsThatConflict = $this->getFieldsThatConflict($entity, $data))) {
+            foreach ($fieldsThatConflict as &$fieldThatConflict) {
+                $fieldThatConflict = $this->getInjection('language')->translate($fieldThatConflict, 'fields', $this->entityName);
+            }
+            unset($fieldThatConflict);
+
+            throw new Conflict(sprintf($this->getInjection('language')->translate('editedByAnotherUser', 'exceptions', 'Global'), implode(', ', $fieldsThatConflict)));
         }
 
         $entity->set($data);
@@ -2326,15 +2331,15 @@ class Record extends \Espo\Core\Services\Base
      * @param Entity    $entity
      * @param \stdClass $data
      *
-     * @return bool
+     * @return array
      */
-    protected function isDataConflictExist(Entity $entity, \stdClass $data): bool
+    protected function getFieldsThatConflict(Entity $entity, \stdClass $data): array
     {
         // prepare data
         $data = json_decode(json_encode($data, JSON_PRESERVE_ZERO_FRACTION | JSON_NUMERIC_CHECK), true);
 
         if (empty($data['_prev'])) {
-            return false;
+            return [];
         }
 
         $prev = $data['_prev'];
@@ -2342,17 +2347,26 @@ class Record extends \Espo\Core\Services\Base
         unset($data['_prev']);
         unset($data['_silentMode']);
 
+        $suffixes = ['Id', 'Name', 'Currency', 'Unit'];
+
+        $fieldsThatConflict = [];
         foreach ($data as $field => $newValue) {
             if ($field == 'data') {
                 continue 1;
             }
 
             if ($entity->has($field) && Util::toMd5($entity->get($field)) != Util::toMd5($prev[$field])) {
-                return true;
+                foreach ($suffixes as $suffix) {
+                    if (strpos($field, $suffix) !== false && substr($field, strlen($suffix) * -1) === $suffix) {
+                        $field = mb_substr($field, 0, strlen($suffix) * -1);
+                    }
+                }
+
+                $fieldsThatConflict[] = $field;
             }
         }
 
-        return false;
+        return array_unique($fieldsThatConflict);
     }
 
     /**

@@ -80,9 +80,10 @@ Espo.define('treo-core:views/fields/base', 'class-replace!treo-core:views/fields
                     self.inlineEditClose(true);
                 },
                 error: function (e, xhr) {
+                    let statusReason = xhr.getResponseHeader('X-Status-Reason') || '';
                     if (xhr.status === 409) {
                         self.notify(false);
-                        Espo.Ui.confirm(self.translate('editedByAnotherUser', 'exceptions', 'Global'), {
+                        Espo.Ui.confirm(statusReason, {
                             confirmText: self.translate('Apply'),
                             cancelText: self.translate('Cancel')
                         }, function () {
@@ -103,7 +104,6 @@ Espo.define('treo-core:views/fields/base', 'class-replace!treo-core:views/fields
                         if (xhr.status === 304) {
                             Espo.Ui.notify(self.translate('notModified', 'messages'), 'warning', 1000 * 60 * 60 * 2, true);
                         } else {
-                            let statusReason = xhr.getResponseHeader('X-Status-Reason') || '';
                             Espo.Ui.notify(`${self.translate("Error")} ${xhr.status}: ${statusReason}`, "error", 1000 * 60 * 60 * 2, true);
                         }
                     }
