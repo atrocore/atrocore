@@ -171,6 +171,10 @@ class Util
      */
     public static function toString($value): string
     {
+        if (empty($value)){
+            $value = '';
+        }
+
         if (is_array($value)) {
             $value = Json::encode(array_map('strval', $value));
         }
