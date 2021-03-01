@@ -66,11 +66,6 @@ Espo.define('views/export/record/record', 'views/record/base', function (Dep) {
             });
 
             this.model.set('ignoreFilter', true);
-            this.createField('ignoreFilter', 'views/fields/bool', {
-                model: this.model,
-                el: `${this.options.el} .field[data-name="ignoreFilter"]`,
-                mode: 'edit'
-            });
         },
 
     });
