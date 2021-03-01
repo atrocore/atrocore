@@ -5,7 +5,9 @@
             [{"name":"name"}, false],
             [{"name":"emailAddress"},{"name":"phoneNumber"}],
             [{"name":"title"}, {"name":"doNotCall"}],
-            [{"name":"address"}, false],
+            [{"name":"addressStreet"}, {"name":"addressCity"}],
+            [{"name":"addressState"}, {"name":"addressCountry"}],
+            [{"name":"addressPostalCode"}, false],
             [{"name":"description", "fullWidth": true}]
         ]
     }

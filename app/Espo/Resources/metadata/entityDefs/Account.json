@@ -100,10 +100,6 @@
             "default": false,
             "disabled": true
         },
-        "billingAddress": {
-            "type": "address",
-            "trim": true
-        },
         "billingAddressStreet": {
             "type": "text",
             "maxLength": 255,
@@ -124,10 +120,6 @@
         "billingAddressPostalCode": {
             "type": "varchar",
             "trim": true
-        },
-        "shippingAddress": {
-            "type": "address",
-            "view": "views/account/fields/shipping-address"
         },
         "shippingAddressStreet": {
             "type": "text",

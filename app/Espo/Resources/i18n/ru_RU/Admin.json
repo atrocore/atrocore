@@ -88,7 +88,6 @@
   "fieldTypes": {
     "color": "Color",
     "unit": "Unit",
-    "address": "Address",
     "array": "Array",
     "foreign": "Foreign",
     "duration": "Duration",

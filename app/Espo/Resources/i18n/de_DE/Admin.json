@@ -83,7 +83,6 @@
   "fieldTypes": {
     "color": "Farbe",
     "unit": "Maßeinheit",
-    "address": "Adresse",
     "array": "Liste",
     "foreign": "Fremdbezug",
     "duration": "Dauer",

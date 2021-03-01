@@ -82,14 +82,6 @@
     "unit": {
       "unit": "(Unit)"
     },
-    "address": {
-      "street": "Street",
-      "city": "City",
-      "state": "State",
-      "country": "Country",
-      "postalCode": "Postal Code",
-      "map": "Map"
-    },
     "personName": {
       "salutation": "Salutation",
       "first": "First",

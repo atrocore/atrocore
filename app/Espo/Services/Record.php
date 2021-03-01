@@ -906,12 +906,12 @@ class Record extends \Espo\Core\Services\Base
             throw new Forbidden();
         }
 
-        if (!$this->isEntityUpdated($entity, $data)) {
-            throw new NotModified();
-        }
-
         if ($this->getConfig()->get('checkForConflicts', true) && !empty($conflicts = $this->getFieldsThatConflict($entity, $data))) {
             throw (new Conflict(sprintf($this->getInjection('language')->translate('editedByAnotherUser', 'exceptions', 'Global'), implode(', ', $conflicts))))->setFields($conflicts);
+        }
+
+        if (!$this->isEntityUpdated($entity, $data)) {
+            throw new NotModified();
         }
 
         $entity->set($data);

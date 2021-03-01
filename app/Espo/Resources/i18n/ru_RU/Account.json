@@ -4,8 +4,16 @@
         "emailAddress": "Email",
         "website": "Website",
         "phoneNumber": "Phone",
-        "billingAddress": "Billing Address",
-        "shippingAddress": "Shipping Address",
+        "billingAddressStreet": "Street",
+        "billingAddressCity": "City",
+        "billingAddressState": "State",
+        "billingAddressCountry": "Country",
+        "billingAddressPostalCode": "Postal Code",
+        "shippingAddressStreet": "Street",
+        "shippingAddressCity": "City",
+        "shippingAddressState": "State",
+        "shippingAddressCountry": "Country",
+        "shippingAddressPostalCode": "Postal Code",
         "description": "Description",
         "sicCode": "Sic Code",
         "industry": "Industry",
@@ -79,6 +87,8 @@
         }
     },
     "labels": {
+        "billingAddress": "Billing Address",
+        "shippingAddress": "Shipping Address",
         "Create Account": "Create Account",
         "Copy Billing": "Copy Billing",
         "Set Primary": "Set Primary"

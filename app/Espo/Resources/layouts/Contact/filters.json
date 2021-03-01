@@ -5,7 +5,11 @@
     "createdBy",
     "modifiedAt",
     "account",
-    "address",
+    "addressStreet",
+    "addressCity",
+    "addressState",
+    "addressCountry",
+    "addressPostalCode",
     "emailAddress",
     "phoneNumber",
     "title"

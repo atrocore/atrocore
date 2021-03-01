@@ -85,10 +85,6 @@
         "doNotCall": {
             "type": "bool"
         },
-        "address": {
-            "type": "address",
-            "isPersonalData": true
-        },
         "addressStreet": {
             "type": "text",
             "maxLength": 255,

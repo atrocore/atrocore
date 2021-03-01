@@ -78,14 +78,6 @@
     "maxFileSize": "Wenn leer oder 0, dann keine Begrenzung."
   },
   "fieldParts": {
-    "address": {
-      "street": "Straße",
-      "city": "Ort",
-      "state": "Bundesland/Kanton",
-      "country": "Land",
-      "postalCode": "PLZ",
-      "map": "Karte"
-    },
     "personName": {
       "salutation": "Anrede",
       "first": "Vorname",

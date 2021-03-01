@@ -9,7 +9,11 @@
     "phoneNumber": "Telefon",
     "accountType": "Firmentyp",
     "doNotCall": "Anrufe unerwünscht",
-    "address": "Adresse",
+    "addressStreet": "Straße",
+    "addressCity": "Ort",
+    "addressState": "Bundesland/Kanton",
+    "addressCountry": "Land",
+    "addressPostalCode": "PLZ",
     "description": "Beschreibung",
     "portalUser": "Portal Benutzer",
     "accountIsInactive": "Inaktives Konto"

@@ -3,8 +3,16 @@
     "emailAddress": "E-Mail",
     "website": "Webseite",
     "phoneNumber": "Telefon",
-    "billingAddress": "Rechnungsadresse",
-    "shippingAddress": "Lieferadresse",
+    "billingAddressStreet": "Straße",
+    "billingAddressCity": "Ort",
+    "billingAddressState": "Bundesland/Kanton",
+    "billingAddressCountry": "Land",
+    "billingAddressPostalCode": "PLZ",
+    "shippingAddressStreet": "Straße",
+    "shippingAddressCity": "Ort",
+    "shippingAddressState": "Bundesland/Kanton",
+    "shippingAddressCountry": "Land",
+    "shippingAddressPostalCode": "PLZ",
     "description": "Beschreibung",
     "sicCode": "ISIC Code",
     "industry": "Branche",
@@ -75,6 +83,8 @@
     }
   },
   "labels": {
+    "billingAddress": "Rechnungsadresse",
+    "shippingAddress": "Lieferadresse",
     "Create Account": "Account erstellen",
     "Copy Billing": "Rechnungsadresse kopieren",
     "Set Primary": "Primär setzen"
