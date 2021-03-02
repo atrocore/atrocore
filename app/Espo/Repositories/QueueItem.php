@@ -47,6 +47,16 @@ use Espo\Services\QueueManagerServiceInterface;
 class QueueItem extends Base
 {
     /**
+     * @return bool
+     */
+    public function isQueueEmpty(): bool
+    {
+        $count = $this->select(['id'])->where(['status' => ['Pending', 'Running']])->count();
+
+        return empty($count);
+    }
+
+    /**
      * @param int $stream
      *
      * @return \Espo\Entities\QueueItem|null
@@ -90,6 +100,18 @@ class QueueItem extends Base
         }
 
         parent::beforeRemove($entity, $options);
+    }
+
+    /**
+     * @param Entity $entity
+     * @param array  $options
+     */
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        parent::afterRemove($entity, $options);
+
+        // delete forever
+        $this->deleteFromDb($entity->get('id'));
     }
 
     /**

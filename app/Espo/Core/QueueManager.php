@@ -183,6 +183,10 @@ class QueueManager
      */
     protected function runJob(int $stream): bool
     {
+        if ($this->getRepository()->isQueueEmpty()) {
+            return true;
+        }
+
         if (!empty($item = $this->getRepository()->getRunningItemForStream($stream))) {
             $this->setStatus($item, 'Failed');
             $GLOBALS['log']->error("QM failed: The item '{$item->get('id')}' was not completed in the previous run.");
