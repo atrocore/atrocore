@@ -36,7 +36,7 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
 
         template: 'notification/badge',
 
-        notificationsCheckInterval: 10,
+        notificationsCheckInterval: 3,
 
         timeout: null,
 
