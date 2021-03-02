@@ -74,7 +74,7 @@ class QueueManager
     {
         $result = $this->runJob($stream);
 
-        if ($this->getRepository()->isQueueEmpty()) {
+        if ($this->getRepository()->isQueueEmpty() && file_exists(self::FILE_PATH)) {
             unlink(self::FILE_PATH);
         }
 
