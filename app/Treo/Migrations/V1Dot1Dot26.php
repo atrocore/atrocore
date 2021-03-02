@@ -35,6 +35,7 @@ declare(strict_types=1);
 
 namespace Treo\Migrations;
 
+use Treo\Console\Cron;
 use Treo\Core\Migration\Base;
 
 /**
@@ -42,8 +43,20 @@ use Treo\Core\Migration\Base;
  */
 class V1Dot1Dot26 extends Base
 {
+    /**
+     * @inheritDoc
+     */
     public function up(): void
     {
         $this->getPDO()->exec("DELETE FROM queue_item WHERE deleted=1");
+        file_put_contents(Cron::DAEMON_KILLER, '1');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function down(): void
+    {
+        file_put_contents(Cron::DAEMON_KILLER, '1');
     }
 }

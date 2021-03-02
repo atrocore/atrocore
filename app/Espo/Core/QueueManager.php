@@ -47,6 +47,8 @@ use Treo\Core\ServiceFactory;
  */
 class QueueManager
 {
+    const FILE_PATH = 'data/queue-exist.log';
+
     /**
      * @var Container
      */
@@ -70,7 +72,13 @@ class QueueManager
      */
     public function run(int $stream): bool
     {
-        return $this->runJob($stream);
+        $result = $this->runJob($stream);
+
+        if ($this->getRepository()->isQueueEmpty()) {
+            unlink(self::FILE_PATH);
+        }
+
+        return $result;
     }
 
     /**
@@ -131,6 +139,8 @@ class QueueManager
             $this->getEntityManager()->getRepository('QueueItem')->relate($item, 'teams', $row['id']);
         }
 
+        file_put_contents(self::FILE_PATH, '1');
+
         return true;
     }
 
@@ -184,7 +194,7 @@ class QueueManager
     protected function runJob(int $stream): bool
     {
         if ($this->getRepository()->isQueueEmpty()) {
-            return true;
+            return false;
         }
 
         if (!empty($item = $this->getRepository()->getRunningItemForStream($stream))) {
@@ -196,7 +206,7 @@ class QueueManager
         $item = $this->getRepository()->getPendingItemForStream();
 
         if (empty($item) || (!empty($item->get('isWriting')) && $stream !== 1)) {
-            return true;
+            return false;
         }
 
         // auth

@@ -139,7 +139,9 @@ class Daemon extends AbstractConsole
                 break;
             }
 
-            exec($this->getPhp() . " index.php qm $stream --run");
+            if (file_exists(\Espo\Core\QueueManager::FILE_PATH)) {
+                exec($this->getPhp() . " index.php qm $stream --run");
+            }
 
             sleep(1);
         }
