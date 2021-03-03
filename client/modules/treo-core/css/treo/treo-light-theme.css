@@ -19684,8 +19684,9 @@ td[data-name="draggableIcon"] {
 }
 
 .content .progress-log-wrapper {
-  clear: both;
-  padding-top: 9px;
+  display: inline-block;
+  margin-top: 6px;
+  padding: 0 9px;
 }
 
 .content .progress-log-wrapper .spinner {
