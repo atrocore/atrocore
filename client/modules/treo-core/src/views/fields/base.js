@@ -71,6 +71,8 @@ Espo.define('treo-core:views/fields/base', 'class-replace!treo-core:views/fields
             attrs['_prev'] = _prev;
             attrs['_silentMode'] = true;
 
+            model.trigger('before:save', attrs);
+
             this.notify('Saving...');
             model.save(attrs, {
                 success: function () {

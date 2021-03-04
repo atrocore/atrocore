@@ -75,11 +75,6 @@ Espo.define('treo-core:views/record/base', 'class-replace!treo-core:views/record
                 return;
             }
 
-            this.beforeSave();
-
-            this.trigger('before:save');
-            model.trigger('before:save');
-
             // get current page url
             let url = window.location.href;
 
@@ -97,6 +92,11 @@ Espo.define('treo-core:views/record/base', 'class-replace!treo-core:views/record
 
             attrs['_prev'] = _prev;
             attrs['_silentMode'] = true;
+
+            this.beforeSave();
+
+            this.trigger('before:save', attrs);
+            model.trigger('before:save', attrs);
 
             model.save(attrs, {
                 success: function () {
