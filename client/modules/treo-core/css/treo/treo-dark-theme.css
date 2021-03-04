@@ -1524,6 +1524,12 @@ mark, .mark {
     padding: .2em
 }
 
+.progress-status {
+    clear: both;
+    display: block;
+    padding-top: 6px;
+}
+
 .progress-status a {
     text-decoration: underline;
 }

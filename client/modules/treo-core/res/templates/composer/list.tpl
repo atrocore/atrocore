@@ -48,7 +48,7 @@
             <div class="bounce3"></div>
         </div>
     </div>
-    <span class="progress-status" style="clear: both; display: block; padding-top: 6px;"></span>
+    <span class="progress-status"></span>
     <div class="clearfix"></div>
 </div>
 <div class="row">
