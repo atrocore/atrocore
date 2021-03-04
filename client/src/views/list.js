@@ -288,7 +288,9 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
         },
 
         afterRender: function () {
-            this.loadList();
+            if (!this.hasView('list')) {
+                this.loadList();
+            }
         },
 
         loadList: function () {
@@ -298,8 +300,12 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
                 return;
             }
 
-            Espo.Ui.notify(this.translate('loading', 'messages'));
-            this.createListRecordView(true);
+            if (this.collection.isFetched) {
+                this.createListRecordView(false);
+            } else {
+                Espo.Ui.notify(this.translate('loading', 'messages'));
+                this.createListRecordView(true);
+            }
         },
 
         prepareRecordViewOptions: function (options) {},
