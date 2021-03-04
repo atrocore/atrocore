@@ -509,14 +509,33 @@ class Record extends \Espo\Core\Services\Base
         /** @var Language $language */
         $language = $this->getInjection('language');
 
-        foreach ($entity->getAttributes() as $field => $fieldData) {
-            if ((!empty($fieldData['required']) || $this->isRequiredField($field, $entity, 'required')) && $this->isNullField($entity, $field)) {
+        foreach ($this->getRequiredFields($entity, $data) as $field) {
+            if ($this->isNullField($entity, $field)) {
                 $message = sprintf($language->translate('fieldIsRequired', 'exceptions'), htmlentities($language->translate($field, 'fields', $entity->getEntityType())));
                 throw (new BadRequest($message))->setDataItem('field', $field);
             }
         }
 
         return true;
+    }
+
+    /**
+     * @param Entity    $entity
+     * @param \stdClass $data
+     *
+     * @return array
+     */
+    protected function getRequiredFields(Entity $entity, \stdClass $data): array
+    {
+        $fields = [];
+
+        foreach ($entity->getAttributes() as $field => $fieldData) {
+            if (!empty($fieldData['required']) || $this->isRequiredField($field, $entity, 'required')) {
+                $fields[] = $field;
+            }
+        }
+
+        return $fields;
     }
 
     protected function hasCompleteness(Entity $entity): bool
