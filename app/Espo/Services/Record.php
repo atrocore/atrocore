@@ -33,6 +33,7 @@
 
 namespace Espo\Services;
 
+use Espo\Core\Utils\Language;
 use \Espo\ORM\Entity;
 
 use \Espo\Core\Exceptions\Error;
@@ -469,16 +470,17 @@ class Record extends \Espo\Core\Services\Base
             return true;
         }
 
-        $hasCompleteness = !empty($this->getMetadata()->get("scopes.{$entity->getEntityType()}.hasCompleteness"))
-            && !empty($this->getMetadata()->get("app.additionalEntityParams.hasCompleteness"));
+        /** @var Language $language */
+        $language = $this->getInjection('language');
+
+        $hasCompleteness = !empty($this->getMetadata()->get("scopes.{$entity->getEntityType()}.hasCompleteness")) && !empty($this->getMetadata()->get("app.additionalEntityParams.hasCompleteness"));
         foreach ($entity->getAttributes() as $field => $data) {
-            if (!$hasCompleteness && (!empty($data['required']) || $this->isRequiredField($field, $entity, 'required'))
-                && $this->isNullField($entity, $field)) {
-                $label = $this->getInjection('language')->translate($field, 'fields', $entity->getEntityType());
-                $label = htmlentities($label);
-                throw new BadRequest("Validation failed. '$label' is required");
+            if (!$hasCompleteness && (!empty($data['required']) || $this->isRequiredField($field, $entity, 'required')) && $this->isNullField($entity, $field)) {
+                $label = htmlentities($language->translate($field, 'fields', $entity->getEntityType()));
+                throw new BadRequest(sprintf($language->translate('fieldIsRequired', 'exceptions', 'Global'), $label));
             }
         }
+
         return true;
     }
 
@@ -2342,19 +2344,17 @@ class Record extends \Espo\Core\Services\Base
         unset($data['_prev']);
         unset($data['_silentMode']);
 
-        $suffixes = ['Id', 'Name', 'Currency', 'Unit'];
-
         $fieldsThatConflict = [];
         foreach ($data as $field => $newValue) {
             if ($field == 'data') {
                 continue 1;
             }
 
+            $field = $this->prepareFieldName($field, 'Name');
+
             if ($entity->has($field) && Util::toMd5($entity->get($field)) != Util::toMd5($prev[$field])) {
-                foreach ($suffixes as $suffix) {
-                    if (strpos($field, $suffix) !== false && substr($field, strlen($suffix) * -1) === $suffix) {
-                        $field = mb_substr($field, 0, strlen($suffix) * -1);
-                    }
+                foreach (['Id', 'Currency', 'Unit'] as $suffix) {
+                    $field = $this->prepareFieldName($field, $suffix);
                 }
 
                 $fieldsThatConflict[$field] = str_replace('›', '&rsaquo;', $this->getInjection('language')->translate($field, 'fields', $this->entityName));
@@ -2362,6 +2362,21 @@ class Record extends \Espo\Core\Services\Base
         }
 
         return $fieldsThatConflict;
+    }
+
+    /**
+     * @param string $field
+     * @param string $suffix
+     *
+     * @return string
+     */
+    protected function prepareFieldName(string $field, string $suffix): string
+    {
+        if (strpos($field, $suffix) !== false && substr($field, strlen($suffix) * -1) === $suffix) {
+            $field = mb_substr($field, 0, strlen($suffix) * -1);
+        }
+
+        return $field;
     }
 
     /**
