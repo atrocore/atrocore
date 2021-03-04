@@ -41,6 +41,11 @@ namespace Espo\Core\Exceptions;
 class Exception extends \Exception
 {
     /**
+     * @var array
+     */
+    protected $data = [];
+
+    /**
      * @inheritDoc
      */
     public function __construct($message = "", $code = 0, \Throwable $previous = null)
@@ -49,5 +54,29 @@ class Exception extends \Exception
         $message = utf8_decode($message);
 
         parent::__construct($message, $code, $previous);
+    }
+
+    /**
+     * @param string $key
+     * @param mixed  $value
+     *
+     * @return Exception
+     */
+
+    public function setDataItem(string $key, $value): Exception
+    {
+        $this->data[$key] = $value;
+
+        return $this;
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return mixed
+     */
+    public function getDataItem(string $key)
+    {
+        return isset($this->data[$key]) ? $this->data[$key] : null;
     }
 }

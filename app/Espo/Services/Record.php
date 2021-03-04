@@ -458,13 +458,14 @@ class Record extends \Espo\Core\Services\Base
     }
 
     /**
-     * @param Entity $entity
+     * @param Entity    $entity
+     * @param \stdClass $data
      *
      * @return bool
      * @throws BadRequest
      * @throws Error
      */
-    protected function isValid($entity)
+    protected function checkRequired(Entity $entity, \stdClass $data): bool
     {
         if ($entity->isSkippedValidation('requiredField')) {
             return true;
@@ -482,6 +483,45 @@ class Record extends \Espo\Core\Services\Base
         }
 
         return true;
+    }
+
+    /**
+     * Are all required fields filled ?
+     *
+     * @param Entity    $entity
+     * @param \stdClass $data
+     *
+     * @return bool
+     * @throws BadRequest
+     * @throws Error
+     */
+    protected function checkRequiredFields(Entity $entity, \stdClass $data): bool
+    {
+        if ($entity->isSkippedValidation('requiredField')) {
+            return true;
+        }
+
+        if ($this->hasCompleteness($entity)) {
+            return true;
+        }
+
+        /** @var Language $language */
+        $language = $this->getInjection('language');
+
+        foreach ($entity->getAttributes() as $field => $fieldData) {
+            if ((!empty($fieldData['required']) || $this->isRequiredField($field, $entity, 'required')) && $this->isNullField($entity, $field)) {
+                $message = sprintf($language->translate('fieldIsRequired', 'exceptions'), htmlentities($language->translate($field, 'fields', $entity->getEntityType())));
+                throw (new BadRequest($message))->setDataItem('field', $field);
+            }
+        }
+
+        return true;
+    }
+
+    protected function hasCompleteness(Entity $entity): bool
+    {
+        return !empty($this->getMetadata()->get("scopes.{$entity->getEntityType()}.hasCompleteness"))
+            && !empty($this->getMetadata()->get("app.additionalEntityParams.hasCompleteness"));
     }
 
     public function checkAssignment(Entity $entity)
@@ -844,10 +884,12 @@ class Record extends \Espo\Core\Services\Base
         $this->populateDefaults($entity, $attachment);
 
         $this->beforeCreateEntity($entity, $attachment);
+
         // set owner user
         $this->setOwnerAndAssignedUser($entity);
-        // is valid ?
-        $this->isValid($entity);
+
+        // Are all required fields filled ?
+        $this->checkRequiredFields($entity, $attachment);
 
         if (!$this->checkAssignment($entity)) {
             throw new Forbidden('Assignment permission failure');
@@ -919,10 +961,12 @@ class Record extends \Espo\Core\Services\Base
         $entity->set($data);
 
         $this->beforeUpdateEntity($entity, $data);
+
         // set owner user
         $this->setOwnerAndAssignedUser($entity);
-        // is valid ?
-        $this->isValid($entity);
+
+        // Are all required fields filled ?
+        $this->checkRequiredFields($entity, $data);
 
         if (!$this->checkAssignment($entity)) {
             throw new Forbidden();
@@ -2453,7 +2497,7 @@ class Record extends \Espo\Core\Services\Base
      */
     private function isNullField(Entity $entity, $field): bool
     {
-        $isNull = is_null($entity->get($field));
+        $isNull = is_null($entity->get($field)) || $entity->get($field) === '';
         if ($isNull && !empty($relation = $entity->getFields()[$field]['relation'])) {
             $relationValue = $entity->get($relation);
             if ($relationValue instanceof \Espo\ORM\EntityCollection) {
@@ -2462,6 +2506,7 @@ class Record extends \Espo\Core\Services\Base
                 $isNull = is_null($relationValue);
             }
         }
+
         return $isNull;
     }
 

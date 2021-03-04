@@ -33,10 +33,13 @@
 
 namespace Espo\Core\Exceptions;
 
+/**
+ * Class BadRequest
+ */
 class BadRequest extends Exception
 {
+    /**
+     * @var int
+     */
     protected $code = 400;
-
 }
-
-
