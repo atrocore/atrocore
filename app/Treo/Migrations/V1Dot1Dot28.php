@@ -31,59 +31,29 @@
  * and "AtroCore" word.
  */
 
-declare(strict_types=1);
-
 namespace Treo\Migrations;
 
-use Espo\Core\Utils\Json;
-use Treo\Core\Migration\Base;
-
 /**
- * Migration for version 1.1.24
+ * Migration for version 1.1.28
  */
-class V1Dot1Dot24 extends Base
+class V1Dot1Dot28 extends V1Dot1Dot24
 {
     /**
-     * @var string[]
+     * @inheritDoc
      */
-    protected $replacements = [
-        'TreoPIM Product',
-        'My TreoCore'
-    ];
-
-    /**
-     * @var string
-     */
-    protected $needle = 'Main Dashboard';
-
     public function up(): void
     {
-        $preferences = $this
-            ->getPDO()
-            ->query("SELECT * FROM preferences")
-            ->fetchAll(\PDO::FETCH_ASSOC);
+        parent::up();
 
-        if (!empty($preferences)) {
-            $sql = "";
-
-            foreach ($preferences as $preference) {
-                $data = Json::decode($preference['data'], true);
-
-                if (isset($data['dashboardLayout']) && is_array($data['dashboardLayout'])) {
-                    foreach ($data['dashboardLayout'] as $key => $dashboard) {
-                        if (in_array($dashboard['name'], $this->replacements)) {
-                            $data['dashboardLayout'][$key]['name'] = $this->needle;
-                            $result = Json::encode($data);
-
-                            $sql .= "UPDATE preferences SET data = '{$result}' WHERE id = '{$preference['id']}';";
-                        }
-                    }
+        if (!empty($configDashboards = $this->getConfig()->get('dashboardLayout', []))) {
+            foreach ($configDashboards as $key => $dashboard) {
+                if (isset($dashboard->name) && in_array($dashboard->name, $this->replacements)) {
+                    $configDashboards[$key]->name = $this->needle;
                 }
             }
 
-            if (!empty($sql)) {
-                $this->getPDO()->exec($sql);
-            }
+            $this->getConfig()->set('dashboardLayout', $configDashboards);
+            $this->getConfig()->save();
         }
     }
 }
