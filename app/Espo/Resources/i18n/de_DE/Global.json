@@ -887,7 +887,7 @@
     "list": "Liste"
   },
   "exceptions": {
-    "fieldIsRequired": "Überprüfung fehlgeschlagen. '%s' ist erforderlich.",
+    "fieldIsRequired": "Validierung fehlgeschlagen. '%s' ist erforderlich.",
     "notDashletService": "Service %s muss Dashlet-Interface implementieren",
     "urlIsInvalid": "Die URL ist ungültig",
     "suchUrlExists": "Eine solche URL ist bereits vorhanden",
