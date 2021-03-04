@@ -42,6 +42,7 @@ use \Espo\Core\Exceptions\BadRequest;
 use \Espo\Core\Exceptions\Conflict;
 use \Espo\Core\Exceptions\NotFound;
 use \Espo\Core\Utils\Util;
+use Espo\ORM\EntityCollection;
 use Espo\ORM\IEntity;
 use Treo\Core\EventManager\Event;
 use Treo\Core\Exceptions\NotModified;
@@ -2390,17 +2391,19 @@ class Record extends \Espo\Core\Services\Base
 
         $fieldsThatConflict = [];
         foreach ($data as $field => $newValue) {
-            if ($field == 'data') {
+            if ($field == 'data' || $this->hasSuffix($field, 'Name') || $this->hasSuffix($field, 'Names')) {
                 continue 1;
             }
 
-            $field = $this->prepareFieldName($field, 'Name');
+            // for link multiple
+            if ($this->hasSuffix($field, 'Ids') && !empty($collection = $entity->get($this->removeSuffix($field, 'Ids'))) && $collection instanceof EntityCollection) {
+                $entity->set($field, array_column($collection->toArray(), 'id'));
+            }
 
             if ($entity->has($field) && Util::toMd5($entity->get($field)) != Util::toMd5($prev[$field])) {
-                foreach (['Id', 'Currency', 'Unit'] as $suffix) {
-                    $field = $this->prepareFieldName($field, $suffix);
+                foreach (['Id', 'Ids', 'Currency', 'Unit'] as $suffix) {
+                    $field = $this->removeSuffix($field, $suffix);
                 }
-
                 $fieldsThatConflict[$field] = str_replace('›', '&rsaquo;', $this->getInjection('language')->translate($field, 'fields', $this->entityName));
             }
         }
@@ -2409,18 +2412,29 @@ class Record extends \Espo\Core\Services\Base
     }
 
     /**
-     * @param string $field
+     * @param string $str
+     * @param string $suffix
+     *
+     * @return bool
+     */
+    protected function hasSuffix(string $str, string $suffix): bool
+    {
+        return strpos($str, $suffix) !== false && substr($str, strlen($suffix) * -1) === $suffix;
+    }
+
+    /**
+     * @param string $str
      * @param string $suffix
      *
      * @return string
      */
-    protected function prepareFieldName(string $field, string $suffix): string
+    protected function removeSuffix(string $str, string $suffix): string
     {
-        if (strpos($field, $suffix) !== false && substr($field, strlen($suffix) * -1) === $suffix) {
-            $field = mb_substr($field, 0, strlen($suffix) * -1);
+        if ($this->hasSuffix($str, $suffix)) {
+            $str = mb_substr($str, 0, strlen($suffix) * -1);
         }
 
-        return $field;
+        return $str;
     }
 
     /**

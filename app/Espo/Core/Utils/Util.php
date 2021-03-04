@@ -34,6 +34,7 @@
 namespace Espo\Core\Utils;
 
 use \Espo\Core\Exceptions\Error;
+use Espo\ORM\EntityCollection;
 
 /**
  * Class Util
@@ -171,11 +172,16 @@ class Util
      */
     public static function toString($value): string
     {
+        if ($value instanceof EntityCollection) {
+            $value = array_column($value->toArray(), 'id');
+        }
+
         if (empty($value)){
             $value = '';
         }
 
         if (is_array($value)) {
+            sort($value);
             $value = Json::encode(array_map('strval', $value));
         }
 
