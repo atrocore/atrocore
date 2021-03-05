@@ -33,17 +33,59 @@
 
 namespace Treo\Migrations;
 
+use Espo\Core\Utils\Json;
+use Treo\Core\Migration\Base;
+
 /**
- * Migration for version 1.1.28
+ * Migration for version 1.1.29
  */
-class V1Dot1Dot28 extends V1Dot1Dot24
+class V1Dot1Dot29 extends Base
 {
+    /**
+     * @var string[]
+     */
+    protected $replacements = [
+        'TreoPIM Product',
+        'My TreoCore'
+    ];
+
+    /**
+     * @var string
+     */
+    protected $needle = 'Main Dashboard';
+
     /**
      * @inheritDoc
      */
     public function up(): void
     {
-        parent::up();
+        $preferences = $this
+            ->getPDO()
+            ->query("SELECT * FROM preferences")
+            ->fetchAll(\PDO::FETCH_ASSOC);
+
+        if (!empty($preferences)) {
+            $sql = "";
+
+            foreach ($preferences as $preference) {
+                $data = Json::decode($preference['data'], true);
+
+                if (isset($data['dashboardLayout']) && is_array($data['dashboardLayout'])) {
+                    foreach ($data['dashboardLayout'] as $key => $dashboard) {
+                        if (in_array($dashboard['name'], $this->replacements)) {
+                            $data['dashboardLayout'][$key]['name'] = $this->needle;
+                            $result = Json::encode($data);
+
+                            $sql .= "UPDATE preferences SET data = '{$result}' WHERE id = '{$preference['id']}';";
+                        }
+                    }
+                }
+            }
+
+            if (!empty($sql)) {
+                $this->getPDO()->exec($sql);
+            }
+        }
 
         if (!empty($configDashboards = $this->getConfig()->get('dashboardLayout', []))) {
             foreach ($configDashboards as $key => $dashboard) {

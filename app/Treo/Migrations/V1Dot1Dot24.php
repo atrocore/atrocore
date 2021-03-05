@@ -43,19 +43,6 @@ use Treo\Core\Migration\Base;
  */
 class V1Dot1Dot24 extends Base
 {
-    /**
-     * @var string[]
-     */
-    protected $replacements = [
-        'TreoPIM Product',
-        'My TreoCore'
-    ];
-
-    /**
-     * @var string
-     */
-    protected $needle = 'Main Dashboard';
-
     public function up(): void
     {
         $preferences = $this
@@ -71,8 +58,8 @@ class V1Dot1Dot24 extends Base
 
                 if (isset($data['dashboardLayout']) && is_array($data['dashboardLayout'])) {
                     foreach ($data['dashboardLayout'] as $key => $dashboard) {
-                        if (in_array($dashboard['name'], $this->replacements)) {
-                            $data['dashboardLayout'][$key]['name'] = $this->needle;
+                        if ($dashboard['name'] == 'TreoPIM Product') {
+                            $data['dashboardLayout'][$key]['name'] = 'Main Dashboard';
                             $result = Json::encode($data);
 
                             $sql .= "UPDATE preferences SET data = '{$result}' WHERE id = '{$preference['id']}';";
