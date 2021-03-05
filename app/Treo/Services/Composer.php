@@ -739,21 +739,9 @@ class Composer extends AbstractService
 
     /**
      * @return array
-     * @throws Error
      */
     private function getInstalledModules(): array
     {
-        $i = 0;
-
-        // wait for modules loading
-        while (!$this->getModuleManager()->isLoaded()) {
-            sleep(1);
-            if ($i > 10) {
-                throw new Error($this->translate('notAllNodulesLoaded', 'exceptions', 'Composer'));
-            }
-            $i++;
-        }
-
         return $this->getModuleManager()->getModules();
     }
 
