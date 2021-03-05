@@ -232,9 +232,9 @@ class Container
      *
      * @return Config
      */
-    protected function loadConfig()
+    protected function loadConfig(): Config
     {
-        return new Config(new FileManager());
+        return new Config(new FileManager(), $this->get('moduleManager'));
     }
 
     /**

@@ -35,7 +35,6 @@ declare(strict_types=1);
 
 namespace Treo\Core\ModuleManager;
 
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Container;
 use Treo\Services\Composer;
 

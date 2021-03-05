@@ -114,9 +114,6 @@ class PostUpdate
         // update client files
         $this->updateClientFiles();
 
-        // loading modules
-        $this->loadingModules();
-
         // copy default config if it needs
         $this->copyDefaultConfig();
 
@@ -130,21 +127,6 @@ class PostUpdate
             //send notification
             $this->sendNotification();
         }
-    }
-
-    /**
-     * Loading modules
-     */
-    protected function loadingModules()
-    {
-        self::renderLine('Loading modules...');
-
-        // wait for modules loading
-        while (!$this->getContainer()->get('moduleManager')->isLoaded()) {
-            sleep(1);
-        }
-
-        self::renderLine('Done!');
     }
 
     /**

@@ -33,8 +33,12 @@
 
 namespace Espo\Core\Utils;
 
-use Espo\Core\DataManager;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Treo\Core\ModuleManager\Manager as ModuleManager;
 
+/**
+ * Class Config
+ */
 class Config
 {
     /**
@@ -76,12 +80,26 @@ class Config
     private $changedData = array();
     private $removeData = array();
 
+    /**
+     * @var FileManager
+     */
     private $fileManager;
 
+    /**
+     * @var ModuleManager
+     */
+    private $moduleManager;
 
-    public function __construct(\Espo\Core\Utils\File\Manager $fileManager) //TODO
+    /**
+     * Config constructor.
+     *
+     * @param FileManager   $fileManager
+     * @param ModuleManager $moduleManager
+     */
+    public function __construct(FileManager $fileManager, ModuleManager $moduleManager)
     {
         $this->fileManager = $fileManager;
+        $this->moduleManager = $moduleManager;
     }
 
     protected function getFileManager()
@@ -104,7 +122,7 @@ class Config
     public function get($name, $default = null)
     {
         if ($name == 'isUpdating') {
-            return file_exists(COMPOSER_LOG);
+            return file_exists(COMPOSER_LOG) || !$this->moduleManager->isLoaded();
         }
 
         $keys = explode('.', $name);
