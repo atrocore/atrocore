@@ -41,7 +41,7 @@ use Espo\Core\Container;
 use Treo\Core\Migration\Migration;
 use Treo\Core\ModuleManager\Manager as ModuleManager;
 use Treo\Core\ORM\EntityManager;
-use Treo\Core\Utils\Util;
+use Espo\Core\Utils\Util;
 use Treo\Core\ModuleManager\AbstractEvent;
 use Treo\Services\Composer as ComposerService;
 
@@ -54,11 +54,6 @@ class PostUpdate
      * @var Container
      */
     private $container;
-
-    /**
-     * @var bool
-     */
-    private $byLockFile = false;
 
     /**
      * @param string $message
@@ -76,10 +71,8 @@ class PostUpdate
 
     /**
      * PostUpdate constructor.
-     *
-     * @param bool $byLockFile
      */
-    public function __construct(bool $byLockFile = false)
+    public function __construct()
     {
         // define path to core app
         if (!defined('CORE_PATH')) {
@@ -103,9 +96,6 @@ class PostUpdate
 
         // set container
         $this->container = (new App())->getContainer();
-
-        // find diff by lock file ?
-        $this->byLockFile = $byLockFile;
     }
 
     /**
@@ -124,6 +114,9 @@ class PostUpdate
         // update client files
         $this->updateClientFiles();
 
+        // loading modules
+        $this->loadingModules();
+
         // copy default config if it needs
         $this->copyDefaultConfig();
 
@@ -137,14 +130,21 @@ class PostUpdate
             //send notification
             $this->sendNotification();
         }
+    }
 
-        // store composer.lock file
-        if ($this->byLockFile) {
-            file_put_contents('data/old-composer.lock', file_get_contents(ComposerService::$composerLock));
+    /**
+     * Loading modules
+     */
+    protected function loadingModules()
+    {
+        self::renderLine('Loading modules...');
 
-            // wait
-            sleep(3);
+        // wait for modules loading
+        while (!$this->getContainer()->get('moduleManager')->isLoaded()) {
+            sleep(1);
         }
+
+        self::renderLine('Done!');
     }
 
     /**
@@ -157,7 +157,7 @@ class PostUpdate
         $sth = $this
             ->getContainer()
             ->get('entityManager')
-            ->getPDO()->prepare("UPDATE auth_token SET deleted = 1");
+            ->getPDO()->prepare("UPDATE auth_token SET deleted=1 WHERE 1");
 
         $sth->execute();
 
@@ -199,10 +199,6 @@ class PostUpdate
      */
     protected function getComposerDiff(): array
     {
-        if ($this->byLockFile) {
-            return $this->getComposerLockDiff();
-        }
-
         // prepare result
         $result = [
             'install' => [],
@@ -225,59 +221,6 @@ class PostUpdate
                     'package' => (isset($packages[$parts[0]])) ? $packages[$parts[0]] : null,
                     'from'    => (isset($parts[1])) ? $parts[1] : null,
                     'to'      => (isset($parts[2])) ? $parts[2] : null
-                ];
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Get composer.lock diff
-     *
-     * @return array
-     */
-    protected function getComposerLockDiff(): array
-    {
-        // prepare result
-        $result = [
-            'install' => [],
-            'update'  => [],
-            'delete'  => [],
-        ];
-
-        if (!file_exists('data/old-composer.lock')) {
-            return $result;
-        }
-
-        // prepare data
-        $oldData = self::getComposerLockTreoPackages('data/old-composer.lock');
-        $newData = self::getComposerLockTreoPackages(ComposerService::$composerLock);
-
-        foreach ($oldData as $package) {
-            if (!isset($newData[$package['name']])) {
-                $result['delete'][$package['extra']['treoId']] = [
-                    'id'      => $package['extra']['treoId'],
-                    'package' => $package,
-                    'from'    => null,
-                    'to'      => null
-                ];
-            } elseif ($package['version'] != $newData[$package['name']]['version']) {
-                $result['update'][$package['extra']['treoId']] = [
-                    'id'      => $package['extra']['treoId'],
-                    'package' => $newData[$package['name']],
-                    'from'    => $package['version'],
-                    'to'      => $newData[$package['name']]['version']
-                ];
-            }
-        }
-        foreach ($newData as $package) {
-            if (!isset($oldData[$package['name']])) {
-                $result['install'][$package['extra']['treoId']] = [
-                    'id'      => $package['extra']['treoId'],
-                    'package' => $package,
-                    'from'    => null,
-                    'to'      => null
                 ];
             }
         }
