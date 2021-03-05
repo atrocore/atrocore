@@ -121,7 +121,7 @@ To create your new AtroCore application, first make sure you're using PHP 7.1 or
 3. Change the permissions for project files: 
    ```
     find . -type d -exec chmod 755 {} + && find . -type f -exec chmod 644 {} +;
-    find data custom -type d -exec chmod 775 {} + && find data custom -type f -exec chmod 664 {} +
+    find data custom upload -type d -exec chmod 775 {} + && find data custom upload -type f -exec chmod 664 {} +
    ```
    
 4. Configure the crontab as described below.
