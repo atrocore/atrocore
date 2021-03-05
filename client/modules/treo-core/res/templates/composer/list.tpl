@@ -47,8 +47,8 @@
             <div class="bounce2"></div>
             <div class="bounce3"></div>
         </div>
-        <span class="progress-status"></span>
     </div>
+    <span class="progress-status"></span>
     <div class="clearfix"></div>
 </div>
 <div class="row">

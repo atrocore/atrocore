@@ -1524,6 +1524,12 @@ mark, .mark {
     padding: .2em
 }
 
+.progress-status {
+    clear: both;
+    display: block;
+    padding-top: 6px;
+}
+
 .progress-status a {
     text-decoration: underline;
 }
@@ -20558,8 +20564,9 @@ td[data-name="draggableIcon"] {
 }
 
 .content .progress-log-wrapper {
-    clear: both;
-    padding-top: 9px;
+    display: inline-block;
+    margin-top: 6px;
+    padding: 0 9px;
 }
 
 .content .progress-log-wrapper .spinner {
