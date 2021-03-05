@@ -8,6 +8,7 @@
     "required": "Erforderlich"
   },
   "exceptions": {
+    "notAllNodulesLoaded": "Nicht alle Module sind geladen.",
     "hasRequiredsDelete": "Sie dürfen das gewünschte Modul nicht löschen, da dieses mit einem anderen verknüpft ist.",
     "isSystem": "Sie können das System-Modul nicht ändern.",
     "noSuchModule": "Es gibt kein solches Modul",

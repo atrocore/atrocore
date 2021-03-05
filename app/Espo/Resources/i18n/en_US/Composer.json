@@ -13,6 +13,7 @@
     }
   },
   "exceptions": {
+    "notAllNodulesLoaded": "Not all modules are loaded.",
     "hasRequireds": "Module has not satisfied requireds",
     "hasRequiredsDelete": "You cann't delete required module",
     "isSystem": "You can not modify system module.",

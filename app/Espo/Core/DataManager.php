@@ -35,7 +35,8 @@ namespace Espo\Core;
 
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Json;
-use Treo\Core\Utils\Util;
+use Espo\Core\Utils\Util;
+use Treo\Core\ModuleManager\Manager as ModuleManager;
 
 /**
  * Class DataManager
@@ -71,19 +72,6 @@ class DataManager
     }
 
     /**
-     * Update cache timestamp
-     *
-     * @return bool
-     */
-    public function updateCacheTimestamp()
-    {
-        $this->getConfig()->set('cacheTimestamp', time());
-        $this->getConfig()->save();
-
-        return true;
-    }
-
-    /**
      * @param string $name
      *
      * @return bool
@@ -101,12 +89,19 @@ class DataManager
      */
     public function setCacheData(string $name, $data): bool
     {
-        if (!$this->getConfig()->get('useCache', false) || substr(php_sapi_name(), 0, 3) == 'cli' || $this->getConfig()->get('cacheTimestamp', 0) + 10 > time()) {
+        if (!$this->getConfig()->get('useCache', false) || substr(php_sapi_name(), 0, 3) == 'cli') {
+            return false;
+        }
+
+        if (!$this->getModuleManager()->isLoaded()) {
             return false;
         }
 
         self::createCacheDir();
         file_put_contents(self::CACHE_DIR_PATH . "/{$name}.json", Json::encode($data));
+
+        $this->getConfig()->set('cacheTimestamp', time());
+        $this->getConfig()->save();
 
         return true;
     }
@@ -156,7 +151,8 @@ class DataManager
         Util::removeDir(self::CACHE_DIR_PATH);
         self::createCacheDir();
 
-        $this->updateCacheTimestamp();
+        $this->getConfig()->remove('cacheTimestamp');
+        $this->getConfig()->save();
 
         return true;
     }
@@ -179,7 +175,7 @@ class DataManager
             throw new Exceptions\Error("Error while rebuilding database. See log file for details.");
         }
 
-        $this->updateCacheTimestamp();
+        $this->clearCache();
 
         return $result;
     }
@@ -197,7 +193,7 @@ class DataManager
 
         $ormData = $this->container->get('ormMetadata')->getData(true);
 
-        $this->updateCacheTimestamp();
+        $this->clearCache();
 
         return empty($ormData) ? false : true;
     }
@@ -276,5 +272,13 @@ class DataManager
     protected function getConfig(): Config
     {
         return $this->container->get('config');
+    }
+
+    /**
+     * @return ModuleManager
+     */
+    private function getModuleManager(): ModuleManager
+    {
+        return $this->container->get('moduleManager');
     }
 }

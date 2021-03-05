@@ -71,7 +71,7 @@ class Layout extends \Espo\Core\Controllers\Base
             throw new Error("Error while saving layout.");
         }
 
-        $this->getContainer()->get('dataManager')->updateCacheTimestamp();
+        $this->getContainer()->get('dataManager')->clearCache();
 
         return $layoutManager->get($params['scope'], $params['name']);
     }

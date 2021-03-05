@@ -44,6 +44,8 @@ use Treo\Services\Composer;
  */
 class Manager
 {
+    const FILE_PATH = 'data/modules.json';
+
     /**
      * @var array|null
      */
@@ -77,62 +79,29 @@ class Manager
     }
 
     /**
-     * Get modules
-     *
-     * @param bool $reload ;
-     *
-     * @return array
-     * @throws Error
-     * @throws \ReflectionException
+     * @return bool
      */
-    public function getModules(bool $reload = false): array
+    public function isLoaded(): bool
     {
-        if ($reload) {
-            $this->modules = null;
+        foreach ($this->getModulesList() as $module) {
+            if (!isset($this->modules[$module])) {
+                return false;
+            }
         }
 
-        if (is_null($this->modules)) {
-            $this->modules = [];
+        return true;
+    }
 
-            // prepare path
-            $path = 'data/modules.json';
-
-            // parse data
-            $data = [];
-            if (file_exists($path)) {
-                $data = array_merge($data, json_decode(file_get_contents($path), true));
-            }
-
-            // load modules
-            if (!empty($data)) {
-                foreach ($data as $module) {
-                    // prepare class name
-                    $className = "\\$module\\Module";
-                    if (property_exists($className, 'isTreoModule')) {
-                        // prepare base path
-                        $path = (new \ReflectionClass($className))->getFileName();
-
-                        // get module path
-                        $modulePath = '';
-                        while (empty($modulePath)) {
-                            $path = dirname($path);
-                            if (file_exists($path . "/composer.json")) {
-                                $modulePath = $path . "/";
-                            }
-
-                            if ($path == '/') {
-                                throw new Error('Error at modules loader');
-                            }
-                        }
-
-                        $this->modules[$module] = new $className(
-                            $module,
-                            $modulePath,
-                            $this->getPackage($module),
-                            $this->container
-                        );
-                    }
-                }
+    /**
+     * Get modules
+     *
+     * @return array
+     */
+    public function getModules(): array
+    {
+        foreach ($this->getModulesList() as $module) {
+            if (!isset($this->modules[$module])) {
+                $this->loadModule($module);
             }
         }
 
@@ -155,6 +124,52 @@ class Manager
         }
 
         return null;
+    }
+
+    /**
+     * @param string $module
+     */
+    protected function loadModule(string $module): void
+    {
+        // prepare class name
+        $className = "\\$module\\Module";
+        if (is_a($className, AbstractModule::class, true)) {
+            try {
+                $path = (new \ReflectionClass($className))->getFileName();
+            } catch (\Throwable $e) {
+                $GLOBALS['log']->error("Module Manager ERROR: Can't load $className");
+                return;
+            }
+
+            $modulePath = '';
+            while (empty($modulePath)) {
+                $path = dirname($path);
+                if (file_exists($path . "/composer.json")) {
+                    $modulePath = $path . "/";
+                }
+
+                if ($path == '/') {
+                    $GLOBALS['log']->error("Module Manager ERROR: Can't find composer.json file");
+                    return;
+                }
+            }
+
+            $this->modules[$module] = new $className($module, $modulePath, $this->getPackage($module), $this->container);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    protected function getModulesList(): array
+    {
+        $data = [];
+
+        if (file_exists(self::FILE_PATH)) {
+            $data = json_decode(file_get_contents(self::FILE_PATH), true);
+        }
+
+        return $data;
     }
 
     /**

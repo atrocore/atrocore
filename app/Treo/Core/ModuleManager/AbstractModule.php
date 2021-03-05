@@ -49,11 +49,6 @@ use Treo\Core\Loaders\Layout;
 abstract class AbstractModule
 {
     /**
-     * @var bool
-     */
-    protected $isTreoModule = true;
-
-    /**
      * @var string
      */
     protected $id;

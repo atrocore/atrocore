@@ -39,8 +39,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Json;
 use Espo\Core\Exceptions;
 use Slim\Http\Request;
-use Treo\Core\ModuleManager\Manager;
-use Treo\Core\ModuleManager\Manager as TreoModuleManager;
+use Treo\Core\ModuleManager\Manager as ModuleManager;
 
 /**
  * Composer service
@@ -294,7 +293,7 @@ class Composer extends AbstractService
             // set settingVersion
             if (isset($composerData['require'][$module->getComposerName()])) {
                 $settingVersion = $composerData['require'][$module->getComposerName()];
-                $result['list'][$id]['settingVersion'] = TreoModuleManager::prepareVersion($settingVersion);
+                $result['list'][$id]['settingVersion'] = ModuleManager::prepareVersion($settingVersion);
             }
         }
 
@@ -322,7 +321,7 @@ class Composer extends AbstractService
                 // set settingVersion
                 if (!empty($composerData['require'][$package->get('packageId')])) {
                     $settingVersion = $composerData['require'][$package->get('packageId')];
-                    $item['settingVersion'] = TreoModuleManager::prepareVersion($settingVersion);
+                    $item['settingVersion'] = ModuleManager::prepareVersion($settingVersion);
                 }
             }
             // push
@@ -731,11 +730,31 @@ class Composer extends AbstractService
     }
 
     /**
+     * @return ModuleManager
+     */
+    private function getModuleManager(): ModuleManager
+    {
+        return $this->getContainer()->get('moduleManager');
+    }
+
+    /**
      * @return array
+     * @throws Error
      */
     private function getInstalledModules(): array
     {
-        return $this->getContainer()->get('moduleManager')->getModules(true);
+        $i = 0;
+
+        // wait for modules loading
+        while (!$this->getModuleManager()->isLoaded()) {
+            sleep(1);
+            if ($i > 10) {
+                throw new Error($this->translate('notAllNodulesLoaded', 'exceptions', 'Composer'));
+            }
+            $i++;
+        }
+
+        return $this->getModuleManager()->getModules();
     }
 
     /**
@@ -743,7 +762,7 @@ class Composer extends AbstractService
      */
     private function getInstalledModule(string $id)
     {
-        return $this->getContainer()->get('moduleManager')->getModule($id);
+        return $this->getModuleManager()->getModule($id);
     }
 
     /**

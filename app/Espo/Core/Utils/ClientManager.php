@@ -76,9 +76,10 @@ class ClientManager
     protected function getCacheTimestamp()
     {
         if (!$this->getConfig()->get('useCache')) {
-            return (string) time();
+            return (string)time();
         }
-        return $this->getConfig()->get('cacheTimestamp', 0);
+
+        return $this->getConfig()->get('cacheTimestamp', (string)time());
     }
 
     public function display($runScript = null, $htmlFilePath = null, $vars = array())
