@@ -98,7 +98,7 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
             deletedRow.addClass('hidden');
 
             let removeGroupButtons = $('a[data-action=removeGroup]');
-            if (removeGroupButtons.length === 1) {
+            if (removeGroupButtons.length === 1 && this.model.get('type') !== 'multiEnum') {
                 removeGroupButtons.remove();
             }
 
@@ -260,10 +260,16 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
             let error = !values,
                 isMultilang = this.model.get('isMultilang');
 
-            if (!values.length && isMultilang) {
-                let msg = this.translate('emptyMultilangOptions', 'messages');
-                this.showValidationMessage(msg, '[data-action="addNewValue"]', true);
-                return true;
+            if (!values.length) {
+                if (isMultilang) {
+                    let msg = this.translate('emptyMultilangOptions', 'messages');
+                    this.showValidationMessage(msg, '[data-action="addNewValue"]', true);
+                    return true;
+                }
+
+                if (this.model.get('type') === 'enum') {
+                    return true;
+                }
             }
 
             values.forEach((value, i) => {
