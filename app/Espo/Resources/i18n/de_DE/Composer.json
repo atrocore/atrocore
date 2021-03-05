@@ -28,6 +28,7 @@
     "updateStarted": "Update wurde gestartet",
     "version": "Version",
     "updateInProgress": "Update wird bereits durchgeführt",
+    "updateInProgressWithLog": "Das Update ist bereits im Gange. Bitte sehen Sie sich das {log} an.",
     "updateFailed": "Update fehlgeschlagen. Es kann keine Verbindung zum Modulserver hergestellt werden. Bitte versuche es erneut",
     "cancelingModuleUpdate": "Modulupdate wird abgebrochen...",
     "canceledModuleUpdate": "Die Modulaktualisierung wurde abgebrochen",

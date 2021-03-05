@@ -1532,6 +1532,12 @@ mark, .mark {
 
 .progress-status a {
     text-decoration: underline;
+    color: #3c763d;
+}
+
+.progress-status a:hover,
+.progress-status a:focus {
+    color: #3c763d;
 }
 
 .text-left {

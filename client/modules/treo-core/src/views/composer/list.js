@@ -337,7 +337,7 @@ Espo.define('treo-core:views/composer/list', 'views/list',
                     this.notify(this.translate('updateStarted', 'labels', 'Composer'), 'success');
                     setTimeout(() => {
                         this.initLogCheck();
-                        this.messageText = this.translate('updateInProgress', 'labels', 'Composer');
+                        this.messageText = this.translate('updateInProgressWithLog', 'labels', 'Composer');
                         this.messageType = 'success';
                         this.showCurrentStatus(this.messageText, this.messageType);
                     }, 2000);
@@ -432,7 +432,8 @@ Espo.define('treo-core:views/composer/list', 'views/list',
 
         showCurrentStatus(text, type, hideLog) {
             if (!hideLog) {
-                text = text + ` (<a href="javascript:" class="action" data-action="showLog">${this.translate('log', 'labels', 'Admin')}</a>)`;
+                let log = `<a href="javascript:" class="action" data-action="showLog">${this.translate('log', 'labels', 'Admin')}</a>`;
+                text = text.replace('{log}', log);
             }
             let el = this.$el.find('.progress-status');
             el.removeClass();

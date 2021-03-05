@@ -31,7 +31,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/settings/fields/currency-rates', 'views/fields/base', function (Dep) {
+Espo.define('views/settings/fields/currency-rates', 'views/fields/float', function (Dep) {
 
     return Dep.extend({
 
@@ -44,15 +44,17 @@ Espo.define('views/settings/fields/currency-rates', 'views/fields/base', functio
             var rateValues = {};
             (this.model.get('currencyList') || []).forEach(function (currency) {
                 if (currency != baseCurrency) {
-                    rateValues[currency] = currencyRates[currency];
-                    if (!rateValues[currency]) {
+                    let value = currencyRates[currency];
+                    if (!value) {
                         if (currencyRates[baseCurrency]) {
-                            rateValues[currency] = Math.round(1 / currencyRates[baseCurrency] * 1000) / 1000;
+                            value = Math.round(1 / currencyRates[baseCurrency] * 1000) / 1000;
                         }
-                        if (!rateValues[currency]) {
-                            rateValues[currency] = 1.00
+                        if (!value) {
+                            value = 1.00
                         }
                     }
+
+                    rateValues[currency] = this.formatNumber(value);
                 }
             }, this);
 
@@ -60,9 +62,6 @@ Espo.define('views/settings/fields/currency-rates', 'views/fields/base', functio
                 rateValues: rateValues,
                 baseCurrency: baseCurrency
             };
-        },
-
-        setup: function () {
         },
 
         fetch: function () {
@@ -75,7 +74,7 @@ Espo.define('views/settings/fields/currency-rates', 'views/fields/base', functio
 
             currencyList.forEach(function (currency) {
                 if (currency != baseCurrency) {
-                    currencyRates[currency] = parseFloat(this.$el.find('input[data-currency="'+currency+'"]').val() || 1);
+                    currencyRates[currency] = this.parse(this.$el.find('input[data-currency="'+currency+'"]').val());
                 }
             }, this);
 
@@ -89,8 +88,19 @@ Espo.define('views/settings/fields/currency-rates', 'views/fields/base', functio
             data[this.name] = currencyRates;
 
             return data;
-        }
+        },
 
+        validateFloat: function () {
+            var rates = this.model.get(this.name);
+
+            (Object.values(rates) || []).forEach(rate => {
+                if (isNaN(rate)) {
+                    var msg = this.translate('fieldShouldBeFloat', 'messages').replace('{field}', this.getLabelText());
+                    this.showValidationMessage(msg);
+                    return true;
+                }
+            })
+        }
     });
 
 });

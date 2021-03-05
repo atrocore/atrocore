@@ -20625,6 +20625,12 @@ td[data-name="draggableIcon"] {
 
 .progress-status a {
     text-decoration: underline;
+    color: #3c763d;
+}
+
+.progress-status a:hover,
+.progress-status a:focus {
+    color: #3c763d;
 }
 
 .bottom .panel-heading > .panel-title > .collapser {
