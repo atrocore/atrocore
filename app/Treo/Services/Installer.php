@@ -748,6 +748,26 @@ class Installer extends AbstractService
             include_once $file;
             unlink($file);
         }
+
+        /**
+         * Create scheduled jobs
+         */
+        $this
+            ->getEntityManager()
+            ->nativeQuery(
+                "INSERT INTO scheduled_job (id, name, job, status, scheduling) VALUES ('ComposerAutoUpdate', 'Auto-updating of modules', 'ComposerAutoUpdate', 'Active', '0 0 * * SUN')"
+            );
+        $this
+            ->getEntityManager()
+            ->nativeQuery(
+                "INSERT INTO scheduled_job (id, name, job, status, scheduling) VALUES ('TreoCleanup','Unused data cleanup. Deleting old data and unused db tables, db columns, etc.','TreoCleanup','Active','0 0 1 * *')"
+            );
+
+        $this
+            ->getEntityManager()
+            ->nativeQuery(
+                "INSERT INTO scheduled_job (id, name, job, status, scheduling) VALUES ('RestApiDocs','Generate REST API docs','RestApiDocs','Active','0 2 * * *')"
+            );
     }
 
     /**

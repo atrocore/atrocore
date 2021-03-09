@@ -420,7 +420,7 @@ class Application
 
         // prepare vars
         $vars = [
-            'applicationName' => 'TreoCore',
+            'applicationName' => 'AtroCore',
             'status'          => $result['status'],
             'message'         => $result['message'],
             'classReplaceMap' => json_encode($this->getMetadata()->get(['app', 'clientClassReplaceMap'], [])),

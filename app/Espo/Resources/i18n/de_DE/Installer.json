@@ -32,7 +32,7 @@
     "status": "Status"
   },
   "errors": {
-    "alreadyInstalled": "TreoCore ist schon installiert",
+    "alreadyInstalled": "AtroCore ist schon installiert",
     "languageNotCorrect": "Die Eingabesprache ist falsch",
     "differentPass": "Verschiedene Passwörter",
     "notCorrectDatabaseConfig": "Ungültige Datenbank Einstellungen",
