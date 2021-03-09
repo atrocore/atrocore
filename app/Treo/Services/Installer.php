@@ -287,9 +287,6 @@ class Installer extends AbstractService
         }
 
         try {
-            // prepare database for installation
-            $this->prepareDataBase();
-
             // create fake system user
             $this->createFakeSystemUser();
 
@@ -639,12 +636,6 @@ class Installer extends AbstractService
     {
         /** @var array $dbParams */
         $dbParams = $this->getConfig()->get('database');
-
-        // prepare port
-        $port = !empty($dbParams['port']) ? '; port=' . $dbParams['port'] : '';
-
-        // create DB if not exists
-        $this->createDataBaseIfNotExists($dbParams, $port);
 
         // get existing db tables
         $tables = $this
