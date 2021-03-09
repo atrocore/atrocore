@@ -290,6 +290,9 @@ class Installer extends AbstractService
             // create fake system user
             $this->createFakeSystemUser();
 
+            // prepare database for installation
+            $this->prepareDataBase();
+
             // create user
             $user = $this->createSuperAdminUser($params['username'], $params['password']);
 
