@@ -2,7 +2,7 @@
     {
         "label": "System",
         "rows": [
-            [{"name": "treoId"}, {"name": "useCache"}],
+            [{"name": "appId"}, {"name": "useCache"}],
             [false, {"name": "siteUrl"}],
             [{"name": "followCreatedEntities"}, {"name": "globalSearchEntityList"}],
             [{"name": "aclStrictMode"}, {"name": "attachmentDuplicates"}],

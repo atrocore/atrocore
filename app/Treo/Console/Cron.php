@@ -76,7 +76,7 @@ class Cron extends AbstractConsole
         $php = (new \Espo\Core\Utils\System())->getPhpBin();
 
         /** @var string $id */
-        $id = $this->getConfig()->get('treoId');
+        $id = $this->getConfig()->get('appId');
 
         // open daemon for composer
         if (empty(strpos($processes, "index.php daemon composer $id"))) {

@@ -47,5 +47,8 @@ class V1Dot1Dot30 extends Base
     public function up(): void
     {
         copy('composer.phar', 'vendor/atrocore/core/copy/composer.phar');
+
+        $this->getConfig()->set('appId', $this->getConfig()->get('treoId'));
+        $this->getConfig()->save();
     }
 }

@@ -39,10 +39,9 @@ use Espo\Core\Exceptions;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\PasswordHash;
-use Treo\Core\Utils\Util;
+use Espo\Core\Utils\Util;
 use Espo\Entities\User;
 use Espo\Core\Utils\Config;
-use Treo\Core\EventManager\Event;
 
 /**
  * Service Installer
@@ -59,14 +58,6 @@ class Installer extends AbstractService
      * @var null|array
      */
     protected $installConfig = null;
-
-    /**
-     * @return string
-     */
-    public static function generateTreoId(): string
-    {
-        return substr(md5(md5(Util::generateId() . "-treo-salt-") . Util::generateId()), 0, 21);
-    }
 
     /**
      * Get requireds list
@@ -263,30 +254,20 @@ class Installer extends AbstractService
      */
     public function setDbSettings(array $data): array
     {
-        $result = ['status' => false, 'message' => ''];
-
-        /** @var Config $config */
-        $config = $this->getConfig();
-
-        $dbParams = $config->get('database');
-
-        // prepare input params
-        $dbSettings = $this->prepareDbParams($data);
-
-        try {
-            // check connect to db
-            $this->isConnectToDb($dbSettings);
-
-            // update config
-            $config->set('database', array_merge($dbParams, $dbSettings));
-
-            $result['status'] = $config->save();
-        } catch (\Exception $e) {
-            $result['message'] = $this->translateError('notCorrectDatabaseConfig');
-            $result['status'] = false;
+        $dbConnection = $this->checkDbConnect($data);
+        if (!$dbConnection['status']) {
+            return $dbConnection;
         }
 
-        return $result;
+        $message = '';
+        try {
+            $this->getConfig()->set('database', array_merge($this->getConfig()->get('database', []), $this->prepareDbParams($data)));
+            $this->getConfig()->save();
+        } catch (\Exception $e) {
+            $message = $this->translateError('filePermissionsError');
+        }
+
+        return ['status' => empty($message), 'message' => $message];
     }
 
     /**
@@ -300,54 +281,39 @@ class Installer extends AbstractService
      */
     public function createAdmin(array $params): array
     {
-        // prepare result
-        $result = [
-            'status'  => true,
-            'message' => ''
-        ];
-
         // check password
         if ($params['password'] !== $params['confirmPassword']) {
-            // prepare result
-            $result = [
-                'status'  => false,
-                'message' => $this->translateError('differentPass')
-            ];
-        } else {
-            try {
-                // create fake system user
-                $this->createFakeSystemUser();
-
-                // prepare database for installation
-                $this->prepareDataBase();
-
-                // create user
-                $user = $this->createSuperAdminUser($params['username'], $params['password']);
-
-                // set installed
-                $this->getConfig()->set('isInstalled', true);
-
-                // save config
-                $this->getConfig()->save();
-
-                // dispatch an event
-                $this->dispatch('Installer', 'afterInstallSystem', new Event());
-
-                // generate RestApiDocs
-                $this->getContainer()->get('serviceFactory')->create('RestApiDocs')->generateDocumentation();
-
-                // clear cache
-                $this->getContainer()->get('dataManager')->clearCache();
-            } catch (\Exception $e) {
-                // prepare result
-                $result = [
-                    'status'  => false,
-                    'message' => $e->getMessage()
-                ];
-            }
+            return ['status' => false, 'message' => $this->translateError('differentPass')];
         }
 
-        return $result;
+        try {
+            // create fake system user
+            $this->createFakeSystemUser();
+
+            // prepare database for installation
+            $this->prepareDataBase();
+
+            // create user
+            $user = $this->createSuperAdminUser($params['username'], $params['password']);
+
+            // set installed
+            $this->getConfig()->set('isInstalled', true);
+            $this->getConfig()->save();
+
+            // generate RestApiDocs
+            $this->getContainer()->get('serviceFactory')->create('RestApiDocs')->generateDocumentation();
+
+            // clear cache
+            $this->getContainer()->get('dataManager')->clearCache();
+        } catch (\Exception $e) {
+            $GLOBALS['log']->error('Installer Error: ' . $e->getMessage() . ' | ' . $e->getTraceAsString());
+            return ['status' => false, 'message' => $e->getMessage()];
+        }
+
+        // after install
+        $this->afterInstall();
+
+        return ['status' => true, 'message' => ''];
     }
 
     /**
@@ -359,16 +325,15 @@ class Installer extends AbstractService
      */
     public function checkDbConnect(array $dbSettings): array
     {
-        $result = ['status' => false, 'message' => ''];
+        $message = '';
 
         try {
-            $result['status'] = $this->isConnectToDb($this->prepareDbParams($dbSettings));
+            $this->isConnectToDb($this->prepareDbParams($dbSettings));
         } catch (\PDOException $e) {
-            $result['status'] = false;
-            $result['message'] = $this->translateError('notCorrectDatabaseConfig');
+            $message = $this->translateError('notCorrectDatabaseConfig');
         }
 
-        return $result;
+        return ['status' => empty($message), 'message' => $message];
     }
 
     /**
@@ -756,5 +721,42 @@ class Installer extends AbstractService
             $this->getContainer()->get('fileManager'),
             $this->getContainer()->get('metadata')
         );
+    }
+
+    protected function afterInstall(): void
+    {
+        // Generate application ID
+        $this->generateAppId();
+
+        // create files in data dir
+        file_put_contents('data/notReadCount.json', '{}');
+        file_put_contents('data/popupNotifications.json', '{}');
+
+        /**
+         * Run after install script if it needs
+         */
+        $file = 'data/after_install_script.php';
+        if (file_exists($file)) {
+            include_once $file;
+            unlink($file);
+        }
+    }
+
+    /**
+     * Generate application ID
+     */
+    protected function generateAppId(): void
+    {
+        // generate id
+        $appId = substr(md5(md5(Util::generateId() . "-atro-salt-") . Util::generateId()), 0, 21);
+
+        // set to config
+        $this->getConfig()->set('appId', $appId);
+        $this->getConfig()->save();
+
+        // set ID to packagist repository
+        $composeData = json_decode(file_get_contents('composer.json'), true);
+        $composeData['repositories'][0]['url'] = str_replace('common', $appId, $composeData['repositories'][0]['url']);
+        file_put_contents('composer.json', json_encode($composeData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
     }
 }

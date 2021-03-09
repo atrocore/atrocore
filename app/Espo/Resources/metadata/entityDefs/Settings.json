@@ -1,6 +1,6 @@
 {
   "fields": {
-    "treoId": {
+    "appId": {
       "type": "varchar",
       "readOnly": true
     },

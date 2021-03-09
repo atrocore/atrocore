@@ -2,7 +2,7 @@
   "fields": {
     "isMultilangActive": "Active",
     "inputLanguageList": "Input Language List",
-    "treoId": "ID",
+    "appId": "ID",
     "isStreamSide": "Is stream in side",
     "isStreamPanelFirst": "Is stream panel first",
     "unitsOfMeasure": "Units Of Measure",
