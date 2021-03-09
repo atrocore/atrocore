@@ -39,6 +39,7 @@ use Treo\Console;
 
 return [
     "list"                         => Console\ListCommand::class,
+    "install demo-project"         => Console\InstallDemoProject::class,
     "clear cache"                  => Console\ClearCache::class,
     "cleanup"                      => Console\Cleanup::class,
     "sql diff --show"              => Console\SqlDiff::class,

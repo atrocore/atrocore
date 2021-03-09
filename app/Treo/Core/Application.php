@@ -129,9 +129,6 @@ class Application
      */
     public function run()
     {
-        // try to install demo project
-        $this->installDemoProject();
-
         if (!empty($query = $this->getQuery())) {
             /** @var bool $show404 */
             $show404 = true;
@@ -626,50 +623,5 @@ class Application
         }
 
         return $query;
-    }
-
-    /**
-     * Try to install demo project
-     */
-    private function installDemoProject()
-    {
-        if (!$this->isInstalled() && isset($_ENV['DB_NAME']) && isset($_ENV['DB_USER']) && isset($_ENV['DB_PASS'])) {
-            $this->getConfig()->set(
-                'database', [
-                    'driver'   => 'pdo_mysql',
-                    'host'     => !empty($_ENV['DB_HOST']) ? $_ENV['DB_HOST'] : 'localhost',
-                    'port'     => '',
-                    'charset'  => 'utf8mb4',
-                    'dbname'   => $_ENV['DB_NAME'],
-                    'user'     => $_ENV['DB_USER'],
-                    'password' => $_ENV['DB_PASS']
-                ]
-            );
-            $this->getConfig()->set('language', !empty($_ENV['LANGUAGE']) ? $_ENV['LANGUAGE'] : 'en_US');
-            $this->getConfig()->set('siteUrl', !empty($_ENV['SITE_URL']) ? $_ENV['SITE_URL'] : '');
-            $this->getConfig()->set(
-                'demo', [
-                    'username' => !empty($_ENV['ADMIN_USER']) ? $_ENV['ADMIN_USER'] : 'admin',
-                    'password' => !empty($_ENV['ADMIN_PASS']) ? $_ENV['ADMIN_PASS'] : 'admin',
-                ]
-            );
-            $this->getConfig()->save();
-
-            $this->getInstallerService()->createAdmin(
-                [
-                    'username'        => $this->getConfig()->get('demo.username'),
-                    'password'        => $this->getConfig()->get('demo.password'),
-                    'confirmPassword' => $this->getConfig()->get('demo.password'),
-                ]
-            );
-        }
-    }
-
-    /**
-     * @return Installer
-     */
-    private function getInstallerService(): Installer
-    {
-        return $this->container->get('serviceFactory')->create('Installer');
     }
 }
