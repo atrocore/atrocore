@@ -49,6 +49,7 @@ class V1Dot1Dot30 extends Base
         copy('composer.phar', 'vendor/atrocore/core/copy/composer.phar');
 
         $this->getConfig()->set('appId', $this->getConfig()->get('treoId'));
+        $this->getConfig()->set('languageList', ['en_US', 'de_DE']);
         $this->getConfig()->save();
     }
 }
