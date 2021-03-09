@@ -467,6 +467,17 @@ class Installer extends AbstractService
     }
 
     /**
+     * @inheritDoc
+     */
+    protected function translate(string $label, string $category = 'labels', string $scope = 'Global', array $requiredOptions = null): string
+    {
+        return $this
+            ->getContainer()
+            ->get('baseLanguage')
+            ->translate($label, $category, $scope, $requiredOptions);
+    }
+
+    /**
      * Get install config
      *
      * @return array
