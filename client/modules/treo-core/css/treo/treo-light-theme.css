@@ -17196,7 +17196,11 @@ body {
 @font-face {
   font-family: "flaticon";
   src: url("../../fonts/flaticon.eot");
-  src: url("../../fonts/flaticon.eot?#iefix") format("embedded-opentype"), url("../../fonts/flaticon.woff") format("woff"), url("../../fonts/flaticon.ttf") format("truetype"), url("../../fonts/flaticon.svg#flaticon") format("svg");
+  src: url("../../fonts/flaticon.eot?#iefix") format("embedded-opentype"),
+  url("../../fonts/flaticon.woff2") format("woff2"),
+  url("../../fonts/flaticon.woff") format("woff"),
+  url("../../fonts/flaticon.ttf") format("truetype"),
+  url("../../fonts/flaticon.svg#flaticon") format("svg");
   font-weight: normal;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
