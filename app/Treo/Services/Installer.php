@@ -302,9 +302,6 @@ class Installer extends AbstractService
 
             // generate RestApiDocs
             $this->getContainer()->get('serviceFactory')->create('RestApiDocs')->generateDocumentation();
-
-            // clear cache
-            $this->getContainer()->get('dataManager')->clearCache();
         } catch (\Exception $e) {
             $GLOBALS['log']->error('Installer Error: ' . $e->getMessage() . ' | ' . $e->getTraceAsString());
             return ['status' => false, 'message' => $e->getMessage()];
