@@ -139,10 +139,6 @@ To create your new AtroCore application, first make sure you're using PHP 7.1 or
      Connect to mysql:
      ```
      mysql -u root -p
-     CREATE DATABASE atrocore;
-     CREATE USER atrocore_user@localhost;
-     ALTER USER atrocore_user@localhost IDENTIFIED BY 'atrocore_password';
-     GRANT ALL ON atrocore.* TO atrocore_user@localhost WITH GRANT OPTION;
      ```
      Create database **atrocore**:
       ```
