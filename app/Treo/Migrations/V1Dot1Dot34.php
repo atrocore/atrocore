@@ -31,63 +31,33 @@
  * and "AtroCore" word.
  */
 
-declare(strict_types=1);
+namespace Treo\Migrations;
 
-namespace Treo\Console;
-
-use Espo\Core\Utils\Util;
+use Espo\Core\Utils\Json;
+use Treo\Console\Cron;
+use Treo\Core\Migration\Base;
 
 /**
- * Class Notification
+ * Migration for version 1.1.34
  */
-class Notification extends AbstractConsole
+class V1Dot1Dot34 extends Base
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public static function getDescription(): string
+    public function up(): void
     {
-        return 'Refresh users notifications cache.';
+        $this->getConfig()->set('notificationsCheckInterval', 1);
+        $this->getConfig()->save();
+
+        file_put_contents(Cron::DAEMON_KILLER, '1');
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function run(array $data): void
+    public function down(): void
     {
-        if (empty($this->getConfig()->get('isInstalled'))) {
-            exit(1);
-        }
-
-        $path = \Espo\Repositories\Notification::UPDATE_COUNT_PATH;
-
-        if (!empty($files = Util::scanDir($path))) {
-            $this->refresh();
-            foreach ($files as $file) {
-                unlink("{$path}/$file");
-            }
-        }
-
-        self::show('Users notifications cache refreshed successfully', self::SUCCESS, true);
-    }
-
-    /**
-     * Refresh notReadCount
-     */
-    protected function refresh(): void
-    {
-        // get data
-        $sth = $this->getPdo()->prepare("SELECT n.user_id as userId, COUNT(n.id) as total FROM notification AS n WHERE n.read=0 GROUP BY n.user_id");
-        $sth->execute();
-        $data = $sth->fetchAll(\PDO::FETCH_ASSOC);
-
-        if (!empty($data)) {
-            file_put_contents('data/notReadCount.json', json_encode(array_column($data, 'total', 'userId')));
-        }
-    }
-
-    private function getPdo(): \Pdo
-    {
-        return $this->getContainer()->get('pdo');
+        file_put_contents(Cron::DAEMON_KILLER, '1');
     }
 }

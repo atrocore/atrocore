@@ -117,33 +117,14 @@ class Notification extends \Espo\Services\Record
         return true;
     }
 
-    public function getNotReadCount($userId)
-    {
-        $whereClause = array(
-            'userId' => $userId,
-            'read' => 0
-        );
-
-        $ignoreScopeList = $this->getIgnoreScopeList();
-        if (!empty($ignoreScopeList)) {
-            $where = [];
-            $where[] = array(
-                'OR' => array(
-                    'relatedParentType' => null,
-                    'relatedParentType!=' => $ignoreScopeList
-                )
-            );
-            $whereClause[] = $where;
-        }
-
-        return $this->getEntityManager()->getRepository('Notification')->where($whereClause)->count();
-    }
-
     public function markAllRead($userId)
     {
         $pdo = $this->getEntityManager()->getPDO();
         $sql = "UPDATE notification SET `read` = 1 WHERE user_id = ".$pdo->quote($userId)." AND `read` = 0";
         $pdo->prepare($sql)->execute();
+
+        \Espo\Repositories\Notification::updateNotReadCount();
+
         return true;
     }
 
@@ -244,6 +225,8 @@ class Notification extends \Espo\Services\Record
 
             $s = $pdo->prepare($sql);
             $s->execute();
+
+            \Espo\Repositories\Notification::updateNotReadCount();
         }
 
 

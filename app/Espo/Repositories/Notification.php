@@ -31,63 +31,34 @@
  * and "AtroCore" word.
  */
 
-declare(strict_types=1);
+namespace Espo\Repositories;
 
-namespace Treo\Console;
-
+use Espo\Core\ORM\Repositories\RDB;
 use Espo\Core\Utils\Util;
+use Espo\ORM\Entity;
 
 /**
  * Class Notification
  */
-class Notification extends AbstractConsole
+class Notification extends RDB
 {
-    /**
-     * @inheritdoc
-     */
-    public static function getDescription(): string
+    const UPDATE_COUNT_PATH = 'data/notifications-count';
+
+    public static function updateNotReadCount(): void
     {
-        return 'Refresh users notifications cache.';
+        Util::createDir(self::UPDATE_COUNT_PATH);
+        file_put_contents(self::UPDATE_COUNT_PATH . '/' . time() . '.txt', '1');
     }
 
     /**
-     * @inheritdoc
+     * @param Entity $entity
+     * @param array  $options
      */
-    public function run(array $data): void
+    protected function afterSave(Entity $entity, array $options = [])
     {
-        if (empty($this->getConfig()->get('isInstalled'))) {
-            exit(1);
-        }
+        parent::afterSave($entity, $options);
 
-        $path = \Espo\Repositories\Notification::UPDATE_COUNT_PATH;
-
-        if (!empty($files = Util::scanDir($path))) {
-            $this->refresh();
-            foreach ($files as $file) {
-                unlink("{$path}/$file");
-            }
-        }
-
-        self::show('Users notifications cache refreshed successfully', self::SUCCESS, true);
-    }
-
-    /**
-     * Refresh notReadCount
-     */
-    protected function refresh(): void
-    {
-        // get data
-        $sth = $this->getPdo()->prepare("SELECT n.user_id as userId, COUNT(n.id) as total FROM notification AS n WHERE n.read=0 GROUP BY n.user_id");
-        $sth->execute();
-        $data = $sth->fetchAll(\PDO::FETCH_ASSOC);
-
-        if (!empty($data)) {
-            file_put_contents('data/notReadCount.json', json_encode(array_column($data, 'total', 'userId')));
-        }
-    }
-
-    private function getPdo(): \Pdo
-    {
-        return $this->getContainer()->get('pdo');
+        self::updateNotReadCount();
     }
 }
+

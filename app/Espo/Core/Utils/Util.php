@@ -70,6 +70,21 @@ class Util
     }
 
     /**
+     * @param string $dir
+     */
+    public static function createDir(string $dir): void
+    {
+        if (!file_exists($dir)) {
+            try {
+                mkdir($dir, 0777, true);
+                sleep(1);
+            } catch (\Throwable $e) {
+                // ignore
+            }
+        }
+    }
+
+    /**
      * Remove dir recursively
      *
      * @param string $dir

@@ -42,7 +42,7 @@ use Espo\Entities\Attachment as AttachmentEntity;
 use Espo\ORM\Entity;
 use Espo\Core\ORM\Repositories\RDB;
 use Treo\Core\FilePathBuilder;
-use Treo\Core\Utils\Util;
+use Espo\Core\Utils\Util;
 
 /**
  * Class Attachment

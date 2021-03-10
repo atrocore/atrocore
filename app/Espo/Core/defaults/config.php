@@ -71,7 +71,7 @@ return [
     'streamEmailNotificationsEntityList'     => ['Case'],
     'streamEmailNotificationsTypeList'       => ['Post', 'Status', 'EmailReceived'],
     'emailMessageMaxSize'                    => 10,
-    'notificationsCheckInterval'             => 3,
+    'notificationsCheckInterval'             => 1,
     'disabledCountQueryEntityList'           => ['Email'],
     'maxEmailAccountCount'                   => 2,
     'followCreatedEntities'                  => false,

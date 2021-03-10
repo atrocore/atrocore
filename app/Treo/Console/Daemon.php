@@ -35,6 +35,7 @@ declare(strict_types=1);
 
 namespace Treo\Console;
 
+use Espo\Core\Utils\Util;
 use Espo\Entities\User;
 use Treo\Core\ORM\EntityManager;
 use Treo\Services\Composer;
@@ -157,9 +158,11 @@ class Daemon extends AbstractConsole
                 break;
             }
 
-            exec($this->getPhp() . " index.php notifications --refresh");
+            if (!empty(Util::scanDir(\Espo\Repositories\Notification::UPDATE_COUNT_PATH))) {
+                exec($this->getPhp() . " index.php notifications --refresh");
+            }
 
-            sleep(5);
+            sleep(1);
         }
     }
 
