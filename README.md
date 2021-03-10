@@ -95,14 +95,9 @@ AtroCore has a REST API and can be integrated with any third-party system. You c
 * PHP 7.1 or above.
 * MySQL 5.5.3 or above.
 
-### Configuration Instructions Based on Your Server
-
-* [Apache server configuration](https://github.com/atrocore/atrocore-docs/blob/master/en/administration/apache-server-configuration.md)
-* [Nginx server configuration](https://github.com/atrocore/atrocore-docs/blob/master/en/administration/nginx-server-configuration.md)
-
 ### Installation
 
-Installation guide you can find [here](https://github.com/atrocore/atrocore-docs/blob/master/en/administration/installation.md).
+Installation Guide is available [here](https://github.com/atrocore/atrocore-docs/blob/master/en/administration/installation.md).
 
 ### License
 
