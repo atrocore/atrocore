@@ -35,21 +35,16 @@ declare(strict_types=1);
 
 namespace Treo\Core\Loaders;
 
-use Treo\Core\ConsoleManager as Instance;
-
 /**
  * ConsoleManager loader
  */
 class ConsoleManager extends Base
 {
-
     /**
-     * Load ConsoleManager
-     *
-     * @return Instance
+     * @inheritDoc
      */
     public function load()
     {
-        return (new Instance())->setContainer($this->getContainer());
+        return new \Treo\Core\ConsoleManager($this->getContainer());
     }
 }

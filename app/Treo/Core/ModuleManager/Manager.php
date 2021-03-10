@@ -92,6 +92,20 @@ class Manager
     }
 
     /**
+     * @return array
+     */
+    public function getModulesList(): array
+    {
+        $data = [];
+
+        if (file_exists(self::FILE_PATH)) {
+            $data = json_decode(file_get_contents(self::FILE_PATH), true);
+        }
+
+        return $data;
+    }
+
+    /**
      * Get modules
      *
      * @return array
@@ -126,6 +140,21 @@ class Manager
     }
 
     /**
+     * @param string $name
+     *
+     * @return AfterInstallAfterDelete
+     */
+    public function getModuleInstallDeleteObject(string $name): AfterInstallAfterDelete
+    {
+        $class = sprintf('\\%s\\Event', $name);
+        if (!class_exists($class) || !is_a($class, AfterInstallAfterDelete::class, true)) {
+            $class = AfterInstallAfterDelete::class;
+        }
+
+        return new $class($this->container);
+    }
+
+    /**
      * @param string $module
      */
     protected function loadModule(string $module): void
@@ -155,20 +184,6 @@ class Manager
 
             $this->modules[$module] = new $className($module, $modulePath, $this->getPackage($module), $this->container);
         }
-    }
-
-    /**
-     * @return array
-     */
-    protected function getModulesList(): array
-    {
-        $data = [];
-
-        if (file_exists(self::FILE_PATH)) {
-            $data = json_decode(file_get_contents(self::FILE_PATH), true);
-        }
-
-        return $data;
     }
 
     /**

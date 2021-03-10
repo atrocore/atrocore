@@ -35,16 +35,29 @@ declare(strict_types=1);
 
 namespace Treo\Core;
 
+use Espo\Core\Container;
 use Treo\Console\AbstractConsole;
 use Treo\Core\Utils\Metadata;
-use Treo\Traits\ContainerTrait;
 
 /**
  * ConsoleManager
  */
 class ConsoleManager
 {
-    use ContainerTrait;
+    /**
+     * @var Container
+     */
+    private $container;
+
+    /**
+     * ConsoleManager constructor.
+     *
+     * @param Container $container
+     */
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
 
     /**
      * Run console command
@@ -54,20 +67,8 @@ class ConsoleManager
     public function run(string $command)
     {
         if (!empty($data = $this->getRouteHandler($command))) {
-            if (class_exists($data['handler'])) {
-                // create handler
-                $handler = new $data['handler']();
-
-                if (!$handler instanceof AbstractConsole) {
-                    // prepare message
-                    $message = "Handler " . $data['handler'] . " should be instance
-                     of " . AbstractConsole::class;
-
-                    AbstractConsole::show($message, 2, true);
-                }
-
-                $handler->setContainer($this->getContainer());
-                $handler->run($data['data']);
+            if (is_a($data['handler'], AbstractConsole::class, true)) {
+                (new $data['handler']($this->container))->run($data['data']);
                 die();
             }
             AbstractConsole::show('No such console handler as ' . $data['handler'], 2, true);
@@ -138,6 +139,6 @@ class ConsoleManager
      */
     protected function getMetadata(): Metadata
     {
-        return $this->getContainer()->get('metadata');
+        return $this->container->get('metadata');
     }
 }

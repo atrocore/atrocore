@@ -35,17 +35,15 @@ declare(strict_types=1);
 
 namespace Treo\Console;
 
+use Espo\Core\Container;
 use Treo\Core\Utils\Metadata;
 use Espo\Core\Utils\Config;
-use Treo\Traits\ContainerTrait;
 
 /**
  * AbtractConsole class
  */
 abstract class AbstractConsole
 {
-    use ContainerTrait;
-
     const SUCCESS = 1;
     const ERROR = 2;
     const INFO = 3;
@@ -54,6 +52,21 @@ abstract class AbstractConsole
      * @var bool
      */
     public static $isHidden = false;
+
+    /**
+     * @var Container
+     */
+    private $container;
+
+    /**
+     * AbstractConsole constructor.
+     *
+     * @param Container $container
+     */
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
 
     /**
      * Run action
@@ -159,6 +172,16 @@ abstract class AbstractConsole
         }
 
         return $table;
+    }
+
+    /**
+     * Get container
+     *
+     * @return Container
+     */
+    protected function getContainer(): Container
+    {
+        return $this->container;
     }
 
     /**

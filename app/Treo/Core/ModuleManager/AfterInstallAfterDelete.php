@@ -35,11 +35,47 @@ declare(strict_types=1);
 
 namespace Treo\Core\ModuleManager;
 
+use Espo\Core\Container;
+
 /**
- * Class AbstractEvent
- *
- * @deprecated from 10.03.2021. Please, use \Treo\Core\ModuleManager\AfterInstallAfterDelete instead.
+ * Class AfterInstallAfterDelete
  */
-abstract class AbstractEvent extends AfterInstallAfterDelete
+class AfterInstallAfterDelete
 {
+    /**
+     * @var Container
+     */
+    private $container;
+
+    /**
+     * AbstractEvent constructor.
+     *
+     * @param Container $container
+     */
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
+
+    /**
+     * After module install event
+     */
+    public function afterInstall(): void
+    {
+    }
+
+    /**
+     * After module delete event
+     */
+    public function afterDelete(): void
+    {
+    }
+
+    /**
+     * @return Container
+     */
+    protected function getContainer(): Container
+    {
+        return $this->container;
+    }
 }

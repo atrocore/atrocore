@@ -42,6 +42,7 @@ use Espo\Core\Utils\PasswordHash;
 use Espo\Core\Utils\Util;
 use Espo\Entities\User;
 use Espo\Core\Utils\Config;
+use Treo\Core\ModuleManager\Manager;
 
 /**
  * Service Installer
@@ -749,25 +750,9 @@ class Installer extends AbstractService
             unlink($file);
         }
 
-        /**
-         * Create scheduled jobs
-         */
-        $this
-            ->getEntityManager()
-            ->nativeQuery(
-                "INSERT INTO scheduled_job (id, name, job, status, scheduling) VALUES ('ComposerAutoUpdate', 'Auto-updating of modules', 'ComposerAutoUpdate', 'Active', '0 0 * * SUN')"
-            );
-        $this
-            ->getEntityManager()
-            ->nativeQuery(
-                "INSERT INTO scheduled_job (id, name, job, status, scheduling) VALUES ('TreoCleanup','Unused data cleanup. Deleting old data and unused db tables, db columns, etc.','TreoCleanup','Active','0 0 1 * *')"
-            );
+        $this->createScheduledJobs();
 
-        $this
-            ->getEntityManager()
-            ->nativeQuery(
-                "INSERT INTO scheduled_job (id, name, job, status, scheduling) VALUES ('RestApiDocs','Generate REST API docs','RestApiDocs','Active','0 2 * * *')"
-            );
+        $this->afterInstallModules();
     }
 
     /**
@@ -786,5 +771,47 @@ class Installer extends AbstractService
         $composeData = json_decode(file_get_contents('composer.json'), true);
         $composeData['repositories'][0]['url'] = str_replace('common', $appId, $composeData['repositories'][0]['url']);
         file_put_contents('composer.json', json_encode($composeData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+    }
+
+    /**
+     * Create scheduled jobs
+     */
+    protected function createScheduledJobs(): void
+    {
+        $this->getPdo()->exec(
+            "INSERT INTO scheduled_job (id, name, job, status, scheduling) VALUES ('ComposerAutoUpdate', 'Auto-updating of modules', 'ComposerAutoUpdate', 'Active', '0 0 * * SUN')"
+        );
+        $this->getPdo()->exec(
+            "INSERT INTO scheduled_job (id, name, job, status, scheduling) VALUES ('TreoCleanup','Unused data cleanup. Deleting old data and unused db tables, db columns, etc.','TreoCleanup','Active','0 0 1 * *')"
+        );
+        $this->getPdo()->exec(
+            "INSERT INTO scheduled_job (id, name, job, status, scheduling) VALUES ('RestApiDocs','Generate REST API docs','RestApiDocs','Active','0 2 * * *')"
+        );
+    }
+
+    /**
+     * Call after install events for modules
+     */
+    protected function afterInstallModules(): void
+    {
+        foreach ($this->getModuleManager()->getModulesList() as $name) {
+            $this->getModuleManager()->getModuleInstallDeleteObject($name)->afterInstall();
+        }
+    }
+
+    /**
+     * @return \PDO
+     */
+    private function getPdo(): \PDO
+    {
+        return $this->getContainer()->get('pdo');
+    }
+
+    /**
+     * @return Manager
+     */
+    private function getModuleManager(): Manager
+    {
+        return $this->getContainer()->get('moduleManager');
     }
 }

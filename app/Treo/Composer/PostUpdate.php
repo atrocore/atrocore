@@ -39,10 +39,10 @@ use Espo\Core\Utils\Config;
 use Treo\Core\Application as App;
 use Espo\Core\Container;
 use Treo\Core\Migration\Migration;
+use Treo\Core\ModuleManager\Manager;
 use Treo\Core\ModuleManager\Manager as ModuleManager;
 use Treo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Util;
-use Treo\Core\ModuleManager\AbstractEvent;
 use Treo\Services\Composer as ComposerService;
 
 /**
@@ -117,10 +117,10 @@ class PostUpdate
         // copy default config if it needs
         $this->copyDefaultConfig();
 
-        // init events
-        $this->initEvents();
-
         if ($this->isInstalled()) {
+            // init events
+            $this->initEvents();
+
             // run migrations
             $this->runMigrations();
 
@@ -262,7 +262,7 @@ class PostUpdate
             // run
             foreach ($composerDiff['install'] as $row) {
                 self::renderLine('Call after install event for ' . $row['id'] . '... ');
-                $this->callEvent($row['id'], 'afterInstall');
+                $this->getModuleManager()->getModuleInstallDeleteObject($row['id'])->afterInstall();
                 self::renderLine('Done!');
             }
         }
@@ -272,26 +272,8 @@ class PostUpdate
             // run
             foreach ($composerDiff['delete'] as $row) {
                 self::renderLine('Call after delete event for ' . $row['id'] . '... ');
-                $this->callEvent($row['id'], 'afterDelete');
+                $this->getModuleManager()->getModuleInstallDeleteObject($row['id'])->afterDelete();
                 self::renderLine('Done!');
-            }
-        }
-    }
-
-    /**
-     * @param string $module
-     * @param string $action
-     */
-    protected function callEvent(string $module, string $action): void
-    {
-        // prepare class name
-        $className = '\\%s\\Event';
-
-        $class = sprintf($className, $module);
-        if (class_exists($class)) {
-            $class = new $class();
-            if ($class instanceof AbstractEvent) {
-                $class->setContainer($this->getContainer())->{$action}();
             }
         }
     }
@@ -593,5 +575,13 @@ class PostUpdate
             // create config
             file_put_contents($path, $content);
         }
+    }
+
+    /**
+     * @return Manager
+     */
+    private function getModuleManager(): Manager
+    {
+        return $this->getContainer()->get('moduleManager');
     }
 }
