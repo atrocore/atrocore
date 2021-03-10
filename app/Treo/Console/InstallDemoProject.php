@@ -93,7 +93,7 @@ class InstallDemoProject extends AbstractConsole
             }
             $this->getConfig()->save();
 
-            $this->container->get('serviceFactory')->create('Installer')->createAdmin(
+            $this->getContainer()->get('serviceFactory')->create('Installer')->createAdmin(
                 [
                     'username'        => $this->getConfig()->get('demo.username'),
                     'password'        => $this->getConfig()->get('demo.password'),
