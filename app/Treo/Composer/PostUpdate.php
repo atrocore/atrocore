@@ -127,6 +127,8 @@ class PostUpdate
             //send notification
             $this->sendNotification();
         }
+
+        exit(0);
     }
 
     /**
