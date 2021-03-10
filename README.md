@@ -134,7 +134,29 @@ To create your new AtroCore application, first make sure you're using PHP 7.1 or
       ```
       * * * * * /usr/bin/php /var/www/my-atrocore-project/index.php cron 
       ```
-5. Install AtroCore following the installation wizard in web interface. Go to http://YOUR_PROJECT/
+5. Create MySQL database and user. User must have all privileges for database. You can create database and user with all privileges by running:
+ 
+     Connect to mysql:
+     ```
+     mysql -u root -p
+     CREATE DATABASE atrocore;
+     CREATE USER atrocore_user@localhost;
+     ALTER USER atrocore_user@localhost IDENTIFIED BY 'atrocore_password';
+     GRANT ALL ON atrocore.* TO atrocore_user@localhost WITH GRANT OPTION;
+     ```
+     Create database **atrocore**:
+      ```
+     CREATE DATABASE atrocore;
+     ```
+     Create user **atrocore_user** with password **atrocore_password** and grant all needed privileges:
+      ```
+     CREATE USER atrocore_user@localhost;
+     ALTER USER atrocore_user@localhost IDENTIFIED BY 'atrocore_password';
+     GRANT ALL ON atrocore.* TO atrocore_user@localhost WITH GRANT OPTION;
+     ```
+
+
+6. Install AtroCore following the installation wizard in web interface. Go to http://YOUR_PROJECT/
 
 ### License
 
