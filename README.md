@@ -134,7 +134,7 @@ To create your new AtroCore application, first make sure you're using PHP 7.1 or
       ```
       * * * * * /usr/bin/php /var/www/my-atrocore-project/index.php cron 
       ```
-5. Create MySQL database and user. User must have all privileges for database. You can create database and user with all privileges by running:
+5. Create MySQL database and user. User must have all privileges for database. You can create database and user with all privileges by executing next few commands:
  
      Connect to mysql:
      ```
