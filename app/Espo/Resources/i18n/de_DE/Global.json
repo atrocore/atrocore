@@ -7,7 +7,7 @@
     "Dashlet": "Dashlet",
     "KnowledgeBaseCategory": "Knowledge Base Kategorie",
     "LastViewed": "Zuletzt angezeigt",
-    "Multilang": "Mehrsprachigkeit",
+    "Multilang": "Mehrsprachig",
     "Note": "Notiz",
     "Notification": "Meldung",
     "Pricing": "Preisgestaltung",
@@ -711,7 +711,7 @@
       "noneOf": "Keiner von"
     },
     "localesFilter": {
-      "": "Alle Locales",
+      "": "Alle Sprachen",
       "showGenericFields": "Hauptsprachfelder anzeigen"
     },
     "fieldsFilter": {

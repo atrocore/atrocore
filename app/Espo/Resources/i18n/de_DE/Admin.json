@@ -1,7 +1,7 @@
 {
   "labels": {
-    "multiLanguagesSettings": "Einstellungen für Mehrsprachigkeit",
-    "multiLanguages": "Mehrsprachigkeit",
+    "multiLanguagesSettings": "Sprachen",
+    "multiLanguages": "Sprachen",
     "Label Manager": "Label-Manager",
     "Composer": "Modul-Manager",
     "log": "Log",
@@ -179,7 +179,7 @@
   },
   "descriptions": {
     "inputLanguage": "Spracheingabe für übersetzbare Felder.",
-    "multiLanguagesSettings": "Einstellungen für Mehrsprachigkeit.",
+    "multiLanguagesSettings": "Konfigurieren Sie die zu verwendete Sprachen",
     "composer": "Verwaltung von Abhängigkeiten - hier kann man diverse Module installieren/aktualisieren/deinstallieren. Die Abhängigkeiten zwischen den Modulen werden automatisch berücksichtigt.",
     "representationSettings": "Darstellungseinstellungen.",
     "unit": "Einstellungen Maßeinheiten.",

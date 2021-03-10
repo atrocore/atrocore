@@ -11,7 +11,7 @@
     "Composer": "Composer",
     "Currency": "Currency",
     "Dashlet": "Dashlet",
-    "Multilang": "Multi-Language",
+    "Multilang": "Multilingual",
     "Note": "Note",
     "Notification": "Notification",
     "Pricing": "Pricing",
@@ -608,8 +608,8 @@
       "emptyAndRequired": "Empty Required Fields"
     },
     "localesFilter": {
-      "": "All Locales",
-      "showGenericFields": "Show Main Locale Fields"
+      "": "All Languages",
+      "showGenericFields": "Show main language fields"
     },
     "language": {
       "af_ZA": "Afrikaans (af_ZA)",

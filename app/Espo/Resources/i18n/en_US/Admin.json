@@ -1,7 +1,7 @@
 {
   "labels": {
-    "multiLanguagesSettings": "Multi-Languages Settings",
-    "multiLanguages": "Multi-Languages",
+    "multiLanguagesSettings": "Languages",
+    "multiLanguages": "Languages",
     "Composer": "Module Manager",
     "log": "log",
     "Validate": "Validate",
@@ -129,7 +129,7 @@
     "jsonObject": "Json Object"
   },
   "fields": {
-    "isMultilang": "Multi-Language",
+    "isMultilang": "Multilingual",
     "fontSize": "Font-Size",
     "assetType": "Asset Type",
     "type": "Type",
@@ -194,7 +194,7 @@
   },
   "descriptions": {
     "inputLanguage": "Input languages for translatable fields.",
-    "multiLanguagesSettings": "Multi-Languages Settings",
+    "multiLanguagesSettings": "Configure multiple languages to be used",
     "composer": "Installation / uninstallation / updating of modules, which is dependency consistent",
     "representationSettings": "Representation settings",
     "unit": "Units of measurement settings",
