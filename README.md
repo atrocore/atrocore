@@ -86,7 +86,7 @@ AtroCore has a REST API and can be integrated with any third-party system. You c
 
 ### Documentation
 
-- We are working on documentation. The current version is available [here](https://atropim.com/help).
+- We are working on documentation. The current version of the User Guide is available [here](https://github.com/atrocore/atrocore-docs/tree/master/en/user-guide).
 - Documentation for administrators is available [here](https://github.com/atrocore/atrocore-docs/tree/master/en/administration).
 
 ### Requirements
