@@ -35,6 +35,7 @@ declare(strict_types=1);
 
 namespace Treo\Core\Utils;
 
+use Espo\Core\Container;
 use Espo\Core\Utils\Json;
 
 /**
@@ -42,7 +43,24 @@ use Espo\Core\Utils\Json;
  */
 class Layout extends \Espo\Core\Utils\Layout
 {
-    use \Treo\Traits\ContainerTrait;
+    /**
+     * @var Container
+     */
+    protected $container;
+
+    /**
+     * Set container
+     *
+     * @param Container $container
+     *
+     * @return $this
+     */
+    public function setContainer(Container $container)
+    {
+        $this->container = $container;
+
+        return $this;
+    }
 
     /**
      * Get Layout context
@@ -184,7 +202,7 @@ class Layout extends \Espo\Core\Utils\Layout
                                 $data[0]['rows'][$key][$fieldKey] = false;
 
                                 if (empty(array_diff($data[0]['rows'][$key], [false]))) {
-                                    array_splice($data[0]['rows'], $key,1);
+                                    array_splice($data[0]['rows'], $key, 1);
                                     $key--;
                                     continue 2;
                                 }
@@ -214,6 +232,16 @@ class Layout extends \Espo\Core\Utils\Layout
     protected function isPortal(): bool
     {
         return !empty($this->getContainer()->get('portal'));
+    }
+
+    /**
+     * Get container
+     *
+     * @return Container
+     */
+    protected function getContainer(): Container
+    {
+        return $this->container;
     }
 
     /**

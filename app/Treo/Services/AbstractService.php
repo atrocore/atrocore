@@ -33,6 +33,7 @@
 
 namespace Treo\Services;
 
+use Espo\Core\Container;
 use Espo\Core\Utils\Config;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
@@ -45,7 +46,34 @@ use Treo\Core\EventManager\Event;
  */
 abstract class AbstractService
 {
-    use \Treo\Traits\ContainerTrait;
+    /**
+     * @var Container
+     */
+    protected $container;
+
+    /**
+     * Set container
+     *
+     * @param Container $container
+     *
+     * @return $this
+     */
+    public function setContainer(Container $container)
+    {
+        $this->container = $container;
+
+        return $this;
+    }
+
+    /**
+     * Get container
+     *
+     * @return Container
+     */
+    protected function getContainer(): Container
+    {
+        return $this->container;
+    }
 
     /**
      * Reload dependency

@@ -35,7 +35,7 @@ declare(strict_types=1);
 
 namespace Treo\Core\Utils\Database\Schema;
 
-use Treo\Traits\ContainerTrait;
+use Espo\Core\Container;
 use Treo\Core\EventManager\Event;
 
 /**
@@ -43,7 +43,24 @@ use Treo\Core\EventManager\Event;
  */
 class Schema extends \Espo\Core\Utils\Database\Schema\Schema
 {
-    use ContainerTrait;
+    /**
+     * @var Container
+     */
+    protected $container;
+
+    /**
+     * Set container
+     *
+     * @param Container $container
+     *
+     * @return $this
+     */
+    public function setContainer(Container $container)
+    {
+        $this->container = $container;
+
+        return $this;
+    }
 
     /**
      * @inheritdoc
@@ -143,5 +160,15 @@ class Schema extends \Espo\Core\Utils\Database\Schema\Schema
         }
 
         return $event;
+    }
+
+    /**
+     * Get container
+     *
+     * @return Container
+     */
+    protected function getContainer(): Container
+    {
+        return $this->container;
     }
 }

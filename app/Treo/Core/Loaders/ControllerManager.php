@@ -35,21 +35,16 @@ declare(strict_types=1);
 
 namespace Treo\Core\Loaders;
 
-use Treo\Core\ControllerManager as Instance;
-
 /**
  * ControllerManager loader
  */
 class ControllerManager extends Base
 {
-
     /**
-     * Load ControllerManager
-     *
-     * @return Instance
+     * @inheritDoc
      */
     public function load()
     {
-        return (new Instance())->setContainer($this->getContainer());
+        return new \Treo\Core\ControllerManager($this->getContainer());
     }
 }

@@ -35,12 +35,12 @@ declare(strict_types=1);
 
 namespace Treo\Core;
 
-use Treo\Core\Utils\Util;
+use Espo\Core\Container;
+use Espo\Core\Utils\Util;
 use Espo\Core\Utils\Json;
 use Espo\Core\Exceptions\NotFound;
 use Slim\Http\Request;
 use StdClass;
-use Treo\Traits\ContainerTrait;
 use Treo\Core\EventManager\Event;
 
 /**
@@ -48,7 +48,20 @@ use Treo\Core\EventManager\Event;
  */
 class ControllerManager
 {
-    use ContainerTrait;
+    /**
+     * @var Container
+     */
+    private $container;
+
+    /**
+     * ControllerManager constructor.
+     *
+     * @param Container $container
+     */
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
 
     /**
      * Precess
@@ -212,5 +225,15 @@ class ControllerManager
         if (!is_null($result)) {
             $result = $event->getArgument('result');
         }
+    }
+
+    /**
+     * Get container
+     *
+     * @return Container
+     */
+    protected function getContainer(): Container
+    {
+        return $this->container;
     }
 }

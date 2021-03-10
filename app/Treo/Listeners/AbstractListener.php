@@ -35,6 +35,7 @@ declare(strict_types=1);
 
 namespace Treo\Listeners;
 
+use Espo\Core\Container;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Language;
@@ -45,12 +46,39 @@ use Espo\Core\Utils\Config;
  */
 abstract class AbstractListener
 {
-    use \Treo\Traits\ContainerTrait;
+    /**
+     * @var Container
+     */
+    protected $container;
 
     /**
      * @var array
      */
     protected $services = [];
+
+    /**
+     * Set container
+     *
+     * @param Container $container
+     *
+     * @return $this
+     */
+    public function setContainer(Container $container)
+    {
+        $this->container = $container;
+
+        return $this;
+    }
+
+    /**
+     * Get container
+     *
+     * @return Container
+     */
+    protected function getContainer(): Container
+    {
+        return $this->container;
+    }
 
     /**
      * Get service
