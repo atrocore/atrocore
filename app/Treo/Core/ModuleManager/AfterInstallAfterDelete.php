@@ -45,7 +45,7 @@ class AfterInstallAfterDelete
     /**
      * @var Container
      */
-    private $container;
+    protected $container;
 
     /**
      * AbstractEvent constructor.
