@@ -44,7 +44,9 @@ class Notification extends RDB
 {
     const UPDATE_COUNT_PATH = 'data/notifications-count';
 
-    public static function updateNotReadCount(): void
+    const NOT_READ_COUNT_FILE = 'data/notReadCount.json';
+
+    public static function refreshNotReadCount(): void
     {
         Util::createDir(self::UPDATE_COUNT_PATH);
         file_put_contents(self::UPDATE_COUNT_PATH . '/' . time() . '.txt', '1');
@@ -58,7 +60,7 @@ class Notification extends RDB
     {
         parent::afterSave($entity, $options);
 
-        self::updateNotReadCount();
+        self::refreshNotReadCount();
     }
 }
 

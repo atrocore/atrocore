@@ -36,6 +36,7 @@ declare(strict_types=1);
 namespace Treo\Console;
 
 use Espo\Core\Utils\Util;
+use Espo\Repositories\Notification as NotificationRepository;
 
 /**
  * Class Notification
@@ -59,7 +60,7 @@ class Notification extends AbstractConsole
             exit(1);
         }
 
-        $path = \Espo\Repositories\Notification::UPDATE_COUNT_PATH;
+        $path = NotificationRepository::UPDATE_COUNT_PATH;
 
         if (!empty($files = Util::scanDir($path))) {
             $this->refresh();
@@ -82,7 +83,7 @@ class Notification extends AbstractConsole
         $data = $sth->fetchAll(\PDO::FETCH_ASSOC);
 
         if (!empty($data)) {
-            file_put_contents('data/notReadCount.json', json_encode(array_column($data, 'total', 'userId')));
+            file_put_contents(NotificationRepository::NOT_READ_COUNT_FILE, json_encode(array_column($data, 'total', 'userId')));
         }
     }
 

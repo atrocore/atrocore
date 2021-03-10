@@ -33,13 +33,12 @@
 
 namespace Espo\Services;
 
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\NotFound;
-
-use Espo\ORM\Entity;
-
 use Espo\Core\Utils\Json;
+use Espo\Repositories\Notification as NotificationRepository;
 
+/**
+ * Class Notification
+ */
 class Notification extends \Espo\Services\Record
 {
     protected $actionHistoryDisabled = true;
@@ -123,7 +122,10 @@ class Notification extends \Espo\Services\Record
         $sql = "UPDATE notification SET `read` = 1 WHERE user_id = ".$pdo->quote($userId)." AND `read` = 0";
         $pdo->prepare($sql)->execute();
 
-        \Espo\Repositories\Notification::updateNotReadCount();
+        // update count for user
+        $notReadCount = Json::decode(file_get_contents(NotificationRepository::NOT_READ_COUNT_FILE), true);
+        $notReadCount[$userId] = 0;
+        file_put_contents(NotificationRepository::NOT_READ_COUNT_FILE, Json::encode($notReadCount));
 
         return true;
     }
@@ -226,7 +228,7 @@ class Notification extends \Espo\Services\Record
             $s = $pdo->prepare($sql);
             $s->execute();
 
-            \Espo\Repositories\Notification::updateNotReadCount();
+            NotificationRepository::refreshNotReadCount();
         }
 
 
