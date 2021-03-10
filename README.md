@@ -4,6 +4,8 @@
 
 AtroCore is an open-source software ecosystem distributed under GPLv3 License for free. AtroCore is designed for rapid development of web-based responsive business applications of any kind (ERP, PIM, CRM, DMS, MDM, DAM, etc.). It is an excellent tool for cost-effective and timely application development that comes with the powerful out-of-the-box functionality.
 
+Thanks to its configurable data model AtroCore is a fully fledged MDM System.
+
 AtroCore is a single page application (SPA) with an API-centric, service-oriented architecture, and flexible data model based on configurable entities and relations. You can organize any data and business-related processes directly in AtroCore, many of them via a simple and user-friendly configuration.
 
 ### For Whom Is AtroCore?
@@ -86,7 +88,7 @@ AtroCore has a REST API and can be integrated with any third-party system. You c
 
 ### Documentation
 
-- We are working on documentation. The current version is available [here](https://atropim.com/help).
+- We are working on documentation. The current version of the User Guide is available [here](https://github.com/atrocore/atrocore-docs/tree/master/en/user-guide).
 - Documentation for administrators is available [here](https://github.com/atrocore/atrocore-docs/tree/master/en/administration).
 
 ### Requirements
@@ -95,46 +97,9 @@ AtroCore has a REST API and can be integrated with any third-party system. You c
 * PHP 7.1 or above.
 * MySQL 5.5.3 or above.
 
-### Configuration Instructions Based on Your Server
-
-* [Apache server configuration](https://github.com/atrocore/atrocore-docs/blob/master/en/administration/apache-server-configuration.md)
-* [Nginx server configuration](https://github.com/atrocore/atrocore-docs/blob/master/en/administration/nginx-server-configuration.md)
-
 ### Installation
 
-> Installation guide is based on **Ubuntu**. Of course, you can use any unix-based system, but make sure that your OS supports the following commands.<br/>
-
-To create your new AtroCore application, first make sure you're using PHP 7.1 or above and have [Composer](https://getcomposer.org/download/) installed.
-
-1. Create your new project by running:
-   ```
-   composer create-project atrocore/skeleton-pim my-atrocore-project
-   ```
-   > **my-atrocore-project** – project name
-   
-2. Change recursively the user and group ownership for project files: 
-   ```
-   chown -R webserver_user:webserver_user my-atrocore-project/
-   ```
-   >**webserver_user** – depends on your webserver and can be one of the following: www, www-data, apache, etc.
-
-3. Change the permissions for project files: 
-   ```
-    find . -type d -exec chmod 755 {} + && find . -type f -exec chmod 644 {} +;
-    find data custom upload -type d -exec chmod 775 {} + && find data custom upload -type f -exec chmod 664 {} +
-   ```
-   
-4. Configure the crontab as described below.
-
-   4.1. Run the following command:
-      ```
-      crontab -e -u webserver_user
-      ```
-   4.2. Add the following configuration:
-      ```
-      * * * * * /usr/bin/php /var/www/my-atrocore-project/index.php cron 
-      ```
-5. Install AtroCore following the installation wizard in web interface. Go to http://YOUR_PROJECT/
+Installation Guide is available [here](https://github.com/atrocore/atrocore-docs/blob/master/en/administration/installation.md).
 
 ### License
 
