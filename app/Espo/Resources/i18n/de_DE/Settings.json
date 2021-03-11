@@ -1,7 +1,7 @@
 {
   "fields": {
     "isMultilangActive": "Aktiv",
-    "inputLanguageList": "Spracheingabe Liste",
+    "inputLanguageList": "Eingabesprachen",
     "aclAllowDeleteCreated": "das Entfernen von eigenerstellten Datensätzen erlauben",
     "appId": "ID",
     "isStreamSide": "Ist Aktivitätenpanel seitlich platziert",
