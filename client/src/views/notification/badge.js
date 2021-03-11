@@ -145,7 +145,7 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
                     count = response[this.getUser().id];
                 }
 
-                if (!isFirstCheck && count > this.unreadCount) {
+                if (!isFirstCheck && count > this.unreadCount && $('#nofitication.alert-danger').length === 0) {
                     if ((count - this.unreadCount) > 1) {
                         Espo.Ui.notify(this.translate('youHaveNewNotifications'), 'info', 5000);
                     } else {
