@@ -148,11 +148,15 @@ class DataManager
      */
     public function clearCache()
     {
-        Util::removeDir(self::CACHE_DIR_PATH);
-        self::createCacheDir();
+        try {
+            Util::removeDir(self::CACHE_DIR_PATH);
+            self::createCacheDir();
 
-        $this->getConfig()->remove('cacheTimestamp');
-        $this->getConfig()->save();
+            $this->getConfig()->remove('cacheTimestamp');
+            $this->getConfig()->save();
+        } catch (\Throwable $e) {
+            $GLOBALS['log']->error('Cache clearing failed: ' . $e->getMessage());
+        }
 
         return true;
     }
