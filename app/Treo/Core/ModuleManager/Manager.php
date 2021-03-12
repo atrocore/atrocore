@@ -46,9 +46,9 @@ class Manager
     const FILE_PATH = 'data/modules.json';
 
     /**
-     * @var array|null
+     * @var array
      */
-    private $modules = null;
+    private $modules = [];
 
     /**
      * @var Container
