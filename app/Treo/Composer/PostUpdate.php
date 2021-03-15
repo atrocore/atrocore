@@ -143,6 +143,21 @@ class PostUpdate
     }
 
     /**
+     * @param string $dir
+     */
+    public static function createDir(string $dir): void
+    {
+        if (!file_exists($dir)) {
+            try {
+                mkdir($dir, 0777, true);
+                sleep(1);
+            } catch (\Throwable $e) {
+                // ignore
+            }
+        }
+    }
+
+    /**
      * PostUpdate constructor.
      */
     public function __construct()
@@ -399,8 +414,12 @@ class PostUpdate
 
         self::renderLine('Cache clearing...');
 
-        // clear cache
-        $this->getContainer()->get('dataManager')->clearCache();
+        $cacheDir = 'data/cache';
+        self::removeDir($cacheDir);
+        self::createDir($cacheDir);
+
+        $config->remove('cacheTimestamp');
+        $config->save();
 
         self::renderLine('Done!');
     }
