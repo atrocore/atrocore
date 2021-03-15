@@ -70,47 +70,51 @@ class PostUpdate
         // set container
         self::$container = (new App())->getContainer();
 
-        // logout all
-        self::logoutAll();
+        try {
+            // logout all
+            self::logoutAll();
 
-        // copy root files
-        self::copyRootFiles();
+            // copy root files
+            self::copyRootFiles($rootPath);
 
-        // save stable-composer.json file
-        self::saveStableComposerJson();
+            // save stable-composer.json file
+            self::saveStableComposerJson();
 
-        // update modules list
-        self::updateModulesList();
+            // update modules list
+            self::updateModulesList();
 
-        // copy modules event
-        self::copyModulesEvent();
+            // copy modules event
+            self::copyModulesEvent();
 
-        // copy modules migrations
-        self::copyModulesMigrations();
+            // copy modules migrations
+            self::copyModulesMigrations();
 
-        // upload demo data if it needs
-        self::uploadDemoData();
+            // upload demo data if it needs
+            self::uploadDemoData();
 
-        // cache clearing
-        self::clearCache();
+            // cache clearing
+            self::clearCache();
 
-        // update client files
-        self::updateClientFiles();
+            // update client files
+            self::updateClientFiles();
 
-        // create config if it needs
-        self::createConfig();
+            // create config if it needs
+            self::createConfig();
 
-        // init events
-        self::initEvents();
+            // init events
+            self::initEvents();
 
-        // run migrations
-        self::runMigrations();
+            // run migrations
+            self::runMigrations();
 
-        // send notification
-        self::sendNotification();
+            // send notification
+            self::sendNotification();
 
-        // save new composer lock
-        self::saveComposerLock();
+            // save new composer lock
+            self::saveComposerLock();
+        } catch (\Throwable $e) {
+            self::restore();
+        }
     }
 
     /**
@@ -246,27 +250,19 @@ class PostUpdate
         }
 
         self::renderLine('Logout all...');
-
-        try {
-            $sth = self::$container->get('pdo')->prepare("UPDATE auth_token SET deleted=1 WHERE 1");
-            $sth->execute();
-        } catch (\Throwable $e) {
-            self::renderLine('Error!');
-            exit(1);
-        }
-
+        $sth = self::$container->get('pdo')->prepare("UPDATE auth_token SET deleted=1 WHERE 1");
+        $sth->execute();
         self::renderLine('Done!');
     }
 
     /**
      * Copy root files
+     *
+     * @param string $rootPath
      */
-    private static function copyRootFiles(): void
+    private static function copyRootFiles(string $rootPath): void
     {
-        $src = dirname(dirname(dirname(__DIR__))) . '/copy';
-        $dest = dirname(dirname(dirname(dirname(dirname(dirname(__DIR__))))));
-
-        self::copyDir($src, $dest);
+        self::copyDir($rootPath . '/vendor/atrocore/core/copy', $rootPath);
     }
 
     /**
@@ -461,16 +457,11 @@ class PostUpdate
     {
         self::renderLine('Cache clearing...');
 
-        try {
-            self::removeDir('data/cache');
-            self::createDir('data/cache');
+        self::removeDir('data/cache');
+        self::createDir('data/cache');
 
-            self::$container->get('config')->remove('cacheTimestamp');
-            self::$container->get('config')->save();
-        } catch (\Throwable $e) {
-            self::renderLine('Error!');
-            exit(1);
-        }
+        self::$container->get('config')->remove('cacheTimestamp');
+        self::$container->get('config')->save();
 
         self::renderLine('Done!');
     }
@@ -482,15 +473,10 @@ class PostUpdate
     {
         self::renderLine('Copy js files...');
 
-        try {
-            self::removeDir('client');
-            self::copyDir(dirname(CORE_PATH) . '/client', 'client');
-            foreach (self::$container->get('moduleManager')->getModules() as $module) {
-                self::copyDir($module->getClientPath(), 'client');
-            }
-        } catch (\Throwable $e) {
-            self::renderLine('Error!');
-            exit(1);
+        self::removeDir('client');
+        self::copyDir(dirname(CORE_PATH) . '/client', 'client');
+        foreach (self::$container->get('moduleManager')->getModules() as $module) {
+            self::copyDir($module->getClientPath(), 'client');
         }
 
         self::renderLine('Done!');
@@ -507,22 +493,17 @@ class PostUpdate
         if (!file_exists($path)) {
             self::renderLine('Create main config...');
 
-            try {
-                // get default data
-                $data = include 'vendor/atrocore/core/app/Espo/Core/defaults/config.php';
+            // get default data
+            $data = include 'vendor/atrocore/core/app/Espo/Core/defaults/config.php';
 
-                // prepare salt
-                $data['passwordSalt'] = mb_substr(md5((string)time()), 0, 9);
+            // prepare salt
+            $data['passwordSalt'] = mb_substr(md5((string)time()), 0, 9);
 
-                // get content
-                $content = "<?php\nreturn " . self::$container->get('fileManager')->varExport($data) . ";\n?>";
+            // get content
+            $content = "<?php\nreturn " . self::$container->get('fileManager')->varExport($data) . ";\n?>";
 
-                // create config
-                file_put_contents($path, $content);
-            } catch (\Throwable $e) {
-                self::renderLine('Error!');
-                exit(1);
-            }
+            // create config
+            file_put_contents($path, $content);
 
             self::renderLine('Done!');
         }
@@ -548,13 +529,7 @@ class PostUpdate
             // run
             foreach ($composerDiff['install'] as $row) {
                 self::renderLine('Call after install event for ' . $row['id'] . '... ');
-                try {
-                    self::$container->get('moduleManager')->getModuleInstallDeleteObject($row['id'])->afterInstall();
-                } catch (\Throwable $e) {
-                    self::renderLine('Error!');
-                    exit(1);
-                }
-
+                self::$container->get('moduleManager')->getModuleInstallDeleteObject($row['id'])->afterInstall();
                 self::renderLine('Done!');
             }
         }
@@ -564,13 +539,7 @@ class PostUpdate
             // run
             foreach ($composerDiff['delete'] as $row) {
                 self::renderLine('Call after delete event for ' . $row['id'] . '... ');
-                try {
-                    self::$container->get('moduleManager')->getModuleInstallDeleteObject($row['id'])->afterDelete();
-                } catch (\Throwable $e) {
-                    self::renderLine('Error!');
-                    exit(1);
-                }
-
+                self::$container->get('moduleManager')->getModuleInstallDeleteObject($row['id'])->afterDelete();
                 self::renderLine('Done!');
             }
         }
@@ -593,12 +562,7 @@ class PostUpdate
 
         if (isset($data['Treo'])) {
             self::renderLine('Run migrations for Core... ');
-            try {
-                $migration->run('Treo', self::prepareVersion($data['Treo']['from']), self::prepareVersion($data['Treo']['to']));
-            } catch (\Throwable $e) {
-                self::renderLine('Error!');
-                exit(1);
-            }
+            $migration->run('Treo', self::prepareVersion($data['Treo']['from']), self::prepareVersion($data['Treo']['to']));
             self::renderLine('Done!');
 
         }
@@ -606,12 +570,7 @@ class PostUpdate
         foreach (self::getModules() as $id) {
             if (isset($data[$id])) {
                 self::renderLine('Run migrations for ' . $id . '... ');
-                try {
-                    $migration->run($id, self::prepareVersion($data[$id]['from']), self::prepareVersion($data[$id]['to']));
-                } catch (\Throwable $e) {
-                    self::renderLine('Error!');
-                    exit(1);
-                }
+                $migration->run($id, self::prepareVersion($data[$id]['from']), self::prepareVersion($data[$id]['to']));
                 self::renderLine('Done!');
             }
         }
@@ -626,25 +585,20 @@ class PostUpdate
 
         if (!empty($composerDiff['install']) || !empty($composerDiff['update']) || !empty($composerDiff['delete'])) {
             self::renderLine('Send update notifications to admin users... ');
-            try {
-                $em = self::$container->get('entityManager');
-                $users = $em->getRepository('User')->getAdminUsers();
-                if (!empty($users)) {
-                    foreach ($composerDiff as $status => $modules) {
-                        foreach ($modules as $module) {
-                            foreach ($users as $user) {
-                                $notification = $em->getEntity('Notification');
-                                $notification->set('type', 'Message');
-                                $notification->set('message', self::getMessageForComposer($status, $module));
-                                $notification->set('userId', $user['id']);
-                                $em->saveEntity($notification);
-                            }
+            $em = self::$container->get('entityManager');
+            $users = $em->getRepository('User')->getAdminUsers();
+            if (!empty($users)) {
+                foreach ($composerDiff as $status => $modules) {
+                    foreach ($modules as $module) {
+                        foreach ($users as $user) {
+                            $notification = $em->getEntity('Notification');
+                            $notification->set('type', 'Message');
+                            $notification->set('message', self::getMessageForComposer($status, $module));
+                            $notification->set('userId', $user['id']);
+                            $em->saveEntity($notification);
                         }
                     }
                 }
-            } catch (\Throwable $e) {
-                self::renderLine('Error!');
-                exit(1);
             }
 
             self::renderLine('Done!');
@@ -782,6 +736,7 @@ class PostUpdate
 
     /**
      * @return string
+     * @throws \Exception
      */
     private static function getRootPath(): string
     {
@@ -795,8 +750,7 @@ class PostUpdate
             }
 
             if ($path == '/') {
-                self::renderLine("Can't find root directory.");
-                exit(1);
+                throw new \Exception("Can't find root directory.");
             }
         }
 
@@ -811,5 +765,13 @@ class PostUpdate
         if (file_exists('composer.lock')) {
             file_put_contents(self::PREVIOUS_COMPOSER_LOCK, file_get_contents('composer.lock'));
         }
+    }
+
+    /**
+     * Restore system
+     */
+    private static function restore(): void
+    {
+
     }
 }
