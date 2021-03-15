@@ -58,7 +58,7 @@ if (file_exists('dump')) {
         $options[\PDO::MYSQL_ATTR_SSL_CIPHER] = $db['sslCipher'];
     }
 
-    $pdo = new \PDO("Mysql:host={$db['host']};{$port}dbname={$db['dbname']};charset={$db['charset']}", $db['user'], $db['password'], $options);
+    $pdo = new \PDO("mysql:host={$db['host']};{$port}dbname={$db['dbname']};charset={$db['charset']}", $db['user'], $db['password'], $options);
 
     $pdo->exec(file_get_contents('dump/db.sql'));
 

@@ -260,7 +260,7 @@ class PostUpdate
      */
     private static function logoutAll(): void
     {
-        if (!self::$container->get('config')->get('isInstalled')) {
+        if (!self::$container->get('config')->get('isInstalled', false)) {
             return;
         }
 
@@ -275,7 +275,7 @@ class PostUpdate
      */
     private static function copyRootFiles(): void
     {
-        if (self::$container->get('config')->get('isInstalled')) {
+        if (self::$container->get('config')->get('isInstalled', false)) {
             return;
         }
 
@@ -476,7 +476,7 @@ class PostUpdate
      */
     private static function clearCache()
     {
-        if (!self::$container->get('config')->get('isInstalled')) {
+        if (!self::$container->get('config')->get('isInstalled', false)) {
             return;
         }
 
@@ -539,7 +539,7 @@ class PostUpdate
      */
     private static function initEvents(): void
     {
-        if (!self::$container->get('config')->get('isInstalled')) {
+        if (!self::$container->get('config')->get('isInstalled', false)) {
             return;
         }
 
@@ -575,7 +575,7 @@ class PostUpdate
      */
     private static function runMigrations(): void
     {
-        if (!self::$container->get('config')->get('isInstalled')) {
+        if (!self::$container->get('config')->get('isInstalled', false)) {
             return;
         }
 
@@ -808,9 +808,7 @@ class PostUpdate
 
         if (file_exists(self::UPDATE_RUNNING_FILE)) {
             self::renderLine('Restoring...');
-
-            // todo
-
+            exec('php restore.php 2>/dev/null');
             self::renderLine('Done!');
         }
     }
@@ -822,7 +820,7 @@ class PostUpdate
      */
     private static function createDump(): void
     {
-        if (self::$container->get('config')->get('isInstalled')) {
+        if (!self::$container->get('config')->get('isInstalled', false)) {
             return;
         }
 
