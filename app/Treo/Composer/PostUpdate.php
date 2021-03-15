@@ -77,9 +77,6 @@ class PostUpdate
             // copy root files
             self::copyRootFiles($rootPath);
 
-            // save stable-composer.json file
-            self::saveStableComposerJson();
-
             // update modules list
             self::updateModulesList();
 
@@ -110,10 +107,9 @@ class PostUpdate
             // send notification
             self::sendNotification();
 
-            // save new composer lock
-            self::saveComposerLock();
+            self::onSuccess();
         } catch (\Throwable $e) {
-            self::restore();
+            self::onFailed();
         }
     }
 
@@ -263,14 +259,6 @@ class PostUpdate
     private static function copyRootFiles(string $rootPath): void
     {
         self::copyDir($rootPath . '/vendor/atrocore/core/copy', $rootPath);
-    }
-
-    /**
-     * Save stable-composer.json file
-     */
-    private static function saveStableComposerJson(): void
-    {
-        file_put_contents('data/stable-composer.json', file_get_contents('data/stable-composer.json'));
     }
 
     /**
@@ -758,20 +746,23 @@ class PostUpdate
     }
 
     /**
-     * Save new composer lock
+     * Update successful
      */
-    private static function saveComposerLock(): void
+    private static function onSuccess(): void
     {
         if (file_exists('composer.lock')) {
             file_put_contents(self::PREVIOUS_COMPOSER_LOCK, file_get_contents('composer.lock'));
         }
+
+        if (file_exists('composer.json')) {
+            file_put_contents('data/stable-composer.json', file_get_contents('composer.json'));
+        }
     }
 
     /**
-     * Restore system
+     * Update failed
      */
-    private static function restore(): void
+    private static function onFailed(): void
     {
-
     }
 }
