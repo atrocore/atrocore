@@ -149,7 +149,7 @@ class Migration
     protected function prepareVersion(string $version): ?string
     {
         // prepare version
-        $version = str_replace('v', '', $version);
+        $version = PostUpdate::prepareVersion($version);
 
         if (preg_match_all('/^(.*)\.(.*)\.(.*)$/', $version, $matches)) {
             // prepare data
