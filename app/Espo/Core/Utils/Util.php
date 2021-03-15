@@ -33,8 +33,8 @@
 
 namespace Espo\Core\Utils;
 
-use \Espo\Core\Exceptions\Error;
 use Espo\ORM\EntityCollection;
+use Treo\Composer\PostUpdate;
 
 /**
  * Class Util
@@ -46,7 +46,10 @@ class Util
      */
     protected static $separator = DIRECTORY_SEPARATOR;
 
-    protected static $reservedWords = array('Case');
+    /**
+     * @var string[]
+     */
+    protected static $reservedWords = ['Case'];
 
     /**
      * @param string $dir
@@ -55,18 +58,7 @@ class Util
      */
     public static function scanDir(string $dir): array
     {
-        // prepare result
-        $result = [];
-
-        if (file_exists($dir) && is_dir($dir)) {
-            foreach (scandir($dir) as $item) {
-                if (!in_array($item, ['.', '..'])) {
-                    $result[] = $item;
-                }
-            }
-        }
-
-        return $result;
+        return PostUpdate::scanDir($dir);
     }
 
     /**
@@ -93,16 +85,7 @@ class Util
      */
     public static function removeDir(string $dir): void
     {
-        if (file_exists($dir) && is_dir($dir)) {
-            foreach (self::scanDir($dir) as $object) {
-                if (is_dir($dir . "/" . $object)) {
-                    self::removeDir($dir . "/" . $object);
-                } else {
-                    unlink($dir . "/" . $object);
-                }
-            }
-            rmdir($dir);
-        }
+        PostUpdate::removeDir($dir);
     }
 
     /**
@@ -115,26 +98,7 @@ class Util
      */
     public static function copyDir(string $src, string $dest): void
     {
-        if (!is_dir($src)) {
-            return;
-        }
-
-        if (!is_dir($dest)) {
-            if (!mkdir($dest)) {
-                return;
-            }
-        }
-
-        $i = new \DirectoryIterator($src);
-        foreach ($i as $f) {
-            if ($f->isFile()) {
-                copy($f->getRealPath(), "$dest/" . $f->getFilename());
-            } else {
-                if (!$f->isDot() && $f->isDir()) {
-                    self::copyDir($f->getRealPath(), "$dest/$f");
-                }
-            }
-        }
+        PostUpdate::copyDir($src, $dest);
     }
 
     /**

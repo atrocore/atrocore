@@ -42,7 +42,6 @@ use Treo\Core\Migration\Migration;
 use Treo\Core\ModuleManager\Manager;
 use Treo\Core\ModuleManager\Manager as ModuleManager;
 use Treo\Core\ORM\EntityManager;
-use Espo\Core\Utils\Util;
 use Treo\Services\Composer as ComposerService;
 
 /**
@@ -67,6 +66,80 @@ class PostUpdate
         }
 
         echo $result;
+    }
+
+    /**
+     * @param string $dir
+     *
+     * @return array
+     */
+    public static function scanDir(string $dir): array
+    {
+        // prepare result
+        $result = [];
+
+        if (file_exists($dir) && is_dir($dir)) {
+            foreach (scandir($dir) as $item) {
+                if (!in_array($item, ['.', '..'])) {
+                    $result[] = $item;
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Remove dir recursively
+     *
+     * @param string $dir
+     *
+     * @return void
+     */
+    public static function removeDir(string $dir): void
+    {
+        if (file_exists($dir) && is_dir($dir)) {
+            foreach (self::scanDir($dir) as $object) {
+                if (is_dir($dir . "/" . $object)) {
+                    self::removeDir($dir . "/" . $object);
+                } else {
+                    unlink($dir . "/" . $object);
+                }
+            }
+            rmdir($dir);
+        }
+    }
+
+    /**
+     * Copy dir recursively
+     *
+     * @param string $src
+     * @param string $dest
+     *
+     * @return void
+     */
+    public static function copyDir(string $src, string $dest): void
+    {
+        if (!is_dir($src)) {
+            return;
+        }
+
+        if (!is_dir($dest)) {
+            if (!mkdir($dest)) {
+                return;
+            }
+        }
+
+        $i = new \DirectoryIterator($src);
+        foreach ($i as $f) {
+            if ($f->isFile()) {
+                copy($f->getRealPath(), "$dest/" . $f->getFilename());
+            } else {
+                if (!$f->isDot() && $f->isDir()) {
+                    self::copyDir($f->getRealPath(), "$dest/$f");
+                }
+            }
+        }
     }
 
     /**
@@ -196,8 +269,8 @@ class PostUpdate
         // get diff path
         $diffPath = 'data/composer-diff';
 
-        foreach (Util::scanDir($diffPath) as $type) {
-            foreach (Util::scanDir("$diffPath/$type") as $file) {
+        foreach (self::scanDir($diffPath) as $type) {
+            foreach (self::scanDir("$diffPath/$type") as $file) {
                 $parts = explode('_', file_get_contents("$diffPath/$type/$file"));
                 $moduleId = str_replace('.txt', '', $file);
                 $result[$type][$moduleId] = [
@@ -537,7 +610,7 @@ class PostUpdate
             $src = dirname(dirname(dirname(__DIR__))) . '/copy';
             $dest = dirname(dirname(dirname(dirname(dirname(dirname(__DIR__))))));
 
-            Util::copyDir($src, $dest);
+            self::copyDir($src, $dest);
         }
     }
 
@@ -547,12 +620,12 @@ class PostUpdate
     private function updateClientFiles(): void
     {
         // delete old
-        Util::removeDir('client');
+        self::removeDir('client');
 
         // copy new
-        Util::copyDir(dirname(CORE_PATH) . '/client', 'client');
+        self::copyDir(dirname(CORE_PATH) . '/client', 'client');
         foreach ($this->getContainer()->get('moduleManager')->getModules() as $module) {
-            Util::copyDir($module->getClientPath(), 'client');
+            self::copyDir($module->getClientPath(), 'client');
         }
     }
 
