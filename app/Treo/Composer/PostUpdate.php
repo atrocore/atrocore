@@ -51,8 +51,20 @@ class PostUpdate
     /**
      * Run post-update actions
      */
-    public function run(): void
+    public static function postUpdate()
     {
+        // get root path
+        $rootPath = self::getRootPath();
+
+        // change directory
+        chdir($rootPath);
+
+        // set the include_path
+        set_include_path($rootPath);
+
+        // autoload
+        require_once 'vendor/autoload.php';
+
         // set container
         self::$container = (new App())->getContainer();
 
@@ -94,6 +106,14 @@ class PostUpdate
 
         //send notification
         self::sendNotification();
+    }
+
+    /**
+     * @deprecated will be removed after 01.01.2022
+     */
+    public function run(): void
+    {
+        self::postUpdate();
     }
 
     /**
@@ -698,5 +718,28 @@ class PostUpdate
         }
 
         return $result;
+    }
+
+    /**
+     * @return string
+     */
+    private static function getRootPath(): string
+    {
+        $rootPath = '';
+
+        $path = __FILE__;
+        while (empty($rootPath)) {
+            $path = dirname($path);
+            if (file_exists($path . "/composer.phar")) {
+                $rootPath = $path;
+            }
+
+            if ($path == '/') {
+                self::renderLine("Can't find root directory.");
+                exit(1);
+            }
+        }
+
+        return $rootPath;
     }
 }
