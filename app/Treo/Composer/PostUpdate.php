@@ -43,6 +43,8 @@ use Treo\Core\Application as App;
  */
 class PostUpdate
 {
+    const PREVIOUS_COMPOSER_LOCK = 'data/previous-composer.lock';
+
     /**
      * @var Container
      */
@@ -104,8 +106,11 @@ class PostUpdate
         // run migrations
         self::runMigrations();
 
-        //send notification
+        // send notification
         self::sendNotification();
+
+        // save new composer lock
+        self::saveComposerLock();
     }
 
     /**
@@ -691,6 +696,61 @@ class PostUpdate
      */
     private static function getComposerDiff(): array
     {
+        if (!file_exists(self::PREVIOUS_COMPOSER_LOCK) && file_exists('composer-cmd.php')) {
+            return self::getComposerDiffByFiles();
+        }
+
+        // prepare result
+        $result = [
+            'install' => [],
+            'update'  => [],
+            'delete'  => [],
+        ];
+
+        if (!file_exists(self::PREVIOUS_COMPOSER_LOCK)) {
+            return $result;
+        }
+
+        // prepare data
+        $oldData = self::getComposerLockPackages(self::PREVIOUS_COMPOSER_LOCK);
+        $newData = self::getComposerLockPackages();
+
+        foreach ($oldData as $package) {
+            if (!isset($newData[$package['name']])) {
+                $result['delete'][$package['extra']['treoId']] = [
+                    'id'      => $package['extra']['treoId'],
+                    'package' => $package,
+                    'from'    => null,
+                    'to'      => null
+                ];
+            } elseif ($package['version'] != $newData[$package['name']]['version']) {
+                $result['update'][$package['extra']['treoId']] = [
+                    'id'      => $package['extra']['treoId'],
+                    'package' => $newData[$package['name']],
+                    'from'    => $package['version'],
+                    'to'      => $newData[$package['name']]['version']
+                ];
+            }
+        }
+        foreach ($newData as $package) {
+            if (!isset($oldData[$package['name']])) {
+                $result['install'][$package['extra']['treoId']] = [
+                    'id'      => $package['extra']['treoId'],
+                    'package' => $package,
+                    'from'    => null,
+                    'to'      => null
+                ];
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @deprecated will be removed after 01.01.2022
+     */
+    private static function getComposerDiffByFiles(): array
+    {
         // prepare result
         $result = [
             'install' => [],
@@ -741,5 +801,15 @@ class PostUpdate
         }
 
         return $rootPath;
+    }
+
+    /**
+     * Save new composer lock
+     */
+    private static function saveComposerLock(): void
+    {
+        if (file_exists('composer.lock')) {
+            file_put_contents(self::PREVIOUS_COMPOSER_LOCK, file_get_contents('composer.lock'));
+        }
     }
 }
