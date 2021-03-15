@@ -245,7 +245,7 @@ class PostUpdate
             return;
         }
 
-        self::renderLine('Logout all...');
+        self::renderLine('Logging out all users...');
         $sth = self::$container->get('pdo')->prepare("UPDATE auth_token SET deleted=1 WHERE 1");
         $sth->execute();
         self::renderLine('Done!');
@@ -262,7 +262,7 @@ class PostUpdate
             return;
         }
 
-        self::renderLine('Copy root files...');
+        self::renderLine('Coping system files...');
         self::copyDir($rootPath . '/vendor/atrocore/core/copy', $rootPath);
         self::renderLine('Done!');
     }
@@ -272,7 +272,7 @@ class PostUpdate
      */
     private static function updateModulesList(): void
     {
-        self::renderLine('Update modules list...');
+        self::renderLine('Updating list of used modules...');
         file_put_contents('data/modules.json', json_encode(self::getModules()));
         self::renderLine('Done!');
     }
@@ -282,7 +282,7 @@ class PostUpdate
      */
     private static function copyModulesEvent(): void
     {
-        self::renderLine('Copy modules install|delete scripts...');
+        self::renderLine('Coping post-install & post-delete scripts for modules...');
         foreach (self::getModules() as $module) {
             // prepare class name
             $className = "\\" . $module . "\\Event";
@@ -323,7 +323,7 @@ class PostUpdate
      */
     private static function copyModulesMigrations(): void
     {
-        self::renderLine('Copy modules migrations...');
+        self::renderLine('Coping migration scripts...');
 
         // prepare data
         $data = [];
@@ -429,7 +429,7 @@ class PostUpdate
     private static function uploadDemoData()
     {
         if (file_exists('first_update.log')) {
-            self::renderLine('Upload demo-data');
+            self::renderLine('Uploading demo-data...');
             $content = @file_get_contents('https://demo-source.atropim.com/demo-data.zip');
             if (!empty($content)) {
                 file_put_contents('demo-data.zip', $content);
@@ -463,7 +463,7 @@ class PostUpdate
             return;
         }
 
-        self::renderLine('Cache clearing...');
+        self::renderLine('Clearing cache...');
 
         self::removeDir('data/cache');
         self::createDir('data/cache');
@@ -479,7 +479,7 @@ class PostUpdate
      */
     private static function updateClientFiles(): void
     {
-        self::renderLine('Copy js files...');
+        self::renderLine('Coping frontend files...');
 
         self::removeDir('client');
         self::copyDir(dirname(CORE_PATH) . '/client', 'client');
@@ -499,7 +499,7 @@ class PostUpdate
         $path = 'data/config.php';
 
         if (!file_exists($path)) {
-            self::renderLine('Create main config...');
+            self::renderLine('Creating main config...');
 
             // get default data
             $data = include 'vendor/atrocore/core/app/Espo/Core/defaults/config.php';
@@ -536,7 +536,7 @@ class PostUpdate
 
             // run
             foreach ($composerDiff['install'] as $row) {
-                self::renderLine('Call after install event for ' . $row['id'] . '... ');
+                self::renderLine('Calling post-install script for ' . $row['id'] . '... ');
                 self::$container->get('moduleManager')->getModuleInstallDeleteObject($row['id'])->afterInstall();
                 self::renderLine('Done!');
             }
@@ -546,7 +546,7 @@ class PostUpdate
         if (!empty($composerDiff['delete'])) {
             // run
             foreach ($composerDiff['delete'] as $row) {
-                self::renderLine('Call after delete event for ' . $row['id'] . '... ');
+                self::renderLine('Calling post-delete script for ' . $row['id'] . '... ');
                 self::$container->get('moduleManager')->getModuleInstallDeleteObject($row['id'])->afterDelete();
                 self::renderLine('Done!');
             }
@@ -569,7 +569,7 @@ class PostUpdate
         $migration = self::$container->get('migration');
 
         if (isset($data['Treo'])) {
-            self::renderLine('Run migrations for Core... ');
+            self::renderLine('Running migrations for Core... ');
             $migration->run('Treo', self::prepareVersion($data['Treo']['from']), self::prepareVersion($data['Treo']['to']));
             self::renderLine('Done!');
 
@@ -577,7 +577,7 @@ class PostUpdate
 
         foreach (self::getModules() as $id) {
             if (isset($data[$id])) {
-                self::renderLine('Run migrations for ' . $id . '... ');
+                self::renderLine('Running migrations for ' . $id . '... ');
                 $migration->run($id, self::prepareVersion($data[$id]['from']), self::prepareVersion($data[$id]['to']));
                 self::renderLine('Done!');
             }
@@ -592,7 +592,7 @@ class PostUpdate
         $composerDiff = self::getComposerDiff();
 
         if (!empty($composerDiff['install']) || !empty($composerDiff['update']) || !empty($composerDiff['delete'])) {
-            self::renderLine('Send update notifications to admin users... ');
+            self::renderLine('Sending notification(s) to admin users... ');
             $em = self::$container->get('entityManager');
             $users = $em->getRepository('User')->getAdminUsers();
             if (!empty($users)) {
