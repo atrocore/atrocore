@@ -258,7 +258,13 @@ class PostUpdate
      */
     private static function copyRootFiles(string $rootPath): void
     {
+        if (self::$container->get('config')->get('isInstalled')) {
+            return;
+        }
+
+        self::renderLine('Copy root files...');
         self::copyDir($rootPath . '/vendor/atrocore/core/copy', $rootPath);
+        self::renderLine('Done!');
     }
 
     /**
@@ -266,7 +272,9 @@ class PostUpdate
      */
     private static function updateModulesList(): void
     {
+        self::renderLine('Update modules list...');
         file_put_contents('data/modules.json', json_encode(self::getModules()));
+        self::renderLine('Done!');
     }
 
     /**
@@ -274,6 +282,7 @@ class PostUpdate
      */
     private static function copyModulesEvent(): void
     {
+        self::renderLine('Copy modules after install|delete scripts...');
         foreach (self::getModules() as $module) {
             // prepare class name
             $className = "\\" . $module . "\\Event";
@@ -306,6 +315,7 @@ class PostUpdate
                 }
             }
         }
+        self::renderLine('Done!');
     }
 
     /**
@@ -313,6 +323,8 @@ class PostUpdate
      */
     private static function copyModulesMigrations(): void
     {
+        self::renderLine('Copy modules migrations...');
+
         // prepare data
         $data = [];
 
@@ -356,6 +368,8 @@ class PostUpdate
                 copy("$src/$file", "$dest/$file");
             }
         }
+
+        self::renderLine('Done!');
     }
 
     /**
@@ -415,6 +429,7 @@ class PostUpdate
     private static function uploadDemoData()
     {
         if (file_exists('first_update.log')) {
+            self::renderLine('Upload demo-data');
             $content = @file_get_contents('https://demo-source.atropim.com/demo-data.zip');
             if (!empty($content)) {
                 file_put_contents('demo-data.zip', $content);
@@ -434,6 +449,7 @@ class PostUpdate
                 // unlink installing file
                 unlink('first_update.log');
             }
+            self::renderLine('Done!');
         }
     }
 
@@ -443,6 +459,10 @@ class PostUpdate
      */
     private static function clearCache()
     {
+        if (!self::$container->get('config')->get('isInstalled')) {
+            return;
+        }
+
         self::renderLine('Cache clearing...');
 
         self::removeDir('data/cache');
