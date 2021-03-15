@@ -55,6 +55,8 @@ class V1Dot1Dot38 extends Base
         $composerData['autoload']['classmap'] = [];
 
         file_put_contents('composer.json', json_encode($composerData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+
+        copy('composer.phar', 'vendor/atrocore/core/copy/composer.phar');
     }
 
     /**
