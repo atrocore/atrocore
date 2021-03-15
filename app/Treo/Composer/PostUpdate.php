@@ -282,7 +282,7 @@ class PostUpdate
      */
     private static function copyModulesEvent(): void
     {
-        self::renderLine('Copy modules after install|delete scripts...');
+        self::renderLine('Copy modules install|delete scripts...');
         foreach (self::getModules() as $module) {
             // prepare class name
             $className = "\\" . $module . "\\Event";
