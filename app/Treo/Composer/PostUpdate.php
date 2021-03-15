@@ -43,7 +43,10 @@ use Treo\Core\Application as App;
  */
 class PostUpdate
 {
-    const PREVIOUS_COMPOSER_LOCK = 'data/previous-composer.lock';
+    public const PREVIOUS_COMPOSER_LOCK = 'data/previous-composer.lock';
+    public const UPDATE_RUNNING_FILE = 'data/update-is-running.txt';
+    public const DUMP_DIR = 'dump';
+    public const DIRS_FOR_DUMPING = ['data', 'client', 'custom', 'vendor'];
 
     /**
      * @var Container
@@ -51,18 +54,23 @@ class PostUpdate
     private static $container;
 
     /**
+     * @var string
+     */
+    private static $rootPath;
+
+    /**
      * Run post-update actions
      */
     public static function postUpdate()
     {
         // get root path
-        $rootPath = self::getRootPath();
+        self::$rootPath = self::getRootPath();
 
         // change directory
-        chdir($rootPath);
+        chdir(self::$rootPath);
 
         // set the include_path
-        set_include_path($rootPath);
+        set_include_path(self::$rootPath);
 
         // autoload
         require_once 'vendor/autoload.php';
@@ -74,8 +82,14 @@ class PostUpdate
             // logout all
             self::logoutAll();
 
+            // create dump
+            self::createDump();
+
+            // mark that update is started
+            file_put_contents(self::UPDATE_RUNNING_FILE, time());
+
             // copy root files
-            self::copyRootFiles($rootPath);
+            self::copyRootFiles();
 
             // update modules list
             self::updateModulesList();
@@ -92,11 +106,11 @@ class PostUpdate
             // cache clearing
             self::clearCache();
 
-            // update client files
-            self::updateClientFiles();
-
             // create config if it needs
             self::createConfig();
+
+            // update client files
+            self::updateClientFiles();
 
             // init events
             self::initEvents();
@@ -110,6 +124,11 @@ class PostUpdate
             self::onSuccess();
         } catch (\Throwable $e) {
             self::onFailed();
+        }
+
+        // mark that update is finished
+        if (file_exists(self::UPDATE_RUNNING_FILE)) {
+            unlink(self::UPDATE_RUNNING_FILE);
         }
     }
 
@@ -253,17 +272,15 @@ class PostUpdate
 
     /**
      * Copy root files
-     *
-     * @param string $rootPath
      */
-    private static function copyRootFiles(string $rootPath): void
+    private static function copyRootFiles(): void
     {
         if (self::$container->get('config')->get('isInstalled')) {
             return;
         }
 
         self::renderLine('Coping system files...');
-        self::copyDir($rootPath . '/vendor/atrocore/core/copy', $rootPath);
+        self::copyDir(self::$rootPath . '/vendor/atrocore/core/copy', self::$rootPath);
         self::renderLine('Done!');
     }
 
@@ -777,6 +794,9 @@ class PostUpdate
         if (file_exists('composer.json')) {
             file_put_contents('data/stable-composer.json', file_get_contents('composer.json'));
         }
+
+        // remove dump dir
+        self::removeDir(self::DUMP_DIR);
     }
 
     /**
@@ -784,5 +804,49 @@ class PostUpdate
      */
     private static function onFailed(): void
     {
+        self::renderLine('Failed!');
+
+        if (file_exists(self::UPDATE_RUNNING_FILE)) {
+            self::renderLine('Restoring...');
+
+            // todo
+
+            self::renderLine('Done!');
+        }
+    }
+
+    /**
+     * Create dump
+     *
+     * @throws \Exception
+     */
+    private static function createDump(): void
+    {
+        if (self::$container->get('config')->get('isInstalled')) {
+            return;
+        }
+
+        self::renderLine('Creating restoring point... ');
+
+        self::removeDir(self::DUMP_DIR);
+        self::createDir(self::DUMP_DIR);
+
+        // copy files
+        foreach (self::DIRS_FOR_DUMPING as $dir) {
+            exec('cp -R ' . $dir . '/ ' . self::DUMP_DIR . '/' . $dir . ' 2>/dev/null', $output, $result);
+            if (!empty($result)) {
+                throw new \Exception("Coping of '$dir' is failed.");
+            }
+        }
+
+        // mysqldump
+        $db = self::$container->get('config')->get('database');
+        $mysqldump = "mysqldump -h {$db['host']} -u {$db['user']} -p{$db['password']} {$db['dbname']} > " . self::DUMP_DIR . "/db.sql";
+        exec($mysqldump . ' 2>/dev/null', $output, $result);
+        if (!empty($result)) {
+            throw new \Exception("Dumping of mysql is failed.");
+        }
+
+        self::renderLine('Done!');
     }
 }
