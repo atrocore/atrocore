@@ -646,8 +646,6 @@ class Application
      */
     private function isUpdating(): bool
     {
-//        return true;
-
         return file_exists(COMPOSER_LOG) || !$this->getContainer()->get('moduleManager')->isLoaded();
     }
 }
