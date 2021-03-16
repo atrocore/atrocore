@@ -50,7 +50,8 @@ class V1Dot1Dot38 extends Base
         $composerData = json_decode(file_get_contents('composer.json'), true);
 
         $composerData['scripts'] = [
-            'post-update-cmd' => "\\Treo\\Composer\\PostUpdate::postUpdate"
+            'post-update-cmd' => '\\Treo\\Composer\\PostUpdate::postUpdate',
+            'restore'         => '\Treo\Composer\PostUpdate::restore'
         ];
         $composerData['autoload']['classmap'] = [];
 
