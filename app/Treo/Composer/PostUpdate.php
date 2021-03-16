@@ -161,6 +161,10 @@ class PostUpdate
             // logout all
             self::logoutAll();
 
+            // save update from time
+            self::$container->get('config')->set('updateFrom', date('Y-m-d H:i:s'));
+            self::$container->get('config')->save();
+
             // create dump
             self::createDump();
         } catch (\Throwable $e) {

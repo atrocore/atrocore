@@ -129,6 +129,15 @@ class Application
      */
     public function run()
     {
+        if ($this->getConfig()->get('isUpdating', false)) {
+            $this->display(
+                'client/html/updating.html', [
+                    'startFrom' => (new \DateTime($this->getConfig()->get('updateFrom', date('Y-m-d H:i:s'))))->format('H:i'),
+                    'year'      => date('Y')
+                ]
+            );
+        }
+
         if (!empty($query = $this->getQuery())) {
             /** @var bool $show404 */
             $show404 = true;

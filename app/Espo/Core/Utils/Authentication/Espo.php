@@ -48,9 +48,6 @@ class Espo extends Base
      */
     public function login($username, $password, \Espo\Entities\AuthToken $authToken = null, $isPortal = null)
     {
-        // is system updating ?
-        $this->isUpdating($authToken);
-
         if ($authToken) {
             $hash = $authToken->get('hash');
         } else {
@@ -65,17 +62,5 @@ class Espo extends Base
         ));
 
         return $user;
-    }
-
-    /**
-     * @param mixed $authToken
-     *
-     * @throws Error
-     */
-    protected function isUpdating($authToken)
-    {
-        if (is_null($authToken) && !empty($this->getConfig()->get('isUpdating'))) {
-            throw new Error('System is updating now! Please try later.');
-        }
     }
 }

@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+    <head>
+        <title>{{applicationName}}</title>
+        <link rel="stylesheet" href="{{basePath}}client/modules/treo-core/css/treo/treo-dark-theme.css">
+        <link rel="shortcut icon" sizes="196x196" href="{{basePath}}client/modules/treo-core/img/favicon16x16.png">
+        <link rel="icon" href="{{basePath}}client/modules/treo-core/img/favicon16x16.png" type="image/x-icon">
+        <link rel="shortcut icon" href="{{basePath}}client/modules/treo-core/img/favicon16x16.png" type="image/x-icon">
+    </head>
+    <body>
+    <div class="container content">
+        <div class="col-md-4 col-md-offset-4 col-sm-8 col-sm-offset-2">
+            <div id="login" class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="logo-container">
+                        <img src="{{basePath}}client/modules/treo-core/img/core_logo_white.svg" class="logo">
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div>
+                        <div class="form-group">
+                            <h3 style="margin-bottom: 19px">System is been updated since {{startFrom}}.</h3>
+                            <label>Please wait till this process ends. You can <a href="/">refresh this page</a>, if you think, that it is already finished.</label>
+                            <label>If the update can not be completed, you need to restore the system, please run this command: </label>
+                            <pre style="margin: 10px 0;">php composer.phar restore</pre>
+                            <label>or you can force the restoration, if previous command does not help</label>
+                            <pre style="margin: 10px 0;">php composer.phar restore --force</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <footer style="margin-left: 0">
+            <p class="credit small">&copy; {{year}} <a href="https://atrocore.com" title="AtroCore is powered by EspoCRM" target="_blank">AtroCore is powered by EspoCRM</a><span class="pull-right"></span></p>
+        </footer>
+    </body>
+</html>

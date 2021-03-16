@@ -192,10 +192,6 @@ class Composer extends AbstractService
      */
     public function update(string $package, string $version): void
     {
-        if (!empty($this->getConfig()->get('isUpdating'))) {
-            throw new Error('System is updating now');
-        }
-
         // get composer.json data
         $data = self::getComposerJson();
 
@@ -215,10 +211,6 @@ class Composer extends AbstractService
      */
     public function delete(string $package): void
     {
-        if (!empty($this->getConfig()->get('isUpdating'))) {
-            throw new Error('System is updating now');
-        }
-
         // get composer.json data
         $data = self::getComposerJson();
 
