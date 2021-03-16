@@ -43,13 +43,13 @@ use Treo\Core\Application as App;
  */
 class PostUpdate
 {
-    public const COMPOSER_LOG_FILE = 'data/treo-composer.log';
-    public const CONFIG_PATH = 'data/config.php';
-    public const STABLE_COMPOSER_JSON = 'data/stable-composer.json';
-    public const PREVIOUS_COMPOSER_LOCK = 'data/previous-composer.lock';
-    public const DUMP_DIR = 'dump';
-    public const DB_DUMP = self::DUMP_DIR . '/db.sql';
-    public const DIRS_FOR_DUMPING = ['data', 'client', 'custom', 'vendor'];
+    private const COMPOSER_LOG_FILE = 'data/treo-composer.log';
+    private const CONFIG_PATH = 'data/config.php';
+    private const STABLE_COMPOSER_JSON = 'data/stable-composer.json';
+    private const PREVIOUS_COMPOSER_LOCK = 'data/previous-composer.lock';
+    private const DUMP_DIR = 'dump';
+    private const DB_DUMP = self::DUMP_DIR . '/db.sql';
+    private const DIRS_FOR_DUMPING = ['data', 'client', 'custom', 'vendor'];
 
     /**
      * @var Container
