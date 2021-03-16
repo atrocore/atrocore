@@ -43,9 +43,12 @@ use Treo\Core\Application as App;
  */
 class PostUpdate
 {
+    public const CONFIG_PATH = 'data/config.php';
+    public const STABLE_COMPOSER_JSON = 'data/stable-composer.json';
     public const PREVIOUS_COMPOSER_LOCK = 'data/previous-composer.lock';
     public const UPDATE_RUNNING_FILE = 'data/update-is-running.txt';
     public const DUMP_DIR = 'dump';
+    public const DB_DUMP = self::DUMP_DIR . '/db.sql';
     public const DIRS_FOR_DUMPING = ['data', 'client', 'custom', 'vendor'];
 
     /**
@@ -75,23 +78,24 @@ class PostUpdate
         if (file_exists(self::DUMP_DIR)) {
             self::renderLine('Restoring files...');
 
-            foreach (['data', 'client', 'custom', 'vendor'] as $dir) {
-                exec('cp -R dump/' . $dir . '/ .', $output, $result);
+            foreach (self::DIRS_FOR_DUMPING as $dir) {
+                self::removeDir($dir);
+                exec('cp -R ' . self::DUMP_DIR . '/' . $dir . '/ .', $output, $result);
             }
 
-            file_put_contents('data/stable-composer.json', file_get_contents('composer.json'));
-            file_put_contents('data/previous-composer.lock', file_get_contents('composer.lock'));
+            file_put_contents(self::STABLE_COMPOSER_JSON, file_get_contents('composer.json'));
+            file_put_contents(self::PREVIOUS_COMPOSER_LOCK, file_get_contents('composer.lock'));
 
             self::renderLine('Done!');
 
             self::renderLine('Restoring database...');
 
-            if (!file_exists('data/config.php') || !file_exists('dump/db.sql')) {
+            if (!file_exists(self::CONFIG_PATH) || !file_exists(self::DB_DUMP)) {
                 self::renderLine('Failed!');
                 exit(1);
             }
 
-            $config = include 'data/config.php';
+            $config = include self::CONFIG_PATH;
 
             if (empty($config['database'])) {
                 self::renderLine('Failed!');
@@ -121,12 +125,12 @@ class PostUpdate
 
             $pdo = new \PDO("mysql:host={$db['host']};{$port}dbname={$db['dbname']};charset={$db['charset']}", $db['user'], $db['password'], $options);
 
-            $pdo->exec(file_get_contents('dump/db.sql'));
+            $pdo->exec(file_get_contents(self::DB_DUMP));
 
             self::renderLine('Done!');
 
             self::renderLine('Removing dump...');
-            exec('rm -R dump');
+            self::removeDir(self::DUMP_DIR);
             self::renderLine('Done!');
             exit(0);
         }
@@ -538,7 +542,7 @@ class PostUpdate
                 exec('cp -r skeleton-tmp/. .');
 
                 // remove
-                exec('rm -R skeleton-tmp');
+                self::removeDir('skeleton-tmp');
 
                 // unlink installing file
                 unlink('first_update.log');
@@ -590,7 +594,7 @@ class PostUpdate
     private static function createConfig(): void
     {
         // prepare config path
-        $path = 'data/config.php';
+        $path = self::CONFIG_PATH;
 
         if (!file_exists($path)) {
             self::renderLine('Creating main config...');
@@ -869,7 +873,7 @@ class PostUpdate
         }
 
         if (file_exists('composer.json')) {
-            file_put_contents('data/stable-composer.json', file_get_contents('composer.json'));
+            file_put_contents(self::STABLE_COMPOSER_JSON, file_get_contents('composer.json'));
         }
 
         // remove dump dir
@@ -914,7 +918,7 @@ class PostUpdate
 
         // mysqldump
         $db = self::$container->get('config')->get('database');
-        $mysqldump = "mysqldump -h {$db['host']} -u {$db['user']} -p{$db['password']} {$db['dbname']} > " . self::DUMP_DIR . "/db.sql";
+        $mysqldump = "mysqldump -h {$db['host']} -u {$db['user']} -p{$db['password']} {$db['dbname']} > " . self::DB_DUMP;
         exec($mysqldump . ' 2>/dev/null', $output, $result);
         if (!empty($result)) {
             throw new \Exception("Dumping of mysql is failed.");
