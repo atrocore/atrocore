@@ -43,6 +43,7 @@ use Treo\Core\Application as App;
  */
 class PostUpdate
 {
+    public const COMPOSER_LOG_FILE = 'data/treo-composer.log';
     public const CONFIG_PATH = 'data/config.php';
     public const STABLE_COMPOSER_JSON = 'data/stable-composer.json';
     public const PREVIOUS_COMPOSER_LOCK = 'data/previous-composer.lock';
@@ -60,10 +61,7 @@ class PostUpdate
      */
     private static $rootPath;
 
-    /**
-     * Restore
-     */
-    public static function restore(): void
+    public static function restoreForce(): void
     {
         // get root path
         self::$rootPath = self::getRootPath();
@@ -73,6 +71,10 @@ class PostUpdate
 
         // set the include_path
         set_include_path(self::$rootPath);
+
+        if (file_exists(self::COMPOSER_LOG_FILE)) {
+            unlink(self::COMPOSER_LOG_FILE);
+        }
 
         if (!file_exists(self::DUMP_DIR)) {
             self::renderLine('Restoring failed! No dump data!');
@@ -129,6 +131,16 @@ class PostUpdate
         exit(0);
     }
 
+    public static function restore(): void
+    {
+        if (file_exists(self::COMPOSER_LOG_FILE)) {
+            self::renderLine('System is updating. Restoring blocked.');
+            exit(1);
+        }
+
+        self::restoreForce();
+    }
+
     /**
      * Run post-update actions
      */
@@ -153,8 +165,8 @@ class PostUpdate
             // logout all
             self::logoutAll();
 
-            // dumping
-            self::dumping();
+            // create dump for database and files
+            self::createDump();
 
             // copy root files
             self::copyRootFiles();
@@ -192,7 +204,7 @@ class PostUpdate
             self::onSuccess();
         } catch (\Throwable $e) {
             self::renderLine('Failed!');
-            self::restore();
+            self::restoreForce();
             exit(1);
         }
     }
@@ -865,7 +877,7 @@ class PostUpdate
         exit(0);
     }
 
-    private static function dumping(): void
+    private static function createDump(): void
     {
         if (!self::$container->get('config')->get('isInstalled', false)) {
             return;
@@ -892,9 +904,9 @@ class PostUpdate
         $mysqldump = "mysqldump -h {$db['host']} -u {$db['user']} -p{$db['password']} {$db['dbname']} > " . self::DB_DUMP;
         exec($mysqldump . ' 2>/dev/null', $output, $result);
         if (!empty($result)) {
-            throw new \Exception("Dumping of mysql is failed.");
+            self::renderLine("Failed! Please, install mysqldump! System can't create dump for database!");
+        } else {
+            self::renderLine('Done!');
         }
-
-        self::renderLine('Done!');
     }
 }
