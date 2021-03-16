@@ -53,8 +53,7 @@ Espo.define('views/login', 'view', function (Dep) {
         },
 
         setupBackgroundImage: function () {
-            let imagesCount = 8,
-                number = Math.floor(Math.random() * imagesCount) + 1,
+            let number = Math.floor(Math.random() * 7) + 1,
                 path = this.getBasePath() + `client/img/login/login_cover_${number}.jpg`;
 
             $('body').css({
