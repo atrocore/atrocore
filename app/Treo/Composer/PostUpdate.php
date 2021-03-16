@@ -61,7 +61,7 @@ class PostUpdate
      */
     private static $rootPath;
 
-    public static function restoreForce(bool $keepLogFile = false): void
+    public static function restoreForce(bool $autoRestore = false): void
     {
         // get root path
         self::$rootPath = self::getRootPath();
@@ -72,9 +72,11 @@ class PostUpdate
         // set the include_path
         set_include_path(self::$rootPath);
 
-        if (!$keepLogFile && file_exists(self::COMPOSER_LOG_FILE)) {
+        if (!$autoRestore && file_exists(self::COMPOSER_LOG_FILE)) {
             unlink(self::COMPOSER_LOG_FILE);
         }
+
+        $exitCode = $autoRestore ? 1 : 0;
 
         if (!file_exists(self::DUMP_DIR)) {
             self::renderLine('Restoring failed! No dump data!');
@@ -96,7 +98,7 @@ class PostUpdate
 
         if (!file_exists(self::DB_DUMP) || filesize(self::DB_DUMP) == 0) {
             self::renderLine('No database dump found!');
-            exit(0);
+            exit($exitCode);
         }
 
         if (!file_exists(self::CONFIG_PATH)) {
@@ -133,7 +135,8 @@ class PostUpdate
         self::renderLine('Removing dump...');
         self::removeDir(self::DUMP_DIR);
         self::renderLine('Done!');
-        exit(0);
+
+        exit($exitCode);
     }
 
     public static function restore(): void
