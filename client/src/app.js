@@ -480,6 +480,32 @@ Espo.define(
         },
 
         logout: function () {
+            if (this.auth) {
+                var arr = Base64.decode(this.auth).split(':');
+                if (arr.length > 1) {
+                    $.ajax({
+                        url: 'App/action/destroyAuthToken',
+                        type: 'POST',
+                        data: JSON.stringify({
+                            token: arr[1]
+                        })
+                    });
+                }
+            }
+
+            this.auth = null;
+            this.user.clear();
+            this.preferences.clear();
+            this.acl.clear();
+            this.storage.clear('user', 'auth');
+
+            this.unsetCookieAuth();
+
+            xhr = new XMLHttpRequest;
+            xhr.open('GET', this.url + '/');
+            xhr.setRequestHeader('Authorization', 'Basic ' + Base64.encode('**logout:logout'));
+            xhr.send('');
+            xhr.abort();
             location.reload();
         },
 
