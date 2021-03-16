@@ -883,23 +883,28 @@ class PostUpdate
             return;
         }
 
-        self::renderLine('Creating restoring point... ');
-
         self::removeDir(self::DUMP_DIR);
         self::createDir(self::DUMP_DIR);
 
         // copy files
+        self::renderLine('Creating restoring files... ');
         foreach (self::DIRS_FOR_DUMPING as $dir) {
             if ($dir == 'vendor') {
                 continue 1;
             }
             exec('cp -R ' . $dir . '/ ' . self::DUMP_DIR . '/' . $dir . ' 2>/dev/null', $output, $result);
             if (!empty($result)) {
-                throw new \Exception("Coping of '$dir' is failed.");
+                self::renderLine("Failed! Please, configure files permissions!");
+                $fileDumpFailed = true;
+                break 1;
             }
+        }
+        if (empty($fileDumpFailed)) {
+            self::renderLine('Done!');
         }
 
         // mysqldump
+        self::renderLine('Creating database dump... ');
         $db = self::$container->get('config')->get('database');
         $mysqldump = "mysqldump -h {$db['host']} -u {$db['user']} -p{$db['password']} {$db['dbname']} > " . self::DB_DUMP;
         exec($mysqldump . ' 2>/dev/null', $output, $result);

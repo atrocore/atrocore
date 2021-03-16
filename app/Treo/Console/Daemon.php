@@ -108,10 +108,14 @@ class Daemon extends AbstractConsole
                 // cleanup
                 file_put_contents($log, '');
 
-                // dumping vendor
+                // create dump for vendor
                 if (!file_exists('dump')) {
-                    mkdir('dump', 0777, true);
-                    sleep(1);
+                    try {
+                        mkdir('dump', 0777, true);
+                        sleep(1);
+                    } catch (\Throwable $e) {
+                        // ignore
+                    }
                 }
                 exec('cp -R vendor/ dump/vendor 2>/dev/null');
 
