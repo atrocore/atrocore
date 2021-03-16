@@ -109,6 +109,10 @@ class Daemon extends AbstractConsole
                 file_put_contents($log, '');
 
                 // dumping vendor
+                if (!file_exists('dump')) {
+                    mkdir('dump', 0777, true);
+                    sleep(1);
+                }
                 exec('cp -R vendor/ dump/vendor 2>/dev/null');
 
                 // execute composer update
