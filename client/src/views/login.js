@@ -47,6 +47,20 @@ Espo.define('views/login', 'view', function (Dep) {
             let demo = this.getConfig().get('demo') || {"username": "", "password": ""};
             $('#field-userName').val(demo.username);
             $('#field-password').val(demo.password);
+
+            // setup background image
+            this.setupBackgroundImage();
+        },
+
+        setupBackgroundImage: function () {
+            let imagesCount = 8,
+                number = Math.floor(Math.random() * imagesCount) + 1,
+                path = this.getBasePath() + `client/img/login/login_cover_${number}.jpg`;
+
+            $('body').css({
+                'background-image': 'url(' + path + ')',
+                'background-size': '100%'
+            });
         },
 
         events: {
