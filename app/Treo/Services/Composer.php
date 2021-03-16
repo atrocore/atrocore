@@ -62,7 +62,7 @@ class Composer extends AbstractService
     /**
      * @var string
      */
-    public static $stableComposer = PostUpdate::STABLE_COMPOSER_JSON;
+    public static $stableComposer = 'data/stable-composer.json';
 
     /**
      * Get composer.json

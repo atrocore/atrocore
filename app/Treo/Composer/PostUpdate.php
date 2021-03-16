@@ -61,6 +61,13 @@ class PostUpdate
      */
     private static $rootPath;
 
+    /**
+     * Restore force
+     *
+     * @param bool $autoRestore
+     *
+     * @throws \Exception
+     */
     public static function restoreForce(bool $autoRestore = false): void
     {
         // get root path
@@ -139,6 +146,11 @@ class PostUpdate
         exit($exitCode);
     }
 
+    /**
+     * Restore
+     *
+     * @throws \Exception
+     */
     public static function restore(): void
     {
         if (file_exists(self::COMPOSER_LOG_FILE)) {
@@ -215,6 +227,13 @@ class PostUpdate
             self::restoreForce(true);
             exit(1);
         }
+    }
+
+    /**
+     * PostUpdate constructor.
+     */
+    public function __construct()
+    {
     }
 
     /**
