@@ -883,7 +883,6 @@ class PostUpdate
             return;
         }
 
-        self::removeDir(self::DUMP_DIR);
         self::createDir(self::DUMP_DIR);
 
         // copy files
@@ -892,6 +891,7 @@ class PostUpdate
             if ($dir == 'vendor') {
                 continue 1;
             }
+            self::removeDir(self::DUMP_DIR . '/' . $dir);
             exec('cp -R ' . $dir . '/ ' . self::DUMP_DIR . '/' . $dir . ' 2>/dev/null', $output, $result);
             if (!empty($result)) {
                 self::renderLine("Failed! Please, configure files permissions!");
