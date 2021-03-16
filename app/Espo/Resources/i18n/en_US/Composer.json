@@ -41,8 +41,6 @@
     "dependencies": "Dependencies",
     "version": "Version",
     "Run Update": "Run Update",
-    "updateInProgress": "Update is already in progress",
-    "updateInProgressWithLog": "Update is already in progress. Please see the {log}.",
     "updateFailed": "Update failed. Can't create connect to modules server. Please, try again",
     "settingModuleForRemoving": "Setting module for removing...",
     "settedModuleForRemoving": "Module has been set for removing",

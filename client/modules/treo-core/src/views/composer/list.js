@@ -79,22 +79,16 @@ Espo.define('treo-core:views/composer/list', 'views/list',
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            if (!this.getConfig().get('isUpdating')) {
-                this.ajaxPostRequest('Composer/action/check').then(response => {
-                    let alertEl = $('.progress-status');
-                    alertEl.html('');
-                    if (response.status) {
-                        $('.composer-action').removeAttr('disabled');
-                    } else {
-                        alertEl.html(response.message);
-                        alertEl.addClass('text-alert');
-                    }
-                });
-            }
-
-            if (this.getConfig().get('isUpdating')) {
-                this.initConfigCheck();
-            }
+            this.ajaxPostRequest('Composer/action/check').then(response => {
+                let alertEl = $('.progress-status');
+                alertEl.html('');
+                if (response.status) {
+                    $('.composer-action').removeAttr('disabled');
+                } else {
+                    alertEl.html(response.message);
+                    alertEl.addClass('text-alert');
+                }
+            });
         },
 
         loadList() {
@@ -149,7 +143,7 @@ Espo.define('treo-core:views/composer/list', 'views/list',
                             this.toggleActionButton('cancelUpdate', showCancelAction);
                         });
                         this.listenToOnce(view, 'after:render', () => {
-                            this.installedCollection.trigger('disableActions', this.getConfig().get('isUpdating'));
+                            this.installedCollection.trigger('disableActions', false);
                         });
                         view.render();
                     });
@@ -182,7 +176,7 @@ Espo.define('treo-core:views/composer/list', 'views/list',
                         rowActionsView: 'treo-core:views/composer/record/row-actions/store'
                     }, view => {
                         this.listenToOnce(view, 'after:render', () => {
-                            this.storeCollection.trigger('disableActions', this.getConfig().get('isUpdating'));
+                            this.storeCollection.trigger('disableActions', false);
                         });
                         view.render();
                     });
@@ -210,11 +204,6 @@ Espo.define('treo-core:views/composer/list', 'views/list',
         },
 
         actionInstallModule(data) {
-            if (this.getConfig().get('isUpdating')) {
-                this.notify(this.translate('updateInProgress', 'labels', 'Composer'), 'warning');
-                return;
-            }
-
             if (!data.id || !data.mode) {
                 return;
             }
@@ -264,11 +253,6 @@ Espo.define('treo-core:views/composer/list', 'views/list',
         },
 
         actionRemoveModule(data) {
-            if (this.getConfig().get('isUpdating')) {
-                this.notify(this.translate('updateInProgress', 'labels', 'Composer'), 'warning');
-                return;
-            }
-
             if (!data.id) {
                 return;
             }
@@ -286,11 +270,6 @@ Espo.define('treo-core:views/composer/list', 'views/list',
         },
 
         actionCancelModule(data) {
-            if (this.getConfig().get('isUpdating')) {
-                this.notify(this.translate('updateInProgress', 'labels', 'Composer'), 'warning');
-                return;
-            }
-
             if (!data.id || !data.status) {
                 return;
             }
@@ -335,12 +314,6 @@ Espo.define('treo-core:views/composer/list', 'views/list',
                 this.actionStarted();
                 this.ajaxPostRequest('Composer/runUpdate', {}, {timeout: 180000}).then(response => {
                     this.notify(this.translate('updateStarted', 'labels', 'Composer'), 'success');
-                    setTimeout(() => {
-                        this.initLogCheck();
-                        this.messageText = this.translate('updateInProgressWithLog', 'labels', 'Composer');
-                        this.messageType = 'success';
-                        this.showCurrentStatus(this.messageText, this.messageType);
-                    }, 2000);
                 }, error => {
                     this.actionFinished();
                 }).always(() => {
@@ -382,32 +355,6 @@ Espo.define('treo-core:views/composer/list', 'views/list',
         disableActionButton(action, disabled) {
             let button = this.$el.find(`.detail-button-container button[data-action="${action}"]`);
             button.prop('disabled', disabled);
-        },
-
-        initLogCheck() {
-            let logCheck = () => {
-                $.ajax({
-                    type: 'GET',
-                    dataType: 'json',
-                    url: `../../?composerLogs=1`,
-                    cache: false,
-                    success: response => {
-                        if (response.status) {
-                            this.log = response.logs.trim();
-                            this.trigger('log-updated');
-                        } else {
-                            window.clearInterval(this.logCheckInterval);
-                            location.reload();
-                        }
-                    },
-                    error: xhr => {
-                        window.clearInterval(this.logCheckInterval);
-                        location.reload();
-                    }
-                });
-            };
-            window.clearInterval(this.logCheckInterval);
-            this.logCheckInterval = window.setInterval(logCheck, 1000);
         },
 
         actionStarted() {
@@ -460,36 +407,6 @@ Espo.define('treo-core:views/composer/list', 'views/list',
                 messageType: this.messageType
             }
         },
-
-        initConfigCheck() {
-            let check = () => {
-                this.getConfig().fetch({
-                    success: (config) => {
-                        let isUpdating = !!config.get('isUpdating');
-                        if (!isUpdating) {
-                            this.getUser().fetch().then(() => {
-                                window.clearInterval(this.configCheckInterval);
-                                this.configCheckInterval = null;
-                                this.notify(this.translate('updateFailed', 'labels', 'Composer'), 'danger');
-                                this.trigger('composerUpdate:failed');
-                            });
-                        } else {
-                            this.messageText = this.translate('updateInProgress', 'labels', 'Composer');
-                            this.messageType = 'success';
-                            this.showCurrentStatus(this.messageText, this.messageType, true);
-                        }
-                        this.disableActionButton('runUpdate', isUpdating);
-                        this.disableActionButton('cancelUpdate', isUpdating);
-
-                        this.installedCollection.trigger('disableActions', isUpdating);
-                        this.storeCollection.trigger('disableActions', isUpdating);
-                    }
-                });
-            };
-            window.clearInterval(this.configCheckInterval);
-            this.configCheckInterval = window.setInterval(check, 1000);
-            check();
-        }
 
     })
 );
