@@ -94,7 +94,7 @@ class PostUpdate
 
         self::renderLine('Restoring database...');
 
-        if (!file_exists(self::DB_DUMP)) {
+        if (!file_exists(self::DB_DUMP) || filesize(self::DB_DUMP) == 0) {
             self::renderLine('No database dump found!');
             exit(0);
         }
