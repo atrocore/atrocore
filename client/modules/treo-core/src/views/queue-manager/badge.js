@@ -52,6 +52,8 @@ Espo.define('treo-core:views/queue-manager/badge', 'view',
         showQueue() {
             this.closeQueue();
 
+            this.$el.addClass('open');
+
             this.createView('panel', 'treo-core:views/queue-manager/panel', {
                 el: `${this.options.el} .queue-panel-container`
             }, view => {
@@ -70,6 +72,8 @@ Espo.define('treo-core:views/queue-manager/badge', 'view',
         },
 
         closeQueue() {
+            this.$el.removeClass('open');
+
             if (this.hasView('panel')) {
                 this.clearView('panel');
             }
