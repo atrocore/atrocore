@@ -877,6 +877,9 @@ class PostUpdate
         exit(0);
     }
 
+    /**
+     * @throws \Throwable
+     */
     private static function createDump(): void
     {
         if (!self::$container->get('config')->get('isInstalled', false)) {
@@ -885,33 +888,36 @@ class PostUpdate
 
         self::createDir(self::DUMP_DIR);
 
-        // copy files
-        self::renderLine('Creating restoring files... ');
-        foreach (self::DIRS_FOR_DUMPING as $dir) {
-            if ($dir == 'vendor') {
-                continue 1;
-            }
-            self::removeDir(self::DUMP_DIR . '/' . $dir);
-            exec('cp -R ' . $dir . '/ ' . self::DUMP_DIR . '/' . $dir . ' 2>/dev/null', $output, $result);
-            if (!empty($result)) {
-                self::renderLine("Failed! Please, configure files permissions!");
-                $fileDumpFailed = true;
-                break 1;
-            }
-        }
-        if (empty($fileDumpFailed)) {
-            self::renderLine('Done!');
-        }
+        self::renderLine('Creating restoring point... ');
 
-        // mysqldump
-        self::renderLine('Creating database dump... ');
-        $db = self::$container->get('config')->get('database');
-        $mysqldump = "mysqldump -h {$db['host']} -u {$db['user']} -p{$db['password']} {$db['dbname']} > " . self::DB_DUMP;
-        exec($mysqldump . ' 2>/dev/null', $output, $result);
-        if (!empty($result)) {
-            self::renderLine("Failed! Please, install mysqldump! System can't create dump for database!");
-        } else {
+        try {
+            // copy files
+            foreach (self::DIRS_FOR_DUMPING as $dir) {
+                if ($dir == 'vendor') {
+                    continue 1;
+                }
+                self::removeDir(self::DUMP_DIR . '/' . $dir);
+                exec('cp -R ' . $dir . '/ ' . self::DUMP_DIR . '/' . $dir . ' 2>/dev/null', $output, $result);
+                if (!empty($result)) {
+                    throw new \Exception("Failed! Please, configure files permissions!");
+                }
+            }
+
+            // mysqldump
+            $db = self::$container->get('config')->get('database');
+            $mysqldump = "mysqldump -h {$db['host']} -u {$db['user']} -p{$db['password']} {$db['dbname']} > " . self::DB_DUMP;
+            exec($mysqldump . ' 2>/dev/null', $output, $result);
+            if (!empty($result)) {
+                throw new \Exception("Failed! Please, install mysqldump! System can't create dump for database!");
+            }
+
             self::renderLine('Done!');
+        } catch (\Throwable $e) {
+            if (file_exists(self::DUMP_DIR . '/vendor')) {
+                throw $e;
+            } else {
+                self::renderLine($e->getMessage());
+            }
         }
     }
 }
