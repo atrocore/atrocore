@@ -39,6 +39,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Json;
 use Espo\Core\Exceptions;
 use Slim\Http\Request;
+use Treo\Composer\PostUpdate;
 use Treo\Core\ModuleManager\Manager as ModuleManager;
 
 /**
@@ -61,7 +62,7 @@ class Composer extends AbstractService
     /**
      * @var string
      */
-    public static $stableComposer = 'data/stable-composer.json';
+    public static $stableComposer = PostUpdate::STABLE_COMPOSER_JSON;
 
     /**
      * Get composer.json

@@ -43,6 +43,7 @@ use Treo\Core\Application as App;
  */
 class PostUpdate
 {
+    public const COMPOSER_LOG = 'data/treo-composer.log';
     public const CONFIG_PATH = 'data/config.php';
     public const STABLE_COMPOSER_JSON = 'data/stable-composer.json';
     public const PREVIOUS_COMPOSER_LOCK = 'data/previous-composer.lock';
@@ -210,6 +211,12 @@ class PostUpdate
         if (file_exists(self::UPDATE_RUNNING_FILE)) {
             unlink(self::UPDATE_RUNNING_FILE);
         }
+
+        if (file_exists(self::COMPOSER_LOG)) {
+            unlink(self::COMPOSER_LOG);
+        }
+
+        exit(0);
     }
 
     /**
