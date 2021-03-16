@@ -79,7 +79,6 @@ class PostUpdate
             self::renderLine('Restoring files...');
 
             foreach (self::DIRS_FOR_DUMPING as $dir) {
-                self::removeDir($dir);
                 exec('cp -R ' . self::DUMP_DIR . '/' . $dir . '/ .', $output, $result);
             }
 
