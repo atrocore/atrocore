@@ -43,11 +43,9 @@ use Treo\Core\Application as App;
  */
 class PostUpdate
 {
-    public const COMPOSER_LOG = 'data/treo-composer.log';
     public const CONFIG_PATH = 'data/config.php';
     public const STABLE_COMPOSER_JSON = 'data/stable-composer.json';
     public const PREVIOUS_COMPOSER_LOCK = 'data/previous-composer.lock';
-    public const UPDATE_RUNNING_FILE = 'data/update-is-running.txt';
     public const DUMP_DIR = 'dump';
     public const DB_DUMP = self::DUMP_DIR . '/db.sql';
     public const DIRS_FOR_DUMPING = ['data', 'client', 'custom', 'vendor'];
@@ -165,10 +163,12 @@ class PostUpdate
 
             // create dump
             self::createDump();
+        } catch (\Throwable $e) {
+            self::renderLine('Failed!');
+            exit(1);
+        }
 
-            // mark that update is started
-            file_put_contents(self::UPDATE_RUNNING_FILE, time());
-
+        try {
             // copy root files
             self::copyRootFiles();
 
@@ -204,19 +204,10 @@ class PostUpdate
 
             self::onSuccess();
         } catch (\Throwable $e) {
-            self::onFailed();
+            self::renderLine('Failed!');
+            self::restore();
+            exit(1);
         }
-
-        // mark that update is finished
-        if (file_exists(self::UPDATE_RUNNING_FILE)) {
-            unlink(self::UPDATE_RUNNING_FILE);
-        }
-
-        if (file_exists(self::COMPOSER_LOG)) {
-            unlink(self::COMPOSER_LOG);
-        }
-
-        exit(0);
     }
 
     /**
@@ -884,18 +875,8 @@ class PostUpdate
 
         // remove dump dir
         self::removeDir(self::DUMP_DIR);
-    }
 
-    /**
-     * Update failed
-     */
-    private static function onFailed(): void
-    {
-        self::renderLine('Failed!');
-
-        if (file_exists(self::UPDATE_RUNNING_FILE)) {
-            self::restore();
-        }
+        exit(0);
     }
 
     /**
