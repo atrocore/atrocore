@@ -314,6 +314,7 @@ Espo.define('treo-core:views/composer/list', 'views/list',
                 this.actionStarted();
                 this.ajaxPostRequest('Composer/runUpdate', {}, {timeout: 180000}).then(response => {
                     this.notify(this.translate('updateStarted', 'labels', 'Composer'), 'success');
+                    location.reload();
                 }, error => {
                     this.actionFinished();
                 }).always(() => {

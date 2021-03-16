@@ -209,7 +209,8 @@ class Application
         }
 
         if ($this->isUpdating()) {
-            $this->getContainer()->get('pdo')->exec("UPDATE auth_token SET deleted=1 WHERE 1");
+            header("HTTP/1.1 401 Unauthorized");
+            exit;
         }
 
         // prepare base route
@@ -646,7 +647,7 @@ class Application
     private function isUpdating(): bool
     {
 //        return true;
-//
+
         return file_exists(COMPOSER_LOG) || !$this->getContainer()->get('moduleManager')->isLoaded();
     }
 }
