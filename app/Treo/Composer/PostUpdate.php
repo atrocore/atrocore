@@ -246,9 +246,6 @@ class PostUpdate
         }
 
         echo $result;
-
-        // wait
-        sleep(1);
     }
 
     /**
@@ -906,27 +903,34 @@ class PostUpdate
                 continue 1;
             }
             self::removeDir(self::DUMP_DIR . '/' . $dir);
-            exec('cp -R ' . $dir . '/ ' . self::DUMP_DIR . '/' . $dir, $output, $result);
+            exec('cp -R ' . $dir . '/ ' . self::DUMP_DIR . '/' . $dir . ' 2>/dev/null', $output, $result);
             if (!empty($result)) {
+                $message = 'Please, configure files permissions!';
                 if ($ignore) {
-                    self::renderLine($output);
+                    self::renderLine('Failed! ' . $message);
                     $isFailed = true;
                     break 1;
                 } else {
-                    throw new \Exception($output);
+                    throw new \Exception($message);
                 }
             }
+        }
+        // remove composer log file from dump
+        if (file_exists(self::DUMP_DIR . '/' . self::COMPOSER_LOG_FILE)) {
+            unlink(self::DUMP_DIR . '/' . self::COMPOSER_LOG_FILE);
         }
 
         // mysqldump
         $db = self::$container->get('config')->get('database');
-        exec("mysqldump -h {$db['host']} -u {$db['user']} -p{$db['password']} {$db['dbname']} > " . self::DB_DUMP, $output, $result);
+        $mysqldump = "mysqldump -h {$db['host']} -u {$db['user']} -p{$db['password']} {$db['dbname']} > " . self::DB_DUMP;
+        exec($mysqldump . ' 2>/dev/null', $output, $result);
         if (!empty($result)) {
+            $message = "Please, install mysqldump! System can't create dump for database!";
             if ($ignore) {
-                self::renderLine($output);
+                self::renderLine('Failed! ' . $message);
                 $isFailed = true;
             } else {
-                throw new \Exception($output);
+                throw new \Exception($message);
             }
         }
 
