@@ -58,6 +58,8 @@ class V1Dot1Dot38 extends Base
         file_put_contents('composer.json', json_encode($composerData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 
         copy('composer.phar', 'vendor/atrocore/core/copy/composer.phar');
+
+        file_put_contents(Cron::DAEMON_KILLER, '1');
     }
 
     /**
@@ -77,5 +79,7 @@ class V1Dot1Dot38 extends Base
         $composerData['autoload']['classmap'] = ["composer-cmd.php"];
 
         file_put_contents('composer.json', json_encode($composerData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+
+        file_put_contents(Cron::DAEMON_KILLER, '1');
     }
 }

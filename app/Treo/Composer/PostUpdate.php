@@ -74,66 +74,58 @@ class PostUpdate
         // set the include_path
         set_include_path(self::$rootPath);
 
-        if (file_exists(self::DUMP_DIR)) {
-            self::renderLine('Restoring files...');
-
-            foreach (self::DIRS_FOR_DUMPING as $dir) {
-                exec('cp -R ' . self::DUMP_DIR . '/' . $dir . '/ .', $output, $result);
-            }
-
-            file_put_contents(self::STABLE_COMPOSER_JSON, file_get_contents('composer.json'));
-            file_put_contents(self::PREVIOUS_COMPOSER_LOCK, file_get_contents('composer.lock'));
-
-            self::renderLine('Done!');
-
-            self::renderLine('Restoring database...');
-
-            if (!file_exists(self::CONFIG_PATH) || !file_exists(self::DB_DUMP)) {
-                self::renderLine('Failed!');
-                exit(1);
-            }
-
-            $config = include self::CONFIG_PATH;
-
-            if (empty($config['database'])) {
-                self::renderLine('Failed!');
-                exit(1);
-            }
-
-            $db = $config['database'];
-
-            $port = empty($db['port']) ? '' : "port={$db['port']};";
-
-            $options = [];
-            if (isset($db['sslCA'])) {
-                $options[\PDO::MYSQL_ATTR_SSL_CA] = $db['sslCA'];
-            }
-            if (isset($db['sslCert'])) {
-                $options[\PDO::MYSQL_ATTR_SSL_CERT] = $db['sslCert'];
-            }
-            if (isset($db['sslKey'])) {
-                $options[\PDO::MYSQL_ATTR_SSL_KEY] = $db['sslKey'];
-            }
-            if (isset($db['sslCAPath'])) {
-                $options[\PDO::MYSQL_ATTR_SSL_CAPATH] = $db['sslCAPath'];
-            }
-            if (isset($db['sslCipher'])) {
-                $options[\PDO::MYSQL_ATTR_SSL_CIPHER] = $db['sslCipher'];
-            }
-
-            $pdo = new \PDO("mysql:host={$db['host']};{$port}dbname={$db['dbname']};charset={$db['charset']}", $db['user'], $db['password'], $options);
-
-            $pdo->exec(file_get_contents(self::DB_DUMP));
-
-            self::renderLine('Done!');
-
-            self::renderLine('Removing dump...');
-            self::removeDir(self::DUMP_DIR);
-            self::renderLine('Done!');
-            exit(0);
+        if (!file_exists(self::DUMP_DIR)) {
+            self::renderLine('Restoring failed! No dump data!');
+            exit(1);
         }
 
-        self::renderLine('No dump data!');
+        self::renderLine('Restoring files...');
+        foreach (self::DIRS_FOR_DUMPING as $dir) {
+            $path = self::DUMP_DIR . '/' . $dir;
+            if (!file_exists($path)) {
+                continue 1;
+            }
+            exec("cp -R {$path}/ .");
+        }
+        file_put_contents(self::STABLE_COMPOSER_JSON, file_get_contents('composer.json'));
+        file_put_contents(self::PREVIOUS_COMPOSER_LOCK, file_get_contents('composer.lock'));
+        self::renderLine('Done!');
+
+        self::renderLine('Restoring database...');
+        if (!file_exists(self::CONFIG_PATH) || !file_exists(self::DB_DUMP)) {
+            self::renderLine('Failed!');
+            exit(1);
+        }
+        $config = include self::CONFIG_PATH;
+        if (empty($config['database'])) {
+            self::renderLine('Failed!');
+            exit(1);
+        }
+        $db = $config['database'];
+        $port = empty($db['port']) ? '' : "port={$db['port']};";
+        $options = [];
+        if (isset($db['sslCA'])) {
+            $options[\PDO::MYSQL_ATTR_SSL_CA] = $db['sslCA'];
+        }
+        if (isset($db['sslCert'])) {
+            $options[\PDO::MYSQL_ATTR_SSL_CERT] = $db['sslCert'];
+        }
+        if (isset($db['sslKey'])) {
+            $options[\PDO::MYSQL_ATTR_SSL_KEY] = $db['sslKey'];
+        }
+        if (isset($db['sslCAPath'])) {
+            $options[\PDO::MYSQL_ATTR_SSL_CAPATH] = $db['sslCAPath'];
+        }
+        if (isset($db['sslCipher'])) {
+            $options[\PDO::MYSQL_ATTR_SSL_CIPHER] = $db['sslCipher'];
+        }
+        $pdo = new \PDO("mysql:host={$db['host']};{$port}dbname={$db['dbname']};charset={$db['charset']}", $db['user'], $db['password'], $options);
+        $pdo->exec(file_get_contents(self::DB_DUMP));
+        self::renderLine('Done!');
+
+        self::renderLine('Removing dump...');
+        self::removeDir(self::DUMP_DIR);
+        self::renderLine('Done!');
         exit(0);
     }
 
@@ -161,14 +153,9 @@ class PostUpdate
             // logout all
             self::logoutAll();
 
-            // create dump
-            self::createDump();
-        } catch (\Throwable $e) {
-            self::renderLine('Failed!');
-            exit(1);
-        }
+            // dumping
+            self::dumping();
 
-        try {
             // copy root files
             self::copyRootFiles();
 
@@ -878,12 +865,7 @@ class PostUpdate
         exit(0);
     }
 
-    /**
-     * Create dump
-     *
-     * @throws \Exception
-     */
-    private static function createDump(): void
+    private static function dumping(): void
     {
         if (!self::$container->get('config')->get('isInstalled', false)) {
             return;
@@ -896,6 +878,9 @@ class PostUpdate
 
         // copy files
         foreach (self::DIRS_FOR_DUMPING as $dir) {
+            if ($dir == 'vendor') {
+                continue 1;
+            }
             exec('cp -R ' . $dir . '/ ' . self::DUMP_DIR . '/' . $dir . ' 2>/dev/null', $output, $result);
             if (!empty($result)) {
                 throw new \Exception("Coping of '$dir' is failed.");
