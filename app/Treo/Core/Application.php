@@ -272,12 +272,7 @@ class Application
         }
 
         if ($this->isUpdating()) {
-            $this->display(
-                'client/html/updating.html', [
-                    'startFrom' => (new \DateTime($this->getConfig()->get('updateFrom', date('Y-m-d H:i:s'))))->format('H:i'),
-                    'year'      => date('Y')
-                ]
-            );
+            $this->display('client/html/updating.html', ['year' => date('Y')]);
         }
 
         // for entryPoint

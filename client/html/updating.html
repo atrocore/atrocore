@@ -6,6 +6,7 @@
         <link rel="shortcut icon" sizes="196x196" href="{{basePath}}client/modules/treo-core/img/favicon16x16.png">
         <link rel="icon" href="{{basePath}}client/modules/treo-core/img/favicon16x16.png" type="image/x-icon">
         <link rel="shortcut icon" href="{{basePath}}client/modules/treo-core/img/favicon16x16.png" type="image/x-icon">
+        <script src="{{basePath}}client/lib/jquery-2.1.4.min.js"></script>
     </head>
     <body>
     <div class="container content">
@@ -19,12 +20,30 @@
                 <div class="panel-body">
                     <div>
                         <div class="form-group">
-                            <h3 style="margin-bottom: 19px">System is been updated since {{startFrom}}.</h3>
+                            <h3 style="margin-bottom: 19px">System is updating.</h3>
                             <label>Please wait till this process ends. You can <a href="/">refresh this page</a>, if you think, that it is already finished.</label>
                             <label>If the update can not be completed, you need to restore the system, please run this command: </label>
                             <pre style="margin: 10px 0;">php composer.phar restore</pre>
                             <label>or you can force the restoration, if previous command does not help</label>
                             <pre style="margin: 10px 0;">php composer.phar restore --force</pre>
+
+                            <label style="margin-top: 20px;">Update logs:</label>
+                            <pre id="log" style="margin: 10px 0;"></pre>
+                            <script type="text/javascript">
+                                window.setInterval(function () {
+                                    $.ajax({
+                                        type: 'GET',
+                                        dataType: 'json',
+                                        url: `/?composerLogs=1`,
+                                        cache: false,
+                                        success: response => {
+                                            if (response.status) {
+                                                $('#log').html(response.logs.trim());
+                                            }
+                                        }
+                                    });
+                                }, 1000);
+                            </script>
                         </div>
                     </div>
                 </div>
