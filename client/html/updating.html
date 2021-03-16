@@ -30,6 +30,7 @@
                             <label style="margin-top: 20px;">Update logs:</label>
                             <pre id="log" style="margin: 10px 0;"></pre>
                             <script type="text/javascript">
+                                let start = false;
                                 window.setInterval(function () {
                                     $.ajax({
                                         type: 'GET',
@@ -38,7 +39,12 @@
                                         cache: false,
                                         success: response => {
                                             if (response.status) {
+                                                start = true;
                                                 $('#log').html(response.logs.trim());
+                                            } else {
+                                                if (start) {
+                                                    location.reload();
+                                                }
                                             }
                                         }
                                     });
