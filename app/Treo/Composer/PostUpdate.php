@@ -59,6 +59,83 @@ class PostUpdate
     private static $rootPath;
 
     /**
+     * Restore
+     */
+    public static function restore(): void
+    {
+        // get root path
+        self::$rootPath = self::getRootPath();
+
+        // change directory
+        chdir(self::$rootPath);
+
+        // set the include_path
+        set_include_path(self::$rootPath);
+
+        if (file_exists(self::DUMP_DIR)) {
+            self::renderLine('Restoring files...');
+
+            foreach (['data', 'client', 'custom', 'vendor'] as $dir) {
+                exec('cp -R dump/' . $dir . '/ .', $output, $result);
+            }
+
+            file_put_contents('data/stable-composer.json', file_get_contents('composer.json'));
+            file_put_contents('data/previous-composer.lock', file_get_contents('composer.lock'));
+
+            self::renderLine('Done!');
+
+            self::renderLine('Restoring database...');
+
+            if (!file_exists('data/config.php') || !file_exists('dump/db.sql')) {
+                self::renderLine('Failed!');
+                exit(1);
+            }
+
+            $config = include 'data/config.php';
+
+            if (empty($config['database'])) {
+                self::renderLine('Failed!');
+                exit(1);
+            }
+
+            $db = $config['database'];
+
+            $port = empty($db['port']) ? '' : "port={$db['port']};";
+
+            $options = [];
+            if (isset($db['sslCA'])) {
+                $options[\PDO::MYSQL_ATTR_SSL_CA] = $db['sslCA'];
+            }
+            if (isset($db['sslCert'])) {
+                $options[\PDO::MYSQL_ATTR_SSL_CERT] = $db['sslCert'];
+            }
+            if (isset($db['sslKey'])) {
+                $options[\PDO::MYSQL_ATTR_SSL_KEY] = $db['sslKey'];
+            }
+            if (isset($db['sslCAPath'])) {
+                $options[\PDO::MYSQL_ATTR_SSL_CAPATH] = $db['sslCAPath'];
+            }
+            if (isset($db['sslCipher'])) {
+                $options[\PDO::MYSQL_ATTR_SSL_CIPHER] = $db['sslCipher'];
+            }
+
+            $pdo = new \PDO("mysql:host={$db['host']};{$port}dbname={$db['dbname']};charset={$db['charset']}", $db['user'], $db['password'], $options);
+
+            $pdo->exec(file_get_contents('dump/db.sql'));
+
+            self::renderLine('Done!');
+
+            self::renderLine('Removing dump...');
+            exec('rm -R dump');
+            self::renderLine('Done!');
+            exit(0);
+        }
+
+        self::renderLine('No dump data!');
+        exit(0);
+    }
+
+    /**
      * Run post-update actions
      */
     public static function postUpdate()
@@ -807,9 +884,7 @@ class PostUpdate
         self::renderLine('Failed!');
 
         if (file_exists(self::UPDATE_RUNNING_FILE)) {
-            self::renderLine('Restoring...');
-            exec('php restore.php 2>/dev/null');
-            self::renderLine('Done!');
+            self::restore();
         }
     }
 
