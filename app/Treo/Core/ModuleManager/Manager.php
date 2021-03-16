@@ -36,7 +36,6 @@ declare(strict_types=1);
 namespace Treo\Core\ModuleManager;
 
 use Espo\Core\Container;
-use Treo\Composer\PostUpdate;
 use Treo\Services\Composer;
 
 /**
@@ -65,7 +64,7 @@ class Manager
      */
     public static function prepareVersion(string $version): string
     {
-        return PostUpdate::prepareVersion($version);
+        return str_replace('v', '', $version);
     }
 
     /**

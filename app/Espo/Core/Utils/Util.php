@@ -34,7 +34,6 @@
 namespace Espo\Core\Utils;
 
 use Espo\ORM\EntityCollection;
-use Treo\Composer\PostUpdate;
 
 /**
  * Class Util
@@ -58,7 +57,18 @@ class Util
      */
     public static function scanDir(string $dir): array
     {
-        return PostUpdate::scanDir($dir);
+        // prepare result
+        $result = [];
+
+        if (file_exists($dir) && is_dir($dir)) {
+            foreach (scandir($dir) as $item) {
+                if (!in_array($item, ['.', '..'])) {
+                    $result[] = $item;
+                }
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -66,7 +76,14 @@ class Util
      */
     public static function createDir(string $dir): void
     {
-        PostUpdate::createDir($dir);
+        if (!file_exists($dir)) {
+            try {
+                mkdir($dir, 0777, true);
+                sleep(1);
+            } catch (\Throwable $e) {
+                // ignore
+            }
+        }
     }
 
     /**
@@ -78,7 +95,16 @@ class Util
      */
     public static function removeDir(string $dir): void
     {
-        PostUpdate::removeDir($dir);
+        if (file_exists($dir) && is_dir($dir)) {
+            foreach (self::scanDir($dir) as $object) {
+                if (is_dir($dir . "/" . $object)) {
+                    self::removeDir($dir . "/" . $object);
+                } else {
+                    unlink($dir . "/" . $object);
+                }
+            }
+            rmdir($dir);
+        }
     }
 
     /**
@@ -91,7 +117,26 @@ class Util
      */
     public static function copyDir(string $src, string $dest): void
     {
-        PostUpdate::copyDir($src, $dest);
+        if (!is_dir($src)) {
+            return;
+        }
+
+        if (!is_dir($dest)) {
+            if (!mkdir($dest)) {
+                return;
+            }
+        }
+
+        $i = new \DirectoryIterator($src);
+        foreach ($i as $f) {
+            if ($f->isFile()) {
+                copy($f->getRealPath(), "$dest/" . $f->getFilename());
+            } else {
+                if (!$f->isDot() && $f->isDir()) {
+                    self::copyDir($f->getRealPath(), "$dest/$f");
+                }
+            }
+        }
     }
 
     /**

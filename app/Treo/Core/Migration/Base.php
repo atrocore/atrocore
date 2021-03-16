@@ -81,7 +81,12 @@ class Base
      */
     protected function renderLine(string $message, bool $break = true)
     {
-        \Treo\Composer\PostUpdate::renderLine($message, $break);
+        $result = date('d.m.Y H:i:s') . ' | ' . $message;
+        if ($break) {
+            $result .= PHP_EOL;
+        }
+
+        echo $result;
     }
 
     /**

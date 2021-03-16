@@ -36,7 +36,6 @@ declare(strict_types=1);
 namespace Treo\Core\Migration;
 
 use Espo\Core\Utils\Config;
-use Treo\Composer\PostUpdate;
 
 /**
  * Migration
@@ -107,7 +106,7 @@ class Migration
             return false;
         }
 
-        PostUpdate::renderLine($message);
+        self::renderLine($message);
 
         // prepare increment
         if ($keyFrom < $keyTo) {
@@ -134,7 +133,7 @@ class Migration
             }
         }
 
-        PostUpdate::renderLine('Migration done!');
+        self::renderLine('Migration done!');
 
         return true;
     }
@@ -149,7 +148,7 @@ class Migration
     protected function prepareVersion(string $version): ?string
     {
         // prepare version
-        $version = PostUpdate::prepareVersion($version);
+        $version = str_replace('v', '', $version);
 
         if (preg_match_all('/^(.*)\.(.*)\.(.*)$/', $version, $matches)) {
             // prepare data
@@ -207,5 +206,19 @@ class Migration
         }
 
         return new $className($this->pdo, $this->config);
+    }
+
+    /**
+     * @param string $message
+     * @param bool   $break
+     */
+    private static function renderLine(string $message, bool $break = true)
+    {
+        $result = date('d.m.Y H:i:s') . ' | ' . $message;
+        if ($break) {
+            $result .= PHP_EOL;
+        }
+
+        echo $result;
     }
 }

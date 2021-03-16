@@ -35,7 +35,6 @@ namespace Espo\Repositories;
 
 use Espo\Core\ORM\Repositories\RDB;
 use Espo\ORM\Entity;
-use Treo\Composer\PostUpdate;
 
 /**
  * Class Notification
@@ -48,7 +47,10 @@ class Notification extends RDB
 
     public static function refreshNotReadCount(): void
     {
-        PostUpdate::createDir(self::UPDATE_COUNT_PATH);
+        if (!file_exists(self::UPDATE_COUNT_PATH)) {
+            mkdir(self::UPDATE_COUNT_PATH, 0777, true);
+            sleep(1);
+        }
         file_put_contents(self::UPDATE_COUNT_PATH . '/' . time() . '.txt', '1');
     }
 
