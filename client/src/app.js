@@ -498,6 +498,7 @@ Espo.define(
             this.preferences.clear();
             this.acl.clear();
             this.storage.clear('user', 'auth');
+            this.doAction({action: 'login'});
 
             this.unsetCookieAuth();
 
