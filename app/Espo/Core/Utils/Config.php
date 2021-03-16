@@ -121,10 +121,6 @@ class Config
      */
     public function get($name, $default = null)
     {
-        if ($name == 'isUpdating') {
-            return file_exists(COMPOSER_LOG) || !$this->moduleManager->isLoaded();
-        }
-
         $keys = explode('.', $name);
 
         $lastBranch = $this->loadConfig();

@@ -129,15 +129,6 @@ class Application
      */
     public function run()
     {
-        if ($this->getConfig()->get('isUpdating', false)) {
-            $this->display(
-                'client/html/updating.html', [
-                    'startFrom' => (new \DateTime($this->getConfig()->get('updateFrom', date('Y-m-d H:i:s'))))->format('H:i'),
-                    'year'      => date('Y')
-                ]
-            );
-        }
-
         if (!empty($query = $this->getQuery())) {
             /** @var bool $show404 */
             $show404 = true;
@@ -217,6 +208,10 @@ class Application
             $this->runInstallerApi();
         }
 
+        if ($this->isUpdating()) {
+            $this->getContainer()->get('pdo')->exec("UPDATE auth_token SET deleted=1 WHERE 1");
+        }
+
         // prepare base route
         $baseRoute = '/api/v1';
 
@@ -273,6 +268,15 @@ class Application
         // for installer
         if (!$this->isInstalled()) {
             $this->runInstallerClient();
+        }
+
+        if ($this->isUpdating()) {
+            $this->display(
+                'client/html/updating.html', [
+                    'startFrom' => (new \DateTime($this->getConfig()->get('updateFrom', date('Y-m-d H:i:s'))))->format('H:i'),
+                    'year'      => date('Y')
+                ]
+            );
         }
 
         // for entryPoint
@@ -632,5 +636,15 @@ class Application
         }
 
         return $query;
+    }
+
+    /**
+     * Is system updating?
+     *
+     * @return bool
+     */
+    private function isUpdating(): bool
+    {
+        return file_exists(COMPOSER_LOG) || !$this->getContainer()->get('moduleManager')->isLoaded();
     }
 }
