@@ -61,7 +61,7 @@ class PostUpdate
      */
     private static $rootPath;
 
-    public static function restoreForce(): void
+    public static function restoreForce(bool $keepLogFile = false): void
     {
         // get root path
         self::$rootPath = self::getRootPath();
@@ -72,7 +72,7 @@ class PostUpdate
         // set the include_path
         set_include_path(self::$rootPath);
 
-        if (file_exists(self::COMPOSER_LOG_FILE)) {
+        if (!$keepLogFile && file_exists(self::COMPOSER_LOG_FILE)) {
             unlink(self::COMPOSER_LOG_FILE);
         }
 
@@ -209,7 +209,7 @@ class PostUpdate
             self::onSuccess();
         } catch (\Throwable $e) {
             self::renderLine('Failed! ' . $e->getMessage());
-            self::restoreForce();
+            self::restoreForce(true);
             exit(1);
         }
     }
