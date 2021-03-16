@@ -65,13 +65,16 @@ class PostUpdate
      * Restore force
      *
      * @param bool $autoRestore
-     *
-     * @throws \Exception
      */
     public static function restoreForce(bool $autoRestore = false): void
     {
-        // get root path
-        self::$rootPath = self::getRootPath();
+        try {
+            // get root path
+            self::$rootPath = self::getRootPath();
+        } catch (\Throwable $e) {
+            self::renderLine($e->getMessage());
+            exit(1);
+        }
 
         // change directory
         chdir(self::$rootPath);
@@ -166,8 +169,13 @@ class PostUpdate
      */
     public static function postUpdate()
     {
-        // get root path
-        self::$rootPath = self::getRootPath();
+        try {
+            // get root path
+            self::$rootPath = self::getRootPath();
+        } catch (\Throwable $e) {
+            self::renderLine('Failed! ' . $e->getMessage());
+            exit(1);
+        }
 
         // change directory
         chdir(self::$rootPath);
