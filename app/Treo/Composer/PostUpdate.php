@@ -94,7 +94,13 @@ class PostUpdate
         self::renderLine('Done!');
 
         self::renderLine('Restoring database...');
-        if (!file_exists(self::CONFIG_PATH) || !file_exists(self::DB_DUMP)) {
+
+        if (!file_exists(self::DB_DUMP)){
+            self::renderLine('No database dump found!');
+            exit(0);
+        }
+
+        if (!file_exists(self::CONFIG_PATH)) {
             self::renderLine('Failed!');
             exit(1);
         }
