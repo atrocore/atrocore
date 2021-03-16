@@ -89,13 +89,12 @@ class PostUpdate
             }
             exec("cp -R {$path}/ .");
         }
-        file_put_contents(self::STABLE_COMPOSER_JSON, file_get_contents('composer.json'));
-        file_put_contents(self::PREVIOUS_COMPOSER_LOCK, file_get_contents('composer.lock'));
+        file_put_contents('composer.lock', file_get_contents(self::PREVIOUS_COMPOSER_LOCK));
         self::renderLine('Done!');
 
         self::renderLine('Restoring database...');
 
-        if (!file_exists(self::DB_DUMP)){
+        if (!file_exists(self::DB_DUMP)) {
             self::renderLine('No database dump found!');
             exit(0);
         }
