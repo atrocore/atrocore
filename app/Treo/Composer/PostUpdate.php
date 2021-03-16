@@ -246,6 +246,9 @@ class PostUpdate
         }
 
         echo $result;
+
+        // wait
+        sleep(1);
     }
 
     /**
