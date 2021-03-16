@@ -19208,12 +19208,13 @@ ul.dropdown-menu > li.checkbox {
     display: inline-block;
     float: right;
     margin-left: 5px;
-    margin-bottom: 2px;
+    margin-bottom: 8px;
 }
 
 .page-header .header-buttons .filter-cell {
     display: inline-block;
     width: 170px;
+    margin-right: -1px;
 }
 
 .page-header .header-buttons .filter-cell .field {
@@ -19256,6 +19257,18 @@ select,
     margin: 0;
     position: relative;
     top: 1px;
+}
+
+.page-header .header-buttons .pull-right {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: end;
+    -webkit-justify-content: flex-end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+    min-width: 510px;
 }
 
 .selectize-input.focus {
@@ -20161,6 +20174,19 @@ button.category:focus {
         width: calc(100% - 30px);
         box-shadow: none;
         margin: 0 15px;
+    }
+
+    .page-header .header-buttons .pull-right {
+        -webkit-flex-wrap: nowrap;
+        -ms-flex-wrap: nowrap;
+        flex-wrap: nowrap;
+        min-width: 100%;
+    }
+
+    .page-header .header-buttons .filter-cell {
+        margin-bottom: 5px;
+        width: 100%;
+        max-width: 170px;
     }
 }
 
