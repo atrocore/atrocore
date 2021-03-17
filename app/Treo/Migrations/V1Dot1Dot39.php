@@ -47,9 +47,21 @@ class V1Dot1Dot39 extends Base
      */
     public function up(): void
     {
-        copy('.htaccess', 'vendor/atrocore/core/copy/.htaccess');
-        copy('index.php', 'vendor/atrocore/core/copy/index.php');
-        copy('composer.phar', 'vendor/atrocore/core/copy/composer.phar');
+        $composerData = json_decode(file_get_contents('composer.json'), true);
+
+        $composerData['scripts'] = [
+            'post-update-cmd' => '\\Treo\\Composer\\PostUpdate::postUpdate',
+            'restore'         => '\Treo\Composer\PostUpdate::restore'
+        ];
+        $composerData['autoload']['classmap'] = [];
+
+        file_put_contents('composer.json', json_encode($composerData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+
+        copy('vendor/atrocore/core/copy/.htaccess', '.htaccess');
+        copy('vendor/atrocore/core/copy/index.php', 'index.php');
+        copy('vendor/atrocore/core/copy/composer.phar', 'composer.phar');
+
+        file_put_contents(Cron::DAEMON_KILLER, '1');
     }
 
     /**
@@ -57,8 +69,23 @@ class V1Dot1Dot39 extends Base
      */
     public function down(): void
     {
-        copy('.htaccess', 'vendor/atrocore/core/copy/.htaccess');
-        copy('index.php', 'vendor/atrocore/core/copy/index.php');
-        copy('composer.phar', 'vendor/atrocore/core/copy/composer.phar');
+        $composerData = json_decode(file_get_contents('composer.json'), true);
+
+        $composerData['scripts'] = [
+            "pre-update-cmd"        => "ComposerCmd::preUpdate",
+            "post-update-cmd"       => "ComposerCmd::postUpdate",
+            "post-package-install"  => "ComposerCmd::postPackageInstall",
+            "post-package-update"   => "ComposerCmd::postPackageUpdate",
+            "pre-package-uninstall" => "ComposerCmd::prePackageUninstall"
+        ];
+        $composerData['autoload']['classmap'] = ["composer-cmd.php"];
+
+        file_put_contents('composer.json', json_encode($composerData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+
+        copy('vendor/atrocore/core/copy/.htaccess', '.htaccess');
+        copy('vendor/atrocore/core/copy/index.php', 'index.php');
+        copy('vendor/atrocore/core/copy/composer.phar', 'composer.phar');
+
+        file_put_contents(Cron::DAEMON_KILLER, '1');
     }
 }
