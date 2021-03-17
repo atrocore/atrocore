@@ -46,6 +46,7 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
 
         events: {
             'click a[data-action="showNotifications"]': function (e) {
+
                 this.showNotifications();
                 setTimeout(function () {
                     this.checkUpdates();
@@ -270,6 +271,8 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
         showNotifications: function () {
             this.closeNotifications();
 
+            this.$el.addClass('open');
+
             var $container = $('<div>').attr('id', 'notifications-panel');
 
             $container.appendTo(this.$el.find('.notifications-panel-container'));
@@ -295,6 +298,8 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
         },
 
         closeNotifications: function () {
+            this.$el.removeClass('open');
+
             $container = $('#notifications-panel');
 
             $('#notifications-panel').remove();
