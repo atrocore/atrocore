@@ -102,22 +102,22 @@ class PostUpdate
             exec("cp -R {$path}/ .");
         }
         file_put_contents('composer.lock', file_get_contents(self::PREVIOUS_COMPOSER_LOCK));
-        self::renderLine(' Done!');
+        self::addToLine(' Done!');
 
         self::renderLine('Restoring database...', false);
 
         if (!file_exists(self::DB_DUMP) || filesize(self::DB_DUMP) == 0) {
-            self::renderLine(' No database dump found!');
+            self::addToLine(' No database dump found!');
             exit($exitCode);
         }
 
         if (!file_exists(self::CONFIG_PATH)) {
-            self::renderLine(' Failed!');
+            self::addToLine(' Failed!');
             exit(1);
         }
         $config = include self::CONFIG_PATH;
         if (empty($config['database'])) {
-            self::renderLine(' Failed!');
+            self::addToLine(' Failed!');
             exit(1);
         }
         $db = $config['database'];
@@ -140,7 +140,7 @@ class PostUpdate
         }
         $pdo = new \PDO("mysql:host={$db['host']};{$port}dbname={$db['dbname']};charset={$db['charset']}", $db['user'], $db['password'], $options);
         $pdo->exec(file_get_contents(self::DB_DUMP));
-        self::renderLine(' Done!');
+        self::addToLine(' Done!');
 
         exit($exitCode);
     }
@@ -231,7 +231,7 @@ class PostUpdate
 
             self::onSuccess();
         } catch (\Throwable $e) {
-            self::renderLine(' Failed! ' . $e->getMessage());
+            self::addToLine(' Failed! ' . $e->getMessage());
             self::restoreForce(true);
             exit(1);
         }
@@ -378,7 +378,7 @@ class PostUpdate
 
         self::renderLine('Logging out all users...', false);
         self::$container->get('pdo')->exec("DELETE FROM auth_token WHERE 1");
-        self::renderLine(' Done!');
+        self::addToLine(' Done!');
     }
 
     /**
@@ -392,7 +392,7 @@ class PostUpdate
 
         self::renderLine('Coping system files...', false);
         self::copyDir(self::$rootPath . '/vendor/atrocore/core/copy', self::$rootPath);
-        self::renderLine(' Done!');
+        self::addToLine(' Done!');
     }
 
     /**
@@ -402,7 +402,7 @@ class PostUpdate
     {
         self::renderLine('Updating list of used modules...', false);
         file_put_contents('data/modules.json', json_encode(self::getModules()));
-        self::renderLine(' Done!');
+        self::addToLine(' Done!');
     }
 
     /**
@@ -443,7 +443,7 @@ class PostUpdate
                 }
             }
         }
-        self::renderLine(' Done!');
+        self::addToLine(' Done!');
     }
 
     /**
@@ -497,7 +497,7 @@ class PostUpdate
             }
         }
 
-        self::renderLine(' Done!');
+        self::addToLine(' Done!');
     }
 
     /**
@@ -577,7 +577,7 @@ class PostUpdate
                 // unlink installing file
                 unlink('first_update.log');
             }
-            self::renderLine(' Done!');
+            self::addToLine(' Done!');
         }
     }
 
@@ -599,7 +599,7 @@ class PostUpdate
         self::$container->get('config')->remove('cacheTimestamp');
         self::$container->get('config')->save();
 
-        self::renderLine(' Done!');
+        self::addToLine(' Done!');
     }
 
     /**
@@ -615,7 +615,7 @@ class PostUpdate
             self::copyDir($module->getClientPath(), 'client');
         }
 
-        self::renderLine(' Done!');
+        self::addToLine(' Done!');
     }
 
     /**
@@ -641,7 +641,7 @@ class PostUpdate
             // create config
             file_put_contents($path, $content);
 
-            self::renderLine(' Done!');
+            self::addToLine(' Done!');
         }
     }
 
@@ -666,7 +666,7 @@ class PostUpdate
             foreach ($composerDiff['install'] as $row) {
                 self::renderLine('Calling post-install script for ' . $row['id'] . '...', false);
                 self::$container->get('moduleManager')->getModuleInstallDeleteObject($row['id'])->afterInstall();
-                self::renderLine(' Done!');
+                self::addToLine(' Done!');
             }
         }
 
@@ -676,7 +676,7 @@ class PostUpdate
             foreach ($composerDiff['delete'] as $row) {
                 self::renderLine('Calling post-delete script for ' . $row['id'] . '...', false);
                 self::$container->get('moduleManager')->getModuleInstallDeleteObject($row['id'])->afterDelete();
-                self::renderLine(' Done!');
+                self::addToLine(' Done!');
             }
         }
     }
@@ -699,7 +699,7 @@ class PostUpdate
         if (isset($data['Treo'])) {
             self::renderLine('Running migrations for Core...', false);
             $migration->run('Treo', self::prepareVersion($data['Treo']['from']), self::prepareVersion($data['Treo']['to']));
-            self::renderLine(' Done!');
+            self::addToLine(' Done!');
 
         }
 
@@ -707,7 +707,7 @@ class PostUpdate
             if (isset($data[$id])) {
                 self::renderLine('Running migrations for ' . $id . '...', false);
                 $migration->run($id, self::prepareVersion($data[$id]['from']), self::prepareVersion($data[$id]['to']));
-                self::renderLine(' Done!');
+                self::addToLine(' Done!');
             }
         }
     }
@@ -734,7 +734,7 @@ class PostUpdate
             }
         }
 
-        self::renderLine(' Done!');
+        self::addToLine(' Done!');
     }
 
     /**
@@ -930,7 +930,7 @@ class PostUpdate
             if (!empty($result)) {
                 $message = 'Please, configure files permissions!';
                 if ($ignore) {
-                    self::renderLine(' Failed! ' . $message);
+                    self::addToLine(' Failed! ' . $message);
                     $isFailed = true;
                     break 1;
                 } else {
@@ -950,7 +950,7 @@ class PostUpdate
         if (!empty($result)) {
             $message = "Please, install mysqldump! System can't create dump for database!";
             if ($ignore) {
-                self::renderLine(' Failed! ' . $message);
+                self::addToLine(' Failed! ' . $message);
                 $isFailed = true;
             } else {
                 throw new \Exception($message);
@@ -958,7 +958,7 @@ class PostUpdate
         }
 
         if (empty($isFailed)) {
-            self::renderLine(' Done!');
+            self::addToLine(' Done!');
         }
     }
 
@@ -967,5 +967,18 @@ class PostUpdate
         $composerDiff = self::getComposerDiff();
 
         return !empty($composerDiff['install']) || !empty($composerDiff['update']) || !empty($composerDiff['delete']);
+    }
+
+    /**
+     * @param string $message
+     * @param bool   $break
+     */
+    private static function addToLine(string $message, bool $break = true)
+    {
+        if ($break) {
+            $message .= PHP_EOL;
+        }
+
+        echo $message;
     }
 }
