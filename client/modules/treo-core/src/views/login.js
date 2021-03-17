@@ -153,7 +153,7 @@ Espo.define('treo-core:views/login', 'class-replace!treo-core:views/login',
                 success: function (data) {
                     this.notify(false);
 
-                    if (this.theme !== 'default' && data.preferences.theme !== this.themes) {
+                    if (this.theme !== 'default' && data.preferences.theme !== this.theme) {
                         $.ajax({
                             url: 'Preferences/' + data.user.id,
                             method: 'PUT',
