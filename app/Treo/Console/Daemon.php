@@ -108,17 +108,6 @@ class Daemon extends AbstractConsole
                 // cleanup
                 file_put_contents($log, '');
 
-                // create dump for vendor
-                if (!file_exists('dump')) {
-                    try {
-                        mkdir('dump', 0777, true);
-                        sleep(1);
-                    } catch (\Throwable $e) {
-                        // ignore
-                    }
-                }
-                exec('cp -R vendor/ dump/vendor 2>/dev/null');
-
                 // execute composer update
                 exec($this->getPhp() . " composer.phar update >> $log 2>&1", $output, $exitCode);
 

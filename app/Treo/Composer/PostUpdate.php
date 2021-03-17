@@ -93,7 +93,7 @@ class PostUpdate
             exit(1);
         }
 
-        self::renderLine('Restoring files...');
+        self::renderLine('Restoring files...', false);
         foreach (self::DIRS_FOR_DUMPING as $dir) {
             $path = self::DUMP_DIR . '/' . $dir;
             if (!file_exists($path)) {
@@ -102,22 +102,22 @@ class PostUpdate
             exec("cp -R {$path}/ .");
         }
         file_put_contents('composer.lock', file_get_contents(self::PREVIOUS_COMPOSER_LOCK));
-        self::renderLine('Done!');
+        self::renderLine(' Done!');
 
-        self::renderLine('Restoring database...');
+        self::renderLine('Restoring database...', false);
 
         if (!file_exists(self::DB_DUMP) || filesize(self::DB_DUMP) == 0) {
-            self::renderLine('No database dump found!');
+            self::renderLine(' No database dump found!');
             exit($exitCode);
         }
 
         if (!file_exists(self::CONFIG_PATH)) {
-            self::renderLine('Failed!');
+            self::renderLine(' Failed!');
             exit(1);
         }
         $config = include self::CONFIG_PATH;
         if (empty($config['database'])) {
-            self::renderLine('Failed!');
+            self::renderLine(' Failed!');
             exit(1);
         }
         $db = $config['database'];
@@ -140,7 +140,7 @@ class PostUpdate
         }
         $pdo = new \PDO("mysql:host={$db['host']};{$port}dbname={$db['dbname']};charset={$db['charset']}", $db['user'], $db['password'], $options);
         $pdo->exec(file_get_contents(self::DB_DUMP));
-        self::renderLine('Done!');
+        self::renderLine(' Done!');
 
         exit($exitCode);
     }
@@ -231,7 +231,7 @@ class PostUpdate
 
             self::onSuccess();
         } catch (\Throwable $e) {
-            self::renderLine('Failed! ' . $e->getMessage());
+            self::renderLine(' Failed! ' . $e->getMessage());
             self::restoreForce(true);
             exit(1);
         }
@@ -376,9 +376,9 @@ class PostUpdate
             return;
         }
 
-        self::renderLine('Logging out all users...');
+        self::renderLine('Logging out all users...', false);
         self::$container->get('pdo')->exec("DELETE FROM auth_token WHERE 1");
-        self::renderLine('Done!');
+        self::renderLine(' Done!');
     }
 
     /**
@@ -390,9 +390,9 @@ class PostUpdate
             return;
         }
 
-        self::renderLine('Coping system files...');
+        self::renderLine('Coping system files...', false);
         self::copyDir(self::$rootPath . '/vendor/atrocore/core/copy', self::$rootPath);
-        self::renderLine('Done!');
+        self::renderLine(' Done!');
     }
 
     /**
@@ -400,9 +400,9 @@ class PostUpdate
      */
     private static function updateModulesList(): void
     {
-        self::renderLine('Updating list of used modules...');
+        self::renderLine('Updating list of used modules...', false);
         file_put_contents('data/modules.json', json_encode(self::getModules()));
-        self::renderLine('Done!');
+        self::renderLine(' Done!');
     }
 
     /**
@@ -410,7 +410,7 @@ class PostUpdate
      */
     private static function copyModulesEvent(): void
     {
-        self::renderLine('Coping post-install & post-delete scripts for modules...');
+        self::renderLine('Coping post-install & post-delete scripts for modules...', false);
         foreach (self::getModules() as $module) {
             // prepare class name
             $className = "\\" . $module . "\\Event";
@@ -443,7 +443,7 @@ class PostUpdate
                 }
             }
         }
-        self::renderLine('Done!');
+        self::renderLine(' Done!');
     }
 
     /**
@@ -451,7 +451,7 @@ class PostUpdate
      */
     private static function copyModulesMigrations(): void
     {
-        self::renderLine('Coping migration scripts...');
+        self::renderLine('Coping migration scripts...', false);
 
         // prepare data
         $data = [];
@@ -497,7 +497,7 @@ class PostUpdate
             }
         }
 
-        self::renderLine('Done!');
+        self::renderLine(' Done!');
     }
 
     /**
@@ -557,7 +557,7 @@ class PostUpdate
     private static function uploadDemoData()
     {
         if (file_exists('first_update.log')) {
-            self::renderLine('Uploading demo-data...');
+            self::renderLine('Uploading demo-data...', false);
             $content = @file_get_contents('https://demo-source.atropim.com/demo-data.zip');
             if (!empty($content)) {
                 file_put_contents('demo-data.zip', $content);
@@ -577,7 +577,7 @@ class PostUpdate
                 // unlink installing file
                 unlink('first_update.log');
             }
-            self::renderLine('Done!');
+            self::renderLine(' Done!');
         }
     }
 
@@ -591,7 +591,7 @@ class PostUpdate
             return;
         }
 
-        self::renderLine('Clearing cache...');
+        self::renderLine('Clearing cache...', false);
 
         self::removeDir('data/cache');
         self::createDir('data/cache');
@@ -599,7 +599,7 @@ class PostUpdate
         self::$container->get('config')->remove('cacheTimestamp');
         self::$container->get('config')->save();
 
-        self::renderLine('Done!');
+        self::renderLine(' Done!');
     }
 
     /**
@@ -607,7 +607,7 @@ class PostUpdate
      */
     private static function updateClientFiles(): void
     {
-        self::renderLine('Coping frontend files...');
+        self::renderLine('Coping frontend files...', false);
 
         self::removeDir('client');
         self::copyDir(dirname(CORE_PATH) . '/client', 'client');
@@ -615,7 +615,7 @@ class PostUpdate
             self::copyDir($module->getClientPath(), 'client');
         }
 
-        self::renderLine('Done!');
+        self::renderLine(' Done!');
     }
 
     /**
@@ -627,7 +627,7 @@ class PostUpdate
         $path = self::CONFIG_PATH;
 
         if (!file_exists($path)) {
-            self::renderLine('Creating main config...');
+            self::renderLine('Creating main config...', false);
 
             // get default data
             $data = include 'vendor/atrocore/core/app/Espo/Core/defaults/config.php';
@@ -641,7 +641,7 @@ class PostUpdate
             // create config
             file_put_contents($path, $content);
 
-            self::renderLine('Done!');
+            self::renderLine(' Done!');
         }
     }
 
@@ -664,9 +664,9 @@ class PostUpdate
 
             // run
             foreach ($composerDiff['install'] as $row) {
-                self::renderLine('Calling post-install script for ' . $row['id'] . '... ');
+                self::renderLine('Calling post-install script for ' . $row['id'] . '...', false);
                 self::$container->get('moduleManager')->getModuleInstallDeleteObject($row['id'])->afterInstall();
-                self::renderLine('Done!');
+                self::renderLine(' Done!');
             }
         }
 
@@ -674,9 +674,9 @@ class PostUpdate
         if (!empty($composerDiff['delete'])) {
             // run
             foreach ($composerDiff['delete'] as $row) {
-                self::renderLine('Calling post-delete script for ' . $row['id'] . '... ');
+                self::renderLine('Calling post-delete script for ' . $row['id'] . '...', false);
                 self::$container->get('moduleManager')->getModuleInstallDeleteObject($row['id'])->afterDelete();
-                self::renderLine('Done!');
+                self::renderLine(' Done!');
             }
         }
     }
@@ -697,17 +697,17 @@ class PostUpdate
         $migration = self::$container->get('migration');
 
         if (isset($data['Treo'])) {
-            self::renderLine('Running migrations for Core... ');
+            self::renderLine('Running migrations for Core...', false);
             $migration->run('Treo', self::prepareVersion($data['Treo']['from']), self::prepareVersion($data['Treo']['to']));
-            self::renderLine('Done!');
+            self::renderLine(' Done!');
 
         }
 
         foreach (self::getModules() as $id) {
             if (isset($data[$id])) {
-                self::renderLine('Running migrations for ' . $id . '... ');
+                self::renderLine('Running migrations for ' . $id . '...', false);
                 $migration->run($id, self::prepareVersion($data[$id]['from']), self::prepareVersion($data[$id]['to']));
-                self::renderLine('Done!');
+                self::renderLine(' Done!');
             }
         }
     }
@@ -717,7 +717,7 @@ class PostUpdate
      */
     private static function sendNotification(): void
     {
-        self::renderLine('Sending notification(s) to admin users... ');
+        self::renderLine('Sending notification(s) to admin users...', false);
         $em = self::$container->get('entityManager');
         $users = $em->getRepository('User')->getAdminUsers();
         if (!empty($users)) {
@@ -734,7 +734,7 @@ class PostUpdate
             }
         }
 
-        self::renderLine('Done!');
+        self::renderLine(' Done!');
     }
 
     /**
@@ -916,7 +916,7 @@ class PostUpdate
 
         self::createDir(self::DUMP_DIR);
 
-        self::renderLine('Creating restoring point... ');
+        self::renderLine('Creating restoring point...', false);
 
         $ignore = !file_exists(self::DUMP_DIR . '/vendor');
 
@@ -930,7 +930,7 @@ class PostUpdate
             if (!empty($result)) {
                 $message = 'Please, configure files permissions!';
                 if ($ignore) {
-                    self::renderLine('Failed! ' . $message);
+                    self::renderLine(' Failed! ' . $message);
                     $isFailed = true;
                     break 1;
                 } else {
@@ -950,7 +950,7 @@ class PostUpdate
         if (!empty($result)) {
             $message = "Please, install mysqldump! System can't create dump for database!";
             if ($ignore) {
-                self::renderLine('Failed! ' . $message);
+                self::renderLine(' Failed! ' . $message);
                 $isFailed = true;
             } else {
                 throw new \Exception($message);
@@ -958,7 +958,7 @@ class PostUpdate
         }
 
         if (empty($isFailed)) {
-            self::renderLine('Done!');
+            self::renderLine(' Done!');
         }
     }
 
