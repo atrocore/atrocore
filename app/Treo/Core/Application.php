@@ -209,8 +209,7 @@ class Application
         }
 
         if ($this->isUpdating()) {
-            header("HTTP/1.1 401 Unauthorized");
-            exit;
+            $this->logoutAll();
         }
 
         // prepare base route
@@ -643,5 +642,10 @@ class Application
     {
 //        return true;
         return file_exists(COMPOSER_LOG) || !$this->getContainer()->get('moduleManager')->isLoaded();
+    }
+
+    private function logoutAll(): void
+    {
+        $this->getContainer()->get('pdo')->exec("DELETE FROM auth_token WHERE 1");
     }
 }

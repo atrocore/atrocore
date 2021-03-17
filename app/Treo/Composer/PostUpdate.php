@@ -377,7 +377,7 @@ class PostUpdate
         }
 
         self::renderLine('Logging out all users...');
-        self::$container->get('pdo')->exec("UPDATE auth_token SET deleted=1 WHERE 1");
+        self::$container->get('pdo')->exec("DELETE FROM auth_token WHERE 1");
         self::renderLine('Done!');
     }
 

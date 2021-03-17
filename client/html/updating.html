@@ -14,7 +14,7 @@
             <div id="login" class="panel panel-default">
                 <div class="panel-heading">
                     <div class="logo-container">
-                        <img src="{{basePath}}client/modules/treo-core/img/core_logo_white.svg" class="logo">
+                        <img src="{{basePath}}client/modules/treo-core/img/core_logo_dark.svg" class="logo">
                     </div>
                 </div>
                 <div class="panel-body">
@@ -30,6 +30,12 @@
                             <label style="margin-top: 20px;">Update logs:</label>
                             <pre id="log" style="margin: 10px 0;"></pre>
                             <script type="text/javascript">
+                                let number = Math.floor(Math.random() * 7) + 1;
+                                $('body').css({
+                                    'background-image': 'url(' + `client/img/login/login_cover_${number}.jpg` + ')',
+                                    'background-size': '100%'
+                                });
+
                                 let start = false;
                                 window.setInterval(function () {
                                     $.ajax({

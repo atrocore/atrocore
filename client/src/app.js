@@ -507,7 +507,6 @@ Espo.define(
             xhr.setRequestHeader('Authorization', 'Basic ' + Base64.encode('**logout:logout'));
             xhr.send('');
             xhr.abort();
-            location.reload();
         },
 
         setCookieAuth: function (username, token) {
