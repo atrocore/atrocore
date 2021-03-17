@@ -49,6 +49,8 @@
                                         error: () => {
                                             if (start) {
                                                 location.reload();
+                                            } else {
+                                                $('#log').html('Starting...');
                                             }
                                         }
                                     });
