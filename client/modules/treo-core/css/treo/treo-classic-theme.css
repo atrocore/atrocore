@@ -1557,7 +1557,7 @@ mark, .mark {
 }
 
 .text-muted {
-    color: #999
+    color: #424242
 }
 
 .text-primary {
@@ -14756,7 +14756,7 @@ body > #header .navbar-brand span.home-icon {
     }
 
     #header .navbar-right > li > a {
-        color: #999;
+        color: #424242;
         padding: 5px 10px
     }
 

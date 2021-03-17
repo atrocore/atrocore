@@ -1552,7 +1552,7 @@ mark, .mark {
 }
 
 .text-muted {
-  color: #999;
+  color: #424242;
 }
 
 .text-primary {
@@ -20683,7 +20683,7 @@ body,
     border: 1px solid #e0e0e0;
     -webkit-border-radius: 3px;
             border-radius: 3px;
-    color: #737373;
+    color: #424242;
     text-align: center;
   }
   #header .navbar-right .global-search-container {
