@@ -142,10 +142,6 @@ class PostUpdate
         $pdo->exec(file_get_contents(self::DB_DUMP));
         self::renderLine('Done!');
 
-        self::renderLine('Removing dump...');
-        self::removeDir(self::DUMP_DIR);
-        self::renderLine('Done!');
-
         exit($exitCode);
     }
 
@@ -182,6 +178,10 @@ class PostUpdate
 
         // set the include_path
         set_include_path(self::$rootPath);
+
+        if (!self::isChanged()) {
+            exit(0);
+        }
 
         // autoload
         require_once 'vendor/autoload.php';
@@ -717,28 +717,24 @@ class PostUpdate
      */
     private static function sendNotification(): void
     {
-        $composerDiff = self::getComposerDiff();
-
-        if (!empty($composerDiff['install']) || !empty($composerDiff['update']) || !empty($composerDiff['delete'])) {
-            self::renderLine('Sending notification(s) to admin users... ');
-            $em = self::$container->get('entityManager');
-            $users = $em->getRepository('User')->getAdminUsers();
-            if (!empty($users)) {
-                foreach ($composerDiff as $status => $modules) {
-                    foreach ($modules as $module) {
-                        foreach ($users as $user) {
-                            $notification = $em->getEntity('Notification');
-                            $notification->set('type', 'Message');
-                            $notification->set('message', self::getMessageForComposer($status, $module));
-                            $notification->set('userId', $user['id']);
-                            $em->saveEntity($notification);
-                        }
+        self::renderLine('Sending notification(s) to admin users... ');
+        $em = self::$container->get('entityManager');
+        $users = $em->getRepository('User')->getAdminUsers();
+        if (!empty($users)) {
+            foreach (self::getComposerDiff() as $status => $modules) {
+                foreach ($modules as $module) {
+                    foreach ($users as $user) {
+                        $notification = $em->getEntity('Notification');
+                        $notification->set('type', 'Message');
+                        $notification->set('message', self::getMessageForComposer($status, $module));
+                        $notification->set('userId', $user['id']);
+                        $em->saveEntity($notification);
                     }
                 }
             }
-
-            self::renderLine('Done!');
         }
+
+        self::renderLine('Done!');
     }
 
     /**
@@ -906,9 +902,6 @@ class PostUpdate
             file_put_contents(self::STABLE_COMPOSER_JSON, file_get_contents('composer.json'));
         }
 
-        // remove dump dir
-        self::removeDir(self::DUMP_DIR);
-
         exit(0);
     }
 
@@ -967,5 +960,12 @@ class PostUpdate
         if (empty($isFailed)) {
             self::renderLine('Done!');
         }
+    }
+
+    private static function isChanged(): bool
+    {
+        $composerDiff = self::getComposerDiff();
+
+        return !empty($composerDiff['install']) || !empty($composerDiff['update']) || !empty($composerDiff['delete']);
     }
 }
