@@ -11,7 +11,7 @@ RewriteRule ^ apidocs/index.html [QSA,L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^(.*)$ index.php?treoq=$1 [L,QSA]
 
-<FilesMatch "(notReadCount\.json|popupNotifications\.json)$">
+<FilesMatch "(notReadCount\.json|popupNotifications\.json|treo-composer\.log)$">
   Allow from all
 </FilesMatch>
 

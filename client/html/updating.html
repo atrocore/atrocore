@@ -40,17 +40,15 @@
                                 window.setInterval(function () {
                                     $.ajax({
                                         type: 'GET',
-                                        dataType: 'json',
-                                        url: `/?composerLogs=1`,
+                                        url: `/data/treo-composer.log`,
                                         cache: false,
-                                        success: response => {
-                                            if (response.status) {
-                                                start = true;
-                                                $('#log').html(response.logs.trim());
-                                            } else {
-                                                if (start) {
-                                                    location.reload();
-                                                }
+                                        success: logs => {
+                                            start = true;
+                                            $('#log').html(logs.trim());
+                                        },
+                                        error: () => {
+                                            if (start) {
+                                                location.reload();
                                             }
                                         }
                                     });
