@@ -48,6 +48,10 @@ class Espo extends Base
      */
     public function login($username, $password, \Espo\Entities\AuthToken $authToken = null, $isPortal = null)
     {
+        if (!$this->getConfig()->get('isModulesLoaded', true)) {
+            throw new Error('Not all modules are loaded. Please try later.');
+        }
+
         if ($authToken) {
             $hash = $authToken->get('hash');
         } else {

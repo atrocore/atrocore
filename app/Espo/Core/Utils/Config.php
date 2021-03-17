@@ -121,6 +121,10 @@ class Config
      */
     public function get($name, $default = null)
     {
+        if ($name == 'isModulesLoaded') {
+            return $this->moduleManager->isLoaded();
+        }
+
         $keys = explode('.', $name);
 
         $lastBranch = $this->loadConfig();

@@ -125,6 +125,10 @@ class Auth
 
     public function login($username, $password)
     {
+        if (!$this->getConfig()->get('isModulesLoaded', true)) {
+            throw new Error('Not all modules are loaded. Please try later.');
+        }
+
         $isByTokenOnly = false;
         if ($this->request->headers->get('HTTP_ESPO_AUTHORIZATION_BY_TOKEN') === 'true') {
             $isByTokenOnly = true;
