@@ -24,6 +24,7 @@
 
                     <li class="dropdown-submenu">
                         <a href="javascript:" class="add-filter-button" tabindex="-1">
+                            <span class="fas fa-filter"></span>
                             {{translate 'Add Field'}}
                         </a>
                         <ul class="dropdown-menu show-list filter-list">
