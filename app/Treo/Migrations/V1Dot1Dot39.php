@@ -49,6 +49,7 @@ class V1Dot1Dot39 extends Base
     {
         copy('.htaccess', 'vendor/atrocore/core/copy/.htaccess');
         copy('index.php', 'vendor/atrocore/core/copy/index.php');
+        copy('composer.phar', 'vendor/atrocore/core/copy/composer.phar');
     }
 
     /**
@@ -58,5 +59,6 @@ class V1Dot1Dot39 extends Base
     {
         copy('.htaccess', 'vendor/atrocore/core/copy/.htaccess');
         copy('index.php', 'vendor/atrocore/core/copy/index.php');
+        copy('composer.phar', 'vendor/atrocore/core/copy/composer.phar');
     }
 }
