@@ -44,7 +44,13 @@
                                         cache: false,
                                         success: logs => {
                                             start = true;
-                                            $('#log').html(logs.trim());
+
+                                            let preparedLogs = logs.trim();
+                                            if (preparedLogs.search("composer") < 0) {
+                                                preparedLogs = 'Starting...';
+                                            }
+
+                                            $('#log').html(preparedLogs);
                                         },
                                         error: () => {
                                             if (start) {
