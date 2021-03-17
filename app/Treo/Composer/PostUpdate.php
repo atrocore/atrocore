@@ -916,7 +916,7 @@ class PostUpdate
 
         self::createDir(self::DUMP_DIR);
 
-        self::renderLine('Creating restoring point...', false);
+        self::renderLine('Creating restore point...', false);
 
         $ignore = !file_exists(self::DUMP_DIR . '/vendor');
 
