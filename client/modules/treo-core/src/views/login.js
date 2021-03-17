@@ -37,6 +37,8 @@ Espo.define('treo-core:views/login', 'class-replace!treo-core:views/login',
 
         language: null,
 
+        theme: 'default',
+
         events: _.extend({
             'change select[name="language"]': function (event) {
                 this.language = $(event.currentTarget).val();
@@ -46,6 +48,9 @@ Espo.define('treo-core:views/login', 'class-replace!treo-core:views/login',
                         this.reRender();
                     });
                 }
+            },
+            'change select[name="theme"]': function (event) {
+                this.theme = $(event.currentTarget).val();
             }
         }, Dep.prototype.events),
 
@@ -57,7 +62,8 @@ Espo.define('treo-core:views/login', 'class-replace!treo-core:views/login',
 
         data() {
             return _.extend({
-                locales: this.getLocales()
+                locales: this.getLocales(),
+                themes: this.getThemes()
             }, Dep.prototype.data.call(this));
         },
 
@@ -81,6 +87,22 @@ Espo.define('treo-core:views/login', 'class-replace!treo-core:views/login',
                         selected: item === this.language
                     };
                 });
+        },
+
+        getThemes() {
+            let themes = Object.keys(this.getConfig().get('themes') || {}).map(theme => {
+                return {
+                    name: theme,
+                    label: this.translate(theme, 'themes', 'Global')
+                }
+            });
+
+            themes.unshift({
+                name: this.theme,
+                label: this.translate('Default', 'labels', 'Global')
+            });
+
+            return themes;
         },
 
         login: function () {
@@ -130,6 +152,21 @@ Espo.define('treo-core:views/login', 'class-replace!treo-core:views/login',
                 },
                 success: function (data) {
                     this.notify(false);
+
+                    if (this.theme !== 'default' && data.preferences.theme !== this.themes) {
+                        $.ajax({
+                            url: 'Preferences/' + data.user.id,
+                            method: 'PUT',
+                            headers: {
+                                'Authorization': 'Basic ' + Base64.encode(userName + ':' + password),
+                                'Espo-Authorization': Base64.encode(userName + ':' + password)
+                            },
+                            data: JSON.stringify({
+                                theme: this.theme
+                            })
+                        });
+                    }
+
                     this.trigger('login', {
                         auth: {
                             userName: userName,
