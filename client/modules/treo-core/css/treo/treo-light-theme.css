@@ -14715,6 +14715,30 @@ label {
 
 .page-header > .row {
   min-height: 33px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+#main .page-header .search-container,
+#main .page-header .search-row .form-group {
+  margin-bottom: 0;
+}
+
+.page-header .header-buttons-container {
+  margin-left: auto;
+}
+
+@media (max-width: 767px) {
+  .page-header .row .col-lg-3,
+  .page-header .row .col-lg-4 {
+    width: 50%;
+  }
+
+  #main .page-header .search-container {
+    width: 100%;
+    order: 1;
+  }
 }
 
 .modal-header {
@@ -15047,8 +15071,7 @@ ul.dropdown-menu > li.checkbox:last-child {
 }
 
 .page-header h3 {
-  margin-top: 0;
-  margin-bottom: 8px;
+  margin: 1px 7px 8px 5px;
 }
 
 .page-header .breadcrumb-separator {
@@ -18642,6 +18665,7 @@ table.table > thead th > a {
   float: right;
   margin-left: 5px;
   margin-bottom: 8px;
+  white-space: nowrap;
 }
 
 .page-header .header-buttons .header-items > a.action {
@@ -18655,7 +18679,7 @@ table.table > thead th > a {
   margin-right: 0;
 }
 
-.page-header .header-buttons .pull-right {
+.page-header .header-buttons div.pull-right {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -19182,6 +19206,14 @@ button.category:focus {
   .search-row > div .search-right-buttons-group button .fa {
     font-size: 14px;
   }
+  .search-row .text-filter + .input-group-btn .search {
+    background: #fff;
+    color: #333;
+    border: 0;
+    margin-left: -2px;
+    margin-bottom: -1px;
+  }
+
   .progress.pre-loading {
     margin-top: 0;
     margin-bottom: 0;
@@ -19552,11 +19584,35 @@ span.jqtree-dragging {
   padding: 2px 8px;
 }
 
+.search-row .form-control {
+  border: 0;
+}
+
+.search-row .input-group {
+  border-bottom: solid 1px #e0e0e0;
+}
+
 .search-row .filters-button {
   overflow: hidden;
   -o-text-overflow: ellipsis;
      text-overflow: ellipsis;
   max-width: 150px;
+  border: 0;
+  margin-bottom: -2px;
+}
+
+.search-row .btn-default {
+  border: 0;
+  margin-bottom: -1px;
+}
+
+.search-row button,
+.search-row button:hover,
+.search-row button:focus {
+  color: #333 !important;
+  background-color: #fff !important;
+  box-shadow: none;
+  border: 0;
 }
 
 a.collapsing-button {
@@ -20601,7 +20657,7 @@ body,
     height: 100vh;
     overflow: auto;
   }
-  .page-header .header-buttons .pull-right {
+  .page-header .header-buttons div.pull-right {
     -webkit-flex-wrap: nowrap;
         -ms-flex-wrap: nowrap;
             flex-wrap: nowrap;
@@ -21221,16 +21277,9 @@ ul.dropdown-menu > li.checkbox {
 }
 
 .btn-primary,
-.search-row .filters-button,
 .show-more > .btn-block,
 .form-control + .input-group-btn > .btn:hover,
-.btn-group > .btn[data-action="edit"] + .dropdown-toggle,
-.search-row .open > .dropdown-toggle.btn-default:hover,
-.search-row .filters-button:active:focus,
-.search-row .filters-button.active:focus,
-.search-row .open > .dropdown-toggle.filters-button:focus,
-.search-row .open > .dropdown-toggle.filters-button.focus,
-.search-row .open > .dropdown-toggle.filters-button {
+.btn-group > .btn[data-action="edit"] + .dropdown-toggle {
   background-color: #0081d1;
   border-color: #0081d1;
   color: #fff;
@@ -21244,8 +21293,6 @@ ul.dropdown-menu > li.checkbox {
 .btn-primary:hover,
 .btn-primary:focus,
 .btn-primary.focus,
-.search-row .filters-button:focus,
-.search-row .filters-button:hover,
 .show-more > .btn-block:hover,
 .btn-group > .btn[data-action="edit"] + .dropdown-toggle:hover {
   background-color: #005cb3;
