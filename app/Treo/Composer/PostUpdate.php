@@ -43,13 +43,9 @@ use Treo\Core\Application as App;
  */
 class PostUpdate
 {
-    private const COMPOSER_LOG_FILE = 'data/treo-composer.log';
     private const CONFIG_PATH = 'data/config.php';
     private const STABLE_COMPOSER_JSON = 'data/stable-composer.json';
     private const PREVIOUS_COMPOSER_LOCK = 'data/previous-composer.lock';
-    private const DUMP_DIR = 'dump';
-    private const DB_DUMP = self::DUMP_DIR . '/db.sql';
-    private const DIRS_FOR_DUMPING = ['data', 'client', 'custom', 'vendor'];
 
     /**
      * @var Container
@@ -60,104 +56,6 @@ class PostUpdate
      * @var string
      */
     private static $rootPath;
-
-    /**
-     * Restore force
-     *
-     * @param bool $autoRestore
-     */
-    public static function restoreForce(bool $autoRestore = false): void
-    {
-        try {
-            // get root path
-            self::$rootPath = self::getRootPath();
-        } catch (\Throwable $e) {
-            self::renderLine($e->getMessage());
-            exit(1);
-        }
-
-        // change directory
-        chdir(self::$rootPath);
-
-        // set the include_path
-        set_include_path(self::$rootPath);
-
-        if (!$autoRestore && file_exists(self::COMPOSER_LOG_FILE)) {
-            unlink(self::COMPOSER_LOG_FILE);
-        }
-
-        $exitCode = $autoRestore ? 1 : 0;
-
-        if (!file_exists(self::DUMP_DIR)) {
-            self::renderLine('Restoring failed! No dump data!');
-            exit(1);
-        }
-
-        self::renderLine('Restoring files');
-        foreach (self::DIRS_FOR_DUMPING as $dir) {
-            $path = self::DUMP_DIR . '/' . $dir;
-            if (!file_exists($path)) {
-                continue 1;
-            }
-            exec("cp -R {$path}/ .");
-        }
-        file_put_contents('composer.lock', file_get_contents(self::PREVIOUS_COMPOSER_LOCK));
-
-        self::renderLine('Restoring database');
-
-        if (!file_exists(self::DB_DUMP) || filesize(self::DB_DUMP) == 0) {
-            self::renderLine('Failed! No database dump found!');
-            exit($exitCode);
-        }
-
-        if (!file_exists(self::CONFIG_PATH)) {
-            self::renderLine('Failed!');
-            exit(1);
-        }
-        $config = include self::CONFIG_PATH;
-        if (empty($config['database'])) {
-            self::renderLine('Failed!');
-            exit(1);
-        }
-        $db = $config['database'];
-        $port = empty($db['port']) ? '' : "port={$db['port']};";
-        $options = [];
-        if (isset($db['sslCA'])) {
-            $options[\PDO::MYSQL_ATTR_SSL_CA] = $db['sslCA'];
-        }
-        if (isset($db['sslCert'])) {
-            $options[\PDO::MYSQL_ATTR_SSL_CERT] = $db['sslCert'];
-        }
-        if (isset($db['sslKey'])) {
-            $options[\PDO::MYSQL_ATTR_SSL_KEY] = $db['sslKey'];
-        }
-        if (isset($db['sslCAPath'])) {
-            $options[\PDO::MYSQL_ATTR_SSL_CAPATH] = $db['sslCAPath'];
-        }
-        if (isset($db['sslCipher'])) {
-            $options[\PDO::MYSQL_ATTR_SSL_CIPHER] = $db['sslCipher'];
-        }
-        $pdo = new \PDO("mysql:host={$db['host']};{$port}dbname={$db['dbname']};charset={$db['charset']}", $db['user'], $db['password'], $options);
-        $pdo->exec(file_get_contents(self::DB_DUMP));
-        self::renderLine('Done!');
-
-        exit($exitCode);
-    }
-
-    /**
-     * Restore
-     *
-     * @throws \Exception
-     */
-    public static function restore(): void
-    {
-        if (file_exists(self::COMPOSER_LOG_FILE)) {
-            self::renderLine('System is updating. Restoring blocked.');
-            exit(1);
-        }
-
-        self::restoreForce();
-    }
 
     /**
      * Run post-update actions
@@ -228,7 +126,7 @@ class PostUpdate
             self::onSuccess();
         } catch (\Throwable $e) {
             self::renderLine('Failed! ' . $e->getMessage());
-            self::restoreForce(true);
+            exec("php composer.phar restore --force --auto >> data/treo-composer.log 2>&1");
             exit(1);
         }
     }
