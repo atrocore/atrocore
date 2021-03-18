@@ -49,11 +49,12 @@ class V1Dot1Dot39 extends Base
     {
         $composerData = json_decode(file_get_contents('composer.json'), true);
 
-        $composerData['scripts'] = [
-            'post-update-cmd' => '\\Treo\\Composer\\PostUpdate::postUpdate',
-            'restore'         => '\Treo\Composer\PostUpdate::restore'
-        ];
-        $composerData['autoload']['classmap'] = [];
+        if (isset($composerData['scripts'])) {
+            unset($composerData['scripts']);
+        }
+        if (isset($composerData['autoload']['classmap'])) {
+            unset($composerData['autoload']['classmap']);
+        }
 
         file_put_contents('composer.json', json_encode($composerData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 
