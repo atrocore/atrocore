@@ -165,6 +165,11 @@ class Application
      */
     public function runConsole(array $argv)
     {
+        if ($this->isUpdating()) {
+            echo 'The System is updating now. Please try later.';
+            exit(1);
+        }
+
         // unset file path
         if (isset($argv[0])) {
             unset($argv[0]);
