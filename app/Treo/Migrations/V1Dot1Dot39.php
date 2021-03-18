@@ -52,8 +52,8 @@ class V1Dot1Dot39 extends Base
         if (isset($composerData['scripts'])) {
             unset($composerData['scripts']);
         }
-        if (isset($composerData['autoload']['classmap'])) {
-            unset($composerData['autoload']['classmap']);
+        if (isset($composerData['autoload'])) {
+            unset($composerData['autoload']);
         }
 
         file_put_contents('composer.json', json_encode($composerData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
