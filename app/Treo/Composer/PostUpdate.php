@@ -126,7 +126,7 @@ class PostUpdate
             self::onSuccess();
         } catch (\Throwable $e) {
             self::renderLine('Failed! ' . $e->getMessage());
-            exec("php composer.phar restore --force --auto >> data/treo-composer.log 2>&1");
+            exec(self::getPhpBin() . " composer.phar restore --force --auto >> data/treo-composer.log 2>&1");
             exit(1);
         }
     }
@@ -786,5 +786,14 @@ class PostUpdate
         $composerDiff = self::getComposerDiff();
 
         return !empty($composerDiff['install']) || !empty($composerDiff['update']) || !empty($composerDiff['delete']);
+    }
+
+    private static function getPhpBin(): string
+    {
+        if (isset($_SERVER['PHP_PATH']) && !empty($_SERVER['PHP_PATH'])) {
+            return $_SERVER['PHP_PATH'];
+        }
+
+        return defined("PHP_BINDIR") ? PHP_BINDIR . DIRECTORY_SEPARATOR . 'php' : 'php';
     }
 }
