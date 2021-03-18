@@ -62,6 +62,11 @@ class V1Dot1Dot39 extends Base
         copy('vendor/atrocore/core/copy/index.php', 'index.php');
         copy('vendor/atrocore/core/copy/composer.phar', 'composer.phar');
 
+        if (file_exists('composer-cmd.php')) {
+            copy('composer-cmd.php', 'old-composer-cmd.php');
+            unlink('composer-cmd.php');
+        }
+
         file_put_contents(Cron::DAEMON_KILLER, '1');
     }
 
@@ -86,6 +91,11 @@ class V1Dot1Dot39 extends Base
         copy('vendor/atrocore/core/copy/.htaccess', '.htaccess');
         copy('vendor/atrocore/core/copy/index.php', 'index.php');
         copy('vendor/atrocore/core/copy/composer.phar', 'composer.phar');
+
+        if (file_exists('old-composer-cmd.php')) {
+            copy('old-composer-cmd.php', 'composer-cmd.php');
+            unlink('old-composer-cmd.php');
+        }
 
         file_put_contents(Cron::DAEMON_KILLER, '1');
     }

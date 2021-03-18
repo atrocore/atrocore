@@ -40,6 +40,8 @@ use Treo\Core\Application as App;
 
 /**
  * Class PostUpdate
+ *
+ * @deprecated this class will be removed soon
  */
 class PostUpdate
 {
