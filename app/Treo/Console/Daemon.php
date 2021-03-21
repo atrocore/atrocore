@@ -37,6 +37,7 @@ namespace Treo\Console;
 
 use Espo\Core\Utils\Util;
 use Espo\Entities\User;
+use Treo\Core\Application;
 use Treo\Core\ORM\EntityManager;
 use Treo\Services\Composer;
 
@@ -75,7 +76,7 @@ class Daemon extends AbstractConsole
     protected function composerDaemon(string $id): void
     {
         /** @var string $log */
-        $log = COMPOSER_LOG;
+        $log = Application::COMPOSER_LOG_FILE;
 
         while (true) {
             // delete check-up file

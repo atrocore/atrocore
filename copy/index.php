@@ -5,9 +5,6 @@ chdir(dirname(__FILE__));
 // set the include_path
 set_include_path(dirname(__FILE__));
 
-// define global variables
-define('COMPOSER_LOG', 'data/treo-composer.log');
-
 // autoload
 require_once 'vendor/autoload.php';
 

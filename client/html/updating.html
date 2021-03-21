@@ -40,7 +40,7 @@
                                 window.setInterval(function () {
                                     $.ajax({
                                         type: 'GET',
-                                        url: `/data/treo-composer.log`,
+                                        url: `/{{logFile}}`,
                                         cache: false,
                                         success: logs => {
                                             start = true;

@@ -40,6 +40,7 @@ use Espo\Core\Utils\Json;
 use Espo\Core\Exceptions;
 use Slim\Http\Request;
 use Treo\Composer\PostUpdate;
+use Treo\Core\Application;
 use Treo\Core\ModuleManager\Manager as ModuleManager;
 
 /**
@@ -167,7 +168,7 @@ class Composer extends AbstractService
      */
     public function runUpdate(): bool
     {
-        file_put_contents(COMPOSER_LOG, $this->getUser()->get('id'));
+        file_put_contents(Application::COMPOSER_LOG_FILE, $this->getUser()->get('id'));
 
         return true;
     }
