@@ -50,7 +50,9 @@ use Espo\Core\Utils\Config;
  */
 class Application
 {
-    const CONFIG_PATH = 'data/portals.json';
+    public const CONFIG_PATH = 'data/portals.json';
+
+    public const COMPOSER_LOG_FILE = 'data/treo-composer.log';
 
     /**
      * @var null|array
@@ -102,6 +104,16 @@ class Application
     public static function savePortalUrlFile(array $data): void
     {
         file_put_contents(self::CONFIG_PATH, Json::encode($data));
+    }
+
+    /**
+     * Is system updating?
+     *
+     * @return bool
+     */
+    public static function isSystemUpdating(): bool
+    {
+        return file_exists(self::COMPOSER_LOG_FILE);
     }
 
     /**
@@ -165,11 +177,6 @@ class Application
      */
     public function runConsole(array $argv)
     {
-        if ($this->isUpdating()) {
-            echo 'The System is updating now. Please try later.';
-            exit(1);
-        }
-
         // unset file path
         if (isset($argv[0])) {
             unset($argv[0]);
@@ -213,7 +220,7 @@ class Application
             $this->runInstallerApi();
         }
 
-        if ($this->isUpdating()) {
+        if (self::isSystemUpdating()) {
             $this->logoutAll();
         }
 
@@ -275,7 +282,7 @@ class Application
             $this->runInstallerClient();
         }
 
-        if ($this->isUpdating()) {
+        if (self::isSystemUpdating()) {
             $this->display('client/html/updating.html', ['year' => date('Y')]);
         }
 
@@ -639,15 +646,8 @@ class Application
     }
 
     /**
-     * Is system updating?
-     *
-     * @return bool
+     * Logout all users
      */
-    private function isUpdating(): bool
-    {
-        return file_exists(COMPOSER_LOG);
-    }
-
     private function logoutAll(): void
     {
         $this->getContainer()->get('pdo')->exec("DELETE FROM auth_token WHERE 1");

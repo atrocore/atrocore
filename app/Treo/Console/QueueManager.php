@@ -35,6 +35,8 @@ declare(strict_types=1);
 
 namespace Treo\Console;
 
+use Treo\Core\Application;
+
 /**
  * Class QueueManager
  */
@@ -53,13 +55,13 @@ class QueueManager extends AbstractConsole
      */
     public function run(array $data): void
     {
-        if (empty($this->getConfig()->get('isInstalled'))) {
+        if (empty($this->getConfig()->get('isInstalled')) || Application::isSystemUpdating()) {
             exit(1);
         }
 
         // run
         $this->getContainer()->get('queueManager')->run((int)$data['stream']);
 
-        self::show('Queue Manager runned successfully', self::SUCCESS, true);
+        self::show('Queue Manager run successfully', self::SUCCESS, true);
     }
 }

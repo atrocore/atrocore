@@ -35,6 +35,8 @@ declare(strict_types=1);
 
 namespace Treo\Console;
 
+use Treo\Core\Application;
+
 /**
  * Cron console
  */
@@ -80,7 +82,17 @@ class Cron extends AbstractConsole
 
         // open daemon for composer
         if (empty(strpos($processes, "index.php daemon composer $id"))) {
+            // exit if system is updating and restore point is created
+            if (Application::isSystemUpdating() && $this->isRestorePointCreated()) {
+                return;
+            }
+
             exec("$php index.php daemon composer $id >/dev/null 2>&1 &");
+        }
+
+        // exit if system is updating now
+        if (Application::isSystemUpdating()) {
+            return;
         }
 
         // open daemon queue manager stream 0
@@ -111,5 +123,17 @@ class Cron extends AbstractConsole
         $auth->useNoAuth();
 
         $this->getContainer()->get('cronManager')->run();
+    }
+
+    /**
+     * @return bool
+     */
+    private function isRestorePointCreated(): bool
+    {
+        if (!Application::isSystemUpdating()) {
+            return false;
+        }
+
+        return strpos(file_get_contents(Application::COMPOSER_LOG_FILE), 'Creating restore point') !== false;
     }
 }

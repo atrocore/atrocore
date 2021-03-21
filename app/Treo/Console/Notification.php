@@ -37,6 +37,7 @@ namespace Treo\Console;
 
 use Espo\Core\Utils\Util;
 use Espo\Repositories\Notification as NotificationRepository;
+use Treo\Core\Application;
 
 /**
  * Class Notification
@@ -56,7 +57,7 @@ class Notification extends AbstractConsole
      */
     public function run(array $data): void
     {
-        if (empty($this->getConfig()->get('isInstalled'))) {
+        if (empty($this->getConfig()->get('isInstalled')) || Application::isSystemUpdating()) {
             exit(1);
         }
 
