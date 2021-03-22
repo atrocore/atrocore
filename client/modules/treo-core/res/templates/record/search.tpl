@@ -1,6 +1,6 @@
 
 <div class="row search-row">
-        <div class="form-group {{#if isModalDialog}} col-md-12 col-sm-12 {{else}} col-md-6 col-sm-7 {{/if}}">
+        <div class="form-group {{#if isModalDialog}}col-md-12 col-sm-12{{/if}}">
         <div class="input-group">
             <div class="input-group-btn left-dropdown{{#unless leftDropdown}} hidden{{/unless}}">
                 <button type="button" class="btn btn-default dropdown-toggle filters-button" title="{{translate 'Filter'}}" data-toggle="dropdown" tabindex="-1">
@@ -47,10 +47,9 @@
             <div class="input-group-btn">
                 <button type="button" class="btn btn-primary search btn-icon btn-icon-x-wide" data-action="search">
                     <span class="fas fa-search"></span>
-                    <span>{{translate 'Search'}}</span>
                 </button>
                 <button type="button" class="btn btn-default reset" data-action="reset">
-                    <span class="fas fa-redo"></span>{{translate 'Reset'}}
+                    <span class="fas fa-redo"></span>
                 </button>
             </div>
         </div>

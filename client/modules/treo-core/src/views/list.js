@@ -47,13 +47,14 @@ Espo.define('treo-core:views/list', ['class-replace!treo-core:views/list', 'sear
 
             this.createView('search', searchView, {
                 collection: this.collection,
-                el: '#main > .search-container',
+                el: '#main > .page-header .row .search-container',
                 searchManager: this.searchManager,
                 scope: this.scope,
                 viewMode: this.viewMode,
                 viewModeList: this.viewModeList,
                 hiddenBoolFilterList: hiddenBoolFilterList,
             }, function (view) {
+                view.render();
                 this.listenTo(view, 'reset', function () {
                     this.resetSorting();
                 }, this);

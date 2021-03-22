@@ -14956,7 +14956,31 @@ label {
 }
 
 .page-header > .row {
-    min-height: 33px
+    min-height: 33px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+#main .page-header .search-container,
+#main .page-header .search-row .form-group {
+    margin-bottom: 0;
+}
+
+.page-header .header-buttons-container {
+    margin-left: auto;
+}
+
+@media (max-width: 767px) {
+    .page-header .row .col-lg-3,
+    .page-header .row .col-lg-4 {
+        width: 50%;
+    }
+
+    #main .page-header .search-container {
+        width: 100%;
+        order: 1;
+    }
 }
 
 .modal-header {
@@ -15297,8 +15321,7 @@ ul.dropdown-menu > li.checkbox:last-child {
 }
 
 .page-header h3 {
-    margin-top: 0;
-    margin-bottom: 8px
+    margin: 1px 7px 8px 5px;
 }
 
 .page-header .breadcrumb-separator {
@@ -18704,13 +18727,13 @@ a:hover, a:focus {
     border: 1px solid #eaeaea
 }
 
-.btn-primary, .search-row .filters-button, .show-more > .btn-block, .form-control + .input-group-btn > .btn:hover, .btn-group > .btn[data-action="edit"] + .dropdown-toggle, .search-row .open > .dropdown-toggle.btn-default:hover, .search-row .filters-button:active:focus, .search-row .filters-button.active:focus, .search-row .open > .dropdown-toggle.filters-button:focus, .search-row .open > .dropdown-toggle.filters-button.focus, .search-row .open > .dropdown-toggle.filters-button {
+.btn-primary, .show-more > .btn-block, .btn-group > .btn[data-action="edit"] + .dropdown-toggle, .search-row .open > .dropdown-toggle.btn-default:hover, .search-row .open > .dropdown-toggle.filters-button:focus, .search-row .open > .dropdown-toggle.filters-button.focus, .search-row .open > .dropdown-toggle.filters-button {
     background-color: #2895ea;
     border-color: #2895ea;
     color: #fff
 }
 
-.btn-primary:hover, .btn-primary:focus, .btn-primary.focus, .search-row .filters-button:focus, .search-row .filters-button:hover, .show-more > .btn-block:hover, .btn-group > .btn[data-action="edit"] + .dropdown-toggle:hover {
+.btn-primary:hover, .btn-primary:focus, .btn-primary.focus, .show-more > .btn-block:hover, .btn-group > .btn[data-action="edit"] + .dropdown-toggle:hover {
     background-color: #005cb3;
     border-color: #005cb3;
     color: #fff
@@ -19020,11 +19043,11 @@ ul.dropdown-menu > li.checkbox {
 }
 
 .search-row .text-filter + .input-group-btn .search {
-    background: #2895ea;
-    color: #fff;
-    border: 1px solid #2895ea;
-    border-left: 0;
+    background: #fff;
+    color: #333;
+    border: 0;
     margin-left: -2px;
+    margin-bottom: -1px;
 }
 
 .search-row .text-filter + .input-group-btn .search {
@@ -19212,6 +19235,7 @@ ul.dropdown-menu > li.checkbox {
     float: right;
     margin-left: 5px;
     margin-bottom: 8px;
+    white-space: nowrap;
 }
 
 .page-header .header-buttons .filter-cell {
@@ -19262,7 +19286,7 @@ select,
     top: 1px;
 }
 
-.page-header .header-buttons .pull-right {
+.page-header .header-buttons div.pull-right {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -20179,7 +20203,7 @@ button.category:focus {
         margin: 0 15px;
     }
 
-    .page-header .header-buttons .pull-right {
+    .page-header .header-buttons div.pull-right {
         -webkit-flex-wrap: nowrap;
         -ms-flex-wrap: nowrap;
         flex-wrap: nowrap;
@@ -20480,10 +20504,40 @@ span.jqtree-dragging {
     padding: 2px 8px;
 }
 
+.search-row .form-control {
+    border: 0;
+}
+
+.search-row .input-group {
+    border-bottom: solid 1px #e0e0e0;
+}
+
 .search-row .filters-button {
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 150px;
+    border: 0;
+    margin-bottom: -2px;
+}
+
+.search-row .btn-default {
+    border: 0;
+    margin-bottom: -1px;
+}
+
+.search-row .filters-button:hover,
+.search-row .filters-button:focus,
+.search-row .btn-default:hover,
+.search-row .btn-default:focus,
+.search-row .text-filter + .input-group-btn .search:hover,
+.search-row .text-filter + .input-group-btn .search:focus,
+.search-row .open > .dropdown-toggle.btn-default:hover,
+.search-row .open > .dropdown-toggle.filters-button:focus,
+.search-row .open > .dropdown-toggle.filters-button.focus,
+.search-row .open > .dropdown-toggle.filters-button {
+    color: #333;
+    background-color: #fff;
+    box-shadow: none;
 }
 
 a.collapsing-button {
