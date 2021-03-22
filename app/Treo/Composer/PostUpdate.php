@@ -78,10 +78,6 @@ class PostUpdate
         // set the include_path
         set_include_path(self::$rootPath);
 
-        if (!self::isChanged() && file_exists('index.php')) {
-            exit(0);
-        }
-
         // autoload
         require_once 'vendor/autoload.php';
 
@@ -537,6 +533,10 @@ class PostUpdate
             return;
         }
 
+        if (!self::isChanged()) {
+            return;
+        }
+
         // get diff
         $composerDiff = self::getComposerDiff();
 
@@ -596,6 +596,14 @@ class PostUpdate
      */
     private static function sendNotification(): void
     {
+        if (!self::$container->get('config')->get('isInstalled', false)) {
+            return;
+        }
+
+        if (!self::isChanged()) {
+            return;
+        }
+
         self::renderLine('Sending notification(s) to admin users');
         $em = self::$container->get('entityManager');
         $users = $em->getRepository('User')->getAdminUsers();
