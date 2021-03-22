@@ -21175,6 +21175,7 @@ body,
 }
 
 .dropdown-menu {
+  display: none;
   padding: 0;
   border: 0;
   -webkit-box-shadow: 0 0 13px rgba(0, 0, 0, 0.175);
@@ -21184,7 +21185,6 @@ body,
 }
 
 .btn-group .dropdown-menu {
-  display: none !important;
   min-width: 122px !important;
   margin-top: 5px;
 }
