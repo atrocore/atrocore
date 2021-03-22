@@ -105,10 +105,6 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
 
             this.setupSorting();
 
-            if (this.searchPanel) {
-                this.setupSearchPanel();
-            }
-
             if (this.createButton) {
                 this.setupCreateButton();
             }
@@ -186,12 +182,13 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
         setupSearchPanel: function () {
             this.createView('search', this.searchView, {
                 collection: this.collection,
-                el: '#main > .search-container',
+                el: '#main > .page-header .row .search-container',
                 searchManager: this.searchManager,
                 scope: this.scope,
                 viewMode: this.viewMode,
                 viewModeList: this.viewModeList
             }, function (view) {
+                view.render();
                 this.listenTo(view, 'reset', function () {
                     this.resetSorting();
                 }, this);
@@ -199,7 +196,7 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
                 if (this.viewModeList.length > 1) {
                     this.listenTo(view, 'change-view-mode', this.switchViewMode, this);
                 }
-            });
+            }.bind(this));
         },
 
         switchViewMode: function (mode) {
@@ -290,6 +287,10 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
         afterRender: function () {
             if (!this.hasView('list')) {
                 this.loadList();
+            }
+
+            if (this.searchPanel) {
+                this.setupSearchPanel();
             }
         },
 

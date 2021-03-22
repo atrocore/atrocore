@@ -1,8 +1,9 @@
 <div class="row">
-    <div class="col-lg-7 col-sm-7">
+    <div>
         <h3>{{{header}}}</h3>
     </div>
-    <div class="col-lg-5 col-sm-5">
+    <div class="col-lg-5 col-sm-5 search-container">{{{search}}}</div>
+    <div class="col-lg-4 col-sm-4 header-buttons-container">
         <div class="header-buttons btn-group pull-right">
             <div class="header-items">
             {{#each items.buttons}}
