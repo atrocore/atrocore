@@ -78,7 +78,7 @@ class PostUpdate
         // set the include_path
         set_include_path(self::$rootPath);
 
-        if (!self::isChanged()) {
+        if (!self::isChanged() && file_exists('index.php')) {
             exit(0);
         }
 
