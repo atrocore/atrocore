@@ -264,7 +264,7 @@ class PostUpdate
      */
     private static function logoutAll(): void
     {
-        if (!self::$container->get('config')->get('isInstalled', false)) {
+        if (!self::isInstalled()) {
             return;
         }
 
@@ -277,7 +277,7 @@ class PostUpdate
      */
     private static function copyRootFiles(): void
     {
-        if (self::$container->get('config')->get('isInstalled', false)) {
+        if (self::isInstalled()) {
             return;
         }
 
@@ -290,6 +290,10 @@ class PostUpdate
      */
     private static function updateModulesList(): void
     {
+        if (self::isInstalled() && !self::isChanged()) {
+            return;
+        }
+
         self::renderLine('Updating list of used modules');
         file_put_contents('data/modules.json', json_encode(self::getModules()));
     }
@@ -299,6 +303,10 @@ class PostUpdate
      */
     private static function copyModulesEvent(): void
     {
+        if (self::isInstalled() && !self::isChanged()) {
+            return;
+        }
+
         self::renderLine('Coping post-install & post-delete scripts for modules');
         foreach (self::getModules() as $module) {
             // prepare class name
@@ -339,6 +347,10 @@ class PostUpdate
      */
     private static function copyModulesMigrations(): void
     {
+        if (self::isInstalled() && !self::isChanged()) {
+            return;
+        }
+
         self::renderLine('Coping migration scripts');
 
         // prepare data
@@ -472,7 +484,7 @@ class PostUpdate
      */
     private static function clearCache()
     {
-        if (!self::$container->get('config')->get('isInstalled', false)) {
+        if (!self::isInstalled()) {
             return;
         }
 
@@ -490,6 +502,10 @@ class PostUpdate
      */
     private static function updateClientFiles(): void
     {
+        if (self::isInstalled() && !self::isChanged()) {
+            return;
+        }
+
         self::renderLine('Coping frontend files');
 
         self::removeDir('client');
@@ -529,7 +545,7 @@ class PostUpdate
      */
     private static function initEvents(): void
     {
-        if (!self::$container->get('config')->get('isInstalled', false)) {
+        if (!self::isInstalled()) {
             return;
         }
 
@@ -567,7 +583,7 @@ class PostUpdate
      */
     private static function runMigrations(): void
     {
-        if (!self::$container->get('config')->get('isInstalled', false)) {
+        if (!self::isInstalled()) {
             return;
         }
 
@@ -596,7 +612,7 @@ class PostUpdate
      */
     private static function sendNotification(): void
     {
-        if (!self::$container->get('config')->get('isInstalled', false)) {
+        if (!self::isInstalled()) {
             return;
         }
 
@@ -805,5 +821,14 @@ class PostUpdate
         }
 
         return defined("PHP_BINDIR") ? PHP_BINDIR . DIRECTORY_SEPARATOR . 'php' : 'php';
+    }
+
+    private static function isInstalled(): bool
+    {
+        if (!file_exists(self::CONFIG_PATH)) {
+            return false;
+        }
+
+        return self::$container->get('config')->get('isInstalled', false);
     }
 }
