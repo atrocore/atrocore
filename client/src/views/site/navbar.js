@@ -445,17 +445,6 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 label: this.getLanguage().translate('Preferences')
             });
 
-            if (!this.getConfig().get('actionHistoryDisabled')) {
-                list.push({
-                    divider: true
-                });
-                list.push({
-                    action: 'showLastViewed',
-                    link: '#LastViewed',
-                    label: this.getLanguage().translate('LastViewed', 'scopeNamesPlural')
-                });
-            }
-
             list = list.concat([
                 {
                     divider: true
