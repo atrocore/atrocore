@@ -98,6 +98,13 @@
                     {{/each}}
                 </ul>
             </li>
+            {{#if lastViewed}}
+            <li class="nav navbar-nav">
+                <a href="#LastViewed" class="nav-link action" data-action="showLastViewed">
+                    <span class="fas fa-history"></span>
+                </a>
+            </li>
+            {{/if}}
             {{#if enableQuickCreate}}
             <li class="dropdown hidden-xs quick-create-container hidden-xs">
 	            <a id="nav-quick-create-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Create'}}"><i class="fas fa-plus"></i></a>
