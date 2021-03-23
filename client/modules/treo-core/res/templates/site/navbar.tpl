@@ -102,7 +102,7 @@
             <li class="dropdown hidden-xs quick-create-container hidden-xs">
 	            <a id="nav-quick-create-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Create'}}"><i class="fas fa-plus"></i></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-quick-create-dropdown">
-                    <li class="dropdown-header">{{translate 'Create'}}</li>
+                    <li class="dropdown-header">{{translate 'quickCreate'}}</li>
                     {{#each quickCreateList}}
                     <li><a href="#{{./this}}/create" data-name="{{./this}}" data-action="quick-create">{{translate this category='scopeNames'}}</a></li>
                     {{/each}}
