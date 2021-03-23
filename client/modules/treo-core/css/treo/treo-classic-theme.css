@@ -4739,6 +4739,26 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
     line-height: 19px
 }
 
+.navbar-right .panel-default > .panel-heading,
+.navbar-right .dropdown-header {
+    color: #000;
+    font-weight: bold;
+}
+
+.navbar-right .dropdown-header {
+    padding: 5px 10px 6px;
+    background-color: #ececec;
+    border-top: 1px solid #dcdcdc;
+    font-size: 14px;
+}
+
+.navbar-right .fas,
+.navbar-right .fas .far,
+.navbar-right .text-muted,
+.navbar-right .dropdown-menu > li > a{
+    color: #000;
+}
+
 @media (max-width: 767px) {
     .navbar-nav .open .dropdown-menu {
         position: static;
