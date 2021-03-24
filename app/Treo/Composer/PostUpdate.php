@@ -446,13 +446,7 @@ class PostUpdate
         if (file_exists($file)) {
             self::renderLine('Uploading demo-data');
 
-            $mode = file_get_contents($file);
-            if ($mode == '2') {
-                $content = @file_get_contents("https://demo-extended-source.atropim.com/demo-data.zip");
-            } else {
-                $content = @file_get_contents("https://demo-source.atropim.com/demo-data.zip");
-            }
-
+            $content = @file_get_contents(trim(file_get_contents($file)));
             if (!empty($content)) {
                 file_put_contents('demo-data.zip', $content);
                 $zip = new \ZipArchive();
