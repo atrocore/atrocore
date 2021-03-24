@@ -5750,6 +5750,7 @@ a.thumbnail:hover, a.thumbnail:focus, a.thumbnail.active {
 }
 
 .pull-right .pipeline {
+    border-right: solid 1px #000;
     margin-right: 20px;
 }
 
