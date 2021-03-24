@@ -1,6 +1,6 @@
 <div class="panel panel-default">
     <div class="panel-heading clearfix">
-        <span>{{translate 'queueManager' category='labels' scope="QueueItem"}}</span>
+        <span class="panel-heading-title">{{translate 'queueManager' category='labels' scope="QueueItem"}}</span>
         <span class="pull-right">
             <a href="#QueueItem" title="{{translate 'View List'}}" data-action="viewList">{{translate 'View List'}}</a>
         </span>

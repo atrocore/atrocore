@@ -5601,6 +5601,10 @@ a.thumbnail:hover, a.thumbnail:focus, a.thumbnail.active {
   padding-left: 10px;
 }
 
+.pull-right .pipeline {
+  margin-right: 20px;
+}
+
 .media-left, .media > .pull-left {
   padding-right: 10px;
 }
