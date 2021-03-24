@@ -445,7 +445,14 @@ class PostUpdate
         $file = 'first_update.log';
         if (file_exists($file)) {
             self::renderLine('Uploading demo-data');
-            $content = @file_get_contents(file_get_contents($file));
+
+            $mode = file_get_contents($file);
+            if ($mode == '2') {
+                $content = @file_get_contents("https://demo-extended-source.atropim.com/demo-data.zip");
+            } else {
+                $content = @file_get_contents("https://demo-source.atropim.com/demo-data.zip");
+            }
+
             if (!empty($content)) {
                 file_put_contents('demo-data.zip', $content);
                 $zip = new \ZipArchive();
@@ -462,7 +469,7 @@ class PostUpdate
                 self::removeDir('skeleton-tmp');
 
                 // unlink installing file
-                unlink('first_update.log');
+                unlink($file);
             }
         }
     }
