@@ -19179,13 +19179,19 @@ ul.dropdown-menu > li.checkbox {
 }
 
 #login #btn-login {
-    background-color: #ffffff;
-    border-color: #eaeaea;
-    color: #000;
+    background-color: #2895ea;
+    border-color: #2895ea;
+    color: #fff;
 }
 
 #login #btn-login:hover {
-    border-color: #424242;
+    background-color: #005cb3;
+    border-color: #005cb3;
+}
+
+#login #btn-login:active {
+    background-color: #415e77;
+    border-color: #3d5970;
 }
 
 #login .btn-link {

@@ -348,8 +348,10 @@ Espo.define('treo-core:views/composer/list', 'views/list',
             let button = this.$el.find(`.detail-button-container button[data-action="${action}"]`);
             if (show) {
                 button.show();
+                button.prev().removeClass('last');
             } else {
                 button.hide();
+                button.prev().addClass('last');
             }
         },
 

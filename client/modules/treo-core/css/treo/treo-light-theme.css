@@ -3895,6 +3895,13 @@ tbody.collapse.in {
           border-top-right-radius: 0;
 }
 
+.btn-group > .btn.last {
+  -webkit-border-bottom-right-radius: 3px !important;
+  border-bottom-right-radius: 3px !important;
+  -webkit-border-top-right-radius: 3px !important;
+  border-top-right-radius: 3px !important;
+}
+
 .btn-group > .btn:last-child:not(:first-child), .btn-group > .dropdown-toggle:not(:first-child) {
   -webkit-border-bottom-left-radius: 0;
           border-bottom-left-radius: 0;
@@ -18667,7 +18674,7 @@ table.table > thead th > a {
   position: relative;
 }
 
-#main .page-header > h3 > a::after, #main .page-header h3 > span.subsection::after {
+#main .page-header h3 > a::after, #main .page-header h3 > span.subsection::after {
   content: '›';
   display: inline-block;
   color: #000;
@@ -20324,13 +20331,19 @@ select {
 }
 
 #login #btn-login {
-  background-color: #FFFFFF;
-  border-color: #eaeaea;
-  color: #000;
+  background-color: #0081d1;
+  border-color: #0081d1;
+  color: #fff;
 }
 
 #login #btn-login:hover {
-  border-color: #424242;
+  background-color: #005cb3;
+  border-color: #005cb3;
+}
+
+#login #btn-login:active {
+  background-color: #344c60;
+  border-color: #263746;
 }
 
 #login .btn-link {
