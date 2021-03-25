@@ -5103,7 +5103,6 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
 
 .navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:hover, .navbar-inverse .navbar-nav > .open > a:focus {
     background-color: #3f535c;
-    color: #fff
 }
 
 @media (max-width: 767px) {
@@ -19172,13 +19171,19 @@ ul.dropdown-menu > li.checkbox {
 }
 
 #login #btn-login {
-    background-color: #ffffff;
-    border-color: #eaeaea;
-    color: #000;
+    background-color: #2895ea;
+    border-color: #2895ea;
+    color: #fff;
 }
 
 #login #btn-login:hover {
-    border-color: #424242;
+    background-color: #005cb3;
+    border-color: #005cb3;
+}
+
+#login #btn-login:active {
+    background-color: #415e77;
+    border-color: #3d5970;
 }
 
 #login .btn-link {
@@ -19192,11 +19197,11 @@ ul.dropdown-menu > li.checkbox {
 
 #header .navbar[data-orientation="vertical"] ul.tabs li.more.highlighted > a {
     color: #fff !important;
-    background: #424242 !important
+    background: #8a8888 !important
 }
 
 #header .navbar-inverse.navbar[data-orientation="vertical"] .navbar-nav .active > a {
-    background: #616161 !important
+    background: #ababab !important
 }
 
 #header .navbar-right .global-search-container a.global-searcy-button:hover {
@@ -19206,7 +19211,6 @@ ul.dropdown-menu > li.checkbox {
 
 .navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:hover, .navbar-inverse .navbar-nav > .open > a:focus {
     background-color: #ececec;
-    color: #fff
 }
 
 .navbar-inverse .navbar-nav > .more.open > a, .navbar-inverse .navbar-nav > .more.open > a:hover, .navbar-inverse .navbar-nav > .more.open > a:focus {

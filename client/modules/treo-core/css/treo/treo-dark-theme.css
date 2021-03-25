@@ -19179,13 +19179,19 @@ ul.dropdown-menu > li.checkbox {
 }
 
 #login #btn-login {
-    background-color: #ffffff;
-    border-color: #eaeaea;
-    color: #000;
+    background-color: #2895ea;
+    border-color: #2895ea;
+    color: #fff;
 }
 
 #login #btn-login:hover {
-    border-color: #424242;
+    background-color: #005cb3;
+    border-color: #005cb3;
+}
+
+#login #btn-login:active {
+    background-color: #415e77;
+    border-color: #3d5970;
 }
 
 #login .btn-link {
@@ -19650,6 +19656,14 @@ button.category:focus {
     #navbar .nav.navbar-nav.navbar-right > li {
         float: right;
         position: static;
+    }
+
+    #header > #navbar > .navbar[data-orientation="vertical"] ul.tabs .more-group > ul > li > a {
+        color: #dfdfdf;
+    }
+
+    #header > #navbar > .navbar[data-orientation="vertical"] ul.tabs > li.open:not(.more-group-name) > a {
+        color: #dfdfdf;
     }
 
     #header .nav > li.more:not(.more-group) > .dropdown-menu {
