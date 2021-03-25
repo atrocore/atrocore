@@ -19658,6 +19658,14 @@ button.category:focus {
         position: static;
     }
 
+    #header > #navbar > .navbar[data-orientation="vertical"] ul.tabs .more-group > ul > li > a {
+        color: #dfdfdf;
+    }
+
+    #header > #navbar > .navbar[data-orientation="vertical"] ul.tabs > li.open:not(.more-group-name) > a {
+        color: #dfdfdf;
+    }
+
     #header .nav > li.more:not(.more-group) > .dropdown-menu {
         left: 220px;
         top: 47px;
