@@ -4755,8 +4755,8 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
     line-height: 19px
 }
 
-.navbar-right .panel-default > .panel-heading,
-.navbar-right .dropdown-header{
+.navbar-right .panel-heading .panel-heading-title,
+.dropdown .dropdown-header .panel-heading-title {
     color: #000;
     font-weight: bold;
 }
@@ -5747,6 +5747,11 @@ a.thumbnail:hover, a.thumbnail:focus, a.thumbnail.active {
 
 .media-right, .media > .pull-right {
     padding-left: 10px
+}
+
+.pull-right .pipeline {
+    border-right: solid 1px #000;
+    margin-right: 20px;
 }
 
 .media-left, .media > .pull-left {
