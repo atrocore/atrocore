@@ -57,8 +57,14 @@ Espo.define('views/login', 'view', function (Dep) {
                 path = this.getBasePath() + `client/img/login/login_cover_${number}.jpg`;
 
             $('body').css({
-                'background-image': 'url(' + path + ')',
-                'background-size': '100%'
+                'background-image': 'url(' + `client/img/login/login_cover_${number}.jpg` + ')',
+                'background-size': 'cover',
+                'background-repeat': 'no-repeat',
+                'background-position': 'center',
+                'height': '100vh'
+            });
+            $('body').children('.content').css({
+                'height': 'calc(100% - 28px)'
             });
         },
 
