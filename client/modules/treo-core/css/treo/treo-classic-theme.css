@@ -14979,6 +14979,11 @@ label {
     margin-left: auto;
 }
 
+.page-header .header-buttons-container > .btn-group {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
 @media (max-width: 767px) {
     .page-header .row .col-lg-3,
     .page-header .row .col-lg-4 {
@@ -19245,9 +19250,10 @@ ul.dropdown-menu > li.checkbox {
 }
 
 .page-header .header-buttons .header-items {
-    display: inline-block;
+    display: flex;
+    flex-direction: row;
     float: right;
-    margin-left: 5px;
+    margin-left: 15px;
     margin-bottom: 8px;
     white-space: nowrap;
 }
