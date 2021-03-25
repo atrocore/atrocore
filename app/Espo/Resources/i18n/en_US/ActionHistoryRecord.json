@@ -3,7 +3,6 @@
         "user": "User",
         "action": "Action",
         "createdAt": "Date",
-        "user": "User",
         "target": "Target",
         "targetType": "Target Type",
         "authToken": "Auth Token",
