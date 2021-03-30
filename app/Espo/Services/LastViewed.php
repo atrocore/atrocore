@@ -49,7 +49,7 @@ class LastViewed extends \Espo\Core\Services\Base
      *
      * @return array
      */
-    public function get($params = [])
+    public function get(array $params = [])
     {
         $entityManager = $this->getInjection('entityManager');
 
