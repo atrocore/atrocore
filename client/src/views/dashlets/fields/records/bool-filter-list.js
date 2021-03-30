@@ -51,10 +51,13 @@ Espo.define('views/dashlets/fields/records/bool-filter-list', 'views/fields/mult
                 return;
             }
 
-            var filterList = this.getMetadata().get(['clientDefs', entityType, 'boolFilterList']) || [];
+            var filterList = this.getMetadata().get(['clientDefs', entityType, 'boolFilterList']) || [],
+                hiddenFilterList = this.getMetadata().get(['clientDefs', entityType, 'hiddenBoolFilterList']) || [],
+                actualFilterList = filterList.filter(item => !hiddenFilterList.includes(item));
+
             this.params.options = [];
 
-            filterList.forEach(function (item) {
+            actualFilterList.forEach(function (item) {
                     if (typeof item === 'object' && item.name) {
                     if (item.accessDataList) {
                         if (!Espo.Utils.checkAccessDataList(item.accessDataList, this.getAcl(), this.getUser(), null, true)) {
