@@ -52,6 +52,9 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
                     this.checkUpdates();
                 }.bind(this), 100);
             },
+            'click a[data-action="close"]': function () {
+                this.closeNotifications();
+            }
         },
 
         setup: function () {

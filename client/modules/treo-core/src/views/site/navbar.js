@@ -120,6 +120,16 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                 ]
             });
 
+            if (!this.getConfig().get('actionHistoryDisabled')) {
+                this.createView('lastViewedBadge', 'views/last-viewed/badge', {
+                    el: this.options.el + ' .last-viewed-badge-container'
+                });
+
+                this.createView('lastViewedBadgeRight', 'views/last-viewed/badge', {
+                    el: `${this.options.el} .navbar-right .last-viewed-badge-container`
+                });
+            }
+
             this.setupGlobalSearch();
 
             this.setupTabDefsList();

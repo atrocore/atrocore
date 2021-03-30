@@ -44,11 +44,18 @@ class LastViewed extends \Espo\Core\Services\Base
         $this->addDependency('metadata');
     }
 
-    public function get()
+    /**
+     * @param array $params
+     *
+     * @return array
+     */
+    public function get($params = [])
     {
         $entityManager = $this->getInjection('entityManager');
 
-        $maxSize = $this->getConfig()->get('lastViewedCount', 20);
+        $maxSize = $params['maxSize'] ?? $this->getConfig()->get('lastViewedCount', 20);
+
+        $offset = $params['offset'] ?? 0;
 
         $actionHistoryRecordService = $this->getInjection('serviceFactory')->create('ActionHistoryRecord');
 
@@ -62,19 +69,27 @@ class LastViewed extends \Espo\Core\Services\Base
             'userId' => $this->getUser()->id,
             'action' => 'read',
             'targetType' => $targetTypeList
-        ))->order(3, true)->limit(0, $maxSize)->select([
+        ))->order(3, true)->limit($offset, $maxSize)->select([
             'targetId', 'targetType', 'MAX:number'
         ])->groupBy([
             'targetId', 'targetType'
         ])->find();
 
+        $count = $this->getEntityManager()->getRepository('ActionHistoryRecord')->where(array(
+            'userId' => $this->getUser()->id,
+            'action' => 'read',
+            'targetType' => $targetTypeList
+        ))->groupBy([
+            'targetId', 'targetType'
+        ])->count();
+
         foreach ($collection as $i => $entity) {
             $actionHistoryRecordService->loadParentNameFields($entity);
-            $entity->id = $i;
+            $entity->id = $offset + $i;
         }
 
         return array(
-            'total' => count($collection),
+            'total' => $count,
             'collection' => $collection
         );
     }

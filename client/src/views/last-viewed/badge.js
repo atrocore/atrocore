@@ -30,68 +30,53 @@
  * and "AtroCore" word.
  */
 
-Espo.define('treo-core:views/queue-manager/badge', 'view',
-    Dep => Dep.extend({
-
-        template: 'treo-core:queue-manager/badge',
+Espo.define('views/last-viewed/badge', 'view', function (Dep) {
+    return Dep.extend({
+        template: 'last-viewed/badge',
 
         events: {
-            'click a[data-action="showQueue"]': function (e) {
-                this.showQueue();
+            'click a[data-action="showLastViewed"]': function (e) {
+                this.showLastViewed();
             },
             'click a[data-action="close"]': function () {
-                this.closeQueue();
+                this.closeLastViewed();
             }
         },
 
-        afterRender() {
-            this.listenTo(Backbone, 'showQueuePanel', () => {
-                if (this.checkConditions()) {
-                    this.showQueue();
-                }
-            });
-        },
-
-        showQueue() {
-            this.closeQueue();
+        showLastViewed: function () {
+            this.closeLastViewed();
 
             this.$el.addClass('open');
 
-            this.createView('panel', 'treo-core:views/queue-manager/panel', {
-                el: `${this.options.el} .queue-panel-container`
+            var $container = $('<div>').attr('id', 'notifications-panel');
+
+            $container.appendTo(this.$el.find('.last-viewed-panel-container'));
+
+            this.createView('panel', 'views/last-viewed/panel', {
+                el: `${this.options.el} .last-viewed-panel-container`
             }, view => {
-                this.listenTo(view, 'closeQueue', () => {
-                    this.closeQueue();
+                this.listenTo(view, 'closeLastViewed', () => {
+                    this.closeLastViewed();
                 });
                 view.render();
             });
 
-            $(document).on('mouseup.queue', function (e) {
-                let container = this.$el.find('.queue-panel-container');
+            $(document).on('mouseup.last-viewed', function (e) {
+                let container = this.$el.find('.last-viewed-panel-container');
                 if (!container.is(e.target) && container.has(e.target).length === 0) {
-                    this.closeQueue();
+                    this.closeLastViewed();
                 }
             }.bind(this));
         },
 
-        closeQueue() {
+        closeLastViewed: function () {
             this.$el.removeClass('open');
 
             if (this.hasView('panel')) {
                 this.clearView('panel');
             }
 
-            $(document).off('mouseup.queue');
+            $(document).off('mouseup.last-viewed');
         },
-
-        checkConditions() {
-            return (this.options.intervalConditions || []).every(item => {
-                if (typeof item === 'function') {
-                    return item();
-                }
-                return false;
-            });
-        }
-
     })
-);
+});

@@ -13,6 +13,11 @@
                 </button>
             {{/if}}
             <ul class="visible-xs header-right pull-left">
+                {{#if lastViewed}}
+                <li class="last-viewed-badge-container">
+                    {{{lastViewedBadge}}}
+                </li>
+                {{/if}}
                 <li class="notifications-badge-container ">
                     {{{notificationsBadge}}}
                 </li>
@@ -99,10 +104,8 @@
                 </ul>
             </li>
             {{#if lastViewed}}
-            <li class="nav navbar-nav">
-                <a href="#LastViewed" class="nav-link action" data-action="showLastViewed">
-                    <span class="fas fa-history"></span>
-                </a>
+            <li class="dropdown hidden-xs last-viewed-badge-container">
+                {{{lastViewedBadge}}}
             </li>
             {{/if}}
             {{#if enableQuickCreate}}

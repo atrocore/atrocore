@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/last-viewed/record/list', 'views/record/list', function (Dep) {
+Espo.define('views/last-viewed/record/list', 'views/record/list-expanded', function (Dep) {
 
     return Dep.extend({
 
@@ -40,7 +40,23 @@ Espo.define('views/last-viewed/record/list', 'views/record/list', function (Dep)
 
         massActionsDisabled: true,
 
-        headerDisabled: true
+        headerDisabled: true,
 
+        showCount: false,
+
+        showMore: true,
+
+        setup: function () {
+            Dep.prototype.setup.call(this);
+
+            this.events['click [data-action="showMore"]'] = function (e) {
+                var $list = this.$el.find(`> ${this.listContainerEl}`);
+                var $showMore = this.$el.find(`> .list > .show-more`);
+                this.showMoreRecords(null, $list, $showMore);
+                e.preventDefault();
+                e.stopPropagation();
+            };
+
+        },
     });
 });
