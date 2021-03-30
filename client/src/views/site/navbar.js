@@ -483,15 +483,6 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             });
         },
 
-        actionShowLastViewed: function () {
-            this.createView('dialog', 'views/modals/last-viewed', {}, function (view) {
-                view.render();
-                this.listenTo(view, 'close', function () {
-                    this.clearView('dialog');
-                }, this);
-            }, this);
-        },
-
         actionShowHistory: function () {
             this.createView('dialog', 'views/modals/action-history', {}, function (view) {
                 view.render();

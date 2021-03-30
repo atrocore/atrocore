@@ -39,7 +39,15 @@ class LastViewed extends \Espo\Core\Controllers\Base
 {
     public function getActionIndex($params, $data, $request)
     {
-        $result = $this->getServiceFactory()->create('LastViewed')->get();
+        $offset = intval($request->get('offset'));
+        $maxSize = intval($request->get('maxSize'));
+
+        $params = array(
+            'offset' => $offset,
+            'maxSize' => $maxSize
+        );
+
+        $result = $this->getServiceFactory()->create('LastViewed')->get($params);
 
         return [
             'total' => $result['total'],
