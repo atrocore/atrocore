@@ -45,6 +45,8 @@ class DataManager
 {
     public const CACHE_DIR_PATH = 'data/cache';
 
+    public const PUBLIC_DATA_FILE_PATH = 'data/publicData.json';
+
     /**
      * @var Container
      */
@@ -58,6 +60,17 @@ class DataManager
     public function __construct(Container $container)
     {
         $this->container = $container;
+    }
+
+    /**
+     * @param array $data
+     */
+    public static function updatePublicData(array $data = []): void
+    {
+        $result = JSON::decode(file_get_contents(self::PUBLIC_DATA_FILE_PATH), true);
+        $result = array_merge($result, $data);
+        $result['dataTimestamp'] = (new \DateTime())->getTimestamp();
+        file_put_contents(self::PUBLIC_DATA_FILE_PATH, JSON::encode($result));
     }
 
     /**

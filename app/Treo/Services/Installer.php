@@ -739,7 +739,7 @@ class Installer extends AbstractService
 
         // create files in data dir
         file_put_contents('data/notReadCount.json', '{}');
-        file_put_contents('data/popupNotifications.json', '{}');
+        file_put_contents('data/publicData.json', '{}');
 
         /**
          * Run after install script if it needs
