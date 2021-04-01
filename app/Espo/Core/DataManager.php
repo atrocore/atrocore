@@ -167,6 +167,8 @@ class DataManager
 
             $this->getConfig()->remove('cacheTimestamp');
             $this->getConfig()->save();
+
+            self::updatePublicData();
         } catch (\Throwable $e) {
             $GLOBALS['log']->error('Cache clearing failed: ' . $e->getMessage());
         }

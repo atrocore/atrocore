@@ -97,7 +97,7 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
                         if (this.dataTimestamp !== 0 && this.dataTimestamp !== response.dataTimestamp) {
                             setTimeout(() => {
                                 Espo.Ui.notify(this.translate('pleaseReloadPage'), 'info', 1000 * 60, true);
-                            }, 5000);
+                            }, 3000);
                         }
                         this.dataTimestamp = response.dataTimestamp;
                     }

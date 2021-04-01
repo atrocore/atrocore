@@ -213,7 +213,7 @@ Espo.define('treo-core:views/admin/entity-manager/modals/edit-entity', 'class-re
                 }.bind(this)
             }).done(function () {
                 if (this.scope) {
-                    Espo.Ui.success(this.translate('successAndReload', 'messages', 'Global'));
+                    Espo.Ui.success(this.translate('Saved'));
                 } else {
                     Espo.Ui.success(this.translate('entityCreated', 'messages', 'EntityManager'));
                 }

@@ -52,7 +52,7 @@ Espo.define('treo-core:views/admin/layouts/base', 'class-replace!treo-core:views
             }
 
             this.getHelper().layoutManager.set(this.scope, this.type, layout, function () {
-                Espo.Ui.success(this.translate('successAndReload', 'messages', 'Global'));
+                Espo.Ui.success(this.translate('Saved'));
 
                 if (typeof callback === 'function') {
                     callback();

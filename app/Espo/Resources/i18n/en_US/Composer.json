@@ -24,7 +24,6 @@
     "versionIsInvalid": "Version is invalid"
   },
   "labels": {
-    "successAndReload": "Changes saved. This page will be reloaded after {value} seconds",
     "available": "available",
     "Installed": "Installed",
     "Store": "Store",
