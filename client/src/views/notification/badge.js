@@ -40,9 +40,9 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
 
         timeout: null,
 
-        popupNotificationsData: null,
-
         intervalConditions: [],
+
+        dataTimestamp: 0,
 
         events: {
             'click a[data-action="showNotifications"]': function (e) {
@@ -66,52 +66,17 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
                 if (this.timeout) {
                     clearTimeout(this.timeout);
                 }
-                for (var name in this.popoupTimeouts) {
-                    clearTimeout(this.popoupTimeouts[name]);
-                }
             }, this);
 
             this.notificationsCheckInterval = this.getConfig().get('notificationsCheckInterval') || this.notificationsCheckInterval;
-
-            this.popupCheckIteration = 0;
-            this.lastId = 0;
-            this.shownNotificationIds = [];
-            this.closedNotificationIds = [];
-            this.popoupTimeouts = {};
-
-            delete localStorage['closePopupNotificationId'];
-
-            window.addEventListener('storage', function (e) {
-                if (e.key == 'closePopupNotificationId') {
-                    var id = localStorage.getItem('closePopupNotificationId');
-                    if (id) {
-                        var key = 'popup-' + id;
-                        if (this.hasView(key)) {
-                            this.markPopupRemoved(id);
-                            this.clearView(key);
-                        }
-                    }
-
-                }
-            }.bind(this), false);
         },
 
         afterRender: function () {
             this.$badge = this.$el.find('.notifications-button');
-            this.$icon = this.$el.find('.notifications-button .icon');
             this.$number = this.$el.find('.number-badge');
 
             this.runCheckUpdates(true);
-
-            this.$popupContainer = $('#popup-notifications-container');
-            if (!$(this.$popupContainer).size()) {
-                this.$popupContainer = $('<div>').attr('id', 'popup-notifications-container').addClass('hidden').appendTo('body');
-            }
-
-            var popupNotificationsData = this.popupNotificationsData = this.getMetadata().get('app.popupNotifications') || {};
-            for (var name in popupNotificationsData) {
-                this.checkPopupNotifications(name);
-            }
+            this.isNeedToReloadPage(true);
         },
 
         showNotRead: function (count) {
@@ -125,19 +90,23 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
             this.$number.addClass('hidden').html('');
         },
 
-        checkBypass: function () {
-            var last = this.getRouter().getLast() || {};
-            if (last.controller == 'Admin' && last.action == 'upgrade') {
-                return true;
-            }
+        isNeedToReloadPage() {
+            setInterval(() => {
+                $.ajax('data/publicData.json?silent=true&time=' + $.now(), {local: true}).done(response => {
+                    if (response.dataTimestamp) {
+                        if (this.dataTimestamp !== 0 && this.dataTimestamp !== response.dataTimestamp) {
+                            setTimeout(() => {
+                                Espo.Ui.notify(this.translate('pleaseReloadPage'), 'info', 1000 * 60, true);
+                            }, 3000);
+                        }
+                        this.dataTimestamp = response.dataTimestamp;
+                    }
+                });
+            }, 1000);
         },
 
         checkUpdates: function (isFirstCheck) {
             if (!this.checkIntervalConditions()) {
-                return;
-            }
-
-            if (this.checkBypass()) {
                 return;
             }
 
@@ -174,101 +143,6 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
             this.timeout = setTimeout(function () {
                 this.runCheckUpdates();
             }.bind(this), this.notificationsCheckInterval * 1000);
-        },
-
-        checkPopupNotifications: function (name) {
-            var data = this.popupNotificationsData[name] || {};
-
-            var url = 'data/popupNotifications.json?time=' + $.now();
-            var interval = data.interval;
-            var disabled = data.disabled || false;
-
-            if (disabled || !url || !interval) return;
-
-            var isFirstCheck = false;
-            if (this.popupCheckIteration == 0) {
-                isFirstCheck = true;
-            }
-
-            (new Promise(function (resolve) {
-                if (this.checkBypass()) {
-                    resolve();
-                    return;
-                }
-
-                if (!this.checkIntervalConditions()) {
-                    resolve();
-                    return;
-                }
-                var jqxhr = $.ajax(url, {local: true}).done(function (response) {
-                    // prepare list
-                    var list = [];
-                    if (typeof response[this.getUser().id] != 'undefined') {
-                        list = response[this.getUser().id];
-                    }
-
-                    list.forEach(function (d) {
-                        this.showPopupNotification(name, d, isFirstCheck);
-                    }, this);
-                }.bind(this));
-
-                jqxhr.always(function() {
-                    resolve();
-                });
-            }.bind(this))).then(function () {
-                this.popoupTimeouts[name] = setTimeout(function () {
-                    this.popupCheckIteration++;
-                    this.checkPopupNotifications(name);
-                }.bind(this), interval * 1000);
-            }.bind(this));
-        },
-
-        showPopupNotification: function (name, data, isFirstCheck) {
-            var view = this.popupNotificationsData[name].view;
-            if (!view) return;
-
-            var id = data.id || null;
-
-            if (id) {
-                id = name + '_' + id;
-                if (~this.shownNotificationIds.indexOf(id)) {
-                    var notificationView = this.getView('popup-' + id);
-                    if (notificationView) {
-                        notificationView.trigger('update-data', data.data);
-                    }
-                    return;
-                }
-                if (~this.closedNotificationIds.indexOf(id)) return;
-            } else {
-                id = this.lastId++;
-            }
-
-            this.shownNotificationIds.push(id);
-
-            this.createView('popup-' + id, view, {
-                notificationData: data.data || {},
-                notificationId: data.id,
-                id: id,
-                isFirstCheck: isFirstCheck
-            }, function (view) {
-                view.render();
-                this.$popupContainer.removeClass('hidden');
-                this.listenTo(view, 'remove', function () {
-                    this.markPopupRemoved(id);
-                    localStorage.setItem('closePopupNotificationId', id);
-                }, this);
-            }.bind(this));
-        },
-
-        markPopupRemoved: function (id) {
-            var index = this.shownNotificationIds.indexOf(id);
-            if (index > -1) {
-                this.shownNotificationIds.splice(index, 1);
-            }
-            if (this.shownNotificationIds.length == 0) {
-                this.$popupContainer.addClass('hidden');
-            }
-            this.closedNotificationIds.push(id);
         },
 
         showNotifications: function () {
@@ -309,7 +183,7 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
             $document = $(document);
             if (this.hasView('panel')) {
                 this.getView('panel').remove();
-            };
+            }
             $document.off('mouseup.notification');
             $container.remove();
         },
@@ -318,7 +192,7 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
             let check = true;
 
             (this.intervalConditions || []).forEach(condition => {
-                if (typeof  condition === 'function') {
+                if (typeof condition === 'function') {
                     check = check && condition.call(this);
                 }
             });

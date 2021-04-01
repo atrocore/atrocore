@@ -19,7 +19,6 @@
     "hasRequireds": "Modul hat die Anforderungen nicht erfüllt"
   },
   "labels": {
-    "successAndReload": "Die Änderungen wurden gespeichert. Die Seite wird in {value} Sekunden neu geladen",
     "Installed": "Installiert",
     "Store": "Store",
     "cancelModule": "Stornieren",

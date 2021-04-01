@@ -1,3 +1,4 @@
+<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -30,34 +31,29 @@
  * and "AtroCore" word.
  */
 
-Espo.define('treo-core:views/admin/layouts/base', 'class-replace!treo-core:views/admin/layouts/base',
-    Dep => Dep.extend({
+namespace Treo\Migrations;
 
-        events: _.extend({}, Dep.prototype.events, {
-            'click button[data-action="save"]': function () {
-                this.disableButtons();
-                this.notify('Saving...');
-                if (!this.save(this.enableButtons.bind(this))) {
-                    this.notify(false)
-                }
-            }
-        }),
+use Treo\Core\Migration\Base;
 
-        save: function (callback) {
-            const layout = this.fetch();
+/**
+ * Migration for version 1.1.46
+ */
+class V1Dot1Dot46 extends Base
+{
+    /**
+     * @inheritDoc
+     */
+    public function up(): void
+    {
+        copy('vendor/atrocore/core/copy/.htaccess', '.htaccess');
+        file_put_contents('data/publicData.json', '{}');
+    }
 
-            if (!this.validate(layout)) {
-                this.enableButtons();
-                return false;
-            }
-
-            this.getHelper().layoutManager.set(this.scope, this.type, layout, function () {
-                Espo.Ui.success(this.translate('Saved'));
-
-                if (typeof callback === 'function') {
-                    callback();
-                }
-            }.bind(this));
-        },
-    })
-);
+    /**
+     * @inheritDoc
+     */
+    public function down(): void
+    {
+        copy('vendor/atrocore/core/copy/.htaccess', '.htaccess');
+    }
+}
