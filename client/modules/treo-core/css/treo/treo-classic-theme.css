@@ -19204,6 +19204,11 @@ ul.dropdown-menu > li.checkbox {
     background: #ddd !important
 }
 
+#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs .more-group > ul > li.active > a {
+    color: #000 !important;
+    background-color: #ddd !important;
+}
+
 #header .navbar-right .global-search-container a.global-searcy-button:hover {
     background: transparent;
     border-color: transparent
