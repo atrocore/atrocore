@@ -15320,6 +15320,15 @@ ul.dropdown-menu > li > a > .check-icon + div {
   .modal-dialog {
     width: 740px;
   }
+
+  #main > .record > .detail > .row > .overview {
+    border-right: 1px solid #e0e0e0;
+  }
+
+  #main > .record > .detail > .row > .side {
+    border-left: 1px solid #e0e0e0;
+    margin-left: -1px;
+  }
 }
 
 @media screen and (min-width: 992px) {
