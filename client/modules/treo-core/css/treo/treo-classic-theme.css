@@ -19200,14 +19200,13 @@ ul.dropdown-menu > li.checkbox {
     border-color: #424242;
 }
 
-
-#header .navbar[data-orientation="vertical"] ul.tabs li.more.highlighted > a {
-    color: #fff !important;
-    background: #8a8888 !important
+#header .navbar-inverse.navbar[data-orientation="vertical"] .navbar-nav .active > a {
+    background: #ddd !important
 }
 
-#header .navbar-inverse.navbar[data-orientation="vertical"] .navbar-nav .active > a {
-    background: #ababab !important
+#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs .more-group > ul > li.active > a {
+    color: #000 !important;
+    background-color: #ddd !important;
 }
 
 #header .navbar-right .global-search-container a.global-searcy-button:hover {
