@@ -163,10 +163,10 @@ class Attachment extends Record
 
         if (empty($entity)) {
             $entity = parent::createEntity(clone $attachment);
-        }
 
-        // create thumbnails
-        $this->createThumbnails($entity);
+            // create thumbnails
+            $this->createThumbnails($entity);
+        }
 
         $entity->set('pathsData', $this->getRepository()->getAttachmentPathsData($entity));
 
@@ -284,10 +284,10 @@ class Attachment extends Record
             if (!empty($attachment->file)) {
                 $entity->clear('contents');
             }
-        }
 
-        // create thumbnails
-        $this->createThumbnails($entity);
+            // create thumbnails
+            $this->createThumbnails($entity);
+        }
 
         $entity->set('pathsData', $this->getRepository()->getAttachmentPathsData($entity));
 
