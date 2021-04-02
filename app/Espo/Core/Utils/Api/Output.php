@@ -33,6 +33,8 @@
 
 namespace Espo\Core\Utils\Api;
 
+use Espo\Core\Exceptions\WithStatusReasonData;
+
 class Output
 {
     private $slim;
@@ -111,6 +113,9 @@ class Output
             $this->getSlim()->response()->setStatus($statusCode);
             if ($toPrintXStatusReason) {
                 $this->getSlim()->response()->headers->set('X-Status-Reason', $text);
+                if (!empty($exception) && $exception instanceof WithStatusReasonData){
+                    $this->getSlim()->response()->headers->set('X-Status-Reason-Data', $exception->getStatusReasonData());
+                }
             }
 
             if ($isPrint) {
