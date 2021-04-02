@@ -36,7 +36,11 @@ Espo.define('views/last-viewed/badge', 'view', function (Dep) {
 
         events: {
             'click a[data-action="showLastViewed"]': function (e) {
-                this.showLastViewed();
+                if (!this.hasView('panel')) {
+                    this.showLastViewed();
+                } else {
+                    this.closeLastViewed();
+                }
             },
             'click a[data-action="close"]': function () {
                 this.closeLastViewed();
@@ -63,7 +67,8 @@ Espo.define('views/last-viewed/badge', 'view', function (Dep) {
 
             $(document).on('mouseup.last-viewed', function (e) {
                 let container = this.$el.find('.last-viewed-panel-container');
-                if (!container.is(e.target) && container.has(e.target).length === 0) {
+                if (!container.is(e.target) && container.has(e.target).length === 0
+                    && !this.$el.is(e.target) && this.$el.has(e.target).length === 0) {
                     this.closeLastViewed();
                 }
             }.bind(this));

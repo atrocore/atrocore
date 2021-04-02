@@ -47,7 +47,12 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
         events: {
             'click a[data-action="showNotifications"]': function (e) {
 
-                this.showNotifications();
+                if (!this.hasView('panel')) {
+                    this.showNotifications();
+                } else {
+                    this.closeNotifications();
+                }
+
                 setTimeout(function () {
                     this.checkUpdates();
                 }.bind(this), 100);
@@ -166,7 +171,8 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
 
             $document = $(document);
             $document.on('mouseup.notification', function (e) {
-                if (!$container.is(e.target) && $container.has(e.target).length === 0) {
+                if (!$container.is(e.target) && $container.has(e.target).length === 0
+                    && !this.$el.is(e.target) && this.$el.has(e.target).length === 0) {
                     if (!$(e.target).closest('div.modal-dialog').size()) {
                         this.closeNotifications();
                     }
@@ -182,7 +188,7 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
             $('#notifications-panel').remove();
             $document = $(document);
             if (this.hasView('panel')) {
-                this.getView('panel').remove();
+                this.clearView('panel');
             }
             $document.off('mouseup.notification');
             $container.remove();
