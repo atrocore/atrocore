@@ -14979,7 +14979,7 @@ label {
 }
 
 .page-header {
-    margin: 10px 0;
+    margin: 16px 0 10px 0;
     border-bottom: 0;
     padding-bottom: 2px;
     min-height: 33px
@@ -20561,6 +20561,7 @@ span.jqtree-dragging {
 
 .search-row .input-group {
     border-bottom: solid 1px #e0e0e0;
+    margin-left: 20px;
 }
 
 .search-row .filters-button {
