@@ -21260,6 +21260,7 @@ body,
 
 .btn-group.open .dropdown-menu {
   display: flex !important;
+  flex-direction: column;
 }
 
 .dropdown-menu .divider {
