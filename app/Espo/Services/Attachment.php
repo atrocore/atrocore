@@ -192,8 +192,6 @@ class Attachment extends Record
             $attachment->contents = $this->parseInputFileContent($attachment->file);
 
             $relatedEntityType = null;
-            $field = null;
-            $role = 'Attachment';
             if (isset($attachment->parentType)) {
                 $relatedEntityType = $attachment->parentType;
             } else {
@@ -201,62 +199,13 @@ class Attachment extends Record
                     $relatedEntityType = $attachment->relatedType;
                 }
             }
-            if (isset($attachment->field)) {
-                $field = $attachment->field;
-            }
-            if (isset($attachment->role)) {
-                $role = $attachment->role;
-            }
-            if (!$relatedEntityType || !$field) {
-                throw new BadRequest("Params 'field' and 'parentType' not passed along with 'file'.");
+
+            if (!$relatedEntityType) {
+                throw new BadRequest("Params 'relatedType' or 'parentType' not passed along with 'file'.");
             }
 
-            $fieldType = $this->getMetadata()->get(['entityDefs', $relatedEntityType, 'fields', $field, 'type']);
-            if (!$fieldType) {
-                throw new Error("Field '{$field}' does not exist.");
-            }
-
-            if (
-                !$this->getAcl()->checkScope($relatedEntityType, 'create')
-                && !$this->getAcl()->checkScope($relatedEntityType, 'edit')
-            ) {
+            if (!$this->getAcl()->checkScope($relatedEntityType, 'create') && !$this->getAcl()->checkScope($relatedEntityType, 'edit')) {
                 throw new Forbidden("No access to " . $relatedEntityType . ".");
-            }
-
-            if (in_array($field, $this->getAcl()->getScopeForbiddenFieldList($relatedEntityType, 'edit'))) {
-                throw new Forbidden("No access to field '" . $field . "'.");
-            }
-
-            $size = mb_strlen($attachment->contents, '8bit');
-
-            if ($role === 'Attachment') {
-                if (!in_array($fieldType, $this->attachmentFieldTypeList)) {
-                    throw new Error("Field type '{$fieldType}' is not allowed for attachment.");
-                }
-                $maxSize = $this->getMetadata()->get(['entityDefs', $relatedEntityType, 'fields', $field, 'maxFileSize']);
-                if (!$maxSize) {
-                    $maxSize = $this->getConfig()->get('attachmentUploadMaxSize');
-                }
-                if ($maxSize) {
-                    if ($size > $maxSize * 1024 * 1024) {
-                        throw new Error("File size should not exceed {$maxSize}Mb.");
-                    }
-                }
-
-            } else {
-                if ($role === 'Inline Attachment') {
-                    if (!in_array($fieldType, $this->inlineAttachmentFieldTypeList)) {
-                        throw new Error("Field '{$field}' is not allowed to have inline attachment.");
-                    }
-                    $inlineAttachmentUploadMaxSize = $this->getConfig()->get('inlineAttachmentUploadMaxSize');
-                    if ($inlineAttachmentUploadMaxSize) {
-                        if ($size > $inlineAttachmentUploadMaxSize * 1024 * 1024) {
-                            throw new Error("File size should not exceed {$inlineAttachmentUploadMaxSize}Mb.");
-                        }
-                    }
-                } else {
-                    throw new BadRequest("Not supported attachment role.");
-                }
             }
         }
 
