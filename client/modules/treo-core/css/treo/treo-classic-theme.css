@@ -19853,13 +19853,8 @@ button.category:focus {
         padding-left: 15px;
     }
 
-    .dashlets > div::after {
-        content: '';
-        height: 100%;
-        width: 1px;
-        background: #dcdcdc;
-        position: absolute;
-        right: 0;
+    .dashlets .dashlet {
+        border-right: 1px solid #dcdcdc !important;
     }
 
     #main .catalog-tree-panel.catalog-tree-panel-hidden {

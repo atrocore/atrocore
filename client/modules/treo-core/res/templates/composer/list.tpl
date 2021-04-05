@@ -16,7 +16,6 @@
     .module-list-container {
         margin-left: -16px;
         margin-right: -8px;
-        border-right: 1px solid #dcdcdc;
     }
     .module-list-container > .panel > .panel-heading {
         position: relative;
