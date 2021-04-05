@@ -42,8 +42,6 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
 
         intervalConditions: [],
 
-        dataTimestamp: 0,
-
         events: {
             'click a[data-action="showNotifications"]': function (e) {
 
@@ -81,7 +79,6 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
             this.$number = this.$el.find('.number-badge');
 
             this.runCheckUpdates(true);
-            this.isNeedToReloadPage(true);
         },
 
         showNotRead: function (count) {
@@ -93,21 +90,6 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
         hideNotRead: function () {
             this.$badge.attr('title', this.translate('Notifications'));
             this.$number.addClass('hidden').html('');
-        },
-
-        isNeedToReloadPage() {
-            setInterval(() => {
-                $.ajax('data/publicData.json?silent=true&time=' + $.now(), {local: true}).done(response => {
-                    if (response.dataTimestamp) {
-                        if (this.dataTimestamp !== 0 && this.dataTimestamp !== response.dataTimestamp) {
-                            setTimeout(() => {
-                                Espo.Ui.notify(this.translate('pleaseReloadPage'), 'info', 1000 * 60, true);
-                            }, 3000);
-                        }
-                        this.dataTimestamp = response.dataTimestamp;
-                    }
-                });
-            }, 1000);
         },
 
         checkUpdates: function (isFirstCheck) {

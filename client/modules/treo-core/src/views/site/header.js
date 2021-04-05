@@ -34,13 +34,32 @@ Espo.define('treo-core:views/site/header', 'class-replace!treo-core:views/site/h
 
     return Dep.extend({
 
-        title: 'TreoCRM',
+        title: 'AtroCore',
+
+        dataTimestamp: 0,
 
         setup: function () {
             this.navbarView = this.getMetadata().get('app.clientDefs.navbarView') || this.navbarView;
 
             Dep.prototype.setup.call(this);
-        }
+
+            this.isNeedToReloadPage();
+        },
+
+        isNeedToReloadPage() {
+            setInterval(() => {
+                $.ajax('data/publicData.json?silent=true&time=' + $.now(), {local: true}).done(response => {
+                    if (response.dataTimestamp) {
+                        if (this.dataTimestamp !== 0 && this.dataTimestamp !== response.dataTimestamp) {
+                            setTimeout(() => {
+                                Espo.Ui.notify(this.translate('pleaseReloadPage'), 'info', 1000 * 60, true);
+                            }, 5000);
+                        }
+                        this.dataTimestamp = response.dataTimestamp;
+                    }
+                });
+            }, 1000);
+        },
 
     });
 
