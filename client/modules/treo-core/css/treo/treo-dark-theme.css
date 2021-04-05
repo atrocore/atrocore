@@ -14979,7 +14979,7 @@ label {
 }
 
 .page-header {
-    margin: 10px 0;
+    margin: 16px 0 10px 0;
     border-bottom: 0;
     padding-bottom: 2px;
     min-height: 33px
@@ -19834,6 +19834,11 @@ button.category:focus {
         border-top: 1px solid #dcdcdc;
     }
 
+    #main > .record > .detail > .row > .side {
+        border-left: 1px solid #dcdcdc;
+        margin-left: -1px;
+    }
+
     .nav > li > a {
         padding: 7px 15px;
     }
@@ -20561,6 +20566,7 @@ span.jqtree-dragging {
 
 .search-row .input-group {
     border-bottom: solid 1px #e0e0e0;
+    margin-left: 20px;
 }
 
 .search-row .filters-button {

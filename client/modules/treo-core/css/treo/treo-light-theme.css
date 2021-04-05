@@ -14744,7 +14744,7 @@ label {
 }
 
 .page-header {
-  margin: 10px 0;
+  margin: 26px 0 10px 0;
   border-bottom: 0;
   padding-bottom: 2px;
   min-height: 33px;
@@ -15319,6 +15319,15 @@ ul.dropdown-menu > li > a > .check-icon + div {
 @media screen and (min-width: 768px) {
   .modal-dialog {
     width: 740px;
+  }
+
+  #main > .record > .detail > .row > .overview {
+    border-right: 1px solid #e0e0e0;
+  }
+
+  #main > .record > .detail > .row > .side {
+    border-left: 1px solid #e0e0e0;
+    margin-left: -1px;
   }
 }
 
@@ -19634,6 +19643,7 @@ span.jqtree-dragging {
 
 .search-row .input-group {
   border-bottom: solid 1px #e0e0e0;
+  margin-left: 20px;
 }
 
 .search-row .filters-button {
@@ -21411,6 +21421,29 @@ ul.dropdown-menu > li.checkbox {
 .btn-group-vertical.open .dropdown-toggle {
   -webkit-box-shadow: none;
           box-shadow: none;
+}
+
+.page-header .header-buttons .header-items > a.action[data-action="List"]:last-of-type {
+  margin-left: 15px;
+}
+
+.page-header .header-buttons .header-items > a.action:last-of-type {
+  margin-right: 0;
+}
+
+.page-header .header-buttons .header-items > a.action:last-of-type:not(:last-child):not(:empty) {
+  border-top-right-radius: 0;
+  -webkit-border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  -webkit-border-bottom-right-radius: 0;
+}
+
+.page-header .header-buttons .header-items .btn-group .dropdown-toggle {
+  height: 100%;
+  border-top-left-radius: 0;
+  -webkit-border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  -webkit-border-bottom-left-radius: 0;
 }
 
 .input-group > .input-group-btn > .btn:hover,

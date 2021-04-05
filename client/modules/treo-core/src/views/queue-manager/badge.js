@@ -37,7 +37,11 @@ Espo.define('treo-core:views/queue-manager/badge', 'view',
 
         events: {
             'click a[data-action="showQueue"]': function (e) {
-                this.showQueue();
+                if (!this.hasView('panel')) {
+                    this.showQueue();
+                } else {
+                    this.closeQueue();
+                }
             },
             'click a[data-action="close"]': function () {
                 this.closeQueue();
@@ -68,7 +72,8 @@ Espo.define('treo-core:views/queue-manager/badge', 'view',
 
             $(document).on('mouseup.queue', function (e) {
                 let container = this.$el.find('.queue-panel-container');
-                if (!container.is(e.target) && container.has(e.target).length === 0) {
+                if (!container.is(e.target) && container.has(e.target).length === 0
+                    && !this.$el.is(e.target) && this.$el.has(e.target).length === 0) {
                     this.closeQueue();
                 }
             }.bind(this));
