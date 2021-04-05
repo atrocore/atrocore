@@ -139,12 +139,12 @@ class QueueItem extends Base
             return;
         }
 
-        if ($service instanceof QueueManagerServiceInterface) {
+        if ($service instanceof QueueManagerServiceInterface && !empty($message = $service->getNotificationMessage($entity))) {
             $notification = $this->getEntityManager()->getEntity('Notification');
             $notification->set('type', 'Message');
             $notification->set('relatedType', 'QueueItem');
             $notification->set('relatedId', $entity->get('id'));
-            $notification->set('message', $service->getNotificationMessage($entity));
+            $notification->set('message', $message);
             $notification->set('userId', $entity->get('createdById'));
             $this->getEntityManager()->saveEntity($notification);
         }

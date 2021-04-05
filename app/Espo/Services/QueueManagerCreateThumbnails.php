@@ -35,6 +35,8 @@ declare(strict_types=1);
 
 namespace Espo\Services;
 
+use Espo\ORM\Entity;
+
 /**
  * Class QueueManagerCreateThumbnails
  */
@@ -63,5 +65,13 @@ class QueueManagerCreateThumbnails extends QueueManagerBase
         }
 
         return true;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getNotificationMessage(Entity $queueItem): string
+    {
+        return '';
     }
 }
