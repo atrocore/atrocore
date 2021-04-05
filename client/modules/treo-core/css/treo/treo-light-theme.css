@@ -19176,13 +19176,8 @@ button.category:focus {
   #main {
     padding-left: 15px;
   }
-  .dashlets > div::after {
-    content: '';
-    height: 100%;
-    width: 1px;
-    background: #dcdcdc;
-    position: absolute;
-    right: 0;
+  .dashlets .dashlet > .panel-heading {
+    border-right: 1px solid #dcdcdc;
   }
 }
 
