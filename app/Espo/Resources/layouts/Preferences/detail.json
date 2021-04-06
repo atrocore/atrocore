@@ -41,34 +41,14 @@
                 {
                     "name": "autoFollowEntityTypeList"
                 },
-                false
-            ],
-            [
-                {
-                    "name": "emailReplyToAllByDefault"
-                },
-                {
-                    "name": "doNotFillAssignedUserIfNotRequired"
-                }
-            ],
-            [
-                {
-                    "name": "emailReplyForceHtml"
-                },
                 {
                     "name": "followEntityOnStreamPost"
                 }
             ],
             [
                 {
-                    "name": "emailUseExternalClient"
-                },
-                {
                     "name": "followCreatedEntities"
-                }
-            ],
-            [
-                false,
+                },
                 {
                     "name": "followCreatedEntityTypeList"
                 }

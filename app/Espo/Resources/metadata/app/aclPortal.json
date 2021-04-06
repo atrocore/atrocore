@@ -57,14 +57,10 @@
                 "receiveAssignmentEmailNotifications": false,
                 "receiveMentionEmailNotifications": false,
                 "autoFollowEntityTypeList": false,
-                "emailReplyForceHtml": false,
-                "emailReplyToAllByDefault": false,
                 "followCreatedEntities": false,
                 "followEntityOnStreamPost": false,
-                "doNotFillAssignedUserIfNotRequired": false,
                 "useCustomTabList": false,
                 "tabList": false,
-                "emailUseExternalClient": false,
                 "dashboardLayout": false
             },
             "Call": {

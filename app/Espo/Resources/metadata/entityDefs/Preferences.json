@@ -126,21 +126,9 @@
             "type": "array",
             "view": "views/preferences/fields/tab-list"
         },
-        "emailReplyToAllByDefault": {
-            "type": "bool",
-            "default": true
-        },
-        "emailReplyForceHtml": {
-            "type": "bool",
-            "default": false
-        },
         "isPortalUser": {
             "type": "bool",
             "notStorable": true
-        },
-        "doNotFillAssignedUserIfNotRequired": {
-            "type": "bool",
-            "tooltip": true
         },
         "followEntityOnStreamPost": {
             "type": "bool",
@@ -155,9 +143,6 @@
             "view": "views/preferences/fields/auto-follow-entity-type-list",
             "translation": "Global.scopeNamesPlural",
             "tooltip": true
-        },
-        "emailUseExternalClient": {
-            "type": "bool"
         },
         "scopeColorsDisabled": {
             "type": "bool"

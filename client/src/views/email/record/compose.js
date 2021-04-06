@@ -44,7 +44,7 @@ Espo.define('views/email/record/compose', ['views/record/edit', 'views/email/rec
             this.initialBody = null;
             this.initialIsHtml = null;
 
-            if (!this.model.get('isHtml') && this.getPreferences().get('emailReplyForceHtml')) {
+            if (!this.model.get('isHtml')) {
                 var body = (this.model.get('body') || '').replace(/\n/g, '<br>');
                 this.model.set('body', body);
                 this.model.set('isHtml', true);
