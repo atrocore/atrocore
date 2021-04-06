@@ -36,6 +36,8 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
 
         sideView: null,
 
+        hideNotificationPanel: true,
+
         buttonList: [
             {
                 name: 'save',
@@ -124,17 +126,17 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
             this.controlColorsField();
             this.listenTo(this.model, 'change:scopeColorsDisabled', this.controlColorsField, this);
 
-            var hideNotificationPanel = true;
+            this.hideNotificationPanel = true;
             if (!this.getConfig().get('assignmentEmailNotifications') || this.model.get('isPortalUser')) {
                 this.hideField('receiveAssignmentEmailNotifications');
             } else {
-                hideNotificationPanel = false;
+                this.hideNotificationPanel = false;
             }
 
             if (!this.getConfig().get('mentionEmailNotifications') || this.model.get('isPortalUser')) {
                 this.hideField('receiveMentionEmailNotifications');
             } else {
-                hideNotificationPanel = false;
+                this.hideNotificationPanel = false;
             }
 
             if (!this.getConfig().get('streamEmailNotifications') && !this.model.get('isPortalUser')) {
@@ -142,7 +144,7 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
             } else if (!this.getConfig().get('portalStreamEmailNotifications') && this.model.get('isPortalUser')) {
                 this.hideField('receiveStreamEmailNotifications');
             } else {
-                hideNotificationPanel = false;
+                this.hideNotificationPanel = false;
             }
 
             if (this.getConfig().get('scopeColorsDisabled')) {
@@ -152,10 +154,6 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
 
             if (this.getConfig().get('tabColorsDisabled')) {
                 this.hideField('tabColorsDisabled');
-            }
-
-            if (hideNotificationPanel) {
-                this.hidePanel('notifications');
             }
 
             if (this.getConfig().get('userThemesDisabled')) {
@@ -236,10 +234,14 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
+
+            if (this.hideNotificationPanel) {
+                this.hidePanel('notifications');
+            }
         },
 
         exit: function (after) {
-            if (after == 'cancel') {
+            if (after === 'cancel') {
                 this.getRouter().navigate('#User/view/' + this.model.id, {trigger: true});
             }
         },
