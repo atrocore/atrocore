@@ -64,7 +64,7 @@ class Auth
 
         $this->allowAnyAccess = $allowAnyAccess;
 
-        $authenticationMethod = $this->getConfig()->get('authenticationMethod', 'Espo');
+        $authenticationMethod = $this->getConfig()->get('authenticationMethod', 'Basic');
         $authenticationClassName = "\\Espo\\Core\\Utils\\Authentication\\" . $authenticationMethod;
         $this->authentication = new $authenticationClassName($this->getConfig(), $this->getEntityManager(), $this);
 
@@ -130,7 +130,7 @@ class Auth
         }
 
         $isByTokenOnly = false;
-        if ($this->request->headers->get('HTTP_ESPO_AUTHORIZATION_BY_TOKEN') === 'true') {
+        if ($this->request->headers->get('HTTP_BASIC_AUTHORIZATION_BY_TOKEN') === 'true') {
             $isByTokenOnly = true;
         }
 
@@ -226,7 +226,7 @@ class Auth
         $this->getEntityManager()->setUser($user);
         $this->getContainer()->setUser($user);
 
-        if ($this->request->headers->get('HTTP_ESPO_AUTHORIZATION')) {
+        if ($this->request->headers->get('HTTP_BASIC_AUTHORIZATION')) {
             if (!$authToken) {
                 $authToken = $this->getEntityManager()->getEntity('AuthToken');
                 $token = $this->generateToken();

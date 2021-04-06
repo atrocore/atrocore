@@ -721,9 +721,9 @@
     "authenticationMethod": {
       "type": "enum",
       "options": [
-        "Espo"
+        "Basic"
       ],
-      "default": "Espo"
+      "default": "Basic"
     },
     "ldapHost": {
       "type": "varchar",
@@ -1019,9 +1019,6 @@
     "historyEntityList": {
       "type": "multiEnum",
       "view": "views/settings/fields/history-entity-list"
-    },
-    "googleMapsApiKey": {
-      "type": "varchar"
     },
     "massEmailDisableMandatoryOptOutLink": {
       "type": "bool"

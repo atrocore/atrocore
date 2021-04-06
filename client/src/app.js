@@ -606,8 +606,8 @@ Espo.define(
                     }
                     if (self.auth !== null) {
                         xhr.setRequestHeader('Authorization', 'Basic ' + self.auth);
-                        xhr.setRequestHeader('Espo-Authorization', self.auth);
-                        xhr.setRequestHeader('Espo-Authorization-By-Token', true);
+                        xhr.setRequestHeader('Basic-Authorization', self.auth);
+                        xhr.setRequestHeader('Basic-Authorization-By-Token', true);
                     }
                 },
                 dataType: 'json',

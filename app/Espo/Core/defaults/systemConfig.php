@@ -174,8 +174,7 @@ return array (    'defaultPermissions' =>
     array (
         'outboundEmailFromAddress',
         'outboundEmailFromName',
-        'integrations',
-        'googleMapsApiKey'
+        'integrations'
     ),
     'isInstalled' => false,
     'ldapUserNameAttribute' => 'sAMAccountName',

@@ -57,12 +57,12 @@ class Auth extends \Slim\Middleware
         $uri = $req->getResourceUri();
         $httpMethod = $req->getMethod();
 
-        $authUsername = $req->headers('PHP_AUTH_USER');
-        $authPassword = $req->headers('PHP_AUTH_PW');
+        $authUsername = null;
+        $authPassword = null;
 
-        $espoAuth = $req->headers('HTTP_ESPO_AUTHORIZATION');
-        if (isset($espoAuth)) {
-            list($authUsername, $authPassword) = explode(':', base64_decode($espoAuth), 2);
+        $auth = $req->headers('HTTP_BASIC_AUTHORIZATION');
+        if (isset($auth)) {
+            list($authUsername, $authPassword) = explode(':', base64_decode($auth), 2);
         }
 
         if (!isset($authUsername)) {
@@ -70,14 +70,6 @@ class Auth extends \Slim\Middleware
                 $authUsername = $_COOKIE['auth-username'];
                 $authPassword = $_COOKIE['auth-token'];
             }
-        }
-
-        $espoCgiAuth = $req->headers('HTTP_ESPO_CGI_AUTH');
-        if (empty($espoCgiAuth)) {
-            $espoCgiAuth = $req->headers('REDIRECT_HTTP_ESPO_CGI_AUTH');
-        }
-        if (!isset($authUsername) && !isset($authPassword) && !empty($espoCgiAuth)) {
-            list($authUsername, $authPassword) = explode(':' , base64_decode(substr($espoCgiAuth, 6)));
         }
 
         if (is_null($this->authRequired)) {

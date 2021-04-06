@@ -111,11 +111,6 @@ Espo.define('views/fields/map', 'views/fields/base', function (Dep) {
                     this.initMapGoogle();
                 }.bind(this);
                 var src = 'https://maps.googleapis.com/maps/api/js?callback=mapapiloaded';
-                var apiKey = this.getConfig().get('googleMapsApiKey');
-                if (apiKey) {
-                    src += '&key=' + apiKey;
-                }
-
                 var s = document.createElement('script');
                 s.setAttribute('async', 'async');
                 s.src = src;

@@ -31,33 +31,33 @@
  * and "AtroCore" word.
  */
 
-declare(strict_types=1);
+namespace Treo\Migrations;
 
-namespace Treo\Listeners;
-
-use Treo\Core\EventManager\Event;
+use Treo\Core\Migration\Base;
 
 /**
- * Class IntegrationEntity
+ * Migration for version 1.1.47
  */
-class IntegrationEntity extends AbstractListener
+class V1Dot1Dot47 extends Base
 {
     /**
-     * @param Event $event
+     * @inheritDoc
      */
-    public function afterSave(Event $event)
+    public function up(): void
     {
-        // get entity
-        $entity = $event->getArgument('entity');
+        if ($this->getConfig()->get('authenticationMethod') == 'Espo') {
+            $this->getConfig()->set('authenticationMethod', 'Basic');
+            $this->getConfig()->save();
+        }
+    }
 
-        // for GoogleMaps
-        if ($entity->id === 'GoogleMaps') {
-            if (!$entity->get('enabled') || !$entity->get('apiKey')) {
-                $this->getConfig()->set('googleMapsApiKey', null);
-                $this->getConfig()->save();
-                return;
-            }
-            $this->getConfig()->set('googleMapsApiKey', $entity->get('apiKey'));
+    /**
+     * @inheritDoc
+     */
+    public function down(): void
+    {
+        if ($this->getConfig()->get('authenticationMethod') == 'Basic') {
+            $this->getConfig()->set('authenticationMethod', 'Espo');
             $this->getConfig()->save();
         }
     }

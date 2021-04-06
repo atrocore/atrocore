@@ -44,9 +44,6 @@
   "views/list": [
     "treo-core"
   ],
-  "views/login": [
-    "treo-core"
-  ],
   "views/dashboard": [
     "treo-core"
   ],
