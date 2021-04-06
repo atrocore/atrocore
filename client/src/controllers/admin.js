@@ -244,12 +244,6 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             model.fetch();
         },
 
-        integrations: function (options) {
-            var integration = options.name || null;
-
-            this.main('views/admin/integrations/index', {integration: integration});
-        },
-
         clearCache: function (options) {
             var master = this.get('master');
             Espo.Ui.notify(master.translate('Please wait...'));

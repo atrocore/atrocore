@@ -38,11 +38,6 @@
         "description": "notifications"
       },
       {
-        "url": "#Admin/integrations",
-        "label": "Integrations",
-        "description": "integrations"
-      },
-      {
         "url": "#Admin/clearCache",
         "label": "Clear Cache",
         "description": "clearCache"
