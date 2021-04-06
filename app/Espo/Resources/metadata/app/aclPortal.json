@@ -48,12 +48,6 @@
         },
         "scopeFieldLevel": {
             "Preferences": {
-                "smtpServer": false,
-                "smtpPort": false,
-                "smtpSecurity": false,
-                "smtpUsername": false,
-                "smtpPassword": false,
-                "smtpAuth": false,
                 "receiveAssignmentEmailNotifications": false,
                 "receiveMentionEmailNotifications": false,
                 "autoFollowEntityTypeList": false,

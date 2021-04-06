@@ -51,22 +51,6 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
         ],
 
         dependencyDefs: {
-            'smtpAuth': {
-                map: {
-                    true: [
-                        {
-                            action: 'show',
-                            fields: ['smtpUsername', 'smtpPassword']
-                        }
-                    ]
-                },
-                default: [
-                    {
-                        action: 'hide',
-                        fields: ['smtpUsername', 'smtpPassword']
-                    }
-                ]
-            },
             'useCustomTabList': {
                 map: {
                     true: [
@@ -110,7 +94,6 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
             if (this.model.id == this.getUser().id) {
                 this.on('after:save', function () {
                     var data = this.model.toJSON();
-                    delete data['smtpPassword'];
                     this.getPreferences().set(data);
                     this.getPreferences().trigger('update');
                 }, this);
@@ -168,17 +151,6 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
 
                 ) {
                     window.location.reload();
-                }
-            }, this);
-
-            this.listenTo(this.model, 'change:smtpSecurity', function (model, smtpSecurity, o) {
-                if (!o.ui) return;
-                if (smtpSecurity == 'SSL') {
-                    this.model.set('smtpPort', '465');
-                } else if (smtpSecurity == 'TLS') {
-                    this.model.set('smtpPort', '587');
-                } else {
-                    this.model.set('smtpPort', '25');
                 }
             }, this);
         },

@@ -107,48 +107,5 @@
                 false
             ]
         ]
-    },
-    {
-        "label": "SMTP",
-        "rows": [
-            [
-                {
-                    "name": "smtpEmailAddress"
-                },
-                false
-            ],
-            [
-                {
-                    "name": "smtpServer"
-                },
-                {
-                    "name": "smtpPort"
-                }
-            ],
-            [
-                {
-                    "name": "smtpAuth"
-                },
-                {
-                    "name": "smtpSecurity"
-                }
-            ],
-            [
-                {
-                    "name": "smtpUsername"
-                },
-                {
-                    "name": "testSend",
-                    "customLabel": null,
-                    "view": "views/preferences/fields/test-send"
-                }
-            ],
-            [
-                {
-                    "name": "smtpPassword"
-                },
-                false
-            ]
-        ]
     }
 ]
