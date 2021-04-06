@@ -32,10 +32,9 @@
 
 Espo.define('acl', [], function () {
 
-    var Acl = function (user, scope, aclAllowDeleteCreated) {
+    var Acl = function (user, scope) {
         this.user = user || null;
         this.scope = scope;
-        this.aclAllowDeleteCreated = aclAllowDeleteCreated;
     }
 
     _.extend(Acl.prototype, {
@@ -153,21 +152,6 @@ Espo.define('acl', [], function () {
             var d = data || {};
             if (d.read === 'no') {
                 return false;
-            }
-
-            if (model.has('createdById')) {
-                if (model.get('createdById') === this.getUser().id && this.aclAllowDeleteCreated) {
-                    if (!model.has('assignedUserId')) {
-                        return true;
-                    } else {
-                        if (!model.get('assignedUserId')) {
-                            return true;
-                        }
-                        if (model.get('assignedUserId') === this.getUser().id) {
-                            return true;
-                        }
-                    }
-                }
             }
 
             return result;

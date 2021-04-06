@@ -94,7 +94,6 @@ return [
     'currencyFormat'                         => 2,
     'currencyDecimalPlaces'                  => 2,
     'aclStrictMode'                          => false,
-    'aclAllowDeleteCreated'                  => false,
     'inlineAttachmentUploadMaxSize'          => 20,
     'textFilterUseContainsForVarchar'        => false,
     'tabColorsDisabled'                      => false,

@@ -374,7 +374,7 @@ Espo.define(
         },
 
         createAclManager: function () {
-            return new AclManager(this.user, null, this.settings.get('aclAllowDeleteCreated'));
+            return new AclManager(this.user, null);
         },
 
         initView: function () {

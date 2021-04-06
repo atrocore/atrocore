@@ -2,7 +2,6 @@
   "fields": {
     "isMultilangActive": "Aktiv",
     "inputLanguageList": "Eingabesprachen",
-    "aclAllowDeleteCreated": "das Entfernen von eigenerstellten Datensätzen erlauben",
     "appId": "ID",
     "isStreamSide": "Ist Aktivitätenpanel seitlich platziert",
     "isStreamPanelFirst": "Ist Aktivitätenpanel zuerst",
@@ -113,7 +112,6 @@
     }
   },
   "tooltips": {
-    "aclAllowDeleteCreated": "Benutzer können die von ihnen erstellte Datensätze entfernen, auch wenn sie keinen Löschzugriff haben.",
     "isStreamSide": "Wenn aktiviert, wird das Aktivitätenpanel seitlich angezeigt.",
     "isStreamPanelFirst": "Wenn aktiviert, wird das Aktivitätenpanel direkt nach der Übersicht angezeigt.",
     "recordsPerPage": "Anzahl Sätze In Listenansichten (Standard) ",
