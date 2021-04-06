@@ -113,10 +113,6 @@
             "notStorable": true,
             "tooltip": true
         },
-        "signature": {
-            "type": "text",
-            "view": "views/fields/wysiwyg"
-        },
         "theme": {
             "type": "enum",
             "view": "views/preferences/fields/theme",

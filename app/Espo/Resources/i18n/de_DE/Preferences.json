@@ -15,10 +15,8 @@
     "emailAddress": "E-Mail",
     "smtpPassword": "Passwort",
     "smtpEmailAddress": "E-Mail Adresse",
-    "signature": "E-Mail Signatur",
     "dashboardTabList": "Menüliste",
     "tabList": "Menüliste",
-    "defaultReminders": "Vorgaben für Benachrichtigungen",
     "theme": "Design",
     "useCustomTabList": "Benutzerdefinierte Menüliste",
     "receiveAssignmentEmailNotifications": "E-Mail Nachrichten bei Zuweisungen erhalten",
@@ -44,7 +42,7 @@
   "labels": {
     "Notifications": "Benachrichtigungen",
     "User Interface": "Benutzeroberfläche",
-    "Misc": "Verschiedenes",
+    "General": "Allgemeines",
     "Locale": "Lokalisierungs-Einstellungen",
     "Reset Dashboard to Default": "Dashboard auf Standard zurücksetzen"
   },
