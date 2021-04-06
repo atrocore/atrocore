@@ -126,7 +126,6 @@ class Email extends Record
             $userAddressList[] = $ea->get('lower');
         }
 
-        $primaryUserAddress = strtolower($this->getUser()->get('emailAddress'));
         $fromAddress = strtolower($entity->get('from'));
 
         if (empty($fromAddress)) {
@@ -138,15 +137,6 @@ class Email extends Record
 
         $smtpParams = null;
         if (in_array($fromAddress, $userAddressList)) {
-            if ($primaryUserAddress === $fromAddress) {
-                $smtpParams = $this->getPreferences()->getSmtpParams();
-                if ($smtpParams) {
-                    if (array_key_exists('password', $smtpParams)) {
-                        $smtpParams['password'] = $this->getCrypt()->decrypt($smtpParams['password']);
-                    }
-                }
-            }
-
             $emailAccountService = $this->getServiceFactory()->create('EmailAccount');
             $emailAccount = $emailAccountService->findAccountForUser($this->getUser(), $fromAddress);
 
