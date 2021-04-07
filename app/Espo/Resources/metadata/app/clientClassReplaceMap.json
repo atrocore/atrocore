@@ -2,9 +2,6 @@
   "acl": [
     "treo-core"
   ],
-  "app": [
-    "treo-core"
-  ],
   "view": [
     "treo-core"
   ],

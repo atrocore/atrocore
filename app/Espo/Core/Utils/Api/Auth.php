@@ -88,11 +88,9 @@ class Auth extends Middleware
             list($authUsername, $authPassword) = explode(':', base64_decode($authToken), 2);
         }
 
-        if (!isset($authUsername)) {
-            if (!empty($_COOKIE['auth-username']) && !empty($_COOKIE['auth-token'])) {
-                $authUsername = $_COOKIE['auth-username'];
-                $authPassword = $_COOKIE['auth-token'];
-            }
+        if (!isset($authUsername) && !empty($_COOKIE['auth-username']) && !empty($_COOKIE['auth-token'])) {
+            $authUsername = $_COOKIE['auth-username'];
+            $authPassword = $_COOKIE['auth-token'];
         }
 
         if (is_null($this->authRequired)) {

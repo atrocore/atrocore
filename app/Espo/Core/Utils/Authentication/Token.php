@@ -45,13 +45,17 @@ class Token extends AbstractAuthentication
 {
     public function login(string $username, string $password, AuthToken $authToken = null, bool $isPortal = false): ?User
     {
+        if (!empty($authToken) && !empty($authToken->get('isActive'))) {
+            return $authToken->get('user');
+        }
+
         return $this
             ->getEntityManager()
             ->getRepository('User')
             ->where(
                 [
                     'userName' => $username,
-                    'password' => $authToken ? $authToken->get('hash') : $this->getPasswordHash()->hash($password)
+                    'password' => $this->getPasswordHash()->hash($password),
                 ]
             )
             ->findOne();

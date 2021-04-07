@@ -468,10 +468,7 @@ Espo.define(
 
                 this.setCookieAuth(data.auth.userName, data.auth.token);
 
-                this.initUserData(data, function () {
-                    this.trigger('auth');
-                }.bind(this));
-
+                window.location.reload(true);
             }.bind(this));
 
             this.baseController.on('logout', function () {
