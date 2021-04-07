@@ -19219,7 +19219,7 @@ button.category:focus {
     left: 0;
     right: 0;
     top: 0;
-    z-index: 9;
+    z-index: 2000;
   }
   .navbar-header {
     position: relative;
@@ -20965,6 +20965,7 @@ body,
   top: 100%;
   -webkit-box-shadow: 0 0 13px rgba(0, 0, 0, 0.175);
           box-shadow: 0 0 13px rgba(0, 0, 0, 0.175);
+  background-color: #FFFFFF;
 }
 
 .last-viewed-panel-container div.list-expanded > ul > li > div.expanded-row > .cell {
@@ -21014,6 +21015,7 @@ body,
     top: 0;
     left: 0;
     margin-right: 10px;
+    z-index: 2000;
   }
 
   .last-viewed-panel-container .list-container {
