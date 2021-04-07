@@ -41,14 +41,19 @@ use Espo\Entities\User;
 /**
  * Class Token
  */
-class Token extends Base
+class Token extends AbstractAuthentication
 {
-    public function login(AuthToken $authToken): ?User
+    public function login(string $username, string $password, AuthToken $authToken = null, bool $isPortal = false): ?User
     {
         return $this
             ->getEntityManager()
             ->getRepository('User')
-            ->where(['password' => $authToken->get('hash')])
+            ->where(
+                [
+                    'userName' => $username,
+                    'password' => $authToken ? $authToken->get('hash') : $this->getPasswordHash()->hash($password)
+                ]
+            )
             ->findOne();
     }
 }

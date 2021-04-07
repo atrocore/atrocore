@@ -33,103 +33,110 @@
 
 namespace Espo\Core\Utils;
 
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Container;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Utils\Authentication\AbstractAuthentication;
+use Espo\Entities\Portal;
+use Espo\ORM\EntityManager;
+use Treo\Core\Slim\Http\Request;
 
-use \Espo\Entities\Portal;
-
+/**
+ * Class Auth
+ */
 class Auth
 {
-    protected $container;
+    public const FAILED_ATTEMPTS_PERIOD = '60 seconds';
 
-    protected $authentication;
+    public const MAX_FAILED_ATTEMPT_NUMBER = 10;
 
-    protected $allowAnyAccess;
+    /**
+     * @var Container
+     */
+    private $container;
 
-    const FAILED_ATTEMPTS_PERIOD = '60 seconds';
+    /**
+     * @var AbstractAuthentication
+     */
+    private $authentication;
 
-    const MAX_FAILED_ATTEMPT_NUMBER = 10;
+    /**
+     * @var bool
+     */
+    private $allowAnyAccess;
 
+    /**
+     * @var Portal|null
+     */
     private $portal;
 
-    public function __construct(\Espo\Core\Container $container, $allowAnyAccess = false)
+    /**
+     * @var Request
+     */
+    private $request;
+
+    /**
+     * Auth constructor.
+     *
+     * @param Container $container
+     * @param bool      $allowAnyAccess
+     */
+    public function __construct(Container $container, bool $allowAnyAccess = false)
     {
         $this->container = $container;
-
         $this->allowAnyAccess = $allowAnyAccess;
 
-        $authenticationMethod = $this->getConfig()->get('authenticationMethod', 'Basic');
-        $authenticationClassName = "\\Espo\\Core\\Utils\\Authentication\\" . $authenticationMethod;
-        $this->authentication = new $authenticationClassName($this->getConfig(), $this->getEntityManager(), $this);
-
-        $this->request = $container->get('slim')->request();
-    }
-
-    protected function getContainer()
-    {
-        return $this->container;
-    }
-
-    protected function setPortal(Portal $portal)
-    {
-        $this->portal = $portal;
-    }
-
-    protected function isPortal()
-    {
-        if ($this->portal) {
-            return true;
-        }
-        return !!$this->getContainer()->get('portal');
-    }
-
-    protected function getPortal()
-    {
-        if ($this->portal) {
-            return $this->portal;
-        }
-        return $this->getContainer()->get('portal');
-    }
-
-    protected function getConfig()
-    {
-        return $this->getContainer()->get('config');
-    }
-
-    protected function getEntityManager()
-    {
-        return $this->getContainer()->get('entityManager');
-    }
-
-    public function useNoAuth()
-    {
-        if (!file_exists($this->getConfig()) || !$this->getConfig()->get('isInstalled', false)) {
-            return;
+        /** @var string $authenticationClassName */
+        $authenticationClassName = $this->getMetadata()->get(['app', 'authentication', $this->getConfig()->get('authenticationMethod', 'Token')]);
+        if (!is_a($authenticationClassName, AbstractAuthentication::class, true)) {
+            $authenticationClassName = $this->getMetadata()->get(['app', 'authentication', 'Token']);
         }
 
-        $entityManager = $this->getContainer()->get('entityManager');
+        $this->authentication = new $authenticationClassName($this, $container);
+        $this->request = $this->container->get('slim')->request();
+    }
 
-        $user = $entityManager->getRepository('User')->get('system');
-        if (!$user) {
-            throw new Error("System user is not found");
-        }
+    public function useNoAuth(): void
+    {
+//        if (!file_exists($this->getConfig()) || !$this->getConfig()->get('isInstalled', false)) {
+//            return;
+//        }
 
+        $user = $this->getEntityManager()->getRepository('User')->get('system');
         $user->set('isAdmin', true);
         $user->set('ipAddress', $_SERVER['REMOTE_ADDR']);
 
-        $entityManager->setUser($user);
-        $this->getContainer()->setUser($user);
+        $this->getEntityManager()->setUser($user);
+        $this->container->setUser($user);
     }
 
-    public function login(string $token): bool
+    /**
+     * @param string $username
+     * @param string $password
+     *
+     * @return bool
+     * @throws Error
+     * @throws Forbidden
+     */
+    public function login(string $username, string $password): bool
     {
         if (!$this->getConfig()->get('isModulesLoaded', true)) {
             throw new Error('Not all modules are loaded. Please try later.');
         }
 
-        $authToken = $this->getEntityManager()->getRepository('AuthToken')->where(['token' => $token])->findOne();
+        $isByTokenOnly = $this->request->getResourceUri() !== '/api/v1/App/user';
 
-        if ($authToken && $authToken->get('isActive')) {
+        if (!$isByTokenOnly) {
+            $this->checkFailedAttemptsLimit();
+        }
+
+        $authToken = $this
+            ->getEntityManager()
+            ->getRepository('AuthToken')
+            ->where(['token' => $password, 'isActive' => true])
+            ->findOne();
+
+        if (!empty($authToken)) {
             if (!$this->allowAnyAccess) {
                 if ($this->isPortal() && $authToken->get('portalId') !== $this->getPortal()->id) {
                     $GLOBALS['log']->info("AUTH: Trying to login to portal with a token not related to portal.");
@@ -144,18 +151,18 @@ class Auth
                 if ($authToken->get('portalId') && !$this->isPortal()) {
                     $portal = $this->getEntityManager()->getEntity('Portal', $authToken->get('portalId'));
                     if ($portal) {
-                        $this->setPortal($portal);
+                        $this->portal = $portal;
                     }
                 }
             }
-        } else {
-            $GLOBALS['log']->info("AUTH: Trying to login but token is not found.");
+        }
+
+        if ($isByTokenOnly && empty($authToken)) {
+            $GLOBALS['log']->info("AUTH: Trying to login as user '{$username}' by token but token is not found.");
             return false;
         }
 
-        if (empty($user = $this->authentication->login($authToken, $this->isPortal()))) {
-            return false;
-        }
+        $user = $this->authentication->login($username, $password, $authToken, $this->isPortal());
 
         if (!$user) {
             return false;
@@ -167,7 +174,7 @@ class Auth
         }
 
         if (!$user->isAdmin() && !$this->isPortal() && $user->get('isPortalUser')) {
-            $GLOBALS['log']->info("AUTH: Trying to login to system as a portal user '" . $user->get('userName') . "'.");
+            $GLOBALS['log']->info("AUTH: Trying to login to crm as a portal user '" . $user->get('userName') . "'.");
             return false;
         }
 
@@ -189,54 +196,30 @@ class Auth
         $user->set('ipAddress', $_SERVER['REMOTE_ADDR']);
 
         $this->getEntityManager()->setUser($user);
-        $this->getContainer()->setUser($user);
+        $this->container->setUser($user);
 
-//        if ($this->request->headers->get('HTTP_BASIC_AUTHORIZATION')) {
-//            if (!$authToken) {
-//                $authToken = $this->getEntityManager()->getEntity('AuthToken');
-//                $token = $this->generateToken();
-//                $authToken->set('token', $token);
-//                $authToken->set('hash', $user->get('password'));
-//                $authToken->set('ipAddress', $_SERVER['REMOTE_ADDR']);
-//                $authToken->set('userId', $user->id);
-//                if ($this->isPortal()) {
-//                    $authToken->set('portalId', $this->getPortal()->id);
-//                }
-//
-//                if ($this->getConfig()->get('authTokenPreventConcurrent')) {
-//                    $concurrentAuthTokenList = $this->getEntityManager()->getRepository('AuthToken')->select(['id'])->where([
-//                        'userId' => $user->id,
-//                        'isActive' => true
-//                    ])->find();
-//                    foreach ($concurrentAuthTokenList as $concurrentAuthToken) {
-//                        $concurrentAuthToken->set('isActive', false);
-//                        $this->getEntityManager()->saveEntity($concurrentAuthToken);
-//                    }
-//                }
-//            }
-//        	$authToken->set('lastAccess', date('Y-m-d H:i:s'));
-//
-//        	$this->getEntityManager()->saveEntity($authToken);
-//        	$user->set('token', $authToken->get('token'));
-//            $user->set('authTokenId', $authToken->id);
-//        }
+        if (empty($authToken)) {
+            $this->preventConcurrent($user->id);
 
-        $authLogRecord = $this
-            ->getEntityManager()
-            ->getRepository('AuthLogRecord')
-            ->select(['id'])
-            ->where(['authTokenId' => $authToken->id])
-            ->order('requestTime', true)
-            ->findOne();
-
-        if (!empty($authLogRecord)) {
-            $user->set('authLogRecordId', $authLogRecord->id);
+            $authToken = $this->getEntityManager()->getEntity('AuthToken');
+            $authToken->set('token', $this->generateToken());
+            $authToken->set('hash', $user->get('password'));
+            $authToken->set('ipAddress', $_SERVER['REMOTE_ADDR']);
+            $authToken->set('userId', $user->id);
+            if ($this->isPortal()) {
+                $authToken->set('portalId', $this->getPortal()->id);
+            }
         }
+        $authToken->set('lastAccess', date('Y-m-d H:i:s'));
+        $this->getEntityManager()->saveEntity($authToken);
+
+        $user->set('token', $authToken->get('token'));
+        $user->set('authTokenId', $authToken->id);
 
         return true;
     }
 
-    public function destroyAuthToken($token): bool
+    public function destroyAuthToken(string $token): bool
     {
         $authToken = $this->getEntityManager()->getRepository('AuthToken')->select(['id', 'isActive'])->where(['token' => $token])->findOne();
         if ($authToken) {
@@ -263,5 +246,79 @@ class Auth
         }
 
         return substr(md5(md5(time()) . time()), 0, $length);
+    }
+
+    protected function preventConcurrent(string $userId): void
+    {
+        if ($this->getConfig()->get('authTokenPreventConcurrent')) {
+            $concurrentAuthTokenList = $this
+                ->getEntityManager()
+                ->getRepository('AuthToken')
+                ->select(['id'])
+                ->where(
+                    [
+                        'userId'   => $userId,
+                        'isActive' => true
+                    ]
+                )
+                ->find();
+            foreach ($concurrentAuthTokenList as $concurrentAuthToken) {
+                $concurrentAuthToken->set('isActive', false);
+                $this->getEntityManager()->saveEntity($concurrentAuthToken);
+            }
+        }
+    }
+
+    protected function checkFailedAttemptsLimit(): void
+    {
+        $failedAttemptsPeriod = $this->getConfig()->get('authFailedAttemptsPeriod', self::FAILED_ATTEMPTS_PERIOD);
+        $maxFailedAttempts = $this->getConfig()->get('authMaxFailedAttemptNumber', self::MAX_FAILED_ATTEMPT_NUMBER);
+
+        $requestTimeFrom = (new \DateTime('@' . intval($_SERVER['REQUEST_TIME_FLOAT'])))->modify('-' . $failedAttemptsPeriod);
+
+        $failAttemptCount = $this->getEntityManager()->getRepository('AuthLogRecord')->where(
+            [
+                'requestTime>' => $requestTimeFrom->format('U'),
+                'ipAddress'    => $_SERVER['REMOTE_ADDR'],
+                'isDenied'     => true
+            ]
+        )->count();
+
+        if ($failAttemptCount > $maxFailedAttempts) {
+            $GLOBALS['log']->warning("AUTH: Max failed login attempts exceeded for IP '" . $_SERVER['REMOTE_ADDR'] . "'.");
+            throw new Forbidden("Max failed login attempts exceeded.");
+        }
+    }
+
+    protected function isPortal(): bool
+    {
+        if ($this->portal) {
+            return true;
+        }
+        return !!$this->container->get('portal');
+    }
+
+    protected function getPortal(): Portal
+    {
+        if ($this->portal) {
+            return $this->portal;
+        }
+
+        return $this->container->get('portal');
+    }
+
+    protected function getConfig(): Config
+    {
+        return $this->container->get('config');
+    }
+
+    protected function getEntityManager(): EntityManager
+    {
+        return $this->container->get('entityManager');
+    }
+
+    protected function getMetadata(): Metadata
+    {
+        return $this->container->get('metadata');
     }
 }

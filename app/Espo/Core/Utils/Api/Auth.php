@@ -80,18 +80,31 @@ class Auth extends Middleware
         $uri = $req->getResourceUri();
         $httpMethod = $req->getMethod();
 
-        $token = $req->headers('HTTP_AUTHORIZATION_TOKEN');
+        $authUsername = $req->headers('PHP_AUTH_USER');
+        $authPassword = $req->headers('PHP_AUTH_PW');
 
-        // for api
+        $authToken = $req->headers('HTTP_AUTHORIZATION_TOKEN');
+        if (isset($authToken)) {
+            list($authUsername, $authPassword) = explode(':', base64_decode($authToken), 2);
+        }
+
+        if (!isset($authUsername)) {
+            if (!empty($_COOKIE['auth-username']) && !empty($_COOKIE['auth-token'])) {
+                $authUsername = $_COOKIE['auth-username'];
+                $authPassword = $_COOKIE['auth-token'];
+            }
+        }
+
         if (is_null($this->authRequired)) {
             $routes = $this->app->router()->getMatchedRoutes($httpMethod, $uri);
 
             if (!empty($routes[0])) {
                 $routeConditions = $routes[0]->getConditions();
                 if (isset($routeConditions['auth']) && $routeConditions['auth'] === false) {
-                    if ($token) {
+
+                    if ($authUsername && $authPassword) {
                         try {
-                            $isAuthenticated = $this->auth->login($token);
+                            $isAuthenticated = $this->auth->login($authUsername, $authPassword);
                         } catch (\Exception $e) {
                             $this->processException($e);
                             return;
@@ -108,7 +121,6 @@ class Auth extends Middleware
                 }
             }
         } else {
-            // for entry points
             if (!$this->authRequired) {
                 $this->auth->useNoAuth();
                 $this->next->call();
@@ -116,9 +128,9 @@ class Auth extends Middleware
             }
         }
 
-        if ($token) {
+        if ($authUsername && $authPassword) {
             try {
-                $isAuthenticated = $this->auth->login($token);
+                $isAuthenticated = $this->auth->login($authUsername, $authPassword);
             } catch (\Exception $e) {
                 $this->processException($e);
                 return;

@@ -605,9 +605,7 @@ Espo.define(
                         options.url = self.basePath + options.url;
                     }
                     if (self.auth !== null) {
-                        xhr.setRequestHeader('Authorization', 'Basic ' + self.auth);
-                        xhr.setRequestHeader('Basic-Authorization', self.auth);
-                        xhr.setRequestHeader('Basic-Authorization-By-Token', true);
+                        xhr.setRequestHeader('Authorization-Token', self.auth);
                     }
                 },
                 dataType: 'json',

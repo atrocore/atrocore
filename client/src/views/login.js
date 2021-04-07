@@ -184,8 +184,7 @@ Espo.define('views/login', 'view', function (Dep) {
             $.ajax({
                 url: 'App/user',
                 headers: {
-                    'Basic-Authorization': Base64.encode(userName + ':' + password),
-                    'Basic-Authorization-By-Token': false
+                    'Authorization': 'Basic ' + Base64.encode(userName + ':' + password)
                 },
                 data: {
                     language: this.language
@@ -198,7 +197,7 @@ Espo.define('views/login', 'view', function (Dep) {
                             url: 'Preferences/' + data.user.id,
                             method: 'PUT',
                             headers: {
-                                'Basic-Authorization': Base64.encode(userName + ':' + password)
+                                'Authorization-Token': Base64.encode(userName + ':' + data.token)
                             },
                             data: JSON.stringify({
                                 theme: this.theme

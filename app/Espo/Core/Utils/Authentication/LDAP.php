@@ -33,15 +33,24 @@
 
 namespace Espo\Core\Utils\Authentication;
 
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Utils\Config;
-use Espo\Core\ORM\EntityManager;
+use Espo\Core\Container;
 use Espo\Core\Utils\Auth;
+use Espo\Entities\AuthToken;
+use Espo\Entities\User;
 
-class LDAP extends Espo
+/**
+ * Class LDAP
+ */
+class LDAP extends Token
 {
+    /**
+     * @var LDAP\Utils
+     */
     private $utils;
 
+    /**
+     * @var LDAP\Client
+     */
     private $ldapClient;
 
     /**
@@ -49,78 +58,62 @@ class LDAP extends Espo
      *
      * @var array
      */
-    protected $ldapFieldMap = array(
-        'userName' => 'userNameAttribute',
-        'firstName' => 'userFirstNameAttribute',
-        'lastName' => 'userLastNameAttribute',
-        'title' => 'userTitleAttribute',
-        'emailAddress' => 'userEmailAddressAttribute',
-        'phoneNumber' => 'userPhoneNumberAttribute',
-    );
+    protected $ldapFieldMap
+        = [
+            'userName'     => 'userNameAttribute',
+            'firstName'    => 'userFirstNameAttribute',
+            'lastName'     => 'userLastNameAttribute',
+            'title'        => 'userTitleAttribute',
+            'emailAddress' => 'userEmailAddressAttribute',
+            'phoneNumber'  => 'userPhoneNumberAttribute',
+        ];
 
     /**
      * User field name => option name
      *
      * @var array
      */
-    protected $userFieldMap = array(
-        'teamsIds' => 'userTeamsIds',
-        'defaultTeamId' => 'userDefaultTeamId',
-    );
+    protected $userFieldMap
+        = [
+            'teamsIds'      => 'userTeamsIds',
+            'defaultTeamId' => 'userDefaultTeamId',
+        ];
 
     /**
      * User field name => option name
      *
      * @var array
      */
-    protected $portalUserFieldMap = array(
-        'portalsIds' => 'portalUserPortalsIds',
-        'portalRolesIds' => 'portalUserRolesIds',
-    );
+    protected $portalUserFieldMap
+        = [
+            'portalsIds'     => 'portalUserPortalsIds',
+            'portalRolesIds' => 'portalUserRolesIds',
+        ];
 
-    public function __construct(Config $config, EntityManager $entityManager, Auth $auth)
+    /**
+     * LDAP constructor.
+     *
+     * @param Auth      $auth
+     * @param Container $container
+     */
+    public function __construct(Auth $auth, Container $container)
     {
-        parent::__construct($config, $entityManager, $auth);
-
-        $this->utils = new LDAP\Utils($config);
-    }
-
-    protected function getUtils()
-    {
-        return $this->utils;
-    }
-
-    protected function getLdapClient()
-    {
-        if (!isset($this->ldapClient)) {
-            $options = $this->getUtils()->getLdapClientOptions();
-
-            try {
-                $this->ldapClient = new LDAP\Client($options);
-            } catch (\Exception $e) {
-                $GLOBALS['log']->error('LDAP error: ' . $e->getMessage());
-            }
-        }
-
-        return $this->ldapClient;
+        parent::__construct($auth, $container);
+        $this->utils = new LDAP\Utils($this->getConfig());
     }
 
     /**
      * LDAP login
      *
-     * @param  string $username
-     * @param  string $password
-     * @param  \Espo\Entities\AuthToken $authToken
+     * @param string         $username
+     * @param string         $password
+     * @param AuthToken|null $authToken
+     * @param bool           $isPortal
      *
-     * @return \Espo\Entities\User | null
-     * @throws Error
+     * @return User|null
      */
-    public function login($username, $password, \Espo\Entities\AuthToken $authToken = null, $isPortal = null)
+    public function login(string $username, string $password, AuthToken $authToken = null, bool $isPortal = false): ?User
     {
-        if (!$this->getConfig()->get('isModulesLoaded', true)) {
-            throw new Error('Not all modules are loaded. Please try later.');
-        }
-
         if ($authToken) {
             return $this->loginByToken($username, $authToken);
         }
@@ -139,49 +132,51 @@ class LDAP extends Espo
             $ldapClient->bind();
         } catch (\Exception $e) {
             $options = $this->getUtils()->getLdapClientOptions();
-            $GLOBALS['log']->error('LDAP: Could not connect to LDAP server ['.$options['host'].'], details: ' . $e->getMessage());
+            $GLOBALS['log']->error('LDAP: Could not connect to LDAP server [' . $options['host'] . '], details: ' . $e->getMessage());
 
             $adminUser = $this->adminLogin($username, $password);
             if (!isset($adminUser)) {
                 return null;
             }
 
-            $GLOBALS['log']->info('LDAP: Administrator ['.$username.'] was logged in by Espo method.');
+            $GLOBALS['log']->info('LDAP: Administrator [' . $username . '] was logged in by Espo method.');
         }
 
         if (!isset($adminUser)) {
             try {
                 $userDn = $this->findLdapUserDnByUsername($username);
             } catch (\Exception $e) {
-                $GLOBALS['log']->error('Error while finding DN for ['.$username.'], details: ' . $e->getMessage() . '.');
+                $GLOBALS['log']->error('Error while finding DN for [' . $username . '], details: ' . $e->getMessage() . '.');
             }
 
             if (!isset($userDn)) {
-                $GLOBALS['log']->error('LDAP: Authentication failed for user ['.$username.'], details: user is not found.');
+                $GLOBALS['log']->error('LDAP: Authentication failed for user [' . $username . '], details: user is not found.');
 
                 $adminUser = $this->adminLogin($username, $password);
                 if (!isset($adminUser)) {
                     return null;
                 }
 
-                $GLOBALS['log']->info('LDAP: Administrator ['.$username.'] was logged in by Espo method.');
+                $GLOBALS['log']->info('LDAP: Administrator [' . $username . '] was logged in by Espo method.');
             }
 
-            $GLOBALS['log']->debug('User ['.$username.'] is found with this DN ['.$userDn.'].');
+            $GLOBALS['log']->debug('User [' . $username . '] is found with this DN [' . $userDn . '].');
 
             try {
                 $ldapClient->bind($userDn, $password);
             } catch (\Exception $e) {
-                $GLOBALS['log']->error('LDAP: Authentication failed for user ['.$username.'], details: ' . $e->getMessage());
+                $GLOBALS['log']->error('LDAP: Authentication failed for user [' . $username . '], details: ' . $e->getMessage());
                 return null;
             }
         }
 
-        $user = $this->getEntityManager()->getRepository('User')->findOne(array(
-            'whereClause' => array(
-                'userName' => $username,
-            ),
-        ));
+        $user = $this->getEntityManager()->getRepository('User')->findOne(
+            array(
+                'whereClause' => array(
+                    'userName' => $username,
+                ),
+            )
+        );
 
         $isCreateUser = $this->getUtils()->getOption('createEspoUser');
         if (!isset($user) && $isCreateUser) {
@@ -192,11 +187,31 @@ class LDAP extends Espo
         return $user;
     }
 
+    protected function getUtils(): LDAP\Utils
+    {
+        return $this->utils;
+    }
+
+    protected function getLdapClient(): LDAP\Client
+    {
+        if (!isset($this->ldapClient)) {
+            $options = $this->getUtils()->getLdapClientOptions();
+
+            try {
+                $this->ldapClient = new LDAP\Client($options);
+            } catch (\Exception $e) {
+                $GLOBALS['log']->error('LDAP error: ' . $e->getMessage());
+            }
+        }
+
+        return $this->ldapClient;
+    }
+
     /**
      * Login by authorization token
      *
-     * @param  string $username
-     * @param  \Espo\Entities\AuthToken $authToken
+     * @param string                   $username
+     * @param \Espo\Entities\AuthToken $authToken
      *
      * @return \Espo\Entities\User | null
      */
@@ -211,15 +226,17 @@ class LDAP extends Espo
 
         $tokenUsername = $user->get('userName');
         if (strtolower($username) != strtolower($tokenUsername)) {
-            $GLOBALS['log']->alert('Unauthorized access attempt for user ['.$username.'] from IP ['.$_SERVER['REMOTE_ADDR'].']');
+            $GLOBALS['log']->alert('Unauthorized access attempt for user [' . $username . '] from IP [' . $_SERVER['REMOTE_ADDR'] . ']');
             return null;
         }
 
-        $user = $this->getEntityManager()->getRepository('User')->findOne(array(
-            'whereClause' => array(
-                'userName' => $username,
+        $user = $this->getEntityManager()->getRepository('User')->findOne(
+            array(
+                'whereClause' => array(
+                    'userName' => $username,
+                )
             )
-        ));
+        );
 
         return $user;
     }
@@ -227,21 +244,24 @@ class LDAP extends Espo
     /**
      * Login user with administrator rights
      *
-     * @param  string $username
-     * @param  string $password
+     * @param string $username
+     * @param string $password
+     *
      * @return \Espo\Entities\User | null
      */
     protected function adminLogin($username, $password)
     {
         $hash = $this->getPasswordHash()->hash($password);
 
-        $user = $this->getEntityManager()->getRepository('User')->findOne(array(
-            'whereClause' => array(
-                'userName' => $username,
-                'password' => $hash,
-                'isAdmin' => 1
+        $user = $this->getEntityManager()->getRepository('User')->findOne(
+            array(
+                'whereClause' => array(
+                    'userName' => $username,
+                    'password' => $hash,
+                    'isAdmin'  => 1
+                )
             )
-        ));
+        );
 
         return $user;
     }
@@ -249,8 +269,8 @@ class LDAP extends Espo
     /**
      * Create Espo user with data gets from LDAP server
      *
-     * @param  array $userData LDAP entity data
-     * @param  boolean $isPortal Is portal user
+     * @param array   $userData LDAP entity data
+     * @param boolean $isPortal Is portal user
      *
      * @return \Espo\Entities\User
      */
@@ -260,14 +280,14 @@ class LDAP extends Espo
         $data = array();
 
         // show full array of the LDAP user
-        $GLOBALS['log']->debug('LDAP: user data: ' .print_r($userData, true));
+        $GLOBALS['log']->debug('LDAP: user data: ' . print_r($userData, true));
 
         //set values from ldap server
         $ldapFields = $this->loadFields('ldap');
         foreach ($ldapFields as $espo => $ldap) {
             $ldap = strtolower($ldap);
             if (isset($userData[$ldap][0])) {
-                $GLOBALS['log']->debug('LDAP: Create a user wtih ['.$espo.'] = ['.$userData[$ldap][0].'].');
+                $GLOBALS['log']->debug('LDAP: Create a user wtih [' . $espo . '] = [' . $userData[$ldap][0] . '].');
                 $data[$espo] = $userData[$ldap][0];
             }
         }
@@ -284,7 +304,7 @@ class LDAP extends Espo
             $data[$fieldName] = $fieldValue;
         }
 
-        $this->getAuth()->useNoAuth();
+        $this->auth->useNoAuth();
 
         $user = $this->getEntityManager()->getEntity('User');
         $user->set($data);
@@ -297,7 +317,7 @@ class LDAP extends Espo
     /**
      * Find LDAP user DN by his username
      *
-     * @param  string $username
+     * @param string $username
      *
      * @return string | null
      */
@@ -311,7 +331,7 @@ class LDAP extends Espo
             $loginFilterString = $this->convertToFilterFormat($options['userLoginFilter']);
         }
 
-        $searchString = '(&(objectClass='.$options['userObjectClass'].')('.$options['userNameAttribute'].'='.$username.')'.$loginFilterString.')';
+        $searchString = '(&(objectClass=' . $options['userObjectClass'] . ')(' . $options['userNameAttribute'] . '=' . $username . ')' . $loginFilterString . ')';
         $result = $ldapClient->search($searchString, null, LDAP\Client::SEARCH_SCOPE_SUB);
         $GLOBALS['log']->debug('LDAP: user search string: "' . $searchString . '"');
 
@@ -323,7 +343,7 @@ class LDAP extends Espo
     /**
      * Check and convert filter item into LDAP format
      *
-     * @param  string $filter E.g. "memberof=CN=externalTesters,OU=groups,DC=espo,DC=local"
+     * @param string $filter E.g. "memberof=CN=externalTesters,OU=groups,DC=espo,DC=local"
      *
      * @return string
      */
@@ -342,7 +362,7 @@ class LDAP extends Espo
     /**
      * Load fields for a user
      *
-     * @param  string $type
+     * @param string $type
      *
      * @return array
      */

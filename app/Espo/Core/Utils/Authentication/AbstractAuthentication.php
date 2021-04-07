@@ -31,51 +31,64 @@
  * and "AtroCore" word.
  */
 
+declare(strict_types=1);
+
 namespace Espo\Core\Utils\Authentication;
 
-use \Espo\Core\Utils\Config;
-use \Espo\Core\ORM\EntityManager;
-use \Espo\Core\Utils\Auth;
+use Espo\Core\Container;
+use Espo\Core\Utils\Auth;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\PasswordHash;
+use Espo\ORM\EntityManager;
 
-abstract class Base
+/**
+ * Class AbstractAuthentication
+ */
+abstract class AbstractAuthentication
 {
-    private $config;
+    /**
+     * @var Auth
+     */
+    protected $auth;
 
-    private $entityManager;
+    /**
+     * @var Container
+     */
+    protected $container;
 
-    private $auth;
-
+    /**
+     * @var string
+     */
     private $passwordHash;
 
-    public function __construct(Config $config, EntityManager $entityManager, Auth $auth)
+    /**
+     * AbstractAuthentication constructor.
+     *
+     * @param Auth      $auth
+     * @param Container $container
+     */
+    public function __construct(Auth $auth, Container $container)
     {
-        $this->config = $config;
-        $this->entityManager = $entityManager;
         $this->auth = $auth;
+        $this->container = $container;
     }
 
-    protected function getConfig()
+    protected function getConfig(): Config
     {
-        return $this->config;
+        return $this->container->get('config');
     }
 
-    protected function getEntityManager()
+    protected function getEntityManager(): EntityManager
     {
-        return $this->entityManager;
+        return $this->container->get('entityManager');
     }
 
-    protected function getAuth()
-    {
-        return $this->auth;
-    }
-
-    protected function getPasswordHash()
+    protected function getPasswordHash(): PasswordHash
     {
         if (!isset($this->passwordHash)) {
-            $this->passwordHash = new \Espo\Core\Utils\PasswordHash($this->config);
+            $this->passwordHash = new PasswordHash($this->getConfig());
         }
 
         return $this->passwordHash;
     }
 }
-
