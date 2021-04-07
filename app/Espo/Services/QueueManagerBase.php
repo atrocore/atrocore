@@ -49,9 +49,7 @@ abstract class QueueManagerBase extends Base implements QueueManagerServiceInter
      */
     public function getNotificationMessage(Entity $queueItem): string
     {
-        $name = '<span style="font-style:italic">' . $queueItem->get('name') . '</span>';
-
-        return sprintf($this->translate('queueItemDone', 'notificationMessages', 'QueueItem'), $name, $queueItem->get('status'));
+        return sprintf($this->translate('queueItemDone', 'notificationMessages', 'QueueItem'), $queueItem->get('name'), $queueItem->get('status'));
     }
 
     /**
