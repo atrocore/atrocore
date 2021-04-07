@@ -119,7 +119,7 @@ class Cron extends AbstractConsole
      */
     protected function runCronManager(): void
     {
-        $auth = new \Treo\Core\Utils\Auth($this->getContainer());
+        $auth = new \Espo\Core\Utils\Auth($this->getContainer());
         $auth->useNoAuth();
 
         $this->getContainer()->get('cronManager')->run();

@@ -33,55 +33,65 @@
 
 namespace Espo\Core\Utils\Api;
 
-use \Espo\Core\Utils\Api\Slim;
+use Espo\Core\Utils\Auth as UtilsAuth;
+use Slim\Middleware;
 
-class Auth extends \Slim\Middleware
+/**
+ * Class Auth
+ */
+class Auth extends Middleware
 {
+    /**
+     * @var UtilsAuth
+     */
     protected $auth;
 
-    protected $authRequired = null;
+    /**
+     * @var bool|null
+     */
+    protected $authRequired;
 
-    protected $showDialog = false;
+    /**
+     * @var bool
+     */
+    protected $showDialog;
 
-    public function __construct(\Espo\Core\Utils\Auth $auth, $authRequired = null, $showDialog = false)
+    /**
+     * Auth constructor.
+     *
+     * @param UtilsAuth $auth
+     * @param bool|null $authRequired
+     * @param bool      $showDialog
+     */
+    public function __construct(UtilsAuth $auth, bool $authRequired = null, bool $showDialog = false)
     {
         $this->auth = $auth;
         $this->authRequired = $authRequired;
         $this->showDialog = $showDialog;
     }
 
-    function call()
+    /**
+     * @inheritDoc
+     */
+    public function call()
     {
         $req = $this->app->request();
 
         $uri = $req->getResourceUri();
         $httpMethod = $req->getMethod();
 
-        $authUsername = null;
-        $authPassword = null;
+        $token = $req->headers('HTTP_AUTHORIZATION_TOKEN');
 
-        $auth = $req->headers('HTTP_BASIC_AUTHORIZATION');
-        if (isset($auth)) {
-            list($authUsername, $authPassword) = explode(':', base64_decode($auth), 2);
-        }
-
-        if (!isset($authUsername)) {
-            if (!empty($_COOKIE['auth-username']) && !empty($_COOKIE['auth-token'])) {
-                $authUsername = $_COOKIE['auth-username'];
-                $authPassword = $_COOKIE['auth-token'];
-            }
-        }
-
+        // for api
         if (is_null($this->authRequired)) {
             $routes = $this->app->router()->getMatchedRoutes($httpMethod, $uri);
 
             if (!empty($routes[0])) {
                 $routeConditions = $routes[0]->getConditions();
                 if (isset($routeConditions['auth']) && $routeConditions['auth'] === false) {
-
-                    if ($authUsername && $authPassword) {
+                    if ($token) {
                         try {
-                            $isAuthenticated = $this->auth->login($authUsername, $authPassword);
+                            $isAuthenticated = $this->auth->login($token);
                         } catch (\Exception $e) {
                             $this->processException($e);
                             return;
@@ -98,6 +108,7 @@ class Auth extends \Slim\Middleware
                 }
             }
         } else {
+            // for entry points
             if (!$this->authRequired) {
                 $this->auth->useNoAuth();
                 $this->next->call();
@@ -105,9 +116,9 @@ class Auth extends \Slim\Middleware
             }
         }
 
-        if ($authUsername && $authPassword) {
+        if ($token) {
             try {
-                $isAuthenticated = $this->auth->login($authUsername, $authPassword);
+                $isAuthenticated = $this->auth->login($token);
             } catch (\Exception $e) {
                 $this->processException($e);
                 return;
@@ -126,7 +137,7 @@ class Auth extends \Slim\Middleware
         }
     }
 
-    protected function processException(\Exception $e)
+    protected function processException(\Exception $e): void
     {
         $response = $this->app->response();
 
@@ -136,7 +147,7 @@ class Auth extends \Slim\Middleware
         $response->setStatus($e->getCode());
     }
 
-    protected function processUnauthorized()
+    protected function processUnauthorized(): void
     {
         $response = $this->app->response();
 
@@ -146,7 +157,7 @@ class Auth extends \Slim\Middleware
         $response->setStatus(401);
     }
 
-    protected function isXMLHttpRequest()
+    protected function isXMLHttpRequest(): bool
     {
         $request = $this->app->request();
 

@@ -69,7 +69,7 @@ class StoreRefresh extends AbstractConsole
     protected function refresh(): void
     {
         // auth
-        (new \Treo\Core\Utils\Auth($this->getContainer()))->useNoAuth();
+        (new \Espo\Core\Utils\Auth($this->getContainer()))->useNoAuth();
 
         // refresh
         $this->getContainer()->get("serviceFactory")->create("TreoStore")->refresh();

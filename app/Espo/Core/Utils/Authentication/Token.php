@@ -33,26 +33,22 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core\Utils;
+namespace Espo\Core\Utils\Authentication;
 
-use Espo\Core\Utils\Auth as EspoAuth;
-use Espo\Core\Exceptions\Error;
+use Espo\Entities\AuthToken;
+use Espo\Entities\User;
 
 /**
- * Class Auth
+ * Class Token
  */
-class Auth extends EspoAuth
+class Token extends Base
 {
-    /**
-     * Disable auth
-     *
-     * @throws Error
-     */
-    public function useNoAuth()
+    public function login(AuthToken $authToken): ?User
     {
-        // disable connect to DB if system not installed
-        if ($this->getContainer()->get('serviceFactory')->create('Installer')->isInstalled()) {
-            parent::useNoAuth();
-        }
+        return $this
+            ->getEntityManager()
+            ->getRepository('User')
+            ->where(['password' => $authToken->get('hash')])
+            ->findOne();
     }
 }

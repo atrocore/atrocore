@@ -127,7 +127,7 @@ return [
     ],
     'defaultCurrency'                        => 'EUR',
     'baseCurrency'                           => 'EUR',
-    'authenticationMethod'                   => 'Basic',
+    'authenticationMethod'                   => 'Token',
     'globalSearchEntityList'                 => [],
     'tabList'                                => [],
     'quickCreateList'                        => [],

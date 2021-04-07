@@ -721,9 +721,9 @@
     "authenticationMethod": {
       "type": "enum",
       "options": [
-        "Basic"
+        "Token"
       ],
-      "default": "Basic"
+      "default": "Token"
     },
     "ldapHost": {
       "type": "varchar",

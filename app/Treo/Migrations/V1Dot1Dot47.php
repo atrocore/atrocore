@@ -46,7 +46,7 @@ class V1Dot1Dot47 extends Base
     public function up(): void
     {
         if ($this->getConfig()->get('authenticationMethod') == 'Espo') {
-            $this->getConfig()->set('authenticationMethod', 'Basic');
+            $this->getConfig()->set('authenticationMethod', 'Token');
             $this->getConfig()->save();
         }
     }
@@ -56,7 +56,7 @@ class V1Dot1Dot47 extends Base
      */
     public function down(): void
     {
-        if ($this->getConfig()->get('authenticationMethod') == 'Basic') {
+        if ($this->getConfig()->get('authenticationMethod') == 'Token') {
             $this->getConfig()->set('authenticationMethod', 'Espo');
             $this->getConfig()->save();
         }
