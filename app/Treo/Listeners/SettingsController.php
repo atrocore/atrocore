@@ -35,6 +35,7 @@ declare(strict_types=1);
 
 namespace Treo\Listeners;
 
+use Espo\Core\Exceptions\BadRequest;
 use Treo\Core\EventManager\Event;
 
 /**
@@ -42,6 +43,25 @@ use Treo\Core\EventManager\Event;
  */
 class SettingsController extends AbstractListener
 {
+    /**
+     * @param Event $event
+     *
+     * @throws BadRequest
+     * @throws \Espo\Core\Exceptions\Error
+     */
+    public function beforeActionUpdate(Event $event): void
+    {
+        $data = $event->getArgument('data');
+
+        if (isset($data->inputLanguageList) && count($data->inputLanguageList) == 0) {
+            $isMultiLangActive = $data->isMultilangActive ?? $this->getConfig()->get('isMultilangActive', false);
+
+            if ($isMultiLangActive) {
+                throw new BadRequest($this->getLanguage()->translate('languageMustBeSelected', 'messages', 'Settings'));
+            }
+        }
+    }
+
     /**
      * @param Event $event
      */
