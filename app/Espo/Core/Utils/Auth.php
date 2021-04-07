@@ -98,9 +98,9 @@ class Auth
 
     public function useNoAuth(): void
     {
-//        if (!file_exists($this->getConfig()) || !$this->getConfig()->get('isInstalled', false)) {
-//            return;
-//        }
+        if (!file_exists($this->getConfig()->getConfigPath()) || !$this->getConfig()->get('isInstalled', false)) {
+            return;
+        }
 
         $user = $this->getEntityManager()->getRepository('User')->get('system');
         $user->set('isAdmin', true);
