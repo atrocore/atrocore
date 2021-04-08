@@ -58,6 +58,7 @@
     "ArrayValue": "Array Value"
   },
   "scopeNamesPlural": {
+    "QueueItem": "Queue Items",
     "Account": "Accounts",
     "Country": "Countries",
     "DocumentFolder": "Document Folders",
