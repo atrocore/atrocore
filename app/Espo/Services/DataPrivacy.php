@@ -188,28 +188,5 @@ class DataPrivacy extends \Espo\Core\Services\Base
 
         return true;
     }
-
-    public function exportPdf()
-    {
-
-
-        $htmlizer = new Htmlizer(
-            $this->getFileManager(),
-            $this->getInjection('dateTime'),
-            $this->getInjection('number'),
-            $this->getAcl(),
-            $this->getInjection('entityManager'),
-            $this->getInjection('metadata'),
-            $this->getInjection('defaultLanguage')
-        );
-
-        $pdf = new \Espo\Core\Pdf\Tcpdf();
-
-        $fontFace = $this->getConfig()->get('pdfFontFace', $this->fontFace);
-
-        $pdf->setFont($fontFace, '', $this->fontSize, '', true);
-        $pdf->setPrintHeader(false);
-
-    }
 }
 

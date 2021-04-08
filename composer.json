@@ -26,7 +26,6 @@
     "monolog/monolog": "~1.20.0",
     "yzalis/identicon": "~1.1.0",
     "zordius/lightncandy": "~0.21",
-    "tecnickcom/tcpdf": "~6.2.17 ",
     "php-mime-mail-parser/php-mime-mail-parser": "~2.10.0",
     "zbateson/mail-mime-parser": "~0.4.8",
     "phpoffice/phpspreadsheet": "~1.8.0",
