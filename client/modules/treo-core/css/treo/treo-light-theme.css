@@ -5614,7 +5614,9 @@ a.thumbnail:hover, a.thumbnail:focus, a.thumbnail.active {
 }
 
 .pull-right .pipeline {
-  border-right: solid 1px #000;
+  position: relative;
+  top: -1px;
+  font-weight: normal;
   margin-right: 20px;
 }
 
