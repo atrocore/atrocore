@@ -1,3 +1,4 @@
+<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -30,44 +31,45 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/admin/fields/input-language-list', 'views/fields/multi-enum',
-    Dep => Dep.extend({
+declare(strict_types=1);
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+namespace Espo\Services;
 
-            this.defineMode();
-            this.listenTo(this.model, 'change:isMultilangActive', () => {
-                this.defineMode();
-                this.reRender();
-            });
-        },
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Services\Base;
+use Espo\Core\Utils\Language;
 
-        defineMode: function () {
-            if (this.model.get('isMultilangActive')) {
-                this.setMode('edit');
-            } else {
-                this.setMode('detail');
+/**
+ * Class Settings
+ */
+class Settings extends Base
+{
+    /**
+     * @param \stdClass $data
+     *
+     * @return bool
+     *
+     * @throws BadRequest
+     * @throws \Espo\Core\Exceptions\Error
+     */
+    public function validate(\stdClass $data): bool
+    {
+        if (isset($data->inputLanguageList) && count($data->inputLanguageList) == 0) {
+            $isMultilangActive = $data->isMultilangActive ?? $this->getConfig()->get('isMultilangActive', false);
+
+            if ($isMultilangActive) {
+                throw new BadRequest($this->getLanguage()->translate('languageMustBeSelected', 'messages', 'Settings'));
             }
-        },
-
-        data() {
-            return _.extend({
-                optionList: this.model.options || []
-            }, Dep.prototype.data.call(this));
-        },
-
-        setupOptions() {
-            this.params.options = Espo.Utils.clone(this.getMetadata().get(['multilang', 'languageList']));
-            this.translatedOptions = Espo.Utils.clone(this.getLanguage().translate('language', 'options') || {});
-        },
-
-        translate(label, category, scope) {
-            if (label === 'fieldIsRequired') {
-                return Dep.prototype.translate.call(this, 'languageMustBeSelected', 'messages', 'Settings');
-            }
-
-            return Dep.prototype.translate.call(this, label, category, scope);
         }
-    })
-);
+
+        return true;
+    }
+
+    /**
+     * @return Language
+     */
+    protected function getLanguage(): Language
+    {
+        return $this->getInjection('language');
+    }
+}

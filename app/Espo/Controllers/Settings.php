@@ -81,6 +81,8 @@ class Settings extends \Espo\Core\Controllers\Base
             throw new BadRequest();
         }
 
+        $this->getServiceFactory()->create('Settings')->validate($data);
+
         // clear cache
         $this->getContainer()->get('dataManager')->clearCache();
 
