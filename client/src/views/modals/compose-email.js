@@ -65,7 +65,7 @@ Espo.define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
 
                 require('email-helper', function (EmailHelper) {
                     var emailHelper = new EmailHelper();
-                    var link = emailHelper.composeMailToLink(attributes, this.getConfig().get('outboundEmailBccAddress'));
+                    var link = emailHelper.composeMailToLink(attributes, null);
                     document.location.href = link;
                 }.bind(this));
 

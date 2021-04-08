@@ -349,7 +349,7 @@ Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
             if (!this.getAcl().checkScope('Email', 'create')) {
                 require('email-helper', function (EmailHelper) {
                     var emailHelper = new EmailHelper();
-                    var link = emailHelper.composeMailToLink(attributes, this.getConfig().get('outboundEmailBccAddress'));
+                    var link = emailHelper.composeMailToLink(attributes, null);
                     document.location.href = link;
                 }.bind(this));
 

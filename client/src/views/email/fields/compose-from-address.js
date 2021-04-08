@@ -59,13 +59,6 @@ Espo.define('views/email/fields/compose-from-address', 'views/fields/base', func
             }, this);
 
             this.list = _.uniq(this.list);
-
-            if (this.getConfig().get('outboundEmailIsShared') && this.getConfig().get('outboundEmailFromAddress')) {
-                var address = this.getConfig().get('outboundEmailFromAddress');
-                if (!~this.list.indexOf(address)) {
-                    this.list.push(this.getConfig().get('outboundEmailFromAddress'));
-                }
-            }
         },
     });
 

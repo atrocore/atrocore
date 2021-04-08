@@ -18,6 +18,11 @@
         "description": "authentication"
       },
       {
+        "url": "#Admin/outboundEmails",
+        "label": "Email",
+        "description": "outboundEmails"
+      },
+      {
         "url": "#ScheduledJob",
         "label": "Scheduled Jobs",
         "description": "scheduledJob"
@@ -115,11 +120,6 @@
   "email": {
     "label": "Email",
     "itemList": [
-      {
-        "url": "#Admin/outboundEmails",
-        "label": "Outbound Emails",
-        "description": "outboundEmails"
-      },
       {
         "url": "#Admin/inboundEmails",
         "label": "Inbound Emails",

@@ -649,11 +649,6 @@
       "type": "base",
       "view": "views/settings/fields/currency-rates"
     },
-    "outboundEmailIsShared": {
-      "type": "bool",
-      "default": false,
-      "tooltip": true
-    },
     "outboundEmailFromName": {
       "type": "varchar",
       "default": "EspoCRM",
@@ -955,10 +950,6 @@
     "maxEmailAccountCount": {
       "type": "int"
     },
-    "massEmailMaxPerHourCount": {
-      "type": "int",
-      "min": 1
-    },
     "authTokenLifetime": {
       "type": "float",
       "min": 0,
@@ -1020,9 +1011,6 @@
       "type": "multiEnum",
       "view": "views/settings/fields/history-entity-list"
     },
-    "massEmailDisableMandatoryOptOutLink": {
-      "type": "bool"
-    },
     "aclStrictMode": {
       "type": "bool",
       "tooltip": true
@@ -1059,10 +1047,6 @@
     "emailAddressIsOptedOutByDefault": {
       "type": "bool",
       "tooltip": true
-    },
-    "outboundEmailBccAddress": {
-      "type": "varchar",
-      "trim": true
     },
     "cleanupDeletedRecords": {
       "type": "bool",

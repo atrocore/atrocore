@@ -149,7 +149,6 @@ return array (    'defaultPermissions' =>
         'ldapUserPhoneNumberAttribute',
         'ldapUserObjectClass',
         'maxEmailAccountCount',
-        'massEmailMaxPerHourCount',
         'personalEmailMaxPortionSize',
         'inboundEmailMaxPortionSize',
         'authTokenLifetime',
