@@ -31,11 +31,17 @@
  * and "AtroCore" word.
  */
 
+declare(strict_types=1);
+
 namespace Espo\Services;
 
+use Espo\Core\Services\Base;
 use Espo\ORM\Entity;
 
-class EmailNotification extends \Espo\Core\Services\Base
+/**
+ * Class EmailNotification
+ */
+class EmailNotification extends Base
 {
     const HOURS_THERSHOLD = 5;
 
@@ -55,8 +61,6 @@ class EmailNotification extends \Espo\Core\Services\Base
         ]);
     }
 
-    protected $emailNotificationEntityHandlerHash = array();
-
     protected function getMailSender()
     {
         return $this->getInjection('mailSender');
@@ -75,11 +79,6 @@ class EmailNotification extends \Espo\Core\Services\Base
     protected function getDateTime()
     {
         return $this->getInjection('dateTime');
-    }
-
-    protected function getConfig()
-    {
-        return $this->getInjection('config');
     }
 
     protected function getTemplateFileManager()
