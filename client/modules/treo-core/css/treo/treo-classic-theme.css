@@ -18945,7 +18945,7 @@ input#sn-checkbox-open-in-new-window {
 }
 
 .panel-info > .panel-heading {
-    padding: 5px 10px 6px;
+    padding: 6px 10px;
 }
 
 .side .panel-default > .panel-heading {
@@ -18967,6 +18967,7 @@ input#sn-checkbox-open-in-new-window {
     border-right-width: 0;
     padding-left: 8px;
     padding-right: 8px;
+    margin-top: 1px;
 }
 
 .side .panel-default > .panel-heading > .btn-group > .btn-default {
