@@ -117,17 +117,6 @@
     ],
     "order": 20
   },
-  "email": {
-    "label": "Email",
-    "itemList": [
-      {
-        "url": "#EmailTemplate",
-        "label": "Email Templates",
-        "description": "emailTemplates"
-      }
-    ],
-    "order": 30
-  },
   "portal": {
     "label": "Portal",
     "itemList": [

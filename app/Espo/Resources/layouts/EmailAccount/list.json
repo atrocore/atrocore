@@ -1,7 +1,0 @@
-[
-	{"name":"name", "link":true},
-	{"name":"status", "width": 15},
-    {"name":"useImap", "width": 15},
-    {"name":"useSmtp", "width": 15},
-	{"name": "assignedUser", "width": 18}
-]
