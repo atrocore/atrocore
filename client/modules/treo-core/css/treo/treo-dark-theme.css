@@ -5755,7 +5755,9 @@ a.thumbnail:hover, a.thumbnail:focus, a.thumbnail.active {
 }
 
 .pull-right .pipeline {
-    border-right: solid 1px #000;
+    position: relative;
+    top: -1px;
+    font-weight: normal;
     margin-right: 20px;
 }
 
@@ -19928,7 +19930,7 @@ button.category:focus {
         left: 0;
         right: 0;
         top: 0;
-        z-index: 9;
+        z-index: 2000;
     }
 
     .navbar-header {
