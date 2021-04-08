@@ -31,181 +31,88 @@
  * and "AtroCore" word.
  */
 
+declare(strict_types=1);
+
 namespace Espo\Core\Mail;
 
-use \Espo\Entities\Email;
+use Espo\Core\Utils\Config;
+use Zend\Mime\Message as MimeMessage;
+use Zend\Mime\Part as MimePart;
+use Zend\Mime\Mime as Mime;
 
-use \Zend\Mime\Message as MimeMessage;
-use \Zend\Mime\Part as MimePart;
-use \Zend\Mime\Mime as Mime;
+use Zend\Mail\Message;
+use Zend\Mail\Transport\Smtp as SmtpTransport;
+use Zend\Mail\Transport\SmtpOptions;
 
-use \Zend\Mail\Message;
-use \Zend\Mail\Transport\Smtp as SmtpTransport;
-use \Zend\Mail\Transport\SmtpOptions;
+use Espo\Core\Exceptions\Error;
 
-use \Espo\Core\Exceptions\Error;
-
+/**
+ * Class Sender
+ */
 class Sender
 {
-    protected $config;
+    /**
+     * @var Config
+     */
+    private $config;
 
-    protected $entityManager;
-
+    /**
+     * @var SmtpTransport
+     */
     protected $transport;
 
-    protected $isGlobal = false;
-
-    protected $params = array();
-
-    public function __construct($config, $entityManager)
+    /**
+     * Sender constructor.
+     *
+     * @param Config $config
+     */
+    public function __construct(Config $config)
     {
         $this->config = $config;
-        $this->entityManager = $entityManager;
-        $this->useGlobal();
-    }
-
-    protected function getConfig()
-    {
-        return $this->config;
-    }
-
-    protected function getEntityManager()
-    {
-        return $this->entityManager;
-    }
-
-    public function resetParams()
-    {
-        $this->params = array();
-        return $this;
-    }
-
-    public function setParams(array $params = array())
-    {
-        $this->params = array_merge($this->params, $params);
-        return $this;
-    }
-
-    public function useSmtp(array $params = array())
-    {
-        $this->isGlobal = false;
-        $this->params = $params;
-
         $this->transport = new SmtpTransport();
 
-        $config = $this->config;
+        $opts = [
+            'name'              => $this->config->get('smtpLocalHostName', gethostname()),
+            'host'              => $this->config->get('smtpServer'),
+            'port'              => $this->config->get('smtpPort'),
+            'connection_config' => []
+        ];
 
-        $localHostName = $config->get('smtpLocalHostName', gethostname());
-
-        $opts = array(
-            'name' => $localHostName,
-            'host' => $params['server'],
-            'port' => $params['port'],
-            'connection_config' => array()
-        );
-        if ($params['auth']) {
-            if (!empty($params['smtpAuthMechanism'])) {
-                $opts['connection_class'] = $params['smtpAuthMechanism'];
-            } else {
-                $opts['connection_class'] = 'login';
-            }
-            $opts['connection_config']['username'] = $params['username'];
-            $opts['connection_config']['password'] = $params['password'];
-        }
-        if ($params['security']) {
-            $opts['connection_config']['ssl'] = strtolower($params['security']);
+        if ($this->config->get('smtpAuth')) {
+            $opts['connection_class'] = $this->config->get('smtpAuthMechanism', 'login');
+            $opts['connection_config']['username'] = $this->config->get('smtpUsername');
+            $opts['connection_config']['password'] = $this->config->get('smtpPassword');
         }
 
-        if (array_key_exists('fromName', $params)) {
-            $this->params['fromName'] = $params['fromName'];
-        }
-        if (array_key_exists('fromAddress', $params)) {
-            $this->params['fromAddress'] = $params['fromAddress'];
+        if ($this->config->get('smtpSecurity')) {
+            $opts['connection_config']['ssl'] = strtolower($this->config->get('smtpSecurity'));
         }
 
-        $options = new SmtpOptions($opts);
-        $this->transport->setOptions($options);
-
-        return $this;
+        $this->transport->setOptions(new SmtpOptions($opts));
     }
 
-    public function useGlobal()
+    /**
+     * @param array $emailData
+     * @param array $params
+     *
+     * @throws Error
+     */
+    public function send(array $emailData, array $params = []): void
     {
-        $this->params = array();
-        if ($this->isGlobal) {
-            return $this;
+        if (empty($emailData['subject']) || empty($emailData['to'])) {
+            throw new Error('Subject and emailTo is required.');
         }
 
-        $this->transport = new SmtpTransport();
-
-        $config = $this->config;
-
-        $localHostName = $config->get('smtpLocalHostName', gethostname());
-
-        $opts = array(
-            'name' => $localHostName,
-            'host' => $config->get('smtpServer'),
-            'port' => $config->get('smtpPort'),
-            'connection_config' => array()
-        );
-        if ($config->get('smtpAuth')) {
-            $opts['connection_class'] = $config->get('smtpAuthMechanism', 'login');
-            $opts['connection_config']['username'] = $config->get('smtpUsername');
-            $opts['connection_config']['password'] = $config->get('smtpPassword');
-        }
-        if ($config->get('smtpSecurity')) {
-            $opts['connection_config']['ssl'] = strtolower($config->get('smtpSecurity'));
-        }
-
-        $options = new SmtpOptions($opts);
-        $this->transport->setOptions($options);
-
-        $this->isGlobal = true;
-
-        return $this;
-    }
-
-    public function send(Email $email, $params = array(), &$message = null, $attachmentList = [])
-    {
-        if (!$message) {
-            $message = new Message();
-        }
-        $config = $this->config;
-        $params = $this->params + $params;
-
-        if ($email->get('from')) {
-            $fromName = null;
-            if (!empty($params['fromName'])) {
-                $fromName = $params['fromName'];
-            } else {
-                $fromName = $config->get('outboundEmailFromName');
-            }
-            $message->addFrom(trim($email->get('from')), $fromName);
-        } else {
-            if (!empty($params['fromAddress'])) {
-                $fromAddress = $params['fromAddress'];
-            } else {
-                if (!$config->get('outboundEmailFromAddress')) {
-                    throw new Error('outboundEmailFromAddress is not specified in config.');
-                }
-                $fromAddress = $config->get('outboundEmailFromAddress');
-            }
-
-            if (!empty($params['fromName'])) {
-                $fromName = $params['fromName'];
-            } else {
-                $fromName = $config->get('outboundEmailFromName');
-            }
-
-            $message->addFrom($fromAddress, $fromName);
-        }
-
-        if (!$email->get('from')) {
-            $email->set('from', $fromAddress);
+        $fromEmail = $this->config->get('outboundEmailFromAddress');
+        if (empty($this->config->get('outboundEmailFromAddress'))) {
+            throw new Error('outboundEmailFromAddress is not specified in config.');
         }
 
         $sender = new \Zend\Mail\Header\Sender();
-        $sender->setAddress($email->get('from'));
+        $sender->setAddress($fromEmail);
+
+        $message = new Message();
+        $message->addFrom(trim($fromEmail), $this->config->get('outboundEmailFromName', $fromEmail));
         $message->getHeaders()->addHeader($sender);
 
         if (!empty($params['replyToAddress'])) {
@@ -216,131 +123,45 @@ class Sender
             $message->setReplyTo($params['replyToAddress'], $replyToName);
         }
 
-        $value = $email->get('to');
-        if ($value) {
-            $arr = explode(';', $value);
-            if (is_array($arr)) {
-                foreach ($arr as $address) {
-                    $message->addTo(trim($address));
-                }
+        if (!empty($emailData['to'])) {
+            foreach (explode(';', $emailData['to']) as $address) {
+                $message->addTo(trim($address));
             }
         }
 
-        $value = $email->get('cc');
-        if ($value) {
-            $arr = explode(';', $value);
-            if (is_array($arr)) {
-                foreach ($arr as $address) {
-                    $message->addCC(trim($address));
-                }
+        if (!empty($emailData['cc'])) {
+            foreach (explode(';', $emailData['cc']) as $address) {
+                $message->addCC(trim($address));
             }
         }
 
-        $value = $email->get('bcc');
-        if ($value) {
-            $arr = explode(';', $value);
-            if (is_array($arr)) {
-                foreach ($arr as $address) {
-                    $message->addBCC(trim($address));
-                }
+        if (!empty($emailData['bcc'])) {
+            foreach (explode(';', $emailData['bcc']) as $address) {
+                $message->addBCC(trim($address));
             }
         }
 
-        $value = $email->get('replyTo');
-        if ($value) {
-            $arr = explode(';', $value);
-            if (is_array($arr)) {
-                foreach ($arr as $address) {
-                    $message->addReplyTo(trim($address));
-                }
+        if (!empty($emailData['replyTo'])) {
+            foreach (explode(';', $emailData['replyTo']) as $address) {
+                $message->addReplyTo(trim($address));
             }
         }
 
-        $attachmentPartList = array();
-        $attachmentCollection = $email->get('attachments');
-        $attachmentInlineCollection = $email->getInlineAttachments();
+        $message->setSubject($emailData['subject']);
 
-        foreach ($attachmentList as $attachment) {
-            $attachmentCollection[] = $attachment;
-        }
+        $bodyPlain = !empty($emailData['body']) ? $emailData['body'] : '';
 
-        if (!empty($attachmentCollection)) {
-            foreach ($attachmentCollection as $a) {
-                $fileName = $this->getEntityManager()->getRepository('Attachment')->getFilePath($a);
-                if (!file_exists($fileName)) {
-                    continue 1;
-                }
-                $attachment = new MimePart(file_get_contents($fileName));
-                $attachment->disposition = Mime::DISPOSITION_ATTACHMENT;
-                $attachment->encoding = Mime::ENCODING_BASE64;
-                $attachment->filename ='=?utf-8?B?' . base64_encode($a->get('name')) . '?=';
-                if ($a->get('type')) {
-                    $attachment->type = $a->get('type');
-                }
-                $attachmentPartList[] = $attachment;
-            }
-        }
-
-        if (!empty($attachmentInlineCollection)) {
-            foreach ($attachmentInlineCollection as $a) {
-                $fileName = $this->getEntityManager()->getRepository('Attachment')->getFilePath($a);
-                $attachment = new MimePart(file_get_contents($fileName));
-                $attachment->disposition = Mime::DISPOSITION_INLINE;
-                $attachment->encoding = Mime::ENCODING_BASE64;
-                $attachment->id = $a->id;
-                if ($a->get('type')) {
-                    $attachment->type = $a->get('type');
-                }
-                $attachmentPartList[] = $attachment;
-            }
-        }
-
-
-        $message->setSubject($email->get('name'));
-
-        $body = new MimeMessage();
-
-        $textPart = new MimePart($email->getBodyPlainForSending());
-        $textPart->type = 'text/plain';
-        $textPart->encoding = Mime::ENCODING_QUOTEDPRINTABLE;
-        $textPart->charset = 'utf-8';
-
-        if ($email->get('isHtml')) {
-            $htmlPart = new MimePart($email->getBodyForSending());
-            $htmlPart->encoding = Mime::ENCODING_QUOTEDPRINTABLE;
-            $htmlPart->type = 'text/html';
-            $htmlPart->charset = 'utf-8';
-        }
-
-        if (!empty($attachmentPartList)) {
-            $messageType = 'multipart/related';
-            if ($email->get('isHtml')) {
-                $content = new MimeMessage();
-                $content->addPart($textPart);
-                $content->addPart($htmlPart);
-
-                $messageType = 'multipart/mixed';
-
-                $contentPart = new MimePart($content->generateMessage());
-                $contentPart->type = "multipart/alternative;\n boundary=\"" . $content->getMime()->boundary() . '"';
-
-                $body->addPart($contentPart);
-            } else {
-                $body->addPart($textPart);
-            }
-
-            foreach ($attachmentPartList as $attachmentPart) {
-                $body->addPart($attachmentPart);
-            }
-
+        if (!empty($emailData['isHtml'])) {
+            $body = new MimeMessage();
+            $html = new MimePart($bodyPlain);
+            $html->encoding = Mime::ENCODING_QUOTEDPRINTABLE;
+            $html->type = 'text/html';
+            $html->charset = 'utf-8';
+            $body->addPart($html);
+            $messageType = 'multipart/alternative';
         } else {
-            if ($email->get('isHtml')) {
-                $body->setParts(array($textPart, $htmlPart));
-                $messageType = 'multipart/alternative';
-            } else {
-                $body = $email->getBodyPlainForSending();
-                $messageType = 'text/plain';
-            }
+            $body = $this->prepareBodyPlain($bodyPlain);
+            $messageType = 'text/plain';
         }
 
         $message->setBody($body);
@@ -361,43 +182,46 @@ class Sender
         $message->setEncoding('UTF-8');
 
         try {
-            $messageId = $email->get('messageId');
-            if (empty($messageId) || !is_string($messageId) || strlen($messageId) < 4 || strpos($messageId, 'dummy:') === 0) {
-                $messageId = $this->generateMessageId($email);
-                $email->set('messageId', '<' . $messageId . '>');
-            } else {
-                $messageId = substr($messageId, 1, strlen($messageId) - 2);
-            }
-
-            $messageIdHeader = new \Zend\Mail\Header\MessageId();
-            $messageIdHeader->setId($messageId);
-            $message->getHeaders()->addHeader($messageIdHeader);
-
             $this->transport->send($message);
-
-            $email->set('status', 'Sent');
-            $email->set('dateSent', date("Y-m-d H:i:s"));
         } catch (\Exception $e) {
             throw new Error($e->getMessage(), 500);
         }
-
-        $this->useGlobal();
     }
 
-    static public function generateMessageId(Email $email)
+    protected function prepareBodyPlain(string $body): string
     {
-        $rand = mt_rand(1000, 9999);
+        $breaks = ["<br />", "<br>", "<br/>", "<br />", "&lt;br /&gt;", "&lt;br/&gt;", "&lt;br&gt;"];
+        $body = str_ireplace($breaks, "\r\n", $body);
+        $body = strip_tags($body);
 
-        if ($email->get('parentType') && $email->get('parentId')) {
-            $messageId = '' . $email->get('parentType') .'/' . $email->get('parentId') . '/' . time() . '/' . $rand . '@espo';
-        } else {
-            $messageId = '' . md5($email->get('name')) . '/' . time() . '/' . $rand .  '@espo';
-        }
-        if ($email->get('isSystem')) {
-            $messageId .= '-system';
-        }
+        $reList = [
+            '/&(quot|#34);/i',
+            '/&(amp|#38);/i',
+            '/&(lt|#60);/i',
+            '/&(gt|#62);/i',
+            '/&(nbsp|#160);/i',
+            '/&(iexcl|#161);/i',
+            '/&(cent|#162);/i',
+            '/&(pound|#163);/i',
+            '/&(copy|#169);/i',
+            '/&(reg|#174);/i'
+        ];
+        $replaceList = [
+            '',
+            '&',
+            '<',
+            '>',
+            ' ',
+            chr(161),
+            chr(162),
+            chr(163),
+            chr(169),
+            chr(174)
+        ];
 
-        return $messageId;
+        $body = preg_replace($reList, $replaceList, $body);
+
+        return $body;
     }
 }
 

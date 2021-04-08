@@ -97,7 +97,7 @@ Espo.define('views/outbound-email/fields/test-send', 'views/fields/base', functi
                     view.close();
 
                     $.ajax({
-                        url: 'Email/action/sendTestEmail',
+                        url: 'App/action/sendTestEmail',
                         type: 'POST',
                         data: JSON.stringify(data),
                         error: function (xhr, status) {

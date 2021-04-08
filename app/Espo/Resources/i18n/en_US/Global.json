@@ -345,7 +345,7 @@
     "massUnfollowResultSingle": "{count} record now is not followed",
     "massFollowZeroResult": "Nothing got followed",
     "massUnfollowZeroResult": "Nothing got unfollowed",
-    "erasePersonalDataConfirmation": "Checked fields will be erased permanently. Are you sure?"
+    "erasePersonalDataConfirmation": "Checked fields will be erased permanently. Are you sure?",
     "clearAclCacheError": "ACL cache could not be cleared.",
     "emptyMultilangOptions": "Options list cannot be empty while multi-language option is activated."
   },
