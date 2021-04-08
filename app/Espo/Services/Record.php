@@ -2461,18 +2461,20 @@ class Record extends \Espo\Core\Services\Base
      */
     private function setOwnerAndAssignedUser(IEntity $entity): void
     {
-        // has owner param
-        $hasOwner = !empty($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'hasOwner']));
+        if (!$this->hasCompleteness($entity)) {
+            // has owner param
+            $hasOwner = !empty($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'hasOwner']));
 
-        if (($hasOwner || $entity->hasAttribute('ownerUserId')) && empty($entity->get('ownerUserId'))) {
-            $entity->set('ownerUserId', $this->getEntityManager()->getUser()->id);
-        }
+            if (($hasOwner || $entity->hasAttribute('ownerUserId')) && empty($entity->get('ownerUserId'))) {
+                $entity->set('ownerUserId', $this->getEntityManager()->getUser()->id);
+            }
 
-        // has assigned
-        $hasAssigned = !empty($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'hasAssignedUser']));
+            // has assigned
+            $hasAssigned = !empty($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'hasAssignedUser']));
 
-        if (($hasAssigned || $entity->hasAttribute('assignedUserId')) && empty($entity->get('assignedUserId'))) {
-            $entity->set('assignedUserId', $this->getEntityManager()->getUser()->id);
+            if (($hasAssigned || $entity->hasAttribute('assignedUserId')) && empty($entity->get('assignedUserId'))) {
+                $entity->set('assignedUserId', $this->getEntityManager()->getUser()->id);
+            }
         }
     }
 
