@@ -33,23 +33,43 @@
 
 declare(strict_types=1);
 
-namespace Treo\Listeners;
+namespace Espo\Services;
 
-use Treo\Core\EventManager\Event;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Services\Base;
+use Espo\Core\Utils\Language;
 
 /**
- * Class SettingsController
+ * Class Settings
  */
-class SettingsController extends AbstractListener
+class Settings extends Base
 {
     /**
-     * @param Event $event
+     * @param \stdClass $data
+     *
+     * @return bool
+     *
+     * @throws BadRequest
+     * @throws \Espo\Core\Exceptions\Error
      */
-    public function afterActionUpdate(Event $event): void
+    public function validate(\stdClass $data): bool
     {
-        // regenerate multilang fields
-        if (isset($event->getArgument('data')->inputLanguageList) || !empty($event->getArgument('data')->isMultilangActive)) {
-            $this->getContainer()->get('dataManager')->rebuild();
+        if (isset($data->inputLanguageList) && count($data->inputLanguageList) == 0) {
+            $isMultilangActive = $data->isMultilangActive ?? $this->getConfig()->get('isMultilangActive', false);
+
+            if ($isMultilangActive) {
+                throw new BadRequest($this->getLanguage()->translate('languageMustBeSelected', 'messages', 'Settings'));
+            }
         }
+
+        return true;
+    }
+
+    /**
+     * @return Language
+     */
+    protected function getLanguage(): Language
+    {
+        return $this->getInjection('language');
     }
 }

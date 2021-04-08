@@ -41,7 +41,7 @@
       "type": "multiEnum",
       "default": [],
       "options": [],
-      "required": false,
+      "required": true,
       "view": "views/admin/fields/input-language-list"
     },
     "isMultilangActive": {

@@ -41,15 +41,6 @@ Espo.define('views/admin/fields/input-language-list', 'views/fields/multi-enum',
                 this.defineMode();
                 this.reRender();
             });
-            this.listenTo(this.model, `change:${this.name}`, () => {
-                this.checkForOneLanguage();
-            });
-        },
-
-        afterRender() {
-            Dep.prototype.afterRender.call(this);
-
-            this.checkForOneLanguage();
         },
 
         defineMode: function () {
@@ -71,26 +62,12 @@ Espo.define('views/admin/fields/input-language-list', 'views/fields/multi-enum',
             this.translatedOptions = Espo.Utils.clone(this.getLanguage().translate('language', 'options') || {});
         },
 
-        checkForOneLanguage() {
-            const values = (this.model.get(this.name) || []);
-
-            if (values.length === 1) {
-                $('div[data-value="' + values[0] + '"] > .remove').addClass('hidden');
-            } else {
-                $('div[data-name="' + this.name + '"] .remove.hidden').removeClass('hidden');
+        translate(label, category, scope) {
+            if (label === 'fieldIsRequired') {
+                return Dep.prototype.translate.call(this, 'languageMustBeSelected', 'messages', 'Settings');
             }
-        },
 
-        validateRequired(field) {
-            let name = field || this.name;
-            const values = this.model.get(name) || [];
-            let isMultilangActive = this.model.get('isMultilangActive') || false;
-
-            if (isMultilangActive && values.length === 0) {
-                let msg = this.translate('languageMustBeSelected', 'messages', 'Settings');
-                this.showValidationMessage(msg, this.$el);
-                return true;
-            }
+            return Dep.prototype.translate.call(this, label, category, scope);
         }
     })
 );
