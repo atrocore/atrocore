@@ -16,7 +16,6 @@
             ],
             [
                 {"name": "portalPermission"},
-                {"name": "groupEmailAccountPermission"},
                 {"name": "dataPrivacyPermission"}
             ]
         ]

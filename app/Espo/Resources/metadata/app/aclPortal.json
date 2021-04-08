@@ -28,14 +28,9 @@
                 "delete": "own",
                 "create": "yes"
             },
-            "EmailAccount": false,
             "ExternalAccount": false,
             "Role": false,
             "PortalRole": false,
-            "EmailFilter": false,
-            "EmailFolder": false,
-            "EmailAccount": false,
-            "EmailTemplate": false,
             "ActionHistoryRecord": false,
             "Preferences": {
                 "read": "own",
@@ -69,10 +64,6 @@
             "Note": {
                 "isInternal": false,
                 "isGlobal": false
-            },
-            "Email": {
-                "inboundEmails": false,
-                "emailAccounts": false
             },
             "User": {
                 "isAdmin": false,
