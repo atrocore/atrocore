@@ -380,15 +380,14 @@ class LeadCapture extends Record
         $body = str_replace('{optInUrl}', $url, $body);
         $body = str_replace('{optInLink}', $linkHtml, $body);
 
-        $email = $this->getEntityManager()->getEntity('Email');
-        $email->set([
-            'to' => $emailAddress,
-            'subject' => $subject,
-            'body' => $body,
-            'isHtml' => $isHtml
-        ]);
-
-        $this->getMailSender()->send($email);
+        $this->getMailSender()->send(
+            [
+                'to'      => $emailAddress,
+                'subject' => $subject,
+                'body'    => $body,
+                'isHtml'  => $isHtml
+            ]
+        );
 
         return true;
     }
