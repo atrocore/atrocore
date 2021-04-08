@@ -143,20 +143,6 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             model.fetch();
         },
 
-        inboundEmails: function () {
-            var model = this.getSettingsModel();
-
-            model.once('sync', function () {
-                model.id = '1';
-                this.main('views/settings/edit', {
-                    model: model,
-                    headerTemplate: 'admin/settings/headers/inbound-emails',
-                    recordView: 'views/admin/inbound-emails'
-                });
-            }, this);
-            model.fetch();
-        },
-
         currency: function () {
             var model = this.getSettingsModel();
 
@@ -242,12 +228,6 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
                 });
             }, this);
             model.fetch();
-        },
-
-        integrations: function (options) {
-            var integration = options.name || null;
-
-            this.main('views/admin/integrations/index', {integration: integration});
         },
 
         clearCache: function (options) {

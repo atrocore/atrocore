@@ -46,7 +46,7 @@ return [
         'ApiHeaders' => [
             ['key' => 'Accept', 'value' => 'application/json'],
             ['key' => 'Content-Type', 'value' => 'application/json'],
-            ['key' => 'Espo-Authorization', 'value' => 'HASH'],
+            ['key' => 'Basic-Authorization', 'value' => 'HASH'],
         ]
     ],
     'method'       => [

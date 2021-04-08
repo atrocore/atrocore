@@ -1,6 +1,5 @@
 {
   "AdminNotifications": "\\Treo\\Services\\AdminNotifications",
-  "Email": "\\Treo\\Services\\Email",
   "Installer": "\\Treo\\Services\\Installer",
   "Person": "\\Treo\\Services\\Person",
   "Portal": "\\Treo\\Services\\Portal",

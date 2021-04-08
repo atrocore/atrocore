@@ -19,24 +19,6 @@
                 "delete": "own",
                 "create": "yes"
             },
-            "EmailAccount": {
-                "read": "own",
-                "edit": "own",
-                "delete": "own",
-                "create": "yes"
-            },
-            "EmailFilter": {
-                "read": "own",
-                "edit": "own",
-                "delete": "own",
-                "create": "yes"
-            },
-            "EmailFolder": {
-                "read": "own",
-                "edit": "own",
-                "delete": "own",
-                "create": "yes"
-            },
             "Preferences": {
                 "read": "own",
                 "edit": "own",
@@ -63,13 +45,6 @@
         "scopeFieldLevel": {
             "Attachment": {
                 "parent": false
-            },
-            "EmailFolder": {
-                "assignedUser": false
-            },
-            "Email": {
-                "inboundEmails": false,
-                "emailAccounts": false
             },
             "User": {
                 "password": false,
@@ -111,28 +86,24 @@
         "assignmentPermission",
         "userPermission",
         "portalPermission",
-        "groupEmailAccountPermission",
         "dataPrivacyPermission"
     ],
     "valuePermissionHighestLevels": {
         "assignmentPermission": "all",
         "userPermission": "all",
         "portalPermission": "yes",
-        "groupEmailAccountPermission": "all",
         "dataPrivacyPermission": "yes"
     },
     "permissionsDefaults": {
         "assignmentPermission": "all",
         "userPermission": "all",
         "portalPermission": "no",
-        "groupEmailAccountPermission": "no",
         "dataPrivacyPermission": "no"
     },
     "permissionsStrictDefaults": {
         "assignmentPermission": "no",
         "userPermission": "no",
         "portalPermission": "no",
-        "groupEmailAccountPermission": "no",
         "dataPrivacyPermission": "no"
     },
     "scopeLevelTypesDefaults": {

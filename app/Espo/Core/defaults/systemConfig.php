@@ -98,14 +98,7 @@ return array (    'defaultPermissions' =>
         'userLimit',
         'portalUserLimit',
         'stylesheet',
-        'userItems',
-        'internalSmtpServer',
-        'internalSmtpPort',
-        'internalSmtpAuth',
-        'internalSmtpUsername',
-        'internalSmtpPassword',
-        'internalSmtpSecurity',
-        'internalOutboundEmailFromAddress'
+        'userItems'
     ),
     'adminItems' =>
     array (
@@ -148,10 +141,6 @@ return array (    'defaultPermissions' =>
         'ldapUserEmailAddressAttribute',
         'ldapUserPhoneNumberAttribute',
         'ldapUserObjectClass',
-        'maxEmailAccountCount',
-        'massEmailMaxPerHourCount',
-        'personalEmailMaxPortionSize',
-        'inboundEmailMaxPortionSize',
         'authTokenLifetime',
         'authTokenMaxIdleTime',
         'ldapUserDefaultTeamId',
@@ -174,8 +163,7 @@ return array (    'defaultPermissions' =>
     array (
         'outboundEmailFromAddress',
         'outboundEmailFromName',
-        'integrations',
-        'googleMapsApiKey'
+        'integrations'
     ),
     'isInstalled' => false,
     'ldapUserNameAttribute' => 'sAMAccountName',

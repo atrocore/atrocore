@@ -36,11 +36,21 @@ Espo.define('views/login', 'view', function (Dep) {
 
         template: 'login',
 
+        language: null,
+
+        theme: 'default',
+
         views: {
             footer: {
                 el: 'body > footer',
                 view: 'views/site/footer'
             },
+        },
+
+        setup() {
+            Dep.prototype.setup.call(this);
+
+            this.language = this.getConfig().get('language');
         },
 
         afterRender: function () {
@@ -75,87 +85,146 @@ Espo.define('views/login', 'view', function (Dep) {
             },
             'click a[data-action="passwordChangeRequest"]': function (e) {
                 this.showPasswordChangeRequest();
+            },
+            'change select[name="language"]': function (event) {
+                this.language = $(event.currentTarget).val();
+                if (this.language) {
+                    this.ajaxGetRequest('I18n', {locale: this.language}).then((data) => {
+                        this.getLanguage().data = data;
+                        this.reRender();
+                    });
+                }
+            },
+            'change select[name="theme"]': function (event) {
+                this.theme = $(event.currentTarget).val();
             }
         },
 
         data: function () {
             return {
+                locales: this.getLocales(),
+                themes: this.getThemes(),
                 logoSrc: this.getLogoSrc()
             };
         },
 
         getLogoSrc: function () {
-            var companyLogoId = this.getConfig().get('companyLogoId');
+            const companyLogoId = this.getConfig().get('companyLogoId');
             if (!companyLogoId) {
-                return this.getBasePath() + ('client/img/logo.png');
+                return this.getBasePath() + 'client/modules/treo-core/img/core_logo_dark.svg';
             }
-            return this.getBasePath() + '?entryPoint=LogoImage&id='+companyLogoId+'&t=' + companyLogoId;
+            return this.getBasePath() + '?entryPoint=LogoImage&id=' + companyLogoId + '&t=' + companyLogoId;
+        },
+
+        getLocales() {
+            let translatedOptions = Espo.Utils.clone(this.getLanguage().translate('language', 'options') || {});
+
+            return Espo.Utils
+                .clone(this.getConfig().get('languageList')).sort((v1, v2) => this.getLanguage().translateOption(v1, 'language').localeCompare(this.getLanguage().translateOption(v2, 'language')))
+                .map(item => {
+                    return {
+                        value: item,
+                        label: translatedOptions[item],
+                        selected: item === this.language
+                    };
+                });
+        },
+
+        getThemes() {
+            let themes = Object.keys(this.getConfig().get('themes') || {}).map(theme => {
+                return {
+                    name: theme,
+                    label: this.translate(theme, 'themes', 'Global')
+                }
+            });
+
+            themes.unshift({
+                name: this.theme,
+                label: this.translate('Default', 'labels', 'Global')
+            });
+
+            return themes;
         },
 
         login: function () {
-                var userName = $('#field-userName').val();
-                var trimmedUserName = userName.trim();
-                if (trimmedUserName !== userName) {
-                    $('#field-userName').val(trimmedUserName);
-                    userName = trimmedUserName;
-                }
+            var userName = $('#field-userName').val();
+            var trimmedUserName = userName.trim();
+            if (trimmedUserName !== userName) {
+                $('#field-userName').val(trimmedUserName);
+                userName = trimmedUserName;
+            }
 
-                var password = $('#field-password').val();
+            var password = $('#field-password').val();
 
-                var $submit = this.$el.find('#btn-login');
+            var $submit = this.$el.find('#btn-login');
 
-                if (userName == '') {
-                    var $el = $("#field-userName");
+            if (userName == '') {
+                var $el = $("#field-userName");
 
-                    var message = this.getLanguage().translate('userCantBeEmpty', 'messages', 'User');
-                    $el.popover({
-                        placement: 'bottom',
-                        content: message,
-                        trigger: 'manual',
-                    }).popover('show');
+                var message = this.getLanguage().translate('userCantBeEmpty', 'messages', 'User');
+                $el.popover({
+                    placement: 'bottom',
+                    content: message,
+                    trigger: 'manual',
+                }).popover('show');
 
-                    var $cell = $el.closest('.form-group');
-                    $cell.addClass('has-error');
-                    this.$el.one('mousedown click', function () {
-                        $cell.removeClass('has-error');
-                        $el.popover('destroy');
-                    });
-                    return;
-                }
-
-                $submit.addClass('disabled').attr('disabled', 'disabled');
-
-                this.notify('Please wait...');
-
-                $.ajax({
-                    url: 'App/user',
-                    headers: {
-                        'Authorization': 'Basic ' + Base64.encode(userName  + ':' + password),
-                        'Espo-Authorization': Base64.encode(userName + ':' + password),
-                        'Espo-Authorization-By-Token': false
-                    },
-                    success: function (data) {
-                        this.notify(false);
-                        this.trigger('login', {
-                            auth: {
-                                userName: userName,
-                                token: data.token
-                            },
-                            user: data.user,
-                            preferences: data.preferences,
-                            acl: data.acl,
-                            settings: data.settings,
-                            appParams: data.appParams
-                        });
-                    }.bind(this),
-                    error: function (xhr) {
-                        $submit.removeClass('disabled').removeAttr('disabled');
-                        if (xhr.status == 401) {
-                            this.onWrong();
-                        }
-                    }.bind(this),
-                    login: true,
+                var $cell = $el.closest('.form-group');
+                $cell.addClass('has-error');
+                this.$el.one('mousedown click', function () {
+                    $cell.removeClass('has-error');
+                    $el.popover('hide');
                 });
+                return;
+            }
+
+            $submit.addClass('disabled').attr('disabled', 'disabled');
+
+            this.notify('Please wait...');
+
+            $.ajax({
+                url: 'App/user',
+                headers: {
+                    'Authorization': 'Basic ' + Base64.encode(userName + ':' + password)
+                },
+                data: {
+                    language: this.language
+                },
+                success: function (data) {
+                    this.notify(false);
+
+                    if (this.theme !== 'default' && data.preferences.theme !== this.theme) {
+                        $.ajax({
+                            url: 'Preferences/' + data.user.id,
+                            method: 'PUT',
+                            headers: {
+                                'Authorization-Token': Base64.encode(userName + ':' + data.token)
+                            },
+                            data: JSON.stringify({
+                                theme: this.theme
+                            })
+                        });
+                    }
+
+                    this.trigger('login', {
+                        auth: {
+                            userName: userName,
+                            token: data.token
+                        },
+                        user: data.user,
+                        preferences: data.preferences,
+                        acl: data.acl,
+                        settings: data.settings,
+                        appParams: data.appParams
+                    });
+                }.bind(this),
+                error: function (xhr) {
+                    $submit.removeClass('disabled').removeAttr('disabled');
+                    if (xhr.status == 401) {
+                        this.onWrong();
+                    }
+                }.bind(this),
+                login: true,
+            });
         },
 
         onWrong: function () {

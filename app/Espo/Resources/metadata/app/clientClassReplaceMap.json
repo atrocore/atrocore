@@ -2,9 +2,6 @@
   "acl": [
     "treo-core"
   ],
-  "app": [
-    "treo-core"
-  ],
   "view": [
     "treo-core"
   ],
@@ -42,9 +39,6 @@
     "treo-core"
   ],
   "views/list": [
-    "treo-core"
-  ],
-  "views/login": [
     "treo-core"
   ],
   "views/dashboard": [

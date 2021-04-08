@@ -33,18 +33,31 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core\Loaders;
+namespace Espo\Core\Utils\Authentication;
+
+use Espo\Entities\AuthToken;
+use Espo\Entities\User;
 
 /**
- * MailSender loader
+ * Class Token
  */
-class MailSender extends Base
+class Token extends AbstractAuthentication
 {
-    /**
-     * @inheritDoc
-     */
-    public function load()
+    public function login(string $username, string $password, AuthToken $authToken = null, bool $isPortal = false): ?User
     {
-        return new \Espo\Core\Mail\Sender($this->getContainer()->get('config'));
+        if (!empty($authToken) && !empty($authToken->get('isActive'))) {
+            return $authToken->get('user');
+        }
+
+        return $this
+            ->getEntityManager()
+            ->getRepository('User')
+            ->where(
+                [
+                    'userName' => $username,
+                    'password' => $this->getPasswordHash()->hash($password),
+                ]
+            )
+            ->findOne();
     }
 }

@@ -31,14 +31,17 @@
  * and "AtroCore" word.
  */
 
+declare(strict_types=1);
+
 namespace Espo\Services;
 
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\NotFound;
-
+use Espo\Core\Services\Base;
 use Espo\ORM\Entity;
 
-class EmailNotification extends \Espo\Core\Services\Base
+/**
+ * Class EmailNotification
+ */
+class EmailNotification extends Base
 {
     const HOURS_THERSHOLD = 5;
 
@@ -58,8 +61,6 @@ class EmailNotification extends \Espo\Core\Services\Base
         ]);
     }
 
-    protected $emailNotificationEntityHandlerHash = array();
-
     protected function getMailSender()
     {
         return $this->getInjection('mailSender');
@@ -78,11 +79,6 @@ class EmailNotification extends \Espo\Core\Services\Base
     protected function getDateTime()
     {
         return $this->getInjection('dateTime');
-    }
-
-    protected function getConfig()
-    {
-        return $this->getInjection('config');
     }
 
     protected function getTemplateFileManager()
@@ -136,8 +132,6 @@ class EmailNotification extends \Espo\Core\Services\Base
 
         $emailAddress = $user->get('emailAddress');
         if (!empty($emailAddress)) {
-            $email = $this->getEntityManager()->getEntity('Email');
-
             $subjectTpl = $this->getTemplateFileManager()->getTemplate('assignment', 'subject', $entity->getEntityType());
             $bodyTpl = $this->getTemplateFileManager()->getTemplate('assignment', 'body', $entity->getEntityType());
 
@@ -156,19 +150,17 @@ class EmailNotification extends \Espo\Core\Services\Base
             $subject = $this->getHtmlizer()->render($entity, $subjectTpl, 'assignment-email-subject-' . $entity->getEntityType(), $data, true);
             $body = $this->getHtmlizer()->render($entity, $bodyTpl, 'assignment-email-body-' . $entity->getEntityType(), $data, true);
 
-            $email->set(array(
-                'subject' => $subject,
-                'body' => $body,
-                'isHtml' => true,
-                'to' => $emailAddress,
-                'isSystem' => true,
-                'parentId' => $entity->id,
-                'parentType' => $entity->getEntityType()
-            ));
             try {
-                $this->getMailSender()->send($email);
+                $this->getMailSender()->send(
+                    [
+                        'subject' => $subject,
+                        'body'    => $body,
+                        'isHtml'  => true,
+                        'to'      => $emailAddress
+                    ]
+                );
             } catch (\Exception $e) {
-                $GLOBALS['log']->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
+                $GLOBALS['log']->error('EmailNotification: [' . $e->getCode() . '] ' . $e->getMessage());
             }
         }
 
@@ -333,26 +325,17 @@ class EmailNotification extends \Espo\Core\Services\Base
         $subject = $this->getHtmlizer()->render($note, $subjectTpl, 'mention-email-subject', $data, true);
         $body = $this->getHtmlizer()->render($note, $bodyTpl, 'mention-email-body', $data, true);
 
-        $email = $this->getEntityManager()->getEntity('Email');
-
-        $email->set(array(
-            'subject' => $subject,
-            'body' => $body,
-            'isHtml' => true,
-            'to' => $emailAddress,
-            'isSystem' => true
-        ));
-        if ($parentId && $parentType) {
-            $email->set(array(
-                'parentId' => $parentId,
-                'parentType' => $parentType
-            ));
-        }
-
         try {
-            $this->getMailSender()->send($email);
+            $this->getMailSender()->send(
+                [
+                    'subject' => $subject,
+                    'body'    => $body,
+                    'isHtml'  => true,
+                    'to'      => $emailAddress
+                ]
+            );
         } catch (\Exception $e) {
-            $GLOBALS['log']->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
+            $GLOBALS['log']->error('EmailNotification: [' . $e->getCode() . '] ' . $e->getMessage());
         }
     }
 
@@ -386,22 +369,6 @@ class EmailNotification extends \Espo\Core\Services\Base
         if (!method_exists($this, $methodName)) return;
 
         $this->$methodName($note, $user);
-    }
-
-    protected function getEmailNotificationEntityHandler($entityType)
-    {
-        if (!array_key_exists($entityType, $this->emailNotificationEntityHandlerHash)) {
-            $this->emailNotificationEntityHandlerHash[$entityType] = null;
-            $className = $this->getMetadata()->get(['app', 'emailNotifications', 'handlerClassNameMap', $entityType]);
-            if ($className && class_exists($className)) {
-                $handler = $this->getInjection('injectableFactory')->createByClassName($className);
-                if ($handler) {
-                    $this->emailNotificationEntityHandlerHash[$entityType] = $handler;
-                }
-            }
-        }
-
-        return $this->emailNotificationEntityHandlerHash[$entityType];
     }
 
     protected function processNotificationNotePost($note, $user)
@@ -450,44 +417,16 @@ class EmailNotification extends \Espo\Core\Services\Base
             $body = $this->getHtmlizer()->render($note, $bodyTpl, 'note-post-email-body', $data, true);
         }
 
-        $email = $this->getEntityManager()->getEntity('Email');
-
-        $email->set(array(
-            'subject' => $subject,
-            'body' => $body,
-            'isHtml' => true,
-            'to' => $emailAddress,
-            'isSystem' => true
-        ));
-        if ($parentId && $parentType) {
-            $email->set(array(
-                'parentId' => $parentId,
-                'parentType' => $parentType
-            ));
-        }
-
-        $smtpParams = null;
-        if ($parentId && $parentType && !empty($parent)) {
-            $handler = $this->getEmailNotificationEntityHandler($parentType);
-            if ($handler) {
-                $prepareEmailMethodName = 'prepareEmail';
-                if (method_exists($handler, $prepareEmailMethodName)) {
-                    $handler->$prepareEmailMethodName('notePost', $parent, $email, $user);
-                }
-                $getSmtpParamsMethodName = 'getSmtpParams';
-                if (method_exists($handler, $getSmtpParamsMethodName)) {
-                    $smtpParams = $handler->$getSmtpParamsMethodName('notePost', $parent, $user);
-                }
-            }
-        }
-
         try {
-            if ($smtpParams) {
-                $this->getMailSender()->setParams($smtpParams);
-            }
-            $this->getMailSender()->send($email);
+            $this->getMailSender()->send(
+                [
+                    'subject' => $subject,
+                    'body'    => $body,
+                    'isHtml'  => true,
+                    'to'      => $emailAddress]
+            );
         } catch (\Exception $e) {
-            $GLOBALS['log']->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
+            $GLOBALS['log']->error('EmailNotification: [' . $e->getCode() . '] ' . $e->getMessage());
         }
     }
 
@@ -570,20 +509,15 @@ class EmailNotification extends \Espo\Core\Services\Base
         $subject = $this->getHtmlizer()->render($note, $subjectTpl, 'note-status-email-subject', $data, true);
         $body = $this->getHtmlizer()->render($note, $bodyTpl, 'note-status-email-body', $data, true);
 
-        $email = $this->getEntityManager()->getEntity('Email');
-
-        $email->set(array(
-            'subject' => $subject,
-            'body' => $body,
-            'isHtml' => true,
-            'to' => $emailAddress,
-            'isSystem' => true,
-            'parentId' => $parentId,
-            'parentType' => $parentType
-        ));
-
         try {
-            $this->getMailSender()->send($email);
+            $this->getMailSender()->send(
+                [
+                    'subject' => $subject,
+                    'body'    => $body,
+                    'isHtml'  => true,
+                    'to'      => $emailAddress
+                ]
+            );
         } catch (\Exception $e) {
             $GLOBALS['log']->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
         }
@@ -652,25 +586,17 @@ class EmailNotification extends \Espo\Core\Services\Base
         $subject = $this->getHtmlizer()->render($note, $subjectTpl, 'note-email-recieved-email-subject-' . $parentType, $data, true);
         $body = $this->getHtmlizer()->render($note, $bodyTpl, 'note-email-recieved-email-body-' . $parentType, $data, true);
 
-        $email = $this->getEntityManager()->getEntity('Email');
-
-        $email->set(array(
-            'subject' => $subject,
-            'body' => $body,
-            'isHtml' => true,
-            'to' => $emailAddress,
-            'isSystem' => true
-        ));
-
-        $email->set(array(
-            'parentId' => $parentId,
-            'parentType' => $parentType
-        ));
-
         try {
-            $this->getMailSender()->send($email);
+            $this->getMailSender()->send(
+                [
+                    'subject' => $subject,
+                    'body'    => $body,
+                    'isHtml'  => true,
+                    'to'      => $emailAddress
+                ]
+            );
         } catch (\Exception $e) {
-            $GLOBALS['log']->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
+            $GLOBALS['log']->error('EmailNotification: [' . $e->getCode() . '] ' . $e->getMessage());
         }
     }
 

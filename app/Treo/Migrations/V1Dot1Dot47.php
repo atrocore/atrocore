@@ -31,20 +31,34 @@
  * and "AtroCore" word.
  */
 
-declare(strict_types=1);
+namespace Treo\Migrations;
 
-namespace Treo\Core\Loaders;
+use Treo\Core\Migration\Base;
 
 /**
- * MailSender loader
+ * Migration for version 1.1.47
  */
-class MailSender extends Base
+class V1Dot1Dot47 extends Base
 {
     /**
      * @inheritDoc
      */
-    public function load()
+    public function up(): void
     {
-        return new \Espo\Core\Mail\Sender($this->getContainer()->get('config'));
+        if ($this->getConfig()->get('authenticationMethod') == 'Espo') {
+            $this->getConfig()->set('authenticationMethod', 'Token');
+            $this->getConfig()->save();
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function down(): void
+    {
+        if ($this->getConfig()->get('authenticationMethod') == 'Token') {
+            $this->getConfig()->set('authenticationMethod', 'Espo');
+            $this->getConfig()->save();
+        }
     }
 }

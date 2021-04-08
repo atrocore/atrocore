@@ -1,9 +1,0 @@
-[
-    {
-        "label": "",
-        "rows": [
-            [{"name": "emailMessageMaxSize"}, {"name": "personalEmailMaxPortionSize"}],
-            [{"name": "maxEmailAccountCount"}, {"name": "inboundEmailMaxPortionSize"}]
-        ]
-    }
-]

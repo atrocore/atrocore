@@ -388,9 +388,7 @@ class User extends Record
             return;
         }
 
-        $email = $this->getEntityManager()->getEntity('Email');
-
-        if (!$this->getConfig()->get('smtpServer') && !$this->getConfig()->get('internalSmtpServer')) {
+        if (!$this->getConfig()->get('smtpServer')) {
             return;
         }
 
@@ -430,27 +428,14 @@ class User extends Record
         }
         $body = str_replace('{siteUrl}', $siteUrl, $body);
 
-        $email->set(array(
-            'subject' => $subject,
-            'body' => $body,
-            'isHtml' => false,
-            'to' => $emailAddress
-        ));
-
-        if ($this->getConfig()->get('smtpServer')) {
-            $this->getMailSender()->useGlobal();
-        } else {
-            $this->getMailSender()->useSmtp(array(
-                'server' => $this->getConfig()->get('internalSmtpServer'),
-                'port' => $this->getConfig()->get('internalSmtpPort'),
-                'auth' => $this->getConfig()->get('internalSmtpAuth'),
-                'username' => $this->getConfig()->get('internalSmtpUsername'),
-                'password' => $this->getConfig()->get('internalSmtpPassword'),
-                'security' => $this->getConfig()->get('internalSmtpSecurity'),
-                'fromAddress' => $this->getConfig()->get('internalOutboundEmailFromAddress', $this->getConfig()->get('outboundEmailFromAddress'))
-            ));
-        }
-        $this->getMailSender()->send($email);
+        $this->getMailSender()->send(
+            [
+                'subject' => $subject,
+                'body'    => $body,
+                'isHtml'  => false,
+                'to'      => $emailAddress
+            ]
+        );
     }
 
     protected function sendChangePasswordLink($requestId, $emailAddress, Entity $user = null)
@@ -459,9 +444,7 @@ class User extends Record
             return;
         }
 
-        $email = $this->getEntityManager()->getEntity('Email');
-
-        if (!$this->getConfig()->get('smtpServer') && !$this->getConfig()->get('internalSmtpServer')) {
+        if (!$this->getConfig()->get('smtpServer')) {
             throw new Error("SMTP credentials are not defined.");
         }
 
@@ -472,28 +455,14 @@ class User extends Record
 
         $body = str_replace('{link}', $link, $body);
 
-        $email->set(array(
-            'subject' => $subject,
-            'body' => $body,
-            'isHtml' => false,
-            'to' => $emailAddress
-        ));
-
-        if ($this->getConfig()->get('smtpServer')) {
-            $this->getMailSender()->useGlobal();
-        } else {
-            $this->getMailSender()->useSmtp(array(
-                'server' => $this->getConfig()->get('internalSmtpServer'),
-                'port' => $this->getConfig()->get('internalSmtpPort'),
-                'auth' => $this->getConfig()->get('internalSmtpAuth'),
-                'username' => $this->getConfig()->get('internalSmtpUsername'),
-                'password' => $this->getConfig()->get('internalSmtpPassword'),
-                'security' => $this->getConfig()->get('internalSmtpSecurity'),
-                'fromAddress' => $this->getConfig()->get('internalOutboundEmailFromAddress', $this->getConfig()->get('outboundEmailFromAddress'))
-            ));
-        }
-
-        $this->getMailSender()->send($email);
+        $this->getMailSender()->send(
+            [
+                'subject' => $subject,
+                'body'    => $body,
+                'isHtml'  => false,
+                'to'      => $emailAddress
+            ]
+        );
     }
 
     public function deleteEntity($id)

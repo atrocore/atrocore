@@ -28,14 +28,9 @@
                 "delete": "own",
                 "create": "yes"
             },
-            "EmailAccount": false,
             "ExternalAccount": false,
             "Role": false,
             "PortalRole": false,
-            "EmailFilter": false,
-            "EmailFolder": false,
-            "EmailAccount": false,
-            "EmailTemplate": false,
             "ActionHistoryRecord": false,
             "Preferences": {
                 "read": "own",
@@ -48,25 +43,13 @@
         },
         "scopeFieldLevel": {
             "Preferences": {
-                "smtpServer": false,
-                "smtpPort": false,
-                "smtpSecurity": false,
-                "smtpUsername": false,
-                "smtpPassword": false,
-                "smtpAuth": false,
                 "receiveAssignmentEmailNotifications": false,
                 "receiveMentionEmailNotifications": false,
-                "defaultReminders": false,
                 "autoFollowEntityTypeList": false,
-                "emailReplyForceHtml": false,
-                "emailReplyToAllByDefault": false,
-                "signature": false,
                 "followCreatedEntities": false,
                 "followEntityOnStreamPost": false,
-                "doNotFillAssignedUserIfNotRequired": false,
                 "useCustomTabList": false,
                 "tabList": false,
-                "emailUseExternalClient": false,
                 "dashboardLayout": false
             },
             "Call": {
@@ -81,10 +64,6 @@
             "Note": {
                 "isInternal": false,
                 "isGlobal": false
-            },
-            "Email": {
-                "inboundEmails": false,
-                "emailAccounts": false
             },
             "User": {
                 "isAdmin": false,

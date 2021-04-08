@@ -33,18 +33,62 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core\Loaders;
+namespace Espo\Core\Utils\Authentication;
+
+use Espo\Core\Container;
+use Espo\Core\Utils\Auth;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\PasswordHash;
+use Espo\ORM\EntityManager;
 
 /**
- * MailSender loader
+ * Class AbstractAuthentication
  */
-class MailSender extends Base
+abstract class AbstractAuthentication
 {
     /**
-     * @inheritDoc
+     * @var Auth
      */
-    public function load()
+    protected $auth;
+
+    /**
+     * @var Container
+     */
+    protected $container;
+
+    /**
+     * @var string
+     */
+    private $passwordHash;
+
+    /**
+     * AbstractAuthentication constructor.
+     *
+     * @param Auth      $auth
+     * @param Container $container
+     */
+    public function __construct(Auth $auth, Container $container)
     {
-        return new \Espo\Core\Mail\Sender($this->getContainer()->get('config'));
+        $this->auth = $auth;
+        $this->container = $container;
+    }
+
+    protected function getConfig(): Config
+    {
+        return $this->container->get('config');
+    }
+
+    protected function getEntityManager(): EntityManager
+    {
+        return $this->container->get('entityManager');
+    }
+
+    protected function getPasswordHash(): PasswordHash
+    {
+        if (!isset($this->passwordHash)) {
+            $this->passwordHash = new PasswordHash($this->getConfig());
+        }
+
+        return $this->passwordHash;
     }
 }

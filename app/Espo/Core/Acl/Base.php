@@ -264,27 +264,6 @@ class Base implements Injectable
             return true;
         }
 
-        if (is_object($data)) {
-            if ($data->edit !== 'no' || $data->create !== 'no') {
-                if (
-                    $this->getConfig()->get('aclAllowDeleteCreated')
-                    &&
-                    $entity->has('createdById') && $entity->get('createdById') == $user->id
-                ) {
-                    if (!$entity->has('assignedUserId')) {
-                        return true;
-                    } else {
-                        if (!$entity->get('assignedUserId')) {
-                            return true;
-                        }
-                        if ($entity->get('assignedUserId') == $entity->get('createdById')) {
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-
         return false;
     }
 

@@ -48,7 +48,7 @@ Espo.define('acl-portal-manager', ['acl-manager', 'acl-portal'], function (Dep, 
                 if (scope in this.implementationClassMap) {
                     implementationClass = this.implementationClassMap[scope];
                 }
-                var obj = new implementationClass(this.getUser(), scope, this.aclAllowDeleteCreated);
+                var obj = new implementationClass(this.getUser(), scope);
                 this.implementationHash[scope] = obj;
             }
             return this.implementationHash[scope];

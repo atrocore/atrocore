@@ -36,10 +36,6 @@ namespace Espo\Services;
 use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\NotFound;
 
-use Espo\ORM\Entity;
-
-use \Espo\Core\Htmlizer\Htmlizer;
-
 class DataPrivacy extends \Espo\Core\Services\Base
 {
     protected function init()
@@ -187,29 +183,6 @@ class DataPrivacy extends \Espo\Core\Services\Base
         $this->getEntityManager()->saveEntity($entity);
 
         return true;
-    }
-
-    public function exportPdf()
-    {
-
-
-        $htmlizer = new Htmlizer(
-            $this->getFileManager(),
-            $this->getInjection('dateTime'),
-            $this->getInjection('number'),
-            $this->getAcl(),
-            $this->getInjection('entityManager'),
-            $this->getInjection('metadata'),
-            $this->getInjection('defaultLanguage')
-        );
-
-        $pdf = new \Espo\Core\Pdf\Tcpdf();
-
-        $fontFace = $this->getConfig()->get('pdfFontFace', $this->fontFace);
-
-        $pdf->setFont($fontFace, '', $this->fontSize, '', true);
-        $pdf->setPrintHeader(false);
-
     }
 }
 

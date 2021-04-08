@@ -31,24 +31,63 @@
  * and "AtroCore" word.
  */
 
+declare(strict_types=1);
+
 namespace Espo\Controllers;
 
-use \Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Utils\Auth;
+use Espo\Core\Controllers\Base;
+use Espo\Core\Exceptions\BadRequest;
 
-class App extends \Espo\Core\Controllers\Base
+/**
+ * Class App
+ */
+class App extends Base
 {
-    public function actionUser()
+    /**
+     * @param mixed $params
+     * @param mixed $data
+     * @param mixed $request
+     *
+     * @return array
+     */
+    public function actionUser($params, $data, $request)
     {
-        return $this->getServiceFactory()->create('App')->getUserData();
+        return $this->getService('App')->getUserData();
     }
 
-    public function postActionDestroyAuthToken($params, $data)
+    /**
+     * @param mixed $params
+     * @param mixed $data
+     * @param mixed $request
+     *
+     * @return bool
+     * @throws BadRequest
+     */
+    public function postActionDestroyAuthToken($params, $data, $request)
     {
         if (empty($data->token)) {
             throw new BadRequest();
         }
 
-        $auth = new \Espo\Core\Utils\Auth($this->getContainer());
-        return $auth->destroyAuthToken($data->token);
+        return (new Auth($this->getContainer()))->destroyAuthToken($data->token);
+    }
+
+    /**
+     * @param mixed $params
+     * @param mixed $data
+     * @param mixed $request
+     *
+     * @return mixed
+     * @throws Forbidden
+     */
+    public function actionSendTestEmail($params, $data, $request)
+    {
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
+
+        return $this->getService('App')->sendTestEmail(get_object_vars($data));
     }
 }

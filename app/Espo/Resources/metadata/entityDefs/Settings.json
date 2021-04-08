@@ -649,11 +649,6 @@
       "type": "base",
       "view": "views/settings/fields/currency-rates"
     },
-    "outboundEmailIsShared": {
-      "type": "bool",
-      "default": false,
-      "tooltip": true
-    },
     "outboundEmailFromName": {
       "type": "varchar",
       "default": "EspoCRM",
@@ -721,9 +716,9 @@
     "authenticationMethod": {
       "type": "enum",
       "options": [
-        "Espo"
+        "Token"
       ],
-      "default": "Espo"
+      "default": "Token"
     },
     "ldapHost": {
       "type": "varchar",
@@ -937,28 +932,6 @@
       "view": "views/settings/fields/theme",
       "translation": "Global.themes"
     },
-    "emailMessageMaxSize": {
-      "type": "float",
-      "min": 0,
-      "tooltip": true
-    },
-    "inboundEmailMaxPortionSize": {
-      "type": "int",
-      "min": 1,
-      "max": 500
-    },
-    "personalEmailMaxPortionSize": {
-      "type": "int",
-      "min": 1,
-      "max": 500
-    },
-    "maxEmailAccountCount": {
-      "type": "int"
-    },
-    "massEmailMaxPerHourCount": {
-      "type": "int",
-      "min": 1
-    },
     "authTokenLifetime": {
       "type": "float",
       "min": 0,
@@ -1020,17 +993,7 @@
       "type": "multiEnum",
       "view": "views/settings/fields/history-entity-list"
     },
-    "googleMapsApiKey": {
-      "type": "varchar"
-    },
-    "massEmailDisableMandatoryOptOutLink": {
-      "type": "bool"
-    },
     "aclStrictMode": {
-      "type": "bool",
-      "tooltip": true
-    },
-    "aclAllowDeleteCreated": {
       "type": "bool",
       "tooltip": true
     },
@@ -1066,10 +1029,6 @@
     "emailAddressIsOptedOutByDefault": {
       "type": "bool",
       "tooltip": true
-    },
-    "outboundEmailBccAddress": {
-      "type": "varchar",
-      "trim": true
     },
     "cleanupDeletedRecords": {
       "type": "bool",

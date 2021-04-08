@@ -33,24 +33,47 @@
 
 namespace Espo\Core\Utils\Api;
 
-use \Espo\Core\Utils\Api\Slim;
+use Espo\Core\Utils\Auth as UtilsAuth;
+use Slim\Middleware;
 
-class Auth extends \Slim\Middleware
+/**
+ * Class Auth
+ */
+class Auth extends Middleware
 {
+    /**
+     * @var UtilsAuth
+     */
     protected $auth;
 
-    protected $authRequired = null;
+    /**
+     * @var bool|null
+     */
+    protected $authRequired;
 
-    protected $showDialog = false;
+    /**
+     * @var bool
+     */
+    protected $showDialog;
 
-    public function __construct(\Espo\Core\Utils\Auth $auth, $authRequired = null, $showDialog = false)
+    /**
+     * Auth constructor.
+     *
+     * @param UtilsAuth $auth
+     * @param bool|null $authRequired
+     * @param bool      $showDialog
+     */
+    public function __construct(UtilsAuth $auth, bool $authRequired = null, bool $showDialog = false)
     {
         $this->auth = $auth;
         $this->authRequired = $authRequired;
         $this->showDialog = $showDialog;
     }
 
-    function call()
+    /**
+     * @inheritDoc
+     */
+    public function call()
     {
         $req = $this->app->request();
 
@@ -60,24 +83,14 @@ class Auth extends \Slim\Middleware
         $authUsername = $req->headers('PHP_AUTH_USER');
         $authPassword = $req->headers('PHP_AUTH_PW');
 
-        $espoAuth = $req->headers('HTTP_ESPO_AUTHORIZATION');
-        if (isset($espoAuth)) {
-            list($authUsername, $authPassword) = explode(':', base64_decode($espoAuth), 2);
+        $authToken = $req->headers('HTTP_AUTHORIZATION_TOKEN');
+        if (isset($authToken)) {
+            list($authUsername, $authPassword) = explode(':', base64_decode($authToken), 2);
         }
 
-        if (!isset($authUsername)) {
-            if (!empty($_COOKIE['auth-username']) && !empty($_COOKIE['auth-token'])) {
-                $authUsername = $_COOKIE['auth-username'];
-                $authPassword = $_COOKIE['auth-token'];
-            }
-        }
-
-        $espoCgiAuth = $req->headers('HTTP_ESPO_CGI_AUTH');
-        if (empty($espoCgiAuth)) {
-            $espoCgiAuth = $req->headers('REDIRECT_HTTP_ESPO_CGI_AUTH');
-        }
-        if (!isset($authUsername) && !isset($authPassword) && !empty($espoCgiAuth)) {
-            list($authUsername, $authPassword) = explode(':' , base64_decode(substr($espoCgiAuth, 6)));
+        if (!isset($authUsername) && !empty($_COOKIE['auth-username']) && !empty($_COOKIE['auth-token'])) {
+            $authUsername = $_COOKIE['auth-username'];
+            $authPassword = $_COOKIE['auth-token'];
         }
 
         if (is_null($this->authRequired)) {
@@ -134,7 +147,7 @@ class Auth extends \Slim\Middleware
         }
     }
 
-    protected function processException(\Exception $e)
+    protected function processException(\Exception $e): void
     {
         $response = $this->app->response();
 
@@ -144,7 +157,7 @@ class Auth extends \Slim\Middleware
         $response->setStatus($e->getCode());
     }
 
-    protected function processUnauthorized()
+    protected function processUnauthorized(): void
     {
         $response = $this->app->response();
 
@@ -154,7 +167,7 @@ class Auth extends \Slim\Middleware
         $response->setStatus(401);
     }
 
-    protected function isXMLHttpRequest()
+    protected function isXMLHttpRequest(): bool
     {
         $request = $this->app->request();
 

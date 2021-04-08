@@ -374,7 +374,7 @@ Espo.define(
         },
 
         createAclManager: function () {
-            return new AclManager(this.user, null, this.settings.get('aclAllowDeleteCreated'));
+            return new AclManager(this.user, null);
         },
 
         initView: function () {
@@ -468,10 +468,7 @@ Espo.define(
 
                 this.setCookieAuth(data.auth.userName, data.auth.token);
 
-                this.initUserData(data, function () {
-                    this.trigger('auth');
-                }.bind(this));
-
+                window.location.reload(true);
             }.bind(this));
 
             this.baseController.on('logout', function () {
@@ -605,9 +602,7 @@ Espo.define(
                         options.url = self.basePath + options.url;
                     }
                     if (self.auth !== null) {
-                        xhr.setRequestHeader('Authorization', 'Basic ' + self.auth);
-                        xhr.setRequestHeader('Espo-Authorization', self.auth);
-                        xhr.setRequestHeader('Espo-Authorization-By-Token', true);
+                        xhr.setRequestHeader('Authorization-Token', self.auth);
                     }
                 },
                 dataType: 'json',

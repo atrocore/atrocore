@@ -38,11 +38,6 @@
             "type": "hasMany",
             "entity": "Note",
             "foreign": "teams"
-        },
-        "inboundEmails": {
-            "type": "hasMany",
-            "entity": "InboundEmail",
-            "foreign": "teams"
         }
     },
     "collection": {

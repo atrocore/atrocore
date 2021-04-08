@@ -100,10 +100,6 @@ class Preferences extends \Espo\Core\Controllers\Base
             unset($data->$attribute);
         }
 
-        if (property_exists($data, 'smtpPassword')) {
-            $data->smtpPassword = $this->getCrypt()->encrypt($data->smtpPassword);
-        }
-
         $user = $this->getEntityManager()->getEntity('User', $userId);
 
         $entity = $this->getEntityManager()->getEntity('Preferences', $userId);
@@ -112,10 +108,8 @@ class Preferences extends \Espo\Core\Controllers\Base
             $entity->set($data);
             $this->getEntityManager()->saveEntity($entity);
 
-            $entity->set('smtpEmailAddress', $user->get('emailAddress'));
             $entity->set('name', $user->get('name'));
 
-            $entity->clear('smtpPassword');
 
             return $entity->getValueMap();
         }
@@ -134,11 +128,8 @@ class Preferences extends \Espo\Core\Controllers\Base
             throw new NotFound();
         }
 
-        $entity->set('smtpEmailAddress', $user->get('emailAddress'));
         $entity->set('name', $user->get('name'));
         $entity->set('isPortalUser', $user->get('isPortalUser'));
-
-        $entity->clear('smtpPassword');
 
         foreach ($this->getAcl()->getScopeForbiddenAttributeList('Preferences', 'read') as $attribute) {
             $entity->clear($attribute);

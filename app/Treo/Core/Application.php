@@ -40,10 +40,10 @@ use Espo\Core\Utils\Json;
 use Espo\Core\EntryPointManager;
 use Espo\Entities\Portal;
 use Espo\Core\Utils\Route;
-use Treo\Services\Installer;
-use Treo\Core\Utils\Auth;
-use Treo\Core\Utils\Metadata;
+use Espo\Core\Utils\Auth;
 use Espo\Core\Utils\Config;
+use Treo\Services\Installer;
+use Treo\Core\Utils\Metadata;
 
 /**
  * Class Application

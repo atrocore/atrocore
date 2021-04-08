@@ -35,65 +35,11 @@
         ]
     },
     {
-        "label": "Misc",
+        "label": "General",
         "rows": [
             [
                 {
                     "name": "autoFollowEntityTypeList"
-                },
-                false
-            ],
-            [
-                {
-                    "name": "signature",
-                    "params": {
-                        "height": 70,
-                        "toolbar": [
-                            [
-                                "style",
-                                [
-                                    "bold",
-                                    "italic",
-                                    "underline",
-                                    "clear"
-                                ]
-                            ],
-                            [
-                                "color",
-                                [
-                                    "color"
-                                ]
-                            ],
-                            [
-                                "height",
-                                [
-                                    "height"
-                                ]
-                            ],
-                            [
-                                "misc",
-                                [
-                                    "codeview"
-                                ]
-                            ]
-                        ]
-                    }
-                },
-                {
-                    "name": "defaultReminders"
-                }
-            ],
-            [
-                {
-                    "name": "emailReplyToAllByDefault"
-                },
-                {
-                    "name": "doNotFillAssignedUserIfNotRequired"
-                }
-            ],
-            [
-                {
-                    "name": "emailReplyForceHtml"
                 },
                 {
                     "name": "followEntityOnStreamPost"
@@ -101,14 +47,8 @@
             ],
             [
                 {
-                    "name": "emailUseExternalClient"
-                },
-                {
                     "name": "followCreatedEntities"
-                }
-            ],
-            [
-                false,
+                },
                 {
                     "name": "followCreatedEntityTypeList"
                 }
@@ -163,49 +103,6 @@
             [
                 {
                     "name": "receiveStreamEmailNotifications"
-                },
-                false
-            ]
-        ]
-    },
-    {
-        "label": "SMTP",
-        "rows": [
-            [
-                {
-                    "name": "smtpEmailAddress"
-                },
-                false
-            ],
-            [
-                {
-                    "name": "smtpServer"
-                },
-                {
-                    "name": "smtpPort"
-                }
-            ],
-            [
-                {
-                    "name": "smtpAuth"
-                },
-                {
-                    "name": "smtpSecurity"
-                }
-            ],
-            [
-                {
-                    "name": "smtpUsername"
-                },
-                {
-                    "name": "testSend",
-                    "customLabel": null,
-                    "view": "views/preferences/fields/test-send"
-                }
-            ],
-            [
-                {
-                    "name": "smtpPassword"
                 },
                 false
             ]

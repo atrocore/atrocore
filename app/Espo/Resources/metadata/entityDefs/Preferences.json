@@ -56,39 +56,6 @@
         "presetFilters": {
             "type": "jsonObject"
         },
-        "smtpEmailAddress": {
-            "type": "varchar",
-            "readOnly": true,
-            "notStorable": true,
-            "view": "views/preferences/fields/smtp-email-address",
-            "trim": true
-        },
-        "smtpServer": {
-            "type": "varchar",
-            "trim": true
-        },
-        "smtpPort": {
-            "type": "int",
-            "min": 0,
-            "max": 9999,
-            "default": 25
-        },
-        "smtpAuth": {
-            "type": "bool",
-            "default": false
-        },
-        "smtpSecurity": {
-            "type": "enum",
-            "options": ["", "SSL", "TLS"]
-        },
-        "smtpUsername": {
-            "type": "varchar",
-            "required": true,
-            "trim": true
-        },
-        "smtpPassword": {
-            "type": "password"
-        },
         "language": {
             "type": "enum",
             "default": "",
@@ -113,10 +80,6 @@
             "notStorable": true,
             "tooltip": true
         },
-        "signature": {
-            "type": "text",
-            "view": "views/fields/wysiwyg"
-        },
         "theme": {
             "type": "enum",
             "view": "views/preferences/fields/theme",
@@ -130,21 +93,9 @@
             "type": "array",
             "view": "views/preferences/fields/tab-list"
         },
-        "emailReplyToAllByDefault": {
-            "type": "bool",
-            "default": true
-        },
-        "emailReplyForceHtml": {
-            "type": "bool",
-            "default": false
-        },
         "isPortalUser": {
             "type": "bool",
             "notStorable": true
-        },
-        "doNotFillAssignedUserIfNotRequired": {
-            "type": "bool",
-            "tooltip": true
         },
         "followEntityOnStreamPost": {
             "type": "bool",
@@ -159,9 +110,6 @@
             "view": "views/preferences/fields/auto-follow-entity-type-list",
             "translation": "Global.scopeNamesPlural",
             "tooltip": true
-        },
-        "emailUseExternalClient": {
-            "type": "bool"
         },
         "scopeColorsDisabled": {
             "type": "bool"

@@ -18,6 +18,11 @@
         "description": "authentication"
       },
       {
+        "url": "#Admin/outboundEmails",
+        "label": "Email",
+        "description": "outboundEmails"
+      },
+      {
         "url": "#ScheduledJob",
         "label": "Scheduled Jobs",
         "description": "scheduledJob"
@@ -36,11 +41,6 @@
         "url": "#Admin/notifications",
         "label": "Notifications",
         "description": "notifications"
-      },
-      {
-        "url": "#Admin/integrations",
-        "label": "Integrations",
-        "description": "integrations"
       },
       {
         "url": "#Admin/clearCache",
@@ -116,42 +116,6 @@
       }
     ],
     "order": 20
-  },
-  "email": {
-    "label": "Email",
-    "itemList": [
-      {
-        "url": "#Admin/outboundEmails",
-        "label": "Outbound Emails",
-        "description": "outboundEmails"
-      },
-      {
-        "url": "#Admin/inboundEmails",
-        "label": "Inbound Emails",
-        "description": "inboundEmails"
-      },
-      {
-        "url": "#InboundEmail",
-        "label": "Group Email Accounts",
-        "description": "groupEmailAccounts"
-      },
-      {
-        "url": "#EmailAccount",
-        "label": "Personal Email Accounts",
-        "description": "personalEmailAccounts"
-      },
-      {
-        "url": "#EmailFilter",
-        "label": "Email Filters",
-        "description": "emailFilters"
-      },
-      {
-        "url": "#EmailTemplate",
-        "label": "Email Templates",
-        "description": "emailTemplates"
-      }
-    ],
-    "order": 30
   },
   "portal": {
     "label": "Portal",

@@ -38,12 +38,11 @@
 
 Espo.define('acl-manager', ['acl'], function (Acl) {
 
-    var AclManager = function (user, implementationClassMap, aclAllowDeleteCreated) {
+    var AclManager = function (user, implementationClassMap) {
         this.setEmpty();
 
         this.user = user || null;
         this.implementationClassMap = implementationClassMap || {};
-        this.aclAllowDeleteCreated = aclAllowDeleteCreated;
     }
 
     _.extend(AclManager.prototype, {
@@ -72,7 +71,7 @@ Espo.define('acl-manager', ['acl'], function (Acl) {
                 if (scope in this.implementationClassMap) {
                     implementationClass = this.implementationClassMap[scope];
                 }
-                var obj = new implementationClass(this.getUser(), scope, this.aclAllowDeleteCreated);
+                var obj = new implementationClass(this.getUser(), scope);
                 this.implementationHash[scope] = obj;
             }
             return this.implementationHash[scope];
