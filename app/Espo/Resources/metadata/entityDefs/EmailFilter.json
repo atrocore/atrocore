@@ -73,7 +73,7 @@
         },
         "parent": {
             "type": "belongsToParent",
-            "entityList": ["User", "EmailAccount"]
+            "entityList": ["User"]
         },
         "emailFolder": {
             "type": "belongsTo",

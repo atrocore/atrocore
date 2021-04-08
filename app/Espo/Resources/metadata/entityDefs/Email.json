@@ -280,13 +280,6 @@
             "layoutListDisabled": true,
             "layoutMassUpdateDisabled": true,
             "readOnly": true
-        },
-        "emailAccounts": {
-            "type": "linkMultiple",
-            "layoutDetailDisabled": true,
-            "layoutListDisabled": true,
-            "layoutMassUpdateDisabled": true,
-            "noLoad": true
         }
     },
     "links": {
@@ -420,11 +413,6 @@
                     "len": "4"
                 }
             }
-        },
-        "emailAccounts": {
-            "type": "hasMany",
-            "entity": "EmailAccount",
-            "foreign": "emails"
         }
     },
     "collection": {

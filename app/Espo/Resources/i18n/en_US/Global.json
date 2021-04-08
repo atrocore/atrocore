@@ -94,8 +94,6 @@
     "Team": "Teams",
     "Role": "Roles",
     "EmailTemplate": "Email Templates",
-    "EmailAccount": "Personal Email Accounts",
-    "EmailAccountScope": "Personal Email Accounts",
     "OutboundEmail": "Outbound Emails",
     "ScheduledJob": "Scheduled Jobs",
     "ExternalAccount": "External Accounts",
