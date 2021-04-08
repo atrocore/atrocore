@@ -121,11 +121,6 @@
     "label": "Email",
     "itemList": [
       {
-        "url": "#InboundEmail",
-        "label": "Group Email Accounts",
-        "description": "groupEmailAccounts"
-      },
-      {
         "url": "#EmailAccount",
         "label": "Personal Email Accounts",
         "description": "personalEmailAccounts"
