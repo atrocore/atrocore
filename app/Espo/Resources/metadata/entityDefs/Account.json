@@ -197,18 +197,6 @@
             "entity": "Contact",
             "foreign": "accounts"
         },
-        "emailsPrimary": {
-            "type": "hasMany",
-            "entity": "Email",
-            "foreign": "account",
-            "layoutRelationshipsDisabled": true
-        },
-        "emails": {
-            "type": "hasChildren",
-            "entity": "Email",
-            "foreign": "parent",
-            "layoutRelationshipsDisabled": true
-        },
         "portalUsers": {
             "type": "hasMany",
             "entity": "User",
