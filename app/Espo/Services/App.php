@@ -122,8 +122,7 @@ class App extends \Espo\Core\Services\Base
             'settings' => $settings,
             'language' => $language,
             'appParams' => [
-                'maxUploadSize' => $this->getMaxUploadSize() / 1024.0 / 1024.0,
-                'templateEntityTypeList' => $this->getTemplateEntityTypeList()
+                'maxUploadSize' => $this->getMaxUploadSize() / 1024.0 / 1024.0
             ]
         ];
     }
@@ -180,31 +179,6 @@ class App extends \Espo\Core\Services\Base
                 break;
             }
         return $value;
-    }
-
-    protected function getTemplateEntityTypeList()
-    {
-        if (!$this->getAcl()->checkScope('Template')) {
-            return [];
-        }
-
-        $list = [];
-
-        $selectManager = $this->getInjection('selectManagerFactory')->create('Template');
-
-        $selectParams = $selectManager->getEmptySelectParams();
-        $selectManager->applyAccess($selectParams);
-
-        $templateList = $this->getEntityManager()->getRepository('Template')
-            ->select(['entityType'])
-            ->groupBy(['entityType'])
-            ->find($selectParams);
-
-        foreach ($templateList as $template) {
-            $list[] = $template->get('entityType');
-        }
-
-        return $list;
     }
 
     public function jobClearCache()

@@ -5,7 +5,6 @@
     "DocumentFolder": "Document Folder",
     "KnowledgeBaseCategory": "Knowledge Base Category",
     "MeasuringUnit": "Measuring Unit",
-    "Template": "Template",
     "Contact": "Contact",
     "Composer": "Composer",
     "Currency": "Currency",
@@ -64,7 +63,6 @@
     "DocumentFolder": "Document Folders",
     "KnowledgeBaseCategory": "Knowledge Base Categories",
     "MeasuringUnit": "Measuring Units",
-    "Template": "Templates",
     "Contact": "Contacts",
     "AuthFailLogRecord": "Auth Fail Log Records",
     "AuthLogRecord": "Auth Log Records",
@@ -347,8 +345,7 @@
     "massUnfollowResultSingle": "{count} record now is not followed",
     "massFollowZeroResult": "Nothing got followed",
     "massUnfollowZeroResult": "Nothing got unfollowed",
-    "erasePersonalDataConfirmation": "Checked fields will be erased permanently. Are you sure?",
-    "massPrintPdfMaxCountError": "Can't print more that {maxCount} records.",
+    "erasePersonalDataConfirmation": "Checked fields will be erased permanently. Are you sure?"
     "clearAclCacheError": "ACL cache could not be cleared.",
     "emptyMultilangOptions": "Options list cannot be empty while multi-language option is activated."
   },
@@ -372,8 +369,7 @@
     "export": "Export",
     "follow": "Follow",
     "unfollow": "Unfollow",
-    "convertCurrency": "Convert Currency",
-    "printPdf": "Print to PDF"
+    "convertCurrency": "Convert Currency"
   },
   "fields": {
     "addressCity": "City",

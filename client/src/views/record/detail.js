@@ -119,8 +119,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         inlineEditDisabled: false,
 
-        printPdfAction: true,
-
         portalLayoutDisabled: false,
 
         events: {
@@ -229,21 +227,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             }
                         }, this);
                     }
-                }
-            }
-
-            if (this.type === 'detail' && this.printPdfAction) {
-                var printPdfAction = true;
-
-                if (!~(this.getHelper().getAppParam('templateEntityTypeList') || []).indexOf(this.entityType)) {
-                    printPdfAction = false;
-                }
-
-                if (printPdfAction) {
-                    this.dropdownItemList.push({
-                        'label': 'Print to PDF',
-                        'name': 'printPdf'
-                    });
                 }
             }
 
@@ -904,18 +887,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.listenToOnce(view, 'erase', function () {
                     this.clearView('viewPersonalData');
                     this.model.fetch();
-                }, this);
-            });
-        },
-
-        actionPrintPdf: function () {
-            this.createView('pdfTemplate', 'views/modals/select-template', {
-                entityType: this.model.name
-            }, function (view) {
-                view.render();
-                this.listenToOnce(view, 'select', function (model) {
-                    this.clearView('pdfTemplate');
-                    window.open('?entryPoint=pdf&entityType='+this.model.name+'&entityId='+this.model.id+'&templateId=' + model.id, '_blank');
                 }, this);
             });
         },

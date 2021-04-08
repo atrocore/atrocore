@@ -20,7 +20,6 @@
     "OutboundEmail": "Ausgehende E-Mail",
     "ScheduledJob": "Geplante Aufgabe",
     "ExternalAccount": "Externes Konto",
-    "Template": "Vorlage",
     "PortalRole": "Portal Rolle",
     "Attachment": "Anhang",
     "PortalUser": "Portal Benutzer",
@@ -67,7 +66,6 @@
     "ScheduledJob": "Geplante Jobs",
     "ExternalAccount": "Externe Konten",
     "Stream": "Aktivitäten",
-    "Template": "Vorlagen",
     "Portal": "Portale",
     "PortalRole": "Portal Rollen",
     "Attachment": "Anhänge",
@@ -272,7 +270,6 @@
     "massFollowResult": "{count} Datensätze wurden abonniert",
     "massFollowResultSingle": "{count} Datensatz wurde abonniert",
     "massFollowZeroResult": "Keine Datensätze wurden abonniert",
-    "massPrintPdfMaxCountError": "Es können nicht mehr als {maxCount} Datensätze gedruckt werden.",
     "massUnfollowResult": "{count} Datensätze werden nicht mehr abonniert",
     "massUnfollowResultSingle": "{count} Datensatz wird nicht mehr abonniert",
     "massUnfollowZeroResult": "Keine Datensätze wurden abbestellt",
@@ -387,8 +384,7 @@
     "addRelation": "Beziehung hinzufügen",
     "removeRelation": "Beziehung entfernen",
     "massUpdate": "Massenänderung",
-    "convertCurrency": "Währung umrechnen",
-    "printPdf": "Als PDF drucken"
+    "convertCurrency": "Währung umrechnen"
   },
   "fields": {
     "amount": "Anzahl",

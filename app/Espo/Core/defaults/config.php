@@ -91,7 +91,6 @@ return [
     'inlineAttachmentUploadMaxSize'          => 20,
     'textFilterUseContainsForVarchar'        => false,
     'tabColorsDisabled'                      => false,
-    'massPrintPdfMaxCount'                   => 50,
     'emailKeepParentTeamsEntityList'         => ['Case'],
     'recordListMaxSizeLimit'                 => 200,
     'noteDeleteThresholdPeriod'              => '1 month',
