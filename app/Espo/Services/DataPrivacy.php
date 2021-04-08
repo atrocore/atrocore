@@ -36,10 +36,6 @@ namespace Espo\Services;
 use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\NotFound;
 
-use Espo\ORM\Entity;
-
-use \Espo\Core\Htmlizer\Htmlizer;
-
 class DataPrivacy extends \Espo\Core\Services\Base
 {
     protected function init()
