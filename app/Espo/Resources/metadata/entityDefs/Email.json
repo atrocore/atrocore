@@ -281,13 +281,6 @@
             "layoutMassUpdateDisabled": true,
             "readOnly": true
         },
-        "inboundEmails": {
-            "type": "linkMultiple",
-            "layoutDetailDisabled": true,
-            "layoutListDisabled": true,
-            "layoutMassUpdateDisabled": true,
-            "noLoad": true
-        },
         "emailAccounts": {
             "type": "linkMultiple",
             "layoutDetailDisabled": true,
@@ -427,11 +420,6 @@
                     "len": "4"
                 }
             }
-        },
-        "inboundEmails": {
-            "type": "hasMany",
-            "entity": "InboundEmail",
-            "foreign": "emails"
         },
         "emailAccounts": {
             "type": "hasMany",

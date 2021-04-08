@@ -32,7 +32,6 @@
     "isUsers": "Is User's",
     "inTrash": "In Trash",
     "folder": "Folder",
-    "inboundEmails": "Group Accounts",
     "emailAccounts": "Personal Accounts",
     "hasAttachment": "Has Attachment",
     "assignedUsers": "Assigned Users",
@@ -49,7 +48,6 @@
   "links": {
     "replied": "Replied",
     "replies": "Replies",
-    "inboundEmails": "Group Accounts",
     "emailAccounts": "Personal Accounts",
     "assignedUsers": "Assigned Users",
     "sentBy": "Sent By",
@@ -80,7 +78,6 @@
     "Original message": "Original message",
     "Forwarded message": "Forwarded message",
     "Email Accounts": "Personal Email Accounts",
-    "Inbound Emails": "Group Email Accounts",
     "Email Templates": "Email Templates",
     "Send Test Email": "Send Test Email",
     "Send": "Send",

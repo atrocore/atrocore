@@ -129,7 +129,7 @@ class EmailAccount extends Record
             $count = $this->getEntityManager()->getRepository('EmailAccount')->where(array(
                 'assignedUserId' => $this->getUser()->id
             ))->count();
-            if ($count >= $this->getConfig()->get('maxEmailAccountCount', \PHP_INT_MAX)) {
+            if ($count >= \PHP_INT_MAX) {
                 throw new Forbidden();
             }
         }
@@ -182,7 +182,7 @@ class EmailAccount extends Record
 
         $importer = new \Espo\Core\Mail\Importer($this->getEntityManager(), $this->getConfig());
 
-        $maxSize = $this->getConfig()->get('emailMessageMaxSize');
+        $maxSize = 10;
 
         $user = $this->getEntityManager()->getEntity('User', $emailAccount->get('assignedUserId'));
         if (!$user) {
@@ -230,7 +230,7 @@ class EmailAccount extends Record
             throw new Error();
         }
 
-        $portionLimit = $this->getConfig()->get('personalEmailMaxPortionSize', self::PORTION_LIMIT);
+        $portionLimit = self::PORTION_LIMIT;
 
         $parserName = 'MailMimeParser';
         if ($this->getConfig()->get('emailParser')) {

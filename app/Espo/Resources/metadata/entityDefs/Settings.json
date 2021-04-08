@@ -932,24 +932,6 @@
       "view": "views/settings/fields/theme",
       "translation": "Global.themes"
     },
-    "emailMessageMaxSize": {
-      "type": "float",
-      "min": 0,
-      "tooltip": true
-    },
-    "inboundEmailMaxPortionSize": {
-      "type": "int",
-      "min": 1,
-      "max": 500
-    },
-    "personalEmailMaxPortionSize": {
-      "type": "int",
-      "min": 1,
-      "max": 500
-    },
-    "maxEmailAccountCount": {
-      "type": "int"
-    },
     "authTokenLifetime": {
       "type": "float",
       "min": 0,
