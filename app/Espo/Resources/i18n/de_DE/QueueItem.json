@@ -37,7 +37,7 @@
   "notificationMessages": {
     "error": "%  ist fehlgeschlagen",
     "success": "%  wurde erfolgreich abgeschlossen",
-    "queueItemDone": "Das Warteschlangenelement \"<span style=\"font-style:italic\">%s</span>\" wurde mit dem Status \"%s\" ausgeführt."
+    "queueItemDone": "Das Warteschlangenelement \"%s\" wurde mit dem Status \"%s\" ausgeführt."
   },
   "messages": {
     "byQueueManager": "Wird vom Warteschlangenmanager verarbeitet"

@@ -36,7 +36,7 @@
   "notificationMessages": {
     "success": "%s was successfully completed",
     "error": "%s failed",
-    "queueItemDone": "Queue item \"<span style=\"font-style:italic\">%s</span>\" was executed with status \"%s\"."
+    "queueItemDone": "Queue item \"%s\" was executed with status \"%s\"."
   },
   "messages": {
     "byQueueManager": "Processed by Queue Manager"
