@@ -98,14 +98,7 @@ return array (    'defaultPermissions' =>
         'userLimit',
         'portalUserLimit',
         'stylesheet',
-        'userItems',
-        'internalSmtpServer',
-        'internalSmtpPort',
-        'internalSmtpAuth',
-        'internalSmtpUsername',
-        'internalSmtpPassword',
-        'internalSmtpSecurity',
-        'internalOutboundEmailFromAddress'
+        'userItems'
     ),
     'adminItems' =>
     array (
