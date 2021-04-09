@@ -15324,6 +15324,7 @@ ul.dropdown-menu > li > a > .check-icon + div {
   }
 
   #main > .record > .detail > .row > .overview {
+    box-sizing: content-box;
     border-right: 1px solid #e0e0e0;
   }
 
@@ -18763,11 +18764,15 @@ table.table > thead th > a {
 .page-header .header-buttons .filter-cell {
   display: inline-block;
   width: 170px;
-  margin-right: -1px;
 }
 
 .page-header .header-buttons .filter-cell > .field {
   border: 1px solid #e0e0e0;
+}
+
+.page-header .header-buttons .filter-cell:not(:first-child):not(:last-child) > .field {
+  border-left: 0;
+  border-right: 0;
 }
 
 .page-header .header-buttons .filter-cell > .field .form-control {
@@ -20864,7 +20869,6 @@ body,
 #header > #navbar .navbar-inverse .navbar-nav > .open > a,
 #header > #navbar .navbar-inverse .navbar-nav > .open > a:hover,
 #header > #navbar .navbar-inverse .navbar-nav > .open > a:focus {
-  background-color: #F5F5F5 !important;
   color: #111111 !important;
 }
 
@@ -20885,7 +20889,7 @@ body,
 #header > #navbar .navbar-inverse .navbar-nav > .more-group > ul > li.active > a:hover,
 #header > #navbar .navbar-inverse .navbar-nav > .more-group > ul > li.active > a:focus {
   color: #111111 !important;
-  background-color: #fbfbfb !important;
+  background-color: #F5F5F5 !important;
 }
 
 #header > #navbar .navbar-inverse .navbar-nav > .open > ul > li > a,
