@@ -45,6 +45,10 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
                 var tab = parseInt($(e.currentTarget).data('tab'));
                 this.selectTab(tab);
             },
+            'change select[data-action="selectTab"]': function (e) {
+                var tab = $(e.currentTarget).prop('selectedIndex');
+                this.selectTab(tab);
+            },
             'click button[data-action="addDashlet"]': function () {
                 this.createView('addDashlet', 'views/modals/add-dashlet', {}, function (view) {
                     view.render();
