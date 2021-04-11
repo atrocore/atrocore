@@ -19377,11 +19377,15 @@ ul.dropdown-menu > li.checkbox {
     position: absolute;
     left: 5px;
     top: 0;
-    color: #333333;
+    color: #000;
 }
 
-.completeness .progress-value.none {
-    color: #000;
+.completeness .progress {
+    background-color: #f0f8ff;
+}
+
+.completeness .progress-bar {
+    background-color: #c2e0fc;
 }
 
 .progress {
