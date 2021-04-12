@@ -1,9 +1,0 @@
-{
-    "entity": true,
-    "layouts": false,
-    "tab": false,
-    "acl": false,
-    "module": "TreoCore",
-    "customizable": false,
-    "importable": false
-}

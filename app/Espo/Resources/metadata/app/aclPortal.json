@@ -52,12 +52,6 @@
                 "tabList": false,
                 "dashboardLayout": false
             },
-            "Call": {
-                "reminders": false
-            },
-            "Meeting": {
-                "reminders": false
-            },
             "Attachment": {
                 "parent": false
             },

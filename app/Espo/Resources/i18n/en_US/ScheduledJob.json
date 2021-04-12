@@ -19,9 +19,6 @@
       "TreoCleanup": "Unused data cleanup. Deleting old data and unused db tables, db columns, etc.",
       "RestApiDocs": "Generate REST API docs",
       "ComposerAutoUpdate": "Auto-updating of modules",
-      "Cleanup": "Clean-up",
-      "CheckEmailAccounts": "Check Personal Email Accounts",
-      "SendEmailReminders": "Send Email Reminders",
       "AuthTokenControl": "Auth Token Control"
     },
     "cronSetup": {

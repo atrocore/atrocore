@@ -13,13 +13,7 @@
   },
   "options": {
     "job": {
-      "Cleanup": "Aufräumen",
-      "CheckEmailAccounts": "Persönliche E-Mail Konten prüfen",
-      "SendEmailReminders": "E-Mail Erinnerungen senden",
       "AuthTokenControl": "Auth Token-Überwachung",
-      "CheckNewVersion": "Check for New Version",
-      "ProcessMassEmail": "Massen E-Mails senden",
-      "ControlKnowledgeBaseArticleStatus": "Wissensbasis Artikel Status kontrollieren",
       "ModuleAutoUpdate": "Alle installierten Module automatisch aktualisieren"
     },
     "cronSetup": {
