@@ -80,12 +80,6 @@ class Entity extends AbstractListener
         // call hooks
         if (empty($event->getArgument('hooksDisabled')) && empty($event->getArgument('options')['skipHooks'])) {
             $this
-                ->createHook(Common\AssignmentEmailNotification::class)
-                ->afterSave($event->getArgument('entity'), $event->getArgument('options'));
-            $this
-                ->createHook(Common\Notifications::class)
-                ->afterSave($event->getArgument('entity'), $event->getArgument('options'));
-            $this
                 ->createHook(Common\Stream::class)
                 ->afterSave($event->getArgument('entity'), $event->getArgument('options'));
             $this
@@ -101,13 +95,6 @@ class Entity extends AbstractListener
     {
         // delegate an event
         $this->dispatch($event->getArgument('entityType') . 'Entity', 'beforeRemove', $event);
-
-        // call hooks
-        if (empty($event->getArgument('hooksDisabled')) && empty($event->getArgument('options')['skipHooks'])) {
-            $this
-                ->createHook(Common\Notifications::class)
-                ->beforeRemove($event->getArgument('entity'), $event->getArgument('options'));
-        }
     }
 
     /**
@@ -120,9 +107,6 @@ class Entity extends AbstractListener
 
         // call hooks
         if (empty($event->getArgument('hooksDisabled')) && empty($event->getArgument('options')['skipHooks'])) {
-            $this
-                ->createHook(Common\Notifications::class)
-                ->afterRemove($event->getArgument('entity'), $event->getArgument('options'));
             $this
                 ->createHook(Common\Stream::class)
                 ->afterRemove($event->getArgument('entity'), $event->getArgument('options'));
