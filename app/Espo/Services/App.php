@@ -99,7 +99,7 @@ class App extends Base
 
     public function sendTestEmail(array $data): bool
     {
-        return $this
+        $this
             ->getInjection('mailSender')
             ->send(
                 [
@@ -108,6 +108,8 @@ class App extends Base
                     'to'      => $data['emailAddress']
                 ]
             );
+
+        return true;
     }
 
     protected function getEmailAddressList(): array

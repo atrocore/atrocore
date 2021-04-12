@@ -281,6 +281,7 @@
     "manyToMany": "Many-to-Many"
   },
   "messages": {
+    "testEmailSent": "Test email has been sent",
     "massUpdateResult": "Updating {count} records",
     "isRequiredAndUnique": "{field} is required and should be unique.",
     "relationsAdded": "Relation was successfully added.",

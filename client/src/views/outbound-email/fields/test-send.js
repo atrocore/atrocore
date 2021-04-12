@@ -117,7 +117,7 @@ Espo.define('views/outbound-email/fields/test-send', 'views/fields/base', functi
                         }.bind(this)
                     }).done(function () {
                         this.$el.find('button').removeClass('disabled');
-                        Espo.Ui.success(this.translate('testEmailSent', 'messages', 'Email'));
+                        Espo.Ui.success(this.translate('testEmailSent', 'messages'));
                     }.bind(this));
                 }, this);
             }.bind(this));
