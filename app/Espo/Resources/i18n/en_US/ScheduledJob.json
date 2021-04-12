@@ -22,8 +22,7 @@
       "Cleanup": "Clean-up",
       "CheckEmailAccounts": "Check Personal Email Accounts",
       "SendEmailReminders": "Send Email Reminders",
-      "AuthTokenControl": "Auth Token Control",
-      "SendEmailNotifications": "Send Email Notifications"
+      "AuthTokenControl": "Auth Token Control"
     },
     "cronSetup": {
       "linux": "Note: Add this line to the crontab file to run Espo Scheduled Jobs:",

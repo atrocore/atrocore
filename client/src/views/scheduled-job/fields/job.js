@@ -47,6 +47,16 @@ Espo.define('views/scheduled-job/fields/job', 'views/fields/enum', function (Dep
                             return !this.getMetadata().get(['entityDefs', 'ScheduledJob', 'jobs', item, 'isSystem']);
                         }, this);
                         this.params.options.unshift('');
+
+                        const translatedJobs = this.getLanguage().get('ScheduledJob', 'options', 'job');
+
+                        this.translatedOptions = {};
+                        this.params.options.forEach(option => {
+                            this.translatedOptions[option] = option;
+                            if (translatedJobs[option]){
+                                this.translatedOptions[option] = translatedJobs[option];
+                            }
+                        });
                         this.wait(false);
                     }.bind(this)
                 });

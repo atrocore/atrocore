@@ -11,6 +11,8 @@
         },
         "status": {
             "type": "enum",
+            "required": true,
+            "prohibitedEmptyValue": true,
             "options": ["Active", "Inactive"]
         },
         "scheduling": {
@@ -66,7 +68,6 @@
         "asc": true
     },
     "jobSchedulingMap": {
-        "SendEmailNotifications": "*/2 * * * *",
         "TreoCleanup": "0 3 1 * *",
         "RestApiDocs": "0 */2 * * *",
         "ComposerAutoUpdate": "0 5 * * SUN"
