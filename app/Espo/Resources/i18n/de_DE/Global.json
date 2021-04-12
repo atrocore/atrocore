@@ -19,7 +19,6 @@
     "Role": "Rolle",
     "OutboundEmail": "Ausgehende E-Mail",
     "ScheduledJob": "Geplante Aufgabe",
-    "ExternalAccount": "Externes Konto",
     "PortalRole": "Portal Rolle",
     "Attachment": "Anhang",
     "PortalUser": "Portal Benutzer",
@@ -38,8 +37,6 @@
     "PhoneNumber": "Telefonnummer",
     "AuthLogRecord": "Auth Log-Datensatz",
     "AuthFailLogRecord": "Auth-Fehlerprotokoll Datensatz",
-    "LeadCapture": "Einstiegspunkt der Erfassung des Interessenten",
-    "LeadCaptureLogRecord": "Logeintrag der Erfassung des Interessenten",
     "ArrayValue": "Array-Wert"
   },
   "scopeNamesPlural": {
@@ -64,7 +61,6 @@
     "Role": "Rollen",
     "OutboundEmail": "Ausgehende E-Mails",
     "ScheduledJob": "Geplante Jobs",
-    "ExternalAccount": "Externe Konten",
     "Stream": "Aktivitäten",
     "Portal": "Portale",
     "PortalRole": "Portal Rollen",
@@ -76,8 +72,6 @@
     "LastViewed": "Zuletzt angezeigt",
     "AuthLogRecord": "Auth-Protokoll",
     "AuthFailLogRecord": "Auth-Fehlerprotokoll",
-    "LeadCapture": "Erfassung des Interessenten",
-    "LeadCaptureLogRecord": "Erfassung des Interessenten Log",
     "ArrayValue": "Array-Werte"
   },
   "descriptions": {

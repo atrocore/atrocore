@@ -1,8 +1,0 @@
-{
-    "entity":true,
-    "layouts":false,
-    "tab":false,
-    "acl": "boolean",
-    "aclPortal": false,
-    "customizable":false
-}

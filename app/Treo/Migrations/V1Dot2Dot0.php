@@ -60,6 +60,9 @@ class V1Dot2Dot0 extends V1Dot1Dot23
         $this->execute("DROP TABLE inbound_email_team");
         $this->execute("DROP TABLE integration");
         $this->execute("DROP TABLE template");
+        $this->execute("DROP TABLE external_account");
+        $this->execute("DROP TABLE lead_capture");
+        $this->execute("DROP TABLE lead_capture_log_record");
     }
 
     /**
