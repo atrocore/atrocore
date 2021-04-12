@@ -20919,7 +20919,6 @@ body,
 .inline-edit-link {
   width: 24px;
   height: 24px;
-  background: #F5F5F5;
   text-align: center;
   line-height: 24px;
   color: #777777;
@@ -20935,7 +20934,6 @@ body,
   line-height: 24px;
   -webkit-border-radius: 3px;
           border-radius: 3px;
-  background: #F5F5F5;
   color: #777777;
 }
 
@@ -21183,6 +21181,10 @@ body,
 
 .panel-default > .panel-body {
   margin-bottom: 15px;
+}
+
+.modal-dialog > .modal-content > .modal-body .overview {
+  padding: 0;
 }
 
 .modal-content .panel-default > .panel-heading {
