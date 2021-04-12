@@ -21511,11 +21511,6 @@ ul.dropdown-menu > li.checkbox {
   position: absolute;
   left: 5px;
   top: 0;
-  color: #ddd;
-}
-
-#content .completeness .progress-value.none,
-.modal-content .completeness .progress-value.none {
   color: #000;
 }
 
@@ -21527,7 +21522,7 @@ ul.dropdown-menu > li.checkbox {
   margin-bottom: 5px;
   -webkit-border-radius: 3px;
           border-radius: 3px;
-  background: #E6F1FF;
+  background-color: #f0f8ff;
 }
 
 #content .progress-bar,
@@ -21536,7 +21531,7 @@ ul.dropdown-menu > li.checkbox {
           box-shadow: none;
   -webkit-border-radius: 3px;
           border-radius: 3px;
-  background: #cce6ff;
+  background-color: #c2e0fc;
 }
 
 #content .progress-bar-success,

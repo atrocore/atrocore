@@ -19387,17 +19387,13 @@ select,
     position: absolute;
     left: 5px;
     top: 0;
-    color: #333333;
-}
-
-.completeness .progress-value.none {
     color: #000;
 }
 
 .progress {
     border-radius: 0;
     box-shadow: none;
-    background: #fff;
+    background-color: #f0f8ff;
     border: 1px solid #ccc;
     height: 20px;
     margin-bottom: 5px;
@@ -19405,7 +19401,7 @@ select,
 
 .progress-bar {
     box-shadow: none;
-    background: #cce6ff;
+    background-color: #c2e0fc;
 }
 
 .progress-bar-success,
