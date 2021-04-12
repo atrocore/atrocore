@@ -19,6 +19,13 @@
                     <button class="btn btn-default{{#ifEqual @index ../currentTab}} active{{/ifEqual}}" data-action="selectTab" data-tab="{{@index}}">{{name}}</button>
                 {{/each}}
             </div>
+            <div class="pull-right dashboard-selectbox">
+                <select class=" form-control" data-action="selectTab">
+                    {{#each dashboardLayout}}
+                    <option {{#ifEqual @index ../currentTab}}selected{{/ifEqual}}>{{name}}</option>
+                    {{/each}}
+                </select>
+            </div>
             {{/ifNotEqual}}
         </div>
     </div>

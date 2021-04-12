@@ -4665,6 +4665,14 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
   .navbar-nav .open .dropdown-menu > li > a:hover, .navbar-nav .open .dropdown-menu > li > a:focus {
     background-image: none;
   }
+
+  .dashboard-header > .row > .clearfix {
+    width: 100%;
+  }
+
+  .dashboard-tabs {
+    display: none;
+  }
 }
 
 @media (min-width: 768px) {
@@ -4678,6 +4686,10 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
   .navbar-nav > li > a {
     padding-top: 12px;
     padding-bottom: 12px;
+  }
+
+  .dashboard-selectbox {
+    display: none;
   }
 }
 
