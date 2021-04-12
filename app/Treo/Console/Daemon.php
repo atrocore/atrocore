@@ -116,13 +116,17 @@ class Daemon extends AbstractConsole
                     file_put_contents($log, "Failed! The new version of the composer can't be copied.");
                 }
 
-                // create note
-                $note = $em->getEntity('Note');
-                $note->set('type', 'composerUpdate');
-                $note->set('parentType', 'ModuleManager');
-                $note->set('data', ['status' => ($exitCode == 0) ? 0 : 1, 'output' => file_get_contents($log)]);
-                $note->set('createdById', $user->get('id'));
-                $em->saveEntity($note, ['skipCreatedBy' => true]);
+                try {
+                    // create note
+                    $note = $em->getEntity('Note');
+                    $note->set('type', 'composerUpdate');
+                    $note->set('parentType', 'ModuleManager');
+                    $note->set('data', ['status' => ($exitCode == 0) ? 0 : 1, 'output' => file_get_contents($log)]);
+                    $note->set('createdById', $user->get('id'));
+                    $em->saveEntity($note, ['skipCreatedBy' => true]);
+                } catch (\Throwable $e) {
+                    $GLOBALS['log']->error('Creating composer update log failed: ' . $e->getMessage());
+                }
 
                 // remove log file
                 unlink($log);

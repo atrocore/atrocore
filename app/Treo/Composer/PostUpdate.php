@@ -623,20 +623,25 @@ class PostUpdate
         }
 
         self::renderLine('Sending notification(s) to admin users');
-        $em = self::$container->get('entityManager');
-        $users = $em->getRepository('User')->getAdminUsers();
-        if (!empty($users)) {
-            foreach (self::getComposerDiff() as $status => $modules) {
-                foreach ($modules as $module) {
-                    foreach ($users as $user) {
-                        $notification = $em->getEntity('Notification');
-                        $notification->set('type', 'Message');
-                        $notification->set('message', self::getMessageForComposer($status, $module));
-                        $notification->set('userId', $user['id']);
-                        $em->saveEntity($notification);
+
+        try {
+            $em = self::$container->get('entityManager');
+            $users = $em->getRepository('User')->getAdminUsers();
+            if (!empty($users)) {
+                foreach (self::getComposerDiff() as $status => $modules) {
+                    foreach ($modules as $module) {
+                        foreach ($users as $user) {
+                            $notification = $em->getEntity('Notification');
+                            $notification->set('type', 'Message');
+                            $notification->set('message', self::getMessageForComposer($status, $module));
+                            $notification->set('userId', $user['id']);
+                            $em->saveEntity($notification);
+                        }
                     }
                 }
             }
+        } catch (\Throwable $e) {
+            $GLOBALS['log']->error('Sending notification(s) to admin users: ' . $e->getMessage());
         }
     }
 
