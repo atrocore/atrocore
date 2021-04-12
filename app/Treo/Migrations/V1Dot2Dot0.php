@@ -64,6 +64,7 @@ class V1Dot2Dot0 extends V1Dot1Dot23
         $this->execute("DROP TABLE lead_capture");
         $this->execute("DROP TABLE lead_capture_log_record");
         $this->execute("DROP TABLE reminder");
+        $this->execute("DROP TABLE unique_id");
     }
 
     /**

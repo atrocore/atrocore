@@ -74,7 +74,6 @@ class TreoCleanup extends Base
     {
         $this->cleanupJobs();
         $this->cleanupScheduledJobLog();
-        $this->cleanupUniqueIds();
         $this->cleanupAuthLog();
         $this->cleanupActionHistory();
         $this->cleanupNotifications();
@@ -124,15 +123,6 @@ class TreoCleanup extends Base
                 $this->exec("DELETE FROM {$this->db}.$table WHERE deleted=1 AND DATE(modified_at)<'{$this->date}'");
             }
         }
-    }
-
-    /**
-     * Cleanup unique ids
-     */
-    protected function cleanupUniqueIds(): void
-    {
-        $date = date('Y-m-d H:i:s');
-        $this->exec("DELETE FROM `unique_id` WHERE terminate_at IS NOT NULL AND terminate_at<'$date'");
     }
 
     /**
