@@ -12,18 +12,6 @@
       "type": "bool",
       "tooltip": true
     },
-    "notificationNewModuleVersionDisabled": {
-      "type": "bool",
-      "default": true
-    },
-    "notificationNewSystemVersionDisabled": {
-      "type": "bool",
-      "default": true
-    },
-    "notificationInstallDeleteModuleDisabled": {
-      "type": "bool",
-      "default": true
-    },
     "unitsOfMeasure": {
       "type": "jsonObject",
       "view": "treo-core:views/settings/fields/unit-configuration"
@@ -864,10 +852,9 @@
       "translation": "Global.scopeNamesPlural",
       "view": "views/settings/fields/assignment-email-notifications-entity-list"
     },
-    "assignmentNotificationsEntityList": {
-      "type": "multiEnum",
-      "translation": "Global.scopeNamesPlural",
-      "view": "views/settings/fields/assignment-notifications-entity-list"
+    "assignmentNotifications": {
+      "type": "bool",
+      "default": true
     },
     "postEmailNotifications": {
       "type": "bool",

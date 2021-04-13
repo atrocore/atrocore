@@ -89,7 +89,13 @@
         ]
     },
     {
-        "label": "Notifications",
+        "label": "In-app Notifications",
+        "rows": [
+            [{"name": "assignmentNotifications"}, false]
+        ]
+    },
+    {
+        "label": "Email Notifications",
         "name": "notifications",
         "rows": [
             [

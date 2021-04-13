@@ -86,12 +86,6 @@
   "views/admin/index": [
     "treo-core"
   ],
-  "views/admin/notifications": [
-    "treo-core"
-  ],
-  "views/admin/upgrade/index": [
-    "treo-core"
-  ],
   "views/admin/entity-manager/modals/edit-entity": [
     "treo-core"
   ],

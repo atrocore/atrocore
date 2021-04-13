@@ -71,7 +71,7 @@ class Note extends RDB
     protected function afterSave(Entity $entity, array $options = [])
     {
         $this->notifyAboutMention($entity);
-        $this->sendNotifications($entity);
+//        $this->sendNotifications($entity);
 
         parent::afterSave($entity, $options);
     }

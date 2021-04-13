@@ -67,7 +67,7 @@
     "ldapUserTeams": "Teams",
     "ldapUserDefaultTeam": "Standard-Team",
     "ldapUserPhoneNumberAttribute": "Rufnummer Attribut",
-    "assignmentNotificationsEntityList": "Entitäten über die bei Zuweisung man benachrichtigt werden soll",
+    "assignmentNotifications": "Benachrichtigungen bei Zuweisungen senden",
     "assignmentEmailNotifications": "E-Mail Benachrichtigungen bei Zuweisungen senden",
     "assignmentEmailNotificationsEntityList": "Entitäten über die mit E-Mail bei Zuweisung benachrichtigt werden soll",
     "streamEmailNotifications": "Benachrichtigungen über Änderungen im Aktivitätenpanel für interne Benutzer",

@@ -62,7 +62,7 @@
     "ldapUserPhoneNumberAttribute": "User Phone Number Attribute",
     "ldapPortalUserPortals": "Default Portals for a Portal User",
     "ldapPortalUserRoles": "Default Roles for a Portal User",
-    "assignmentNotificationsEntityList": "Entities to notify about upon assignment",
+    "assignmentNotifications": "Notifications upon assignment",
     "assignmentEmailNotifications": "Notifications upon assignment",
     "assignmentEmailNotificationsEntityList": "Assignment email notifications scopes",
     "streamEmailNotifications": "Notifications about updates in Stream for internal users",

@@ -1,5 +1,6 @@
 {
     "fields": {
+        "assignmentNotifications": "Notifications upon assignment",
         "dateFormat": "Date Format",
         "timeFormat": "Time Format",
         "timeZone": "Time Zone",

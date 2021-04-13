@@ -1,5 +1,6 @@
 {
   "fields": {
+    "assignmentNotifications": "Benachrichtigungen bei Zuweisungen senden",
     "dateFormat": "Datumsformat",
     "timeFormat": "Zeitformat",
     "timeZone": "Zeitzone",
