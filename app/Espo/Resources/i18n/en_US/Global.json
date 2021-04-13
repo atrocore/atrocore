@@ -430,7 +430,8 @@
     "Records": "Record List"
   },
   "notificationMessages": {
-    "assign": "{entityType} {entity} has been assigned to you",
+    "own": "You were set as Owner for {entityType} {entity}.",
+    "assign": "{entityType} {entity} has been assigned to you.",
     "emailReceived": "Email received from {from}",
     "entityRemoved": "{user} removed {entityType} {entity}"
   },
@@ -463,6 +464,13 @@
     "createAssignedYou": "{user} created {entityType} {entity} assigned to you",
     "createAssignedThisSelf": "{user} created this {entityType} self-assigned",
     "createAssignedSelf": "{user} created {entityType} {entity} self-assigned",
+    "own": "{user} set {owner} as an owner for {entityType} {entity}",
+    "ownThis": "{user} set {owner} as an owner for this {entityType}",
+    "ownYou": "{user} set you as an owner for {entityType} {entity}",
+    "ownThisVoid": "{user} unset the owner for this {entityType}",
+    "ownVoid": "{user} unset the owner for {entityType} {entity}",
+    "ownThisSelf": "{user} set himself as an owner for this {entityType}",
+    "ownSelf": "{user} set himself as an owner for {entityType} {entity}",
     "assign": "{user} assigned {entityType} {entity} to {assignee}",
     "assignThis": "{user} assigned this {entityType} to {assignee}",
     "assignYou": "{user} assigned {entityType} {entity} to you",

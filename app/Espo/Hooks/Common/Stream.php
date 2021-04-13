@@ -45,8 +45,6 @@ class Stream extends \Espo\Core\Hooks\Base
 
     protected $isLinkObservableInStreamCache = array();
 
-    protected $statusFields = null;
-
     public static $order = 9;
 
     protected function init()
@@ -273,30 +271,7 @@ class Stream extends \Espo\Core\Hooks\Base
                 }
             } else {
                 if (empty($options['noStream']) && empty($options['silent'])) {
-                    if ($entity->isAttributeChanged('assignedUserId')) {
-                        $assignedUserId = $entity->get('assignedUserId');
-                        if (!empty($assignedUserId)) {
-                            $this->getStreamService()->followEntity($entity, $assignedUserId);
-                            $this->getStreamService()->noteAssign($entity);
-
-			                if ($this->getUser()->id === $assignedUserId) {
-			                	$entity->set('isFollowed', true);
-			                }
-                        } else {
-                            $this->getStreamService()->noteAssign($entity);
-                        }
-                    }
                     $this->getStreamService()->handleAudited($entity);
-
-                    $statusFields = $this->getStatusFields();
-
-                    if (array_key_exists($entityType, $this->statusFields)) {
-                        $field = $this->statusFields[$entityType];
-                        $value = $entity->get($field);
-                        if (!empty($value) && $value != $entity->getFetched($field)) {
-                            $this->getStreamService()->noteStatus($entity, $field);
-                        }
-                    }
 
                     $assignedUserIdList = [];
                     if ($hasAssignedUsersField) {
@@ -459,19 +434,6 @@ class Stream extends \Espo\Core\Hooks\Base
                 }
             }
         }
-    }
-
-    protected function getStatusFields()
-    {
-        if (is_null($this->statusFields)) {
-            $this->statusFields = array();
-            $scopes = $this->getMetadata()->get('scopes', array());
-            foreach ($scopes as $scope => $data) {
-                if (empty($data['statusField'])) continue;
-                $this->statusFields[$scope] = $data['statusField'];
-            }
-        }
-        return $this->statusFields;
     }
 
     protected function getStreamService()

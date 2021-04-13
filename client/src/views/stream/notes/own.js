@@ -30,13 +30,13 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/stream/notes/assign', 'views/stream/note', function (Dep) {
+Espo.define('views/stream/notes/own', 'views/stream/note', function (Dep) {
 
     return Dep.extend({
 
-        template: 'stream/notes/assign',
+        template: 'stream/notes/own',
 
-        messageName: 'assign',
+        messageName: 'own',
 
         data: function () {
             return _.extend({
@@ -53,17 +53,17 @@ Espo.define('views/stream/notes/assign', 'views/stream/note', function (Dep) {
         setup: function () {
             var data = this.model.get('data');
 
-            this.assignedUserId = data.userId || null;
-            this.assignedUserName = data.userName || null;
+            this.ownerUserId = data.userId || null;
+            this.ownerUserName = data.userName || null;
 
-            this.messageData['assignee'] = '<a href="#User/view/' + this.assignedUserId + '">' + this.assignedUserName + '</a>';
+            this.messageData['owner'] = '<a href="#User/view/' + this.ownerUserId + '">' + this.ownerUserName + '</a>';
 
             if (this.isUserStream) {
-                if (this.assignedUserId) {
-                    if (this.assignedUserId === this.model.get('createdById')) {
+                if (this.ownerUserId) {
+                    if (this.ownerUserId === this.model.get('createdById')) {
                         this.messageName += 'Self';
                     } else {
-                        if (this.assignedUserId === this.getUser().id) {
+                        if (this.ownerUserId === this.getUser().id) {
                             this.messageName += 'You';
                         }
                     }
@@ -71,8 +71,8 @@ Espo.define('views/stream/notes/assign', 'views/stream/note', function (Dep) {
                     this.messageName += 'Void';
                 }
             } else {
-                if (this.assignedUserId) {
-                    if (this.assignedUserId === this.model.get('createdById')) {
+                if (this.ownerUserId) {
+                    if (this.ownerUserId === this.model.get('createdById')) {
                         this.messageName += 'Self';
                     }
                 } else {

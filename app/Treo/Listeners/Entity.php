@@ -35,6 +35,7 @@ declare(strict_types=1);
 
 namespace Treo\Listeners;
 
+use Espo\Entities\User;
 use Espo\Hooks\Common;
 use Espo\ORM\Entity as OrmEntity;
 use Treo\Core\EventManager\Event;
@@ -76,6 +77,8 @@ class Entity extends AbstractListener
     {
         // delegate an event
         $this->dispatch($event->getArgument('entityType') . 'Entity', 'afterSave', $event);
+
+        $this->assignmentNotifications($event->getArgument('entity'));
 
         // call hooks
         if (empty($event->getArgument('hooksDisabled')) && empty($event->getArgument('options')['skipHooks'])) {
@@ -133,6 +136,7 @@ class Entity extends AbstractListener
 
     /**
      * @param Event $event
+     *
      * @throws \Espo\Core\Exceptions\Error
      */
     public function beforeRelate(Event $event)
@@ -246,6 +250,73 @@ class Entity extends AbstractListener
                 }
             }
         }
+    }
+
+    protected function assignmentNotifications(\Espo\ORM\Entity $entity): void
+    {
+        if (!$this->getConfig()->get('assignmentNotifications', true)) {
+            return;
+        }
+
+        if ($entity->isAttributeChanged('ownerUserId')) {
+            $this->follow($entity, $entity->get('ownerUserId'));
+            $this->createOwnNotification($entity, $entity->get('ownerUserId'));
+        }
+
+        if ($entity->isAttributeChanged('assignedUserId')) {
+            $this->follow($entity, $entity->get('assignedUserId'));
+            $this->createAssignmentNotification($entity, $entity->get('assignedUserId'));
+        }
+    }
+
+    protected function follow(\Espo\ORM\Entity $entity, string $userId): void
+    {
+    }
+
+    protected function createOwnNotification(\Espo\ORM\Entity $entity, string $userId): void
+    {
+        $preferences = $this->getEntityManager()->getEntity('Preferences', $userId);
+        if (empty($preferences->get('assignmentNotifications'))) {
+            return;
+        }
+
+        $notification = $this->getEntityManager()->getEntity('Notification');
+        $notification->set('type', 'Own');
+        $notification->set('relatedType', $entity->getEntityType());
+        $notification->set('relatedId', $entity->get('id'));
+        $notification->set('userId', $userId);
+        $notification->set(
+            'data', [
+                'entityName' => $entity->get('name'),
+                'entityType' => $entity->getEntityType(),
+                'entityId'   => $entity->get('id'),
+                'changedBy'  => $this->getUser()->get('id'),
+            ]
+        );
+        $this->getEntityManager()->saveEntity($notification);
+    }
+
+    protected function createAssignmentNotification(\Espo\ORM\Entity $entity, string $userId): void
+    {
+        $preferences = $this->getEntityManager()->getEntity('Preferences', $userId);
+        if (empty($preferences->get('assignmentNotifications'))) {
+            return;
+        }
+
+        $notification = $this->getEntityManager()->getEntity('Notification');
+        $notification->set('type', 'Assign');
+        $notification->set('relatedType', $entity->getEntityType());
+        $notification->set('relatedId', $entity->get('id'));
+        $notification->set('userId', $userId);
+        $notification->set(
+            'data', [
+                'entityName' => $entity->get('name'),
+                'entityType' => $entity->getEntityType(),
+                'entityId'   => $entity->get('id'),
+                'changedBy'  => $this->getUser()->get('id'),
+            ]
+        );
+        $this->getEntityManager()->saveEntity($notification);
     }
 
     /**

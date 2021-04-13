@@ -40,6 +40,8 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Config;
+use Espo\Entities\Preferences;
+use Espo\Entities\User;
 
 /**
  * AbstractListener class
@@ -134,13 +136,18 @@ abstract class AbstractListener
         return $this->getContainer()->get('language');
     }
 
-    /**
-     * Get metadata
-     *
-     * @return \Treo\Core\Utils\Metadata
-     */
     protected function getMetadata(): \Treo\Core\Utils\Metadata
     {
         return $this->getContainer()->get('metadata');
+    }
+
+    protected function getUser(): User
+    {
+        return $this->getContainer()->get('user');
+    }
+
+    protected function getPreferences(): Preferences
+    {
+        return $this->getContainer()->get('Preferences');
     }
 }

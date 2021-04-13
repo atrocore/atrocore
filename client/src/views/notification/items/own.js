@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -31,39 +30,25 @@
  * and "AtroCore" word.
  */
 
-declare(strict_types=1);
+Espo.define('views/notification/items/own', 'views/notification/items/base', function (Dep) {
 
-namespace Treo\Listeners;
+    return Dep.extend({
 
-use Treo\Core\Utils\Metadata;
-use Treo\Core\EventManager\Event;
+        messageName: 'own',
 
-/**
- * Class ActionHistoryRecordController
- */
-class ActionHistoryRecordController extends AbstractListener
-{
-    /**
-     * @param Event $event
-     */
-    public function beforeActionList(Event $event)
-    {
-        // get where
-        $where = $event->getArgument('request')->get('where', []);
+        template: 'notification/items/own',
 
-        // get scopes
-        $scopes = $this
-            ->getMetadata()
-            ->get('scopes');
+        setup: function () {
+            var data = this.model.get('data') || {};
 
-        // prepare where
-        $where[] = [
-            'type'      => 'in',
-            'attribute' => 'targetType',
-            'value'     => array_keys($scopes)
-        ];
+            this.userId = data.userId;
 
-        // set where
-        $event->getArgument('request')->setQuery('where', $where);
-    }
-}
+            this.messageData['entityType'] = Espo.Utils.upperCaseFirst((this.translate(data.entityType, 'scopeNames') || '').toLowerCase());
+            this.messageData['entity'] = '<a href="#' + data.entityType + '/view/' + data.entityId + '">' + data.entityName + '</a>';
+
+            this.createMessage();
+        },
+
+    });
+});
+

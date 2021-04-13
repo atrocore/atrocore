@@ -76,16 +76,6 @@ class AppController extends AbstractListener
     }
 
     /**
-     * Get preferences
-     *
-     * @return Preferences
-     */
-    protected function getPreferences(): Preferences
-    {
-        return $this->getContainer()->get('Preferences');
-    }
-
-    /**
      * Save entity
      *
      * @param Entity $entity

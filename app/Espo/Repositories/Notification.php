@@ -76,22 +76,45 @@ class Notification extends RDB
         self::refreshNotReadCount();
 
         if ($entity->isNew()) {
+            $this->createNote($entity);
             $this->sendEmail($entity);
         }
 
         parent::afterSave($entity, $options);
     }
 
+    protected function createNote(Entity $notification): void
+    {
+        if (!in_array($notification->get('type'), ['Assign', 'Own'])) {
+            return;
+        }
+
+        if (!$this->getMetadata()->get(['scopes', $notification->get('relatedType'), 'stream'], false)) {
+            return;
+        }
+
+        $note = $this->getEntityManager()->getEntity('Note');
+
+        $note->set('type', $notification->get('type'));
+        $note->set('parentId', $notification->get('relatedId'));
+        $note->set('parentType', $notification->get('relatedType'));
+
+        $note->set(
+            'data', [
+                'userId'   => $notification->get('userId'),
+                'userName' => !empty($user = $notification->get('user')) ? $user->get('name') : '',
+            ]
+        );
+
+        $this->getEntityManager()->saveEntity($note);
+    }
+
     protected function sendEmail(Entity $notification): void
     {
         $this->emailMentionInPost($notification);
 
-//        processNotificationMentionInPost
 //        processNotificationNote
 //        processNotificationNotePost
-//        processNotificationNoteStatus
-//        processNotificationNoteEmailReceived
-
     }
 
     protected function emailMentionInPost(Entity $notification): void
