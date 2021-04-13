@@ -5629,7 +5629,7 @@ a.thumbnail:hover, a.thumbnail:focus, a.thumbnail.active {
   position: relative;
   top: -1px;
   font-weight: normal;
-  margin-right: 20px;
+  margin-right: 5px;
 }
 
 .media-left, .media > .pull-left {
@@ -20989,10 +20989,12 @@ body,
 .last-viewed-panel-container div.list-expanded > ul > li > div.expanded-row > .cell {
   border: 0;
   display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .last-viewed-panel-container div.list-expanded > ul > li > div.expanded-row > .cell:first-child {
-  width: 22%;
+  width: 30%;
 }
 
 .queue-panel-container > .panel {
@@ -21042,6 +21044,10 @@ body,
 
   .last-viewed-panel-container td[data-name="targetType"] {
     display: none;
+  }
+
+  .last-viewed-panel-container div.list-expanded > ul > li > div.expanded-row > .cell {
+    width: 45% !important;
   }
 }
 

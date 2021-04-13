@@ -2,7 +2,7 @@
     <div class="panel-heading">
         <div class="pull-right">
             <a href="javascript:" class="close" data-action="close"><span aria-hidden="true">×</span></a>
-            <a href="#Notification" data-action="openNotifications" style="margin-right: 20px;">{{translate 'View List'}}</a>
+            <a href="#Notification" data-action="openNotifications" style="margin-right: 5px;">{{translate 'View List'}}</a>
             <span class="pipeline">|</span>
             <a href="javascript:" data-action="markAllNotificationsRead">{{translate 'Mark all read'}}</a>
         </div>
