@@ -104,6 +104,7 @@ class App extends Base
             ->send(
                 [
                     'subject' => 'Test Email',
+                    'body' => 'Test Email',
                     'isHtml'  => false,
                     'to'      => $data['emailAddress']
                 ]

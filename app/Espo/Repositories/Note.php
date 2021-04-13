@@ -47,6 +47,11 @@ use Espo\ORM\EntityCollection;
 class Note extends RDB
 {
     /**
+     * @var null|\Espo\Services\Notification
+     */
+    protected $notificationService = null;
+
+    /**
      * @param Entity $entity
      * @param array  $options
      */
@@ -65,6 +70,7 @@ class Note extends RDB
      */
     protected function afterSave(Entity $entity, array $options = [])
     {
+        $this->notifyAboutMention($entity);
         $this->sendNotifications($entity);
 
         parent::afterSave($entity, $options);
@@ -89,10 +95,6 @@ class Note extends RDB
         $mentionCount = 0;
 
         if (is_array($matches) && !empty($matches[0]) && is_array($matches[0])) {
-            $parent = null;
-            if ($entity->get('parentId') && $entity->get('parentType')) {
-                $parent = $this->getEntityManager()->getEntity($entity->get('parentType'), $entity->get('parentId'));
-            }
             foreach ($matches[0] as $item) {
                 $userName = substr($item, 1);
                 $user = $this->getEntityManager()->getRepository('User')->where(array('userName' => $userName))->findOne();
@@ -112,7 +114,6 @@ class Note extends RDB
                         if ($user->id == $this->getUser()->id) {
                             continue;
                         }
-                        $this->notifyAboutMention($entity, $user, $parent);
                         $entity->addNotifiedUserId($user->id);
                     }
                 }
@@ -132,17 +133,32 @@ class Note extends RDB
         $entity->set('data', $data);
     }
 
-    protected function notifyAboutMention(Entity $entity, \Espo\Entities\User $user, Entity $parent = null): void
+    protected function notifyAboutMention(Entity $entity): void
     {
-        if ($user->get('isPortalUser')) {
+        if (empty($entity->get('data')) || empty($entity->get('data')->mentions)) {
             return;
         }
-        if ($parent) {
-            if (!$this->getAclManager()->check($user, $parent, 'stream')) {
-                return;
-            }
+
+        $parent = null;
+        if ($entity->get('parentId') && $entity->get('parentType')) {
+            $parent = $this->getEntityManager()->getEntity($entity->get('parentType'), $entity->get('parentId'));
         }
-        $this->getNotificationService()->notifyAboutMentionInPost($user->id, $entity->id);
+
+        foreach ($entity->get('data')->mentions as $mention) {
+            if (empty($user = $this->getEntityManager()->getEntity('User', $mention->id))) {
+                continue 1;
+            }
+
+            if ($user->get('isPortalUser')) {
+                continue 1;
+            }
+
+            if ($parent && !$this->getAclManager()->check($user, $parent, 'stream')) {
+                continue 1;
+            }
+
+            $this->getNotificationService()->notifyAboutMentionInPost($user->id, $entity->id);
+        }
     }
 
     protected function sendNotifications(Entity $entity): void
@@ -403,7 +419,11 @@ class Note extends RDB
 
     protected function getNotificationService(): \Espo\Services\Notification
     {
-        return $this->getInjection('serviceFactory')->create('Notification');
+        if (is_null($this->notificationService)) {
+            $this->notificationService = $this->getInjection('serviceFactory')->create('Notification');
+        }
+
+        return $this->notificationService;
     }
 
     /**

@@ -38,7 +38,6 @@ namespace Espo\Core\Mail;
 use Espo\Core\Utils\Config;
 use Zend\Mime\Message as MimeMessage;
 use Zend\Mime\Part as MimePart;
-use Zend\Mime\Mime as Mime;
 
 use Zend\Mail\Message;
 use Zend\Mail\Transport\Smtp as SmtpTransport;
@@ -152,33 +151,16 @@ class Sender
         $bodyPlain = !empty($emailData['body']) ? $emailData['body'] : '';
 
         if (!empty($emailData['isHtml'])) {
-            $body = new MimeMessage();
             $html = new MimePart($bodyPlain);
-            $html->encoding = Mime::ENCODING_QUOTEDPRINTABLE;
             $html->type = 'text/html';
-            $html->charset = 'utf-8';
-            $body->addPart($html);
-            $messageType = 'multipart/alternative';
+
+            $body = new MimeMessage();
+            $body->setParts([$html]);
         } else {
             $body = $this->prepareBodyPlain($bodyPlain);
-            $messageType = 'text/plain';
         }
 
         $message->setBody($body);
-
-        if ($messageType == 'text/plain') {
-            if ($message->getHeaders()->has('content-type')) {
-                $message->getHeaders()->removeHeader('content-type');
-            }
-            $message->getHeaders()->addHeaderLine('Content-Type', 'text/plain; charset=UTF-8');
-        } else {
-            if (!$message->getHeaders()->has('content-type')) {
-                $contentTypeHeader = new \Zend\Mail\Header\ContentType();
-                $message->getHeaders()->addHeader($contentTypeHeader);
-            }
-            $message->getHeaders()->get('content-type')->setType($messageType);
-        }
-
         $message->setEncoding('UTF-8');
 
         try {

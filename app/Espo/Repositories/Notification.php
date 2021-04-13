@@ -84,7 +84,7 @@ class Notification extends RDB
 
     protected function sendEmail(Entity $notification): void
     {
-//        $this->emailMentionInPost($notification);
+        $this->emailMentionInPost($notification);
 
 //        processNotificationMentionInPost
 //        processNotificationNote

@@ -34,7 +34,6 @@
 namespace Espo\Core\Htmlizer;
 
 use Espo\ORM\Entity;
-use Espo\Core\Exceptions\Error;
 
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\DateTime;
