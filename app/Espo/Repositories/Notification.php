@@ -163,18 +163,14 @@ class Notification extends RDB
         $subject = $this->getHtmlizer()->render($note, $subjectTpl, 'mention-email-subject', $data, true);
         $body = $this->getHtmlizer()->render($note, $bodyTpl, 'mention-email-body', $data, true);
 
-        try {
-            $this->getMailSender()->send(
-                [
-                    'subject' => $subject,
-                    'body'    => $body,
-                    'isHtml'  => true,
-                    'to'      => $emailAddress
-                ]
-            );
-        } catch (\Exception $e) {
-            $GLOBALS['log']->error('emailMentionInPost: [' . $e->getCode() . '] ' . $e->getMessage());
-        }
+        $this->getMailSender()->sendByJob(
+            [
+                'subject' => $subject,
+                'body'    => $body,
+                'isHtml'  => true,
+                'to'      => $emailAddress
+            ]
+        );
     }
 
     protected function getSiteUrl(\Espo\Entities\User $user): string

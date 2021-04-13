@@ -33,18 +33,37 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core\Loaders;
+namespace Espo\Services;
+
+use Espo\ORM\Entity;
 
 /**
- * MailSender loader
+ * Class QueueManagerEmailSender
  */
-class MailSender extends Base
+class QueueManagerEmailSender extends QueueManagerBase
 {
+    /**
+     * @inheritdoc
+     */
+    public function run(array $data = []): bool
+    {
+        $emailData = !empty($data['emailData']) ? $data['emailData'] : [];
+        $params = !empty($data['params']) ? $data['params'] : [];
+
+        try {
+            $this->getContainer()->get('mailSender')->send($emailData, $params);
+        } catch (\Throwable $e) {
+            $GLOBALS['log']->error('MailSender: [' . $e->getCode() . '] ' . $e->getMessage());
+        }
+
+        return true;
+    }
+
     /**
      * @inheritDoc
      */
-    public function load()
+    public function getNotificationMessage(Entity $queueItem): string
     {
-        return new \Espo\Core\Mail\Sender($this->getContainer()->get('config'), $this->getContainer()->get('queueManager'));
+        return '';
     }
 }

@@ -35,6 +35,7 @@ declare(strict_types=1);
 
 namespace Espo\Core\Mail;
 
+use Espo\Core\QueueManager;
 use Espo\Core\Utils\Config;
 use Zend\Mime\Message as MimeMessage;
 use Zend\Mime\Part as MimePart;
@@ -56,18 +57,25 @@ class Sender
     private $config;
 
     /**
+     * @var QueueManager
+     */
+    private $queueManager;
+
+    /**
      * @var SmtpTransport
      */
-    protected $transport;
+    private $transport;
 
     /**
      * Sender constructor.
      *
-     * @param Config $config
+     * @param Config       $config
+     * @param QueueManager $queueManager
      */
-    public function __construct(Config $config)
+    public function __construct(Config $config, QueueManager $queueManager)
     {
         $this->config = $config;
+        $this->queueManager = $queueManager;
         $this->transport = new SmtpTransport();
 
         $opts = [
@@ -88,6 +96,11 @@ class Sender
         }
 
         $this->transport->setOptions(new SmtpOptions($opts));
+    }
+
+    public function sendByJob(array $emailData, array $params = []): void
+    {
+        $this->queueManager->push('Send email', 'QueueManagerEmailSender', ['emailData' => $emailData, 'params' => $params]);
     }
 
     /**
@@ -206,4 +219,3 @@ class Sender
         return $body;
     }
 }
-

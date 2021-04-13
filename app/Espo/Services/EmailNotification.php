@@ -172,15 +172,10 @@ class EmailNotification extends Base
         $dateTime = new \DateTime();
         $dateTime->modify('-' . self::HOURS_THERSHOLD . ' hours');
 
-        $mentionEmailNotifications = $this->getConfig()->get('mentionEmailNotifications');
-
         $streamEmailNotifications = $this->getConfig()->get('streamEmailNotifications');
         $portalStreamEmailNotifications = $this->getConfig()->get('portalStreamEmailNotifications');
 
         $typeList = [];
-        if ($mentionEmailNotifications) {
-            $typeList[] = 'MentionInPost';
-        }
 
         if ($streamEmailNotifications || $portalStreamEmailNotifications) {
             $typeList[] = 'Note';
@@ -219,17 +214,6 @@ class EmailNotification extends Base
 
             $this->getEntityManager()->saveEntity($notification);
         }
-    }
-
-    protected function getNotificationSelectParamsMentionInPost()
-    {
-        $selectManager = $this->getInjection('selectManagerFactory')->create('Notification');
-
-        $selectParams = $selectManager->getEmptySelectParams();
-
-        $selectParams['whereClause']['type'] = 'MentionInPost';
-
-        return $selectParams;
     }
 
     protected function getNotificationSelectParamsNote()
@@ -274,69 +258,6 @@ class EmailNotification extends Base
         }
 
         return $selectParams;
-    }
-
-    protected function processNotificationMentionInPost(Entity $notification)
-    {
-        if (!$notification->get('userId')) return;
-        $userId = $notification->get('userId');
-        $user = $this->getEntityManager()->getEntity('User', $userId);
-
-        if (!$user) return;
-
-        $emailAddress = $user->get('emailAddress');
-        if (!$emailAddress) return;
-
-        $preferences = $this->getEntityManager()->getEntity('Preferences', $userId);
-        if (!$preferences) return;
-
-        if (!$preferences->get('receiveMentionEmailNotifications')) return;
-
-        if ($notification->get('relatedType') !== 'Note' || !$notification->get('relatedId')) return;
-        $note = $this->getEntityManager()->getEntity('Note', $notification->get('relatedId'));
-        if (!$note) return;
-
-        $parentId = $note->get('parentId');
-        $parentType = $note->get('parentType');
-
-        $data = array();
-
-        if ($parentId && $parentType) {
-            $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
-            if (!$parent) return;
-
-            $data['url'] = $this->getSiteUrl($user) . '/#' . $parentType . '/view/' . $parentId;
-            $data['parentName'] = $parent->get('name');
-            $data['parentType'] = $parentType;
-            $data['parentId'] = $parentId;
-        } else {
-            $data['url'] = $this->getSiteUrl($user) . '/#Notification';
-        }
-
-        $data['userName'] = $note->get('createdByName');
-
-        $data['post'] = nl2br($note->get('post'));
-
-        $subjectTpl = $this->getTemplateFileManager()->getTemplate('mention', 'subject');
-        $bodyTpl = $this->getTemplateFileManager()->getTemplate('mention', 'body');
-
-        $subjectTpl = str_replace(array("\n", "\r"), '', $subjectTpl);
-
-        $subject = $this->getHtmlizer()->render($note, $subjectTpl, 'mention-email-subject', $data, true);
-        $body = $this->getHtmlizer()->render($note, $bodyTpl, 'mention-email-body', $data, true);
-
-        try {
-            $this->getMailSender()->send(
-                [
-                    'subject' => $subject,
-                    'body'    => $body,
-                    'isHtml'  => true,
-                    'to'      => $emailAddress
-                ]
-            );
-        } catch (\Exception $e) {
-            $GLOBALS['log']->error('EmailNotification: [' . $e->getCode() . '] ' . $e->getMessage());
-        }
     }
 
     protected function processNotificationNote(Entity $notification)
