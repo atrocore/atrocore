@@ -847,11 +847,6 @@
       "type": "bool",
       "default": false
     },
-    "assignmentEmailNotificationsEntityList": {
-      "type": "multiEnum",
-      "translation": "Global.scopeNamesPlural",
-      "view": "views/settings/fields/assignment-email-notifications-entity-list"
-    },
     "assignmentNotifications": {
       "type": "bool",
       "default": true
@@ -875,20 +870,6 @@
     "portalStreamEmailNotifications": {
       "type": "bool",
       "default": true
-    },
-    "streamEmailNotificationsEntityList": {
-      "type": "multiEnum",
-      "translation": "Global.scopeNamesPlural",
-      "view": "views/settings/fields/stream-email-notifications-entity-list",
-      "tooltip": true
-    },
-    "streamEmailNotificationsTypeList": {
-      "type": "multiEnum",
-      "options": [
-        "Post",
-        "Status",
-        "EmailReceived"
-      ]
     },
     "b2cMode": {
       "type": "bool",

@@ -69,10 +69,8 @@
     "ldapUserPhoneNumberAttribute": "Rufnummer Attribut",
     "assignmentNotifications": "Benachrichtigungen bei Zuweisungen senden",
     "assignmentEmailNotifications": "E-Mail Benachrichtigungen bei Zuweisungen senden",
-    "assignmentEmailNotificationsEntityList": "Entitäten über die mit E-Mail bei Zuweisung benachrichtigt werden soll",
     "streamEmailNotifications": "Benachrichtigungen über Änderungen im Aktivitätenpanel für interne Benutzer",
     "portalStreamEmailNotifications": "Benachrichtigungen über Änderungen in Aktivitätenpanel für Portalnutzer",
-    "streamEmailNotificationsEntityList": "Umfang der E-Mail-Benachrichtigungen über Aktivitäten",
     "calendarEntityList": "Kalenderentitätsliste",
     "mentionEmailNotifications": "E-Mail Benachrichtigungen für Erwähnungen in Beträgen",
     "activitiesEntityList": "Aktivitätenentitätsliste",
@@ -83,7 +81,6 @@
     "followCreatedEntities": "Eigene Einträge abonnieren",
     "adminNotifications": "Systembenachrichtigungen im Administrationsbereich",
     "adminNotificationsNewVersion": "Benachrichtigung anzeigen, wenn eine neue EspoCRM-Version verfügbar ist",
-    "streamEmailNotificationsTypeList": "Worüber zu informieren",
     "authTokenPreventConcurrent": "Nur ein Auth Token pro Benutzer",
     "scopeColorsDisabled": "Bereichsfarben deaktivieren",
     "tabColorsDisabled": "Tabfarben deaktivieren",
@@ -97,10 +94,6 @@
     "weekStart": {
       "0": "Sonntag",
       "1": "Montag"
-    },
-    "streamEmailNotificationsTypeList": {
-      "Status": "Statusaktualisierungen",
-      "EmailReceived": "Empfangene E-Mails"
     }
   },
   "tooltips": {
@@ -137,7 +130,6 @@
     "currencyDecimalPlaces": "Anzahl der Dezimalstellen. Wenn das Feld leer ist, werden alle nicht leeren Dezimalstellen angezeigt.",
     "aclStrictMode": "Aktiviert: Der Zugriff auf Bereiche ist verboten, wenn er nicht in Rollen angegeben ist.\n\nDeaktiviert: Der Zugriff auf Bereiche ist zulässig, wenn er nicht in Rollen angegeben ist.",
     "textFilterUseContainsForVarchar": "Wenn nicht aktiviert, wird der Operator \"beginnt mit\" verwendet. Sie können den Platzhalter '%' verwenden.",
-    "streamEmailNotificationsEntityList": "E-Mail-Benachrichtigungen über neuen Aktivitäten von gefolgten Datensätzen. Benutzer erhalten E-Mail-Benachrichtigungen nur für bestimmte Entitätstypen.",
     "authTokenPreventConcurrent": "Benutzer können nicht gleichzeitig auf mehreren Geräten angemeldet sein.",
     "emailAddressIsOptedOutByDefault": "Beim Erstellen eines neuen Datensatzes wird die E-Mail-Adresse als Opt-Out  markiert."
   },

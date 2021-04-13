@@ -64,11 +64,8 @@
     "ldapPortalUserRoles": "Default Roles for a Portal User",
     "assignmentNotifications": "Notifications upon assignment",
     "assignmentEmailNotifications": "Notifications upon assignment",
-    "assignmentEmailNotificationsEntityList": "Assignment email notifications scopes",
     "streamEmailNotifications": "Notifications about updates in Stream for internal users",
     "portalStreamEmailNotifications": "Notifications about updates in Stream for portal users",
-    "streamEmailNotificationsEntityList": "Stream email notifications scopes",
-    "streamEmailNotificationsTypeList": "What to notify about",
     "avatarsDisabled": "Disable Avatars",
     "followCreatedEntities": "Follow created records",
     "displayListViewRecordCount": "Display Total Count (on List View)",
@@ -109,11 +106,6 @@
     "currencyFormat": {
       "1": "10 USD",
       "2": "$10"
-    },
-    "streamEmailNotificationsTypeList": {
-      "Post": "Posts",
-      "Status": "Status updates",
-      "EmailReceived": "Received emails"
     }
   },
   "tooltips": {
@@ -153,7 +145,6 @@
     "currencyDecimalPlaces": "Number of decimal places. If empty then all nonempty decimal places will be displayed.",
     "aclStrictMode": "Enabled: Access to scopes will be forbidden if it's not specified in roles.\n\nDisabled: Access to scopes will be allowed if it's not specified in roles.",
     "textFilterUseContainsForVarchar": "If not checked then 'starts with' operator is used. You can use the wildcard '%'.",
-    "streamEmailNotificationsEntityList": "Email notifications about stream updates of followed records. Users will receive email notifications only for specified entity types.",
     "authTokenPreventConcurrent": "Users won't be able to be logged in on multiple devices simultaneously.",
     "emailAddressIsOptedOutByDefault": "When creating new record email addess will be marked as opted-out.",
     "cleanupDeletedRecords": "Removed records will be deleted from database after a while."
