@@ -72,7 +72,7 @@
     "streamEmailNotifications": "Benachrichtigungen über Änderungen im Aktivitätenpanel für interne Benutzer",
     "portalStreamEmailNotifications": "Benachrichtigungen über Änderungen in Aktivitätenpanel für Portalnutzer",
     "calendarEntityList": "Kalenderentitätsliste",
-    "mentionEmailNotifications": "E-Mail Benachrichtigungen für Erwähnungen in Beträgen",
+    "mentionEmailNotifications": "Benachrichtigungen für Erwähnungen in Beträgen",
     "activitiesEntityList": "Aktivitätenentitätsliste",
     "historyEntityList": "Verlaufsentitätenliste",
     "currencyFormat": "Währungsformat",
