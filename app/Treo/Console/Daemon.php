@@ -135,7 +135,7 @@ class Daemon extends AbstractConsole
     {
         $id = Util::generateId();
         $createdAt = date('Y-m-d H:i:s');
-        $data = json_encode($data);
+        $data = str_replace(PHP_EOL, "\n", json_encode($data));
 
         try {
             $this
