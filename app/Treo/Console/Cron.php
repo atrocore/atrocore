@@ -82,8 +82,7 @@ class Cron extends AbstractConsole
 
         // open daemon for composer
         if (empty(strpos($processes, "index.php daemon composer $id"))) {
-            // exit if system is updating and restore point is created
-            if (Application::isSystemUpdating() && $this->isRestorePointCreated()) {
+            if ($this->isComposerDaemonBlocked()) {
                 return;
             }
 
@@ -128,12 +127,23 @@ class Cron extends AbstractConsole
     /**
      * @return bool
      */
-    private function isRestorePointCreated(): bool
+    private function isComposerDaemonBlocked(): bool
     {
-        if (!Application::isSystemUpdating()) {
+        if (!file_exists(Application::COMPOSER_LOG_FILE)) {
             return false;
         }
 
-        return strpos(file_get_contents(Application::COMPOSER_LOG_FILE), 'Creating restore point') !== false;
+        $log = file_get_contents(Application::COMPOSER_LOG_FILE);
+
+        if (strpos($log, 'Creating restore point') === false) {
+            return false;
+        }
+
+        // @todo remove this after 01.06.2021
+        if (strpos($log, 'Sending notification(s)') !== false) {
+            unlink(Application::COMPOSER_LOG_FILE);
+        }
+
+        return true;
     }
 }
