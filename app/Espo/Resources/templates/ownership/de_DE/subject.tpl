@@ -1,0 +1,1 @@
+Mark as owner: [{{{entityType}}}] {{{name}}}

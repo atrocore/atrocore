@@ -112,6 +112,9 @@ class Notification extends RDB
     protected function sendEmail(Entity $notification): void
     {
         $this->emailMentionInPost($notification);
+        $this->emailAssignment($notification);
+        $this->emailOwnership($notification);
+
 
 //        processNotificationNote
 //        processNotificationNotePost
@@ -196,6 +199,138 @@ class Notification extends RDB
         );
     }
 
+    protected function emailAssignment(Entity $notification): void
+    {
+        if ($notification->get('type') != 'Assign') {
+            return;
+        }
+
+        if (!$this->getConfig()->get('assignmentEmailNotifications', false)) {
+            return;
+        }
+
+        if (empty($userId = $notification->get('userId'))) {
+            return;
+        }
+
+        if (empty($user = $this->getEntityManager()->getEntity('User', $userId))) {
+            return;
+        }
+
+        if (empty($emailAddress = $user->get('emailAddress'))) {
+            return;
+        }
+
+        if (empty($preferences = $this->getEntityManager()->getEntity('Preferences', $userId))) {
+            return;
+        }
+
+        if (!$preferences->get('receiveAssignmentEmailNotifications')) {
+            return;
+        }
+
+        $entity = $this->getEntityManager()->getEntity($notification->get('data')['entityType'], $notification->get('data')['entityId']);
+        $assignerUser = $this->getEntityManager()->getEntity('User', $notification->get('data')['changedBy']);
+
+        $subjectTpl = $this->getTemplateFileManager()->getTemplate('assignment', 'subject', $entity->getEntityType());
+        $bodyTpl = $this->getTemplateFileManager()->getTemplate('assignment', 'body', $entity->getEntityType());
+
+        $subjectTpl = str_replace(array("\n", "\r"), '', $subjectTpl);
+
+        $recordUrl = rtrim($this->getConfig()->get('siteUrl'), '/') . '/#' . $entity->getEntityType() . '/view/' . $entity->id;
+
+        $data = [
+            'userName'         => $user->get('name'),
+            'assignerUserName' => $assignerUser->get('name'),
+            'recordUrl'        => $recordUrl,
+            'entityType'       => $this->getInjection('language')->translate($entity->getEntityType(), 'scopeNames')
+        ];
+
+        $data['entityTypeLowerFirst'] = lcfirst($data['entityType']);
+
+        $subject = $this->getHtmlizer()->render($entity, $subjectTpl, 'assignment-email-subject-' . $entity->getEntityType(), $data, true);
+        $body = $this->getHtmlizer()->render($entity, $bodyTpl, 'assignment-email-body-' . $entity->getEntityType(), $data, true);
+
+        try {
+            $this->getMailSender()->sendByJob(
+                [
+                    'subject' => $subject,
+                    'body'    => $body,
+                    'isHtml'  => true,
+                    'to'      => $emailAddress
+                ]
+            );
+        } catch (\Exception $e) {
+            $GLOBALS['log']->error('EmailNotification: [' . $e->getCode() . '] ' . $e->getMessage());
+        }
+    }
+
+    protected function emailOwnership(Entity $notification): void
+    {
+        if ($notification->get('type') != 'Own') {
+            return;
+        }
+
+        if (!$this->getConfig()->get('assignmentEmailNotifications', false)) {
+            return;
+        }
+
+        if (empty($userId = $notification->get('userId'))) {
+            return;
+        }
+
+        if (empty($user = $this->getEntityManager()->getEntity('User', $userId))) {
+            return;
+        }
+
+        if (empty($emailAddress = $user->get('emailAddress'))) {
+            return;
+        }
+
+        if (empty($preferences = $this->getEntityManager()->getEntity('Preferences', $userId))) {
+            return;
+        }
+
+        if (!$preferences->get('receiveAssignmentEmailNotifications')) {
+            return;
+        }
+
+        $entity = $this->getEntityManager()->getEntity($notification->get('data')['entityType'], $notification->get('data')['entityId']);
+        $assignerUser = $this->getEntityManager()->getEntity('User', $notification->get('data')['changedBy']);
+
+        $subjectTpl = $this->getTemplateFileManager()->getTemplate('ownership', 'subject', $entity->getEntityType());
+        $bodyTpl = $this->getTemplateFileManager()->getTemplate('ownership', 'body', $entity->getEntityType());
+
+        $subjectTpl = str_replace(array("\n", "\r"), '', $subjectTpl);
+
+        $recordUrl = rtrim($this->getConfig()->get('siteUrl'), '/') . '/#' . $entity->getEntityType() . '/view/' . $entity->id;
+
+        $data = [
+            'userName'         => $user->get('name'),
+            'assignerUserName' => $assignerUser->get('name'),
+            'recordUrl'        => $recordUrl,
+            'entityType'       => $this->getInjection('language')->translate($entity->getEntityType(), 'scopeNames')
+        ];
+
+        $data['entityTypeLowerFirst'] = lcfirst($data['entityType']);
+
+        $subject = $this->getHtmlizer()->render($entity, $subjectTpl, 'ownership-email-subject-' . $entity->getEntityType(), $data, true);
+        $body = $this->getHtmlizer()->render($entity, $bodyTpl, 'ownership-email-body-' . $entity->getEntityType(), $data, true);
+
+        try {
+            $this->getMailSender()->sendByJob(
+                [
+                    'subject' => $subject,
+                    'body'    => $body,
+                    'isHtml'  => true,
+                    'to'      => $emailAddress
+                ]
+            );
+        } catch (\Exception $e) {
+            $GLOBALS['log']->error('EmailNotification: [' . $e->getCode() . '] ' . $e->getMessage());
+        }
+    }
+
     protected function getSiteUrl(\Espo\Entities\User $user): string
     {
         if ($user->get('isPortalUser')) {
@@ -260,6 +395,7 @@ class Notification extends RDB
         $this->addDependency('dateTime');
         $this->addDependency('number');
         $this->addDependency('mailSender');
+        $this->addDependency('language');
     }
 }
 
