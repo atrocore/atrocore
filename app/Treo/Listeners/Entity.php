@@ -273,8 +273,12 @@ class Entity extends AbstractListener
     {
     }
 
-    protected function createOwnNotification(\Espo\ORM\Entity $entity, string $userId): void
+    protected function createOwnNotification(\Espo\ORM\Entity $entity, ?string $userId): void
     {
+        if (empty($userId)) {
+            return;
+        }
+
         $preferences = $this->getEntityManager()->getEntity('Preferences', $userId);
         if (empty($preferences->get('assignmentNotifications'))) {
             return;
@@ -296,8 +300,12 @@ class Entity extends AbstractListener
         $this->getEntityManager()->saveEntity($notification);
     }
 
-    protected function createAssignmentNotification(\Espo\ORM\Entity $entity, string $userId): void
+    protected function createAssignmentNotification(\Espo\ORM\Entity $entity, ?string $userId): void
     {
+        if (empty($userId)) {
+            return;
+        }
+
         $preferences = $this->getEntityManager()->getEntity('Preferences', $userId);
         if (empty($preferences->get('assignmentNotifications'))) {
             return;
