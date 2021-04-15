@@ -1,1 +1,1 @@
-Mark as owner: [{{{entityType}}}] {{{name}}}
+Markiert als Eigentümer: [{{{entityType}}}] {{{name}}}
