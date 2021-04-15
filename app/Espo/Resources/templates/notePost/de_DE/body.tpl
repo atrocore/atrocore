@@ -1,3 +1,3 @@
-<p>{{userName}} posted on {{entityTypeLowerFirst}} {{parentName}}.</p>
+<p>{{userName}} auf {{entityTypeLowerFirst}} {{parentName}} gepostet.</p>
 <p>{{{post}}}</p>
-<p><a href="{{url}}">View</a></p>
+<p><a href="{{url}}">Ansehen</a></p>
