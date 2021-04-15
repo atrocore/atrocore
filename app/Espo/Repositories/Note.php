@@ -399,28 +399,28 @@ class Note extends RDB
 
     protected function getInternalAclManager(): AclManager
     {
-        return $this->getInjection('internalAclManager');
+        return $this->getInjection('container')->get('internalAclManager');
     }
 
     protected function getUser(): \Espo\Entities\User
     {
-        return $this->getInjection('user');
+        return $this->getInjection('container')->get('user');
     }
 
     protected function getAcl(): Acl
     {
-        return $this->getInjection('acl');
+        return $this->getInjection('container')->get('acl');
     }
 
     protected function getAclManager(): AclManager
     {
-        return $this->getInjection('aclManager');
+        return $this->getInjection('container')->get('aclManager');
     }
 
     protected function getNotificationService(): \Espo\Services\Notification
     {
         if (is_null($this->notificationService)) {
-            $this->notificationService = $this->getInjection('serviceFactory')->create('Notification');
+            $this->notificationService = $this->getInjection('container')->get('serviceFactory')->create('Notification');
         }
 
         return $this->notificationService;
@@ -433,11 +433,7 @@ class Note extends RDB
     {
         parent::init();
 
-        $this->addDependency('acl');
-        $this->addDependency('aclManager');
-        $this->addDependency('user');
-        $this->addDependency('serviceFactory');
-        $this->addDependency('internalAclManager');
+        $this->addDependency('container');
     }
 }
 

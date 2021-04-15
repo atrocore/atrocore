@@ -116,36 +116,23 @@ class Daemon extends AbstractConsole
                     file_put_contents($log, "Failed! The new version of the composer can't be copied.");
                 }
 
-                $data = [
-                    'status' => ($exitCode == 0) ? 0 : 1,
-                    'output' => file_get_contents($log)
-                ];
-
-                $this->createComposerUpdateLog((string)$user->get('id'), $data);
+                try {
+                    // create note
+                    $note = $em->getEntity('Note');
+                    $note->set('type', 'composerUpdate');
+                    $note->set('parentType', 'ModuleManager');
+                    $note->set('data', ['status' => ($exitCode == 0) ? 0 : 1, 'output' => file_get_contents($log)]);
+                    $note->set('createdById', $user->get('id'));
+                    $em->saveEntity($note, ['skipAll' => true]);
+                } catch (\Throwable $e) {
+                    $GLOBALS['log']->error('Creating composer update log failed: ' . $e->getMessage());
+                }
 
                 // remove log file
                 unlink($log);
             }
 
             sleep(1);
-        }
-    }
-
-    protected function createComposerUpdateLog(string $userId, array $data): void
-    {
-        $id = Util::generateId();
-        $createdAt = date('Y-m-d H:i:s');
-        $data = str_replace(PHP_EOL, "\n", json_encode($data));
-
-        try {
-            $this
-                ->getContainer()
-                ->get('pdo')
-                ->exec(
-                    "INSERT INTO `note` (id, type, parent_type, data, created_by_id, created_at, modified_at) VALUES ('$id', 'composerUpdate', 'ModuleManager', '$data', '$userId', '$createdAt', '$createdAt')"
-                );
-        } catch (\Throwable $e) {
-            $GLOBALS['log']->error('Creating composer update log failed: ' . $e->getMessage());
         }
     }
 

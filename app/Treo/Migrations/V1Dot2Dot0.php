@@ -66,7 +66,6 @@ class V1Dot2Dot0 extends V1Dot1Dot23
         $this->execute("DROP TABLE reminder");
         $this->execute("DROP TABLE unique_id");
         $this->execute("ALTER TABLE `notification` DROP email_is_processed");
-        file_put_contents(Cron::DAEMON_KILLER, '1');
     }
 
     /**
@@ -95,6 +94,5 @@ class V1Dot2Dot0 extends V1Dot1Dot23
         $this->execute("CREATE TABLE `reminder` (`id` VARCHAR(24) NOT NULL COLLATE utf8mb4_unicode_ci, `deleted` TINYINT(1) DEFAULT '0' COLLATE utf8mb4_unicode_ci, `remind_at` DATETIME DEFAULT NULL COLLATE utf8mb4_unicode_ci, `start_at` DATETIME DEFAULT NULL COLLATE utf8mb4_unicode_ci, `type` VARCHAR(36) DEFAULT 'Popup' COLLATE utf8mb4_unicode_ci, `seconds` INT DEFAULT '0' COLLATE utf8mb4_unicode_ci, `entity_type` VARCHAR(100) DEFAULT NULL COLLATE utf8mb4_unicode_ci, `entity_id` VARCHAR(50) DEFAULT NULL COLLATE utf8mb4_unicode_ci, `user_id` VARCHAR(50) DEFAULT NULL COLLATE utf8mb4_unicode_ci, INDEX `IDX_REMIND_AT` (remind_at), INDEX `IDX_START_AT` (start_at), INDEX `IDX_TYPE` (type), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB");
         $this->execute("CREATE TABLE `unique_id` (`id` VARCHAR(24) NOT NULL COLLATE utf8mb4_unicode_ci, `name` VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci, `deleted` TINYINT(1) DEFAULT '0' COLLATE utf8mb4_unicode_ci, `data` MEDIUMTEXT DEFAULT NULL COLLATE utf8mb4_unicode_ci, `created_at` DATETIME DEFAULT NULL COLLATE utf8mb4_unicode_ci, `terminate_at` DATETIME DEFAULT NULL COLLATE utf8mb4_unicode_ci, `created_by_id` VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci, `target_id` VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci, `target_type` VARCHAR(100) DEFAULT NULL COLLATE utf8mb4_unicode_ci, INDEX `IDX_NAME` (name), INDEX `IDX_CREATED_BY_ID` (created_by_id), INDEX `IDX_TARGET` (target_id, target_type), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB");
         $this->execute("ALTER TABLE `notification` ADD email_is_processed TINYINT(1) DEFAULT '0' NOT NULL COLLATE utf8mb4_unicode_ci");
-        file_put_contents(Cron::DAEMON_KILLER, '1');
     }
 }
