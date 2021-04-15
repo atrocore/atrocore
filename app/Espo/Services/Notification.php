@@ -34,6 +34,7 @@
 namespace Espo\Services;
 
 use Espo\Core\Utils\Json;
+use Espo\ORM\Entity;
 use Espo\Repositories\Notification as NotificationRepository;
 
 /**
@@ -43,53 +44,58 @@ class Notification extends \Espo\Services\Record
 {
     protected $actionHistoryDisabled = true;
 
-    public function notifyAboutMentionInPost($userId, $noteId)
+    public function notifyAboutMentionInPost(string $userId, string $noteId): void
     {
         $notification = $this->getEntityManager()->getEntity('Notification');
-        $notification->set(array(
-            'type' => 'MentionInPost',
-            'data' => array('noteId' => $noteId),
-            'userId' => $userId,
-            'relatedId' => $noteId,
-            'relatedType' => 'Note'
-        ));
+        $notification->set(
+            [
+                'type'        => 'MentionInPost',
+                'data'        => ['noteId' => $noteId],
+                'userId'      => $userId,
+                'relatedId'   => $noteId,
+                'relatedType' => 'Note'
+            ]
+        );
         $this->getEntityManager()->saveEntity($notification);
     }
 
-    public function notifyAboutNote(array $userIdList, \Espo\Entities\Note $note)
+    public function notifyAboutNote(array $userIdList, Entity $note): void
     {
-        $data = array('noteId' => $note->id);
-        $encodedData = Json::encode($data);
+        $userList = $this
+            ->getEntityManager()
+            ->getRepository('User')
+            ->where(
+                [
+                    'isActive' => true,
+                    'id'       => $userIdList
+                ]
+            )
+            ->find();
 
-        $now = date('Y-m-d H:i:s');
-        $pdo = $this->getEntityManager()->getPDO();
-
-        $query = $this->getEntityManager()->getQuery();
-
-        $sql = "INSERT INTO `notification` (`id`, `data`, `type`, `user_id`, `created_at`, `related_id`, `related_type`, `related_parent_id`, `related_parent_type`) VALUES ";
-        $arr = [];
-
-        $userList = $this->getEntityManager()->getRepository('User')->where(array(
-            'isActive' => true,
-            'id' => $userIdList
-        ))->find();
         foreach ($userList as $user) {
-            $userId = $user->id;
-            if (!$this->checkUserNoteAccess($user, $note)) continue;
-            if ($note->get('createdById') === $user->id) continue;
-            $id = \Espo\Core\Utils\Util::generateId();
-            $arr[] = "(".$query->quote($id).", ".$query->quote($encodedData).", ".$query->quote('Note').", ".$query->quote($userId).", ".$query->quote($now).", ".$query->quote($note->id).", ".$query->quote('Note').", ".$query->quote($note->get('parentId')).", ".$query->quote($note->get('parentType')).")";
-        }
+            if (!$this->checkUserNoteAccess($user, $note)) {
+                continue 1;
+            }
 
-        if (empty($arr)) {
-            return;
-        }
+            if ($note->get('createdById') === $user->get('id')) {
+                continue 1;
+            }
 
-        $sql .= implode(", ", $arr);
-        $pdo->query($sql);
+            $notification = $this->getEntityManager()->getEntity('Notification');
+
+            $notification->set('type', 'Note');
+            $notification->set('data', ['noteId' => $note->get('id')]);
+            $notification->set('userId', $user->get('id'));
+            $notification->set('relatedId', $note->get('id'));
+            $notification->set('relatedType', 'Note');
+            $notification->set('relatedParentId', $note->get('parentId'));
+            $notification->set('relatedParentType', $note->get('parentType'));
+
+            $this->getEntityManager()->saveEntity($notification);
+        }
     }
 
-    public function checkUserNoteAccess(\Espo\Entities\User $user, \Espo\Entities\Note $note)
+    public function checkUserNoteAccess(\Espo\Entities\User $user, Entity $note)
     {
         if ($user->get('isPortalUser')) {
             if ($note->get('relatedType')) {

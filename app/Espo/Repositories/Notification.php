@@ -114,10 +114,7 @@ class Notification extends RDB
         $this->emailMentionInPost($notification);
         $this->emailAssignment($notification);
         $this->emailOwnership($notification);
-
-
-//        processNotificationNote
-//        processNotificationNotePost
+        $this->emailNote($notification);
     }
 
     protected function emailMentionInPost(Entity $notification): void
@@ -325,6 +322,100 @@ class Notification extends RDB
                     'isHtml'  => true,
                     'to'      => $emailAddress
                 ]
+            );
+        } catch (\Exception $e) {
+            $GLOBALS['log']->error('EmailNotification: [' . $e->getCode() . '] ' . $e->getMessage());
+        }
+    }
+
+    protected function emailNote(Entity $notification): void
+    {
+        if ($notification->get('type') !== 'Note') {
+            return;
+        }
+
+        if ($notification->get('relatedType') !== 'Note') {
+            return;
+        }
+
+        if (!$notification->get('relatedId')) {
+            return;
+        }
+
+        if (empty($note = $this->getEntityManager()->getEntity('Note', $notification->get('relatedId')))) {
+            return;
+        }
+
+        if (empty($userId = $notification->get('userId'))) {
+            return;
+        }
+
+        if (empty($user = $this->getEntityManager()->getEntity('User', $userId))) {
+            return;
+        }
+
+        if (empty($emailAddress = $user->get('emailAddress'))) {
+            return;
+        }
+
+        if (empty($preferences = $this->getEntityManager()->getEntity('Preferences', $userId))) {
+            return;
+        }
+
+        if (empty($preferences->get('receiveStreamEmailNotifications'))) {
+            return;
+        }
+
+
+        $parentId = $note->get('parentId');
+        $parentType = $note->get('parentType');
+
+        $data = [];
+
+        $data['userName'] = $note->get('createdByName');
+        $data['post'] = nl2br($note->get('post'));
+
+        if ($parentId && $parentType) {
+            if (empty($parent = $this->getEntityManager()->getEntity($parentType, $parentId))) {
+                return;
+            }
+
+            $data['url'] = $this->getSiteUrl($user) . '/#' . $parentType . '/view/' . $parentId;
+            $data['parentName'] = $parent->get('name');
+            $data['parentType'] = $parentType;
+            $data['parentId'] = $parentId;
+
+            $data['name'] = $data['parentName'];
+
+            $data['entityType'] = $this->getInjection('language')->translate($data['parentType'], 'scopeNames');
+            $data['entityTypeLowerFirst'] = lcfirst($data['entityType']);
+
+            $subjectTpl = $this->getTemplateFileManager()->getTemplate('notePost', 'subject', $parentType);
+            $bodyTpl = $this->getTemplateFileManager()->getTemplate('notePost', 'body', $parentType);
+
+            $subjectTpl = str_replace(array("\n", "\r"), '', $subjectTpl);
+
+            $subject = $this->getHtmlizer()->render($note, $subjectTpl, 'note-post-email-subject-' . $parentType, $data, true);
+            $body = $this->getHtmlizer()->render($note, $bodyTpl, 'note-post-email-body-' . $parentType, $data, true);
+        } else {
+            $data['url'] = $this->getSiteUrl($user) . '/#Notification';
+
+            $subjectTpl = $this->getTemplateFileManager()->getTemplate('notePostNoParent', 'subject');
+            $bodyTpl = $this->getTemplateFileManager()->getTemplate('notePostNoParent', 'body');
+
+            $subjectTpl = str_replace(array("\n", "\r"), '', $subjectTpl);
+
+            $subject = $this->getHtmlizer()->render($note, $subjectTpl, 'note-post-email-subject', $data, true);
+            $body = $this->getHtmlizer()->render($note, $bodyTpl, 'note-post-email-body', $data, true);
+        }
+
+        try {
+            $this->getMailSender()->sendByJob(
+                [
+                    'subject' => $subject,
+                    'body'    => $body,
+                    'isHtml'  => true,
+                    'to'      => $emailAddress]
             );
         } catch (\Exception $e) {
             $GLOBALS['log']->error('EmailNotification: [' . $e->getCode() . '] ' . $e->getMessage());
