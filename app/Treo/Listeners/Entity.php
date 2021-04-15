@@ -269,7 +269,7 @@ class Entity extends AbstractListener
         }
     }
 
-    protected function follow(\Espo\ORM\Entity $entity, string $userId): void
+    protected function follow(\Espo\ORM\Entity $entity, ?string $userId): void
     {
     }
 
