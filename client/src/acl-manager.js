@@ -163,10 +163,6 @@ Espo.define('acl-manager', ['acl'], function (Acl) {
             return this.checkPermission('assignmentPermission', user);
         },
 
-        checkUserPermission: function (user) {
-            return this.checkPermission('userPermission', user);
-        },
-
         checkPermission: function (permission, user) {
             var result = false;
 

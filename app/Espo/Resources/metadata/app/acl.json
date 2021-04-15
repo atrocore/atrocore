@@ -84,25 +84,21 @@
     },
     "valuePermissionList": [
         "assignmentPermission",
-        "userPermission",
         "portalPermission",
         "dataPrivacyPermission"
     ],
     "valuePermissionHighestLevels": {
         "assignmentPermission": "all",
-        "userPermission": "all",
         "portalPermission": "yes",
         "dataPrivacyPermission": "yes"
     },
     "permissionsDefaults": {
         "assignmentPermission": "all",
-        "userPermission": "all",
         "portalPermission": "no",
         "dataPrivacyPermission": "no"
     },
     "permissionsStrictDefaults": {
         "assignmentPermission": "no",
-        "userPermission": "no",
         "portalPermission": "no",
         "dataPrivacyPermission": "no"
     },

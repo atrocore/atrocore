@@ -264,9 +264,9 @@ class AclManager
         return $this->getTable($user)->getScopeForbiddenFieldList($scope, $action, $thresholdLevel);
     }
 
-    public function checkUserPermission(User $user, $target, $permissionType = 'userPermission')
+    public function checkAssignmentPermission(User $user, $target)
     {
-        $permission = $this->get($user, $permissionType);
+        $permission = $this->get($user, 'assignmentPermission');
 
         if (is_object($target)) {
             $userId = $target->id;
@@ -292,11 +292,6 @@ class AclManager
         }
 
         return true;
-    }
-
-    public function checkAssignmentPermission(User $user, $target)
-    {
-        return $this->checkUserPermission($user, $target, 'assignmentPermission');
     }
 
     public function createUserAcl(User $user)

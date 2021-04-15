@@ -11,8 +11,8 @@
     {
         "rows": [
             [
-                {"name": "userPermission"},
-                {"name": "assignmentPermission"}
+                {"name": "assignmentPermission"},
+                false
             ],
             [
                 {"name": "portalPermission"},

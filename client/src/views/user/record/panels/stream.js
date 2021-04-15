@@ -51,11 +51,8 @@ Espo.define('views/user/record/panels/stream', 'views/stream/panel', function (D
                 if (this.getAcl().get('assignmentPermission') === 'team') {
                     if (!this.model.has('teamsIds')) {
                         this.listenToOnce(this.model, 'sync', function () {
-                            assignmentPermission = this.getAcl().checkUserPermission(this.model);
-                            if (assignmentPermission) {
-                                this.postDisabled = false;
-                                this.$el.find('.post-container').removeClass('hidden');;
-                            }
+                            this.postDisabled = false;
+                            this.$el.find('.post-container').removeClass('hidden');
                         }, this);
                     }
                 }

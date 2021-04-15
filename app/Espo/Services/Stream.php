@@ -313,9 +313,6 @@ class Stream extends \Espo\Core\Services\Base
             if (!$user) {
                 throw new NotFound();
             }
-            if (!$this->getAcl()->checkUser('userPermission', $user)) {
-                throw new Forbidden();
-            }
         }
 
         $teamIdList = $user->getTeamIdList();
