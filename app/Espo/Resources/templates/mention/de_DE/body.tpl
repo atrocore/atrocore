@@ -1,6 +1,6 @@
-<p>You were mentioned in post by {{userName}}.</p>
+<p>Sie wurden in Post von {{userName}} erwähnt.</p>
 {{#if parentName}}
-<p>Related to: {{parentName}}</p>
+<p>Im Zusammenhang mit: {{parentName}}</p>
 {{/if}}
 <p>{{{post}}}</p>
-<p><a href="{{url}}">View</a></p>
+<p><a href="{{url}}">Ansehen</a></p>
