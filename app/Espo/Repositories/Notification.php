@@ -354,6 +354,16 @@ class Notification extends RDB
             return;
         }
 
+        if ($user->get('isPortalUser')) {
+            if (empty($this->getConfig()->get('portalStreamEmailNotifications'))) {
+                return;
+            }
+        } else {
+            if (empty($this->getConfig()->get('streamEmailNotifications'))) {
+                return;
+            }
+        }
+
         if (empty($emailAddress = $user->get('emailAddress'))) {
             return;
         }
