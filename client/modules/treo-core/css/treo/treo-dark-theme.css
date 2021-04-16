@@ -14749,6 +14749,26 @@ body > #header .navbar-brand span.home-icon {
         margin-top: -26x
     }
 
+    body.minimized > footer.is-collapsed.collapsed {
+        width: calc(100% - 278px);
+        margin-left: auto !important;
+    }
+
+    body.minimized > footer.is-collapsed.not-collapsed {
+        width: calc(100% - 64px);
+        margin-left: auto !important;
+    }
+
+    body:not(.minimized) > footer.is-collapsed.collapsed {
+        width: calc(100% - 460px);
+        margin-left: auto;
+    }
+
+    body:not(.minimized) > footer.is-collapsed.not-collapsed {
+        width: calc(100% - 246px);
+        margin-left: auto;
+    }
+
     body > .content {
         height: auto;
         min-height: 100%;
@@ -19489,6 +19509,7 @@ select,
     padding: 0;
     top: 1px;
     border: 0;
+    color: #ccc;
 }
 
 #main .catalog-tree-panel > button.collapsed {
@@ -19636,6 +19657,27 @@ button.category:focus {
         height: 48px
     }
 
+    #header a.minimizer {
+        color: #ccc;
+    }
+
+    body:not(.minimized) #header a.minimizer {
+        position: absolute;
+        top: 52px;
+        left: 175px;
+        z-index: 2000;
+        background: #ffffff;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        padding: 1px 5px;
+    }
+
+    body:not(.minimized) #header a.minimizer.bottom-minimizer {
+        top: unset;
+        bottom: 5px;
+    }
+
     #header a.navbar-brand {
         height: 47px
     }
@@ -19646,10 +19688,8 @@ button.category:focus {
     }
 
     #header ul.tabs {
-        margin: 5px 0 0 -8px;
+        margin: 0 0 0 -8px;
         overflow-y: auto;
-        border-bottom: 1px solid #545454;
-        border-top: 1px solid #545454;
     }
 
     #navbar .nav.navbar-nav.navbar-right {

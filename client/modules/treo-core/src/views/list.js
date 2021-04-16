@@ -90,5 +90,14 @@ Espo.define('treo-core:views/list', ['class-replace!treo-core:views/list', 'sear
             Dep.prototype.setupSorting.call(this);
         },
 
+        afterRender() {
+            let footer = $('#footer');
+
+            if (footer.length) {
+                footer.removeClass('is-collapsed');
+            }
+
+            Dep.prototype.afterRender.call(this);
+        }
     })
 );
