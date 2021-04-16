@@ -80,7 +80,7 @@ class InstallDemoProject extends AbstractConsole
             }
 
             if (isset($_ENV['CRYPT_KEY'])) {
-                $this->getConfig()->set('cryptKey', $_ENV['CRYPT_KEY']);
+                $this->getConfig()->set('cryptKey', $_ENV['CRYPT_KEY'] == 'empty' ? '' : $_ENV['CRYPT_KEY']);
             }
 
             if (!empty($_ENV['LANGUAGE'])) {
