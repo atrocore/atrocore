@@ -37,7 +37,7 @@ namespace Treo\Core\Loaders;
 
 use Treo\Core\Utils\Layout as LayoutUtil;
 use Espo\Core\Utils\File\Manager;
-use Treo\Core\Utils\Metadata;
+use Espo\Core\Utils\Metadata;
 use Espo\Entities\User;
 
 /**

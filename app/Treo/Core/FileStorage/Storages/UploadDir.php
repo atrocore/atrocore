@@ -37,7 +37,7 @@ use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\Attachment;
 use Espo\EntryPoints\Image;
-use Treo\Core\Utils\Util;
+use Espo\Core\Utils\Util;
 
 /**
  * Class UploadDir

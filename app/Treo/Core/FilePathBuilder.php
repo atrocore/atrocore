@@ -37,10 +37,9 @@ namespace Treo\Core;
 
 use Espo\Core\Exceptions\Error;
 use Espo\ORM\Metadata;
-use Treo\Core\FileStorage\Storages\UploadDir;
 use Treo\Core\Utils\File\Manager;
 use Treo\Core\Utils\Random;
-use Treo\Core\Utils\Util;
+use Espo\Core\Utils\Util;
 
 /**
  * Class FilePathBuilder

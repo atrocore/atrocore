@@ -36,7 +36,7 @@ declare(strict_types=1);
 namespace Treo\Listeners;
 
 use Espo\Core\Exceptions\BadRequest;
-use Treo\Core\Utils\Util;
+use Espo\Core\Utils\Util;
 use Treo\Core\EventManager\Event;
 
 /**

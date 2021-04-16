@@ -38,8 +38,8 @@ namespace Treo\Services;
 use Espo\Core\Services\Base;
 use Espo\Core\Utils\Json;
 use Treo\Documentator\Extractor;
-use Treo\Core\Utils\Metadata;
-use Treo\Core\Utils\Util;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Util;
 
 /**
  * RestApiDocs service

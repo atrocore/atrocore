@@ -37,8 +37,8 @@ namespace Treo\Services;
 
 use Espo\Core\Utils\Json;
 use Treo\Core\Utils\Layout;
-use Treo\Core\Utils\Metadata;
-use Treo\Core\Utils\Util;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Util;
 
 /**
  * Class Multilang

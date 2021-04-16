@@ -136,7 +136,7 @@ abstract class AbstractListener
         return $this->getContainer()->get('language');
     }
 
-    protected function getMetadata(): \Treo\Core\Utils\Metadata
+    protected function getMetadata(): \Espo\Core\Utils\Metadata
     {
         return $this->getContainer()->get('metadata');
     }

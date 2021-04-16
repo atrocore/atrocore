@@ -36,7 +36,7 @@ declare(strict_types=1);
 namespace Treo\Core\Loaders;
 
 use Espo\Core\Utils\FieldManagerUtil as Instance;
-use Treo\Core\Utils\Metadata;
+use Espo\Core\Utils\Metadata;
 
 /**
  * FieldManagerUtil loader

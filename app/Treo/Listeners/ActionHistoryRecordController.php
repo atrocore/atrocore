@@ -35,7 +35,7 @@ declare(strict_types=1);
 
 namespace Treo\Listeners;
 
-use Treo\Core\Utils\Metadata;
+use Espo\Core\Utils\Metadata;
 use Treo\Core\EventManager\Event;
 
 /**

@@ -36,7 +36,7 @@ declare(strict_types=1);
 namespace Treo\Listeners;
 
 use Treo\Core\EventManager\Event;
-use Treo\Core\Utils\Util;
+use Espo\Core\Utils\Util;
 
 /**
  * Class Language

@@ -38,7 +38,7 @@ namespace Treo\Listeners;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Json;
 use Treo\Core\EventManager\Event;
-use Treo\Core\Utils\Util;
+use Espo\Core\Utils\Util;
 
 /**
  * Class FieldManager

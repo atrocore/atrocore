@@ -36,9 +36,8 @@ declare(strict_types=1);
 namespace Treo\Core\Loaders;
 
 use Espo\Entities\Portal;
-use Treo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config;
-use Treo\Core\Utils\Metadata;
+use Espo\Core\Utils\Metadata;
 
 /**
  * ThemeManager loader

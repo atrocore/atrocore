@@ -46,7 +46,7 @@ use Monolog\ErrorHandler;
 use Treo\Core\EventManager\Manager as EventManager;
 use Treo\Core\ModuleManager\Manager as ModuleManager;
 use Treo\Core\Utils\File\Manager as FileManager;
-use Treo\Core\Utils\Metadata;
+use Espo\Core\Utils\Metadata;
 
 /**
  * Class Container
@@ -244,13 +244,7 @@ class Container
      */
     protected function loadMetadata(): Metadata
     {
-        return new Metadata(
-            $this->get('fileManager'),
-            $this->get('dataManager'),
-            $this->get('moduleManager'),
-            $this->get('eventManager'),
-            $this->get('config')->get('useCache', false)
-        );
+        return new Metadata($this->get('fileManager'), $this->get('dataManager'), $this->get('moduleManager'), $this->get('eventManager'));
     }
 
     /**

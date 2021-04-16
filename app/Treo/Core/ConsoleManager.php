@@ -37,7 +37,7 @@ namespace Treo\Core;
 
 use Espo\Core\Container;
 use Treo\Console\AbstractConsole;
-use Treo\Core\Utils\Metadata;
+use Espo\Core\Utils\Metadata;
 
 /**
  * ConsoleManager

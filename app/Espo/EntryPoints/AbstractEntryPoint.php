@@ -46,7 +46,7 @@ use Treo\Core\ORM\EntityManager;
 use Treo\Core\ServiceFactory;
 use Espo\Core\Utils\Config;
 use Treo\Core\Utils\File\Manager;
-use Treo\Core\Utils\Metadata;
+use Espo\Core\Utils\Metadata;
 
 /**
  * Class AbstractEntryPoint

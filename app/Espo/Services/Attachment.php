@@ -41,7 +41,7 @@ use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\Error;
 use Treo\Core\EventManager\Event;
 use Treo\Core\FilePathBuilder;
-use Treo\Core\Utils\Util;
+use Espo\Core\Utils\Util;
 
 class Attachment extends Record
 {
