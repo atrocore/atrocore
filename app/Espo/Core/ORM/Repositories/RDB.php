@@ -273,6 +273,8 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
         parent::afterSave($entity, $options);
 
+        $this->assignmentNotifications($entity);
+
         if (!$this->processFieldsAfterSaveDisabled) {
             $this->processEmailAddressSave($entity);
             $this->processPhoneNumberSave($entity);
@@ -595,6 +597,79 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                 }
             }
         }
+    }
+
+    protected function assignmentNotifications(Entity $entity): void
+    {
+        if ($entity->getEntityType() === 'Notification') {
+            return;
+        }
+
+        if (!$this->getConfig()->get('assignmentNotifications', true)) {
+            return;
+        }
+
+        if ($entity->isAttributeChanged('ownerUserId')) {
+            $this->createOwnNotification($entity, $entity->get('ownerUserId'));
+        }
+
+        if ($entity->isAttributeChanged('assignedUserId')) {
+            $this->createAssignmentNotification($entity, $entity->get('assignedUserId'));
+        }
+    }
+
+    protected function createOwnNotification(Entity $entity, ?string $userId): void
+    {
+        if (empty($userId)) {
+            return;
+        }
+
+        $preferences = $this->getEntityManager()->getEntity('Preferences', $userId);
+        if (empty($preferences->get('assignmentNotifications'))) {
+            return;
+        }
+
+        $notification = $this->getEntityManager()->getEntity('Notification');
+        $notification->set('type', 'Own');
+        $notification->set('relatedType', $entity->getEntityType());
+        $notification->set('relatedId', $entity->get('id'));
+        $notification->set('userId', $userId);
+        $notification->set(
+            'data', [
+                'entityName' => $entity->get('name'),
+                'entityType' => $entity->getEntityType(),
+                'entityId'   => $entity->get('id'),
+                'changedBy'  => $this->getEntityManager()->getUser()->get('id'),
+            ]
+        );
+        $this->getEntityManager()->saveEntity($notification);
+    }
+
+    protected function createAssignmentNotification(Entity $entity, ?string $userId): void
+    {
+        if (empty($userId)) {
+            return;
+        }
+
+        $preferences = $this->getEntityManager()->getEntity('Preferences', $userId);
+        if (empty($preferences->get('assignmentNotifications'))) {
+            return;
+        }
+
+        $notification = $this->getEntityManager()->getEntity('Notification');
+        $notification->set('type', 'Assign');
+        $notification->set('relatedType', $entity->getEntityType());
+        $notification->set('relatedId', $entity->get('id'));
+        $notification->set('userId', $userId);
+        $notification->set(
+            'data', [
+                'entityName' => $entity->get('name'),
+                'entityType' => $entity->getEntityType(),
+                'entityId'   => $entity->get('id'),
+                'changedBy'  => $this->getEntityManager()->getUser()->get('id'),
+            ]
+        );
+        $this->getEntityManager()->saveEntity($notification);
     }
 
     /**
