@@ -79,7 +79,7 @@ class InstallDemoProject extends AbstractConsole
                 $this->getConfig()->set('passwordSalt', $_ENV['passwordSalt']);
             }
 
-            if (!empty($_ENV['CRYPT_KEY'])) {
+            if (isset($_ENV['CRYPT_KEY'])) {
                 $this->getConfig()->set('cryptKey', $_ENV['cryptKey']);
             }
 
