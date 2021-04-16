@@ -39,6 +39,10 @@
     </div>
 
     <div class="menu">
+        <a class="minimizer" href="javascript:">
+            <span class="fas fa-chevron-right right"></span>
+            <span class="fas fa-chevron-left left"></span>
+        </a>
         <ul class="nav navbar-nav tabs">
             {{#each tabDefsList}}
             {{#unless isInMore}}

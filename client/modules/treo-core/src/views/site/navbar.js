@@ -288,7 +288,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                         $more.css('max-height', '');
                     } else {
                         let tabsHeight = windowHeight - navbarStaticItemsHeight;
-
+                        tabsHeight -= 28;
                         $tabs.css('height', tabsHeight + 'px');
                         $more.css('max-height', windowHeight + 'px');
                     }
