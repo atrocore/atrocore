@@ -128,52 +128,6 @@ class Installer extends AbstractService
     }
 
     /**
-     *  Generate default config if not exists
-     *
-     * @return bool
-     * @throws Exceptions\Error
-     *
-     * @throws Exceptions\Forbidden
-     */
-    public function generateConfig(): bool
-    {
-        $result = false;
-
-        // check if is install
-        if ($this->isInstalled()) {
-            throw new Exceptions\Forbidden($this->translateError('alreadyInstalled'));
-        }
-
-        /** @var Config $config */
-        $config = $this->getConfig();
-
-        $pathToConfig = $config->getConfigPath();
-
-        // get default config
-        if (empty($defaultConfig = $config->getDefaults())) {
-            throw new Exceptions\Error();
-        }
-
-        // get permissions
-        if (!empty($owner = $this->getDefaultOwner(true))) {
-            $defaultConfig['defaultPermissions']['user'] = $owner;
-        }
-        if (!empty($group = $this->getDefaultGroup(true))) {
-            $defaultConfig['defaultPermissions']['group'] = $group;
-        }
-
-        $defaultConfig['passwordSalt'] = $this->generateSalt();
-        $defaultConfig['cryptKey'] = $this->generateKey();
-
-        // create config if not exists
-        if (!$this->fileExists($pathToConfig)) {
-            $result = $this->putPhpContents($pathToConfig, $defaultConfig, true);
-        }
-
-        return $result;
-    }
-
-    /**
      * Get translations for installer
      *
      * @return array
@@ -698,26 +652,6 @@ class Installer extends AbstractService
     protected function getDefaultGroup(bool $usePosix)
     {
         return $this->getFileManager()->getPermissionUtils()->getDefaultGroup($usePosix);
-    }
-
-    /**
-     * Generate a new salt
-     *
-     * @return string
-     */
-    protected function generateSalt()
-    {
-        return $this->getPasswordHash()->generateSalt();
-    }
-
-    /**
-     * Generate key
-     *
-     * @return mixed
-     */
-    protected function generateKey()
-    {
-        return $this->getContainer()->get('crypt')->generateKey();
     }
 
     /**

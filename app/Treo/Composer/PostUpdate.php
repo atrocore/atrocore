@@ -531,8 +531,9 @@ class PostUpdate
             // get default data
             $data = include 'vendor/atrocore/core/app/Espo/Core/defaults/config.php';
 
-            // prepare salt
             $data['passwordSalt'] = mb_substr(md5((string)time()), 0, 9);
+
+            $data['cryptKey'] = md5(uniqid());
 
             // get content
             $content = "<?php\nreturn " . self::$container->get('fileManager')->varExport($data) . ";\n?>";

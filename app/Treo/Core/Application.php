@@ -432,7 +432,6 @@ class Application
             /** @var Installer $installer */
             $installer = $this->getContainer()->get('serviceFactory')->create('Installer');
             $result['status'] = $installer->checkPermissions();
-            $result['status'] = $installer->generateConfig() && $result['status'];
         } catch (\Exception $e) {
             $result['status'] = 'false';
             $result['message'] = $e->getMessage();
