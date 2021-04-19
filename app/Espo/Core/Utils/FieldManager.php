@@ -165,15 +165,20 @@ class FieldManager
         $result = true;
         $isLabelChanged = false;
 
-        if (isset($fieldDefs['label'])) {
+        if (isset($fieldDefs['label']) && empty($fieldDefs['multilangField'])) {
             $this->setLabel($scope, $name, $fieldDefs['label'], $isNew, $isCustom);
             $isLabelChanged = true;
         }
 
-//        foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
-//            $label =
-//
-//        }
+        foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
+            $label = Util::toCamelCase('label_' . strtolower($locale));
+            $fieldKey = empty($fieldDefs['multilangField']) ? $name : $fieldDefs['multilangField'];
+            if (isset($fieldDefs[$label])) {
+                $languageObj = new Language($locale, $this->container->get('fileManager'), $this->getMetadata());
+                $languageObj->set($scope, 'fields', $fieldKey, $fieldDefs[$label]);
+                $languageObj->save();
+            }
+        }
 
         if (isset($fieldDefs['tooltipText'])) {
             $this->setTooltipText($scope, $name, $fieldDefs['tooltipText'], $isNew, $isCustom);
