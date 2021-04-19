@@ -84,16 +84,14 @@ class Metadata extends AbstractListener
             return $data;
         }
 
-        /**
-         * Set multi-lang params to few fields
-         */
-        $fields = ['bool', 'enum', 'multiEnum', 'text', 'varchar', 'wysiwyg'];
-        foreach ($fields as $field) {
-            $data['fields'][$field]['params'][] = [
-                'name'    => 'isMultilang',
-                'type'    => 'bool',
-                'tooltip' => true
-            ];
+        $params = [];
+        foreach ($locales as $locale) {
+            $params[] = ['name' => 'label' . ucfirst(Util::toCamelCase(strtolower($locale))), 'type' => 'varchar'];
+        }
+        $params[] = ['name' => 'isMultilang', 'type' => 'bool', 'tooltip' => true];
+
+        foreach (['bool', 'enum', 'multiEnum', 'text', 'varchar', 'wysiwyg'] as $field) {
+            $data['fields'][$field]['params'] = array_merge($params, $data['fields'][$field]['params']);
         }
 
         /**

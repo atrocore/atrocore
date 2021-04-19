@@ -165,10 +165,21 @@ class FieldManager
         $result = true;
         $isLabelChanged = false;
 
-        if (isset($fieldDefs['label'])) {
+        if (isset($fieldDefs['label']) && empty($fieldDefs['multilangField'])) {
             $this->setLabel($scope, $name, $fieldDefs['label'], $isNew, $isCustom);
             $isLabelChanged = true;
         }
+
+        foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
+            $label = Util::toCamelCase('label_' . strtolower($locale));
+            $fieldKey = empty($fieldDefs['multilangField']) ? $name : $fieldDefs['multilangField'];
+            if (isset($fieldDefs[$label])) {
+                $languageObj = new Language($locale, $this->container->get('fileManager'), $this->getMetadata());
+                $languageObj->set($scope, 'fields', $fieldKey, $fieldDefs[$label]);
+                $languageObj->save();
+            }
+        }
+
         if (isset($fieldDefs['tooltipText'])) {
             $this->setTooltipText($scope, $name, $fieldDefs['tooltipText'], $isNew, $isCustom);
             $isLabelChanged = true;
@@ -830,13 +841,11 @@ class FieldManager
         return $fields;
     }
 
-    /**
-     * @param string $target
-     * @param string $action
-     * @param Event  $event
-     *
-     * @return Event
-     */
+    protected function getConfig():Config
+    {
+        return $this->container->get('config');
+    }
+
     protected function dispatch(string $target, string $action, Event $event): Event
     {
         return $this->container->get('eventManager')->dispatch($target, $action, $event);
