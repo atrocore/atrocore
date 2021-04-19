@@ -169,6 +169,12 @@ class FieldManager
             $this->setLabel($scope, $name, $fieldDefs['label'], $isNew, $isCustom);
             $isLabelChanged = true;
         }
+
+//        foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
+//            $label =
+//
+//        }
+
         if (isset($fieldDefs['tooltipText'])) {
             $this->setTooltipText($scope, $name, $fieldDefs['tooltipText'], $isNew, $isCustom);
             $isLabelChanged = true;
@@ -830,13 +836,11 @@ class FieldManager
         return $fields;
     }
 
-    /**
-     * @param string $target
-     * @param string $action
-     * @param Event  $event
-     *
-     * @return Event
-     */
+    protected function getConfig():Config
+    {
+        return $this->container->get('config');
+    }
+
     protected function dispatch(string $target, string $action, Event $event): Event
     {
         return $this->container->get('eventManager')->dispatch($target, $action, $event);

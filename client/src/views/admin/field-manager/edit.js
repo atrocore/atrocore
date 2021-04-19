@@ -86,7 +86,6 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                 this.model.id = this.field;
                 this.model.scope = this.scope;
                 this.model.set('name', this.field);
-                this.model.set('label', this.getLanguage().translate(this.field, 'fields', this.scope));
 
                 if (this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'tooltip'])) {
                     this.model.set('tooltipText', this.getLanguage().translate(this.field, 'tooltips', this.scope));
@@ -118,7 +117,7 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                     new Promise(function (resolve) {
                         if (this.isNew) {
                             resolve();
-                        };
+                        }
                     }.bind(this)),
                     new Promise(function (resolve) {
                         if (this.isNew) return;
@@ -128,6 +127,18 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                         }.bind(this));
                     }.bind(this))
                 ]).then(function () {
+                    let field = this.field;
+                    if (this.defs.multilangField) {
+                        field = this.defs.multilangField;
+                    }
+
+                    if (!this.isNew) {
+                        this.model.set('label', this.getLanguage().translate(field, 'fields', this.scope));
+                        (this.getConfig().get('inputLanguageList') || []).forEach(locale => {
+                            this.setLocaleLabel(locale, field);
+                        });
+                    }
+
                     this.paramList = [];
                     var paramList = Espo.Utils.clone(this.getFieldManager().getParams(this.type) || []);
 
@@ -290,6 +301,17 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
             }.bind(this));
         },
 
+        setLocaleLabel: function (locale, field) {
+            let name = 'label' + locale.charAt(0).toUpperCase() + locale.charAt(1) + locale.charAt(3) + locale.charAt(4).toLowerCase();
+            this.ajaxGetRequest(`I18n?locale=${locale}`).then(responseData => {
+                if (responseData && responseData[this.scope] && responseData[this.scope]['fields'] && responseData[this.scope]['fields'][field]) {
+                    this.model.set(name, responseData[this.scope]['fields'][field]);
+                } else {
+                    this.model.set(name, this.model.get('label'));
+                }
+            });
+        },
+
         afterRender: function () {
             this.getView('name').on('change', function (m) {
                 var name = this.model.get('name');
@@ -309,13 +331,38 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                 this.model.set('name', name);
             }, this);
 
-            if (this.defs.hideMultilang) {
-                $('div[data-name="readOnly"]').remove();
-                $('div[data-name="required"]').remove();
-                $('a[data-action="removeValue"]').remove();
-                $('.array-control-container').remove();
-                $('input[name="coloredValue"]').remove();
+            if (this.getView('isMultilang')) {
+                this.getView('isMultilang').on('change', function (m) {
+                    this.toggleLocaleLabel();
+                }, this);
             }
+
+            if (this.defs.multilangField) {
+                this.hideLabelsExcept(this.defs.multilangLocale);
+            } else {
+                this.toggleLocaleLabel();
+            }
+        },
+
+        hideLabelsExcept: function (locale) {
+            this.hideField('label');
+            (this.getConfig().get('inputLanguageList') || []).forEach(v => {
+                let name = 'label' + v.charAt(0).toUpperCase() + v.charAt(1) + v.charAt(3) + v.charAt(4).toLowerCase();
+                if (locale !== v) {
+                    this.hideField(name);
+                }
+            });
+        },
+
+        toggleLocaleLabel: function () {
+            (this.getConfig().get('inputLanguageList') || []).forEach(v => {
+                let name = 'label' + v.charAt(0).toUpperCase() + v.charAt(1) + v.charAt(3) + v.charAt(4).toLowerCase();
+                if (this.model.get('isMultilang')) {
+                    this.showField(name);
+                } else {
+                    this.hideField(name);
+                }
+            });
         },
 
         readOnlyControl: function () {
