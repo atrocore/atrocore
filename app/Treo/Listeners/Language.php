@@ -49,12 +49,12 @@ class Language extends AbstractListener
     public function modify(Event $event)
     {
         if (empty($this->getConfig()->get('isMultilangActive'))) {
-            return false;
+            return;
         }
 
         // get languages
         if (empty($languages = $this->getConfig()->get('inputLanguageList', []))) {
-            return false;
+            return;
         }
 
         // get data
