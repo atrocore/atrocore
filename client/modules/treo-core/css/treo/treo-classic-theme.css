@@ -19814,7 +19814,6 @@ button.category:focus {
         padding-left: 0;
         min-height: 79.6vh;
         border-right: 1px solid #dcdcdc;
-        box-sizing: content-box;
     }
 
     .modal-dialog .edit > .row > .overview.col-sm-12,

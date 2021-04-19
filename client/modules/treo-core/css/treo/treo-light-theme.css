@@ -15336,7 +15336,6 @@ ul.dropdown-menu > li > a > .check-icon + div {
   }
 
   #main > .record > .detail > .row > .overview {
-    box-sizing: content-box;
     border-right: 1px solid #e0e0e0;
   }
 
