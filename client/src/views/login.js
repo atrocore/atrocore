@@ -216,6 +216,8 @@ Espo.define('views/login', 'view', function (Dep) {
                         settings: data.settings,
                         appParams: data.appParams
                     });
+
+                    $('body').attr({'style': ''});
                 }.bind(this),
                 error: function (xhr) {
                     $submit.removeClass('disabled').removeAttr('disabled');

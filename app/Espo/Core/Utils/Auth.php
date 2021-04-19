@@ -126,7 +126,7 @@ class Auth
             throw new Error('Not all modules are loaded. Please try later.');
         }
 
-        $isByTokenOnly = $this->request->getResourceUri() !== '/api/v1/App/user';
+        $isByTokenOnly = $this->request->getResourceUri() !== '/api/v1/App/user' && !preg_match('/^\/api\/v1\/portal-access\/(.*)\/App\/user$/', $this->request->getResourceUri());
 
         if (!$isByTokenOnly) {
             $this->checkFailedAttemptsLimit();

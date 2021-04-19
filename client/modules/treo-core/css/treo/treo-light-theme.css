@@ -14409,7 +14409,7 @@ body > #header .navbar-brand span.home-icon {
     overflow-y: hidden;
   }
   #header a.minimizer {
-    color: #dfdfdf;
+    color: #000000;
     text-decoration: none;
     margin-top: 5px;
     display: inline-block;
@@ -14526,6 +14526,25 @@ body > #header .navbar-brand span.home-icon {
   }
   body > footer {
     margin-top: -26x;
+  }
+  body.minimized > footer.is-collapsed.collapsed {
+    width: calc(100% - 278px);
+    margin-left: auto !important;
+  }
+
+  body.minimized > footer.is-collapsed.not-collapsed {
+    width: calc(100% - 64px);
+    margin-left: auto !important;
+  }
+
+  body:not(.minimized) > footer.is-collapsed.collapsed {
+    width: calc(100% - 460px);
+    margin-left: auto;
+  }
+
+  body:not(.minimized) > footer.is-collapsed.not-collapsed {
+    width: calc(100% - 246px);
+    margin-left: auto;
   }
   body > .content {
     height: auto;
@@ -15336,7 +15355,6 @@ ul.dropdown-menu > li > a > .check-icon + div {
   }
 
   #main > .record > .detail > .row > .overview {
-    box-sizing: content-box;
     border-right: 1px solid #e0e0e0;
   }
 
@@ -18883,17 +18901,15 @@ table.table > thead th > a {
 
 #main .catalog-tree-panel {
   position: relative;
-  border-top: 1px solid #e8eced;
   border-right: 1px solid #e8eced;
   margin: 0 14px -10px -15px;
-  padding: 0 15px 0 25px;
+  padding: 0 10px;
   float: left;
   min-height: 35px;
 }
 
 #main .detail .catalog-tree-panel {
   margin: 0;
-  border-right: 0;
 }
 
 #main .catalog-tree-panel + .list-container {
@@ -18937,6 +18953,7 @@ table.table > thead th > a {
   padding: 0;
   top: 1px;
   border: 0;
+  color: #ccc;
 }
 
 #main .catalog-tree-panel > button.collapsed {
@@ -18947,6 +18964,55 @@ table.table > thead th > a {
 }
 
 @media screen and (min-width: 768px) {
+  #main .catalog-tree-panel {
+    position: fixed;
+    top: 56px;
+    max-width: 240px;
+    height: calc(100% - 84px);
+    overflow-y: auto;
+  }
+
+  #main .catalog-tree-panel:not(.catalog-tree-panel-hidden) {
+    width: 240px;
+  }
+
+  #main .catalog-tree-panel .bottom-collapse {
+    top: unset !important;
+    bottom: 0;
+  }
+
+  #main > .page-header.not-collapsed .header-breadcrumbs:not(.fixed-header-breadcrumbs),
+  #main > .record > .detail > .detail-button-container.not-collapsed {
+    margin-left: 26px;
+  }
+
+  #main > .list-container.collapsed,
+  #main > .page-header.collapsed .header-breadcrumbs:not(.fixed-header-breadcrumbs),
+  #main > .record > .detail > .detail-button-container.collapsed
+  {
+    margin-left: 239px;
+    width: calc(100% - 239px);
+  }
+
+  #main > .record > .detail > .detail-button-container.stick-sub.collapsed {
+    margin-left: 225px;
+    width: calc(100% - 439px);
+  }
+
+  #main > .record > .detail > .detail-button-container.stick-sub.not-collapsed {
+    margin-left: 11px;
+  }
+
+  #main .detail .row > .overview.collapsed {
+    margin-left: 239px;
+    width: calc(75% - 241px);
+  }
+
+  #main .detail .row > .overview.not-collapsed {
+    margin-left: 25px;
+    width: calc(75% - 27px) !important;
+  }
+
   #main .catalog-tree-panel.catalog-tree-panel-hidden {
     padding: 20px 8px 20px 17px;
   }
@@ -19095,7 +19161,6 @@ button.category:focus {
   #header ul.tabs {
     margin: 0 0 0 -8px;
     overflow-y: auto;
-    border-bottom: 1px solid #e0e0e0;
   }
   #header .nav > li.more:not(.more-group) > .dropdown-menu {
     left: 220px;
@@ -21631,6 +21696,25 @@ ul.dropdown-menu > li.checkbox {
   body.minimized #header a.minimizer {
     top: 0;
   }
+  #header a.minimizer {
+    color: #ccc;
+  }
+
+  body:not(.minimized) #header a.minimizer {
+    position: absolute;
+    top: 56px;
+    left: 175px;
+    z-index: 2000;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    padding: 1px 5px;
+  }
+
+  body:not(.minimized) #header a.minimizer.bottom-minimizer {
+    top: unset;
+    bottom: 5px;
+  }
   body.minimized #header a.navbar-brand {
     width: 48px;
   }
@@ -21651,7 +21735,7 @@ ul.dropdown-menu > li.checkbox {
   }
   body.minimized #header ul.tabs {
     overflow-x: hidden;
-    margin: 0 0 0 -8px;
+    margin: 4px 0 0 -8px;
   }
   body.minimized #header ul.tabs > li.tab > a,
   body.minimized #header ul.tabs .more-group > ul > li > a {
