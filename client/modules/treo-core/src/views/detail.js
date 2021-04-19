@@ -135,6 +135,16 @@ Espo.define('treo-core:views/detail', 'class-replace!treo-core:views/detail',
                 }
             }
             return panelView;
+        },
+
+        afterRender() {
+            let footer = $('#footer');
+
+            if (footer.length) {
+                footer.removeClass('is-collapsed');
+            }
+
+            Dep.prototype.afterRender.call(this);
         }
 
     })
