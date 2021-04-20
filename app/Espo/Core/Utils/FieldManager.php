@@ -177,6 +177,7 @@ class FieldManager
                 $languageObj = new Language($locale, $this->container->get('fileManager'), $this->getMetadata());
                 $languageObj->set($scope, 'fields', $fieldKey, $fieldDefs[$label]);
                 $languageObj->save();
+                unset($fieldDefs[$label]);
             }
         }
 

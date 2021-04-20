@@ -84,13 +84,17 @@ class Metadata extends AbstractListener
             return $data;
         }
 
-        $params = [];
+        $defaultParams = [];
         foreach ($locales as $locale) {
-            $params[] = ['name' => 'label' . ucfirst(Util::toCamelCase(strtolower($locale))), 'type' => 'varchar'];
+            $defaultParams[] = ['name' => 'label' . ucfirst(Util::toCamelCase(strtolower($locale))), 'type' => 'varchar'];
         }
-        $params[] = ['name' => 'isMultilang', 'type' => 'bool', 'tooltip' => true];
 
-        foreach (['bool', 'enum', 'multiEnum', 'text', 'varchar', 'wysiwyg'] as $field) {
+        foreach ($data['fields'] as $field => $v) {
+            $params = $defaultParams;
+            if (in_array($field, ['bool', 'enum', 'multiEnum', 'text', 'varchar', 'wysiwyg'])) {
+                $params[] = ['name' => 'isMultilang', 'type' => 'bool', 'tooltip' => true];
+            }
+
             $data['fields'][$field]['params'] = array_merge($params, $data['fields'][$field]['params']);
         }
 
@@ -172,69 +176,82 @@ class Metadata extends AbstractListener
         foreach ($data['scopes'] as $scope => $row) {
             // for owner user
             if (!empty($row['hasOwner'])) {
-                if (empty($data['entityDefs'][$scope]['fields']['ownerUser'])) {
-                    $data['entityDefs'][$scope]['fields']['ownerUser'] = [
-                        "type"     => "link",
-                        "required" => true,
-                        "view"     => "views/fields/owner-user"
-                    ];
+                if (!isset($data['entityDefs'][$scope]['fields']['ownerUser']['type'])) {
+                    $data['entityDefs'][$scope]['fields']['ownerUser']['type'] = 'link';
                 }
-                if (empty($data['entityDefs'][$scope]['links']['ownerUser'])) {
-                    $data['entityDefs'][$scope]['links']['ownerUser'] = [
-                        "type"   => "belongsTo",
-                        "entity" => "User"
-                    ];
+
+                if (!isset($data['entityDefs'][$scope]['fields']['ownerUser']['required'])) {
+                    $data['entityDefs'][$scope]['fields']['ownerUser']['required'] = true;
                 }
-                if (empty($data['entityDefs'][$scope]['indexes']['ownerUser'])) {
-                    $data['entityDefs'][$scope]['indexes']['ownerUser'] = [
-                        "columns" => [
-                            "ownerUserId",
-                            "deleted"
-                        ]
-                    ];
+
+                if (!isset($data['entityDefs'][$scope]['fields']['ownerUser']['view'])) {
+                    $data['entityDefs'][$scope]['fields']['ownerUser']['view'] = 'views/fields/owner-user';
+                }
+
+                if (!isset($data['entityDefs'][$scope]['links']['ownerUser']['type'])) {
+                    $data['entityDefs'][$scope]['links']['ownerUser']['type'] = 'belongsTo';
+                }
+
+                if (!isset($data['entityDefs'][$scope]['links']['ownerUser']['entity'])) {
+                    $data['entityDefs'][$scope]['links']['ownerUser']['entity'] = 'User';
+                }
+
+                if (!isset($data['entityDefs'][$scope]['indexes']['ownerUser']['columns'])) {
+                    $data['entityDefs'][$scope]['indexes']['ownerUser']['columns'] = ["ownerUserId", "deleted"];
                 }
             }
 
             // for assigned user
             if (!empty($row['hasAssignedUser'])) {
-                if (empty($data['entityDefs'][$scope]['fields']['assignedUser'])) {
-                    $data['entityDefs'][$scope]['fields']['assignedUser'] = [
-                        "type"     => "link",
-                        "required" => true,
-                        "view"     => "views/fields/owner-user"
-                    ];
+                if (!isset($data['entityDefs'][$scope]['fields']['assignedUser']['type'])) {
+                    $data['entityDefs'][$scope]['fields']['assignedUser']['type'] = 'link';
                 }
-                if (empty($data['entityDefs'][$scope]['links']['assignedUser'])) {
-                    $data['entityDefs'][$scope]['links']['assignedUser'] = [
-                        "type"   => "belongsTo",
-                        "entity" => "User"
-                    ];
+
+                if (!isset($data['entityDefs'][$scope]['fields']['assignedUser']['required'])) {
+                    $data['entityDefs'][$scope]['fields']['assignedUser']['required'] = true;
                 }
-                if (empty($data['entityDefs'][$scope]['indexes']['assignedUser'])) {
-                    $data['entityDefs'][$scope]['indexes']['assignedUser'] = [
-                        "columns" => [
-                            "assignedUserId",
-                            "deleted"
-                        ]
-                    ];
+
+                if (!isset($data['entityDefs'][$scope]['fields']['assignedUser']['view'])) {
+                    $data['entityDefs'][$scope]['fields']['assignedUser']['view'] = 'views/fields/owner-user';
+                }
+
+                if (!isset($data['entityDefs'][$scope]['links']['assignedUser']['type'])) {
+                    $data['entityDefs'][$scope]['links']['assignedUser']['type'] = 'belongsTo';
+                }
+
+                if (!isset($data['entityDefs'][$scope]['links']['assignedUser']['entity'])) {
+                    $data['entityDefs'][$scope]['links']['assignedUser']['entity'] = 'User';
+                }
+
+                if (!isset($data['entityDefs'][$scope]['indexes']['assignedUser']['columns'])) {
+                    $data['entityDefs'][$scope]['indexes']['assignedUser']['columns'] = ["assignedUserId", "deleted"];
                 }
             }
 
             // for teams
             if (!empty($row['hasTeam'])) {
-                if (empty($data['entityDefs'][$scope]['fields']['teams'])) {
-                    $data['entityDefs'][$scope]['fields']['teams'] = [
-                        "type" => "linkMultiple",
-                        "view" => "views/fields/teams"
-                    ];
+                if (!isset($data['entityDefs'][$scope]['fields']['teams']['type'])) {
+                    $data['entityDefs'][$scope]['fields']['teams']['type'] = 'linkMultiple';
                 }
-                if (empty($data['entityDefs'][$scope]['links']['teams'])) {
-                    $data['entityDefs'][$scope]['links']['teams'] = [
-                        "type"                        => "hasMany",
-                        "entity"                      => "Team",
-                        "relationName"                => "EntityTeam",
-                        "layoutRelationshipsDisabled" => true
-                    ];
+
+                if (!isset($data['entityDefs'][$scope]['fields']['teams']['view'])) {
+                    $data['entityDefs'][$scope]['fields']['teams']['view'] = 'views/fields/teams';
+                }
+
+                if (!isset($data['entityDefs'][$scope]['links']['teams']['type'])) {
+                    $data['entityDefs'][$scope]['links']['teams']['type'] = 'hasMany';
+                }
+
+                if (!isset($data['entityDefs'][$scope]['links']['teams']['entity'])) {
+                    $data['entityDefs'][$scope]['links']['teams']['entity'] = 'Team';
+                }
+
+                if (!isset($data['entityDefs'][$scope]['links']['teams']['relationName'])) {
+                    $data['entityDefs'][$scope]['links']['teams']['relationName'] = 'EntityTeam';
+                }
+
+                if (!isset($data['entityDefs'][$scope]['links']['teams']['layoutRelationshipsDisabled'])) {
+                    $data['entityDefs'][$scope]['links']['teams']['layoutRelationshipsDisabled'] = true;
                 }
             }
         }

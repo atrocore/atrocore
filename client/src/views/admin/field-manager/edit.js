@@ -331,16 +331,8 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                 this.model.set('name', name);
             }, this);
 
-            if (this.getView('isMultilang')) {
-                this.getView('isMultilang').on('change', function (m) {
-                    this.toggleLocaleLabel();
-                }, this);
-            }
-
             if (this.defs.multilangField) {
                 this.hideLabelsExcept(this.defs.multilangLocale);
-            } else {
-                this.toggleLocaleLabel();
             }
         },
 
@@ -349,17 +341,6 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
             (this.getConfig().get('inputLanguageList') || []).forEach(v => {
                 let name = 'label' + v.charAt(0).toUpperCase() + v.charAt(1) + v.charAt(3) + v.charAt(4).toLowerCase();
                 if (locale !== v) {
-                    this.hideField(name);
-                }
-            });
-        },
-
-        toggleLocaleLabel: function () {
-            (this.getConfig().get('inputLanguageList') || []).forEach(v => {
-                let name = 'label' + v.charAt(0).toUpperCase() + v.charAt(1) + v.charAt(3) + v.charAt(4).toLowerCase();
-                if (this.model.get('isMultilang')) {
-                    this.showField(name);
-                } else {
                     this.hideField(name);
                 }
             });
