@@ -54,7 +54,7 @@ return [
     'smtpUsername'                           => '',
     'smtpPassword'                           => '',
     'logger'                                 => [
-        'path'          => 'data/logs/espo.log',
+        'path'          => 'data/logs/atro.log',
         'level'         => 'WARNING', /** DEBUG, INFO, NOTICE, WARNING, ERROR, CRITICAL, ALERT, EMERGENCY */
         'rotation'      => true,
         'maxFileNumber' => 30,
