@@ -19251,6 +19251,30 @@ button.category:focus {
     margin-left: 1px;
     margin-right: -1px;
   }
+
+  .edit > .row > .side.fixed-top,
+  .detail > .row > .side.fixed-top,
+  .edit > .row > .side.fixed-bottom,
+  .detail > .row > .side.fixed-bottom {
+    position: fixed;
+    right: 5px;
+  }
+
+  .edit > .row > .side.fixed-top,
+  .detail > .row > .side.fixed-top {
+    top: 91px;
+  }
+
+  .edit > .row > .side.fixed-bottom,
+  .detail > .row > .side.fixed-bottom {
+    bottom: 0;
+  }
+
+  .edit > .row > .side.scrolled,
+  .detail > .row > .side.scrolled {
+    position: absolute;
+    right: 5px;
+  }
   .nav > li > a {
     padding: 7px 15px;
   }
