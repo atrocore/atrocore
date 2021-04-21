@@ -352,6 +352,88 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             var screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
 
+            let $side = this.getView('side').$el;
+
+            if ($side.length) {
+                let prevScroll = 0;
+
+                $window.on('scroll.side', function (e) {
+                    let side = $('.side');
+
+                    let pageHeader = $('.page-header');
+                    let buttonContainer = $('.record-buttons');
+                    let topHeight = pageHeader.outerHeight() + buttonContainer.outerHeight();
+                    let overview = $('.overview');
+
+                    let scroll = $window.scrollTop();
+
+                    // if screen width more than 768 pixels and side panel height more than screen height
+                    if ($window.width() >= 768 && side.outerHeight() > $window.height() - topHeight && overview.outerHeight() > side.outerHeight()) {
+                        let sideWidth = side.outerWidth();
+
+                        // define scrolling direction
+                        if (scroll > prevScroll) {
+
+                            // if side panel scrolled to end
+                            if (scroll > side.outerHeight() - ($window.height() - side.offset().top)) {
+                                side.attr('style', '');
+                                side.css({'width': sideWidth + 'px'});
+
+                                if (side.hasClass('fixed-top')) {
+                                    side.addClass('scrolled');
+                                    side.css({
+                                        'top': side.offset().top + 'px'
+                                    });
+                                } else {
+                                    side.removeClass('scrolled');
+                                    side.addClass('fixed-bottom');
+                                }
+                            } else {
+                                if (!side.hasClass('fixed-bottom')) {
+                                    if (side.hasClass('fixed-top')) {
+                                        side.removeClass('fixed-top');
+                                    }
+
+                                    side.addClass('scrolled');
+                                    side.css({
+                                        'top': side.offset().top + 'px',
+                                        'width': sideWidth + 'px'
+                                    });
+                                }
+                            }
+                        } else {
+
+                            // if side panel has just start scrolling up
+                            if (side.hasClass('fixed-bottom')) {
+                                side.removeClass('fixed-bottom');
+
+                                side.addClass('scrolled');
+                                side.css({
+                                    'top': (scroll - (side.outerHeight() - $window.height())) + 'px'
+                                });
+                            } else {
+                                // if panel scrolled to end
+                                if (scroll < topHeight) {
+                                    side.attr('style', '');
+                                    side.removeClass('fixed-top scrolled');
+                                } else {
+                                    if (scroll < side.offset().top - topHeight) {
+                                        side.attr('style', '');
+                                        side.removeClass('scrolled');
+                                        side.addClass('fixed-top');
+                                        side.css({
+                                            'width': sideWidth + 'px'
+                                        })
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    prevScroll = scroll;
+                }.bind(this));
+            }
+
             $window.off('scroll.detail-' + this.numId);
             $window.on('scroll.detail-' + this.numId, function (e) {
                 if ($(window.document).width() < screenWidthXs) {
