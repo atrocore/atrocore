@@ -39,11 +39,13 @@
     </div>
 
     <div class="menu">
-        <a class="minimizer" href="javascript:">
-            <span class="fas fa-angle-right right"></span>
-            <span class="fas fa-angle-left left"></span>
-        </a>
         <ul class="nav navbar-nav tabs">
+            <li>
+                <a class="minimizer" href="javascript:">
+                    <span class="fas fa-angle-right right"></span>
+                    <span class="fas fa-angle-left left"></span>
+                </a>
+            </li>
             {{#each tabDefsList}}
             {{#unless isInMore}}
             <li data-name="{{name}}" class="not-in-more tab">
@@ -132,9 +134,5 @@
             </li>
             {{/if}}
         </ul>
-        <a class="minimizer" href="javascript:">
-            <span class="fas fa-angle-right right"></span>
-            <span class="fas fa-angle-left left"></span>
-        </a>
     </div>
 </div>
