@@ -15087,8 +15087,8 @@ div.list-kanban > div > table {
 
 div.list-kanban > div > table th {
     font-weight: normal;
-    color: #fff;
-    background-color: #999;
+    color: #777;
+    background-color: #eee;
     position: relative;
     padding: 0;
     margin: 0;
@@ -15123,7 +15123,7 @@ div.list-kanban > div > table th > div:after {
 div.list-kanban > div > table th > div:before {
     left: calc(100% - 12px);
     z-index: 2;
-    border-color: transparent transparent transparent #999
+    border-color: transparent transparent transparent #eee
 }
 
 div.list-kanban > div > table th:last-child > div:before, div.list-kanban > div > table th:last-child > div:after {
@@ -15152,7 +15152,8 @@ div.list-kanban > div > table td.group-column .group-column-list {
 }
 
 div.list-kanban > div > table .item {
-    margin-bottom: 10px
+    margin-bottom: 10px;
+    border: 1px solid #eee;
 }
 
 div.list-kanban > div > table .item .panel {
@@ -15236,7 +15237,7 @@ div.list-kanban > div.kanban-columns-container > table {
     }
 
     div.list-kanban > div.kanban-head-container {
-        background-color: #999
+        background-color: #eee
     }
 
     div.list-kanban > div.kanban-head-container > table > thead tr.kanban-row {
@@ -17026,6 +17027,10 @@ pre > code {
 @media screen and (min-width: 768px) {
     .search-container .view-mode-switcher-buttons-group {
         float: right
+    }
+
+    .search-container .advanced-filters {
+        position: relative;
     }
 }
 
