@@ -19267,6 +19267,13 @@ button.category:focus {
   .edit > .row > .side.fixed-bottom,
   .detail > .row > .side.fixed-bottom {
     position: fixed;
+    right: 3px;
+  }
+
+  .edit > .row > .catalog-tree-panel ~ .side.fixed-top,
+  .detail > .row > .catalog-tree-panel ~ .side.fixed-top,
+  .edit > .row > .catalog-tree-panel ~ .side.fixed-bottom,
+  .detail > .row > .catalog-tree-panel ~ .side.fixed-bottom {
     right: 5px;
   }
 
@@ -19283,6 +19290,11 @@ button.category:focus {
   .edit > .row > .side.scrolled,
   .detail > .row > .side.scrolled {
     position: absolute;
+    right: 3px;
+  }
+
+  .edit > .row > .catalog-tree-panel ~ .side.scrolled,
+  .detail > .row > .catalog-tree-panel ~ .side.scrolled {
     right: 5px;
   }
   .nav > li > a {

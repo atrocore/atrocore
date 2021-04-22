@@ -19882,7 +19882,14 @@ button.category:focus {
     .edit > .row > .side.fixed-bottom,
     .detail > .row > .side.fixed-bottom {
         position: fixed;
-        right: 6px;
+        right: 2px;
+    }
+
+    .edit > .row > .catalog-tree-panel ~ .side.fixed-top,
+    .detail > .row > .catalog-tree-panel ~ .side.fixed-top,
+    .edit > .row > .catalog-tree-panel ~ .side.fixed-bottom,
+    .detail > .row > .catalog-tree-panel ~ .side.fixed-bottom {
+        right: 4px;
     }
 
     .edit > .row > .side.fixed-top,
@@ -19898,12 +19905,17 @@ button.category:focus {
     .edit > .row > .side.scrolled,
     .detail > .row > .side.scrolled {
         position: absolute;
-        right: 6px;
+        right: 2px;
+    }
+
+    .edit > .row > .catalog-tree-panel ~ .side.scrolled,
+    .detail > .row > .catalog-tree-panel ~ .side.scrolled {
+        right: 4px;
     }
 
     #main > .record > .detail > .row > .side {
         border-left: 1px solid #dcdcdc;
-        margin-left: -3px;
+        margin-left: -1px;
     }
 
     .nav > li > a {
