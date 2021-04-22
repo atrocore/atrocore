@@ -19643,10 +19643,10 @@ button.category:focus {
 
     body:not(.minimized) #header a.minimizer {
         position: absolute;
-        top: 52px;
+        top: 3px;
         left: 175px;
         z-index: 2000;
-        background: #ffffff;
+        background: #f5f5f5;
         width: 20px;
         height: 20px;
         border-radius: 50%;
@@ -19824,7 +19824,7 @@ button.category:focus {
     }
 
     body.minimized > footer.is-collapsed.collapsed {
-        width: calc(100% - 278px);
+        width: calc(100% - 318px);
         margin-left: auto !important;
     }
 
@@ -19834,7 +19834,7 @@ button.category:focus {
     }
 
     body:not(.minimized) > footer.is-collapsed.collapsed {
-        width: calc(100% - 460px);
+        width: calc(100% - 500px);
         margin-left: auto;
     }
 
@@ -19943,13 +19943,13 @@ button.category:focus {
     #main .catalog-tree-panel {
         position: fixed;
         top: 54px;
-        max-width: 240px;
+        max-width: 280px;
         height: calc(100% - 48px);
         overflow-y: auto;
     }
 
     #main .catalog-tree-panel:not(.catalog-tree-panel-hidden) {
-        width: 240px;
+        width: 280px;
     }
 
     #main .catalog-tree-panel .bottom-collapse {
@@ -19970,22 +19970,27 @@ button.category:focus {
     #main > .page-header.collapsed .header-breadcrumbs:not(.fixed-header-breadcrumbs),
     #main > .record > .detail > .detail-button-container.collapsed
     {
-        margin-left: 239px;
-        width: calc(100% - 239px);
+        margin-left: 279px;
+        width: calc(100% - 279px);
     }
 
     #main > .record > .detail > .detail-button-container.stick-sub.collapsed {
-        margin-left: 225px;
-        width: calc(100% - 460px);
+        margin-left: 265px;
+        width: calc(100% - 500px);
     }
 
     #main > .record > .detail > .detail-button-container.stick-sub.not-collapsed {
         margin-left: 11px;
     }
 
+    body.minimized #main > .record > .detail > .detail-button-container.stick-sub.collapsed {
+        margin-left: 265px;
+        width: calc(100% - 318px);
+    }
+
     #main .detail .row > .overview.collapsed {
-        margin-left: 239px;
-        width: calc(75% - 241px);
+        margin-left: 279px;
+        width: calc(75% - 281px);
     }
 
     #main .detail .row > .overview.not-collapsed {
