@@ -357,6 +357,14 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             if ($side.length) {
                 let prevScroll = 0;
 
+                $window.resize(function () {
+                    let side = $('.side');
+                    if (side.outerHeight() < $window.height() - (parseInt($('body').css('padding-top')) + $('.record-buttons').outerHeight())) {
+                        side.attr('style', '');
+                        side.removeClass('fixed-top fixed-bottom scrolled');
+                    }
+                });
+
                 $window.on('scroll.side', function (e) {
                     let side = $('.side');
 
