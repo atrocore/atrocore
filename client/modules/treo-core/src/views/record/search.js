@@ -230,6 +230,17 @@ Espo.define('treo-core:views/record/search', 'class-replace!treo-core:views/reco
 
             this.manageLabels();
             this.setupOperatorLabels();
+            this.setupAdvancedFiltersPosition();
+        },
+
+        setupAdvancedFiltersPosition() {
+            let entityName = $('.row > div > h3');
+            let searchContainer = $('.search-container');
+            let positionLeft = entityName.find('span').innerWidth() + parseFloat(entityName.css('marginRight')) + parseFloat(entityName.css('paddingRight')) + parseFloat(searchContainer.css('paddingLeft')) + parseFloat(searchContainer.css('marginLeft'));
+
+            this.$advancedFiltersPanel.css({
+                'left': '-' + positionLeft  + 'px'
+            });
         },
 
         setupOperatorLabels() {
