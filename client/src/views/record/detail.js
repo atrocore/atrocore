@@ -352,9 +352,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             var screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
 
-            let $side = this.getView('side').$el;
+            let $side = this.getView('side');
 
-            if ($side.length) {
+            if ($side) {
                 let prevScroll = 0;
 
                 $window.resize(function () {
