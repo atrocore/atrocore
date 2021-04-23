@@ -95,7 +95,9 @@ class Metadata extends AbstractListener
                 $params[] = ['name' => 'isMultilang', 'type' => 'bool', 'tooltip' => true];
             }
 
-            $data['fields'][$field]['params'] = array_merge($params, $data['fields'][$field]['params']);
+            if (!empty($data['fields'][$field]['params']) && is_array($data['fields'][$field]['params'])) {
+                $data['fields'][$field]['params'] = array_merge($params, $data['fields'][$field]['params']);
+            }
         }
 
         /**
