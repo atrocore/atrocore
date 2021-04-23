@@ -67,7 +67,11 @@ class DataManager
      */
     public static function updatePublicData(array $data = []): void
     {
-        $result = JSON::decode(file_get_contents(self::PUBLIC_DATA_FILE_PATH), true);
+        if (file_exists(self::PUBLIC_DATA_FILE_PATH)) {
+            $result = JSON::decode(file_get_contents(self::PUBLIC_DATA_FILE_PATH), true);
+        } else {
+            $result = [];
+        }
         $result = array_merge($result, $data);
         $result['dataTimestamp'] = (new \DateTime())->getTimestamp();
         file_put_contents(self::PUBLIC_DATA_FILE_PATH, JSON::encode($result));
