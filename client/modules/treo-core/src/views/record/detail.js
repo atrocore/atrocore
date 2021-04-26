@@ -318,6 +318,21 @@ Espo.define('treo-core:views/record/detail', 'class-replace!treo-core:views/reco
             var $window = $(window);
             var screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
 
+            let searchContainer = $('.search-container');
+            if (searchContainer.length) {
+                searchContainer.addClass('hidden');
+            }
+
+            let headerButtonsContainer = $('.header-buttons-container');
+            if (headerButtonsContainer.length) {
+                let main = $('#main');
+                let headerBreadcrumbs = $('.header-breadcrumbs');
+
+                if (main.length && headerBreadcrumbs.length && headerButtonsContainer.outerWidth() > main.outerWidth() - headerBreadcrumbs.outerWidth()) {
+                    headerButtonsContainer.addClass('full-row');
+                }
+            }
+
             $window.off('scroll.detail-' + this.numId);
             $window.on('scroll.detail-' + this.numId, function (e) {
                 if ($(window.document).width() < screenWidthXs) {
