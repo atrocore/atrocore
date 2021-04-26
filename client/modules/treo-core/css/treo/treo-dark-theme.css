@@ -15033,6 +15033,15 @@ label {
 
 .page-header .header-buttons-container {
     margin-left: auto;
+    width: auto !important;
+}
+
+.header .header-buttons-container.full-row {
+    width: 100% !important;
+}
+
+.header .header-buttons-container.full-row .header-buttons {
+    justify-content: space-between;
 }
 
 .page-header .header-buttons-container > .btn-group {
@@ -19378,7 +19387,6 @@ select,
     -webkit-justify-content: flex-end;
     -ms-flex-pack: end;
     justify-content: flex-end;
-    min-width: 510px;
 }
 
 .selectize-input.focus {
@@ -19476,6 +19484,7 @@ select,
 
 #main .detail .catalog-tree-panel {
     margin: 0;
+    background-color: #ffffff;
 }
 
 #main .catalog-tree-panel + .list-container {
@@ -19850,12 +19859,17 @@ button.category:focus {
         padding-left: 0
     }
 
+    #main .header .header-buttons-container.full-row {
+        padding-left: 33px;
+    }
+
     .edit > .row > .overview,
     .detail > .row > .overview {
         padding-right: 0;
         padding-left: 0;
         min-height: 79.6vh;
         border-right: 1px solid #dcdcdc;
+        background-color: #ffffff;
     }
 
     .modal-dialog .edit > .row > .overview.col-sm-12,
@@ -19868,6 +19882,7 @@ button.category:focus {
     #main .detail > .row {
         margin-left: -15px;
         margin-right: -14px;
+        background-color: #fafafa;
     }
 
     .edit > .row > .side,
@@ -19958,7 +19973,7 @@ button.category:focus {
         position: fixed;
         top: 54px;
         max-width: 280px;
-        height: calc(100% - 76px);
+        height: calc(100% - 47px);
         overflow-y: auto;
     }
 
@@ -20391,17 +20406,26 @@ button.category:focus {
         margin: 0 15px;
     }
 
+    #main .header.page-header .header-buttons-container {
+        width: 100%;
+        margin-left: unset;
+    }
+
     .page-header .header-buttons div.pull-right {
         -webkit-flex-wrap: nowrap;
         -ms-flex-wrap: nowrap;
         flex-wrap: nowrap;
-        min-width: 100%;
+        min-width: calc(100% - 95px);
     }
 
     .page-header .header-buttons .filter-cell {
         margin-bottom: 5px;
         width: 100%;
         max-width: 170px;
+    }
+
+    .page-header .header-buttons .filter-cell:first-child > .open .dropdown-menu {
+        left: 0;
     }
 }
 
