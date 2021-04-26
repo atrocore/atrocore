@@ -318,7 +318,7 @@ Espo.define('treo-core:views/record/detail', 'class-replace!treo-core:views/reco
             var $window = $(window);
             var screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
 
-            let searchContainer = $('.search-container');
+            let searchContainer = $('.page-header .search-container');
             if (searchContainer.length) {
                 searchContainer.addClass('hidden');
             }
