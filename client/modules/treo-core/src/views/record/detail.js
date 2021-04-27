@@ -333,6 +333,31 @@ Espo.define('treo-core:views/record/detail', 'class-replace!treo-core:views/reco
                 }
             }
 
+            let overview = $('.detail .overview');
+            let side = $('.detail .side');
+            if (overview.length && side.length) {
+                setTimeout(function () {
+                    if (overview.outerHeight() > side.outerHeight()) {
+                        overview.addClass('bordered');
+                    } else {
+                        side.addClass('bordered');
+                    }
+                }, 100);
+
+                $window.resize(function () {
+                    let row = $('.record > .detail > .row');
+
+                    if ($window.outerWidth() > 768) {
+                        if (row.length && (side.hasClass('fixed-top') || side.hasClass('fixed-bottom') || side.hasClass('scrolled'))) {
+
+                            side.css({
+                                'width': (row.outerWidth() - overview.outerWidth(true)) + 'px'
+                            });
+                        }
+                    }
+                });
+            }
+
             $window.off('scroll.detail-' + this.numId);
             $window.on('scroll.detail-' + this.numId, function (e) {
                 if ($(window.document).width() < screenWidthXs) {

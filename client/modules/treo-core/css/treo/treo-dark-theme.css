@@ -19868,8 +19868,17 @@ button.category:focus {
         padding-right: 0;
         padding-left: 0;
         min-height: 79.6vh;
-        border-right: 1px solid #dcdcdc;
         background-color: #ffffff;
+    }
+
+    .edit > .row > .overview.bordered,
+    .detail > .row > .overview.bordered {
+        border-right: 1px solid #dcdcdc;
+    }
+
+    .edit > .row > .side.bordered,
+    .detail > .row > .side.bordered {
+        border-left: 1px solid #dcdcdc;
     }
 
     .modal-dialog .edit > .row > .overview.col-sm-12,
@@ -19881,7 +19890,7 @@ button.category:focus {
     #main .edit > .row,
     #main .detail > .row {
         margin-left: -15px;
-        margin-right: -14px;
+        margin-right: -15px;
         background-color: #fafafa;
     }
 
@@ -19897,14 +19906,14 @@ button.category:focus {
     .edit > .row > .side.fixed-bottom,
     .detail > .row > .side.fixed-bottom {
         position: fixed;
-        right: 2px;
+        right: 0;
     }
 
     .edit > .row > .catalog-tree-panel ~ .side.fixed-top,
     .detail > .row > .catalog-tree-panel ~ .side.fixed-top,
     .edit > .row > .catalog-tree-panel ~ .side.fixed-bottom,
     .detail > .row > .catalog-tree-panel ~ .side.fixed-bottom {
-        right: 4px;
+        right: 0;
     }
 
     .edit > .row > .side.fixed-top,
@@ -19920,17 +19929,12 @@ button.category:focus {
     .edit > .row > .side.scrolled,
     .detail > .row > .side.scrolled {
         position: absolute;
-        right: 2px;
+        right: 0;
     }
 
     .edit > .row > .catalog-tree-panel ~ .side.scrolled,
     .detail > .row > .catalog-tree-panel ~ .side.scrolled {
-        right: 4px;
-    }
-
-    #main > .record > .detail > .row > .side {
-        border-left: 1px solid #dcdcdc;
-        margin-left: -1px;
+        right: 0;
     }
 
     .nav > li > a {
@@ -20019,12 +20023,12 @@ button.category:focus {
 
     #main .detail .row > .overview.collapsed {
         margin-left: 279px;
-        width: calc(75% - 281px);
+        width: calc(66.6666666667% - 279px);
     }
 
     #main .detail .row > .overview.not-collapsed {
         margin-left: 25px;
-        width: calc(75% - 27px) !important;
+        width: calc(66.6666666667% - 25px) !important;
     }
 
     #main .catalog-tree-panel.catalog-tree-panel-hidden {
@@ -20039,6 +20043,16 @@ button.category:focus {
 @media screen and (min-width: 1200px) {
     #main .detail .catalog-tree-panel.catalog-tree-panel-hidden + .overview {
         width: calc(75% - 25px);
+    }
+
+    #main .detail .row > .overview.collapsed {
+        margin-left: 279px;
+        width: calc(75% - 279px);
+    }
+
+    #main .detail .row > .overview.not-collapsed {
+        margin-left: 25px;
+        width: calc(75% - 25px) !important;
     }
 }
 
