@@ -16917,6 +16917,14 @@ h5 {
     z-index: 3
 }
 
+.search-container .input-group > .input-group-btn.left-dropdown > .btn:first-child {
+    padding-left: 0;
+}
+
+.search-container .input-group > .input-group-btn:last-child > .btn:last-child {
+    padding-right: 0;
+}
+
 .list-group-panel {
     background-color: #fff
 }
@@ -19145,7 +19153,6 @@ ul.dropdown-menu > li.checkbox {
 }
 .search-row .text-filter + .input-group-btn .reset .fas {
     font-size: 13px;
-    margin-right: 5px;
 }
 
 .search-row .text-filter + .input-group-btn .search::after:first-letter {
@@ -19658,6 +19665,7 @@ button.category:focus {
 
     body.minimized #header a.minimizer {
         top: 0;
+        padding-left: 11px !important;
     }
 
     .record .list-container {
@@ -20301,8 +20309,6 @@ button.category:focus {
         overflow: auto;
     }
 
-    .search-row .text-filter + .input-group-btn .search,
-    .search-row .text-filter + .input-group-btn .reset,
     .search-row > div .search-right-buttons-group button {
         font-size: 0;
         height: 33px;
@@ -20722,7 +20728,12 @@ span.jqtree-dragging {
 
 .search-row .input-group {
     border-bottom: solid 1px #e0e0e0;
-    margin-left: 20px;
+}
+
+@media screen and (min-width: 768px) {
+    .search-row .input-group {
+        margin-left: 20px;
+    }
 }
 
 .search-row .filters-button {
