@@ -61,5 +61,13 @@ class PortalRole extends Record
     {
         $this->getInjection('fileManager')->removeInDir('data/cache/application/acl-portal');
     }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getFieldsThatConflict(Entity $entity, \stdClass $data): array
+    {
+        return [];
+    }
 }
 
