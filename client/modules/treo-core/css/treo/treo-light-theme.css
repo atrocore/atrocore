@@ -15364,13 +15364,12 @@ ul.dropdown-menu > li > a > .check-icon + div {
     width: 740px;
   }
 
-  #main > .record > .detail > .row > .overview {
+  #main > .record > .detail > .row > .overview.bordered {
     border-right: 1px solid #e0e0e0;
   }
 
-  #main > .record > .detail > .row > .side {
+  #main > .record > .detail > .row > .side.bordered {
     border-left: 1px solid #e0e0e0;
-    margin-left: -1px;
   }
 }
 
@@ -19024,12 +19023,12 @@ table.table > thead th > a {
 
   #main .detail .row > .overview.collapsed {
     margin-left: 279px;
-    width: calc(75% - 281px);
+    width: calc(66.6666666667% - 279px);
   }
 
   #main .detail .row > .overview.not-collapsed {
     margin-left: 25px;
-    width: calc(75% - 27px) !important;
+    width: calc(66.6666666667% - 25px) !important;
   }
 
   #main .catalog-tree-panel.catalog-tree-panel-hidden {
@@ -19043,6 +19042,16 @@ table.table > thead th > a {
 @media screen and (min-width: 1200px) {
   #main .detail .catalog-tree-panel.catalog-tree-panel-hidden + .overview {
     width: calc(75% - 25px);
+  }
+
+  #main .detail .row > .overview.collapsed {
+    margin-left: 279px;
+    width: calc(75% - 279px);
+  }
+
+  #main .detail .row > .overview.not-collapsed {
+    margin-left: 25px;
+    width: calc(75% - 25px) !important;
   }
 }
 
@@ -19262,17 +19271,12 @@ button.category:focus {
   #main .edit > .row,
   #main .detail > .row {
     margin-left: -15px;
-    margin-right: -14px;
-  }
-  #main .detail .catalog-tree-panel + .overview {
-    border-right: 1px solid #EEEEEE;
+    margin-right: -15px;
   }
   .edit > .row > .side,
   .detail > .row > .side {
     padding: 0;
     position: relative;
-    margin-left: 1px;
-    margin-right: -1px;
   }
 
   .edit > .row > .side.fixed-top,
@@ -19280,14 +19284,14 @@ button.category:focus {
   .edit > .row > .side.fixed-bottom,
   .detail > .row > .side.fixed-bottom {
     position: fixed;
-    right: 3px;
+    right: 0;
   }
 
   .edit > .row > .catalog-tree-panel ~ .side.fixed-top,
   .detail > .row > .catalog-tree-panel ~ .side.fixed-top,
   .edit > .row > .catalog-tree-panel ~ .side.fixed-bottom,
   .detail > .row > .catalog-tree-panel ~ .side.fixed-bottom {
-    right: 5px;
+    right: 0;
   }
 
   .edit > .row > .side.fixed-top,
@@ -19303,12 +19307,12 @@ button.category:focus {
   .edit > .row > .side.scrolled,
   .detail > .row > .side.scrolled {
     position: absolute;
-    right: 3px;
+    right: 0;
   }
 
   .edit > .row > .catalog-tree-panel ~ .side.scrolled,
   .detail > .row > .catalog-tree-panel ~ .side.scrolled {
-    right: 5px;
+    right: 0;
   }
   .nav > li > a {
     padding: 7px 15px;
