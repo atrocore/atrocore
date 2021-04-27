@@ -19871,8 +19871,17 @@ button.category:focus {
         padding-right: 0;
         padding-left: 0;
         min-height: 79.6vh;
-        border-right: 1px solid #dcdcdc;
         background-color: #ffffff;
+    }
+
+    .edit > .row > .overview.bordered,
+    .detail > .row > .overview.bordered {
+        border-right: 1px solid #dcdcdc;
+    }
+
+    .edit > .row > .side.bordered,
+    .detail > .row > .side.bordered {
+        border-left: 1px solid #dcdcdc;
     }
 
     .modal-dialog .edit > .row > .overview.col-sm-12,
