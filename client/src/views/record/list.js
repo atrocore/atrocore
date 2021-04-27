@@ -825,14 +825,13 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 return this._cachedFilteredListLayout;
             }
 
-            filteredListLayout = Espo.Utils.clone(listLayout);
-            for (var i in listLayout) {
-                var name = listLayout[i].name;
-                if (name && ~forbiddenFieldList.indexOf(name)) {
-                    filteredListLayout[i].customLabel = '';
-                    filteredListLayout[i].notSortable = true;
+            let filteredListLayout = [];
+
+            listLayout.forEach(item => {
+                if (item.name && forbiddenFieldList.indexOf(item.name) < 0) {
+                    filteredListLayout.push(item);
                 }
-            }
+            });
 
             this._cachedFilteredListLayout = filteredListLayout;
 
