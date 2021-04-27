@@ -4632,6 +4632,10 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
   background-color: #ececec;
 }
 
+.navbar-right .panel-default > .panel-heading > .pull-right > a {
+  font-weight: normal;
+}
+
 .navbar-right .dropdown-header {
   padding: 13px 10px;
   border-top: 1px solid #dcdcdc;
@@ -19389,8 +19393,6 @@ button.category:focus {
     -webkit-box-shadow: none;
             box-shadow: none;
   }
-  .search-row .text-filter + .input-group-btn .search,
-  .search-row .text-filter + .input-group-btn .reset,
   .search-row > div .search-right-buttons-group button {
     font-size: 0;
     height: 33px;
@@ -19785,7 +19787,12 @@ span.jqtree-dragging {
 
 .search-row .input-group {
   border-bottom: solid 1px #e0e0e0;
-  margin-left: 20px;
+}
+
+@media screen and (min-width: 768px) {
+  .search-row .input-group {
+    margin-left: 20px;
+  }
 }
 
 .search-row .filters-button {
@@ -21612,18 +21619,26 @@ ul.dropdown-menu > li.checkbox {
   z-index: 2;
 }
 
+.search-container .input-group > .input-group-btn.left-dropdown > .btn:first-child {
+  padding-left: 0;
+}
+
+.search-container .input-group > .input-group-btn:last-child > .btn:last-child {
+  padding-right: 0;
+}
+
 .modal-open .modal {
   padding-right: 0 !important;
 }
 
 .modal-header {
-  background-color: #273238;
+  background-color: #ececec;
   padding-top: 16px;
   padding-bottom: 16px;
 }
 
 .modal-header a, .modal-title {
-  color: #fff;
+  color: #000;
   text-transform: uppercase;
   font-weight: 600;
   font-size: 14px;
@@ -21634,11 +21649,11 @@ ul.dropdown-menu > li.checkbox {
 }
 
 .modal-header .close:hover, .modal-header .close:focus {
-  color: #fff;
+  color: #000;
 }
 
 .modal-header .close > span {
-  color: #fff;
+  color: #000;
 }
 
 #content .completeness,
@@ -21767,6 +21782,7 @@ ul.dropdown-menu > li.checkbox {
   }
   body.minimized #header a.minimizer {
     top: 0;
+    padding-left: 9px !important;
   }
   #header a.minimizer {
     color: #ccc;
