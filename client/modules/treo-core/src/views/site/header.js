@@ -43,21 +43,35 @@ Espo.define('treo-core:views/site/header', 'class-replace!treo-core:views/site/h
 
             Dep.prototype.setup.call(this);
 
+            this.getPublicData();
+
             this.isNeedToReloadPage();
+        },
+
+        getPublicData() {
+            setInterval(() => {
+                $.ajax('data/publicData.json?silent=true&time=' + $.now(), {local: true}).done(response => {
+                    if (response.dataTimestamp) {
+                        $.each(response, (k, v) => {
+                            localStorage.setItem('pd_' + k, v);
+                        });
+                    }
+                });
+            }, 1000);
         },
 
         isNeedToReloadPage() {
             setInterval(() => {
-                $.ajax('data/publicData.json?silent=true&time=' + $.now(), {local: true}).done(response => {
-                    if (response.dataTimestamp) {
-                        if (this.dataTimestamp !== 0 && this.dataTimestamp !== response.dataTimestamp) {
-                            setTimeout(() => {
-                                Espo.Ui.notify(this.translate('pleaseReloadPage'), 'info', 1000 * 60, true);
-                            }, 5000);
-                        }
-                        this.dataTimestamp = response.dataTimestamp;
+                const dataTimestamp = localStorage.getItem('pd_dataTimestamp');
+
+                if (dataTimestamp) {
+                    if (this.dataTimestamp !== 0 && this.dataTimestamp !== dataTimestamp) {
+                        setTimeout(() => {
+                            Espo.Ui.notify(this.translate('pleaseReloadPage'), 'info', 1000 * 60, true);
+                        }, 5000);
                     }
-                });
+                    this.dataTimestamp = dataTimestamp;
+                }
             }, 1000);
         },
 

@@ -63,18 +63,17 @@ class DataManager
     }
 
     /**
-     * @param array $data
+     * @param string $key
+     * @param mixed $value
      */
-    public static function updatePublicData(array $data = []): void
+    public static function pushPublicData(string $key, $value): void
     {
         if (file_exists(self::PUBLIC_DATA_FILE_PATH)) {
             $result = JSON::decode(file_get_contents(self::PUBLIC_DATA_FILE_PATH), true);
         } else {
             $result = [];
         }
-        $result = array_merge($result, $data);
-        $result['dataTimestamp'] = (new \DateTime())->getTimestamp();
-        file_put_contents(self::PUBLIC_DATA_FILE_PATH, JSON::encode($result));
+        file_put_contents(self::PUBLIC_DATA_FILE_PATH, JSON::encode(array_merge($result, [$key => $value])));
     }
 
     /**
@@ -172,7 +171,7 @@ class DataManager
             $this->getConfig()->remove('cacheTimestamp');
             $this->getConfig()->save();
 
-            self::updatePublicData();
+            self::pushPublicData('dataTimestamp', (new \DateTime())->getTimestamp());
         } catch (\Throwable $e) {
             $GLOBALS['log']->error('Cache clearing failed: ' . $e->getMessage());
         }
