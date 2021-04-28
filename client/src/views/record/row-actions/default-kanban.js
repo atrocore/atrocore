@@ -43,15 +43,15 @@ Espo.define('views/record/row-actions/default-kanban', 'views/record/row-actions
                 },
                 link: '#' + this.model.name + '/view/' + this.model.id
             }];
-            if (this.options.statusFieldIsEditable) {
-                list.push({
-                    action: 'moveOver',
-                    label: 'Move Over',
-                    data: {
-                        id: this.model.id
-                    }
-                });
-            }
+            // if (this.options.statusFieldIsEditable) {
+            //     list.push({
+            //         action: 'moveOver',
+            //         label: 'Move Over',
+            //         data: {
+            //             id: this.model.id
+            //         }
+            //     });
+            // }
             if (this.options.acl.edit) {
                 list.push({
                     action: 'quickEdit',
