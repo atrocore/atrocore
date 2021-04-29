@@ -599,4 +599,12 @@ class User extends Record
 
         $entity->set('lastAccess', $lastAccess);
     }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getFieldsThatConflict(Entity $entity, \stdClass $data): array
+    {
+        return [];
+    }
 }
