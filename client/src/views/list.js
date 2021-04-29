@@ -70,6 +70,14 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
 
         defaultViewMode: 'list',
 
+        init: function () {
+            Dep.prototype.init.call(this);
+
+            if (this.options.params.viewMode) {
+                this.viewMode = this.options.params.viewMode;
+            }
+        },
+
         setup: function () {
             this.collection.maxSize = this.getConfig().get('recordsPerPage') || this.collection.maxSize;
 
@@ -108,6 +116,32 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
             if (this.createButton) {
                 this.setupCreateButton();
             }
+
+            if (this.getMetadata().get(['clientDefs', this.scope, 'kanbanViewMode'])) {
+                let buttonKanban = {
+                    link: '#' + this.scope + '/kanban',
+                    name: 'kanban',
+                    title: 'Kanban',
+                    acl: 'read',
+                    iconHtml: '<span class="fas fa-grip-horizontal"></span>'
+                };
+
+                let listIndex = this.menu.buttons.findIndex(button => button.name === 'list');
+                if (listIndex > -1) {
+                    this.menu.buttons.splice(listIndex, 0, buttonKanban);
+                } else {
+                    this.menu.buttons.unshift({
+                        link: '#' + this.scope + '/list',
+                        name: 'list',
+                        title: 'List',
+                        acl: 'read',
+                        iconHtml: '<span class=\"fa fa-list\"></span>'
+                    });
+                    this.menu.buttons.unshift(buttonKanban);
+                }
+            }
+
+            this.getStorage().set('list-view', this.scope, this.viewMode);
         },
 
         setupModes: function () {
@@ -125,11 +159,6 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
                 this.viewModeList = viewModeList;
             } else {
                 this.viewModeList = ['list'];
-                if (this.getMetadata().get(['clientDefs', this.scope, 'kanbanViewMode'])) {
-                    if (!~this.viewModeList.indexOf('kanban')) {
-                        this.viewModeList.push('kanban');
-                    }
-                }
             }
 
             if (this.viewModeList.length > 1) {
@@ -165,7 +194,8 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
                     label: 'Create ' + this.scope,
                     style: 'primary',
                     acl: 'create',
-                    aclScope: this.entityType || this.scope
+                    aclScope: this.entityType || this.scope,
+                    cssStyle: "margin-left: 15px",
                 });
             } else {
                 this.menu.buttons.unshift({
@@ -174,7 +204,8 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
                     label: 'Create ' +  this.scope,
                     style: 'primary',
                     acl: 'create',
-                    aclScope: this.entityType || this.scope
+                    aclScope: this.entityType || this.scope,
+                    cssStyle: "margin-left: 15px"
                 });
             }
         },
@@ -291,6 +322,15 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
 
             if (this.searchPanel) {
                 this.setupSearchPanel();
+            }
+
+            let mode = this.getStorage().get('list-view', this.scope);
+            let button = $('a[data-name="' + mode + '"]');
+            if (button.length) {
+                if (button.hasClass('btn-default')) {
+                    button.removeClass('btn-default');
+                }
+                button.addClass('btn-primary');
             }
         },
 
