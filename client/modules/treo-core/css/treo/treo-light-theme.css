@@ -20866,10 +20866,6 @@ body,
     height: 100vh;
     overflow: auto;
   }
-  #main .header.page-header .header-buttons-container {
-    width: 100%;
-    margin-left: unset;
-  }
   .page-header .header-buttons div.pull-right {
     -webkit-flex-wrap: nowrap;
         -ms-flex-wrap: nowrap;
@@ -20883,7 +20879,7 @@ body,
   }
 
   #main .header.page-header .header-buttons-container {
-    width: 100%;
+    width: 100% !important;
     margin-left: unset;
   }
   .page-header .header-buttons .filter-cell:first-child > .open .dropdown-menu {
