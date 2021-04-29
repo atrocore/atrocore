@@ -17374,6 +17374,12 @@ a.field-info > span.fa-info-circle {
     right: -10px
 }
 
+@media screen and (max-width: 767px) {
+    .panel-heading > .btn-group {
+        top: -6px;
+    }
+}
+
 .panel-heading > .btn-group > .btn {
     padding-top: 4px;
     padding-bottom: 4px
@@ -20084,7 +20090,7 @@ button.category:focus {
 
     .record .middle .panel-body,
     .record .bottom .panel-body {
-        padding: 0;
+        padding: 14px 0 0 0;
     }
 
     .panel-body > div > .list {
@@ -20427,7 +20433,7 @@ button.category:focus {
     }
 
     #main .header.page-header .header-buttons-container {
-        width: 100%;
+        width: 100% !important;
         margin-left: unset;
     }
 
