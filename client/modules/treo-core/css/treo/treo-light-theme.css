@@ -15384,11 +15384,13 @@ ul.dropdown-menu > li > a > .check-icon + div {
     width: 740px;
   }
 
-  #main > .record > .detail > .row > .overview.bordered {
+  #main > .record > .detail > .row > .overview.bordered,
+  #main > .record > .edit > .row > .overview.bordered {
     border-right: 1px solid #e0e0e0;
   }
 
-  #main > .record > .detail > .row > .side.bordered {
+  #main > .record > .detail > .row > .side.bordered,
+  #main > .record > .edit > .row > .side.bordered {
     border-left: 1px solid #e0e0e0;
   }
 }

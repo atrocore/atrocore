@@ -19903,13 +19903,13 @@ button.category:focus {
         background-color: #ffffff;
     }
 
-    .edit > .row > .overview.bordered,
-    .detail > .row > .overview.bordered {
+    .record > .edit > .row > .overview.bordered,
+    .record > .detail > .row > .overview.bordered {
         border-right: 1px solid #dcdcdc;
     }
 
-    .edit > .row > .side.bordered,
-    .detail > .row > .side.bordered {
+    .record > .edit > .row > .side.bordered,
+    .record > .detail > .row > .side.bordered {
         border-left: 1px solid #dcdcdc;
     }
 
