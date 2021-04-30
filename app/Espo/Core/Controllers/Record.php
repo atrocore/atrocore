@@ -137,12 +137,8 @@ class Record extends Base
         $q = $request->get('q');
         $textFilter = $request->get('textFilter');
 
-        $maxSizeLimit = $this->getConfig()->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
         if (empty($maxSize)) {
-            $maxSize = $maxSizeLimit;
-        }
-        if (!empty($maxSize) && $maxSize > $maxSizeLimit) {
-            throw new Forbidden("Max should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
+            $maxSize = self::MAX_SIZE_LIMIT;
         }
 
         $params = array(
@@ -183,12 +179,8 @@ class Record extends Base
         $q = $request->get('q');
         $textFilter = $request->get('textFilter');
 
-        $maxSizeLimit = $this->getConfig()->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
         if (empty($maxSize)) {
-            $maxSize = $maxSizeLimit;
-        }
-        if (!empty($maxSize) && $maxSize > $maxSizeLimit) {
-            throw new Forbidden("Max should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
+            $maxSize = self::MAX_SIZE_LIMIT;
         }
 
         $params = array(
@@ -242,12 +234,8 @@ class Record extends Base
         $q = $request->get('q');
         $textFilter = $request->get('textFilter');
 
-        $maxSizeLimit = $this->getConfig()->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
         if (empty($maxSize)) {
-            $maxSize = $maxSizeLimit;
-        }
-        if (!empty($maxSize) && $maxSize > $maxSizeLimit) {
-            throw new Forbidden("Max should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
+            $maxSize = self::MAX_SIZE_LIMIT;
         }
 
         $params = array(

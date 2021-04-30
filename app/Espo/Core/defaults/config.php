@@ -89,7 +89,6 @@ return [
     'textFilterUseContainsForVarchar'        => false,
     'tabColorsDisabled'                      => false,
     'emailKeepParentTeamsEntityList'         => ['Case'],
-    'recordListMaxSizeLimit'                 => 200,
     'noteDeleteThresholdPeriod'              => '1 month',
     'noteEditThresholdPeriod'                => '7 days',
     'recordsPerPage'                         => 50,
