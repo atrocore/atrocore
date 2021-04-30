@@ -14857,6 +14857,21 @@ div.list-expanded > ul > li > div.expanded-row > .cell:first-child {
   margin-top: 4px;
 }
 
+div.list-kanban {
+  background-color: #fafafa;
+  margin-left: -14px;
+  width: calc(100% + 29px);
+}
+
+div.list-kanban > div.kanban-head-container,
+div.list-kanban > div.kanban-columns-container {
+  padding-left: 15px;
+}
+
+div.list-kanban > div.kanban-columns-container {
+  padding-right: 15px;
+}
+
 div.list-kanban > div > table {
   width: 100%;
   table-layout: fixed;
@@ -14929,6 +14944,7 @@ div.list-kanban > div > table td.group-column .group-column-list {
 }
 
 div.list-kanban > div > table .item {
+  background-color: #ffffff;
   margin-bottom: 10px;
   border: 1px solid #eee;
 }
@@ -17150,7 +17166,7 @@ table.table {
   }
 }
 
-.list-container > .list, .panel, .dashlet-container, .list-nested-categories, #main > .calendar-container .calendar, #main > .calendar-container .timeline, .well, .admin-content .table.table-bordered, .admin-content iframe, .list-kanban > div > table > thead, .list-group-panel {
+.list-container > .list, .panel, .dashlet-container, .list-nested-categories, #main > .calendar-container .calendar, #main > .calendar-container .timeline, .well, .admin-content .table.table-bordered, .admin-content iframe, .list-kanban > .kanban-head-container, .list-group-panel {
   -webkit-box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.13);
   box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.13);
 }
