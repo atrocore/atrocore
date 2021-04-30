@@ -67,12 +67,6 @@ Espo.define('controllers/record', 'controller', function (Dep) {
 
         kanban: function () {
             this.getCollection(function (collection) {
-                collection.url = collection.name + '/action/listKanban';
-                collection.maxSize = this.getConfig().get('recordsPerPageSmall');
-                collection.sortBy = collection.defaultSortBy;
-                collection.asc = collection.defaultAsc;
-                collection.fetch();
-
                 this.main(this.getViewName('list'), {
                     scope: this.name,
                     collection: collection,
