@@ -333,8 +333,8 @@ Espo.define('treo-core:views/record/detail', 'class-replace!treo-core:views/reco
                 }
             }
 
-            let overview = $('.detail .overview');
-            let side = $('.detail .side');
+            let overview = $('.record .overview');
+            let side = $('.record .side');
             if (overview.length && side.length) {
                 setTimeout(function () {
                     if (overview.outerHeight() > side.outerHeight()) {
