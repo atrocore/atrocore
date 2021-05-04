@@ -164,7 +164,6 @@
     "Menu": "Menu",
     "More": "More",
     "Search": "Search",
-    "Only My": "Only My",
     "Open": "Open",
     "Admin": "Admin",
     "About": "About",
@@ -336,8 +335,10 @@
     "emptyMultilangOptions": "Options list cannot be empty while multi-language option is activated."
   },
   "boolFilters": {
-    "onlyActive": "Only Active",
-    "onlyMy": "Only My",
+    "onlyActive": "Active",
+    "onlyMy": "My",
+    "assignedToMe": "Assigned to me",
+    "ownedByMe": "Owned by me",
     "followed": "Followed"
   },
   "presetFilters": {

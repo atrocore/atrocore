@@ -319,7 +319,7 @@ Espo.define('treo-core:views/record/detail', 'class-replace!treo-core:views/reco
             var screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
 
             let searchContainer = $('.page-header .search-container');
-            if (searchContainer.length) {
+            if (searchContainer.length && !this.$el.parents('.modal-container').length) {
                 searchContainer.addClass('hidden');
             }
 
@@ -333,8 +333,8 @@ Espo.define('treo-core:views/record/detail', 'class-replace!treo-core:views/reco
                 }
             }
 
-            let overview = $('.detail .overview');
-            let side = $('.detail .side');
+            let overview = $('.record .overview');
+            let side = $('.record .side');
             if (overview.length && side.length) {
                 setTimeout(function () {
                     if (overview.outerHeight() > side.outerHeight()) {

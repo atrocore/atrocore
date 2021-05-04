@@ -15089,6 +15089,21 @@ div.list-expanded > ul > li > div.expanded-row > .cell:first-child {
     margin-top: 4px
 }
 
+div.list-kanban {
+    background-color: #fafafa;
+    margin-left: -14px;
+    width: calc(100% + 29px);
+}
+
+div.list-kanban > div.kanban-head-container,
+div.list-kanban > div.kanban-columns-container {
+    padding-left: 15px;
+}
+
+div.list-kanban > div.kanban-columns-container {
+    padding-right: 15px;
+}
+
 div.list-kanban > div > table {
     width: 100%;
     table-layout: fixed
@@ -17374,6 +17389,12 @@ a.field-info > span.fa-info-circle {
     right: -10px
 }
 
+@media screen and (max-width: 767px) {
+    .panel-heading > .btn-group {
+        top: -6px;
+    }
+}
+
 .panel-heading > .btn-group > .btn {
     padding-top: 4px;
     padding-bottom: 4px
@@ -17412,7 +17433,7 @@ table.table {
     }
 }
 
-.list-container > .list, .panel, .dashlet-container, .list-nested-categories, #main > .calendar-container .calendar, #main > .calendar-container .timeline, .well, .admin-content .table.table-bordered, .admin-content iframe, .list-kanban > div > table > thead, .list-group-panel {
+.list-container > .list, .panel, .dashlet-container, .list-nested-categories, #main > .calendar-container .calendar, #main > .calendar-container .timeline, .well, .admin-content .table.table-bordered, .admin-content iframe, .list-kanban > .kanban-head-container, .list-group-panel {
     -webkit-box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.13);
     -moz-box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.13);
     box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.13)
@@ -19879,13 +19900,13 @@ button.category:focus {
         background-color: #ffffff;
     }
 
-    .edit > .row > .overview.bordered,
-    .detail > .row > .overview.bordered {
+    .record > .edit > .row > .overview.bordered,
+    .record > .detail > .row > .overview.bordered {
         border-right: 1px solid #dcdcdc;
     }
 
-    .edit > .row > .side.bordered,
-    .detail > .row > .side.bordered {
+    .record > .edit > .row > .side.bordered,
+    .record > .detail > .row > .side.bordered {
         border-left: 1px solid #dcdcdc;
     }
 
@@ -20084,7 +20105,7 @@ button.category:focus {
 
     .record .middle .panel-body,
     .record .bottom .panel-body {
-        padding: 0;
+        padding: 14px 0 0 0;
     }
 
     .panel-body > div > .list {
@@ -20427,7 +20448,7 @@ button.category:focus {
     }
 
     #main .header.page-header .header-buttons-container {
-        width: 100%;
+        width: 100% !important;
         margin-left: unset;
     }
 

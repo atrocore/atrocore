@@ -356,9 +356,11 @@
     "Year": "Jahre"
   },
   "boolFilters": {
-    "onlyMy": "Nur meine",
+    "onlyMy": "Mein",
+    "assignedToMe": "Mir zugewiesen",
+    "ownedByMe": "Gehört mir",
     "followed": "abonniert",
-    "onlyActive": "Nur aktiv"
+    "onlyActive": "Aktiv"
   },
   "presetFilters": {
     "followed": "abonniert",

@@ -94,7 +94,7 @@
     }
   },
   "boolFilters": {
-    "onlyMyTeam": "Only My Team"
+    "onlyMyTeam": "My Team"
   },
   "presetFilters": {
     "active": "Active",

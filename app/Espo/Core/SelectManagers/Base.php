@@ -748,32 +748,44 @@ class Base
         }
     }
 
+    /**
+     * @return bool
+     */
     protected function hasAssignedUsersField()
     {
-        if ($this->getSeed()->hasRelation('assignedUsers') && $this->getSeed()->hasAttribute('assignedUsersIds')) {
-            return true;
-        }
+        return $this->getSeed()->hasRelation('assignedUsers') && $this->getSeed()->hasAttribute('assignedUsersIds');
     }
 
+    /**
+     * @return bool
+     */
+    protected function hasOwnerUserField()
+    {
+        return $this->getSeed()->hasAttribute('ownerUserId');
+    }
+
+    /**
+     * @return bool
+     */
     protected function hasAssignedUserField()
     {
-        if ($this->getSeed()->hasAttribute('assignedUserId')) {
-            return true;
-        }
+        return $this->getSeed()->hasAttribute('assignedUserId');
     }
 
+    /**
+     * @return bool
+     */
     protected function hasCreatedByField()
     {
-        if ($this->getSeed()->hasAttribute('createdById')) {
-            return true;
-        }
+        return $this->getSeed()->hasAttribute('createdById');
     }
 
+    /**
+     * @return bool
+     */
     protected function hasTeamsField()
     {
-        if ($this->getSeed()->hasRelation('teams') && $this->getSeed()->hasAttribute('teamsIds')) {
-            return true;
-        }
+        return $this->getSeed()->hasRelation('teams') && $this->getSeed()->hasAttribute('teamsIds');
     }
 
     public function getAclParams()
@@ -1962,7 +1974,68 @@ class Base
         }
     }
 
+    /**
+     * @param array $result
+     *
+     * @return void
+     */
     protected function boolFilterOnlyMy(&$result)
+    {
+        if (!$this->checkIsPortal()) {
+            $where = [];
+
+            if ($this->hasOwnerUserField()) {
+                $where[] = ['ownerUserId' => $this->getUser()->id];
+            }
+
+            if ($this->hasAssignedUserField()) {
+                $where[] = ['assignedUserId' => $this->getUser()->id];
+            }
+
+            if (!$this->hasOwnerUserField() && !$this->hasAssignedUserField()) {
+                $where[] = ['createdById' => $this->getUser()->id];
+            }
+
+            $result['whereClause'][] = [
+                'OR' => $where
+            ];
+        } else {
+            $result['whereClause'][] = [
+                'createdById' => $this->getUser()->id
+            ];
+        }
+    }
+
+    /**
+     * @param array $result
+     *
+     * @return void
+     */
+    protected function boolFilterOwnedByMe(&$result)
+    {
+        if (!$this->checkIsPortal()) {
+            if ($this->hasOwnerUserField()) {
+                $result['whereClause'][] = [
+                    'ownerUserId' => $this->getUser()->id
+                ];
+            } else {
+                $result['whereClause'][] = [
+                    'createdById' => $this->getUser()->id
+                ];
+            }
+        } else {
+            $result['whereClause'][] = [
+                'createdById' => $this->getUser()->id
+            ];
+        }
+    }
+
+    /**
+     * @param array $result
+     *
+     * @return void
+     */
+    protected function boolFilterAssignedToMe(&$result)
     {
         if (!$this->checkIsPortal()) {
             if ($this->hasAssignedUsersField()) {

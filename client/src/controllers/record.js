@@ -55,6 +55,28 @@ Espo.define('controllers/record', 'controller', function (Dep) {
             return this.viewMap[type] || this.getMetadata().get(['clientDefs', this.name, 'views', type]) || 'views/' + Espo.Utils.camelCaseToHyphen(type);
         },
 
+        doAction(action, options) {
+            action = action ? action : this.getStorage().get('list-view', this.name);
+
+            Dep.prototype.doAction.call(this, action, options);
+        },
+
+        beforeKanban: function () {
+            this.handleCheckAccess('read');
+        },
+
+        kanban: function () {
+            this.getCollection(function (collection) {
+                this.main(this.getViewName('list'), {
+                    scope: this.name,
+                    collection: collection,
+                    params: {
+                        viewMode: 'kanban'
+                    }
+                });
+            });
+        },
+
         beforeList: function () {
             this.handleCheckAccess('read');
         },

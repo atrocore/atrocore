@@ -14857,6 +14857,21 @@ div.list-expanded > ul > li > div.expanded-row > .cell:first-child {
   margin-top: 4px;
 }
 
+div.list-kanban {
+  background-color: #fafafa;
+  margin-left: -14px;
+  width: calc(100% + 29px);
+}
+
+div.list-kanban > div.kanban-head-container,
+div.list-kanban > div.kanban-columns-container {
+  padding-left: 15px;
+}
+
+div.list-kanban > div.kanban-columns-container {
+  padding-right: 15px;
+}
+
 div.list-kanban > div > table {
   width: 100%;
   table-layout: fixed;
@@ -14929,6 +14944,7 @@ div.list-kanban > div > table td.group-column .group-column-list {
 }
 
 div.list-kanban > div > table .item {
+  background-color: #ffffff;
   margin-bottom: 10px;
   border: 1px solid #eee;
 }
@@ -15368,11 +15384,13 @@ ul.dropdown-menu > li > a > .check-icon + div {
     width: 740px;
   }
 
-  #main > .record > .detail > .row > .overview.bordered {
+  #main > .record > .detail > .row > .overview.bordered,
+  #main > .record > .edit > .row > .overview.bordered {
     border-right: 1px solid #e0e0e0;
   }
 
-  #main > .record > .detail > .row > .side.bordered {
+  #main > .record > .detail > .row > .side.bordered,
+  #main > .record > .edit > .row > .side.bordered {
     border-left: 1px solid #e0e0e0;
   }
 }
@@ -17150,7 +17168,7 @@ table.table {
   }
 }
 
-.list-container > .list, .panel, .dashlet-container, .list-nested-categories, #main > .calendar-container .calendar, #main > .calendar-container .timeline, .well, .admin-content .table.table-bordered, .admin-content iframe, .list-kanban > div > table > thead, .list-group-panel {
+.list-container > .list, .panel, .dashlet-container, .list-nested-categories, #main > .calendar-container .calendar, #main > .calendar-container .timeline, .well, .admin-content .table.table-bordered, .admin-content iframe, .list-kanban > .kanban-head-container, .list-group-panel {
   -webkit-box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.13);
   box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.13);
 }
@@ -20866,10 +20884,6 @@ body,
     height: 100vh;
     overflow: auto;
   }
-  #main .header.page-header .header-buttons-container {
-    width: 100%;
-    margin-left: unset;
-  }
   .page-header .header-buttons div.pull-right {
     -webkit-flex-wrap: nowrap;
         -ms-flex-wrap: nowrap;
@@ -20883,7 +20897,7 @@ body,
   }
 
   #main .header.page-header .header-buttons-container {
-    width: 100%;
+    width: 100% !important;
     margin-left: unset;
   }
   .page-header .header-buttons .filter-cell:first-child > .open .dropdown-menu {

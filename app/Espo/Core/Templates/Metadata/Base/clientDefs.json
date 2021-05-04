@@ -1,4 +1,4 @@
 {
    "controller": "controllers/record",
-   "boolFilterList": ["onlyMy"]
+   "boolFilterList": ["onlyMy","assignedToMe","ownedByMe"]
 }

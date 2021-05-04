@@ -81,7 +81,7 @@
     "userNameExists": "Benutzername existiert bereits"
   },
   "boolFilters": {
-    "onlyMyTeam": "Nur mein Team"
+    "onlyMyTeam": "Mein Team"
   },
   "presetFilters": {
     "active": "Aktiv",

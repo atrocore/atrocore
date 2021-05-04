@@ -164,6 +164,7 @@
     "dynamicLogicRequired": "Conditions making field required",
     "dynamicLogicOptions": "Conditional options",
     "probabilityMap": "Stage Probabilities (%)",
+    "currentUserAsDefault": "Set current user as default value",
     "readOnly": "Read-only",
     "maxFileSize": "Max File Size (Mb)",
     "isPersonalData": "Is Personal Data",
