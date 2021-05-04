@@ -234,9 +234,18 @@ class Config
             }
         }
 
-        $result = $this->getFileManager()->putPhpContents($this->configPath, $data, true);
+        $content = $this->getFileManager()->wrapForDataExport($data, true);
+
+        if (strpos($content, '<?php') === false) {
+            return false;
+        }
+
+        $result = file_put_contents($this->configPath, $content, LOCK_EX);
 
         if ($result) {
+            if (function_exists('opcache_invalidate')) {
+                opcache_invalidate($this->configPath);
+            }
             $this->changedData = array();
             $this->removeData = array();
             $this->loadConfig(true);
