@@ -3338,7 +3338,7 @@ a.btn.disabled, fieldset[disabled] a.btn {
 
 .btn-default:active, .btn-default.active, .open > .dropdown-toggle.btn-default {
   color: #333;
-  background-color: #dedede;
+  background-color: #eee;
   border-color: #adadad;
 }
 
@@ -19184,9 +19184,6 @@ button.category:focus {
     top: 5px;
     right: 5px;
   }
-  #main .catalog-tree-panel.catalog-tree-panel-hidden {
-    width: 40px;
-  }
   #main .catalog-tree-panel + .list-container.hidden-catalog-tree-panel {
     margin-left: 0;
   }
@@ -20784,7 +20781,7 @@ body,
     -webkit-align-items: center;
         -ms-flex-align: center;
             align-items: center;
-    width: 160px;
+    width: 140px;
   }
   #header .navbar img.logo {
     max-width: 60%;
@@ -20907,7 +20904,7 @@ body,
 
 @media screen and (max-width: 399px) {
   .navbar-brand {
-    max-width: 100px;
+    max-width: 90px;
   }
   #header .navbar img.logo {
     max-width: 80%;
@@ -21533,8 +21530,8 @@ ul.dropdown-menu > li.checkbox {
 }
 
 .btn-default:hover, .btn-default:focus, .btn-default.focus, .btn-default:active, .btn-default.active {
-  background-color: #E6F1FF;
-  border-color: #E6F1FF;
+  background-color: #eee;
+  border-color: #eee;
 }
 
 .btn-primary,
