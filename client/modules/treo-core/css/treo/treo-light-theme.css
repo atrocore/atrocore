@@ -21962,6 +21962,7 @@ body.minimized #header > #navbar .navbar-inverse .navbar-nav .more .dropdown-men
 
 .kanban-avatar {
   width: 100%;
+  margin-top: -20px;
   float: left;
 }
 

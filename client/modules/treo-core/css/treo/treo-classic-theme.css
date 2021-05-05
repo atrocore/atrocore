@@ -21475,6 +21475,7 @@ select {
 
 .kanban-avatar {
     width: 100%;
+    margin-top: -20px;
     float: left;
 }
 
