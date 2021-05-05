@@ -89,7 +89,7 @@ Espo.define('views/dashlets/abstract/base', 'view', function (Dep) {
             this.optionsData = _.extend(options, storedOptions);
 
             if (this.optionsData.autorefreshInterval || false) {
-                var interval = this.optionsData.autorefreshInterval * 60000;
+                var interval = this.optionsData.autorefreshInterval * 60 * 1000;
 
                 var t;
                 var process = function () {

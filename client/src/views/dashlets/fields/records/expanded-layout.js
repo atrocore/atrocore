@@ -110,7 +110,7 @@ Espo.define('views/dashlets/fields/records/expanded-layout', 'views/fields/base'
             var fieldList = Object.keys(fields).sort(function (v1, v2) {
                  return this.translate(v1, 'fields', scope).localeCompare(this.translate(v2, 'fields', scope));
             }.bind(this)).filter(function (item) {
-                if (fields[item].disabled || fields[item].listLayoutDisabled) return false;
+                if (fields[item].exportDisabled || fields[item].disabled || fields[item].listLayoutDisabled) return false;
                 return true;
             }, this);
 

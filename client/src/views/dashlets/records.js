@@ -40,8 +40,6 @@ Espo.define('views/dashlets/records', 'views/dashlets/abstract/record-list', fun
 
         rowActionsView: 'views/record/row-actions/view-and-edit',
 
-        listView: 'views/email/record/list-expanded',
-
         init: function () {
             Dep.prototype.init.call(this);
             this.scope = this.getOption('entityType');
