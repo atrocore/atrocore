@@ -15698,8 +15698,12 @@ select[multiple].input-sm {
     margin-right: -14px
 }
 
-.panel-body > div > .list > table td:first-child, .panel-body > div > .list > table th:first-child {
-    padding-left: 14px
+.panel-body > div > .list > table td:first-child,
+.panel-body > div > .list > table th:first-child,
+.panel-body > div > .group > .list-container > .list > table td:first-child,
+.panel-body > div > .group > .list-container > .list > table th:first-child,
+.bottom .panel .group-container > .group > .group-name {
+    padding-left: 14px !important;
 }
 
 .panel-body > div > .list > table td:last-child, .panel-body > div > .list > table th:last-child {
@@ -20094,6 +20098,14 @@ button.category:focus {
 
     .detail .panel-default > .panel-heading {
         margin: 0 -15px;
+    }
+
+    .detail .side {
+        margin: 0 -15px;
+    }
+
+    .detail .side > .panel-default > .panel-heading {
+        margin: 0;
     }
 
     .detail .panel-navigation {
