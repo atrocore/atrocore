@@ -5,6 +5,7 @@
     "align": "Ausrichten",
     "sticked": "Gepinnt",
     "isLarge": "Große Schriftgröße",
+    "cssStyle": "CSS-Stile",
     "dynamicLogicVisible": "Bedingungen, die das Panel sichtbar machen"
   },
   "options": {

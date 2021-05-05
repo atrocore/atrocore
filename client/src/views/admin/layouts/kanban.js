@@ -34,12 +34,13 @@ Espo.define('views/admin/layouts/kanban', 'views/admin/layouts/list', function (
 
     return Dep.extend({
 
-        dataAttributeList: ['name', 'link', 'align', 'view', 'isLarge'],
+        dataAttributeList: ['name', 'link', 'align', 'view', 'isLarge', 'cssStyle'],
 
         dataAttributesDefs: {
             link: {type: 'bool'},
             isLarge: {type: 'bool'},
             width: {type: 'float'},
+            cssStyle: {type: 'varchar'},
             align: {
                 type: 'enum',
                 options: ["left", "right"]

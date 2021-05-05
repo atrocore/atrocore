@@ -21960,4 +21960,15 @@ body.minimized #header > #navbar .navbar-inverse .navbar-nav .more .dropdown-men
   display: none;
 }
 
+.kanban-avatar {
+  width: 100%;
+  float: left;
+}
+
+.kanban-avatar img {
+  border-radius: 50%;
+  width: 32px;
+  float: right;
+}
+
 /*# sourceMappingURL=treo-light-theme.css.map */

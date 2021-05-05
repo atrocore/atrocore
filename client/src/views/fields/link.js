@@ -73,10 +73,16 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             if (this.mode === 'detail') {
                 iconHtml = this.getHelper().getScopeColorIconHtml(this.foreignScope);
             }
+
+            let idValue = this.model.get(this.idName);
+            if (this.options.isKanban){
+                idValue = null;
+            }
+
             return _.extend({
                 idName: this.idName,
                 nameName: this.nameName,
-                idValue: this.model.get(this.idName),
+                idValue: idValue,
                 nameValue: nameValue,
                 foreignScope: this.foreignScope,
                 valueIsSet: this.model.has(this.idName),

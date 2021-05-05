@@ -1,7 +1,7 @@
 <div class="panel panel-default">
     <div class="panel-body">
         {{#each layoutDataList}}
-        <div>
+        <div style="{{cssStyle}}">
             {{#if isFirst}}
             {{#unless rowActionsDisabled}}
             <div class="pull-right item-menu-container">{{{../../../itemMenu}}}</div>
@@ -12,5 +12,11 @@
             </div>
         </div>
         {{/each}}
+
+        {{#if assignedUserId}}
+        <div class="kanban-avatar">
+            <a href="/#User/view/{{assignedUserId}}" target="_blank" title="{{assignedUserName}}"><img src="/?entryPoint=avatar&size=small&id={{assignedUserId}}" alt="{{assignedUserName}}" title="{{assignedUserName}}"></a>
+        </div>
+        {{/if}}
     </div>
 </div>
