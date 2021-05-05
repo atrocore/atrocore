@@ -3507,7 +3507,7 @@ a.btn.disabled, fieldset[disabled] a.btn {
 
 .btn-default:active, .btn-default.active, .open > .dropdown-toggle.btn-default {
     color: #333;
-    background-color: #dedede;
+    background-color: #eee;
     border-color: #adadad
 }
 
@@ -19651,7 +19651,6 @@ button.category:focus {
     }
 
     #main .catalog-tree-panel.catalog-tree-panel-hidden {
-        width: 40px;
         border-right: 1px solid #e8eced;
     }
 
