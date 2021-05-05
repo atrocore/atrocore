@@ -36,11 +36,12 @@ Espo.define('views/record/kanban-item', 'view', function (Dep) {
 
         template: 'record/kanban-item',
 
-
         data: function () {
             return {
                 layoutDataList: this.layoutDataList,
-                rowActionsDisabled: this.rowActionsDisabled
+                rowActionsDisabled: this.rowActionsDisabled,
+                assignedUserId: this.model.get('assignedUserId'),
+                assignedUserName: this.model.get('assignedUserName'),
             };
         },
 
@@ -63,9 +64,9 @@ Espo.define('views/record/kanban-item', 'view', function (Dep) {
                     isAlignRight: item.align === 'right',
                     isLarge: item.isLarge,
                     isFirst: i === 0,
+                    cssStyle: item.cssStyle ? item.cssStyle : '',
                     key: key
                 };
-                this.layoutDataList.push(o);
 
                 var viewName = item.view || this.model.getFieldParam(name, 'view');
                 if (!viewName) {
@@ -78,13 +79,27 @@ Espo.define('views/record/kanban-item', 'view', function (Dep) {
                     mode = 'listLink';
                 }
 
-                this.createView(key, viewName, {
-                    model: this.model,
-                    name: name,
-                    mode: mode,
-                    readOnly: true,
-                    el: this.getSelector() + ' .field[data-name="'+name+'"]'
-                });
+                let valueEmpty = !(this.model.get(name));
+
+                if (!valueEmpty && Array.isArray(this.model.get(name)) && this.model.get(name).length === 0) {
+                    valueEmpty = true;
+                }
+
+                if (this.model.get(name + 'Id')){
+                    valueEmpty = false;
+                }
+
+                if (!valueEmpty) {
+                    this.createView(key, viewName, {
+                        model: this.model,
+                        name: name,
+                        mode: mode,
+                        readOnly: true,
+                        isKanban: true,
+                        el: this.getSelector() + ' .field[data-name="' + name + '"]'
+                    });
+                    this.layoutDataList.push(o);
+                }
 
             }, this);
 

@@ -8,6 +8,7 @@
         "style": "Style",
         "sticked": "Sticked",
         "isLarge": "Large font size",
+        "cssStyle": "CSS Styles",
         "dynamicLogicVisible": "Conditions making panel visible"
     },
     "options": {

@@ -21462,3 +21462,14 @@ select {
 .form-group[data-name="files"]>label {
     display: none;
 }
+
+.kanban-avatar {
+    width: 100%;
+    float: left;
+}
+
+.kanban-avatar img {
+    border-radius: 50%;
+    width: 32px;
+    float: right;
+}
