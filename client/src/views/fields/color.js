@@ -42,7 +42,7 @@ Espo.define('views/fields/color', ['views/fields/varchar', 'lib!jscolor'],
             let input = this.$el.find('input').get(0);
 
             if (input) {
-                let picker = new jscolor(input);
+                let picker = new jscolor(input, {zIndex: 2000});
 
                 if (this.mode !== 'edit') {
                     input.readOnly = true;
