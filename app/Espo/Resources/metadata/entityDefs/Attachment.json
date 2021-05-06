@@ -6,9 +6,23 @@
       "trim": true,
       "view": "views/attachment/fields/name"
     },
+    "url": {
+      "type": "varchar",
+      "notStorable": true,
+      "default": null,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "layoutFiltersDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": false
+    },
     "type": {
       "type": "varchar",
-      "maxLength": 100
+      "maxLength": 100,
+      "exportDisabled": true
     },
     "size": {
       "type": "float",
@@ -16,23 +30,27 @@
     },
     "parent": {
       "type": "linkParent",
-      "view": "views/attachment/fields/parent"
+      "view": "views/attachment/fields/parent",
+      "exportDisabled": true
     },
     "related": {
       "type": "linkParent",
       "noLoad": true,
-      "view": "views/attachment/fields/parent"
+      "view": "views/attachment/fields/parent",
+      "exportDisabled": true
     },
     "sourceId": {
       "type": "varchar",
       "maxLength": 36,
       "readOnly": true,
       "disabled": true,
-      "index": true
+      "index": true,
+      "exportDisabled": true
     },
     "field": {
       "type": "varchar",
-      "disabled": true
+      "disabled": true,
+      "exportDisabled": true
     },
     "createdAt": {
       "type": "datetime",
@@ -44,7 +62,8 @@
     },
     "contents": {
       "type": "text",
-      "notStorable": true
+      "notStorable": true,
+      "exportDisabled": true
     },
     "role": {
       "type": "enum",
@@ -55,34 +74,41 @@
         "Inline Attachment",
         "Mail Merge",
         "Mass Pdf"
-      ]
+      ],
+      "exportDisabled": true
     },
     "storage": {
       "type": "varchar",
       "maxLength": 24,
-      "default": null
+      "default": null,
+      "exportDisabled": true
     },
     "storageFilePath": {
       "type": "varchar",
       "maxLength": 260,
-      "default": null
+      "default": null,
+      "exportDisabled": true
     },
     "storageThumbPath": {
       "type": "varchar",
       "maxLength": 260,
-      "default": null
+      "default": null,
+      "exportDisabled": true
     },
     "global": {
       "type": "bool",
-      "default": false
+      "default": false,
+      "exportDisabled": true
     },
     "md5": {
       "type": "varchar",
-      "index": true
+      "index": true,
+      "exportDisabled": true
     },
     "pathsData": {
       "type": "jsonObject",
-      "notStorable": true
+      "notStorable": true,
+      "exportDisabled": true
     }
   },
   "links": {

@@ -270,6 +270,11 @@ class Attachment extends Record
         parent::prepareEntityForOutput($entity);
 
         $entity->set('pathsData', $this->getRepository()->getAttachmentPathsData($entity));
+
+        $url = rtrim($this->getConfig()->get('siteUrl', ''), '/');
+        $url .= '/';
+        $url .= $entity->get('pathsData')['download'];
+        $entity->set('url', $url);
     }
 
     protected function beforeCreateEntity(Entity $entity, $data)

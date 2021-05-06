@@ -14,6 +14,7 @@
     "field": "Feld",
     "sourceId": "Quell-ID",
     "storage": "Speicher",
+    "url": "URL",
     "size": "Größe (Bytes)"
   },
   "labels": {
