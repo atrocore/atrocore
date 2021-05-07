@@ -47,7 +47,25 @@ Espo.define('views/fields/user-with-avatar', 'views/fields/user', function (Dep)
         },
 
         getAvatarHtml: function () {
-            return this.getHelper().getAvatarHtml(this.model.get(this.idName), 'small', 14, 'avatar-link');
+            return this.getHelper().getAvatarHtml(this.model.get(this.idName), 'small', 32, 'avatar-link');
+        },
+
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+
+            if (this.$el.length) {
+                let label = this.$el.siblings('.control-label');
+
+                if (label.length) {
+                    if (this.model.get(this.idName) && this.mode !== 'edit') {
+                        label.css({'margin-left': '39px'});
+                    } else {
+                        if (label.css('margin-left')) {
+                            label.css({'margin-left': '0'});
+                        }
+                    }
+                }
+            }
         }
     });
 });

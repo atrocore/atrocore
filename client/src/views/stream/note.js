@@ -184,7 +184,7 @@ Espo.define('views/stream/note', 'view', function (Dep) {
             if (this.isSystemAvatar) {
                 id = 'system';
             }
-            return this.getHelper().getAvatarHtml(id, 'small', 20);
+            return this.getHelper().getAvatarHtml(id, 'small', 32);
         },
 
         getIconHtml: function (scope, id) {

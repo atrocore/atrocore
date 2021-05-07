@@ -14879,7 +14879,7 @@ body > #header .navbar-brand span.home-icon {
 }
 
 body .stick-sub.button-container {
-    width: calc(100% - 173px)
+    width: calc(100% - 220px)
 }
 
 body.minimized .stick-sub.button-container {
@@ -15031,8 +15031,8 @@ label {
     margin-bottom: 0;
 }
 
-.page-header .header-buttons-container {
-    margin-left: auto;
+.page-header .header-buttons-container:not(.full-row) {
+    margin-left: auto !important;
     width: auto !important;
 }
 
@@ -16522,6 +16522,10 @@ img.avatar.avatar-link {
     margin-right: 3px
 }
 
+.side > .panel .field > img.avatar.avatar-link {
+    margin-top: -25px;
+}
+
 stream-head-text-container .span {
     overflow-wrap: break-word;
     word-wrap: break-word
@@ -16533,7 +16537,7 @@ stream-head-text-container .span {
 }
 
 .stream-post-container, .stream-attachments-container, .stream-details-container, .stream-subject-container {
-    padding: 2px 0 5px 26px
+    padding: 2px 0 5px 37px
 }
 
 .link-container .list-group-item {
@@ -17574,6 +17578,11 @@ table.table {
 
 .pull-left {
     float: left !important
+}
+
+.stream-head-container .pull-left {
+    margin-top: 5px;
+    margin-right: 5px;
 }
 
 .hide {
@@ -19893,7 +19902,7 @@ button.category:focus {
     }
 
     #main .header .header-buttons-container.full-row {
-        padding-left: 33px;
+        margin-left: 26px;
     }
 
     .edit > .row > .overview,
@@ -19927,46 +19936,46 @@ button.category:focus {
         background-color: #fafafa;
     }
 
-    .edit > .row > .side,
-    .detail > .row > .side {
+    #main > .record > .edit > .row > .side,
+    #main > .record > .detail > .row > .side {
         padding: 0;
         position: relative;
         border-top: 1px solid #dcdcdc;
     }
 
-    .edit > .row > .side.fixed-top,
-    .detail > .row > .side.fixed-top,
-    .edit > .row > .side.fixed-bottom,
-    .detail > .row > .side.fixed-bottom {
+    #main > .record > .edit > .row > .side.fixed-top,
+    #main > .record > .detail > .row > .side.fixed-top,
+    #main > .record > .edit > .row > .side.fixed-bottom,
+    #main > .record > .detail > .row > .side.fixed-bottom {
         position: fixed;
         right: 0;
     }
 
-    .edit > .row > .catalog-tree-panel ~ .side.fixed-top,
-    .detail > .row > .catalog-tree-panel ~ .side.fixed-top,
-    .edit > .row > .catalog-tree-panel ~ .side.fixed-bottom,
-    .detail > .row > .catalog-tree-panel ~ .side.fixed-bottom {
+    #main > .record > .edit > .row > .catalog-tree-panel ~ .side.fixed-top,
+    #main > .record > .detail > .row > .catalog-tree-panel ~ .side.fixed-top,
+    #main > .record > .edit > .row > .catalog-tree-panel ~ .side.fixed-bottom,
+    #main > .record > .detail > .row > .catalog-tree-panel ~ .side.fixed-bottom {
         right: 0;
     }
 
-    .edit > .row > .side.fixed-top,
-    .detail > .row > .side.fixed-top {
+    #main > .record > .edit > .row > .side.fixed-top,
+    #main > .record >  .detail > .row > .side.fixed-top {
         top: 91px;
     }
 
-    .edit > .row > .side.fixed-bottom,
-    .detail > .row > .side.fixed-bottom {
+    #main > .record > .edit > .row > .side.fixed-bottom,
+    #main > .record > .detail > .row > .side.fixed-bottom {
         bottom: 0;
     }
 
-    .edit > .row > .side.scrolled,
-    .detail > .row > .side.scrolled {
+    #main > .record > .edit > .row > .side.scrolled,
+    #main > .record > .detail > .row > .side.scrolled {
         position: absolute;
         right: 0;
     }
 
-    .edit > .row > .catalog-tree-panel ~ .side.scrolled,
-    .detail > .row > .catalog-tree-panel ~ .side.scrolled {
+    #main > .record > .edit > .row > .catalog-tree-panel ~ .side.scrolled,
+    #main > .record > .detail > .row > .catalog-tree-panel ~ .side.scrolled {
         right: 0;
     }
 
@@ -19976,12 +19985,12 @@ button.category:focus {
 
     .stick-sub.button-container {
         margin: 44px 0 0 -15px;
-    }
-
-    body .stick-sub.button-container {
-        width: calc(100% - 246px);
         padding-top: 9px !important;
         padding-bottom: 5px !important
+    }
+
+    body .stick-sub.button-container.not-collapsed {
+        width: calc(100% - 246px);
     }
 
     .home-content > .row.dashlets {
@@ -20034,6 +20043,7 @@ button.category:focus {
 
     #main > .list-container.collapsed,
     #main > .page-header.collapsed .header-breadcrumbs:not(.fixed-header-breadcrumbs),
+    #main > .page-header.collapsed .header-buttons-container,
     #main > .record > .detail > .detail-button-container.collapsed
     {
         margin-left: 279px;
