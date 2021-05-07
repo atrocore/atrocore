@@ -239,9 +239,30 @@ Espo.define('treo-core:views/record/search', 'class-replace!treo-core:views/reco
             let positionLeft = entityName.find('span').innerWidth() + parseFloat(entityName.css('marginRight')) + parseFloat(entityName.css('paddingRight')) + parseFloat(searchContainer.css('paddingLeft')) + parseFloat(searchContainer.css('marginLeft'));
 
             if (searchContainer.has(this.$advancedFiltersPanel).length) {
+                let main = $('#main');
+                let $window = $(window);
+
                 this.$advancedFiltersPanel.css({
                     'left': '-' + positionLeft + 'px'
                 });
+
+                if ($window.outerWidth() >= 768) {
+                    this.$advancedFiltersPanel.css({
+                        'width': (main.outerWidth() - 40) + 'px'
+                    });
+                }
+
+                $window.resize(function () {
+                    if ($window.outerWidth() >= 768) {
+                        this.$advancedFiltersPanel.css({
+                            'width': (main.outerWidth() - 40) + 'px'
+                        });
+                    } else {
+                        this.$advancedFiltersPanel.css({
+                            'width': 'unset'
+                        });
+                    }
+                }.bind(this));
             }
         },
 
