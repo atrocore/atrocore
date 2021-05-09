@@ -73,7 +73,7 @@ Here is a AtroCore package description in detail:
 
 It uses:
 
-* PHP7 – pure PHP, without any frameworks to achieve the best possible performance,
+* PHP 7 – pure PHP, without any frameworks to achieve the best possible performance,
 * backbone.js – framework for SPA Frontend,
 * Composer – dependency manager for PHP,
 * Some libraries from Zend Framework,
