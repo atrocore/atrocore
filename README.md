@@ -4,7 +4,7 @@
 
 AtroCore is an open-source Master Data Management (MDM) software distributed under GPLv3 License for free. 
 
-AtroCore is also a software ecosystem designed for rapid development of web-based responsive business applications of any kind (ERP, PIM, CRM, DMS, MDM, DAM, etc.). It is an excellent tool for cost-effective and timely application development that comes with the powerful out-of-the-box functionality. Thus, AtroCore is a platform for Rapid Application Development (RAD).
+AtroCore is also a software ecosystem designed for rapid development of web-based responsive business applications of any kind (ERP, PIM, CRM, DMS, MDM, DAM, etc.). It is an excellent tool for cost-effective and timely application development that comes with the powerful out-of-the-box functionality. Thus, AtroCore is a also a platform for Rapid Application Development (RAD).
 
 AtroCore is a single page application (SPA) with an API-centric, service-oriented architecture, and flexible data model based on configurable entities and relations. You can organize any data and business-related processes directly in AtroCore, many of them via a simple and user-friendly configuration.
 
@@ -12,6 +12,8 @@ AtroCore is a single page application (SPA) with an API-centric, service-oriente
 
 AtroCore is the best fit **for businesses**, who want to:
 
+* unify any kind of data;
+* increase data quality;
 * solve custom business problems;
 * store data and organize business processes;
 * set up and use a middleware to connect with the third-party systems;
@@ -20,16 +22,12 @@ AtroCore is the best fit **for businesses**, who want to:
 
 ### Software based on AtroCore
 
-The following extensions are available on the AtroCore basis:
+The following full-fledged software products are already available on the AtroCore basis:
 * [AtroPIM](https://github.com/atrocore/atropim)
 * [AtroDAM](https://github.com/atrocore/atrodam)
-* and many others extending the functionality of PIM and DAM.
 
-Thanks to the configurable data model and layouts the application can be used as a Master Data Mangement System (MDM), if no extension is installed.
 
 ### What Is On Board?
-
-
 
 Here is a AtroCore package description in detail:
 
@@ -71,9 +69,9 @@ Here is a AtroCore package description in detail:
 * Many out-of-the-box features
 * Best for Rapid Application Development
 
-### What Technologies Is It Based On?
+### What Technologies are used?
 
-AtroCore was created based on TreoCore and EspoCRM. It uses:
+It uses:
 
 * PHP7 – pure PHP, without any frameworks to achieve the best possible performance,
 * backbone.js – framework for SPA Frontend,
