@@ -71,8 +71,6 @@ class Cron extends AbstractConsole
             unlink(self::DAEMON_KILLER);
         }
 
-        $this->authTokenControl();
-
         // get active processes
         exec('ps ax | grep index.php', $processes);
         $processes = implode(' | ', $processes);
@@ -111,6 +109,9 @@ class Cron extends AbstractConsole
         if (empty(strpos($processes, "index.php daemon notification $id"))) {
             exec("$php index.php daemon notification $id >/dev/null 2>&1 &");
         }
+
+        // check auth tokens
+        $this->authTokenControl();
 
         // run cron jobs
         $this->runCronManager();
