@@ -34,6 +34,7 @@
 namespace Espo\EntryPoints;
 
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Entities\Attachment;
 
 class Avatar extends Image
 {
@@ -122,5 +123,9 @@ class Avatar extends Image
         }
     }
 
+    protected function checkAttachment(Attachment $attachment): bool
+    {
+        return true;
+    }
 }
 
