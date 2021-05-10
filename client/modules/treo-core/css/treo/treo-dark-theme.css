@@ -21486,3 +21486,20 @@ select {
     width: 32px;
     float: right;
 }
+
+.date-alert {
+    background-color: #FF0000;
+    color: #FFF;
+    border-radius: .25em;
+    padding: .09em .5em .2em;
+    display: inline-block;
+    line-height: 1;
+}
+
+.date-warning {
+    background-color: #F2D600;
+    padding: .09em .5em .2em;
+    border-radius: .25em;
+    display: inline-block;
+    line-height: 1;
+}
