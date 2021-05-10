@@ -13,7 +13,6 @@
   },
   "options": {
     "job": {
-      "AuthTokenControl": "Auth Token-Überwachung",
       "ModuleAutoUpdate": "Alle installierten Module automatisch aktualisieren"
     },
     "cronSetup": {

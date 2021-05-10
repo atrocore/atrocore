@@ -35,6 +35,7 @@ declare(strict_types=1);
 
 namespace Treo\Console;
 
+use Espo\ORM\EntityManager;
 use Treo\Core\Application;
 
 /**
@@ -109,6 +110,9 @@ class Cron extends AbstractConsole
             exec("$php index.php daemon notification $id >/dev/null 2>&1 &");
         }
 
+        // check auth tokens
+        $this->authTokenControl();
+
         // run cron jobs
         $this->runCronManager();
     }
@@ -145,5 +149,36 @@ class Cron extends AbstractConsole
         }
 
         return true;
+    }
+
+    private function authTokenControl(): void
+    {
+        if ($this->getConfig()->get('authenticationMethod') != 'Token') {
+            return;
+        }
+
+        /** @var EntityManager $em */
+        $em = $this->getContainer()->get('entityManager');
+
+        $tokenList = $em
+            ->getRepository('AuthToken')
+            ->select(['id', 'lifetime', 'idleTime', 'createdAt', 'lastAccess'])
+            ->where(['isActive' => true])
+            ->find();
+
+        foreach ($tokenList as $token) {
+            $authTokenLifetime = $token->get('lifetime') !== null ? $token->get('lifetime') : $this->getConfig()->get('authTokenLifetime');
+            if ($authTokenLifetime && new \DateTime($token->get('createdAt')) < (new \DateTime())->modify('-' . $authTokenLifetime . ' hours')) {
+                $token->set('isActive', false);
+                $em->saveEntity($token);
+                continue 1;
+            }
+
+            $authTokenMaxIdleTime = $token->get('idleTime') !== null ? $token->get('idleTime') : $this->getConfig()->get('authTokenMaxIdleTime');
+            if ($authTokenMaxIdleTime && new \DateTime($token->get('lastAccess')) < (new \DateTime())->modify('-' . $authTokenMaxIdleTime . ' hours')) {
+                $token->set('isActive', false);
+                $em->saveEntity($token);
+            }
+        }
     }
 }

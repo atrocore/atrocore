@@ -45,6 +45,14 @@
         "modifiedAt": {
             "type": "datetime",
             "readOnly": true
+        },
+        "lifetime": {
+            "type": "int",
+            "default": null
+        },
+        "idleTime": {
+            "type": "int",
+            "default": null
         }
     },
     "links": {

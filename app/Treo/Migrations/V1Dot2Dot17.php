@@ -31,47 +31,27 @@
  * and "AtroCore" word.
  */
 
-namespace Espo\Jobs;
+namespace Treo\Migrations;
 
-use \Espo\Core\Exceptions;
-
-class AuthTokenControl extends \Espo\Core\Jobs\Base
+/**
+ * Migration for version 1.2.17
+ */
+class V1Dot2Dot17 extends V1Dot2Dot0
 {
-    public function run()
+    /**
+     * @inheritDoc
+     */
+    public function up(): void
     {
-        $authTokenLifetime = $this->getConfig()->get('authTokenLifetime');
-        $authTokenMaxIdleTime = $this->getConfig()->get('authTokenMaxIdleTime');
+        $this->execute("ALTER TABLE `auth_token` ADD lifetime INT DEFAULT NULL COLLATE utf8mb4_unicode_ci, ADD idle_time INT DEFAULT NULL COLLATE utf8mb4_unicode_ci");
+        $this->execute("DELETE FROM scheduled_job WHERE job='AuthTokenControl'");
+    }
 
-        if (!$authTokenLifetime && !$authTokenMaxIdleTime) {
-            return;
-        }
-
-        $whereClause = array(
-            'isActive' => true
-        );
-
-        if ($authTokenLifetime) {
-            $dt = new \DateTime();
-            $dt->modify('-' . $authTokenLifetime . ' hours');
-            $authTokenLifetimeThreshold = $dt->format('Y-m-d H:i:s');
-
-            $whereClause['createdAt<'] = $authTokenLifetimeThreshold;
-        }
-
-        if ($authTokenMaxIdleTime) {
-            $dt = new \DateTime();
-            $dt->modify('-' . $authTokenMaxIdleTime . ' hours');
-            $authTokenMaxIdleTimeThreshold = $dt->format('Y-m-d H:i:s');
-
-            $whereClause['lastAccess<'] = $authTokenMaxIdleTimeThreshold;
-        }
-
-        $tokenList = $this->getEntityManager()->getRepository('AuthToken')->where($whereClause)->limit(0, 500)->find();
-
-        foreach ($tokenList as $token) {
-            $token->set('isActive', false);
-            $this->getEntityManager()->saveEntity($token);
-        }
+    /**
+     * @inheritDoc
+     */
+    public function down(): void
+    {
+        $this->execute("ALTER TABLE `auth_token` DROP lifetime, DROP idle_time");
     }
 }
-
