@@ -18,8 +18,7 @@
     "job": {
       "TreoCleanup": "Unused data cleanup. Deleting old data and unused db tables, db columns, etc.",
       "RestApiDocs": "Generate REST API docs",
-      "ComposerAutoUpdate": "Auto-updating of modules",
-      "AuthTokenControl": "Auth Token Control"
+      "ComposerAutoUpdate": "Auto-updating of modules"
     },
     "cronSetup": {
       "linux": "Note: Add this line to the crontab file to run Espo Scheduled Jobs:",

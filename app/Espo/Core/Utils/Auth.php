@@ -217,6 +217,16 @@ class Auth
             if ($this->isPortal()) {
                 $authToken->set('portalId', $this->getPortal()->id);
             }
+
+            $tokenLifeTime = $this->request->headers('HTTP_AUTHORIZATION_TOKEN_LIFETIME');
+            if ($tokenLifeTime !== null) {
+                $authToken->set('lifetime', $tokenLifeTime);
+            }
+
+            $tokenIdleTime = $this->request->headers('HTTP_AUTHORIZATION_TOKEN_IDLETIME');
+            if ($tokenIdleTime !== null) {
+                $authToken->set('idleTime', $tokenIdleTime);
+            }
         }
         $authToken->set('lastAccess', date('Y-m-d H:i:s'));
         $this->getEntityManager()->saveEntity($authToken);
