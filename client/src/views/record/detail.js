@@ -366,7 +366,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 });
 
                 $window.on('scroll.side', function (e) {
-                    let side = $('.side');
+                    let side = $('#main > .record > .detail > .row > .side');
 
                     let pageHeader = $('.page-header');
                     let buttonContainer = $('.record-buttons');
