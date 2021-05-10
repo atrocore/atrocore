@@ -21056,6 +21056,10 @@ td[data-name="draggableIcon"] {
     width: 30%;
 }
 
+.last-viewed-panel-container div.list-expanded > ul > li > div.expanded-row > .cell:last-child {
+    width: calc(70% - 4px);
+}
+
 .queue-panel-container > .panel {
     border-width: 1px
 }
