@@ -6391,6 +6391,10 @@ button.close {
   padding-top: 14px;
 }
 
+#general-container .modal-body{
+  padding: 14px;
+}
+
 .modal-body .row {
   margin: 0;
 }
