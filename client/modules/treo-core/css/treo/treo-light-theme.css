@@ -6404,6 +6404,10 @@ button.close {
   padding: 0;
 }
 
+.modal-body .row > .overview .cell:first-child:not(:last-child) {
+  padding-right: 16px;
+}
+
 .modal-footer {
   padding: 14px;
   text-align: right;
@@ -21836,6 +21840,7 @@ ul.dropdown-menu > li.checkbox {
   body.minimized #header a.minimizer {
     top: 0;
     padding-left: 9px !important;
+    padding-top: 0;
   }
   #header a.minimizer {
     color: #ccc;
@@ -21844,7 +21849,7 @@ ul.dropdown-menu > li.checkbox {
   body:not(.minimized) #header a.minimizer {
     position: absolute;
     top: 3px;
-    left: 175px;
+    right: 5px;
     z-index: 2000;
     width: 20px;
     height: 20px;
