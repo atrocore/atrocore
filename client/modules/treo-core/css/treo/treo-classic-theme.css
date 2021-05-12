@@ -6479,7 +6479,20 @@ button.close {
 
 .modal-body {
     position: relative;
-    padding: 14px
+    padding-top: 14px;
+}
+
+.modal-body .row {
+    margin: 0;
+}
+
+.modal-body .row > .side {
+    padding: 0;
+}
+
+.modal-body .row > .overview .cell,
+.modal-body .row > .side .cell {
+    padding: 0;
 }
 
 .modal-footer {
@@ -16209,6 +16222,10 @@ label.attach-file-label > input.file {
     margin: 3px 6px 3px 0
 }
 
+.attachment-preview > a > img {
+    max-width: 100%;
+}
+
 .field > .attachment-preview {
     overflow: hidden
 }
@@ -18997,7 +19014,7 @@ input#sn-checkbox-open-in-new-window {
 }
 
 .panel-default > .panel-heading {
-    padding: 5px 10px 6px;
+    padding: 5px 10px 6px 14px;
     color: rgba(0, 0, 0, 0.87);
     background-color: #ececec;
     border-top: 1px solid #dcdcdc;

@@ -6388,7 +6388,20 @@ button.close {
 
 .modal-body {
   position: relative;
-  padding: 14px;
+  padding-top: 14px;
+}
+
+.modal-body .row {
+  margin: 0;
+}
+
+.modal-body .row > .side {
+  padding: 0;
+}
+
+.modal-body .row > .overview .cell,
+.modal-body .row > .side .cell {
+  padding: 0;
 }
 
 .modal-footer {
@@ -16009,6 +16022,10 @@ label.attach-file-label > input.file {
   margin: 3px 6px 3px 0;
 }
 
+.attachment-preview > a > img {
+  max-width: 100%;
+}
+
 .field > .attachment-preview {
   overflow: hidden;
 }
@@ -21328,7 +21345,7 @@ body,
 }
 
 .panel-default > .panel-heading {
-  padding: 13px 10px;
+  padding: 13px 10px 13px 14px;
   color: #101010;
   border-top: 5px solid #efefef;
 }
@@ -21378,13 +21395,13 @@ body,
 
 .modal-content .panel-default > .panel-heading:before {
   content: '';
-  width: calc(100% + 14px);
+  width: 100%;
   height: 6px;
   background-color: #efefef;
   bottom: 100%;
   display: block;
   position: absolute;
-  left: -7px;
+  left: 0;
 }
 
 @media screen and (max-width: 767px) {
