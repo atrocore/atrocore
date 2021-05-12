@@ -6495,6 +6495,10 @@ button.close {
     padding: 0;
 }
 
+.modal-body .row > .overview .cell:first-child:not(:last-child) {
+    padding-right: 16px;
+}
+
 .modal-footer {
     padding: 14px;
     text-align: right;
@@ -19707,6 +19711,7 @@ button.category:focus {
     body.minimized #header a.minimizer {
         top: 0;
         padding-left: 11px !important;
+        padding-top: 0;
     }
 
     #header a.minimizer {
@@ -19716,7 +19721,7 @@ button.category:focus {
     body:not(.minimized) #header a.minimizer {
         position: absolute;
         top: 3px;
-        left: 175px;
+        right: 5px;
         z-index: 2000;
         background: #f5f5f5;
         width: 20px;
