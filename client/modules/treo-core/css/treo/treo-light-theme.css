@@ -6416,8 +6416,8 @@ button.close {
   padding-right: 20px;
 }
 
-.modal-body .row > .overview .cell:first-child:not(:last-child) {
-  padding-right: 16px;
+.modal-body .row > .overview .cell:last-child:not(:first-child) {
+  padding-left: 16px;
 }
 
 .modal-footer {
