@@ -6534,6 +6534,15 @@ button.close {
     border-top: 1px solid #e5e5e5
 }
 
+.dialog-confirm .modal-body {
+    padding-bottom: 14px;
+}
+
+.dialog-confirm .modal-body .confirm-message {
+    display: inline-block;
+    padding: 0 14px;
+}
+
 .modal-footer .btn + .btn {
     margin-left: 5px;
     margin-bottom: 0
