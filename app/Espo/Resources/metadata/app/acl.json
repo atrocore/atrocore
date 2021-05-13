@@ -98,7 +98,7 @@
         "dataPrivacyPermission": "no"
     },
     "permissionsStrictDefaults": {
-        "assignmentPermission": "no",
+        "assignmentPermission": "all",
         "portalPermission": "no",
         "dataPrivacyPermission": "no"
     },
