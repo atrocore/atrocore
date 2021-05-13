@@ -6525,7 +6525,7 @@ button.close {
 }
 
 .modal-body .row > .overview .cell:last-child:not(:first-child) {
-    padding-right: 16px;
+    padding-left: 16px;
 }
 
 .modal-footer {
