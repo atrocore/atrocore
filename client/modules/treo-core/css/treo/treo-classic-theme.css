@@ -6511,6 +6511,15 @@ button.close {
     padding-left: 16px;
 }
 
+.dialog-confirm .modal-body {
+    padding-bottom: 14px;
+}
+
+.dialog-confirm .modal-body .confirm-message {
+    display: inline-block;
+    padding: 0 14px;
+}
+
 .modal-footer {
     padding: 14px;
     text-align: right;

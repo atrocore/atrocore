@@ -298,7 +298,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
             if (assignmentPermission !== 'no') {
                 this.$textarea.textcomplete([{
-                    match: /(^|\s)@(\w*)$/,
+                    match: /(^|\s)@((\w|\.)*)$/,
                     index: 2,
                     search: function (term, callback) {
                         if (term.length == 0) {

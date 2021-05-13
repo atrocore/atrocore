@@ -108,7 +108,7 @@ Espo.define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'],
 
             if (assignmentPermission !== 'no') {
                 this.$element.textcomplete([{
-                    match: /(^|\s)@(\w*)$/,
+                    match: /(^|\s)@((\w|\.)*)$/,
                     search: function (term, callback) {
                         if (term.length == 0) {
                             callback([]);
