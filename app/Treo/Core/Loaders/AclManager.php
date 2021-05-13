@@ -35,6 +35,11 @@ declare(strict_types=1);
 
 namespace Treo\Core\Loaders;
 
+use Espo\Core\AclManager as MainAclManager;
+use Espo\Core\Portal\AclManager as PortalAclManager;
+use Espo\Core\Container;
+use Espo\Entities\Portal;
+
 /**
  * Class AclManager
  */
@@ -47,12 +52,20 @@ class AclManager extends Base
      */
     public function load()
     {
-        $aclManager = new \Espo\Core\AclManager($this->getContainer());
-
         if (!empty($this->getContainer()->get('portal'))) {
-            return new \Espo\Core\Portal\AclManager($this->getContainer());
+            return self::createPortalAclManager($this->getContainer(), $this->getContainer()->get('portal'));
         }
 
-        return $aclManager;
+        return self::createAclManager($this->getContainer());
+    }
+
+    public static function createAclManager(Container $container): MainAclManager
+    {
+        return new MainAclManager($container);
+    }
+
+    public static function createPortalAclManager(Container $container, Portal $portal): PortalAclManager
+    {
+        return new PortalAclManager($container, $portal);
     }
 }

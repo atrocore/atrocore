@@ -40,6 +40,8 @@ use Espo\Core\AclManager;
 use Espo\Core\ORM\Repositories\RDB;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
+use Espo\Entities\User;
+use Treo\Core\Loaders\AclManager as AclManagerLoader;
 
 /**
  * Class Note
@@ -149,7 +151,7 @@ class Note extends RDB
                 continue 1;
             }
 
-            if ($parent && !$this->getAclManager()->check($user, $parent, 'stream')) {
+            if ($parent && !$this->checkByAclManager($user, $parent, 'stream')) {
                 continue 1;
             }
 
@@ -394,7 +396,7 @@ class Note extends RDB
         return $this->getInjection('container')->get('internalAclManager');
     }
 
-    protected function getUser(): \Espo\Entities\User
+    protected function getUser(): User
     {
         return $this->getInjection('container')->get('user');
     }
@@ -404,9 +406,24 @@ class Note extends RDB
         return $this->getInjection('container')->get('acl');
     }
 
-    protected function getAclManager(): AclManager
+    protected function checkByAclManager(User $user, Entity $parent, string $action): bool
     {
-        return $this->getInjection('container')->get('aclManager');
+        if (!$user->isPortalUser()) {
+            return (AclManagerLoader::createAclManager($this->getInjection('container')))->check($user, $parent, $action);
+        }
+
+        $result = false;
+        $portals = $user->get('portals');
+        if (count($portals) > 0) {
+            foreach ($portals as $portal) {
+                $result = (AclManagerLoader::createPortalAclManager($this->getInjection('container'), $portal))->check($user, $parent, $action);
+                if ($result) {
+                    return $result;
+                }
+            }
+        }
+
+        return $result;
     }
 
     protected function getNotificationService(): \Espo\Services\Notification

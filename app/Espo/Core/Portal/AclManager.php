@@ -33,6 +33,8 @@
 
 namespace Espo\Core\Portal;
 
+use Espo\Core\Container;
+use Espo\Entities\Portal;
 use \Espo\ORM\Entity;
 use \Espo\Entities\User;
 use \Espo\Core\Utils\Util;
@@ -42,6 +44,24 @@ class AclManager extends \Espo\Core\AclManager
     protected $tableClassName = '\\Espo\\Core\\AclPortal\\Table';
 
     protected $userAclClassName = '\\Espo\\Core\\Portal\\Acl';
+
+    /**
+     * @var Portal
+     */
+    protected $portal;
+
+    /**
+     * AclManager constructor.
+     *
+     * @param Container $container
+     * @param Portal    $portal
+     */
+    public function __construct(Container $container, Portal $portal)
+    {
+        parent::__construct($container);
+
+        $this->portal = $portal;
+    }
 
     public function getImplementation($scope)
     {
@@ -88,7 +108,7 @@ class AclManager extends \Espo\Core\AclManager
             $fileManager = $this->getContainer()->get('fileManager');
             $metadata = $this->getContainer()->get('metadata');
             $fieldManager = $this->getContainer()->get('fieldManagerUtil');
-            $portal = $this->getContainer()->get('portal');
+            $portal = $this->portal;
 
             $this->tableHashMap[$key] = new $this->tableClassName($user, $portal, $config, $fileManager, $metadata, $fieldManager);
         }
