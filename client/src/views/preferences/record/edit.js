@@ -110,21 +110,19 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
             this.listenTo(this.model, 'change:scopeColorsDisabled', this.controlColorsField, this);
 
             this.hideNotificationPanel = true;
-            if (!this.getConfig().get('assignmentEmailNotifications') || this.model.get('isPortalUser')) {
+            if (!this.getConfig().get('assignmentEmailNotifications')) {
                 this.hideField('receiveAssignmentEmailNotifications');
             } else {
                 this.hideNotificationPanel = false;
             }
 
-            if (!this.getConfig().get('mentionEmailNotifications') || this.model.get('isPortalUser')) {
+            if (!this.getConfig().get('mentionEmailNotifications')) {
                 this.hideField('receiveMentionEmailNotifications');
             } else {
                 this.hideNotificationPanel = false;
             }
 
-            if (!this.getConfig().get('streamEmailNotifications') && !this.model.get('isPortalUser')) {
-                this.hideField('receiveStreamEmailNotifications');
-            } else if (!this.getConfig().get('portalStreamEmailNotifications') && this.model.get('isPortalUser')) {
+            if (!this.getConfig().get('streamEmailNotifications')) {
                 this.hideField('receiveStreamEmailNotifications');
             } else {
                 this.hideNotificationPanel = false;

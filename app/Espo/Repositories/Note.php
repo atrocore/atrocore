@@ -149,10 +149,6 @@ class Note extends RDB
                 continue 1;
             }
 
-            if ($user->get('isPortalUser')) {
-                continue 1;
-            }
-
             if ($parent && !$this->getAclManager()->check($user, $parent, 'stream')) {
                 continue 1;
             }
@@ -180,9 +176,6 @@ class Note extends RDB
                 if ($superParentType && $superParentId) {
                     $additionalUserList = $this->getSubscriberList($superParentType, $superParentId, $entity->get('isInternal'));
                     foreach ($additionalUserList as $user) {
-                        if ($user->isPortal()) {
-                            continue;
-                        }
                         if (in_array($user->id, $userIdMetList)) {
                             continue;
                         }
@@ -331,8 +324,7 @@ class Note extends RDB
                                 $targetUserList = $this->getEntityManager()->getRepository('User')->find(
                                     array(
                                         'whereClause' => array(
-                                            'isActive'     => true,
-                                            'isPortalUser' => false
+                                            'isActive'     => true
                                         )
                                     )
                                 );
@@ -388,7 +380,7 @@ class Note extends RDB
             [
                 'isActive' => true
             ]
-        )->select(['id', 'isPortalUser', 'isAdmin'])->find(
+        )->select(['id', 'isAdmin'])->find(
             [
                 'customWhere' => "AND user.id IN (" . $sql . ")"
             ]

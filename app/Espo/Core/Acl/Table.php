@@ -556,15 +556,6 @@ class Table
 
     protected function applyAdditional(&$table, &$fieldTable, &$valuePermissionLists)
     {
-        if ($this->getUser()->get('isPortalUser')) {
-            foreach ($this->getScopeList() as $scope) {
-                $table->$scope = false;
-                unset($fieldTable->$scope);
-            }
-            foreach ($this->valuePermissionList as $permission) {
-                $valuePermissionLists->{$permission}[] = 'no';
-            }
-        }
     }
 
     private function mergeValueList(array $list, $defaultValue)

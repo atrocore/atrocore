@@ -43,11 +43,11 @@
         },
         "scopeFieldLevel": {
             "Preferences": {
-                "receiveAssignmentEmailNotifications": false,
-                "receiveMentionEmailNotifications": false,
-                "autoFollowEntityTypeList": false,
-                "followCreatedEntities": false,
-                "followEntityOnStreamPost": false,
+                "receiveAssignmentEmailNotifications": true,
+                "receiveMentionEmailNotifications": true,
+                "autoFollowEntityTypeList": true,
+                "followCreatedEntities": true,
+                "followEntityOnStreamPost": true,
                 "useCustomTabList": false,
                 "tabList": false,
                 "dashboardLayout": false
