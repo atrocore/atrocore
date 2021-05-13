@@ -6499,6 +6499,10 @@ button.close {
     padding-top: 14px;
 }
 
+#general-container .modal-body{
+    padding: 14px;
+}
+
 .modal-body .row {
     margin: 0;
 }
@@ -6510,6 +6514,14 @@ button.close {
 .modal-body .row > .overview .cell,
 .modal-body .row > .side .cell {
     padding: 0;
+}
+
+.modal-body .list-container {
+    padding: 0 14px;
+}
+
+.modal-body .search-container .search-row {
+    padding-right: 20px;
 }
 
 .modal-body .row > .overview .cell:first-child:not(:last-child) {
