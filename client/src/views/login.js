@@ -218,10 +218,8 @@ Espo.define('views/login', 'view', function (Dep) {
                         appParams: data.appParams
                     });
 
-                    setTimeout(function () {
-                        $('body').attr({'style': ''});
-                        $('.photo-link').remove();
-                    }, 1000);
+                    $('body').attr({'style': ''});
+                    $('.photo-link').remove();
                 }.bind(this),
                 error: function (xhr) {
                     $submit.removeClass('disabled').removeAttr('disabled');
