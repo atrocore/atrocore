@@ -67,7 +67,7 @@ Espo.define('views/login', 'view', function (Dep) {
                 path = this.getBasePath() + `client/img/login/login_cover_${number}.jpg`;
 
             $('body').css({
-                'background-image': 'url(' + `client/img/login/login_cover_${number}.jpg` + ')',
+                'background-image': 'url("https://source.unsplash.com/random/1080x720/?nature,office,wallpaper")',
                 'background-size': 'cover',
                 'background-repeat': 'no-repeat',
                 'background-position': 'center',
@@ -76,6 +76,7 @@ Espo.define('views/login', 'view', function (Dep) {
             $('body').children('.content').css({
                 'height': 'calc(100% - 28px)'
             });
+            $('body').append('<span class="photo-link">Image: <a href="https://unsplash.com/" target="_blank">unsplash.com</a></span>');
         },
 
         events: {
@@ -218,6 +219,7 @@ Espo.define('views/login', 'view', function (Dep) {
                     });
 
                     $('body').attr({'style': ''});
+                    $('.photo-link').remove();
                 }.bind(this),
                 error: function (xhr) {
                     $submit.removeClass('disabled').removeAttr('disabled');

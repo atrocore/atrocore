@@ -6374,6 +6374,19 @@ button.close {
     -webkit-appearance: none
 }
 
+.photo-link {
+    position: absolute;
+    clear: both;
+    right: 20px;
+    margin-top: -55px;
+    color: #ffffff;
+    font-size: 10px
+}
+
+.photo-link a {
+    color: #ffffff;
+}
+
 .modal-open {
     overflow: hidden
 }
@@ -19056,7 +19069,7 @@ input#sn-checkbox-open-in-new-window {
 }
 
 .panel-info > .panel-heading {
-    padding: 6px 10px;
+    padding: 6px 10px 6px 14px;
 }
 
 .side .panel-default > .panel-heading {

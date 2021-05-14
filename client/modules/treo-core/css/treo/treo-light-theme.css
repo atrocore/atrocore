@@ -6284,6 +6284,19 @@ button.close {
   -webkit-appearance: none;
 }
 
+.photo-link {
+  position: absolute;
+  clear: both;
+  right: 20px;
+  margin-top: -55px;
+  color: #ffffff;
+  font-size: 10px
+}
+
+.photo-link a {
+  color: #ffffff;
+}
+
 .modal-open {
   overflow: hidden;
 }
@@ -21352,7 +21365,7 @@ body,
 }
 
 .panel-info > .panel-heading {
-  padding: 5px 10px 6px;
+  padding: 5px 10px 6px 14px;
 }
 
 .panel-info > .panel-heading > .btn-group .panel-info > .panel-heading > .btn-info {
@@ -21864,7 +21877,7 @@ ul.dropdown-menu > li.checkbox {
     padding-top: 0;
   }
   #header a.minimizer {
-    color: #ccc;
+    color: #ccc !important;
   }
 
   body:not(.minimized) #header a.minimizer {
