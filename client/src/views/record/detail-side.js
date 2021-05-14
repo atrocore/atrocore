@@ -44,15 +44,20 @@ Espo.define('views/record/detail-side', ['view'], function (Dep) {
 
         defaultPanel: true,
 
+        streamPanel: true,
+
         panelList: [],
 
         defaultPanelDefs: {
             name: 'default',
-            label: false,
+            label: 'Ownership Information',
             view: 'views/record/panels/default-side',
             isForm: true,
             options: {
                 fieldList: [
+                    {
+                        name: ':ownerUser'
+                    },
                     {
                         name: ':assignedUser'
                     },
@@ -154,6 +159,11 @@ Espo.define('views/record/detail-side', ['view'], function (Dep) {
                 if (layoutData) {
                     this.alterPanels(layoutData);
                 }
+
+                if (this.streamPanel && this.getMetadata().get('scopes.' + this.scope + '.stream') && this.getConfig().get('isStreamSide') && !this.model.isNew()) {
+                    this.setupStreamPanel();
+                }
+
                 this.setupPanelViews();
                 this.wait(false);
             }.bind(this));
@@ -184,58 +194,107 @@ Espo.define('views/record/detail-side', ['view'], function (Dep) {
         },
 
         setupDefaultPanel: function () {
-            var met = false;
-            this.panelList.forEach(function (item) {
-                if (item.name === 'default') {
-                    met = true;
+            this.defaultPanelDefs = Espo.Utils.cloneDeep(this.defaultPanelDefs);
+
+            let scopeDefs = this.getMetadata().get(['scopes', this.scope]) || {};
+
+            this.defaultPanelDefs.options.fieldList = this.defaultPanelDefs.options.fieldList.filter(fieldDefs => {
+                return (scopeDefs.hasOwner && fieldDefs.name === ':ownerUser' && this.getAcl().check('User', 'read'))
+                    || (scopeDefs.hasAssignedUser && fieldDefs.name === ':assignedUser' && this.getAcl().check('User', 'read'))
+                    || (scopeDefs.hasTeam && fieldDefs.name === 'teams' && this.getAcl().check('Team', 'read'));
+            });
+
+            let hasAnyField = (this.defaultPanelDefs.options.fieldList || []).some(fieldDefs => {
+                if ((fieldDefs.name === ':ownerUser' && this.model.hasLink('ownerUser')) || (fieldDefs.name === ':assignedUser' && (this.model.hasLink('assignedUsers') || this.model.hasLink('assignedUser')))) {
+                    return true;
+                } else {
+                    return this.model.hasLink(fieldDefs.name)
                 }
-            }, this);
-
-            if (met) return;
-
-            var defaultPanelDefs = this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanel', this.type]);
-
-            if (defaultPanelDefs === false) return;
-
-            if (this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelDisabled'])) return;
-
-            defaultPanelDefs = defaultPanelDefs || this.defaultPanelDefs;
-
-            if (!defaultPanelDefs) return;
-
-            defaultPanelDefs = Espo.Utils.cloneDeep(defaultPanelDefs);
-
-            var fieldList = this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelFieldLists', this.type]);
-
-            if (fieldList) {
-                defaultPanelDefs.options = defaultPanelDefs.options || {};
-                defaultPanelDefs.options.fieldList = fieldList;
-            }
-
-            if (defaultPanelDefs.options.fieldList && defaultPanelDefs.options.fieldList.length) {
-                defaultPanelDefs.options.fieldList.forEach(function (item, i) {
-                    if (typeof item !== 'object') {
-                        item = {
-                            name: item
-                        }
-                        defaultPanelDefs.options.fieldList[i] = item;
+            });
+            if (this.mode === 'detail' || hasAnyField) {
+                var met = false;
+                this.panelList.forEach(function (item) {
+                    if (item.name === 'default') {
+                        met = true;
                     }
-                    if (item.name === ':assignedUser') {
-                        if (this.model.hasField('assignedUsers')) {
-                            item.name = 'assignedUsers';
-                            if (!this.model.getFieldParam('assignedUsers', 'view')) {
-                                item.view = 'views/fields/assigned-users';
+                }, this);
+
+                if (met) return;
+
+                var defaultPanelDefs = this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanel', this.type]);
+
+                if (defaultPanelDefs === false) return;
+
+                if (this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelDisabled'])) return;
+
+                defaultPanelDefs = defaultPanelDefs || this.defaultPanelDefs;
+
+                if (!defaultPanelDefs) return;
+
+                defaultPanelDefs = Espo.Utils.cloneDeep(defaultPanelDefs);
+
+                var fieldList = this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelFieldLists', this.type]);
+
+                if (fieldList) {
+                    defaultPanelDefs.options = defaultPanelDefs.options || {};
+                    defaultPanelDefs.options.fieldList = fieldList;
+                }
+
+                if (defaultPanelDefs.options.fieldList && defaultPanelDefs.options.fieldList.length) {
+                    defaultPanelDefs.options.fieldList.forEach(function (item, i) {
+                        if (typeof item !== 'object') {
+                            item = {
+                                name: item
                             }
-                        } else if (this.model.hasField('assignedUser')) {
-                            item.name = 'assignedUser';
-                        } else {
-                            defaultPanelDefs.options.fieldList[i] = {};
+                            defaultPanelDefs.options.fieldList[i] = item;
                         }
+                        if (item.name === ':ownerUser') {
+                            if (this.model.hasField('ownerUser')) {
+                                item.name = 'ownerUser';
+                            } else {
+                                defaultPanelDefs.options.fieldList[i] = {};
+                            }
+                        }
+
+                        if (item.name === ':assignedUser') {
+                            if (this.model.hasField('assignedUsers')) {
+                                item.name = 'assignedUsers';
+                                if (!this.model.getFieldParam('assignedUsers', 'view')) {
+                                    item.view = 'views/fields/assigned-users';
+                                }
+                            } else if (this.model.hasField('assignedUser')) {
+                                item.name = 'assignedUser';
+                            } else {
+                                defaultPanelDefs.options.fieldList[i] = {};
+                            }
+                        }
+                    }, this);
+                }
+
+                this.panelList.unshift(defaultPanelDefs);
+            }
+        },
+
+        setupStreamPanel: function () {
+            var streamAllowed = this.getAcl().checkModel(this.model, 'stream', true);
+            if (streamAllowed === null) {
+                this.listenToOnce(this.model, 'sync', function () {
+                    streamAllowed = this.getAcl().checkModel(this.model, 'stream', true);
+                    if (streamAllowed) {
+                        this.showPanel('stream', function () {
+                            this.getView('stream').collection.fetch();
+                        });
                     }
                 }, this);
             }
-
-            this.panelList.unshift(defaultPanelDefs);
+            if (streamAllowed !== false) {
+                this.panelList.push({
+                    "name": "stream",
+                    "label": "Stream",
+                    "view": "views/stream/panel",
+                    "hidden": !streamAllowed
+                });
+            }
         },
 
         setupPanelViews: function () {

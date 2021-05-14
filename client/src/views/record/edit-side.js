@@ -38,11 +38,14 @@ Espo.define('views/record/edit-side', 'views/record/detail-side', function (Dep)
 
         defaultPanelDefs: {
             name: 'default',
-            label: false,
+            label: 'Ownership Information',
             view: 'views/record/panels/side',
             isForm: true,
             options: {
                 fieldList: [
+                    {
+                        name: ':ownerUser'
+                    },
                     {
                         name: ':assignedUser'
                     },

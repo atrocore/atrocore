@@ -56,16 +56,10 @@
   "views/record/base": [
     "treo-core"
   ],
-  "views/record/detail-side": [
-    "treo-core"
-  ],
   "views/record/detail-bottom": [
     "treo-core"
   ],
   "views/record/edit": [
-    "treo-core"
-  ],
-  "views/record/edit-side": [
     "treo-core"
   ],
   "views/record/list": [
