@@ -120,7 +120,7 @@ class Background extends AbstractEntryPoint
     {
         session_start();
 
-        if (!isset($_SESSION['background']) || $_SESSION['background']['till'] < new \DateTime()) {
+        if (!isset($_SESSION['background']) || $_SESSION['background']['till'] < new \DateTime() || !file_exists($_SESSION['background']['imagePath'])) {
             $_SESSION['background'] = $this->backgrounds[array_rand($this->backgrounds)];
             $_SESSION['background']['till'] = (new \DateTime())->modify('+2 hours');
         }
