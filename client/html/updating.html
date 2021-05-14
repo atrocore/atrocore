@@ -8,7 +8,7 @@
         <link rel="shortcut icon" href="{{basePath}}client/modules/treo-core/img/favicon16x16.png" type="image/x-icon">
         <script src="{{basePath}}client/lib/jquery-2.1.4.min.js"></script>
     </head>
-    <body>
+    <body style="background-image: url(/?entryPoint=background);background-size: cover;background-repeat: no-repeat;background-position: center;height: 100vh">
     <div class="container content">
         <div class="col-md-4 col-md-offset-4 col-sm-8 col-sm-offset-2">
             <div id="login" class="panel panel-default">
@@ -30,12 +30,6 @@
                             <label style="margin-top: 20px;">Update logs:</label>
                             <pre id="log" style="margin: 10px 0;"></pre>
                             <script type="text/javascript">
-                                let number = Math.floor(Math.random() * 7) + 1;
-                                $('body').css({
-                                    'background-image': 'url(' + `client/img/login/login_cover_${number}.jpg` + ')',
-                                    'background-size': '100%'
-                                });
-
                                 let start = false;
                                 window.setInterval(function () {
                                     $.ajax({
