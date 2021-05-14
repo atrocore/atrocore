@@ -5,6 +5,17 @@
     "params": "REST API"
   },
   {
+    "route": "/background",
+    "method": "get",
+    "params": {
+      "controller": "App",
+      "action": "background"
+    },
+    "conditions": {
+      "auth": false
+    }
+  },
+  {
     "route": "/Composer/list",
     "method": "get",
     "params": {

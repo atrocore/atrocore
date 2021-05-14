@@ -35,6 +35,7 @@ declare(strict_types=1);
 
 namespace Espo\Services;
 
+use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Services\Base;
 use Espo\Core\Utils\Language;
 
@@ -43,6 +44,21 @@ use Espo\Core\Utils\Language;
  */
 class App extends Base
 {
+    /**
+     * @return array
+     * @throws NotFound
+     */
+    public function getBackground(): array
+    {
+        session_start();
+
+        if (!isset($_SESSION['background'])) {
+            throw new NotFound();
+        }
+
+        return $_SESSION['background'];
+    }
+
     public function getUserData(): array
     {
         $preferencesData = $this->getInjection('preferences')->getValueMap();
@@ -104,7 +120,7 @@ class App extends Base
             ->send(
                 [
                     'subject' => 'Test Email',
-                    'body' => 'Test Email',
+                    'body'    => 'Test Email',
                     'isHtml'  => false,
                     'to'      => $data['emailAddress']
                 ]

@@ -63,20 +63,15 @@ Espo.define('views/login', 'view', function (Dep) {
         },
 
         setupBackgroundImage: function () {
-            let number = Math.floor(Math.random() * 7) + 1,
-                path = this.getBasePath() + `client/img/login/login_cover_${number}.jpg`;
-
-            $('body').css({
-                'background-image': 'url("https://source.unsplash.com/random/1080x720/?nature,office,wallpaper")',
-                'background-size': 'cover',
-                'background-repeat': 'no-repeat',
-                'background-position': 'center',
-                'height': '100vh'
+            $.ajax({
+                url: 'background',
+                type: 'GET',
+                success: data => {
+                    const $body = $('body');
+                    $body.children('.content').css({'height': 'calc(100% - 28px)'});
+                    $body.append('<span class="photo-link">Image: <a href="' + data.authorLink + '" target="_blank">' + data.authorName + '</a></span>');
+                }
             });
-            $('body').children('.content').css({
-                'height': 'calc(100% - 28px)'
-            });
-            $('body').append('<span class="photo-link">Image: <a href="https://unsplash.com/" target="_blank">unsplash.com</a></span>');
         },
 
         events: {
@@ -217,9 +212,6 @@ Espo.define('views/login', 'view', function (Dep) {
                         settings: data.settings,
                         appParams: data.appParams
                     });
-
-                    $('body').attr({'style': ''});
-                    $('.photo-link').remove();
                 }.bind(this),
                 error: function (xhr) {
                     $submit.removeClass('disabled').removeAttr('disabled');

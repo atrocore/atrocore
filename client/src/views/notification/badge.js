@@ -79,6 +79,8 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
             this.$number = this.$el.find('.number-badge');
 
             this.runCheckUpdates(true);
+
+            $('body').attr({'style': ''});
         },
 
         showNotRead: function (count) {

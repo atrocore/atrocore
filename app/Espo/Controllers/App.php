@@ -52,6 +52,18 @@ class App extends Base
      *
      * @return array
      */
+    public function actionBackground($params, $data, $request)
+    {
+        return $this->getService('App')->getBackground();
+    }
+
+    /**
+     * @param mixed $params
+     * @param mixed $data
+     * @param mixed $request
+     *
+     * @return array
+     */
     public function actionUser($params, $data, $request)
     {
         return $this->getService('App')->getUserData();
