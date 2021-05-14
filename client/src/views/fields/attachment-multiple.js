@@ -513,6 +513,20 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             return preview;
         },
 
+        getVideoPlayer: function (id) {
+            return '<video src="' + this.getDownloadUrl(id) + '" controls width="256px"></video>';
+        },
+
+        hasVideoPlayer(name) {
+            const extensions = this.getMetadata().get('dam.video.videoPlayerExtensions') || [];
+
+            return $.inArray(this.getFileNameExtension(name), extensions) !== -1;
+        },
+
+        getFileNameExtension(name) {
+            return (name || '').split('.').pop().toLowerCase();
+        },
+
         getValueForDisplay: function () {
             if (this.mode == 'detail' || this.mode == 'list') {
                 var nameHash = this.nameHash;
@@ -533,6 +547,12 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                         previews.push('<div class="attachment-preview">' + this.getDetailPreview(name, type, id) + '</div>');
                         continue;
                     }
+
+                    if (this.hasVideoPlayer(name)) {
+                        previews.push('<div class="attachment-preview">' + this.getVideoPlayer(id) + '</div>');
+                        continue;
+                    }
+
                     var line = '<div class="attachment-block"><span class="glyphicon glyphicon-paperclip small"></span> <a href="' + this.getDownloadUrl(id) + '" target="_BLANK">' + Handlebars.Utils.escapeExpression(name) + '</a></div>';
                     names.push(line);
                 }
