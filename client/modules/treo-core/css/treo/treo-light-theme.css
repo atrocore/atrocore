@@ -15015,6 +15015,7 @@ div.list-kanban > div > table .item .panel .form-group .field-right-align {
 div.list-kanban > div > table .item .panel .form-group .field {
   overflow-wrap: break-word;
   word-wrap: break-word;
+  word-break: break-word;
   font-size: 14px;
 }
 
@@ -20986,7 +20987,7 @@ body,
     max-width: 90px;
   }
   #header .navbar img.logo {
-    max-width: 80%;
+    max-width: 100%;
   }
 }
 
