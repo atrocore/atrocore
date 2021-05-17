@@ -20845,7 +20845,11 @@ span.jqtree-dragging {
 
 @media screen and (min-width: 768px) {
     .search-row .input-group {
-        margin-left: 20px;
+        margin-left: 14px;
+    }
+
+    .panel .search-row .input-group {
+        margin-left: 0;
     }
 }
 
