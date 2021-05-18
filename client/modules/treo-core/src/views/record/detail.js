@@ -326,7 +326,7 @@ Espo.define('treo-core:views/record/detail', 'class-replace!treo-core:views/reco
             let headerButtonsContainer = $('.header-buttons-container');
             if (headerButtonsContainer.length) {
                 let main = $('#main');
-                let headerBreadcrumbs = $('.header-breadcrumbs');
+                let headerBreadcrumbs = $('.header-breadcrumbs:not(.fixed-header-breadcrumbs)');
 
                 if (main.length && headerBreadcrumbs.length && headerButtonsContainer.outerWidth() > main.outerWidth() - headerBreadcrumbs.outerWidth()) {
                     headerButtonsContainer.addClass('full-row');
