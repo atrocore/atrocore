@@ -81,14 +81,7 @@ class Auth extends Middleware
         $httpMethod = $req->getMethod();
 
         $authUsername = $req->headers('PHP_AUTH_USER');
-        if (empty($authUsername)) {
-            $authUsername = $_SERVER['PHP_AUTH_USER'];
-        }
-
         $authPassword = $req->headers('PHP_AUTH_PW');
-        if (empty($authPassword)) {
-            $authPassword = $_SERVER['PHP_AUTH_PW'];
-        }
 
         $authToken = $req->headers('HTTP_AUTHORIZATION_TOKEN');
         if (isset($authToken)) {
