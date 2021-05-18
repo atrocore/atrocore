@@ -6512,6 +6512,19 @@ button.close {
     padding-top: 14px;
 }
 
+.modal-body > div:not(.record-container):not(.edit-container) {
+    padding: 0 14px;
+}
+
+.modal-body > div.edit-container > .row {
+    padding: 0 6px;
+}
+
+.modal-body .fields-container .cell:nth-of-type(odd),
+.modal-body > .row > .cell {
+    padding-left: 0;
+}
+
 #general-container .modal-body{
     padding: 14px;
 }
@@ -6533,8 +6546,8 @@ button.close {
     padding: 0 14px;
 }
 
-.modal-body .search-container .search-row {
-    padding-right: 20px;
+.modal-body .search-container .search-row .input-group{
+    margin: 0;
 }
 
 .modal-body .row > .overview .cell:last-child:not(:first-child) {
