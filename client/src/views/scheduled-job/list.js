@@ -51,19 +51,6 @@ Espo.define('views/scheduled-job/list', 'views/list', function (Dep) {
             });
         },
 
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-            $.ajax({
-                type: 'GET',
-                url: 'Admin/action/cronMessage',
-                error: function (x) {
-                }.bind(this)
-            }).done(function (data) {
-                this.$el.find('.cronjob .message').html(data.message);
-                this.$el.find('.cronjob .command').html('<strong>' + data.command + '</strong>');
-            }.bind(this));
-        },
-
     });
 
 });

@@ -109,9 +109,9 @@ class Daemon extends AbstractConsole
                 // cleanup
                 file_put_contents($log, '');
 
-                exec($this->getPhp() . " composer.phar self-update 2>/dev/null", $output, $exitCode);
+                exec($this->getPhpBin() . " composer.phar self-update 2>/dev/null", $output, $exitCode);
                 if (empty($exitCode)) {
-                    exec($this->getPhp() . " composer.phar update >> $log 2>&1", $output, $exitCode);
+                    exec($this->getPhpBin() . " composer.phar update >> $log 2>&1", $output, $exitCode);
                 } else {
                     file_put_contents($log, "Failed! The new version of the composer can't be copied.");
                 }
@@ -150,7 +150,7 @@ class Daemon extends AbstractConsole
             }
 
             if (file_exists(\Espo\Core\QueueManager::FILE_PATH)) {
-                exec($this->getPhp() . " index.php qm $stream --run");
+                exec($this->getPhpBin() . " index.php qm $stream --run");
             }
 
             sleep(1);
@@ -168,18 +168,10 @@ class Daemon extends AbstractConsole
             }
 
             if (!empty(Util::scanDir(\Espo\Repositories\Notification::UPDATE_COUNT_PATH))) {
-                exec($this->getPhp() . " index.php notifications --refresh");
+                exec($this->getPhpBin() . " index.php notifications --refresh");
             }
 
             sleep(1);
         }
-    }
-
-    /**
-     * @return string
-     */
-    protected function getPhp(): string
-    {
-        return (new \Espo\Core\Utils\System())->getPhpBin();
     }
 }

@@ -59,9 +59,4 @@ class Admin extends \Espo\Core\Controllers\Base
 
         return $scheduledJob->getAvailableList();
     }
-
-    public function actionCronMessage($params)
-    {
-        return $this->getContainer()->get('scheduledJob')->getSetupMessage();
-    }
 }
