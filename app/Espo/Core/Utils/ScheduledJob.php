@@ -33,8 +33,6 @@
 
 namespace Espo\Core\Utils;
 
-use Espo\Core\Exceptions\NotFound;
-
 class ScheduledJob
 {
     private $container;
@@ -44,8 +42,6 @@ class ScheduledJob
     protected $data = null;
 
     protected $cacheFile = 'data/cache/application/jobs.php';
-
-    protected $cronFile = 'cron.php';
 
     protected $allowedMethod = 'run';
 
@@ -63,13 +59,6 @@ class ScheduledJob
         'corePath' => CORE_PATH . '/Espo/Jobs',
         'modulePath' => CORE_PATH . '/Espo/Modules/{*}/Jobs',
         'customPath' => 'custom/Espo/Custom/Jobs',
-    );
-
-    protected $cronSetup = array(
-        'linux' => '* * * * * cd {DOCUMENT_ROOT}; {PHP-BIN-DIR} -f {CRON-FILE} > /dev/null 2>&1',
-        'windows' => '{PHP-BINARY} -f {FULL-CRON-PATH}',
-        'mac' => '* * * * * cd {DOCUMENT_ROOT}; {PHP-BIN-DIR} -f {CRON-FILE} > /dev/null 2>&1',
-        'default' => '* * * * * cd {DOCUMENT_ROOT}; {PHP-BIN-DIR} -f {CRON-FILE} > /dev/null 2>&1',
     );
 
     public function __construct(\Espo\Core\Container $container)
@@ -168,41 +157,12 @@ class ScheduledJob
 
     /**
      * Load scheduler classes. It loads from ...Jobs, ex. \Espo\Jobs
-     * @return null
      */
     protected function init()
     {
         $classParser = $this->getContainer()->get('classParser');
         $classParser->setAllowedMethods( array($this->allowedMethod) );
         $this->data = $classParser->getData($this->paths, $this->cacheFile);
-    }
-
-    public function getSetupMessage()
-    {
-        $language = $this->getContainer()->get('language');
-
-        $OS = $this->getSystemUtil()->getOS();
-        $desc = $language->translate('cronSetup', 'options', 'ScheduledJob');
-
-        $data = array(
-            'PHP-BIN-DIR' => $this->getSystemUtil()->getPhpBin(),
-            'PHP-BINARY' => $this->getSystemUtil()->getPhpBinary(),
-            'CRON-FILE' => $this->cronFile,
-            'DOCUMENT_ROOT' => $this->getSystemUtil()->getRootDir(),
-            'FULL-CRON-PATH' => Util::concatPath($this->getSystemUtil()->getRootDir(), $this->cronFile),
-        );
-
-        $message = isset($desc[$OS]) ? $desc[$OS] : $desc['default'];
-        $command = isset($this->cronSetup[$OS]) ? $this->cronSetup[$OS] : $this->cronSetup['default'];
-
-        foreach ($data as $name => $value) {
-            $command = str_replace('{'.$name.'}', $value, $command);
-        }
-
-        return array(
-            'message' => $message,
-            'command' => $command,
-        );
     }
 
     /**

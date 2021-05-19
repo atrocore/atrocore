@@ -76,7 +76,7 @@ class Cron extends AbstractConsole
         $processes = implode(' | ', $processes);
 
         /** @var string $php */
-        $php = (new \Espo\Core\Utils\System())->getPhpBin();
+        $php = $this->getPhpBin();
 
         /** @var string $id */
         $id = $this->getConfig()->get('appId');
