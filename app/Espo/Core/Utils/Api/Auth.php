@@ -87,9 +87,6 @@ class Auth extends Middleware
             $authPassword = $req->headers('PHP_AUTH_PW');
         }
 
-        $authUsername = $req->headers('PHP_AUTH_USER');
-        $authPassword = $req->headers('PHP_AUTH_PW');
-
         $authToken = $req->headers('HTTP_AUTHORIZATION_TOKEN');
         if (isset($authToken)) {
             list($authUsername, $authPassword) = explode(':', base64_decode($authToken), 2);
