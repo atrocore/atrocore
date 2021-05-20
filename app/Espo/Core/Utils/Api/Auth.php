@@ -80,6 +80,13 @@ class Auth extends Middleware
         $uri = $req->getResourceUri();
         $httpMethod = $req->getMethod();
 
+        if (!empty($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
+            list($authUsername, $authPassword) = explode(':', base64_decode(substr($_SERVER['REDIRECT_HTTP_AUTHORIZATION'], 6)));
+        } else {
+            $authUsername = $req->headers('PHP_AUTH_USER');
+            $authPassword = $req->headers('PHP_AUTH_PW');
+        }
+
         $authUsername = $req->headers('PHP_AUTH_USER');
         $authPassword = $req->headers('PHP_AUTH_PW');
 
