@@ -4,7 +4,7 @@
 
 AtroCore is an open-source Master Data Management (MDM) software distributed under GPLv3 License for free. 
 
-AtroCore is also a software ecosystem designed for rapid development of web-based responsive business applications of any kind (ERP, PIM, CRM, DMS, MDM, DAM, etc.). It is an excellent tool for cost-effective and timely application development that comes with the powerful out-of-the-box functionality. Thus, AtroCore is a also a platform for Rapid Application Development (RAD).
+AtroCore is also a software ecosystem designed for rapid development of web-based responsive business applications of any kind (ERP, PIM, CRM, DMS, MDM, DAM, etc.). It is an excellent tool for cost-effective and timely application development that comes with the powerful out-of-the-box functionality. Thus, AtroCore is a platform for Rapid Application Development (RAD).
 
 AtroCore is a single page application (SPA) with an API-centric, service-oriented architecture, and flexible data model based on configurable entities and relations. You can organize any data and business-related processes directly in AtroCore, many of them via a simple and user-friendly configuration.
 
