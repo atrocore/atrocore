@@ -93,4 +93,9 @@ class Portal extends \Espo\Services\Record
 
         return $this->urls;
     }
+
+    protected function getFieldsThatConflict(Entity $entity, \stdClass $data): array
+    {
+        return [];
+    }
 }
