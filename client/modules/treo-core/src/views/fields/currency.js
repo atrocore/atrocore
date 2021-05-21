@@ -47,7 +47,7 @@ Espo.define('treo-core:views/fields/currency', 'class-replace!treo-core:views/fi
 
         data() {
             let data = Dep.prototype.data.call(this);
-            data.valueAndCurrency = !!(data.value || data.currencyValue);
+            data.valueAndCurrency = !!(data.value && data.currencyValue);
             return data;
         },
 
