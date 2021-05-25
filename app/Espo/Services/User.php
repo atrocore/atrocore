@@ -402,23 +402,13 @@ class User extends Record
 
         if ($user->get('isPortalUser')) {
             $urlList = [];
-            $portalList = $this->getEntityManager()->getRepository('Portal')->distinct()->join('users')->where(array(
-                'isActive' => true,
-                'users.id' => $user->id
-            ))->find();
-            foreach ($portalList as $portal) {
-                if ($portal->get('customUrl')) {
-                    $urlList[] = $portal->get('customUrl');
-                } else {
-                    $url = $siteUrl . 'portal/';
-                    if ($this->getConfig()->get('defaultPortalId') !== $portal->id) {
-                        if ($portal->get('customId')) {
-                            $url .= $portal->get('customId');
-                        } else {
-                            $url .= $portal->id;
-                        }
+            $portals = $this->findLinkedEntities($user->get('id'), 'portals', []);
+            if (!empty($portals['total'])) {
+                foreach ($portals['collection'] as $portal) {
+                    if (!$portal->get('isActive')) {
+                        continue 1;
                     }
-                    $urlList[] = $url;
+                    $urlList[] = $portal->get('url');
                 }
             }
             if (!count($urlList)) {

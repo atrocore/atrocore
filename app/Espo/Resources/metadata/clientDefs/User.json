@@ -1,70 +1,96 @@
 {
-   "controller": "controllers/user",
-   "model": "models/user",
-   "acl": "acl/user",
-   "views": {
-      "detail": "views/user/detail",
-      "list": "views/user/list"
-   },
-   "recordViews":{
-      "detail":"views/user/record/detail",
-      "detailSmall":"views/user/record/detail-quick",
-      "edit": "treo-core:views/user/record/edit",
-      "editSmall":"views/user/record/edit-quick",
-      "list":"views/user/record/list"
-   },
-   "modalViews": {
-      "detail": "views/user/modals/detail"
-   },
-   "defaultSidePanel": {
-      "detail": {
-        "name": "default",
-        "label": false,
-        "view": "views/user/record/panels/default-side",
-        "isForm": true
-      },
-      "detailSmall": {
-        "name": "default",
-        "label": false,
-        "view": "views/user/record/panels/default-side",
-        "isForm": true
-      },
-      "edit": {
-        "name": "default",
-        "label": false,
-        "view": "views/user/record/panels/default-side",
-        "isForm": true
-      },
-      "editSmall": {
-        "name": "default",
-        "label": false,
-        "view": "views/user/record/panels/default-side",
-        "isForm": true
-      }
-   },
-   "defaultSidePanelFieldLists": {
-      "detail": [
-        "avatar",
-        "createdAt",
-        "lastAccess"
-      ],
-      "detailSmall": [
-        "avatar",
-        "lastAccess"
-      ],
-      "edit": [
-        "avatar"
-      ],
-      "editSmall": [
-        "avatar"
-      ]
-   },
-   "filterList": [
-      "active"
-   ],
-   "boolFilterList": ["onlyMyTeam"],
-    "selectDefaultFilters": {
-        "filter": "active"
+  "controller": "controllers/user",
+  "model": "models/user",
+  "acl": "acl/user",
+  "views": {
+    "detail": "views/user/detail",
+    "list": "views/user/list"
+  },
+  "recordViews": {
+    "detail": "views/user/record/detail",
+    "detailSmall": "views/user/record/detail-quick",
+    "edit": "treo-core:views/user/record/edit",
+    "editSmall": "views/user/record/edit-quick",
+    "list": "views/user/record/list"
+  },
+  "modalViews": {
+    "detail": "views/user/modals/detail"
+  },
+  "defaultSidePanel": {
+    "detail": {
+      "name": "default",
+      "label": false,
+      "view": "views/user/record/panels/default-side",
+      "isForm": true
     },
-    "iconClass": "fas fa-user-circle"
+    "detailSmall": {
+      "name": "default",
+      "label": false,
+      "view": "views/user/record/panels/default-side",
+      "isForm": true
+    },
+    "edit": {
+      "name": "default",
+      "label": false,
+      "view": "views/user/record/panels/default-side",
+      "isForm": true
+    },
+    "editSmall": {
+      "name": "default",
+      "label": false,
+      "view": "views/user/record/panels/default-side",
+      "isForm": true
+    }
+  },
+  "defaultSidePanelFieldLists": {
+    "detail": [
+      "avatar",
+      "createdAt",
+      "lastAccess"
+    ],
+    "detailSmall": [
+      "avatar",
+      "lastAccess"
+    ],
+    "edit": [
+      "avatar"
+    ],
+    "editSmall": [
+      "avatar"
+    ]
+  },
+  "filterList": [
+    "active"
+  ],
+  "boolFilterList": [
+    "onlyMyTeam"
+  ],
+  "selectDefaultFilters": {
+    "filter": "active"
+  },
+  "iconClass": "fas fa-user-circle",
+  "dynamicLogic": {
+    "fields": {
+      "portals": {
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "isPortalUser"
+            }
+          ]
+        }
+      },
+      "portal": {
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "isPortalUser"
+            }
+          ]
+        }
+      }
+    }
+  }
 }
