@@ -649,6 +649,6 @@ class Application
      */
     private function logoutAll(): void
     {
-        $this->getContainer()->get('pdo')->exec("DELETE FROM auth_token WHERE 1");
+        $this->getContainer()->get('pdo')->exec("DELETE FROM auth_token WHERE lifetime IS NULL AND idle_time IS NULL");
     }
 }

@@ -269,7 +269,7 @@ class PostUpdate
         }
 
         self::renderLine('Logging out all users');
-        self::$container->get('pdo')->exec("DELETE FROM auth_token WHERE 1");
+        self::$container->get('pdo')->exec("DELETE FROM auth_token WHERE lifetime IS NULL AND idle_time IS NULL");
     }
 
     /**
