@@ -674,7 +674,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.removeMassAction('merge');
             }
 
-            if (!this.getMetadata().get('scopes.ExportFeed') || !this.getAcl().checkScope('ExportFeed', 'view')) {
+            if (!this.getMetadata().get('scopes.ExportFeed') || !this.getAcl().checkScope('ExportFeed', 'read')) {
                 this.removeMassAction('export');
                 this.removeMassAction('export');
             }
