@@ -85,9 +85,6 @@ class PostUpdate
         self::$container = (new App())->getContainer();
 
         try {
-            // logout all
-            self::logoutAll();
-
             // copy root files
             self::copyRootFiles();
 
@@ -257,19 +254,6 @@ class PostUpdate
                 // ignore
             }
         }
-    }
-
-    /**
-     * Logout all
-     */
-    private static function logoutAll(): void
-    {
-        if (!self::isInstalled()) {
-            return;
-        }
-
-        self::renderLine('Logging out all users');
-        self::$container->get('pdo')->exec("DELETE FROM auth_token WHERE lifetime IS NULL AND idle_time IS NULL");
     }
 
     /**
