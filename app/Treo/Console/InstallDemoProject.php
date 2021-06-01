@@ -100,18 +100,16 @@ class InstallDemoProject extends AbstractConsole
                 );
             }
             $this->getConfig()->save();
-
-            $this->getContainer()->get('serviceFactory')->create('Installer')->createAdmin(
-                [
-                    'username'        => $this->getConfig()->get('demo.username'),
-                    'password'        => $this->getConfig()->get('demo.password'),
-                    'confirmPassword' => $this->getConfig()->get('demo.password'),
-                ]
-            );
-
-            self::show('Demo project installed successfully.', self::SUCCESS, true);
         }
 
-        self::show('There are no needed environment variables.', self::ERROR, true);
+        $this->getContainer()->get('serviceFactory')->create('Installer')->createAdmin(
+            [
+                'username'        => $this->getConfig()->get('demo.username'),
+                'password'        => $this->getConfig()->get('demo.password'),
+                'confirmPassword' => $this->getConfig()->get('demo.password'),
+            ]
+        );
+
+        self::show('Demo project installed successfully.', self::SUCCESS, true);
     }
 }
