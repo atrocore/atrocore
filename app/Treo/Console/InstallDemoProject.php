@@ -89,7 +89,7 @@ class InstallDemoProject extends AbstractConsole
             }
 
             if (!empty($_SERVER['SITE_URL'])) {
-                $this->getConfig()->set('siteUrl', $_SERVER['SITE_URL']);
+                $this->getConfig()->set('siteUrl', 'https://' . $_SERVER['SITE_URL']);
             }
 
             if (!empty($_SERVER['ADMIN_USER']) && !empty($_SERVER['ADMIN_PASS'])) {
