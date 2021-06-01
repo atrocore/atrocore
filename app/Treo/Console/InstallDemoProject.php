@@ -62,6 +62,7 @@ class InstallDemoProject extends AbstractConsole
             self::show('System is already installed.', self::ERROR, true);
         }
 
+        // fill config via environment variables
         if (isset($_ENV['DB_NAME']) && isset($_ENV['DB_USER']) && isset($_ENV['DB_PASS'])) {
             $this->getConfig()->set(
                 'database', [
