@@ -604,7 +604,17 @@ class Installer extends AbstractService
         // drop all existing tables if it needs
         if (!empty($tables)) {
             foreach ($tables as $row) {
-                $this->getEntityManager()->nativeQuery("DROP TABLE `{$row['table_name']}`");
+                $tableName = null;
+                if (!empty($row['table_name'])) {
+                    $tableName = $row['table_name'];
+                }
+                if (!empty($row['TABLE_NAME'])) {
+                    $tableName = $row['TABLE_NAME'];
+                }
+
+                if ($tableName) {
+                    $this->getEntityManager()->nativeQuery("DROP TABLE `$tableName`");
+                }
             }
         }
 
