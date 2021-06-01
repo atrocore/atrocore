@@ -63,40 +63,40 @@ class InstallDemoProject extends AbstractConsole
         }
 
         // fill config via environment variables
-        if (isset($_ENV['DB_NAME']) && isset($_ENV['DB_USER']) && isset($_ENV['DB_PASS'])) {
+        if (isset($_SERVER['DB_NAME']) && isset($_SERVER['DB_USER']) && isset($_SERVER['DB_PASS'])) {
             $this->getConfig()->set(
                 'database', [
                     'driver'   => 'pdo_mysql',
-                    'host'     => !empty($_ENV['DB_HOST']) ? $_ENV['DB_HOST'] : 'localhost',
+                    'host'     => !empty($_SERVER['DB_HOST']) ? $_SERVER['DB_HOST'] : 'localhost',
                     'port'     => '',
                     'charset'  => 'utf8mb4',
-                    'dbname'   => $_ENV['DB_NAME'],
-                    'user'     => $_ENV['DB_USER'],
-                    'password' => $_ENV['DB_PASS']
+                    'dbname'   => $_SERVER['DB_NAME'],
+                    'user'     => $_SERVER['DB_USER'],
+                    'password' => $_SERVER['DB_PASS']
                 ]
             );
 
-            if (!empty($_ENV['PASSWORD_SALT'])) {
-                $this->getConfig()->set('passwordSalt', $_ENV['PASSWORD_SALT']);
+            if (!empty($_SERVER['PASSWORD_SALT'])) {
+                $this->getConfig()->set('passwordSalt', $_SERVER['PASSWORD_SALT']);
             }
 
-            if (isset($_ENV['CRYPT_KEY'])) {
-                $this->getConfig()->set('cryptKey', $_ENV['CRYPT_KEY'] == 'empty' ? '' : $_ENV['CRYPT_KEY']);
+            if (isset($_SERVER['CRYPT_KEY'])) {
+                $this->getConfig()->set('cryptKey', $_SERVER['CRYPT_KEY'] == 'empty' ? '' : $_SERVER['CRYPT_KEY']);
             }
 
-            if (!empty($_ENV['LANGUAGE'])) {
-                $this->getConfig()->set('language', $_ENV['LANGUAGE']);
+            if (!empty($_SERVER['LANGUAGE'])) {
+                $this->getConfig()->set('language', $_SERVER['LANGUAGE']);
             }
 
-            if (!empty($_ENV['SITE_URL'])) {
-                $this->getConfig()->set('siteUrl', $_ENV['SITE_URL']);
+            if (!empty($_SERVER['SITE_URL'])) {
+                $this->getConfig()->set('siteUrl', $_SERVER['SITE_URL']);
             }
 
-            if (!empty($_ENV['ADMIN_USER']) && !empty($_ENV['ADMIN_PASS'])) {
+            if (!empty($_SERVER['ADMIN_USER']) && !empty($_SERVER['ADMIN_PASS'])) {
                 $this->getConfig()->set(
                     'demo', [
-                        'username' => $_ENV['ADMIN_USER'],
-                        'password' => $_ENV['ADMIN_PASS'],
+                        'username' => $_SERVER['ADMIN_USER'],
+                        'password' => $_SERVER['ADMIN_PASS'],
                     ]
                 );
             }
