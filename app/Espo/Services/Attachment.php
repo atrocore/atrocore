@@ -111,12 +111,6 @@ class Attachment extends Record
      */
     public function createByChunks(\stdClass $attachment): Entity
     {
-        $attachment = $this
-            ->dispatchEvent('beforeCreateEntity', new Event(['attachment' => $attachment]))
-            ->getArgument('attachment');
-
-        $this->clearTrash();
-
         $dirPath = self::CHUNKS_DIR . $attachment->chunkId . '/';
 
         if (!file_exists($dirPath) || !is_dir($dirPath)) {
@@ -134,45 +128,14 @@ class Attachment extends Record
         $files = Util::scanDir($dirPath);
         sort($files);
 
-        $destPath = $this->getRepository()->getDestPath(FilePathBuilder::UPLOAD);
+        $this->prepareAttachmentFilePath($attachment);
 
-        $fullPath = $this->getConfig()->get('filesPath', 'upload/files/') . $destPath;
-        if (!file_exists($fullPath)) {
-            mkdir($fullPath, 0777, true);
-        }
-
-        $filePath = $fullPath . "/" . $attachment->name;
-
-        $md5 = '';
-        file_put_contents($filePath, '');
+        file_put_contents($attachment->fileName, '');
         foreach ($files as $file) {
-            $md5 = md5($md5 . $file);
-            file_put_contents($filePath, file_get_contents($dirPath . $file), FILE_APPEND);
+            file_put_contents($attachment->fileName, file_get_contents($dirPath . $file), FILE_APPEND);
         }
 
-        $attachment->md5 = $md5;
-        $attachment->storageFilePath = $destPath;
-        $attachment->storageThumbPath = $this->getRepository()->getDestPath(FilePathBuilder::UPLOAD);
-
-        $duplicateParam = $this->getConfig()->get('attachmentDuplicates', 'notAllowByContent');
-        if ($duplicateParam == 'notAllowByContent') {
-            $entity = $this->getRepository()->where(['md5' => $attachment->md5])->findOne();
-        } elseif ($duplicateParam == 'notAllowByContentAndName') {
-            $entity = $this->getRepository()->where(['md5' => $attachment->md5, 'name' => $attachment->name])->findOne();
-        }
-
-        if (empty($entity)) {
-            $entity = parent::createEntity(clone $attachment);
-
-            // create thumbnails
-            $this->createThumbnails($entity);
-        }
-
-        $entity->set('pathsData', $this->getRepository()->getAttachmentPathsData($entity));
-
-        return $this
-            ->dispatchEvent('afterCreateEntity', new Event(['attachment' => $attachment, 'entity' => $entity]))
-            ->getArgument('entity');
+        return $this->createEntity($attachment);
     }
 
     /**
@@ -209,15 +172,22 @@ class Attachment extends Record
             }
         }
 
-        if (empty($attachment->contents)) {
-            throw new BadRequest($this->getInjection('language')->translate('fileUploadingFailed', 'exceptions', 'Attachment'));
+        /**
+         * Create file from content
+         */
+        if (!empty($attachment->contents)) {
+            $this->prepareAttachmentFilePath($attachment);
+            file_put_contents($attachment->fileName, $attachment->contents);
+            unset($attachment->contents);
         }
 
-        $attachment->md5 = md5($attachment->contents);
-
-        if (empty($attachment->size)) {
-            $attachment->size = mb_strlen($attachment->contents);
+        if (empty($attachment->fileName) || !file_exists($attachment->fileName)) {
+            throw new Error('Attachment creating failed.');
         }
+
+        $attachment->md5 = md5_file($attachment->fileName);
+        $attachment->size = filesize($attachment->fileName);
+        $attachment->type = mime_content_type($attachment->fileName);
 
         $duplicateParam = $this->getConfig()->get('attachmentDuplicates', 'notAllowByContent');
 
@@ -236,6 +206,8 @@ class Attachment extends Record
 
             // create thumbnails
             $this->createThumbnails($entity);
+        } else {
+            unlink($attachment->fileName);
         }
 
         $entity->set('pathsData', $this->getRepository()->getAttachmentPathsData($entity));
@@ -275,6 +247,19 @@ class Attachment extends Record
         $url .= '/';
         $url .= $entity->get('pathsData')['download'];
         $entity->set('url', $url);
+    }
+
+    protected function prepareAttachmentFilePath(\stdClass $attachment): void
+    {
+        $attachment->storageFilePath = $this->getRepository()->getDestPath(FilePathBuilder::UPLOAD);
+        $attachment->storageThumbPath = $this->getRepository()->getDestPath(FilePathBuilder::UPLOAD);
+
+        $fullPath = $this->getConfig()->get('filesPath', 'upload/files/') . $attachment->storageFilePath;
+        if (!file_exists($fullPath)) {
+            mkdir($fullPath, 0777, true);
+        }
+
+        $attachment->fileName = $fullPath . '/' . $attachment->name;
     }
 
     protected function beforeCreateEntity(Entity $entity, $data)
