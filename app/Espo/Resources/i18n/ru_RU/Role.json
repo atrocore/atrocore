@@ -1,51 +1,51 @@
 {
-    "fields": {
-        "name": "Name",
-        "roles": "Roles",
-        "assignmentPermission": "Assignment Permission",
-        "portalPermission": "Portal Permission",
-        "dataPrivacyPermission": "Data Privacy Permission"
+  "fields": {
+    "name": "Название",
+    "roles": "Роли",
+    "assignmentPermission": "Разрешение для назначения",
+    "portalPermission": "Разрешение портала",
+    "dataPrivacyPermission": "Разрешение на обработку конфиденциальных данных"
+  },
+  "links": {
+    "users": "Пользователи",
+    "teams": "Группы"
+  },
+  "tooltips": {
+    "assignmentPermission": "Позволяет ограничить возможность назначать задания и отправлять сообщения другим пользователям.\n\nвсе - без ограничений\n\nгруппа - могут назначать задания и отправлять сообщения только членам своей группы\n\nнет - могут назначать задания и отправлять сообщения только себе",
+    "portalPermission": "Определяет доступ к информации портала, способность конвертировать контакты в пользователей портала и отправлять сообщения пользователям портала.",
+    "dataPrivacyPermission": "Позволяет просматривать и стирать личные данные."
+  },
+  "labels": {
+    "Access": "Доступ",
+    "Create Role": "Создать роль",
+    "Scope Level": "Scope Level",
+    "Field Level": "Field Level"
+  },
+  "options": {
+    "accessList": {
+      "not-set": "не установлено",
+      "enabled": "включено",
+      "disabled": "отключено"
     },
-    "links": {
-        "users": "Users",
-        "teams": "Teams"
-    },
-    "tooltips": {
-        "assignmentPermission": "Allows to restrict an ability to assign records and post messages to other users.\n\nall - no restriction\n\nteam - can assign and post only to teammates\n\nno - can assign and post only to self",
-        "portalPermission": "Defines an access to portal information, ability to post messages to portal users.",
-        "dataPrivacyPermission": "Allows to view and erase personal data."
-    },
-    "labels": {
-        "Access": "Access",
-        "Create Role": "Create Role",
-        "Scope Level": "Scope Level",
-        "Field Level": "Field Level"
-    },
-    "options": {
-        "accessList": {
-            "not-set": "not-set",
-            "enabled": "enabled",
-            "disabled": "disabled"
-        },
-        "levelList": {
-            "all": "all",
-            "team": "team",
-            "account": "account",
-            "contact": "contact",
-            "own": "own",
-            "no": "no",
-            "yes": "yes",
-            "not-set": "not-set"
-        }
-    },
-    "actions": {
-        "read": "Read",
-        "edit": "Edit",
-        "delete": "Delete",
-        "stream": "Stream",
-        "create": "Create"
-    },
-    "messages": {
-        "changesAfterClearCache": "All changes in an access control will be applied after cache is cleared."
+    "levelList": {
+      "all": "все",
+      "team": "группа",
+      "account": "контрагент",
+      "contact": "контакт",
+      "own": "владелец",
+      "no": "нет",
+      "yes": "да",
+      "not-set": "не установлено"
     }
+  },
+  "actions": {
+    "read": "Чтение",
+    "edit": "Редактирование",
+    "delete": "Удаление",
+    "stream": "Лента",
+    "create": "Создать"
+  },
+  "messages": {
+    "changesAfterClearCache": "Все изменения применятся только после очистки кэша."
+  }
 }

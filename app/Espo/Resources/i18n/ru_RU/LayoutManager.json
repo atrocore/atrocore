@@ -1,32 +1,32 @@
 {
-    "fields": {
-        "width": "Width (%)",
-        "link": "Link",
-        "notSortable": "Not Sortable",
-        "align": "Align",
-        "panelName": "Panel Name",
-        "style": "Style",
-        "sticked": "Sticked",
-        "isLarge": "Large font size",
-        "cssStyle": "CSS Styles",
-        "dynamicLogicVisible": "Conditions making panel visible"
+  "fields": {
+    "width": "Ширина (%)",
+    "link": "Ссылка",
+    "notSortable": "Не сортируемый",
+    "align": "Выровнять",
+    "panelName": "Название панели",
+    "style": "Стиль",
+    "isLarge": "Большой размер шрифта",
+    "dynamicLogicVisible": "Условия, которые делают панель видимой",
+    "sticked": "Sticked",
+    "cssStyle": "CSS Styles"
+  },
+  "options": {
+    "align": {
+      "left": "по левому краю",
+      "right": "по правому краю"
     },
-    "options": {
-        "align": {
-            "left": "Left",
-            "right": "Right"
-        },
-        "style": {
-            "default": "Default",
-            "success": "Success",
-            "danger": "Danger",
-            "info": "Info",
-            "warning": "Warning",
-            "primary": "Primary"
-        }
-    },
-    "labels": {
-        "New panel": "New panel",
-        "Layout": "Layout"
+    "style": {
+      "default": "По умолчанию",
+      "success": "Успех",
+      "danger": "Опасность",
+      "info": "Информация",
+      "warning": "Предупреждение",
+      "primary": "Основной"
     }
+  },
+  "labels": {
+    "New panel": "Новая панель",
+    "Layout": "Макет"
+  }
 }

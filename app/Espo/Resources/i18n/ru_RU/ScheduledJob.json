@@ -1,15 +1,15 @@
 {
   "fields": {
-    "name": "Name",
-    "status": "Status",
-    "job": "Job",
-    "scheduling": "Scheduling"
+    "name": "Название",
+    "status": "Статус",
+    "job": "Задание",
+    "scheduling": "Планирование"
   },
   "links": {
-    "log": "Log"
+    "log": "Лог"
   },
   "labels": {
-    "Create ScheduledJob": "Create Scheduled Job"
+    "Create ScheduledJob": "Создать задание"
   },
   "exceptions": {
     "wrongCrontabConfiguration": "Wrong crontab configuration"
@@ -21,11 +21,11 @@
       "ComposerAutoUpdate": "Auto-updating of modules"
     },
     "status": {
-      "Active": "Active",
-      "Inactive": "Inactive"
+      "Active": "Активно",
+      "Inactive": "Неактивно"
     }
   },
   "tooltips": {
-    "scheduling": "Crontab notation. Defines frequency of job runs.\n\n*/5 * * * * - every 5 minutes\n\n0 */2 * * * - every 2 hours\n\n30 1 * * * - at 01:30 once a day\n\n0 0 1 * * - on the first day of the month"
+    "scheduling": "Определяет периодичность выполнения задания.\n\n`*/5 * * * *` - каждые 5 минут\n\n`0 */2 * * *` - каждые 2 часа\n\n`30 1 * * *` - каждый день один раз в 01:30\n\n`0 0 1 * *` - каждый первый день месяца"
   }
 }

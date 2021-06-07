@@ -1,49 +1,49 @@
 {
-    "fields": {
-        "assignmentNotifications": "Notifications upon assignment",
-        "dateFormat": "Date Format",
-        "timeFormat": "Time Format",
-        "timeZone": "Time Zone",
-        "weekStart": "First Day of Week",
-        "thousandSeparator": "Thousand Separator",
-        "decimalMark": "Decimal Mark",
-        "defaultCurrency": "Default Currency",
-        "currencyList": "Currency List",
-        "language": "Language",
-        "emailAddress": "Email",
-        "receiveAssignmentEmailNotifications": "Notifications upon assignment",
-        "receiveMentionEmailNotifications": "Notifications about mentions in posts",
-        "receiveStreamEmailNotifications": "Notifications about updates in Stream",
-        "autoFollowEntityTypeList": "Global Auto-Follow",
-        "dashboardTabList": "Tab List",
-        "theme": "Theme",
-        "useCustomTabList": "Custom Tab List",
-        "tabList": "Tab List",
-        "dashboardLayout": "Dashboard Layout",
-        "followEntityOnStreamPost": "Auto-follow record after posting in Stream",
-        "followCreatedEntities": "Auto-follow created records",
-        "followCreatedEntityTypeList": "Auto-follow created records of specific entity types",
-        "scopeColorsDisabled": "Disable scope colors",
-        "tabColorsDisabled": "Disable tab icons colors"
-    },
-    "links": {
-    },
-    "options": {
-        "weekStart": {
-            "0": "Sunday",
-            "1": "Monday"
-        }
-    },
-    "labels": {
-        "Notifications": "Notifications",
-        "User Interface": "User Interface",
-        "General": "General",
-        "Locale": "Locale",
-        "Reset Dashboard to Default": "Reset Dashboard to Default"
-    },
-    "tooltips": {
-        "autoFollowEntityTypeList": "Automatically follow ALL new records (created by any user) of the selected entity types. To be able to see information in the stream and receive notifications about all records in the system.",
-        "followCreatedEntities": "When creating new records, they will automatically be followed, even if assigned to a different user.",
-        "followCreatedEntityTypeList": "When creating new records of selected entity types, they will automatically be followed, even if assigned to a different user."
+  "fields": {
+    "dateFormat": "Формат даты",
+    "timeFormat": "Формат времени",
+    "timeZone": "Часовой пояс",
+    "weekStart": "Первый день недели",
+    "thousandSeparator": "Тысячный разделитель",
+    "decimalMark": "Десятичный разделитель",
+    "defaultCurrency": "Валюта по умолчанию",
+    "currencyList": "Список валют",
+    "language": "Язык",
+    "emailAddress": "Адрес эл. почты",
+    "dashboardTabList": "Список вкладок",
+    "tabList": "Список вкладок",
+    "theme": "Тема",
+    "useCustomTabList": "Настраиваемый список вкладок",
+    "receiveAssignmentEmailNotifications": "Получать оповещения по эл. почте при назначении",
+    "receiveMentionEmailNotifications": "Уведомления по эл. почте об упоминаниях в сообщениях",
+    "receiveStreamEmailNotifications": "Уведомления по электронной почте о сообщениях и обновлениях статуса",
+    "dashboardLayout": "Планировка панели виджетов",
+    "autoFollowEntityTypeList": "Автоподписка",
+    "followEntityOnStreamPost": "Автоматически подписаться поле публикации в ленте",
+    "followCreatedEntities": "Автоматически подписаться на созданные записи",
+    "followCreatedEntityTypeList": "Автоматически подписаться на созданные записи конкретных типов объектов",
+    "scopeColorsDisabled": "Отключить цвета границ",
+    "tabColorsDisabled": "Отключить цвета вкладок",
+    "assignmentNotifications": "Notifications upon assignment"
+  },
+  "links": {
+  },
+  "options": {
+    "weekStart": {
+      "0": "Воскресенье",
+      "1": "Понедельник"
     }
+  },
+  "labels": {
+    "Notifications": "Оповещения",
+    "User Interface": "Интерфейс пльзователя",
+    "Locale": "Локаль",
+    "Reset Dashboard to Default": "Сбросить настройки панели виджетов по умолчанию",
+    "General": "General"
+  },
+  "tooltips": {
+    "autoFollowEntityTypeList": "Пользователь будет автоматически подписан на все новые записи о выбранных типах объектов, будет видеть эту информацию в ленте и получать оповещения.",
+    "followCreatedEntities": "При создании новых записей они будут автоматически отслеживаться, даже если они назначены другому пользователю.",
+    "followCreatedEntityTypeList": "При создании новых записей выбранных типов объектов они будут отслеживаться автоматически, даже если они назначены другому пользователю."
+  }
 }
