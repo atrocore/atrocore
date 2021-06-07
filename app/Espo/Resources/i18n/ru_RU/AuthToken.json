@@ -15,9 +15,9 @@
     "inactive": "Неактивный"
   },
   "labels": {
-    "Set Inactive": "Селать неактивным"
+    "Set Inactive": "Сделать неактивным"
   },
   "massActions": {
-    "setInactive": "Селать неактивным"
+    "setInactive": "Сделать неактивным"
   }
 }
