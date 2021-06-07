@@ -1,34 +1,34 @@
 {
   "fields": {
-    "name": "Name",
-    "emailAddress": "Email",
     "title": "Title",
-    "account": "Account",
-    "accounts": "Accounts",
-    "phoneNumber": "Phone",
-    "accountType": "Account Type",
-    "doNotCall": "Do Not Call",
     "addressStreet": "Street",
     "addressCity": "City",
     "addressState": "State",
     "addressCountry": "Country",
     "addressPostalCode": "Postal Code",
-    "accountRole": "Title",
-    "description": "Description",
-    "portalUser": "Portal User",
-    "accountIsInactive": "Account Inactive"
+    "name": "Имя",
+    "emailAddress": "Адрес эл. почты",
+    "accountRole": "Должность",
+    "account": "Контрагент",
+    "accounts": "Контрагенты",
+    "phoneNumber": "Телефон",
+    "accountType": "Тип контрагента",
+    "doNotCall": "Не звонить",
+    "description": "Описание",
+    "portalUser": "Пользователь портала",
+    "accountIsInactive": "Неактивный контрагент"
   },
   "links": {
-    "account": "Account (Primary)",
-    "accounts": "Accounts",
-    "portalUser": "Portal User"
+    "account": "Контрагент (основной)",
+    "accounts": "Контрагенты",
+    "portalUser": "Пользователь портала"
   },
   "labels": {
-    "Create Contact": "Create Contact"
+    "Create Contact": "Создать контакт"
   },
   "presetFilters": {
-    "portalUsers": "Portal Users",
-    "notPortalUsers": "Not Portal Users",
-    "accountActive": "Active"
+    "portalUsers": "Пользователи порталов",
+    "notPortalUsers": "Не пользователи порталов",
+    "accountActive": "Активный"
   }
 }
