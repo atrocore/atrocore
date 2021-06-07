@@ -1,7 +1,7 @@
 {
   "fields": {
     "billingAddressStreet": "Улица",
-    "billingAddressCity": "City",
+    "billingAddressCity": "Город",
     "billingAddressState": "State",
     "billingAddressCountry": "Country",
     "billingAddressPostalCode": "Postal Code",
