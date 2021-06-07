@@ -4,15 +4,15 @@
     "md5": "md5 Hash",
     "storageFilePath": "Storage File Path",
     "contents": "Contents",
-    "role": "Role",
-    "related": "Related",
-    "file": "File",
-    "type": "Type",
-    "field": "Field",
-    "sourceId": "Source ID",
-    "storage": "Storage",
     "url": "URL",
-    "size": "Size (bytes)"
+    "role": "Роль",
+    "related": "Связанный",
+    "file": "Файл",
+    "type": "Тип",
+    "field": "Поле",
+    "sourceId": "ID Источника",
+    "storage": "Хранилище",
+    "size": "Размер (bytes)"
   },
   "labels": {
     "Create Attachment": "Create Attachment",
@@ -22,10 +22,10 @@
     "related": "Related"
   },
   "insertFromSourceLabels": {
-    "Document": "Insert Document"
+    "Document": "Вставить документ"
   },
   "presetFilters": {
-    "orphan": "Orphan"
+    "orphan": "Сирота"
   },
   "exceptions": {
     "fileUploadingFailed": "File uploading failed.",
