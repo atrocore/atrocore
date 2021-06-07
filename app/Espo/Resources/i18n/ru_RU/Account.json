@@ -1,6 +1,6 @@
 {
   "fields": {
-    "billingAddressStreet": "Street",
+    "billingAddressStreet": "Улица",
     "billingAddressCity": "City",
     "billingAddressState": "State",
     "billingAddressCountry": "Country",
