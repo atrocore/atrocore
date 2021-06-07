@@ -1,9 +1,9 @@
 {
   "fields": {
-    "global": "Global",
-    "md5": "md5 Hash",
-    "storageFilePath": "Storage File Path",
-    "contents": "Contents",
+    "global": "Глобальные",
+    "md5": "md5 хеш",
+    "storageFilePath": "Путь к файлу хранилища",
+    "contents": "Содержание",
     "url": "URL",
     "role": "Роль",
     "related": "Связанный",
@@ -15,20 +15,20 @@
     "size": "Размер (bytes)"
   },
   "labels": {
-    "Create Attachment": "Create Attachment",
-    "createThumbnailsNotification": "Create thumbnails for %s"
+    "Create Attachment": "Создать вложение",
+    "createThumbnailsNotification": "Создать миниатюру для %"
   },
   "links": {
-    "related": "Related"
+    "related": "Связанный"
   },
   "insertFromSourceLabels": {
     "Document": "Вставить документ"
   },
   "presetFilters": {
-    "orphan": "Сирота"
+    "orphan": "Изолированая строка"
   },
   "exceptions": {
-    "fileUploadingFailed": "File uploading failed.",
-    "chunkUploadFailed": "Error occurred, please re-upload."
+    "fileUploadingFailed": "Загрузка файла не выполнена.",
+    "chunkUploadFailed": "Возникла ошибка, пожалуйста, повторите загрузку."
   }
 }
