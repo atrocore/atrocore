@@ -1,0 +1,51 @@
+{
+    "fields": {
+        "name": "Name",
+        "roles": "Roles",
+        "assignmentPermission": "Assignment Permission",
+        "portalPermission": "Portal Permission",
+        "dataPrivacyPermission": "Data Privacy Permission"
+    },
+    "links": {
+        "users": "Users",
+        "teams": "Teams"
+    },
+    "tooltips": {
+        "assignmentPermission": "Allows to restrict an ability to assign records and post messages to other users.\n\nall - no restriction\n\nteam - can assign and post only to teammates\n\nno - can assign and post only to self",
+        "portalPermission": "Defines an access to portal information, ability to post messages to portal users.",
+        "dataPrivacyPermission": "Allows to view and erase personal data."
+    },
+    "labels": {
+        "Access": "Access",
+        "Create Role": "Create Role",
+        "Scope Level": "Scope Level",
+        "Field Level": "Field Level"
+    },
+    "options": {
+        "accessList": {
+            "not-set": "not-set",
+            "enabled": "enabled",
+            "disabled": "disabled"
+        },
+        "levelList": {
+            "all": "all",
+            "team": "team",
+            "account": "account",
+            "contact": "contact",
+            "own": "own",
+            "no": "no",
+            "yes": "yes",
+            "not-set": "not-set"
+        }
+    },
+    "actions": {
+        "read": "Read",
+        "edit": "Edit",
+        "delete": "Delete",
+        "stream": "Stream",
+        "create": "Create"
+    },
+    "messages": {
+        "changesAfterClearCache": "All changes in an access control will be applied after cache is cleared."
+    }
+}

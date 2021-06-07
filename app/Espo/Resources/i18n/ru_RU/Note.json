@@ -1,0 +1,41 @@
+{
+    "fields": {
+        "post": "Post",
+        "attachments": "Attachments",
+        "targetType": "Target",
+        "teams": "Teams",
+        "users": "Users",
+        "portals": "Portals",
+        "type": "Type",
+        "isGlobal": "Is Global",
+        "isInternal": "Is Internal (for internal users)",
+        "related": "Related",
+        "createdByGender": "Created By Gender",
+        "data": "Data",
+        "number": "Number"
+    },
+    "filters": {
+        "all": "All",
+        "posts": "Posts",
+        "updates": "Updates"
+    },
+    "options": {
+        "targetType": {
+            "self": "to myself",
+            "users": "to particular user(s)",
+            "teams": "to particular team(s)",
+            "all": "to all internal users",
+            "portals": "to portal users"
+        },
+        "type": {
+            "Post": "Post"
+        }
+    },
+    "messages": {
+        "writeMessage": "Write your message here"
+    },
+    "links": {
+        "superParent": "Super Parent",
+        "related": "Related"
+    }
+}
