@@ -1,19 +1,19 @@
 {
-    "fields": {
-        "name": "Name",
-        "roles": "Roles",
-        "positionList": "Position List"
-    },
-    "links": {
-        "users": "Users",
-        "notes": "Notes",
-        "roles": "Roles"
-    },
-    "tooltips": {
-        "roles": "Access Roles. Users of this team obtain access control level from selected roles.",
-        "positionList": "Available positions in this team. E.g. Salesperson, Manager."
-    },
-    "labels": {
-        "Create Team": "Create Team"
-    }
+  "fields": {
+    "name": "Название",
+    "roles": "Роли",
+    "positionList": "Список должностей"
+  },
+  "links": {
+    "users": "Пользователи",
+    "notes": "Заметки",
+    "roles": "Роли"
+  },
+  "tooltips": {
+    "roles": "Роли доступа. Пользователи этой группы получают права доступа исходя из выбранных ролей.",
+    "positionList": "Имеющиеся в этой группе должности. Например продавец, менеджер."
+  },
+  "labels": {
+    "Create Team": "Создать группу"
+  }
 }
