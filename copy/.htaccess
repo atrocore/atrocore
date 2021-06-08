@@ -24,3 +24,7 @@ RewriteRule ^(.*)$ index.php?treoq=$1 [L,QSA]
 <IfModule pagespeed_module>
     ModPagespeed off
 </IfModule>
+
+#<IfModule mod_headers.c>
+#    Header set Access-Control-Allow-Origin "*"
+#</IfModule>
