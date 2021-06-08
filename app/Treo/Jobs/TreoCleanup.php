@@ -37,6 +37,7 @@ namespace Treo\Jobs;
 
 use Espo\Core\Jobs\Base;
 use Espo\Core\Container;
+use Espo\Core\Utils\Util;
 use Treo\Core\EventManager\Event;
 
 /**
@@ -80,11 +81,23 @@ class TreoCleanup extends Base
         $this->cleanupDeleted();
         $this->cleanupAttachments();
         $this->cleanupDbSchema();
+        $this->cleanupEntityTeam();
 
         // dispatch an event
         $this->getContainer()->get('eventManager')->dispatch('TreoCleanupJob', 'run', new Event());
 
         return true;
+    }
+
+    protected function cleanupEntityTeam()
+    {
+        foreach ($this->getMetadata()->get('entityDefs', []) as $scope => $data) {
+            $table = Util::toUnderScore($scope);
+            try {
+                $this->getEntityManager()->nativeQuery("DELETE FROM entity_team WHERE entity_type='$scope' AND entity_id NOT IN (SELECT id FROM $table WHERE deleted=0)");
+            } catch (\Throwable $e) {
+            }
+        }
     }
 
     /**
