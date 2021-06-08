@@ -1,44 +1,44 @@
 {
   "fields": {
-    "serviceName": "Service",
-    "stream": "Queue",
-    "isWriting": "Is Update Job?",
-    "data": "Data",
-    "sortOrder": "Sort order",
-    "status": "Status"
+    "serviceName": "Сервис",
+    "stream": "Очередь",
+    "isWriting": "Это задание на обновление?",
+    "data": "Дата",
+    "sortOrder": "Порядок сортировки",
+    "status": "Статус"
   },
   "links": {
   },
   "labels": {
-    "Create QueueItem": "Create Queue Item",
-    "showMessage": "Show Message",
-    "message": "Message",
-    "cancel": "Cancel",
-    "close": "Close",
-    "download": "Download",
-    "queueManager": "Queue Manager",
-    "showDone": "Show done"
+    "Create QueueItem": "Создать элемент очереди",
+    "showMessage": "Показать сообщение",
+    "message": "Сообщение",
+    "cancel": "Отменить",
+    "close": "Закрыть",
+    "download": "Скачать",
+    "queueManager": "Менеджер задач",
+    "showDone": "Показать готово"
   },
   "options": {
     "status": {
-      "Pending": "Pending",
-      "Success": "Success",
-      "Running": "Running",
-      "Failed": "Failed",
-      "Canceled": "Canceled",
-      "Closed": "Closed"
+      "Pending": "В ожидании",
+      "Success": "Успешно",
+      "Running": "Выполняется",
+      "Failed": "Не выполнено",
+      "Canceled": "Отменено",
+      "Closed": "Закрыто"
     }
   },
   "exceptions": {
-    "queueItemCannotBeChanged": "Queue item cannot be changed.",
-    "jobIsRunning": "A running queue item cannot be removed."
+    "queueItemCannotBeChanged": "Элемент очереди не может быть изменен.",
+    "jobIsRunning": "Невозможно удалить работающий элемент очереди."
   },
   "notificationMessages": {
-    "success": "%s was successfully completed",
-    "error": "%s failed",
-    "queueItemDone": "Queue item \"%s\" was executed with status \"%s\"."
+    "success": "%s был успешно выполнен",
+    "error": "%s не выполнено",
+    "queueItemDone": "Элемент очереди \"%s\" был выполнен со статусом \"%s\"."
   },
   "messages": {
-    "byQueueManager": "Processed by Queue Manager"
+    "byQueueManager": "Обрабатывается администратором очередей"
   }
 }
