@@ -12,13 +12,13 @@
     "Create ScheduledJob": "Создать задание"
   },
   "exceptions": {
-    "wrongCrontabConfiguration": "Wrong crontab configuration"
+    "wrongCrontabConfiguration": "Неправильная конфигурация crontab"
   },
   "options": {
     "job": {
-      "TreoCleanup": "Unused data cleanup. Deleting old data and unused db tables, db columns, etc.",
-      "RestApiDocs": "Generate REST API docs",
-      "ComposerAutoUpdate": "Auto-updating of modules"
+      "TreoCleanup": "Очистка неиспользуемых данных. Удаление старых данных и неиспользуемых таблиц БД, столбцов БД и т.д.",
+      "RestApiDocs": "Создать документы REST API",
+      "ComposerAutoUpdate": "Автообновление модулей"
     },
     "status": {
       "Active": "Активно",
