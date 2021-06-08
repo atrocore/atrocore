@@ -18,8 +18,8 @@
   "labels": {
     "Access": "Доступ",
     "Create Role": "Создать роль",
-    "Scope Level": "Scope Level",
-    "Field Level": "Field Level"
+    "Scope Level": "Уровень области действия",
+    "Field Level": "Уровень поля"
   },
   "options": {
     "accessList": {
