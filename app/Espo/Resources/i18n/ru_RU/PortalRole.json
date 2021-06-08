@@ -5,7 +5,7 @@
   "labels": {
     "Access": "Доступ",
     "Create PortalRole": "Создать роль портала",
-    "Scope Level": "Scope Level",
-    "Field Level": "Field Level"
+    "Scope Level": "Уровень области действия",
+    "Field Level": "Уровень поля"
   }
 }
