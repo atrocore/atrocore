@@ -1,11 +1,11 @@
 {
   "fields": {
-    "title": "Title",
-    "addressStreet": "Street",
-    "addressCity": "City",
-    "addressState": "State",
-    "addressCountry": "Country",
-    "addressPostalCode": "Postal Code",
+    "title": "Название",
+    "addressStreet": "Улица",
+    "addressCity": "Город",
+    "addressState": "Штат",
+    "addressCountry": "Страна",
+    "addressPostalCode": "Почтовый индекс",
     "name": "Имя",
     "emailAddress": "Адрес эл. почты",
     "accountRole": "Должность",
