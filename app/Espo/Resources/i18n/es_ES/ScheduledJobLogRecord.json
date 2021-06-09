@@ -1,7 +1,7 @@
 {
-    "fields": {
-        "status": "Status",
-        "executionTime": "Execution Time",
-        "target": "Target"
-    }
+  "fields": {
+    "status": "Estado",
+    "executionTime": "Fecha de ejecución",
+    "target": "Objetivo"
+  }
 }

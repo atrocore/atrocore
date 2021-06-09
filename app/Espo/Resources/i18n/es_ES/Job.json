@@ -1,22 +1,22 @@
 {
-    "fields": {
-        "status": "Status",
-        "executeTime": "Execute At",
-        "attempts": "Attempts Left",
-        "failedAttempts": "Failed Attempts",
-        "serviceName": "Service",
-        "method": "Method (deprecated)",
-        "methodName": "Method",
-        "scheduledJob": "Scheduled Job",
-        "scheduledJobJob": "Scheduled Job Name",
-        "data": "Data"
-    },
-    "options": {
-        "status": {
-            "Pending": "Pending",
-            "Success": "Success",
-            "Running": "Running",
-            "Failed": "Failed"
-        }
+  "fields": {
+    "status": "Estado",
+    "executeTime": "Ejecutar a",
+    "attempts": "Intentos restantes",
+    "failedAttempts": "Intentos Fallidos",
+    "serviceName": "Servicio",
+    "methodName": "Método",
+    "scheduledJob": "Tarea Programada",
+    "data": "Datos",
+    "method": "Método",
+    "scheduledJobJob": "Scheduled Job Name"
+  },
+  "options": {
+    "status": {
+      "Pending": "Pendiente",
+      "Success": "Exitoso",
+      "Running": "Corriendo",
+      "Failed": "Falló"
     }
+  }
 }

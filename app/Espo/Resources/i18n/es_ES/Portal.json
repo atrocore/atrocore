@@ -1,37 +1,37 @@
 {
-    "fields": {
-        "name": "Name",
-        "logo": "Logo",
-        "url": "URL",
-        "portalRoles": "Roles",
-        "isActive": "Is Active",
-        "isDefault": "Is Default",
-        "tabList": "Tab List",
-        "quickCreateList": "Quick Create List",
-        "companyLogo": "Logo",
-        "theme": "Theme",
-        "language": "Language",
-        "dashboardLayout": "Dashboard Layout",
-        "dateFormat": "Date Format",
-        "timeFormat": "Time Format",
-        "timeZone": "Time Zone",
-        "weekStart": "First Day of Week",
-        "defaultCurrency": "Default Currency",
-        "customUrl": "Custom URL",
-        "customId": "Custom ID"
-    },
-    "links": {
-        "users": "Users",
-        "portalRoles": "Roles",
-        "notes": "Notes"
-    },
-    "tooltips": {
-        "portalRoles": "Specified Portal Roles will be applied to all users of this portal."
-    },
-    "labels": {
-        "Create Portal": "Create Portal",
-        "User Interface": "User Interface",
-        "General": "General",
-        "Settings": "Settings"
-    }
+  "fields": {
+    "name": "Nombre",
+    "logo": "Logotipo",
+    "companyLogo": "Logotipo",
+    "isActive": "Está activo",
+    "isDefault": "Portal por defecto",
+    "tabList": "Lista de pestañas",
+    "quickCreateList": "Lista de creación rápida",
+    "theme": "Tema",
+    "language": "Idioma",
+    "dashboardLayout": "Diseño del escritorio",
+    "dateFormat": "Formato de fecha",
+    "timeFormat": "Formato de hora",
+    "timeZone": "Zona horaria",
+    "weekStart": "Primer día de la semana",
+    "defaultCurrency": "Moneda por defecto",
+    "customUrl": "URL personalizada",
+    "customId": "ID personalizado",
+    "url": "URL",
+    "portalRoles": "Roles"
+  },
+  "links": {
+    "users": "Usuarios",
+    "notes": "Notas",
+    "portalRoles": "Roles"
+  },
+  "tooltips": {
+    "portalRoles": "Los roles del portal indicados se aplicarán a todos los usuarios de este portal."
+  },
+  "labels": {
+    "Create Portal": "Crear portal",
+    "User Interface": "Interfaz del Usuario",
+    "Settings": "Ajustes",
+    "General": "General"
+  }
 }

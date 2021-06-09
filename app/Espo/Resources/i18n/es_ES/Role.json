@@ -1,51 +1,51 @@
 {
-    "fields": {
-        "name": "Name",
-        "roles": "Roles",
-        "assignmentPermission": "Assignment Permission",
-        "portalPermission": "Portal Permission",
-        "dataPrivacyPermission": "Data Privacy Permission"
+  "fields": {
+    "name": "Nombre",
+    "assignmentPermission": "Asignación de permisos",
+    "portalPermission": "Permisos del portal",
+    "roles": "Roles",
+    "dataPrivacyPermission": "Data Privacy Permission"
+  },
+  "links": {
+    "users": "Usuarios",
+    "teams": "Equipos"
+  },
+  "tooltips": {
+    "assignmentPermission": "Permite restringir la capacidad de los usuarios para que asignen registros y publicaciones a otros usuarios.\n\ntodo - sin restricción\n\nequipo - puede asignar a usuarios de su propio equipo\n\nno - solo puede asignarse a sí mismo",
+    "portalPermission": "Define un acceso a la información del portal, la capacidad de publicar mensajes a los usuarios del portal.\n",
+    "dataPrivacyPermission": "Allows to view and erase personal data."
+  },
+  "labels": {
+    "Access": "Acceso",
+    "Create Role": "Crear rol",
+    "Scope Level": "Nivel de acceso a entidades",
+    "Field Level": "Nivel de acceso a campos"
+  },
+  "options": {
+    "accessList": {
+      "not-set": "sin establecer",
+      "enabled": "activado",
+      "disabled": "desactivado"
     },
-    "links": {
-        "users": "Users",
-        "teams": "Teams"
-    },
-    "tooltips": {
-        "assignmentPermission": "Allows to restrict an ability to assign records and post messages to other users.\n\nall - no restriction\n\nteam - can assign and post only to teammates\n\nno - can assign and post only to self",
-        "portalPermission": "Defines an access to portal information, ability to post messages to portal users.",
-        "dataPrivacyPermission": "Allows to view and erase personal data."
-    },
-    "labels": {
-        "Access": "Access",
-        "Create Role": "Create Role",
-        "Scope Level": "Scope Level",
-        "Field Level": "Field Level"
-    },
-    "options": {
-        "accessList": {
-            "not-set": "not-set",
-            "enabled": "enabled",
-            "disabled": "disabled"
-        },
-        "levelList": {
-            "all": "all",
-            "team": "team",
-            "account": "account",
-            "contact": "contact",
-            "own": "own",
-            "no": "no",
-            "yes": "yes",
-            "not-set": "not-set"
-        }
-    },
-    "actions": {
-        "read": "Read",
-        "edit": "Edit",
-        "delete": "Delete",
-        "stream": "Stream",
-        "create": "Create"
-    },
-    "messages": {
-        "changesAfterClearCache": "All changes in an access control will be applied after cache is cleared."
+    "levelList": {
+      "all": "Todos",
+      "team": "Equipo",
+      "account": "Cuenta",
+      "contact": "Contacto",
+      "own": "Propio",
+      "no": "No",
+      "yes": "Si",
+      "not-set": "Sin establecer"
     }
+  },
+  "actions": {
+    "read": "Leer",
+    "edit": "Editar",
+    "delete": "Borrar",
+    "stream": "Historia",
+    "create": "Crear"
+  },
+  "messages": {
+    "changesAfterClearCache": "Todos los cambios en el control de acceso serán aplicacados después de limpiar la caché"
+  }
 }

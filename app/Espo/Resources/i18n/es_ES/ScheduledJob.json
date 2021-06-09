@@ -1,15 +1,15 @@
 {
   "fields": {
-    "name": "Name",
-    "status": "Status",
-    "job": "Job",
-    "scheduling": "Scheduling"
+    "name": "Nombre",
+    "status": "Estado",
+    "job": "Trabajo",
+    "scheduling": "Programación (notación CRONTab)"
   },
   "links": {
-    "log": "Log"
+    "log": "Registro"
   },
   "labels": {
-    "Create ScheduledJob": "Create Scheduled Job"
+    "Create ScheduledJob": "Crear tarea programada"
   },
   "exceptions": {
     "wrongCrontabConfiguration": "Wrong crontab configuration"
@@ -21,11 +21,11 @@
       "ComposerAutoUpdate": "Auto-updating of modules"
     },
     "status": {
-      "Active": "Active",
-      "Inactive": "Inactive"
+      "Active": "Activo",
+      "Inactive": "Inactivo"
     }
   },
   "tooltips": {
-    "scheduling": "Crontab notation. Defines frequency of job runs.\n\n*/5 * * * * - every 5 minutes\n\n0 */2 * * * - every 2 hours\n\n30 1 * * * - at 01:30 once a day\n\n0 0 1 * * - on the first day of the month"
+    "scheduling": "Define cuándo y cada cuánto el trabajo será ejecutado\n\n`*/5 * * * *` - cada 5 minutos\n\n`0 */2 * * *` - cada 2 horas\n\n`30 1 * * *` - a las 01:30 cada día\n\n`0 0 1 * *` - el primer día del mes"
   }
 }
