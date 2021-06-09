@@ -1,33 +1,33 @@
 {
-    "fields": {
-        "title": "Title",
-        "dateFrom": "Date From",
-        "dateTo": "Date To",
-        "autorefreshInterval": "Auto-refresh Interval",
-        "displayRecords": "Display Records",
-        "isDoubleHeight": "Height 2x",
-        "mode": "Mode",
-        "enabledScopeList": "What to display",
-        "users": "Users",
-        "entityType": "Entity Type",
-        "primaryFilter": "Primary Filter",
-        "boolFilterList": "Additional Filters",
-        "sortBy": "Order (field)",
-        "sortDirection": "Order (direction)",
-        "expandedLayout": "Layout",
-        "dateFilter": "Date Filter"
-    },
-    "options": {
-    	"mode": {
-    		"agendaWeek": "Week (agenda)",
-    		"basicWeek": "Week",
-    		"month": "Month",
-            "basicDay": "Day",
-            "agendaDay": "Day (agenda)",
-            "timeline": "Timeline"
-    	}
-    },
-    "messages": {
-        "selectEntityType": "Select Entity Type in dashlet options."
+  "fields": {
+    "title": "Título",
+    "dateFrom": "Fecha desde",
+    "dateTo": "Fecha hasta",
+    "autorefreshInterval": "Actualizar cada:",
+    "displayRecords": "Mostrar Registros",
+    "isDoubleHeight": "Altitud 2x",
+    "mode": "Modo",
+    "enabledScopeList": "Qué mostrar",
+    "users": "Usuarios",
+    "entityType": "Tipo de entidad",
+    "primaryFilter": "Filtro principal",
+    "boolFilterList": "Filtros adicionales",
+    "sortBy": "Ordenar (campo)",
+    "sortDirection": "Ordenar (dirección)",
+    "expandedLayout": "Diseño",
+    "dateFilter": "Date Filter"
+  },
+  "options": {
+    "mode": {
+      "agendaWeek": "Semana (orden del día)",
+      "basicWeek": "Semana",
+      "month": "Mes",
+      "basicDay": "Día",
+      "agendaDay": "Día (agenda)",
+      "timeline": "Línea de tiempo"
     }
+  },
+  "messages": {
+    "selectEntityType": "Seleccione el tipo de entidad en las opciones de la caja."
+  }
 }

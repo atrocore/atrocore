@@ -1,28 +1,28 @@
 {
-    "labels": {
-        "Field": "Field"
-    },
-    "options": {
-        "operators": {
-            "equals": "Equals",
-            "notEquals": "Not Equals",
-            "greaterThan": "Greater Than",
-            "lessThan": "Less Than",
-            "greaterThanOrEquals": "Greater Than Or Equals",
-            "lessThanOrEquals": "Less Than Or Equals",
-            "in": "In",
-            "notIn": "Not In",
-            "inPast": "In Past",
-            "inFuture": "Is Future",
-            "isToday": "Is Today",
-            "isTrue": "Is True",
-            "isFalse": "Is False",
-            "isEmpty": "Is Empty",
-            "isNotEmpty": "Is Not Empty",
-            "contains": "Contains",
-            "notContains": "Not Contains",
-            "has": "Contains",
-            "notHas": "Not Contains"
-        }
+  "labels": {
+    "Field": "Campo"
+  },
+  "options": {
+    "operators": {
+      "equals": "Es igual",
+      "notEquals": "No es igual",
+      "greaterThan": "Es mayor que",
+      "lessThan": "Es menor que",
+      "greaterThanOrEquals": "Es mayor o igual que",
+      "lessThanOrEquals": "Es menor o igual que",
+      "in": "Está en",
+      "notIn": "No está en",
+      "inPast": "Es antes de hoy",
+      "inFuture": "Es después de hoy",
+      "isToday": "Es hoy",
+      "isTrue": "Es verdadero",
+      "isFalse": "Es falso",
+      "isEmpty": "Está vacío",
+      "isNotEmpty": "No está vacío",
+      "contains": "Contiene",
+      "has": "Contiene",
+      "notContains": "No Contiene",
+      "notHas": "No Contiene"
     }
+  }
 }

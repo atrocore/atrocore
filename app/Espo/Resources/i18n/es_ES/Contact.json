@@ -1,34 +1,34 @@
 {
   "fields": {
-    "name": "Name",
-    "emailAddress": "Email",
+    "name": "Nombre",
+    "emailAddress": "Correo electrónico",
+    "accountRole": "Título",
+    "account": "Cuenta",
+    "accounts": "Cuentas",
+    "phoneNumber": "Teléfono",
+    "accountType": "Tipo de Cuenta",
+    "doNotCall": "No llamar",
+    "description": "Descripción",
+    "portalUser": "Usuario del portal",
+    "accountIsInactive": "Cuenta inactiva",
     "title": "Title",
-    "account": "Account",
-    "accounts": "Accounts",
-    "phoneNumber": "Phone",
-    "accountType": "Account Type",
-    "doNotCall": "Do Not Call",
     "addressStreet": "Street",
     "addressCity": "City",
     "addressState": "State",
     "addressCountry": "Country",
-    "addressPostalCode": "Postal Code",
-    "accountRole": "Title",
-    "description": "Description",
-    "portalUser": "Portal User",
-    "accountIsInactive": "Account Inactive"
+    "addressPostalCode": "Postal Code"
   },
   "links": {
-    "account": "Account (Primary)",
-    "accounts": "Accounts",
-    "portalUser": "Portal User"
+    "account": "Cuentas (principal)",
+    "accounts": "Cuentas",
+    "portalUser": "Usuario del portal"
   },
   "labels": {
-    "Create Contact": "Create Contact"
+    "Create Contact": "Crear contacto"
   },
   "presetFilters": {
-    "portalUsers": "Portal Users",
-    "notPortalUsers": "Not Portal Users",
-    "accountActive": "Active"
+    "portalUsers": "Usuarios del portal",
+    "notPortalUsers": "No son usuarios del portal",
+    "accountActive": "Activo"
   }
 }

@@ -1,23 +1,23 @@
 {
-    "fields": {
-        "user": "User",
-        "ipAddress": "IP Address",
-        "lastAccess": "Last Access Date",
-        "createdAt": "Login Date",
-        "isActive": "Is Active",
-        "portal": "Portal"
-    },
-    "links": {
-        "actionHistoryRecords": "Action History"
-    },
-    "presetFilters": {
-        "active": "Active",
-        "inactive": "Inactive"
-    },
-    "labels": {
-        "Set Inactive": "Set Inactive"
-    },
-    "massActions": {
-        "setInactive": "Set Inactive"
-    }
+  "fields": {
+    "user": "Usuario",
+    "ipAddress": "Dirección IP",
+    "lastAccess": "Fecha del último acceso",
+    "createdAt": "Fecha de acceso",
+    "isActive": "Está activo",
+    "portal": "Portal"
+  },
+  "links": {
+    "actionHistoryRecords": "Histórico"
+  },
+  "presetFilters": {
+    "active": "Activo",
+    "inactive": "Inactivo"
+  },
+  "labels": {
+    "Set Inactive": "Establecer Inactivo"
+  },
+  "massActions": {
+    "setInactive": "Establecer Inactivo"
+  }
 }
