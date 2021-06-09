@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "name": "Name"
+  },
+  "links": {
+  },
+  "labels": {
+    "Create Label": "Create Label"
+  }
+}

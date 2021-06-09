@@ -1,0 +1,23 @@
+[
+  {
+    "label": "",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "module"
+        }
+      ],
+      [
+        {
+          "name": "locale"
+        },
+        {
+          "name": "value"
+        }
+      ]
+    ]
+  }
+]

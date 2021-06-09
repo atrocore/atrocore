@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "Label": "Label",
     "Account": "Account",
     "Country": "Country",
     "DocumentFolder": "Document Folder",
@@ -51,6 +52,7 @@
     "ArrayValue": "Array Value"
   },
   "scopeNamesPlural": {
+    "Label": "Labels",
     "QueueItem": "Queue Items",
     "Account": "Accounts",
     "DocumentFolder": "Document Folders",

@@ -1,0 +1,15 @@
+[
+  {
+    "name": "name",
+    "link": true
+  },
+  {
+    "name": "module"
+  },
+  {
+    "name": "locale"
+  },
+  {
+    "name": "value"
+  }
+]
