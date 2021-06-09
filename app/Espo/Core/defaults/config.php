@@ -109,7 +109,8 @@ return [
     'languageList'                           => [
         'en_US',
         'de_DE',
-        'ru_RU'
+        'ru_RU',
+        'es_ES'
     ],
     'language'                               => 'en_US',
     'currencyList'                           => [
