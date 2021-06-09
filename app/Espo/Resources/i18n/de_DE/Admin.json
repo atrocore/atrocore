@@ -158,18 +158,11 @@
     "dataUrl": "Daten-URL"
   },
   "messages": {
-    "selectExtensionPackage": "Erweiterungspaket auswählen",
     "upgradeFailed": "Upgrade fehlgeschlagen",
     "selectEntityType": "Entitätstyp im linken Menü auswählen.",
     "selectLayout": "Layout zum Editieren links auswählen",
-    "extensionInstalled": "Erweiterung {name} {version} wurde installiert.",
-    "installExtension": "Erweiterung {name} {version} ist bereit für die Installation",
     "thousandSeparatorEqualsDecimalMark": "Das Tausendertrennzeichen und das Dezimaltrennzeichen können nicht gleich sein",
-    "userHasNoEmailAddress": "Der Benutzer hat keine E-Mail Adresse.",
-    "newVersionIsAvailable": "Die neue EspoCRM-Version {latestVersion} ist verfügbar.",
-    "uninstallConfirmation": "Möchten Sie die Erweiterung wirklich deinstallieren?",
-    "cronIsNotConfigured": "Geplante Jobs werden nicht ausgeführt. Daher funktionieren eingehende E-Mails, Benachrichtigungen und Erinnerungen nicht. Bitte folgen Sie den [instructions] (https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab), um den Cron-Job einzurichten.",
-    "newExtensionVersionIsAvailable": "Die neue {extensionName} Version {latestVersion} ist verfügbar."
+    "userHasNoEmailAddress": "Der Benutzer hat keine E-Mail Adresse."
   },
   "descriptions": {
     "inputLanguage": "Spracheingabe für übersetzbare Felder.",

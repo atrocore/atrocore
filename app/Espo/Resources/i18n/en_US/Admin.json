@@ -177,14 +177,7 @@
     "thousandSeparatorEqualsDecimalMark": "The thousands separator character can not be the same as the decimal point character.",
     "userHasNoEmailAddress": "User has no email address.",
     "selectEntityType": "Select entity type in the left menu.",
-    "selectLayout": "Select needed layout in the left menu and edit it.",
-    "selectExtensionPackage": "Select extension package",
-    "extensionInstalled": "Extension {name} {version} has been installed.",
-    "installExtension": "Extension {name} {version} is ready for an installation.",
-    "cronIsNotConfigured": "Scheduled jobs are not running.  Please follow the [instructions](https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab) to setup cron job.",
-    "newVersionIsAvailable": "New EspoCRM version {latestVersion} is available.",
-    "newExtensionVersionIsAvailable": "New {extensionName} version {latestVersion} is available.",
-    "uninstallConfirmation": "Are you sure you want to uninstall the extension?"
+    "selectLayout": "Select needed layout in the left menu and edit it."
   },
   "descriptions": {
     "inputLanguage": "Input languages for translatable fields.",

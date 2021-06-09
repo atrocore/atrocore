@@ -200,8 +200,7 @@
     "selectEntityType": "Выберите тип объекта в левом меню.",
     "selectLayout": "Выберите интересующий макет в левом меню и отредактируйте его.",
     "thousandSeparatorEqualsDecimalMark": "Разделитель тысячных не может быть таким же, как разделитель десятичных.",
-    "userHasNoEmailAddress": "У пользователя нет адреса эл. почты.",
-    "cronIsNotConfigured": "Запланированные задания не выполняются. Следовательно, входящие письма, уведомления и напоминания не работают. Пожалуйста, следуйте инструкциям [https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab) для установки cron job."
+    "userHasNoEmailAddress": "У пользователя нет адреса эл. почты."
   },
   "descriptions": {
     "inputLanguage": "Укажите языкт для полей, которые подлежат переводу.",
