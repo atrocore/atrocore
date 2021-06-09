@@ -104,6 +104,11 @@ class Language
     private $customPath = 'custom/Espo/Custom/Resources/i18n';
 
     /**
+     * @var array
+     */
+    private $moduleData = [];
+
+    /**
      * Language constructor.
      *
      * @param string            $currentLanguage
@@ -289,6 +294,16 @@ class Language
     }
 
     /**
+     * @return array
+     */
+    public function getModulesData(): array
+    {
+        $this->clearChanges();
+
+        return $this->moduleData;
+    }
+
+    /**
      * @param string       $scope
      * @param string       $category
      * @param string|array $name
@@ -360,16 +375,20 @@ class Language
     protected function init(): void
     {
         // load core
-        $fullData = $this->unify($this->corePath);
+        $this->moduleData['core'] = $this->unify($this->corePath);
+        $fullData = Util::merge([], $this->moduleData['core']);
 
         // load modules
-        foreach ($this->metadata->getModules() as $module) {
-            $module->loadTranslates($fullData);
+        foreach ($this->metadata->getModules() as $name => $module) {
+            $this->moduleData[$name] = [];
+            $module->loadTranslates($this->moduleData[$name]);
+            $fullData = Util::merge($fullData, $this->moduleData[$name]);
         }
 
         // load custom
         if (!$this->noCustom) {
-            $fullData = Util::merge($fullData, $this->unify($this->customPath));
+            $this->moduleData['custom'] = $this->unify($this->customPath);
+            $fullData = Util::merge($fullData, $this->moduleData['custom']);
         }
 
         foreach ($fullData as $i18nName => $i18nData) {

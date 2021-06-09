@@ -35,6 +35,11 @@ declare(strict_types=1);
 
 namespace Treo\Console;
 
+use Espo\Core\Utils\File\Unifier;
+use Espo\Core\Utils\Language;
+use Espo\Core\Utils\Util;
+use Espo\ORM\EntityManager;
+
 /**
  * Class RefreshTranslates
  */
@@ -47,7 +52,7 @@ class RefreshTranslates extends AbstractConsole
      */
     public static function getDescription(): string
     {
-        return 'Show all existing commands and their descriptions.';
+        return 'Refresh translates.';
     }
 
     /**
@@ -57,35 +62,52 @@ class RefreshTranslates extends AbstractConsole
      */
     public function run(array $data): void
     {
-        // get console config
-        $config = $this->getConsoleConfig();
+        $language = new Language('en_US', $this->getContainer()->get('fileManager'), $this->getMetadata(), $this->getContainer()->get('eventManager'));
+        $data = $language->getModulesData();
 
-        // prepare data
-        foreach ($config as $command => $class) {
-            if (method_exists($class, 'getDescription') && empty($class::$isHidden)) {
-                $data[$command] = [$command, $class::getDescription()];
+        /** @var EntityManager $em */
+        $em = $this->getContainer()->get('entityManager');
+
+        // delete old
+        $em->nativeQuery('DELETE FROM label WHERE 1');
+
+        $records = [];
+        foreach ($data as $module => $moduleData) {
+            foreach ($moduleData as $locale => $localeData) {
+                $preparedLocaleData = [];
+                $this->toSimpleArray($localeData, $preparedLocaleData);
+                foreach ($preparedLocaleData as $key => $value) {
+                    $records[$key]['name'] = $key;
+                    $records[$key]['module'] = $module;
+                    $records[$key][Util::toCamelCase(strtolower($locale))] = $value;
+                }
             }
         }
 
-        // sorting
-        $sorted = array_keys($data);
-        natsort($sorted);
-        foreach ($sorted as $command) {
-            $result[] = $data[$command];
+        foreach ($records as $record) {
+            $label = $em->getEntity('Label');
+            $label->set($record);
+            $em->saveEntity($label);
         }
 
+
         // render
-        self::show('Available commands:', self::INFO);
-        echo self::arrayToTable($result);
+        self::show('Translates refreshed successfully.', self::SUCCESS);
     }
 
-    /**
-     * Get console config
-     *
-     * @return array
-     */
-    protected function getConsoleConfig(): array
+    protected function toSimpleArray(array $data, array &$result, array &$parents = []): void
     {
-        return include CORE_PATH . '/Treo/Configs/Console.php';
+        foreach ($data as $key => $value) {
+            if (is_array($value)) {
+                $parents[] = $key;
+                $this->toSimpleArray($value, $result, $parents);
+            } else {
+                $result[implode('.', array_merge($parents, [$key]))] = $value;
+            }
+        }
+
+        if (!empty($parents)) {
+            array_pop($parents);
+        }
     }
 }
