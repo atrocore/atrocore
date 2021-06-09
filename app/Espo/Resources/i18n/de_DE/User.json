@@ -66,7 +66,7 @@
   "messages": {
     "accountInfoEmailSubject": "AtroCore Benutzerzugriffsinfo",
     "passwordWillBeSent": "Das Passwort wird an die E-Mail Adresse des Benutzers gesendet",
-    "accountInfoEmailBody": "Ihre EspoCRM Zugriffsinformation:\n\nBenutzername: {userName}\nPasswort: {password}\n\n{siteUrl}",
+    "accountInfoEmailBody": "Ihre AtroCore Zugriffsinformation:\n\nBenutzername: {userName}\nPasswort: {password}\n\n{siteUrl}",
     "passwordChangeLinkEmailSubject": "Anforderung zur Passwortänderung",
     "passwordChanged": "Das Passwort wurde geändert",
     "userCantBeEmpty": "Der Benutzername darf nicht leer sein!",
