@@ -265,7 +265,7 @@ class PostUpdate
             return;
         }
 
-        self::renderLine('Coping system files');
+        self::renderLine('Copying system files');
         self::copyDir(self::$rootPath . '/vendor/atrocore/core/copy', self::$rootPath);
     }
 
@@ -291,7 +291,7 @@ class PostUpdate
             return;
         }
 
-        self::renderLine('Coping post-install & post-delete scripts for modules');
+        self::renderLine('Copying post-install & post-delete scripts for modules');
         foreach (self::getModules() as $module) {
             // prepare class name
             $className = "\\" . $module . "\\Event";
@@ -335,7 +335,7 @@ class PostUpdate
             return;
         }
 
-        self::renderLine('Coping migration scripts');
+        self::renderLine('Copying migration scripts');
 
         // prepare data
         $data = [];
@@ -492,7 +492,7 @@ class PostUpdate
             return;
         }
 
-        self::renderLine('Coping frontend files');
+        self::renderLine('Copying frontend files');
 
         self::removeDir('client');
         self::copyDir(dirname(CORE_PATH) . '/client', 'client');
