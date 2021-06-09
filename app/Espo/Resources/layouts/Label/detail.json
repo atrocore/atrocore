@@ -12,10 +12,32 @@
       ],
       [
         {
-          "name": "locale"
-        },
+          "name": "enUs",
+          "fullWidth": true
+        }
+      ],
+      [
         {
-          "name": "value"
+          "name": "deDe",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "esEs",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "frFr",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "ruRu",
+          "fullWidth": true
         }
       ]
     ]

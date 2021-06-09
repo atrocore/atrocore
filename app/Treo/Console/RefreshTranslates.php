@@ -33,25 +33,59 @@
 
 declare(strict_types=1);
 
-namespace Treo\Configs;
+namespace Treo\Console;
 
-use Treo\Console;
+/**
+ * Class RefreshTranslates
+ */
+class RefreshTranslates extends AbstractConsole
+{
+    /**
+     * Get console command description
+     *
+     * @return string
+     */
+    public static function getDescription(): string
+    {
+        return 'Show all existing commands and their descriptions.';
+    }
 
-return [
-    "refresh translates"           => Console\RefreshTranslates::class,
-    "list"                         => Console\ListCommand::class,
-    "install demo-project"         => Console\InstallDemoProject::class,
-    "clear cache"                  => Console\ClearCache::class,
-    "cleanup"                      => Console\Cleanup::class,
-    "sql diff --show"              => Console\SqlDiff::class,
-    "sql diff --run"               => Console\SqlDiffRun::class,
-    "cron"                         => Console\Cron::class,
-    "store --refresh"              => Console\StoreRefresh::class,
-    "migrate <module> <from> <to>" => Console\Migrate::class,
-    "apidocs --generate"           => Console\GenerateApidocs::class,
-    "qm <stream> --run"            => Console\QueueManager::class,
-    "qm item <id> --run"           => Console\QueueItem::class,
-    "notifications --refresh"      => Console\Notification::class,
-    "kill daemons"                 => Console\KillDaemons::class,
-    "daemon <name> <id>"           => Console\Daemon::class,
-];
+    /**
+     * Run action
+     *
+     * @param array $data
+     */
+    public function run(array $data): void
+    {
+        // get console config
+        $config = $this->getConsoleConfig();
+
+        // prepare data
+        foreach ($config as $command => $class) {
+            if (method_exists($class, 'getDescription') && empty($class::$isHidden)) {
+                $data[$command] = [$command, $class::getDescription()];
+            }
+        }
+
+        // sorting
+        $sorted = array_keys($data);
+        natsort($sorted);
+        foreach ($sorted as $command) {
+            $result[] = $data[$command];
+        }
+
+        // render
+        self::show('Available commands:', self::INFO);
+        echo self::arrayToTable($result);
+    }
+
+    /**
+     * Get console config
+     *
+     * @return array
+     */
+    protected function getConsoleConfig(): array
+    {
+        return include CORE_PATH . '/Treo/Configs/Console.php';
+    }
+}

@@ -7,9 +7,18 @@
     "name": "module"
   },
   {
-    "name": "locale"
+    "name": "enUs"
   },
   {
-    "name": "value"
+    "name": "deDe"
+  },
+  {
+    "name": "esEs"
+  },
+  {
+    "name": "frFr"
+  },
+  {
+    "name": "ruRu"
   }
 ]

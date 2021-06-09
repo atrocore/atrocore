@@ -1,6 +1,12 @@
 {
   "fields": {
-    "name": "Name"
+    "name": "Key",
+    "module": "Module",
+    "enUs": "en_US",
+    "deDe": "de_DE",
+    "esEs": "es_ES",
+    "frFr": "fr_FR",
+    "ruRu": "ru_RU"
   },
   "links": {
   },
