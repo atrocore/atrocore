@@ -1,49 +1,49 @@
 {
-    "fields": {
-        "assignmentNotifications": "Notifications upon assignment",
-        "dateFormat": "Date Format",
-        "timeFormat": "Time Format",
-        "timeZone": "Time Zone",
-        "weekStart": "First Day of Week",
-        "thousandSeparator": "Thousand Separator",
-        "decimalMark": "Decimal Mark",
-        "defaultCurrency": "Default Currency",
-        "currencyList": "Currency List",
-        "language": "Language",
-        "emailAddress": "Email",
-        "receiveAssignmentEmailNotifications": "Notifications upon assignment",
-        "receiveMentionEmailNotifications": "Notifications about mentions in posts",
-        "receiveStreamEmailNotifications": "Notifications about updates in Stream",
-        "autoFollowEntityTypeList": "Global Auto-Follow",
-        "dashboardTabList": "Tab List",
-        "theme": "Theme",
-        "useCustomTabList": "Custom Tab List",
-        "tabList": "Tab List",
-        "dashboardLayout": "Dashboard Layout",
-        "followEntityOnStreamPost": "Auto-follow record after posting in Stream",
-        "followCreatedEntities": "Auto-follow created records",
-        "followCreatedEntityTypeList": "Auto-follow created records of specific entity types",
-        "scopeColorsDisabled": "Disable scope colors",
-        "tabColorsDisabled": "Disable tab icons colors"
-    },
-    "links": {
-    },
-    "options": {
-        "weekStart": {
-            "0": "Sunday",
-            "1": "Monday"
-        }
-    },
-    "labels": {
-        "Notifications": "Notifications",
-        "User Interface": "User Interface",
-        "General": "General",
-        "Locale": "Locale",
-        "Reset Dashboard to Default": "Reset Dashboard to Default"
-    },
-    "tooltips": {
-        "autoFollowEntityTypeList": "Automatically follow ALL new records (created by any user) of the selected entity types. To be able to see information in the stream and receive notifications about all records in the system.",
-        "followCreatedEntities": "When creating new records, they will automatically be followed, even if assigned to a different user.",
-        "followCreatedEntityTypeList": "When creating new records of selected entity types, they will automatically be followed, even if assigned to a different user."
+  "fields": {
+    "assignmentNotifications": "Notifications upon assignment",
+    "dateFormat": "Date Format",
+    "timeFormat": "Time Format",
+    "timeZone": "Time Zone",
+    "weekStart": "First Day of Week",
+    "thousandSeparator": "Thousand Separator",
+    "decimalMark": "Decimal Mark",
+    "defaultCurrency": "Default Currency",
+    "currencyList": "Currency List",
+    "language": "Language",
+    "emailAddress": "Email",
+    "receiveAssignmentEmailNotifications": "Notifications upon assignment",
+    "receiveMentionEmailNotifications": "Notifications about mentions in posts",
+    "receiveStreamEmailNotifications": "Notifications about updates in Stream",
+    "autoFollowEntityTypeList": "Global Auto-Follow",
+    "dashboardTabList": "Tab List",
+    "theme": "Theme",
+    "useCustomTabList": "Custom Tab List",
+    "tabList": "Tab List",
+    "dashboardLayout": "Dashboard Layout",
+    "followEntityOnStreamPost": "Auto-follow record after posting in Stream",
+    "followCreatedEntities": "Auto-follow created records",
+    "followCreatedEntityTypeList": "Auto-follow created records of specific entity types",
+    "scopeColorsDisabled": "Disable scope colors",
+    "tabColorsDisabled": "Disable tab icons colors"
+  },
+  "links": {
+  },
+  "options": {
+    "weekStart": {
+      "0": "Sunday",
+      "1": "Monday"
     }
+  },
+  "labels": {
+    "Notifications": "Notifications",
+    "User Interface": "User Interface",
+    "General": "General",
+    "Locale": "Locale",
+    "Reset Dashboard to Default": "Reset Dashboard to Default"
+  },
+  "tooltips": {
+    "autoFollowEntityTypeList": "Automatically follow ALL new records (created by any user) of the selected entity types. To be able to see information in the stream and receive notifications about all records in the system.",
+    "followCreatedEntities": "When creating new records, they will automatically be followed, even if assigned to a different user.",
+    "followCreatedEntityTypeList": "When creating new records of selected entity types, they will automatically be followed, even if assigned to a different user."
+  }
 }
