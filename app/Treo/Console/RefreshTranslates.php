@@ -108,6 +108,9 @@ class RefreshTranslates extends AbstractConsole
             $em->saveEntity($label);
         }
 
+        // delete deprecated dir
+        Util::removeDir('custom/Espo/Custom/Resources/i18n');
+
         // render
         self::show('Translates refreshed successfully.', self::SUCCESS);
     }
