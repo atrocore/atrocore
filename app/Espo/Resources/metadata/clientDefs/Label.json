@@ -1,5 +1,9 @@
 {
   "controller": "controllers/record",
   "createDisabled": true,
-  "iconClass": "fas fa-pen-alt"
+  "iconClass": "fas fa-pen-alt",
+  "recordViews": {
+    "list": "views/label/record/list",
+    "detail": "views/label/record/detail"
+  }
 }

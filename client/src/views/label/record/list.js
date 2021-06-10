@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -31,73 +30,16 @@
  * and "AtroCore" word.
  */
 
-namespace Espo\Controllers;
+Espo.define('views/label/record/list', 'views/record/list', function (Dep) {
 
-use Espo\Core\Exceptions\Exception;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Templates\Controllers\Base;
+    return Dep.extend({
 
-/**
- * Class Label
- */
-class Label extends Base
-{
-    /**
-     * @inheritDoc
-     */
-    public function actionCreate($params, $data, $request)
-    {
-        throw new Forbidden();
-    }
+        rowActionsView: 'views/record/row-actions/view-and-edit',
 
-    /**
-     * @inheritDoc
-     */
-    public function actionCreateLink($params, $data, $request)
-    {
-        throw new Forbidden();
-    }
+        massActionList: ['export'],
 
-    /**
-     * @inheritDoc
-     */
-    public function actionDelete($params, $data, $request)
-    {
-        throw new Forbidden();
-    }
+        checkAllResultMassActionList: ['export'],
 
-    /**
-     * @inheritDoc
-     */
-    public function actionMassUpdate($params, $data, $request)
-    {
-        throw new Forbidden();
-    }
+    });
+});
 
-    /**
-     * @inheritDoc
-     */
-    public function actionMassDelete($params, $data, $request)
-    {
-        throw new Forbidden();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function actionRemoveLink($params, $data, $request)
-    {
-        throw new Forbidden();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function checkControllerAccess()
-    {
-        if (!$this->getUser()->isAdmin()) {
-            throw new Forbidden();
-        }
-    }
-}

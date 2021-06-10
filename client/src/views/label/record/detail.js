@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -31,73 +30,14 @@
  * and "AtroCore" word.
  */
 
-namespace Espo\Controllers;
+Espo.define('views/label/record/detail', 'views/record/detail', function (Dep) {
 
-use Espo\Core\Exceptions\Exception;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Templates\Controllers\Base;
+    return Dep.extend({
 
-/**
- * Class Label
- */
-class Label extends Base
-{
-    /**
-     * @inheritDoc
-     */
-    public function actionCreate($params, $data, $request)
-    {
-        throw new Forbidden();
-    }
+        duplicateAction: false,
 
-    /**
-     * @inheritDoc
-     */
-    public function actionCreateLink($params, $data, $request)
-    {
-        throw new Forbidden();
-    }
+        dropdownItemList: [],
 
-    /**
-     * @inheritDoc
-     */
-    public function actionDelete($params, $data, $request)
-    {
-        throw new Forbidden();
-    }
+    });
+});
 
-    /**
-     * @inheritDoc
-     */
-    public function actionMassUpdate($params, $data, $request)
-    {
-        throw new Forbidden();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function actionMassDelete($params, $data, $request)
-    {
-        throw new Forbidden();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function actionRemoveLink($params, $data, $request)
-    {
-        throw new Forbidden();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function checkControllerAccess()
-    {
-        if (!$this->getUser()->isAdmin()) {
-            throw new Forbidden();
-        }
-    }
-}
