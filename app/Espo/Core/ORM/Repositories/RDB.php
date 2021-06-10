@@ -110,6 +110,9 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $this->init();
     }
 
+    /**
+     * Init
+     */
     protected function init()
     {
     }
@@ -253,7 +256,11 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $this->dispatch('afterUnrelate', $entity, $options, $relationName, null, $foreign);
     }
 
-    protected function beforeSave(Entity $entity, array $options = array())
+    /**
+     * @param Entity $entity
+     * @param array  $options
+     */
+    protected function beforeSave(Entity $entity, array $options = [])
     {
         parent::beforeSave($entity, $options);
 
@@ -265,7 +272,11 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
     }
 
-    protected function afterSave(Entity $entity, array $options = array())
+    /**
+     * @param Entity $entity
+     * @param array  $options
+     */
+    protected function afterSave(Entity $entity, array $options = [])
     {
         if (!empty($this->restoreData)) {
             $entity->set($this->restoreData);

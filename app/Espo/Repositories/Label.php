@@ -33,11 +33,72 @@
 
 namespace Espo\Repositories;
 
+use Espo\Core\DataManager;
 use Espo\Core\Templates\Repositories\Base;
+use Espo\Core\Utils\Language;
+use Espo\Core\Utils\Util;
+use Espo\ORM\Entity;
+use Treo\Console\RefreshTranslates;
 
 /**
  * Class Label
  */
 class Label extends Base
 {
+    /**
+     * @inheritDoc
+     */
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        if ($entity->get('module') === 'custom' && !$entity->isNew() && !$entity->get('isCustomized')) {
+            $entity->set('isCustomized', true);
+        }
+
+        if ($entity->get('module') !== 'custom' && !$entity->isNew()) {
+            foreach ($this->getLocales() as $locale) {
+                if ($entity->isAttributeChanged(Util::toCamelCase(strtolower($locale)))) {
+                    $entity->set('isCustomized', true);
+                }
+            }
+
+            if ($entity->isAttributeChanged('isCustomized') && !$entity->get('isCustomized')) {
+                $records = RefreshTranslates::getSimplifiedTranslates((new Language($this->getInjection('container')))->getModulesData());
+                if (!empty($records[$entity->get('name')])) {
+                    $entity->set($records[$entity->get('name')]);
+                    $this->getEntityManager()->saveEntity($entity, ['skipAll' => true]);
+                } else {
+                    $this->getEntityManager()->removeEntity($entity);
+                }
+            }
+        }
+
+        parent::beforeSave($entity, $options);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function afterSave(Entity $entity, array $options = [])
+    {
+        parent::afterSave($entity, $options);
+
+        $this->getConfig()->set('cacheTimestamp', time());
+        $this->getConfig()->save();
+        DataManager::pushPublicData('dataTimestamp', time());
+    }
+
+    protected function getLocales(): array
+    {
+        return $this->getMetadata()->get('multilang.languageList', []);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('container');
+    }
 }

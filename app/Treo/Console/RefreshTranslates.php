@@ -54,27 +54,13 @@ class RefreshTranslates extends AbstractConsole
         return 'Refresh translates.';
     }
 
-    /**
-     * Run action
-     *
-     * @param array $data
-     */
-    public function run(array $data): void
+    public static function getSimplifiedTranslates(array $data): array
     {
-        $language = new Language($this->getContainer());
-        $data = $language->getModulesData();
-
-        /** @var EntityManager $em */
-        $em = $this->getContainer()->get('entityManager');
-
-        // delete old
-        $em->nativeQuery("DELETE FROM label WHERE is_customized=0");
-
         $records = [];
         foreach ($data as $module => $moduleData) {
             foreach ($moduleData as $locale => $localeData) {
                 $preparedLocaleData = [];
-                $this->toSimpleArray($localeData, $preparedLocaleData);
+                self::toSimpleArray($localeData, $preparedLocaleData);
                 foreach ($preparedLocaleData as $key => $value) {
                     $records[$key]['name'] = $key;
                     $records[$key]['module'] = $module;
@@ -83,6 +69,24 @@ class RefreshTranslates extends AbstractConsole
                 }
             }
         }
+
+        return $records;
+    }
+
+    /**
+     * Run action
+     *
+     * @param array $data
+     */
+    public function run(array $data): void
+    {
+        /** @var EntityManager $em */
+        $em = $this->getContainer()->get('entityManager');
+
+        // delete old
+        $em->nativeQuery("DELETE FROM label WHERE is_customized=0");
+
+        $records = self::getSimplifiedTranslates((new Language($this->getContainer()))->getModulesData());
 
         foreach ($records as $record) {
             $label = $em->getEntity('Label');
@@ -108,12 +112,12 @@ class RefreshTranslates extends AbstractConsole
         self::show('Translates refreshed successfully.', self::SUCCESS);
     }
 
-    protected function toSimpleArray(array $data, array &$result, array &$parents = []): void
+    protected static function toSimpleArray(array $data, array &$result, array &$parents = []): void
     {
         foreach ($data as $key => $value) {
             if (is_array($value)) {
                 $parents[] = $key;
-                $this->toSimpleArray($value, $result, $parents);
+                self::toSimpleArray($value, $result, $parents);
             } else {
                 $result[implode('.', array_merge($parents, [$key]))] = $value;
             }
