@@ -61,7 +61,7 @@ class RefreshTranslates extends AbstractConsole
      */
     public function run(array $data): void
     {
-        $language = new Language('en_US', $this->getContainer()->get('fileManager'), $this->getMetadata(), $this->getContainer()->get('eventManager'));
+        $language = new Language($this->getContainer());
         $data = $language->getModulesData();
 
         /** @var EntityManager $em */

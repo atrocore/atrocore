@@ -274,12 +274,7 @@ class Container
      */
     protected function loadLanguage(): Language
     {
-        return new Language(
-            Language::detectLanguage($this->get('config'), $this->get('preferences')),
-            $this->get('fileManager'),
-            $this->get('metadata'),
-            $this->get('eventManager')
-        );
+        return new Language($this, Language::detectLanguage($this->get('config'), $this->get('preferences')));
     }
 
     /**
@@ -289,12 +284,7 @@ class Container
      */
     protected function loadBaseLanguage(): Language
     {
-        return new Language(
-            Language::DEFAULT_LANGUAGE,
-            $this->get('fileManager'),
-            $this->get('metadata'),
-            $this->get('eventManager')
-        );
+        return new Language($this);
     }
 
     /**
@@ -304,12 +294,7 @@ class Container
      */
     protected function loadDefaultLanguage(): Language
     {
-        return new Language(
-            Language::detectLanguage($this->get('config')),
-            $this->get('fileManager'),
-            $this->get('metadata'),
-            $this->get('eventManager')
-        );
+        return new Language($this, Language::detectLanguage($this->get('config')));
     }
 
     /**

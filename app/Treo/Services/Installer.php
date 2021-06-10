@@ -669,11 +669,7 @@ class Installer extends AbstractService
      */
     protected function getLanguage()
     {
-        return new Language(
-            $this->getConfig()->get('language'),
-            $this->getContainer()->get('fileManager'),
-            $this->getContainer()->get('metadata')
-        );
+        return new Language($this->getContainer(), $this->getConfig()->get('language'));
     }
 
     protected function afterInstall(): void
