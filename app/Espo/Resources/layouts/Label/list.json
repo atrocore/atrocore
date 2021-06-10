@@ -1,7 +1,8 @@
 [
   {
     "name": "name",
-    "link": true
+    "link": true,
+    "width": 25
   },
   {
     "name": "module"
@@ -14,12 +15,6 @@
   },
   {
     "name": "deDe"
-  },
-  {
-    "name": "esEs"
-  },
-  {
-    "name": "frFr"
   },
   {
     "name": "ruRu"

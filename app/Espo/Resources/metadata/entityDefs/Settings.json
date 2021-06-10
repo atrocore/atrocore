@@ -25,6 +25,13 @@
         "allow"
       ]
     },
+    "languageList": {
+      "type": "multiEnum",
+      "default": [],
+      "options": [],
+      "required": true,
+      "view": "views/admin/fields/language-list"
+    },
     "inputLanguageList": {
       "type": "multiEnum",
       "default": [],

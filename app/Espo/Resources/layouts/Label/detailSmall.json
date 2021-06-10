@@ -30,18 +30,6 @@
       ],
       [
         {
-          "name": "esEs",
-          "fullWidth": true
-        }
-      ],
-      [
-        {
-          "name": "frFr",
-          "fullWidth": true
-        }
-      ],
-      [
-        {
           "name": "ruRu",
           "fullWidth": true
         }
