@@ -30,6 +30,204 @@
     "ruRu": {
       "type": "text"
     },
+    "afZa": {
+      "type": "text"
+    },
+    "azAz": {
+      "type": "text"
+    },
+    "beBy": {
+      "type": "text"
+    },
+    "bgBg": {
+      "type": "text"
+    },
+    "bnIn": {
+      "type": "text"
+    },
+    "bsBa": {
+      "type": "text"
+    },
+    "caEs": {
+      "type": "text"
+    },
+    "csCz": {
+      "type": "text"
+    },
+    "cyGb": {
+      "type": "text"
+    },
+    "daDk": {
+      "type": "text"
+    },
+    "elGr": {
+      "type": "text"
+    },
+    "enGb": {
+      "type": "text"
+    },
+    "etEe": {
+      "type": "text"
+    },
+    "euEs": {
+      "type": "text"
+    },
+    "faIr": {
+      "type": "text"
+    },
+    "fiFi": {
+      "type": "text"
+    },
+    "foFo": {
+      "type": "text"
+    },
+    "frCa": {
+      "type": "text"
+    },
+    "gaIe": {
+      "type": "text"
+    },
+    "glEs": {
+      "type": "text"
+    },
+    "gnPy": {
+      "type": "text"
+    },
+    "heIl": {
+      "type": "text"
+    },
+    "hiIn": {
+      "type": "text"
+    },
+    "hrHr": {
+      "type": "text"
+    },
+    "huHu": {
+      "type": "text"
+    },
+    "hyAm": {
+      "type": "text"
+    },
+    "idId": {
+      "type": "text"
+    },
+    "isIs": {
+      "type": "text"
+    },
+    "itIt": {
+      "type": "text"
+    },
+    "jaJp": {
+      "type": "text"
+    },
+    "kaGe": {
+      "type": "text"
+    },
+    "kmKh": {
+      "type": "text"
+    },
+    "koKr": {
+      "type": "text"
+    },
+    "kuTr": {
+      "type": "text"
+    },
+    "ltLt": {
+      "type": "text"
+    },
+    "lvLv": {
+      "type": "text"
+    },
+    "mkMk": {
+      "type": "text"
+    },
+    "mlIn": {
+      "type": "text"
+    },
+    "msMy": {
+      "type": "text"
+    },
+    "nbNo": {
+      "type": "text"
+    },
+    "nnNo": {
+      "type": "text"
+    },
+    "neNp": {
+      "type": "text"
+    },
+    "nlNl": {
+      "type": "text"
+    },
+    "paIn": {
+      "type": "text"
+    },
+    "plPl": {
+      "type": "text"
+    },
+    "psAf": {
+      "type": "text"
+    },
+    "ptBr": {
+      "type": "text"
+    },
+    "ptPt": {
+      "type": "text"
+    },
+    "roRo": {
+      "type": "text"
+    },
+    "skSk": {
+      "type": "text"
+    },
+    "slSi": {
+      "type": "text"
+    },
+    "sqAl": {
+      "type": "text"
+    },
+    "srRs": {
+      "type": "text"
+    },
+    "svSe": {
+      "type": "text"
+    },
+    "swKe": {
+      "type": "text"
+    },
+    "taIn": {
+      "type": "text"
+    },
+    "teIn": {
+      "type": "text"
+    },
+    "thTh": {
+      "type": "text"
+    },
+    "tlPh": {
+      "type": "text"
+    },
+    "trTr": {
+      "type": "text"
+    },
+    "ukUa": {
+      "type": "text"
+    },
+    "urPk": {
+      "type": "text"
+    },
+    "viVn": {
+      "type": "text"
+    },
+    "zhCn": {
+      "type": "text"
+    },
+    "zhHk": {
+      "type": "text"
+    },
+    "zhTw": {
+      "type": "text"
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
