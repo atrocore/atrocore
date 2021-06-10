@@ -2,6 +2,7 @@
   "fields": {
     "name": "Key",
     "module": "Module",
+    "isCustomized": "Customized",
     "enUs": "en_US",
     "deDe": "de_DE",
     "esEs": "es_ES",

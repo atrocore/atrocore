@@ -4,6 +4,9 @@
   "createdAt",
   "createdBy",
   "modifiedAt",
-  "locale",
-  "value"
+  "enUs",
+  "deDe",
+  "esEs",
+  "frFr",
+  "ruRu"
 ]

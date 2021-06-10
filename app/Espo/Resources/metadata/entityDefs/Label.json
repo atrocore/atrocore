@@ -11,6 +11,9 @@
       "readOnly": true,
       "required": true
     },
+    "isCustomized": {
+      "type": "bool"
+    },
     "enUs": {
       "type": "text",
       "required": true

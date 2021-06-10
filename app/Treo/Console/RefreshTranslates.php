@@ -69,7 +69,7 @@ class RefreshTranslates extends AbstractConsole
         $em = $this->getContainer()->get('entityManager');
 
         // delete old
-        $em->nativeQuery('DELETE FROM label WHERE 1');
+        $em->nativeQuery("DELETE FROM label WHERE is_customized=0");
 
         $records = [];
         foreach ($data as $module => $moduleData) {
@@ -79,6 +79,7 @@ class RefreshTranslates extends AbstractConsole
                 foreach ($preparedLocaleData as $key => $value) {
                     $records[$key]['name'] = $key;
                     $records[$key]['module'] = $module;
+                    $records[$key]['isCustomized'] = $module === 'custom';
                     $records[$key][Util::toCamelCase(strtolower($locale))] = $value;
                 }
             }
@@ -87,9 +88,22 @@ class RefreshTranslates extends AbstractConsole
         foreach ($records as $record) {
             $label = $em->getEntity('Label');
             $label->set($record);
+
+            // skip if such already exists
+            if ($label->get('isCustomized')) {
+                $exist = $em
+                    ->getRepository('Label')
+                    ->select(['id'])
+                    ->where(['name' => $label->get('name')])
+                    ->findOne();
+
+                if (!empty($exist)) {
+                    continue 1;
+                }
+            }
+
             $em->saveEntity($label);
         }
-
 
         // render
         self::show('Translates refreshed successfully.', self::SUCCESS);
