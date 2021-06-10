@@ -33,11 +33,58 @@
 
 namespace Espo\Services;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Services\Base;
+use Espo\Core\Utils\Util;
 
 /**
  * Class Label
  */
 class Label extends Base
 {
+    public function saveUnitsOfMeasure(string $language, array $labels): bool
+    {
+        $toRemove = [];
+        $data = [];
+        foreach ($labels as $k => $value) {
+            $parts = explode('[.]', $k);
+            if (!isset($parts[0]) || !isset($parts[1])) {
+                throw new BadRequest("Wrong input data.");
+            }
+
+            $toRemove["Global.$parts[0]"] = true;
+            $data["Global.$parts[0].$parts[1]"] = $value;
+        }
+        $toRemove = array_keys($toRemove);
+
+        // delete old
+        foreach ($toRemove as $item) {
+            $preparedKeys = implode("','", array_keys($data));
+            $this
+                ->getEntityManager()
+                ->nativeQuery("DELETE FROM label WHERE is_customized=1 AND name LIKE '$item%' AND module='custom' AND name NOT IN ('$preparedKeys')");
+        }
+
+        // update or create
+        $language = Util::toCamelCase(strtolower($language));
+        foreach ($data as $key => $value) {
+            $entity = $this->getEntityManager()->getRepository('Label')->where(['name' => $key])->findOne();
+            if (empty($entity)) {
+                $entity = $this->getEntityManager()->getRepository('Label')->get();
+                $entity->set('name', $key);
+                $entity->set('module', 'custom');
+            }
+
+            if ($entity->get($language) === $value) {
+                continue 1;
+            }
+
+            $entity->set('isCustomized', true);
+            $entity->set($language, $value);
+
+            $this->getEntityManager()->saveEntity($entity);
+        }
+
+        return true;
+    }
 }

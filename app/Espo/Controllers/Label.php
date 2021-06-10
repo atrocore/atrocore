@@ -42,24 +42,13 @@ use Espo\Core\Templates\Controllers\Base;
  */
 class Label extends Base
 {
-    public function postActionSaveLabels($params, $data)
+    public function postActionSaveUnitsOfMeasure(array $params, \stdClass $data): bool
     {
-        echo '<pre>';
-        print_r('123');
-        die();
-
-        if (empty($data->scope) || empty($data->language) || !isset($data->labels)) {
+        if (empty($data->language) || !isset($data->labels)) {
             throw new BadRequest();
         }
 
-        $labels = get_object_vars($data->labels);
-
-        $labelManager = $this->getContainer()->get('injectableFactory')->createByClassName('\\Espo\\Core\\Utils\\LabelManager');
-        $returnData = $labelManager->saveLabels($data->language, $data->scope, $labels);
-
-        $this->getContainer()->get('dataManager')->clearCache();
-
-        return $returnData;
+        return $this->getRecordService()->saveUnitsOfMeasure($data->language, get_object_vars($data->labels));
     }
 
     /**
