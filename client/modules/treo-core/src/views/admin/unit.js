@@ -47,7 +47,7 @@ Espo.define('treo-core:views/admin/unit', 'views/settings/record/edit',
             this.listenTo(this.model, 'after:save', () => {
                 let labels = this.getLabelsForSaveFromUnits();
                 if (Object.keys(labels).length) {
-                    this.ajaxPostRequest('LabelManager/action/saveLabels', {
+                    this.ajaxPostRequest('Label/action/saveLabels', {
                         labels: labels,
                         language: this.getPreferences().get('language') || this.getConfig().get('language'),
                         scope: 'Global'

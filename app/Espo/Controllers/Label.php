@@ -33,9 +33,8 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\Exceptions\Exception;
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Templates\Controllers\Base;
 
 /**
@@ -43,6 +42,26 @@ use Espo\Core\Templates\Controllers\Base;
  */
 class Label extends Base
 {
+    public function postActionSaveLabels($params, $data)
+    {
+        echo '<pre>';
+        print_r('123');
+        die();
+
+        if (empty($data->scope) || empty($data->language) || !isset($data->labels)) {
+            throw new BadRequest();
+        }
+
+        $labels = get_object_vars($data->labels);
+
+        $labelManager = $this->getContainer()->get('injectableFactory')->createByClassName('\\Espo\\Core\\Utils\\LabelManager');
+        $returnData = $labelManager->saveLabels($data->language, $data->scope, $labels);
+
+        $this->getContainer()->get('dataManager')->clearCache();
+
+        return $returnData;
+    }
+
     /**
      * @inheritDoc
      */
