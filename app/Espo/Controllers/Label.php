@@ -70,14 +70,6 @@ class Label extends Base
     /**
      * @inheritDoc
      */
-    public function actionMassUpdate($params, $data, $request)
-    {
-        throw new Forbidden();
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function actionMassDelete($params, $data, $request)
     {
         throw new Forbidden();

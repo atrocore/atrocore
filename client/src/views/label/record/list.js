@@ -36,9 +36,9 @@ Espo.define('views/label/record/list', 'views/record/list', function (Dep) {
 
         rowActionsView: 'views/record/row-actions/view-and-edit',
 
-        massActionList: ['export'],
+        massActionList: ['massUpdate', 'export'],
 
-        checkAllResultMassActionList: ['export'],
+        checkAllResultMassActionList: ['massUpdate', 'export'],
 
     });
 });
