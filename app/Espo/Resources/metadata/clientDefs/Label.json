@@ -1,4 +1,5 @@
 {
   "controller": "controllers/record",
+  "createDisabled": true,
   "iconClass": "fas fa-pen-alt"
 }
