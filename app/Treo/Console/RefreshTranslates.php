@@ -35,7 +35,6 @@ declare(strict_types=1);
 
 namespace Treo\Console;
 
-use Espo\Core\Utils\File\Unifier;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Util;
 use Espo\ORM\EntityManager;
