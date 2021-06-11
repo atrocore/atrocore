@@ -35,14 +35,41 @@ namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Templates\Controllers\Base;
+use Espo\Core\Utils\Language;
 use Treo\Console\AbstractConsole;
+use Treo\Console\RefreshTranslates;
 
 /**
  * Class Label
  */
 class Label extends Base
 {
+    /**
+     * @param mixed $params
+     * @param mixed $data
+     * @param mixed $request
+     *
+     * @return array
+     * @throws BadRequest
+     * @throws NotFound
+     */
+    public function getActionGetDefaults($params, $data, $request): array
+    {
+        if (empty($request->get('key'))) {
+            throw new BadRequest();
+        }
+
+        $records = RefreshTranslates::getSimplifiedTranslates((new Language($this->getContainer()))->getModulesData());
+
+        if (empty($records[$request->get('key')])) {
+            throw new NotFound();
+        }
+
+        return $records[$request->get('key')];
+    }
+
     public function postActionSaveUnitsOfMeasure(array $params, \stdClass $data): bool
     {
         if (empty($data->language) || !isset($data->labels)) {

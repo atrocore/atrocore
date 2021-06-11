@@ -64,24 +64,6 @@ class Label extends Base
             $entity->set('isCustomized', true);
         }
 
-        if ($entity->get('module') !== 'custom' && !$entity->isNew()) {
-            foreach ($this->getLocales() as $locale) {
-                if ($entity->isAttributeChanged(Util::toCamelCase(strtolower($locale)))) {
-                    $entity->set('isCustomized', true);
-                }
-            }
-
-            if ($entity->isAttributeChanged('isCustomized') && !$entity->get('isCustomized')) {
-                $records = RefreshTranslates::getSimplifiedTranslates((new Language($this->getInjection('container')))->getModulesData());
-                if (!empty($records[$entity->get('name')])) {
-                    $entity->set($records[$entity->get('name')]);
-                    $this->getEntityManager()->saveEntity($entity, ['skipAll' => true]);
-                } else {
-                    $this->getEntityManager()->removeEntity($entity);
-                }
-            }
-        }
-
         parent::beforeSave($entity, $options);
     }
 
