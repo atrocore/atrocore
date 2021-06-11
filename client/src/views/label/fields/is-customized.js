@@ -39,7 +39,7 @@ Espo.define('views/label/fields/is-customized', 'views/fields/bool', function (D
 
             if (this.mode !== 'list') {
                 this.listenTo(this.model, 'change', (model, o) => {
-                    if (!model.hasChanged('isCustomized') && !o.reset) {
+                    if (!model.hasChanged('isCustomized') && o.ui) {
                         this.model.set('isCustomized', true);
                     } else {
                         if (!this.model.get('isCustomized')) {
