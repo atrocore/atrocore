@@ -1,0 +1,12 @@
+{
+  "labels": {
+    "reset": "Восстановить",
+    "push": "Отправить на ревью",
+    "Create Label": "Создать метку"
+  },
+  "messages": {
+    "nothingToSend": "Отправлять нечего.",
+    "sentSuccessfully": "Отправлено успешно.",
+    "sentFailed": "Отправка не удалась."
+  }
+}

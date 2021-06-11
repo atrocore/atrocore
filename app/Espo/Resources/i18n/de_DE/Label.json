@@ -1,0 +1,12 @@
+{
+  "labels": {
+    "reset": "Zurücksetzen",
+    "push": "Zur Überprüfung senden",
+    "Create Label": "Label erstellen"
+  },
+  "messages": {
+    "nothingToSend": "Nothing to send.",
+    "sentSuccessfully": "Sent successfully.",
+    "sentFailed": "Sent failed."
+  }
+}

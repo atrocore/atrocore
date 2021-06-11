@@ -76,9 +76,16 @@
     "zhTw": "Chinesisch traditionell (zh_TW)"
   },
   "exceptions": {
-    "suchKeyAlreadyExist": "Such key already exist."
+    "suchKeyAlreadyExist": "Such key already exists."
   },
   "labels": {
+    "reset": "Reset to Default",
+    "push": "Send for Review",
     "Create Label": "Create Label"
+  },
+  "messages": {
+    "nothingToSend": "Nothing to send.",
+    "sentSuccessfully": "Sent successfully.",
+    "sentFailed": "Sent failed."
   }
 }
