@@ -73,6 +73,22 @@ class RefreshTranslates extends AbstractConsole
         return $records;
     }
 
+    public static function toSimpleArray(array $data, array &$result, array &$parents = []): void
+    {
+        foreach ($data as $key => $value) {
+            if (is_array($value)) {
+                $parents[] = $key;
+                self::toSimpleArray($value, $result, $parents);
+            } else {
+                $result[implode('.', array_merge($parents, [$key]))] = $value;
+            }
+        }
+
+        if (!empty($parents)) {
+            array_pop($parents);
+        }
+    }
+
     /**
      * Run action
      *
@@ -113,21 +129,5 @@ class RefreshTranslates extends AbstractConsole
 
         // render
         self::show('Translates refreshed successfully.', self::SUCCESS);
-    }
-
-    protected static function toSimpleArray(array $data, array &$result, array &$parents = []): void
-    {
-        foreach ($data as $key => $value) {
-            if (is_array($value)) {
-                $parents[] = $key;
-                self::toSimpleArray($value, $result, $parents);
-            } else {
-                $result[implode('.', array_merge($parents, [$key]))] = $value;
-            }
-        }
-
-        if (!empty($parents)) {
-            array_pop($parents);
-        }
     }
 }

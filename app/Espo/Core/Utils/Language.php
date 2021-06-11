@@ -39,6 +39,7 @@ use Espo\Core\Container;
 use Espo\Core\Utils\File\Unifier;
 use Espo\Core\Exceptions\Error;
 use Espo\Entities\Preferences;
+use Treo\Console\RefreshTranslates;
 use Treo\Core\EventManager\Event;
 
 /**
@@ -237,29 +238,42 @@ class Language
      */
     public function save()
     {
-        $path = $this->customPath;
-        $currentLanguage = $this->getLanguage();
+        $field = Util::toCamelCase(strtolower($this->getLanguage()));
 
-        $result = true;
+        /** @var \Espo\ORM\EntityManager $em */
+        $em = $this->container->get('entityManager');
+
         if (!empty($this->changedData)) {
-            foreach ($this->changedData as $scope => $data) {
-                if (!empty($data)) {
-                    $result &= $this->container->get('fileManager')->mergeContents(array($path, $currentLanguage, $scope . '.json'), $data, true);
+            $simplifiedTranslates = [];
+            RefreshTranslates::toSimpleArray($this->changedData, $simplifiedTranslates);
+
+            foreach ($simplifiedTranslates as $key => $value) {
+                $label = $em->getRepository('Label')->where(['name' => $key])->findOne();
+                if (empty($label)) {
+                    $label = $em->getRepository('Label')->get();
+                    $label->set(['name' => $key, 'module' => 'custom', 'isCustomized' => true]);
                 }
+                $label->set($field, $value);
+                $em->saveEntity($label);
             }
         }
 
         if (!empty($this->deletedData)) {
             foreach ($this->deletedData as $scope => $unsetData) {
-                if (!empty($unsetData)) {
-                    $result &= $this->container->get('fileManager')->unsetContents(array($path, $currentLanguage, $scope . '.json'), $unsetData, true);
+                foreach ($unsetData as $category => $names) {
+                    foreach ($names as $name) {
+                        $label = $em->getRepository('Label')->where(['name' => "$scope.$category.$name", 'module' => 'custom', 'isCustomized' => true])->findOne();
+                        if (!empty($label)) {
+                            $em->removeEntity($label);
+                        }
+                    }
                 }
             }
         }
 
         $this->clearChanges();
 
-        return (bool)$result;
+        return true;
     }
 
     /**
