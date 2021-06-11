@@ -603,6 +603,10 @@ class PostUpdate
             return;
         }
 
+        if (!self::isChanged()) {
+            return;
+        }
+
         self::renderLine('Refreshing translations');
         exec(self::getPhpBin() . " index.php refresh translates >/dev/null");
     }
