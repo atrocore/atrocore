@@ -54,7 +54,7 @@ class Label extends Base
 
     public function postActionReset(): bool
     {
-        exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " index.php refresh translates 1 >/dev/null");
+        exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " index.php refresh translates >/dev/null");
 
         return true;
     }

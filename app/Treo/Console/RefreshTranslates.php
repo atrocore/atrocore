@@ -111,7 +111,7 @@ class RefreshTranslates extends AbstractConsole
             $label->set($record);
 
             try {
-                $em->saveEntity($label, $data);
+                $em->saveEntity($label, ['keepCache' => true]);
             } catch (BadRequest $e) {
                 // ignore validation errors
             }
