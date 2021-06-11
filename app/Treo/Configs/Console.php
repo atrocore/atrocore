@@ -38,7 +38,7 @@ namespace Treo\Configs;
 use Treo\Console;
 
 return [
-    "refresh translates"           => Console\RefreshTranslates::class,
+    "refresh translations"         => Console\RefreshTranslates::class,
     "list"                         => Console\ListCommand::class,
     "install demo-project"         => Console\InstallDemoProject::class,
     "clear cache"                  => Console\ClearCache::class,
