@@ -218,7 +218,7 @@ class Language
         $data = $this->getData();
 
         if (!isset($data) || $data === false) {
-            throw new Error('Language: current language [' . $this->getLanguage() . '] does not found');
+            return null;
         }
 
         return Util::getValueByKey($data, $key, $returns);
@@ -251,8 +251,9 @@ class Language
                 $label = $em->getRepository('Label')->where(['name' => $key])->findOne();
                 if (empty($label)) {
                     $label = $em->getRepository('Label')->get();
-                    $label->set(['name' => $key, 'module' => 'custom', 'isCustomized' => true]);
+                    $label->set(['name' => $key, 'module' => 'custom']);
                 }
+                $label->set('isCustomized', true);
                 $label->set($field, $value);
                 $em->saveEntity($label);
             }
