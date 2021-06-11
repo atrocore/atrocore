@@ -57,15 +57,18 @@ Espo.define('views/label/list', 'views/list', function (Dep) {
         },
 
         actionReset() {
-            this.ajaxPostRequest(`Label/action/reset`).then(response => {
-                this.notify(this.translate('resetSuccessfully', 'messages', 'Label'), 'success');
-            });
+            this.confirm({
+                message: this.translate('resetConfirm', 'messages', 'Label'),
+                confirmText: this.translate('Remove')
+            }, () => {
+                this.ajaxPostRequest(`Label/action/reset`).then(response => {
+                    this.notify(this.translate('resetSuccessfully', 'messages', 'Label'), 'success');
+                });
+            }, this);
         },
 
         actionPush() {
-            // this.ajaxPostRequest(`ThreeDimensionalModel/action/sync`).then(response => {
-            //     this.notify(this.translate('syncJobCreated', 'messages', 'ThreeDimensionalModel'), 'success');
-            // });
+
         },
 
     });

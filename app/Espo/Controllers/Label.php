@@ -36,6 +36,7 @@ namespace Espo\Controllers;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Templates\Controllers\Base;
+use Treo\Console\AbstractConsole;
 
 /**
  * Class Label
@@ -49,6 +50,13 @@ class Label extends Base
         }
 
         return $this->getRecordService()->saveUnitsOfMeasure($data->language, get_object_vars($data->labels));
+    }
+
+    public function postActionReset(): bool
+    {
+        exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " index.php refresh translates >/dev/null");
+
+        return true;
     }
 
     /**
