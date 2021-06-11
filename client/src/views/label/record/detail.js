@@ -36,8 +36,6 @@ Espo.define('views/label/record/detail', 'views/record/detail', function (Dep) {
 
         duplicateAction: false,
 
-        dropdownItemList: [],
-
     });
 });
 

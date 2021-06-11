@@ -3,16 +3,17 @@
     "name": {
       "type": "varchar",
       "required": true,
-      "readOnly": true,
       "trim": true
     },
     "module": {
       "type": "varchar",
+      "default": "custom",
       "readOnly": true,
       "required": true
     },
     "isCustomized": {
-      "type": "bool"
+      "type": "bool",
+      "default": "true"
     },
     "enUs": {
       "type": "text",

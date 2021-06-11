@@ -82,14 +82,29 @@ class Label extends Base
     {
         parent::afterSave($entity, $options);
 
-        $this->getConfig()->set('cacheTimestamp', time());
-        $this->getConfig()->save();
-        DataManager::pushPublicData('dataTimestamp', time());
+        $this->refreshTimestamp();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        parent::afterRemove($entity, $options);
+
+        $this->refreshTimestamp();
     }
 
     protected function getLocales(): array
     {
         return $this->getMetadata()->get('multilang.languageList', []);
+    }
+
+    protected function refreshTimestamp(): void
+    {
+        $this->getConfig()->set('cacheTimestamp', time());
+        $this->getConfig()->save();
+        DataManager::pushPublicData('dataTimestamp', time());
     }
 
     /**

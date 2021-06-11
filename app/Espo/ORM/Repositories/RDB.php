@@ -193,7 +193,11 @@ class RDB extends \Espo\ORM\Repository
     {
     }
 
-    protected function afterRemove(Entity $entity, array $options = array())
+    /**
+     * @param Entity $entity
+     * @param array  $options
+     */
+    protected function afterRemove(Entity $entity, array $options = [])
     {
     }
 

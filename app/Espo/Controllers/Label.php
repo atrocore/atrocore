@@ -54,23 +54,7 @@ class Label extends Base
     /**
      * @inheritDoc
      */
-    public function actionCreate($params, $data, $request)
-    {
-        throw new Forbidden();
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function actionCreateLink($params, $data, $request)
-    {
-        throw new Forbidden();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function actionDelete($params, $data, $request)
     {
         throw new Forbidden();
     }

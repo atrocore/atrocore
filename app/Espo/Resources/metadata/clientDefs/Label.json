@@ -1,9 +1,736 @@
 {
   "controller": "controllers/record",
-  "createDisabled": true,
   "iconClass": "fas fa-pen-alt",
   "recordViews": {
     "list": "views/label/record/list",
     "detail": "views/label/record/detail"
+  },
+  "dynamicLogic": {
+    "fields": {
+      "name": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      },
+      "isCustomized": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "module",
+              "value": "custom"
+            }
+          ]
+        }
+      },
+      "enUs": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "deDe": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "esEs": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "frFr": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "ruRu": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "afZa": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "azAz": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "beBy": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "bgBg": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "bnIn": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "bsBa": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "caEs": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "csCz": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "cyGb": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "daDk": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "elGr": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "enGb": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "etEe": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "euEs": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "faIr": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "fiFi": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "foFo": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "frCa": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "gaIe": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "glEs": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "gnPy": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "heIl": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "hiIn": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "hrHr": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "huHu": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "hyAm": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "idId": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "isIs": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "itIt": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "jaJp": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "kaGe": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "kmKh": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "koKr": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "kuTr": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "ltLt": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "lvLv": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "mkMk": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "mlIn": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "msMy": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "nbNo": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "nnNo": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "neNp": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "nlNl": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "paIn": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "plPl": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "psAf": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "ptBr": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "ptPt": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "roRo": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "skSk": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "slSi": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "sqAl": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "srRs": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "svSe": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "swKe": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "taIn": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "teIn": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "thTh": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "tlPh": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "trTr": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "ukUa": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "urPk": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "viVn": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "zhCn": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "zhHk": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isCustomized"
+            }
+          ]
+        }
+      },
+      "zhTw": {
+        "type": "text"
+      }
+    }
   }
 }
