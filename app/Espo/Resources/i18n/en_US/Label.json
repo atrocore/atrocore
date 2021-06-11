@@ -75,7 +75,8 @@
     "zhHk": "Chinesisch traditionell (zh_HK)",
     "zhTw": "Chinesisch traditionell (zh_TW)"
   },
-  "links": {
+  "exceptions": {
+    "suchKeyAlreadyExist": "Such key already exist."
   },
   "labels": {
     "Create Label": "Create Label"

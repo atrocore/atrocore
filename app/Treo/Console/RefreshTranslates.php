@@ -35,6 +35,7 @@ declare(strict_types=1);
 
 namespace Treo\Console;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Util;
 use Espo\ORM\EntityManager;
@@ -108,20 +109,11 @@ class RefreshTranslates extends AbstractConsole
             $label = $em->getEntity('Label');
             $label->set($record);
 
-            // skip if such already exists
-            if ($label->get('isCustomized')) {
-                $exist = $em
-                    ->getRepository('Label')
-                    ->select(['id'])
-                    ->where(['name' => $label->get('name')])
-                    ->findOne();
-
-                if (!empty($exist)) {
-                    continue 1;
-                }
+            try {
+                $em->saveEntity($label);
+            } catch (BadRequest $e) {
+                // ignore validation errors
             }
-
-            $em->saveEntity($label);
         }
 
         // delete deprecated dir

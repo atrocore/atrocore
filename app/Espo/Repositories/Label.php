@@ -34,6 +34,7 @@
 namespace Espo\Repositories;
 
 use Espo\Core\DataManager;
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Repositories\Base;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Util;
@@ -47,9 +48,18 @@ class Label extends Base
 {
     /**
      * @inheritDoc
+     *
+     * @throws BadRequest
      */
     protected function beforeSave(Entity $entity, array $options = [])
     {
+        if ($entity->isNew()) {
+            $exist = $this->select(['id'])->where(['name' => $entity->get('name')])->findOne();
+            if (!empty($exist)) {
+                throw new BadRequest($this->getInjection('language')->translate('suchKeyAlreadyExist', 'exceptions', 'Label'));
+            }
+        }
+
         if ($entity->get('module') === 'custom' && !$entity->isNew() && !$entity->get('isCustomized')) {
             $entity->set('isCustomized', true);
         }
@@ -115,5 +125,6 @@ class Label extends Base
         parent::init();
 
         $this->addDependency('container');
+        $this->addDependency('language');
     }
 }
