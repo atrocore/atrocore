@@ -56,6 +56,18 @@ Espo.define('views/label/list', 'views/list', function (Dep) {
             });
         },
 
+        actionReset() {
+            this.ajaxPostRequest(`Label/action/reset`).then(response => {
+                this.notify(this.translate('resetSuccessfully', 'messages', 'Label'), 'success');
+            });
+        },
+
+        actionPush() {
+            // this.ajaxPostRequest(`ThreeDimensionalModel/action/sync`).then(response => {
+            //     this.notify(this.translate('syncJobCreated', 'messages', 'ThreeDimensionalModel'), 'success');
+            // });
+        },
+
     });
 });
 

@@ -5,8 +5,9 @@
     "Create Label": "Label erstellen"
   },
   "messages": {
-    "nothingToSend": "Nothing to send.",
-    "sentSuccessfully": "Sent successfully.",
-    "sentFailed": "Sent failed."
+    "resetSuccessfully": "Labels wurden erfolgreich zurückgesetzt.",
+    "nothingToSend": "Nichts zu senden.",
+    "sentSuccessfully": "Labels wurden erfolgreich gesendet.",
+    "sentFailed": "Das Senden von Labels ist fehlgeschlagen."
   }
 }

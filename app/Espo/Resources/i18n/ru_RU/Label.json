@@ -5,6 +5,7 @@
     "Create Label": "Создать метку"
   },
   "messages": {
+    "resetSuccessfully": "Метки восстановлены.",
     "nothingToSend": "Отправлять нечего.",
     "sentSuccessfully": "Отправлено успешно.",
     "sentFailed": "Отправка не удалась."

@@ -84,8 +84,9 @@
     "Create Label": "Create Label"
   },
   "messages": {
+    "resetSuccessfully": "Labels have been successfully reset.",
     "nothingToSend": "Nothing to send.",
-    "sentSuccessfully": "Sent successfully.",
-    "sentFailed": "Sent failed."
+    "sentSuccessfully": "Labels have been successfully sent.",
+    "sentFailed": "Sending Labels failed."
   }
 }
