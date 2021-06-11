@@ -6,10 +6,11 @@
       "trim": true
     },
     "module": {
-      "type": "varchar",
+      "type": "enum",
       "default": "custom",
       "readOnly": true,
-      "required": true
+      "required": true,
+      "view": "views/label/fields/module"
     },
     "isCustomized": {
       "type": "bool",
