@@ -59,16 +59,21 @@ Espo.define('views/label/list', 'views/list', function (Dep) {
         actionReset() {
             this.confirm({
                 message: this.translate('resetConfirm', 'messages', 'Label'),
-                confirmText: this.translate('Remove')
+                confirmText: this.translate('Apply')
             }, () => {
                 this.ajaxPostRequest(`Label/action/reset`).then(response => {
                     this.notify(this.translate('resetSuccessfully', 'messages', 'Label'), 'success');
                 });
-            }, this);
+            });
         },
 
         actionPush() {
-
+            this.confirm({
+                message: this.translate('pushConfirm', 'messages', 'Label'),
+                confirmText: this.translate('Apply')
+            }, () => {
+                this.notify(this.translate('pushSuccessfully', 'messages', 'Label'), 'success');
+            });
         },
 
     });
