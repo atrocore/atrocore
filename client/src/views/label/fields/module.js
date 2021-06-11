@@ -45,7 +45,7 @@ Espo.define('views/label/fields/module', 'views/fields/enum', function (Dep) {
 
             if (!data || now.getTime() > data.expiry) {
                 this.ajaxGetRequest(`Composer/list`, {}, {async: false}).then(response => {
-                    data = {data: response.list, expiry: now.getTime() + 60 * 1000};
+                    data = {data: response.list, expiry: now.getTime() + 5 * 60 * 1000};
                     localStorage.setItem(key, JSON.stringify(data))
                 });
             }
@@ -54,9 +54,14 @@ Espo.define('views/label/fields/module', 'views/fields/enum', function (Dep) {
             this.translatedOptions = {};
 
             data.data.forEach(module => {
-                this.params.options.push(module.id);
-                this.translatedOptions[module.id] = module.name;
+                let id = module.id === 'TreoCore' ? 'core' : module.id;
+
+                this.params.options.push(id);
+                this.translatedOptions[id] = module.name;
             });
+
+            this.params.options.push('custom');
+            this.translatedOptions['custom'] = 'Custom';
         },
 
     });
