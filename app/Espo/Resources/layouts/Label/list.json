@@ -1,0 +1,22 @@
+[
+  {
+    "name": "name",
+    "link": true,
+    "width": 25
+  },
+  {
+    "name": "module"
+  },
+  {
+    "name": "isCustomized"
+  },
+  {
+    "name": "enUs"
+  },
+  {
+    "name": "deDe"
+  },
+  {
+    "name": "ruRu"
+  }
+]

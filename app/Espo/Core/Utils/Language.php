@@ -35,11 +35,12 @@ declare(strict_types=1);
 
 namespace Espo\Core\Utils;
 
+use Espo\Core\Container;
 use Espo\Core\Utils\File\Unifier;
 use Espo\Core\Exceptions\Error;
 use Espo\Entities\Preferences;
+use Treo\Console\RefreshTranslates;
 use Treo\Core\EventManager\Event;
-use Treo\Core\EventManager\Manager as EventManager;
 
 /**
  * Class Language
@@ -47,16 +48,6 @@ use Treo\Core\EventManager\Manager as EventManager;
 class Language
 {
     public const DEFAULT_LANGUAGE = 'en_US';
-
-    /**
-     * @var File\Manager
-     */
-    private $fileManager;
-
-    /**
-     * @var Metadata
-     */
-    private $metadata;
 
     /**
      * @var Unifier
@@ -84,11 +75,6 @@ class Language
     private $currentLanguage;
 
     /**
-     * @var EventManager|null
-     */
-    private $eventManager;
-
-    /**
      * @var bool
      */
     private $noCustom;
@@ -104,22 +90,23 @@ class Language
     private $customPath = 'custom/Espo/Custom/Resources/i18n';
 
     /**
+     * @var Container
+     */
+    private $container;
+
+    /**
      * Language constructor.
      *
-     * @param string            $currentLanguage
-     * @param File\Manager      $fileManager
-     * @param Metadata          $metadata
-     * @param EventManager|null $eventManager
-     * @param bool              $noCustom
+     * @param Container $container
+     * @param string    $currentLanguage
+     * @param bool      $noCustom
      */
-    public function __construct(string $currentLanguage, File\Manager $fileManager, Metadata $metadata, EventManager $eventManager = null, bool $noCustom = false)
+    public function __construct(Container $container, string $currentLanguage = self::DEFAULT_LANGUAGE, bool $noCustom = false)
     {
+        $this->container = $container;
         $this->currentLanguage = $currentLanguage;
-        $this->fileManager = $fileManager;
-        $this->metadata = $metadata;
-        $this->eventManager = $eventManager;
         $this->noCustom = $noCustom;
-        $this->unifier = new Unifier($this->fileManager, $this->metadata);
+        $this->unifier = new Unifier($this->container->get('fileManager'), $this->container->get('metadata'));
     }
 
     public static function detectLanguage(Config $config, Preferences $preferences = null): string
@@ -231,7 +218,7 @@ class Language
         $data = $this->getData();
 
         if (!isset($data) || $data === false) {
-            throw new Error('Language: current language [' . $this->getLanguage() . '] does not found');
+            return null;
         }
 
         return Util::getValueByKey($data, $key, $returns);
@@ -251,29 +238,43 @@ class Language
      */
     public function save()
     {
-        $path = $this->customPath;
-        $currentLanguage = $this->getLanguage();
+        $field = Util::toCamelCase(strtolower($this->getLanguage()));
 
-        $result = true;
+        /** @var \Espo\ORM\EntityManager $em */
+        $em = $this->container->get('entityManager');
+
         if (!empty($this->changedData)) {
-            foreach ($this->changedData as $scope => $data) {
-                if (!empty($data)) {
-                    $result &= $this->fileManager->mergeContents(array($path, $currentLanguage, $scope . '.json'), $data, true);
+            $simplifiedTranslates = [];
+            RefreshTranslates::toSimpleArray($this->changedData, $simplifiedTranslates);
+
+            foreach ($simplifiedTranslates as $key => $value) {
+                $label = $em->getRepository('Label')->where(['name' => $key])->findOne();
+                if (empty($label)) {
+                    $label = $em->getRepository('Label')->get();
+                    $label->set(['name' => $key, 'module' => 'custom']);
                 }
+                $label->set('isCustomized', true);
+                $label->set($field, $value);
+                $em->saveEntity($label);
             }
         }
 
         if (!empty($this->deletedData)) {
             foreach ($this->deletedData as $scope => $unsetData) {
-                if (!empty($unsetData)) {
-                    $result &= $this->fileManager->unsetContents(array($path, $currentLanguage, $scope . '.json'), $unsetData, true);
+                foreach ($unsetData as $category => $names) {
+                    foreach ($names as $name) {
+                        $label = $em->getRepository('Label')->where(['name' => "$scope.$category.$name", 'module' => 'custom', 'isCustomized' => true])->findOne();
+                        if (!empty($label)) {
+                            $em->removeEntity($label);
+                        }
+                    }
                 }
             }
         }
 
         $this->clearChanges();
 
-        return (bool)$result;
+        return true;
     }
 
     /**
@@ -286,6 +287,30 @@ class Language
         $this->changedData = [];
         $this->deletedData = [];
         $this->init();
+    }
+
+    /**
+     * @return array
+     */
+    public function getModulesData(): array
+    {
+        $data = [];
+
+        // load core
+        $data['core'] = $this->unify($this->corePath);
+
+        // load modules
+        foreach ($this->container->get('metadata')->getModules() as $name => $module) {
+            $data[$name] = [];
+            $module->loadTranslates($data[$name]);
+        }
+
+        // load custom
+        if (!$this->noCustom) {
+            $data['custom'] = $this->unify($this->customPath);
+        }
+
+        return $data;
     }
 
     /**
@@ -359,17 +384,47 @@ class Language
 
     protected function init(): void
     {
+        /** @var bool $installed */
+        $installed = $this->container->get('config')->get('isInstalled', false);
+
+        $data = [];
+
+        // get translates from DB
+        if ($installed) {
+            $dbData = $this->container->get('entityManager')->getRepository('Label')->find();
+            if ($dbData->count() > 0) {
+                foreach ($dbData as $record) {
+                    foreach ($this->container->get('metadata')->get('multilang.languageList', []) as $locale) {
+                        $row = [];
+                        $field = Util::toCamelCase(strtolower($locale));
+                        if ($record->get($field) !== null) {
+                            $insideRow = [];
+                            $this->prepareTreeValue(explode('.', $record->get('name')), $insideRow, $record->get($field));
+                            $row[$record->get('module')][$locale] = $insideRow;
+                            $data = Util::merge($data, $row);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (empty($data)) {
+            $data = $this->getModulesData();
+        }
+
+        $fullData = [];
+
         // load core
-        $fullData = $this->unify($this->corePath);
+        $fullData = Util::merge($fullData, $data['core']);
 
         // load modules
-        foreach ($this->metadata->getModules() as $module) {
-            $module->loadTranslates($fullData);
+        foreach ($this->container->get('metadata')->getModules() as $name => $module) {
+            $fullData = Util::merge($fullData, $data[$name]);
         }
 
         // load custom
         if (!$this->noCustom) {
-            $fullData = Util::merge($fullData, $this->unify($this->customPath));
+            $fullData = Util::merge($fullData, $data['custom']);
         }
 
         foreach ($fullData as $i18nName => $i18nData) {
@@ -379,8 +434,8 @@ class Language
             $this->data[$i18nName] = $i18nData;
         }
 
-        if (!is_null($this->eventManager)) {
-            $this->data = $this->eventManager->dispatch('Language', 'modify', new Event(['data' => $this->data]))->getArgument('data');
+        if ($installed) {
+            $this->data = $this->container->get('eventManager')->dispatch('Language', 'modify', new Event(['data' => $this->data]))->getArgument('data');
         }
     }
 
@@ -402,5 +457,22 @@ class Language
     private function unify(string $path): array
     {
         return $this->unifier->unify('i18n', $path, true);
+    }
+
+    /**
+     * @param array $data
+     * @param mixed $result
+     * @param mixed $value
+     */
+    private function prepareTreeValue(array $data, &$result, $value): void
+    {
+        if (!empty($data)) {
+            $first = array_shift($data);
+            if (!empty($data)) {
+                $this->prepareTreeValue($data, $result[$first], $value);
+            } else {
+                $result[$first] = $value;
+            }
+        }
     }
 }

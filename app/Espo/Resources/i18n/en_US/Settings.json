@@ -1,6 +1,7 @@
 {
   "fields": {
     "isMultilangActive": "Active",
+    "languageList": "Interface Languages",
     "inputLanguageList": "Input Languages",
     "appId": "ID",
     "isStreamSide": "Is stream in side",

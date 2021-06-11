@@ -42,6 +42,7 @@ use Espo\Core\Utils\PasswordHash;
 use Espo\Core\Utils\Util;
 use Espo\Entities\User;
 use Espo\Core\Utils\Config;
+use Treo\Console\AbstractConsole;
 use Treo\Core\ModuleManager\Manager;
 
 /**
@@ -669,11 +670,7 @@ class Installer extends AbstractService
      */
     protected function getLanguage()
     {
-        return new Language(
-            $this->getConfig()->get('language'),
-            $this->getContainer()->get('fileManager'),
-            $this->getContainer()->get('metadata')
-        );
+        return new Language($this->getContainer(), $this->getConfig()->get('language'));
     }
 
     protected function afterInstall(): void
@@ -697,6 +694,9 @@ class Installer extends AbstractService
         $this->createScheduledJobs();
 
         $this->afterInstallModules();
+
+        // refresh translates
+        exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " index.php refresh translates >/dev/null");
     }
 
     /**

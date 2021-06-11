@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -31,27 +30,14 @@
  * and "AtroCore" word.
  */
 
-declare(strict_types=1);
+Espo.define('views/label/record/list', 'views/record/list', function (Dep) {
 
-namespace Treo\Configs;
+    return Dep.extend({
 
-use Treo\Console;
+        massActionList: ['massUpdate', 'export'],
 
-return [
-    "refresh translates"           => Console\RefreshTranslates::class,
-    "list"                         => Console\ListCommand::class,
-    "install demo-project"         => Console\InstallDemoProject::class,
-    "clear cache"                  => Console\ClearCache::class,
-    "cleanup"                      => Console\Cleanup::class,
-    "sql diff --show"              => Console\SqlDiff::class,
-    "sql diff --run"               => Console\SqlDiffRun::class,
-    "cron"                         => Console\Cron::class,
-    "store --refresh"              => Console\StoreRefresh::class,
-    "migrate <module> <from> <to>" => Console\Migrate::class,
-    "apidocs --generate"           => Console\GenerateApidocs::class,
-    "qm <stream> --run"            => Console\QueueManager::class,
-    "qm item <id> --run"           => Console\QueueItem::class,
-    "notifications --refresh"      => Console\Notification::class,
-    "kill daemons"                 => Console\KillDaemons::class,
-    "daemon <name> <id>"           => Console\Daemon::class,
-];
+        checkAllResultMassActionList: ['massUpdate', 'export'],
+
+    });
+});
+

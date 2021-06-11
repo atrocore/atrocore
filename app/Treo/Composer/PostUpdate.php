@@ -115,6 +115,9 @@ class PostUpdate
             // run migrations
             self::runMigrations();
 
+            // refresh translates
+            self::refreshTranslates();
+
             // send notification
             self::sendNotification();
 
@@ -594,6 +597,16 @@ class PostUpdate
         }
     }
 
+    private static function refreshTranslates()
+    {
+        if (!self::isInstalled()) {
+            return;
+        }
+
+        self::renderLine('Refreshing translates');
+        exec(self::getPhpBin() . " index.php refresh translates >/dev/null");
+    }
+
     /**
      * Send Notification Admin Users when updated composer
      */
@@ -808,8 +821,16 @@ class PostUpdate
 
     private static function getPhpBin(): string
     {
+        if (self::$container->get('config')->get('phpBinPath')) {
+            return self::$container->get('config')->get('phpBinPath');
+        }
+
         if (isset($_SERVER['PHP_PATH']) && !empty($_SERVER['PHP_PATH'])) {
             return $_SERVER['PHP_PATH'];
+        }
+
+        if (!empty($_SERVER['_'])) {
+            return $_SERVER['_'];
         }
 
         return defined("PHP_BINDIR") ? PHP_BINDIR . DIRECTORY_SEPARATOR . 'php' : 'php';

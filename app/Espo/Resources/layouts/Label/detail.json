@@ -1,0 +1,39 @@
+[
+  {
+    "label": "Overview",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "module"
+        }
+      ],
+      [
+        {
+          "name": "isCustomized"
+        },
+        false
+      ],
+      [
+        {
+          "name": "enUs",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "deDe",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "ruRu",
+          "fullWidth": true
+        }
+      ]
+    ]
+  }
+]

@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -31,27 +30,13 @@
  * and "AtroCore" word.
  */
 
-declare(strict_types=1);
+Espo.define('views/admin/fields/language-list', 'views/fields/multi-enum',
+    Dep => Dep.extend({
 
-namespace Treo\Configs;
+        setupOptions() {
+            this.params.options = Espo.Utils.clone(this.getMetadata().get(['multilang', 'languageList']));
+            this.translatedOptions = Espo.Utils.clone(this.getLanguage().translate('language', 'options') || {});
+        },
 
-use Treo\Console;
-
-return [
-    "refresh translates"           => Console\RefreshTranslates::class,
-    "list"                         => Console\ListCommand::class,
-    "install demo-project"         => Console\InstallDemoProject::class,
-    "clear cache"                  => Console\ClearCache::class,
-    "cleanup"                      => Console\Cleanup::class,
-    "sql diff --show"              => Console\SqlDiff::class,
-    "sql diff --run"               => Console\SqlDiffRun::class,
-    "cron"                         => Console\Cron::class,
-    "store --refresh"              => Console\StoreRefresh::class,
-    "migrate <module> <from> <to>" => Console\Migrate::class,
-    "apidocs --generate"           => Console\GenerateApidocs::class,
-    "qm <stream> --run"            => Console\QueueManager::class,
-    "qm item <id> --run"           => Console\QueueItem::class,
-    "notifications --refresh"      => Console\Notification::class,
-    "kill daemons"                 => Console\KillDaemons::class,
-    "daemon <name> <id>"           => Console\Daemon::class,
-];
+    })
+);

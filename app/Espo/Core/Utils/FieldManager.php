@@ -174,7 +174,7 @@ class FieldManager
             $label = Util::toCamelCase('label_' . strtolower($locale));
             $fieldKey = empty($fieldDefs['multilangField']) ? $name : $fieldDefs['multilangField'];
             if (isset($fieldDefs[$label])) {
-                $languageObj = new Language($locale, $this->container->get('fileManager'), $this->getMetadata());
+                $languageObj = new Language($this->container, $locale);
                 $languageObj->set($scope, 'fields', $fieldKey, $fieldDefs[$label]);
                 $languageObj->save();
                 unset($fieldDefs[$label]);

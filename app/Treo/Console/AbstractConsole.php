@@ -82,6 +82,23 @@ abstract class AbstractConsole
      */
     abstract public static function getDescription(): string;
 
+    public static function getPhpBinPath(Config $config): string
+    {
+        if ($config->get('phpBinPath')) {
+            return $config->get('phpBinPath');
+        }
+
+        if (isset($_SERVER['PHP_PATH']) && !empty($_SERVER['PHP_PATH'])) {
+            return $_SERVER['PHP_PATH'];
+        }
+
+        if (!empty($_SERVER['_'])) {
+            return $_SERVER['_'];
+        }
+
+        return defined("PHP_BINDIR") ? PHP_BINDIR . DIRECTORY_SEPARATOR . 'php' : 'php';
+    }
+
     /**
      * Echo CLI message
      *
@@ -224,18 +241,6 @@ abstract class AbstractConsole
      */
     protected function getPhpBin(): string
     {
-        if ($this->getConfig()->get('phpBinPath')) {
-            return $this->getConfig()->get('phpBinPath');
-        }
-
-        if (isset($_SERVER['PHP_PATH']) && !empty($_SERVER['PHP_PATH'])) {
-            return $_SERVER['PHP_PATH'];
-        }
-
-        if (!empty($_SERVER['_'])) {
-            return $_SERVER['_'];
-        }
-
-        return defined("PHP_BINDIR") ? PHP_BINDIR . DIRECTORY_SEPARATOR . 'php' : 'php';
+        return self::getPhpBinPath($this->getConfig());
     }
 }

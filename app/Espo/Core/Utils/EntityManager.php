@@ -37,8 +37,8 @@ use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\BadRequest;
 use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\Conflict;
-use \Espo\Core\Utils\Json;
 use \Espo\Core\Container;
+use Treo\Console\RefreshTranslates;
 
 class EntityManager
 {
@@ -280,9 +280,23 @@ class EntityManager
             foreach ($replaceData as $key => $value) {
                 $languageContents = str_replace('{'.$key.'}', $value, $languageContents);
             }
+            $languageContents = Json::decode($languageContents, true);
 
-            $destinationFilePath = 'custom/Espo/Custom/Resources/i18n/' . $language . '/' . $name . '.json';
-            $this->getFileManager()->putContents($destinationFilePath, $languageContents);
+            $field = Util::toCamelCase(strtolower($language));
+            $simplifiedTranslates = [];
+            RefreshTranslates::toSimpleArray($languageContents, $simplifiedTranslates);
+
+            foreach ($simplifiedTranslates as $key => $value) {
+                $key = "$name.$key";
+                $label = $this->getEntityManager()->getRepository('Label')->where(['name' => $key])->findOne();
+                if (empty($label)) {
+                    $label = $this->getEntityManager()->getRepository('Label')->get();
+                    $label->set(['name' => $key, 'module' => 'custom']);
+                }
+                $label->set('isCustomized', true);
+                $label->set($field, $value);
+                $this->getEntityManager()->saveEntity($label);
+            }
         }
 
         $filePath = $templatePath . "/Metadata/{$type}/scopes.json";
@@ -526,11 +540,16 @@ class EntityManager
         $this->getFileManager()->removeInDir("custom/Espo/Custom/Resources/layouts/{$normalizedName}");
         $this->getFileManager()->removeDir("custom/Espo/Custom/Resources/layouts/{$normalizedName}");
 
-        $languageList = $this->getConfig()->get('languageList', []);
-        foreach ($languageList as $language) {
-            $filePath = 'custom/Espo/Custom/Resources/i18n/' . $language . '/' . $normalizedName . '.json' ;
-            if (!file_exists($filePath)) continue;
-            $this->getFileManager()->removeFile($filePath);
+        $labels = $this
+            ->getEntityManager()
+            ->getRepository('Label')
+            ->where(['name *' => "$normalizedName.%", 'module' => 'custom', 'isCustomized' => true])
+            ->find();
+
+        if ($labels->count() > 0) {
+            foreach ($labels as $label) {
+                $this->getEntityManager()->removeEntity($label);
+            }
         }
 
         try {
@@ -974,11 +993,18 @@ class EntityManager
             'fields.' . $link,
             'links.' . $link
         ));
+        $this->getLanguage()->delete($entity, 'fields', $link);
+        $this->getLanguage()->delete($entity, 'links', $link);
+
         $this->getMetadata()->delete('entityDefs', $entityForeign, array(
             'fields.' . $linkForeign,
             'links.' . $linkForeign
         ));
+        $this->getLanguage()->delete($entityForeign, 'fields', $linkForeign);
+        $this->getLanguage()->delete($entityForeign, 'links', $linkForeign);
+
         $this->getMetadata()->save();
+        $this->getLanguage()->save();
 
         return true;
     }

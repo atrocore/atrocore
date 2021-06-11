@@ -1,3 +1,4 @@
+<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -30,10 +31,17 @@
  * and "AtroCore" word.
  */
 
-Espo.define('treo-core:views/admin/label-manager/index', 'class-replace!treo-core:views/admin/label-manager/index', function (Dep) {
+namespace Espo\Entities;
 
-   return Dep.extend({
-       template: 'treo-core:admin/label-manager/index'
+use Espo\Core\Templates\Entities\Base;
 
-   })
-});
+/**
+ * Class Label
+ */
+class Label extends Base
+{
+    /**
+     * @var string
+     */
+    protected $entityType = "Label";
+}
