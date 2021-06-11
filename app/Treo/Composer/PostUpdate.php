@@ -115,8 +115,8 @@ class PostUpdate
             // run migrations
             self::runMigrations();
 
-            // refresh translates
-            self::refreshTranslates();
+            // refresh translations
+            self::refreshTranslations();
 
             // send notification
             self::sendNotification();
@@ -597,13 +597,13 @@ class PostUpdate
         }
     }
 
-    private static function refreshTranslates()
+    private static function refreshTranslations()
     {
         if (!self::isInstalled()) {
             return;
         }
 
-        self::renderLine('Refreshing translates');
+        self::renderLine('Refreshing translations');
         exec(self::getPhpBin() . " index.php refresh translates >/dev/null");
     }
 
