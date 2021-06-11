@@ -92,7 +92,7 @@ class Label extends Base
     {
         parent::afterSave($entity, $options);
 
-        $this->refreshTimestamp();
+        $this->refreshTimestamp($options);
     }
 
     /**
@@ -102,7 +102,7 @@ class Label extends Base
     {
         parent::afterRemove($entity, $options);
 
-        $this->refreshTimestamp();
+        $this->refreshTimestamp($options);
     }
 
     protected function getLocales(): array
@@ -110,8 +110,12 @@ class Label extends Base
         return $this->getMetadata()->get('multilang.languageList', []);
     }
 
-    protected function refreshTimestamp(): void
+    protected function refreshTimestamp(array $options): void
     {
+        if (!empty($options['keepCache'])) {
+            return;
+        }
+
         $this->getConfig()->set('cacheTimestamp', time());
         $this->getConfig()->save();
         DataManager::pushPublicData('dataTimestamp', time());

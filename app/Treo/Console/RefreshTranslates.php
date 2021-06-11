@@ -35,6 +35,7 @@ declare(strict_types=1);
 
 namespace Treo\Console;
 
+use Espo\Core\DataManager;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Util;
@@ -110,11 +111,15 @@ class RefreshTranslates extends AbstractConsole
             $label->set($record);
 
             try {
-                $em->saveEntity($label);
+                $em->saveEntity($label, $data);
             } catch (BadRequest $e) {
                 // ignore validation errors
             }
         }
+
+        $this->getConfig()->set('cacheTimestamp', time());
+        $this->getConfig()->save();
+        DataManager::pushPublicData('dataTimestamp', time());
 
         // delete deprecated dir
         Util::removeDir('custom/Espo/Custom/Resources/i18n');
