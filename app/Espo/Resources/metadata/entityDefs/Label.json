@@ -3,8 +3,7 @@
     "name": {
       "type": "varchar",
       "required": true,
-      "trim": true,
-      "view": "views/label/fields/key"
+      "trim": true
     },
     "module": {
       "type": "varchar",
