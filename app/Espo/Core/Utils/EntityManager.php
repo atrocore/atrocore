@@ -993,11 +993,18 @@ class EntityManager
             'fields.' . $link,
             'links.' . $link
         ));
+        $this->getLanguage()->delete($entity, 'fields', $link);
+        $this->getLanguage()->delete($entity, 'links', $link);
+
         $this->getMetadata()->delete('entityDefs', $entityForeign, array(
             'fields.' . $linkForeign,
             'links.' . $linkForeign
         ));
+        $this->getLanguage()->delete($entityForeign, 'fields', $linkForeign);
+        $this->getLanguage()->delete($entityForeign, 'links', $linkForeign);
+
         $this->getMetadata()->save();
+        $this->getLanguage()->save();
 
         return true;
     }
