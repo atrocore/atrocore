@@ -6499,8 +6499,16 @@ button.close {
     padding: 0 14px;
 }
 
+.modal-body > .button-container {
+    margin-bottom: 12px;
+}
+
 .modal-body > div.edit-container > .row {
     padding: 0 6px;
+}
+
+.modal-body > .edit-container > .cell {
+    padding: 0 14px;
 }
 
 .modal-body .fields-container .cell:nth-of-type(odd),
