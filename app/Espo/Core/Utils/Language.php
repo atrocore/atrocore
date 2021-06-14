@@ -39,7 +39,7 @@ use Espo\Core\Container;
 use Espo\Core\Utils\File\Unifier;
 use Espo\Core\Exceptions\Error;
 use Espo\Entities\Preferences;
-use Treo\Console\RefreshTranslates;
+use Treo\Console\RefreshTranslations;
 use Treo\Core\EventManager\Event;
 
 /**
@@ -245,12 +245,12 @@ class Language
 
         if (!empty($this->changedData)) {
             $simplifiedTranslates = [];
-            RefreshTranslates::toSimpleArray($this->changedData, $simplifiedTranslates);
+            RefreshTranslations::toSimpleArray($this->changedData, $simplifiedTranslates);
 
             foreach ($simplifiedTranslates as $key => $value) {
-                $label = $em->getRepository('Label')->where(['name' => $key])->findOne();
+                $label = $em->getRepository('Translation')->where(['name' => $key])->findOne();
                 if (empty($label)) {
-                    $label = $em->getRepository('Label')->get();
+                    $label = $em->getRepository('Translation')->get();
                     $label->set(['name' => $key, 'module' => 'custom']);
                 }
                 $label->set('isCustomized', true);
@@ -263,7 +263,7 @@ class Language
             foreach ($this->deletedData as $scope => $unsetData) {
                 foreach ($unsetData as $category => $names) {
                     foreach ($names as $name) {
-                        $label = $em->getRepository('Label')->where(['name' => "$scope.$category.$name", 'module' => 'custom', 'isCustomized' => true])->findOne();
+                        $label = $em->getRepository('Translation')->where(['name' => "$scope.$category.$name", 'module' => 'custom', 'isCustomized' => true])->findOne();
                         if (!empty($label)) {
                             $em->removeEntity($label);
                         }
@@ -391,7 +391,7 @@ class Language
 
         // get translates from DB
         if ($installed) {
-            $dbData = $this->container->get('entityManager')->getRepository('Label')->find();
+            $dbData = $this->container->get('entityManager')->getRepository('Translation')->find();
             if ($dbData->count() > 0) {
                 foreach ($dbData as $record) {
                     foreach ($this->container->get('metadata')->get('multilang.languageList', []) as $locale) {

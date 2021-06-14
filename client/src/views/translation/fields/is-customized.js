@@ -30,57 +30,32 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/label/list', 'views/list', function (Dep) {
+Espo.define('views/translation/fields/is-customized', 'views/fields/bool', function (Dep) {
 
     return Dep.extend({
 
         setup() {
             Dep.prototype.setup.call(this);
 
-            this.menu.dropdown = [];
-
-            this.menu.dropdown.push({
-                acl: 'create',
-                aclScope: 'Label',
-                action: 'reset',
-                label: this.translate('reset', 'labels', 'Label'),
-                iconHtml: ''
-            });
-
-            this.menu.dropdown.push({
-                acl: 'create',
-                aclScope: 'Label',
-                action: 'push',
-                label: this.translate('push', 'labels', 'Label'),
-                iconHtml: ''
-            });
-        },
-
-        actionReset() {
-            this.confirm({
-                message: this.translate('resetConfirm', 'messages', 'Label'),
-                confirmText: this.translate('Apply')
-            }, () => {
-                this.ajaxPostRequest(`Label/action/reset`).then(response => {
-                    this.notify(this.translate('resetSuccessfully', 'messages', 'Label'), 'success');
-                });
-            });
-        },
-
-        actionPush() {
-            this.confirm({
-                message: this.translate('pushConfirm', 'messages', 'Label'),
-                confirmText: this.translate('Apply')
-            }, () => {
-                this.ajaxPostRequest(`Label/action/push`).then(success => {
-                    if (success) {
-                        this.notify(this.translate('pushSuccessfully', 'messages', 'Label'), 'success');
+            if (this.mode !== 'list') {
+                this.listenTo(this.model, 'change', (model, o) => {
+                    if (!model.hasChanged('isCustomized') && o.ui) {
+                        this.model.set('isCustomized', true);
                     } else {
-                        this.notify(this.translate('pushFailed', 'messages', 'Label'), 'error');
+                        if (!this.model.get('isCustomized')) {
+                            this.ajaxGetRequest(`Translation/action/getDefaults?key=${this.model.get('name')}`).then(fetchedAttributes => {
+                                let values = this.getMetadata().get('entityDefs.Label.fields') || {};
+                                $.each(values, (field, data) => {
+                                    if (!!(data.isValue) && this.model.has(field)) {
+                                        let value = (fetchedAttributes[field]) ? fetchedAttributes[field] : null;
+                                        this.model.set(field, value, {reset: true});
+                                    }
+                                });
+                            });
+                        }
                     }
-
                 });
-            });
+            }
         },
 
     });

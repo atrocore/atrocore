@@ -695,8 +695,8 @@ class Installer extends AbstractService
 
         $this->afterInstallModules();
 
-        // refresh translates
-        exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " index.php refresh translates >/dev/null");
+        // refresh translations
+        exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " index.php refresh translations >/dev/null");
     }
 
     /**

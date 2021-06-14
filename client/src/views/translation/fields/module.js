@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/label/fields/module', 'views/fields/enum', function (Dep) {
+Espo.define('views/translation/fields/module', 'views/fields/enum', function (Dep) {
 
     return Dep.extend({
 

@@ -10,12 +10,12 @@
       "default": "custom",
       "readOnly": true,
       "required": true,
-      "view": "views/label/fields/module"
+      "view": "views/translation/fields/module"
     },
     "isCustomized": {
       "type": "bool",
       "default": "true",
-      "view": "views/label/fields/is-customized"
+      "view": "views/translation/fields/is-customized"
     },
     "enUs": {
       "type": "text",

@@ -608,7 +608,7 @@ class PostUpdate
         }
 
         self::renderLine('Refreshing translations');
-        exec(self::getPhpBin() . " index.php refresh translates >/dev/null");
+        exec(self::getPhpBin() . " index.php refresh translations >/dev/null");
     }
 
     /**

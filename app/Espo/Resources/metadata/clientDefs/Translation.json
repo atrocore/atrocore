@@ -2,11 +2,11 @@
   "controller": "controllers/record",
   "iconClass": "fas fa-pen-alt",
   "views": {
-    "list": "views/label/list"
+    "list": "views/translation/list"
   },
   "recordViews": {
-    "list": "views/label/record/list",
-    "detail": "views/label/record/detail"
+    "list": "views/translation/record/list",
+    "detail": "views/translation/record/detail"
   },
   "dynamicLogic": {
     "fields": {

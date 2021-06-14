@@ -38,20 +38,20 @@ use Espo\Core\Templates\Services\Base;
 use Espo\Core\Utils\Util;
 
 /**
- * Class Label
+ * Class Translation
  */
-class Label extends Base
+class Translation extends Base
 {
     public function push(): bool
     {
         $data = [];
         $data['data'] = $this
             ->getEntityManager()
-            ->nativeQuery("SELECT * FROM label WHERE is_customized=1 OR deleted=1")
+            ->nativeQuery("SELECT * FROM translation WHERE is_customized=1 OR deleted=1")
             ->fetchAll(\PDO::FETCH_ASSOC);
 
         if (empty($data['data'])) {
-            throw new BadRequest($this->getInjection('language')->translate('nothingToPush', 'messages', 'Label'));
+            throw new BadRequest($this->getInjection('language')->translate('nothingToPush', 'messages', 'Translation'));
         }
 
         $data['appId'] = $this->getConfig()->get('appId');
@@ -89,15 +89,15 @@ class Label extends Base
             $preparedKeys = implode("','", array_keys($data));
             $this
                 ->getEntityManager()
-                ->nativeQuery("DELETE FROM label WHERE is_customized=1 AND name LIKE '$item%' AND module='custom' AND name NOT IN ('$preparedKeys')");
+                ->nativeQuery("DELETE FROM translation WHERE is_customized=1 AND name LIKE '$item%' AND module='custom' AND name NOT IN ('$preparedKeys')");
         }
 
         // update or create
         $language = Util::toCamelCase(strtolower($language));
         foreach ($data as $key => $value) {
-            $entity = $this->getEntityManager()->getRepository('Label')->where(['name' => $key])->findOne();
+            $entity = $this->getEntityManager()->getRepository('Translation')->where(['name' => $key])->findOne();
             if (empty($entity)) {
-                $entity = $this->getEntityManager()->getRepository('Label')->get();
+                $entity = $this->getEntityManager()->getRepository('Translation')->get();
                 $entity->set('name', $key);
                 $entity->set('module', 'custom');
             }

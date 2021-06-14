@@ -42,9 +42,9 @@ use Espo\Core\Utils\Util;
 use Espo\ORM\EntityManager;
 
 /**
- * Class RefreshTranslates
+ * Class RefreshTranslations
  */
-class RefreshTranslates extends AbstractConsole
+class RefreshTranslations extends AbstractConsole
 {
     /**
      * Get console command description
@@ -53,7 +53,7 @@ class RefreshTranslates extends AbstractConsole
      */
     public static function getDescription(): string
     {
-        return 'Refresh translates.';
+        return 'Refresh translations.';
     }
 
     public static function getSimplifiedTranslates(array $data): array
@@ -102,12 +102,12 @@ class RefreshTranslates extends AbstractConsole
         $em = $this->getContainer()->get('entityManager');
 
         // delete old
-        $em->nativeQuery("DELETE FROM label WHERE is_customized=0");
+        $em->nativeQuery("DELETE FROM translation WHERE is_customized=0");
 
         $records = self::getSimplifiedTranslates((new Language($this->getContainer()))->getModulesData());
 
         foreach ($records as $record) {
-            $label = $em->getEntity('Label');
+            $label = $em->getEntity('Translation');
             $label->set($record);
 
             try {
@@ -125,6 +125,6 @@ class RefreshTranslates extends AbstractConsole
         Util::removeDir('custom/Espo/Custom/Resources/i18n');
 
         // render
-        self::show('Translates refreshed successfully.', self::SUCCESS);
+        self::show('Translations refreshed successfully.', self::SUCCESS);
     }
 }

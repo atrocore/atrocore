@@ -39,12 +39,12 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Templates\Controllers\Base;
 use Espo\Core\Utils\Language;
 use Treo\Console\AbstractConsole;
-use Treo\Console\RefreshTranslates;
+use Treo\Console\RefreshTranslations;
 
 /**
- * Class Label
+ * Class Translation
  */
-class Label extends Base
+class Translation extends Base
 {
     /**
      * @param mixed $params
@@ -61,7 +61,7 @@ class Label extends Base
             throw new BadRequest();
         }
 
-        $records = RefreshTranslates::getSimplifiedTranslates((new Language($this->getContainer()))->getModulesData());
+        $records = RefreshTranslations::getSimplifiedTranslates((new Language($this->getContainer()))->getModulesData());
 
         if (empty($records[$request->get('key')])) {
             throw new NotFound();
@@ -81,7 +81,7 @@ class Label extends Base
 
     public function postActionReset(): bool
     {
-        exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " index.php refresh translates >/dev/null");
+        exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " index.php refresh translations >/dev/null");
 
         return true;
     }

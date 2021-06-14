@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/label/record/detail', 'views/record/detail', function (Dep) {
+Espo.define('views/translation/record/detail', 'views/record/detail', function (Dep) {
 
     return Dep.extend({
 

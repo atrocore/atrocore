@@ -36,15 +36,12 @@ namespace Espo\Repositories;
 use Espo\Core\DataManager;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Repositories\Base;
-use Espo\Core\Utils\Language;
-use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
-use Treo\Console\RefreshTranslates;
 
 /**
- * Class Label
+ * Class Translation
  */
-class Label extends Base
+class Translation extends Base
 {
     /**
      * @inheritDoc
@@ -56,7 +53,7 @@ class Label extends Base
         if ($entity->isNew()) {
             $exist = $this->select(['id'])->where(['name' => $entity->get('name')])->findOne();
             if (!empty($exist)) {
-                throw new BadRequest($this->getInjection('language')->translate('suchKeyAlreadyExist', 'exceptions', 'Label'));
+                throw new BadRequest($this->getInjection('language')->translate('suchKeyAlreadyExist', 'exceptions', 'Translation'));
             }
         }
 

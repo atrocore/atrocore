@@ -38,7 +38,7 @@ use \Espo\Core\Exceptions\BadRequest;
 use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\Conflict;
 use \Espo\Core\Container;
-use Treo\Console\RefreshTranslates;
+use Treo\Console\RefreshTranslations;
 
 class EntityManager
 {
@@ -284,13 +284,13 @@ class EntityManager
 
             $field = Util::toCamelCase(strtolower($language));
             $simplifiedTranslates = [];
-            RefreshTranslates::toSimpleArray($languageContents, $simplifiedTranslates);
+            RefreshTranslations::toSimpleArray($languageContents, $simplifiedTranslates);
 
             foreach ($simplifiedTranslates as $key => $value) {
                 $key = "$name.$key";
-                $label = $this->getEntityManager()->getRepository('Label')->where(['name' => $key])->findOne();
+                $label = $this->getEntityManager()->getRepository('Translation')->where(['name' => $key])->findOne();
                 if (empty($label)) {
-                    $label = $this->getEntityManager()->getRepository('Label')->get();
+                    $label = $this->getEntityManager()->getRepository('Translation')->get();
                     $label->set(['name' => $key, 'module' => 'custom']);
                 }
                 $label->set('isCustomized', true);
@@ -542,7 +542,7 @@ class EntityManager
 
         $labels = $this
             ->getEntityManager()
-            ->getRepository('Label')
+            ->getRepository('Translation')
             ->where(['name *' => "$normalizedName.%", 'module' => 'custom', 'isCustomized' => true])
             ->find();
 

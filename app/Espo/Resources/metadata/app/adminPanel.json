@@ -110,7 +110,7 @@
         "description": "entityManager"
       },
       {
-        "url": "#Label",
+        "url": "#Translation",
         "label": "Label Manager",
         "description": "labelManager"
       }
