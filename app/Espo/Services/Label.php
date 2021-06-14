@@ -55,6 +55,7 @@ class Label extends Base
         }
 
         $data['appId'] = $this->getConfig()->get('appId');
+        $data['siteUrl'] = $this->getConfig()->get('siteUrl');
         $data['smtpUsername'] = $this->getConfig()->get('smtpUsername');
         $data['emailFrom'] = $this->getConfig()->get('outboundEmailFromAddress');
 
