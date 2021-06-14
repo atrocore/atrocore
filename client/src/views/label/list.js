@@ -72,7 +72,14 @@ Espo.define('views/label/list', 'views/list', function (Dep) {
                 message: this.translate('pushConfirm', 'messages', 'Label'),
                 confirmText: this.translate('Apply')
             }, () => {
-                this.notify(this.translate('pushSuccessfully', 'messages', 'Label'), 'success');
+                this.ajaxPostRequest(`Label/action/push`).then(success => {
+                    if (success) {
+                        this.notify(this.translate('pushSuccessfully', 'messages', 'Label'), 'success');
+                    } else {
+                        this.notify(this.translate('pushFailed', 'messages', 'Label'), 'error');
+                    }
+
+                });
             });
         },
 

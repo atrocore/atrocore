@@ -42,6 +42,32 @@ use Espo\Core\Utils\Util;
  */
 class Label extends Base
 {
+    public function push(): bool
+    {
+        $data = [];
+        $data['data'] = $this
+            ->getEntityManager()
+            ->nativeQuery("SELECT * FROM label WHERE is_customized=1 OR deleted=1")
+            ->fetchAll(\PDO::FETCH_ASSOC);
+
+        if (empty($data['data'])) {
+            throw new BadRequest($this->getInjection('language')->translate('nothingToPush', 'messages', 'Label'));
+        }
+
+        $data['appId'] = $this->getConfig()->get('appId');
+        $data['smtpUsername'] = $this->getConfig()->get('smtpUsername');
+        $data['emailFrom'] = $this->getConfig()->get('outboundEmailFromAddress');
+
+        $ch = curl_init('https://pm.atrocore.com/api/v1/PushedTranslation');
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:application/json']);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+        return $result;
+    }
+
     public function saveUnitsOfMeasure(string $language, array $labels): bool
     {
         $toRemove = [];
@@ -86,5 +112,12 @@ class Label extends Base
         }
 
         return true;
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('language');
     }
 }

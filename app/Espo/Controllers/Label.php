@@ -86,6 +86,11 @@ class Label extends Base
         return true;
     }
 
+    public function postActionPush(): bool
+    {
+        return $this->getRecordService()->push();
+    }
+
     /**
      * @inheritDoc
      */
