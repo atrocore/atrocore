@@ -151,11 +151,61 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
 
                 if (!(language in $.fn.datepicker.dates)) {
                     $.fn.datepicker.dates[language] = {
-                        days: this.translate('dayNames', 'lists'),
-                        daysShort: this.translate('dayNamesShort', 'lists'),
-                        daysMin: this.translate('dayNamesMin', 'lists'),
-                        months: this.translate('monthNames', 'lists'),
-                        monthsShort: this.translate('monthNamesShort', 'lists'),
+                        days: [
+                            this.translate('Sunday', 'dayNames'),
+                            this.translate('Monday', 'dayNames'),
+                            this.translate('Tuesday', 'dayNames'),
+                            this.translate('Wednesday', 'dayNames'),
+                            this.translate('Thursday', 'dayNames'),
+                            this.translate('Friday', 'dayNames'),
+                            this.translate('Saturday', 'dayNames')
+                        ],
+                        daysShort: [
+                            this.translate('Sun', 'dayNamesShort'),
+                            this.translate('Mon', 'dayNamesShort'),
+                            this.translate('Tue', 'dayNamesShort'),
+                            this.translate('Wed', 'dayNamesShort'),
+                            this.translate('Thu', 'dayNamesShort'),
+                            this.translate('Fri', 'dayNamesShort'),
+                            this.translate('Sat', 'dayNamesShort')
+                        ],
+                        daysMin: [
+                            this.translate('Su', 'dayNamesShortMin'),
+                            this.translate('Mo', 'dayNamesShortMin'),
+                            this.translate('Tu', 'dayNamesShortMin'),
+                            this.translate('We', 'dayNamesShortMin'),
+                            this.translate('Th', 'dayNamesShortMin'),
+                            this.translate('Fr', 'dayNamesShortMin'),
+                            this.translate('Sa', 'dayNamesShortMin')
+                        ],
+                        months: [
+                            this.translate('January', 'monthNames'),
+                            this.translate('February', 'monthNames'),
+                            this.translate('March', 'monthNames'),
+                            this.translate('April', 'monthNames'),
+                            this.translate('May', 'monthNames'),
+                            this.translate('June', 'monthNames'),
+                            this.translate('July', 'monthNames'),
+                            this.translate('August', 'monthNames'),
+                            this.translate('September', 'monthNames'),
+                            this.translate('October', 'monthNames'),
+                            this.translate('November', 'monthNames'),
+                            this.translate('December', 'monthNames')
+                        ],
+                        monthsShort: [
+                            this.translate('Jan', 'monthNamesShort'),
+                            this.translate('Feb', 'monthNamesShort'),
+                            this.translate('Mar', 'monthNamesShort'),
+                            this.translate('Apr', 'monthNamesShort'),
+                            this.translate('May', 'monthNamesShort'),
+                            this.translate('Jun', 'monthNamesShort'),
+                            this.translate('Jul', 'monthNamesShort'),
+                            this.translate('Aug', 'monthNamesShort'),
+                            this.translate('Sep', 'monthNamesShort'),
+                            this.translate('Oct', 'monthNamesShort'),
+                            this.translate('Nov', 'monthNamesShort'),
+                            this.translate('Dec', 'monthNamesShort')
+                        ],
                         today: this.translate('Today'),
                         clear: this.translate('Clear'),
                     };
