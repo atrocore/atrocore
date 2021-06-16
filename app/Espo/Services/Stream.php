@@ -1012,16 +1012,11 @@ class Stream extends \Espo\Core\Services\Base
     {
         $entityType = $entity->getEntityType();
 
-        $statusFields = $this->getStatusFields();
-
         if (!array_key_exists($entityType, $this->auditedFieldsCache)) {
             $fields = $this->getMetadata()->get('entityDefs.' . $entityType . '.fields');
             $auditedFields = array();
             foreach ($fields as $field => $d) {
                 if (!empty($d['audited'])) {
-                    if (!empty($statusFields[$entityType]) && $statusFields[$entityType] === $field) {
-                        continue;
-                    }
                     $auditedFields[$field] = array();
                     $auditedFields[$field]['actualList'] = $this->getFieldManager()->getActualAttributeList($entityType, $field);
                     $auditedFields[$field]['notActualList'] = $this->getFieldManager()->getNotActualAttributeList($entityType, $field);
