@@ -519,62 +519,60 @@
     "assignThisSelf": "{user} hat sich selbst {entityType} zugewiesen",
     "assignSelf": "{user} hat sich {entityType} {entity} selbst zugewiesen"
   },
-  "lists": {
-    "monthNames": [
-      "Januar",
-      "Februar",
-      "März",
-      "April",
-      "Mai",
-      "Juni",
-      "Juli",
-      "August",
-      "September",
-      "Oktober",
-      "November",
-      "Dezember"
-    ],
-    "monthNamesShort": [
-      "Jan",
-      "Feb",
-      "Mär",
-      "Apr",
-      "Mai",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Okt",
-      "Nov",
-      "Dez"
-    ],
-    "dayNames": [
-      "Sonntag",
-      "Montag",
-      "Dienstag",
-      "Mittwoch",
-      "Donnerstag",
-      "Freitag",
-      "Samstag"
-    ],
-    "dayNamesShort": [
-      "So",
-      "Mo",
-      "Di",
-      "Mi",
-      "Do",
-      "Fr",
-      "Sa"
-    ],
-    "dayNamesMin": [
-      "So",
-      "Mo",
-      "Di",
-      "Mi",
-      "Do",
-      "Fr",
-      "Sa"
-    ]
+  "monthNames": {
+    "January": "Januar",
+    "February": "Februar",
+    "March": "März",
+    "April": "April",
+    "May": "Mai",
+    "June": "Juni",
+    "July": "Juli",
+    "August": "August",
+    "September": "September",
+    "October": "Oktober",
+    "November": "November",
+    "December": "Dezember"
+  },
+  "monthNamesShort": {
+    "Jan": "Jan",
+    "Feb": "Feb",
+    "Mar": "Mär",
+    "Apr": "Apr",
+    "May": "Mai",
+    "Jun": "Jun",
+    "Jul": "Jul",
+    "Aug": "Aug",
+    "Sep": "Sep",
+    "Oct": "Okt",
+    "Nov": "Nov",
+    "Dec": "Dez"
+  },
+  "dayNames": {
+    "Sunday": "Sonntag",
+    "Monday": "Montag",
+    "Tuesday": "Dienstag",
+    "Wednesday": "Mittwoch",
+    "Thursday": "Donnerstag",
+    "Friday": "Freitag",
+    "Saturday": "Samstag"
+  },
+  "dayNamesShort": {
+    "Sun": "So",
+    "Mon": "Mo",
+    "Tue": "Di",
+    "Wed": "Mi",
+    "Thu": "Do",
+    "Fri": "Fr",
+    "Sat": "Sa"
+  },
+  "dayNamesMin": {
+    "Su": "So",
+    "Mo": "Mo",
+    "Tu": "Di",
+    "We": "Mi",
+    "Th": "Do",
+    "Fr": "Fr",
+    "Sa": "Sa"
   },
   "options": {
     "salutationName": {

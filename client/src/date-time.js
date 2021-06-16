@@ -252,11 +252,61 @@ Espo.define('date-time', [], function () {
 
         setLanguage: function (language) {
             moment.locale('en', {
-                months: language.translate('monthNames', 'lists'),
-                monthsShort: language.translate('monthNamesShort', 'lists'),
-                weekdays: language.translate('dayNames', 'lists'),
-                weekdaysShort: language.translate('dayNamesShort', 'lists'),
-                weekdaysMin: language.translate('dayNamesMin', 'lists'),
+                months: [
+                    language.translate('January', 'monthNames'),
+                    language.translate('February', 'monthNames'),
+                    language.translate('March', 'monthNames'),
+                    language.translate('April', 'monthNames'),
+                    language.translate('May', 'monthNames'),
+                    language.translate('June', 'monthNames'),
+                    language.translate('July', 'monthNames'),
+                    language.translate('August', 'monthNames'),
+                    language.translate('September', 'monthNames'),
+                    language.translate('October', 'monthNames'),
+                    language.translate('November', 'monthNames'),
+                    language.translate('December', 'monthNames')
+                ],
+                monthsShort: [
+                    language.translate('Jan', 'monthNamesShort'),
+                    language.translate('Feb', 'monthNamesShort'),
+                    language.translate('Mar', 'monthNamesShort'),
+                    language.translate('Apr', 'monthNamesShort'),
+                    language.translate('May', 'monthNamesShort'),
+                    language.translate('Jun', 'monthNamesShort'),
+                    language.translate('Jul', 'monthNamesShort'),
+                    language.translate('Aug', 'monthNamesShort'),
+                    language.translate('Sep', 'monthNamesShort'),
+                    language.translate('Oct', 'monthNamesShort'),
+                    language.translate('Nov', 'monthNamesShort'),
+                    language.translate('Dec', 'monthNamesShort')
+                ],
+                weekdays: [
+                    language.translate('Sunday', 'dayNames'),
+                    language.translate('Monday', 'dayNames'),
+                    language.translate('Tuesday', 'dayNames'),
+                    language.translate('Wednesday', 'dayNames'),
+                    language.translate('Thursday', 'dayNames'),
+                    language.translate('Friday', 'dayNames'),
+                    language.translate('Saturday', 'dayNames')
+                ],
+                weekdaysShort: [
+                    language.translate('Sun', 'dayNamesShort'),
+                    language.translate('Mon', 'dayNamesShort'),
+                    language.translate('Tue', 'dayNamesShort'),
+                    language.translate('Wed', 'dayNamesShort'),
+                    language.translate('Thu', 'dayNamesShort'),
+                    language.translate('Fri', 'dayNamesShort'),
+                    language.translate('Sat', 'dayNamesShort')
+                ],
+                weekdaysMin: [
+                    language.translate('Su', 'dayNamesShortMin'),
+                    language.translate('Mo', 'dayNamesShortMin'),
+                    language.translate('Tu', 'dayNamesShortMin'),
+                    language.translate('We', 'dayNamesShortMin'),
+                    language.translate('Th', 'dayNamesShortMin'),
+                    language.translate('Fr', 'dayNamesShortMin'),
+                    language.translate('Sa', 'dayNamesShortMin')
+                ],
             });
             moment.locale('en');
         },
