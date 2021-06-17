@@ -44,8 +44,6 @@ Espo.define('treo-core:views/site/header', 'class-replace!treo-core:views/site/h
             Dep.prototype.setup.call(this);
 
             this.getPublicData();
-
-            this.isNeedToReloadPage();
         },
 
         getPublicData() {
@@ -55,6 +53,7 @@ Espo.define('treo-core:views/site/header', 'class-replace!treo-core:views/site/h
                         $.each(response, (k, v) => {
                             localStorage.setItem('pd_' + k, v);
                         });
+                        this.isNeedToReloadPage();
                     }
                 });
             }, 1000);
@@ -62,15 +61,12 @@ Espo.define('treo-core:views/site/header', 'class-replace!treo-core:views/site/h
 
         isNeedToReloadPage() {
             const key = 'pd_dataTimestamp';
+            if (this.dataTimestamp && this.dataTimestamp !== localStorage.getItem(key)) {
+                setTimeout(() => {
+                    Espo.Ui.notify(this.translate('pleaseReloadPage'), 'info', 1000 * 60, true);
+                }, 5000);
+            }
             this.dataTimestamp = localStorage.getItem(key);
-            setInterval(() => {
-                if (this.dataTimestamp !== localStorage.getItem(key)) {
-                    setTimeout(() => {
-                        Espo.Ui.notify(this.translate('pleaseReloadPage'), 'info', 1000 * 60, true);
-                    }, 5000);
-                }
-                this.dataTimestamp = localStorage.getItem(key);
-            }, 1000);
         },
 
     });
