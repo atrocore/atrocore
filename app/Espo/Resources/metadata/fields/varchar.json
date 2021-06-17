@@ -25,6 +25,10 @@
       {
          "name":"readOnly",
          "type":"bool"
+      },
+      {
+         "name":"pattern",
+         "type":"varchar"
       }
    ],
    "filter": true,

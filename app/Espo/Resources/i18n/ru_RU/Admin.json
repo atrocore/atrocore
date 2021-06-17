@@ -193,7 +193,8 @@
     "isPersonalData": "Личные данные",
     "useIframe": "Использовать Iframe",
     "useNumericFormat": "Использовать числовой формат",
-    "strip": "Стрип"
+    "strip": "Стрип",
+    "pattern": "Regex Pattern"
   },
   "messages": {
     "upgradeFailed": "Апргрейд не выполнен",

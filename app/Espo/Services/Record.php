@@ -520,6 +520,40 @@ class Record extends \Espo\Core\Services\Base
     }
 
     /**
+     * @param Entity $entity
+     *
+     * @throws BadRequest
+     * @throws Error
+     */
+    protected function checkFieldsWithPattern(Entity $entity): void
+    {
+        foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields']) as $field => $defs) {
+            if (!empty($entity->get($field))) {
+                $this->validateFieldWithPattern($entity, $field, $defs);
+            }
+        }
+    }
+
+    /**
+     * @param Entity $entity
+     * @param string $field
+     * @param array $defs
+     *
+     * @throws BadRequest
+     * @throws Error
+     */
+    protected function validateFieldWithPattern(Entity $entity, string $field, array $defs): void
+    {
+        if (!empty($pattern = $defs['pattern']) && !preg_match("/{$pattern}/i", $entity->get($field))) {
+            $message = $this->getInjection('language')->translate('dontMatchToPattern', 'exceptions', $entity->getEntityType());
+            $message = str_replace('{field}', $field, $message);
+            $message = str_replace('{pattern}', $pattern, $message);
+
+            throw new BadRequest($message);
+        }
+    }
+
+    /**
      * @param Entity    $entity
      * @param \stdClass $data
      *
@@ -911,6 +945,9 @@ class Record extends \Espo\Core\Services\Base
         // Are all required fields filled ?
         $this->checkRequiredFields($entity, $attachment);
 
+        // validate field with pattern
+        $this->checkFieldsWithPattern($entity);
+
         if (!$this->checkAssignment($entity)) {
             throw new Forbidden('Assignment permission failure');
         }
@@ -987,6 +1024,9 @@ class Record extends \Espo\Core\Services\Base
 
         // Are all required fields filled ?
         $this->checkRequiredFields($entity, $data);
+
+        // validate field with pattern
+        $this->checkFieldsWithPattern($entity);
 
         if (!$this->checkAssignment($entity)) {
             throw new Forbidden();
