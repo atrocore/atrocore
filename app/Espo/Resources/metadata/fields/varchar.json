@@ -28,7 +28,8 @@
       },
       {
          "name":"pattern",
-         "type":"varchar"
+         "type":"varchar",
+         "tooltip": true
       }
    ],
    "filter": true,

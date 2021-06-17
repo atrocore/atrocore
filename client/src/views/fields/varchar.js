@@ -49,7 +49,7 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
 
             this.validations = Espo.utils.clone(this.validations);
             this.validations.push('pattern');
-            this.validationPattern = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'pattern']);
+            this.validationPattern = this.convertStrToRegex();
         },
 
         setupSearch: function () {
@@ -178,7 +178,7 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
 
         validatePattern() {
             if (this.validationPattern) {
-                let regexp = new RegExp(this.validationPattern, 'i');
+                let regexp = new RegExp(this.validationPattern);
                 let value = this.model.get(this.name);
                 if (value !== '' && !regexp.test(value)) {
                     let msg = this.getPatternValidationMessage();
@@ -195,6 +195,18 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
             return this.translate('dontMatchToPattern', 'exceptions', this.model.name)
                 .replace('{field}', this.translate(this.name, 'fields', this.model.name))
                 .replace('{pattern}', this.validationPattern);
+        },
+
+        convertStrToRegex() {
+            let patternString = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'pattern']);
+
+            if (patternString) {
+                let flags = patternString.replace(/.*\/([gimy]*)$/, '$1');
+                let pattern = patternString.replace(new RegExp('^/(.*?)/' + flags + '$'), '$1');
+                return new RegExp(pattern, flags);
+            }
+
+            return null;
         }
 
     });
