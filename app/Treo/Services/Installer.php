@@ -283,7 +283,7 @@ class Installer extends AbstractService
         try {
             $this->isConnectToDb($this->prepareDbParams($dbSettings));
         } catch (\PDOException $e) {
-            $message = $this->translateError('notCorrectDatabaseConfig');
+            $message = $this->translateError('notCorrectDatabaseConfig'). ': ' . $e->getMessage();
         }
 
         return ['status' => empty($message), 'message' => $message];

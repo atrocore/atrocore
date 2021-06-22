@@ -36,7 +36,7 @@ Espo.define('treo-core:views/site/header', 'class-replace!treo-core:views/site/h
 
         title: 'AtroCore',
 
-        dataTimestamp: 0,
+        dataTimestamp: null,
 
         setup: function () {
             this.navbarView = this.getMetadata().get('app.clientDefs.navbarView') || this.navbarView;
@@ -44,8 +44,6 @@ Espo.define('treo-core:views/site/header', 'class-replace!treo-core:views/site/h
             Dep.prototype.setup.call(this);
 
             this.getPublicData();
-
-            this.isNeedToReloadPage();
         },
 
         getPublicData() {
@@ -55,24 +53,20 @@ Espo.define('treo-core:views/site/header', 'class-replace!treo-core:views/site/h
                         $.each(response, (k, v) => {
                             localStorage.setItem('pd_' + k, v);
                         });
+                        this.isNeedToReloadPage();
                     }
                 });
             }, 1000);
         },
 
         isNeedToReloadPage() {
-            setInterval(() => {
-                const dataTimestamp = localStorage.getItem('pd_dataTimestamp');
-
-                if (dataTimestamp) {
-                    if (this.dataTimestamp !== 0 && this.dataTimestamp !== dataTimestamp) {
-                        setTimeout(() => {
-                            Espo.Ui.notify(this.translate('pleaseReloadPage'), 'info', 1000 * 60, true);
-                        }, 5000);
-                    }
-                    this.dataTimestamp = dataTimestamp;
-                }
-            }, 1000);
+            const key = 'pd_dataTimestamp';
+            if (this.dataTimestamp && this.dataTimestamp !== localStorage.getItem(key)) {
+                setTimeout(() => {
+                    Espo.Ui.notify(this.translate('pleaseReloadPage'), 'info', 1000 * 60, true);
+                }, 5000);
+            }
+            this.dataTimestamp = localStorage.getItem(key);
         },
 
     });
