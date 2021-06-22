@@ -97,5 +97,8 @@
   },
   "messages": {
     "defaultValidationFailed": "Der Standardwert darf keine Sonderzeichen enthalten"
+  },
+  "exceptions": {
+    "regexNotValid": "Dieses REGEX-Muster ist nicht gültig."
   }
 }

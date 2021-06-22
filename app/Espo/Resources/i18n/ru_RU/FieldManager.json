@@ -98,5 +98,8 @@
   },
   "messages": {
     "defaultValidationFailed": "Стандартное значение не может содержать специальные знаки"
+  },
+  "exceptions": {
+    "regexNotValid": "Этот REGEX паттерн не валидный."
   }
 }

@@ -178,9 +178,8 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
 
         validatePattern() {
             if (this.validationPattern) {
-                let regexp = new RegExp(this.validationPattern);
                 let value = this.model.get(this.name);
-                if (value !== '' && !regexp.test(value)) {
+                if (value !== '' && !this.validationPattern.test(value)) {
                     let msg = this.getPatternValidationMessage();
                     if (msg) {
                         this.showValidationMessage(msg);
@@ -201,7 +200,7 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
             let patternString = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'pattern']);
 
             if (patternString) {
-                let flags = patternString.replace(/.*\/([gimy]*)$/, '$1');
+                let flags = patternString.replace(/.*\/([gmixsuAJD]*)$/, '$1');
                 let pattern = patternString.replace(new RegExp('^/(.*?)/' + flags + '$'), '$1');
                 return new RegExp(pattern, flags);
             }

@@ -98,5 +98,8 @@
   },
   "messages": {
     "defaultValidationFailed": "The default value can not contain special characters"
+  },
+  "exceptions": {
+    "regexNotValid": "This REGEX Pattern is not valid."
   }
 }

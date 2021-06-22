@@ -49,8 +49,14 @@ class FieldManagerController extends AbstractListener
      */
     public function beforePostActionCreate(Event $event)
     {
+        $data = $event->getArgument('data');
+
         // is default value valid ?
-        $this->isDefaultValueValid($event->getArgument('data')->type, $event->getArgument('data')->default);
+        $this->isDefaultValueValid($data->type, $event->getArgument('data')->default);
+
+        if (!empty($pattern = $data->pattern) && !preg_match('/^\/((?:(?:[^?+*{}()[\]\\\\|]+|\\\\.|\[(?:\^?\\\\.|\^[^\\\\]|[^\\\\^])(?:[^\]\\\\]+|\\\\.)*\]|\((?:\?[:=!]|\?<[=!]|\?>)?(?1)??\)|\(\?(?:R|[+-]?\d+)\))(?:(?:[?+*]|\{\d+(?:,\d*)?\})[?+]?)?|\|)*)\/[gmixsuAJD]*$/', $pattern)) {
+            throw new BadRequest($this->getLanguage()->translate('regexNotValid', 'exceptions', 'FieldManager'));
+        }
     }
 
     /**
