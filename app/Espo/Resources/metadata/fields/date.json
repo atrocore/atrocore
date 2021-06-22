@@ -59,6 +59,10 @@
       {
          "name":"readOnly",
          "type":"bool"
+      },
+      {
+         "name": "unique",
+         "type": "bool"
       }
    ],
    "filter": true,
