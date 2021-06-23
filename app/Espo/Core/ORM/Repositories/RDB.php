@@ -136,9 +136,9 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             return;
         }
 
-        $defs = $metadata->get(['entityDefs', $entityType]);
+        $fields = $metadata->get(['entityDefs', $entityType, 'fields'], []);
 
-        foreach ($defs['fields'] as $field => $d) {
+        foreach ($fields as $field => $d) {
             if (isset($d['type']) && $d['type'] == 'currency') {
                 if (!empty($d['notStorable'])) continue;
                 if (empty($params['leftJoins'])) $params['leftJoins'] = [];
