@@ -27,6 +27,11 @@
          "type":"bool"
       },
       {
+         "name": "pattern",
+         "type": "varchar",
+         "tooltip": true
+      },
+      {
          "name": "unique",
          "type": "bool"
       }

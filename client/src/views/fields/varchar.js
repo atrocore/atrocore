@@ -42,6 +42,16 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
 
         searchTypeList: ['startsWith', 'contains', 'equals', 'endsWith', 'like', 'notContains', 'notEquals', 'notLike', 'isEmpty', 'isNotEmpty'],
 
+        validationPattern: null,
+
+        setup() {
+            Dep.prototype.setup.call(this);
+
+            this.validations = Espo.utils.clone(this.validations);
+            this.validations.push('pattern');
+            this.validationPattern = this.convertStrToRegex();
+        },
+
         setupSearch: function () {
             this.events = _.extend({
                 'change select.search-type': function (e) {
@@ -164,6 +174,38 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
 
         getSearchType: function () {
             return this.getSearchParamsData().type || this.searchParams.typeFront || this.searchParams.type;
+        },
+
+        validatePattern() {
+            if (this.validationPattern) {
+                let value = this.model.get(this.name);
+                if (value !== '' && !this.validationPattern.test(value)) {
+                    let msg = this.getPatternValidationMessage();
+                    if (msg) {
+                        this.showValidationMessage(msg);
+                    }
+                    return true;
+                }
+            }
+            return false;
+        },
+
+        getPatternValidationMessage() {
+            return this.translate('dontMatchToPattern', 'exceptions', this.model.name)
+                .replace('{field}', this.translate(this.name, 'fields', this.model.name))
+                .replace('{pattern}', this.validationPattern);
+        },
+
+        convertStrToRegex() {
+            let patternString = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'pattern']);
+
+            if (patternString) {
+                let flags = patternString.replace(/.*\/([gmixsuAJD]*)$/, '$1');
+                let pattern = patternString.replace(new RegExp('^/(.*?)/' + flags + '$'), '$1');
+                return new RegExp(pattern, flags);
+            }
+
+            return null;
         }
 
     });

@@ -76,7 +76,8 @@
     "before": "The date value should be before the date value of the specified field.",
     "after": "The date value should be after the date value of the specified field.",
     "readOnly": "Field value can't be specified by user. But can be calculated by formula.",
-    "maxFileSize": "If empty or 0 then no limit."
+    "maxFileSize": "If empty or 0 then no limit.",
+    "pattern": "To enable only capital letters with 10-symbol length use \"^[A-Z]{1,10}$\""
   },
   "fieldParts": {
     "unit": {
@@ -97,5 +98,8 @@
   },
   "messages": {
     "defaultValidationFailed": "The default value can not contain special characters"
+  },
+  "exceptions": {
+    "regexNotValid": "This REGEX Pattern is not valid."
   }
 }

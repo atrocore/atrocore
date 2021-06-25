@@ -170,7 +170,8 @@
     "isPersonalData": "Is Personal Data",
     "useIframe": "Use Iframe",
     "useNumericFormat": "Use Numeric Format",
-    "strip": "Strip"
+    "strip": "Strip",
+    "pattern": "Regex Pattern"
   },
   "messages": {
     "upgradeFailed": "Upgrade failed",
