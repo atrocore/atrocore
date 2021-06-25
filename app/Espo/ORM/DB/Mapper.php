@@ -719,8 +719,6 @@ abstract class Mapper implements IMapper
             return 'NULL';
         } else if (is_bool($value)) {
             return $value ? '1' : '0';
-        } else if (is_float($value)) {
-            return str_replace(',', '.', str_replace('.', '', (string)$value));
         } else {
             return $this->pdo->quote($value);
         }
