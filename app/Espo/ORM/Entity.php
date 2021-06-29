@@ -245,7 +245,7 @@ abstract class Entity implements IEntity
                         case self::VARCHAR:
                             break;
                         case self::BOOL:
-                            $value = ($value === 'true' || $value === '1' || $value === true);
+                            $value = ($value === 'true' || $value === '1' || $value === true || $value === 1);
                             break;
                         case self::INT:
                             $value = intval($value);
