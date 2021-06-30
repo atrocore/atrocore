@@ -46,6 +46,7 @@ use Espo\ORM\EntityCollection;
 use Espo\ORM\IEntity;
 use Treo\Core\EventManager\Event;
 use Treo\Core\Exceptions\NotModified;
+use Treo\Core\ServiceFactory;
 use Treo\Core\Utils\Condition\Condition;
 
 class Record extends \Espo\Core\Services\Base
@@ -2014,6 +2015,19 @@ class Record extends \Espo\Core\Services\Base
         }
         foreach ($this->getAcl()->getScopeForbiddenAttributeList($entity->getEntityType(), 'read') as $attribute) {
             $entity->clear($attribute);
+        }
+
+        if ($this->hasCompleteness($entity) && $entity->hasAttribute('isCompleted') && !$entity->get('isCompleted')) {
+            /** @var ServiceFactory $serviceFactory */
+            $serviceFactory = $this->getServiceFactory();
+
+            if ($serviceFactory->checkExists('Completeness')) {
+                $service = $serviceFactory->create('Completeness');
+
+                if (method_exists($service, 'runUpdateCompleteness')) {
+                    $service->runUpdateCompleteness($entity);
+                }
+            }
         }
     }
 
