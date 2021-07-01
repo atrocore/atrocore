@@ -5,7 +5,7 @@
   "license": "GPL-3.0-only",
   "minimum-stability": "stable",
   "require": {
-    "php": "^7.1",
+    "php": "^7.4",
     "ext-pdo_mysql": "*",
     "ext-openssl": "*",
     "ext-json": "*",
