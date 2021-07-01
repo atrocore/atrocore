@@ -92,7 +92,7 @@ AtroCore has a REST API and can be integrated with any third-party system. You c
 ### Requirements
 
 * Unix-based system. Ubuntu is recommended.
-* PHP 7.1 or above.
+* PHP 7.4 or above.
 * MySQL 5.5.3 or above.
 
 ### Installation
