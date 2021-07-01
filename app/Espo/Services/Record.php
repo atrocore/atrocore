@@ -46,7 +46,6 @@ use Espo\ORM\EntityCollection;
 use Espo\ORM\IEntity;
 use Treo\Core\EventManager\Event;
 use Treo\Core\Exceptions\NotModified;
-use Treo\Core\ServiceFactory;
 use Treo\Core\Utils\Condition\Condition;
 
 class Record extends \Espo\Core\Services\Base
