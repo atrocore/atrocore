@@ -2017,18 +2017,7 @@ class Record extends \Espo\Core\Services\Base
             $entity->clear($attribute);
         }
 
-        if ($this->hasCompleteness($entity) && $entity->hasAttribute('isCompleted') && !$entity->get('isCompleted')) {
-            /** @var ServiceFactory $serviceFactory */
-            $serviceFactory = $this->getServiceFactory();
-
-            if ($serviceFactory->checkExists('Completeness')) {
-                $service = $serviceFactory->create('Completeness');
-
-                if (method_exists($service, 'runUpdateCompleteness')) {
-                    $service->runUpdateCompleteness($entity);
-                }
-            }
-        }
+        $this->dispatchEvent('prepareEntityForOutput', new Event(['entity' => $entity]));
     }
 
     public function merge($id, array $sourceIdList = array(), $attributes)
