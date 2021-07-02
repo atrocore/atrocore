@@ -2015,6 +2015,8 @@ class Record extends \Espo\Core\Services\Base
         foreach ($this->getAcl()->getScopeForbiddenAttributeList($entity->getEntityType(), 'read') as $attribute) {
             $entity->clear($attribute);
         }
+
+        $this->dispatchEvent('prepareEntityForOutput', new Event(['entity' => $entity]));
     }
 
     public function merge($id, array $sourceIdList = array(), $attributes)
