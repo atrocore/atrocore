@@ -49,7 +49,7 @@ Espo.define('treo-core:views/fields/base', 'class-replace!treo-core:views/fields
                 if (_.isEqual(prev[attr], data[attr])) {
                     continue;
                 }
-                (attrs || (attrs = {}))[attr] =    data[attr];
+                (attrs || (attrs = {}))[attr] = data[attr];
             }
 
             if (!attrs) {
@@ -73,6 +73,29 @@ Espo.define('treo-core:views/fields/base', 'class-replace!treo-core:views/fields
 
             model.trigger('before:save', attrs);
 
+            let confirmMessage = null;
+            let confirmations = this.getMetadata().get(`clientDefs.${model.urlRoot}.confirm`) || {};
+            $.each(confirmations, (field, key) => {
+                if (_prev[field]) {
+                    let parts = key.split('.');
+                    confirmMessage = this.translate(parts[2], parts[1], parts[0]);
+                }
+            });
+
+            if (confirmMessage) {
+                Espo.Ui.confirm(confirmMessage, {
+                    confirmText: self.translate('Apply'),
+                    cancelText: self.translate('Cancel')
+                }, () => {
+                    this.inlineEditSaveModel(model, attrs);
+                });
+            } else {
+                this.inlineEditSaveModel(model, attrs);
+            }
+        },
+
+        inlineEditSaveModel: function (model, attrs) {
+            let self = this;
             this.notify('Saving...');
             model.save(attrs, {
                 success: function () {

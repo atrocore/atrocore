@@ -330,21 +330,37 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                             data.id = selectObj.id;
                         }
                     }
-                    $.ajax({
-                        url: self.scope + '/' + self.model.id + '/' + link,
-                        type: 'POST',
-                        data: JSON.stringify(data),
-                        success: function () {
-                            this.notify('Linked', 'success');
-                            this.updateRelationshipPanel(link);
-                            this.model.trigger('after:relate');
-                        }.bind(this),
-                        error: function () {
-                            this.notify('Error occurred', 'error');
-                        }.bind(this)
-                    });
+
+                    const selectConfirm = this.getMetadata().get(`clientDefs.${self.scope}.relationshipPanels.${link}.selectConfirm`) || false;
+                    if (selectConfirm) {
+                        let parts = selectConfirm.split('.');
+                        Espo.Ui.confirm(this.translate(parts[2], parts[1], parts[0]), {
+                            confirmText: self.translate('Apply'),
+                            cancelText: self.translate('Cancel')
+                        }, () => {
+                            this.createLink(this.scope, this.model.id, link, data);
+                        });
+                    } else {
+                        this.createLink(this.scope, this.model.id, link, data);
+                    }
                 }.bind(this));
             }.bind(this));
+        },
+
+        createLink: function (scope, id, link, data) {
+            $.ajax({
+                url: scope + '/' + id + '/' + link,
+                type: 'POST',
+                data: JSON.stringify(data),
+                success: function () {
+                    this.notify('Linked', 'success');
+                    this.updateRelationshipPanel(link);
+                    this.model.trigger('after:relate');
+                }.bind(this),
+                error: function () {
+                    this.notify('Error occurred', 'error');
+                }.bind(this)
+            });
         },
 
         actionDuplicate: function () {

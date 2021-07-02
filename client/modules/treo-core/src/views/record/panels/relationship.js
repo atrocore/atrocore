@@ -117,9 +117,18 @@ Espo.define('treo-core:views/record/panels/relationship', ['class-replace!treo-c
 
         actionUnlinkRelated(data) {
             let id = data.id;
+            let scope = this.collection.url.split('/').shift();
+            let link = this.collection.url.split('/').pop();
+            let message = this.translate('unlinkRecordConfirmation', 'messages');
+
+            const unlinkConfirm = this.getMetadata().get(`clientDefs.${scope}.relationshipPanels.${link}.unlinkConfirm`) || false;
+            if (unlinkConfirm) {
+                let parts = unlinkConfirm.split('.');
+                message = this.translate(parts[2], parts[1], parts[0]);
+            }
 
             this.confirm({
-                message: this.translate('unlinkRecordConfirmation', 'messages'),
+                message: message,
                 confirmText: this.translate('Unlink')
             }, () => {
                 let model = this.collection.get(id);
