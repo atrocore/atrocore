@@ -68,8 +68,13 @@ class RelationManager
         $relationName = ucfirst($relationName);
 
         $className = '\Espo\Custom\Core\Utils\Database\Orm\Relations\\'.$relationName;
+
         if (!class_exists($className)) {
-            $className = '\Espo\Core\Utils\Database\Orm\Relations\\'.$relationName;
+            $className = $this->getMetadata()->get(['app', 'relationClass', $relationName]);
+        }
+
+        if (empty($className) || !class_exists($className)) {
+            $className = '\Espo\Core\Utils\Database\Orm\Relations\\' . $relationName;
         }
 
         if (class_exists($className)) {
