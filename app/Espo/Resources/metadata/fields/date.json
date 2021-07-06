@@ -61,7 +61,7 @@
          "type":"bool"
       },
       {
-         "name": "unique",
+         "name": "isUnique",
          "type": "bool"
       }
    ],

@@ -22,7 +22,7 @@
          "type":"bool"
       },
       {
-         "name": "unique",
+         "name": "isUnique",
          "type": "bool"
       }
    ],
@@ -44,5 +44,6 @@
       }
    },
    "filter": true,
-   "personalData": true
+   "personalData": true,
+   "handler": "\\Espo\\Core\\Utils\\FieldManager\\Types\\Currency"
 }

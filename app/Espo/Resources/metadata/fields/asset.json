@@ -27,7 +27,7 @@
       "type": "bool"
     },
     {
-      "name": "unique",
+      "name": "isUnique",
       "type": "bool"
     }
   ],
@@ -52,5 +52,6 @@
     "jpeg",
     "gif",
     "png"
-  ]
+  ],
+  "handler": "\\Espo\\Core\\Utils\\FieldManager\\Types\\Asset"
 }

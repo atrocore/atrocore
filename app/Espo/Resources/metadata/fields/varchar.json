@@ -32,7 +32,7 @@
          "tooltip": true
       },
       {
-         "name": "unique",
+         "name": "isUnique",
          "type": "bool"
       }
    ],

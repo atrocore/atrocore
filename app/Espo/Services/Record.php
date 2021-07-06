@@ -33,6 +33,8 @@
 
 namespace Espo\Services;
 
+use Espo\Core\Utils\FieldManager\Types\DefaultType;
+use Espo\Core\Utils\FieldManager\Types\Type;
 use Espo\Core\Utils\Language;
 use \Espo\ORM\Entity;
 
@@ -64,7 +66,8 @@ class Record extends \Espo\Core\Services\Base
         'injectableFactory',
         'fieldManagerUtil',
         'eventManager',
-        'language'
+        'language',
+        'container'
     );
 
     protected $getEntityBeforeUpdate = false;
@@ -588,7 +591,7 @@ class Record extends \Espo\Core\Services\Base
         $result = [];
 
         foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields']) as $field => $defs) {
-            if (!empty($defs['unique']) && !empty($entity->get($field))) {
+            if (!empty($defs['isUnique']) && !empty($entity->get($field))) {
                 $result[] = $field;
             }
         }
@@ -616,6 +619,26 @@ class Record extends \Espo\Core\Services\Base
 
     /**
      * @param Entity $entity
+     * @param string $field
+     */
+    protected function getFieldTypeHandler(Entity $entity, string $field): Type
+    {
+        $type = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $field, 'type']);
+        $defs = $this->getMetadata()->get(['fields', $type], []);
+
+        if (!empty($className = $defs['handler'])) {
+            try {
+                return (new $className($this->getInjection('container')));
+            } catch (\Exception $e) {
+                $GLOBALS['log']->error("Could not create handler class for field '$field'");
+            }
+        }
+
+        return new DefaultType($this->getInjection('container'));
+    }
+
+    /**
+     * @param Entity $entity
      *
      * @throws BadRequest
      * @throws Error
@@ -623,26 +646,42 @@ class Record extends \Espo\Core\Services\Base
     protected function checkUniqueField(Entity $entity)
     {
         if (!empty($fields = $this->prepareUniqueFieldsList($entity))) {
-            $select = [];
-            $where = [];
+            $select = $joins = $where = [];
+            $table = Util::toUnderScore($entity->getEntityType());
+
+            $fieldsDefs = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []);
+            $handlers = [];
 
             foreach ($fields as $field) {
-                $select[] = "`" . Util::toUnderScore($field) . "` AS `{$field}`";
-                $where[] = "`{$field}` = '" . $entity->get($field) . "'";
+                $type = $fieldsDefs[$field]['type'];
+
+                if (!isset($handlers[$type])) {
+                    $handlers[$type] = $this->getFieldTypeHandler($entity, $field);
+                }
+
+                $handler = $handlers[$type];
+                $data = $handler->prepareSqlUniqueData($entity, $field);
+
+                $select[] = $data['select'];
+                $where[] = $data['where'];
+
+                if (!empty($data['joins'])) {
+                    $joins[] = $data['joins'];
+                }
             }
 
             $select = implode(', ', $select);
             $where = implode(' OR ', $where);
-            $table = Util::toUnderScore($entity->getEntityType());
+            $joins = implode(' ', $joins);
 
-            $sql = "SELECT $select FROM {$table} WHERE id != '{$entity->id}' AND ($where) AND deleted = 0";
+            $sql = "SELECT $select FROM $table $joins WHERE $table.id != '$entity->id' AND ($where) AND $table.deleted = 0";
             $pdo = $this->getEntityManager()->getPDO();
             $sth = $pdo->prepare($sql);
             $sth->execute();
 
             if (!empty($result = $sth->fetch(\PDO::FETCH_ASSOC))) {
-                foreach ($result as $field => $value) {
-                    if ($value == $entity->get($field)) {
+                foreach ($fields as $field) {
+                    if ($handlers[$fieldsDefs[$field]['type']]->checkEquals($entity, $field, $result)) {
                         throw new BadRequest($this->prepareUniqueErrorMessage($entity, $field));
                     }
                 }

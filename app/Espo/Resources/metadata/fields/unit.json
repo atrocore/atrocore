@@ -28,7 +28,7 @@
          "type":"bool"
       },
       {
-         "name": "unique",
+         "name": "isUnique",
          "type": "bool"
       }
    ],
@@ -46,5 +46,6 @@
    "view": "treo-core:views/fields/unit",
    "fieldDefs": {
       "type": "float"
-   }
+   },
+   "handler": "\\Espo\\Core\\Utils\\FieldManager\\Types\\Unit"
 }
