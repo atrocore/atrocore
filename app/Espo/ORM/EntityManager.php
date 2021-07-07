@@ -121,7 +121,7 @@ class EntityManager
 
     public function getMapper($name)
     {
-        if ($name{0} == '\\') {
+        if (substr($name, 0, 1) == '\\') {
             $className = $name;
         } else {
             $className = $this->getMapperClassName($name);
