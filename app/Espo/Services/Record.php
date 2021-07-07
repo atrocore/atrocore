@@ -455,7 +455,38 @@ class Record extends \Espo\Core\Services\Base
 
     protected function storeEntity(Entity $entity)
     {
-        return $this->getRepository()->save($entity);
+        $result = null;
+
+        try {
+            $result = $this->getRepository()->save($entity);
+        } catch (\PDOException $e) {
+            if ($e->getCode() == 23000) {
+                $message = $e->getMessage();
+                $tableName = Util::toUnderScore($entity->getEntityType());
+
+                if (preg_match("/SQLSTATE\[23000\]: Integrity constraint violation: 1062 Duplicate entry '(.*)' for key '$tableName.(.*)'/", $message, $matches)) {
+                    if (!empty($index = $matches[2])) {
+                        $data = $this
+                            ->getEntityManager()
+                            ->getPDO()
+                            ->query("SHOW INDEX FROM $tableName WHERE Key_name = '$index' AND Seq_in_index = 1")
+                            ->fetch(\PDO::FETCH_ASSOC);
+
+                        if (!empty($data) && !empty($column = $data['Column_name'])) {
+                            /** @var Language $language */
+                            $language = $this->getInjection('language');
+
+                            $column = $language->translate(Util::toCamelCase($column), 'fields', $entity->getEntityType());
+                            $errorMessage = sprintf($language->translate('fieldShouldMustBeUnique', 'exceptions'), $column);
+
+                            throw new BadRequest($errorMessage);
+                        }
+                    }
+                }
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -576,78 +607,6 @@ class Record extends \Espo\Core\Services\Base
     {
         return !empty($this->getMetadata()->get("scopes.{$entity->getEntityType()}.hasCompleteness"))
             && !empty($this->getMetadata()->get("app.additionalEntityParams.hasCompleteness"));
-    }
-
-    /**
-     * @param Entity $entity
-     *
-     * @return array
-     */
-    protected function prepareUniqueFieldsList(Entity $entity): array
-    {
-        $result = [];
-
-        foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields']) as $field => $defs) {
-            if (!empty($defs['unique']) && !empty($entity->get($field))) {
-                $result[] = $field;
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param Entity $entity
-     * @param string $field
-     *
-     * @return string
-     *
-     * @throws Error
-     */
-    protected function prepareUniqueErrorMessage(Entity $entity, string $field): string
-    {
-        /** @var Language $language */
-        $language = $this->getInjection('language');
-
-        $fieldLabel = $language->translate($field, 'fields', $entity->getEntityType());
-
-        return sprintf($language->translate('fieldShouldMustBeUnique', 'exceptions', $entity->getEntityType()), $fieldLabel);
-    }
-
-    /**
-     * @param Entity $entity
-     *
-     * @throws BadRequest
-     * @throws Error
-     */
-    protected function checkUniqueField(Entity $entity)
-    {
-        if (!empty($fields = $this->prepareUniqueFieldsList($entity))) {
-            $select = [];
-            $where = [];
-
-            foreach ($fields as $field) {
-                $select[] = "`" . Util::toUnderScore($field) . "` AS `{$field}`";
-                $where[] = "`{$field}` = '" . $entity->get($field) . "'";
-            }
-
-            $select = implode(', ', $select);
-            $where = implode(' OR ', $where);
-            $table = Util::toUnderScore($entity->getEntityType());
-
-            $sql = "SELECT $select FROM {$table} WHERE id != '{$entity->id}' AND ($where) AND deleted = 0";
-            $pdo = $this->getEntityManager()->getPDO();
-            $sth = $pdo->prepare($sql);
-            $sth->execute();
-
-            if (!empty($result = $sth->fetch(\PDO::FETCH_ASSOC))) {
-                foreach ($result as $field => $value) {
-                    if ($value == $entity->get($field)) {
-                        throw new BadRequest($this->prepareUniqueErrorMessage($entity, $field));
-                    }
-                }
-            }
-        }
     }
 
     public function checkAssignment(Entity $entity)
@@ -1020,9 +979,6 @@ class Record extends \Espo\Core\Services\Base
         // validate field with pattern
         $this->checkFieldsWithPattern($entity);
 
-        // Check if all unique fields has unique values
-        $this->checkUniqueField($entity);
-
         if (!$this->checkAssignment($entity)) {
             throw new Forbidden('Assignment permission failure');
         }
@@ -1102,9 +1058,6 @@ class Record extends \Espo\Core\Services\Base
 
         // validate field with pattern
         $this->checkFieldsWithPattern($entity);
-
-        // Check if all unique fields has unique values
-        $this->checkUniqueField($entity);
 
         if (!$this->checkAssignment($entity)) {
             throw new Forbidden();

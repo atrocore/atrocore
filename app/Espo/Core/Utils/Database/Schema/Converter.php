@@ -235,7 +235,13 @@ class Converter
 
                 //add unique
                 if ($fieldParams['type'] != 'id' && isset($fieldParams['unique'])) {
-                    $uniqueColumns = $this->getKeyList($columnName, $fieldParams['unique'], $uniqueColumns);
+                    $additionalFields = [];
+                    $metadataFieldType = $this->getMetadata()->get(['entityDefs', $entityName, 'fields', $fieldName, 'type']);
+                    if (!empty($metadataFieldType)) {
+                        $additionalFields = $this->getMetadata()->get(['fields', $metadataFieldType, 'actualFields'], []);
+                    }
+
+                    $uniqueColumns = $this->getKeyList($columnName, $fieldParams['unique'], $uniqueColumns, $additionalFields);
                 } //END: add unique
             }
 
@@ -425,11 +431,19 @@ class Converter
      * @param  bool | string $keyValue
      * @return array
      */
-    protected function getKeyList($columnName, $keyValue, array $keyList)
+    protected function getKeyList($columnName, $keyValue, array $keyList, array $additionalFields = [])
     {
         if ($keyValue === true) {
             $tableIndexName = SchemaUtils::generateIndexName($columnName);
-            $keyList[$tableIndexName] = array($columnName);
+            $columnNames = [$columnName];
+
+            foreach ($additionalFields as $column) {
+                if (!empty($column)) {
+                    $columnNames[] = $columnName . '_' . Util::toUnderScore($column);
+                }
+            }
+
+            $keyList[$tableIndexName] = $columnNames;
         } else if (is_string($keyValue)) {
             $tableIndexName = SchemaUtils::generateIndexName($keyValue);
             $keyList[$tableIndexName][] = $columnName;

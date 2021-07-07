@@ -50,9 +50,12 @@ class FieldManagerController extends AbstractListener
     public function beforePostActionCreate(Event $event)
     {
         $data = $event->getArgument('data');
+        $params = $event->getArgument('params');
 
         // is default value valid ?
         $this->isDefaultValueValid($data->type, $event->getArgument('data')->default);
+
+        $this->isUniqueFieldWithoutDuplicates($params['scope'], $data->name);
 
         if (!empty($pattern = $data->pattern) && !preg_match('/^\/((?:(?:[^?+*{}()[\]\\\\|]+|\\\\.|\[(?:\^?\\\\.|\^[^\\\\]|[^\\\\^])(?:[^\]\\\\]+|\\\\.)*\]|\((?:\?[:=!]|\?<[=!]|\?>)?(?1)??\)|\(\?(?:R|[+-]?\d+)\))(?:(?:[?+*]|\{\d+(?:,\d*)?\})[?+]?)?|\|)*)\/[gmixsuAJD]*$/', $pattern)) {
             throw new BadRequest($this->getLanguage()->translate('regexNotValid', 'exceptions', 'FieldManager'));
@@ -154,5 +157,47 @@ class FieldManagerController extends AbstractListener
         }
 
         return true;
+    }
+
+    /**
+     * @param string $scope
+     * @param string $field
+     *
+     * @throws BadRequest
+     * @throws \Espo\Core\Exceptions\Error
+     */
+    protected function isUniqueFieldWithoutDuplicates(string $scope, string $field)
+    {
+        $table = Util::toUnderScore($scope);
+        $field = Util::toUnderScore($field);
+
+        $defs = $this->getMetadata()->get(['entityDefs', $scope, 'fields', $field], []);
+
+        if (isset($defs['type'])) {
+            switch ($defs['type']) {
+                case 'currency':
+                    $sql = "SELECT COUNT(*) FROM $table WHERE $table.$field IS NOT NULL AND {$field}_currency IS NOT NULL AND deleted = 0 GROUP BY $table.$field, {$field}_currency HAVING COUNT($table.$field) > 1 AND COUNT({$field}_currency) > 1";
+                    break;
+                case 'unit':
+                    $sql = "SELECT COUNT(*) FROM $table WHERE $table.$field IS NOT NULL AND {$field}_unit IS NOT NULL AND deleted = 0 GROUP BY $table.$field, {$field}_unit HAVING COUNT($table.$field) > 1 AND COUNT({$field}_unit) > 1";
+                    break;
+                default:
+                    $sql = "SELECT COUNT(*) FROM $table WHERE $table.$field IS NOT NULL AND deleted = 0 GROUP BY $table.$field HAVING COUNT($table.$field) > 1";
+            }
+
+            $pdo = $this
+                ->getContainer()
+                ->get('pdo');
+            $sth = $pdo->prepare($sql);
+            $sth->execute();
+
+            if (!empty($sth->fetch())) {
+                $message = $this
+                    ->getLanguage()
+                    ->translate('someFieldNotUnique', 'exceptions', 'FieldManager');
+
+                throw new BadRequest($message);
+            }
+        }
     }
 }

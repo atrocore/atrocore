@@ -156,7 +156,8 @@
     "useIframe": "Iframe verwenden",
     "useNumericFormat": "Verwenden Sie das numerische Format",
     "dataUrl": "Daten-URL",
-    "pattern": "Regex Pattern"
+    "pattern": "Regex Pattern",
+    "unique": "Unique"
   },
   "messages": {
     "upgradeFailed": "Upgrade fehlgeschlagen",
