@@ -460,30 +460,32 @@ class Record extends \Espo\Core\Services\Base
         try {
             $result = $this->getRepository()->save($entity);
         } catch (\PDOException $e) {
-            if ($e->getCode() == 23000) {
+            if (!empty($e->errorInfo[1]) && $e->errorInfo[1] == 1062) {
                 $message = $e->getMessage();
                 $tableName = Util::toUnderScore($entity->getEntityType());
 
-                if (preg_match("/SQLSTATE\[23000\]: Integrity constraint violation: 1062 Duplicate entry '(.*)' for key '$tableName.(.*)'/", $message, $matches)) {
-                    if (!empty($index = $matches[2])) {
-                        $data = $this
-                            ->getEntityManager()
-                            ->getPDO()
-                            ->query("SHOW INDEX FROM $tableName WHERE Key_name = '$index' AND Seq_in_index = 1")
-                            ->fetch(\PDO::FETCH_ASSOC);
+                if (preg_match("/SQLSTATE\[23000\]: Integrity constraint violation: 1062 Duplicate entry '(.*)' for key '$tableName\.(.*)'/", $message, $matches) && !empty($matches[2])) {
+                    $data = $this
+                        ->getEntityManager()
+                        ->getPDO()
+                        ->query("SHOW INDEX FROM $tableName WHERE Key_name = '$matches[2]' AND Seq_in_index = 1")
+                        ->fetch(\PDO::FETCH_ASSOC);
 
-                        if (!empty($data) && !empty($column = $data['Column_name'])) {
-                            /** @var Language $language */
-                            $language = $this->getInjection('language');
+                    if (!empty($data['Column_name'])) {
+                        $column = $data['Column_name'];
 
-                            $column = $language->translate(Util::toCamelCase($column), 'fields', $entity->getEntityType());
-                            $errorMessage = sprintf($language->translate('fieldShouldMustBeUnique', 'exceptions'), $column);
+                        /** @var Language $language */
+                        $language = $this->getInjection('language');
 
-                            throw new BadRequest($errorMessage);
-                        }
+                        $column = $language->translate(Util::toCamelCase($column), 'fields', $entity->getEntityType());
+                        $errorMessage = sprintf($language->translate('fieldShouldMustBeUnique', 'exceptions'), $column);
+
+                        throw new BadRequest($errorMessage);
                     }
                 }
             }
+
+            throw $e;
         }
 
         return $result;
