@@ -194,7 +194,8 @@
     "useIframe": "Использовать Iframe",
     "useNumericFormat": "Использовать числовой формат",
     "strip": "Стрип",
-    "pattern": "Regex Pattern"
+    "pattern": "Regex Pattern",
+    "unique": "Unique"
   },
   "messages": {
     "upgradeFailed": "Апргрейд не выполнен",

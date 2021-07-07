@@ -171,7 +171,8 @@
     "useIframe": "Use Iframe",
     "useNumericFormat": "Use Numeric Format",
     "strip": "Strip",
-    "pattern": "Regex Pattern"
+    "pattern": "Regex Pattern",
+    "unique": "Unique"
   },
   "messages": {
     "selectEntityType": "Seleccione el tipo de entidad en el menú de la izquierda.",
