@@ -186,6 +186,7 @@ class Layout extends \Espo\Core\Utils\Layout
         if (!empty($entityDefs)) {
             // get fields for entity
             $fields = array_keys($entityDefs['fields']);
+            $fields[] = 'id';
 
             // remove fields from layout if this fields not exist in metadata
             switch ($name) {
