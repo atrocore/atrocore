@@ -76,7 +76,7 @@
     "after": "Der Datumswert sollte nach dem Datumswert des angegebenen Feldes liegen.",
     "readOnly": "Feldwert kann nicht vom Benutzer angegebe, aber durch Formel berechnet werden.",
     "maxFileSize": "Wenn leer oder 0, dann keine Begrenzung.",
-    "pattern": "Um nur Großbuchstaben mit einer Länge von 10 Zeichen zu ermöglichen, verwenden Sie \"/^[A-Z]{1,10}$/s\""
+    "pattern": "Um nur Großbuchstaben mit einer Länge von 10 Zeichen zu ermöglichen, verwenden Sie \"\/^[A-Z]{1,10}$\/\""
   },
   "fieldParts": {
     "personName": {
