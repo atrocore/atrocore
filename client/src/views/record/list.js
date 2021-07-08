@@ -1408,8 +1408,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 return false;
             }
 
+            let message = this.getMetadata().get(`clientDefs.${this.scope}.deleteConfirmation`) || 'Global.messages.removeRecordConfirmation'
+            let parts = message.split('.');
+
             this.confirm({
-                message: this.translate('removeRecordConfirmation', 'messages'),
+                message: this.translate(parts.pop(), parts.pop(), parts.pop()),
                 confirmText: this.translate('Remove')
             }, function () {
                 this.collection.trigger('model-removing', id);

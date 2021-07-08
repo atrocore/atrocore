@@ -154,7 +154,15 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         actionDelete: function () {
-            this.delete();
+            let message = this.getMetadata().get(`clientDefs.${this.scope}.deleteConfirmation`) || 'Global.messages.removeRecordConfirmation'
+            let parts = message.split('.');
+
+            this.confirm({
+                message: this.translate(parts.pop(), parts.pop(), parts.pop()),
+                confirmText: this.translate('Remove')
+            }, function () {
+                this.delete();
+            }, this);
         },
 
         actionSave: function () {
