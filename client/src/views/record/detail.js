@@ -154,15 +154,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         actionDelete: function () {
-            let message = this.getMetadata().get(`clientDefs.${this.scope}.deleteConfirmation`) || 'Global.messages.removeRecordConfirmation'
-            let parts = message.split('.');
-
-            this.confirm({
-                message: this.translate(parts.pop(), parts.pop(), parts.pop()),
-                confirmText: this.translate('Remove')
-            }, function () {
-                this.delete();
-            }, this);
+            this.delete();
         },
 
         actionSave: function () {
@@ -622,8 +614,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         delete: function () {
+            let message = this.getMetadata().get(`clientDefs.${this.scope}.deleteConfirmation`) || 'Global.messages.removeRecordConfirmation'
+            let parts = message.split('.');
+
             this.confirm({
-                message: this.translate('removeRecordConfirmation', 'messages'),
+                message: this.translate(parts.pop(), parts.pop(), parts.pop()),
                 confirmText: this.translate('Remove')
             }, function () {
                 this.trigger('before:delete');
