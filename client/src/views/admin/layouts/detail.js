@@ -139,7 +139,7 @@ Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (
         },
 
         readDataFromLayout: function (model, layout) {
-            var allFields = [];
+            var allFields = ['id'];
             for (var field in model.defs.fields) {
                 if (this.isFieldEnabled(model, field)) {
                     allFields.push(field);
