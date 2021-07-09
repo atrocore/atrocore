@@ -1,0 +1,32 @@
+[
+  {
+    "label": "Overview",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        false
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "html",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "css",
+          "fullWidth": true
+        }
+      ]
+    ]
+  }
+]
