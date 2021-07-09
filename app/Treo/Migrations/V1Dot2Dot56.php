@@ -65,6 +65,14 @@ class V1Dot2Dot56 extends Base
     }
 
     /**
+     * @inheritDoc
+     */
+    public function down(): void
+    {
+        $this->execute("DROP TABLE `info_page`");
+    }
+
+    /**
      * @param string $sql
      */
     protected function execute(string $sql)

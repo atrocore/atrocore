@@ -1,7 +1,7 @@
 {
   "fields": {
-    "name": "Title",
-    "description": "Meta Description",
+    "name": "Название",
+    "description": "Мета-описание",
     "html": "HTML",
     "css": "CSS"
   },
@@ -9,6 +9,6 @@
     "Create InfoPage": "Создать Инфостраницу"
   },
   "exceptions": {
-    "cssNotValid": "Your CSS is not valid."
+    "cssNotValid": "Ваш CSS недействителен."
   }
 }
