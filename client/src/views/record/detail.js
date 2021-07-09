@@ -377,7 +377,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     let scroll = $window.scrollTop();
 
                     // if screen width more than 768 pixels and side panel height more than screen height
-                    if ($window.width() >= 768 && overview.outerHeight() > side.outerHeight()) {
+                    if (side.length && $window.width() >= 768 && overview.outerHeight() > side.outerHeight()) {
                         let sideWidth = side.outerWidth();
 
                         if (side.outerHeight() > $window.height() - topHeight) {

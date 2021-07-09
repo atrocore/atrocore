@@ -1,0 +1,38 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true,
+      "isMultilang": true
+    },
+    "description": {
+      "type": "wysiwyg",
+      "trim": true,
+      "isMultilang": true
+    },
+    "html": {
+      "type": "wysiwyg",
+      "trim": true,
+      "isMultilang": true
+    },
+    "css": {
+      "type": "text"
+    }
+  },
+  "collection": {
+    "sortBy": "name",
+    "asc": true,
+    "textFilterFields": [
+      "name"
+    ]
+  },
+  "indexes": {
+    "name": {
+      "columns": [
+        "name",
+        "deleted"
+      ]
+    }
+  }
+}

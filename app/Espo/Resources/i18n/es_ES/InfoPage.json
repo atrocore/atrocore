@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "name": "Title",
+    "description": "Meta Description",
+    "html": "HTML",
+    "css": "CSS"
+  },
+  "labels": {
+    "Create InfoPage": "Create Info Page"
+  },
+  "exceptions": {
+    "cssNotValid": "Your CSS is not valid."
+  }
+}
