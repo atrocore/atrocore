@@ -59,7 +59,7 @@ class Pdo extends Base
             'user'      => $config->get('database.user'),
             'charset'   => $config->get('database.charset', 'utf8'),
             'password'  => $config->get('database.password'),
-            'driver'    => $config->get('database.driver'),
+            'driver'    => $config->get('database.driver', 'pdo_mysql'),
             'platform'  => $config->get('database.platform'),
             'sslCA'     => $config->get('database.sslCA'),
             'sslCert'   => $config->get('database.sslCert'),

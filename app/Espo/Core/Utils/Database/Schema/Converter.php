@@ -478,7 +478,7 @@ class Converter
 
             $dependentEntities[] = $entityName;
 
-            if (array_key_exists('relations', $ormMeta[$entityName])) {
+            if (isset($ormMeta[$entityName]['relations'])) {
                 foreach ($ormMeta[$entityName]['relations'] as $relationName => $relationParams) {
                     if (isset($relationParams['entity'])) {
                         $relationEntity = $relationParams['entity'];
@@ -488,7 +488,6 @@ class Converter
                     }
                 }
             }
-
         }
 
         return $dependentEntities;
