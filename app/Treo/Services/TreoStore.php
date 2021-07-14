@@ -92,11 +92,8 @@ class TreoStore extends Base
      */
     protected function getRemotePackages(): array
     {
-        // get composer data
-        $composerData = json_decode(file_get_contents('composer.json'), true);
-
         // get packagist url
-        $url = $composerData['repositories'][0]['url'];
+        $url = "https://packagist.atrocore.com/packages.json?id=" . $this->getConfig()->get('appId');
 
         // parse all
         $packages = $this->parsePackages(self::getPathContent(explode('?', $url)[0]));

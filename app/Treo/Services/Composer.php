@@ -530,11 +530,13 @@ class Composer extends AbstractService
                 // prepare id
                 $id = $this->getStoredModuleId($package);
 
-                $result['update'][] = [
-                    'id'      => $id,
-                    'package' => $package,
-                    'from'    => $this->getModule($id)->getVersion()
-                ];
+                if (!empty($this->getModule($id))) {
+                    $result['update'][] = [
+                        'id'      => $id,
+                        'package' => $package,
+                        'from'    => $this->getModule($id)->getVersion()
+                    ];
+                }
             }
         }
         foreach ($composerStableData['require'] as $package => $version) {
