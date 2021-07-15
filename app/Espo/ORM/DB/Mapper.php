@@ -805,10 +805,6 @@ abstract class Mapper implements IMapper
             $value = (int) $value;
         }
 
-        if (is_string($value)) {
-            $value = utf8_encode($value);
-        }
-
         return $value;
     }
 
