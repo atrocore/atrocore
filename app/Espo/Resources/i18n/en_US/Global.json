@@ -15,7 +15,7 @@
     "Notification": "Notification",
     "Pricing": "Pricing",
     "RepresentationSettings": "Representation Settings",
-    "Unit": "Unit",
+    "Unit": "Measuring Unit",
     "QueueItem": "Queue Item",
     "TreoStore": "Store",
     "User": "User",
@@ -52,6 +52,7 @@
     "ArrayValue": "Array Value"
   },
   "scopeNamesPlural": {
+    "Unit": "Measuring Units",
     "Translation": "Translations",
     "QueueItem": "Queue Items",
     "Account": "Accounts",
