@@ -388,14 +388,15 @@ class Config
 
         $data = $service->findEntities([]);
 
-        $result = [];
+        if (empty($data['total'])) {
+            return new \stdClass();
+        }
 
-        if (!empty($data['total'])) {
-            foreach ($data['collection'] as $unit) {
-                $result[$unit->get('name')]['unitList'] = $unit->get('value');
-                foreach ($this->get('inputLanguageList', []) as $locale) {
-                    $result[$unit->get('name')]['unitListTranslates'][$locale] = $unit->get('value' . ucfirst(Util::toCamelCase(strtolower($locale))));
-                }
+        $result = [];
+        foreach ($data['collection'] as $unit) {
+            $result[$unit->get('name')]['unitList'] = $unit->get('value');
+            foreach ($this->get('inputLanguageList', []) as $locale) {
+                $result[$unit->get('name')]['unitListTranslates'][$locale] = $unit->get('value' . ucfirst(Util::toCamelCase(strtolower($locale))));
             }
         }
 
