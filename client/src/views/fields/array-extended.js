@@ -173,20 +173,25 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
         removeGroup(el) {
             let index = el.data('index');
             let value = this.selectedComplex[this.name] || [];
-            value[index] = 'todel';
+
+            if (this.isAttribute) {
+                value[index] = 'todel';
+            } else {
+                value.splice(index, 1);
+            }
+
             let data = {
                 [this.name]: value
             };
             this.langFieldNames.forEach(name => {
                 let value = this.selectedComplex[name] || [];
-                value[index] = 'todel';
+                if (this.isAttribute) {
+                    value[index] = 'todel';
+                } else {
+                    value.splice(index, 1);
+                }
                 data[name] = value;
             });
-
-            if (!this.isAttribute) {
-                data['optionColors'] = this.selectedComplex['optionColors'] || [];
-                data['optionColors'][index] = 'todel';
-            }
 
             this.selectedComplex = data;
             this.reRender();
