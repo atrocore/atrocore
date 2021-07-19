@@ -131,6 +131,7 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
         },
 
         updateSelectedComplex() {
+            this.model.fetch();
             this.selectedComplex = {
                 [this.name]: Espo.Utils.cloneDeep(this.model.get(this.name)) || []
             };
