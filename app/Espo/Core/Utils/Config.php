@@ -33,8 +33,9 @@
 
 namespace Espo\Core\Utils;
 
+use Espo\Core\Container;
 use Espo\Core\Utils\File\Manager as FileManager;
-use Treo\Core\ModuleManager\Manager as ModuleManager;
+use Espo\Services\Unit;
 
 /**
  * Class Config
@@ -86,20 +87,19 @@ class Config
     private $fileManager;
 
     /**
-     * @var ModuleManager
+     * @var Container
      */
-    private $moduleManager;
+    private $container;
 
     /**
      * Config constructor.
      *
-     * @param FileManager   $fileManager
-     * @param ModuleManager $moduleManager
+     * @param Container $container
      */
-    public function __construct(FileManager $fileManager, ModuleManager $moduleManager)
+    public function __construct(Container $container)
     {
-        $this->fileManager = $fileManager;
-        $this->moduleManager = $moduleManager;
+        $this->fileManager = new FileManager();
+        $this->container = $container;
     }
 
     protected function getFileManager()
@@ -121,10 +121,6 @@ class Config
      */
     public function get($name, $default = null)
     {
-        if ($name == 'isModulesLoaded') {
-            return $this->moduleManager->isLoaded();
-        }
-
         $keys = explode('.', $name);
 
         $lastBranch = $this->loadConfig();
@@ -188,7 +184,7 @@ class Config
 
         foreach ($name as $key => $value) {
             if (in_array($key, $this->associativeArrayAttributeList) && is_object($value)) {
-                $value = (array) $value;
+                $value = (array)$value;
             }
             $this->data[$key] = $value;
             if (!$dontMarkDirty) {
@@ -285,11 +281,17 @@ class Config
      * Get config acording to restrictions for a user
      *
      * @param $isAdmin
+     *
      * @return array
      */
     public function getData($isAdmin = null)
     {
         $data = $this->loadConfig();
+
+        if ($this->get('isInstalled', false)) {
+            $data['isModulesLoaded'] = $this->container->get('moduleManager')->isLoaded();
+            $data['unitsOfMeasure'] = $this->getUnitsOfMeasure();
+        }
 
         $restrictedConfig = $data;
         foreach($this->getRestrictItems($isAdmin) as $name) {
@@ -370,5 +372,23 @@ class Config
     public function getSiteUrl()
     {
         return rtrim($this->get('siteUrl'), '/');
+    }
+
+    protected function getUnitsOfMeasure(): object
+    {
+        /** @var Unit $service */
+        $service = $this->container->get('serviceFactory')->create('Unit');
+
+        $data = $service->findEntities([]);
+
+        $result = [];
+
+        if (!empty($data['total'])) {
+            foreach ($data['collection'] as $unit) {
+                $result[$unit->get('name')]['unitList'] = $unit->get('value');
+            }
+        }
+
+        return Json::decode(Json::encode($result));
     }
 }

@@ -234,7 +234,7 @@ class Container
      */
     protected function loadConfig(): Config
     {
-        return new Config(new FileManager(), $this->get('moduleManager'));
+        return new Config($this->get('container'));
     }
 
     /**
