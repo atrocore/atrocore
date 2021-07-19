@@ -136,8 +136,11 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
         },
 
         validateInt: function () {
-            var value = this.model.get(this.name);
-            if (isNaN(value)) {
+            const value = this.$el.find('[name="'+this.name+'"]').val();
+            const pattern = "^\\d{1,3}(\\" + this.thousandSeparator + "\\d{3})?$";
+            const matcher = new RegExp(pattern);
+
+            if (!matcher.test(value)) {
                 var msg = this.translate('fieldShouldBeInt', 'messages').replace('{field}', this.getLabelText());
                 this.showValidationMessage(msg);
                 return true;

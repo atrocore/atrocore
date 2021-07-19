@@ -75,8 +75,11 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
         },
 
         validateFloat: function () {
-            var value = this.model.get(this.name);
-            if (isNaN(value)) {
+            const value = this.$el.find('[name="' + this.name + '"]').val();
+            const pattern = "^\\d{1,3}(\\" + this.thousandSeparator + "\\d{3})*(\\" + this.decimalMark + "\\d+)?$";
+            const matcher = new RegExp(pattern);
+
+            if (!matcher.test(value)) {
                 var msg = this.translate('fieldShouldBeFloat', 'messages').replace('{field}', this.getLabelText());
                 this.showValidationMessage(msg);
                 return true;
