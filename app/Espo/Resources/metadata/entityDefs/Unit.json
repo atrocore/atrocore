@@ -14,7 +14,7 @@
       "type": "array",
       "required": true,
       "isMultilang": true,
-      "view": "views/fields/array-extended"
+      "view": "views/unit/fields/value"
     },
     "createdAt": {
       "type": "datetime",

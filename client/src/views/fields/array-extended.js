@@ -35,6 +35,8 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
 
         _timeouts: {},
 
+        defaultColor: 'ECECEC',
+
         isAttribute: false,
 
         entityTypeWithTranslatedMultiLangOptionsList: ['enum', 'multiEnum'],
@@ -131,13 +133,16 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
         },
 
         updateSelectedComplex() {
-            this.model.fetch();
             this.selectedComplex = {
                 [this.name]: Espo.Utils.cloneDeep(this.model.get(this.name)) || []
             };
             this.langFieldNames.forEach(name => {
                 this.selectedComplex[name] = Espo.Utils.cloneDeep(this.model.get(name)) || []
             });
+
+            if (!this.isAttribute) {
+                this.selectedComplex['optionColors'] = Espo.Utils.cloneDeep(this.model.get('optionColors')) || [];
+            }
         },
 
         setMode: function (mode) {
@@ -174,25 +179,20 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
         removeGroup(el) {
             let index = el.data('index');
             let value = this.selectedComplex[this.name] || [];
-
-            if (this.isAttribute) {
-                value[index] = 'todel';
-            } else {
-                value.splice(index, 1);
-            }
-
+            value[index] = 'todel';
             let data = {
                 [this.name]: value
             };
             this.langFieldNames.forEach(name => {
                 let value = this.selectedComplex[name] || [];
-                if (this.isAttribute) {
-                    value[index] = 'todel';
-                } else {
-                    value.splice(index, 1);
-                }
+                value[index] = 'todel';
                 data[name] = value;
             });
+
+            if (!this.isAttribute) {
+                data['optionColors'] = this.selectedComplex['optionColors'] || [];
+                data['optionColors'][index] = 'todel';
+            }
 
             this.selectedComplex = data;
             this.reRender();
@@ -374,16 +374,25 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
 
             if (this.isEnums()) {
                 data.optionGroups = (this.selectedComplex[this.name] || []).map((item, index) => {
+                    let colorValue = null;
+                    if (!this.isAttribute) {
+                        if (this.selectedComplex['optionColors'] && this.selectedComplex['optionColors'][index]) {
+                            colorValue = this.selectedComplex['optionColors'][index];
+                        } else {
+                            colorValue = this.defaultColor
+                        }
+                    }
+
                     let options = [
                         {
                             name: this.name,
                             value: item,
                             shortLang: '',
-                            colorValue: null
+                            colorValue: colorValue
                         }
                     ];
 
-                    if (!this.isAttribute || this.model.get('isMultilang') || !!(this.model.get('multilangField'))) {
+                    if (this.model.get('isMultilang') || !!(this.model.get('multilangField'))) {
                         (this.langFieldNames || []).forEach(function (name) {
                             options.push(
                                 {
@@ -404,11 +413,7 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
         },
 
         isEnums() {
-            if (this.isAttribute) {
-                return this.model.get('type') === 'enum' || this.model.get('type') === 'multiEnum';
-            }
-
-            return true;
+            return this.model.get('type') === 'enum' || this.model.get('type') === 'multiEnum';
         },
 
         resetValue() {
