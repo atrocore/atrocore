@@ -121,6 +121,14 @@ class Config
      */
     public function get($name, $default = null)
     {
+        if ($name == 'isModulesLoaded') {
+            return $this->container->get('moduleManager')->isLoaded();
+        }
+
+        if ($name == 'unitsOfMeasure') {
+            return $this->getUnitsOfMeasure();
+        }
+
         $keys = explode('.', $name);
 
         $lastBranch = $this->loadConfig();
@@ -289,11 +297,10 @@ class Config
         $data = $this->loadConfig();
 
         if ($this->get('isInstalled', false)) {
-            $data['isModulesLoaded'] = $this->container->get('moduleManager')->isLoaded();
             $data['unitsOfMeasure'] = $this->getUnitsOfMeasure();
         }
 
-        $restrictedConfig = $data;
+        $restrictedConfig  = $data;
         foreach($this->getRestrictItems($isAdmin) as $name) {
             if (isset($restrictedConfig[$name])) {
                 unset($restrictedConfig[$name]);
@@ -386,6 +393,9 @@ class Config
         if (!empty($data['total'])) {
             foreach ($data['collection'] as $unit) {
                 $result[$unit->get('name')]['unitList'] = $unit->get('value');
+                foreach ($this->get('inputLanguageList', []) as $locale) {
+                    $result[$unit->get('name')]['unitListTranslates'][$locale] = $unit->get('value' . ucfirst(Util::toCamelCase(strtolower($locale))));
+                }
             }
         }
 
