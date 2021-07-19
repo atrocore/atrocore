@@ -234,8 +234,10 @@ class Entity extends AbstractListener
 
             if ($data['type'] == 'multiEnum' && !empty($data['isMultilang']) && $entity->isAttributeChanged($field)) {
                 $keys = [];
-                foreach ($entity->get($field) as $value) {
-                    $keys[] = array_search($value, $data['options']);
+                if (!empty($data['options'])) {
+                    foreach ($entity->get($field) as $value) {
+                        $keys[] = array_search($value, $data['options']);
+                    }
                 }
                 foreach ($fields as $mField => $mData) {
                     if (isset($mData['multilangField']) && $mData['multilangField'] == $field) {

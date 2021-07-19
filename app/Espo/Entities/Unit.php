@@ -31,48 +31,19 @@
  * and "AtroCore" word.
  */
 
-namespace Espo\Services;
+declare(strict_types=1);
 
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Templates\Services\Base;
-use Espo\Core\Utils\Util;
+namespace Espo\Entities;
+
+use Espo\Core\Templates\Entities\Base;
 
 /**
- * Class Translation
+ * Class Unit
  */
-class Translation extends Base
+class Unit extends Base
 {
-    public function push(): bool
-    {
-        $data = [];
-        $data['data'] = $this
-            ->getEntityManager()
-            ->nativeQuery("SELECT * FROM translation WHERE is_customized=1 OR deleted=1")
-            ->fetchAll(\PDO::FETCH_ASSOC);
-
-        if (empty($data['data'])) {
-            throw new BadRequest($this->getInjection('language')->translate('nothingToPush', 'messages', 'Translation'));
-        }
-
-        $data['appId'] = $this->getConfig()->get('appId');
-        $data['siteUrl'] = $this->getConfig()->get('siteUrl');
-        $data['smtpUsername'] = $this->getConfig()->get('smtpUsername');
-        $data['emailFrom'] = $this->getConfig()->get('outboundEmailFromAddress');
-
-        $ch = curl_init('https://pm.atrocore.com/api/v1/PushedTranslation');
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:application/json']);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $result = curl_exec($ch);
-        curl_close($ch);
-
-        return $result;
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('language');
-    }
+    /**
+     * @var string
+     */
+    protected $entityType = "Unit";
 }

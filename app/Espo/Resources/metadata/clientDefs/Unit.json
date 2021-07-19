@@ -1,0 +1,9 @@
+{
+  "controller": "controllers/record",
+  "boolFilterList": [
+    "onlyMy",
+    "assignedToMe",
+    "ownedByMe"
+  ],
+  "iconClass": "fas fa-ruler"
+}

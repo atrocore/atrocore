@@ -1,0 +1,19 @@
+[
+  {
+    "label": "Overview",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        false
+      ],
+      [
+        {
+          "name": "value"
+        },
+        false
+      ]
+    ]
+  }
+]

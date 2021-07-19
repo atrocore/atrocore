@@ -374,12 +374,21 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
 
             if (this.isEnums()) {
                 data.optionGroups = (this.selectedComplex[this.name] || []).map((item, index) => {
+                    let colorValue = null;
+                    if (!this.isAttribute) {
+                        if (this.selectedComplex['optionColors'] && this.selectedComplex['optionColors'][index]) {
+                            colorValue = this.selectedComplex['optionColors'][index];
+                        } else {
+                            colorValue = this.defaultColor
+                        }
+                    }
+
                     let options = [
                         {
                             name: this.name,
                             value: item,
                             shortLang: '',
-                            colorValue: !this.isAttribute ? this.selectedComplex['optionColors'][index] || this.defaultColor : null
+                            colorValue: colorValue
                         }
                     ];
 

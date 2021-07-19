@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -31,48 +30,51 @@
  * and "AtroCore" word.
  */
 
-namespace Espo\Services;
+Espo.define('views/unit/fields/value', 'views/fields/array-extended',
+    Dep => Dep.extend({
 
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Templates\Services\Base;
-use Espo\Core\Utils\Util;
+        setup() {
+            if (this.model.get('id')) {
+                this.model.fetch();
+            }
 
-/**
- * Class Translation
- */
-class Translation extends Base
-{
-    public function push(): bool
-    {
-        $data = [];
-        $data['data'] = $this
-            ->getEntityManager()
-            ->nativeQuery("SELECT * FROM translation WHERE is_customized=1 OR deleted=1")
-            ->fetchAll(\PDO::FETCH_ASSOC);
+            this.defaultColor = null;
+            this.model.set('multilangField', true);
 
-        if (empty($data['data'])) {
-            throw new BadRequest($this->getInjection('language')->translate('nothingToPush', 'messages', 'Translation'));
-        }
+            Dep.prototype.setup.call(this);
+        },
 
-        $data['appId'] = $this->getConfig()->get('appId');
-        $data['siteUrl'] = $this->getConfig()->get('siteUrl');
-        $data['smtpUsername'] = $this->getConfig()->get('smtpUsername');
-        $data['emailFrom'] = $this->getConfig()->get('outboundEmailFromAddress');
+        isEnums() {
+            return true;
+        },
 
-        $ch = curl_init('https://pm.atrocore.com/api/v1/PushedTranslation');
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:application/json']);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $result = curl_exec($ch);
-        curl_close($ch);
+        removeGroup(el) {
+            let index = el.data('index');
+            let value = this.selectedComplex[this.name] || [];
 
-        return $result;
-    }
+            if (this.isAttribute) {
+                value[index] = 'todel';
+            } else {
+                value.splice(index, 1);
+            }
 
-    protected function init()
-    {
-        parent::init();
+            let data = {
+                [this.name]: value
+            };
+            this.langFieldNames.forEach(name => {
+                let value = this.selectedComplex[name] || [];
+                if (this.isAttribute) {
+                    value[index] = 'todel';
+                } else {
+                    value.splice(index, 1);
+                }
+                data[name] = value;
+            });
 
-        $this->addDependency('language');
-    }
-}
+            this.selectedComplex = data;
+            this.reRender();
+            this.trigger('change');
+        },
+
+    })
+);

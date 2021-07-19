@@ -123,6 +123,7 @@ class Metadata extends AbstractListener
                         $mParams['multilangField'] = $field;
                         $mParams['multilangLocale'] = $locale;
                         $mParams['isCustom'] = false;
+                        $mParams['unique'] = false;
                         if (isset($params['requiredForMultilang'])) {
                             $mParams['required'] = $params['requiredForMultilang'];
                         }

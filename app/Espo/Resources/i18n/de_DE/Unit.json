@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "name": "Name",
+    "description": "Beschreibung",
+    "value": "Wert"
+  },
+  "labels": {
+    "Create Unit": "Maßeinheit erstellen"
+  }
+}

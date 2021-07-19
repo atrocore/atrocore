@@ -1,3 +1,4 @@
+<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -30,25 +31,15 @@
  * and "AtroCore" word.
  */
 
-Espo.define('treo-core:controllers/unit', 'controller', function (Dep) {
+declare(strict_types=1);
 
-    return Dep.extend({
+namespace Espo\Repositories;
 
-        defaultAction: "view",
+use Espo\Core\Templates\Repositories\Base;
 
-        view: function () {
-            var model = this.getConfig().clone();
-            model.defs = this.getConfig().defs;
-
-            model.once('sync', () => {
-                model.id = '1';
-                this.main('views/settings/edit', {
-                    model: model,
-                    headerTemplate: 'treo-core:admin/settings/headers/unit',
-                    recordView: 'treo-core:views/admin/unit'
-                });
-            });
-            model.fetch();
-        },
-    });
-});
+/**
+ * Class Unit
+ */
+class Unit extends Base
+{
+}

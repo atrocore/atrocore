@@ -33,7 +33,7 @@
         "description": "currency"
       },
       {
-        "url": "#Unit/view",
+        "url": "#Unit",
         "label": "Unit",
         "description": "unit"
       },
