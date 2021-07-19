@@ -35,8 +35,6 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
 
         _timeouts: {},
 
-        defaultColor: 'ECECEC',
-
         isAttribute: false,
 
         entityTypeWithTranslatedMultiLangOptionsList: ['enum', 'multiEnum'],
@@ -139,10 +137,6 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
             this.langFieldNames.forEach(name => {
                 this.selectedComplex[name] = Espo.Utils.cloneDeep(this.model.get(name)) || []
             });
-
-            if (!this.isAttribute) {
-                this.selectedComplex['optionColors'] = Espo.Utils.cloneDeep(this.model.get('optionColors')) || [];
-            }
         },
 
         setMode: function (mode) {
@@ -379,11 +373,11 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
                             name: this.name,
                             value: item,
                             shortLang: '',
-                            colorValue: !this.isAttribute ? this.selectedComplex['optionColors'][index] || this.defaultColor : null
+                            colorValue: null
                         }
                     ];
 
-                    if (this.model.get('isMultilang') || !!(this.model.get('multilangField'))) {
+                    if (!this.isAttribute || this.model.get('isMultilang') || !!(this.model.get('multilangField'))) {
                         (this.langFieldNames || []).forEach(function (name) {
                             options.push(
                                 {
@@ -404,7 +398,11 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
         },
 
         isEnums() {
-            return this.model.get('type') === 'enum' || this.model.get('type') === 'multiEnum';
+            if (this.isAttribute) {
+                return this.model.get('type') === 'enum' || this.model.get('type') === 'multiEnum';
+            }
+
+            return true;
         },
 
         resetValue() {

@@ -11,10 +11,10 @@
       "type": "text"
     },
     "value": {
-      "type": "multiEnum",
-      "storeArrayValues": true,
-      "required": false,
-      "isMultilang": true
+      "type": "array",
+      "required": true,
+      "isMultilang": true,
+      "view": "views/fields/array-extended"
     },
     "createdAt": {
       "type": "datetime",

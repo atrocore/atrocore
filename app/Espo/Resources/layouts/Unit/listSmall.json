@@ -1,6 +1,7 @@
 [
   {
-    "name": "name"
+    "name": "name",
+    "link": true
   },
   {
     "name": "value"
