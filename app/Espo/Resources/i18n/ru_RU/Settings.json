@@ -85,7 +85,6 @@
     "appId": "ID",
     "isStreamSide": "Поток внутри",
     "isStreamPanelFirst": "Is stream panel first",
-    "unitsOfMeasure": "Единица измерения",
     "attachmentDuplicates": "Дубликаты ресурсов",
     "ldapAccountCanonicalForm": "Каноническая форма учетной записи",
     "ldapAccountDomainName": "Доменное имя учетной записи",

@@ -82,7 +82,6 @@
     "appId": "ID",
     "isStreamSide": "Is stream in side",
     "isStreamPanelFirst": "Is stream panel first",
-    "unitsOfMeasure": "Units Of Measure",
     "attachmentDuplicates": "Asset Duplicates",
     "ldapPortalUserLdapAuth": "Use LDAP Authentication for Portal Users",
     "ldapPortalUserPortals": "Default Portals for a Portal User",

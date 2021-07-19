@@ -1,4 +1,9 @@
 {
-  "entity": false,
-  "module": "TreoCore"
+  "entity": true,
+  "layouts": true,
+  "tab": true,
+  "acl": false,
+  "aclPortal": false,
+  "type": "Base",
+  "object": true
 }

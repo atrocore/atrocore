@@ -70,15 +70,6 @@ class Translation extends Base
         return $records[$request->get('key')];
     }
 
-    public function postActionSaveUnitsOfMeasure(array $params, \stdClass $data): bool
-    {
-        if (empty($data->language) || !isset($data->labels)) {
-            throw new BadRequest();
-        }
-
-        return $this->getRecordService()->saveUnitsOfMeasure($data->language, get_object_vars($data->labels));
-    }
-
     public function postActionReset(): bool
     {
         exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " index.php refresh translations >/dev/null");
