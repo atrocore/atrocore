@@ -56,7 +56,7 @@ class InfoPage extends Base
     {
         parent::beforeSave($entity, $options);
 
-        $pattern = "/([^{]+{([^:}]+:[^;}]+;)+[^}]+}\s*)+/mi";
+        $pattern = "/([^{]+{([^:;{}]+:[^;:{}]+;\s*)+}\s*)+/mi";
 
         if (!empty($entity->get('css')) && !preg_match($pattern, $entity->get('css'))) {
             throw new BadRequest($this->getLanguage()->translate('cssNotValid', 'exceptions', $entity->getEntityType()));
