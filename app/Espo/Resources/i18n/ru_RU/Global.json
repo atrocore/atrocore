@@ -48,7 +48,8 @@
     "RepresentationSettings": "Настройки представления",
     "Unit": "Единица",
     "QueueItem": "Элемент очереди",
-    "TreoStore": "Магазин"
+    "TreoStore": "Магазин",
+    "InfoPage": "Инфостраница"
   },
   "scopeNamesPlural": {
     "User": "Пользователи",
@@ -82,7 +83,8 @@
     "Note": "Примечания",
     "Notification": "Уведомления",
     "PhoneNumber": "Номера телефонов",
-    "Preferences": "Настройки"
+    "Preferences": "Настройки",
+    "InfoPage": "Инфостраницы"
   },
   "descriptions": {
     "Core": "AtroCore - это программная экосистема, предназначенная для быстрой разработки веб-приложений для бизнеса."

@@ -7,8 +7,7 @@
       "isMultilang": true
     },
     "description": {
-      "type": "wysiwyg",
-      "trim": true,
+      "type": "text",
       "isMultilang": true
     },
     "html": {
