@@ -464,11 +464,13 @@ class Record extends \Espo\Core\Services\Base
                 $message = $e->getMessage();
                 $tableName = Util::toUnderScore($entity->getEntityType());
 
-                if (preg_match("/SQLSTATE\[23000\]: Integrity constraint violation: 1062 Duplicate entry '(.*)' for key '$tableName\.(.*)'/", $message, $matches) && !empty($matches[2])) {
+                if (preg_match("/SQLSTATE\[23000\]: Integrity constraint violation: 1062 Duplicate entry '(.*)' for key '(.*)'/", $message, $matches) && !empty($matches[2])) {
+                    $keyNameParts = explode('.', $matches[2]);
+                    $keyName = array_pop($keyNameParts);
                     $data = $this
                         ->getEntityManager()
                         ->getPDO()
-                        ->query("SHOW INDEX FROM $tableName WHERE Key_name = '$matches[2]' AND Seq_in_index = 1")
+                        ->query("SHOW INDEX FROM $tableName WHERE Key_name = '$keyName' AND Seq_in_index = 1")
                         ->fetch(\PDO::FETCH_ASSOC);
 
                     if (!empty($data['Column_name'])) {
