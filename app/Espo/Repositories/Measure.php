@@ -1,3 +1,4 @@
+<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -30,51 +31,15 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/unit/fields/value', 'views/fields/array-extended',
-    Dep => Dep.extend({
+declare(strict_types=1);
 
-        setup() {
-            if (this.model.get('id')) {
-                this.model.fetch();
-            }
+namespace Espo\Repositories;
 
-            this.defaultColor = null;
-            this.model.set('multilangField', true);
+use Espo\Core\Templates\Repositories\Base;
 
-            Dep.prototype.setup.call(this);
-        },
-
-        isEnums() {
-            return true;
-        },
-
-        removeGroup(el) {
-            let index = el.data('index');
-            let value = this.selectedComplex[this.name] || [];
-
-            if (this.isAttribute) {
-                value[index] = 'todel';
-            } else {
-                value.splice(index, 1);
-            }
-
-            let data = {
-                [this.name]: value
-            };
-            this.langFieldNames.forEach(name => {
-                let value = this.selectedComplex[name] || [];
-                if (this.isAttribute) {
-                    value[index] = 'todel';
-                } else {
-                    value.splice(index, 1);
-                }
-                data[name] = value;
-            });
-
-            this.selectedComplex = data;
-            this.reRender();
-            this.trigger('change');
-        },
-
-    })
-);
+/**
+ * Class Measure
+ */
+class Measure extends Base
+{
+}

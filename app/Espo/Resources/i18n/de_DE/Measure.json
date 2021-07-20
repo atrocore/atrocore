@@ -2,12 +2,12 @@
   "fields": {
     "name": "Name",
     "description": "Beschreibung",
-    "measure": "Maß"
+    "units": "Einheiten"
   },
   "links": {
-    "measure": "Maß"
+    "units": "Einheiten"
   },
   "labels": {
-    "Create Unit": "Maßeinheit erstellen"
+    "Create Measure": "Maß erstellen"
   }
 }

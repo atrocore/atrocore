@@ -46,12 +46,14 @@
     "Notification": "Уведомление",
     "Pricing": "Ценообразование",
     "RepresentationSettings": "Настройки представления",
+    "Measure": "Мера",
     "Unit": "Единица измерения",
     "QueueItem": "Элемент очереди",
     "TreoStore": "Магазин",
     "InfoPage": "Инфостраница"
   },
   "scopeNamesPlural": {
+    "Measure": "Меры",
     "Unit": "Единицы измерения",
     "User": "Пользователи",
     "Team": "Группы",

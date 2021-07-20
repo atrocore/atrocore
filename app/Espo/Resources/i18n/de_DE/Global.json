@@ -13,7 +13,8 @@
     "Pricing": "Preisgestaltung",
     "QueueItem": "Warteschlangenelement",
     "RepresentationSettings": "Repräsentationseinstellungen",
-    "Unit": "Maßeinheit",
+    "Measure": "Maß",
+    "Unit": "Einheit",
     "User": "Benutzer",
     "Role": "Rolle",
     "OutboundEmail": "Ausgehende E-Mail",
@@ -39,7 +40,8 @@
     "InfoPage": "Info Seite"
   },
   "scopeNamesPlural": {
-    "Unit": "Maßeinheiten",
+    "Measure": "Maße",
+    "Unit": "Einheiten",
     "ActionHistoryRecord": "Aktionsgeschichte",
     "Currency": "Währungen",
     "Dashboard": "Dashboards",

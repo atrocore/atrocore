@@ -2,12 +2,12 @@
   "fields": {
     "name": "Name",
     "description": "Description",
-    "measure": "Measure"
+    "units": "Units"
   },
   "links": {
-    "measure": "Measure"
+    "units": "Units"
   },
   "labels": {
-    "Create Unit": "Create Unit"
+    "Create Measure": "Create Measure"
   }
 }

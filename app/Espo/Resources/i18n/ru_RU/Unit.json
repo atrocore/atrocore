@@ -2,7 +2,10 @@
   "fields": {
     "name": "Название",
     "description": "Описание",
-    "value": "Значение"
+    "measure": "Мера"
+  },
+  "links": {
+    "measure": "Мера"
   },
   "labels": {
     "Create Unit": "Создать единицу измерения"
