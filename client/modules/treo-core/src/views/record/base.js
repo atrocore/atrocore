@@ -99,13 +99,15 @@ Espo.define('treo-core:views/record/base', 'class-replace!treo-core:views/record
             model.trigger('before:save', attrs);
 
             let confirmMessage = null;
-            let confirmations = this.getMetadata().get(`clientDefs.${model.urlRoot}.confirm`) || {};
-            $.each(confirmations, (field, key) => {
-                if (_prev[field] !== attrs[field]) {
-                    let parts = key.split('.');
-                    confirmMessage = this.translate(parts[2], parts[1], parts[0]);
-                }
-            });
+            if (this.model.get('id')) {
+                let confirmations = this.getMetadata().get(`clientDefs.${model.urlRoot}.confirm`) || {};
+                $.each(confirmations, (field, key) => {
+                    if (_prev[field] !== attrs[field]) {
+                        let parts = key.split('.');
+                        confirmMessage = this.translate(parts[2], parts[1], parts[0]);
+                    }
+                });
+            }
 
             this.notify(false);
             if (confirmMessage) {
