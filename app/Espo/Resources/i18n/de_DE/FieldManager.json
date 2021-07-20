@@ -99,6 +99,7 @@
     "defaultValidationFailed": "Der Standardwert darf keine Sonderzeichen enthalten"
   },
   "exceptions": {
-    "regexNotValid": "Dieses REGEX-Muster ist nicht gültig."
+    "regexNotValid": "Dieses REGEX-Muster ist nicht gültig.",
+    "someFieldNotUnique": "Einige Felder haben keinen eindeutigen Wert."
   }
 }

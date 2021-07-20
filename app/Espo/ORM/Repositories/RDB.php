@@ -33,6 +33,7 @@
 
 namespace Espo\ORM\Repositories;
 
+use Espo\Core\Utils\Util;
 use \Espo\ORM\EntityManager;
 use \Espo\ORM\EntityFactory;
 use \Espo\ORM\EntityCollection;
@@ -189,8 +190,67 @@ class RDB extends \Espo\ORM\Repository
         return $result;
     }
 
+    /**
+     * @param Entity $entity
+     * @param array $options
+     */
     protected function beforeRemove(Entity $entity, array $options = array())
     {
+        $uniques = $this->getUniqueFields($entity);
+
+        if (!empty($uniques)) {
+            $dbTable = Util::toUnderScore($entity->getEntityType());
+
+            foreach ($uniques as $key => $unique) {
+                if (is_array($unique)) {
+                    $sqlCondition = [];
+
+                    foreach ($unique as $field) {
+                        $sqlCondition[] = Util::toUnderScore($field) . "='" . $entity->get($field) . "'";
+                    }
+
+                    $uniques[$key] = '(' . implode(' AND ', $sqlCondition) . ')';
+                }
+            }
+
+            $where = implode(' OR ', $uniques);
+
+            $sql = "DELETE FROM `{$dbTable}` WHERE deleted = 1 AND id != '{$entity->id}' AND ({$where})";
+
+            $this
+                ->getEntityManager()
+                ->nativeQuery($sql);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    protected function getUniqueFields(Entity $entity): array
+    {
+        $result = [];
+
+        $metadata = $this->getEntityManager()->getEspoMetadata();
+
+        foreach ($metadata->get(['entityDefs', $entity->getEntityType(), 'fields'], []) as $field => $defs) {
+            if (!empty($defs['unique'])) {
+                $actualFields = $metadata->get(['fields', $defs['type'], 'actualFields'], []);
+
+                if (!empty($actualFields)) {
+                    $actualUniqueFields = [];
+
+                    foreach ($actualFields as $actualField) {
+                        $actualUniqueFields[] = $field . ucfirst($actualField);
+                    }
+
+                    $result[] = $actualUniqueFields;
+                } else {
+                    $result[] = $field;
+                }
+            }
+        }
+
+        return $result;
     }
 
     /**

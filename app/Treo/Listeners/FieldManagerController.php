@@ -166,15 +166,18 @@ class FieldManagerController extends AbstractListener
      * @throws BadRequest
      * @throws \Espo\Core\Exceptions\Error
      */
-    protected function isUniqueFieldWithoutDuplicates(string $scope, string $field)
+    protected function isUniqueFieldWithoutDuplicates(string $scope, string $field): void
     {
-        $table = Util::toUnderScore($scope);
-        $field = Util::toUnderScore($field);
-
         $defs = $this->getMetadata()->get(['entityDefs', $scope, 'fields', $field], []);
 
         if (isset($defs['type'])) {
+            $table = Util::toUnderScore($scope);
+            $field = Util::toUnderScore($field);
+
             switch ($defs['type']) {
+                case 'asset':
+                    $sql = "SELECT COUNT(*) FROM $table WHERE $table.{$field}_id IS NOT NULL AND deleted = 0 GROUP BY $table.{$field}_id HAVING COUNT($table.{$field}_id) > 1";
+                    break;
                 case 'currency':
                     $sql = "SELECT COUNT(*) FROM $table WHERE $table.$field IS NOT NULL AND {$field}_currency IS NOT NULL AND deleted = 0 GROUP BY $table.$field, {$field}_currency HAVING COUNT($table.$field) > 1 AND COUNT({$field}_currency) > 1";
                     break;
