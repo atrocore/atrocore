@@ -38,21 +38,7 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
 
         editTemplate: 'fields/float/edit',
 
-        decimalMark: '.',
-
         validations: ['required', 'float', 'range'],
-
-        setup: function () {
-            Dep.prototype.setup.call(this);
-
-            if (this.getPreferences().has('decimalMark')) {
-                this.decimalMark = this.getPreferences().get('decimalMark');
-            } else {
-                if (this.getConfig().has('decimalMark')) {
-                    this.decimalMark = this.getConfig().get('decimalMark');
-                }
-            }
-        },
 
         getValueForDisplay: function () {
             var value = isNaN(this.model.get(this.name)) ? null : this.model.get(this.name);
@@ -76,14 +62,33 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
 
         validateFloat: function () {
             const value = this.$el.find('[name="' + this.name + '"]').val();
-            const pattern = "^\\d{1,3}(\\" + this.thousandSeparator + "\\d{3})*(\\" + this.decimalMark + "\\d+)?$";
-            const matcher = new RegExp(pattern);
 
-            if (!matcher.test(value)) {
-                var msg = this.translate('fieldShouldBeFloat', 'messages').replace('{field}', this.getLabelText());
-                this.showValidationMessage(msg);
+            let invalid = false;
+
+            let pattern = "^\\d+(\\" + this.decimalMark + "\\d+)*$"
+            let matcher = new RegExp(pattern);
+            if (!matcher.test(value.replaceAll(this.thousandSeparator, ''))) {
+                invalid = true;
+            }
+
+            if (!invalid && (value.match(new RegExp("\\" + this.decimalMark, "g")) || []).length > 1) {
+                invalid = true;
+            }
+
+            if (!invalid && value.indexOf(this.thousandSeparator) >= 0) {
+                pattern = "^\\d{1,3}(\\" + this.thousandSeparator + "\\d{3})*(\\" + this.decimalMark + "\\d+)?$";
+                matcher = new RegExp(pattern);
+                if (!matcher.test(value)) {
+                    invalid = true;
+                }
+            }
+
+            if (invalid) {
+                this.showValidationMessage(this.translate('fieldShouldBeFloat', 'messages').replace('{field}', this.getLabelText()));
                 return true;
             }
+
+            return false;
         },
 
         parse: function (value) {

@@ -48,6 +48,8 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
 
         thousandSeparator: ',',
 
+        decimalMark: '.',
+
         searchTypeList: ['isNotEmpty', 'isEmpty', 'equals', 'notEquals', 'greaterThan', 'lessThan', 'greaterThanOrEquals', 'lessThanOrEquals', 'between'],
 
         setup: function () {
@@ -59,6 +61,14 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
             } else {
                 if (this.getConfig().has('thousandSeparator')) {
                     this.thousandSeparator = this.getConfig().get('thousandSeparator');
+                }
+            }
+
+            if (this.getPreferences().has('decimalMark')) {
+                this.decimalMark = this.getPreferences().get('decimalMark');
+            } else {
+                if (this.getConfig().has('decimalMark')) {
+                    this.decimalMark = this.getConfig().get('decimalMark');
                 }
             }
 
@@ -113,7 +123,7 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
 
         handleSearchType: function (type) {
             var $additionalInput = this.$el.find('input.additional');
-            var $input = this.$el.find('input[name="'+this.name+'"]');
+            var $input = this.$el.find('input[name="' + this.name + '"]');
 
             if (type === 'between') {
                 $additionalInput.removeClass('hidden');
@@ -136,15 +146,30 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
         },
 
         validateInt: function () {
-            const value = this.$el.find('[name="'+this.name+'"]').val();
-            const pattern = "^\\d{1,3}(\\" + this.thousandSeparator + "\\d{3})?$";
-            const matcher = new RegExp(pattern);
+            const value = this.$el.find('[name="' + this.name + '"]').val();
 
+            let invalid = false;
+
+            let pattern = "^\\d+(\\" + this.thousandSeparator + "\\d+)*$"
+            let matcher = new RegExp(pattern);
             if (!matcher.test(value)) {
-                var msg = this.translate('fieldShouldBeInt', 'messages').replace('{field}', this.getLabelText());
-                this.showValidationMessage(msg);
+                invalid = true;
+            }
+
+            if (!invalid && value.indexOf(this.thousandSeparator) >= 0) {
+                pattern = "^\\d{1,3}(\\" + this.thousandSeparator + "\\d{3})*(\\" + this.decimalMark + "\\d+)?$"
+                matcher = new RegExp(pattern);
+                if (!matcher.test(value)) {
+                    invalid = true;
+                }
+            }
+
+            if (invalid) {
+                this.showValidationMessage(this.translate('fieldShouldBeInt', 'messages').replace('{field}', this.getLabelText()));
                 return true;
             }
+
+            return false;
         },
 
         validateRange: function () {
@@ -158,10 +183,10 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
             var maxValue = this.model.getFieldParam(this.name, 'max');
 
             if (minValue !== null && maxValue !== null) {
-                if (value < minValue || value > maxValue ) {
+                if (value < minValue || value > maxValue) {
                     var msg = this.translate('fieldShouldBeBetween', 'messages').replace('{field}', this.getLabelText())
-                                                                                .replace('{min}', minValue)
-                                                                                .replace('{max}', maxValue);
+                        .replace('{min}', minValue)
+                        .replace('{max}', maxValue);
                     this.showValidationMessage(msg);
                     return true;
                 }
@@ -169,14 +194,14 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
                 if (minValue !== null) {
                     if (value < minValue) {
                         var msg = this.translate('fieldShouldBeGreater', 'messages').replace('{field}', this.getLabelText())
-                                                                                 .replace('{value}', minValue);
+                            .replace('{value}', minValue);
                         this.showValidationMessage(msg);
                         return true;
                     }
                 } else if (maxValue !== null) {
                     if (value > maxValue) {
                         var msg = this.translate('fieldShouldBeLess', 'messages').replace('{field}', this.getLabelText())
-                                                                                    .replace('{value}', maxValue);
+                            .replace('{value}', maxValue);
                         this.showValidationMessage(msg);
                         return true;
                     }
@@ -209,7 +234,7 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
         },
 
         fetch: function () {
-            var value = this.$el.find('[name="'+this.name+'"]').val();
+            var value = this.$el.find('[name="' + this.name + '"]').val();
             value = this.parse(value);
             var data = {};
             data[this.name] = value;
@@ -218,7 +243,7 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
 
         fetchSearch: function () {
             var value = this.parse(this.$element.val());
-            var type = this.$el.find('[name="'+this.name+'-type"]').val();
+            var type = this.$el.find('[name="' + this.name + '-type"]').val();
             var data;
 
             if (isNaN(value)) {
