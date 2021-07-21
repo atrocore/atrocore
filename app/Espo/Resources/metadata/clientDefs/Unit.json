@@ -1,5 +1,9 @@
 {
   "controller": "controllers/record",
+  "views": {
+    "list": "views/unit/list",
+    "detail": "views/unit/detail"
+  },
   "boolFilterList": [
     "onlyMy",
     "assignedToMe",

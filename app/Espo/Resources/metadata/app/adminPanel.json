@@ -33,9 +33,9 @@
         "description": "currency"
       },
       {
-        "url": "#Unit",
-        "label": "Unit",
-        "description": "unit"
+        "url": "#Measure",
+        "label": "Measure",
+        "description": "measure"
       },
       {
         "url": "#Admin/notifications",

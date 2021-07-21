@@ -74,7 +74,7 @@
   },
   "fieldTypes": {
     "color": "Farbe",
-    "measure": "Messeinstellungen",
+    "unit": "Maßeinheit",
     "array": "Liste",
     "foreign": "Fremdbezug",
     "duration": "Dauer",
@@ -170,7 +170,7 @@
     "multiLanguagesSettings": "Konfigurieren Sie die zu verwendeten Sprachen",
     "composer": "Verwaltung von Abhängigkeiten - hier kann man diverse Module installieren/aktualisieren/deinstallieren. Die Abhängigkeiten zwischen den Modulen werden automatisch berücksichtigt.",
     "representationSettings": "Darstellungseinstellungen.",
-    "unit": "Einstellungen Maßeinheiten.",
+    "measure": "Messeinstellungen.",
     "settings": "Systemeinstellungen der Webanwendung.",
     "scheduledJob": "Cronjob-Aufgaben.",
     "clearCache": "Cache leeren.",

@@ -11,8 +11,8 @@
       "type": "text"
     },
     "measure": {
-      "type": "datetime",
-      "readOnly": true
+      "type": "link",
+      "required": true
     },
     "createdAt": {
       "type": "datetime",

@@ -79,7 +79,7 @@
   },
   "fieldTypes": {
     "color": "Color",
-    "measure": "Measure settings",
+    "unit": "Unit",
     "array": "Array",
     "foreign": "Foreign",
     "duration": "Duration",
@@ -185,7 +185,7 @@
     "multiLanguagesSettings": "Configure multiple languages to be used",
     "composer": "Installation / uninstallation / updating of modules, which is dependency consistent",
     "representationSettings": "Representation settings",
-    "unit": "Units of measuring settings",
+    "measure": "Measure settings",
     "settings": "General system settings",
     "scheduledJob": "Jobs executed by cron",
     "clearCache": "Backend cache clearing",
