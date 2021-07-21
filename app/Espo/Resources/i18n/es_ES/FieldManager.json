@@ -101,6 +101,7 @@
   },
   "exceptions": {
     "regexNotValid": "This REGEX Pattern is not valid.",
-    "someFieldNotUnique": "Some fields have no unique value."
+    "someFieldNotUnique": "Some fields have no unique value.",
+    "someFieldDontMathToPattern": "Some field don't match the pattern."
   }
 }

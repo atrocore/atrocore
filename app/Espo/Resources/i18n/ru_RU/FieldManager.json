@@ -101,6 +101,7 @@
   },
   "exceptions": {
     "regexNotValid": "Этот REGEX паттерн не валидный.",
-    "someFieldNotUnique": "Некоторые поля не имеют уникального значения."
+    "someFieldNotUnique": "Некоторые поля не имеют уникального значения.",
+    "someFieldDontMathToPattern": "Некоторые поля не соответствуют шаблону."
   }
 }
