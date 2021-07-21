@@ -100,6 +100,7 @@
   },
   "exceptions": {
     "regexNotValid": "Dieses REGEX-Muster ist nicht gültig.",
-    "someFieldNotUnique": "Einige Felder haben keinen eindeutigen Wert."
+    "someFieldNotUnique": "Einige Felder haben keinen eindeutigen Wert.",
+    "someFieldDontMathToPattern": "Einige Felder stimmen nicht mit dem Muster überein."
   }
 }

@@ -36,6 +36,7 @@ declare(strict_types=1);
 namespace Treo\Listeners;
 
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Exception;
 use Espo\Core\Utils\Util;
 use Treo\Core\EventManager\Event;
 
@@ -57,8 +58,39 @@ class FieldManagerController extends AbstractListener
 
         $this->isUniqueFieldWithoutDuplicates($params['scope'], $data->name);
 
-        if (!empty($pattern = $data->pattern) && !preg_match('/^\/((?:(?:[^?+*{}()[\]\\\\|]+|\\\\.|\[(?:\^?\\\\.|\^[^\\\\]|[^\\\\^])(?:[^\]\\\\]+|\\\\.)*\]|\((?:\?[:=!]|\?<[=!]|\?>)?(?1)??\)|\(\?(?:R|[+-]?\d+)\))(?:(?:[?+*]|\{\d+(?:,\d*)?\})[?+]?)?|\|)*)\/[gmixsuAJD]*$/', $pattern)) {
-            throw new BadRequest($this->getLanguage()->translate('regexNotValid', 'exceptions', 'FieldManager'));
+        if (!empty($pattern = $data->pattern)) {
+            if (!preg_match('/^\/((?:(?:[^?+*{}()[\]\\\\|]+|\\\\.|\[(?:\^?\\\\.|\^[^\\\\]|[^\\\\^])(?:[^\]\\\\]+|\\\\.)*\]|\((?:\?[:=!]|\?<[=!]|\?>)?(?1)??\)|\(\?(?:R|[+-]?\d+)\))(?:(?:[?+*]|\{\d+(?:,\d*)?\})[?+]?)?|\|)*)\/[gmixsuAJD]*$/', $pattern)) {
+                throw new BadRequest($this->getLanguage()->translate('regexNotValid', 'exceptions', 'FieldManager'));
+            }
+
+            if (preg_match('/\^(.*)\$/', $pattern, $matches)) {
+                $sqlPattern = $matches[0];
+
+                $table = Util::toUnderScore($params['scope']);
+                $field = Util::toUnderScore($data->name);
+
+                $where = "$field IS NOT NULL AND $field != '' AND $field NOT REGEXP '{$sqlPattern}'";
+
+                if (!empty($data->isMultilang) && $this->getConfig()->get('isMultilangActive', false)) {
+                    foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
+                        $locale = strtolower($locale);
+                        $where .= " OR {$field}_{$locale} IS NOT NULL AND {$field}_{$locale} != '' AND {$field}_{$locale} NOT REGEXP '{$sqlPattern}'";
+                    }
+                }
+
+                $sql = "SELECT id FROM {$table}
+                    WHERE deleted = 0
+                        AND ({$where})";
+
+                $result = $this
+                    ->getEntityManager()
+                    ->nativeQuery($sql)
+                    ->fetch(\PDO::FETCH_ASSOC);
+
+                if (!empty($result)) {
+                    throw new BadRequest($this->getLanguage()->translate('someFieldDontMathToPattern', 'exceptions', 'FieldManager'));
+                }
+            }
         }
     }
 
