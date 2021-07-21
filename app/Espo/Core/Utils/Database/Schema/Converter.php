@@ -241,7 +241,7 @@ class Converter
                         $additionalFields = $this->getMetadata()->get(['fields', $metadataFieldType, 'actualFields'], []);
                     }
 
-                    $uniqueColumns = $this->getKeyList($columnName, $fieldParams['unique'], $uniqueColumns, $additionalFields);
+                    $uniqueColumns = $this->getKeyList($columnName, $fieldParams, $uniqueColumns, $additionalFields);
                 } //END: add unique
             }
 
@@ -427,15 +427,21 @@ class Converter
 
     /**
      * Get key list (index, unique). Ex. index => true OR index => 'somename'
-     * @param  string $columnName Column name (underscore field name)
-     * @param  bool | string $keyValue
+     * @param array $fieldParams
+     * @param bool | string $keyValue
      * @return array
      */
-    protected function getKeyList($columnName, $keyValue, array $keyList, array $additionalFields = [])
+    protected function getKeyList($columnName, $fieldParams, array $keyList, array $additionalFields = [])
     {
+        $keyValue = $fieldParams['unique'];
         if ($keyValue === true) {
-            $tableIndexName = SchemaUtils::generateIndexName($columnName);
-            $columnNames = [$columnName];
+            if (empty($fieldParams['autoincrement'])) {
+                $tableIndexName = SchemaUtils::generateIndexName($columnName . '_deleted');
+                $columnNames = [$columnName, 'deleted'];
+            } else {
+                $tableIndexName = SchemaUtils::generateIndexName($columnName);
+                $columnNames = [$columnName];
+            }
 
             foreach ($additionalFields as $column) {
                 if (!empty($column)) {

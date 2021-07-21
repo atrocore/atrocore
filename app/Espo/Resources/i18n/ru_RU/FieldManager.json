@@ -100,6 +100,7 @@
     "defaultValidationFailed": "Стандартное значение не может содержать специальные знаки"
   },
   "exceptions": {
-    "regexNotValid": "Этот REGEX паттерн не валидный."
+    "regexNotValid": "Этот REGEX паттерн не валидный.",
+    "someFieldNotUnique": "Некоторые поля не имеют уникального значения."
   }
 }
