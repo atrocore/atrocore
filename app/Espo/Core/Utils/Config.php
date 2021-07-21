@@ -35,7 +35,6 @@ namespace Espo\Core\Utils;
 
 use Espo\Core\Container;
 use Espo\Core\Utils\File\Manager as FileManager;
-use Espo\Services\Unit;
 
 /**
  * Class Config
@@ -383,23 +382,21 @@ class Config
 
     protected function getUnitsOfMeasure(): object
     {
-        /** @var Unit $service */
-        $service = $this->container->get('serviceFactory')->create('Unit');
-
-        $data = $service->findEntities([]);
+        $data = $this->container->get('serviceFactory')->create('Measure')->findEntities([]);
 
         if (empty($data['total'])) {
             return new \stdClass();
         }
 
         $result = [];
-        foreach ($data['collection'] as $unit) {
-            $result[$unit->get('name')]['unitList'] = $unit->get('value');
+        foreach ($data['collection'] as $measure) {
+            $units = $measure->get('units')->toArray();
+            $result[$measure->get('name')]['unitList'] = array_column($units, 'name');
             foreach ($this->get('inputLanguageList', []) as $locale) {
-                $result[$unit->get('name')]['unitListTranslates'][$locale] = $unit->get('value' . ucfirst(Util::toCamelCase(strtolower($locale))));
+                $result[$measure->get('name')]['unitListTranslates'][$locale] = array_column($units, 'name' . ucfirst(Util::toCamelCase(strtolower($locale))));
             }
         }
 
-        return Json::decode(Json::encode($result));
+        return empty($result) ? new \stdClass() : Json::decode(Json::encode($result));
     }
 }
