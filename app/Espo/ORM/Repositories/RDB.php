@@ -204,22 +204,20 @@ class RDB extends \Espo\ORM\Repository
             foreach ($uniques as $key => $unique) {
                 if (is_array($unique)) {
                     $sqlCondition = [];
-
                     foreach ($unique as $field) {
                         $sqlCondition[] = Util::toUnderScore($field) . "='" . $entity->get($field) . "'";
                     }
-
                     $uniques[$key] = '(' . implode(' AND ', $sqlCondition) . ')';
+                } else {
+                    $uniques[$key] = Util::toUnderScore($unique) . "='" . $entity->get($unique) . "'";
                 }
             }
 
             $where = implode(' OR ', $uniques);
 
-            $sql = "DELETE FROM `{$dbTable}` WHERE deleted = 1 AND id != '{$entity->id}' AND ({$where})";
-
             $this
                 ->getEntityManager()
-                ->nativeQuery($sql);
+                ->nativeQuery("DELETE FROM `$dbTable` WHERE deleted=1 AND id!='$entity->id' AND ($where)");
         }
     }
 
