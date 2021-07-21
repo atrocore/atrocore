@@ -35,11 +35,24 @@ declare(strict_types=1);
 
 namespace Espo\Repositories;
 
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Templates\Repositories\Base;
+use Espo\ORM\Entity;
 
 /**
  * Class Unit
  */
 class Unit extends Base
 {
+    /**
+     * @inheritDoc
+     */
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        if (!$entity->isNew() && $entity->isAttributeChanged('measure')) {
+            throw new Forbidden();
+        }
+
+        parent::beforeSave($entity, $options);
+    }
 }

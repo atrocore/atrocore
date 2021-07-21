@@ -35,11 +35,48 @@ declare(strict_types=1);
 
 namespace Espo\Repositories;
 
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Templates\Repositories\Base;
+use Espo\ORM\Entity;
 
 /**
  * Class Measure
  */
 class Measure extends Base
 {
+    /**
+     * @inheritDoc
+     */
+    protected function beforeRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
+    {
+        if ($relationName == 'units') {
+            throw new Forbidden();
+        }
+
+        parent::beforeRelate($entity, $relationName, $foreign, $data, $options);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function beforeUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
+    {
+        if ($relationName == 'units') {
+            throw new Forbidden();
+        }
+
+        parent::beforeUnrelate($entity, $relationName, $foreign, $options);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function beforeRemove(Entity $entity, array $options = [])
+    {
+        foreach ($entity->get('units') as $unit) {
+            $this->getEntityManager()->removeEntity($unit);
+        }
+
+        parent::beforeRemove($entity, $options);
+    }
 }

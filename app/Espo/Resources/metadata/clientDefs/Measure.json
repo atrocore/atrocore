@@ -5,5 +5,11 @@
     "assignedToMe",
     "ownedByMe"
   ],
-  "iconClass": "fas fa-ruler"
+  "iconClass": "fas fa-ruler",
+  "relationshipPanels": {
+    "units": {
+      "select": false,
+      "rowActionsView": "views/record/row-actions/relationship-no-unlink"
+    }
+  }
 }

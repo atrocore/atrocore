@@ -50,7 +50,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         'workflow'
     );
 
-    protected $injections = array();
+    protected $injections = [];
 
     private $restoreData = null;
 
@@ -174,7 +174,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
     }
 
-    protected function beforeRemove(Entity $entity, array $options = array())
+    protected function beforeRemove(Entity $entity, array $options = [])
     {
         parent::beforeRemove($entity, $options);
 
@@ -205,7 +205,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $this->dispatch('afterRemove', $entity, $options);
     }
 
-    protected function beforeMassRelate(Entity $entity, $relationName, array $params = array(), array $options = array())
+    protected function beforeMassRelate(Entity $entity, $relationName, array $params = [], array $options = [])
     {
         parent::beforeMassRelate($entity, $relationName, $params, $options);
 
@@ -213,7 +213,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $this->dispatch('beforeMassRelate', $entity, $options, $relationName, $params);
     }
 
-    protected function afterMassRelate(Entity $entity, $relationName, array $params = array(), array $options = array())
+    protected function afterMassRelate(Entity $entity, $relationName, array $params = [], array $options = [])
     {
         parent::afterMassRelate($entity, $relationName, $params, $options);
 
@@ -221,13 +221,13 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $this->dispatch('afterMassRelate', $entity, $options, $relationName, $params);
     }
 
-    public function remove(Entity $entity, array $options = array())
+    public function remove(Entity $entity, array $options = [])
     {
         $result = parent::remove($entity, $options);
         return $result;
     }
 
-    protected function beforeRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = array())
+    protected function beforeRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
     {
         parent::beforeRelate($entity, $relationName, $foreign, $data, $options);
 
@@ -235,7 +235,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $this->dispatch('beforeRelate', $entity, $options, $relationName, $data, $foreign);
     }
 
-    protected function afterRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = array())
+    protected function afterRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
     {
         parent::afterRelate($entity, $relationName, $foreign, $data, $options);
 
@@ -243,7 +243,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $this->dispatch('afterRelate', $entity, $options, $relationName, $data, $foreign);
     }
 
-    protected function beforeUnrelate(Entity $entity, $relationName, $foreign, array $options = array())
+    protected function beforeUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
     {
         parent::beforeUnrelate($entity, $relationName, $foreign, $options);
 
@@ -251,7 +251,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $this->dispatch('beforeUnrelate', $entity, $options, $relationName, null, $foreign);
     }
 
-    protected function afterUnrelate(Entity $entity, $relationName, $foreign, array $options = array())
+    protected function afterUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
     {
         parent::afterUnrelate($entity, $relationName, $foreign, $options);
 
@@ -304,10 +304,10 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $this->dispatch('afterSave', $entity, $options);
     }
 
-    public function save(Entity $entity, array $options = array())
+    public function save(Entity $entity, array $options = [])
     {
         $nowString = date('Y-m-d H:i:s', time());
-        $restoreData = array();
+        $restoreData = [];
 
         if ($entity->isNew()) {
             if (!$entity->has('id')) {
@@ -479,18 +479,18 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                     if ($entity->has($fieldName)) {
                         $specifiedIds = $entity->get($fieldName);
                     } else {
-                        $specifiedIds = array();
+                        $specifiedIds = [];
                         foreach ($entity->get($columnsFieldsName) as $id => $d) {
                             $specifiedIds[] = $id;
                         }
                     }
                     if (is_array($specifiedIds)) {
-                        $toRemoveIds = array();
-                        $existingIds = array();
-                        $toUpdateIds = array();
+                        $toRemoveIds = [];
+                        $existingIds = [];
+                        $toUpdateIds = [];
                         $existingColumnsData = new \stdClass();
 
-                        $defs = array();
+                        $defs = [];
                         $columns = $this->getMetadata()->get("entityDefs." . $entity->getEntityType() . ".fields.{$name}.columns");
                         if (!empty($columns)) {
                             $columnData = $entity->get($columnsFieldsName);
@@ -583,7 +583,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
                 if (!$entity->has($idFieldName)) continue;
 
-                $where = array();
+                $where = [];
                 $where[$foreignKey] = $entity->id;
                 $previousForeignEntity = $this->getEntityManager()->getRepository($foreignEntityType)->where($where)->findOne();
                 if ($previousForeignEntity) {
