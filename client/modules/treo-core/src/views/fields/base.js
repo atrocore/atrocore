@@ -76,7 +76,7 @@ Espo.define('treo-core:views/fields/base', 'class-replace!treo-core:views/fields
             let confirmMessage = null;
             let confirmations = this.getMetadata().get(`clientDefs.${model.urlRoot}.confirm`) || {};
             $.each(confirmations, (field, key) => {
-                if (_prev[field]) {
+                if (typeof _prev[field] !== 'undefined') {
                     let parts = key.split('.');
                     confirmMessage = this.translate(parts[2], parts[1], parts[0]);
                 }
