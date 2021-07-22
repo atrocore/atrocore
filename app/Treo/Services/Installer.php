@@ -48,7 +48,7 @@ use Treo\Core\ModuleManager\Manager;
 /**
  * Service Installer
  */
-class Installer extends AbstractService
+class Installer extends \Espo\Core\Templates\Services\HasContainer
 {
 
     /**

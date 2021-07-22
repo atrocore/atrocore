@@ -40,7 +40,7 @@ use Espo\Core\Exceptions\BadRequest;
 /**
  * Class MassActions
  */
-class MassActions extends AbstractService
+class MassActions extends \Espo\Core\Templates\Services\HasContainer
 {
     /**
      * @param string    $entityType

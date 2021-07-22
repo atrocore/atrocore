@@ -105,13 +105,6 @@ class ServiceFactory
                 }
             }
 
-            /**
-             * @deprecated from 23.02.2021
-             */
-            if ($service instanceof \Treo\Services\AbstractService) {
-                $service->setContainer($this->container);
-            }
-
             $this->services[$name] = $service;
         }
 
