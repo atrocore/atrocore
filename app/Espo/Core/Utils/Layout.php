@@ -149,6 +149,14 @@ class Layout
         return $this->get($scope, $name);
     }
 
+    public function resetAllToDefault(): bool
+    {
+        Util::removeDir('custom/Espo/Custom/Resources/layouts');
+        $this->getContainer()->get('dataManager')->clearCache();
+
+        return true;
+    }
+
     /**
      * Save changes
      *

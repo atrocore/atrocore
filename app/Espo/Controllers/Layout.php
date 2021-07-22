@@ -92,4 +92,21 @@ class Layout extends \Espo\Core\Controllers\Base
 
         return $this->getContainer()->get('layout')->resetToDefault($data->scope, $data->name);
     }
+
+    /**
+     * @param mixed $params
+     * @param mixed $data
+     * @param mixed $request
+     *
+     * @return bool
+     * @throws BadRequest
+     */
+    public function actionResetAllToDefault($params, $data, $request): bool
+    {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+
+        return $this->getContainer()->get('layout')->resetAllToDefault();
+    }
 }

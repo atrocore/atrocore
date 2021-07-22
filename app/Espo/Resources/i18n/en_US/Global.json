@@ -93,6 +93,7 @@
     "Core": "AtroCore is a software ecosystem, designed for rapid development of web-based responsive business applications."
   },
   "labels": {
+    "resetAllToDefault": "Reset all to Default",
     "pleaseReloadPage": "Please <a href=\"javascript:\" onClick=\"window.location.reload();\">refresh</a> the page to update the metadata.",
     "youHaveNewNotification": "You have new notification!",
     "youHaveNewNotifications": "You have new notifications!",
@@ -269,6 +270,7 @@
     "manyToMany": "Many-to-Many"
   },
   "messages": {
+    "resetAllToDefaultConfirm": "Are you sure you want to reset all layouts to default values?",
     "testEmailSent": "Test email has been sent",
     "massUpdateResult": "Updating {count} records",
     "isRequiredAndUnique": "{field} is required and should be unique.",

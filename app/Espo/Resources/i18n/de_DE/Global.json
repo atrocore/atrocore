@@ -78,6 +78,7 @@
     "Core": "AtroCore ist ein Software-Ökosystem, das für die schnelle Entwicklung webbasierter responsiver Geschäftsanwendungen entwickelt wurde."
   },
   "labels": {
+    "resetAllToDefault": "Alles auf Standardwerte zurücksetzen",
     "pleaseReloadPage": "Bitte <a href=\"javascript:\" onClick=\"window.location.reload();\">laden</a> Sie die Seite neu, um die Metadaten zu aktualisieren.",
     "youHaveNewNotification": "Sie haben eine neue Benachrichtigung!",
     "youHaveNewNotifications": "Sie haben neue Benachrichtigungen!",
@@ -250,6 +251,7 @@
     "manyToMany": "Many-to-Many"
   },
   "messages": {
+    "resetAllToDefaultConfirm": "Are you sure you want to reset all layouts to default values?",
     "testEmailSent": "Eine Test E-Mail wurde gesendet",
     "fieldIsUploading": "Hochladen läuft",
     "fieldMaxFileSizeError": "Datei sollte {max} Mb nicht überschreiten",
