@@ -1,6 +1,6 @@
-<div class="page-header"><h3><a href="#Admin">{{translate 'Administration'}}</a><span class="subsection">{{translate 'Customization' scope='Admin'}}</span>{{translate 'Layout Manager' scope='Admin'}}</h3><button style="margin: 10px 0" class="btn btn-default action" data-action="resetAllToDefault" type="button">{{translate 'resetAllToDefault'}}</button></div>
+<div class="page-header"><h3><a href="#Admin">{{translate 'Administration'}}</a><span class="subsection">{{translate 'Customization' scope='Admin'}}</span>{{translate 'Layout Manager' scope='Admin'}}</h3><button style="margin: 10px 7px 10px 5px" class="btn btn-default action" data-action="resetAllToDefault" type="button">{{translate 'resetAllToDefault'}}</button></div>
 
-<div class="row">
+<div class="row" style="margin-left: -3px">
     <div id="layouts-menu" class="col-sm-3">
         <div class="panel-group" id="layout-accordion">
             {{#each layoutScopeDataList}}
