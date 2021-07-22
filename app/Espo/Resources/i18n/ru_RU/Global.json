@@ -93,6 +93,7 @@
     "Core": "AtroCore - это программная экосистема, предназначенная для быстрой разработки веб-приложений для бизнеса."
   },
   "labels": {
+    "resetAllToDefault": "Восстановить все по умолчанию",
     "Merge": "Объединить",
     "None": "Нет",
     "Home": "Главная",
@@ -245,7 +246,6 @@
     "pleaseReloadPage": "Пожалуйста <a href=\"javascript:\" onClick=\"window.location.reload();\">refresh</a> страницу, чтобы обновить мета-данные.",
     "youHaveNewNotification": "У Вас новое уведомление!",
     "youHaveNewNotifications": "У Вас новые уведомления!",
-    "Update Layouts": "Обновить макеты",
     "status": "Статус",
     "fail": "Ошибка",
     "success": "Успешно",
@@ -270,6 +270,7 @@
     "manyToMany": "Многие-ко-многим"
   },
   "messages": {
+    "resetAllToDefaultConfirm": "Вы уверены, что хотите восстановить все макеты по умолчанию?",
     "pleaseWait": "Пожалуйста, подождите...",
     "posting": "Размещается...",
     "confirmLeaveOutMessage": "Вы действительно хотите покинуть эту форму?",
@@ -824,7 +825,7 @@
         "transparent": "Прозрачный",
         "setTransparent": "Сделать прозрачным",
         "reset": "Сбросить",
-        "resetToDefault": "Восстановить умолчания"
+        "resetToDefault": "Восстановить по умолчанию"
       },
       "shortcut": {
         "shortcuts": "Сочетания клавиш",

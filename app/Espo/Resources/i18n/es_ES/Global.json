@@ -233,7 +233,6 @@
     "pleaseReloadPage": "Please <a href=\"javascript:\" onClick=\"window.location.reload();\">refresh</a> the page to update the metadata.",
     "youHaveNewNotification": "You have new notification!",
     "youHaveNewNotifications": "You have new notifications!",
-    "Update Layouts": "Update Layouts",
     "status": "Status",
     "fail": "Fail",
     "success": "Success",

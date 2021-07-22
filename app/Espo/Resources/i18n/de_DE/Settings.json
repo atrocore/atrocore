@@ -150,7 +150,6 @@
     "Activities": "Aktivitäten"
   },
   "messages": {
-    "updateLayouts": "Möchten Sie die Layouts wirklich aktualisieren und die zuvor fehlenden Gebietsschemafelder automatisch hinzufügen?",
     "ldapTestConnection": "Die Verbindung wurde erfolgreich hergestellt.",
     "languageMustBeSelected": "Mindestens eine Sprache soll ausgewählt werden."
   }

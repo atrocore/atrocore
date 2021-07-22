@@ -46,7 +46,7 @@ use Treo\Core\ModuleManager\Manager as ModuleManager;
 /**
  * Composer service
  */
-class Composer extends AbstractService
+class Composer extends \Espo\Core\Templates\Services\HasContainer
 {
     const CHECK_UP_FILE = 'data/composer-check-up.log';
 

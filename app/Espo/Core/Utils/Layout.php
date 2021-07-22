@@ -33,98 +33,85 @@
 
 namespace Espo\Core\Utils;
 
+use Espo\Core\Container;
+
+/**
+ * Class Layout
+ */
 class Layout
 {
-    private $fileManager;
+    protected Container $container;
 
-    private $metadata;
+    protected array $changedData = [];
 
-    private $user;
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
 
-    protected $changedData = array();
-
-    protected $params = array(
-        'defaultsPath' => CORE_PATH . '/Espo/Core/defaults',
-    );
+    public function isCustom(string $scope, string $name): bool
+    {
+        return file_exists($this->concatPath($this->getCustomPath($scope), $name . '.json'));
+    }
 
     /**
-     * @var array - path to layout files
+     * Get a full path of the file
+     *
+     * @param string | array $folderPath - Folder path, Ex. myfolder
+     * @param string         $filePath   - File path, Ex. file.json
+     *
+     * @return string
      */
-    protected $paths = array(
-        'corePath' => CORE_PATH . '/Espo/Resources/layouts',
-        'modulePath' => CORE_PATH . '/Espo/Modules/{*}/Resources/layouts',
-        'customPath' => 'custom/Espo/Custom/Resources/layouts',
-    );
-
-
-    public function __construct(\Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\Metadata $metadata, \Espo\Entities\User $user)
+    public function concatPath($folderPath, $filePath = null)
     {
-        $this->fileManager = $fileManager;
-        $this->metadata = $metadata;
-        $this->user = $user;
-    }
+        // for portal
+        if ($this->isPortal()) {
+            $portalPath = Util::concatPath($folderPath, 'portal/' . $filePath);
+            if (file_exists($portalPath)) {
+                return $portalPath;
+            }
+        }
 
-    protected function getFileManager()
-    {
-        return $this->fileManager;
-    }
-
-    protected function getMetadata()
-    {
-        return $this->metadata;
-    }
-
-    protected function getUser()
-    {
-        return $this->user;
-    }
-
-    protected function sanitizeInput($name)
-    {
-        return preg_replace("([\.]{2,})", '', $name);
+        return Util::concatPath($folderPath, $filePath);
     }
 
     /**
      * Get Layout context
      *
-     * @param $scope
-     * @param $name
+     * @param string $scope
+     * @param string $name
      *
-     * @return json
+     * @return json|string
      */
     public function get($scope, $name)
     {
+        // prepare scope
         $scope = $this->sanitizeInput($scope);
+
+        // prepare name
         $name = $this->sanitizeInput($name);
 
+        // cache
         if (isset($this->changedData[$scope][$name])) {
             return Json::encode($this->changedData[$scope][$name]);
         }
 
-        $fileFullPath = Util::concatPath($this->getLayoutPath($scope, true), $name . '.json');
-        if (!file_exists($fileFullPath)) {
-            $fileFullPath = Util::concatPath($this->getLayoutPath($scope), $name . '.json');
-        }
+        // compose
+        $layout = $this->compose($scope, $name);
 
-        if (!file_exists($fileFullPath)) {
-            $defaultPath = $this->params['defaultsPath'];
-            $fileFullPath =  Util::concatPath(Util::concatPath($defaultPath, 'layouts'), $name . '.json' );
+        // remove fields from layout if this fields not exist in metadata
+        $layout = $this->disableNotExistingFields($scope, $name, $layout);
 
-            if (!file_exists($fileFullPath)) {
-                return false;
-            }
-        }
-
-        return $this->getFileManager()->getContents($fileFullPath);
+        return Json::encode($layout);
     }
 
     /**
      * Set Layout data
      * Ex. $scope = Account, $name = detail then will be created a file layoutFolder/Account/detail.json
      *
-     * @param array $data
-     * @param string $scope - ex. Account
-     * @param string $name - detail
+     * @param array|string $data
+     * @param string       $scope - ex. Account
+     * @param string       $name  - detail
      *
      * @return void
      */
@@ -134,12 +121,18 @@ class Layout
         $name = $this->sanitizeInput($name);
 
         if (empty($scope) || empty($name)) {
-            return false;
+            return;
         }
 
         $this->changedData[$scope][$name] = $data;
     }
 
+    /**
+     * @param string $scope
+     * @param string $name
+     *
+     * @return json|string
+     */
     public function resetToDefault($scope, $name)
     {
         $scope = $this->sanitizeInput($scope);
@@ -152,7 +145,16 @@ class Layout
         if (!empty($this->changedData[$scope]) && !empty($this->changedData[$scope][$name])) {
             unset($this->changedData[$scope][$name]);
         }
+
         return $this->get($scope, $name);
+    }
+
+    public function resetAllToDefault(): bool
+    {
+        Util::removeDir('custom/Espo/Custom/Resources/layouts');
+        $this->getContainer()->get('dataManager')->clearCache();
+
+        return true;
     }
 
     /**
@@ -170,10 +172,10 @@ class Layout
                     if (empty($scope) || empty($layoutName)) {
                         continue;
                     }
-                    $layoutPath = $this->getLayoutPath($scope, true);
+                    $layoutPath = $this->getCustomPath($scope);
                     $data = Json::encode($layoutData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 
-                    $result &= $this->getFileManager()->putContents(array($layoutPath, $layoutName.'.json'), $data);
+                    $result &= $this->getFileManager()->putContents(array($layoutPath, $layoutName . '.json'), $data);
                 }
             }
         }
@@ -182,7 +184,7 @@ class Layout
             $this->clearChanges();
         }
 
-        return (bool) $result;
+        return (bool)$result;
     }
 
     /**
@@ -190,18 +192,15 @@ class Layout
      *
      * @return void
      */
-    public function clearChanges()
+    public function clearChanges(): void
     {
-        $this->changedData = array();
+        $this->changedData = [];
     }
 
     /**
-     * Merge layout data
-     * Ex. $scope= Account, $name= detail then will be created a file layoutFolder/Account/detail.json
-     *
      * @param JSON string $data
      * @param string $scope - ex. Account
-     * @param string $name - detail
+     * @param string $name  - detail
      *
      * @return bool
      */
@@ -221,29 +220,296 @@ class Layout
         return $this->set($data, $scope, $name);
     }
 
-    /**
-     * Get Layout path, ex. application/Modules/Crm/Layouts/Account
-     *
-     * @param string $entityType
-     * @param bool $isCustom - if need to check custom folder
-     *
-     * @return string
-     */
-    protected function getLayoutPath($entityType, $isCustom = false)
+    protected function getCustomPath(string $entityType): string
     {
-        $path = $this->paths['customPath'];
+        return Util::concatPath('custom/Espo/Custom/Resources/layouts', $entityType);
+    }
 
-        if (!$isCustom) {
-            $moduleName = $this->getMetadata()->getScopeModuleName($entityType);
+    protected function compose(string $scope, string $name): array
+    {
+        // from custom data
+        if ($this->isCustom($scope, $name)) {
+            return Json::decode($this->getFileManager()->getContents($this->concatPath($this->getCustomPath($scope), $name . '.json')), true);
+        }
 
-            $path = $this->paths['corePath'];
-            if ($moduleName !== false) {
-                $path = str_replace('{*}', $moduleName, $this->paths['modulePath']);
+        // prepare data
+        $data = [];
+
+        // from treo core data
+        $filePath = $this->concatPath(CORE_PATH . '/Treo/Resources/layouts', $scope);
+        $fileFullPath = $this->concatPath($filePath, $name . '.json');
+        if (file_exists($fileFullPath)) {
+            // get file data
+            $fileData = $this->getFileManager()->getContents($fileFullPath);
+
+            // prepare data
+            $data = Json::decode($fileData, true);
+        }
+
+        // from espo core data
+        if (empty($data)) {
+            $filePath = $this->concatPath(CORE_PATH . '/Espo/Resources/layouts', $scope);
+            $fileFullPath = $this->concatPath($filePath, $name . '.json');
+            if (file_exists($fileFullPath)) {
+                // get file data
+                $fileData = $this->getFileManager()->getContents($fileFullPath);
+
+                // prepare data
+                $data = Json::decode($fileData, true);
             }
         }
 
-        $path = Util::concatPath($path, $entityType);
+        // from modules data
+        foreach ($this->getMetadata()->getModules() as $module) {
+            $module->loadLayouts($scope, $name, $data);
+        }
 
-        return $path;
+        // default
+        if (empty($data)) {
+            // prepare file path
+            $fileFullPath = $this->concatPath($this->concatPath(CORE_PATH . '/Espo/Core/defaults', 'layouts'), $name . '.json');
+
+            if (file_exists($fileFullPath)) {
+                // get file data
+                $fileData = $this->getFileManager()->getContents($fileFullPath);
+
+                // prepare data
+                $data = Json::decode($fileData, true);
+            }
+        }
+
+        if (in_array($name, ['detail', 'detailSmall'])) {
+            $data = $this->injectMultiLanguageFields($data, $scope);
+        }
+
+        return $data;
+    }
+
+    protected function injectMultiLanguageFields(array $data, string $scope): array
+    {
+        if (empty($multiLangFields = $this->getMultiLangFields($scope))) {
+            return $data;
+        }
+
+        $exists = [];
+        foreach ($data as $k => $panel) {
+            // skip if no rows
+            if (empty($panel['rows'])) {
+                continue 1;
+            }
+            foreach ($panel['rows'] as $row) {
+                foreach ($row as $field) {
+                    if (!empty($field['name'])) {
+                        $exists[] = $field['name'];
+                    }
+                }
+            }
+        }
+
+        $result = [];
+        foreach ($data as $k => $panel) {
+            $result[$k] = $panel;
+
+            if (isset($panel['rows']) || !empty($panel['rows'])) {
+                $rows = [];
+                $skip = false;
+
+                foreach ($panel['rows'] as $key => $row) {
+                    if ($skip) {
+                        $skip = false;
+                        continue;
+                    }
+
+                    if (empty(array_diff($row, [false]))) {
+                        $rows[] = $row;
+                        continue;
+                    }
+
+                    $newRow = [];
+                    $fullWidthRow = count($row) == 1;
+
+                    foreach ($row as $field) {
+                        $newRow[] = $field;
+
+                        if (is_array($field) && in_array($field['name'], $multiLangFields)) {
+                            $localeFields = $this->getMultiLangLocalesFields($field['name']);
+
+                            if (!empty($needToAdd = array_diff($localeFields, $exists))) {
+                                $nextRow = $key != count($panel['rows']) - 1 ? $panel['rows'][$key + 1] : null;
+
+                                if (!$fullWidthRow && !empty($nextRow)) {
+                                    if (in_array(false, $nextRow)) {
+                                        $item = null;
+                                        foreach ($nextRow as $f) {
+                                            if (is_array($f)) {
+                                                $item = $f;
+                                            }
+                                        }
+
+                                        if (in_array($item['name'], $localeFields)) {
+                                            $newField = $field;
+                                            $newField['name'] = array_shift($needToAdd);
+                                            $newRow[] = $newField;
+                                            $newRow[] = $item;
+
+                                            $skip = true;
+                                        }
+                                    }
+                                }
+
+                                foreach ($needToAdd as $item) {
+                                    $newField = $field;
+                                    $newField['name'] = $item;
+                                    $newRow[] = $newField;
+                                }
+                            }
+                        }
+                    }
+
+                    if (!$fullWidthRow && count($newRow) % 2 != 0) {
+                        if ($newRow[count($newRow) - 1] === false) {
+                            array_pop($newRow);
+                        } else {
+                            $newRow[] = false;
+                        }
+                    }
+
+                    $rows = array_merge($rows, array_chunk($newRow, $fullWidthRow ? 1 : 2));
+                }
+
+                $result[$k]['rows'] = $rows;
+            }
+        }
+
+        return $result;
+    }
+
+    protected function getMultiLangFields(string $scope): array
+    {
+        $result = [];
+
+        foreach ($this->getMetadata()->get(['entityDefs', $scope, 'fields'], []) as $field => $data) {
+            if (!empty($data['isMultilang'])) {
+                $result[] = $field;
+            }
+        }
+
+        return $result;
+    }
+
+    protected function getPreparedLocalesCodes(): array
+    {
+        $result = [];
+
+        foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
+            $result[] = ucfirst(Util::toCamelCase(strtolower($locale)));
+        }
+
+        return $result;
+    }
+
+    protected function getMultiLangLocalesFields(string $fieldName): array
+    {
+        $result = [];
+
+        foreach ($this->getPreparedLocalesCodes() as $locale) {
+            $result[] = $fieldName . $locale;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Disable fields from layout if this fields not exist in metadata
+     *
+     * @param string $scope
+     * @param string $name
+     * @param array  $data
+     *
+     * @return array
+     */
+    protected function disableNotExistingFields($scope, $name, $data): array
+    {
+        // get entityDefs
+        $entityDefs = $this->getMetadata()->get('entityDefs')[$scope] ?? [];
+
+        // check if entityDefs exists
+        if (!empty($entityDefs)) {
+            // get fields for entity
+            $fields = array_keys($entityDefs['fields']);
+            $fields[] = 'id';
+
+            // remove fields from layout if this fields not exist in metadata
+            switch ($name) {
+                case 'filters':
+                case 'massUpdate':
+                    $data = array_values(array_intersect($data, $fields));
+
+                    break;
+                case 'detail':
+                case 'detailSmall':
+                    for ($key = 0; $key < count($data[0]['rows']); $key++) {
+                        foreach ($data[0]['rows'][$key] as $fieldKey => $fieldData) {
+                            if (isset($fieldData['name']) && !in_array($fieldData['name'], $fields)) {
+                                $data[0]['rows'][$key][$fieldKey] = false;
+
+                                if (empty(array_diff($data[0]['rows'][$key], [false]))) {
+                                    array_splice($data[0]['rows'], $key, 1);
+                                    $key--;
+                                    continue 2;
+                                }
+                            }
+                        }
+                    }
+
+                    break;
+                case 'list':
+                case 'listSmall':
+                    foreach ($data as $key => $row) {
+                        if (isset($row['name']) && !in_array($row['name'], $fields)) {
+                            array_splice($data, $key, 1);
+                        }
+                    }
+
+                    break;
+            }
+        }
+
+        return $data;
+    }
+
+    protected function sanitizeInput(string $name): string
+    {
+        return preg_replace("([\.]{2,})", '', $name);
+    }
+
+    protected function isPortal(): bool
+    {
+        return !empty($this->getContainer()->get('portal'));
+    }
+
+    protected function getContainer(): Container
+    {
+        return $this->container;
+    }
+
+    protected function getFileManager(): File\Manager
+    {
+        return $this->getContainer()->get('fileManager');
+    }
+
+    protected function getMetadata(): Metadata
+    {
+        return $this->getContainer()->get('metadata');
+    }
+
+    protected function getConfig(): Config
+    {
+        return $this->getContainer()->get('config');
+    }
+
+    protected function getUser(): \Espo\Entities\User
+    {
+        return $this->getContainer()->get('user');
     }
 }
