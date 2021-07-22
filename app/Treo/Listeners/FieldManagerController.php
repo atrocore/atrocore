@@ -56,7 +56,9 @@ class FieldManagerController extends AbstractListener
         // is default value valid ?
         $this->isDefaultValueValid($data->type, $event->getArgument('data')->default);
 
-        $this->isUniqueFieldWithoutDuplicates($params['scope'], $data->name);
+        if (!empty($data->unique)) {
+            $this->isUniqueFieldWithoutDuplicates($params['scope'], $data->name);
+        }
 
         if (!empty($pattern = $data->pattern)) {
             if (!preg_match('/^\/((?:(?:[^?+*{}()[\]\\\\|]+|\\\\.|\[(?:\^?\\\\.|\^[^\\\\]|[^\\\\^])(?:[^\]\\\\]+|\\\\.)*\]|\((?:\?[:=!]|\?<[=!]|\?>)?(?1)??\)|\(\?(?:R|[+-]?\d+)\))(?:(?:[?+*]|\{\d+(?:,\d*)?\})[?+]?)?|\|)*)\/[gmixsuAJD]*$/', $pattern)) {
