@@ -270,7 +270,145 @@ class Layout
             }
         }
 
+        if (in_array($name, ['detail', 'detailSmall'])) {
+            $data = $this->injectMultiLanguageFields($data, $scope);
+        }
+
         return $data;
+    }
+
+    protected function injectMultiLanguageFields(array $data, string $scope): array
+    {
+        if (empty($multiLangFields = $this->getMultiLangFields($scope))) {
+            return $data;
+        }
+
+        $exists = [];
+        foreach ($data as $k => $panel) {
+            // skip if no rows
+            if (empty($panel['rows'])) {
+                continue 1;
+            }
+            foreach ($panel['rows'] as $row) {
+                foreach ($row as $field) {
+                    if (!empty($field['name'])) {
+                        $exists[] = $field['name'];
+                    }
+                }
+            }
+        }
+
+        $result = [];
+        foreach ($data as $k => $panel) {
+            $result[$k] = $panel;
+
+            if (isset($panel['rows']) || !empty($panel['rows'])) {
+                $rows = [];
+                $skip = false;
+
+                foreach ($panel['rows'] as $key => $row) {
+                    if ($skip) {
+                        $skip = false;
+                        continue;
+                    }
+
+                    if (empty(array_diff($row, [false]))) {
+                        $rows[] = $row;
+                        continue;
+                    }
+
+                    $newRow = [];
+                    $fullWidthRow = count($row) == 1;
+
+                    foreach ($row as $field) {
+                        $newRow[] = $field;
+
+                        if (is_array($field) && in_array($field['name'], $multiLangFields)) {
+                            $localeFields = $this->getMultiLangLocalesFields($field['name']);
+
+                            if (!empty($needToAdd = array_diff($localeFields, $exists))) {
+                                $nextRow = $key != count($panel['rows']) - 1 ? $panel['rows'][$key + 1] : null;
+
+                                if (!$fullWidthRow && !empty($nextRow)) {
+                                    if (in_array(false, $nextRow)) {
+                                        $item = null;
+                                        foreach ($nextRow as $f) {
+                                            if (is_array($f)) {
+                                                $item = $f;
+                                            }
+                                        }
+
+                                        if (in_array($item['name'], $localeFields)) {
+                                            $newField = $field;
+                                            $newField['name'] = array_shift($needToAdd);
+                                            $newRow[] = $newField;
+                                            $newRow[] = $item;
+
+                                            $skip = true;
+                                        }
+                                    }
+                                }
+
+                                foreach ($needToAdd as $item) {
+                                    $newField = $field;
+                                    $newField['name'] = $item;
+                                    $newRow[] = $newField;
+                                }
+                            }
+                        }
+                    }
+
+                    if (!$fullWidthRow && count($newRow) % 2 != 0) {
+                        if ($newRow[count($newRow) - 1] === false) {
+                            array_pop($newRow);
+                        } else {
+                            $newRow[] = false;
+                        }
+                    }
+
+                    $rows = array_merge($rows, array_chunk($newRow, $fullWidthRow ? 1 : 2));
+                }
+
+                $result[$k]['rows'] = $rows;
+            }
+        }
+
+        return $result;
+    }
+
+    protected function getMultiLangFields(string $scope): array
+    {
+        $result = [];
+
+        foreach ($this->getMetadata()->get(['entityDefs', $scope, 'fields'], []) as $field => $data) {
+            if (!empty($data['isMultilang'])) {
+                $result[] = $field;
+            }
+        }
+
+        return $result;
+    }
+
+    protected function getPreparedLocalesCodes(): array
+    {
+        $result = [];
+
+        foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
+            $result[] = ucfirst(Util::toCamelCase(strtolower($locale)));
+        }
+
+        return $result;
+    }
+
+    protected function getMultiLangLocalesFields(string $fieldName): array
+    {
+        $result = [];
+
+        foreach ($this->getPreparedLocalesCodes() as $locale) {
+            $result[] = $fieldName . $locale;
+        }
+
+        return $result;
     }
 
     /**
@@ -355,6 +493,11 @@ class Layout
     protected function getMetadata(): Metadata
     {
         return $this->getContainer()->get('metadata');
+    }
+
+    protected function getConfig(): Config
+    {
+        return $this->getContainer()->get('config');
     }
 
     protected function getUser(): \Espo\Entities\User
