@@ -245,7 +245,6 @@
     "pleaseReloadPage": "Пожалуйста <a href=\"javascript:\" onClick=\"window.location.reload();\">refresh</a> страницу, чтобы обновить мета-данные.",
     "youHaveNewNotification": "У Вас новое уведомление!",
     "youHaveNewNotifications": "У Вас новые уведомления!",
-    "Update Layouts": "Обновить макеты",
     "status": "Статус",
     "fail": "Ошибка",
     "success": "Успешно",

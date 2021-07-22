@@ -38,8 +38,6 @@ Espo.define('views/admin/input-language', 'views/settings/record/edit',
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.buttonList.push({name: 'updateLayouts', label: 'Update Layouts', style: 'warning'});
-
             this.listenTo(this.model, 'after:save', function () {
                 Espo.Ui.success(this.translate('Saved'));
             }.bind(this));
@@ -67,16 +65,6 @@ Espo.define('views/admin/input-language', 'views/settings/record/edit',
                 this.save();
             }
         },
-
-        actionUpdateLayouts() {
-            Espo.Ui.confirm(this.translate('updateLayouts', 'messages', 'Settings'), {
-                confirmText: this.translate('Apply', 'labels', 'Global'),
-                cancelText: this.translate('Cancel', 'labels', 'Global')
-            }, () => {
-                this.ajaxPostRequest('Multilang/action/updateLayouts').then(response => {
-                    Espo.Ui.success(this.translate('Saved'));
-                });
-            })
-        }
+        
     })
 );

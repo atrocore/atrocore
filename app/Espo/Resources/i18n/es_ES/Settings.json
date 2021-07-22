@@ -169,7 +169,6 @@
   },
   "messages": {
     "ldapTestConnection": "La conexión fue establecida con éxito.",
-    "updateLayouts": "Are you sure you want to update the layouts and automatically add the previously missing locale fields to them?",
     "languageMustBeSelected": "At least one language should be selected."
   }
 }
