@@ -120,11 +120,6 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 }.bind(this));
             }
 
-            if (this.foreignScope === 'User' && this.model.getFieldParam(this.name, 'currentUserAsDefault') && (this.mode === 'edit' || this.mode === 'detail') && !this.model.get('id')) {
-                this.model.set(this.idName, this.getUser().get('id'));
-                this.model.set(this.nameName, this.getUser().get('name'));
-            }
-
             if ('createDisabled' in this.options) {
                 this.createDisabled = this.options.createDisabled;
             }
@@ -253,6 +248,11 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         },
 
         afterRender: function () {
+            if (this.foreignScope === 'User' && this.model.getFieldParam(this.name, 'currentUserAsDefault') && (this.mode === 'edit' || this.mode === 'detail') && !this.model.get('id')) {
+                this.model.set(this.idName, this.getUser().get('id'));
+                this.model.set(this.nameName, this.getUser().get('name'));
+            }
+
             if (this.mode == 'edit' || this.mode == 'search') {
                 this.$elementId = this.$el.find('input[name="' + this.idName + '"]');
                 this.$elementName = this.$el.find('input[name="' + this.nameName + '"]');
