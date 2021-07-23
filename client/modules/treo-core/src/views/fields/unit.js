@@ -105,6 +105,14 @@ Espo.define('treo-core:views/fields/unit', 'views/fields/float',
             return '';
         },
 
+        validateFloat: function () {
+            if (!this.$unit.val()) {
+                return true;
+            }
+
+            return Dep.prototype.validateFloat.call(this);
+        },
+
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 

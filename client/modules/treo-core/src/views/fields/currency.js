@@ -51,6 +51,14 @@ Espo.define('treo-core:views/fields/currency', 'class-replace!treo-core:views/fi
             return data;
         },
 
+        validateFloat: function () {
+            if (!this.$currency.val()) {
+                return true;
+            }
+
+            return Dep.prototype.validateFloat.call(this);
+        },
+
         fetch: function () {
             let value = this.$element.val();
             value = this.parse(value);
