@@ -34,6 +34,34 @@ Espo.define('treo-core:views/record/base', 'class-replace!treo-core:views/record
 
     return Dep.extend({
 
+        getConfirmMessage: function (_prev, attrs, model) {
+            let confirmMessage = null;
+            if (this.model.get('id')) {
+                let confirmations = this.getMetadata().get(`clientDefs.${model.urlRoot}.confirm`) || {};
+                $.each(confirmations, (field, data) => {
+                    if (_prev[field] !== attrs[field]) {
+                        let key = null;
+                        if (typeof data.values !== 'undefined') {
+                            data.values.forEach(value => {
+                                if (attrs[field] === value) {
+                                    key = data.message;
+                                }
+                            });
+                        } else {
+                            key = data;
+                        }
+
+                        if (key) {
+                            let parts = key.split('.');
+                            confirmMessage = this.translate(parts[2], parts[1], parts[0]);
+                        }
+                    }
+                });
+            }
+
+            return confirmMessage;
+        },
+
         save: function (callback, skipExit) {
             this.beforeBeforeSave();
 
@@ -98,23 +126,18 @@ Espo.define('treo-core:views/record/base', 'class-replace!treo-core:views/record
             this.trigger('before:save', attrs);
             model.trigger('before:save', attrs);
 
-            let confirmMessage = null;
-            if (this.model.get('id')) {
-                let confirmations = this.getMetadata().get(`clientDefs.${model.urlRoot}.confirm`) || {};
-                $.each(confirmations, (field, key) => {
-                    if (_prev[field] !== attrs[field]) {
-                        let parts = key.split('.');
-                        confirmMessage = this.translate(parts[2], parts[1], parts[0]);
-                    }
-                });
-            }
+            let confirmMessage = this.getConfirmMessage(_prev, attrs, model);
 
             this.notify(false);
             if (confirmMessage) {
                 Espo.Ui.confirm(confirmMessage, {
                     confirmText: self.translate('Apply'),
-                    cancelText: self.translate('Cancel')
-                }, () => {
+                    cancelText: self.translate('Cancel'),
+                    cancelCallback(){
+                        self.enableButtons();
+                        self.trigger('cancel:save');
+                    }
+                }, (result) => {
                     this.saveModel(model, callback, skipExit, attrs);
                 });
             } else {
