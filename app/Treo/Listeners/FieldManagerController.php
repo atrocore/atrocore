@@ -56,7 +56,9 @@ class FieldManagerController extends AbstractListener
         // is default value valid ?
         $this->isDefaultValueValid($data->type, $event->getArgument('data')->default);
 
-        $this->isUniqueFieldWithoutDuplicates($params['scope'], $data->name);
+        if (!empty($data->unique)) {
+            $this->isUniqueFieldWithoutDuplicates($params['scope'], $data->name);
+        }
 
         if (!empty($pattern = $data->pattern)) {
             if (!preg_match('/^\/((?:(?:[^?+*{}()[\]\\\\|]+|\\\\.|\[(?:\^?\\\\.|\^[^\\\\]|[^\\\\^])(?:[^\]\\\\]+|\\\\.)*\]|\((?:\?[:=!]|\?<[=!]|\?>)?(?1)??\)|\(\?(?:R|[+-]?\d+)\))(?:(?:[?+*]|\{\d+(?:,\d*)?\})[?+]?)?|\|)*)\/[gmixsuAJD]*$/', $pattern)) {
@@ -209,24 +211,30 @@ class FieldManagerController extends AbstractListener
             switch ($defs['type']) {
                 case 'asset':
                     $sql = "SELECT COUNT(*) FROM $table WHERE $table.{$field}_id IS NOT NULL AND deleted = 0 GROUP BY $table.{$field}_id HAVING COUNT($table.{$field}_id) > 1";
+                    $result = $this->fetch($sql);
                     break;
                 case 'currency':
                     $sql = "SELECT COUNT(*) FROM $table WHERE $table.$field IS NOT NULL AND {$field}_currency IS NOT NULL AND deleted = 0 GROUP BY $table.$field, {$field}_currency HAVING COUNT($table.$field) > 1 AND COUNT({$field}_currency) > 1";
+                    $result = $this->fetch($sql);
                     break;
                 case 'unit':
                     $sql = "SELECT COUNT(*) FROM $table WHERE $table.$field IS NOT NULL AND {$field}_unit IS NOT NULL AND deleted = 0 GROUP BY $table.$field, {$field}_unit HAVING COUNT($table.$field) > 1 AND COUNT({$field}_unit) > 1";
+                    $result = $this->fetch($sql);
                     break;
                 default:
-                    $sql = "SELECT COUNT(*) FROM $table WHERE $table.$field IS NOT NULL AND deleted = 0 GROUP BY $table.$field HAVING COUNT($table.$field) > 1";
+                    $sql = "SELECT COUNT(*) FROM $table WHERE $table.$field IS NOT NULL AND deleted = 0 GROUP BY $table.$field HAVING COUNT($table.$field) > 1;";
+                    $result = $this->fetch($sql);
+
+                    if (!$result && !empty($defs['isMultilang']) && $this->getConfig()->get('isMultilangActive', false)) {
+                        foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
+                            $locale = strtolower($locale);
+                            $sql = "SELECT COUNT(*) FROM $table WHERE $table.{$field}_$locale IS NOT NULL AND deleted = 0 GROUP BY $table.{$field}_$locale HAVING COUNT($table.{$field}_$locale) > 1;";
+                            $result = $result || $this->fetch($sql);
+                        }
+                    }
             }
 
-            $pdo = $this
-                ->getContainer()
-                ->get('pdo');
-            $sth = $pdo->prepare($sql);
-            $sth->execute();
-
-            if (!empty($sth->fetch())) {
+            if (!empty($result)) {
                 $message = $this
                     ->getLanguage()
                     ->translate('someFieldNotUnique', 'exceptions', 'FieldManager');
@@ -234,5 +242,21 @@ class FieldManagerController extends AbstractListener
                 throw new BadRequest($message);
             }
         }
+    }
+
+    /**
+     * @param string $sql
+     *
+     * @return mixed
+     */
+    protected function fetch(string $sql)
+    {
+        $pdo = $this
+            ->getContainer()
+            ->get('pdo');
+        $sth = $pdo->prepare($sql);
+        $sth->execute();
+
+        return $sth->fetch();
     }
 }

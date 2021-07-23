@@ -85,6 +85,10 @@ class File extends Base
             );
         }
 
+        if (!empty($fieldParams['unique'])) {
+            $data[$entityName]['fields'][$fieldName.'Id']['unique'] = true;
+        }
+
         return $data;
     }
 }
