@@ -140,6 +140,7 @@ Espo.define('layout-manager', [], function () {
                     if (typeof callback === 'function') {
                         callback();
                     }
+                    Espo.Ui.notify('Done', 'success', 1000 * 3);
                 }.bind(this)
             });
         }
