@@ -145,6 +145,7 @@ class Layout
         if (!empty($this->changedData[$scope]) && !empty($this->changedData[$scope][$name])) {
             unset($this->changedData[$scope][$name]);
         }
+        $this->getContainer()->get('dataManager')->clearCache();
 
         return $this->get($scope, $name);
     }

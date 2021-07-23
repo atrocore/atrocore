@@ -124,6 +124,7 @@ Espo.define('layout-manager', [], function () {
         resetToDefault: function (scope, type, callback) {
             var key = this.getKey(scope, type);
 
+            Espo.Ui.notify('Saving...');
             this.ajax({
                 url: 'Layout/action/resetToDefault',
                 type: 'POST',
