@@ -147,6 +147,9 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
 
         validateInt: function () {
             const value = this.$el.find('[name="' + this.name + '"]').val();
+            if (value.length === 0) {
+                return false;
+            }
 
             let invalid = false;
 
