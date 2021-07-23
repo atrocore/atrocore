@@ -211,30 +211,30 @@ class FieldManagerController extends AbstractListener
             switch ($defs['type']) {
                 case 'asset':
                     $sql = "SELECT COUNT(*) FROM $table WHERE $table.{$field}_id IS NOT NULL AND deleted = 0 GROUP BY $table.{$field}_id HAVING COUNT($table.{$field}_id) > 1";
-                    $result = $this->checkHasNotUnique($sql);
+                    $result = $this->fetch($sql);
                     break;
                 case 'currency':
                     $sql = "SELECT COUNT(*) FROM $table WHERE $table.$field IS NOT NULL AND {$field}_currency IS NOT NULL AND deleted = 0 GROUP BY $table.$field, {$field}_currency HAVING COUNT($table.$field) > 1 AND COUNT({$field}_currency) > 1";
-                    $result = $this->checkHasNotUnique($sql);
+                    $result = $this->fetch($sql);
                     break;
                 case 'unit':
                     $sql = "SELECT COUNT(*) FROM $table WHERE $table.$field IS NOT NULL AND {$field}_unit IS NOT NULL AND deleted = 0 GROUP BY $table.$field, {$field}_unit HAVING COUNT($table.$field) > 1 AND COUNT({$field}_unit) > 1";
-                    $result = $this->checkHasNotUnique($sql);
+                    $result = $this->fetch($sql);
                     break;
                 default:
                     $sql = "SELECT COUNT(*) FROM $table WHERE $table.$field IS NOT NULL AND deleted = 0 GROUP BY $table.$field HAVING COUNT($table.$field) > 1;";
-                    $result = $this->checkHasNotUnique($sql);
+                    $result = $this->fetch($sql);
 
                     if (!$result && !empty($defs['isMultilang']) && $this->getConfig()->get('isMultilangActive', false)) {
                         foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
                             $locale = strtolower($locale);
                             $sql = "SELECT COUNT(*) FROM $table WHERE $table.{$field}_$locale IS NOT NULL AND deleted = 0 GROUP BY $table.{$field}_$locale HAVING COUNT($table.{$field}_$locale) > 1;";
-                            $result = $result || $this->checkHasNotUnique($sql);
+                            $result = $result || $this->fetch($sql);
                         }
                     }
             }
 
-            if ($result) {
+            if (!empty($result)) {
                 $message = $this
                     ->getLanguage()
                     ->translate('someFieldNotUnique', 'exceptions', 'FieldManager');
@@ -247,9 +247,9 @@ class FieldManagerController extends AbstractListener
     /**
      * @param string $sql
      *
-     * @return bool
+     * @return mixed
      */
-    protected function checkHasNotUnique(string $sql): bool
+    protected function fetch(string $sql)
     {
         $pdo = $this
             ->getContainer()
@@ -257,6 +257,6 @@ class FieldManagerController extends AbstractListener
         $sth = $pdo->prepare($sql);
         $sth->execute();
 
-        return !empty($sth->fetch());
+        return $sth->fetch();
     }
 }
