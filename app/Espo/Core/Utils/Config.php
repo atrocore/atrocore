@@ -294,10 +294,7 @@ class Config
     public function getData($isAdmin = null)
     {
         $data = $this->loadConfig();
-
-        if ($this->get('isInstalled', false)) {
-            $data['unitsOfMeasure'] = $this->getUnitsOfMeasure();
-        }
+        $data['unitsOfMeasure'] = $this->getUnitsOfMeasure();
 
         $restrictedConfig  = $data;
         foreach($this->getRestrictItems($isAdmin) as $name) {
@@ -382,6 +379,10 @@ class Config
 
     protected function getUnitsOfMeasure(): object
     {
+        if (!$this->get('isInstalled', false) || !$this->container->get('user')->isFetched()) {
+            return new \stdClass();
+        }
+
         $data = $this->container->get('serviceFactory')->create('Measure')->findEntities([]);
 
         if (empty($data['total'])) {
