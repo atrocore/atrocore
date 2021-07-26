@@ -48,14 +48,9 @@ use Treo\Core\EventManager\Event;
 class HasContainer extends Base
 {
     /**
-     * @inheritDoc
+     * @var string[]
      */
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('container');
-    }
+    protected $dependencies = ['container'];
 
     protected function getContainer(): Container
     {
