@@ -15462,6 +15462,44 @@ ul.dropdown-menu > li > a > .check-icon + div {
     border-right: 1px solid #e0e0e0;
   }
 
+  #main > .record > .detail > .row:before,
+  #main > .record > .edit > .row:before {
+    content: '';
+    display: block;
+    box-shadow: inset 0 2px 4px #efefef;
+    height: 6px;
+    width: 100%;
+    position: absolute;
+    z-index: 1;
+    margin-top: 5px;
+    left: 0;
+  }
+
+  #main > .record > .detail > .row > .overview.bordered:after,
+  #main > .record > .edit > .row > .overview.bordered:after,
+  #main > .record > .detail > .row > .side.bordered:before,
+  #main > .record > .edit > .row > .side.bordered:before {
+    content: '';
+    display: block;
+    height: 100%;
+    width: 5px;
+    position: absolute;
+    z-index: 1;
+    top: 0;
+  }
+
+  #main > .record > .detail > .row > .overview.bordered:after,
+  #main > .record > .edit > .row > .overview.bordered:after {
+    box-shadow: inset -2px 0 4px #efefef;
+    right: 0;
+  }
+
+  #main > .record > .detail > .row > .side.bordered:before,
+  #main > .record > .edit > .row > .side.bordered:before {
+    box-shadow: -2px 0 4px #efefef;
+    left: 0;
+  }
+
   #main > .record > .detail > .row > .side.bordered,
   #main > .record > .edit > .row > .side.bordered {
     border-left: 1px solid #e0e0e0;
@@ -18709,6 +18747,7 @@ input#sn-checkbox-open-in-new-window {
 
 .record .stick-sub.button-container {
   background-color: #fff !important;
+  box-shadow: 0 2px 4px #efefef;
 }
 
 .stick-sub.button-container {
@@ -18727,6 +18766,7 @@ input#sn-checkbox-open-in-new-window {
 .list > table thead {
   border-top: 1px solid #e8eced;
   background-color: #fafafa;
+  box-shadow: 0 2px 4px #efefef;
 }
 
 .list > table tr:hover {
@@ -19095,6 +19135,7 @@ table.table > thead th > a {
     max-width: 280px;
     height: calc(100% - 47px);
     overflow-y: auto;
+    z-index: 2;
   }
 
   #main .catalog-tree-panel:not(.catalog-tree-panel-hidden) {
@@ -19306,6 +19347,7 @@ button.category:focus {
   }
   #header .navbar-header, #header ul.tabs, #header .navbar, #header .navbar-brand {
     width: 220px;
+    box-shadow: 2px -2px 4px #efefef;
   }
   #header a.navbar-brand {
     max-width: 220px;
