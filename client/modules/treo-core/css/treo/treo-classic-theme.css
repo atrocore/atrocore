@@ -19047,7 +19047,8 @@ input#sn-checkbox-open-in-new-window {
 }
 
 .record .stick-sub.button-container {
-    background-color: #fff !important
+    background-color: #fff !important;
+    box-shadow: 0 2px 4px #efefef;
 }
 
 .stick-sub.button-container {
@@ -19127,7 +19128,8 @@ input#sn-checkbox-open-in-new-window {
 
 .list > table thead {
     background-color: #fafafa;
-    border-top: 1px solid #f5f5f5
+    border-top: 1px solid #f5f5f5;
+    box-shadow: 0 2px 4px #efefef;
 }
 
 .list > table thead tr:hover {
@@ -19582,6 +19584,7 @@ ul.dropdown-menu > li.checkbox {
 #main .detail .catalog-tree-panel {
     margin: 0;
     background-color: #ffffff;
+    z-index: 2;
 }
 
 #main .catalog-tree-panel + .list-container {
