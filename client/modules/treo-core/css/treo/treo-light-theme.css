@@ -19285,11 +19285,11 @@ button.category:focus {
 }
 
 #main ul.list-group-tree > li {
-  padding: 5px 0 0 14px;
+  padding: 5px 0 0 0;
 }
 
 #main ul.list-group-tree li.child {
-  padding-left: 18px;
+  padding-left: 10px;
 }
 
 #main ul.list-group-tree li.child.active {
@@ -19807,7 +19807,7 @@ ul.jqtree-tree .jqtree-toggler.jqtree-toggler-right {
 ul.jqtree-tree .jqtree-element {
   cursor: pointer;
   position: relative;
-  padding: 5px 15px;
+  padding: 5px 15px 0 5px;
 }
 
 ul.jqtree-tree .jqtree-title {
