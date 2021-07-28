@@ -156,22 +156,4 @@ class Daemon extends AbstractConsole
             sleep(1);
         }
     }
-
-    /**
-     * @param string $id
-     */
-    protected function notificationDaemon(string $id): void
-    {
-        while (true) {
-            if (file_exists(Cron::DAEMON_KILLER)) {
-                break;
-            }
-
-            if (!empty(Util::scanDir(\Espo\Repositories\Notification::UPDATE_COUNT_PATH))) {
-                exec($this->getPhpBin() . " index.php notifications --refresh");
-            }
-
-            sleep(1);
-        }
-    }
 }

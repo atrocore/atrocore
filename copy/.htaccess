@@ -14,7 +14,7 @@ RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^(.*)$ index.php?treoq=$1 [L,QSA]
 
-<FilesMatch "(notReadCount\.json|publicData\.json|treo-composer\.log)$">
+<FilesMatch "(publicData\.json|treo-composer\.log)$">
   Allow from all
 </FilesMatch>
 

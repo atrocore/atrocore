@@ -99,31 +99,30 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
                 return;
             }
 
-            let url = 'data/notReadCount.json?time=' + $.now();
-            $.ajax(url, {local: true}).done(function (response) {
-                // prepare count
-                var count = 0;
-                if (typeof response[this.getUser().id] != 'undefined') {
-                    count = response[this.getUser().id];
-                }
+            const usersCount = JSON.parse(localStorage.getItem('pd_notReadCount') || "{}");
 
-                if (!isFirstCheck && count > this.unreadCount && $('#nofitication.alert-danger').length === 0) {
-                    if ((count - this.unreadCount) > 1) {
-                        Espo.Ui.notify(this.translate('youHaveNewNotifications'), 'info', 5000);
-                    } else {
-                        Espo.Ui.notify(this.translate('youHaveNewNotification'), 'info', 5000);
-                    }
-                }
+            // prepare count
+            let count = 0;
+            if (usersCount && usersCount[this.getUser().id]) {
+                count = usersCount[this.getUser().id];
+            }
 
-                this.unreadCount = count;
-                localStorage.setItem('unreadCount', this.unreadCount);
-
-                if (count) {
-                    this.showNotRead(count);
+            if (!isFirstCheck && count > this.unreadCount && $('#nofitication.alert-danger').length === 0) {
+                if ((count - this.unreadCount) > 1) {
+                    Espo.Ui.notify(this.translate('youHaveNewNotifications'), 'info', 5000);
                 } else {
-                    this.hideNotRead();
+                    Espo.Ui.notify(this.translate('youHaveNewNotification'), 'info', 5000);
                 }
-            }.bind(this));
+            }
+
+            this.unreadCount = count;
+            localStorage.setItem('unreadCount', this.unreadCount);
+
+            if (count) {
+                this.showNotRead(count);
+            } else {
+                this.hideNotRead();
+            }
         },
 
         runCheckUpdates: function (isFirstCheck) {

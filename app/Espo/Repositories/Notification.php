@@ -33,6 +33,7 @@
 
 namespace Espo\Repositories;
 
+use Espo\Core\DataManager;
 use Espo\Core\Htmlizer\Htmlizer;
 use Espo\Core\Mail\Sender;
 use Espo\Core\ORM\Repositories\RDB;
@@ -44,10 +45,6 @@ use Espo\ORM\Entity;
  */
 class Notification extends RDB
 {
-    const UPDATE_COUNT_PATH = 'data/notifications-count';
-
-    const NOT_READ_COUNT_FILE = 'data/notReadCount.json';
-
     /**
      * @var Htmlizer|null
      */
@@ -58,13 +55,13 @@ class Notification extends RDB
      */
     protected $userIdPortalCacheMap = [];
 
-    public static function refreshNotReadCount(): void
+    public static function refreshNotReadCount(\Pdo $pdo): void
     {
-        if (!file_exists(self::UPDATE_COUNT_PATH)) {
-            mkdir(self::UPDATE_COUNT_PATH, 0777, true);
-            sleep(1);
-        }
-        file_put_contents(self::UPDATE_COUNT_PATH . '/' . time() . '.txt', '1');
+        $sth = $pdo->prepare("SELECT n.user_id as userId, COUNT(n.id) as total FROM notification AS n WHERE n.read=0 GROUP BY n.user_id");
+        $sth->execute();
+        $data = $sth->fetchAll(\PDO::FETCH_ASSOC);
+
+        DataManager::pushPublicData('notReadCount', json_encode(array_column($data, 'total', 'userId')));
     }
 
     /**
@@ -73,7 +70,7 @@ class Notification extends RDB
      */
     protected function afterSave(Entity $entity, array $options = [])
     {
-        self::refreshNotReadCount();
+        self::refreshNotReadCount($this->getPDO());
 
         if ($entity->isNew()) {
             $this->createNote($entity);

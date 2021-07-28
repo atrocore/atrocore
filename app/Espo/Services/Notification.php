@@ -119,9 +119,7 @@ class Notification extends \Espo\Services\Record
         $pdo->prepare($sql)->execute();
 
         // update count for user
-        $notReadCount = Json::decode(file_get_contents(NotificationRepository::NOT_READ_COUNT_FILE), true);
-        $notReadCount[$userId] = 0;
-        file_put_contents(NotificationRepository::NOT_READ_COUNT_FILE, Json::encode($notReadCount));
+        NotificationRepository::refreshNotReadCount($pdo);
 
         return true;
     }
@@ -224,7 +222,7 @@ class Notification extends \Espo\Services\Record
             $s = $pdo->prepare($sql);
             $s->execute();
 
-            NotificationRepository::refreshNotReadCount();
+            NotificationRepository::refreshNotReadCount($pdo);
         }
 
 

@@ -35,7 +35,6 @@ declare(strict_types=1);
 
 namespace Treo\Console;
 
-use Espo\Core\Utils\Util;
 use Espo\Repositories\Notification as NotificationRepository;
 use Treo\Core\Application;
 
@@ -61,35 +60,8 @@ class Notification extends AbstractConsole
             exit(1);
         }
 
-        $path = NotificationRepository::UPDATE_COUNT_PATH;
-
-        if (!empty($files = Util::scanDir($path))) {
-            $this->refresh();
-            foreach ($files as $file) {
-                unlink("{$path}/$file");
-            }
-        }
+        NotificationRepository::refreshNotReadCount($this->getContainer()->get('pdo'));
 
         self::show('Users notifications cache refreshed successfully', self::SUCCESS, true);
-    }
-
-    /**
-     * Refresh notReadCount
-     */
-    protected function refresh(): void
-    {
-        // get data
-        $sth = $this->getPdo()->prepare("SELECT n.user_id as userId, COUNT(n.id) as total FROM notification AS n WHERE n.read=0 GROUP BY n.user_id");
-        $sth->execute();
-        $data = $sth->fetchAll(\PDO::FETCH_ASSOC);
-
-        if (!empty($data)) {
-            file_put_contents(NotificationRepository::NOT_READ_COUNT_FILE, json_encode(array_column($data, 'total', 'userId')));
-        }
-    }
-
-    private function getPdo(): \Pdo
-    {
-        return $this->getContainer()->get('pdo');
     }
 }

@@ -679,7 +679,6 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
         $this->generateAppId();
 
         // create files in data dir
-        file_put_contents('data/notReadCount.json', '{}');
         file_put_contents('data/publicData.json', '{}');
 
         /**
