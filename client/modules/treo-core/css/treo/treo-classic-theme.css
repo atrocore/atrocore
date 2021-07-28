@@ -20740,9 +20740,12 @@ ul.jqtree-tree .jqtree-toggler.jqtree-toggler-right {
 }
 
 ul.jqtree-tree .jqtree-element {
-    cursor: pointer;
     position: relative;
     padding: 5px 15px 0 5px;
+}
+
+ul.jqtree-tree .jqtree-toggler, ul.jqtree-tree .jqtree-title {
+    cursor: pointer;
 }
 
 ul.jqtree-tree .jqtree-title {
