@@ -19874,8 +19874,11 @@ ul.jqtree-tree span.jqtree-border {
 }
 
 ul.jqtree-tree li.jqtree-selected > .jqtree-element,
+ul.jqtree-tree li.jqtree-selected > .jqtree-element .jqtree-toggler,
 ul.jqtree-tree li.jqtree-selected > .jqtree-element:hover {
-  background-color: #f5f5f5;
+  color: #2895ea !important;
+  background-color: transparent;
+  border-color: transparent;
 }
 
 ul.jqtree-tree .jqtree-moving > .jqtree-element .jqtree-title {
