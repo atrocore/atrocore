@@ -15428,8 +15428,10 @@ table.table > thead th {
 }
 
 .progress.pre-loading {
-    margin-top: -50px;
-    margin-bottom: 31px
+    margin: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
 }
 
 .edit form {
@@ -19186,6 +19188,15 @@ input#sn-checkbox-open-in-new-window {
     padding: 0 0 0 6px
 }
 
+.panel-heading .panel-title .text-muted.discussion-collapser span {
+    color: #8e8e8e;
+    font-size: 12px;
+}
+
+.panel-heading .panel-title .text-muted.discussion-collapser span:not(.collapse-icon) {
+    font-weight: normal;
+}
+
 .list-container .list-buttons-container {
     margin-bottom: 10px
 }
@@ -19575,12 +19586,12 @@ select,
 }
 
 .progress.pre-loading {
-    height: 10px;
+    height: 5px;
     background: #fafafa !important;
 }
 
 .progress.pre-loading div {
-    background: #424242 !important;
+    background: #C80B19 !important;
 }
 
 .dashlets.grid-stack > .grid-stack-item > .grid-stack-item-content {
