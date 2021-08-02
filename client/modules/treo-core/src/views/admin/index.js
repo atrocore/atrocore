@@ -35,5 +35,10 @@ Espo.define('treo-core:views/admin/index', 'class-replace!treo-core:views/admin/
 
         template: 'treo-core:admin/index',
 
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            $('footer').removeClass('is-collapsed not-collapsed');
+        }
     })
 );

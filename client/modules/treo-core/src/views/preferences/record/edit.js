@@ -42,6 +42,12 @@ Espo.define('treo-core:views/preferences/record/edit', 'class-replace!treo-core:
                 this.showPanel('notifications');
             }
         },
+
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            $('footer').removeClass('is-collapsed not-collapsed');
+        }
     });
 });
 
