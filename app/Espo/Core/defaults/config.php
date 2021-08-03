@@ -129,7 +129,6 @@ return [
             'layout' => []
         ]
     ],
-    'webMassUpdateMax'                       => 200, // count of max massUpdate items for WEB
     'cronMassUpdateMax'                      => 3000, // count of max massUpdate items for CRON
     'developMode'                            => false,
     'timeZone'                               => 'UTC',

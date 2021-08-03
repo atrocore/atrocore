@@ -36,63 +36,25 @@ declare(strict_types=1);
 namespace Treo\Services;
 
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Templates\Services\HasContainer;
 
 /**
  * Class MassActions
  */
-class MassActions extends \Espo\Core\Templates\Services\HasContainer
+class MassActions extends HasContainer
 {
-    /**
-     * @param string    $entityType
-     * @param \stdClass $data
-     *
-     * @return array
-     */
-    public function massUpdate(string $entityType, \stdClass $data): array
+    public function massUpdate(string $entityType, \stdClass $data): bool
     {
-        // get ids
-        $ids = $this->getMassActionIds($entityType, $data);
+        $this->createMassUpdateJobs($entityType, $data->attributes, $this->getMassActionIds($entityType, $data));
 
-        // attributes
-        $attributes = $data->attributes;
-
-        if (count($ids) > $this->getWebMassUpdateMax()) {
-            // create jobs
-            $this->createMassUpdateJobs($entityType, $attributes, $ids);
-
-            return [
-                'count'          => 0,
-                'ids'            => [],
-                'byQueueManager' => true
-            ];
-        }
-
-        return $this->getService($entityType)->massUpdate($attributes, ['ids' => $ids]);
+        return true;
     }
 
-    /**
-     * @param string    $entityType
-     * @param \stdClass $data
-     *
-     * @return array
-     */
-    public function massDelete(string $entityType, \stdClass $data): array
+    public function massDelete(string $entityType, \stdClass $data): bool
     {
-        // get ids
-        $ids = $this->getMassActionIds($entityType, $data);
+        $this->createMassDeleteJobs($entityType, $this->getMassActionIds($entityType, $data));
 
-        if (count($ids) > $this->getWebMassUpdateMax()) {
-            // create jobs
-            $this->createMassDeleteJobs($entityType, $ids);
-
-            return [
-                'count'          => 0,
-                'ids'            => [],
-                'byQueueManager' => true
-            ];
-        }
-
-        return $this->getService($entityType)->massRemove(['ids' => $ids]);
+        return true;
     }
 
     /**
@@ -446,14 +408,6 @@ class MassActions extends \Espo\Core\Templates\Services\HasContainer
             ->getEntityManager()
             ->getEntity($entityType)
             ->getRelationParam($link, 'entity');
-    }
-
-    /**
-     * @return int
-     */
-    protected function getWebMassUpdateMax(): int
-    {
-        return (int)$this->getConfig()->get('webMassUpdateMax', 200);
     }
 
     /**

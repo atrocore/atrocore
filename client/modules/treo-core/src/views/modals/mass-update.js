@@ -108,11 +108,7 @@ Espo.define('treo-core:views/modals/mass-update', 'class-replace!treo-core:views
                         byWhere: this.byWhere
                     }),
                     success: function (result) {
-                        var result = result || {};
-                        var count = result.count;
-                        var byQueueManager = result.byQueueManager;
-
-                        self.trigger('after:update', count, byQueueManager);
+                        self.trigger('after:update', result);
                     },
                     error: function () {
                         self.notify('Error occurred', 'error');

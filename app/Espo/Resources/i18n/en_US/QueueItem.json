@@ -39,6 +39,6 @@
     "queueItemDone": "Queue item \"%s\" was executed with status \"%s\"."
   },
   "messages": {
-    "byQueueManager": "Processed by Queue Manager"
+    "byQueueManager": "Job will be processed by Queue Manager."
   }
 }

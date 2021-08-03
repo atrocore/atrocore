@@ -40,6 +40,6 @@
     "queueItemDone": "Das Warteschlangenelement \"%s\" wurde mit dem Status \"%s\" ausgeführt."
   },
   "messages": {
-    "byQueueManager": "Wird vom Warteschlangenmanager verarbeitet"
+    "byQueueManager": "Aufgabe wird vom Warteschlangenmanager verarbeitet."
   }
 }

@@ -520,21 +520,10 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
             }, function (view) {
                 view.render();
                 view.notify(false);
-                view.once('after:update', function (count, byQueueManager) {
+                view.once('after:update', function () {
                     view.close();
                     this.listenToOnce(this.collection, 'sync', function () {
-                        if (count) {
-                            var msg = 'massUpdateResult';
-                            if (count == 1) {
-                                msg = 'massUpdateResultSingle'
-                            }
-                            Espo.Ui.success(this.translate(msg, 'messages').replace('{count}', count));
-                        } else if (byQueueManager) {
-                            Espo.Ui.success(this.translate('byQueueManager', 'messages', 'QueueItem'));
-                            Backbone.trigger('showQueuePanel');
-                        } else {
-                            Espo.Ui.warning(this.translate('noRecordsUpdated', 'messages'));
-                        }
+                        Espo.Ui.notify(this.translate('byQueueManager', 'messages', 'QueueItem'), "success", 1000 * 5, true);
                         if (allResultIsChecked) {
                             this.selectAllResult();
                         } else {
@@ -584,50 +573,7 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
                     type: 'POST',
                     data: JSON.stringify(data)
                 }).done(function (result) {
-                    result = result || {};
-                    var count = result.count;
-                    var byQueueManager = result.byQueueManager;
-                    if (this.allResultIsChecked) {
-                        if (count) {
-                            this.unselectAllResult();
-                            this.listenToOnce(this.collection, 'sync', function () {
-                                var msg = 'massRemoveResult';
-                                if (count == 1) {
-                                    msg = 'massRemoveResultSingle'
-                                }
-                                Espo.Ui.success(this.translate(msg, 'messages').replace('{count}', count));
-                            }, this);
-                            this.collection.fetch();
-                            Espo.Ui.notify(false);
-                        } else if (byQueueManager) {
-                            Espo.Ui.success(this.translate('byQueueManager', 'messages', 'QueueItem'));
-                            Backbone.trigger('showQueuePanel');
-                        } else {
-                            Espo.Ui.warning(self.translate('noRecordsRemoved', 'messages'));
-                        }
-                    } else {
-                        var idsRemoved = result.ids || [];
-                        if (count) {
-                            idsRemoved.forEach(function (id) {
-                                Espo.Ui.notify(false);
-
-                                this.collection.trigger('model-removing', id);
-                                this.removeRecordFromList(id);
-                                this.uncheckRecord(id, null, true);
-
-                            }, this);
-                            var msg = 'massRemoveResult';
-                            if (count == 1) {
-                                msg = 'massRemoveResultSingle'
-                            }
-                            Espo.Ui.success(self.translate(msg, 'messages').replace('{count}', count));
-                        } else if (byQueueManager) {
-                            Espo.Ui.success(this.translate('byQueueManager', 'messages', 'QueueItem'));
-                            Backbone.trigger('showQueuePanel');
-                        } else {
-                            Espo.Ui.warning(self.translate('noRecordsRemoved', 'messages'));
-                        }
-                    }
+                    Espo.Ui.notify(this.translate('byQueueManager', 'messages', 'QueueItem'), "success", 1000 * 5, true);
                 }.bind(this));
             }, this);
         },

@@ -45,15 +45,7 @@ use Treo\Core\EventManager\Event;
  */
 class MassActions extends \Espo\Core\Controllers\Base
 {
-
-    /**
-     * @param array     $params
-     * @param \stdClass $data
-     * @param Request   $request
-     *
-     * @return array
-     */
-    public function actionMassUpdate(array $params, \stdClass $data, Request $request): array
+    public function actionMassUpdate(array $params, \stdClass $data, Request $request): bool
     {
         if (!$request->isPut() || !isset($params['scope'])) {
             throw new BadRequest();
@@ -68,16 +60,7 @@ class MassActions extends \Espo\Core\Controllers\Base
         return $this->getService('MassActions')->massUpdate($params['scope'], $data);
     }
 
-    /**
-     * @param array     $params
-     * @param \stdClass $data
-     * @param Request   $request
-     *
-     * @return array
-     * @throws BadRequest
-     * @throws Forbidden
-     */
-    public function actionMassDelete(array $params, \stdClass $data, Request $request): array
+    public function actionMassDelete(array $params, \stdClass $data, Request $request): bool
     {
         if (!$request->isPost() || !isset($params['scope'])) {
             throw new BadRequest();
@@ -91,7 +74,6 @@ class MassActions extends \Espo\Core\Controllers\Base
             ->getContainer()
             ->get('eventManager')
             ->dispatch($params['scope'] . 'Controller', 'beforeActionMassDelete', $event);
-
 
         return $this->getService('MassActions')->massDelete($params['scope'], $data);
     }
