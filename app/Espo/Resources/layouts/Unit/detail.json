@@ -7,6 +7,12 @@
           "name": "name"
         },
         false
+      ],
+      [
+        {
+          "name": "description"
+        },
+        false
       ]
     ]
   }
