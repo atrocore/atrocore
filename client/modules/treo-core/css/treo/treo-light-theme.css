@@ -15190,8 +15190,10 @@ table.table > thead th {
 }
 
 .progress.pre-loading {
-  margin-top: -50px;
-  margin-bottom: 31px;
+  margin: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
 }
 
 .edit form {
@@ -15472,31 +15474,6 @@ ul.dropdown-menu > li > a > .check-icon + div {
     position: absolute;
     z-index: 1;
     margin-top: 5px;
-    left: 0;
-  }
-
-  #main > .record > .detail > .row > .overview.bordered:after,
-  #main > .record > .edit > .row > .overview.bordered:after,
-  #main > .record > .detail > .row > .side.bordered:before,
-  #main > .record > .edit > .row > .side.bordered:before {
-    content: '';
-    display: block;
-    height: 100%;
-    width: 5px;
-    position: absolute;
-    z-index: 1;
-    top: 0;
-  }
-
-  #main > .record > .detail > .row > .overview.bordered:after,
-  #main > .record > .edit > .row > .overview.bordered:after {
-    box-shadow: inset -2px 0 4px #efefef;
-    right: 0;
-  }
-
-  #main > .record > .detail > .row > .side.bordered:before,
-  #main > .record > .edit > .row > .side.bordered:before {
-    box-shadow: -2px 0 4px #efefef;
     left: 0;
   }
 
@@ -18791,6 +18768,15 @@ input#sn-checkbox-open-in-new-window {
   padding: 0 0 0 6px;
 }
 
+.panel-heading .panel-title .text-muted.discussion-collapser span {
+  color: #8e8e8e;
+  font-size: 12px;
+}
+
+.panel-heading .panel-title .text-muted.discussion-collapser span:not(.collapse-icon) {
+  font-weight: normal;
+}
+
 .list-container .list-buttons-container {
   margin-bottom: 10px;
 }
@@ -19045,12 +19031,12 @@ table.table > thead th > a {
 }
 
 .progress.pre-loading {
-  height: 10px;
+  height: 5px;
   background: #fafafa !important;
 }
 
 .progress.pre-loading div {
-  background: #424242 !important;
+  background: #C80B19 !important;
 }
 
 .dashlets.grid-stack > .grid-stack-item > .grid-stack-item-content {
@@ -19341,13 +19327,15 @@ button.category:focus {
     margin: 0 0 0 -8px;
     overflow-y: auto;
   }
+  #header #navbar .navbar {
+    box-shadow: 2px -2px 4px #efefef;
+  }
   #header .nav > li.more:not(.more-group) > .dropdown-menu {
     left: 220px;
     top: 47px;
   }
   #header .navbar-header, #header ul.tabs, #header .navbar, #header .navbar-brand {
     width: 220px;
-    box-shadow: 2px -2px 4px #efefef;
   }
   #header a.navbar-brand {
     max-width: 220px;

@@ -50,6 +50,11 @@ Espo.define('treo-core:views/settings/record/edit', 'class-replace!treo-core:vie
             }.bind(this));
         },
 
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            $('footer').removeClass('is-collapsed not-collapsed');
+        }
     });
 });
 
