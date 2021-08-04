@@ -194,7 +194,8 @@
     "useNumericFormat": "Использовать числовой формат",
     "strip": "Стрип",
     "pattern": "Regex Pattern",
-    "unique": "Unique"
+    "unique": "Unique",
+    "foreignName": "Поле связанной сущности"
   },
   "messages": {
     "upgradeFailed": "Апргрейд не выполнен",

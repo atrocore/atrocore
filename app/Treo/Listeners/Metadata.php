@@ -63,8 +63,27 @@ class Metadata extends AbstractListener
         // prepare multi-lang
         $data = $this->prepareMultiLang($data);
 
+        $data = $this->setForeignName($data);
+
         // set data
         $event->setArgument('data', $data);
+    }
+
+    protected function setForeignName(array $data): array
+    {
+        foreach ($data['entityDefs'] as $scope => $scopeData) {
+            if (empty($scopeData['fields'])) {
+                continue;
+            }
+
+            foreach ($scopeData['fields'] as $fieldName => $fieldData) {
+                if (!empty($fieldData['foreignName'])) {
+                    $data['entityDefs'][$scope]['links'][$fieldName]['foreignName'] = $fieldData['foreignName'];
+                }
+            }
+        }
+
+        return $data;
     }
 
     /**

@@ -77,7 +77,8 @@
     "after": "The date value should be after the date value of the specified field.",
     "readOnly": "Field value can't be specified by user. But can be calculated by formula.",
     "maxFileSize": "If empty or 0 then no limit.",
-    "pattern": "To enable only capital letters with 10-symbol length use \"\/^[A-Z]{1,10}$\/\""
+    "pattern": "To enable only capital letters with 10-symbol length use \"\/^[A-Z]{1,10}$\/\"",
+    "foreignName": "Field to be shown in the relation."
   },
   "fieldParts": {
     "unit": {

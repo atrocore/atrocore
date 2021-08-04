@@ -171,6 +171,7 @@
     "useNumericFormat": "Use Numeric Format",
     "strip": "Strip",
     "pattern": "Regex Pattern",
+    "foreignName": "Foreign Field",
     "unique": "Unique"
   },
   "messages": {

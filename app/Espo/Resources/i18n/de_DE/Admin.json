@@ -156,7 +156,8 @@
     "useNumericFormat": "Verwenden Sie das numerische Format",
     "dataUrl": "Daten-URL",
     "pattern": "Regex Pattern",
-    "unique": "Unique"
+    "unique": "Unique",
+    "foreignName": "Fremdfeld"
   },
   "messages": {
     "upgradeFailed": "Upgrade fehlgeschlagen",
