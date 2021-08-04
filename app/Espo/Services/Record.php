@@ -878,6 +878,10 @@ class Record extends \Espo\Core\Services\Base
 
     protected function filterInput($data)
     {
+        if (!is_object($data)) {
+            return;
+        }
+
         foreach ($this->readOnlyAttributeList as $attribute) {
             unset($data->$attribute);
         }
