@@ -224,11 +224,13 @@ class Application
             $this->logoutAll();
         }
 
-        if ($this->getConfig()->get('disableCorsPolicy', false) && !empty($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == "OPTIONS") {
+        if ($this->getConfig()->get('disableCorsPolicy', false)) {
             header('Access-Control-Allow-Origin: *');
-            header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Access-Control-Request-Method,Access-Control-Request-Headers, Authorization, Authorization-Token");
-            header("HTTP/1.1 200 OK");
-            exit;
+            header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Access-Control-Request-Method,Access-Control-Request-Headers, Authorization, Authorization-Token, Authorization-Token-Idletime, Authorization-Token-Lifetime");
+            if (!empty($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == "OPTIONS") {
+                header("HTTP/1.1 200 OK");
+                exit;
+            }
         }
 
         // prepare base route
