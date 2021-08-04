@@ -48,7 +48,9 @@
                                         },
                                         error: () => {
                                             if (start) {
-                                                location.reload();
+                                                setTimeout(() => {
+                                                    location.reload();
+                                                }, 2000);
                                             } else {
                                                 $('#log').html('Starting...');
                                             }
