@@ -190,7 +190,8 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         },
 
         select: function (model) {
-            this.$elementName.val(model.get('name'));
+            const foreignName = this.model.getFieldParam(this.name, 'foreignName') || 'name';
+            this.$elementName.val(model.get(foreignName));
             this.$elementId.val(model.get('id'));
             if (this.mode === 'search') {
                 this.searchData.idValue = model.get('id');
