@@ -17,7 +17,13 @@
     "close": "Close",
     "download": "Download",
     "queueManager": "Queue Manager",
-    "showDone": "Show done"
+    "showDone": "Show done",
+    "Pending": "Pending",
+    "Success": "Success",
+    "Running": "Running",
+    "Failed": "Failed",
+    "Canceled": "Canceled",
+    "Closed": "Closed"
   },
   "options": {
     "status": {

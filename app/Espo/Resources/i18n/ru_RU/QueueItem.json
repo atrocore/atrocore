@@ -17,7 +17,13 @@
     "close": "Закрыть",
     "download": "Скачать",
     "queueManager": "Менеджер задач",
-    "showDone": "Показать готово"
+    "showDone": "Показать готово",
+    "Pending": "В ожидании",
+    "Success": "Успешно",
+    "Running": "Выполняется",
+    "Failed": "Не выполнено",
+    "Canceled": "Отменено",
+    "Closed": "Закрыто"
   },
   "options": {
     "status": {

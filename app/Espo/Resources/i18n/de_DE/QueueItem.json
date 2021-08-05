@@ -18,7 +18,13 @@
     "cancel": "Abbrechen",
     "close": "Schließen",
     "download": "Herunterladen",
-    "queueManager": "Warteschlangenmanager"
+    "queueManager": "Warteschlangenmanager",
+    "Pending": "Steht aus",
+    "Success": "Erfolg",
+    "Running": "In Arbeit",
+    "Failed": "Fehlgeschlagen",
+    "Canceled": "Abgebrochen",
+    "Closed": "Geschlossen"
   },
   "options": {
     "status": {
