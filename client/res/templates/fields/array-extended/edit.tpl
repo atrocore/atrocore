@@ -1,6 +1,7 @@
 <div id="options" class="link-container list-group attribute-type-value {{#if disableMultiLang}}disable-multi-lang{{/if}}" data-name="{{name}}">
     {{#each optionGroups}}
 	<div class="list-group-item" data-index="{{@index}}">
+		<span class="pull-left flaticon flaticon-move-arrows"></span>
 		<a href="javascript:" class="pull-right remove-icon" data-index="{{@index}}" data-action="removeGroup">
 			<i class="fas fa-times"></i>
 		</a>
@@ -8,7 +9,7 @@
 			{{#each options}}
 			<div class="option-item" data-name="{{name}}" data-index="{{@../index}}">
 				<span class="text-muted">{{shortLang}} {{#if shortLang}}&#8250;{{/if}}</span>
-				<input class="form-control" {{#if colorValue}} style="width: 70%" {{/if}} value="{{value}}" data-name="{{name}}" data-index="{{@../index}}">
+				<input class="form-control" {{#if colorValue}} style="width: 70%" {{/if}} data-id="{{id}}" value="{{value}}" data-name="{{name}}" data-index="{{@../index}}">
 				{{#if colorValue}}
 				<input class="form-control color-input" value="{{colorValue}}" data-value="{{value}}" data-index="{{@../index}}">
 				{{/if}}
@@ -28,5 +29,9 @@
 	}
 	#options .form-control.color-input {
 		width: 19%;
+	}
+	.list-group-item .flaticon-move-arrows {
+		position: absolute;
+		margin-top: 7px;
 	}
 </style>

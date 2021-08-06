@@ -64,15 +64,18 @@ class DataManager
 
     /**
      * @param string $key
-     * @param mixed $value
+     * @param mixed  $value
      */
     public static function pushPublicData(string $key, $value): void
     {
         if (file_exists(self::PUBLIC_DATA_FILE_PATH)) {
             $result = JSON::decode(file_get_contents(self::PUBLIC_DATA_FILE_PATH), true);
-        } else {
+        }
+
+        if (empty($result) || !is_array($result)) {
             $result = [];
         }
+
         file_put_contents(self::PUBLIC_DATA_FILE_PATH, JSON::encode(array_merge($result, [$key => $value])));
     }
 

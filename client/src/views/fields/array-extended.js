@@ -72,6 +72,11 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
 
             this.langFieldNames = this.getLangFieldNames();
 
+            this.model.set(this.name, this.prepareArrayOptionsToObjectOptions(Espo.Utils.cloneDeep(this.model.get(this.name)) || []));
+            this.langFieldNames.forEach(name => {
+                this.model.set(name, this.prepareArrayOptionsToObjectOptions(Espo.Utils.cloneDeep(this.model.get(name)) || []));
+            });
+
             this.updateSelectedComplex();
             const eventStr = this.langFieldNames.reduce((prev, curr) => `${prev} change:${curr}`, `change:${this.name}`);
             this.listenTo(this.model, eventStr, () => this.updateSelectedComplex());
@@ -82,20 +87,35 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
             });
         },
 
+        prepareArrayOptionsToObjectOptions(options) {
+            let result = [];
+            options.forEach((option, k) => {
+                if (option.value) {
+                    result.push(option);
+                } else {
+                    result.push({"id": `${k}`, "value": option});
+                }
+            });
+
+            return result;
+        },
+
         afterRender: function () {
             const arrayExtended = this;
 
             if (this.mode === 'edit') {
                 this.$list = this.$el.find('.list-group');
+                this.$list.sortable({
+                    stop: function (e) {
+                        this.fetchFromDom();
+                        this.trigger('change');
+                    }.bind(this)
+                });
             }
 
             if (this.mode === 'search') {
                 this.renderSearch();
             }
-
-            let deletedRow = $("input[value=todel]").parents('.list-group-item');
-            deletedRow.find('a[data-action=removeGroup]').remove();
-            deletedRow.addClass('hidden');
 
             let removeGroupButtons = $('a[data-action=removeGroup]');
             if (removeGroupButtons.length === 1 && this.model.get('type') !== 'multiEnum') {
@@ -161,11 +181,12 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
         },
 
         addNewValue() {
+            const row = {"id": new Date().getTime(), "value": ""};
             let data = {
-                [this.name]: (this.selectedComplex[this.name] || []).concat([''])
+                [this.name]: (this.selectedComplex[this.name] || []).concat([row])
             };
             this.langFieldNames.forEach(name => {
-                data[name] = (this.selectedComplex[name] || []).concat([''])
+                data[name] = (this.selectedComplex[name] || []).concat([row])
             });
             if (!this.isAttribute) {
                 data['optionColors'] = (this.selectedComplex['optionColors'] || []).concat(['']);
@@ -176,22 +197,24 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
             this.trigger('change');
         },
 
-        removeGroup(el) {
-            let index = el.data('index');
+        removeGroup($el) {
+            let index = $el.parents('.list-group-item').index();
             let value = this.selectedComplex[this.name] || [];
-            value[index] = 'todel';
+
+            value.splice(index, 1);
+
             let data = {
                 [this.name]: value
             };
             this.langFieldNames.forEach(name => {
                 let value = this.selectedComplex[name] || [];
-                value[index] = 'todel';
+                value.splice(index, 1);
                 data[name] = value;
             });
 
             if (!this.isAttribute) {
                 data['optionColors'] = this.selectedComplex['optionColors'] || [];
-                data['optionColors'][index] = 'todel';
+                data['optionColors'].splice(index, 1);
             }
 
             this.selectedComplex = data;
@@ -242,7 +265,7 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
                     $(element).find('.option-item input').each((i, el) => {
                         const $el = $(el);
                         if (!$el.hasClass('color-input')) {
-                            data[$el.data('name').toString()][index] = $el.val().toString();
+                            data[$el.data('name').toString()][index] = {"id": `${$el.data('id')}`,"value": $el.val().toString()};
                         } else {
                             data['optionColors'][index] = $el.val();
                         }
@@ -386,7 +409,8 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
                     let options = [
                         {
                             name: this.name,
-                            value: item,
+                            id: `${item.id}`,
+                            value: item.value,
                             shortLang: '',
                             colorValue: colorValue
                         }
@@ -394,10 +418,12 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
 
                     if (this.model.get('isMultilang') || !!(this.model.get('multilangField'))) {
                         (this.langFieldNames || []).forEach(function (name) {
+                            let localeItem = (this.selectedComplex[name] || [])[index];
                             options.push(
                                 {
                                     name: name,
-                                    value: (this.selectedComplex[name] || [])[index],
+                                    id: localeItem.id ? localeItem.id : '',
+                                    value: localeItem.value ? localeItem.value : '',
                                     shortLang: name.slice(-4, -2).toLowerCase() + '_' + name.slice(-2).toUpperCase(),
                                     colorValue: null
                                 }
