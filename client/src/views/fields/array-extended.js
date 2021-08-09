@@ -72,10 +72,13 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
 
             this.langFieldNames = this.getLangFieldNames();
 
-            this.model.set(this.name, this.prepareArrayOptionsToObjectOptions(Espo.Utils.cloneDeep(this.model.get(this.name)) || []));
-            this.langFieldNames.forEach(name => {
-                this.model.set(name, this.prepareArrayOptionsToObjectOptions(Espo.Utils.cloneDeep(this.model.get(name)) || []));
-            });
+            if (!this.model.get('optionsIds')) {
+                let optionsIds = [];
+                (this.model.get(this.name) || []).forEach((v, k) => {
+                    optionsIds.push(`${k}`);
+                });
+                this.model.set('optionsIds', optionsIds);
+            }
 
             this.updateSelectedComplex();
             const eventStr = this.langFieldNames.reduce((prev, curr) => `${prev} change:${curr}`, `change:${this.name}`);
@@ -85,19 +88,6 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
                 this.setMode(this.mode);
                 this.reRender();
             });
-        },
-
-        prepareArrayOptionsToObjectOptions(options) {
-            let result = [];
-            options.forEach((option, k) => {
-                if (option.value) {
-                    result.push(option);
-                } else {
-                    result.push({"id": `${k}`, "value": option});
-                }
-            });
-
-            return result;
         },
 
         afterRender: function () {
@@ -160,6 +150,8 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
                 this.selectedComplex[name] = Espo.Utils.cloneDeep(this.model.get(name)) || []
             });
 
+            this.selectedComplex['optionsIds'] = Espo.Utils.cloneDeep(this.model.get('optionsIds')) || [];
+
             if (!this.isAttribute) {
                 this.selectedComplex['optionColors'] = Espo.Utils.cloneDeep(this.model.get('optionColors')) || [];
             }
@@ -181,12 +173,12 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
         },
 
         addNewValue() {
-            const row = {"id": new Date().getTime(), "value": ""};
             let data = {
-                [this.name]: (this.selectedComplex[this.name] || []).concat([row])
+                [this.name]: (this.selectedComplex[this.name] || []).concat([""]),
+                ['optionsIds']: (this.selectedComplex['optionsIds'] || []).concat([`${new Date().getTime()}`])
             };
             this.langFieldNames.forEach(name => {
-                data[name] = (this.selectedComplex[name] || []).concat([row])
+                data[name] = (this.selectedComplex[name] || []).concat([""])
             });
             if (!this.isAttribute) {
                 data['optionColors'] = (this.selectedComplex['optionColors'] || []).concat(['']);
@@ -203,8 +195,13 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
 
             value.splice(index, 1);
 
+            let optionsIds = this.selectedComplex['optionsIds'] || [];
+
+            optionsIds.splice(index, 1);
+
             let data = {
-                [this.name]: value
+                [this.name]: value,
+                ['optionsIds']: optionsIds,
             };
             this.langFieldNames.forEach(name => {
                 let value = this.selectedComplex[name] || [];
@@ -257,6 +254,7 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
             if (this.isEnums()) {
                 const data = {};
                 data[this.name] = [];
+                data['optionsIds'] = [];
                 if (!this.isAttribute) {
                     data['optionColors'] = [];
                 }
@@ -265,10 +263,12 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
                     $(element).find('.option-item input').each((i, el) => {
                         const $el = $(el);
                         if (!$el.hasClass('color-input')) {
-                            data[$el.data('name').toString()][index] = {"id": `${$el.data('id')}`,"value": $el.val().toString()};
-                        } else {
+                            data[$el.data('name').toString()][index] = $el.val().toString();
+                        }
+                        if ($el.hasClass('color-input')) {
                             data['optionColors'][index] = $el.val();
                         }
+                        data['optionsIds'][index] = `${$el.data('id')}`;
                     });
                 });
                 this.selectedComplex = data;
@@ -409,8 +409,8 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
                     let options = [
                         {
                             name: this.name,
-                            id: `${item.id}`,
-                            value: item.value,
+                            id: this.selectedComplex['optionsIds'][index],
+                            value: item,
                             shortLang: '',
                             colorValue: colorValue
                         }
@@ -422,8 +422,8 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
                             options.push(
                                 {
                                     name: name,
-                                    id: localeItem.id ? localeItem.id : '',
-                                    value: localeItem.value ? localeItem.value : '',
+                                    id: this.selectedComplex['optionsIds'][index],
+                                    value: localeItem,
                                     shortLang: name.slice(-4, -2).toLowerCase() + '_' + name.slice(-2).toUpperCase(),
                                     colorValue: null
                                 }
