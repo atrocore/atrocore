@@ -72,12 +72,12 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
 
             this.langFieldNames = this.getLangFieldNames();
 
-            if (!this.model.get('optionsIds')) {
+            if (!this.model.get(this.name + 'Ids')) {
                 let optionsIds = [];
                 (this.model.get(this.name) || []).forEach((v, k) => {
                     optionsIds.push(`${k}`);
                 });
-                this.model.set('optionsIds', optionsIds);
+                this.model.set(this.name + 'Ids', optionsIds);
             }
 
             this.updateSelectedComplex();
@@ -91,8 +91,8 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
         },
 
         beforeSave: function () {
-            if (this.model.get('isSorted')) {
-                this.sortOptions();
+            if (!this.isAttribute && this.model.get('isSorted')) {
+                this.model.set(this.sortOptions());
             }
         },
 
@@ -117,7 +117,7 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
             const sortedOptions = Espo.Utils.cloneDeep(originalOptions);
             sortedOptions.sort();
 
-            let data = {"options": sortedOptions};
+            let data = {[this.name]: sortedOptions};
             sortedOptions.forEach(sortedOption => {
                 originalOptions.forEach((originalOption, index) => {
                     if (sortedOption === originalOption) {
@@ -128,10 +128,10 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
                             data[name].push(this.model.get(name)[index]);
                         });
 
-                        if (!data['optionsIds']) {
-                            data['optionsIds'] = [];
+                        if (!data[this.name + 'Ids']) {
+                            data[this.name + 'Ids'] = [];
                         }
-                        data['optionsIds'].push(this.model.get('optionsIds')[index]);
+                        data[this.name + 'Ids'].push(this.model.get(this.name + 'Ids')[index]);
 
                         if (!this.isAttribute) {
                             if (!data['optionColors']) {
@@ -143,7 +143,7 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
                 });
             });
 
-            this.model.set(data);
+            return data;
         },
 
         afterRender: function () {
@@ -207,7 +207,7 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
                 this.selectedComplex[name] = Espo.Utils.cloneDeep(this.model.get(name)) || []
             });
 
-            this.selectedComplex['optionsIds'] = Espo.Utils.cloneDeep(this.model.get('optionsIds')) || [];
+            this.selectedComplex[this.name + 'Ids'] = Espo.Utils.cloneDeep(this.model.get(this.name + 'Ids')) || [];
 
             if (!this.isAttribute) {
                 this.selectedComplex['optionColors'] = Espo.Utils.cloneDeep(this.model.get('optionColors')) || [];
@@ -232,7 +232,7 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
         addNewValue() {
             let data = {
                 [this.name]: (this.selectedComplex[this.name] || []).concat([""]),
-                ['optionsIds']: (this.selectedComplex['optionsIds'] || []).concat([`${new Date().getTime()}`])
+                [this.name + 'Ids']: (this.selectedComplex[this.name + 'Ids'] || []).concat([`${new Date().getTime()}`])
             };
             this.langFieldNames.forEach(name => {
                 data[name] = (this.selectedComplex[name] || []).concat([""])
@@ -252,13 +252,13 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
 
             value.splice(index, 1);
 
-            let optionsIds = this.selectedComplex['optionsIds'] || [];
+            let optionsIds = this.selectedComplex[this.name + 'Ids'] || [];
 
             optionsIds.splice(index, 1);
 
             let data = {
                 [this.name]: value,
-                ['optionsIds']: optionsIds,
+                [this.name + 'Ids']: optionsIds,
             };
             this.langFieldNames.forEach(name => {
                 let value = this.selectedComplex[name] || [];
@@ -311,7 +311,7 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
             if (this.isEnums()) {
                 const data = {};
                 data[this.name] = [];
-                data['optionsIds'] = [];
+                data[this.name + 'Ids'] = [];
                 if (!this.isAttribute) {
                     data['optionColors'] = [];
                 }
@@ -325,7 +325,7 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
                         if ($el.hasClass('color-input')) {
                             data['optionColors'][index] = $el.val();
                         }
-                        data['optionsIds'][index] = `${$el.data('id')}`;
+                        data[this.name + 'Ids'][index] = `${$el.data('id')}`;
                     });
                 });
                 this.selectedComplex = data;
@@ -466,7 +466,7 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
                     let options = [
                         {
                             name: this.name,
-                            id: this.selectedComplex['optionsIds'][index],
+                            id: this.selectedComplex[this.name + 'Ids'][index],
                             value: item,
                             shortLang: '',
                             colorValue: colorValue
@@ -479,7 +479,7 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
                             options.push(
                                 {
                                     name: name,
-                                    id: this.selectedComplex['optionsIds'][index],
+                                    id: this.selectedComplex[this.name + 'Ids'][index],
                                     value: localeItem,
                                     shortLang: name.slice(-4, -2).toLowerCase() + '_' + name.slice(-2).toUpperCase(),
                                     colorValue: null
