@@ -78,6 +78,10 @@ class FieldManager extends AbstractListener
             return;
         }
 
+        if (!isset($oldDefs['optionsIds'])) {
+            return;
+        }
+
         $tableName = Util::toUnderScore($scope);
         $columnName = Util::toUnderScore($field);
 
@@ -139,6 +143,10 @@ class FieldManager extends AbstractListener
     protected function updateMultiEnumValue(string $scope, string $field, array $oldDefs, array $defs): void
     {
         if (!$this->isEnumTypeValueValid($defs)) {
+            return;
+        }
+
+        if (!isset($oldDefs['optionsIds'])) {
             return;
         }
 
