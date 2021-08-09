@@ -96,7 +96,7 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             if (this.params.isSorted && this.translatedOptions) {
                 this.params.options = Espo.Utils.clone(this.params.options);
                 this.params.options = this.params.options.sort(function (v1, v2) {
-                     return (this.translatedOptions[v1] || v1).localeCompare(this.translatedOptions[v2] || v2);
+                    return (this.translatedOptions[v1] || v1).localeCompare(this.translatedOptions[v2] || v2);
                 }.bind(this));
             }
 
@@ -140,6 +140,17 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
         },
 
         setupOptions: function () {
+            if (this.params.options) {
+                let options = [];
+                this.params.options.forEach(option => {
+                    if (option.value) {
+                        options.push(option.value);
+                    } else {
+                        options.push(option);
+                    }
+                });
+                this.params.options = options;
+            }
         },
 
         setOptionList: function (optionList) {
@@ -200,7 +211,7 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             }
 
             let key = null;
-            (this.options.defs.params.options || []).forEach(function (v, k) {
+            (this.model.getFieldParam(this.name, 'options') || []).forEach(function (v, k) {
                 if (v === value) {
                     key = k;
                 }
