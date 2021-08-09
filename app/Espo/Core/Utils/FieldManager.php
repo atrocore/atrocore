@@ -310,11 +310,6 @@ class FieldManager
 
         $entityDefs = $this->normalizeDefs($scope, $name, $fieldDefs);
 
-        $deletedPositions = [];
-        if (in_array($oldFieldDefs['type'], ['enum', 'multiEnum'])) {
-            $deletedPositions = $this->deletePositions($name, $entityDefs);
-        }
-
         if (!empty($entityDefs)) {
             $this->getMetadata()->set('entityDefs', $scope, $entityDefs);
             $metadataToBeSaved = true;
@@ -324,7 +319,7 @@ class FieldManager
         if ($metadataToBeSaved) {
             $result &= $this->getMetadata()->save();
 
-            $event = new Event(['scope' => $scope, 'field' => $name, 'oldFieldDefs' => $oldFieldDefs, 'deletedPositions' => $deletedPositions]);
+            $event = new Event(['scope' => $scope, 'field' => $name, 'oldFieldDefs' => $oldFieldDefs]);
 
             $this->dispatch('FieldManager', 'afterSave', $event);
 
@@ -788,58 +783,6 @@ class FieldManager
         }
 
         return $hook;
-    }
-
-    /**
-     * @param string $name
-     * @param array  $entityDefs
-     *
-     * @return array
-     */
-    protected function deletePositions(string $name, array &$entityDefs): array
-    {
-        if (empty($entityDefs['fields'][$name]['options'])) {
-            return [];
-        }
-
-        $deletedPositions = [];
-        foreach ($entityDefs['fields'][$name]['options'] as $pos => $value) {
-            if ($value === 'todel') {
-                $deletedPositions[] = $pos;
-            }
-        }
-
-        if (!empty($deletedPositions)) {
-            foreach ($this->getOptionsFields($entityDefs['fields'][$name]) as $field) {
-                foreach ($deletedPositions as $pos) {
-                    unset($entityDefs['fields'][$name][$field][$pos]);
-                }
-                $entityDefs['fields'][$name][$field] = array_values($entityDefs['fields'][$name][$field]);
-            }
-        }
-
-        return $deletedPositions;
-    }
-
-    /**
-     * @param array $defs
-     *
-     * @return array
-     */
-    protected function getOptionsFields(array $defs): array
-    {
-        /** @var \Espo\Core\Utils\Config $config */
-        $config = $this->container->get('config');
-
-        $fields[] = 'options';
-        if ($config->get('isMultilangActive', false)) {
-            foreach ($config->get('inputLanguageList', []) as $locale) {
-                $fields[] = 'options' . ucfirst(Util::toCamelCase(strtolower($locale)));
-            }
-        }
-        $fields[] = 'optionColors';
-
-        return $fields;
     }
 
     protected function getConfig():Config

@@ -72,6 +72,14 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
 
             this.langFieldNames = this.getLangFieldNames();
 
+            if (!this.model.get('optionsIds')) {
+                let optionsIds = [];
+                (this.model.get(this.name) || []).forEach((v, k) => {
+                    optionsIds.push(`${k}`);
+                });
+                this.model.set('optionsIds', optionsIds);
+            }
+
             this.updateSelectedComplex();
             const eventStr = this.langFieldNames.reduce((prev, curr) => `${prev} change:${curr}`, `change:${this.name}`);
             this.listenTo(this.model, eventStr, () => this.updateSelectedComplex());
@@ -87,15 +95,17 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
 
             if (this.mode === 'edit') {
                 this.$list = this.$el.find('.list-group');
+                this.$list.sortable({
+                    stop: function (e) {
+                        this.fetchFromDom();
+                        this.trigger('change');
+                    }.bind(this)
+                });
             }
 
             if (this.mode === 'search') {
                 this.renderSearch();
             }
-
-            let deletedRow = $("input[value=todel]").parents('.list-group-item');
-            deletedRow.find('a[data-action=removeGroup]').remove();
-            deletedRow.addClass('hidden');
 
             let removeGroupButtons = $('a[data-action=removeGroup]');
             if (removeGroupButtons.length === 1 && this.model.get('type') !== 'multiEnum') {
@@ -140,6 +150,8 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
                 this.selectedComplex[name] = Espo.Utils.cloneDeep(this.model.get(name)) || []
             });
 
+            this.selectedComplex['optionsIds'] = Espo.Utils.cloneDeep(this.model.get('optionsIds')) || [];
+
             if (!this.isAttribute) {
                 this.selectedComplex['optionColors'] = Espo.Utils.cloneDeep(this.model.get('optionColors')) || [];
             }
@@ -162,10 +174,11 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
 
         addNewValue() {
             let data = {
-                [this.name]: (this.selectedComplex[this.name] || []).concat([''])
+                [this.name]: (this.selectedComplex[this.name] || []).concat([""]),
+                ['optionsIds']: (this.selectedComplex['optionsIds'] || []).concat([`${new Date().getTime()}`])
             };
             this.langFieldNames.forEach(name => {
-                data[name] = (this.selectedComplex[name] || []).concat([''])
+                data[name] = (this.selectedComplex[name] || []).concat([""])
             });
             if (!this.isAttribute) {
                 data['optionColors'] = (this.selectedComplex['optionColors'] || []).concat(['']);
@@ -176,22 +189,29 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
             this.trigger('change');
         },
 
-        removeGroup(el) {
-            let index = el.data('index');
+        removeGroup($el) {
+            let index = $el.parents('.list-group-item').index();
             let value = this.selectedComplex[this.name] || [];
-            value[index] = 'todel';
+
+            value.splice(index, 1);
+
+            let optionsIds = this.selectedComplex['optionsIds'] || [];
+
+            optionsIds.splice(index, 1);
+
             let data = {
-                [this.name]: value
+                [this.name]: value,
+                ['optionsIds']: optionsIds,
             };
             this.langFieldNames.forEach(name => {
                 let value = this.selectedComplex[name] || [];
-                value[index] = 'todel';
+                value.splice(index, 1);
                 data[name] = value;
             });
 
             if (!this.isAttribute) {
                 data['optionColors'] = this.selectedComplex['optionColors'] || [];
-                data['optionColors'][index] = 'todel';
+                data['optionColors'].splice(index, 1);
             }
 
             this.selectedComplex = data;
@@ -234,6 +254,7 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
             if (this.isEnums()) {
                 const data = {};
                 data[this.name] = [];
+                data['optionsIds'] = [];
                 if (!this.isAttribute) {
                     data['optionColors'] = [];
                 }
@@ -243,9 +264,11 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
                         const $el = $(el);
                         if (!$el.hasClass('color-input')) {
                             data[$el.data('name').toString()][index] = $el.val().toString();
-                        } else {
+                        }
+                        if ($el.hasClass('color-input')) {
                             data['optionColors'][index] = $el.val();
                         }
+                        data['optionsIds'][index] = `${$el.data('id')}`;
                     });
                 });
                 this.selectedComplex = data;
@@ -386,6 +409,7 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
                     let options = [
                         {
                             name: this.name,
+                            id: this.selectedComplex['optionsIds'][index],
                             value: item,
                             shortLang: '',
                             colorValue: colorValue
@@ -394,10 +418,12 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
 
                     if (this.model.get('isMultilang') || !!(this.model.get('multilangField'))) {
                         (this.langFieldNames || []).forEach(function (name) {
+                            let localeItem = (this.selectedComplex[name] || [])[index];
                             options.push(
                                 {
                                     name: name,
-                                    value: (this.selectedComplex[name] || [])[index],
+                                    id: this.selectedComplex['optionsIds'][index],
+                                    value: localeItem,
                                     shortLang: name.slice(-4, -2).toLowerCase() + '_' + name.slice(-2).toUpperCase(),
                                     colorValue: null
                                 }

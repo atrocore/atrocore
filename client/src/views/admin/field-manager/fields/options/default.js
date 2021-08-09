@@ -41,7 +41,8 @@ Espo.define('views/admin/field-manager/fields/options/default', 'views/fields/en
             this.listenTo(this.model, 'change:options', function () {
                 this.setOptionList(this.model.get('options') || ['']);
             }, this);
-        }
+        },
+
     });
 
 });
