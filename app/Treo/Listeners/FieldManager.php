@@ -62,50 +62,33 @@ class FieldManager extends AbstractListener
             // get current field defs
             $defs = $this->getMetadata()->get(['entityDefs', $scope, 'fields', $field]);
 
-            // get deleted positions
-            $deletedPositions = $event->getArgument('deletedPositions');
-
-            // rebuild
-            $this->getContainer()->get('dataManager')->rebuild();
-
             if ($oldDefs['type'] === 'enum') {
-                $this->updateEnumValue($scope, $field, $deletedPositions, $oldDefs, $defs);
+                $this->updateEnumValue($scope, $field, $oldDefs, $defs);
             }
 
             if ($oldDefs['type'] === 'multiEnum') {
-                $this->updateMultiEnumValue($scope, $field, $deletedPositions, $oldDefs, $defs);
+                $this->updateMultiEnumValue($scope, $field, $oldDefs, $defs);
             }
         }
     }
 
-    /**
-     * @param string $scope
-     * @param string $field
-     * @param array  $deletedPositions
-     * @param array  $oldDefs
-     * @param array  $defs
-     *
-     * @return bool
-     * @throws BadRequest
-     */
-    protected function updateEnumValue(string $scope, string $field, array $deletedPositions, array $oldDefs, array $defs): bool
+    protected function updateEnumValue(string $scope, string $field, array $oldDefs, array $defs): void
     {
         if (!$this->isEnumTypeValueValid($defs)) {
-            return true;
+            return;
         }
 
         $tableName = Util::toUnderScore($scope);
         $columnName = Util::toUnderScore($field);
 
-        // delete
-        foreach ($deletedPositions as $deletedPosition) {
-            unset($oldDefs['options'][$deletedPosition]);
-        }
-
         // prepare became values
         $becameValues = [];
-        foreach (array_values($oldDefs['options']) as $k => $v) {
-            $becameValues[$v] = $defs['options'][$k];
+        foreach ($defs['optionsIds'] as $k => $v) {
+            foreach ($oldDefs['optionsIds'] as $k1 => $v1) {
+                if ($v1 === $v) {
+                    $becameValues[$oldDefs['options'][$k1]] = $defs['options'][$k];
+                }
+            }
         }
 
         /** @var array $records */
@@ -151,39 +134,24 @@ class FieldManager extends AbstractListener
                 ->getEntityManager()
                 ->nativeQuery("UPDATE {$tableName} SET " . implode(",", $sqlValues) . " WHERE id='{$record['id']}'");
         }
-
-        return true;
     }
 
-    /**
-     * @param string $scope
-     * @param string $field
-     * @param array  $deletedPositions
-     * @param array  $oldDefs
-     * @param array  $defs
-     *
-     * @return bool
-     * @throws BadRequest
-     */
-    protected function updateMultiEnumValue(string $scope, string $field, array $deletedPositions, array $oldDefs, array $defs): bool
+    protected function updateMultiEnumValue(string $scope, string $field, array $oldDefs, array $defs): void
     {
         if (!$this->isEnumTypeValueValid($defs)) {
-            return true;
+            return;
         }
 
         $tableName = Util::toUnderScore($scope);
         $columnName = Util::toUnderScore($field);
 
-        // delete
-        foreach ($deletedPositions as $deletedPosition) {
-            unset($oldDefs['options'][$deletedPosition]);
-        }
-
         // prepare became values
         $becameValues = [];
-        if (empty(!$oldDefs['options'])) {
-            foreach (array_values($oldDefs['options']) as $k => $v) {
-                $becameValues[$v] = $defs['options'][$k];
+        foreach ($defs['optionsIds'] as $k => $v) {
+            foreach ($oldDefs['optionsIds'] as $k1 => $v1) {
+                if ($v1 === $v) {
+                    $becameValues[$oldDefs['options'][$k1]] = $defs['options'][$k];
+                }
             }
         }
 
@@ -231,40 +199,6 @@ class FieldManager extends AbstractListener
             $this
                 ->getEntityManager()
                 ->nativeQuery("UPDATE {$tableName} SET " . implode(",", $sqlValues) . " WHERE id='{$record['id']}'");
-        }
-
-        return true;
-    }
-
-    /**
-     * @param array $typeValue
-     *
-     * @return array
-     */
-    protected function getDeletedPositions(array $typeValue): array
-    {
-        $deletedPositions = [];
-        foreach ($typeValue as $pos => $value) {
-            if ($value === 'todel') {
-                $deletedPositions[] = $pos;
-            }
-        }
-
-        return $deletedPositions;
-    }
-
-    /**
-     * @param array $defs
-     * @param array $deletedPositions
-     */
-    protected function deletePositions(array &$defs, array $deletedPositions): void
-    {
-        foreach ($this->getTypeValuesFields($defs) as $field) {
-            $typeValue = $defs[$field];
-            foreach ($deletedPositions as $pos) {
-                unset($typeValue[$pos]);
-            }
-            $defs[$field] = array_values($typeValue);
         }
     }
 
