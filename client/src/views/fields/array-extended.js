@@ -90,6 +90,62 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
             });
         },
 
+        beforeSave: function () {
+            if (this.model.get('isSorted')) {
+                this.sortOptions();
+            }
+        },
+
+        validate: function () {
+            return this.findDuplicates(Espo.Utils.cloneDeep(this.model.get(this.name)) || []).length > 0;
+        },
+
+        findDuplicates: function (arr) {
+            let sorted_arr = arr.slice().sort();
+            let results = [];
+            for (let i = 0; i < sorted_arr.length - 1; i++) {
+                if (sorted_arr[i + 1] === sorted_arr[i]) {
+                    results.push(sorted_arr[i]);
+                }
+            }
+
+            return results;
+        },
+
+        sortOptions: function () {
+            const originalOptions = Espo.Utils.cloneDeep(this.model.get(this.name)) || [];
+            const sortedOptions = Espo.Utils.cloneDeep(originalOptions);
+            sortedOptions.sort();
+
+            let data = {"options": sortedOptions};
+            sortedOptions.forEach(sortedOption => {
+                originalOptions.forEach((originalOption, index) => {
+                    if (sortedOption === originalOption) {
+                        this.langFieldNames.forEach(name => {
+                            if (!data[name]) {
+                                data[name] = [];
+                            }
+                            data[name].push(this.model.get(name)[index]);
+                        });
+
+                        if (!data['optionsIds']) {
+                            data['optionsIds'] = [];
+                        }
+                        data['optionsIds'].push(this.model.get('optionsIds')[index]);
+
+                        if (!this.isAttribute) {
+                            if (!data['optionColors']) {
+                                data['optionColors'] = [];
+                            }
+                            data['optionColors'].push(this.model.get('optionColors')[index]);
+                        }
+                    }
+                });
+            });
+
+            this.model.set(data);
+        },
+
         afterRender: function () {
             const arrayExtended = this;
 
@@ -97,6 +153,7 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
                 this.$list = this.$el.find('.list-group');
                 this.$list.sortable({
                     stop: function (e) {
+                        this.model.set('isSorted', false);
                         this.fetchFromDom();
                         this.trigger('change');
                     }.bind(this)

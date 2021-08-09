@@ -474,6 +474,13 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
 
             this.notify('Saving...');
 
+            this.fieldList.forEach((field) => {
+                const fieldView = this.getView(field);
+                if (fieldView && typeof fieldView.beforeSave !== "undefined") {
+                    fieldView.beforeSave();
+                }
+            });
+
             if (this.isNew) {
                 this.model.save().error(function () {
                     this.enableButtons();
