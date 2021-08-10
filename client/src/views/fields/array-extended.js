@@ -117,6 +117,13 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
             const sortedOptions = Espo.Utils.cloneDeep(originalOptions);
             sortedOptions.sort();
 
+            let optionsIds = this.model.get(this.name + 'Ids') || [];
+            if (optionsIds.length === 0) {
+                optionsIds = Espo.Utils.cloneDeep(originalOptions)
+            }
+
+            const optionsColors = this.model.get('optionColors') || [];
+
             let data = {[this.name]: sortedOptions};
             sortedOptions.forEach(sortedOption => {
                 originalOptions.forEach((originalOption, index) => {
@@ -125,19 +132,28 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
                             if (!data[name]) {
                                 data[name] = [];
                             }
-                            data[name].push(this.model.get(name)[index]);
+                            const localedOptions = this.model.get(name) || [];
+                            if (localedOptions[index]) {
+                                data[name].push(localedOptions[index]);
+                            }
                         });
 
                         if (!data[this.name + 'Ids']) {
                             data[this.name + 'Ids'] = [];
                         }
-                        data[this.name + 'Ids'].push(this.model.get(this.name + 'Ids')[index]);
+
+                        if (optionsIds[index]) {
+                            data[this.name + 'Ids'].push(optionsIds[index]);
+                        }
 
                         if (!this.isAttribute) {
                             if (!data['optionColors']) {
                                 data['optionColors'] = [];
                             }
-                            data['optionColors'].push(this.model.get('optionColors')[index]);
+
+                            if (optionsColors[index]) {
+                                data['optionColors'].push(optionsColors[index]);
+                            }
                         }
                     }
                 });
