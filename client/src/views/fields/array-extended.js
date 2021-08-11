@@ -78,7 +78,9 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
                     optionsIds.push(`${k}`);
                 });
                 this.model.set(this.name + 'Ids', optionsIds);
-                this.model.save();
+                this.model.save().then(() => {
+                    location.reload();
+                });
             }
 
             this.updateSelectedComplex();
