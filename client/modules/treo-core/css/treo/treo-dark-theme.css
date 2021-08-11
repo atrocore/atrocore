@@ -19586,8 +19586,9 @@ select,
 }
 
 .progress.pre-loading {
-    height: 5px;
-    background: #fafafa !important;
+    height: 3px;
+    background: none;
+    border: none;
 }
 
 .progress.pre-loading div {
