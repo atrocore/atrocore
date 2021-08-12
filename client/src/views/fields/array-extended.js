@@ -97,7 +97,6 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
         },
 
         beforeSave: function () {
-            debugger;
             if (!this.isAttribute && this.model.get('isSorted')) {
                 this.model.set(this.sortOptions());
             }
