@@ -97,6 +97,7 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
         },
 
         beforeSave: function () {
+            debugger;
             if (!this.isAttribute && this.model.get('isSorted')) {
                 this.model.set(this.sortOptions());
             }
@@ -342,12 +343,12 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
                     $(element).find('.option-item input').each((i, el) => {
                         const $el = $(el);
                         if (!$el.hasClass('color-input')) {
+                            data[this.name + 'Ids'][index] = `${$el.data('id')}`;
                             data[$el.data('name').toString()][index] = $el.val().toString();
                         }
                         if ($el.hasClass('color-input')) {
                             data['optionColors'][index] = $el.val();
                         }
-                        data[this.name + 'Ids'][index] = `${$el.data('id')}`;
                     });
                 });
                 this.selectedComplex = data;
