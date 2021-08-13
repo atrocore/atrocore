@@ -51,7 +51,7 @@ class Exception extends \Exception
     public function __construct($message = "", $code = 0, \Throwable $previous = null)
     {
         // decode message to utf8
-        $message = utf8_decode($message);
+        $message = mb_convert_encoding($message, 'utf-8', mb_detect_encoding($message));
 
         parent::__construct($message, $code, $previous);
     }

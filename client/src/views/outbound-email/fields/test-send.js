@@ -101,7 +101,7 @@ Espo.define('views/outbound-email/fields/test-send', 'views/fields/base', functi
                         type: 'POST',
                         data: JSON.stringify(data),
                         error: function (xhr, status) {
-                            var statusReason = xhr.getResponseHeader('X-Status-Reason') || '';
+                            var statusReason = xhr.responseText || '';
                             statusReason = statusReason.replace(/ $/, '');
                             statusReason = statusReason.replace(/,$/, '');
 

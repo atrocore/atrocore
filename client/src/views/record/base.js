@@ -504,7 +504,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
                     var response = null;
 
                     if (~[409, 500].indexOf(xhr.status)) {
-                        var statusReasonHeader = xhr.getResponseHeader('X-Status-Reason');
+                        var statusReasonHeader = xhr.responseText;
                         if (statusReasonHeader) {
                             try {
                                 var response = JSON.parse(statusReasonHeader);

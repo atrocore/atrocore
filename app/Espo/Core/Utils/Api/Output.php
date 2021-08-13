@@ -113,6 +113,7 @@ class Output
             $this->getSlim()->response()->setStatus($statusCode);
             if ($toPrintXStatusReason) {
                 $this->getSlim()->response()->headers->set('X-Status-Reason', $text);
+                $this->getSlim()->response()->body($text);
                 if (!empty($exception) && $exception instanceof WithStatusReasonData){
                     $this->getSlim()->response()->headers->set('X-Status-Reason-Data', $exception->getStatusReasonData());
                 }

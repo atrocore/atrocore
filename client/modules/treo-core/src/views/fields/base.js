@@ -105,7 +105,7 @@ Espo.define('treo-core:views/fields/base', 'class-replace!treo-core:views/fields
                     self.inlineEditClose(true);
                 },
                 error: function (e, xhr) {
-                    let statusReason = xhr.getResponseHeader('X-Status-Reason') || '';
+                    let statusReason = xhr.responseText || '';
                     if (xhr.status === 409) {
                         self.notify(false);
                         Espo.Ui.confirm(statusReason, {

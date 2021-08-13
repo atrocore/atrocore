@@ -558,7 +558,7 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 error: function (xhr) {
                     if (xhr.status == 409) {
                         var msg = this.translate('linkConflict', 'messages', 'EntityManager');
-                        var statusReasonHeader = xhr.getResponseHeader('X-Status-Reason');
+                        var statusReasonHeader = xhr.responseText;
                         if (statusReasonHeader) {
                             console.error(statusReasonHeader);
                         }

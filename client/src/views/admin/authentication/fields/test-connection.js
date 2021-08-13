@@ -74,7 +74,7 @@ Espo.define('views/admin/authentication/fields/test-connection', 'views/fields/b
                 type: 'POST',
                 data: JSON.stringify(data),
                 error: function (xhr, status) {
-                    var statusReason = xhr.getResponseHeader('X-Status-Reason') || '';
+                    var statusReason = xhr.responseText || '';
                     statusReason = statusReason.replace(/ $/, '');
                     statusReason = statusReason.replace(/,$/, '');
 

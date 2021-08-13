@@ -617,7 +617,7 @@ Espo.define(
                 if (xhr.errorIsHandled) {
                     return;
                 }
-                var statusReason = xhr.getResponseHeader('X-Status-Reason');
+                var statusReason = xhr.responseText;
 
                 switch (xhr.status) {
                     case 0:
