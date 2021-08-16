@@ -237,7 +237,7 @@ class QueueManager
         try {
             $this->getServiceFactory()->create($item->get('serviceName'))->run($data);
         } catch (\Throwable $e) {
-            $this->setStatus($item, 'Failed');
+            $this->setStatus($item, 'Failed', $e->getMessage());
             $GLOBALS['log']->error('QM failed: ' . $e->getMessage() . ' ' . $e->getTraceAsString());
 
             return false;
@@ -248,13 +248,12 @@ class QueueManager
         return true;
     }
 
-    /**
-     * @param Entity $item
-     * @param string $status
-     */
-    protected function setStatus(Entity $item, string $status): void
+    protected function setStatus(Entity $item, string $status, string $message = null): void
     {
         $item->set('status', $status);
+        if ($message !== null) {
+            $item->set('message', $message);
+        }
         $this->getEntityManager()->saveEntity($item);
     }
 

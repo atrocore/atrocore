@@ -6,7 +6,8 @@
     "isWriting": "Ist Update Job?",
     "data": "Daten",
     "sortOrder": "Sortierreihenfolge",
-    "status": "Status"
+    "status": "Status",
+    "message": "Nachricht"
   },
   "links": {
   },

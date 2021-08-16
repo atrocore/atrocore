@@ -5,7 +5,8 @@
     "isWriting": "Is Update Job?",
     "data": "Data",
     "sortOrder": "Sort order",
-    "status": "Status"
+    "status": "Status",
+    "message": "Message"
   },
   "links": {
   },

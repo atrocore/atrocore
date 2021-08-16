@@ -51,6 +51,9 @@
         "4F4F4F"
       ]
     },
+    "message": {
+      "type": "text"
+    },
     "actions": {
       "type": "jsonObject",
       "notStorable": true,
