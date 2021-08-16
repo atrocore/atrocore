@@ -93,7 +93,7 @@
     "phone": "Telefon",
     "text": "Textbox",
     "url": "URL",
-    "varchar": "Text (max. 255)",
+    "varchar": "Varchar",
     "file": "Datei",
     "image": "Bild",
     "asset": "Asset",
