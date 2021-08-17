@@ -6172,7 +6172,8 @@ a.list-group-item-danger.active, button.list-group-item-danger.active, a.list-gr
 .panel-default > .panel-heading {
     color: #333;
     background-color: #fff;
-    border-color: #dcdcdc
+    border-color: #dcdcdc;
+    border-bottom: 1px solid #dcdcdc;
 }
 
 .panel-default > .panel-heading + .panel-collapse > .panel-body {
@@ -14927,7 +14928,8 @@ body > #header .navbar-brand span.home-icon {
     }
 
     #header ul.tabs li.tab > a {
-        padding-left: 10px
+        padding-left: 10px;
+        border-bottom: 1px solid #555 !important;
     }
 
     #header .navbar-form {
@@ -17473,7 +17475,7 @@ a.field-info > span.fa-info-circle {
 }
 
 .panel-heading > .btn-group {
-    top: -5px;
+    top: -6px;
     right: -10px
 }
 
@@ -19125,10 +19127,6 @@ input#sn-checkbox-open-in-new-window {
     padding: 6px 10px 6px 14px;
 }
 
-.side .panel-default > .panel-heading {
-    border-top: 0;
-}
-
 .panel-default > .panel-heading > .btn-group > .btn-default {
     background-color: #ececec;
     border-color: #dcdcdc;
@@ -20176,6 +20174,9 @@ button.category:focus {
         border-left: 1px solid #dcdcdc;
     }
 
+    .side .panel-default:first-child > .panel-heading {
+        border-top: 0;
+    }
 }
 @media screen and (min-width: 1200px) {
     #main .detail .catalog-tree-panel.catalog-tree-panel-hidden + .overview {
