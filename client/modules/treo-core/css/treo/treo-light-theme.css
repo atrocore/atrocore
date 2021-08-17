@@ -4348,6 +4348,7 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
 .nav-pills > li > a {
   -webkit-border-radius: 0;
           border-radius: 0;
+  border-right: 1px solid #efefef;
 }
 
 .nav-pills > li + li {
