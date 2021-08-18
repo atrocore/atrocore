@@ -4351,10 +4351,6 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
   border-right: 1px solid #efefef;
 }
 
-.nav-pills > li + li {
-  margin-left: 2px;
-}
-
 .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
   color: #fff;
   background-color: #537898;
@@ -6451,10 +6447,6 @@ button.close {
   margin: 0;
 }
 
-.modal-body .row > .overview .cell:last-child:not(:first-child) {
-  padding-left: 16px;
-}
-
 .dialog-confirm .modal-body {
   padding-bottom: 14px;
 }
@@ -6502,6 +6494,10 @@ button.close {
   }
   .modal-sm {
     width: 300px;
+  }
+
+  .modal-body .row > .overview .cell:last-child:not(:first-child) {
+    padding-left: 16px;
   }
 }
 
@@ -19481,7 +19477,8 @@ button.category:focus {
   .page-header .header-buttons .header-items > a.action {
     margin-bottom: 4px;
   }
-  .detail .panel-default > .panel-heading {
+  .detail .panel-default > .panel-heading,
+  .edit .panel-default > .panel-heading {
     margin: 0 -15px;
   }
   .detail .side {
@@ -21533,10 +21530,6 @@ body,
   -webkit-border-radius: 3px;
           border-radius: 3px;
   background-color: #E6F1FF;
-}
-
-.nav-pills > li + li {
-  margin-left: 5px;
 }
 
 .entity-container .cell {

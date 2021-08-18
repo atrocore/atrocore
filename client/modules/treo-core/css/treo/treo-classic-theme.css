@@ -4359,7 +4359,7 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
 
 .nav > li > a:hover, .nav > li > a:focus {
     text-decoration: none;
-    background-color: #eee
+    background-color: #e4f2fc;
 }
 
 .nav > li.disabled > a {
@@ -4474,10 +4474,6 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
 .nav-pills > li > a {
     border-radius: 0;
     border-right: 1px solid #efefef;
-}
-
-.nav-pills > li + li {
-    margin-left: 2px
 }
 
 .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
@@ -6155,7 +6151,8 @@ a.list-group-item-danger.active, button.list-group-item-danger.active, a.list-gr
 .panel-default > .panel-heading {
     color: #333;
     background-color: #fff;
-    border-color: #dcdcdc
+    border-color: #dcdcdc;
+    box-shadow: 0 2px 2px #ddd;
 }
 
 .panel-default > .panel-heading + .panel-collapse > .panel-body {
@@ -6542,10 +6539,6 @@ button.close {
     margin: 0;
 }
 
-.modal-body .row > .overview .cell:last-child:not(:first-child) {
-    padding-left: 16px;
-}
-
 .dialog-confirm .modal-body {
     padding-bottom: 14px;
 }
@@ -6596,6 +6589,10 @@ button.close {
 
     .modal-sm {
         width: 300px
+    }
+
+    .modal-body .row > .overview .cell:last-child:not(:first-child) {
+        padding-left: 16px;
     }
 }
 
@@ -19090,6 +19087,10 @@ input#sn-checkbox-open-in-new-window {
     height: 28px;
 }
 
+.middle > .panel-default > .panel-heading {
+    padding-top: 4px;
+}
+
 .middle > .panel-default > .panel-heading:first-child {
     height: 29px;
 }
@@ -20199,7 +20200,8 @@ button.category:focus {
         margin-top: 44px;
     }
 
-    .detail .panel-default > .panel-heading {
+    .detail .panel-default > .panel-heading,
+    .edit .panel-default > .panel-heading {
         margin: 0 -15px;
     }
 
