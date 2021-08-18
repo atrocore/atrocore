@@ -4488,11 +4488,8 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
 }
 
 .nav-pills > li > a {
-    border-radius: 0
-}
-
-.nav-pills > li + li {
-    margin-left: 2px
+    border-radius: 0;
+    border-right: 1px solid #efefef;
 }
 
 .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
@@ -6171,7 +6168,9 @@ a.list-group-item-danger.active, button.list-group-item-danger.active, a.list-gr
 .panel-default > .panel-heading {
     color: #333;
     background-color: #fff;
-    border-color: #dcdcdc
+    border-color: #dcdcdc;
+    border-bottom: 1px solid #dcdcdc;
+    box-shadow: 0 2px 2px #ddd;
 }
 
 .panel-default > .panel-heading + .panel-collapse > .panel-body {
@@ -6558,10 +6557,6 @@ button.close {
     margin: 0;
 }
 
-.modal-body .row > .overview .cell:last-child:not(:first-child) {
-    padding-left: 16px;
-}
-
 .modal-footer {
     padding: 14px;
     text-align: right;
@@ -6612,6 +6607,10 @@ button.close {
 
     .modal-sm {
         width: 300px
+    }
+
+    .modal-body .row > .overview .cell:last-child:not(:first-child) {
+        padding-left: 16px;
     }
 }
 
@@ -14926,7 +14925,8 @@ body > #header .navbar-brand span.home-icon {
     }
 
     #header ul.tabs li.tab > a {
-        padding-left: 10px
+        padding-left: 10px;
+        border-bottom: 1px solid #555 !important;
     }
 
     #header .navbar-form {
@@ -17472,7 +17472,7 @@ a.field-info > span.fa-info-circle {
 }
 
 .panel-heading > .btn-group {
-    top: -5px;
+    top: -6px;
     right: -10px
 }
 
@@ -19116,16 +19116,16 @@ input#sn-checkbox-open-in-new-window {
     height: 28px;
 }
 
+.middle > .panel-default > .panel-heading {
+    padding-top: 4px;
+}
+
 .middle > .panel-default > .panel-heading:first-child {
     height: 29px;
 }
 
 .panel-info > .panel-heading {
     padding: 6px 10px 6px 14px;
-}
-
-.side .panel-default > .panel-heading {
-    border-top: 0;
 }
 
 .panel-default > .panel-heading > .btn-group > .btn-default {
@@ -20175,6 +20175,9 @@ button.category:focus {
         border-left: 1px solid #dcdcdc;
     }
 
+    .side .panel-default:first-child > .panel-heading {
+        border-top: 0;
+    }
 }
 @media screen and (min-width: 1200px) {
     #main .detail .catalog-tree-panel.catalog-tree-panel-hidden + .overview {
@@ -20197,7 +20200,8 @@ button.category:focus {
         margin-top: 44px;
     }
 
-    .detail .panel-default > .panel-heading {
+    .detail .panel-default > .panel-heading,
+    .edit .panel-default > .panel-heading {
         margin: 0 -15px;
     }
 
