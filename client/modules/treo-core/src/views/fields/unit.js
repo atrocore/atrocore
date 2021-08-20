@@ -70,7 +70,7 @@ Espo.define('treo-core:views/fields/unit', 'views/fields/float',
                 if (measureConfig.unitList) {
                     measureConfig.unitList.forEach((v, k) => {
                         this.unitList.push(v);
-                        if (measureConfig.unitListTranslates[this.getLanguage().name] && measureConfig.unitListTranslates[this.getLanguage().name][k]) {
+                        if (measureConfig.unitListTranslates && measureConfig.unitListTranslates[this.getLanguage().name] && measureConfig.unitListTranslates[this.getLanguage().name][k]) {
                             this.unitListTranslates[v] = measureConfig.unitListTranslates[this.getLanguage().name][k];
                         }
                     });
