@@ -4359,7 +4359,7 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
 
 .nav > li > a:hover, .nav > li > a:focus {
     text-decoration: none;
-    background-color: #eee
+    background-color: #e4f2fc;
 }
 
 .nav > li.disabled > a {
@@ -4472,11 +4472,8 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
 }
 
 .nav-pills > li > a {
-    border-radius: 0
-}
-
-.nav-pills > li + li {
-    margin-left: 2px
+    border-radius: 0;
+    border-right: 1px solid #f4f4f4;
 }
 
 .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
@@ -6154,7 +6151,8 @@ a.list-group-item-danger.active, button.list-group-item-danger.active, a.list-gr
 .panel-default > .panel-heading {
     color: #333;
     background-color: #fff;
-    border-color: #dcdcdc
+    border-color: #dcdcdc;
+    box-shadow: 0 2px 2px #ddd;
 }
 
 .panel-default > .panel-heading + .panel-collapse > .panel-body {
@@ -6541,10 +6539,6 @@ button.close {
     margin: 0;
 }
 
-.modal-body .row > .overview .cell:last-child:not(:first-child) {
-    padding-left: 16px;
-}
-
 .dialog-confirm .modal-body {
     padding-bottom: 14px;
 }
@@ -6595,6 +6589,10 @@ button.close {
 
     .modal-sm {
         width: 300px
+    }
+
+    .modal-body .row > .overview .cell:last-child:not(:first-child) {
+        padding-left: 16px;
     }
 }
 
@@ -17449,9 +17447,16 @@ a.field-info > span.fa-info-circle {
     }
 }
 
-.panel-heading > .btn-group > .btn {
+.middle > .panel-default > .panel-heading > .btn-group > .btn,
+.bottom > .panel-default > .panel-heading > .btn-group > .btn,
+.side > .panel-default > .panel-heading > .btn-group > .btn {
     padding-top: 4px;
     padding-bottom: 4px
+}
+
+.panel-heading > .btn-group > .btn {
+    padding-top: 5px;
+    padding-bottom: 5px
 }
 
 .note-editor > .panel-heading > .btn-group > .btn {
@@ -19089,6 +19094,10 @@ input#sn-checkbox-open-in-new-window {
     height: 28px;
 }
 
+.middle > .panel-default > .panel-heading {
+    padding-top: 4px;
+}
+
 .middle > .panel-default > .panel-heading:first-child {
     height: 29px;
 }
@@ -19595,8 +19604,13 @@ ul.dropdown-menu > li.checkbox {
 
 #main .detail .catalog-tree-panel {
     margin: 0;
-    background-color: #ffffff;
     z-index: 2;
+}
+
+#main .catalog-tree-panel,
+#main .catalog-tree-panel .panel,
+#main .catalog-tree-panel .category-search {
+    background-color: #fafafa;
 }
 
 #main .catalog-tree-panel + .list-container {
@@ -20198,7 +20212,17 @@ button.category:focus {
         margin-top: 44px;
     }
 
-    .detail .panel-default > .panel-heading {
+    .modal-content .overview {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    .modal-content .panel-default > .panel-heading {
+        margin: 0 !important;
+    }
+
+    .detail .panel-default > .panel-heading,
+    .edit .panel-default > .panel-heading {
         margin: 0 -15px;
     }
 
@@ -20463,10 +20487,13 @@ button.category:focus {
         left: 0;
         right: 0;
         bottom: 0;
-        background: #fff;
         z-index: 2000;
         height: 100vh;
         overflow: auto;
+    }
+
+    #main .catalog-tree-panel-hidden {
+        background: #ffffff;
     }
 
     .search-row > div .search-right-buttons-group button {

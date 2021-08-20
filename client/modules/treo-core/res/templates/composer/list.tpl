@@ -68,10 +68,10 @@
                     <div class="list-container modules-installed">{{{list}}}</div>
                 </div>
             </div>
-            <div class="panel panel-info">
+            <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="pull-right btn-group">
-                        <button type="button" class="btn btn-info btn-sm action" data-action="refresh" data-collection="store" title="{{translate 'clickToRefresh' category='messages'}}">
+                        <button type="button" class="btn btn-default btn-sm action" data-action="refresh" data-collection="store" title="{{translate 'clickToRefresh' category='messages'}}">
                             <span class="fas fa-sync"></span>
                         </button>
                     </div>

@@ -356,6 +356,22 @@ Espo.define('treo-core:views/record/detail', 'class-replace!treo-core:views/reco
                         }
                     }
                 });
+
+                let content = $('#content');
+
+                if (content.length) {
+                    let pageHeader = $('.page-header');
+                    let detailButtons = $('.detail-button-container.record-buttons');
+
+                    let minHeight = (content.height() - pageHeader.outerHeight(true) - detailButtons.outerHeight(true));
+
+                    overview.css({
+                        'minHeight': minHeight + 'px'
+                    })
+                    side.css({
+                        'minHeight': minHeight + 'px'
+                    })
+                }
             }
 
             $window.off('scroll.detail-' + this.numId);

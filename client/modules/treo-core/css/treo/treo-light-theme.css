@@ -4232,7 +4232,7 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
 
 .nav > li > a:hover, .nav > li > a:focus {
   text-decoration: none;
-  background-color: #eee;
+  background-color: #e4f2fc;
 }
 
 .nav > li.disabled > a {
@@ -4348,10 +4348,7 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
 .nav-pills > li > a {
   -webkit-border-radius: 0;
           border-radius: 0;
-}
-
-.nav-pills > li + li {
-  margin-left: 2px;
+  border-right: 1px solid #f4f4f4;
 }
 
 .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
@@ -6450,10 +6447,6 @@ button.close {
   margin: 0;
 }
 
-.modal-body .row > .overview .cell:last-child:not(:first-child) {
-  padding-left: 16px;
-}
-
 .dialog-confirm .modal-body {
   padding-bottom: 14px;
 }
@@ -6501,6 +6494,10 @@ button.close {
   }
   .modal-sm {
     width: 300px;
+  }
+
+  .modal-body .row > .overview .cell:last-child:not(:first-child) {
+    padding-left: 16px;
   }
 }
 
@@ -19061,7 +19058,12 @@ table.table > thead th > a {
 
 #main .detail .catalog-tree-panel {
   margin: 0;
-  background-color: #ffffff;
+}
+
+#main .catalog-tree-panel,
+#main .catalog-tree-panel .panel,
+#main .catalog-tree-panel .category-search {
+  background-color: #fafafa;
 }
 
 #main .catalog-tree-panel + .list-container {
@@ -19437,7 +19439,7 @@ button.category:focus {
 
   #main > .record > .edit > .row > .side.fixed-top,
   #main > .record > .detail > .row > .side.fixed-top {
-    top: 91px;
+    top: 108px;
   }
 
   #main > .record > .edit > .row > .side.fixed-bottom,
@@ -19473,6 +19475,15 @@ button.category:focus {
   #content {
     margin-top: 44px;
   }
+
+  .modal-content .overview {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .modal-content .panel-default > .panel-heading {
+    margin: 0 !important;
+  }
   .page-header .header-buttons .header-items {
     margin-top: 0;
     margin-bottom: 0;
@@ -19480,7 +19491,8 @@ button.category:focus {
   .page-header .header-buttons .header-items > a.action {
     margin-bottom: 4px;
   }
-  .detail .panel-default > .panel-heading {
+  .detail .panel-default > .panel-heading,
+  .edit .panel-default > .panel-heading {
     margin: 0 -15px;
   }
   .detail .side {
@@ -21014,10 +21026,12 @@ body,
     left: 0;
     right: 0;
     bottom: 0;
-    background: #FFFFFF;
     z-index: 2000;
     height: 100vh;
     overflow: auto;
+  }
+  #main .catalog-tree-panel-hidden {
+    background: #ffffff;
   }
   .page-header .header-buttons div.pull-right {
     -webkit-flex-wrap: nowrap;
@@ -21486,10 +21500,6 @@ body,
   margin-bottom: 15px;
 }
 
-.modal-dialog > .modal-content > .modal-body .overview {
-  padding: 0;
-}
-
 .modal-content .panel-default > .panel-heading {
   position: relative;
 }
@@ -21524,18 +21534,10 @@ body,
   border-bottom: 1px solid #EEEEEE;
 }
 
-.nav-pills > li {
-  margin-left: 5px;
-}
-
 .nav-pills > li:hover, .nav-pills > li:focus {
   -webkit-border-radius: 3px;
           border-radius: 3px;
   background-color: #E6F1FF;
-}
-
-.nav-pills > li + li {
-  margin-left: 5px;
 }
 
 .entity-container .cell {
@@ -21549,9 +21551,25 @@ body,
   line-height: 22px;
 }
 
+#main .edit > .row,
+#main .detail > .row,
+.side > .panel.panel-default.panel-default,
+.side > .panel.panel-default.panel-default .list{
+  background: #fafafa;
+}
+
+.side > .panel.panel-default.panel-default,
+.side > .panel.panel-default.panel-default list,
+.side > .panel.panel-default.panel-default > .panel-heading {
+  background-color: unset !important;
+}
+
+#main .detail .row > .overview {
+  background-color: #ffffff;
+}
+
 .side > .panel.panel-default.panel-default,
 .side > .panel.panel-default.panel-default list {
-  background: #FFFFFF;
   border-top: 0;
 }
 
@@ -21629,6 +21647,10 @@ ul.dropdown-menu > li.checkbox {
   .detail .bottom .panel-default > .panel-heading:not(.note-toolbar) {
     position: relative;
     margin-bottom: 0;
+  }
+
+  .modal-dialog > .modal-content > .modal-body .overview {
+    padding: 0;
   }
 }
 
