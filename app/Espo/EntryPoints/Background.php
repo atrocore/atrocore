@@ -131,15 +131,7 @@ class Background extends AbstractEntryPoint
             $_SESSION['background']['till'] = (new \DateTime())->modify('+2 hours');
         }
 
-        $content = file_get_contents($_SESSION['background']['imagePath']);
-
-        header('Content-Disposition:inline;filename="' . $_SESSION['background']['imageName'] . '"');
-        header('Content-Type: ' . mime_content_type($_SESSION['background']['imagePath']));
-        header('Pragma: public');
-        header('Cache-Control: max-age=360000, must-revalidate');
-        header('Content-Length: ' . mb_strlen($content, "8bit"));
-
-        echo $content;
+        header("Location: {$_SESSION['background']['imagePath']}", true, 302);
         exit;
     }
 }
