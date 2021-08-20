@@ -40,6 +40,12 @@ Espo.define('views/home', 'view', function (Dep) {
             this.createView('dashboard', 'views/dashboard', {
                 el: this.options.el + ' > .home-content'
             });
+        },
+
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            $('footer').removeClass('is-collapsed not-collapsed');
         }
     });
 });
