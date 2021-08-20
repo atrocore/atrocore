@@ -270,6 +270,8 @@
     "manyToMany": "Многие-ко-многим"
   },
   "messages": {
+    "optionValueCannotBeEmpty": "Значение опции не может быть пустым",
+    "defaultValueCannotBeEmpty": "Значение по умолчанию не может быть пустым",
     "resetAllToDefaultConfirm": "Вы уверены, что хотите восстановить все макеты по умолчанию?",
     "pleaseWait": "Пожалуйста, подождите...",
     "posting": "Размещается...",
@@ -365,6 +367,7 @@
     "removeRelation": "Удалить связь"
   },
   "fields": {
+    "prohibitedEmptyValue": "Запретить пустые значения",
     "name": "Название",
     "firstName": "Имя",
     "lastName": "Фамилия",

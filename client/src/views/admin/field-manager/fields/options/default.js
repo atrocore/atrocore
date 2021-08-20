@@ -37,10 +37,29 @@ Espo.define('views/admin/field-manager/fields/options/default', 'views/fields/en
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.setOptionList(this.model.get('options') || ['']);
+            this.setOptionList(this.getOptionListItems());
             this.listenTo(this.model, 'change:options', function () {
-                this.setOptionList(this.model.get('options') || ['']);
+                this.setOptionList(this.getOptionListItems());
             }, this);
+        },
+
+        getOptionListItems() {
+            let options = [];
+            if (this.model.get('options')) {
+                options = Espo.Utils.clone(this.model.get('options'));
+            }
+            options.unshift('');
+
+            return options;
+        },
+
+        validate() {
+            if (this.model.get('prohibitedEmptyValue') && this.model.get('default') === '') {
+                this.showValidationMessage(this.translate('defaultValueCannotBeEmpty', 'messages'));
+                return true;
+            }
+
+            return false;
         },
 
     });

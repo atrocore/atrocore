@@ -103,7 +103,26 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
         },
 
         validate: function () {
-            return this.findDuplicates(Espo.Utils.cloneDeep(this.model.get(this.name)) || []).length > 0;
+            const data = Espo.Utils.cloneDeep(this.model.get(this.name)) || [];
+            const emptyOptionId = this.emptyOptionId(data);
+
+            if (emptyOptionId) {
+                this.showValidationMessage(this.translate('optionValueCannotBeEmpty', 'messages'), `input[data-name="${this.name}"][data-id="${emptyOptionId}"]`);
+                return true;
+            }
+
+            return this.findDuplicates(data).length > 0;
+        },
+
+        emptyOptionId(data) {
+            let id = false;
+            data.forEach((value, k) => {
+                if (value === '' && this.model.get(this.name + 'Ids')[k]) {
+                    id = this.model.get(this.name + 'Ids')[k];
+                }
+            });
+
+            return id;
         },
 
         findDuplicates: function (arr) {

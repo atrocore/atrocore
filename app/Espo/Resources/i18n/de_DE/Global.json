@@ -251,6 +251,8 @@
     "manyToMany": "Many-to-Many"
   },
   "messages": {
+    "optionValueCannotBeEmpty": "Option darf nicht leer sein",
+    "defaultValueCannotBeEmpty": "Standardwert darf nicht leer sein",
     "resetAllToDefaultConfirm": "Are you sure you want to reset all layouts to default values?",
     "testEmailSent": "Eine Test E-Mail wurde gesendet",
     "fieldIsUploading": "Hochladen läuft",
@@ -386,6 +388,7 @@
     "convertCurrency": "Währung umrechnen"
   },
   "fields": {
+    "prohibitedEmptyValue": "Leeren Wert deaktivieren",
     "amount": "Anzahl",
     "measure": "Maß",
     "oneGeoType": "OneGeo Typ",

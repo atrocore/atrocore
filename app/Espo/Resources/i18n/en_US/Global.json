@@ -270,6 +270,8 @@
     "manyToMany": "Many-to-Many"
   },
   "messages": {
+    "optionValueCannotBeEmpty": "Option value cannot be empty",
+    "defaultValueCannotBeEmpty": "Default value cannot be empty",
     "resetAllToDefaultConfirm": "Are you sure you want to reset all layouts to default values?",
     "testEmailSent": "Test email has been sent",
     "massUpdateResult": "Updating {count} records",
@@ -365,6 +367,7 @@
     "convertCurrency": "Convert Currency"
   },
   "fields": {
+    "prohibitedEmptyValue": "Disable empty value",
     "addressCity": "City",
     "addressStreet": "Street",
     "addressCountry": "Country",

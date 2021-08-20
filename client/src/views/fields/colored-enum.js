@@ -80,18 +80,21 @@ Espo.define('views/fields/colored-enum', 'views/fields/enum', function (Dep) {
 
         getBackgroundColor(fieldValue) {
             let options = this.model.getFieldParam(this.name, 'options') || [];
+            let optionColors = this.model.getFieldParam(this.name, 'optionColors') || [];
+
+            if (!this.model.getFieldParam(this.name, 'prohibitedEmptyValue') && options[0] && options[0] !== '') {
+                options.unshift('');
+                optionColors.unshift(this.defaultBackgroundColor);
+            }
 
             let key = 0;
             options.forEach(function (item, k) {
                 if (fieldValue === item) {
                     key = k;
-                    if (typeof options[0] !== 'undefined' && options[0] === '') {
-                        key--;
-                    }
                 }
             });
 
-            return '#' + ((this.model.getFieldParam(this.name, 'optionColors') || {})[key] || this.defaultBackgroundColor);
+            return '#' + (optionColors[key] || this.defaultBackgroundColor);
         },
 
         getFontColor(backgroundColor) {
