@@ -1,7 +1,2 @@
-<p class="credit small" style="width: 100%">
-    &copy; {{year}} <a href="https://atrocore.com" target="_blank">AtroCore is based on EspoCRM</a>
-</p>
-
-<button class="scroll-top hidden">
-    <span class="fas fa-chevron-up"></span>
-</button>
+<p class="credit small" style="width: 100%"><a href="https://github.com/atrocore/atrocore/issues/new">Report bug</a>  |  <a href="https://github.com/atrocore/atrocore/discussions">Community</a>  |  <a href="https://pm.atrocore.com">Paid Support</a>  |  <a href="https://atrocore.com/contact">Contact</a><span style="float: right">&copy; {{year}} <a href="https://atrocore.com" target="_blank">AtroCore is based on EspoCRM</a></span></p>
+<button class="scroll-top hidden"><span class="fas fa-chevron-up"></span></button>
