@@ -362,13 +362,15 @@ Espo.define('treo-core:views/record/detail', 'class-replace!treo-core:views/reco
                 if (content.length) {
                     let pageHeader = $('.page-header');
                     let detailButtons = $('.detail-button-container.record-buttons');
+                    let mainOverview = $('#main > .record > .detail > .row > .overview');
+                    let mainSide = $('#main > .record > .detail > .row > .side');
 
                     let minHeight = (content.height() - pageHeader.outerHeight(true) - detailButtons.outerHeight(true));
 
-                    overview.css({
+                    mainOverview.css({
                         'minHeight': minHeight + 'px'
                     })
-                    side.css({
+                    mainSide.css({
                         'minHeight': minHeight + 'px'
                     })
                 }
