@@ -64,7 +64,7 @@ Espo.define('views/login', 'view', function (Dep) {
 
         setupBackgroundImage: function () {
             $.ajax({
-                url: 'background',
+                url: 'background?silent=true',
                 type: 'GET',
                 success: data => {
                     const $body = $('body');
