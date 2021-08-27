@@ -367,12 +367,15 @@ Espo.define('treo-core:views/record/detail', 'class-replace!treo-core:views/reco
 
                     let minHeight = (content.height() - pageHeader.outerHeight(true) - detailButtons.outerHeight(true));
 
-                    mainOverview.css({
-                        'minHeight': minHeight + 'px'
-                    })
-                    mainSide.css({
-                        'minHeight': minHeight + 'px'
-                    })
+                    if (mainOverview.outerHeight() > mainSide.outerHeight()) {
+                        mainOverview.css({
+                            'minHeight': minHeight + 'px'
+                        })
+                    } else {
+                        mainSide.css({
+                            'minHeight': minHeight + 'px'
+                        })
+                    }
                 }
             }
 
