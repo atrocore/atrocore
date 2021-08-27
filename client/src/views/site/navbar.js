@@ -364,6 +364,8 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 }.bind(this);
                 process();
             }
+
+            $('a[data-action="composerUpdate"]').parent().addClass('disabled');
         },
 
         selectTab: function (name) {
@@ -450,6 +452,13 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                     divider: true
                 },
                 {
+                    action: 'composerUpdate',
+                    html: this.getLanguage().translate('Run Update', 'labels', 'Composer') + ' <span id="composer-update" class="fas fa-arrow-alt-circle-down"></span>'
+                },
+                {
+                    divider: true
+                },
+                {
                     link: '#clearCache',
                     label: this.getLanguage().translate('Clear Local Cache')
                 },
@@ -457,15 +466,10 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                     divider: true
                 },
                 {
-                    link: '#About',
-                    label: this.getLanguage().translate('About')
-                },
-                {
                     link: '#logout',
                     label: this.getLanguage().translate('Log Out')
                 }
             ]);
-
 
 
             return list;
@@ -475,7 +479,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             Espo.Ui.notify(this.translate('Loading...'));
             var type = this.getMetadata().get(['clientDefs', scope, 'quickCreateModalType']) || 'edit';
             var viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', type]) || 'views/modals/edit';
-            this.createView('quickCreate', viewName , {scope: scope}, function (view) {
+            this.createView('quickCreate', viewName, {scope: scope}, function (view) {
                 view.once('after:render', function () {
                     Espo.Ui.notify(false);
                 });
@@ -490,7 +494,27 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                     this.clearView('dialog');
                 }, this);
             }, this);
-        }
+        },
+
+        actionComposerUpdate(data, el) {
+            if ($(el.currentTarget).parent().hasClass('disabled')) {
+                return false;
+            }
+
+            this.confirm({
+                message: this.translate('confirmRun', 'labels', 'Composer'),
+                confirmText: this.translate('Run Update', 'labels', 'Composer')
+            }, () => {
+                this.notify(this.translate('updating', 'labels', 'Composer'));
+                this.ajaxPostRequest('Composer/runUpdate', {}, {timeout: 180000}).then(response => {
+                    this.notify(this.translate('updateStarted', 'labels', 'Composer'), 'success');
+                    location.reload();
+                }, error => {
+                    location.reload();
+                });
+            });
+        },
+
     });
 
 });

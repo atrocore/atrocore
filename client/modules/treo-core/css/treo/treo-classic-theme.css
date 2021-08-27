@@ -3936,8 +3936,8 @@ tbody.collapse.in {
     background-color: #537898
 }
 
-.dropdown-menu > .disabled > a, .dropdown-menu > .disabled > a:hover, .dropdown-menu > .disabled > a:focus {
-    color: #999
+.dropdown-menu > .disabled > a, .dropdown-menu > .disabled > a > .fas, .dropdown-menu > .disabled > a:hover, .dropdown-menu > .disabled > a:focus {
+    color: #999 !important;
 }
 
 .dropdown-menu > .disabled > a:hover, .dropdown-menu > .disabled > a:focus {

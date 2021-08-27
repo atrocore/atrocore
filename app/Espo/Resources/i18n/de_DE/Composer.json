@@ -29,7 +29,7 @@
     "updateFailed": "Update fehlgeschlagen. Es kann keine Verbindung zum Modulserver hergestellt werden. Bitte versuche es erneut",
     "cancelingModuleInstall": "Abbrechen der Modulinstallation...",
     "canceledModuleInstall": "Die Installation des Moduls wurde abgebrochen",
-    "confirmRun": "Nach der Aktualisierungsaktion würden sich alle Benutzer vom System abmelden. Bist du sicher, dass du diese Aktion machen willst?",
+    "confirmRun": "Nach der Aktualisierungsaktion würden sich alle Benutzer vom System abmelden. Möchten Sie Ihr System wirklich aktualisieren?",
     "anotherActionInProgress": "ein anderes Workflow ist gerade in Arbeit. Warten Sie bitte ab, bis dieses abgeschlossen ist",
     "available": "verfügbar",
     "canceled": "abgebrochen",
