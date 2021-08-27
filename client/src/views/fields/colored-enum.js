@@ -81,6 +81,9 @@ Espo.define('views/fields/colored-enum', 'views/fields/enum', function (Dep) {
         getBackgroundColor(fieldValue) {
             let options = this.model.getFieldParam(this.name, 'options') || [];
             let optionColors = this.model.getFieldParam(this.name, 'optionColors') || [];
+            if (!Array.isArray(optionColors)) {
+                optionColors = [];
+            }
 
             if (!this.model.getFieldParam(this.name, 'prohibitedEmptyValue') && options[0] && options[0] !== '') {
                 options.unshift('');
