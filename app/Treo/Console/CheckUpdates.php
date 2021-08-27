@@ -1,3 +1,4 @@
+<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -30,36 +31,33 @@
  * and "AtroCore" word.
  */
 
-Espo.define('treo-core:views/composer/modals/update-details', 'views/modal',
-    Dep => Dep.extend({
+declare(strict_types=1);
 
-        template: 'treo-core:composer/modals/update-details',
+namespace Treo\Console;
 
-        setup() {
-            Dep.prototype.setup.call(this);
+use Treo\Jobs\CheckUpdates as Job;
 
-            this.setupHeader();
-            this.setupButtonList();
-        },
+class CheckUpdates extends AbstractConsole
+{
+    /**
+     * @inheritDoc
+     */
+    public static function getDescription(): string
+    {
+        return 'Check is system need to be updated.';
+    }
 
-        setupHeader() {
-            this.header = this.translate('Details');
-        },
+    /**
+     * @inheritDoc
+     */
+    public function run(array $data): void
+    {
+        (new Job($this->getContainer()))->run();
 
-        setupButtonList() {
-            this.buttonList = [
-                {
-                    name: 'cancel',
-                    label: 'Cancel'
-                }
-            ];
-        },
-
-        data() {
-            return {
-                output: this.options.output
-            };
-        },
-
-    })
-);
+        if (Job::isUpdatesAvailable()) {
+            self::show('Updates available.', self::SUCCESS);
+        } else {
+            self::show('There is nothing to update.', self::SUCCESS);
+        }
+    }
+}

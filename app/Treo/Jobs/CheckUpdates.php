@@ -1,3 +1,4 @@
+<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -30,26 +31,38 @@
  * and "AtroCore" word.
  */
 
-Espo.define('treo-core:views/composer/modals/update', 'treo-core:views/composer/modals/install',
-    Dep => Dep.extend({
+declare(strict_types=1);
 
-        setupHeader() {
-            this.header = this.translate('updateModule', 'labels', 'Composer');
-        },
+namespace Treo\Jobs;
 
-        setupButtonList() {
-            this.buttonList = [
-                {
-                    name: 'save',
-                    label: this.translate('updateModule', 'labels', 'Composer'),
-                    style: 'primary',
-                },
-                {
-                    name: 'cancel',
-                    label: 'Cancel'
-                }
-            ];
-        },
+use Espo\Core\DataManager;
+use Espo\Core\Jobs\Base;
+use Treo\Console\AbstractConsole;
 
-    })
-);
+class CheckUpdates extends Base
+{
+    public const CHECK_UPDATES_LOG_FILE = 'data/check-updates.log';
+
+    public function run(): void
+    {
+        $php = AbstractConsole::getPhpBinPath($this->getConfig());
+        $log = self::CHECK_UPDATES_LOG_FILE;
+
+        if (file_exists($log)) {
+            unlink($log);
+        }
+
+        exec("$php composer.phar update --dry-run >> $log 2>&1");
+
+        DataManager::pushPublicData('isNeedToUpdate', self::isUpdatesAvailable());
+    }
+
+    public static function isUpdatesAvailable(): bool
+    {
+        if (!file_exists(self::CHECK_UPDATES_LOG_FILE)) {
+            return false;
+        }
+
+        return strpos(file_get_contents(self::CHECK_UPDATES_LOG_FILE), 'Package operations:') !== false;
+    }
+}

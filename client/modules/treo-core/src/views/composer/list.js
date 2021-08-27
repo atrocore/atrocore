@@ -204,51 +204,20 @@ Espo.define('treo-core:views/composer/list', 'views/list',
         },
 
         actionInstallModule(data) {
-            if (!data.id || !data.mode) {
+            if (!data.id) {
                 return;
             }
 
-            let currentModel;
-            let viewName;
-            let beforeSaveLabel;
-            let afterSaveLabel;
-            let apiUrl;
-            let requestType;
-            if (data.mode === 'install') {
-                currentModel = this.storeCollection.get(data.id);
-                viewName = 'treo-core:views/composer/modals/install';
-                beforeSaveLabel = 'settingModuleForInstalling';
-                afterSaveLabel = 'settedModuleForInstalling';
-                apiUrl = 'Composer/installModule';
-                requestType = 'POST';
-            } else {
-                currentModel = this.installedCollection.get(data.id);
-                viewName = 'treo-core:views/composer/modals/update';
-                beforeSaveLabel = 'settingModuleForUpdating';
-                afterSaveLabel = 'settedModuleForUpdating';
-                apiUrl = 'Composer/updateModule';
-                requestType = 'PUT';
-            }
-
-            this.createView('installModal', viewName, {
-                currentModel: currentModel
-            }, view => {
-                view.render();
-                this.listenTo(view, 'save', saveData => {
-                    this.actionsInProgress++;
-                    this.notify(this.translate(beforeSaveLabel, 'labels', 'Composer'));
-                    this.ajaxRequest(apiUrl, requestType, JSON.stringify(saveData), {timeout: 180000}).then(response => {
-                        if (response) {
-                            this.notify(this.translate(afterSaveLabel, 'labels', 'Composer'), 'success');
-                            if (data.mode === 'install') {
-                                this.storeCollection.fetch();
-                            }
-                            this.installedCollection.fetch();
-                        }
-                    }).always(() => {
-                        this.actionsInProgress--;
-                    });
-                });
+            this.actionsInProgress++;
+            this.notify(this.translate('settingModuleForInstalling', 'labels', 'Composer'));
+            this.ajaxRequest('Composer/installModule', 'POST', JSON.stringify({id: data.id}), {timeout: 180000}).then(response => {
+                if (response) {
+                    this.notify(this.translate('settedModuleForInstalling', 'labels', 'Composer'), 'success');
+                    this.storeCollection.fetch();
+                    this.installedCollection.fetch();
+                }
+            }).always(() => {
+                this.actionsInProgress--;
             });
         },
 
@@ -270,28 +239,16 @@ Espo.define('treo-core:views/composer/list', 'views/list',
         },
 
         actionCancelModule(data) {
-            if (!data.id || !data.status) {
+            if (!data.id) {
                 return;
             }
 
-            let beforeSaveLabel;
-            let afterSaveLabel;
-            if (data.status = 'install') {
-                beforeSaveLabel = 'cancelingModuleUpdate';
-                afterSaveLabel = 'canceledModuleUpdate';
-            } else {
-                beforeSaveLabel = 'cancelingModuleInstall';
-                afterSaveLabel = 'canceledModuleInstall';
-            }
-
             this.actionsInProgress++;
-            this.notify(this.translate(beforeSaveLabel, 'labels', 'Composer'));
+            this.notify(this.translate('cancelingModuleInstall', 'labels', 'Composer'));
             this.ajaxPostRequest('Composer/cancel', {id: data.id}).then(response => {
                 if (response) {
-                    this.notify(this.translate(afterSaveLabel, 'labels', 'Composer'), 'success');
-                    if (data.status = 'install') {
-                        this.storeCollection.fetch();
-                    }
+                    this.notify(this.translate('canceledModuleInstall', 'labels', 'Composer'), 'success');
+                    this.storeCollection.fetch();
                     this.installedCollection.fetch();
                 }
             }).always(() => {
