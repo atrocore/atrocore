@@ -817,6 +817,16 @@ class PostUpdate
             unlink($checkUpdatesLog);
         }
 
+        $publicDataFile = 'data/publicData.json';
+        if (file_exists($publicDataFile)) {
+            $publicData = json_decode(file_get_contents($publicDataFile), true);
+        }
+        if (empty($publicData) || !is_array($publicData)) {
+            $publicData = [];
+        }
+        $publicData['isNeedToUpdate'] = false;
+        file_put_contents($publicDataFile, json_encode($publicData));
+
         self::renderLine('Done!');
         exit(0);
     }

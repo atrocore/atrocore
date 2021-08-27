@@ -11,6 +11,12 @@
     "method": "Метод",
     "scheduledJobJob": "Название задания"
   },
+  "labels": {
+    "Pending": "В ожидании",
+    "Success": "Успех",
+    "Running": "Выполняется",
+    "Failed": "Сбой"
+  },
   "options": {
     "status": {
       "Pending": "В ожидании",

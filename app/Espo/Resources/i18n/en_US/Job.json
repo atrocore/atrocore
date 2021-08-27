@@ -11,6 +11,12 @@
     "scheduledJobJob": "Scheduled Job Name",
     "data": "Data"
   },
+  "labels": {
+    "Pending": "Pending",
+    "Success": "Success",
+    "Running": "Running",
+    "Failed": "Failed"
+  },
   "options": {
     "status": {
       "Pending": "Pending",

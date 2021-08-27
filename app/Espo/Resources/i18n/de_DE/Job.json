@@ -19,7 +19,11 @@
     }
   },
   "labels": {
-    "Create Job": "Aufgabe erstellen"
+    "Create Job": "Aufgabe erstellen",
+    "Pending": "Steht aus",
+    "Success": "Erfolg",
+    "Running": "In Arbeit",
+    "Failed": "Fehlgeschlagen"
   },
   "links": {
     "queueItem": "Warteschlangeeinheit",
