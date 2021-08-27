@@ -364,8 +364,6 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 }.bind(this);
                 process();
             }
-
-            $('a[data-action="composerUpdate"]').parent().addClass('disabled');
         },
 
         selectTab: function (name) {
@@ -471,6 +469,15 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 }
             ]);
 
+            setInterval(() => {
+                let $composerLi = $('a[data-action="composerUpdate"]').parent();
+                let isNeedToUpdate = localStorage.getItem('pd_isNeedToUpdate') || false;
+                if (isNeedToUpdate === '1') {
+                    $composerLi.removeClass('disabled');
+                } else {
+                    $composerLi.addClass('disabled');
+                }
+            }, 1000);
 
             return list;
         },
