@@ -364,6 +364,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 }.bind(this);
                 process();
             }
+            $('a[data-action="composerUpdate"]').parent().addClass('disabled');
         },
 
         selectTab: function (name) {
@@ -445,29 +446,34 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 label: this.getLanguage().translate('Preferences')
             });
 
-            list = list.concat([
-                {
+            if (this.getUser().isAdmin()) {
+                list.push({
                     divider: true
-                },
-                {
+                });
+
+                list.push({
                     action: 'composerUpdate',
                     html: this.getLanguage().translate('Run Update', 'labels', 'Composer') + ' <span id="composer-update" class="fas fa-arrow-alt-circle-down"></span>'
-                },
-                {
-                    divider: true
-                },
-                {
-                    link: '#clearCache',
-                    label: this.getLanguage().translate('Clear Local Cache')
-                },
-                {
-                    divider: true
-                },
-                {
-                    link: '#logout',
-                    label: this.getLanguage().translate('Log Out')
-                }
-            ]);
+                });
+            }
+
+            list.push({
+                divider: true
+            });
+
+            list.push({
+                link: '#clearCache',
+                label: this.getLanguage().translate('Clear Local Cache')
+            });
+
+            list.push({
+                divider: true
+            });
+
+            list.push({
+                link: '#logout',
+                label: this.getLanguage().translate('Log Out')
+            });
 
             setInterval(() => {
                 let $composerLi = $('a[data-action="composerUpdate"]').parent();
@@ -475,7 +481,9 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
                 if (isNeedToUpdate === 'true') {
                     $composerLi.removeClass('disabled');
                 } else {
-                    $composerLi.addClass('disabled');
+                    if (!$composerLi.hasClass('disabled')) {
+                        $composerLi.addClass('disabled');
+                    }
                 }
             }, 1000);
 
