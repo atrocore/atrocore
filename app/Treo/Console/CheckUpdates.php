@@ -54,16 +54,10 @@ class CheckUpdates extends AbstractConsole
     {
         (new Job($this->getContainer()))->run();
 
-        if (self::isUpdatesAvailable()) {
+        if (Job::isUpdatesAvailable()) {
             self::show('Updates available.', self::SUCCESS);
         } else {
             self::show('There is nothing to update.', self::SUCCESS);
         }
-    }
-
-    public static function isUpdatesAvailable(): bool
-    {
-        $content = file_get_contents(Job::CHECK_UPDATES_LOG_FILE);
-        return strpos($content, 'Package operations:') !== false;
     }
 }

@@ -35,6 +35,7 @@ declare(strict_types=1);
 
 namespace Treo\Jobs;
 
+use Espo\Core\DataManager;
 use Espo\Core\Jobs\Base;
 use Treo\Console\AbstractConsole;
 
@@ -47,10 +48,21 @@ class CheckUpdates extends Base
         $php = AbstractConsole::getPhpBinPath($this->getConfig());
         $log = self::CHECK_UPDATES_LOG_FILE;
 
-        if (file_exists($log)){
+        if (file_exists($log)) {
             unlink($log);
         }
 
         exec("$php composer.phar update --dry-run >> $log 2>&1");
+
+        DataManager::pushPublicData('isNeedToUpdate', self::isUpdatesAvailable());
+    }
+
+    public static function isUpdatesAvailable(): bool
+    {
+        if (!file_exists(self::CHECK_UPDATES_LOG_FILE)) {
+            return false;
+        }
+
+        return strpos(file_get_contents(self::CHECK_UPDATES_LOG_FILE), 'Package operations:') !== false;
     }
 }

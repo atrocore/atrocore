@@ -472,7 +472,7 @@ Espo.define('views/site/navbar', 'view', function (Dep) {
             setInterval(() => {
                 let $composerLi = $('a[data-action="composerUpdate"]').parent();
                 let isNeedToUpdate = localStorage.getItem('pd_isNeedToUpdate') || false;
-                if (isNeedToUpdate === '1') {
+                if (isNeedToUpdate === 'true') {
                     $composerLi.removeClass('disabled');
                 } else {
                     $composerLi.addClass('disabled');
