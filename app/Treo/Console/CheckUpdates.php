@@ -33,26 +33,37 @@
 
 declare(strict_types=1);
 
-namespace Treo\Configs;
+namespace Treo\Console;
 
-use Treo\Console;
+use Treo\Jobs\CheckUpdates as Job;
 
-return [
-    "refresh translations"         => Console\RefreshTranslations::class,
-    "list"                         => Console\ListCommand::class,
-    "install demo-project"         => Console\InstallDemoProject::class,
-    "clear cache"                  => Console\ClearCache::class,
-    "cleanup"                      => Console\Cleanup::class,
-    "sql diff --show"              => Console\SqlDiff::class,
-    "sql diff --run"               => Console\SqlDiffRun::class,
-    "cron"                         => Console\Cron::class,
-    "store --refresh"              => Console\StoreRefresh::class,
-    "migrate <module> <from> <to>" => Console\Migrate::class,
-    "apidocs --generate"           => Console\GenerateApidocs::class,
-    "qm <stream> --run"            => Console\QueueManager::class,
-    "qm item <id> --run"           => Console\QueueItem::class,
-    "notifications --refresh"      => Console\Notification::class,
-    "kill daemons"                 => Console\KillDaemons::class,
-    "daemon <name> <id>"           => Console\Daemon::class,
-    "check updates"                => Console\CheckUpdates::class,
-];
+class CheckUpdates extends AbstractConsole
+{
+    /**
+     * @inheritDoc
+     */
+    public static function getDescription(): string
+    {
+        return 'Check is system need to be updated.';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function run(array $data): void
+    {
+        (new Job($this->getContainer()))->run();
+
+        if (self::isUpdatesAvailable()) {
+            self::show('Updates available.', self::SUCCESS);
+        } else {
+            self::show('There is nothing to update.', self::SUCCESS);
+        }
+    }
+
+    public static function isUpdatesAvailable(): bool
+    {
+        $content = file_get_contents(Job::CHECK_UPDATES_LOG_FILE);
+        return strpos($content, 'Package operations:') !== false;
+    }
+}

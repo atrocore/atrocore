@@ -33,26 +33,24 @@
 
 declare(strict_types=1);
 
-namespace Treo\Configs;
+namespace Treo\Jobs;
 
-use Treo\Console;
+use Espo\Core\Jobs\Base;
+use Treo\Console\AbstractConsole;
 
-return [
-    "refresh translations"         => Console\RefreshTranslations::class,
-    "list"                         => Console\ListCommand::class,
-    "install demo-project"         => Console\InstallDemoProject::class,
-    "clear cache"                  => Console\ClearCache::class,
-    "cleanup"                      => Console\Cleanup::class,
-    "sql diff --show"              => Console\SqlDiff::class,
-    "sql diff --run"               => Console\SqlDiffRun::class,
-    "cron"                         => Console\Cron::class,
-    "store --refresh"              => Console\StoreRefresh::class,
-    "migrate <module> <from> <to>" => Console\Migrate::class,
-    "apidocs --generate"           => Console\GenerateApidocs::class,
-    "qm <stream> --run"            => Console\QueueManager::class,
-    "qm item <id> --run"           => Console\QueueItem::class,
-    "notifications --refresh"      => Console\Notification::class,
-    "kill daemons"                 => Console\KillDaemons::class,
-    "daemon <name> <id>"           => Console\Daemon::class,
-    "check updates"                => Console\CheckUpdates::class,
-];
+class CheckUpdates extends Base
+{
+    public const CHECK_UPDATES_LOG_FILE = 'data/check-updates.log';
+
+    public function run(): void
+    {
+        $php = AbstractConsole::getPhpBinPath($this->getConfig());
+        $log = self::CHECK_UPDATES_LOG_FILE;
+
+        if (file_exists($log)){
+            unlink($log);
+        }
+
+        exec("$php composer.phar update --dry-run >> $log 2>&1");
+    }
+}

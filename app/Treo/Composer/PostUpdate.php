@@ -812,6 +812,11 @@ class PostUpdate
             file_put_contents(self::STABLE_COMPOSER_JSON, file_get_contents('composer.json'));
         }
 
+        $checkUpdatesLog = 'data/check-updates.log';
+        if (file_exists($checkUpdatesLog)) {
+            unlink($checkUpdatesLog);
+        }
+
         self::renderLine('Done!');
         exit(0);
     }
