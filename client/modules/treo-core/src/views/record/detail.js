@@ -120,14 +120,10 @@ Espo.define('treo-core:views/record/detail', 'class-replace!treo-core:views/reco
                         (this.getConfig().get('inputLanguageList') || []).length
                     ) {
                         let hiddenLocales = currentLocaleFilter ? this.getConfig().get('inputLanguageList').filter(lang => lang !== currentLocaleFilter) : [];
-                        fieldView.setHiddenLocales(hiddenLocales);
-                        let langFieldNameList = fieldView.getLangFieldNameList();
-                        langFieldNameList = langFieldNameList.filter(field => this.checkFieldValue(currentFieldFilter, fieldView.model.get(field), fieldView.isRequired()));
-                        fieldView.langFieldNameList = langFieldNameList;
                         fieldView.hideMainOption = (showGenericFields !== null && typeof showGenericFields !== 'undefined' && !showGenericFields)
                             || !this.checkFieldValue(currentFieldFilter, fieldView.model.get(name), fieldView.isRequired());
                         fieldView.expandLocales = fieldView.hideMainOption || !!(hiddenLocales.length || currentLocaleFilter);
-                        this.controlFieldVisibility(fieldView, !fieldView.langFieldNameList.length && fieldView.hideMainOption);
+                        this.controlFieldVisibility(fieldView, fieldView.hideMainOption);
                         fieldView.reRender();
                     } else {
                         let actualFields = this.getFieldManager().getActualAttributeList(fieldView.model.getFieldType(name), name);
