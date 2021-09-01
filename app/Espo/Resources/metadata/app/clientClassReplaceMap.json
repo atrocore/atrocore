@@ -59,9 +59,6 @@
   "views/record/detail-bottom": [
     "treo-core"
   ],
-  "views/record/edit": [
-    "treo-core"
-  ],
   "views/record/list": [
     "treo-core"
   ],

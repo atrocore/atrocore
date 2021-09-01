@@ -79,6 +79,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 edit: true
             },
             {
+                name: 'saveAndNext',
+                label: 'Save and edit next',
+                edit: true
+            },
+            {
                 name: 'cancelEdit',
                 label: 'Cancel',
                 edit: true
@@ -160,6 +165,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         actionSave: function () {
             if (this.save(null, true)) {
                 this.setDetailMode();
+                $(window).scrollTop(0)
+            }
+        },
+
+        actionSaveAndNext: function () {
+            if (this.save(null, true)) {
+                this.actionNext();
                 $(window).scrollTop(0)
             }
         },
@@ -952,15 +964,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             var scope = model.name || this.scope;
 
-            var url;
+            let mode = 'view';
             if (this.mode === 'edit') {
-                url = '#' + scope + '/edit/' + id;
-            } else {
-                url = '#' + scope + '/view/' + id;
+                mode = 'edit';
             }
 
-            this.getRouter().navigate('#' + scope + '/view/' + id, {trigger: false});
-            this.getRouter().dispatch(scope, 'view', {
+            this.getRouter().navigate('#' + scope + '/' + mode + '/' + id, {trigger: false});
+            this.getRouter().dispatch(scope, mode, {
                 id: id,
                 model: model,
                 indexOfRecord: indexOfRecord
