@@ -726,6 +726,15 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             }
 
+            if (!nextButtonEnabled) {
+                this.buttonEditList = (this.buttonEditList || []).filter(row => {
+                    return row.name !== 'saveAndNext';
+                });
+                this.buttonList = (this.buttonList || []).filter(row => {
+                    return row.name !== 'saveAndNext';
+                });
+            }
+
             return {
                 scope: this.scope,
                 entityType: this.entityType,
