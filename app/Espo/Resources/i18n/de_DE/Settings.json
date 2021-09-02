@@ -137,6 +137,7 @@
     "Admin Notifications": "Admin Notifications",
     "System Notifications": "System-Meldungen",
     "notAllowByContent": "Nicht zulassen, nach Dateiinhalt prüfen",
+    "notAllowByName": "Nicht zulassen, nach Dateinamen",
     "notAllowByContentAndName": "Nicht zulassen, nach Dateinamen + Dateiinhalt prüfen",
     "allow": "Zulassen",
     "Locale": "Lokale Einstellungen",

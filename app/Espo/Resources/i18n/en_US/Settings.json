@@ -153,6 +153,7 @@
     "Representation": "Representation",
     "System Notifications": "System Notifications",
     "notAllowByContent": "Not allow, check by file content",
+    "notAllowByName": "Not allow, check by file name",
     "notAllowByContentAndName": "Not allow, check by file name + file content",
     "allow": "Allow",
     "System": "System",

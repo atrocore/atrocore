@@ -193,6 +193,8 @@ class Attachment extends Record
 
         if ($duplicateParam == 'notAllowByContent') {
             $entity = $this->getRepository()->where(['md5' => $attachment->md5])->findOne();
+        } elseif ($duplicateParam == 'notAllowByName') {
+            $entity = $this->getRepository()->where(['name' => $attachment->name])->findOne();
         } elseif ($duplicateParam == 'notAllowByContentAndName') {
             $entity = $this->getRepository()->where(['md5' => $attachment->md5, 'name' => $attachment->name])->findOne();
         }

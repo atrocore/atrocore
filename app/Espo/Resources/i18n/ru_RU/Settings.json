@@ -164,6 +164,7 @@
     "Representation": "Представление",
     "System Notifications": "Системные уведомления",
     "notAllowByContent": "Не разрешено, проверка по содержимому файла",
+    "notAllowByName": "Не разрешено, проверка по имени файла",
     "notAllowByContentAndName": "Не разрешено, проверка по имени файла + содержимому файла",
     "allow": "Разрешено",
     "SMTP": "SMTP"

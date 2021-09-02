@@ -17,6 +17,7 @@
       "default": "notAllowByContent",
       "options": [
         "notAllowByContent",
+        "notAllowByName",
         "notAllowByContentAndName",
         "allow"
       ]
