@@ -128,6 +128,10 @@ abstract class AbstractModule
         return false;
     }
 
+    public function prepareApiDocs(array &$data): void
+    {
+    }
+
     /**
      * @return string
      */

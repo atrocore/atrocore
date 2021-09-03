@@ -35,6 +35,7 @@ declare(strict_types=1);
 
 namespace Treo\Core;
 
+use Espo\Core\OpenApiGenerator;
 use Espo\Core\Utils\Api\Auth as ApiAuth;
 use Espo\Core\Utils\Json;
 use Espo\Core\EntryPointManager;
@@ -216,7 +217,7 @@ class Application
     protected function showOpenApiJson(): void
     {
         header('Content-Type: application/json; charset=utf-8');
-        echo json_encode(['foo']);
+        echo Json::encode((new OpenApiGenerator($this->getContainer()))->getData());
         exit;
     }
 
