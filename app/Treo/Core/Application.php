@@ -151,6 +151,11 @@ class Application
                 $this->runApi($query);
             }
 
+            // generate openapi json
+            if (preg_match('/^openapi\.json$/', $query)) {
+                $this->showOpenApiJson();
+            }
+
             // for portal
             $portalId = array_search($this->getConfig()->get('siteUrl', '') . '/' . $query, self::getPortalUrlFileData());
             if (!empty($portalId)) {
@@ -206,6 +211,13 @@ class Application
     public function isInstalled(): bool
     {
         return file_exists($this->getConfig()->getConfigPath()) && $this->getConfig()->get('isInstalled');
+    }
+
+    protected function showOpenApiJson(): void
+    {
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode(['foo']);
+        exit;
     }
 
     /**
