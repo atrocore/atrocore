@@ -223,6 +223,7 @@ class OpenApiGenerator
                         $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'string'];
                 }
             }
+            $schemas[$entityName] = $result['components']['schemas'][$entityName];
         }
 
         foreach ($metadata->get(['scopes'], []) as $scopeName => $scopeData) {
@@ -231,6 +232,27 @@ class OpenApiGenerator
             }
 
             $result['tags'][] = ['name' => $scopeName];
+
+            // prepare schema data
+            $schema = null;
+            if (isset($schemas[$scopeName])) {
+                $schema = $schemas[$scopeName];
+                unset($schema['properties']['id']);
+                unset($schema['properties']['deleted']);
+
+                foreach ($schema['properties'] as $k => $v) {
+                    if (
+                        substr($k, 0, 1) === '_'
+                        || substr($k, -4) === 'Name'
+                        || substr($k, -5) === 'Names'
+                        || $k === 'createdAt'
+                        || $k === 'modifiedAt'
+                        || $k === 'createdById'
+                    ) {
+                        unset($schema['properties'][$k]);
+                    }
+                }
+            }
 
             $result['paths']["/{$scopeName}"] = [
                 'get' => [
@@ -317,6 +339,25 @@ class OpenApiGenerator
                             "required" => true,
                             "schema"   => [
                                 "type" => "string"
+                            ]
+                        ],
+                    ],
+                    "responses"   => $this->prepareResponses(['$ref' => "#/components/schemas/$scopeName"])
+                ]
+            ];
+
+            $result['paths']["/{$scopeName}"] = [
+                'post' => [
+                    'tags'        => [$scopeName],
+                    "summary"     => "Create a record of the $scopeName",
+                    "description" => "Create a record of the $scopeName",
+                    "operationId" => "create{$scopeName}Item",
+                    'security'    => [['Authorization-Token' => []]],
+                    'requestBody' => [
+                        'required' => true,
+                        'content'  => [
+                            'application/json' => [
+                                'schema' => $schema
                             ]
                         ],
                     ],
