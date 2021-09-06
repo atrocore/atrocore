@@ -137,7 +137,6 @@ class OpenApiGenerator
                 ]
             ],
             'components'   => [
-                'schemas'         => [],
                 'securitySchemes' => [
                     'basicAuth'           => [
                         'type'   => 'http',
