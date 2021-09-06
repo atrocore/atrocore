@@ -59,14 +59,88 @@ class OpenApiGenerator
                     'url' => '/api/v1'
                 ]
             ],
-            'tags'       => [],
-            'security'   => [
-                'Authorization-Token' => []
+            'tags'       => [
+                ['name' => 'App']
             ],
-            'paths'      => [],
+            'paths'      => [
+                '/App/user' => [
+                    'get' => [
+                        'tags'        => ['App'],
+                        "summary"     => "Generate authorization token and return authorized user data.",
+                        "description" => "Generate authorization token and return authorized user data.",
+                        "operationId" => "getAuthorizedUserData",
+                        'security'    => [['basicAuth' => []]],
+                        'parameters'  => [
+                            [
+                                "name"     => "Authorization-Token-Only",
+                                "in"       => "header",
+                                "required" => true,
+                                "schema"   => [
+                                    "type"    => "boolean",
+                                    "example" => "true"
+                                ]
+                            ],
+                            [
+                                "name"     => "Authorization-Token-Lifetime",
+                                "in"       => "header",
+                                "required" => false,
+                                "schema"   => [
+                                    "type"    => "integer",
+                                    "example" => "0"
+                                ]
+                            ],
+                            [
+                                "name"     => "Authorization-Token-Idletime",
+                                "in"       => "header",
+                                "required" => false,
+                                "schema"   => [
+                                    "type"    => "integer",
+                                    "example" => "0"
+                                ]
+                            ],
+                        ],
+                        "responses"   => [
+                            "200" => [
+                                "description" => "OK",
+                                "content"     => [
+                                    "application/json" => [
+                                        "schema" => [
+                                            "type"       => "object",
+                                            "properties" => [
+                                                "authorizationToken" => [
+                                                    "type" => "string",
+                                                ],
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ],
+                            "400" => [
+                                "description" => "Bad Request"
+                            ],
+                            "401" => [
+                                "description" => "Unauthorized"
+                            ],
+                            "403" => [
+                                "description" => "Forbidden"
+                            ],
+                            "404" => [
+                                "description" => "Not Found"
+                            ],
+                            "500" => [
+                                "description" => "Internal Server Error"
+                            ],
+                        ]
+                    ]
+                ]
+            ],
             'components' => [
                 'schemas'         => [],
                 'securitySchemes' => [
+                    'basicAuth'           => [
+                        'type'   => 'http',
+                        'scheme' => 'basic',
+                    ],
                     'Authorization-Token' => [
                         'type' => 'apiKey',
                         'name' => 'Authorization-Token',
@@ -79,14 +153,86 @@ class OpenApiGenerator
         /** @var Metadata $metadata */
         $metadata = $this->container->get('metadata');
 
+        foreach ($metadata->get(['entityDefs'], []) as $entityName => $data) {
+            if (empty($data['fields'])) {
+                continue;
+            }
+
+            $result['components']['schemas'][$entityName] = [
+                'type'       => 'object',
+                'properties' => [
+                    'id'      => ['type' => 'string'],
+                    'deleted' => ['type' => 'boolean'],
+                ],
+            ];
+
+            foreach ($data['fields'] as $fieldName => $fieldData) {
+                if (!empty($fieldData['noLoad']) || !empty($fieldData['emHidden'])) {
+                    continue 1;
+                }
+
+                if (!empty($fieldData['required'])) {
+                    if (empty($result['components']['schemas'][$entityName]['required'])) {
+                        $result['components']['schemas'][$entityName]['required'] = [];
+                    }
+                    $result['components']['schemas'][$entityName]['required'][] = $fieldName;
+                }
+
+                switch ($fieldData['type']) {
+                    case "autoincrement":
+                    case "int":
+                        $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'integer'];
+                        break;
+                    case "bool":
+                        $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'boolean'];
+                        break;
+                    case "jsonArray":
+                    case "jsonObject":
+                        $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'object'];
+                        break;
+                    case "currency":
+                        $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'string'];
+                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Currency"] = ['type' => 'string'];
+                        break;
+                    case "unit":
+                        $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'string'];
+                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Unit"] = ['type' => 'string'];
+                        break;
+                    case "array":
+                    case "multiEnum":
+                        $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'array', 'items' => ['type' => 'string']];
+                        break;
+                    case "asset":
+                    case "file":
+                    case "image":
+                    case "link":
+                    case "linkParent":
+                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Id"] = ['type' => 'string'];
+                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Name"] = ['type' => 'string'];
+                        break;
+                    case "linkMultiple":
+                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Ids"] = ['type' => 'array', 'items' => ['type' => 'string']];
+                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Names"] = ['type' => 'object'];
+                        break;
+                    default:
+                        $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'string'];
+                }
+            }
+        }
+
         foreach ($metadata->get(['scopes'], []) as $scopeName => $scopeData) {
-            $result['tags'][] = $scopeName;
+            if (!isset($result['components']['schemas'][$scopeName])) {
+                continue 1;
+            }
+
+            $result['tags'][] = ['name' => $scopeName];
             $result['paths']["/{$scopeName}"] = [
                 'get' => [
                     'tags'        => [$scopeName],
                     "summary"     => "Returns a collection of $scopeName items",
                     "description" => "Returns a collection of $scopeName items",
-                    "operationId" => "list",
+                    "operationId" => "getListOf{$scopeName}Items",
+                    'security'    => [['Authorization-Token' => []]],
                     'parameters'  => [
                         [
                             "name"     => "select",
@@ -174,66 +320,6 @@ class OpenApiGenerator
                     ]
                 ]
             ];
-        }
-
-        foreach ($metadata->get(['entityDefs'], []) as $entityName => $data) {
-            if (empty($data['fields'])) {
-                continue;
-            }
-
-            $result['components']['schemas'][$entityName] = [
-                'type'       => 'object',
-                'required'   => [],
-                'properties' => [
-                    'id'      => ['type' => 'string'],
-                    'deleted' => ['type' => 'boolean'],
-                ],
-            ];
-
-            foreach ($data['fields'] as $fieldName => $fieldData) {
-                if (!empty($fieldData['noLoad']) || !empty($fieldData['emHidden'])) {
-                    continue 1;
-                }
-                switch ($fieldData['type']) {
-                    case "autoincrement":
-                    case "int":
-                        $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'integer'];
-                        break;
-                    case "bool":
-                        $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'boolean'];
-                        break;
-                    case "jsonArray":
-                    case "jsonObject":
-                        $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'object'];
-                        break;
-                    case "currency":
-                        $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'string'];
-                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Currency"] = ['type' => 'string'];
-                        break;
-                    case "unit":
-                        $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'string'];
-                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Unit"] = ['type' => 'string'];
-                        break;
-                    case "array":
-                    case "multiEnum":
-                        $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'array', 'items' => ['type' => 'string']];
-                        break;
-                    case "asset":
-                    case "file":
-                    case "image":
-                    case "link":
-                    case "linkParent":
-                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Id"] = ['type' => 'string'];
-                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Name"] = ['type' => 'string'];
-                        break;
-                    case "linkMultiple":
-                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Ids"] = ['type' => 'array', 'items' => ['type' => 'string']];
-                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Names"] = ['type' => 'object'];
-                        break;
-                    default:
-                        $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'string'];
-                }
-            }
         }
 
         foreach ($this->container->get('moduleManager')->getModules() as $module) {

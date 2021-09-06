@@ -59,7 +59,9 @@ class AppController extends AbstractListener
         $language = $event->getArgument('request')->get('language');
         $currentLanguage = $result['language'] ?? '';
 
-        $this->hideDashletsWithEmptyEntity($result['preferences']);
+        if (!empty($result['preferences'])) {
+            $this->hideDashletsWithEmptyEntity($result['preferences']);
+        }
 
         if (!empty($result['user']) && !empty($language) && $currentLanguage !== $language) {
             /** @var Entity $preferences */
