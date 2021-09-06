@@ -234,8 +234,8 @@ class OpenApiGenerator
             $result['paths']["/{$scopeName}"] = [
                 'get' => [
                     'tags'        => [$scopeName],
-                    "summary"     => "Returns a collection of $scopeName items",
-                    "description" => "Returns a collection of $scopeName items",
+                    "summary"     => "Returns a collection of $scopeName records",
+                    "description" => "Returns a collection of $scopeName records",
                     "operationId" => "getListOf{$scopeName}Items",
                     'security'    => [['Authorization-Token' => []]],
                     'parameters'  => [
@@ -303,6 +303,52 @@ class OpenApiGenerator
                                                 ]
                                             ],
                                         ]
+                                    ]
+                                ]
+                            ]
+                        ],
+                        "400" => [
+                            "description" => "Bad Request"
+                        ],
+                        "401" => [
+                            "description" => "Unauthorized"
+                        ],
+                        "403" => [
+                            "description" => "Forbidden"
+                        ],
+                        "404" => [
+                            "description" => "Not Found"
+                        ],
+                        "500" => [
+                            "description" => "Internal Server Error"
+                        ],
+                    ]
+                ]
+            ];
+            $result['paths']["/{$scopeName}/{id}"] = [
+                'get' => [
+                    'tags'        => [$scopeName],
+                    "summary"     => "Returns a record of the $scopeName",
+                    "description" => "Returns a record of the $scopeName",
+                    "operationId" => "get{$scopeName}Item",
+                    'security'    => [['Authorization-Token' => []]],
+                    'parameters'  => [
+                        [
+                            "name"     => "id",
+                            "in"       => "path",
+                            "required" => true,
+                            "schema"   => [
+                                "type" => "string"
+                            ]
+                        ],
+                    ],
+                    "responses"   => [
+                        "200" => [
+                            "description" => "OK",
+                            "content"     => [
+                                "application/json" => [
+                                    "schema" => [
+                                        '$ref' => "#/components/schemas/$scopeName"
                                     ]
                                 ]
                             ]
