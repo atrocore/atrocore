@@ -49,20 +49,21 @@ class OpenApiGenerator
     public function getData(): array
     {
         $result = [
-            'openapi'    => '3.0.0',
-            'info'       => [
-                'version' => '1.0.0',
-                'title'   => 'AtroCore REST API documentation'
+            'openapi'      => '3.0.0',
+            'info'         => [
+                'version'     => '1.0.0',
+                'title'       => 'AtroCore REST API documentation',
+                'description' => "This is REST API documentation for AtroCore, AtroPim, AtroDam and other modules, which is based on OpenApi (swagger). You can find out more about Swagger at [http://swagger.io](http://swagger.io). You can generate your client [here](https://openapi-generator.tech/docs/generators)."
             ],
-            'servers'    => [
+            'servers'      => [
                 [
                     'url' => '/api/v1'
                 ]
             ],
-            'tags'       => [
+            'tags'         => [
                 ['name' => 'App']
             ],
-            'paths'      => [
+            'paths'        => [
                 '/App/user' => [
                     'get' => [
                         'tags'        => ['App'],
@@ -81,10 +82,11 @@ class OpenApiGenerator
                                 ]
                             ],
                             [
-                                "name"     => "Authorization-Token-Lifetime",
-                                "in"       => "header",
-                                "required" => false,
-                                "schema"   => [
+                                "name"        => "Authorization-Token-Lifetime",
+                                "description" => 'qwe 123',
+                                "in"          => "header",
+                                "required"    => false,
+                                "schema"      => [
                                     "type"    => "integer",
                                     "example" => "0"
                                 ]
@@ -134,7 +136,7 @@ class OpenApiGenerator
                     ]
                 ]
             ],
-            'components' => [
+            'components'   => [
                 'schemas'         => [],
                 'securitySchemes' => [
                     'basicAuth'           => [
@@ -148,6 +150,10 @@ class OpenApiGenerator
                     ]
                 ]
             ],
+            'externalDocs' => [
+                'description' => 'How to authorize?',
+                'url'         => 'https://github.com/atrocore/atrocore-docs/blob/master/en/developer-guide/rest-api.md'
+            ]
         ];
 
         /** @var Metadata $metadata */
