@@ -231,6 +231,7 @@ class OpenApiGenerator
             }
 
             $result['tags'][] = ['name' => $scopeName];
+
             $result['paths']["/{$scopeName}"] = [
                 'get' => [
                     'tags'        => [$scopeName],
@@ -285,46 +286,23 @@ class OpenApiGenerator
                             ]
                         ],
                     ],
-                    "responses"   => [
-                        "200" => [
-                            "description" => "OK",
-                            "content"     => [
-                                "application/json" => [
-                                    "schema" => [
-                                        "type"       => "object",
-                                        "properties" => [
-                                            "total" => [
-                                                "type" => "integer"
-                                            ],
-                                            "list"  => [
-                                                "type"  => "array",
-                                                "items" => [
-                                                    '$ref' => "#/components/schemas/$scopeName"
-                                                ]
-                                            ],
-                                        ]
-                                    ]
+                    "responses"   => $this->prepareResponses([
+                        "type"       => "object",
+                        "properties" => [
+                            "total" => [
+                                "type" => "integer"
+                            ],
+                            "list"  => [
+                                "type"  => "array",
+                                "items" => [
+                                    '$ref' => "#/components/schemas/$scopeName"
                                 ]
-                            ]
-                        ],
-                        "400" => [
-                            "description" => "Bad Request"
-                        ],
-                        "401" => [
-                            "description" => "Unauthorized"
-                        ],
-                        "403" => [
-                            "description" => "Forbidden"
-                        ],
-                        "404" => [
-                            "description" => "Not Found"
-                        ],
-                        "500" => [
-                            "description" => "Internal Server Error"
-                        ],
-                    ]
+                            ],
+                        ]
+                    ]),
                 ]
             ];
+
             $result['paths']["/{$scopeName}/{id}"] = [
                 'get' => [
                     'tags'        => [$scopeName],
@@ -342,33 +320,49 @@ class OpenApiGenerator
                             ]
                         ],
                     ],
-                    "responses"   => [
-                        "200" => [
-                            "description" => "OK",
-                            "content"     => [
-                                "application/json" => [
-                                    "schema" => [
-                                        '$ref' => "#/components/schemas/$scopeName"
-                                    ]
-                                ]
+                    "responses"   => $this->prepareResponses(['$ref' => "#/components/schemas/$scopeName"])
+                ]
+            ];
+
+            $result['paths']["/{$scopeName}/{id}/{link}"] = [
+                'get' => [
+                    'tags'        => [$scopeName],
+                    "summary"     => "Returns linked entities for the $scopeName",
+                    "description" => "Returns linked entities for the $scopeName",
+                    "operationId" => "getLinkedItemsFor{$scopeName}Item",
+                    'security'    => [['Authorization-Token' => []]],
+                    'parameters'  => [
+                        [
+                            "name"     => "id",
+                            "in"       => "path",
+                            "required" => true,
+                            "schema"   => [
+                                "type" => "string"
                             ]
                         ],
-                        "400" => [
-                            "description" => "Bad Request"
+                        [
+                            "name"     => "link",
+                            "in"       => "path",
+                            "required" => true,
+                            "schema"   => [
+                                "type" => "string"
+                            ]
                         ],
-                        "401" => [
-                            "description" => "Unauthorized"
-                        ],
-                        "403" => [
-                            "description" => "Forbidden"
-                        ],
-                        "404" => [
-                            "description" => "Not Found"
-                        ],
-                        "500" => [
-                            "description" => "Internal Server Error"
-                        ],
-                    ]
+                    ],
+                    "responses"   => $this->prepareResponses([
+                        "type"       => "object",
+                        "properties" => [
+                            "total" => [
+                                "type" => "integer"
+                            ],
+                            "list"  => [
+                                "type"  => "array",
+                                "items" => [
+                                    "type" => "object"
+                                ]
+                            ],
+                        ]
+                    ]),
                 ]
             ];
         }
@@ -378,5 +372,34 @@ class OpenApiGenerator
         }
 
         return $result;
+    }
+
+    protected function prepareResponses(array $success): array
+    {
+        return [
+            "200" => [
+                "description" => "OK",
+                "content"     => [
+                    "application/json" => [
+                        "schema" => $success
+                    ]
+                ]
+            ],
+            "400" => [
+                "description" => "Bad Request"
+            ],
+            "401" => [
+                "description" => "Unauthorized"
+            ],
+            "403" => [
+                "description" => "Forbidden"
+            ],
+            "404" => [
+                "description" => "Not Found"
+            ],
+            "500" => [
+                "description" => "Internal Server Error"
+            ],
+        ];
     }
 }
