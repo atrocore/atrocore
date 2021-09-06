@@ -94,7 +94,7 @@ class OpenApiGenerator
                             "required" => false,
                             "schema"   => [
                                 "type"    => "string",
-                                "example" => "name,description"
+                                "example" => "name,createdAt"
                             ]
                         ],
                         [
@@ -184,17 +184,51 @@ class OpenApiGenerator
             $result['components']['schemas'][$entityName] = [
                 'type'       => 'object',
                 'required'   => [],
-                'properties' => [],
+                'properties' => [
+                    'id'      => ['type' => 'string'],
+                    'deleted' => ['type' => 'boolean'],
+                ],
             ];
 
             foreach ($data['fields'] as $fieldName => $fieldData) {
+                if (!empty($fieldData['noLoad']) || !empty($fieldData['emHidden'])) {
+                    continue 1;
+                }
                 switch ($fieldData['type']) {
+                    case "autoincrement":
                     case "int":
                         $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'integer'];
                         break;
+                    case "bool":
+                        $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'boolean'];
+                        break;
+                    case "jsonArray":
+                    case "jsonObject":
+                        $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'object'];
+                        break;
+                    case "currency":
+                        $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'string'];
+                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Currency"] = ['type' => 'string'];
+                        break;
+                    case "unit":
+                        $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'string'];
+                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Unit"] = ['type' => 'string'];
+                        break;
+                    case "array":
+                    case "multiEnum":
+                        $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'array', 'items' => ['type' => 'string']];
+                        break;
+                    case "asset":
+                    case "file":
+                    case "image":
                     case "link":
+                    case "linkParent":
                         $result['components']['schemas'][$entityName]['properties']["{$fieldName}Id"] = ['type' => 'string'];
                         $result['components']['schemas'][$entityName]['properties']["{$fieldName}Name"] = ['type' => 'string'];
+                        break;
+                    case "linkMultiple":
+                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Ids"] = ['type' => 'array', 'items' => ['type' => 'string']];
+                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Names"] = ['type' => 'object'];
                         break;
                     default:
                         $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'string'];
