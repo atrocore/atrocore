@@ -254,157 +254,149 @@ class OpenApiGenerator
                 }
             }
 
-            $result['paths']["/{$scopeName}"] = [
-                'get' => [
-                    'tags'        => [$scopeName],
-                    "summary"     => "Returns a collection of $scopeName records",
-                    "description" => "Returns a collection of $scopeName records",
-                    "operationId" => "getListOf{$scopeName}Items",
-                    'security'    => [['Authorization-Token' => []]],
-                    'parameters'  => [
-                        [
-                            "name"     => "select",
-                            "in"       => "query",
-                            "required" => false,
-                            "schema"   => [
-                                "type"    => "string",
-                                "example" => "name,createdAt"
-                            ]
-                        ],
-                        [
-                            "name"     => "offset",
-                            "in"       => "query",
-                            "required" => false,
-                            "schema"   => [
-                                "type"    => "integer",
-                                "example" => 0
-                            ]
-                        ],
-                        [
-                            "name"     => "maxSize",
-                            "in"       => "query",
-                            "required" => false,
-                            "schema"   => [
-                                "type"    => "integer",
-                                "example" => 50
-                            ]
-                        ],
-                        [
-                            "name"     => "sortBy",
-                            "in"       => "query",
-                            "required" => false,
-                            "schema"   => [
-                                "type"    => "string",
-                                "example" => "name"
-                            ]
-                        ],
-                        [
-                            "name"     => "asc",
-                            "in"       => "query",
-                            "required" => false,
-                            "schema"   => [
-                                "type"    => "boolean",
-                                "example" => "true"
-                            ]
-                        ],
-                    ],
-                    "responses"   => $this->prepareResponses([
-                        "type"       => "object",
-                        "properties" => [
-                            "total" => [
-                                "type" => "integer"
-                            ],
-                            "list"  => [
-                                "type"  => "array",
-                                "items" => [
-                                    '$ref' => "#/components/schemas/$scopeName"
-                                ]
-                            ],
+            $result['paths']["/{$scopeName}"]['get'] = [
+                'tags'        => [$scopeName],
+                "summary"     => "Returns a collection of $scopeName records",
+                "description" => "Returns a collection of $scopeName records",
+                "operationId" => "getListOf{$scopeName}Items",
+                'security'    => [['Authorization-Token' => []]],
+                'parameters'  => [
+                    [
+                        "name"     => "select",
+                        "in"       => "query",
+                        "required" => false,
+                        "schema"   => [
+                            "type"    => "string",
+                            "example" => "name,createdAt"
                         ]
-                    ]),
-                ]
-            ];
-
-            $result['paths']["/{$scopeName}/{id}"] = [
-                'get' => [
-                    'tags'        => [$scopeName],
-                    "summary"     => "Returns a record of the $scopeName",
-                    "description" => "Returns a record of the $scopeName",
-                    "operationId" => "get{$scopeName}Item",
-                    'security'    => [['Authorization-Token' => []]],
-                    'parameters'  => [
-                        [
-                            "name"     => "id",
-                            "in"       => "path",
-                            "required" => true,
-                            "schema"   => [
-                                "type" => "string"
-                            ]
-                        ],
                     ],
-                    "responses"   => $this->prepareResponses(['$ref' => "#/components/schemas/$scopeName"])
-                ]
-            ];
-
-            $result['paths']["/{$scopeName}"] = [
-                'post' => [
-                    'tags'        => [$scopeName],
-                    "summary"     => "Create a record of the $scopeName",
-                    "description" => "Create a record of the $scopeName",
-                    "operationId" => "create{$scopeName}Item",
-                    'security'    => [['Authorization-Token' => []]],
-                    'requestBody' => [
-                        'required' => true,
-                        'content'  => [
-                            'application/json' => [
-                                'schema' => $schema
-                            ]
-                        ],
-                    ],
-                    "responses"   => $this->prepareResponses(['$ref' => "#/components/schemas/$scopeName"])
-                ]
-            ];
-
-            $result['paths']["/{$scopeName}/{id}/{link}"] = [
-                'get' => [
-                    'tags'        => [$scopeName],
-                    "summary"     => "Returns linked entities for the $scopeName",
-                    "description" => "Returns linked entities for the $scopeName",
-                    "operationId" => "getLinkedItemsFor{$scopeName}Item",
-                    'security'    => [['Authorization-Token' => []]],
-                    'parameters'  => [
-                        [
-                            "name"     => "id",
-                            "in"       => "path",
-                            "required" => true,
-                            "schema"   => [
-                                "type" => "string"
-                            ]
-                        ],
-                        [
-                            "name"     => "link",
-                            "in"       => "path",
-                            "required" => true,
-                            "schema"   => [
-                                "type" => "string"
-                            ]
-                        ],
-                    ],
-                    "responses"   => $this->prepareResponses([
-                        "type"       => "object",
-                        "properties" => [
-                            "total" => [
-                                "type" => "integer"
-                            ],
-                            "list"  => [
-                                "type"  => "array",
-                                "items" => [
-                                    "type" => "object"
-                                ]
-                            ],
+                    [
+                        "name"     => "offset",
+                        "in"       => "query",
+                        "required" => false,
+                        "schema"   => [
+                            "type"    => "integer",
+                            "example" => 0
                         ]
-                    ]),
-                ]
+                    ],
+                    [
+                        "name"     => "maxSize",
+                        "in"       => "query",
+                        "required" => false,
+                        "schema"   => [
+                            "type"    => "integer",
+                            "example" => 50
+                        ]
+                    ],
+                    [
+                        "name"     => "sortBy",
+                        "in"       => "query",
+                        "required" => false,
+                        "schema"   => [
+                            "type"    => "string",
+                            "example" => "name"
+                        ]
+                    ],
+                    [
+                        "name"     => "asc",
+                        "in"       => "query",
+                        "required" => false,
+                        "schema"   => [
+                            "type"    => "boolean",
+                            "example" => "true"
+                        ]
+                    ],
+                ],
+                "responses"   => $this->prepareResponses([
+                    "type"       => "object",
+                    "properties" => [
+                        "total" => [
+                            "type" => "integer"
+                        ],
+                        "list"  => [
+                            "type"  => "array",
+                            "items" => [
+                                '$ref' => "#/components/schemas/$scopeName"
+                            ]
+                        ],
+                    ]
+                ]),
+            ];
+
+            $result['paths']["/{$scopeName}/{id}"]['get'] = [
+                'tags'        => [$scopeName],
+                "summary"     => "Returns a record of the $scopeName",
+                "description" => "Returns a record of the $scopeName",
+                "operationId" => "get{$scopeName}Item",
+                'security'    => [['Authorization-Token' => []]],
+                'parameters'  => [
+                    [
+                        "name"     => "id",
+                        "in"       => "path",
+                        "required" => true,
+                        "schema"   => [
+                            "type" => "string"
+                        ]
+                    ],
+                ],
+                "responses"   => $this->prepareResponses(['$ref' => "#/components/schemas/$scopeName"])
+            ];
+
+            $result['paths']["/{$scopeName}"]['post'] = [
+                'tags'        => [$scopeName],
+                "summary"     => "Create a record of the $scopeName",
+                "description" => "Create a record of the $scopeName",
+                "operationId" => "create{$scopeName}Item",
+                'security'    => [['Authorization-Token' => []]],
+                'requestBody' => [
+                    'required' => true,
+                    'content'  => [
+                        'application/json' => [
+                            'schema' => $schema
+                        ]
+                    ],
+                ],
+                "responses"   => $this->prepareResponses(['$ref' => "#/components/schemas/$scopeName"])
+            ];
+
+            $result['paths']["/{$scopeName}/{id}/{link}"]['get'] = [
+                'tags'        => [$scopeName],
+                "summary"     => "Returns linked entities for the $scopeName",
+                "description" => "Returns linked entities for the $scopeName",
+                "operationId" => "getLinkedItemsFor{$scopeName}Item",
+                'security'    => [['Authorization-Token' => []]],
+                'parameters'  => [
+                    [
+                        "name"     => "id",
+                        "in"       => "path",
+                        "required" => true,
+                        "schema"   => [
+                            "type" => "string"
+                        ]
+                    ],
+                    [
+                        "name"     => "link",
+                        "in"       => "path",
+                        "required" => true,
+                        "schema"   => [
+                            "type" => "string"
+                        ]
+                    ],
+                ],
+                "responses"   => $this->prepareResponses([
+                    "type"       => "object",
+                    "properties" => [
+                        "total" => [
+                            "type" => "integer"
+                        ],
+                        "list"  => [
+                            "type"  => "array",
+                            "items" => [
+                                "type" => "object"
+                            ]
+                        ],
+                    ]
+                ]),
             ];
         }
 
