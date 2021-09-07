@@ -83,7 +83,6 @@ class OpenApiGenerator
                             ],
                             [
                                 "name"        => "Authorization-Token-Lifetime",
-                                "description" => 'qwe 123',
                                 "in"          => "header",
                                 "required"    => false,
                                 "schema"      => [
