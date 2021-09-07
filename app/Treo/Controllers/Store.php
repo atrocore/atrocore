@@ -43,27 +43,6 @@ use Slim\Http\Request;
  */
 class Store extends \Espo\Core\Controllers\Base
 {
-    /**
-     * @ApiDescription(description="Get store list")
-     * @ApiMethod(type="GET")
-     * @ApiRoute(name="/Store/list")
-     * @ApiReturn(sample="{
-     *     'total': 1,
-     *     'list': [
-     *           {
-     *               'id': 'Revisions',
-     *               'name': 'Revisions',
-     *               'version': '1.0.0',
-     *               'description': 'Module Revisions.',
-     *               'status': 'available'
-     *           }
-     *       ]
-     * }")
-     *
-     * @return array
-     * @throws Exceptions\Forbidden
-     * @throws Exceptions\BadRequest
-     */
     public function actionList($params, $data, Request $request): array
     {
         if (!$this->getUser()->isAdmin()) {
