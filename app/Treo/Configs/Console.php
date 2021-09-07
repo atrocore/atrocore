@@ -48,7 +48,6 @@ return [
     "cron"                         => Console\Cron::class,
     "store --refresh"              => Console\StoreRefresh::class,
     "migrate <module> <from> <to>" => Console\Migrate::class,
-    "apidocs --generate"           => Console\GenerateApidocs::class,
     "qm <stream> --run"            => Console\QueueManager::class,
     "qm item <id> --run"           => Console\QueueItem::class,
     "notifications --refresh"      => Console\Notification::class,

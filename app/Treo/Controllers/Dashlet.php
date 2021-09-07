@@ -45,27 +45,6 @@ use Espo\Core\Controllers\Base;
  */
 class Dashlet extends Base
 {
-
-    /**
-     * Get dashlet
-     *
-     * @ApiDescription(description="Get Dashlet data")
-     * @ApiMethod(type="GET")
-     * @ApiRoute(name="/Dashlet/{dashletName}")
-     * @ApiParams(name="dashletName", type="string", is_required=1, description="Dashlet name")
-     * @ApiReturn(sample="[{
-     *     'total': 'integer',
-     *     'list': 'array'
-     * }]")
-     *
-     * @param         $params
-     * @param         $data
-     * @param Request $request
-     *
-     * @return array
-     * @throws Exceptions\Error
-     * @throws Exceptions\BadRequest
-     */
     public function actionGetDashlet($params, $data, Request $request): array
     {
         // is get?

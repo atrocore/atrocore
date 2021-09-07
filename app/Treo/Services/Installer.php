@@ -255,9 +255,6 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
             // set installed
             $this->getConfig()->set('isInstalled', true);
             $this->getConfig()->save();
-
-            // generate RestApiDocs
-            $this->getContainer()->get('serviceFactory')->create('RestApiDocs')->generateDocumentation();
         } catch (\Exception $e) {
             $GLOBALS['log']->error('Installer Error: ' . $e->getMessage() . ' | ' . $e->getTraceAsString());
             return ['status' => false, 'message' => $e->getMessage()];
@@ -725,9 +722,6 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
         );
         $this->getPdo()->exec(
             "INSERT INTO scheduled_job (id, name, job, status, scheduling) VALUES ('TreoCleanup','Unused data cleanup. Deleting old data and unused db tables, db columns, etc.','TreoCleanup','Active','0 0 1 * *')"
-        );
-        $this->getPdo()->exec(
-            "INSERT INTO scheduled_job (id, name, job, status, scheduling) VALUES ('RestApiDocs','Generate REST API docs','RestApiDocs','Active','0 2 * * *')"
         );
     }
 

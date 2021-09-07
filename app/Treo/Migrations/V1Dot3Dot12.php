@@ -33,22 +33,27 @@
 
 declare(strict_types=1);
 
-namespace Treo\Jobs;
+namespace Treo\Migrations;
 
-use Espo\Core\Jobs\Base;
+use Treo\Core\Migration\Base;
 
-/**
- * RestApiDocs job
- */
-class RestApiDocs extends Base
+class V1Dot3Dot12 extends Base
 {
-    /**
-     * Run cron job
-     *
-     * @return bool
-     */
-    public function run(): bool
+    public function up(): void
     {
-        return $this->getServiceFactory()->create('RestApiDocs')->generateDocumentation();
+        if (file_exists('apidocs/index.html')) {
+            unlink('apidocs/index.html');
+        }
+        copy('vendor/atrocore/core/copy/apidocs/index.html', 'apidocs/index.html');
+
+        try {
+            $this->getPDO()->exec("DELETE FROM scheduled_job WHERE job='RestApiDocs'");
+            $this->getPDO()->exec("DELETE FROM job WHERE name='Generate REST API docs'");
+        } catch (\Throwable $e) {
+        }
+    }
+
+    public function down(): void
+    {
     }
 }

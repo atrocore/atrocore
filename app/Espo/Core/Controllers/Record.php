@@ -399,6 +399,10 @@ class Record extends Base
             }
         }
 
+        if (empty($params['ids'])) {
+            $foreignIdList = $params['ids'];
+        }
+
         $result = false;
         foreach ($foreignIdList as $foreignId) {
             if ($this->getRecordService()->unlinkEntity($id, $link, $foreignId)) {

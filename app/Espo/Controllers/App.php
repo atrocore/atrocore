@@ -66,7 +66,15 @@ class App extends Base
      */
     public function actionUser($params, $data, $request)
     {
-        return $this->getService('App')->getUserData();
+        $data = $this->getService('App')->getUserData();
+        $data['authorizationToken'] = base64_encode("{$data['user']->userName}:{$data['user']->token}");
+
+        $tokenOnly = $request->headers('Authorization-Token-Only');
+        if ($tokenOnly === 'true' || $tokenOnly === '1') {
+            return ['authorizationToken' => $data['authorizationToken']];
+        }
+
+        return $data;
     }
 
     /**

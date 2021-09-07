@@ -7,6 +7,5 @@
   "QueueManagerMassUpdate": "\\Espo\\Services\\QueueManagerMassUpdate",
   "QueueManagerCreateThumbnails": "\\Espo\\Services\\QueueManagerCreateThumbnails",
   "MassActions": "\\Treo\\Services\\MassActions",
-  "RestApiDocs": "\\Treo\\Services\\RestApiDocs",
   "ScheduledJob": "\\Treo\\Services\\ScheduledJob"
 }
