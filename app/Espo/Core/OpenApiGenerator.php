@@ -504,6 +504,136 @@ class OpenApiGenerator
                 ],
                 "responses"   => $this->prepareResponses(['type' => 'boolean'])
             ];
+
+            $result['paths']["/{$scopeName}/{id}/{link}"]['post'] = [
+                'tags'        => [$scopeName],
+                "summary"     => "Link $scopeName to Entities",
+                "description" => "Link $scopeName to Entities",
+                "operationId" => "link{$scopeName}",
+                'security'    => [['Authorization-Token' => []]],
+                'parameters'  => [
+                    [
+                        "name"     => "id",
+                        "in"       => "path",
+                        "required" => true,
+                        "schema"   => [
+                            "type" => "string"
+                        ]
+                    ],
+                    [
+                        "name"     => "link",
+                        "in"       => "path",
+                        "required" => true,
+                        "schema"   => [
+                            "type" => "string"
+                        ]
+                    ],
+                ],
+                'requestBody' => [
+                    'required' => true,
+                    'content'  => [
+                        'application/json' => [
+                            'schema' => [
+                                "type"       => "object",
+                                "properties" => [
+                                    "ids" => [
+                                        "type"    => "array",
+                                        "items"   => [
+                                            "type" => "string"
+                                        ],
+                                        'example' => ["613219736ca7a1c68", "6132197390d69afa5"]
+                                    ],
+                                ],
+                            ]
+                        ]
+                    ],
+                ],
+                "responses"   => $this->prepareResponses(['type' => 'boolean'])
+            ];
+
+            $result['paths']["/{$scopeName}/{id}/{link}"]['delete'] = [
+                'tags'        => [$scopeName],
+                "summary"     => "Unlink $scopeName from Entities",
+                "description" => "Unlink $scopeName from Entities",
+                "operationId" => "unlink{$scopeName}",
+                'security'    => [['Authorization-Token' => []]],
+                'parameters'  => [
+                    [
+                        "name"     => "id",
+                        "in"       => "path",
+                        "required" => true,
+                        "schema"   => [
+                            "type" => "string"
+                        ]
+                    ],
+                    [
+                        "name"     => "link",
+                        "in"       => "path",
+                        "required" => true,
+                        "schema"   => [
+                            "type" => "string"
+                        ]
+                    ],
+                ],
+                'requestBody' => [
+                    'required' => true,
+                    'content'  => [
+                        'application/json' => [
+                            'schema' => [
+                                "type"       => "object",
+                                "properties" => [
+                                    "ids" => [
+                                        "type"    => "array",
+                                        "items"   => [
+                                            "type" => "string"
+                                        ],
+                                        'example' => ["613219736ca7a1c68", "6132197390d69afa5"]
+                                    ],
+                                ],
+                            ]
+                        ]
+                    ],
+                ],
+                "responses"   => $this->prepareResponses(['type' => 'boolean'])
+            ];
+
+            $result['paths']["/{$scopeName}/{id}/subscription"]['put'] = [
+                'tags'        => [$scopeName],
+                "summary"     => "Follow the $scopeName stream",
+                "description" => "Follow the $scopeName stream",
+                "operationId" => "follow{$scopeName}",
+                'security'    => [['Authorization-Token' => []]],
+                'parameters'  => [
+                    [
+                        "name"     => "id",
+                        "in"       => "path",
+                        "required" => true,
+                        "schema"   => [
+                            "type" => "string"
+                        ]
+                    ]
+                ],
+                "responses"   => $this->prepareResponses(['type' => 'boolean'])
+            ];
+
+            $result['paths']["/{$scopeName}/{id}/subscription"]['delete'] = [
+                'tags'        => [$scopeName],
+                "summary"     => "Unfollow the $scopeName stream",
+                "description" => "Unfollow the $scopeName stream",
+                "operationId" => "unfollow{$scopeName}",
+                'security'    => [['Authorization-Token' => []]],
+                'parameters'  => [
+                    [
+                        "name"     => "id",
+                        "in"       => "path",
+                        "required" => true,
+                        "schema"   => [
+                            "type" => "string"
+                        ]
+                    ]
+                ],
+                "responses"   => $this->prepareResponses(['type' => 'boolean'])
+            ];
         }
 
         foreach ($this->container->get('moduleManager')->getModules() as $module) {
