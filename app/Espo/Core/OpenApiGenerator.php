@@ -359,6 +359,52 @@ class OpenApiGenerator
                 "responses"   => $this->prepareResponses(['$ref' => "#/components/schemas/$scopeName"])
             ];
 
+            $result['paths']["/{$scopeName}/{id}"]['put'] = [
+                'tags'        => [$scopeName],
+                "summary"     => "Update a record of the $scopeName",
+                "description" => "Update a record of the $scopeName",
+                "operationId" => "update{$scopeName}Item",
+                'security'    => [['Authorization-Token' => []]],
+                'parameters'  => [
+                    [
+                        "name"     => "id",
+                        "in"       => "path",
+                        "required" => true,
+                        "schema"   => [
+                            "type" => "string"
+                        ]
+                    ],
+                ],
+                'requestBody' => [
+                    'required' => true,
+                    'content'  => [
+                        'application/json' => [
+                            'schema' => $schema
+                        ]
+                    ],
+                ],
+                "responses"   => $this->prepareResponses(['$ref' => "#/components/schemas/$scopeName"])
+            ];
+
+            $result['paths']["/{$scopeName}/{id}"]['delete'] = [
+                'tags'        => [$scopeName],
+                "summary"     => "Delete a record of the $scopeName",
+                "description" => "Delete a record of the $scopeName",
+                "operationId" => "delete{$scopeName}Item",
+                'security'    => [['Authorization-Token' => []]],
+                'parameters'  => [
+                    [
+                        "name"     => "id",
+                        "in"       => "path",
+                        "required" => true,
+                        "schema"   => [
+                            "type" => "string"
+                        ]
+                    ],
+                ],
+                "responses"   => $this->prepareResponses(['type' => 'boolean'])
+            ];
+
             $result['paths']["/{$scopeName}/{id}/{link}"]['get'] = [
                 'tags'        => [$scopeName],
                 "summary"     => "Returns linked entities for the $scopeName",
