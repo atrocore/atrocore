@@ -249,11 +249,8 @@ class Composer extends \Espo\Core\Templates\Services\HasContainer
                     'id'             => 'TreoCore',
                     'name'           => $this->translate('Core'),
                     'description'    => $this->translate('Core', 'descriptions'),
-                    'settingVersion' => self::getComposerJson()['require']['atrocore/core'],
                     'currentVersion' => self::getCoreVersion(),
-                    'versions'       => [],
                     'isSystem'       => true,
-                    'isComposer'     => true,
                     'status'         => '',
                 ]
             ]
@@ -271,18 +268,10 @@ class Composer extends \Espo\Core\Templates\Services\HasContainer
                 'id'             => $id,
                 'name'           => (empty($module->getName())) ? $id : $module->getName(),
                 'description'    => $module->getDescription(),
-                'settingVersion' => '*',
                 'currentVersion' => $module->getVersion(),
-                'versions'       => [],
                 'isSystem'       => $module->isSystem(),
-                'isComposer'     => !empty($module->getVersion()),
                 'status'         => $this->getModuleStatus($composerDiff, $id),
             ];
-
-            // set available versions
-            if (!empty($package = $this->getPackage($id))) {
-                $result['list'][$id]['versions'] = json_decode(json_encode($package->get('versions')), true);
-            }
 
             // set settingVersion
             if (isset($composerData['require'][$module->getComposerName()])) {
@@ -297,27 +286,17 @@ class Composer extends \Espo\Core\Templates\Services\HasContainer
                 'id'             => $row['id'],
                 'name'           => $row['id'],
                 'description'    => '',
-                'settingVersion' => '*',
                 'currentVersion' => '',
                 'isSystem'       => false,
-                'isComposer'     => true,
                 'status'         => 'install'
             ];
 
             // get package
             if (!empty($package = $this->getPackage($row['id']))) {
-                // set name
                 $item['name'] = $package->get('name');
-
-                // set description
                 $item['description'] = $package->get('description');
-
-                // set settingVersion
-                if (!empty($composerData['require'][$package->get('packageId')])) {
-                    $settingVersion = $composerData['require'][$package->get('packageId')];
-                    $item['settingVersion'] = ModuleManager::prepareVersion($settingVersion);
-                }
             }
+
             // push
             $result['list'][$row['id']] = $item;
         }
@@ -358,37 +337,6 @@ class Composer extends \Espo\Core\Templates\Services\HasContainer
 
         // update composer.json
         $this->update($package->get('packageId'), $version);
-
-        return true;
-    }
-
-    /**
-     * Update module
-     *
-     * @param string $id
-     * @param string $version
-     *
-     * @return bool
-     * @throws Exceptions\Error
-     */
-    public function updateModule(string $id, string $version): bool
-    {
-        // prepare params
-        $package = $this->getInstalledModule($id);
-
-        // validation
-        if (empty($this->getPackage($id))) {
-            throw new Exceptions\Error($this->translateError('noSuchModule'));
-        }
-        if (empty($package)) {
-            throw new Exceptions\Error($this->translateError('moduleWasNotInstalled'));
-        }
-        if (!$this->isVersionValid($version)) {
-            throw new Exceptions\Error($this->translateError('versionIsInvalid'));
-        }
-
-        // update composer.json
-        $this->update($package->getComposerName(), $version);
 
         return true;
     }

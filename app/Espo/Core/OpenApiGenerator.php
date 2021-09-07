@@ -744,6 +744,8 @@ class OpenApiGenerator
             ];
         }
 
+        $this->pushComposerActions($result, $schemas);
+
         foreach ($this->container->get('moduleManager')->getModules() as $module) {
             $module->prepareApiDocs($result);
         }
@@ -777,6 +779,244 @@ class OpenApiGenerator
             "500" => [
                 "description" => "Internal Server Error"
             ],
+        ];
+    }
+
+    protected function pushComposerActions(array &$result, array $schemas): void
+    {
+        $result['tags'][] = ['name' => 'Composer'];
+
+        $result['paths']["/Composer/runUpdate"]['post'] = [
+            'tags'        => ['Composer'],
+            "summary"     => "Run update",
+            "description" => "Run update",
+            "operationId" => "runUpdateComposer",
+            'security'    => [['Authorization-Token' => []]],
+            "responses"   => $this->prepareResponses(['type' => 'boolean'])
+        ];
+
+        $result['paths']["/Composer/cancelUpdate"]['delete'] = [
+            'tags'        => ['Composer'],
+            "summary"     => "Cancel changes",
+            "description" => "Cancel changes",
+            "operationId" => "cancelUpdateComposer",
+            'security'    => [['Authorization-Token' => []]],
+            "responses"   => $this->prepareResponses(['type' => 'boolean'])
+        ];
+
+        $result['paths']["/Composer/list"]['get'] = [
+            'tags'        => ['Composer'],
+            "summary"     => "Get installed modules",
+            "description" => "Get installed modules",
+            "operationId" => "getInstalledModules",
+            'security'    => [['Authorization-Token' => []]],
+            'parameters'  => [
+                [
+                    "name"     => "select",
+                    "in"       => "query",
+                    "required" => false,
+                    "schema"   => [
+                        "type"    => "string",
+                        "example" => "name,createdAt"
+                    ]
+                ],
+                [
+                    "name"     => "offset",
+                    "in"       => "query",
+                    "required" => false,
+                    "schema"   => [
+                        "type"    => "integer",
+                        "example" => 0
+                    ]
+                ],
+                [
+                    "name"     => "maxSize",
+                    "in"       => "query",
+                    "required" => false,
+                    "schema"   => [
+                        "type"    => "integer",
+                        "example" => 50
+                    ]
+                ],
+                [
+                    "name"     => "sortBy",
+                    "in"       => "query",
+                    "required" => false,
+                    "schema"   => [
+                        "type"    => "string",
+                        "example" => "name"
+                    ]
+                ],
+                [
+                    "name"     => "asc",
+                    "in"       => "query",
+                    "required" => false,
+                    "schema"   => [
+                        "type"    => "boolean",
+                        "example" => "true"
+                    ]
+                ],
+            ],
+            "responses"   => $this->prepareResponses([
+                "type"       => "object",
+                "properties" => [
+                    "total" => [
+                        "type" => "integer"
+                    ],
+                    "list"  => [
+                        "type"  => "array",
+                        "items" => [
+                            "type"       => "object",
+                            "properties" => [
+                                "id"             => ["type" => "string"],
+                                "description"    => ["type" => "string"],
+                                "currentVersion" => ["type" => "string"],
+                                "status"         => ["type" => "string"],
+                                "isSystem"       => ["type" => "boolean"],
+                            ]
+                        ]
+                    ],
+                ]
+            ]),
+        ];
+
+        $result['paths']["/Composer/installModule"]['post'] = [
+            'tags'        => ['Composer'],
+            "summary"     => "Install module",
+            "description" => "Install module",
+            "operationId" => "installModule",
+            'security'    => [['Authorization-Token' => []]],
+            'requestBody' => [
+                'required' => true,
+                'content'  => [
+                    'application/json' => [
+                        'schema' => [
+                            "type"       => "object",
+                            "properties" => [
+                                "id" => [
+                                    "type" => "string",
+                                ],
+                            ],
+                        ]
+                    ]
+                ],
+            ],
+            "responses"   => $this->prepareResponses(['type' => 'boolean'])
+        ];
+
+        $result['paths']["/Composer/deleteModule"]['delete'] = [
+            'tags'        => ['Composer'],
+            "summary"     => "Delete module",
+            "description" => "Delete module",
+            "operationId" => "deleteModule",
+            'security'    => [['Authorization-Token' => []]],
+            'requestBody' => [
+                'required' => true,
+                'content'  => [
+                    'application/json' => [
+                        'schema' => [
+                            "type"       => "object",
+                            "properties" => [
+                                "id" => [
+                                    "type" => "string",
+                                ],
+                            ],
+                        ]
+                    ]
+                ],
+            ],
+            "responses"   => $this->prepareResponses(['type' => 'boolean'])
+        ];
+
+        $result['paths']["/Composer/cancel"]['post'] = [
+            'tags'        => ['Composer'],
+            "summary"     => "Cancel module changes",
+            "description" => "Cancel module changes",
+            "operationId" => "cancelModule",
+            'security'    => [['Authorization-Token' => []]],
+            'requestBody' => [
+                'required' => true,
+                'content'  => [
+                    'application/json' => [
+                        'schema' => [
+                            "type"       => "object",
+                            "properties" => [
+                                "id" => [
+                                    "type" => "string",
+                                ],
+                            ],
+                        ]
+                    ]
+                ],
+            ],
+            "responses"   => $this->prepareResponses(['type' => 'boolean'])
+        ];
+
+        $result['paths']["/Composer/logs"]['get'] = [
+            'tags'        => ['Composer'],
+            "summary"     => "Get updates logs",
+            "description" => "Get updates logs",
+            "operationId" => "getModulesLogs",
+            'security'    => [['Authorization-Token' => []]],
+            'parameters'  => [
+                [
+                    "name"     => "select",
+                    "in"       => "query",
+                    "required" => false,
+                    "schema"   => [
+                        "type"    => "string",
+                        "example" => "name,createdAt"
+                    ]
+                ],
+                [
+                    "name"     => "offset",
+                    "in"       => "query",
+                    "required" => false,
+                    "schema"   => [
+                        "type"    => "integer",
+                        "example" => 0
+                    ]
+                ],
+                [
+                    "name"     => "maxSize",
+                    "in"       => "query",
+                    "required" => false,
+                    "schema"   => [
+                        "type"    => "integer",
+                        "example" => 50
+                    ]
+                ],
+                [
+                    "name"     => "sortBy",
+                    "in"       => "query",
+                    "required" => false,
+                    "schema"   => [
+                        "type"    => "string",
+                        "example" => "name"
+                    ]
+                ],
+                [
+                    "name"     => "asc",
+                    "in"       => "query",
+                    "required" => false,
+                    "schema"   => [
+                        "type"    => "boolean",
+                        "example" => "true"
+                    ]
+                ],
+            ],
+            "responses"   => $this->prepareResponses([
+                "type"       => "object",
+                "properties" => [
+                    "total" => [
+                        "type" => "integer"
+                    ],
+                    "list"  => [
+                        "type"  => "array",
+                        "items" => $schemas['Note']
+                    ],
+                ]
+            ]),
         ];
     }
 }
