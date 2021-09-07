@@ -128,7 +128,7 @@ abstract class AbstractModule
         return false;
     }
 
-    public function prepareApiDocs(array &$data): void
+    public function prepareApiDocs(array &$data, array $schemas): void
     {
     }
 

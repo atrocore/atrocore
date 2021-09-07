@@ -311,7 +311,7 @@ class OpenApiGenerator
                         ]
                     ],
                 ],
-                "responses"   => $this->prepareResponses([
+                "responses"   => self::prepareResponses([
                     "type"       => "object",
                     "properties" => [
                         "total" => [
@@ -343,7 +343,7 @@ class OpenApiGenerator
                         ]
                     ],
                 ],
-                "responses"   => $this->prepareResponses(['$ref' => "#/components/schemas/$scopeName"])
+                "responses"   => self::prepareResponses(['$ref' => "#/components/schemas/$scopeName"])
             ];
 
             $result['paths']["/{$scopeName}"]['post'] = [
@@ -360,7 +360,7 @@ class OpenApiGenerator
                         ]
                     ],
                 ],
-                "responses"   => $this->prepareResponses(['$ref' => "#/components/schemas/$scopeName"])
+                "responses"   => self::prepareResponses(['$ref' => "#/components/schemas/$scopeName"])
             ];
 
             $result['paths']["/{$scopeName}/{id}"]['put'] = [
@@ -387,7 +387,7 @@ class OpenApiGenerator
                         ]
                     ],
                 ],
-                "responses"   => $this->prepareResponses(['$ref' => "#/components/schemas/$scopeName"])
+                "responses"   => self::prepareResponses(['$ref' => "#/components/schemas/$scopeName"])
             ];
 
             $result['paths']["/{$scopeName}/{id}"]['delete'] = [
@@ -406,7 +406,7 @@ class OpenApiGenerator
                         ]
                     ],
                 ],
-                "responses"   => $this->prepareResponses(['type' => 'boolean'])
+                "responses"   => self::prepareResponses(['type' => 'boolean'])
             ];
 
             $result['paths']["/{$scopeName}/{id}/{link}"]['get'] = [
@@ -433,7 +433,7 @@ class OpenApiGenerator
                         ]
                     ],
                 ],
-                "responses"   => $this->prepareResponses([
+                "responses"   => self::prepareResponses([
                     "type"       => "object",
                     "properties" => [
                         "total" => [
@@ -478,7 +478,7 @@ class OpenApiGenerator
                         ]
                     ],
                 ],
-                "responses"   => $this->prepareResponses(['type' => 'boolean'])
+                "responses"   => self::prepareResponses(['type' => 'boolean'])
             ];
 
             $result['paths']["/{$scopeName}/action/massDelete"]['post'] = [
@@ -506,7 +506,7 @@ class OpenApiGenerator
                         ]
                     ],
                 ],
-                "responses"   => $this->prepareResponses(['type' => 'boolean'])
+                "responses"   => self::prepareResponses(['type' => 'boolean'])
             ];
 
             $result['paths']["/{$scopeName}/{id}/{link}"]['post'] = [
@@ -552,7 +552,7 @@ class OpenApiGenerator
                         ]
                     ],
                 ],
-                "responses"   => $this->prepareResponses(['type' => 'boolean'])
+                "responses"   => self::prepareResponses(['type' => 'boolean'])
             ];
 
             $result['paths']["/{$scopeName}/{id}/{link}"]['delete'] = [
@@ -590,7 +590,7 @@ class OpenApiGenerator
                         ]
                     ],
                 ],
-                "responses"   => $this->prepareResponses(['type' => 'boolean'])
+                "responses"   => self::prepareResponses(['type' => 'boolean'])
             ];
 
             $result['paths']["/{$scopeName}/{id}/subscription"]['put'] = [
@@ -609,7 +609,7 @@ class OpenApiGenerator
                         ]
                     ]
                 ],
-                "responses"   => $this->prepareResponses(['type' => 'boolean'])
+                "responses"   => self::prepareResponses(['type' => 'boolean'])
             ];
 
             $result['paths']["/{$scopeName}/{id}/subscription"]['delete'] = [
@@ -628,7 +628,7 @@ class OpenApiGenerator
                         ]
                     ]
                 ],
-                "responses"   => $this->prepareResponses(['type' => 'boolean'])
+                "responses"   => self::prepareResponses(['type' => 'boolean'])
             ];
 
             $result['paths']["/{$scopeName}/action/getDuplicateAttributes"]['post'] = [
@@ -652,7 +652,7 @@ class OpenApiGenerator
                         ]
                     ],
                 ],
-                "responses"   => $this->prepareResponses($schema)
+                "responses"   => self::prepareResponses($schema)
             ];
 
             $result['paths']["/{$scopeName}/action/massFollow"]['post'] = [
@@ -680,7 +680,7 @@ class OpenApiGenerator
                         ]
                     ],
                 ],
-                "responses"   => $this->prepareResponses([
+                "responses"   => self::prepareResponses([
                     "type"       => "object",
                     "properties" => [
                         "ids"   => [
@@ -722,7 +722,7 @@ class OpenApiGenerator
                         ]
                     ],
                 ],
-                "responses"   => $this->prepareResponses([
+                "responses"   => self::prepareResponses([
                     "type"       => "object",
                     "properties" => [
                         "ids"   => [
@@ -744,13 +744,13 @@ class OpenApiGenerator
         $this->pushDashletActions($result, $schemas);
 
         foreach ($this->container->get('moduleManager')->getModules() as $module) {
-            $module->prepareApiDocs($result);
+            $module->prepareApiDocs($result, $schemas);
         }
 
         return $result;
     }
 
-    protected function prepareResponses(array $success): array
+    public static function prepareResponses(array $success): array
     {
         return [
             "200" => [
@@ -789,7 +789,7 @@ class OpenApiGenerator
             "description" => "Run update",
             "operationId" => "runUpdateComposer",
             'security'    => [['Authorization-Token' => []]],
-            "responses"   => $this->prepareResponses(['type' => 'boolean'])
+            "responses"   => self::prepareResponses(['type' => 'boolean'])
         ];
 
         $result['paths']["/Composer/cancelUpdate"]['delete'] = [
@@ -798,7 +798,7 @@ class OpenApiGenerator
             "description" => "Cancel changes",
             "operationId" => "cancelUpdateComposer",
             'security'    => [['Authorization-Token' => []]],
-            "responses"   => $this->prepareResponses(['type' => 'boolean'])
+            "responses"   => self::prepareResponses(['type' => 'boolean'])
         ];
 
         $result['paths']["/Composer/list"]['get'] = [
@@ -854,7 +854,7 @@ class OpenApiGenerator
                     ]
                 ],
             ],
-            "responses"   => $this->prepareResponses([
+            "responses"   => self::prepareResponses([
                 "type"       => "object",
                 "properties" => [
                     "total" => [
@@ -898,7 +898,7 @@ class OpenApiGenerator
                     ]
                 ],
             ],
-            "responses"   => $this->prepareResponses(['type' => 'boolean'])
+            "responses"   => self::prepareResponses(['type' => 'boolean'])
         ];
 
         $result['paths']["/Composer/deleteModule"]['delete'] = [
@@ -917,7 +917,7 @@ class OpenApiGenerator
                     ]
                 ],
             ],
-            "responses"   => $this->prepareResponses(['type' => 'boolean'])
+            "responses"   => self::prepareResponses(['type' => 'boolean'])
         ];
 
         $result['paths']["/Composer/cancel"]['post'] = [
@@ -941,7 +941,7 @@ class OpenApiGenerator
                     ]
                 ],
             ],
-            "responses"   => $this->prepareResponses(['type' => 'boolean'])
+            "responses"   => self::prepareResponses(['type' => 'boolean'])
         ];
 
         $result['paths']["/Composer/logs"]['get'] = [
@@ -997,7 +997,7 @@ class OpenApiGenerator
                     ]
                 ],
             ],
-            "responses"   => $this->prepareResponses([
+            "responses"   => self::prepareResponses([
                 "type"       => "object",
                 "properties" => [
                     "total" => [
@@ -1032,7 +1032,7 @@ class OpenApiGenerator
                     ]
                 ]
             ],
-            "responses"   => $this->prepareResponses([
+            "responses"   => self::prepareResponses([
                 "type"       => "object",
                 "properties" => [
                     "total" => [
