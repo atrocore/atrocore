@@ -36,6 +36,7 @@ declare(strict_types=1);
 namespace Espo\Core;
 
 use Espo\Core\Utils\Metadata;
+use Treo\Core\ControllerManager;
 
 class OpenApiGenerator
 {
@@ -82,10 +83,10 @@ class OpenApiGenerator
                                 ]
                             ],
                             [
-                                "name"        => "Authorization-Token-Lifetime",
-                                "in"          => "header",
-                                "required"    => false,
-                                "schema"      => [
+                                "name"     => "Authorization-Token-Lifetime",
+                                "in"       => "header",
+                                "required" => false,
+                                "schema"   => [
                                     "type"    => "integer",
                                     "example" => "0"
                                 ]
@@ -227,6 +228,10 @@ class OpenApiGenerator
 
         foreach ($metadata->get(['scopes'], []) as $scopeName => $scopeData) {
             if (!isset($result['components']['schemas'][$scopeName])) {
+                continue 1;
+            }
+
+            if (empty(ControllerManager::getControllerClassName($scopeName, $this->container->get('metadata')))) {
                 continue 1;
             }
 

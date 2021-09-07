@@ -36,6 +36,7 @@ declare(strict_types=1);
 namespace Treo\Core;
 
 use Espo\Core\Container;
+use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Util;
 use Espo\Core\Utils\Json;
 use Espo\Core\Exceptions\NotFound;
@@ -63,35 +64,16 @@ class ControllerManager
         $this->container = $container;
     }
 
-    /**
-     * Precess
-     *
-     * @param string      $controllerName
-     * @param string      $actionName
-     * @param array       $params
-     * @param mixed       $data
-     * @param Request     $request
-     * @param object|null $response
-     *
-     * @return string
-     * @throws NotFound
-     */
-    public function process($controllerName, $actionName, $params, $data, $request, $response = null)
+    public static function getControllerClassName(string $controllerName, Metadata $metadata): string
     {
-        // normilizeClassName
         $className = Util::normilizeClassName($controllerName);
 
         // for custom
         $controllerClassName = "\\Espo\\Custom\\Controllers\\$className";
 
-        // for Modules
+        // for modules
         if (!class_exists($controllerClassName)) {
-            // get module name
-            $moduleName = $this
-                ->getContainer()
-                ->get('metadata')
-                ->getScopeModuleName($controllerName);
-
+            $moduleName = $metadata->getScopeModuleName($controllerName);
             if (!empty($moduleName)) {
                 $controllerClassName = "\\$moduleName\\Controllers\\$className";
             }
@@ -108,6 +90,30 @@ class ControllerManager
         }
 
         if (!class_exists($controllerClassName)) {
+            return '';
+        }
+
+        return $controllerClassName;
+    }
+
+    /**
+     * Precess
+     *
+     * @param string      $controllerName
+     * @param string      $actionName
+     * @param array       $params
+     * @param mixed       $data
+     * @param Request     $request
+     * @param object|null $response
+     *
+     * @return string
+     * @throws NotFound
+     */
+    public function process($controllerName, $actionName, $params, $data, $request, $response = null)
+    {
+        $controllerClassName = self::getControllerClassName($controllerName, $this->getContainer()->get('metadata'));
+
+        if (empty($controllerClassName) || !class_exists($controllerClassName)) {
             throw new NotFound("Controller '$controllerName' is not found");
         }
 
