@@ -634,6 +634,114 @@ class OpenApiGenerator
                 ],
                 "responses"   => $this->prepareResponses(['type' => 'boolean'])
             ];
+
+            $result['paths']["/{$scopeName}/action/getDuplicateAttributes"]['post'] = [
+                'tags'        => [$scopeName],
+                "summary"     => "Get duplicate attributes from $scopeName",
+                "description" => "Get duplicate attributes from $scopeName",
+                "operationId" => "getDuplicateAttributes{$scopeName}",
+                'security'    => [['Authorization-Token' => []]],
+                'requestBody' => [
+                    'required' => true,
+                    'content'  => [
+                        'application/json' => [
+                            'schema' => [
+                                "type"       => "object",
+                                "properties" => [
+                                    "id" => [
+                                        "type" => "string"
+                                    ],
+                                ],
+                            ]
+                        ]
+                    ],
+                ],
+                "responses"   => $this->prepareResponses($schema)
+            ];
+
+            $result['paths']["/{$scopeName}/action/massFollow"]['post'] = [
+                'tags'        => [$scopeName],
+                "summary"     => "Mass follow to $scopeName records",
+                "description" => "Mass follow to $scopeName records",
+                "operationId" => "massFollow{$scopeName}",
+                'security'    => [['Authorization-Token' => []]],
+                'requestBody' => [
+                    'required' => true,
+                    'content'  => [
+                        'application/json' => [
+                            'schema' => [
+                                "type"       => "object",
+                                "properties" => [
+                                    "ids" => [
+                                        "type"    => "array",
+                                        "items"   => [
+                                            "type" => "string"
+                                        ],
+                                        'example' => ["613219736ca7a1c68", "6132197390d69afa5"]
+                                    ],
+                                ],
+                            ]
+                        ]
+                    ],
+                ],
+                "responses"   => $this->prepareResponses([
+                    "type"       => "object",
+                    "properties" => [
+                        "ids"   => [
+                            "type"    => "array",
+                            "items"   => [
+                                "type" => "string"
+                            ],
+                            'example' => ["613219736ca7a1c68", "6132197390d69afa5"]
+                        ],
+                        "count" => [
+                            "type" => "integer",
+                        ]
+                    ],
+                ])
+            ];
+
+            $result['paths']["/{$scopeName}/action/massUnfollow"]['post'] = [
+                'tags'        => [$scopeName],
+                "summary"     => "Mass unfollow from $scopeName records",
+                "description" => "Mass unfollow from $scopeName records",
+                "operationId" => "massUnfollow{$scopeName}",
+                'security'    => [['Authorization-Token' => []]],
+                'requestBody' => [
+                    'required' => true,
+                    'content'  => [
+                        'application/json' => [
+                            'schema' => [
+                                "type"       => "object",
+                                "properties" => [
+                                    "ids" => [
+                                        "type"    => "array",
+                                        "items"   => [
+                                            "type" => "string"
+                                        ],
+                                        'example' => ["613219736ca7a1c68", "6132197390d69afa5"]
+                                    ],
+                                ],
+                            ]
+                        ]
+                    ],
+                ],
+                "responses"   => $this->prepareResponses([
+                    "type"       => "object",
+                    "properties" => [
+                        "ids"   => [
+                            "type"    => "array",
+                            "items"   => [
+                                "type" => "string"
+                            ],
+                            'example' => ["613219736ca7a1c68", "6132197390d69afa5"]
+                        ],
+                        "count" => [
+                            "type" => "integer",
+                        ]
+                    ],
+                ])
+            ];
         }
 
         foreach ($this->container->get('moduleManager')->getModules() as $module) {
