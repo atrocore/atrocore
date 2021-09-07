@@ -444,6 +444,66 @@ class OpenApiGenerator
                     ]
                 ]),
             ];
+
+            $result['paths']["/{$scopeName}/action/massUpdate"]['put'] = [
+                'tags'        => [$scopeName],
+                "summary"     => "Mass update of $scopeName data",
+                "description" => "Mass update of $scopeName data",
+                "operationId" => "massUpdate{$scopeName}",
+                'security'    => [['Authorization-Token' => []]],
+                'requestBody' => [
+                    'required' => true,
+                    'content'  => [
+                        'application/json' => [
+                            'schema' => [
+                                "type"       => "object",
+                                "properties" => [
+                                    "attributes" => [
+                                        "type"    => "object",
+                                        'example' => ['name' => 'New name', 'description' => 'New description']
+                                    ],
+                                    "ids"        => [
+                                        "type"    => "array",
+                                        "items"   => [
+                                            "type" => "string"
+                                        ],
+                                        'example' => ["613219736ca7a1c68", "6132197390d69afa5"]
+                                    ],
+                                ],
+                            ]
+                        ]
+                    ],
+                ],
+                "responses"   => $this->prepareResponses(['type' => 'boolean'])
+            ];
+
+            $result['paths']["/{$scopeName}/action/massDelete"]['post'] = [
+                'tags'        => [$scopeName],
+                "summary"     => "Mass delete of $scopeName data",
+                "description" => "Mass delete of $scopeName data",
+                "operationId" => "massDelete{$scopeName}",
+                'security'    => [['Authorization-Token' => []]],
+                'requestBody' => [
+                    'required' => true,
+                    'content'  => [
+                        'application/json' => [
+                            'schema' => [
+                                "type"       => "object",
+                                "properties" => [
+                                    "ids" => [
+                                        "type"    => "array",
+                                        "items"   => [
+                                            "type" => "string"
+                                        ],
+                                        'example' => ["613219736ca7a1c68", "6132197390d69afa5"]
+                                    ],
+                                ],
+                            ]
+                        ]
+                    ],
+                ],
+                "responses"   => $this->prepareResponses(['type' => 'boolean'])
+            ];
         }
 
         foreach ($this->container->get('moduleManager')->getModules() as $module) {
