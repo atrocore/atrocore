@@ -742,6 +742,7 @@ class OpenApiGenerator
 
         $this->pushComposerActions($result, $schemas);
         $this->pushDashletActions($result, $schemas);
+        $this->pushMassActions($result, $schemas);
 
         foreach ($this->container->get('moduleManager')->getModules() as $module) {
             $module->prepareApiDocs($result, $schemas);
@@ -1044,6 +1045,147 @@ class OpenApiGenerator
                             "type" => "object"
                         ]
                     ],
+                ]
+            ]),
+        ];
+    }
+
+    protected function pushMassActions(array &$result, array $schemas): void
+    {
+        $result['tags'][] = ['name' => 'MassActions'];
+
+        $result['paths']["/MassActions/action/addRelation"]['post'] = [
+            'tags'        => ['MassActions'],
+            "summary"     => "Mass add relation",
+            "description" => "Mass add relation",
+            "operationId" => "massAddRelation",
+            'security'    => [['Authorization-Token' => []]],
+            'parameters'  => [
+                [
+                    "name"     => "scope",
+                    "in"       => "query",
+                    "required" => true,
+                    "schema"   => [
+                        "type" => "string"
+                    ]
+                ],
+                [
+                    "name"     => "link",
+                    "in"       => "query",
+                    "required" => true,
+                    "schema"   => [
+                        "type" => "string"
+                    ]
+                ],
+                [
+                    "name"     => "ids",
+                    "in"       => "query",
+                    "required" => true,
+                    "schema"   => [
+                        "type"  => "array",
+                        "items" => [
+                            "type" => "string",
+                        ],
+                    ]
+                ],
+                [
+                    "name"     => "foreignIds",
+                    "in"       => "query",
+                    "required" => true,
+                    "schema"   => [
+                        "type"  => "array",
+                        "items" => [
+                            "type" => "string",
+                        ],
+                    ]
+                ]
+            ],
+            'requestBody' => [
+                'required' => true,
+                'content'  => [
+                    'application/json' => [
+                        'schema' => [
+                            "type"       => "object",
+                            "properties" => [
+                                "ids"        => [
+                                    "type"  => "array",
+                                    "items" => [
+                                        "type" => "string",
+                                    ],
+                                ],
+                                "foreignIds" => [
+                                    "type"  => "array",
+                                    "items" => [
+                                        "type" => "string",
+                                    ],
+                                ],
+                            ],
+                        ]
+                    ]
+                ],
+            ],
+            "responses"   => self::prepareResponses([
+                "type"       => "object",
+                "properties" => [
+                    "message" => [
+                        "type" => "string"
+                    ]
+                ]
+            ]),
+        ];
+
+        $result['paths']["/MassActions/action/removeRelation"]['delete'] = [
+            'tags'        => ['MassActions'],
+            "summary"     => "Mass remove relation",
+            "description" => "Mass remove relation",
+            "operationId" => "massRemoveRelation",
+            'security'    => [['Authorization-Token' => []]],
+            'parameters'  => [
+                [
+                    "name"     => "scope",
+                    "in"       => "query",
+                    "required" => true,
+                    "schema"   => [
+                        "type" => "string"
+                    ]
+                ],
+                [
+                    "name"     => "link",
+                    "in"       => "query",
+                    "required" => true,
+                    "schema"   => [
+                        "type" => "string"
+                    ]
+                ],
+                [
+                    "name"     => "ids",
+                    "in"       => "query",
+                    "required" => true,
+                    "schema"   => [
+                        "type"  => "array",
+                        "items" => [
+                            "type" => "string",
+                        ],
+                    ]
+                ],
+                [
+                    "name"     => "foreignIds",
+                    "in"       => "query",
+                    "required" => true,
+                    "schema"   => [
+                        "type"  => "array",
+                        "items" => [
+                            "type" => "string",
+                        ],
+                    ]
+                ]
+            ],
+            "responses"   => self::prepareResponses([
+                "type"       => "object",
+                "properties" => [
+                    "message" => [
+                        "type" => "string"
+                    ]
                 ]
             ]),
         ];

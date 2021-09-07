@@ -38,46 +38,12 @@ namespace Treo\Controllers;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Slim\Http\Request;
-use Treo\Core\EventManager\Event;
 
 /**
  * Class MassActions
  */
 class MassActions extends \Espo\Core\Controllers\Base
 {
-    public function actionMassUpdate(array $params, \stdClass $data, Request $request): bool
-    {
-        if (!$request->isPut() || !isset($params['scope'])) {
-            throw new BadRequest();
-        }
-        if (!$this->getAcl()->check($params['scope'], 'edit')) {
-            throw new Forbidden();
-        }
-        if (empty($data->attributes)) {
-            throw new BadRequest();
-        }
-
-        return $this->getService('MassActions')->massUpdate($params['scope'], $data);
-    }
-
-    public function actionMassDelete(array $params, \stdClass $data, Request $request): bool
-    {
-        if (!$request->isPost() || !isset($params['scope'])) {
-            throw new BadRequest();
-        }
-        if (!$this->getAcl()->check($params['scope'], 'delete')) {
-            throw new Forbidden();
-        }
-
-        $event = new Event(['params' => $params, 'data' => $data, 'request' => $request]);
-        $this
-            ->getContainer()
-            ->get('eventManager')
-            ->dispatch($params['scope'] . 'Controller', 'beforeActionMassDelete', $event);
-
-        return $this->getService('MassActions')->massDelete($params['scope'], $data);
-    }
-
     /**
      * Action add relation
      *
@@ -95,7 +61,24 @@ class MassActions extends \Espo\Core\Controllers\Base
         if (!$request->isPost()) {
             throw new BadRequest();
         }
-        if (empty($data->ids) || empty($data->foreignIds) || !isset($params['scope']) || !isset($params['link'])) {
+
+        if (!empty($data->ids)) {
+            $ids = $data->ids;
+        }
+
+        if (!empty($params['ids'])) {
+            $ids = $params['ids'];
+        }
+
+        if (!empty($data->foreignIds)) {
+            $foreignIds = $data->foreignIds;
+        }
+
+        if (!empty($params['foreignIds'])) {
+            $foreignIds = $params['foreignIds'];
+        }
+
+        if (empty($ids) || empty($foreignIds) || !isset($params['scope']) || !isset($params['link'])) {
             throw new BadRequest();
         }
         if (!$this->getAcl()->check($params['scope'], 'edit')) {
@@ -104,7 +87,7 @@ class MassActions extends \Espo\Core\Controllers\Base
 
         return $this
             ->getService('MassActions')
-            ->addRelation($data->ids, $data->foreignIds, $params['scope'], $params['link']);
+            ->addRelation($ids, $foreignIds, $params['scope'], $params['link']);
     }
 
     /**
@@ -124,7 +107,24 @@ class MassActions extends \Espo\Core\Controllers\Base
         if (!$request->isDelete()) {
             throw new BadRequest();
         }
-        if (empty($data->ids) || empty($data->foreignIds) || !isset($params['scope']) || !isset($params['link'])) {
+
+        if (!empty($data->ids)) {
+            $ids = $data->ids;
+        }
+
+        if (!empty($params['ids'])) {
+            $ids = $params['ids'];
+        }
+
+        if (!empty($data->foreignIds)) {
+            $foreignIds = $data->foreignIds;
+        }
+
+        if (!empty($params['foreignIds'])) {
+            $foreignIds = $params['foreignIds'];
+        }
+
+        if (empty($ids) || empty($foreignIds) || !isset($params['scope']) || !isset($params['link'])) {
             throw new BadRequest();
         }
         if (!$this->getAcl()->check($params['scope'], 'edit')) {
@@ -133,6 +133,6 @@ class MassActions extends \Espo\Core\Controllers\Base
 
         return $this
             ->getService('MassActions')
-            ->removeRelation($data->ids, $data->foreignIds, $params['scope'], $params['link']);
+            ->removeRelation($ids, $foreignIds, $params['scope'], $params['link']);
     }
 }
