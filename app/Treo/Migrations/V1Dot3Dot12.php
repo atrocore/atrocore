@@ -45,6 +45,12 @@ class V1Dot3Dot12 extends Base
             unlink('apidocs/index.html');
         }
         copy('vendor/atrocore/core/copy/apidocs/index.html', 'apidocs/index.html');
+
+        try {
+            $this->getPDO()->exec("DELETE FROM scheduled_job WHERE job='RestApiDocs'");
+            $this->getPDO()->exec("DELETE FROM job WHERE name='Generate REST API docs'");
+        } catch (\Throwable $e) {
+        }
     }
 
     public function down(): void
