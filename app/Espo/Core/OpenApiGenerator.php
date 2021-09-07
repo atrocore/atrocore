@@ -574,22 +574,14 @@ class OpenApiGenerator
                             "type" => "string"
                         ]
                     ],
-                ],
-                'requestBody' => [
-                    'required' => true,
-                    'content'  => [
-                        'application/json' => [
-                            'schema' => [
-                                "type"       => "object",
-                                "properties" => [
-                                    "ids" => [
-                                        "type"    => "array",
-                                        "items"   => [
-                                            "type" => "string"
-                                        ],
-                                        'example' => ["613219736ca7a1c68", "6132197390d69afa5"]
-                                    ],
-                                ],
+                    [
+                        "name"     => "ids",
+                        "in"       => "query",
+                        "required" => true,
+                        "schema"   => [
+                            "type"  => "array",
+                            "items" => [
+                                "type" => "string"
                             ]
                         ]
                     ],
@@ -912,18 +904,13 @@ class OpenApiGenerator
             "description" => "Delete module",
             "operationId" => "deleteModule",
             'security'    => [['Authorization-Token' => []]],
-            'requestBody' => [
-                'required' => true,
-                'content'  => [
-                    'application/json' => [
-                        'schema' => [
-                            "type"       => "object",
-                            "properties" => [
-                                "id" => [
-                                    "type" => "string",
-                                ],
-                            ],
-                        ]
+            'parameters'  => [
+                [
+                    "name"     => "id",
+                    "in"       => "query",
+                    "required" => true,
+                    "schema"   => [
+                        "type" => "string"
                     ]
                 ],
             ],

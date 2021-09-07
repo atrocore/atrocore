@@ -125,10 +125,18 @@ class Composer extends Base
             throw new Exceptions\BadRequest();
         }
 
-        // prepare data
-        $data = Json::decode(Json::encode($data), true);
+        if (!empty($data)) {
+            $data = Json::decode(Json::encode($data), true);
+            if (!empty($data['id'])) {
+                $id = $data['id'];
+            }
+        }
 
-        if (!empty($id = $data['id'])) {
+        if (empty($params['id'])) {
+            $id = $params['id'];
+        }
+
+        if (!empty($id)) {
             return $this->getComposerService()->deleteModule($id);
         }
 
