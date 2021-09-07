@@ -83,7 +83,6 @@ class OpenApiGenerator
                             ],
                             [
                                 "name"        => "Authorization-Token-Lifetime",
-                                "description" => 'qwe 123',
                                 "in"          => "header",
                                 "required"    => false,
                                 "schema"      => [
@@ -737,7 +736,6 @@ class OpenApiGenerator
         }
 
         $this->pushComposerActions($result, $schemas);
-        $this->pushStoreActions($result, $schemas);
         $this->pushDashletActions($result, $schemas);
 
         foreach ($this->container->get('moduleManager')->getModules() as $module) {
@@ -1003,87 +1001,6 @@ class OpenApiGenerator
                     "list"  => [
                         "type"  => "array",
                         "items" => $schemas['Note']
-                    ],
-                ]
-            ]),
-        ];
-    }
-
-    protected function pushStoreActions(array &$result, array $schemas): void
-    {
-        $result['tags'][] = ['name' => 'Store'];
-
-        $result['paths']["/TreoStore"]['get'] = [
-            'tags'        => ['Store'],
-            "summary"     => "Get store modules",
-            "description" => "Get store modules",
-            "operationId" => "getStoreModules",
-            'security'    => [['Authorization-Token' => []]],
-            'parameters'  => [
-                [
-                    "name"     => "isInstalled",
-                    "in"       => "query",
-                    "required" => false,
-                    "schema"   => [
-                        "type"    => "boolean",
-                        "example" => "false"
-                    ]
-                ],
-                [
-                    "name"     => "select",
-                    "in"       => "query",
-                    "required" => false,
-                    "schema"   => [
-                        "type"    => "string",
-                        "example" => "name,createdAt"
-                    ]
-                ],
-                [
-                    "name"     => "offset",
-                    "in"       => "query",
-                    "required" => false,
-                    "schema"   => [
-                        "type"    => "integer",
-                        "example" => 0
-                    ]
-                ],
-                [
-                    "name"     => "maxSize",
-                    "in"       => "query",
-                    "required" => false,
-                    "schema"   => [
-                        "type"    => "integer",
-                        "example" => 50
-                    ]
-                ],
-                [
-                    "name"     => "sortBy",
-                    "in"       => "query",
-                    "required" => false,
-                    "schema"   => [
-                        "type"    => "string",
-                        "example" => "name"
-                    ]
-                ],
-                [
-                    "name"     => "asc",
-                    "in"       => "query",
-                    "required" => false,
-                    "schema"   => [
-                        "type"    => "boolean",
-                        "example" => "true"
-                    ]
-                ],
-            ],
-            "responses"   => $this->prepareResponses([
-                "type"       => "object",
-                "properties" => [
-                    "total" => [
-                        "type" => "integer"
-                    ],
-                    "list"  => [
-                        "type"  => "array",
-                        "items" => $schemas['TreoStore']
                     ],
                 ]
             ]),
