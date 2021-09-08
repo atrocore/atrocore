@@ -404,10 +404,13 @@ class MassActions extends HasContainer
      */
     protected function getForeignEntityType(string $entityType, string $link): string
     {
-        return $this
-            ->getEntityManager()
-            ->getEntity($entityType)
-            ->getRelationParam($link, 'entity');
+        $foreignEntityType = $this->getEntityManager()->getEntity($entityType)->getRelationParam($link, 'entity');
+
+        if (empty($foreignEntityType)){
+            throw new BadRequest("No such relation found.");
+        }
+
+        return $foreignEntityType;
     }
 
     /**

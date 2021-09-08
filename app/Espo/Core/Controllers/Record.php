@@ -399,8 +399,8 @@ class Record extends Base
             }
         }
 
-        if (empty($params['ids'])) {
-            $foreignIdList = $params['ids'];
+        if (!empty($request->get('ids'))) {
+            $foreignIdList = explode(',', $request->get('ids'));
         }
 
         $result = false;

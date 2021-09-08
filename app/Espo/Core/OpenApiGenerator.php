@@ -582,6 +582,7 @@ class OpenApiGenerator
                         "name"     => "ids",
                         "in"       => "query",
                         "required" => true,
+                        "explode"  => false,
                         "schema"   => [
                             "type"  => "array",
                             "items" => [
@@ -612,6 +613,7 @@ class OpenApiGenerator
                         "name"     => "ids",
                         "in"       => "query",
                         "required" => true,
+                        "explode"  => false,
                         "schema"   => [
                             "type"  => "array",
                             "items" => [
@@ -623,6 +625,7 @@ class OpenApiGenerator
                         "name"     => "foreignIds",
                         "in"       => "query",
                         "required" => true,
+                        "explode"  => false,
                         "schema"   => [
                             "type"  => "array",
                             "items" => [
@@ -653,6 +656,7 @@ class OpenApiGenerator
                         "name"     => "ids",
                         "in"       => "query",
                         "required" => true,
+                        "explode"  => false,
                         "schema"   => [
                             "type"  => "array",
                             "items" => [
@@ -664,6 +668,7 @@ class OpenApiGenerator
                         "name"     => "foreignIds",
                         "in"       => "query",
                         "required" => true,
+                        "explode"  => false,
                         "schema"   => [
                             "type"  => "array",
                             "items" => [

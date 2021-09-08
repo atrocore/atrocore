@@ -78,7 +78,7 @@ class MassActions extends \Espo\Core\Controllers\Base
         return $this->getService('MassActions')->massDelete($params['scope'], $data);
     }
 
-    public function actionAddRelation(array $params, \stdClass $data, Request $request): array
+    public function actionAddRelation($params, $data, $request): array
     {
         if (!$request->isPost()) {
             throw new BadRequest();
@@ -88,21 +88,22 @@ class MassActions extends \Espo\Core\Controllers\Base
             $ids = $data->ids;
         }
 
-        if (!empty($params['ids'])) {
-            $ids = $params['ids'];
+        if (!empty($request->get('ids'))) {
+            $ids = explode(',', $request->get('ids'));
         }
 
         if (!empty($data->foreignIds)) {
             $foreignIds = $data->foreignIds;
         }
 
-        if (!empty($params['foreignIds'])) {
-            $foreignIds = $params['foreignIds'];
+        if (!empty($request->get('foreignIds'))) {
+            $foreignIds = explode(',', $request->get('foreignIds'));
         }
 
         if (empty($ids) || empty($foreignIds) || !isset($params['scope']) || !isset($params['link'])) {
             throw new BadRequest();
         }
+
         if (!$this->getAcl()->check($params['scope'], 'edit')) {
             throw new Forbidden();
         }
@@ -112,7 +113,7 @@ class MassActions extends \Espo\Core\Controllers\Base
             ->addRelation($ids, $foreignIds, $params['scope'], $params['link']);
     }
 
-    public function actionRemoveRelation(array $params, \stdClass $data, Request $request): array
+    public function actionRemoveRelation($params, $data, $request): array
     {
         if (!$request->isDelete()) {
             throw new BadRequest();
@@ -122,21 +123,22 @@ class MassActions extends \Espo\Core\Controllers\Base
             $ids = $data->ids;
         }
 
-        if (!empty($params['ids'])) {
-            $ids = $params['ids'];
+        if (!empty($request->get('ids'))) {
+            $ids = explode(',', $request->get('ids'));
         }
 
         if (!empty($data->foreignIds)) {
             $foreignIds = $data->foreignIds;
         }
 
-        if (!empty($params['foreignIds'])) {
-            $foreignIds = $params['foreignIds'];
+        if (!empty($request->get('foreignIds'))) {
+            $foreignIds = explode(',', $request->get('foreignIds'));
         }
 
         if (empty($ids) || empty($foreignIds) || !isset($params['scope']) || !isset($params['link'])) {
             throw new BadRequest();
         }
+
         if (!$this->getAcl()->check($params['scope'], 'edit')) {
             throw new Forbidden();
         }
