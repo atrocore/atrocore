@@ -202,7 +202,8 @@
     "selectEntityType": "Выберите тип объекта в левом меню.",
     "selectLayout": "Выберите интересующий макет в левом меню и отредактируйте его.",
     "thousandSeparatorEqualsDecimalMark": "Разделитель тысячных не может быть таким же, как разделитель десятичных.",
-    "userHasNoEmailAddress": "У пользователя нет адреса эл. почты."
+    "userHasNoEmailAddress": "У пользователя нет адреса эл. почты.",
+    "incorrectThousandSeparatorOrDecimalMark": "Разрешены только следующие разделители: '.' а также ','."
   },
   "descriptions": {
     "inputLanguage": "Укажите языкт для полей, которые подлежат переводу.",
