@@ -275,6 +275,23 @@ class OpenApiGenerator
                         ]
                     ],
                     [
+                        "name"        => "where",
+                        "in"          => "query",
+                        "required"    => false,
+                        "description" => "There are a lot of filter types supported. You can learn all of them if you trace what's requested by Atro UI in the network tab in your browser console (press F12 key to open the console).",
+                        "content"     => [
+                            "application/json" => [
+                                "schema" => [
+                                    "type"    => "array",
+                                    "items"   => [
+                                        "type" => "object",
+                                    ],
+                                    'example' => [['type' => 'or', 'value' => [['type' => 'like', 'attribute' => 'name', 'value' => '%find-me-1%'], ['type' => 'equals', 'attribute' => 'name', 'value' => 'find-me-2']]]]
+                                ],
+                            ],
+                        ],
+                    ],
+                    [
                         "name"     => "offset",
                         "in"       => "query",
                         "required" => false,

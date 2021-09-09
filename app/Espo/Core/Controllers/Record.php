@@ -129,7 +129,7 @@ class Record extends Base
             throw new Forbidden();
         }
 
-        $where = $request->get('where');
+        $where = $this->prepareWhereQuery($request->get('where'));
         $offset = $request->get('offset');
         $maxSize = $request->get('maxSize');
         $asc = $request->get('asc', 'true') === 'true';
@@ -171,7 +171,7 @@ class Record extends Base
             throw new Forbidden();
         }
 
-        $where = $request->get('where');
+        $where = $this->prepareWhereQuery($request->get('where'));
         $offset = $request->get('offset');
         $maxSize = $request->get('maxSize');
         $asc = $request->get('asc', 'true') === 'true';
@@ -226,7 +226,7 @@ class Record extends Base
         $id = $params['id'];
         $link = $params['link'];
 
-        $where = $request->get('where');
+        $where = $this->prepareWhereQuery($request->get('where'));
         $offset = $request->get('offset');
         $maxSize = $request->get('maxSize');
         $asc = $request->get('asc', 'true') === 'true';
@@ -500,5 +500,14 @@ class Record extends Base
         }
 
         return $this->getRecordService()->massUnfollow($params);
+    }
+
+    protected function prepareWhereQuery($where)
+    {
+        if (is_string($where)) {
+            $where = json_decode(str_replace(['"{', '}"', '\"', '\n'], ['{', '}', '"', ''], $where), true);
+        }
+
+        return $where;
     }
 }
