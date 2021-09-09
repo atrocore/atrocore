@@ -179,7 +179,8 @@
     "selectLayout": "Seleccione el diseño necesario en el menú de la izquierda y edítelo.",
     "thousandSeparatorEqualsDecimalMark": "El símbolo de separador de miles no puede ser el mismo que el de punto decimal.",
     "userHasNoEmailAddress": "El usuario no tiene dirección de correo electrónico.",
-    "upgradeFailed": "Upgrade failed"
+    "upgradeFailed": "Upgrade failed",
+    "incorrectThousandSeparatorOrDecimalMark": "Solo se permiten los siguientes delimitadores: '.' y ','."
   },
   "descriptions": {
     "settings": "Ajustes generales del sistema.",

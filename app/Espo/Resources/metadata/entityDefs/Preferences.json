@@ -38,7 +38,8 @@
             "type": "varchar",
             "default": ".",
             "required": true,
-            "maxLength": 1
+            "maxLength": 1,
+            "view": "views/settings/fields/decimal-mark"
         },
         "dashboardLayout": {
             "type": "jsonArray",

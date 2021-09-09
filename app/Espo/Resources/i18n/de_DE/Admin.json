@@ -164,7 +164,8 @@
     "selectEntityType": "Entitätstyp im linken Menü auswählen.",
     "selectLayout": "Layout zum Editieren links auswählen",
     "thousandSeparatorEqualsDecimalMark": "Das Tausendertrennzeichen und das Dezimaltrennzeichen können nicht gleich sein",
-    "userHasNoEmailAddress": "Der Benutzer hat keine E-Mail Adresse."
+    "userHasNoEmailAddress": "Der Benutzer hat keine E-Mail Adresse.",
+    "incorrectThousandSeparatorOrDecimalMark": "Es sind nur die folgenden Trennzeichen zulässig: '.' und ','."
   },
   "descriptions": {
     "inputLanguage": "Spracheingabe für übersetzbare Felder.",

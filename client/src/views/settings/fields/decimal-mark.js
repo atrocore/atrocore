@@ -31,16 +31,16 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/settings/fields/thousand-separator', 'views/fields/varchar', function (Dep) {
+Espo.define('views/settings/fields/decimal-mark', 'views/fields/varchar', function (Dep) {
 
     return Dep.extend({
 
-        validations: ['required', 'thousandSeparator', 'value'],
+        validations: ['required', 'decimalMark', 'value'],
 
         acceptableValues: ['.', ','],
 
-        validateThousandSeparator: function () {
-            if (this.model.get(this.name) == this.model.get('decimalMark')) {
+        validateDecimalMark: function () {
+            if (this.model.get(this.name) == this.model.get('thousandSeparator')) {
                 var msg = this.translate('thousandSeparatorEqualsDecimalMark', 'messages', 'Admin');
                 this.showValidationMessage(msg);
                 return true;
