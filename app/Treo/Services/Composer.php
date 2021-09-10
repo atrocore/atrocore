@@ -251,6 +251,7 @@ class Composer extends \Espo\Core\Templates\Services\HasContainer
                     'description'    => $this->translate('Core', 'descriptions'),
                     'currentVersion' => self::getCoreVersion(),
                     'isSystem'       => true,
+                    'isComposer'     => true,
                     'status'         => '',
                 ]
             ]
@@ -270,6 +271,7 @@ class Composer extends \Espo\Core\Templates\Services\HasContainer
                 'description'    => $module->getDescription(),
                 'currentVersion' => $module->getVersion(),
                 'isSystem'       => $module->isSystem(),
+                'isComposer'     => !empty($module->getVersion()),
                 'status'         => $this->getModuleStatus($composerDiff, $id),
             ];
 
@@ -288,6 +290,7 @@ class Composer extends \Espo\Core\Templates\Services\HasContainer
                 'description'    => '',
                 'currentVersion' => '',
                 'isSystem'       => false,
+                'isComposer'     => true,
                 'status'         => 'install'
             ];
 

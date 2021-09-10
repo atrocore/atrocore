@@ -286,7 +286,8 @@ class OpenApiGenerator
                                     "items"   => [
                                         "type" => "object",
                                     ],
-                                    'example' => [['type' => 'or', 'value' => [['type' => 'like', 'attribute' => 'name', 'value' => '%find-me-1%'], ['type' => 'equals', 'attribute' => 'name', 'value' => 'find-me-2']]]]
+                                    'example' => [['type'  => 'or', 'value' => [['type' => 'like', 'attribute' => 'name', 'value' => '%find-me-1%'],
+                                                                                ['type' => 'equals', 'attribute' => 'name', 'value' => 'find-me-2']]]]
                                 ],
                             ],
                         ],
@@ -981,6 +982,7 @@ class OpenApiGenerator
                                 "currentVersion" => ["type" => "string"],
                                 "status"         => ["type" => "string"],
                                 "isSystem"       => ["type" => "boolean"],
+                                "isComposer"     => ["type" => "boolean"],
                             ]
                         ]
                     ],
