@@ -228,7 +228,7 @@ Espo.define('treo-core:views/composer/list', 'views/list',
 
             this.actionsInProgress++;
             this.notify(this.translate('settingModuleForRemoving', 'labels', 'Composer'));
-            this.ajaxRequest('Composer/deleteModule', 'DELETE', JSON.stringify({id: data.id})).then(response => {
+            this.ajaxRequest('Composer/deleteModule?id=' + data.id, 'DELETE').then(response => {
                 if (response) {
                     this.notify(this.translate('settedModuleForRemoving', 'labels', 'Composer'), 'success');
                     this.installedCollection.fetch();

@@ -132,8 +132,8 @@ class Composer extends Base
             }
         }
 
-        if (empty($params['id'])) {
-            $id = $params['id'];
+        if (!empty($request->get('id'))) {
+            $id = $request->get('id');
         }
 
         if (!empty($id)) {
