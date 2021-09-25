@@ -82,39 +82,32 @@ class QueueManager
     }
 
     /**
-     * @param string   $name
-     * @param string   $serviceName
-     * @param array    $data
-     * @param bool|int $isWriting
+     * @param string $name
+     * @param string $serviceName
+     * @param array  $data
      *
      * @return bool
      * @throws Error
      */
-    public function push(string $name, string $serviceName, array $data = [], $isWriting = false): bool
+    public function push(string $name, string $serviceName, array $data = []): bool
     {
         // validation
         if (!$this->isService($serviceName)) {
             return false;
         }
 
-        // @todo $isWriting should be bool only !
-        if (is_int($isWriting)) {
-            $isWriting = $isWriting === 1;
-        }
-
-        return $this->createQueueItem($name, $serviceName, $data, $isWriting);
+        return $this->createQueueItem($name, $serviceName, $data);
     }
 
     /**
      * @param string $name
      * @param string $serviceName
      * @param array  $data
-     * @param bool   $isWriting
      *
      * @return bool
      * @throws Error
      */
-    protected function createQueueItem(string $name, string $serviceName, array $data, bool $isWriting): bool
+    protected function createQueueItem(string $name, string $serviceName, array $data): bool
     {
         /** @var User $user */
         $user = $this->getContainer()->get('user');
@@ -124,7 +117,6 @@ class QueueManager
             [
                 'name'           => $name,
                 'serviceName'    => $serviceName,
-                'isWriting'      => $isWriting,
                 'data'           => $data,
                 'sortOrder'      => $this->getNextSortOrder(),
                 'createdById'    => $user->get('id'),
@@ -205,7 +197,7 @@ class QueueManager
 
         $item = $this->getRepository()->getPendingItemForStream();
 
-        if (empty($item) || (!empty($item->get('isWriting')) && $stream !== 1)) {
+        if (empty($item)) {
             return false;
         }
 

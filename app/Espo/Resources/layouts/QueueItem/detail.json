@@ -25,11 +25,9 @@
       ],
       [
         {
-          "name": "isWriting"
-        },
-        {
           "name": "stream"
-        }
+        },
+        false
       ],
       [
         {

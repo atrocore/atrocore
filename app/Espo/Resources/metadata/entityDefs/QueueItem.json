@@ -12,11 +12,6 @@
       "required": true,
       "readOnly": true
     },
-    "isWriting": {
-      "type": "bool",
-      "readOnly": true,
-      "default": false
-    },
     "stream": {
       "type": "int",
       "readOnly": true,
