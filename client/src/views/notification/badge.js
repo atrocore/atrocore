@@ -94,6 +94,25 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
             this.$number.addClass('hidden').html('');
         },
 
+        refreshList: function () {
+            const key = this.getUser().id + 'RefreshListScope';
+            const refreshScope = localStorage.getItem('pd_' + key) || null;
+
+            let expectedHash = "#" + refreshScope;
+            if (refreshScope === 'Job') {
+                expectedHash = '#Admin/jobs';
+            }
+
+            if (refreshScope && expectedHash === window.location.hash) {
+                this.ajaxPostRequest('App/action/UpdatePublicDataKey', {
+                    key: key,
+                    value: null
+                }).then(() => {
+                    $('button[data-action="search"]').click();
+                });
+            }
+        },
+
         checkUpdates: function (isFirstCheck) {
             if (!this.checkIntervalConditions()) {
                 return;
@@ -123,6 +142,8 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
             } else {
                 this.hideNotRead();
             }
+
+            this.refreshList();
         },
 
         runCheckUpdates: function (isFirstCheck) {

@@ -35,6 +35,7 @@ declare(strict_types=1);
 
 namespace Espo\Controllers;
 
+use Espo\Core\DataManager;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Utils\Auth;
 use Espo\Core\Controllers\Base;
@@ -87,11 +88,22 @@ class App extends Base
      */
     public function postActionDestroyAuthToken($params, $data, $request)
     {
-        if (empty($data->token)) {
+        if (!property_exists($data, 'token')) {
             throw new BadRequest();
         }
 
         return (new Auth($this->getContainer()))->destroyAuthToken($data->token);
+    }
+
+    public function postActionUpdatePublicDataKey($params, $data, $request): bool
+    {
+        if (!property_exists($data, 'key') || !property_exists($data, 'value') || in_array($data->key, ['dataTimestamp', 'notReadCount'])) {
+            return false;
+        }
+
+        DataManager::pushPublicData($data->key, $data->value);
+
+        return true;
     }
 
     /**

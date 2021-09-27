@@ -523,7 +523,11 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
                 view.once('after:update', function () {
                     view.close();
                     this.listenToOnce(this.collection, 'sync', function () {
-                        Espo.Ui.notify(this.translate('byQueueManager', 'messages', 'QueueItem'), "success", 1000 * 5, true);
+                        if (this.entityType === 'QueueItem') {
+                            Espo.Ui.success(this.translate('Done'));
+                        } else {
+                            Espo.Ui.success(this.translate('byQueueManager', 'messages', 'QueueItem'));
+                        }
                         if (allResultIsChecked) {
                             this.selectAllResult();
                         } else {
@@ -573,7 +577,12 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
                     type: 'POST',
                     data: JSON.stringify(data)
                 }).done(function (result) {
-                    Espo.Ui.notify(this.translate('byQueueManager', 'messages', 'QueueItem'), "success", 1000 * 5, true);
+                    if (this.entityType === 'QueueItem') {
+                        Espo.Ui.success(this.translate('Done'));
+                        this.collection.fetch();
+                    } else {
+                        Espo.Ui.success(this.translate('byQueueManager', 'messages', 'QueueItem'));
+                    }
                 }.bind(this));
             }, this);
         },

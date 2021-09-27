@@ -35,6 +35,8 @@ declare(strict_types=1);
 
 namespace Espo\Services;
 
+use Espo\Core\DataManager;
+
 /**
  * Class QueueManagerMassUpdate
  */
@@ -45,22 +47,15 @@ class QueueManagerMassUpdate extends QueueManagerBase
      */
     public function run(array $data = []): bool
     {
-        // prepare result
-        $result = false;
-
-        // call mass remove method
-        if (isset($data["entityType"])
-            && !empty($data["attributes"])
-            && is_array($data["attributes"])
-            && !empty($data["ids"])
-            && is_array($data["ids"])) {
-            $this->massUpdate($data["entityType"], $data["attributes"], ["ids" => $data["ids"]]);
-
-            // prepare result
-            $result = true;
+        if (!empty($data['data']['byWhere'])) {
+            $this->massUpdate($data["entityType"], $data["attributes"], ["where" => $data['data']["where"]]);
+        } else {
+            $this->massUpdate($data["entityType"], $data["attributes"], ["ids" => $data['data']["ids"]]);
         }
 
-        return $result;
+        DataManager::pushPublicData($this->getUser()->get('id') . 'RefreshListScope', $data["entityType"]);
+
+        return true;
     }
 
     /**
