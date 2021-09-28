@@ -114,7 +114,7 @@
         },
         "emailAddress": {
             "type": "email",
-            "required": false
+            "required": true
         },
         "phoneNumber": {
             "type": "phone",

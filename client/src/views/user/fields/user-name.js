@@ -34,6 +34,21 @@ Espo.define('views/user/fields/user-name', 'views/fields/varchar', function (Dep
 
     return Dep.extend({
 
+        setup() {
+            Dep.prototype.setup.call(this);
+
+            this.listenTo(this.model, 'change:emailAddress', () => {
+                if (this.model.get('emailAddress')) {
+                    let email = this.model.get('emailAddress');
+                    let parts = email.split('@');
+
+                    if (Array.isArray(parts) && parts.length > 1) {
+                        this.model.set(this.name, parts[0]);
+                    }
+                }
+            });
+        },
+
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
