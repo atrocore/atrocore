@@ -38,14 +38,7 @@ Espo.define('views/user/fields/user-name', 'views/fields/varchar', function (Dep
             Dep.prototype.setup.call(this);
 
             this.listenTo(this.model, 'change:emailAddress', () => {
-                if (this.model.get('emailAddress')) {
-                    let email = this.model.get('emailAddress');
-                    let parts = email.split('@');
-
-                    if (Array.isArray(parts) && parts.length > 1) {
-                        this.model.set(this.name, parts[0]);
-                    }
-                }
+                this.generateNameFromEmail();
             });
         },
 
@@ -63,8 +56,20 @@ Espo.define('views/user/fields/user-name', 'views/fields/varchar', function (Dep
                     this.trigger('change');
                 }.bind(this));
             }
-        }
+        },
 
+        generateNameFromEmail() {
+            if (this.model.get('emailAddress')) {
+                let email = this.model.get('emailAddress');
+                let parts = email.split('@');
+
+                if (Array.isArray(parts) && parts.length > 1) {
+                    this.model.set(this.name, parts[0]);
+                } else {
+                    this.model.set(this.name, parts);
+                }
+            }
+        }
     });
 
 });
