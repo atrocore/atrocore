@@ -2,10 +2,9 @@
     {
         "label": "Overview",
         "rows": [
-            [{"name":"userName"}, false],
+            [{"name": "emailAddress"}, {"name":"userName"}],
             [{"name": "name"}, {"name": "title"}],
-            [{"name": "emailAddress"}, {"name": "phoneNumber"}],
-            [{"name":"gender"}, false]
+            [{"name":"gender"}, {"name": "phoneNumber"}]
         ]
     }
 ]
