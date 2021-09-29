@@ -89,6 +89,10 @@ Espo.define('views/record/kanban-item', 'view', function (Dep) {
                     valueEmpty = false;
                 }
 
+                if (this.model.get(name + 'Ids')){
+                    valueEmpty = false;
+                }
+
                 if (!valueEmpty) {
                     this.createView(key, viewName, {
                         model: this.model,
