@@ -53,7 +53,7 @@ Espo.define('views/admin/layouts/filters', 'views/admin/layouts/rows', function 
             this.getModelFactory().create(this.scope, function (model) {
                 this.getHelper().layoutManager.get(this.scope, this.type, function (layout) {
 
-                    var allFields = [];
+                    var allFields = ['id'];
                     for (var field in model.defs.fields) {
                         if (this.checkFieldType(model.getFieldParam(field, 'type')) && this.isFieldEnabled(model, field)) {
                             allFields.push(field);

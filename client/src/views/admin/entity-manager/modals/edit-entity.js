@@ -301,6 +301,9 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                     textFilterFieldsTranslation[item] = this.translate(item, 'fields', scope);
                 }, this);
 
+                optionList.unshift('id');
+                textFilterFieldsTranslation['id'] = this.translate('id', 'fields');
+
                 this.createView('textFilterFields', 'views/fields/multi-enum', {
                     model: model,
                     mode: 'edit',
