@@ -2460,7 +2460,7 @@ class Record extends \Espo\Core\Services\Base
                 $value = json_decode(json_encode($entity->get($field), JSON_PRESERVE_ZERO_FRACTION | JSON_NUMERIC_CHECK), true);
             }
 
-            if (!in_array($field, $skip) && array_key_exists($field, $data) && $data[$field] !== $value) {
+            if (!in_array($field, $skip) && !empty($data) && is_array($data) && array_key_exists($field, $data) && $data[$field] !== $value) {
                 $isUpdated = true;
                 break;
             }
