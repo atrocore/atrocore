@@ -110,9 +110,9 @@ class FieldManager extends AbstractListener
              * First, prepare main value
              */
             if (!empty($becameValues[$record[$field]])) {
-                $sqlValues[] = "{$columnName}='{$becameValues[$record[$field]]}'";
+                $sqlValues[] = "`{$columnName}`='{$becameValues[$record[$field]]}'";
             } else {
-                $sqlValues[] = "{$columnName}=null";
+                $sqlValues[] = "`{$columnName}`=null";
             }
 
             /**
@@ -127,7 +127,7 @@ class FieldManager extends AbstractListener
                         $value = "null";
                     }
 
-                    $sqlValues[] = "{$columnName}_" . strtolower($language) . "=$value";
+                    $sqlValues[] = "`{$columnName}_" . strtolower($language) . "`=$value";
                 }
             }
 
