@@ -4002,7 +4002,8 @@ tbody.collapse.in {
 
 .pull-right > .dropdown-menu {
     right: 0;
-    left: auto
+    left: auto;
+    z-index: 10000;
 }
 
 .dropup .caret, .navbar-fixed-bottom .dropdown .caret {
@@ -15356,8 +15357,35 @@ div.list-kanban > div.kanban-columns-container > table {
     }
 }
 
-table.table > thead th > a {
+table.table > thead th > a,
+table.table > thead th > div > a {
     color: #999
+}
+
+@media screen and (min-width: 768px) {
+    #main > .list-container > .list > .table {
+        min-width: 100%;
+        width: auto;
+    }
+
+    .list > .table thead th {
+        vertical-align: middle;
+    }
+
+    .list > .table thead th:not([data-name="r-checkbox"]) > div {
+        min-width: 100px;
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+    }
+
+    .list > .table thead th:not([data-name="r-checkbox"]) > div > span {
+        margin-top: 2px;
+    }
+
+    .catalog-tree-panel {
+        z-index: 2;
+    }
 }
 
 table.table > thead th {

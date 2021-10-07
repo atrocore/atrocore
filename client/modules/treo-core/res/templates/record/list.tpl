@@ -59,20 +59,22 @@
                 {{#each headerDefs}}
                 <th {{#if align}} style="text-align: {{align}};"{{/if}}>
                     {{#if this.sortable}}
-                        <a href="javascript:" class="sort" data-name="{{this.name}}">
-                            {{#if this.hasCustomLabel}}
-                                {{this.customLabel}}
-                            {{else}}
-                                {{translate this.name scope=../../../collection.name category='fields'}}
-                            {{/if}}
-                        </a>
-                        {{#if this.sorted}}
-                            {{#if this.asc}}
-                                <span class="caret"></span>
-                            {{else}}
-                                <span class="caret-up"></span>
-                            {{/if}}
+                        <div>
+                            <a href="javascript:" class="sort" data-name="{{this.name}}">
+                                {{#if this.hasCustomLabel}}
+                                    {{this.customLabel}}
+                                {{else}}
+                                    {{translate this.name scope=../../../collection.name category='fields'}}
+                                {{/if}}
+                            </a>
+                            {{#if this.sorted}}
+                                {{#if this.asc}}
+                                    <span class="caret"></span>
+                                {{else}}
+                                    <span class="caret-up"></span>
+                                {{/if}}
                         {{/if}}
+                        </div>
                     {{else}}
                         {{#if this.hasCustomLabel}}
                             {{this.customLabel}}
@@ -108,16 +110,18 @@
                 {{/if}}
                 {{#each headerDefs}}
                 <th {{#if width}} width="{{width}}"{{/if}}{{#if align}} style="text-align: {{align}};"{{/if}}>
-                    {{#if this.sortable}}
-                        <a href="javascript:" class="sort" data-name="{{this.name}}">{{#if this.hasCustomLabel}}{{this.customLabel}}{{else}}{{translate this.name scope=../../../collection.name category='fields'}}{{/if}}</a>
-                        {{#if this.sorted}}{{#if this.asc}}<span class="caret"></span>{{else}}<span class="caret-up"></span>{{/if}}{{/if}}
-                    {{else}}
-                        {{#if this.hasCustomLabel}}
-                            {{this.customLabel}}
+                    <div>
+                        {{#if this.sortable}}
+                            <a href="javascript:" class="sort" data-name="{{this.name}}">{{#if this.hasCustomLabel}}{{this.customLabel}}{{else}}{{translate this.name scope=../../../collection.name category='fields'}}{{/if}}</a>
+                            {{#if this.sorted}}{{#if this.asc}}<span class="caret"></span>{{else}}<span class="caret-up"></span>{{/if}}{{/if}}
                         {{else}}
-                            {{translate this.name scope=../../../collection.name category='fields'}}
+                            {{#if this.hasCustomLabel}}
+                                {{this.customLabel}}
+                            {{else}}
+                                {{translate this.name scope=../../../collection.name category='fields'}}
+                            {{/if}}
                         {{/if}}
-                    {{/if}}
+                    </div>
                 </th>
                 {{/each}}
             </tr>

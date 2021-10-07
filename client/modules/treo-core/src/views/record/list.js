@@ -290,6 +290,26 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
                     this.initDraggableList();
                 });
             }
+
+            let list = $('.list');
+            if (list && this.hasHorizontalScroll()) {
+                let fixedTableHeader = $('.fixed-header-table');
+                let fullTable = $('.full-table');
+
+                if (fixedTableHeader && fullTable) {
+                    let prevScrollLeft = 0;
+
+                    list.on('scroll', () => {
+                        if (prevScrollLeft !== list.scrollLeft()) {
+                            let fixedTableHeaderBasePosition = list.offset().left + 1 || 0;
+                            fixedTableHeader.css('left', fixedTableHeaderBasePosition - list.scrollLeft());
+                        }
+                        prevScrollLeft = list.scrollLeft();
+                    });
+                }
+
+                $('#main > .list-container > .list').css('overflow-x', 'auto');
+            }
         },
 
         initDraggableList() {
@@ -483,6 +503,19 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
             el.on('hide.bs.dropdown', function (e) {
                 $(e.relatedTarget).next('.dropdown-menu').removeAttr('style');
             });
+        },
+
+        hasHorizontalScroll() {
+            let list = this.$el.find('.list').get(0);
+            let table = this.$el.find('.full-table').get(0);
+
+            if (list && table) {
+                if (list.clientWidth < table.clientWidth) {
+                    return true;
+                }
+            }
+
+            return false;
         },
 
         fetchAttributeListFromLayout() {
