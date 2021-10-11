@@ -15328,7 +15328,7 @@ table.table > thead th > div > a {
 }
 
 @media screen and (min-width: 768px) {
-    #main > .list-container > .list > .table {
+    #main > .list-container > .list > .table:not(.fixed-header-table) {
         min-width: 100%;
         width: auto;
     }
@@ -15349,7 +15349,7 @@ table.table > thead th > div > a {
     }
 
     .catalog-tree-panel {
-        z-index: 2;
+        z-index: 3;
     }
 }
 
