@@ -313,7 +313,7 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
                             }
                         }.bind(this))
 
-                        if (width) {
+                        if (width > 100) {
                             fullTable.css('min-width', width + '%');
                             fullTable.css('width', width + '%');
                         }
