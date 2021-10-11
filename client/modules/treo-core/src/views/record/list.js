@@ -278,6 +278,8 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
+            this.fullTableScroll();
+
             if (this.enabledFixedHeader) {
                 this.fixedTableHead()
             }
@@ -290,22 +292,44 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
                     this.initDraggableList();
                 });
             }
+        },
 
+        fullTableScroll() {
             let list = $('.list');
-            if (list && this.hasHorizontalScroll()) {
+            if (list) {
                 let fixedTableHeader = $('.fixed-header-table');
                 let fullTable = $('.full-table');
 
                 if (fixedTableHeader && fullTable) {
-                    let prevScrollLeft = 0;
+                    let width = 0;
+                    let tableHeaders = fullTable.find('th');
+                    if (tableHeaders.length) {
+                        tableHeaders.each(function (index, element) {
+                            if (element.width) {
+                                if (element.width.match(/[0-9]*(%)/gm)) {
+                                    let thWidth = parseInt(element.width);
+                                    width += thWidth;
+                                }
+                            }
+                        }.bind(this))
 
-                    list.on('scroll', () => {
-                        if (prevScrollLeft !== list.scrollLeft()) {
-                            let fixedTableHeaderBasePosition = list.offset().left + 1 || 0;
-                            fixedTableHeader.css('left', fixedTableHeaderBasePosition - list.scrollLeft());
+                        if (width) {
+                            fullTable.css('min-width', width + '%');
+                            fullTable.css('width', width + '%');
                         }
-                        prevScrollLeft = list.scrollLeft();
-                    });
+                    }
+
+                    if (this.hasHorizontalScroll()) {
+                        let prevScrollLeft = 0;
+
+                        list.on('scroll', () => {
+                            if (prevScrollLeft !== list.scrollLeft()) {
+                                let fixedTableHeaderBasePosition = list.offset().left + 1 || 0;
+                                fixedTableHeader.css('left', fixedTableHeaderBasePosition - list.scrollLeft());
+                            }
+                            prevScrollLeft = list.scrollLeft();
+                        });
+                    }
                 }
 
                 $('#main > .list-container > .list').css('overflow-x', 'auto');
@@ -475,9 +499,10 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
 
                 $window.on('scroll', toggleClass);
                 $window.on('resize', function () {
+                    this.fullTableScroll();
                     setPosition();
                     setWidth();
-                });
+                }.bind(this));
             }
         },
 
