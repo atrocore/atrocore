@@ -364,8 +364,14 @@ class RDB extends \Espo\ORM\Repository
             $collection = $result;
             return $collection;
         } else if ($result instanceof Entity) {
-            $entity = $result;
-            return $entity;
+            if (!empty($params['collectionOnly'])) {
+                $collection = new EntityCollection([$result], $entityType, $this->entityFactory);
+                $collection->setAsFetched();
+                return $collection;
+            } else {
+                $entity = $result;
+                return $entity;
+            }
         } else {
             return $result;
         }

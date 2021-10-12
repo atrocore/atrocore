@@ -1443,6 +1443,7 @@ class Record extends \Espo\Core\Services\Base
         }
 
         $selectParams = $this->getSelectManager($foreignEntityName)->getSelectParams($params, true);
+        $selectParams['collectionOnly'] = true;
 
         if (array_key_exists($link, $this->linkSelectParams)) {
             $selectParams = array_merge($selectParams, $this->linkSelectParams[$link]);
@@ -1491,6 +1492,12 @@ class Record extends \Espo\Core\Services\Base
 
     public function linkEntity($id, $link, $foreignId)
     {
+        if ($this->getMetadata()->get(['entityDefs', $this->entityName, 'links', $link, 'type']) === 'belongsTo') {
+            $data = new \stdClass();
+            $data->{"{$link}Id"} = $foreignId;
+            return $this->updateEntity($id, $data);
+        }
+
         $event = $this
             ->dispatchEvent('beforeLinkEntity', new Event(['id' => $id, 'link' => $link, 'foreignId' => $foreignId]));
 
@@ -1541,6 +1548,12 @@ class Record extends \Espo\Core\Services\Base
 
     public function unlinkEntity($id, $link, $foreignId)
     {
+        if ($this->getMetadata()->get(['entityDefs', $this->entityName, 'links', $link, 'type']) === 'belongsTo') {
+            $data = new \stdClass();
+            $data->{"{$link}Id"} = null;
+            return $this->updateEntity($id, $data);
+        }
+
         $event = $this
             ->dispatchEvent('beforeUnlinkEntity', new Event(['id' => $id, 'link' => $link, 'foreignId' => $foreignId]));
 

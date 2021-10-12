@@ -39,8 +39,8 @@ Espo.define('treo-core:views/admin/layouts/relationships', 'class-replace!treo-c
                 this.getHelper().layoutManager.get(this.scope, this.type, function (layout) {
                     let allFields = [];
                     for (let field in model.defs.links) {
-                        if (['hasMany', 'hasChildren'].indexOf(model.defs.links[field].type) !== -1) {
-                            if (this.isLinkEnabled(model, field)) {
+                        if (['belongsTo', 'hasMany', 'hasChildren'].indexOf(model.defs.links[field].type) !== -1) {
+                            if (['ownerUser', 'assignedUser', 'modifiedBy', 'createdBy'].indexOf(field) === -1 && this.isLinkEnabled(model, field)) {
                                 allFields.push(field);
                             }
                         }
