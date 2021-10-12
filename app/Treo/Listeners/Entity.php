@@ -56,8 +56,6 @@ class Entity extends AbstractListener
         // call multi-lang event
         $this->multiLang($event);
 
-        $this->prepareTextEmptyValues($event);
-
         // call hooks
         if (empty($event->getArgument('hooksDisabled')) && empty($event->getArgument('options')['skipHooks'])) {
             $this
@@ -250,23 +248,6 @@ class Entity extends AbstractListener
                         $entity->set($mField, $values);
                     }
                 }
-            }
-        }
-    }
-
-    /**
-     * @param Event $event
-     */
-    protected function prepareTextEmptyValues(Event $event): void
-    {
-        /** @var \Espo\Core\ORM\Entity $entity */
-        $entity = $event->getArgument('entity');
-
-        $textTypes = ['varchar', 'text', 'wysiwyg', 'url'];
-
-        foreach ($this->getMetadata()->get(['entityDefs', $event->getArgument('entityType'), 'fields'], []) as $field => $defs) {
-            if (in_array($defs['type'], $textTypes) && $entity->get($field) === '') {
-                $entity->set($field);
             }
         }
     }
