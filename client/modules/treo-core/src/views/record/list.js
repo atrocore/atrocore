@@ -44,12 +44,15 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
 
         massRelationView: 'treo-core:views/modals/select-entity-and-records',
 
+        baseWidth: [],
+
         setup() {
             this.setupDraggableParams();
 
             Dep.prototype.setup.call(this);
 
             this.enabledFixedHeader = this.options.enabledFixedHeader || this.enabledFixedHeader;
+            this.baseWidth = [];
 
             this.listenTo(this, 'after:save', () => {
                 this.collection.fetch();
@@ -295,37 +298,51 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
         },
 
         fullTableScroll() {
-            let list = $('.list');
+            let list = $('#main > .list-container > .list');
             if (list) {
-                let fixedTableHeader = $('.fixed-header-table');
-                let fullTable = $('.full-table');
+                let fixedTableHeader = $('#main > .list-container > .list > .fixed-header-table');
+                let fullTable = $('#main > .list-container > .list > .full-table');
 
                 if (fixedTableHeader && fullTable) {
-                    let width = 0;
-                    let tableHeaders = fullTable.find('th');
-                    if (tableHeaders.length) {
-                        tableHeaders.each(function (index, element) {
-                            if (element.width) {
-                                if (element.width.match(/[0-9]*(%)/gm)) {
-                                    let thWidth = parseInt(element.width);
-                                    width += thWidth;
-                                }
-                            }
-                        }.bind(this))
+                    fullTable.find('thead').find('th').each(function (i, elem) {
+                        let width = elem.width;
 
-                        if (width > 100) {
-                            fullTable.css('min-width', width + '%');
-                            fullTable.css('width', width + '%');
+                        if (width) {
+                            if (i in this.baseWidth) {
+                                width = this.baseWidth[i];
+                            }
+
+                            if (typeof width === 'string' && width.match(/[0-9]*(%)/gm)) {
+                                this.baseWidth[i] = width;
+                                width = list.outerWidth() * parseInt(width) / 100;
+                            }
+
+                            elem.width = width;
                         }
-                    }
+                    }.bind(this));
 
                     if (this.hasHorizontalScroll()) {
+                        fixedTableHeader.addClass('table-scrolled');
+                        fullTable.addClass('table-scrolled');
+
+                        let rowsButtons = $('td[data-name="buttons"]');
+                        let rowsButtonsPosition = list.width() - 35;
+                        if ($(window).outerWidth() > 768 && rowsButtons.length) {
+                            rowsButtons.addClass('fixed-button');
+
+                            rowsButtons.css('left', rowsButtonsPosition);
+                        }
+
                         let prevScrollLeft = 0;
 
                         list.on('scroll', () => {
                             if (prevScrollLeft !== list.scrollLeft()) {
                                 let fixedTableHeaderBasePosition = list.offset().left + 1 || 0;
                                 fixedTableHeader.css('left', fixedTableHeaderBasePosition - list.scrollLeft());
+
+                                if ($(window).outerWidth() > 768 && rowsButtons.hasClass('fixed-button')) {
+                                    rowsButtons.css('left', rowsButtonsPosition + list.scrollLeft());
+                                }
                             }
                             prevScrollLeft = list.scrollLeft();
                         });
@@ -477,8 +494,13 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
 
                     fixedTable.css('width', widthTable);
 
-                    fullTable.find('thead').find('th').each(function (i) {
+                    fullTable.find('thead').find('th').each(function (i, elem) {
                         let width = $(this).outerWidth();
+
+                        if (!width) {
+                            $(this).attr('width', 100);
+                        }
+
                         fixedTable.find('th').eq(i).css('width', width);
                     });
                 },
