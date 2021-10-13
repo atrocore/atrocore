@@ -305,7 +305,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             this.notify('Loading...');
             this.createView('dialog', viewName, {
                 scope: scope,
-                multiple: true,
+                multiple: this.model.defs['links'][link].type !== 'belongsTo',
                 createButton: false,
                 filters: filters,
                 massRelateEnabled: massRelateEnabled,
