@@ -15333,23 +15333,46 @@ table.table > thead th > div > a {
         width: auto;
     }
 
-    .list > .table thead th {
+    #main > .list-container > .list > .table thead th {
         vertical-align: middle;
     }
 
-    .list > .table thead th:not([data-name="r-checkbox"]) > div {
+    #main > .list-container > .list > .table thead th:not([data-name="r-checkbox"]) > div {
         min-width: 100px;
+        width: inherit;
         display: flex;
         flex-flow: row nowrap;
         align-items: center;
     }
 
-    .list > .table thead th:not([data-name="r-checkbox"]) > div > span {
+    #main > .list-container > .list > .table thead th:not([data-name="r-checkbox"]) > div > span {
         margin-top: 2px;
+    }
+
+    #main > .list-container > .list > .table.table-scrolled th:last-child {
+        display: none;
     }
 
     .catalog-tree-panel {
         z-index: 3;
+    }
+
+    #main > .list-container > .list > table tr {
+        position: relative;
+    }
+
+    #main > .list-container > .list > table td.fixed-button:last-child {
+        display: flex;
+        position: absolute;
+        top: 3px;
+        left: 0;
+        border: 0;
+        width: 28px;
+        height: 28px;
+        background-color: rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+        justify-content: center;
+        align-items: center;
     }
 }
 
