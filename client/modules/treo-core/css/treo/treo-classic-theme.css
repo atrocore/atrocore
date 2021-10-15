@@ -15328,6 +15328,10 @@ table.table > thead th > div > a {
 }
 
 @media screen and (min-width: 768px) {
+    #main > .list-container > .list {
+        overflow: auto;
+    }
+
     #main > .list-container > .list > .table:not(.fixed-header-table) {
         min-width: 100%;
         width: auto;
@@ -15373,6 +15377,13 @@ table.table > thead th > div > a {
         border-radius: 50%;
         justify-content: center;
         align-items: center;
+    }
+
+    .fixed-scrollbar {
+        display: none;
+        position: fixed;
+        overflow-x: scroll;
+        bottom: 0;
     }
 }
 
