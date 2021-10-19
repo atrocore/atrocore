@@ -21,7 +21,6 @@
     },
     "type": {
       "type": "varchar",
-      "maxLength": 100,
       "importDisabled": true,
       "exportDisabled": true
     },
