@@ -598,6 +598,11 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
                 if (target && menu) {
                     let menuHeight = menu.height();
                     let pageHeight = $(document).height();
+                    let footer = $('#footer');
+                    if (footer) {
+                        pageHeight -= footer.height();
+                    }
+
                     let positionTop = $(target).offset().top + $(target).outerHeight(true);
 
                     if ((positionTop + menuHeight) > pageHeight) {
