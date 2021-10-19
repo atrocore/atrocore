@@ -206,6 +206,14 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                             }
                             collection.fetch();
                         }.bind(this));
+
+                        view.listenTo(view, 'after:save', function () {
+                            let parent = this.getParentView();
+
+                            if (parent && 'link' in parent) {
+                                $('a[data-name="' + parent.link + '"]').click();
+                            }
+                        });
                     });
                 }, this);
 

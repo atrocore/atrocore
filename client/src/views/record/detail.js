@@ -884,6 +884,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.$detailButtonContainer = this.$el.find('.detail-button-container');
                 this.$dropdownItemListButton = this.$detailButtonContainer.find('.dropdown-item-list-button');
             }, this);
+
+            this.listenTo(this.model, 'after:relate after:unrelate after:save', link => {
+                if (link) {
+                    $('a[data-name="' + link + '"]').click();
+                }
+            });
         },
 
         setupBeforeFinal: function () {
