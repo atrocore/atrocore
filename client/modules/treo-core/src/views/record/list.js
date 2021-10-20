@@ -597,25 +597,32 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
                 let menu = $(target).siblings('.dropdown-menu');
                 if (target && menu) {
                     let menuHeight = menu.height();
-                    let pageHeight = $(document).height();
-                    let footer = $('#footer');
-                    if (footer) {
-                        pageHeight -= footer.height();
-                    }
-
                     let positionTop = $(target).offset().top + $(target).outerHeight(true);
 
-                    if ((positionTop + menuHeight) > pageHeight) {
+                    if ((positionTop + menuHeight) > this.getHeightParentPosition()) {
                         menu.css({
                             'top': `-${menuHeight}px`
                         });
                     }
                 }
-            });
+            }.bind(this));
 
             el.on('hide.bs.dropdown', function (e) {
                 $(e.relatedTarget).next('.dropdown-menu').removeAttr('style');
             });
+        },
+
+        getHeightParentPosition() {
+            let position;
+            let parent = this.getParentView();
+
+            if (parent && parent.viewMode === 'list') {
+                position = this.$el.offset().top + this.$el.outerHeight(true);
+            } else {
+                position = $(document).height();
+            }
+
+            return position;
         },
 
         hasHorizontalScroll() {
