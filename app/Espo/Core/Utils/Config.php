@@ -219,11 +219,13 @@ class Config
 
     public function save()
     {
-        $values = $this->changedData;
-
-        $removeData = empty($this->removeData) ? null : $this->removeData;
-
         $data = include($this->configPath);
+        if (empty($data) || !is_array($data)) {
+            return false;
+        }
+
+        $values = $this->changedData;
+        $removeData = empty($this->removeData) ? null : $this->removeData;
 
         if (is_array($values)) {
             foreach ($values as $key => $value) {
