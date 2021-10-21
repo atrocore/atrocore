@@ -35,6 +35,7 @@ namespace Espo\Repositories;
 
 use Espo\Core\AclManager;
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Utils\Language;
 use \Espo\ORM\Entity;
 
 use \Espo\Core\Exceptions\Error;
@@ -83,7 +84,7 @@ class User extends \Espo\Core\ORM\Repositories\RDB
             ))->findOne();
 
             if ($user) {
-                throw new Conflict(json_encode(['reason' => 'userNameExists']));
+                throw new BadRequest($this->getLanguage()->translate('userNameExists', 'messages', 'User'));
             }
         } else {
             if ($entity->isAttributeChanged('userName')) {
@@ -97,7 +98,7 @@ class User extends \Espo\Core\ORM\Repositories\RDB
                     'id!=' => $entity->id
                 ))->findOne();
                 if ($user) {
-                    throw new Conflict(json_encode(['reason' => 'userNameExists']));
+                    throw new BadRequest($this->getLanguage()->translate('userNameExists', 'messages', 'User'));
                 }
             }
 
@@ -176,5 +177,13 @@ class User extends \Espo\Core\ORM\Repositories\RDB
     protected function getAclManager(): AclManager
     {
         return $this->getInjection('container')->get('aclManager');
+    }
+
+    /**
+     * @return Language
+     */
+    protected function getLanguage(): Language
+    {
+        return $this->getInjection('container')->get('language');
     }
 }
