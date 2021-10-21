@@ -431,11 +431,12 @@ class Application
         // prepare action
         $action = str_replace("/api/v1/Installer/", "", $request->getPathInfo());
 
-        // call controller
-        $result = $this
-            ->getContainer()
-            ->get('controllerManager')
-            ->process('Installer', $action, [], $request->getBody(), $request);
+        try {
+            $result = $this->getContainer()->get('controllerManager')->process('Installer', $action, [], $request->getBody(), $request);
+        } catch (\Throwable $e) {
+            header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
+            exit;
+        }
 
         header('Content-Type: application/json');
         echo $result;
