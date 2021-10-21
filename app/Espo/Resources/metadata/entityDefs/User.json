@@ -31,14 +31,16 @@
             "type": "password",
             "maxLength": 150,
             "internal": true,
-            "disabled": true
+            "disabled": true,
+            "tooltip": true
         },
         "passwordConfirm": {
             "type": "password",
             "maxLength": 150,
             "internal": true,
             "disabled": true,
-            "notStorable": true
+            "notStorable": true,
+            "tooltip": true
         },
         "salutationName": {
             "type": "enum",

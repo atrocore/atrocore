@@ -90,6 +90,26 @@
             }
           ]
         }
+      },
+      "password": {
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      },
+      "passwordConfirm": {
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
       }
     }
   }
