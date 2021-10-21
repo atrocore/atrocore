@@ -15409,7 +15409,7 @@ table.table > thead th > div > a {
         border: 0;
         width: 28px;
         height: 28px;
-        background-color: rgba(255, 255, 255, 0.5);
+        background-color: rgba(255, 255, 255, 0.9);
         border-radius: 50%;
         justify-content: center;
         align-items: center;

@@ -616,8 +616,9 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
             let position;
             let parent = this.getParentView();
 
-            if (parent && parent.viewMode === 'list') {
-                position = this.$el.offset().top + this.$el.outerHeight(true);
+            if (parent && parent.viewMode === 'list' && this.$el.find('.list')) {
+                let list = this.$el.find('.list');
+                position = list.offset().top + list.get(0).clientHeight;
             } else {
                 position = $(document).height();
             }
