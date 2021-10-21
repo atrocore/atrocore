@@ -61,7 +61,9 @@
     "teams": "Das Team zu dem dieser Benutzer gehört. Die Zugriffsberechtigung wird von der Team Rolle vererbt.",
     "roles": "Zusätzliche Zugriffsrollen. Wenn ein Benutzer zu keinem Team gehört oder wenn Sie die Zugriffsberechtigung nur für diesen Benutzer erweitern wollen.",
     "portalRoles": "Zusätzliche Portal Rollen. Benutzen Sie diese wenn Sie die Zugriffsberechtigung nur für diesen Benutzer erweitern wollen.",
-    "portals": "Portale auf die der Benutzer Zugriff hat."
+    "portals": "Portale auf die der Benutzer Zugriff hat.",
+    "password": "Lassen Sie dieses Feld leer, wenn Sie das alte Password behalten wollen.",
+    "passwordConfirm": "Lassen Sie dieses Feld leer, wenn Sie das alte Password behalten wollen."
   },
   "messages": {
     "accountInfoEmailSubject": "AtroCore Benutzerzugriffsinfo",
