@@ -15069,6 +15069,10 @@ label {
     margin-bottom: 0;
 }
 
+#main .page-header .search-container:empty {
+    display: none;
+}
+
 .page-header .header-buttons-container:not(.full-row) {
     margin-left: auto !important;
     width: auto !important;
