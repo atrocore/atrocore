@@ -49,7 +49,10 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
 
             this.validations = Espo.utils.clone(this.validations);
             this.validations.push('pattern');
-            this.validationPattern = this.convertStrToRegex();
+
+
+            let patternString = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'pattern']) || null;
+            this.validationPattern = this.convertStrToRegex(patternString);
         },
 
         setupSearch: function () {
@@ -197,9 +200,7 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
                 .replace('{pattern}', this.validationPattern);
         },
 
-        convertStrToRegex() {
-            let patternString = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'pattern']);
-
+        convertStrToRegex(patternString) {
             if (patternString) {
                 let flags = patternString.replace(/.*\/([gmixsuAJD]*)$/, '$1');
                 let pattern = patternString.replace(new RegExp('^/(.*?)/' + flags + '$'), '$1');
