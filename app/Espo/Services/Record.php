@@ -1780,9 +1780,8 @@ class Record extends \Espo\Core\Services\Base
 
         $count = 0;
 
-        if (array_key_exists('ids', $params)) {
-            $ids = $params['ids'];
-            foreach ($ids as $id) {
+        if (array_key_exists('ids', $params) && !empty($params['ids']) && is_array($params['ids'])) {
+            foreach ($params['ids'] as $id) {
                 $entity = $this->getEntity($id);
                 if ($entity && $this->getAcl()->check($entity, 'delete') && $this->checkEntityForMassRemove($entity)) {
                     if ($repository->remove($entity)) {

@@ -170,10 +170,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         actionSaveAndNext: function () {
-            if (this.save(null, true)) {
+            this.save(function () {
                 this.actionNext();
                 $(window).scrollTop(0)
-            }
+            }.bind(this), true);
         },
 
         actionCancelEdit: function () {
