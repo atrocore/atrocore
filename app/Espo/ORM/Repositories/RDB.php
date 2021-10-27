@@ -205,11 +205,11 @@ class RDB extends \Espo\ORM\Repository
                 if (is_array($unique)) {
                     $sqlCondition = [];
                     foreach ($unique as $field) {
-                        $sqlCondition[] = Util::toUnderScore($field) . "='" . $entity->get($field) . "'";
+                        $sqlCondition[] = "`" . Util::toUnderScore($field) . "`='" . $entity->get($field) . "'";
                     }
                     $uniques[$key] = '(' . implode(' AND ', $sqlCondition) . ')';
                 } else {
-                    $uniques[$key] = Util::toUnderScore($unique) . "='" . $entity->get($unique) . "'";
+                    $uniques[$key] = "`" . Util::toUnderScore($unique) . "`='" . $entity->get($unique) . "'";
                 }
             }
 
