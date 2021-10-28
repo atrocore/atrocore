@@ -19556,7 +19556,8 @@ button.category:focus {
     margin-top: 0;
     margin-bottom: 0;
   }
-  .page-header .header-buttons .header-items > a.action {
+  .page-header .header-buttons .header-items > a.action,
+  .page-header .header-buttons .header-items > div.btn-group {
     margin-bottom: 4px;
   }
   .detail .panel-default > .panel-heading,
@@ -21009,6 +21010,10 @@ body,
   }
   #content {
     margin-top: 52px;
+    min-height: calc(100vh - 80px);
+  }
+  body > .container.content:not(#content) {
+    min-height: calc(100vh - 28px);
   }
   #main .catalog-tree-panel + .list-container.hidden-catalog-tree-panel {
     margin-left: 0;
