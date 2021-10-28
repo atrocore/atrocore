@@ -876,6 +876,7 @@
     "list": "Liste"
   },
   "exceptions": {
+    "noSuchOptions": "Der Wert für das Feld '%s' ist ungültig.",
     "fieldIsRequired": "Validierung fehlgeschlagen. '%s' ist erforderlich.",
     "notDashletService": "Service %s muss Dashlet-Interface implementieren",
     "urlIsInvalid": "Die URL ist ungültig",

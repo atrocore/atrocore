@@ -904,6 +904,7 @@
     "cd": "Кд"
   },
   "exceptions": {
+    "noSuchOptions": "Значение для поля '%s' не допустимо.",
     "fieldIsRequired": "Проверка не удалась. '%s' необходим.",
     "urlIsInvalid": "URL неправильный",
     "suchUrlExists": "Такой URL уже существует",

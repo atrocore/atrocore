@@ -33,6 +33,7 @@
 
 namespace Espo\Core\ORM\Repositories;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\EntityManager;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\Entity;
@@ -43,6 +44,7 @@ use Treo\Core\EventManager\Event;
 class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 {
     protected $dependencies = array(
+        'container',
         'metadata',
         'config',
         'fieldManagerUtil',
@@ -259,6 +261,27 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $this->dispatch('afterUnrelate', $entity, $options, $relationName, null, $foreign);
     }
 
+    protected function validateEnum(Entity $entity): void
+    {
+        $fields = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []);
+
+        foreach ($fields as $fieldName => $fieldData) {
+            if (isset($fieldData['type']) && in_array($fieldData['type'], ['enum', 'multiEnum']) && $entity->isAttributeChanged($fieldName) && !empty($entity->get($fieldName))) {
+                $fieldOptions = empty($fieldData['options']) ? [] : $fieldData['options'];
+                $value = $entity->get($fieldName);
+                if ($fieldData['type'] == 'enum') {
+                    $value = [$value];
+                }
+
+                foreach ($value as $v) {
+                    if (!in_array($v, $fieldOptions)) {
+                        throw new BadRequest(sprintf($this->getInjection('container')->get('language')->translate('noSuchOptions', 'exceptions', 'Global'), $fieldName));
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * @param Entity $entity
      * @param array  $options
@@ -266,6 +289,10 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     protected function beforeSave(Entity $entity, array $options = [])
     {
         parent::beforeSave($entity, $options);
+
+        if (empty($options['skipAll'])) {
+            $this->validateEnum($entity);
+        }
 
         // dispatch an event
         $this->dispatch('beforeSave', $entity, $options);

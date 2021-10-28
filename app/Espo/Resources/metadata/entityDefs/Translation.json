@@ -6,7 +6,7 @@
       "trim": true
     },
     "module": {
-      "type": "enum",
+      "type": "varchar",
       "default": "custom",
       "readOnly": true,
       "required": true,
