@@ -20277,6 +20277,11 @@ button.category:focus {
 @media screen and (max-width: 767px) {
     #content {
         margin-top: 44px;
+        min-height: calc(100vh - 80px);
+    }
+
+    body > .container.content:not(#content) {
+        min-height: calc(100vh - 28px);
     }
 
     .modal-content .overview {
