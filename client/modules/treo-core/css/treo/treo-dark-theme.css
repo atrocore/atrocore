@@ -6610,7 +6610,7 @@ button.close {
         width: 300px
     }
 
-    .modal-body .row > .overview .cell:last-child:not(:first-child) {
+    .modal-body .row > .overview .cell:not(.hidden-cell) + .cell {
         padding-left: 16px;
     }
 }
