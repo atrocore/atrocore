@@ -145,6 +145,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             if (!this.editModeDisabled) {
                 this.setEditMode();
                 $(window).scrollTop(0);
+                this.resetSidebar();
             } else {
                 var options = {
                     id: this.model.id,
@@ -179,6 +180,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         actionCancelEdit: function () {
             this.cancelEdit();
             $(window).scrollTop(0);
+            this.resetSidebar();
         },
 
         actionSelfAssign: function () {
@@ -547,6 +549,14 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     this.setIsNotChanged();
                 }, this);
             }
+        },
+
+        resetSidebar() {
+          let side = $('#main > .record .row > .side');
+
+          if (side) {
+              side.removeClass('scrolled fixed-bottom fixed-top');
+          }
         },
 
         fetch: function () {
