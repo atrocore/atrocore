@@ -2472,7 +2472,7 @@ class Record extends \Espo\Core\Services\Base
             }
 
             if (in_array($field, $linkMultipleIds)) {
-                $value = !empty($linked) ? array_column($entity->get(substr($field, 0, -3))->toArray(), 'id') : null;
+                $value = array_column($entity->get(substr($field, 0, -3))->toArray(), 'id');
             } else {
                 $value = $entity->get($field);
             }
