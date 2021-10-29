@@ -266,7 +266,13 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $fields = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []);
 
         foreach ($fields as $fieldName => $fieldData) {
-            if (isset($fieldData['type']) && in_array($fieldData['type'], ['enum', 'multiEnum']) && $entity->isAttributeChanged($fieldName) && !empty($entity->get($fieldName))) {
+            if (
+                isset($fieldData['type'])
+                && in_array($fieldData['type'], ['enum', 'multiEnum'])
+                && !isset($fieldData['view'])
+                && $entity->isAttributeChanged($fieldName)
+                && !empty($entity->get($fieldName))
+            ) {
                 $fieldOptions = empty($fieldData['options']) ? [] : $fieldData['options'];
                 $value = $entity->get($fieldName);
                 if ($fieldData['type'] == 'enum') {
