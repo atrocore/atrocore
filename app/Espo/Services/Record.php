@@ -2437,12 +2437,6 @@ class Record extends \Espo\Core\Services\Base
         return $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links'], []);
     }
 
-    /**
-     * @param Entity    $entity
-     * @param \stdClass $data
-     *
-     * @return bool
-     */
     protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
     {
         // prepare skipping fields
@@ -2466,7 +2460,7 @@ class Record extends \Espo\Core\Services\Base
         $linkMultipleNames = [];
         foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields']) as $name => $fieldData) {
             if (isset($fieldData['type'])) {
-                if ($fieldData['type'] === 'link') {
+                if ($fieldData['type'] === 'link' || $fieldData['type'] === 'asset') {
                     $linkNames[] = $name . 'Name';
                 }
                 if ($fieldData['type'] === 'linkMultiple') {
@@ -2486,13 +2480,16 @@ class Record extends \Espo\Core\Services\Base
             }
 
             if (in_array($field, $linkMultipleIds)) {
-                $value = !empty($linked) ? array_column($entity->get(substr($field, 0, -3))->toArray(), 'id') : [];
+                $value = !empty($linked) ? array_column($entity->get(substr($field, 0, -3))->toArray(), 'id') : null;
             } else {
                 $value = json_decode(json_encode($entity->get($field), JSON_PRESERVE_ZERO_FRACTION | JSON_NUMERIC_CHECK), true);
             }
 
-            if (!in_array($field, $skip) && array_key_exists($field, $data) && $data[$field] !== $value) {
-                return true;
+            if (!in_array($field, $skip) && array_key_exists($field, $data)) {
+                $data[$field] = json_decode(json_encode($entity->get($field), JSON_PRESERVE_ZERO_FRACTION | JSON_NUMERIC_CHECK), true);
+                if ($data[$field] !== $value) {
+                    return true;
+                }
             }
         }
 
