@@ -205,11 +205,15 @@ class RDB extends \Espo\ORM\Repository
                 if (is_array($unique)) {
                     $sqlCondition = [];
                     foreach ($unique as $field) {
-                        $sqlCondition[] = "`" . Util::toUnderScore($field) . "`='" . $entity->get($field) . "'";
+                        $value = $entity->get($field);
+
+                        $sqlCondition[] = $this->prepareWhereConditions($field, $value);
                     }
                     $uniques[$key] = '(' . implode(' AND ', $sqlCondition) . ')';
                 } else {
-                    $uniques[$key] = "`" . Util::toUnderScore($unique) . "`='" . $entity->get($unique) . "'";
+                    $value = $entity->get($unique);
+
+                    $uniques[$key] = $this->prepareWhereConditions($unique, $value);
                 }
             }
 
@@ -219,6 +223,23 @@ class RDB extends \Espo\ORM\Repository
                 ->getEntityManager()
                 ->nativeQuery("DELETE FROM `$dbTable` WHERE deleted=1 AND id!='$entity->id' AND ($where)");
         }
+    }
+
+    /**
+     * @param string $field
+     * @param $value
+     *
+     * @return string
+     */
+    protected function prepareWhereConditions(string $field, $value): string
+    {
+        if (is_null($value)) {
+            $result = "`" . Util::toUnderScore($field) . "` IS NULL";
+        } else {
+            $result = "`" . Util::toUnderScore($field) . "`='" . $value . "'";
+        }
+
+        return $result;
     }
 
     /**
