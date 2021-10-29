@@ -2486,7 +2486,6 @@ class Record extends \Espo\Core\Services\Base
             }
 
             if (!in_array($field, $skip) && array_key_exists($field, $data)) {
-                $data[$field] = json_decode(json_encode($entity->get($field), JSON_PRESERVE_ZERO_FRACTION | JSON_NUMERIC_CHECK), true);
                 if ($data[$field] !== $value) {
                     return true;
                 }
