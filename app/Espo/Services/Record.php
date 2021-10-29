@@ -2439,7 +2439,6 @@ class Record extends \Espo\Core\Services\Base
 
     protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
     {
-        // prepare skipping fields
         $skip = [
             'id',
             'deleted',
@@ -2447,13 +2446,6 @@ class Record extends \Espo\Core\Services\Base
             'modifiedAt',
             'createdById'
         ];
-
-        // prepare data
-        $data = json_decode(json_encode($data, JSON_PRESERVE_ZERO_FRACTION | JSON_NUMERIC_CHECK), true);
-
-        if (empty($data) || !is_array($data)) {
-            return false;
-        }
 
         $linkNames = [];
         $linkMultipleIds = [];
@@ -2482,13 +2474,11 @@ class Record extends \Espo\Core\Services\Base
             if (in_array($field, $linkMultipleIds)) {
                 $value = !empty($linked) ? array_column($entity->get(substr($field, 0, -3))->toArray(), 'id') : null;
             } else {
-                $value = json_decode(json_encode($entity->get($field), JSON_PRESERVE_ZERO_FRACTION | JSON_NUMERIC_CHECK), true);
+                $value = $entity->get($field);
             }
 
-            if (!in_array($field, $skip) && array_key_exists($field, $data)) {
-                if ($data[$field] !== $value) {
-                    return true;
-                }
+            if (!in_array($field, $skip) && property_exists($data, $field) && $data->$field != $value) {
+                return true;
             }
         }
 
