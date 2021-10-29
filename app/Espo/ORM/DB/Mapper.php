@@ -799,8 +799,6 @@ abstract class Mapper implements IMapper
             $value = json_encode($value, \JSON_UNESCAPED_UNICODE);
         } else if ($type == IEntity::JSON_OBJECT && (is_array($value) || $value instanceof \stdClass)) {
             $value = json_encode($value, \JSON_UNESCAPED_UNICODE);
-        } elseif (in_array($type, [IEntity::VARCHAR, IEntity::TEXT]) && $value === '') {
-            $value = null;
         }
 
         if (is_bool($value)) {

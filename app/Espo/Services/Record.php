@@ -2457,28 +2457,46 @@ class Record extends \Espo\Core\Services\Base
         // prepare data
         $data = json_decode(json_encode($data, JSON_PRESERVE_ZERO_FRACTION | JSON_NUMERIC_CHECK), true);
 
-        $isUpdated = false;
-        foreach ($entity->getFields() as $field => $params) {
-            // prepare value
-            if (substr($field, -3) == 'Ids') {
-                $linked = $entity->get(substr($field, 0, -3));
+        if (empty($data) || !is_array($data)) {
+            return false;
+        }
 
-                if (!empty($linked)) {
-                    $value = array_column($linked->toArray(), 'id');
-                } else {
-                    continue;
+        $linkNames = [];
+        $linkMultipleIds = [];
+        $linkMultipleNames = [];
+        foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields']) as $name => $fieldData) {
+            if (isset($fieldData['type'])) {
+                if ($fieldData['type'] === 'link') {
+                    $linkNames[] = $name . 'Name';
                 }
+                if ($fieldData['type'] === 'linkMultiple') {
+                    $linkMultipleIds[] = $name . 'Ids';
+                    $linkMultipleNames[] = $name . 'Names';
+                }
+            }
+        }
+
+        foreach ($entity->getFields() as $field => $params) {
+            if (in_array($field, $linkNames)) {
+                continue 1;
+            }
+
+            if (in_array($field, $linkMultipleNames)) {
+                continue 1;
+            }
+
+            if (in_array($field, $linkMultipleIds)) {
+                $value = !empty($linked) ? array_column($entity->get(substr($field, 0, -3))->toArray(), 'id') : [];
             } else {
                 $value = json_decode(json_encode($entity->get($field), JSON_PRESERVE_ZERO_FRACTION | JSON_NUMERIC_CHECK), true);
             }
 
-            if (!in_array($field, $skip) && !empty($data) && is_array($data) && array_key_exists($field, $data) && $data[$field] !== $value) {
-                $isUpdated = true;
-                break;
+            if (!in_array($field, $skip) && array_key_exists($field, $data) && $data[$field] !== $value) {
+                return true;
             }
         }
 
-        return $isUpdated;
+        return false;
     }
 
     /**
