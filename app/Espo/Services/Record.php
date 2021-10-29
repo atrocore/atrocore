@@ -2477,8 +2477,15 @@ class Record extends \Espo\Core\Services\Base
                 $value = $entity->get($field);
             }
 
-            if (!in_array($field, $skip) && property_exists($data, $field) && $data->$field != $value) {
-                return true;
+            if (!in_array($field, $skip) && property_exists($data, $field)) {
+                // strict type for NULL
+                if (($data->$field === null && $value !== null) || ($data->$field !== null && $value === null)){
+                    return true;
+                }
+
+                if ($data->$field != $value) {
+                    return true;
+                }
             }
         }
 
