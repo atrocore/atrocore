@@ -210,24 +210,35 @@ class FieldManagerController extends AbstractListener
 
             switch ($defs['type']) {
                 case 'asset':
+                    $this->removeDeletedDuplicate($table, [$field . '_id']);
+
                     $sql = "SELECT COUNT(*) FROM $table WHERE $table.{$field}_id IS NOT NULL AND deleted = 0 GROUP BY $table.{$field}_id HAVING COUNT($table.{$field}_id) > 1";
                     $result = $this->fetch($sql);
                     break;
                 case 'currency':
+                    $this->removeDeletedDuplicate($table, [$field, $field . '_currency']);
+
                     $sql = "SELECT COUNT(*) FROM $table WHERE $table.$field IS NOT NULL AND {$field}_currency IS NOT NULL AND deleted = 0 GROUP BY $table.$field, {$field}_currency HAVING COUNT($table.$field) > 1 AND COUNT({$field}_currency) > 1";
                     $result = $this->fetch($sql);
                     break;
                 case 'unit':
+                    $this->removeDeletedDuplicate($table, [$field, $field . '_unit']);
+
                     $sql = "SELECT COUNT(*) FROM $table WHERE $table.$field IS NOT NULL AND {$field}_unit IS NOT NULL AND deleted = 0 GROUP BY $table.$field, {$field}_unit HAVING COUNT($table.$field) > 1 AND COUNT({$field}_unit) > 1";
                     $result = $this->fetch($sql);
                     break;
                 default:
+                    $this->removeDeletedDuplicate($table, [$field]);
+
                     $sql = "SELECT COUNT(*) FROM $table WHERE $table.$field IS NOT NULL AND deleted = 0 GROUP BY $table.$field HAVING COUNT($table.$field) > 1;";
                     $result = $this->fetch($sql);
 
                     if (!$result && !empty($defs['isMultilang']) && $this->getConfig()->get('isMultilangActive', false)) {
                         foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
                             $locale = strtolower($locale);
+
+                            $this->removeDeletedDuplicate($table, [$field . '_' . $locale]);
+
                             $sql = "SELECT COUNT(*) FROM $table WHERE $table.{$field}_$locale IS NOT NULL AND deleted = 0 GROUP BY $table.{$field}_$locale HAVING COUNT($table.{$field}_$locale) > 1;";
                             $result = $result || $this->fetch($sql);
                         }
@@ -241,6 +252,31 @@ class FieldManagerController extends AbstractListener
 
                 throw new BadRequest($message);
             }
+        }
+    }
+
+    /**
+     * @param string $table
+     * @param array $fields
+     */
+    protected function removeDeletedDuplicate(string $table, array $fields): void
+    {
+        $sql = "SELECT DISTINCT first.id AS id FROM $table as first, $table as second WHERE first.id <> second.id AND first.deleted = 1";
+        foreach ($fields as $field) {
+            $sql .= " AND first.$field = second.$field";
+        }
+
+        $notUniqueDeletedIds = $this
+            ->getEntityManager()
+            ->nativeQuery($sql)
+            ->fetchAll(\PDO::FETCH_ASSOC|\PDO::FETCH_COLUMN);
+
+        if (!empty($notUniqueDeletedIds)) {
+            $ids = "'" . implode("','", $notUniqueDeletedIds) . "'";
+
+            $this
+                ->getEntityManager()
+                ->nativeQuery("DELETE FROM $table WHERE id IN ($ids)");
         }
     }
 
