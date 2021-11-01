@@ -74,15 +74,9 @@
       "exportDisabled": true
     },
     "role": {
-      "type": "enum",
+      "type": "varchar",
       "maxLength": 36,
       "default": "Attachment",
-      "options": [
-        "Attachment",
-        "Inline Attachment",
-        "Mail Merge",
-        "Mass Pdf"
-      ],
       "importDisabled": true,
       "exportDisabled": true
     },
