@@ -274,6 +274,11 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                 && !empty($entity->get($fieldName))
             ) {
                 $fieldOptions = empty($fieldData['options']) ? [] : $fieldData['options'];
+
+                if (empty($fieldOptions) && $fieldData['type'] === 'multiEnum') {
+                    continue 1;
+                }
+
                 $value = $entity->get($fieldName);
                 if ($fieldData['type'] == 'enum') {
                     $value = [$value];
