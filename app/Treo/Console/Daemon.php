@@ -149,7 +149,8 @@ class Daemon extends AbstractConsole
                 break;
             }
 
-            if (file_exists(\Espo\Core\QueueManager::FILE_PATH)) {
+            $activatedTime = time() % (int)$this->getConfig()->get('queueManagerWorkersCount', 4);
+            if (file_exists(\Espo\Core\QueueManager::FILE_PATH) && $activatedTime == $stream) {
                 exec($this->getPhpBin() . " index.php qm $stream --run");
             }
 
