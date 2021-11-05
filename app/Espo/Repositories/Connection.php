@@ -33,6 +33,8 @@
 
 namespace Espo\Repositories;
 
-class Connection extends \Espo\Core\Templates\Repositories\Base
+use Espo\Core\Templates\Repositories\Base;
+
+class Connection extends Base
 {
 }

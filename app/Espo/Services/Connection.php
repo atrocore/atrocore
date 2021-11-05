@@ -33,6 +33,69 @@
 
 namespace Espo\Services;
 
-class Connection extends \Espo\Core\Templates\Services\Base
+use Espo\Core\Templates\Services\Base;
+use Espo\ORM\Entity;
+
+class Connection extends Base
 {
+    public function createEntity($attachment)
+    {
+        if (property_exists($attachment, 'password')) {
+            $attachment->password = $this->encryptPassword((string)$attachment->password);
+        }
+
+        return parent::createEntity($attachment);
+    }
+
+    public function updateEntity($id, $data)
+    {
+        if (property_exists($data, 'password')) {
+            $data->password = $this->encryptPassword((string)$data->password);
+        }
+
+        return parent::updateEntity($id, $data);
+    }
+
+    public function encryptPassword(string $password): string
+    {
+        return openssl_encrypt($password, $this->getCypherMethod(), $this->getSecretKey(), 0, $this->getByteSecretIv());
+    }
+
+    public function decryptPassword(string $hash): string
+    {
+        return openssl_decrypt($hash, $this->getCypherMethod(), $this->getSecretKey(), 0, $this->getByteSecretIv());
+    }
+
+    protected function getByteSecretIv(): string
+    {
+        $ivFile = 'data/byte_secret_iv.txt';
+        if (file_exists($ivFile)) {
+            $iv = file_get_contents($ivFile);
+        } else {
+            $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($this->getCypherMethod()));
+            file_put_contents($ivFile, $iv);
+        }
+
+        return $iv;
+    }
+
+    protected function getCypherMethod(): string
+    {
+        return $this->getConfig()->get('cypherMethod', 'AES-256-CBC');
+    }
+
+    protected function getSecretKey(): string
+    {
+        return $this->getConfig()->get('passwordSalt', 'ATRO');
+    }
+
+    protected function getFieldsThatConflict(Entity $entity, \stdClass $data): array
+    {
+        return [];
+    }
+
+    protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
+    {
+        return true;
+    }
 }
