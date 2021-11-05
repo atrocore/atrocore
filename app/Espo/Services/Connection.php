@@ -40,7 +40,7 @@ class Connection extends Base
 {
     public function testConnection(string $id): bool
     {
-        return false;
+        return true;
     }
 
     public function createEntity($attachment)

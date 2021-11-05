@@ -37,10 +37,12 @@ Espo.define('views/connection/record/detail', 'views/record/detail', function (D
         setup() {
             Dep.prototype.setup.call(this);
 
-            this.additionalButtons.push({
-                "action": "testConnection",
-                "label": this.translate('testConnection', 'labels', 'Connection')
-            });
+            this.additionalButtons = [
+                {
+                    "action": "testConnection",
+                    "label": this.translate('testConnection', 'labels', 'Connection')
+                }
+            ];
         },
 
         actionTestConnection() {
