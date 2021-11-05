@@ -56,6 +56,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         isNew: false,
 
+        additionalButtons: [],
+
         buttonList: [
             {
                 name: 'edit',
@@ -746,6 +748,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
 
             return {
+                additionalButtons: this.additionalButtons,
                 scope: this.scope,
                 entityType: this.entityType,
                 buttonList: this.buttonList,
@@ -762,6 +765,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 previousButtonEnabled: previousButtonEnabled,
                 nextButtonEnabled: nextButtonEnabled
             }
+        },
+
+        getAdditionalButtons: function () {
+            return [];
         },
 
         init: function () {

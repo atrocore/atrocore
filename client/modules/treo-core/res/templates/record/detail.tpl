@@ -13,6 +13,7 @@
                 {{/each}}
             </ul>
             {{/if}}
+            {{#if additionalButtons}}{{#each additionalButtons}}<button type="button" class="btn btn-default additional-button action" data-action="{{action}}">{{label}}</button>{{/each}}{{/if}}
         </div>
         <div class="panel-navigation pull-left">{{{panelnavigation}}}</div>
         {{#if navigateButtonsEnabled}}
