@@ -1,0 +1,70 @@
+{
+  "fields": {
+    "type": {
+      "type": "enum",
+      "required": true,
+      "options": [
+        "mysql",
+        "msql"
+      ]
+    },
+    "name": {
+      "type": "varchar",
+      "required": false,
+      "trim": true
+    },
+    "host": {
+      "type": "varchar",
+      "required": false,
+      "trim": true,
+      "default": "localhost"
+    },
+    "port": {
+      "type": "varchar",
+      "required": false,
+      "trim": true
+    },
+    "user": {
+      "type": "varchar",
+      "required": false,
+      "trim": true
+    },
+    "password": {
+      "type": "varchar",
+      "required": false,
+      "trim": true
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    }
+  },
+  "links": {
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    }
+  },
+  "collection": {
+    "sortBy": "createdAt",
+    "asc": false
+  }
+}

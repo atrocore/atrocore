@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "type": "Type",
+    "name": "DB Name",
+    "host": "Host",
+    "port": "Port",
+    "user": "User",
+    "password": "Password"
+  },
+  "labels": {
+    "Create Connection": "Create Connection"
+  }
+}

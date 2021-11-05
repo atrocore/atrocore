@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "Connection": "Connection",
     "Translation": "Translation",
     "Account": "Account",
     "Country": "Country",
@@ -53,6 +54,7 @@
     "InfoPage": "Info Page"
   },
   "scopeNamesPlural": {
+    "Connection": "Connections",
     "Measure": "Measures",
     "Unit": "Units",
     "Translation": "Translations",
