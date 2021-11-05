@@ -1,4 +1,7 @@
 {
   "controller": "controllers/record",
-  "iconClass": "fas fa-database"
+  "iconClass": "fas fa-database",
+  "recordViews": {
+    "detail": "views/connection/record/detail"
+  }
 }

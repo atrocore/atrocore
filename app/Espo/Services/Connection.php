@@ -38,6 +38,11 @@ use Espo\ORM\Entity;
 
 class Connection extends Base
 {
+    public function testConnection(string $id): bool
+    {
+        return false;
+    }
+
     public function createEntity($attachment)
     {
         if (property_exists($attachment, 'password')) {

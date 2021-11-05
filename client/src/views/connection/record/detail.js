@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -31,31 +30,22 @@
  * and "AtroCore" word.
  */
 
-namespace Espo\Controllers;
+Espo.define('views/connection/record/detail', 'views/record/detail', function (Dep) {
 
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Templates\Controllers\Base;
+    return Dep.extend({
 
-class Connection extends Base
-{
-    public function postActionTestConnection($params, $data, $request)
-    {
-        if (!$this->getUser()->isAdmin()) {
-            throw new Forbidden();
-        }
+        template: 'connection/record/detail',
 
-        if (!property_exists($data, 'id')){
-            throw new BadRequest('ID is required.');
-        }
+        actionTestConnection() {
+            this.notify('Loading...');
+            this.ajaxPostRequest('Connection/action/testConnection', {id: this.model.get('id')}).then(success => {
+                if (success) {
+                    this.notify(this.translate('connectionSuccess', 'labels', 'Connection'), 'success');
+                } else {
+                    this.notify(this.translate('connectionFailed', 'labels', 'Connection'), 'error');
+                }
+            });
+        },
 
-        return $this->getRecordService()->testConnection((string)$data->id);
-    }
-
-    protected function checkControllerAccess()
-    {
-        if (!$this->getUser()->isAdmin()) {
-            throw new Forbidden();
-        }
-    }
-}
+    });
+});

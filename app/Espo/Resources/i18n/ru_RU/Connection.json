@@ -8,6 +8,9 @@
     "password": "Пароль"
   },
   "labels": {
+    "connectionSuccess": "Соединение успешно установлено",
+    "connectionFailed": "Соединение не установлено - пожалуйста, проверьте параметры вашего подключения.",
+    "testConnection": "Проверить соединение",
     "mysql": "MySQL Server",
     "msql": "Microsoft SQL Server",
     "Create Connection": "Создать соединение"
