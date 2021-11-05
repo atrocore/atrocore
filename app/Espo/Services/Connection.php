@@ -68,7 +68,7 @@ class Connection extends Base
 
     protected function getByteSecretIv(): string
     {
-        $ivFile = 'data/byte_secret_iv.txt';
+        $ivFile = 'data/byte-secret-iv-' . strtolower($this->getCypherMethod()) . '.txt';
         if (file_exists($ivFile)) {
             $iv = file_get_contents($ivFile);
         } else {
