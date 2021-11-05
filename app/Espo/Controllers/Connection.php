@@ -33,6 +33,15 @@
 
 namespace Espo\Controllers;
 
-class Connection extends \Espo\Core\Templates\Controllers\Base
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Templates\Controllers\Base;
+
+class Connection extends Base
 {
+    protected function checkControllerAccess()
+    {
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
+    }
 }

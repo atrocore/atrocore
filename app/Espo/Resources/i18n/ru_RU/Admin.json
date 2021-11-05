@@ -1,5 +1,6 @@
 {
   "labels": {
+    "Connection": "Подключения",
     "multiLanguagesSettings": "Языки",
     "multiLanguages": "Языки",
     "Composer": "Обновления & Модули",
@@ -206,6 +207,7 @@
     "incorrectThousandSeparatorOrDecimalMark": "Разрешены только следующие разделители: '.' а также ','."
   },
   "descriptions": {
+    "connection": "Настройки подключений",
     "inputLanguage": "Укажите языкт для полей, которые подлежат переводу.",
     "multiLanguagesSettings": "Сконфигурируйте множественные языки для использования",
     "composer": "Установка / Удаление / Обновление модулей, c утвержденными связами",
