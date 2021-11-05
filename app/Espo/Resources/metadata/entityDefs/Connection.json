@@ -36,7 +36,7 @@
       "trim": true
     },
     "password": {
-      "type": "varchar",
+      "type": "password",
       "required": false,
       "trim": true
     },
