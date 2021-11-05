@@ -1,13 +1,15 @@
 {
   "fields": {
     "type": "Тип",
-    "name": "Имя БД",
+    "dbName": "Имя БД",
     "host": "Хост",
     "port": "Порт",
     "user": "Пользователь",
     "password": "Пароль"
   },
   "labels": {
+    "mysql": "MySQL Server",
+    "msql": "Microsoft SQL Server",
     "Create Connection": "Создать соединение"
   }
 }

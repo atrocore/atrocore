@@ -1,13 +1,15 @@
 {
   "fields": {
     "type": "Typ",
-    "name": "DB Name",
+    "dbName": "DB Name",
     "host": "Host",
     "port": "Port",
     "user": "Benutzer",
     "password": "Passwort"
   },
   "labels": {
+    "mysql": "MySQL Server",
+    "msql": "Microsoft SQL Server",
     "Create Connection": "Verbindung erstellen"
   }
 }
