@@ -33,6 +33,7 @@
 
 namespace Espo\Services;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
 
@@ -40,6 +41,9 @@ class Connection extends Base
 {
     public function testConnection(string $id): bool
     {
+//        $errorMessage = $this->getInjection('language')->translate('connectionFailed', 'exceptions', 'Connection');
+//        throw new BadRequest(sprintf($errorMessage, 'qwe 11 22 333'));
+
         return true;
     }
 
@@ -69,6 +73,13 @@ class Connection extends Base
     public function decryptPassword(string $hash): string
     {
         return openssl_decrypt($hash, $this->getCypherMethod(), $this->getSecretKey(), 0, $this->getByteSecretIv());
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('language');
     }
 
     protected function getByteSecretIv(): string

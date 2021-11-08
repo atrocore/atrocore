@@ -30,26 +30,12 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/connection/record/detail', 'views/record/detail', function (Dep) {
+Espo.define('views/connection/list', 'views/list', function (Dep) {
 
     return Dep.extend({
 
-        setup() {
-            Dep.prototype.setup.call(this);
-
-            this.additionalButtons = [
-                {
-                    "action": "testConnection",
-                    "label": this.translate('testConnection', 'labels', 'Connection')
-                }
-            ];
-        },
-
-        actionTestConnection() {
-            this.notify('Loading...');
-            this.ajaxPostRequest('Connection/action/testConnection', {id: this.model.get('id')}).then(() => {
-                this.notify(this.translate('connectionSuccess', 'labels', 'Connection'), 'success');
-            });
+        getHeader() {
+            return `<a href="#Admin">${this.translate('Administration')}</a><span class="subsection">${this.translate('System')}</span>${this.getLanguage().translate('Connection', 'labels', 'Admin')}`;
         },
 
     });

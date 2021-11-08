@@ -9,10 +9,13 @@
   },
   "labels": {
     "connectionSuccess": "Verbindung wurde erfolgreich hergestellt",
-    "connectionFailed": "Verbindung konnte nicht hergestellt werden - bitte überprüfen Sie Ihre Verbindungsparameter.",
     "testConnection": "Verbindung testen",
     "mysql": "MySQL Server",
+    "psql": "PostgreSQL Server",
     "msql": "Microsoft SQL Server",
     "Create Connection": "Verbindung erstellen"
+  },
+  "exceptions": {
+    "connectionFailed": "Verbindung konnte nicht hergestellt werden: %s"
   }
 }

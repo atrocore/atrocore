@@ -9,10 +9,13 @@
   },
   "labels": {
     "connectionSuccess": "Connection is successfully established",
-    "connectionFailed": "Connection could not be established - please check your connection parameters.",
     "testConnection": "Test Connection",
     "mysql": "MySQL Server",
+    "psql": "PostgreSQL Server",
     "msql": "Microsoft SQL Server",
     "Create Connection": "Create Connection"
+  },
+  "exceptions": {
+    "connectionFailed": "Connection could not be established: %s"
   }
 }
