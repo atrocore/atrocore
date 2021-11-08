@@ -16,6 +16,7 @@
     "Create Connection": "Создать соединение"
   },
   "exceptions": {
-    "connectionFailed": "Соединение не установлено: %s"
+    "connectionFailed": "Соединение не установлено: %s",
+    "noSuchType": "Тип соединения не поддерживается."
   }
 }

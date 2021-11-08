@@ -34,6 +34,7 @@
 namespace Espo\Services;
 
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
 
@@ -41,8 +42,50 @@ class Connection extends Base
 {
     public function testConnection(string $id): bool
     {
-//        $errorMessage = $this->getInjection('language')->translate('connectionFailed', 'exceptions', 'Connection');
-//        throw new BadRequest(sprintf($errorMessage, 'qwe 11 22 333'));
+        $connection = $this->getRepository()->get($id);
+        if (empty($connection)) {
+            throw new NotFound();
+        }
+
+        $language = $this->getInjection('language');
+
+        $errorMessage = $language->translate('connectionFailed', 'exceptions', 'Connection');
+
+        switch ($connection->get('type')) {
+            case 'mysql':
+                try {
+                    $port = !empty($connection->get('port')) ? ';port=' . $connection->get('port') : '';
+                    $dsn = 'mysql:host=' . $connection->get('host') . $port . ';dbname=' . $connection->get('dbName') . ';';
+                    new \PDO($dsn, $connection->get('user'), $this->decryptPassword($connection->get('password')), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_WARNING]);
+                } catch (\PDOException $e) {
+                    throw new BadRequest(sprintf($errorMessage, $e->getMessage()));
+                }
+                break;
+            case 'psql':
+                try {
+                    $port = !empty($connection->get('port')) ? ';port=' . $connection->get('port') : '';
+                    $dsn = 'pgsql:host=' . $connection->get('host') . $port . ';dbname=' . $connection->get('dbName') . ';';
+                    new \PDO($dsn, $connection->get('user'), $this->decryptPassword($connection->get('password')), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_WARNING]);
+                } catch (\PDOException $e) {
+                    throw new BadRequest(sprintf($errorMessage, $e->getMessage()));
+                }
+                break;
+            case 'msql':
+                $serverName = "{$connection->get('host')},{$connection->get('port')}";
+                $connectionInfo = [
+                    "Database"     => $connection->get('dbName'),
+                    "Uid"          => $connection->get('user'),
+                    "PWD"          => $this->decryptPassword($connection->get('password')),
+                    "LoginTimeout" => 5
+                ];
+                $conn = \sqlsrv_connect($serverName, $connectionInfo);
+                if ($conn === false) {
+                    throw new BadRequest(sprintf($errorMessage, implode(', ', array_column(\sqlsrv_errors(), 'message'))));
+                }
+                break;
+            default:
+                throw new BadRequest(sprintf($errorMessage, $language->translate('noSuchType', 'exceptions', 'Connection')));
+        }
 
         return true;
     }

@@ -16,6 +16,7 @@
     "Create Connection": "Verbindung erstellen"
   },
   "exceptions": {
-    "connectionFailed": "Verbindung konnte nicht hergestellt werden: %s"
+    "connectionFailed": "Verbindung konnte nicht hergestellt werden: %s",
+    "noSuchType": "Solcher Verbindungstyp ist nicht vorhanden"
   }
 }

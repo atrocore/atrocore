@@ -16,6 +16,7 @@
     "Create Connection": "Create Connection"
   },
   "exceptions": {
-    "connectionFailed": "Connection could not be established: %s"
+    "connectionFailed": "Connection could not be established: %s",
+    "noSuchType": "No such connection type."
   }
 }
