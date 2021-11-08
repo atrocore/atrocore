@@ -13,11 +13,6 @@
         "description": "userInterface"
       },
       {
-        "url": "#Connection",
-        "label": "Connection",
-        "description": "connection"
-      },
-      {
         "url": "#Admin/authentication",
         "label": "Authentication",
         "description": "authentication"
