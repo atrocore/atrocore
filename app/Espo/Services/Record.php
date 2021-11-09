@@ -1093,6 +1093,8 @@ class Record extends \Espo\Core\Services\Base
     protected function beforeCreateEntity(Entity $entity, $data)
     {
         $this->beforeCreate($entity, get_object_vars($data)); // TODO remove in 5.1.0
+
+        $this->checkForSkipComplete($entity, $data);
     }
 
     protected function afterCreateEntity(Entity $entity, $data)
@@ -1103,6 +1105,8 @@ class Record extends \Espo\Core\Services\Base
     protected function beforeUpdateEntity(Entity $entity, $data)
     {
         $this->beforeUpdate($entity, get_object_vars($data)); // TODO remove in 5.1.0
+
+        $this->checkForSkipComplete($entity, $data);
     }
 
     protected function afterUpdateEntity(Entity $entity, $data)
@@ -1113,11 +1117,24 @@ class Record extends \Espo\Core\Services\Base
     protected function beforeDeleteEntity(Entity $entity)
     {
         $this->beforeDelete($entity); // TODO remove in 5.1.0
+
+        $this->checkForSkipComplete($entity, $data);
     }
 
     protected function afterDeleteEntity(Entity $entity)
     {
         $this->afterDelete($entity); // TODO remove in 5.1.0
+    }
+
+    /**
+     * @param Entity $entity
+     * @param $data
+     */
+    protected function checkForSkipComplete(Entity $entity, $data): void
+    {
+        if (!empty($data->skipComplete)) {
+            $entity->skipComplete = true;
+        }
     }
 
     /** Deprecated */
