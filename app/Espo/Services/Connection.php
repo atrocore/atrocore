@@ -47,16 +47,22 @@ class Connection extends Base
             throw new NotFound();
         }
 
-        $language = $this->getInjection('language');
+        $this->connect($connection);
 
-        $errorMessage = $language->translate('connectionFailed', 'exceptions', 'Connection');
+        return true;
+    }
+
+    public function connect(Entity $connection)
+    {
+        $errorMessage = $this->getInjection('language')->translate('connectionFailed', 'exceptions', 'Connection');
 
         switch ($connection->get('type')) {
             case 'mysql':
                 try {
                     $port = !empty($connection->get('port')) ? ';port=' . $connection->get('port') : '';
                     $dsn = 'mysql:host=' . $connection->get('host') . $port . ';dbname=' . $connection->get('dbName') . ';';
-                    new \PDO($dsn, $connection->get('user'), $this->decryptPassword($connection->get('password')), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_WARNING]);
+                    $result = new \PDO($dsn, $connection->get('user'), $this->decryptPassword($connection->get('password')));
+                    $result->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
                 } catch (\PDOException $e) {
                     throw new BadRequest(sprintf($errorMessage, $e->getMessage()));
                 }
@@ -65,7 +71,8 @@ class Connection extends Base
                 try {
                     $port = !empty($connection->get('port')) ? ';port=' . $connection->get('port') : '';
                     $dsn = 'pgsql:host=' . $connection->get('host') . $port . ';dbname=' . $connection->get('dbName') . ';';
-                    new \PDO($dsn, $connection->get('user'), $this->decryptPassword($connection->get('password')), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_WARNING]);
+                    $result = new \PDO($dsn, $connection->get('user'), $this->decryptPassword($connection->get('password')));
+                    $result->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
                 } catch (\PDOException $e) {
                     throw new BadRequest(sprintf($errorMessage, $e->getMessage()));
                 }
@@ -78,16 +85,16 @@ class Connection extends Base
                     "PWD"          => $this->decryptPassword($connection->get('password')),
                     "LoginTimeout" => 5
                 ];
-                $conn = \sqlsrv_connect($serverName, $connectionInfo);
-                if ($conn === false) {
+                $result = \sqlsrv_connect($serverName, $connectionInfo);
+                if ($result === false) {
                     throw new BadRequest(sprintf($errorMessage, implode(', ', array_column(\sqlsrv_errors(), 'message'))));
                 }
                 break;
             default:
-                throw new BadRequest(sprintf($errorMessage, $language->translate('noSuchType', 'exceptions', 'Connection')));
+                throw new BadRequest(sprintf($errorMessage, $this->getInjection('language')->translate('noSuchType', 'exceptions', 'Connection')));
         }
 
-        return true;
+        return $result;
     }
 
     public function createEntity($attachment)
