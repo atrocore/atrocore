@@ -37,7 +37,7 @@ namespace Treo\Migrations;
 
 use Treo\Core\Migration\Base;
 
-class V1Dot3Dot34 extends Base
+class V1Dot3Dot35 extends Base
 {
     public function up(): void
     {
