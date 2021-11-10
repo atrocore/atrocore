@@ -1300,17 +1300,14 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     view.render();
 
                     this.listenToOnce(view, 'remove', function () {
-                        debugger;
                         this.clearView('modal');
                     }, this);
 
                     this.listenToOnce(view, 'after:edit-cancel', function () {
-                        debugger;
                         this.actionQuickView({id: view.model.id, scope: view.model.name});
                     }, this);
 
                     this.listenToOnce(view, 'after:save', function (model) {
-                        debugger;
                         this.trigger('after:save', model);
                     }, this);
                 }, this);
