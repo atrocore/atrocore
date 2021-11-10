@@ -245,7 +245,7 @@ class CronManager
             $data = $job->get('data');
         }
 
-        $jobClass->$method($data, $job->get('targetId'), $job->get('targetType'));
+        $jobClass->$method($data, $job->get('targetId'), $job->get('targetType'), $job->get('scheduledJobId'));
     }
 
     /**
