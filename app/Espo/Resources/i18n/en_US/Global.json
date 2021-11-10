@@ -272,6 +272,7 @@
   },
   "messages": {
     "optionValueCannotBeEmpty": "Option value cannot be empty",
+    "minimumOneOptionsRequired": "Minimum one option value is required.",
     "defaultValueCannotBeEmpty": "Default value cannot be empty",
     "resetAllToDefaultConfirm": "Are you sure you want to reset all layouts to default values?",
     "testEmailSent": "Test email has been sent",
