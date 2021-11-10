@@ -68,7 +68,7 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
 
             let invalid = false;
 
-            let pattern = "^-?[0-9]\\d*(\\" + this.decimalMark + "\\d+)?$"
+            let pattern = "^-?[0-9]\\d*(\\" + this.decimalMark + "\\d+)?$";
             let matcher = new RegExp(pattern);
             if (!matcher.test(value.replaceAll(this.thousandSeparator, ''))) {
                 invalid = true;
