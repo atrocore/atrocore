@@ -1,0 +1,38 @@
+[
+  {
+    "label": "Overview",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "type"
+        }
+      ],
+      [
+        {
+          "name": "host"
+        },
+        false
+      ],
+      [
+        {
+          "name": "dbName"
+        },
+        {
+          "name": "port"
+        }
+      ],
+      [
+        {
+          "name": "user"
+        },
+        {
+          "name": "password"
+        }
+      ]
+    ]
+  }
+]

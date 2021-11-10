@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "Connection": "Соединение",
     "User": "Пользователь",
     "Team": "Группа",
     "Role": "Роль",
@@ -53,6 +54,7 @@
     "InfoPage": "Инфостраница"
   },
   "scopeNamesPlural": {
+    "Connection": "Соединения",
     "Measure": "Меры",
     "Unit": "Единицы измерения",
     "User": "Пользователи",

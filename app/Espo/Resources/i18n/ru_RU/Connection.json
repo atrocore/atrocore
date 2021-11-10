@@ -1,0 +1,22 @@
+{
+  "fields": {
+    "type": "Тип",
+    "dbName": "Имя БД",
+    "host": "Хост",
+    "port": "Порт",
+    "user": "Пользователь",
+    "password": "Пароль"
+  },
+  "labels": {
+    "connectionSuccess": "Соединение успешно установлено",
+    "testConnection": "Проверить соединение",
+    "mysql": "MySQL Server",
+    "psql": "PostgreSQL Server",
+    "msql": "Microsoft SQL Server",
+    "Create Connection": "Создать соединение"
+  },
+  "exceptions": {
+    "connectionFailed": "Соединение не установлено: %s",
+    "noSuchType": "Тип соединения не поддерживается."
+  }
+}

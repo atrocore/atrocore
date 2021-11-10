@@ -1,0 +1,10 @@
+{
+  "controller": "controllers/record",
+  "iconClass": "fas fa-database",
+  "views": {
+    "list": "views/connection/list"
+  },
+  "recordViews": {
+    "detail": "views/connection/record/detail"
+  }
+}

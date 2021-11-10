@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "Connection": "Verbindung",
     "Stream": "Stream",
     "Currency": "Währung",
     "Contact": "Kontakt",
@@ -40,6 +41,7 @@
     "InfoPage": "Info Seite"
   },
   "scopeNamesPlural": {
+    "Connection": "Verbindungen",
     "Measure": "Maße",
     "Unit": "Einheiten",
     "ActionHistoryRecord": "Aktionsgeschichte",

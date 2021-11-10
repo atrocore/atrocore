@@ -65,8 +65,34 @@ class Metadata extends AbstractListener
 
         $data = $this->setForeignName($data);
 
+        $data = $this->showConnections($data);
+
         // set data
         $event->setArgument('data', $data);
+    }
+
+    protected function showConnections(array $data): array
+    {
+        if (
+            !empty($data['scopes']['Connection']['showInAdminPanel'])
+            && !empty($data['app']['adminPanel']['system']['itemList'])
+            && is_array($data['app']['adminPanel']['system']['itemList'])
+        ) {
+            $new = [];
+            foreach ($data['app']['adminPanel']['system']['itemList'] as $v) {
+                $new[] = $v;
+                if ($v['label'] == 'Authentication') {
+                    $new[] = [
+                        "url"         => "#Connection",
+                        "label"       => "Connection",
+                        "description" => "connection"
+                    ];
+                }
+            }
+            $data['app']['adminPanel']['system']['itemList'] = $new;
+        }
+
+        return $data;
     }
 
     protected function setForeignName(array $data): array

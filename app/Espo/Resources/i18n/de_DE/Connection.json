@@ -1,0 +1,22 @@
+{
+  "fields": {
+    "type": "Typ",
+    "dbName": "DB Name",
+    "host": "Host",
+    "port": "Port",
+    "user": "Benutzer",
+    "password": "Passwort"
+  },
+  "labels": {
+    "connectionSuccess": "Verbindung wurde erfolgreich hergestellt",
+    "testConnection": "Verbindung testen",
+    "mysql": "MySQL Server",
+    "psql": "PostgreSQL Server",
+    "msql": "Microsoft SQL Server",
+    "Create Connection": "Verbindung erstellen"
+  },
+  "exceptions": {
+    "connectionFailed": "Verbindung konnte nicht hergestellt werden: %s",
+    "noSuchType": "Solcher Verbindungstyp ist nicht vorhanden"
+  }
+}
