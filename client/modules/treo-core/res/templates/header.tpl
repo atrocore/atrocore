@@ -39,17 +39,19 @@
             </div>
             {{/if}}
             </div>
-            <div class="pull-right">
-                {{#if overviewFilters.length}}
-                {{#each overviewFilters}}
-                <div class="cell filter-cell" data-name="{{this}}">
-                    <div class="field" data-name="{{this}}">
-                        {{{var this ../this}}}
-                    </div>
+        </div>
+    </div>
+    <div class="col-lg-12 overview-filters-container">
+        <div class="pull-right">
+            {{#if overviewFilters.length}}
+            {{#each overviewFilters}}
+            <div class="cell filter-cell" data-name="{{this}}">
+                <div class="field" data-name="{{this}}">
+                    {{{var this ../this}}}
                 </div>
-                {{/each}}
-                {{/if}}
             </div>
+            {{/each}}
+            {{/if}}
         </div>
     </div>
 </div>
