@@ -104,6 +104,12 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
 
         validate: function () {
             const data = Espo.Utils.cloneDeep(this.model.get(this.name)) || [];
+
+            if (!data.length && this.model.get('type') === 'enum') {
+                this.showValidationMessage(this.translate('minimumOneOptionsRequired', 'messages'), `div[data-name="${this.name}"]`);
+                return true;
+            }
+
             const emptyOptionId = this.emptyOptionId(data);
 
             if (emptyOptionId) {
