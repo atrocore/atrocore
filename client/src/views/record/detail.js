@@ -897,7 +897,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             this.listenTo(this.model, 'after:save after:relate after:unrelate', link => {
                 if (link) {
-                    $('a[data-name="' + link + '"]').click();
+                    $('.panel-navigation .nav a[data-name="' + link + '"]').click();
                 }
             });
         },

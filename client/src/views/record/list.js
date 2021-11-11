@@ -1372,7 +1372,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         this.trigger('after:save', m);
 
                         if (this.relationName) {
-                            $('a[data-name="' + this.relationName + '"]').click();
+                            $('.panel-navigation .nav a[data-name="' + this.relationName + '"]').click();
                         }
                     }, this);
                 }, this);
