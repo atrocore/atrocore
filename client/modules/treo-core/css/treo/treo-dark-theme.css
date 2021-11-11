@@ -19535,18 +19535,21 @@ ul.dropdown-menu > li.checkbox {
     white-space: nowrap;
 }
 
-.page-header .header-buttons .filter-cell {
+.page-header .header-buttons .filter-cell,
+.page-header .overview-filters-container .filter-cell {
     display: inline-block;
     width: 170px;
     margin-right: -1px;
 }
 
-.page-header .header-buttons .filter-cell .field {
+.page-header .header-buttons .filter-cell .field,
+.page-header .overview-filters-container .filter-cell > .field {
     position: relative;
 }
 
 select,
-.page-header .header-buttons .filter-cell .field .selected-element {
+.page-header .header-buttons .filter-cell .field .selected-element,
+.page-header .overview-filters-container .filter-cell .field .selected-element {
     background-image: url("../../img/arrow-down.png") !important;
     background-position: center right 5px;
     background-repeat: no-repeat;
@@ -19554,44 +19557,52 @@ select,
     background-size: 12px;
 }
 
-.page-header .header-buttons .filter-cell .field .selected-element {
+.page-header .header-buttons .filter-cell .field .selected-element,
+.page-header .overview-filters-container .filter-cell .field .selected-element {
     cursor: default;
     -moz-appearance: menulist;
     -webkit-appearance: menulist;
     padding: 6px 12px 6px 6px;
 }
 
-.page-header .header-buttons .filter-cell .field .selected-element span {
+.page-header .header-buttons .filter-cell .field .selected-element span,
+.page-header .overview-filters-container .filter-cell .field .selected-element span {
     display: inline-block;
     height: 100%;
     overflow: hidden;
 }
 
-.page-header .header-buttons .filter-cell .dropdown-enum-menu {
+.page-header .header-buttons .filter-cell .dropdown-enum-menu,
+.page-header .overview-filters-container .filter-cell .dropdown-enum-menu {
     min-width: 180px;
     max-height: 50vh;
 }
 
-.page-header .header-buttons .filter-cell .dropdown-enum-menu > li > a {
+.page-header .header-buttons .filter-cell .dropdown-enum-menu > li > a,
+.page-header .overview-filters-container .filter-cell .dropdown-enum-menu > li > a {
     padding: 10px 15px;
 }
 
 .page-header .header-buttons .filter-cell .dropdown-enum-menu > li > a > .field[data-name="showGenericFields"] .control-label,
-.page-header .header-buttons .filter-cell .dropdown-enum-menu > li > a > .field[data-name="showGenericFields"] .main-element {
+.page-header .header-buttons .filter-cell .dropdown-enum-menu > li > a > .field[data-name="showGenericFields"] .main-element,
+.page-header .overview-filters-container .filter-cell .dropdown-enum-menu > li > a > .field[data-name="showGenericFields"] .control-label,
+.page-header .overview-filters-container .dropdown-enum-menu > li > a > .field[data-name="showGenericFields"] .main-element {
     margin: 0;
     position: relative;
     top: 1px;
 }
 
-.page-header .header-buttons div.pull-right {
+.page-header .header-buttons div.pull-right,
+.page-header .overview-filters-container div.pull-right {
+    float: unset !important;
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
-    -webkit-box-pack: end;
-    -webkit-justify-content: flex-end;
-    -ms-flex-pack: end;
-    justify-content: flex-end;
+    -webkit-box-pack: start;
+    -webkit-justify-content: flex-start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
 }
 
 .selectize-input.focus {
@@ -20209,14 +20220,16 @@ button.category:focus {
     }
 
     #main > .page-header.not-collapsed .header-breadcrumbs:not(.fixed-header-breadcrumbs),
-    #main > .record > .detail > .detail-button-container.not-collapsed {
+    #main > .record > .detail > .detail-button-container.not-collapsed,
+    #main > .page-header.not-collapsed .overview-filters-container {
         margin-left: 26px;
     }
 
     #main > .list-container.collapsed,
     #main > .page-header.collapsed .header-breadcrumbs:not(.fixed-header-breadcrumbs),
     #main > .page-header.collapsed .header-buttons-container,
-    #main > .record > .detail > .detail-button-container.collapsed
+    #main > .record > .detail > .detail-button-container.collapsed,
+    #main > .page-header.collapsed .overview-filters-container
     {
         margin-left: 279px;
         width: calc(100% - 279px);
@@ -21599,6 +21612,10 @@ select {
 
 .chevron-dropdown > ul.dropdown-menu > li > a {
     padding: 10px 15px;
+}
+
+.header-breadcrumbs {
+    padding-left: 2px;
 }
 
 .header-breadcrumbs .header-with-dropdown {
