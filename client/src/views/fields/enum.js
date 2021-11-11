@@ -61,6 +61,8 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             if (
                 value !== null
                 &&
+                value !== undefined
+                &&
                 value !== ''
                 ||
                 value === '' && (value in (this.translatedOptions || {}) && (this.translatedOptions || {})[value] !== '')
@@ -121,7 +123,7 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                         this.translatedOptions[''] = '';
                     }
 
-                    if (this.model.isNew() && this.mode === 'edit' && !this.model.get('_duplicatingEntityId')) {
+                    if (this.model.isNew() && this.mode === 'edit' && !this.model.get('_duplicatingEntityId') && !this.params.default) {
                         this.model.set({[this.name]: ''});
                     }
                 }

@@ -274,6 +274,7 @@
   },
   "messages": {
     "optionValueCannotBeEmpty": "Значение опции не может быть пустым",
+    "minimumOneOptionsRequired": "Требуется минимум одно значение параметра.",
     "defaultValueCannotBeEmpty": "Значение по умолчанию не может быть пустым",
     "resetAllToDefaultConfirm": "Вы уверены, что хотите восстановить все макеты по умолчанию?",
     "pleaseWait": "Пожалуйста, подождите...",
