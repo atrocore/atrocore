@@ -165,7 +165,7 @@ class Sender
 
         if (!empty($emailData['isHtml'])) {
             $html = new MimePart($bodyPlain);
-            $html->type = 'text/html';
+            $html->type = 'text/html; charset=utf-8';
 
             $body = new MimeMessage();
             $body->setParts([$html]);
