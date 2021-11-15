@@ -15568,6 +15568,16 @@ ul.dropdown-menu > li.checkbox:last-child {
     word-wrap: break-word
 }
 
+.cell > .field > a,
+.cell > .field > span.pre-label,
+.cell > .field > span.complex-text p {
+    white-space: pre-wrap;
+}
+
+.list table td a {
+    white-space: pre;
+}
+
 .field .row {
     margin-left: -3px !important;
     margin-right: -3px !important
@@ -21648,6 +21658,7 @@ select {
 
 .header-breadcrumbs {
     padding-left: 2px;
+    white-space: pre-wrap;
 }
 
 .header-breadcrumbs .header-with-dropdown {
