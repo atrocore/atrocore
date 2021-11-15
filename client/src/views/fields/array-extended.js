@@ -105,7 +105,7 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
         validate: function () {
             const data = Espo.Utils.cloneDeep(this.model.get(this.name)) || [];
 
-            if (!data.length && this.model.get('type') === 'enum') {
+            if (!data.length && this.isEnums()) {
                 this.showValidationMessage(this.translate('minimumOneOptionsRequired', 'messages'), `div[data-name="${this.name}"]`);
                 return true;
             }
@@ -205,6 +205,29 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
                         this.trigger('change');
                     }.bind(this)
                 });
+
+                let parent = this.getParentView();
+                if (this.isEnums() && parent) {
+                    let isMultilangView = parent.getView('isMultilang');
+
+                    if (isMultilangView) {
+                        let updateIsMultilang = function () {
+                            let options = this.model.get(this.name)
+                            if (!options || !options.length) {
+                                this.model.set('isMultilang', false);
+                                isMultilangView.$el.find('input').prop('disabled', true);
+                            } else {
+                                isMultilangView.$el.find('input').prop('disabled', false);
+                            }
+                        }.bind(this);
+
+                        updateIsMultilang();
+
+                        this.listenTo(this.model, `change:${this.name}`, function () {
+                            updateIsMultilang();
+                        });
+                    }
+                }
             }
 
             if (this.mode === 'search') {
