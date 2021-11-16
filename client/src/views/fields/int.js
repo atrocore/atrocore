@@ -153,14 +153,14 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
 
             let invalid = false;
 
-            let pattern = "^\\d+(\\" + this.thousandSeparator + "\\d+)*$"
+            let pattern = "^-?[0-9]\\d*(\\" + this.thousandSeparator + "\\d+)?$";
             let matcher = new RegExp(pattern);
             if (!matcher.test(value)) {
                 invalid = true;
             }
 
             if (!invalid && value.indexOf(this.thousandSeparator) >= 0) {
-                pattern = "^\\d{1,3}(\\" + this.thousandSeparator + "\\d{3})*(\\" + this.decimalMark + "\\d+)?$"
+                pattern = "^-?\\d{1,3}(\\" + this.thousandSeparator + "\\d{3})*(\\" + this.decimalMark + "\\d+)?$"
                 matcher = new RegExp(pattern);
                 if (!matcher.test(value)) {
                     invalid = true;
