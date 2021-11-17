@@ -16989,8 +16989,23 @@ pre > code {
 
 @media screen and (min-width: 992px) {
   .admin-content .admin-right-column {
-    padding-top: 28px;
+    margin-top: -15px;
   }
+
+  .admin-tables-container.fixed-bottom {
+    position: fixed;
+    bottom: 15px;
+  }
+
+  .admin-tables-container.scrolled {
+    position: relative;
+  }
+
+  .admin-tables-container.fixed-top {
+    position: fixed;
+    top: 66px;
+  }
+
   .col-md-12.hidden-cell {
     min-height: 0;
   }
@@ -18990,6 +19005,10 @@ table.table > thead th > div > a {
 
 .page-header .header-buttons .header-items > a.action:last-child {
   margin-right: 0;
+}
+
+.page-header div.pull-right {
+  padding-bottom: 6px;
 }
 
 .page-header .header-buttons div.pull-right,
