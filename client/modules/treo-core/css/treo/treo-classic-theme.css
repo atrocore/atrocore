@@ -15574,7 +15574,7 @@ ul.dropdown-menu > li.checkbox:last-child {
     white-space: pre-wrap;
 }
 
-.list table td a {
+.list table td a:not(.btn) {
     white-space: pre;
 }
 
