@@ -202,8 +202,15 @@ class QueueManager
         }
 
         // auth
-        $this->getContainer()->setUser($item->get('createdBy'));
-        $this->getEntityManager()->setUser($item->get('createdBy'));
+        if ($item->get('createdById') === 'system') {
+            $user = $this->getEntityManager()->getRepository('User')->get('system');
+            $user->set('isAdmin', true);
+            $user->set('ipAddress', $_SERVER['REMOTE_ADDR']);
+        } else {
+            $user = $item->get('createdBy');
+        }
+        $this->getContainer()->setUser($user);
+        $this->getEntityManager()->setUser($user);
 
         // reload language
         $this->getContainer()->reload('language');
