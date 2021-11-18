@@ -36,6 +36,7 @@ namespace Espo\Repositories;
 use Espo\Core\DataManager;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Repositories\Base;
+use Espo\Core\Utils\Language;
 use Espo\ORM\Entity;
 
 /**
@@ -91,6 +92,8 @@ class Translation extends Base
 
     protected function refreshTimestamp(array $options): void
     {
+        $this->getInjection('language')->reload();
+
         if (!empty($options['keepCache'])) {
             return;
         }
