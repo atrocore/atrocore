@@ -36,7 +36,6 @@ namespace Espo\Repositories;
 use Espo\Core\DataManager;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Repositories\Base;
-use Espo\Core\Utils\Language;
 use Espo\ORM\Entity;
 
 /**
