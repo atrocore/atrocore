@@ -91,6 +91,8 @@ class Translation extends Base
 
     protected function refreshTimestamp(array $options): void
     {
+        $this->getInjection('language')->reload();
+
         if (!empty($options['keepCache'])) {
             return;
         }
