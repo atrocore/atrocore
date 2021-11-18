@@ -117,6 +117,8 @@ class RefreshTranslations extends AbstractConsole
             }
         }
 
+        $this->getContainer()->get('language')->reload();
+
         $this->getConfig()->set('cacheTimestamp', time());
         $this->getConfig()->save();
         DataManager::pushPublicData('dataTimestamp', time());
