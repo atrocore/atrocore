@@ -35,8 +35,10 @@ declare(strict_types=1);
 
 namespace Espo\Repositories;
 
+use Espo\Core\DataManager;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Templates\Repositories\Base;
+use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 
 /**
@@ -44,6 +46,18 @@ use Espo\ORM\Entity;
  */
 class Measure extends Base
 {
+    public const CACHE_DIR = 'data/cache/measures';
+    public const CACHE_FILE = self::CACHE_DIR . '/measures_%s.json';
+
+    public function refreshCache(): void
+    {
+        Util::removeDir(self::CACHE_DIR);
+
+        $this->getConfig()->set('cacheTimestamp', time());
+        $this->getConfig()->save();
+        DataManager::pushPublicData('dataTimestamp', time());
+    }
+
     /**
      * @inheritDoc
      */
@@ -78,5 +92,19 @@ class Measure extends Base
         }
 
         parent::beforeRemove($entity, $options);
+    }
+
+    protected function afterSave(Entity $entity, array $options = [])
+    {
+        parent::afterSave($entity, $options);
+
+        $this->refreshCache();
+    }
+
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        parent::afterRemove($entity, $options);
+
+        $this->refreshCache();
     }
 }

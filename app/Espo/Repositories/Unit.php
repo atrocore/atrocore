@@ -55,4 +55,18 @@ class Unit extends Base
 
         parent::beforeSave($entity, $options);
     }
+
+    protected function afterSave(Entity $entity, array $options = [])
+    {
+        parent::afterSave($entity, $options);
+
+        $this->getEntityManager()->getRepository('Measure')->refreshCache();
+    }
+
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        parent::afterRemove($entity, $options);
+
+        $this->getEntityManager()->getRepository('Measure')->refreshCache();
+    }
 }
