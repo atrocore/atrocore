@@ -379,7 +379,7 @@ class Config
         return rtrim($this->get('siteUrl'), '/');
     }
 
-    protected function getUnitsOfMeasure(): object
+    protected function getUnitsOfMeasure()
     {
         if (!$this->get('isInstalled', false) || !$this->container->get('user')->isFetched()) {
             return new \stdClass();

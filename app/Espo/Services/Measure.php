@@ -45,7 +45,7 @@ use Espo\Repositories\Measure as Repository;
  */
 class Measure extends Base
 {
-    public function getUnitsOfMeasure(): object
+    public function getUnitsOfMeasure()
     {
         if (!file_exists(Repository::CACHE_DIR)) {
             Util::createDir(Repository::CACHE_DIR);
