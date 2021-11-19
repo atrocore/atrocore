@@ -94,6 +94,8 @@ Espo.define('treo-core:views/admin/index', 'class-replace!treo-core:views/admin/
                     if ($(window).width() < 992) {
                         container.removeClass('fixed-top fixed-bottom scrolled');
                         container.css({top: '', width: ''});
+                    } else {
+                        container.css({width: container.parent().width() + 'px'});
                     }
                 });
             }
