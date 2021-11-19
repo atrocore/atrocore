@@ -385,21 +385,6 @@ class Config
             return new \stdClass();
         }
 
-        $data = $this->container->get('serviceFactory')->create('Measure')->findEntities([]);
-
-        if (empty($data['total'])) {
-            return new \stdClass();
-        }
-
-        $result = [];
-        foreach ($data['collection'] as $measure) {
-            $units = $measure->get('units')->toArray();
-            $result[$measure->get('name')]['unitList'] = array_column($units, 'name');
-            foreach ($this->get('inputLanguageList', []) as $locale) {
-                $result[$measure->get('name')]['unitListTranslates'][$locale] = array_column($units, 'name' . ucfirst(Util::toCamelCase(strtolower($locale))));
-            }
-        }
-
-        return empty($result) ? new \stdClass() : Json::decode(Json::encode($result));
+        return $this->container->get('serviceFactory')->create('Measure')->getUnitsOfMeasure();
     }
 }

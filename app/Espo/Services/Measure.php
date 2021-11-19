@@ -36,10 +36,42 @@ declare(strict_types=1);
 namespace Espo\Services;
 
 use Espo\Core\Templates\Services\Base;
+use Espo\Core\Utils\Json;
+use Espo\Core\Utils\Util;
+use Espo\Repositories\Measure as Repository;
 
 /**
  * Class Measure
  */
 class Measure extends Base
 {
+    public function getUnitsOfMeasure(): object
+    {
+        if (!file_exists(Repository::CACHE_DIR)) {
+            Util::createDir(Repository::CACHE_DIR);
+        }
+
+        $cacheFile = sprintf(Repository::CACHE_FILE, $this->getUser()->get('id'));
+        if (!file_exists($cacheFile)) {
+            $data = $this->findEntities(['maxSize' => \PHP_INT_MAX]);
+
+            $result = [];
+            if (!empty($data['total'])) {
+                $inputLanguageList = $this->getConfig()->get('inputLanguageList', []);
+                foreach ($data['collection'] as $measure) {
+                    $units = $measure->get('units')->toArray();
+                    $result[$measure->get('name')]['unitList'] = array_column($units, 'name');
+                    foreach ($inputLanguageList as $locale) {
+                        $result[$measure->get('name')]['unitListTranslates'][$locale] = array_column($units, 'name' . ucfirst(Util::toCamelCase(strtolower($locale))));
+                    }
+                }
+            }
+            $result = Json::encode($result);
+            file_put_contents($cacheFile, $result);
+        } else {
+            $result = file_get_contents($cacheFile);
+        }
+
+        return Json::decode($result);
+    }
 }
