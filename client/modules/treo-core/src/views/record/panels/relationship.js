@@ -143,7 +143,7 @@ Espo.define('treo-core:views/record/panels/relationship', ['class-replace!treo-c
                     success: () => {
                         this.notify('Unlinked', 'success');
                         this.collection.fetch();
-                        this.model.trigger('after:unrelate', this.link);
+                        this.model.trigger('after:unrelate', this.link, this.defs);
                     },
                     error: () => {
                         this.notify('Error occurred', 'error');
@@ -165,7 +165,7 @@ Espo.define('treo-core:views/record/panels/relationship', ['class-replace!treo-c
                     success: () => {
                         this.notify('Removed', 'success');
                         this.collection.fetch();
-                        this.model.trigger('after:unrelate', this.link);
+                        this.model.trigger('after:unrelate', this.link, this.defs);
                     },
 
                     error: () => {
