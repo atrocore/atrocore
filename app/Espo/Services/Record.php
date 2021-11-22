@@ -377,11 +377,49 @@ class Record extends \Espo\Core\Services\Base
         $this->loadPreview($entity);
     }
 
-    /**
-     * Load image preview
-     *
-     * @param Entity $entity
-     */
+    public function loadPreviewForCollection(EntityCollection $collection): void
+    {
+        $fields = [];
+        foreach ($this->getMetadata()->get(['entityDefs', $collection->getEntityName(), 'fields'], []) as $field => $data) {
+            if (in_array($data['type'], ['asset', 'image', 'file'])) {
+                $fields[] = $field;
+            }
+        }
+
+        if (empty($fields)) {
+            return;
+        }
+
+        $ids = [];
+        foreach ($fields as $field) {
+            foreach ($collection as $entity) {
+                $ids[] = $entity->get("{$field}Id");
+            }
+        }
+
+        $attachmentRepository = $this->getEntityManager()->getRepository('Attachment');
+        foreach ($attachmentRepository->where(['id' => $ids])->find() as $attachment) {
+            $attachments[$attachment->get('id')] = [
+                'name'      => $attachment->get('name'),
+                'pathsData' => $attachmentRepository->getAttachmentPathsData($attachment),
+            ];
+        }
+
+        foreach ($fields as $field) {
+            foreach ($collection as $entity) {
+                $attachmentId = $entity->get("{$field}Id");
+                if (isset($attachments[$attachmentId])) {
+                    $entity->set("{$field}Id", $attachmentId);
+                    $entity->set("{$field}Name", $attachments[$attachmentId]['name']);
+                    $entity->set("{$field}PathsData", $attachments[$attachmentId]['pathsData']);
+                } else {
+                    $entity->set("{$field}Id", null);
+                    $entity->set("{$field}Name", null);
+                }
+            }
+        }
+    }
+
     public function loadPreview(Entity $entity): void
     {
         $fields = [];
@@ -420,7 +458,6 @@ class Record extends \Espo\Core\Services\Base
     public function loadAdditionalFieldsForList(Entity $entity)
     {
         $this->loadParentNameFields($entity);
-        $this->loadPreview($entity);
     }
 
     protected function loadEmailAddressField(Entity $entity)
@@ -1254,6 +1291,8 @@ class Record extends \Espo\Core\Services\Base
 
         $collection = $this->getRepository()->find($selectParams);
 
+        $this->loadPreviewForCollection($collection);
+
         foreach ($collection as $e) {
             $this->loadAdditionalFieldsForList($e);
             if (!empty($params['loadAdditionalFields'])) {
@@ -1358,6 +1397,8 @@ class Record extends \Espo\Core\Services\Base
                     $totalSub = -2;
                 }
             }
+
+            $this->loadPreviewForCollection($collectionSub);
 
             foreach ($collectionSub as $e) {
                 $this->loadAdditionalFieldsForList($e);
@@ -1479,6 +1520,7 @@ class Record extends \Espo\Core\Services\Base
         $collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
 
         if (!empty($collection) && count($collection) > 0) {
+            $recordService->loadPreviewForCollection($collection);
             foreach ($collection as $e) {
                 $recordService->loadAdditionalFieldsForList($e);
                 if (!empty($params['loadAdditionalFields'])) {
