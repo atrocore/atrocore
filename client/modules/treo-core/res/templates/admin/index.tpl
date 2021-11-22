@@ -24,7 +24,7 @@
         <div class="col-md-5 admin-right-column">
             <div class="notifications-panel-container">{{{notificationsPanel}}}</div>
             <div class="twitter-tape">
-                <a class="twitter-timeline" data-lang="en" data-width="500" href="https://twitter.com/atrocore_global?ref_src=twsrc%5Etfw">Tweets by atrocore_global</a>
+                <a class="twitter-timeline" data-lang="en" data-dnt="true" data-width="500" href="https://twitter.com/atrocore_global?ref_src=twsrc%5Etfw">Tweets by atrocore_global</a>
                 <script>
                     $('#twitter-wjs').remove();
                     window.twttr = (function(d, s, id) {
@@ -41,6 +41,22 @@
                         };
                         return t;
                     }(document, "script", "twitter-wjs"));
+
+                    twttr.ready(function (twttr) {
+                        twttr.events.bind(
+                            'rendered',
+                            function (event) {
+                                let frame = event.target;
+                                let h1 = frame.contentWindow.document.getElementsByTagName('h1');
+
+                                if (h1) {
+                                    h1[0].style.fontSize = '18px';
+                                    h1[0].style.lineHeight = '18px';
+                                    h1[0].style.marginTop = '8px';
+                                }
+                            }
+                        );
+                    });
                 </script>
             </div>
         </div>
