@@ -447,6 +447,7 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
                     const parent = this.getParentView();
                     data = {
                         _id: parent ? parent.model ? parent.model.id : null : null,
+                        _sortedIds: this.getIdsFromDom(),
                         [this.dragableSortField]: sortFieldValue
                     };
                 }
