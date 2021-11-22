@@ -355,7 +355,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 success: function () {
                     this.notify('Linked', 'success');
                     this.updateRelationshipPanel(link);
-                    this.model.trigger('after:relate');
+                    this.model.trigger('after:relate', link);
                 }.bind(this),
                 error: function () {
                     this.notify('Error occurred', 'error');

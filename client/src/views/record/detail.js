@@ -902,11 +902,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.$dropdownItemListButton = this.$detailButtonContainer.find('.dropdown-item-list-button');
             }, this);
 
-            this.listenTo(this.model, 'after:save after:relate after:unrelate', link => {
-                if (link) {
-                    $('.panel-navigation .nav a[data-name="' + link + '"]').click();
+            this.listenTo(this.model, 'after:save after:relate after:unrelate', function (link, defs) {
+                let panelName = defs !== undefined && defs.name ? defs.name : link;
+
+                if (panelName) {
+                    $('.panel-navigation .nav a[data-name="' + panelName + '"]').click();
                 }
-            });
+            }.bind(this));
         },
 
         setupBeforeFinal: function () {
