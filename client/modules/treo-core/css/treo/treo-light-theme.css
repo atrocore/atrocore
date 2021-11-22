@@ -16989,7 +16989,7 @@ pre > code {
 
 @media screen and (min-width: 992px) {
   .admin-content .admin-right-column {
-    margin-top: -15px;
+    margin-top: -18px;
   }
 
   .admin-tables-container.fixed-bottom {
@@ -18771,6 +18771,10 @@ a:hover, a:focus {
 .page-header h3 {
   font-size: 28px;
   color: #000;
+}
+
+#main > .page-header > h3 {
+  margin-left: 0;
 }
 
 .middle > .panel > .panel-heading > h4.panel-title {
