@@ -31,60 +31,36 @@
  * and "AtroCore" word.
  */
 
-namespace Espo\Entities;
+declare(strict_types=1);
 
-use Espo\Core\ORM\Entity as Base;
+namespace Treo\Migrations;
 
-/**
- * Class Attachment
- */
-class Attachment extends Base
+use Treo\Core\Migration\Base;
+
+class V1Dot3Dot37 extends Base
 {
-    /**
-     * @return mixed|null
-     */
-    public function getSourceId()
+    public function up(): void
     {
-        $sourceId = $this->get('sourceId');
-        if (!$sourceId) {
-            $sourceId = $this->id;
+        try {
+            $this->getPDO()->exec("ALTER TABLE `attachment` ADD private TINYINT(1) DEFAULT '1' NOT NULL COLLATE utf8mb4_unicode_ci");
+        } catch (\Throwable $e) {
         }
 
-        return $sourceId;
+        try {
+            $records = $this
+                ->getPDO()
+                ->query("SELECT * FROM `asset` WHERE deleted=0")
+                ->fetchAll(\PDO::FETCH_ASSOC);
+
+            foreach ($records as $record) {
+                $isPrivate = !empty($record['private']);
+                $this->getPDO()->exec("UPDATE `attachment` SET private=$isPrivate WHERE id='{$record['file_id']}'");
+            }
+        } catch (\Throwable $e) {
+        }
     }
 
-    /**
-     * @return string
-     */
-    public function _getStorage()
+    public function down(): void
     {
-        return $this->valuesContainer['storage'] ? $this->valuesContainer['storage'] : "UploadDir";
-    }
-
-    public function getFilePath(): string
-    {
-        return $this->entityManager->getRepository($this->getEntityType())->getFilePath($this);
-    }
-
-    public function getThumbPath(string $size): string
-    {
-        $data = $this->entityManager->getRepository($this->getEntityType())->getAttachmentPathsData($this);
-
-        return !empty($data['thumbs'][$size]) ? $data['thumbs'][$size] : '';
-    }
-
-    public function getStorageFilePath(): string
-    {
-        return (string)$this->get('storageFilePath');
-    }
-
-    public function getStorageThumbPath(): string
-    {
-        return empty($this->get('storageThumbPath')) ? $this->getStorageFilePath() : (string)$this->get('storageThumbPath');
-    }
-
-    public function isPrivate(): bool
-    {
-        return $this->get('private');
     }
 }

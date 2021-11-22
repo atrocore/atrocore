@@ -24,6 +24,10 @@
       "importDisabled": true,
       "exportDisabled": true
     },
+    "private": {
+      "type": "bool",
+      "default": true
+    },
     "size": {
       "type": "float",
       "min": 0,

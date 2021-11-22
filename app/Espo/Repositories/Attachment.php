@@ -65,14 +65,9 @@ class Attachment extends RDB
         }
     }
 
-    /**
-     * @param Entity $entity
-     *
-     * @return bool
-     */
     public function isPrivate(Entity $entity): bool
     {
-        return $this->getConfig()->get('isUploadPrivate', true);
+        return $entity->isPrivate();
     }
 
     /**
