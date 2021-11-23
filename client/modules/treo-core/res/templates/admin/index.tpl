@@ -54,6 +54,11 @@
                                     h1[0].style.lineHeight = '18px';
                                     h1[0].style.marginTop = '8px';
                                 }
+
+                                $('.admin-right-column').css({
+                                    animation: 'fadein 1s',
+                                    opacity: 1
+                                });
                             }
                         );
                     });
