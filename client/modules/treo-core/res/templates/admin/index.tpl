@@ -24,7 +24,7 @@
         <div class="col-md-5 admin-right-column">
             <div class="notifications-panel-container">{{{notificationsPanel}}}</div>
             <div class="twitter-tape">
-                <a class="twitter-timeline" data-lang="en" data-dnt="true" data-width="500" href="https://twitter.com/atrocore_global?ref_src=twsrc%5Etfw">Tweets by atrocore_global</a>
+                <a class="twitter-timeline" data-lang="en" data-dnt="true" data-width="500" href="https://twitter.com/atrocore_news?ref_src=twsrc%5Etfw">Tweets by atrocore_global</a>
                 <script>
                     $('#twitter-wjs').remove();
                     window.twttr = (function(d, s, id) {
