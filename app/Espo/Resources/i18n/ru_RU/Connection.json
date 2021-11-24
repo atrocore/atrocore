@@ -16,7 +16,7 @@
     "Create Connection": "Создать соединение"
   },
   "exceptions": {
-    "sqlsrvMissing": "MSSQL driver не установлен на сервере.",
+    "sqlsrvMissing": "PHP MSSQL extension не установлен.",
     "connectionFailed": "Соединение не установлено: %s",
     "noSuchType": "Тип соединения не поддерживается."
   }
