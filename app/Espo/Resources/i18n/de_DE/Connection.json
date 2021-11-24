@@ -16,6 +16,7 @@
     "Create Connection": "Verbindung erstellen"
   },
   "exceptions": {
+    "sqlsrvMissing": "MSSQL-Treiber ist nicht auf dem Server installiert.",
     "connectionFailed": "Verbindung konnte nicht hergestellt werden: %s",
     "noSuchType": "Solcher Verbindungstyp ist nicht vorhanden"
   }

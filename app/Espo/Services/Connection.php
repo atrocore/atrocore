@@ -78,6 +78,9 @@ class Connection extends Base
                 }
                 break;
             case 'msql':
+                if (!function_exists('sqlsrv_connect')) {
+                    throw new BadRequest($this->getInjection('language')->translate('sqlsrvMissing', 'exceptions', 'Connection'));
+                }
                 $serverName = "{$connection->get('host')},{$connection->get('port')}";
                 $connectionInfo = [
                     "Database"     => $connection->get('dbName'),
