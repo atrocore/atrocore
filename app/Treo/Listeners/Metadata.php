@@ -136,7 +136,7 @@ class Metadata extends AbstractListener
 
         foreach ($data['fields'] as $field => $v) {
             $params = $defaultParams;
-            if (in_array($field, ['bool', 'enum', 'multiEnum', 'text', 'varchar', 'wysiwyg'])) {
+            if (in_array($field, ['bool', 'enum', 'multiEnum', 'text', 'varchar', 'wysiwyg', 'asset'])) {
                 $params[] = ['name' => 'isMultilang', 'type' => 'bool', 'tooltip' => true];
             }
 
