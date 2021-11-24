@@ -16,6 +16,7 @@
     "Create Connection": "Create Connection"
   },
   "exceptions": {
+    "sqlsrvMissing": "MSSQL driver is not installed on the server.",
     "connectionFailed": "Connection could not be established: %s",
     "noSuchType": "No such connection type."
   }
