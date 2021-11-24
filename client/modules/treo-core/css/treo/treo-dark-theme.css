@@ -17213,6 +17213,40 @@ pre > code {
 @media screen and (min-width: 992px) {
     .admin-content .admin-right-column {
         margin-top: -18px;
+        opacity: 0;
+    }
+
+    @keyframes fadein {
+        from {
+            opacity:0;
+        }
+        to {
+            opacity:1;
+        }
+    }
+    @-moz-keyframes fadein {
+        from {
+            opacity:0;
+        }
+        to {
+            opacity:1;
+        }
+    }
+    @-webkit-keyframes fadein {
+        from {
+            opacity:0;
+        }
+        to {
+            opacity:1;
+        }
+    }
+    @-o-keyframes fadein {
+        from {
+            opacity:0;
+        }
+        to {
+            opacity: 1;
+        }
     }
 
     .admin-tables-container.fixed-bottom {
