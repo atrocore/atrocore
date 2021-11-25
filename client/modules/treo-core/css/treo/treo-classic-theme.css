@@ -6540,6 +6540,10 @@ button.close {
     margin: 0;
 }
 
+.dialog-confirm {
+    z-index: 3000;
+}
+
 .dialog-confirm .modal-body {
     padding-bottom: 14px;
 }
@@ -20438,7 +20442,7 @@ button.category:focus {
     }
 
     #header .navbar img.logo {
-        max-width: 60%;
+        max-width: 70%;
     }
 
     #header .navbar-collapse,
@@ -20742,6 +20746,12 @@ button.category:focus {
     }
     #header .navbar img.logo {
         max-width: 100%;
+    }
+    #footer {
+        font-size: 13px;
+    }
+    #footer .year {
+        display: none;
     }
 }
 
