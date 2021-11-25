@@ -609,12 +609,22 @@ Espo.define('views/record/search', 'view', function (Dep) {
         getFilterDataList: function () {
             var arr = [];
             for (var field in this.advanced) {
-                arr.push({
-                    key: 'filter-' + field,
-                    name: field
-                });
+                if (this.isFieldExist(field, this.advanced[field])) {
+                    arr.push({
+                        key: 'filter-' + field,
+                        name: field
+                    });
+                } else {
+                    delete this.advanced[field];
+                }
             }
             return arr;
+        },
+
+        isFieldExist(name, filterField) {
+            let field = name.split('-').shift();
+
+            return !!this.getMetadata().get(['entityDefs', this.scope, 'fields', field]);
         },
 
         updateCollection: function () {
