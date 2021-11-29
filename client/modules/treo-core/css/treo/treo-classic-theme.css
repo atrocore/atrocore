@@ -21081,6 +21081,22 @@ span.jqtree-dragging {
     border-bottom: solid 1px #e0e0e0;
 }
 
+td.cell{
+    position: relative;
+}
+
+.image-preview ~ .main-image {
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    bottom: 0;
+    background-color: #0081d1;
+}
+
+.image-preview ~ .main-image.global-main-image {
+    background-color: #c80b19;
+}
+
 @media screen and (min-width: 768px) {
     .search-row .input-group {
         margin-left: 14px;
