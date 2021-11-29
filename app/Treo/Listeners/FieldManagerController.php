@@ -102,6 +102,12 @@ class FieldManagerController extends AbstractListener
     public function beforePatchActionUpdate(Event $event)
     {
         $this->beforePostActionCreate($event);
+
+        $data = $event->getArgument('data');
+
+        if ($data->isMultilang == false && $this->getConfig()->get('isMultilangActive', false)) {
+            $this->clearUnnecessaryMultilangFields($event->getArgument('params')['scope'], $event->getArgument('params')['name']);
+        }
     }
 
     /**
@@ -110,6 +116,12 @@ class FieldManagerController extends AbstractListener
     public function beforePutActionUpdate(Event $event)
     {
         $this->beforePostActionCreate($event);
+
+        $data = $event->getArgument('data');
+
+        if ($data->isMultilang == false && $this->getConfig()->get('isMultilangActive', false)) {
+            $this->clearUnnecessaryMultilangFields($event->getArgument('params')['scope'], $event->getArgument('params')['name']);
+        }
     }
 
     /**
@@ -277,6 +289,19 @@ class FieldManagerController extends AbstractListener
             $this
                 ->getEntityManager()
                 ->nativeQuery("DELETE FROM $table WHERE id IN ($ids)");
+        }
+    }
+
+    /**
+     * @param string $scope
+     * @param string $field
+     */
+    protected function clearUnnecessaryMultilangFields(string $scope, string $field): void
+    {
+        foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
+            $locale = Util::toCamelCase(strtolower($locale), '_', true);
+
+            $this->deleteColumns($scope, $field . $locale);
         }
     }
 
