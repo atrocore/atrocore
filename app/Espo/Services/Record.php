@@ -425,7 +425,7 @@ class Record extends \Espo\Core\Services\Base
         $fields = [];
         foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []) as $field => $data) {
             if (in_array($data['type'], ['asset', 'image', 'file']) && !empty($entity->get("{$field}Id"))) {
-                $fields[$entity->get("{$field}Id")] = $field;
+                $fields[$field] = $entity->get("{$field}Id");
             }
         }
 
@@ -437,20 +437,23 @@ class Record extends \Espo\Core\Services\Base
         $attachmentRepository = $this->getEntityManager()->getRepository('Attachment');
 
         $attachments = $attachmentRepository
-            ->where(['id' => array_keys($fields)])
+            ->where(['id' => array_unique(array_values($fields))])
             ->find();
 
-        foreach ($fields as $field) {
+        foreach (array_keys($fields) as $field) {
             $entity->set("{$field}Id", null);
             $entity->set("{$field}Name", null);
         }
 
         if (!empty($attachments) && count($attachments) > 0) {
             foreach ($attachments as $attachment) {
-                $fieldName = $fields[$attachment->get('id')];
-                $entity->set("{$fieldName}Id", $attachment->get('id'));
-                $entity->set("{$fieldName}Name", $attachment->get('name'));
-                $entity->set("{$fieldName}PathsData", $attachmentRepository->getAttachmentPathsData($attachment));
+                foreach ($fields as $field => $attachmentId) {
+                    if ($attachment->id == $attachmentId) {
+                        $entity->set("{$field}Id", $attachment->get('id'));
+                        $entity->set("{$field}Name", $attachment->get('name'));
+                        $entity->set("{$field}PathsData", $attachmentRepository->getAttachmentPathsData($attachment));
+                    }
+                }
             }
         }
     }
