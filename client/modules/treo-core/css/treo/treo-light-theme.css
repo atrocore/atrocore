@@ -20118,7 +20118,7 @@ tr.list-row{
   position: relative;
 }
 
-.image-preview ~ .main-image {
+.cell > .main-image {
   position: absolute;
   height: 100%;
   width: 4px;
@@ -20127,8 +20127,8 @@ tr.list-row{
   background-color: #0081d1;
 }
 
-.image-preview ~ .main-image.global-main-image {
-  background-color: #c80b19;
+.cell > .main-image.global-main-image {
+  background-color: red;
 }
 
 @media screen and (min-width: 768px) {
