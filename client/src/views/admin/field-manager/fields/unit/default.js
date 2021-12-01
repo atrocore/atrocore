@@ -35,8 +35,17 @@ Espo.define('views/admin/field-manager/fields/unit/default', 'views/fields/unit'
     return Dep.extend({
 
         setup: function () {
-            this.params.measure = this.model.get('measure');
+            const measures = Object.keys(Espo.Utils.cloneDeep(this.getConfig().get('unitsOfMeasure') || {})) || [];
+
+            this.params.measure = this.model.get('measure') || measures.shift();
+
             Dep.prototype.setup.call(this);
+
+            this.listenTo(this.model, 'change:measure', () => {
+                this.params.measure = this.model.get('measure');
+                this.loadUnitList();
+                this.reRender();
+            });
         },
 
         validate() {

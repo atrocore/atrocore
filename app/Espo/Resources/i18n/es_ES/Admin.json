@@ -51,9 +51,9 @@
     "Composer": "Module Manager",
     "log": "log",
     "Validate": "Validate",
-    "Unit": "Measurement Unit",
+    "Unit": "Measure Unit",
     "addOption": "Add option",
-    "addMeasureUnit": "Add measurement unit",
+    "addMeasureUnit": "Add measure unit",
     "progressLog": "Progress Log",
     "Roles": "Roles"
   },
@@ -209,7 +209,7 @@
     "multiLanguagesSettings": "Configure multiple languages to be used",
     "composer": "Installation / uninstallation / updating of modules, which is dependency consistent",
     "representationSettings": "Representation settings",
-    "unit": "Units of measurement settings"
+    "unit": "Units of measure settings"
   },
   "options": {
     "previewSize": {

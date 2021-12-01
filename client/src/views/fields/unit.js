@@ -52,6 +52,7 @@ Espo.define('views/fields/unit', 'views/fields/float',
             data.unitValue = this.model.get(this.unitFieldName);
             data.unitValueTranslate = this.unitListTranslates[data.unitValue] || data.unitValue;
             data.valueAndUnit = !!(data.value && data.unitValue);
+
             return data;
         },
 
@@ -59,18 +60,21 @@ Espo.define('views/fields/unit', 'views/fields/float',
             Dep.prototype.setup.call(this);
 
             this.unitFieldName = this.name + 'Unit';
+            this.prohibitedEmptyValue = this.prohibitedEmptyValue || this.options.prohibitedEmptyValue || this.model.getFieldParam(this.name, 'prohibitedEmptyValue');
 
-            const measure = this.params.measure;
+            this.loadUnitList();
+        },
 
+        loadUnitList() {
             this.unitList = [];
             this.unitListTranslates = {};
-
-            this.prohibitedEmptyValue = this.prohibitedEmptyValue || this.options.prohibitedEmptyValue || this.model.getFieldParam(this.name, 'prohibitedEmptyValue');
 
             if (!this.prohibitedEmptyValue) {
                 this.unitList.push('');
                 this.unitListTranslates[''] = '';
             }
+
+            const measure = this.params.measure;
 
             if (measure) {
                 const unitsOfMeasure = this.getConfig().get('unitsOfMeasure') || {};
@@ -126,10 +130,14 @@ Espo.define('views/fields/unit', 'views/fields/float',
             Dep.prototype.afterRender.call(this);
 
             if (this.mode === 'edit') {
+                if (this.model.get(this.name) === null && this.model.getFieldParam(this.name, 'default') !== null) {
+                    this.model.set(this.name, this.model.getFieldParam(this.name, 'default'));
+                }
+                if (this.model.get(this.unitFieldName) === null && this.model.getFieldParam(this.name, 'defaultUnit') !== null) {
+                    this.model.set(this.unitFieldName, this.model.getFieldParam(this.name, 'defaultUnit'));
+                }
                 this.$unit = this.$el.find(`[name="${this.unitFieldName}"]`);
-                this.$unit.on('change', function () {
-                    this.model.set(this.unitFieldName, this.$unit.val());
-                }.bind(this));
+                this.$unit.on('change', () => this.model.set(this.unitFieldName, this.$unit.val()));
             }
         },
 
