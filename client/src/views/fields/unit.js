@@ -30,16 +30,18 @@
  * and "AtroCore" word.
  */
 
-Espo.define('treo-core:views/fields/unit', 'views/fields/float',
+Espo.define('views/fields/unit', 'views/fields/float',
     Dep => Dep.extend({
 
         type: 'unit',
 
-        editTemplate: 'treo-core:fields/unit/edit',
+        editTemplate: 'fields/unit/edit',
 
-        detailTemplate: 'treo-core:fields/unit/detail',
+        detailTemplate: 'fields/unit/detail',
 
-        listTemplate: 'treo-core:fields/unit/list',
+        listTemplate: 'fields/unit/list',
+
+        prohibitedEmptyValue: false,
 
         data() {
             let data = Dep.prototype.data.call(this);
@@ -62,6 +64,13 @@ Espo.define('treo-core:views/fields/unit', 'views/fields/float',
 
             this.unitList = [];
             this.unitListTranslates = {};
+
+            this.prohibitedEmptyValue = this.prohibitedEmptyValue || this.options.prohibitedEmptyValue || this.model.getFieldParam(this.name, 'prohibitedEmptyValue');
+
+            if (!this.prohibitedEmptyValue) {
+                this.unitList.push('');
+                this.unitListTranslates[''] = '';
+            }
 
             if (measure) {
                 const unitsOfMeasure = this.getConfig().get('unitsOfMeasure') || {};

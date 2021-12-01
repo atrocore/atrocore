@@ -12,6 +12,16 @@
          "view": "treo-core:views/admin/field-manager/fields/measure-options"
       },
       {
+         "name": "prohibitedEmptyValue",
+         "type": "bool",
+         "default": false
+      },
+      {
+         "name":"default",
+         "type":"varchar",
+         "view": "views/admin/field-manager/fields/unit/default"
+      },
+      {
          "name":"min",
          "type":"float"
       },
@@ -43,7 +53,7 @@
       }
    },
    "filter": true,
-   "view": "treo-core:views/fields/unit",
+   "view": "views/fields/unit",
    "fieldDefs": {
       "type": "float"
    }

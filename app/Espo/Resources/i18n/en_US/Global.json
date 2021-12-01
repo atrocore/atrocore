@@ -275,7 +275,8 @@
   "messages": {
     "optionValueCannotBeEmpty": "Option value cannot be empty",
     "minimumOneOptionsRequired": "Minimum one option value is required.",
-    "defaultValueCannotBeEmpty": "Default value cannot be empty",
+    "defaultEnumValueCannotBeEmpty": "Default value should be selected if empty value is disabled.",
+    "defaultUnitCannotBeEmpty": "Default unit value should be selected if empty value is disabled.",
     "resetAllToDefaultConfirm": "Are you sure you want to reset all layouts to default values?",
     "testEmailSent": "Test email has been sent",
     "massUpdateResult": "Updating {count} records",

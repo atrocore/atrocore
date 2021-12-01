@@ -256,7 +256,8 @@
   "messages": {
     "optionValueCannotBeEmpty": "Option darf nicht leer sein",
     "minimumOneOptionsRequired": "Mindestens ein Optionswert ist erforderlich.",
-    "defaultValueCannotBeEmpty": "Standardwert darf nicht leer sein",
+    "defaultEnumValueCannotBeEmpty": "Der Standardwert sollte ausgewählt werden, wenn der leere Wert deaktiviert ist.",
+    "defaultUnitCannotBeEmpty": "Der Standardwert sollte ausgewählt werden, wenn der leere Wert deaktiviert ist.",
     "resetAllToDefaultConfirm": "Are you sure you want to reset all layouts to default values?",
     "testEmailSent": "Eine Test E-Mail wurde gesendet",
     "fieldIsUploading": "Hochladen läuft",
