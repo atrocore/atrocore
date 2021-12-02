@@ -381,7 +381,7 @@ class Config
 
     protected function getUnitsOfMeasure()
     {
-        if (!$this->get('isInstalled', false) || !$this->container->get('user')->isFetched()) {
+        if (!$this->get('isInstalled', false) || !$this->container->get('user') || !$this->container->get('user')->isFetched()) {
             return new \stdClass();
         }
 

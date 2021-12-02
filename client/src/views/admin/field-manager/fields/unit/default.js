@@ -30,32 +30,27 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/admin/field-manager/fields/options/default', 'views/fields/enum', function (Dep) {
+Espo.define('views/admin/field-manager/fields/unit/default', 'views/fields/unit', function (Dep) {
 
     return Dep.extend({
 
         setup: function () {
+            const measures = Object.keys(Espo.Utils.cloneDeep(this.getConfig().get('unitsOfMeasure') || {})) || [];
+
+            this.params.measure = this.model.get('measure') || measures.shift();
+
             Dep.prototype.setup.call(this);
 
-            this.setOptionList(this.getOptionListItems());
-            this.listenTo(this.model, 'change:options', function () {
-                this.setOptionList(this.getOptionListItems());
-            }, this);
-        },
-
-        getOptionListItems() {
-            let options = [];
-            if (this.model.get('options')) {
-                options = Espo.Utils.clone(this.model.get('options'));
-            }
-            options.unshift('');
-
-            return options;
+            this.listenTo(this.model, 'change:measure', () => {
+                this.params.measure = this.model.get('measure');
+                this.loadUnitList();
+                this.reRender();
+            });
         },
 
         validate() {
-            if (this.model.get('prohibitedEmptyValue') && this.model.get('default') === '') {
-                this.showValidationMessage(this.translate('defaultEnumValueCannotBeEmpty', 'messages'));
+            if (this.model.get('prohibitedEmptyValue') && this.model.get('defaultUnit') === '') {
+                this.showValidationMessage(this.translate('defaultUnitCannotBeEmpty', 'messages'));
                 return true;
             }
 
