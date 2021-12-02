@@ -34,6 +34,7 @@
 namespace Espo\Core\ORM\Repositories;
 
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Utils\Json;
 use Espo\ORM\EntityManager;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\Entity;
@@ -264,6 +265,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     protected function validateEnum(Entity $entity): void
     {
         $fields = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []);
+        $language = $this->getInjection('container')->get('language');
 
         foreach ($fields as $fieldName => $fieldData) {
             if (
@@ -286,8 +288,36 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
                 foreach ($value as $v) {
                     if (!in_array($v, $fieldOptions)) {
-                        $language = $this->getInjection('container')->get('language');
                         throw new BadRequest(sprintf($language->translate('noSuchOptions', 'exceptions', 'Global'), $language->translate($fieldName, 'fields', $entity->getEntityType())));
+                    }
+                }
+            }
+        }
+    }
+
+    protected function validateUnit(Entity $entity): void
+    {
+        $fields = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []);
+        $language = $this->getInjection('container')->get('language');
+
+        $unitsOfMeasure = $this->getConfig()->get('unitsOfMeasure');
+        $unitsOfMeasure = empty($unitsOfMeasure) ? [] : Json::decode(Json::encode($unitsOfMeasure), true);
+
+        foreach ($fields as $fieldName => $fieldData) {
+            if (isset($fieldData['type']) && $fieldData['type'] === 'unit') {
+                $value = $entity->get($fieldName);
+                $unit = $entity->get($fieldName . 'Unit');
+
+                $fieldLabel = $language->translate($fieldName, 'fields', $entity->getEntityType());
+
+                if ($value !== null && $value !== '' && empty($unit)) {
+                    throw new BadRequest(sprintf($language->translate('unitValueIsRequired', 'exceptions', 'Global'), $fieldLabel));
+                }
+
+                if (!empty($unit)) {
+                    $units = empty($unitsOfMeasure[$fieldData['measure']]['unitList']) ? [] : $unitsOfMeasure[$fieldData['measure']]['unitList'];
+                    if (!in_array($unit, $units)) {
+                        throw new BadRequest(sprintf($language->translate('noSuchUnit', 'exceptions', 'Global'), $fieldLabel));
                     }
                 }
             }
@@ -304,6 +334,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
         if (empty($options['skipAll'])) {
             $this->validateEnum($entity);
+            $this->validateUnit($entity);
         }
 
         // dispatch an event

@@ -880,6 +880,8 @@
     "list": "Liste"
   },
   "exceptions": {
+    "unitValueIsRequired": "unitValueIsRequired",
+    "noSuchUnit": "noSuchUnit",
     "noSuchOptions": "Der Wert für das Feld '%s' ist ungültig.",
     "fieldIsRequired": "Validierung fehlgeschlagen. '%s' ist erforderlich.",
     "notDashletService": "Service %s muss Dashlet-Interface implementieren",

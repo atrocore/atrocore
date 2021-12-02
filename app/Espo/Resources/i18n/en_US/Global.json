@@ -908,6 +908,8 @@
     "cd": "cd"
   },
   "exceptions": {
+    "unitValueIsRequired": "unitValueIsRequired",
+    "noSuchUnit": "noSuchUnit",
     "noSuchOptions": "Value for the field '%s' is not valid.",
     "fieldIsRequired": "Validation failed. '%s' is required.",
     "urlIsInvalid": "URL is invalid",
