@@ -129,10 +129,11 @@ Espo.define('views/fields/unit', 'views/fields/float',
             Dep.prototype.afterRender.call(this);
 
             if (this.mode === 'edit') {
-                if (this.model.get(this.name) === null && this.model.getFieldParam(this.name, 'default') !== null) {
+                if (!this.model.get(this.name) && this.model.getFieldParam(this.name, 'default')) {
                     this.model.set(this.name, this.model.getFieldParam(this.name, 'default'));
                 }
-                if (this.model.get(this.unitFieldName) === null && this.model.getFieldParam(this.name, 'defaultUnit') !== null) {
+
+                if (!this.model.get(this.unitFieldName) && this.model.getFieldParam(this.name, 'defaultUnit')) {
                     this.model.set(this.unitFieldName, this.model.getFieldParam(this.name, 'defaultUnit'));
                 }
                 this.$unit = this.$el.find(`[name="${this.unitFieldName}"]`);
