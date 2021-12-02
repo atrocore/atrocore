@@ -51,7 +51,6 @@ Espo.define('views/fields/unit', 'views/fields/float',
             data.unitListTranslates = this.unitListTranslates;
             data.unitValue = this.model.get(this.unitFieldName);
             data.unitValueTranslate = this.unitListTranslates[data.unitValue] || data.unitValue;
-            data.valueAndUnit = !!(data.value && data.unitValue);
 
             return data;
         },
