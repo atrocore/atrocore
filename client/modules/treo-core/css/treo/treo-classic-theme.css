@@ -19605,7 +19605,6 @@ ul.dropdown-menu > li.checkbox {
 .page-header .header-buttons .filter-cell .dropdown-enum-menu,
 .page-header .overview-filters-container .filter-cell .dropdown-enum-menu {
     min-width: 180px;
-    max-height: 50vh;
 }
 
 .page-header .header-buttons .filter-cell .dropdown-enum-menu > li > a,

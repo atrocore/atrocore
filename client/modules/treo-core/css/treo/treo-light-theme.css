@@ -19114,7 +19114,6 @@ table.table > thead th > div > a {
   width: 100%;
   min-width: 180px;
   overflow-y: auto;
-  max-height: 50vh;
 }
 
 .page-header .header-buttons .filter-cell .dropdown-enum-menu > li > a,
