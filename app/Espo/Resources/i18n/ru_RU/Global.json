@@ -908,8 +908,8 @@
     "cd": "Кд"
   },
   "exceptions": {
-    "unitValueIsRequired": "unitValueIsRequired",
-    "noSuchUnit": "noSuchUnit",
+    "unitValueIsRequired": "Единица измерения для поля '%s' необходима.",
+    "noSuchUnit": "Единица измерения для поля '%s' не допустима.",
     "noSuchOptions": "Значение для поля '%s' не допустимо.",
     "fieldIsRequired": "Проверка не удалась. '%s' необходим.",
     "urlIsInvalid": "URL неправильный",
