@@ -117,6 +117,10 @@ class ControllerManager
             throw new NotFound("Controller '$controllerName' is not found");
         }
 
+        if (empty($actionName)) {
+            throw new NotFound("Action '$actionName' for controller '$controllerName' is not found");
+        }
+
         if ($data && stristr($request->getContentType(), 'application/json')) {
             $data = json_decode($data);
         }
