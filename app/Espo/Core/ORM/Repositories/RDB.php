@@ -315,13 +315,19 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                 }
 
                 if (!empty($unit)) {
-                    $units = empty($unitsOfMeasure[$fieldData['measure']]['unitList']) ? [] : $unitsOfMeasure[$fieldData['measure']]['unitList'];
+                    $measure = $this->getUnitFieldMeasure($fieldName, $entity);
+                    $units = empty($unitsOfMeasure[$measure]['unitList']) ? [] : $unitsOfMeasure[$measure]['unitList'];
                     if (!in_array($unit, $units)) {
                         throw new BadRequest(sprintf($language->translate('noSuchUnit', 'exceptions', 'Global'), $fieldLabel));
                     }
                 }
             }
         }
+    }
+
+    protected function getUnitFieldMeasure(string $fieldName, Entity $entity): string
+    {
+        return $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $fieldName, 'measure'], '');
     }
 
     /**
