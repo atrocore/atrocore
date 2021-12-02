@@ -2545,7 +2545,7 @@ class Record extends \Espo\Core\Services\Base
                     return true;
                 }
 
-                if ($data->$field != $value) {
+                if (!Entity::areValuesEqual($params['type'], $data->$field, $value)) {
                     return true;
                 }
             }
