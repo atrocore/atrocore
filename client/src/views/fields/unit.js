@@ -118,19 +118,11 @@ Espo.define('views/fields/unit', 'views/fields/float',
         },
 
         validateFloat: function () {
-            if (!this.$unit.val()) {
+            if (Dep.prototype.validateFloat.call(this)){
                 return true;
             }
 
-            return Dep.prototype.validateFloat.call(this);
-        },
-
-        validate() {
-            if (Dep.prototype.validate.call(this)) {
-                return true;
-            }
-
-            return this.model.get(this.name) && this.model.get(this.unitFieldName) === '';
+            return this.model.get(this.name) && !this.$unit.val();
         },
 
         afterRender: function () {
