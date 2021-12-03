@@ -33,6 +33,7 @@
 
 namespace Espo\Services;
 
+use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Language;
 use \Espo\ORM\Entity;
 
@@ -2545,13 +2546,28 @@ class Record extends \Espo\Core\Services\Base
                     return true;
                 }
 
-                if (!Entity::areValuesEqual($params['type'], $data->$field, $value)) {
+                if (!$this->areValuesEqual($entity, $field, $data->$field, $value)) {
                     return true;
                 }
             }
         }
 
         return false;
+    }
+
+    protected function areValuesEqual(Entity $entity, string $field, $value1, $value2): bool
+    {
+        $type = isset($entity->getFields()[$field]['type']) ? $entity->getFields()[$field]['type'] : 'varchar';
+
+        if ($type === Entity::JSON_ARRAY && is_string($value1)) {
+            $value1 = Json::decode($value1, true);
+        }
+
+        if ($type === Entity::JSON_OBJECT && is_string($value1)) {
+            $value1 = Json::decode($value1);
+        }
+
+        return Entity::areValuesEqual($type, $value1, $value2);
     }
 
     /**
