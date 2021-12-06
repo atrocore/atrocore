@@ -28,6 +28,11 @@
         "description": "scheduledJob"
       },
       {
+        "url": "#Locale",
+        "label": "Locale",
+        "description": "locale"
+      },
+      {
         "url": "#Currency/view",
         "label": "Currency",
         "description": "currency"

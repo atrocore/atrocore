@@ -31,16 +31,10 @@
  * and "AtroCore" word.
  */
 
-namespace Espo\Controllers;
+namespace Espo\Repositories;
 
-use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Templates\Repositories\Base;
 
-class ScheduledJob extends \Espo\Core\Controllers\Record
+class Locale extends Base
 {
-    protected function checkControllerAccess()
-    {
-        if (!$this->getUser()->isAdmin()) {
-            throw new Forbidden();
-        }
-    }
 }
