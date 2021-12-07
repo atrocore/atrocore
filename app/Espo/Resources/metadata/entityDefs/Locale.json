@@ -11,6 +11,8 @@
     },
     "language": {
       "type": "enum",
+      "prohibitedEmptyValue": true,
+      "required": true,
       "options": [
         "en_US"
       ],
