@@ -9,14 +9,5 @@
             [{"name": "textFilterUseContainsForVarchar"}, {"name": "languageList"}],
             [{"name": "locale"}, false]
         ]
-    },
-    {
-        "label": "Locale",
-        "rows": [
-            [false, {"name": "timeZone"}],
-            [{"name": "dateFormat"}, {"name": "weekStart"}],
-            [{"name": "timeFormat"}, {"name": "thousandSeparator"}],
-            [{"name": "decimalMark"}, false]
-        ]
     }
 ]

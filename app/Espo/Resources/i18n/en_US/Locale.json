@@ -1,6 +1,12 @@
 {
   "fields": {
-    "language": "Language"
+    "language": "Language",
+    "timeZone": "Time Zone",
+    "dateFormat": "Date Format",
+    "weekStart": "First Day of Week",
+    "timeFormat": "Time Format",
+    "thousandSeparator": "Thousand Separator",
+    "decimalMark": "Decimal Mark"
   },
   "links": {
     "users": "Users"

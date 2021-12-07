@@ -18,6 +18,30 @@
         {
           "name": "language"
         },
+        {
+          "name": "timeZone"
+        }
+      ],
+      [
+        {
+          "name": "dateFormat"
+        },
+        {
+          "name": "weekStart"
+        }
+      ],
+      [
+        {
+          "name": "timeFormat"
+        },
+        {
+          "name": "thousandSeparator"
+        }
+      ],
+      [
+        {
+          "name": "decimalMark"
+        },
         false
       ]
     ]

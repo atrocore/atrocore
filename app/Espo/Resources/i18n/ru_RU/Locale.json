@@ -1,6 +1,12 @@
 {
   "fields": {
-    "language": "Язык"
+    "language": "Язык",
+    "timeZone": "Часовой пояс",
+    "dateFormat": "Формат даты",
+    "weekStart": "Первый день недели",
+    "timeFormat": "Формат времени",
+    "thousandSeparator": "Тысячный разделитель",
+    "decimalMark": "Десятичный разделитель"
   },
   "links": {
     "users": "Пользователи"
