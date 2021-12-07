@@ -54,7 +54,7 @@ Espo.define('views/admin/field-manager/fields/unit/default', 'views/fields/unit'
                 return true;
             }
 
-            return false;
+            return Dep.prototype.validate.call(this);
         },
 
     });

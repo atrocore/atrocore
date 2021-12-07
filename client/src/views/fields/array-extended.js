@@ -72,7 +72,7 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
 
             this.langFieldNames = this.getLangFieldNames();
 
-            if (!this.model.get(this.name + 'Ids')) {
+            if (this.model.get(this.name) && !this.model.get(this.name + 'Ids')) {
                 let optionsIds = [];
                 (this.model.get(this.name) || []).forEach((v, k) => {
                     optionsIds.push(`${k}`);
