@@ -1,5 +1,6 @@
 {
   "labels": {
+    "Locale": "Gebietsschema",
     "multiLanguagesSettings": "Sprachen",
     "multiLanguages": "Sprachen",
     "Label Manager": "Label-Manager",
@@ -169,6 +170,7 @@
     "incorrectThousandSeparatorOrDecimalMark": "Es sind nur die folgenden Trennzeichen zulässig: '.' und ','."
   },
   "descriptions": {
+    "locale": "Gebietsschemaeinstellungen",
     "inputLanguage": "Spracheingabe für übersetzbare Felder.",
     "multiLanguagesSettings": "Konfigurieren Sie die zu verwendeten Sprachen",
     "composer": "Verwaltung von Abhängigkeiten - hier kann man diverse Module installieren/aktualisieren/deinstallieren. Die Abhängigkeiten zwischen den Modulen werden automatisch berücksichtigt.",

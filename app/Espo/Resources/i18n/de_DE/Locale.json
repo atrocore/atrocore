@@ -1,0 +1,11 @@
+{
+  "fields": {
+    "language": "Sprache"
+  },
+  "links": {
+    "users": "Benutzer"
+  },
+  "labels": {
+    "Create Locale": "Gebietsschema erstellen"
+  }
+}

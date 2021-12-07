@@ -17,7 +17,6 @@
     "baseCurrency": "Basiswährung",
     "currencyRates": "Wechselkurse",
     "currencyList": "Währungsliste",
-    "language": "Sprache",
     "companyLogo": "Firmenlogo",
     "smtpAuth": "Authentifizierung",
     "ldapAuth": "Authentifizierung",

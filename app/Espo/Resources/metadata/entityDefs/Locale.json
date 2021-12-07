@@ -9,6 +9,15 @@
     "description": {
       "type": "text"
     },
+    "language": {
+      "type": "enum",
+      "options": [
+        "en_US"
+      ],
+      "default": "en_US",
+      "view": "views/settings/fields/language",
+      "isSorted": true
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true

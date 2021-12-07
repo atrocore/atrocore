@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "Locale": "Локаль",
     "Connection": "Соединение",
     "User": "Пользователь",
     "Team": "Группа",
@@ -54,6 +55,7 @@
     "InfoPage": "Инфостраница"
   },
   "scopeNamesPlural": {
+    "Locale": "Локали",
     "Connection": "Соединения",
     "Measure": "Меры",
     "Unit": "Единицы измерения",

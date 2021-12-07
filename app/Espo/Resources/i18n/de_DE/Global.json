@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "Locale": "Gebietsschema",
     "Connection": "Verbindung",
     "Stream": "Stream",
     "Currency": "Währung",
@@ -41,6 +42,7 @@
     "InfoPage": "Info Seite"
   },
   "scopeNamesPlural": {
+    "Locale": "Gebietsschemas",
     "Connection": "Verbindungen",
     "Measure": "Maße",
     "Unit": "Einheiten",

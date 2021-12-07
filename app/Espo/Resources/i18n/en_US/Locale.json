@@ -1,0 +1,11 @@
+{
+  "fields": {
+    "language": "Language"
+  },
+  "links": {
+    "users": "Users"
+  },
+  "labels": {
+    "Create Locale": "Create Locale"
+  }
+}
