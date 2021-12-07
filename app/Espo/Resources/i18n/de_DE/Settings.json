@@ -1,5 +1,6 @@
 {
   "fields": {
+    "locale": "Gebietsschema",
     "isMultilangActive": "Aktiv",
     "inputLanguageList": "Eingabesprachen",
     "appId": "ID",

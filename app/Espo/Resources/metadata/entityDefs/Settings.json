@@ -689,6 +689,12 @@
       "translation": "Global.scopeNames",
       "view": "views/settings/fields/quick-create-list"
     },
+    "locale": {
+      "type": "enum",
+      "required": true,
+      "prohibitedEmptyValue": true,
+      "view": "views/settings/fields/locale"
+    },
     "globalSearchEntityList": {
       "type": "multiEnum",
       "translation": "Global.scopeNames",

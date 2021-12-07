@@ -1,5 +1,6 @@
 {
   "fields": {
+    "locale": "Локаль",
     "useCache": "Использовать кэш",
     "dateFormat": "Формат даты",
     "timeFormat": "Формат времени",

@@ -1,5 +1,6 @@
 {
   "fields": {
+    "locale": "Locale",
     "isMultilangActive": "Active",
     "languageList": "Interface Languages",
     "inputLanguageList": "Input Languages",

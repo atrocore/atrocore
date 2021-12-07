@@ -6,13 +6,14 @@
             [false, {"name": "siteUrl"}],
             [{"name": "followCreatedEntities"}, {"name": "globalSearchEntityList"}],
             [{"name": "aclStrictMode"}, {"name": "attachmentDuplicates"}],
-            [{"name": "textFilterUseContainsForVarchar"}, {"name": "languageList"}]
+            [{"name": "textFilterUseContainsForVarchar"}, {"name": "languageList"}],
+            [{"name": "locale"}, false]
         ]
     },
     {
         "label": "Locale",
         "rows": [
-            [{"name": "language"}, {"name": "timeZone"}],
+            [false, {"name": "timeZone"}],
             [{"name": "dateFormat"}, {"name": "weekStart"}],
             [{"name": "timeFormat"}, {"name": "thousandSeparator"}],
             [{"name": "decimalMark"}, false]
