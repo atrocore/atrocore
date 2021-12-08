@@ -1,14 +1,8 @@
 {
   "fields": {
-    "dateFormat": "Формат даты",
-    "timeFormat": "Формат времени",
-    "timeZone": "Часовой пояс",
-    "weekStart": "Первый день недели",
-    "thousandSeparator": "Тысячный разделитель",
-    "decimalMark": "Десятичный разделитель",
+    "locale": "Локаль",
     "defaultCurrency": "Валюта по умолчанию",
     "currencyList": "Список валют",
-    "language": "Язык",
     "emailAddress": "Адрес эл. почты",
     "dashboardTabList": "Список вкладок",
     "tabList": "Список вкладок",
@@ -27,12 +21,6 @@
     "assignmentNotifications": "Notifications upon assignment"
   },
   "links": {
-  },
-  "options": {
-    "weekStart": {
-      "0": "Воскресенье",
-      "1": "Понедельник"
-    }
   },
   "labels": {
     "Notifications": "Оповещения",

@@ -1,15 +1,9 @@
 {
   "fields": {
+    "locale": "Gebietsschema",
     "assignmentNotifications": "Benachrichtigungen bei Zuweisungen senden",
-    "dateFormat": "Datumsformat",
-    "timeFormat": "Zeitformat",
-    "timeZone": "Zeitzone",
-    "weekStart": "Erster Tag der Woche",
-    "thousandSeparator": "Tausendertrennzeichen",
-    "decimalMark": "Dezimaltrennzeichen",
     "defaultCurrency": "Standardwährung",
     "currencyList": "Währungsliste",
-    "language": "Sprache",
     "emailAddress": "E-Mail",
     "dashboardTabList": "Menüliste",
     "tabList": "Menüliste",
@@ -24,12 +18,6 @@
     "followCreatedEntityTypeList": "Der Benutzer abonniert erstellten Einträge bestimmter Entitätstypen",
     "scopeColorsDisabled": "Bereichsfarben deaktivieren",
     "tabColorsDisabled": "Tabfarben deaktivieren"
-  },
-  "options": {
-    "weekStart": {
-      "0": "Sonntag",
-      "1": "Montag"
-    }
   },
   "labels": {
     "Notifications": "Benachrichtigungen",

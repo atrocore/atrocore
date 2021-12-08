@@ -1,45 +1,15 @@
 {
     "fields": {
-        "timeZone": {
-            "type": "enum",
-            "detault": "",
-            "view": "views/preferences/fields/time-zone"
-        },
-        "dateFormat": {
-            "type": "enum",
-            "options": ["MM/DD/YYYY", "YYYY-MM-DD", "DD.MM.YYYY", "DD/MM/YYYY"],
-            "default": "",
-            "view": "views/preferences/fields/date-format"
-        },
-        "timeFormat": {
-            "type": "enum",
-            "options": ["HH:mm", "hh:mma", "hh:mmA", "hh:mm A", "hh:mm a"],
-            "default": "",
-            "view": "views/preferences/fields/time-format"
-        },
-        "weekStart": {
-            "type": "enumInt",
-            "options": [0, 1],
-            "default": -1,
-            "view": "views/preferences/fields/week-start"
+        "locale": {
+            "type": "varchar",
+            "required": false,
+            "prohibitedEmptyValue": false,
+            "view": "views/settings/fields/locale"
         },
         "defaultCurrency": {
             "type": "enum",
             "default": "",
             "view": "views/preferences/fields/default-currency"
-        },
-        "thousandSeparator": {
-            "type": "varchar",
-            "default": ",",
-            "maxLength": 1,
-            "view": "views/settings/fields/thousand-separator"
-        },
-        "decimalMark": {
-            "type": "varchar",
-            "default": ".",
-            "required": true,
-            "maxLength": 1,
-            "view": "views/settings/fields/decimal-mark"
         },
         "dashboardLayout": {
             "type": "jsonArray",
@@ -56,11 +26,6 @@
         },
         "presetFilters": {
             "type": "jsonObject"
-        },
-        "language": {
-            "type": "enum",
-            "default": "",
-            "view": "views/preferences/fields/language"
         },
         "receiveAssignmentEmailNotifications": {
             "type": "bool",

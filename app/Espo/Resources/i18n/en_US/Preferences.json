@@ -1,15 +1,9 @@
 {
   "fields": {
+    "locale": "Locale",
     "assignmentNotifications": "Notifications upon assignment",
-    "dateFormat": "Date Format",
-    "timeFormat": "Time Format",
-    "timeZone": "Time Zone",
-    "weekStart": "First Day of Week",
-    "thousandSeparator": "Thousand Separator",
-    "decimalMark": "Decimal Mark",
     "defaultCurrency": "Default Currency",
     "currencyList": "Currency List",
-    "language": "Language",
     "emailAddress": "Email",
     "receiveAssignmentEmailNotifications": "Notifications upon assignment",
     "receiveMentionEmailNotifications": "Notifications about mentions in posts",
@@ -27,12 +21,6 @@
     "tabColorsDisabled": "Disable tab icons colors"
   },
   "links": {
-  },
-  "options": {
-    "weekStart": {
-      "0": "Sunday",
-      "1": "Monday"
-    }
   },
   "labels": {
     "Notifications": "Notifications",
