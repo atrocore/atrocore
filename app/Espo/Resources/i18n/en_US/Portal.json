@@ -10,17 +10,14 @@
     "quickCreateList": "Quick Create List",
     "companyLogo": "Logo",
     "theme": "Theme",
-    "language": "Language",
+    "locale": "Locale",
     "dashboardLayout": "Dashboard Layout",
-    "dateFormat": "Date Format",
-    "timeFormat": "Time Format",
-    "timeZone": "Time Zone",
-    "weekStart": "First Day of Week",
     "defaultCurrency": "Default Currency",
     "customUrl": "Custom URL",
     "customId": "Custom ID"
   },
   "links": {
+    "locale": "Locale",
     "users": "Users",
     "portalRoles": "Roles",
     "notes": "Notes"

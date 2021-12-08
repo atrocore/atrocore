@@ -1,21 +1,18 @@
 {
   "fields": {
+    "locale": "Gebietsschema",
     "portalRoles": "Rollen",
     "isActive": "Aktiv",
     "isDefault": "Ist Standard",
     "tabList": "Menüoptionen",
     "quickCreateList": "Liste Schnellerstellung",
     "theme": "Design",
-    "language": "Sprache",
-    "dateFormat": "Datumsformat",
-    "timeFormat": "Zeitformat",
-    "timeZone": "Zeitzone",
-    "weekStart": "Erster Tag der Woche",
     "defaultCurrency": "Standardwährung",
     "customUrl": "Benutzerdefinierte URL",
     "customId": "Benutzerdefinierte ID"
   },
   "links": {
+    "locale": "Gebietsschema",
     "users": "Benutzer",
     "portalRoles": "Rollen",
     "notes": "Notizen"

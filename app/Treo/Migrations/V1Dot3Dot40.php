@@ -47,10 +47,12 @@ class V1Dot3Dot40 extends Base
         $this->execute("ALTER TABLE `locale` ADD language VARCHAR(255) DEFAULT 'en_US' COLLATE utf8mb4_unicode_ci");
         $this->execute("ALTER TABLE `locale` ADD date_format VARCHAR(255) DEFAULT 'MM/DD/YYYY' COLLATE utf8mb4_unicode_ci");
         $this->execute("ALTER TABLE `locale` ADD time_zone VARCHAR(255) DEFAULT 'UTC' COLLATE utf8mb4_unicode_ci");
-        $this->execute("ALTER TABLE `locale` ADD week_start VARCHAR(255) DEFAULT '0' COLLATE utf8mb4_unicode_ci");
+        $this->execute("ALTER TABLE `locale` ADD week_start VARCHAR(255) DEFAULT 'sunday' COLLATE utf8mb4_unicode_ci");
         $this->execute("ALTER TABLE `locale` ADD time_format VARCHAR(255) DEFAULT 'HH:mm' COLLATE utf8mb4_unicode_ci");
         $this->execute("ALTER TABLE `locale` ADD thousand_separator VARCHAR(1) DEFAULT ',' COLLATE utf8mb4_unicode_ci");
         $this->execute("ALTER TABLE `locale` ADD decimal_mark VARCHAR(1) DEFAULT '.' COLLATE utf8mb4_unicode_ci");
+        $this->execute("ALTER TABLE `portal` DROP language, DROP time_zone, DROP date_format, DROP time_format, DROP week_start, ADD locale_id VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
+        $this->execute("CREATE INDEX IDX_LOCALE_ID ON `portal` (locale_id)");
 
         $language = $this->getConfig()->get('language');
         $dateFormat = $this->getConfig()->get('dateFormat');

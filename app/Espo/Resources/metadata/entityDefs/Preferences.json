@@ -3,7 +3,6 @@
         "locale": {
             "type": "varchar",
             "required": false,
-            "prohibitedEmptyValue": false,
             "view": "views/settings/fields/locale"
         },
         "localeId": {

@@ -228,7 +228,6 @@
     "locale": {
       "type": "varchar",
       "required": true,
-      "prohibitedEmptyValue": true,
       "view": "views/settings/fields/locale"
     },
     "globalSearchEntityList": {
