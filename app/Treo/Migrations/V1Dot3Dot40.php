@@ -55,12 +55,12 @@ class V1Dot3Dot40 extends Base
         $configData = include 'data/config.php';
 
         $language = !empty($configData['language']) ? $configData['language'] : 'en_US';
-        $dateFormat = !empty($configData['dateFormat']) ? $configData['dateFormat'] : 'MM/DD/YYYY';
+        $dateFormat = !empty($configData['dateFormat']) ? $configData['dateFormat'] : 'DD.MM.YYYY';
         $timeZone = !empty($configData['timeZone']) ? $configData['timeZone'] : 'UTC';
         $weekStart = !empty($configData['weekStart']) ? 'monday' : 'sunday';
         $timeFormat = !empty($configData['timeFormat']) ? $configData['timeFormat'] : 'HH:mm';
-        $thousandSeparator = !empty($configData['thousandSeparator']) ? $configData['thousandSeparator'] : ',';
-        $decimalMark = !empty($configData['decimalMark']) ? $configData['decimalMark'] : '.';
+        $thousandSeparator = !empty($configData['thousandSeparator']) ? $configData['thousandSeparator'] : '.';
+        $decimalMark = !empty($configData['decimalMark']) ? $configData['decimalMark'] : ',';
 
         $this->execute("INSERT INTO `locale` (id, name, language, date_format, time_zone, week_start, time_format, thousand_separator, decimal_mark) VALUES ('1', 'Main', '$language', '$dateFormat', '$timeZone', '$weekStart', '$timeFormat', '$thousandSeparator', '$decimalMark')");
 
