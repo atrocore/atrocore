@@ -44,9 +44,6 @@ return [
         'password' => ''
     ],
     'queueManagerWorkersCount'              => 4,
-    'dateFormat'                            => 'MM/DD/YYYY',
-    'timeFormat'                            => 'hh:mm a',
-    'weekStart'                             => 0,
     'currencyRates'                         => [],
     'outboundEmailFromAddress'              => '',
     'smtpServer'                            => '',
@@ -95,8 +92,6 @@ return [
     'recordsPerPage'                        => 50,
     'recordsPerPageSmall'                   => 20,
     'lastViewedCount'                       => 20,
-    'decimalMark'                           => '.',
-    'thousandSeparator'                     => ',',
     'useCache'                              => true,
     'applicationName'                       => 'AtroCORE',
     'outboundEmailFromName'                 => 'AtroCORE',
@@ -113,7 +108,6 @@ return [
         'ru_RU',
         'es_ES'
     ],
-    'language'                              => 'en_US',
     'currencyList'                          => [
         0 => 'EUR'
     ],
@@ -131,8 +125,7 @@ return [
         ]
     ],
     'cronMassUpdateMax'                     => 3000, // count of max massUpdate items for CRON
-    'developMode'                           => false,
-    'timeZone'                              => 'UTC',
-    'checkForConflicts'                     => true
+    'checkForConflicts'                     => true,
+    'localeId'                              => '1'
 ];
 

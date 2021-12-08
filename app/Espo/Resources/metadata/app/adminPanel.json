@@ -13,6 +13,11 @@
         "description": "userInterface"
       },
       {
+        "url": "#Locale",
+        "label": "Locale",
+        "description": "locale"
+      },
+      {
         "url": "#Admin/authentication",
         "label": "Authentication",
         "description": "authentication"

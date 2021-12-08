@@ -33,6 +33,8 @@
 
 namespace Espo\Controllers;
 
+use Espo\Core\Exceptions\Forbidden;
+
 class ScheduledJob extends \Espo\Core\Controllers\Record
 {
     protected function checkControllerAccess()

@@ -33,21 +33,9 @@
 
 namespace Espo\Entities;
 
-class Portal extends \Espo\Core\ORM\Entity
-{
-    protected $settingsAttributeList
-        = [
-            'companyLogoId',
-            'tabList',
-            'quickCreateList',
-            'dashboardLayout',
-            'dashletsOptions',
-            'theme',
-            'defaultCurrency'
-        ];
+use Espo\Core\Templates\Entities\Base;
 
-    public function getSettingsAttributeList()
-    {
-        return $this->settingsAttributeList;
-    }
+class Locale extends Base
+{
+    protected $entityType = "Locale";
 }

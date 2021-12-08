@@ -1,5 +1,6 @@
 {
   "fields": {
+    "locale": "Locale",
     "isMultilangActive": "Active",
     "languageList": "Interface Languages",
     "inputLanguageList": "Input Languages",
@@ -8,17 +9,10 @@
     "isStreamPanelFirst": "Is stream panel first",
     "attachmentDuplicates": "Asset Duplicates",
     "useCache": "Use Cache",
-    "dateFormat": "Date Format",
-    "timeFormat": "Time Format",
-    "timeZone": "Time Zone",
-    "weekStart": "First Day of Week",
-    "thousandSeparator": "Thousand Separator",
-    "decimalMark": "Decimal Mark",
     "defaultCurrency": "Default Currency",
     "baseCurrency": "Base Currency",
     "currencyRates": "Rate Values",
     "currencyList": "Currency List",
-    "language": "Language",
     "companyLogo": "Company Logo",
     "smtpServer": "Server",
     "smtpPort": "Port",
@@ -97,10 +91,6 @@
     "cleanupDeletedRecords": "Clean up deleted records"
   },
   "options": {
-    "weekStart": {
-      "0": "Sunday",
-      "1": "Monday"
-    },
     "currencyFormat": {
       "1": "10 USD",
       "2": "$10"

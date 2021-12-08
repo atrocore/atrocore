@@ -1,42 +1,13 @@
 [
     {
-        "label": "Locale",
-        "rows": [
-            [
-                {
-                    "name": "dateFormat"
-                },
-                {
-                    "name": "timeZone"
-                }
-            ],
-            [
-                {
-                    "name": "timeFormat"
-                },
-                {
-                    "name": "weekStart"
-                }
-            ],
-            [
-                {
-                    "name": "decimalMark"
-                },
-                {
-                    "name": "thousandSeparator"
-                }
-            ],
-            [
-                {
-                    "name": "language"
-                },
-                false
-            ]
-        ]
-    },
-    {
         "label": "General",
         "rows": [
+            [
+                {
+                    "name": "locale"
+                },
+                false
+            ],
             [
                 {
                     "name": "autoFollowEntityTypeList"

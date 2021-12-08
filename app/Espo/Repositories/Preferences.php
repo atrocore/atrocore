@@ -38,11 +38,7 @@ use Espo\Core\Utils\Json;
 
 class Preferences extends \Espo\Core\ORM\Repository
 {
-    protected $defaultAttributeListFromSettings = [
-        'decimalMark',
-        'thousandSeparator',
-        'followCreatedEntities'
-    ];
+    protected $defaultAttributeListFromSettings = ['followCreatedEntities'];
 
     protected $data = array();
 
@@ -55,7 +51,8 @@ class Preferences extends \Espo\Core\ORM\Repository
             'fileManager',
             'metadata',
             'config',
-            'entityManager'
+            'entityManager',
+            'portal',
         ]);
     }
 
@@ -136,6 +133,23 @@ class Preferences extends \Espo\Core\ORM\Repository
 
             $entity->set($this->data[$id]);
 
+            $localeId = null;
+            if (!empty($this->getInjection('portal'))) {
+                $localeId = $this->getInjection('portal')->get('localeId');
+            }
+            if (!empty($entity->get('locale'))) {
+                $localeId = $entity->get('locale');
+            }
+
+            if (!empty($localeId)) {
+                $locales = $this->getConfig()->get('locales', []);
+                if (isset($locales[$localeId])) {
+                    foreach ($locales[$localeId] as $name => $value) {
+                        $entity->set($name, $value);
+                    }
+                }
+            }
+
             $this->fetchAutoFollowEntityTypeList($entity);
 
             $entity->setAsFetched($this->data[$id]);
@@ -204,7 +218,7 @@ class Preferences extends \Espo\Core\ORM\Repository
 
         $this->data[$entity->id] = $entity->toArray();
 
-        $fields = $fields = $this->getMetadata()->get('entityDefs.Preferences.fields');
+        $fields = $this->getMetadata()->get('entityDefs.Preferences.fields');
 
         $data = array();
         foreach ($this->data[$entity->id] as $field => $value) {
@@ -212,6 +226,8 @@ class Preferences extends \Espo\Core\ORM\Repository
                 $data[$field] = $value;
             }
         }
+
+        $data['locale'] = empty($entity->get('localeId')) ? null : $entity->get('localeId');
 
         $dataString = Json::encode($data, \JSON_PRETTY_PRINT);
 
@@ -243,9 +259,6 @@ class Preferences extends \Espo\Core\ORM\Repository
     {
         if (!$entity->id) return;
         $this->deleteFromDb($entity->id);
-        if (isset($this->data[$userId])) {
-            unset($this->data[$userId]);
-        }
     }
 
     public function resetToDefaults($userId)
@@ -257,6 +270,17 @@ class Preferences extends \Espo\Core\ORM\Repository
         if ($entity = $this->get($userId)) {
             return $entity->toArray();
         }
+    }
+
+    public function hasLocale(string $locale): bool
+    {
+        $count = $this
+            ->getEntityManger()
+            ->getPDO()
+            ->query("SELECT COUNT(id) FROM `preferences` WHERE `data` LIKE '%\"locale\": \"$locale\"%' OR `data` LIKE '%\"locale\":\"$locale\"%'")
+            ->fetch(\PDO::FETCH_COLUMN);
+
+        return !empty($count);
     }
 
     public function find(array $params)

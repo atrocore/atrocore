@@ -1,5 +1,6 @@
 {
   "labels": {
+    "Locale": "Локаль",
     "Connection": "Подключения",
     "multiLanguagesSettings": "Языки",
     "multiLanguages": "Языки",
@@ -207,6 +208,7 @@
     "incorrectThousandSeparatorOrDecimalMark": "Разрешены только следующие разделители: '.' а также ','."
   },
   "descriptions": {
+    "Locale": "Настройки локали",
     "connection": "Настройки подключений",
     "inputLanguage": "Укажите языкт для полей, которые подлежат переводу.",
     "multiLanguagesSettings": "Сконфигурируйте множественные языки для использования",

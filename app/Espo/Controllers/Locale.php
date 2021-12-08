@@ -31,23 +31,10 @@
  * and "AtroCore" word.
  */
 
-namespace Espo\Entities;
+namespace Espo\Controllers;
 
-class Portal extends \Espo\Core\ORM\Entity
+use Espo\Core\Templates\Controllers\Base;
+
+class Locale extends Base
 {
-    protected $settingsAttributeList
-        = [
-            'companyLogoId',
-            'tabList',
-            'quickCreateList',
-            'dashboardLayout',
-            'dashletsOptions',
-            'theme',
-            'defaultCurrency'
-        ];
-
-    public function getSettingsAttributeList()
-    {
-        return $this->settingsAttributeList;
-    }
 }

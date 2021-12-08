@@ -57,6 +57,10 @@
             "User": {
                 "read": "all",
                 "edit": "no"
+            },
+            "Locale": {
+                "read": "all",
+                "edit": "no"
             }
         },
         "fieldLevel": {

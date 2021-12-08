@@ -30,18 +30,25 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/preferences/fields/time-zone', 'views/fields/enum', function (Dep) {
+Espo.define('views/settings/fields/locale', 'views/fields/link', Dep => {
 
     return Dep.extend({
 
-        setupOptions: function () {
-            this.params.options = Espo.Utils.clone(this.getConfig().getFieldParam('timeZone', 'options') || []);
-            this.params.options.unshift('');
+        setup() {
+            if (!this.model.get('localeId') && this.model.get('locale')) {
+                this.model.set('localeId', this.model.get('locale'));
+            }
 
-            this.translatedOptions = this.translatedOptions || {};
-            this.translatedOptions[''] = this.translate('Default') + ' (' + this.getConfig().get('timeZone') +')';
+            if (this.model.get('localeId')) {
+                this.ajaxGetRequest(`Locale/${this.model.get('localeId')}`, null, {async: false}).then(response => {
+                    this.model.set('localeName', response.name);
+                });
+            }
+
+            this.options.foreignScope = 'Locale';
+
+            Dep.prototype.setup.call(this);
         },
 
     });
-
 });

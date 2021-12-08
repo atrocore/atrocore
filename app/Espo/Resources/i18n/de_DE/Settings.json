@@ -1,5 +1,6 @@
 {
   "fields": {
+    "locale": "Gebietsschema",
     "isMultilangActive": "Aktiv",
     "inputLanguageList": "Eingabesprachen",
     "appId": "ID",
@@ -7,17 +8,10 @@
     "isStreamPanelFirst": "Ist Aktivitätenpanel zuerst",
     "attachmentDuplicates": "Asset-Duplikat",
     "useCache": "Cache nutzen",
-    "dateFormat": "Datumsformat",
-    "timeFormat": "Zeitformat",
-    "timeZone": "Zeitzone",
-    "weekStart": "Erster Tag der Woche",
-    "thousandSeparator": "Tausendertrennzeichen",
-    "decimalMark": "Dezimaltrennzeichen",
     "defaultCurrency": "Standardwährung",
     "baseCurrency": "Basiswährung",
     "currencyRates": "Wechselkurse",
     "currencyList": "Währungsliste",
-    "language": "Sprache",
     "companyLogo": "Firmenlogo",
     "smtpAuth": "Authentifizierung",
     "ldapAuth": "Authentifizierung",
@@ -87,12 +81,6 @@
     "emailAddressIsOptedOutByDefault": "Neue E-Mail-Adressen als Opt-Out markieren",
     "adminNotificationsNewExtensionVersion": "Benachrichtigung anzeigen, wenn neue Versionen von Erweiterungen verfügbar sind",
     "cleanupDeletedRecords": "Gelöschte Datensätze aufräumen"
-  },
-  "options": {
-    "weekStart": {
-      "0": "Sonntag",
-      "1": "Montag"
-    }
   },
   "tooltips": {
     "isStreamSide": "Wenn aktiviert, wird das Aktivitätenpanel seitlich angezeigt.",

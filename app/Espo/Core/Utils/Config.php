@@ -35,12 +35,24 @@ namespace Espo\Core\Utils;
 
 use Espo\Core\Container;
 use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Repositories\Locale;
 
 /**
  * Class Config
  */
 class Config
 {
+    public const DEFAULT_LOCALE
+        = [
+            'language'          => 'en_US',
+            'dateFormat'        => 'MM/DD/YYYY',
+            'timeZone'          => 'UTC',
+            'weekStart'         => 0,
+            'timeFormat'        => 'HH:mm',
+            'thousandSeparator' => ',',
+            'decimalMark'       => '.',
+        ];
+
     /**
      * Path of default config file
      *
@@ -126,6 +138,10 @@ class Config
 
         if ($name == 'unitsOfMeasure') {
             return $this->getUnitsOfMeasure();
+        }
+
+        if (in_array($name, array_merge(['locales'], array_keys(self::DEFAULT_LOCALE)))) {
+            return $this->loadLocales()[$name];
         }
 
         $keys = explode('.', $name);
@@ -285,6 +301,45 @@ class Config
         return $this->data;
     }
 
+    protected function loadLocales():array
+    {
+        $result = self::DEFAULT_LOCALE;
+
+        if (!$this->get('isInstalled', false)) {
+            return $result;
+        }
+
+        $result['locales'] = $this->getCachedLocales();
+
+        $localeId = $this->get('localeId');
+        foreach (self::DEFAULT_LOCALE as $name => $value) {
+            $result[$name] = $result['locales'][$localeId][$name];
+        }
+
+        return $result;
+    }
+
+    public function getCachedLocales(): array
+    {
+        if (file_exists(Locale::CACHE_FILE)) {
+            return Json::decode(file_get_contents(Locale::CACHE_FILE), true);
+        }
+
+        $result = [];
+        foreach ($this->container->get('pdo')->query("SELECT * FROM `locale` WHERE deleted=0")->fetchAll(\PDO::FETCH_ASSOC) as $row) {
+            foreach (self::DEFAULT_LOCALE as $k => $v) {
+                $preparedKey = Util::toUnderScore($k);
+                $result[$row['id']][$k] = isset($row[$preparedKey]) ? $row[$preparedKey] : $v;
+            }
+            $result[$row['id']]['name'] = $row['name'];
+            $result[$row['id']]['weekStart'] = $result[$row['id']]['weekStart'] === 'monday' ? 1 : 0;
+        }
+
+        file_put_contents(Locale::CACHE_FILE, Json::encode($result));
+
+        return $result;
+    }
+
 
     /**
      * Get config acording to restrictions for a user
@@ -295,7 +350,7 @@ class Config
      */
     public function getData($isAdmin = null)
     {
-        $data = $this->loadConfig();
+        $data = array_merge($this->loadConfig(), $this->loadLocales());
         $data['unitsOfMeasure'] = $this->getUnitsOfMeasure();
 
         $restrictedConfig  = $data;

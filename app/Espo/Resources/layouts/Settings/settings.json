@@ -6,16 +6,8 @@
             [false, {"name": "siteUrl"}],
             [{"name": "followCreatedEntities"}, {"name": "globalSearchEntityList"}],
             [{"name": "aclStrictMode"}, {"name": "attachmentDuplicates"}],
-            [{"name": "textFilterUseContainsForVarchar"}, {"name": "languageList"}]
-        ]
-    },
-    {
-        "label": "Locale",
-        "rows": [
-            [{"name": "language"}, {"name": "timeZone"}],
-            [{"name": "dateFormat"}, {"name": "weekStart"}],
-            [{"name": "timeFormat"}, {"name": "thousandSeparator"}],
-            [{"name": "decimalMark"}, false]
+            [{"name": "textFilterUseContainsForVarchar"}, {"name": "languageList"}],
+            [{"name": "locale"}, false]
         ]
     }
 ]

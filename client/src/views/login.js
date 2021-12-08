@@ -36,7 +36,7 @@ Espo.define('views/login', 'view', function (Dep) {
 
         template: 'login',
 
-        language: null,
+        localeId: 'default',
 
         theme: 'default',
 
@@ -50,7 +50,15 @@ Espo.define('views/login', 'view', function (Dep) {
         setup() {
             Dep.prototype.setup.call(this);
 
-            this.language = this.getConfig().get('language');
+            let localeId = localStorage.getItem('localeId');
+            if (localeId && (this.getConfig().get('locales')[localeId] || localeId === 'default')) {
+                this.localeId = localeId;
+                this.ajaxGetRequest('I18n', {locale: localStorage.getItem('language')}, {async: false}).then(data => {
+                    this.getLanguage().data = data;
+                });
+            } else {
+                this.localeId = this.getConfig().get('localeId');
+            }
         },
 
         afterRender: function () {
@@ -82,12 +90,15 @@ Espo.define('views/login', 'view', function (Dep) {
             'click a[data-action="passwordChangeRequest"]': function (e) {
                 this.showPasswordChangeRequest();
             },
-            'change select[name="language"]': function (event) {
-                this.language = $(event.currentTarget).val();
-                if (this.language) {
-                    this.ajaxGetRequest('I18n', {locale: this.language}).then((data) => {
+            'change select[name="locale"]': function (event) {
+                this.localeId = $(event.currentTarget).val();
+                if (this.localeId) {
+                    let language = $("#locale option:selected").data('language');
+                    this.ajaxGetRequest('I18n', {locale: language}).then(data => {
                         this.getLanguage().data = data;
                         this.reRender();
+                        localStorage.setItem('localeId', this.localeId);
+                        localStorage.setItem('language', language);
                     });
                 }
             },
@@ -113,17 +124,24 @@ Espo.define('views/login', 'view', function (Dep) {
         },
 
         getLocales() {
-            let translatedOptions = Espo.Utils.clone(this.getLanguage().translate('language', 'options') || {});
-
-            return Espo.Utils
-                .clone(this.getConfig().get('languageList')).sort((v1, v2) => this.getLanguage().translateOption(v1, 'language').localeCompare(this.getLanguage().translateOption(v2, 'language')))
-                .map(item => {
-                    return {
-                        value: item,
-                        label: translatedOptions[item],
-                        selected: item === this.language
-                    };
+            let result = [];
+            $.each((this.getConfig().get('locales') || {}), (id, locale) => {
+                result.push({
+                    value: id,
+                    label: locale.name,
+                    language: locale.language,
+                    selected: id === this.localeId
                 });
+            });
+
+            result.unshift({
+                value: 'default',
+                label: this.translate('Default', 'labels', 'Global'),
+                language: this.getConfig().get('language'),
+                selected: 'default' === this.localeId,
+            });
+
+            return result;
         },
 
         getThemes() {
@@ -182,24 +200,27 @@ Espo.define('views/login', 'view', function (Dep) {
                 headers: {
                     'Authorization': 'Basic ' + Base64.encode(userName + ':' + password)
                 },
-                data: {
-                    language: this.language
-                },
                 success: function (data) {
                     this.notify(false);
 
+                    let localeId = $("#locale option:selected").val();
+
+                    let requestData = {};
+                    requestData['locale'] = localeId === 'default' ? null : localeId;
+                    requestData['localeId'] = requestData['locale'];
+
                     if (this.theme !== 'default' && data.preferences.theme !== this.theme) {
-                        $.ajax({
-                            url: 'Preferences/' + data.user.id,
-                            method: 'PUT',
-                            headers: {
-                                'Authorization-Token': Base64.encode(userName + ':' + data.token)
-                            },
-                            data: JSON.stringify({
-                                theme: this.theme
-                            })
-                        });
+                        requestData['theme'] = this.theme;
                     }
+
+                    $.ajax({
+                        url: 'Preferences/' + data.user.id,
+                        method: 'PUT',
+                        headers: {
+                            'Authorization-Token': Base64.encode(userName + ':' + data.token)
+                        },
+                        data: JSON.stringify(requestData)
+                    });
 
                     this.trigger('login', {
                         auth: {

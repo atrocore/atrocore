@@ -1,0 +1,22 @@
+{
+  "fields": {
+    "language": "Sprache",
+    "timeZone": "Zeitzone",
+    "dateFormat": "Datumsformat",
+    "weekStart": "Erster Tag der Woche",
+    "timeFormat": "Zeitformat",
+    "thousandSeparator": "Tausendertrennzeichen",
+    "decimalMark": "Dezimaltrennzeichen"
+  },
+  "links": {
+    "users": "Benutzer"
+  },
+  "labels": {
+    "sunday": "Sonntag",
+    "monday": "Montag",
+    "Create Locale": "Gebietsschema erstellen"
+  },
+  "exceptions": {
+    "localeIsUsed": "Verwendetes Gebietsschema kann nicht entfernt werden."
+  }
+}

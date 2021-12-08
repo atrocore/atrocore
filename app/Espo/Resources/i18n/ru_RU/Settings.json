@@ -1,17 +1,11 @@
 {
   "fields": {
+    "locale": "Локаль",
     "useCache": "Использовать кэш",
-    "dateFormat": "Формат даты",
-    "timeFormat": "Формат времени",
-    "timeZone": "Часовой пояс",
-    "weekStart": "Первый день недели",
-    "thousandSeparator": "Тысячный разделитель",
-    "decimalMark": "Десятичный разделитель",
     "defaultCurrency": "Валюта по умолчанию",
     "baseCurrency": "Базовая валюта",
     "currencyRates": "Курсы обмена",
     "currencyList": "Список валют",
-    "language": "Язык",
     "companyLogo": "Логотип компании",
     "smtpServer": "Сервер",
     "smtpPort": "Порт",
@@ -97,10 +91,6 @@
     "aclStrictMode": "ACL строгий режим"
   },
   "options": {
-    "weekStart": {
-      "0": "Воскресенье",
-      "1": "Понедельник"
-    },
     "currencyFormat": {
       "1": "10 USD",
       "2": "$10"

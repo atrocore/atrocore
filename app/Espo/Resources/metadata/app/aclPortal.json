@@ -1,6 +1,13 @@
 {
     "mandatory": {
         "scopeLevel": {
+            "Locale": {
+                "read": "all",
+                "edit": "no",
+                "delete": "no",
+                "stream": "no",
+                "create": "no"
+            },
             "User": {
                 "read": "own",
                 "edit": "no",

@@ -1,3 +1,4 @@
+<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -30,24 +31,31 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/preferences/fields/language', 'views/fields/enum', function (Dep) {
+namespace Espo\Acl;
 
-    return Dep.extend({
+use Espo\Core\Acl\Base;
+use Espo\Entities\User;
+use Espo\ORM\Entity;
 
-        setupOptions: function () {
-            this.params.options = Espo.Utils.clone(this.getConfig().get('languageList')).sort(function (v1, v2) {
-                return this.getLanguage().translateOption(v1, 'language').localeCompare(this.getLanguage().translateOption(v2, 'language'));
-            }.bind(this));
+class Locale extends Base
+{
+    public function checkScope(User $user, $data, $action = null, Entity $entity = null, $entityAccessData = array())
+    {
+        return true;
+    }
 
-            this.params.options.unshift('');
+    public function checkEntityCreate(User $user, Entity $entity, $data)
+    {
+        return $user->isAdmin();
+    }
 
-            this.translatedOptions = Espo.Utils.clone(this.getLanguage().translate('language', 'options') || {});
+    public function checkEntityEdit(User $user, Entity $entity, $data)
+    {
+        return $user->isAdmin();
+    }
 
-            var defaultTranslated =  this.translatedOptions[this.getConfig().get('language')] || this.getConfig().get('language');
-
-            this.translatedOptions[''] = this.translate('Default') + ' (' + defaultTranslated + ')';
-        },
-
-    });
-
-});
+    public function checkEntityDelete(User $user, Entity $entity, $data)
+    {
+        return $user->isAdmin();
+    }
+}

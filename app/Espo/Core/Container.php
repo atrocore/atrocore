@@ -115,26 +115,8 @@ class Container
         foreach ($this->get('portal')->getSettingsAttributeList() as $attribute) {
             $data[$attribute] = $this->get('portal')->get($attribute);
         }
-        if (empty($data['language'])) {
-            unset($data['language']);
-        }
         if (empty($data['theme'])) {
             unset($data['theme']);
-        }
-        if (empty($data['timeZone'])) {
-            unset($data['timeZone']);
-        }
-        if (empty($data['dateFormat'])) {
-            unset($data['dateFormat']);
-        }
-        if (empty($data['timeFormat'])) {
-            unset($data['timeFormat']);
-        }
-        if (isset($data['weekStart']) && $data['weekStart'] === -1) {
-            unset($data['weekStart']);
-        }
-        if (array_key_exists('weekStart', $data) && is_null($data['weekStart'])) {
-            unset($data['weekStart']);
         }
         if (empty($data['defaultCurrency'])) {
             unset($data['defaultCurrency']);

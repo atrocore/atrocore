@@ -1,5 +1,6 @@
 {
   "fields": {
+    "locale": "Локаль",
     "name": "Название",
     "logo": "Логотип",
     "companyLogo": "Логотип",
@@ -9,18 +10,14 @@
     "tabList": "Список вкладок",
     "quickCreateList": "Список для быстрого создания",
     "theme": "Тема",
-    "language": "Язык",
     "dashboardLayout": "Планировка панели виджетов",
-    "dateFormat": "Формат даты",
-    "timeFormat": "Формат времени",
-    "timeZone": "Часовой пояс",
-    "weekStart": "Первый день недели",
     "defaultCurrency": "Валюта по умолчанию",
     "customUrl": "Пользовательский URL",
     "customId": "Пользовательский ID",
     "url": "URL"
   },
   "links": {
+    "locale": "Локаль",
     "users": "Пользователи",
     "portalRoles": "Роли",
     "notes": "Заметки"

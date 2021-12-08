@@ -23,6 +23,7 @@
     "Add Field": "Add Field",
     "Settings": "Settings",
     "Scheduled Jobs": "Scheduled Jobs",
+    "Locale": "Locale",
     "Clear Cache": "Clear Cache",
     "Teams": "Teams",
     "Roles": "Roles",
@@ -184,6 +185,7 @@
     "incorrectThousandSeparatorOrDecimalMark": "Only the following delimiters are allowed: '.' and ','."
   },
   "descriptions": {
+    "locale": "Locale Settings",
     "inputLanguage": "Input languages for translatable fields.",
     "multiLanguagesSettings": "Configure multiple languages to be used",
     "composer": "Installation / uninstallation / updating of modules, which is dependency consistent",

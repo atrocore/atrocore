@@ -33,50 +33,58 @@
 
 namespace Espo\Repositories;
 
+use Espo\Core\DataManager;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
 
-use \Espo\Core\Exceptions\Error;
-
-class Portal extends \Espo\Core\ORM\Repositories\RDB
+class Locale extends Base
 {
-    public function loadUrlField(Entity $entity)
+    public const CACHE_FILE = 'data/cache/locales.json';
+
+    public function refreshCache(): void
     {
-        if ($entity->get('customUrl')) {
-            $entity->set('url', $entity->get('customUrl'));
+        if (!file_exists(self::CACHE_FILE)) {
             return;
         }
-        $siteUrl = $this->getConfig()->get('siteUrl');
-        $siteUrl = rtrim($siteUrl , '/') . '/';
-        $url = $siteUrl . 'portal/';
-        if ($entity->id === $this->getConfig()->get('defaultPortalId')) {
-            $entity->set('isDefault', true);
-            $entity->setFetched('isDefault', true);
-        } else {
-            if ($entity->get('customId')) {
-                $url .= $entity->get('customId') . '/';
-            } else {
-                $url .= $entity->id . '/';
-            }
-            $entity->setFetched('isDefault', false);
-        }
-        $entity->set('url', $url);
+
+        unlink(self::CACHE_FILE);
+
+        $this->getConfig()->set('cacheTimestamp', time());
+        $this->getConfig()->save();
+        DataManager::pushPublicData('dataTimestamp', time());
     }
 
-    protected function afterSave(Entity $entity, array $options = array())
+    protected function afterSave(Entity $entity, array $options = [])
     {
         parent::afterSave($entity, $options);
 
-        if ($entity->has('isDefault')) {
-            if ($entity->get('isDefault')) {
-                $this->getConfig()->set('defaultPortalId', $entity->id);
-                $this->getConfig()->save();
-            } else {
-                if ($entity->isAttributeChanged('isDefault')) {
-                    $this->getConfig()->set('defaultPortalId', null);
-                    $this->getConfig()->save();
-                }
-            }
+        $this->refreshCache();
+    }
+
+    protected function beforeRemove(Entity $entity, array $options = [])
+    {
+        if (
+            $this->getEntityManager()->getRepository('Preferences')->hasLocale((string)$entity->get('id'))
+            || $this->getConfig()->get('localeId') === $entity->get('id')
+        ) {
+            throw new BadRequest($this->getInjection('language')->translate('localeIsUsed', 'exceptions', 'Locale'));
         }
+
+        parent::beforeRemove($entity, $options);
+    }
+
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        parent::afterRemove($entity, $options);
+
+        $this->refreshCache();
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('language');
     }
 }
-

@@ -1,3 +1,4 @@
+<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -30,18 +31,10 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/preferences/fields/week-start', 'views/fields/enum-int', function (Dep) {
+namespace Espo\Services;
 
-    return Dep.extend({
+use Espo\Core\Templates\Services\Base;
 
-        setupOptions: function () {
-            this.params.options = Espo.Utils.clone(this.params.options);
-            this.params.options.unshift(-1);
-
-            this.translatedOptions = Espo.Utils.clone(this.getLanguage().translate('weekStart', 'options', 'Settings') || {});
-            this.translatedOptions[-1] = this.translate('Default') + ' (' + this.getLanguage().translateOption(this.getConfig().get('weekStart'), 'weekStart', 'Settings') +')';
-        },
-
-    });
-
-});
+class Locale extends Base
+{
+}

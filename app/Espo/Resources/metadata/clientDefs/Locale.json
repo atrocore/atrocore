@@ -1,0 +1,6 @@
+{
+  "controller": "controllers/record",
+  "views": {
+    "list": "views/locale/list"
+  }
+}

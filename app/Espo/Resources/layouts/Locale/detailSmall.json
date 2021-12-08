@@ -1,0 +1,49 @@
+[
+  {
+    "label": "",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        false
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "language"
+        },
+        {
+          "name": "timeZone"
+        }
+      ],
+      [
+        {
+          "name": "dateFormat"
+        },
+        {
+          "name": "weekStart"
+        }
+      ],
+      [
+        {
+          "name": "timeFormat"
+        },
+        {
+          "name": "thousandSeparator"
+        }
+      ],
+      [
+        {
+          "name": "decimalMark"
+        },
+        false
+      ]
+    ]
+  }
+]

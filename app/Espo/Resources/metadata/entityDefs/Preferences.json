@@ -1,45 +1,46 @@
 {
     "fields": {
-        "timeZone": {
-            "type": "enum",
-            "detault": "",
-            "view": "views/preferences/fields/time-zone"
+        "locale": {
+            "type": "varchar",
+            "required": false,
+            "view": "views/settings/fields/locale"
         },
-        "dateFormat": {
-            "type": "enum",
-            "options": ["MM/DD/YYYY", "YYYY-MM-DD", "DD.MM.YYYY", "DD/MM/YYYY"],
-            "default": "",
-            "view": "views/preferences/fields/date-format"
+        "localeId": {
+            "type": "varchar",
+            "notStorable": true
+        },
+        "language": {
+            "type": "varchar",
+            "notStorable": true
+        },
+        "decimalMark": {
+            "type": "varchar",
+            "notStorable": true
         },
         "timeFormat": {
-            "type": "enum",
-            "options": ["HH:mm", "hh:mma", "hh:mmA", "hh:mm A", "hh:mm a"],
-            "default": "",
-            "view": "views/preferences/fields/time-format"
+            "type": "varchar",
+            "notStorable": true
+        },
+        "thousandSeparator": {
+            "type": "varchar",
+            "notStorable": true
         },
         "weekStart": {
-            "type": "enumInt",
-            "options": [0, 1],
-            "default": -1,
-            "view": "views/preferences/fields/week-start"
+            "type": "int",
+            "notStorable": true
+        },
+        "dateFormat": {
+            "type": "varchar",
+            "notStorable": true
+        },
+        "timeZone": {
+            "type": "varchar",
+            "notStorable": true
         },
         "defaultCurrency": {
             "type": "enum",
             "default": "",
             "view": "views/preferences/fields/default-currency"
-        },
-        "thousandSeparator": {
-            "type": "varchar",
-            "default": ",",
-            "maxLength": 1,
-            "view": "views/settings/fields/thousand-separator"
-        },
-        "decimalMark": {
-            "type": "varchar",
-            "default": ".",
-            "required": true,
-            "maxLength": 1,
-            "view": "views/settings/fields/decimal-mark"
         },
         "dashboardLayout": {
             "type": "jsonArray",
@@ -56,11 +57,6 @@
         },
         "presetFilters": {
             "type": "jsonObject"
-        },
-        "language": {
-            "type": "enum",
-            "default": "",
-            "view": "views/preferences/fields/language"
         },
         "receiveAssignmentEmailNotifications": {
             "type": "bool",

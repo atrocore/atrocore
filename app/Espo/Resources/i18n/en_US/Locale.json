@@ -1,0 +1,22 @@
+{
+  "fields": {
+    "language": "Language",
+    "timeZone": "Time Zone",
+    "dateFormat": "Date Format",
+    "weekStart": "First Day of Week",
+    "timeFormat": "Time Format",
+    "thousandSeparator": "Thousand Separator",
+    "decimalMark": "Decimal Mark"
+  },
+  "links": {
+    "users": "Users"
+  },
+  "labels": {
+    "sunday": "Sunday",
+    "monday": "Monday",
+    "Create Locale": "Create Locale"
+  },
+  "exceptions": {
+    "localeIsUsed": "Locale in use cannot be removed."
+  }
+}

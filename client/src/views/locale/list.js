@@ -30,18 +30,13 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/preferences/fields/time-format', 'views/fields/enum', function (Dep) {
+Espo.define('views/locale/list', 'views/list', function (Dep) {
 
     return Dep.extend({
 
-        setupOptions: function () {
-            this.params.options = Espo.Utils.clone(this.params.options);
-            this.params.options.unshift('');
-
-            this.translatedOptions = this.translatedOptions || {};
-            this.translatedOptions[''] = this.translate('Default') + ' (' + this.getConfig().get('timeFormat') +')';
+        getHeader() {
+            return `<a href="#Admin">${this.translate('Administration')}</a><span class="subsection">${this.translate('System')}</span>${this.getLanguage().translate('Locale', 'labels', 'Admin')}`;
         },
 
     });
-
 });
