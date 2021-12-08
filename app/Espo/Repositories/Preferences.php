@@ -265,13 +265,13 @@ class Preferences extends \Espo\Core\ORM\Repository
 
     public function hasLocale(string $locale): bool
     {
-        $total = $this
+        $count = $this
             ->getEntityManger()
             ->getPDO()
-            ->query("SELECT COUNT(id) as total FROM `preferences` WHERE `data` LIKE '%\"locale\": \"$locale\"%' OR `data` LIKE '%\"locale\":\"$locale\"%'")
+            ->query("SELECT COUNT(id) FROM `preferences` WHERE `data` LIKE '%\"locale\": \"$locale\"%' OR `data` LIKE '%\"locale\":\"$locale\"%'")
             ->fetch(\PDO::FETCH_COLUMN);
 
-        return !empty($total);
+        return !empty($count);
     }
 
     public function find(array $params)

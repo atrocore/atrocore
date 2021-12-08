@@ -143,10 +143,9 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
 
             this.listenTo(this.model, 'after:save', function () {
                 if (
-                    this.model.get('language') !== this.attributes.language
+                    this.model.get('localeId') !== this.attributes.language
                     ||
                     this.model.get('theme') !== this.attributes.theme
-
                 ) {
                     window.location.reload();
                 }
