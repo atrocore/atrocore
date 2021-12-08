@@ -335,7 +335,9 @@ class Config
             $result[$row['id']]['weekStart'] = $result[$row['id']]['weekStart'] === 'monday' ? 1 : 0;
         }
 
-        file_put_contents(Locale::CACHE_FILE, Json::encode($result));
+        if (!empty($result)) {
+            file_put_contents(Locale::CACHE_FILE, Json::encode($result));
+        }
 
         return $result;
     }
