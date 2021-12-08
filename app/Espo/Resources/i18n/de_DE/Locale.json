@@ -15,5 +15,8 @@
     "sunday": "Sonntag",
     "monday": "Montag",
     "Create Locale": "Gebietsschema erstellen"
+  },
+  "exceptions": {
+    "localeIsUsed": "Verwendetes Gebietsschema kann nicht entfernt werden."
   }
 }

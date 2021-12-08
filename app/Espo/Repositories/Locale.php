@@ -34,30 +34,13 @@
 namespace Espo\Repositories;
 
 use Espo\Core\DataManager;
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Repositories\Base;
-use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 
 class Locale extends Base
 {
     public const CACHE_FILE = 'data/cache/locales.json';
-
-    public function getCachedLocales(): array
-    {
-        if (file_exists(self::CACHE_FILE)) {
-            return Json::decode(file_get_contents(self::CACHE_FILE), true);
-        }
-
-        $result = [];
-        foreach ($this->find() as $locale) {
-            $result[$locale->get('id')] = $locale->toArray();
-            $result[$locale->get('id')]['weekStart'] = $locale->get('weekStart') === 'monday' ? 1 : 0;
-        }
-
-        file_put_contents(self::CACHE_FILE, Json::encode($result));
-
-        return $result;
-    }
 
     public function refreshCache(): void
     {
@@ -79,10 +62,29 @@ class Locale extends Base
         $this->refreshCache();
     }
 
+    protected function beforeRemove(Entity $entity, array $options = [])
+    {
+        if (
+            $this->getEntityManager()->getRepository('Preferences')->hasLocale((string)$entity->get('id'))
+            || $this->getConfig()->get('localeId') === $entity->get('id')
+        ) {
+            throw new BadRequest($this->getInjection('language')->translate('localeIsUsed', 'exceptions', 'Locale'));
+        }
+
+        parent::beforeRemove($entity, $options);
+    }
+
     protected function afterRemove(Entity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);
 
         $this->refreshCache();
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('language');
     }
 }

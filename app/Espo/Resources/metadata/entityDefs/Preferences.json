@@ -10,6 +10,34 @@
             "type": "varchar",
             "notStorable": true
         },
+        "language": {
+            "type": "varchar",
+            "notStorable": true
+        },
+        "decimalMark": {
+            "type": "varchar",
+            "notStorable": true
+        },
+        "timeFormat": {
+            "type": "varchar",
+            "notStorable": true
+        },
+        "thousandSeparator": {
+            "type": "varchar",
+            "notStorable": true
+        },
+        "weekStart": {
+            "type": "int",
+            "notStorable": true
+        },
+        "dateFormat": {
+            "type": "varchar",
+            "notStorable": true
+        },
+        "timeZone": {
+            "type": "varchar",
+            "notStorable": true
+        },
         "defaultCurrency": {
             "type": "enum",
             "default": "",

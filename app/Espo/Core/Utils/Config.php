@@ -35,6 +35,7 @@ namespace Espo\Core\Utils;
 
 use Espo\Core\Container;
 use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Repositories\Locale;
 
 /**
  * Class Config
@@ -139,7 +140,7 @@ class Config
             return $this->getUnitsOfMeasure();
         }
 
-        if (in_array($name, array_keys(self::DEFAULT_LOCALE))) {
+        if (in_array($name, array_merge(['locales'], array_keys(self::DEFAULT_LOCALE)))) {
             return $this->loadLocales()[$name];
         }
 
@@ -303,18 +304,37 @@ class Config
     protected function loadLocales():array
     {
         $result = self::DEFAULT_LOCALE;
-        $result['locales'] = [];
 
         if (!$this->get('isInstalled', false)) {
             return $result;
         }
 
-        $result['locales'] =$this->container->get('entityManager')->getRepository('Locale')->getCachedLocales();
+        $result['locales'] = $this->getCachedLocales();
 
         $localeId = $this->get('localeId');
         foreach (self::DEFAULT_LOCALE as $name => $value) {
             $result[$name] = $result['locales'][$localeId][$name];
         }
+
+        return $result;
+    }
+
+    public function getCachedLocales(): array
+    {
+        if (file_exists(Locale::CACHE_FILE)) {
+            return Json::decode(file_get_contents(Locale::CACHE_FILE), true);
+        }
+
+        $result = [];
+        foreach ($this->container->get('pdo')->query("SELECT * FROM `locale` WHERE deleted=0")->fetchAll(\PDO::FETCH_ASSOC) as $row) {
+            foreach (self::DEFAULT_LOCALE as $k => $v) {
+                $preparedKey = Util::toUnderScore($k);
+                $result[$row['id']][$k] = isset($row[$preparedKey]) ? $row[$preparedKey] : $v;
+            }
+            $result[$row['id']]['weekStart'] = $result[$row['id']]['weekStart'] === 'monday' ? 1 : 0;
+        }
+
+        file_put_contents(Locale::CACHE_FILE, Json::encode($result));
 
         return $result;
     }

@@ -38,11 +38,7 @@ use Espo\Core\Utils\Json;
 
 class Preferences extends \Espo\Core\ORM\Repository
 {
-    protected $defaultAttributeListFromSettings = [
-        'decimalMark',
-        'thousandSeparator',
-        'followCreatedEntities'
-    ];
+    protected $defaultAttributeListFromSettings = ['followCreatedEntities'];
 
     protected $data = array();
 
@@ -55,7 +51,7 @@ class Preferences extends \Espo\Core\ORM\Repository
             'fileManager',
             'metadata',
             'config',
-            'entityManager'
+            'entityManager',
         ]);
     }
 
@@ -135,6 +131,15 @@ class Preferences extends \Espo\Core\ORM\Repository
             }
 
             $entity->set($this->data[$id]);
+
+            if (!empty($entity->get('locale'))) {
+                $locales = $this->getConfig()->get('locales', []);
+                if (isset($locales[$entity->get('locale')])) {
+                    foreach ($locales[$entity->get('locale')] as $name => $value) {
+                        $entity->set($name, $value);
+                    }
+                }
+            }
 
             $this->fetchAutoFollowEntityTypeList($entity);
 
@@ -245,9 +250,6 @@ class Preferences extends \Espo\Core\ORM\Repository
     {
         if (!$entity->id) return;
         $this->deleteFromDb($entity->id);
-        if (isset($this->data[$userId])) {
-            unset($this->data[$userId]);
-        }
     }
 
     public function resetToDefaults($userId)
@@ -259,6 +261,17 @@ class Preferences extends \Espo\Core\ORM\Repository
         if ($entity = $this->get($userId)) {
             return $entity->toArray();
         }
+    }
+
+    public function hasLocale(string $locale): bool
+    {
+        $total = $this
+            ->getEntityManger()
+            ->getPDO()
+            ->query("SELECT COUNT(id) as total FROM `preferences` WHERE `data` LIKE '%\"locale\": \"$locale\"%' OR `data` LIKE '%\"locale\":\"$locale\"%'")
+            ->fetch(\PDO::FETCH_COLUMN);
+
+        return !empty($total);
     }
 
     public function find(array $params)
