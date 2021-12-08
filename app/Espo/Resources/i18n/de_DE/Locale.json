@@ -12,6 +12,8 @@
     "users": "Benutzer"
   },
   "labels": {
+    "sunday": "Sonntag",
+    "monday": "Montag",
     "Create Locale": "Gebietsschema erstellen"
   }
 }

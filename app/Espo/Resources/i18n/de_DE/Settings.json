@@ -82,12 +82,6 @@
     "adminNotificationsNewExtensionVersion": "Benachrichtigung anzeigen, wenn neue Versionen von Erweiterungen verfügbar sind",
     "cleanupDeletedRecords": "Gelöschte Datensätze aufräumen"
   },
-  "options": {
-    "weekStart": {
-      "0": "Sonntag",
-      "1": "Montag"
-    }
-  },
   "tooltips": {
     "isStreamSide": "Wenn aktiviert, wird das Aktivitätenpanel seitlich angezeigt.",
     "isStreamPanelFirst": "Wenn aktiviert, wird das Aktivitätenpanel direkt nach der Übersicht angezeigt.",

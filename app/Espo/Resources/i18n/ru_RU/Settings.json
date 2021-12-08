@@ -91,10 +91,6 @@
     "aclStrictMode": "ACL строгий режим"
   },
   "options": {
-    "weekStart": {
-      "0": "Воскресенье",
-      "1": "Понедельник"
-    },
     "currencyFormat": {
       "1": "10 USD",
       "2": "$10"

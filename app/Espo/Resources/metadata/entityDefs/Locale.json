@@ -51,10 +51,10 @@
       "prohibitedEmptyValue": true,
       "required": true,
       "options": [
-        "0",
-        "1"
+        "sunday",
+        "monday"
       ],
-      "default": "0"
+      "default": "sunday"
     },
     "dateFormat": {
       "type": "enum",

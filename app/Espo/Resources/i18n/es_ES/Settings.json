@@ -1,17 +1,10 @@
 {
   "fields": {
     "useCache": "Usar caché",
-    "dateFormat": "Formato de fecha",
-    "timeFormat": "Formato de hora",
-    "timeZone": "Zona horaria",
-    "weekStart": "Primer día de la semana",
-    "thousandSeparator": "Separador de miles",
-    "decimalMark": "Separador decimal",
     "defaultCurrency": "Moneda por defecto",
     "baseCurrency": "Moneda Base",
     "currencyRates": "Tipos de cambio",
     "currencyList": "Lista de monedas",
-    "language": "Idioma",
     "companyLogo": "Logo de la empresa",
     "smtpServer": "Servidor",
     "smtpPort": "Puerto",
@@ -96,10 +89,6 @@
     "cleanupDeletedRecords": "Clean up deleted records"
   },
   "options": {
-    "weekStart": {
-      "0": "Domingo",
-      "1": "Lunes"
-    },
     "currencyFormat": {
       "1": "10 USD",
       "2": "$10"

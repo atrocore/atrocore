@@ -12,6 +12,8 @@
     "users": "Users"
   },
   "labels": {
+    "sunday": "Sunday",
+    "monday": "Monday",
     "Create Locale": "Create Locale"
   }
 }
