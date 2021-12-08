@@ -41,6 +41,17 @@ use Espo\Core\Utils\File\Manager as FileManager;
  */
 class Config
 {
+    public const DEFAULT_LOCALE
+        = [
+            'language'          => 'en_US',
+            'dateFormat'        => 'MM/DD/YYYY',
+            'timeZone'          => 'UTC',
+            'weekStart'         => 0,
+            'timeFormat'        => 'HH:mm',
+            'thousandSeparator' => ',',
+            'decimalMark'       => '.',
+        ];
+
     /**
      * Path of default config file
      *
@@ -126,6 +137,10 @@ class Config
 
         if ($name == 'unitsOfMeasure') {
             return $this->getUnitsOfMeasure();
+        }
+
+        if (in_array($name, array_keys(self::DEFAULT_LOCALE))) {
+            return $this->loadLocales()[$name];
         }
 
         $keys = explode('.', $name);
@@ -285,6 +300,25 @@ class Config
         return $this->data;
     }
 
+    protected function loadLocales():array
+    {
+        $result = self::DEFAULT_LOCALE;
+        $result['locales'] = [];
+
+        if (!$this->get('isInstalled', false)) {
+            return $result;
+        }
+
+        $result['locales'] =$this->container->get('entityManager')->getRepository('Locale')->getCachedLocales();
+
+        $localeId = $this->get('localeId');
+        foreach (self::DEFAULT_LOCALE as $name => $value) {
+            $result[$name] = $result['locales'][$localeId][$name];
+        }
+
+        return $result;
+    }
+
 
     /**
      * Get config acording to restrictions for a user
@@ -295,7 +329,7 @@ class Config
      */
     public function getData($isAdmin = null)
     {
-        $data = $this->loadConfig();
+        $data = array_merge($this->loadConfig(), $this->loadLocales());
         $data['unitsOfMeasure'] = $this->getUnitsOfMeasure();
 
         $restrictedConfig  = $data;

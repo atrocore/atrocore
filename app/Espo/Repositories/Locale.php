@@ -33,8 +33,55 @@
 
 namespace Espo\Repositories;
 
+use Espo\Core\DataManager;
 use Espo\Core\Templates\Repositories\Base;
+use Espo\Core\Utils\Json;
+use Espo\ORM\Entity;
 
 class Locale extends Base
 {
+    public const CACHE_FILE = 'data/cache/locales.json';
+
+    public function getCachedLocales(): array
+    {
+        if (file_exists(self::CACHE_FILE)) {
+            return Json::decode(file_get_contents(self::CACHE_FILE), true);
+        }
+
+        $result = [];
+        foreach ($this->find() as $locale) {
+            $result[$locale->get('id')] = $locale->toArray();
+        }
+
+        file_put_contents(self::CACHE_FILE, Json::encode($result));
+
+        return $result;
+    }
+
+    public function refreshCache(): void
+    {
+        if (!file_exists(self::CACHE_FILE)) {
+            return;
+        }
+
+        unlink(self::CACHE_FILE);
+
+        $this->getConfig()->set('cacheTimestamp', time());
+        $this->getConfig()->save();
+        DataManager::pushPublicData('dataTimestamp', time());
+    }
+
+    protected function afterSave(Entity $entity, array $options = [])
+    {
+        parent::afterSave($entity, $options);
+
+        $this->refreshCache();
+    }
+
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        parent::afterRemove($entity, $options);
+
+        $this->refreshCache();
+    }
 }
