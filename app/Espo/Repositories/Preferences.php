@@ -204,7 +204,7 @@ class Preferences extends \Espo\Core\ORM\Repository
 
         $this->data[$entity->id] = $entity->toArray();
 
-        $fields = $fields = $this->getMetadata()->get('entityDefs.Preferences.fields');
+        $fields = $this->getMetadata()->get('entityDefs.Preferences.fields');
 
         $data = array();
         foreach ($this->data[$entity->id] as $field => $value) {
@@ -212,6 +212,8 @@ class Preferences extends \Espo\Core\ORM\Repository
                 $data[$field] = $value;
             }
         }
+
+        $data['locale'] = empty($entity->get('localeId')) ? null : $entity->get('localeId');
 
         $dataString = Json::encode($data, \JSON_PRETTY_PRINT);
 

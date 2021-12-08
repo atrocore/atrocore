@@ -6,6 +6,10 @@
             "prohibitedEmptyValue": false,
             "view": "views/settings/fields/locale"
         },
+        "localeId": {
+            "type": "varchar",
+            "notStorable": true
+        },
         "defaultCurrency": {
             "type": "enum",
             "default": "",

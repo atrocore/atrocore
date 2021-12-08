@@ -35,6 +35,10 @@ Espo.define('views/settings/fields/locale', 'views/fields/link', Dep => {
     return Dep.extend({
 
         setup() {
+            if (!this.model.get('localeId') && this.model.get('locale')) {
+                this.model.set('localeId', this.model.get('locale'));
+            }
+
             if (this.model.get('localeId')) {
                 this.ajaxGetRequest(`Locale/${this.model.get('localeId')}`, null, {async: false}).then(response => {
                     this.model.set('localeName', response.name);
