@@ -18,10 +18,10 @@
                             <input type="password" name="password" id="field-password" class="form-control" tabindex="2">
                         </div>
                         <div class="form-group">
-                            <label for="language">{{translate 'language' category='fields' scope='Settings'}}</label>
-                            <select class="form-control" name="language" id="language">
+                            <label for="locale">{{translate 'locale' category='fields' scope='Settings'}}</label>
+                            <select class="form-control" name="locale" id="locale">
                                 {{#each locales}}
-                                <option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>
+                                <option data-language="{{language}}" value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>
                                 {{/each}}
                             </select>
                         </div>

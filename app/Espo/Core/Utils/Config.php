@@ -331,6 +331,7 @@ class Config
                 $preparedKey = Util::toUnderScore($k);
                 $result[$row['id']][$k] = isset($row[$preparedKey]) ? $row[$preparedKey] : $v;
             }
+            $result[$row['id']]['name'] = $row['name'];
             $result[$row['id']]['weekStart'] = $result[$row['id']]['weekStart'] === 'monday' ? 1 : 0;
         }
 
