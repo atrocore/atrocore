@@ -226,7 +226,7 @@
       "view": "views/settings/fields/quick-create-list"
     },
     "locale": {
-      "type": "enum",
+      "type": "varchar",
       "required": true,
       "prohibitedEmptyValue": true,
       "view": "views/settings/fields/locale"

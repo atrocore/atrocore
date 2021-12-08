@@ -687,6 +687,11 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
             unlink($file);
         }
 
+        // Insert default locale
+        $this->getPdo()->exec(
+            "INSERT INTO `locale` (id, name, language, date_format, time_zone, week_start, time_format, thousand_separator, decimal_mark) VALUES ('1', 'Default Locale', 'en_US', 'MM/DD/YYYY', 'UTC', '0', 'HH:mm', ',', '.')"
+        );
+
         $this->createScheduledJobs();
 
         $this->afterInstallModules();

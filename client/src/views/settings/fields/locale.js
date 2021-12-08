@@ -30,23 +30,20 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/settings/fields/locale', 'views/fields/enum', function (Dep) {
+Espo.define('views/settings/fields/locale', 'views/fields/link', Dep => {
 
     return Dep.extend({
 
-        setupOptions: function () {
-            this.params.options = [];
-            this.translatedOptions = {};
+        setup() {
 
-            this.ajaxGetRequest('Locale?maxSize=9999', null, {async: false}).then(response => {
-                if (response.total > 0) {
-                    response.list.forEach(locale => {
-                        this.params.options.push(locale.id);
-                        this.translatedOptions[locale.id] = locale.name;
-                    });
-                }
+            this.ajaxGetRequest(`Locale/${this.model.get('localeId')}`, null, {async: false}).then(response => {
+                this.model.set('localeName', response.name);
             });
-        }
-    });
 
+            this.options.foreignScope = 'Locale';
+
+            Dep.prototype.setup.call(this);
+        },
+
+    });
 });
