@@ -55,7 +55,7 @@ class V1Dot3Dot40 extends Base
         $language = $this->getConfig()->get('language');
         $dateFormat = $this->getConfig()->get('dateFormat');
         $timeZone = $this->getConfig()->get('timeZone');
-        $weekStart = $this->getConfig()->get('weekStart');
+        $weekStart = $this->getConfig()->get('weekStart') == 1 ? 'monday' : 'sunday';
         $timeFormat = $this->getConfig()->get('timeFormat');
         $thousandSeparator = $this->getConfig()->get('thousandSeparator');
         $decimalMark = $this->getConfig()->get('decimalMark');

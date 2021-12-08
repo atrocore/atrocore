@@ -51,6 +51,7 @@ class Locale extends Base
         $result = [];
         foreach ($this->find() as $locale) {
             $result[$locale->get('id')] = $locale->toArray();
+            $result[$locale->get('id')]['weekStart'] = $locale->get('weekStart') === 'monday' ? 1 : 0;
         }
 
         file_put_contents(self::CACHE_FILE, Json::encode($result));
