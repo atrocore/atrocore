@@ -39,17 +39,6 @@ use \Espo\Core\Exceptions\Error;
 
 class Portal extends \Espo\Core\ORM\Repositories\RDB
 {
-    protected function init()
-    {
-        parent::init();
-        $this->addDependency('config');
-    }
-
-    protected function getConfig()
-    {
-        return $this->getInjection('config');
-    }
-
     public function loadUrlField(Entity $entity)
     {
         if ($entity->get('customUrl')) {

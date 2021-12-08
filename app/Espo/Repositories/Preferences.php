@@ -52,6 +52,7 @@ class Preferences extends \Espo\Core\ORM\Repository
             'metadata',
             'config',
             'entityManager',
+            'portal',
         ]);
     }
 
@@ -132,10 +133,18 @@ class Preferences extends \Espo\Core\ORM\Repository
 
             $entity->set($this->data[$id]);
 
+            $localeId = null;
+            if (!empty($this->getInjection('portal'))) {
+                $localeId = $this->getInjection('portal')->get('localeId');
+            }
             if (!empty($entity->get('locale'))) {
+                $localeId = $entity->get('locale');
+            }
+
+            if (!empty($localeId)) {
                 $locales = $this->getConfig()->get('locales', []);
-                if (isset($locales[$entity->get('locale')])) {
-                    foreach ($locales[$entity->get('locale')] as $name => $value) {
+                if (isset($locales[$localeId])) {
+                    foreach ($locales[$localeId] as $name => $value) {
                         $entity->set($name, $value);
                     }
                 }

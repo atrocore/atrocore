@@ -31,23 +31,31 @@
  * and "AtroCore" word.
  */
 
-namespace Espo\Entities;
+namespace Espo\Acl;
 
-class Portal extends \Espo\Core\ORM\Entity
+use Espo\Core\Acl\Base;
+use Espo\Entities\User;
+use Espo\ORM\Entity;
+
+class Locale extends Base
 {
-    protected $settingsAttributeList
-        = [
-            'companyLogoId',
-            'tabList',
-            'quickCreateList',
-            'dashboardLayout',
-            'dashletsOptions',
-            'theme',
-            'defaultCurrency'
-        ];
-
-    public function getSettingsAttributeList()
+    public function checkScope(User $user, $data, $action = null, Entity $entity = null, $entityAccessData = array())
     {
-        return $this->settingsAttributeList;
+        return true;
+    }
+
+    public function checkEntityCreate(User $user, Entity $entity, $data)
+    {
+        return $user->isAdmin();
+    }
+
+    public function checkEntityEdit(User $user, Entity $entity, $data)
+    {
+        return $user->isAdmin();
+    }
+
+    public function checkEntityDelete(User $user, Entity $entity, $data)
+    {
+        return $user->isAdmin();
     }
 }

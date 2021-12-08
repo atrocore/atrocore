@@ -33,15 +33,8 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Templates\Controllers\Base;
 
 class Locale extends Base
 {
-    protected function checkControllerAccess()
-    {
-        if (!$this->getUser()->isAdmin()) {
-            throw new Forbidden();
-        }
-    }
 }
