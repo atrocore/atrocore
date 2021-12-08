@@ -36,7 +36,7 @@ Espo.define('views/login', 'view', function (Dep) {
 
         template: 'login',
 
-        localeId: null,
+        localeId: 'default',
 
         theme: 'default',
 
@@ -51,7 +51,7 @@ Espo.define('views/login', 'view', function (Dep) {
             Dep.prototype.setup.call(this);
 
             let localeId = localStorage.getItem('localeId');
-            if (localeId && this.getConfig().get('locales')[localeId]) {
+            if (localeId && (this.getConfig().get('locales')[localeId] || localeId === 'default')) {
                 this.localeId = localeId;
                 this.ajaxGetRequest('I18n', {locale: localStorage.getItem('language')}, {async: false}).then(data => {
                     this.getLanguage().data = data;
@@ -134,6 +134,13 @@ Espo.define('views/login', 'view', function (Dep) {
                 });
             });
 
+            result.unshift({
+                value: 'default',
+                label: this.translate('Default', 'labels', 'Global'),
+                language: this.getConfig().get('language'),
+                selected: 'default' === this.localeId,
+            });
+
             return result;
         },
 
@@ -196,8 +203,10 @@ Espo.define('views/login', 'view', function (Dep) {
                 success: function (data) {
                     this.notify(false);
 
+                    let localeId = $("#locale option:selected").val();
+
                     let requestData = {};
-                    requestData['locale'] = $("#locale option:selected").val();
+                    requestData['locale'] = localeId === 'default' ? null : localeId;
                     requestData['localeId'] = requestData['locale'];
 
                     if (this.theme !== 'default' && data.preferences.theme !== this.theme) {

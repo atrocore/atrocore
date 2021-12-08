@@ -63,7 +63,7 @@ class V1Dot3Dot40 extends Base
         $decimalMark = $this->getConfig()->get('decimalMark');
 
         $this->execute(
-            "INSERT INTO `locale` (id, name, language, date_format, time_zone, week_start, time_format, thousand_separator, decimal_mark) VALUES ('1', 'Default Locale', '$language', '$dateFormat', '$timeZone', '$weekStart', '$timeFormat', '$thousandSeparator', '$decimalMark')"
+            "INSERT INTO `locale` (id, name, language, date_format, time_zone, week_start, time_format, thousand_separator, decimal_mark) VALUES ('1', 'Main', '$language', '$dateFormat', '$timeZone', '$weekStart', '$timeFormat', '$thousandSeparator', '$decimalMark')"
         );
 
         $this->getConfig()->set('localeId', '1');
