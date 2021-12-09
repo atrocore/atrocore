@@ -27,6 +27,16 @@
             }
           ]
         }
+      },
+      "isDefault": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "isDefault"
+            }
+          ]
+        }
       }
     }
   }

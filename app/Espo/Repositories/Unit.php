@@ -35,6 +35,7 @@ declare(strict_types=1);
 
 namespace Espo\Repositories;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
@@ -53,11 +54,29 @@ class Unit extends Base
             throw new Forbidden();
         }
 
+        // default disabling
+        if (empty($options['cascadeChange']) && $entity->getFetched('isDefault') === true && $entity->get('isDefault') === false) {
+            $unit = $this
+                ->select(['id'])
+                ->where(['measureId' => $entity->get('measureId'), 'isDefault' => true, 'id!=' => $entity->get('id')])
+                ->findOne();
+
+            if (empty($unit)) {
+                throw new BadRequest('The measure must have a default unit.');
+            }
+        }
+
         parent::beforeSave($entity, $options);
 
-        if (!empty($entity->get('isDefault'))) {
+        // recalculate multiplier
+        if ($entity->getFetched('isDefault') === false && $entity->get('isDefault') === true) {
+            $k = 1 / $entity->getFetched('multiplier');
+            foreach ($this->where(['measureId' => $entity->get('measureId'), 'id!=' => $entity->get('id')])->find() as $unit) {
+                $unit->set('multiplier', $k * $unit->get('multiplier'));
+                $unit->set('isDefault', false);
+                $this->getEntityManager()->saveEntity($unit, ['cascadeChange' => true]);
+            }
             $entity->set('multiplier', 1);
-            $this->getEntityManager()->getPDO()->exec("UPDATE `unit` SET is_default=0 WHERE measure_id='{$entity->get('measureId')}'");
         }
     }
 
@@ -65,7 +84,9 @@ class Unit extends Base
     {
         parent::afterSave($entity, $options);
 
-        $this->getEntityManager()->getRepository('Measure')->refreshCache();
+        if (empty($options['cascadeChange'])) {
+            $this->getEntityManager()->getRepository('Measure')->refreshCache();
+        }
     }
 
     protected function afterRemove(Entity $entity, array $options = [])
