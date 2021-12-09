@@ -46,8 +46,6 @@ use Espo\Repositories\Measure as Repository;
  */
 class Measure extends Base
 {
-    protected $mandatorySelectAttributeList = ["unitsIds", "unitsNames", "data"];
-
     public function getUnitsOfMeasure()
     {
         if (!file_exists(Repository::CACHE_DIR)) {

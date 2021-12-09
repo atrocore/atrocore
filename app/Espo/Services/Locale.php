@@ -37,4 +37,32 @@ use Espo\Core\Templates\Services\Base;
 
 class Locale extends Base
 {
+    public function findLinkedEntities($id, $link, $params)
+    {
+        if ($link === 'measures') {
+            $params['select'][] = 'data';
+        }
+
+        $result = parent::findLinkedEntities($id, $link, $params);
+
+        if (!empty($result['total']) && $link === 'measures') {
+            foreach ($result['collection'] as $measure) {
+                $localeUnits = $measure->getDataParameter("locale_$id");
+                if (empty($localeUnits)) {
+                    $localeUnits = [];
+                } else {
+                    $localeUnits = array_column($this->getEntityManager()->getRepository('Unit')->select(['id'])->where(['id' => $localeUnits])->find()->toArray(), 'id');
+                }
+
+                $measure->set('localeUnits', $localeUnits);
+
+                $units = $measure->get('units')->toArray();
+
+                $measure->set('unitsIds', array_column($units, 'id'));
+                $measure->set('unitsNames', array_column($units, 'name', 'id'));
+            }
+        }
+
+        return $result;
+    }
 }

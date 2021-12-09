@@ -46,9 +46,14 @@ Espo.define('views/measure/fields/locale-units', 'views/fields/multi-enum', Dep 
             });
 
             this.prepareLocaleId();
-            this.prepareLocaleUnits();
 
             Dep.prototype.setup.call(this);
+
+            this.listenTo(this.model, 'change:localeUnits', () => {
+                let data = this.model.get('data') || {};
+                data[`locale_${this.localeId}`] = this.model.get('localeUnits');
+                this.model.set('data', data);
+            });
         },
 
         afterRender() {
@@ -75,22 +80,6 @@ Espo.define('views/measure/fields/locale-units', 'views/fields/multi-enum', Dep 
             }
             if (!this.localeId && hash.indexOf("#Locale/edit/") >= 0) {
                 this.localeId = hash.replace("#Locale/edit/", "");
-            }
-        },
-
-        prepareLocaleUnits() {
-            if (this.localeId) {
-                const data = this.model.get('data');
-                if (data && data[`locale_${this.localeId}`]) {
-                    let localeValues = [];
-                    data[`locale_${this.localeId}`].forEach(id => {
-                        if (this.options.translatedOptions[id]) {
-                            localeValues.push(id);
-                        }
-                    });
-
-                    this.model.set('localeUnits', localeValues);
-                }
             }
         },
 
