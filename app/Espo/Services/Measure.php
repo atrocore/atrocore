@@ -60,10 +60,21 @@ class Measure extends Base
             if (!empty($data['total'])) {
                 $inputLanguageList = $this->getConfig()->get('inputLanguageList', []);
                 foreach ($data['collection'] as $measure) {
-                    $units = $measure->get('units')->toArray();
-                    $result[$measure->get('name')]['unitList'] = array_column($units, 'name');
+                    if (empty($units = $measure->get('units')) || count($units) == 0) {
+                        continue 1;
+                    }
+
+                    foreach ($units as $unit) {
+                        $result[$measure->get('name')]['unitList'][] = $unit->get('unit');
+                        $result[$measure->get('name')]['unitListData'][$unit->get('id')] = [
+                            'isDefault'  => $unit->get('default'),
+                            'multiplier' => $unit->get('multiplier'),
+                            'convertTo'  => empty($convertTo = $unit->get('convertTo')) ? null : $convertTo->toArray(),
+                        ];
+                    }
+
                     foreach ($inputLanguageList as $locale) {
-                        $result[$measure->get('name')]['unitListTranslates'][$locale] = array_column($units, 'name' . ucfirst(Util::toCamelCase(strtolower($locale))));
+                        $result[$measure->get('name')]['unitListTranslates'][$locale] = array_column($units->toArray(), 'name' . ucfirst(Util::toCamelCase(strtolower($locale))));
                     }
                 }
             }

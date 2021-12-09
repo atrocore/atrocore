@@ -29,6 +29,14 @@
         }
       },
       "isDefault": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        },
         "readOnly": {
           "conditionGroup": [
             {
