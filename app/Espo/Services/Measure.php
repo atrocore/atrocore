@@ -38,6 +38,7 @@ namespace Espo\Services;
 use Espo\Core\Templates\Services\Base;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
+use Espo\ORM\Entity;
 use Espo\Repositories\Measure as Repository;
 
 /**
@@ -45,6 +46,8 @@ use Espo\Repositories\Measure as Repository;
  */
 class Measure extends Base
 {
+    protected $mandatorySelectAttributeList = ["unitsIds", "unitsNames", "data"];
+
     public function getUnitsOfMeasure()
     {
         if (!file_exists(Repository::CACHE_DIR)) {

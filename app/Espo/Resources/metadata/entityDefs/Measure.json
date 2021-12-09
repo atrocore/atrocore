@@ -40,6 +40,30 @@
     },
     "locales": {
       "type": "linkMultiple"
+    },
+    "localeId": {
+      "type": "varchar",
+      "notStorable": true,
+      "noAsset": true,
+      "layoutDetailDisabled": true,
+      "layoutListDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "layoutFiltersDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "textFilterDisabled": true,
+      "emHidden": true
+    },
+    "data": {
+      "type": "jsonObject",
+      "layoutDetailDisabled": true,
+      "layoutListDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "layoutFiltersDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "textFilterDisabled": true,
+      "emHidden": true
     }
   },
   "links": {

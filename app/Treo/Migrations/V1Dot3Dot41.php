@@ -42,6 +42,8 @@ class V1Dot3Dot41 extends Base
     public function up(): void
     {
         $this->execute("CREATE TABLE `locale_measure` (`id` INT AUTO_INCREMENT NOT NULL UNIQUE COLLATE utf8mb4_unicode_ci, `locale_id` VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci, `measure_id` VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci, `deleted` TINYINT(1) DEFAULT '0' COLLATE utf8mb4_unicode_ci, INDEX `IDX_DCC4988CE559DFD1` (locale_id), INDEX `IDX_DCC4988C5DA37D00` (measure_id), UNIQUE INDEX `UNIQ_DCC4988CE559DFD15DA37D00` (locale_id, measure_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB");
+        $this->execute("ALTER TABLE `measure` ADD data MEDIUMTEXT DEFAULT NULL COLLATE utf8mb4_unicode_ci");
+        $this->execute("DROP INDEX id ON `locale_measure`");
     }
 
     public function down(): void

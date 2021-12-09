@@ -36,14 +36,36 @@ declare(strict_types=1);
 namespace Espo\Entities;
 
 use Espo\Core\Templates\Entities\Base;
+use Espo\Core\Utils\Json;
 
-/**
- * Class Measure
- */
 class Measure extends Base
 {
-    /**
-     * @var string
-     */
     protected $entityType = "Measure";
+
+    public function setData(array $data): void
+    {
+        $this->set('data', $data);
+    }
+
+    public function setDataParameter(string $key, $value): void
+    {
+        $data = $this->getData();
+        $data[$key] = $value;
+
+        $this->set('data', $data);
+    }
+
+    public function getDataParameter(string $key)
+    {
+        $data = $this->getData();
+
+        return isset($data[$key]) ? $data[$key] : null;
+    }
+
+    public function getData(): array
+    {
+        $data = $this->get('data');
+
+        return empty($data) ? [] : Json::decode(Json::encode($data), true);
+    }
 }

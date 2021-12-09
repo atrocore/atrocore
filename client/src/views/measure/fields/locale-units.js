@@ -34,8 +34,64 @@ Espo.define('views/measure/fields/locale-units', 'views/fields/multi-enum', Dep 
 
     return Dep.extend({
 
+        localeId: null,
+
         setup() {
+            this.params.options = [];
+            this.options.translatedOptions = {};
+
+            $.each(this.model.get('unitsNames'), (id, name) => {
+                this.params.options.push(id);
+                this.options.translatedOptions[id] = name;
+            });
+
+            this.prepareLocaleId();
+            this.prepareLocaleUnits();
+
             Dep.prototype.setup.call(this);
+        },
+
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            if (this.mode !== 'list') {
+                this.checkFieldVisibility();
+            }
+        },
+
+        checkFieldVisibility() {
+            this.hide();
+
+            if (this.localeId) {
+                this.model.set('localeId', this.localeId);
+                this.show();
+            }
+        },
+
+        prepareLocaleId() {
+            const hash = window.location.hash;
+            if (hash.indexOf("#Locale/view/") >= 0) {
+                this.localeId = hash.replace("#Locale/view/", "");
+            }
+            if (!this.localeId && hash.indexOf("#Locale/edit/") >= 0) {
+                this.localeId = hash.replace("#Locale/edit/", "");
+            }
+        },
+
+        prepareLocaleUnits() {
+            if (this.localeId) {
+                const data = this.model.get('data');
+                if (data && data[`locale_${this.localeId}`]) {
+                    let localeValues = [];
+                    data[`locale_${this.localeId}`].forEach(id => {
+                        if (this.options.translatedOptions[id]) {
+                            localeValues.push(id);
+                        }
+                    });
+
+                    this.model.set('localeUnits', localeValues);
+                }
+            }
         },
 
     });

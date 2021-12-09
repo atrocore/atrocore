@@ -58,6 +58,15 @@ class Measure extends Base
         DataManager::pushPublicData('dataTimestamp', time());
     }
 
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        if (!empty($entity->get('localeId'))) {
+            $entity->setDataParameter('locale_' . $entity->get('localeId'), $entity->get('localeUnits'));
+        }
+
+        parent::beforeSave($entity, $options);
+    }
+
     /**
      * @inheritDoc
      */

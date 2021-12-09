@@ -4,6 +4,7 @@
     "link": true
   },
   {
-    "name": "localeUnits"
+    "name": "localeUnits",
+    "notSortable": true
   }
 ]
