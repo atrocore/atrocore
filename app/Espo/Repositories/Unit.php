@@ -62,7 +62,13 @@ class Unit extends Base
                 ->findOne();
 
             if (empty($unit)) {
-                throw new BadRequest('The measure must have a default unit.');
+                throw new BadRequest($this->getInjection('language')->translate('defaultIsRequired', 'exceptions', 'Unit'));
+            }
+        }
+
+        if ($entity->isNew()) {
+            if ($entity->get('isDefault') && !empty($this->where(['measureId' => $entity->get('measureId'), 'isDefault' => true])->findOne())) {
+                throw new BadRequest($this->getInjection('language')->translate('newUnitCanNotBeDefault', 'exceptions', 'Unit'));
             }
         }
 
@@ -89,10 +95,26 @@ class Unit extends Base
         }
     }
 
+    protected function beforeRemove(Entity $entity, array $options = [])
+    {
+        if ($entity->get('isDefault')) {
+            throw new BadRequest($this->getInjection('language')->translate('defaultIsRequired', 'exceptions', 'Unit'));
+        }
+
+        parent::beforeRemove($entity, $options);
+    }
+
     protected function afterRemove(Entity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);
 
         $this->getEntityManager()->getRepository('Measure')->refreshCache();
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('language');
     }
 }
