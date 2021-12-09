@@ -2,10 +2,14 @@
   "fields": {
     "name": "Name",
     "description": "Description",
-    "measure": "Measure"
+    "measure": "Measure",
+    "isDefault": "Default",
+    "multiplier": "Multiplier",
+    "convertTo": "Convert to"
   },
   "links": {
-    "measure": "Measure"
+    "measure": "Measure",
+    "convertTo": "Convert to"
   },
   "labels": {
     "Create Unit": "Create Unit"

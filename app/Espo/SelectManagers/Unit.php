@@ -33,31 +33,28 @@
 
 declare(strict_types=1);
 
-namespace Treo\Migrations;
+namespace Espo\SelectManagers;
 
-use Treo\Core\Migration\Base;
+use Treo\Core\SelectManagers\Base;
 
-class V1Dot3Dot41 extends Base
+class Unit extends Base
 {
-    public function up(): void
+    protected function boolFilterNotEntity(array &$result)
     {
-        $this->execute("CREATE TABLE `locale_measure` (`id` INT AUTO_INCREMENT NOT NULL UNIQUE COLLATE utf8mb4_unicode_ci, `locale_id` VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci, `measure_id` VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci, `deleted` TINYINT(1) DEFAULT '0' COLLATE utf8mb4_unicode_ci, INDEX `IDX_DCC4988CE559DFD1` (locale_id), INDEX `IDX_DCC4988C5DA37D00` (measure_id), UNIQUE INDEX `UNIQ_DCC4988CE559DFD15DA37D00` (locale_id, measure_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB");
-        $this->execute("ALTER TABLE `measure` ADD data MEDIUMTEXT DEFAULT NULL COLLATE utf8mb4_unicode_ci");
-        $this->execute("DROP INDEX id ON `locale_measure`");
-        $this->execute("ALTER TABLE `unit` ADD is_default TINYINT(1) DEFAULT '0' NOT NULL COLLATE utf8mb4_unicode_ci, ADD multiplier DOUBLE PRECISION DEFAULT '1' COLLATE utf8mb4_unicode_ci, ADD convert_to_id VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
-        $this->execute("CREATE INDEX IDX_CONVERT_TO_ID ON `unit` (convert_to_id)");
+        if (!empty($id = $this->getBoolFilterParameter('notEntity'))) {
+            $result['whereClause'][] = [
+                'id!=' => $id
+            ];
+        }
     }
 
-    public function down(): void
+    protected function boolFilterFromMeasure(array &$result)
     {
-    }
-
-    protected function execute(string $sql): void
-    {
-        try {
-            $this->getPDO()->exec($sql);
-        } catch (\Throwable $e) {
-            // ignore all
+        if (!empty($measureId = $this->getBoolFilterParameter('fromMeasure'))) {
+            $result['whereClause'][] = [
+                'measureId' => $measureId
+            ];
         }
     }
 }
+

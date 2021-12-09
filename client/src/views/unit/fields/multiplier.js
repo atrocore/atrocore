@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -31,47 +30,16 @@
  * and "AtroCore" word.
  */
 
-declare(strict_types=1);
+Espo.define('views/unit/fields/multiplier', 'views/fields/float', Dep => Dep.extend({
 
-namespace Espo\Repositories;
+    setup() {
+        Dep.prototype.setup.call(this);
 
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Templates\Repositories\Base;
-use Espo\ORM\Entity;
+        this.listenTo(this.model, 'change:isDefault', () => {
+            if (this.model.get('isDefault') === true) {
+                this.model.set('multiplier', 1);
+            }
+        });
+    },
 
-/**
- * Class Unit
- */
-class Unit extends Base
-{
-    /**
-     * @inheritDoc
-     */
-    protected function beforeSave(Entity $entity, array $options = [])
-    {
-        if (!$entity->isNew() && $entity->isAttributeChanged('measure')) {
-            throw new Forbidden();
-        }
-
-        parent::beforeSave($entity, $options);
-
-        if (!empty($entity->get('isDefault'))) {
-            $entity->set('multiplier', 1);
-            $this->getEntityManager()->getPDO()->exec("UPDATE `unit` SET is_default=0 WHERE measure_id='{$entity->get('measureId')}'");
-        }
-    }
-
-    protected function afterSave(Entity $entity, array $options = [])
-    {
-        parent::afterSave($entity, $options);
-
-        $this->getEntityManager()->getRepository('Measure')->refreshCache();
-    }
-
-    protected function afterRemove(Entity $entity, array $options = [])
-    {
-        parent::afterRemove($entity, $options);
-
-        $this->getEntityManager()->getRepository('Measure')->refreshCache();
-    }
-}
+}));

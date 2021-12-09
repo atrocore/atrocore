@@ -2,10 +2,14 @@
   "fields": {
     "name": "Name",
     "description": "Beschreibung",
-    "measure": "Maß"
+    "measure": "Maß",
+    "isDefault": "Standard",
+    "multiplier": "Multiplikator",
+    "convertTo": "Konvertieren zu"
   },
   "links": {
-    "measure": "Maß"
+    "measure": "Maß",
+    "convertTo": "Konvertieren zu"
   },
   "labels": {
     "Create Unit": "Maßeinheit erstellen"

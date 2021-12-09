@@ -15,6 +15,19 @@
       "type": "link",
       "required": true
     },
+    "isDefault": {
+      "type": "bool"
+    },
+    "multiplier": {
+      "type": "float",
+      "required": true,
+      "default": 1,
+      "view": "views/unit/fields/multiplier"
+    },
+    "convertTo": {
+      "type": "link",
+      "view": "views/unit/fields/convert-to"
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
@@ -39,6 +52,10 @@
       "type": "belongsTo",
       "entity": "Measure",
       "foreign": "units"
+    },
+    "convertTo": {
+      "type": "belongsTo",
+      "entity": "Unit"
     },
     "createdBy": {
       "type": "belongsTo",
