@@ -2,10 +2,13 @@
   "fields": {
     "name": "Name",
     "description": "Description",
-    "units": "Units"
+    "units": "Units",
+    "localeUnits": "Units",
+    "locales": "Locales"
   },
   "links": {
-    "units": "Units"
+    "units": "Units",
+    "locales": "Locales"
   },
   "labels": {
     "Create Measure": "Create Measure"

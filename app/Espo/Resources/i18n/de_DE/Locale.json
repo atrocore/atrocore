@@ -6,10 +6,11 @@
     "weekStart": "Erster Tag der Woche",
     "timeFormat": "Zeitformat",
     "thousandSeparator": "Tausendertrennzeichen",
-    "decimalMark": "Dezimaltrennzeichen"
+    "decimalMark": "Dezimaltrennzeichen",
+    "measures": "Maße"
   },
   "links": {
-    "users": "Benutzer"
+    "measures": "Maße"
   },
   "labels": {
     "sunday": "Sonntag",

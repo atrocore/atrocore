@@ -509,9 +509,17 @@
       "type": "link",
       "readOnly": true,
       "view": "views/fields/user"
+    },
+    "measures": {
+      "type": "linkMultiple"
     }
   },
   "links": {
+    "measures": {
+      "type": "hasMany",
+      "entity": "Measure",
+      "foreign": "locales"
+    },
     "createdBy": {
       "type": "belongsTo",
       "entity": "User"

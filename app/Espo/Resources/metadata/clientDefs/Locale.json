@@ -2,5 +2,12 @@
   "controller": "controllers/record",
   "views": {
     "list": "views/locale/list"
+  },
+  "relationshipPanels": {
+    "measures": {
+      "create": false,
+      "layout": "listSmallForLocale",
+      "rowActionsView": "views/record/row-actions/relationship-no-remove"
+    }
   }
 }

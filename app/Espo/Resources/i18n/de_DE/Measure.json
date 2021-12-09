@@ -2,10 +2,13 @@
   "fields": {
     "name": "Name",
     "description": "Beschreibung",
-    "units": "Einheiten"
+    "units": "Einheiten",
+    "locales": "Gebietsschemas",
+    "localeUnits": "Einheiten"
   },
   "links": {
-    "units": "Einheiten"
+    "units": "Einheiten",
+    "locales": "Gebietsschemas"
   },
   "labels": {
     "Create Measure": "Maß erstellen"

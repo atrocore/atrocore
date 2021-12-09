@@ -15,6 +15,11 @@
       "type": "linkMultiple",
       "noLoad": true
     },
+    "localeUnits": {
+      "type": "array",
+      "notStorable": true,
+      "view": "views/measure/fields/locale-units"
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
@@ -32,9 +37,17 @@
       "type": "link",
       "readOnly": true,
       "view": "views/fields/user"
+    },
+    "locales": {
+      "type": "linkMultiple"
     }
   },
   "links": {
+    "locales": {
+      "type": "hasMany",
+      "entity": "Locale",
+      "foreign": "measures"
+    },
     "units": {
       "type": "hasMany",
       "entity": "Unit",

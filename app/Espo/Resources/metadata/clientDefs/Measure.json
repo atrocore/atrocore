@@ -1,5 +1,8 @@
 {
   "controller": "controllers/record",
+  "modalViews": {
+    "edit": "views/measure/modals/edit"
+  },
   "boolFilterList": [
     "onlyMy",
     "assignedToMe",
