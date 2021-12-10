@@ -33,6 +33,7 @@
 
 namespace Espo\Core\Services;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Interfaces\Injectable;
 use Espo\Core\Utils\Config;
 use Espo\Entities\User;
@@ -68,6 +69,20 @@ abstract class Base implements Injectable
     public function __construct()
     {
         $this->init();
+    }
+
+    public static function getHeaderLanguage(Config $config): ?string
+    {
+        $headers = \getallheaders();
+        if (!empty($headers['language'])) {
+            if ($config->get('isMultilangActive') && in_array($headers['language'], $config->get('inputLanguageList', []))) {
+                return $headers['language'];
+            }
+
+            throw new BadRequest('No such language is available.');
+        }
+
+        return null;
     }
 
     /**

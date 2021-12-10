@@ -40,6 +40,8 @@ use Treo\Core\ControllerManager;
 
 class OpenApiGenerator
 {
+    private const HEADER_LANGUAGE_DESCRIPTION = "Set this parameter for data to be returned for a specified language";
+
     private Container $container;
 
     public function __construct(Container $container)
@@ -328,6 +330,16 @@ class OpenApiGenerator
                             "example" => "true"
                         ]
                     ],
+                    [
+                        "name"        => "language",
+                        "in"          => "header",
+                        "required"    => false,
+                        "description" => self::HEADER_LANGUAGE_DESCRIPTION,
+                        "schema"      => [
+                            "type"    => "string",
+                            "example" => "de_DE"
+                        ]
+                    ],
                 ],
                 "responses"   => self::prepareResponses([
                     "type"       => "object",
@@ -358,6 +370,16 @@ class OpenApiGenerator
                         "required" => true,
                         "schema"   => [
                             "type" => "string"
+                        ]
+                    ],
+                    [
+                        "name"        => "language",
+                        "in"          => "header",
+                        "required"    => false,
+                        "description" => self::HEADER_LANGUAGE_DESCRIPTION,
+                        "schema"      => [
+                            "type"    => "string",
+                            "example" => "de_DE"
                         ]
                     ],
                 ],
@@ -448,6 +470,16 @@ class OpenApiGenerator
                         "required" => true,
                         "schema"   => [
                             "type" => "string"
+                        ]
+                    ],
+                    [
+                        "name"        => "language",
+                        "in"          => "header",
+                        "required"    => false,
+                        "description" => self::HEADER_LANGUAGE_DESCRIPTION,
+                        "schema"      => [
+                            "type"    => "string",
+                            "example" => "de_DE"
                         ]
                     ],
                 ],
