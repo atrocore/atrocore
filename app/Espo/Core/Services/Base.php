@@ -70,6 +70,18 @@ abstract class Base implements Injectable
         $this->init();
     }
 
+    public static function getHeaderLanguage(Config $config): ?string
+    {
+        $headers = \getallheaders();
+        if (!empty($headers['language'])) {
+            if ($config->get('isMultilangActive') && in_array($headers['language'], $config->get('inputLanguageList', []))) {
+                return $headers['language'];
+            }
+        }
+
+        return null;
+    }
+
     /**
      * Init
      */
