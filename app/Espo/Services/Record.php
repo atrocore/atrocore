@@ -1159,7 +1159,7 @@ class Record extends \Espo\Core\Services\Base
     {
         $this->beforeDelete($entity); // TODO remove in 5.1.0
 
-        $this->checkForSkipComplete($entity, $data);
+        $this->checkForSkipComplete($entity, null);
     }
 
     protected function afterDeleteEntity(Entity $entity)
@@ -2482,6 +2482,20 @@ class Record extends \Espo\Core\Services\Base
                 if (!in_array($attribute, $attributeList) && $seed->hasAttribute($attribute)) {
                     $attributeList[] = $attribute;
                 }
+            }
+
+            if (!empty($language = self::getHeaderLanguage($this->getConfig()))) {
+                $newAttributeList = [];
+                foreach ($attributeList as $field) {
+                    $newAttributeList[] = $field;
+                    if ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $field, 'isMultilang'])) {
+                        $languageField = Util::toCamelCase($field . '_' . strtolower($language));
+                        if ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $languageField])) {
+                            $newAttributeList[] = $languageField;
+                        }
+                    }
+                }
+                $attributeList = $newAttributeList;
             }
 
             return $attributeList;
