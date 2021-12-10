@@ -20,6 +20,12 @@
       "notStorable": true,
       "view": "views/measure/fields/locale-units"
     },
+    "localeDefault": {
+      "type": "varchar",
+      "prohibitedEmptyValue": true,
+      "notStorable": true,
+      "view": "views/measure/fields/locale-default"
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true

@@ -30,29 +30,44 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/measure/fields/locale-units', 'views/fields/multi-enum',
+Espo.define('views/measure/fields/locale-default', 'views/fields/enum',
     Dep => {
         return Dep.extend({
 
-            localeId: null,
-
             setup() {
-                this.params.options = [];
-                this.options.translatedOptions = {};
-
-                $.each(this.model.get('unitsNames'), (id, name) => {
-                    this.params.options.push(id);
-                    this.options.translatedOptions[id] = name;
-                });
-
-                this.prepareLocaleId();
+                this.prepareUnitsOptions();
 
                 Dep.prototype.setup.call(this);
 
                 this.listenTo(this.model, 'change:localeUnits', () => {
+                    this.prepareUnitsOptions();
+                    this.translatedOptions = Espo.Utils.cloneDeep(this.options.translatedOptions);
+                    this.reRender();
+                });
+
+                this.listenTo(this.model, 'change:localeUnits', () => {
+                    const selected = $("select[name=\"localeDefault\"] option:selected").attr('value');
+                    if (selected !== this.model.get('localeDefault')) {
+                        this.model.set('localeDefault', selected);
+                    }
+                });
+
+                this.listenTo(this.model, 'change:localeDefault', () => {
                     let data = this.model.get('data') || {};
-                    data[`locale_${this.localeId}`] = this.model.get('localeUnits');
+                    data[`locale_${this.model.get('localeId')}_default`] = this.model.get('localeDefault');
                     this.model.set('data', data);
+                });
+            },
+
+            prepareUnitsOptions() {
+                this.params.options = [];
+                this.options.translatedOptions = {};
+
+                $.each(this.model.get('unitsNames'), (id, name) => {
+                    if ((this.model.get('localeUnits') || []).includes(id)) {
+                        this.params.options.push(id);
+                        this.options.translatedOptions[id] = name;
+                    }
                 });
             },
 
@@ -67,28 +82,21 @@ Espo.define('views/measure/fields/locale-units', 'views/fields/multi-enum',
             checkFieldVisibility() {
                 this.hide();
 
-                if (this.localeId) {
-                    this.model.set('localeId', this.localeId);
+                if (this.hasLocale()) {
                     this.show();
                 }
             },
 
             isRequired: function () {
                 if (this.mode !== 'list') {
-                    return !!(this.localeId);
+                    return this.hasLocale();
                 }
 
                 return false;
             },
 
-            prepareLocaleId() {
-                const hash = window.location.hash;
-                if (hash.indexOf("#Locale/view/") >= 0) {
-                    this.localeId = hash.replace("#Locale/view/", "");
-                }
-                if (!this.localeId && hash.indexOf("#Locale/edit/") >= 0) {
-                    this.localeId = hash.replace("#Locale/edit/", "");
-                }
+            hasLocale() {
+                return !!(this.getParentView().getView('localeUnits').localeId);
             },
 
         });

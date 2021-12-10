@@ -4,7 +4,8 @@
     "description": "Описание",
     "units": "Единицы измерения",
     "locales": "Локали",
-    "localeUnits": "Единицы измерения"
+    "localeUnits": "Единицы измерения",
+    "localeDefault": "По умолчанию"
   },
   "links": {
     "units": "Единицы измерения",

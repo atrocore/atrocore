@@ -46,6 +46,8 @@ class V1Dot3Dot42 extends Base
         $this->execute("DROP INDEX id ON `locale_measure`");
         $this->execute("ALTER TABLE `unit` ADD is_default TINYINT(1) DEFAULT '0' NOT NULL COLLATE utf8mb4_unicode_ci, ADD multiplier DOUBLE PRECISION DEFAULT '1' COLLATE utf8mb4_unicode_ci, ADD convert_to_id VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
         $this->execute("CREATE INDEX IDX_CONVERT_TO_ID ON `unit` (convert_to_id)");
+        $this->execute("ALTER TABLE `unit` DROP INDEX IDX_NAME, ADD UNIQUE INDEX UNIQ_DCBB0C535E237E06EB3B4E33 (name, deleted)");
+        $this->execute("CREATE UNIQUE INDEX UNIQ_DCBB0C5333E7211DEB3B4E33 ON `unit` (name_de_de, deleted)");
     }
 
     public function down(): void

@@ -6,5 +6,9 @@
   {
     "name": "localeUnits",
     "notSortable": true
+  },
+  {
+    "name": "localeDefault",
+    "notSortable": true
   }
 ]

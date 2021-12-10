@@ -4,7 +4,8 @@
     "description": "Beschreibung",
     "units": "Einheiten",
     "locales": "Gebietsschemas",
-    "localeUnits": "Einheiten"
+    "localeUnits": "Einheiten",
+    "localeDefault": "Standard"
   },
   "links": {
     "units": "Einheiten",

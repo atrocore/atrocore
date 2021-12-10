@@ -53,8 +53,8 @@ class Locale extends Base
                 } else {
                     $localeUnits = array_column($this->getEntityManager()->getRepository('Unit')->select(['id'])->where(['id' => $localeUnits])->find()->toArray(), 'id');
                 }
-
                 $measure->set('localeUnits', $localeUnits);
+                $measure->set('localeDefault', $measure->getDataParameter("locale_{$id}_default"));
 
                 $units = $measure->get('units')->toArray();
 

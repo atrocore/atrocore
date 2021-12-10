@@ -12,7 +12,9 @@
         {
           "name": "localeUnits"
         },
-        false
+        {
+          "name": "localeDefault"
+        }
       ]
     ]
   }

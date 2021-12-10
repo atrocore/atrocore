@@ -4,6 +4,7 @@
     "description": "Description",
     "units": "Units",
     "localeUnits": "Units",
+    "localeDefault": "Default",
     "locales": "Locales"
   },
   "links": {
