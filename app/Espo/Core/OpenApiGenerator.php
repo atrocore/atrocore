@@ -40,7 +40,7 @@ use Treo\Core\ControllerManager;
 
 class OpenApiGenerator
 {
-    private const HEADER_LANGUAGE_DESCRIPTION = "";
+    private const HEADER_LANGUAGE_DESCRIPTION = "Set this parameter for data to be returned for a specified language";
 
     private Container $container;
 
