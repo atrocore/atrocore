@@ -80,10 +80,13 @@ Espo.define('views/fields/unit', 'views/fields/float',
                 const measureConfig = unitsOfMeasure[measure] || {};
 
                 if (measureConfig.unitList) {
-                    measureConfig.unitList.forEach((v, k) => {
-                        this.unitList.push(v);
-                        if (measureConfig.unitListTranslates && measureConfig.unitListTranslates[this.getLanguage().name] && measureConfig.unitListTranslates[this.getLanguage().name][k]) {
-                            this.unitListTranslates[v] = measureConfig.unitListTranslates[this.getLanguage().name][k];
+                    const allowedIds = this.getLocaleUnitsIds(measure);
+                    measureConfig.unitListData.forEach((row, k) => {
+                        if (allowedIds.length === 0 || allowedIds.includes(row.id)) {
+                            this.unitList.push(row.name);
+                            if (measureConfig.unitListTranslates && measureConfig.unitListTranslates[this.getLanguage().name] && measureConfig.unitListTranslates[this.getLanguage().name][k]) {
+                                this.unitListTranslates[row.name] = measureConfig.unitListTranslates[this.getLanguage().name][k];
+                            }
                         }
                     });
                 }
@@ -118,7 +121,7 @@ Espo.define('views/fields/unit', 'views/fields/float',
         },
 
         validateFloat: function () {
-            if (Dep.prototype.validateFloat.call(this)){
+            if (Dep.prototype.validateFloat.call(this)) {
                 return true;
             }
 
@@ -139,6 +142,20 @@ Espo.define('views/fields/unit', 'views/fields/float',
                 this.$unit = this.$el.find(`[name="${this.unitFieldName}"]`);
                 this.$unit.on('change', () => this.model.set(this.unitFieldName, this.$unit.val()));
             }
+        },
+
+        getLocaleUnitsIds(measure) {
+            let localeId = this.getPreferences().get('locale') || this.getConfig().get('localeId');
+            let localeMeasures = this.getConfig().get('locales')[localeId]['measures'] || [];
+
+            let ids = [];
+            localeMeasures.forEach(localeMeasure => {
+                if (localeMeasure.name === measure) {
+                    ids = localeMeasure.units;
+                }
+            });
+
+            return ids;
         },
 
         fetch: function () {

@@ -351,6 +351,10 @@ class Config
             }
         }
 
+        foreach ($result as $id => $row) {
+            $result[$id]['measures'] = empty($row['measures']) ? [] : array_values($row['measures']);
+        }
+
         if (!empty($result)) {
             file_put_contents(Locale::CACHE_FILE, Json::encode($result));
         }

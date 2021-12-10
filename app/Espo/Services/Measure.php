@@ -64,12 +64,15 @@ class Measure extends Base
                         continue 1;
                     }
 
+                    $result[$measure->get('name')]['unitListData'] = [];
                     foreach ($units as $unit) {
-                        $result[$measure->get('name')]['unitList'][] = $unit->get('unit');
-                        $result[$measure->get('name')]['unitListData'][$unit->get('id')] = [
-                            'isDefault'  => $unit->get('default'),
-                            'multiplier' => $unit->get('multiplier'),
-                            'convertTo'  => empty($convertTo = $unit->get('convertTo')) ? null : $convertTo->toArray(),
+                        $result[$measure->get('name')]['unitList'][] = $unit->get('name');
+                        $result[$measure->get('name')]['unitListData'][] = [
+                            'id'          => $unit->get('id'),
+                            'name'        => $unit->get('name'),
+                            'isDefault'   => $unit->get('isDefault'),
+                            'multiplier'  => $unit->get('multiplier'),
+                            'convertToId' => $unit->get('convertToId'),
                         ];
                     }
 

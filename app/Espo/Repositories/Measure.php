@@ -52,6 +52,9 @@ class Measure extends Base
     public function refreshCache(): void
     {
         Util::removeDir(self::CACHE_DIR);
+        if (file_exists(Locale::CACHE_FILE)) {
+            unlink(Locale::CACHE_FILE);
+        }
 
         $this->getConfig()->set('cacheTimestamp', time());
         $this->getConfig()->save();
