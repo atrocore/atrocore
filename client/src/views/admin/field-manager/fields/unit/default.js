@@ -34,6 +34,8 @@ Espo.define('views/admin/field-manager/fields/unit/default', 'views/fields/unit'
 
     return Dep.extend({
 
+        localedOptions: false,
+
         setup: function () {
             const measures = Object.keys(Espo.Utils.cloneDeep(this.getConfig().get('unitsOfMeasure') || {})) || [];
 

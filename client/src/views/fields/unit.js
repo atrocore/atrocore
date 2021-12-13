@@ -43,6 +43,8 @@ Espo.define('views/fields/unit', 'views/fields/float',
 
         prohibitedEmptyValue: false,
 
+        localedOptions: true,
+
         data() {
             let data = Dep.prototype.data.call(this);
 
@@ -81,12 +83,8 @@ Espo.define('views/fields/unit', 'views/fields/float',
 
                 if (measureConfig.unitList) {
                     const localeIds = this.getLocaleUnitsIds(measure);
-                    const defaultId = this.getLocaleDefaultUnitId(measure);
-
-                    console.log(defaultId)
-
                     measureConfig.unitListData.forEach((row, k) => {
-                        if (localeIds.length === 0 || localeIds.includes(row.id)) {
+                        if (!this.localedOptions || localeIds.length === 0 || localeIds.includes(row.id)) {
                             this.unitList.push(row.name);
                             if (measureConfig.unitListTranslates && measureConfig.unitListTranslates[this.getLanguage().name] && measureConfig.unitListTranslates[this.getLanguage().name][k]) {
                                 this.unitListTranslates[row.name] = measureConfig.unitListTranslates[this.getLanguage().name][k];
