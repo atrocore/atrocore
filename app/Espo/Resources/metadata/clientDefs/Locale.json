@@ -6,6 +6,7 @@
   "relationshipPanels": {
     "measures": {
       "create": false,
+      "massRelateEnabled": false,
       "layout": "listSmallForLocale",
       "rowActionsView": "views/record/row-actions/relationship-no-remove"
     }

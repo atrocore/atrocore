@@ -37,6 +37,31 @@ use Espo\Core\Templates\Services\Base;
 
 class Locale extends Base
 {
+    public function linkEntity($id, $link, $foreignId)
+    {
+        $result = parent::linkEntity($id, $link, $foreignId);
+
+        if ($result && $link === 'measures') {
+            $measure = $this->getEntityManager()->getRepository('Measure')->get($foreignId);
+            if (!empty($units = $measure->get('units')) && count($units) > 0) {
+                $unitsIds = [];
+                $defaultUnit = '';
+                foreach ($units as $unit) {
+                    $unitsIds[] = $unit->get('id');
+                    if ($unit->get('isDefault')) {
+                        $defaultUnit = $unit->get('id');
+                    }
+                }
+
+                $measure->setDataParameter("locale_$id", $unitsIds);
+                $measure->setDataParameter("locale_{$id}_default", $defaultUnit);
+                $this->getEntityManager()->saveEntity($measure);
+            }
+        }
+
+        return $result;
+    }
+
     public function findLinkedEntities($id, $link, $params)
     {
         if ($link === 'measures') {

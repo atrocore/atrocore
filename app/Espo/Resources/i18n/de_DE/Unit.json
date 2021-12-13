@@ -16,6 +16,7 @@
   },
   "exceptions": {
     "defaultIsRequired": "Das Maß soll eine Standardeinheit haben.",
-    "newUnitCanNotBeDefault": "Die hinzuzufügende Einheit kann nicht als Standardwert eingestellt werden."
+    "newUnitCanNotBeDefault": "Die hinzuzufügende Einheit kann nicht als Standardwert eingestellt werden.",
+    "isUsedUnit": "Diese Einheit wird verwendet."
   }
 }

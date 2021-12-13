@@ -106,12 +106,28 @@ class Unit extends Base
             throw new BadRequest($this->getInjection('language')->translate('defaultIsRequired', 'exceptions', 'Unit'));
         }
 
+        $measure = $this
+            ->getEntityManager()
+            ->getRepository('Measure')
+            ->select(['id'])
+            ->where(['data*' => '%"' . $entity->get('id') . '"%'])
+            ->findOne();
+
+        if (!empty($measure)) {
+            throw new BadRequest($this->getInjection('language')->translate('isUsedUnit', 'exceptions', 'Unit'));
+        }
+
         parent::beforeRemove($entity, $options);
     }
 
     protected function afterRemove(Entity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);
+
+        foreach ($this->where(['convertToId' => $entity->get('id')])->find() as $unit) {
+            $unit->set('convertToId', null);
+            $this->getEntityManager()->saveEntity($unit, ['cascadeChange' => true]);
+        }
 
         $this->getEntityManager()->getRepository('Measure')->refreshCache();
     }

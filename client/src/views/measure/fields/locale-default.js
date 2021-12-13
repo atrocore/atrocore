@@ -57,6 +57,10 @@ Espo.define('views/measure/fields/locale-default', 'views/fields/enum',
                     data[`locale_${this.model.get('localeId')}_default`] = this.model.get('localeDefault');
                     this.model.set('data', data);
                 });
+
+                this.listenTo(this.model, 'after:save', () => {
+                    $('.action[data-action=refresh][data-panel=measures]').click();
+                });
             },
 
             prepareUnitsOptions() {
