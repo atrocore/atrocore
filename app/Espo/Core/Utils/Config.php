@@ -346,7 +346,8 @@ class Config
                 $result[$row['id']]['measures'][$row['measure_id']] = [
                     'id'    => $row['measure_id'],
                     'name'  => $row['measure_name'],
-                    'units' => isset($measureData["locale_{$row['id']}"]) ? $measureData["locale_{$row['id']}"] : []
+                    'units' => isset($measureData["locale_{$row['id']}"]) ? $measureData["locale_{$row['id']}"] : [],
+                    'defaultUnit' => isset($measureData["locale_{$row['id']}_default"]) ? $measureData["locale_{$row['id']}_default"] : ''
                 ];
             }
         }

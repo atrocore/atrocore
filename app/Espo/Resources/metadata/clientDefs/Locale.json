@@ -8,7 +8,12 @@
       "create": false,
       "massRelateEnabled": false,
       "layout": "listSmallForLocale",
-      "rowActionsView": "views/record/row-actions/relationship-no-remove"
+      "rowActionsView": "views/record/row-actions/relationship-no-remove",
+      "selectAction": "selectRelatedEntity",
+      "selectBoolFilterList": [
+        "notLinkedWithLocale"
+      ],
+      "view": "views/locale/record/record/panels/measures"
     }
   }
 }

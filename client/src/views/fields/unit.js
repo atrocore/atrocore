@@ -80,9 +80,13 @@ Espo.define('views/fields/unit', 'views/fields/float',
                 const measureConfig = unitsOfMeasure[measure] || {};
 
                 if (measureConfig.unitList) {
-                    const allowedIds = this.getLocaleUnitsIds(measure);
+                    const localeIds = this.getLocaleUnitsIds(measure);
+                    const defaultId = this.getLocaleDefaultUnitId(measure);
+
+                    console.log(defaultId)
+
                     measureConfig.unitListData.forEach((row, k) => {
-                        if (allowedIds.length === 0 || allowedIds.includes(row.id)) {
+                        if (localeIds.length === 0 || localeIds.includes(row.id)) {
                             this.unitList.push(row.name);
                             if (measureConfig.unitListTranslates && measureConfig.unitListTranslates[this.getLanguage().name] && measureConfig.unitListTranslates[this.getLanguage().name][k]) {
                                 this.unitListTranslates[row.name] = measureConfig.unitListTranslates[this.getLanguage().name][k];
@@ -156,6 +160,20 @@ Espo.define('views/fields/unit', 'views/fields/float',
             });
 
             return ids;
+        },
+
+        getLocaleDefaultUnitId(measure) {
+            let localeId = this.getPreferences().get('locale') || this.getConfig().get('localeId');
+            let localeMeasures = this.getConfig().get('locales')[localeId]['measures'] || [];
+
+            let id = '';
+            localeMeasures.forEach(localeMeasure => {
+                if (localeMeasure.name === measure) {
+                    id = localeMeasure.defaultUnit;
+                }
+            });
+
+            return id;
         },
 
         fetch: function () {
