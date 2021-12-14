@@ -67,7 +67,7 @@ class Measure extends Base
                     $result[$measure->get('name')]['unitListData'] = [];
                     foreach ($units as $unit) {
                         $result[$measure->get('name')]['unitList'][] = $unit->get('name');
-                        $result[$measure->get('name')]['unitListData'][] = [
+                        $result[$measure->get('name')]['unitListData'][$unit->get('id')] = [
                             'id'          => $unit->get('id'),
                             'name'        => $unit->get('name'),
                             'isDefault'   => $unit->get('isDefault'),

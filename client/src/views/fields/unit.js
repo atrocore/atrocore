@@ -64,6 +64,34 @@ Espo.define('views/fields/unit', 'views/fields/float',
             this.prohibitedEmptyValue = this.prohibitedEmptyValue || this.options.prohibitedEmptyValue || this.model.getFieldParam(this.name, 'prohibitedEmptyValue');
 
             this.loadUnitList();
+            this.prepareDefault();
+        },
+
+        prepareDefault() {
+            if (this.mode === 'edit' && !this.model.get('id')) {
+                let defaultValue = this.model.getFieldParam(this.name, 'default');
+                let defaultUnit = this.model.getFieldParam(this.name, 'defaultUnit');
+                if (!this.unitList.includes(defaultUnit)) {
+                    let defaultUnitData = this.getUnitData(defaultUnit)
+                    if (defaultUnitData) {
+                        let convertTo = null;
+
+                        if (defaultUnitData.convertToId) {
+                            convertTo = this.getConfig().get('unitsOfMeasure')[this.params.measure].unitListData[defaultUnitData.convertToId];
+                            if (!this.unitList.includes(convertTo.name)) {
+                                convertTo = null;
+                            }
+                        }
+
+                        if (convertTo === null) {
+                            convertTo = this.getConfig().get('unitsOfMeasure')[this.params.measure].unitListData[this.getLocaledDefaultUnitId()];
+                        }
+
+                        this.model.set(this.name, this.convertValue(defaultValue, defaultUnitData.id, convertTo.id));
+                        this.model.set(this.unitFieldName, convertTo.name);
+                    }
+                }
+            }
         },
 
         loadUnitList() {
@@ -75,20 +103,15 @@ Espo.define('views/fields/unit', 'views/fields/float',
                 this.unitListTranslates[''] = '';
             }
 
-            const measure = this.params.measure;
-
-            if (measure) {
+            if (this.params.measure) {
                 const unitsOfMeasure = this.getConfig().get('unitsOfMeasure') || {};
-                const measureConfig = unitsOfMeasure[measure] || {};
+                const measureConfig = unitsOfMeasure[this.params.measure] || {};
 
                 if (measureConfig.unitList) {
-                    const localeIds = this.getLocaleUnitsIds(measure);
-                    measureConfig.unitListData.forEach((row, k) => {
-                        if (!this.localedOptions || localeIds.length === 0 || localeIds.includes(row.id)) {
-                            this.unitList.push(row.name);
-                            if (measureConfig.unitListTranslates && measureConfig.unitListTranslates[this.getLanguage().name] && measureConfig.unitListTranslates[this.getLanguage().name][k]) {
-                                this.unitListTranslates[row.name] = measureConfig.unitListTranslates[this.getLanguage().name][k];
-                            }
+                    this.getLocaledUnitList(measureConfig).forEach((unitName, k) => {
+                        this.unitList.push(unitName);
+                        if (measureConfig.unitListTranslates && measureConfig.unitListTranslates[this.getLanguage().name] && measureConfig.unitListTranslates[this.getLanguage().name][k]) {
+                            this.unitListTranslates[unitName] = measureConfig.unitListTranslates[this.getLanguage().name][k];
                         }
                     });
                 }
@@ -146,13 +169,13 @@ Espo.define('views/fields/unit', 'views/fields/float',
             }
         },
 
-        getLocaleUnitsIds(measure) {
+        getLocaledUnitsIds() {
             let localeId = this.getPreferences().get('locale') || this.getConfig().get('localeId');
             let localeMeasures = this.getConfig().get('locales')[localeId]['measures'] || [];
 
             let ids = [];
             localeMeasures.forEach(localeMeasure => {
-                if (localeMeasure.name === measure) {
+                if (localeMeasure.name === this.params.measure) {
                     ids = localeMeasure.units;
                 }
             });
@@ -160,18 +183,52 @@ Espo.define('views/fields/unit', 'views/fields/float',
             return ids;
         },
 
-        getLocaleDefaultUnitId(measure) {
+        getLocaledDefaultUnitId() {
             let localeId = this.getPreferences().get('locale') || this.getConfig().get('localeId');
             let localeMeasures = this.getConfig().get('locales')[localeId]['measures'] || [];
 
-            let id = '';
+            let id = null;
             localeMeasures.forEach(localeMeasure => {
-                if (localeMeasure.name === measure) {
+                if (localeMeasure.name === this.params.measure) {
                     id = localeMeasure.defaultUnit;
                 }
             });
 
             return id;
+        },
+
+        getLocaledUnitList(unitsOfMeasure) {
+            let result = [];
+            this.getLocaledUnitsIds().forEach(id => {
+                result.push(unitsOfMeasure.unitListData[id].name);
+            });
+
+            if (result.length === 0) {
+                result = measureConfig.unitList;
+            }
+
+            return result;
+        },
+
+        getUnitData(unitName) {
+            let result = null;
+
+            if (this.getConfig().get('unitsOfMeasure') && this.getConfig().get('unitsOfMeasure')[this.params.measure]) {
+                $.each(this.getConfig().get('unitsOfMeasure')[this.params.measure].unitListData, (id, row) => {
+                    if (unitName === row.name) {
+                        result = row;
+                    }
+                });
+            }
+
+            return result;
+        },
+
+        convertValue(value, from, to) {
+            value = value / this.getConfig().get('unitsOfMeasure')[this.params.measure].unitListData[from].multiplier;
+            value = value * this.getConfig().get('unitsOfMeasure')[this.params.measure].unitListData[to].multiplier;
+
+            return value.toFixed(2);
         },
 
         fetch: function () {
@@ -187,4 +244,3 @@ Espo.define('views/fields/unit', 'views/fields/float',
         },
     })
 );
-
