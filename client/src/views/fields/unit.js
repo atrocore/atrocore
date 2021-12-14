@@ -64,7 +64,9 @@ Espo.define('views/fields/unit', 'views/fields/float',
             this.prohibitedEmptyValue = this.prohibitedEmptyValue || this.options.prohibitedEmptyValue || this.model.getFieldParam(this.name, 'prohibitedEmptyValue');
 
             this.loadUnitList();
-            this.prepareDefault();
+            if (this.localedOptions) {
+                this.prepareDefault();
+            }
         },
 
         prepareDefault() {
@@ -108,8 +110,12 @@ Espo.define('views/fields/unit', 'views/fields/float',
                 const measureConfig = unitsOfMeasure[this.params.measure] || {};
 
                 if (measureConfig.unitList) {
-                    this.getLocaledUnitList(measureConfig).forEach((unitName, k) => {
-                        this.unitList.push(unitName);
+                    if (this.localedOptions) {
+                        this.unitList = this.getLocaledUnitList(measureConfig);
+                    } else {
+                        this.unitList = measureConfig.unitList;
+                    }
+                    this.unitList.forEach((unitName, k) => {
                         if (measureConfig.unitListTranslates && measureConfig.unitListTranslates[this.getLanguage().name] && measureConfig.unitListTranslates[this.getLanguage().name][k]) {
                             this.unitListTranslates[unitName] = measureConfig.unitListTranslates[this.getLanguage().name][k];
                         }
@@ -228,7 +234,7 @@ Espo.define('views/fields/unit', 'views/fields/float',
             value = value / this.getConfig().get('unitsOfMeasure')[this.params.measure].unitListData[from].multiplier;
             value = value * this.getConfig().get('unitsOfMeasure')[this.params.measure].unitListData[to].multiplier;
 
-            return value.toFixed(2);
+            return parseFloat(value.toFixed(4));
         },
 
         fetch: function () {
