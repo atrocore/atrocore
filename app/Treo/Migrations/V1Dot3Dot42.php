@@ -48,6 +48,18 @@ class V1Dot3Dot42 extends Base
         $this->execute("CREATE INDEX IDX_CONVERT_TO_ID ON `unit` (convert_to_id)");
         $this->execute("ALTER TABLE `unit` DROP INDEX IDX_NAME, ADD UNIQUE INDEX UNIQ_DCBB0C535E237E06EB3B4E33 (name, deleted)");
         $this->execute("CREATE UNIQUE INDEX UNIQ_DCBB0C5333E7211DEB3B4E33 ON `unit` (name_de_de, deleted)");
+
+        $this->execute("UPDATE `unit` SET multiplier=1 WHERE deleted=0");
+
+        $units = $this->getPDO()->query("SELECT * FROM `unit` WHERE deleted=0")->fetchAll(\PDO::FETCH_ASSOC);
+
+        $measures = [];
+        foreach ($units as $unit) {
+            if (!in_array($unit['measure_id'], $measures)) {
+                $measures[] = $unit['measure_id'];
+                $this->execute("UPDATE `unit` SET is_default=1 WHERE id='{$unit['id']}'");
+            }
+        }
     }
 
     public function down(): void
