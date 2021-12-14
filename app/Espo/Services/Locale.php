@@ -37,4 +37,57 @@ use Espo\Core\Templates\Services\Base;
 
 class Locale extends Base
 {
+    public function linkEntity($id, $link, $foreignId)
+    {
+        $result = parent::linkEntity($id, $link, $foreignId);
+
+        if ($result && $link === 'measures') {
+            $measure = $this->getEntityManager()->getRepository('Measure')->get($foreignId);
+            if (!empty($units = $measure->get('units')) && count($units) > 0) {
+                $unitsIds = [];
+                $defaultUnit = '';
+                foreach ($units as $unit) {
+                    $unitsIds[] = $unit->get('id');
+                    if ($unit->get('isDefault')) {
+                        $defaultUnit = $unit->get('id');
+                    }
+                }
+
+                $measure->setDataParameter("locale_$id", $unitsIds);
+                $measure->setDataParameter("locale_{$id}_default", $defaultUnit);
+                $this->getEntityManager()->saveEntity($measure);
+            }
+        }
+
+        return $result;
+    }
+
+    public function findLinkedEntities($id, $link, $params)
+    {
+        if ($link === 'measures') {
+            $params['select'][] = 'data';
+        }
+
+        $result = parent::findLinkedEntities($id, $link, $params);
+
+        if (!empty($result['total']) && $link === 'measures') {
+            foreach ($result['collection'] as $measure) {
+                $localeUnits = $measure->getDataParameter("locale_$id");
+                if (empty($localeUnits)) {
+                    $localeUnits = [];
+                } else {
+                    $localeUnits = array_column($this->getEntityManager()->getRepository('Unit')->select(['id'])->where(['id' => $localeUnits])->find()->toArray(), 'id');
+                }
+                $measure->set('localeUnits', $localeUnits);
+                $measure->set('localeDefault', $measure->getDataParameter("locale_{$id}_default"));
+
+                $units = $measure->get('units')->toArray();
+
+                $measure->set('unitsIds', array_column($units, 'id'));
+                $measure->set('unitsNames', array_column($units, 'name', 'id'));
+            }
+        }
+
+        return $result;
+    }
 }

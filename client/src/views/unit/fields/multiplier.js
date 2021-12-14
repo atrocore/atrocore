@@ -30,35 +30,16 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/admin/field-manager/fields/unit/default', 'views/fields/unit', function (Dep) {
+Espo.define('views/unit/fields/multiplier', 'views/fields/float', Dep => Dep.extend({
 
-    return Dep.extend({
+    setup() {
+        Dep.prototype.setup.call(this);
 
-        localedOptions: false,
-
-        setup: function () {
-            const measures = Object.keys(Espo.Utils.cloneDeep(this.getConfig().get('unitsOfMeasure') || {})) || [];
-
-            this.params.measure = this.model.get('measure') || measures.shift();
-
-            Dep.prototype.setup.call(this);
-
-            this.listenTo(this.model, 'change:measure', () => {
-                this.params.measure = this.model.get('measure');
-                this.loadUnitList();
-                this.reRender();
-            });
-        },
-
-        validate() {
-            if (this.model.get('prohibitedEmptyValue') && this.model.get('defaultUnit') === '') {
-                this.showValidationMessage(this.translate('defaultUnitCannotBeEmpty', 'messages'));
-                return true;
+        this.listenTo(this.model, 'change:isDefault', () => {
+            if (this.model.get('isDefault') === true) {
+                this.model.set('multiplier', 1);
             }
+        });
+    },
 
-            return Dep.prototype.validate.call(this);
-        },
-
-    });
-
-});
+}));

@@ -7,7 +7,45 @@
   "boolFilterList": [
     "onlyMy",
     "assignedToMe",
-    "ownedByMe"
+    "ownedByMe",
+    "notEntity",
+    "fromMeasure"
   ],
-  "iconClass": "fas fa-ruler"
+  "hiddenBoolFilterList": [
+    "notEntity",
+    "fromMeasure"
+  ],
+  "iconClass": "fas fa-ruler",
+  "dynamicLogic": {
+    "fields": {
+      "multiplier": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "isDefault"
+            }
+          ]
+        }
+      },
+      "isDefault": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        },
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "isDefault"
+            }
+          ]
+        }
+      }
+    }
+  }
 }

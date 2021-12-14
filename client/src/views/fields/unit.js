@@ -43,6 +43,8 @@ Espo.define('views/fields/unit', 'views/fields/float',
 
         prohibitedEmptyValue: false,
 
+        localedOptions: true,
+
         data() {
             let data = Dep.prototype.data.call(this);
 
@@ -62,6 +64,36 @@ Espo.define('views/fields/unit', 'views/fields/float',
             this.prohibitedEmptyValue = this.prohibitedEmptyValue || this.options.prohibitedEmptyValue || this.model.getFieldParam(this.name, 'prohibitedEmptyValue');
 
             this.loadUnitList();
+            if (this.localedOptions) {
+                this.prepareDefault();
+            }
+        },
+
+        prepareDefault() {
+            if (this.mode === 'edit' && !this.model.get('id')) {
+                let defaultValue = this.model.getFieldParam(this.name, 'default');
+                let defaultUnit = this.model.getFieldParam(this.name, 'defaultUnit');
+                if (!this.unitList.includes(defaultUnit)) {
+                    let defaultUnitData = this.getUnitData(defaultUnit)
+                    if (defaultUnitData) {
+                        let convertTo = null;
+
+                        if (defaultUnitData.convertToId) {
+                            convertTo = this.getConfig().get('unitsOfMeasure')[this.params.measure].unitListData[defaultUnitData.convertToId];
+                            if (!this.unitList.includes(convertTo.name)) {
+                                convertTo = null;
+                            }
+                        }
+
+                        if (convertTo === null) {
+                            convertTo = this.getConfig().get('unitsOfMeasure')[this.params.measure].unitListData[this.getLocaledDefaultUnitId()];
+                        }
+
+                        this.model.set(this.name, this.convertValue(defaultValue, defaultUnitData.id, convertTo.id));
+                        this.model.set(this.unitFieldName, convertTo.name);
+                    }
+                }
+            }
         },
 
         loadUnitList() {
@@ -73,17 +105,19 @@ Espo.define('views/fields/unit', 'views/fields/float',
                 this.unitListTranslates[''] = '';
             }
 
-            const measure = this.params.measure;
-
-            if (measure) {
+            if (this.params.measure) {
                 const unitsOfMeasure = this.getConfig().get('unitsOfMeasure') || {};
-                const measureConfig = unitsOfMeasure[measure] || {};
+                const measureConfig = unitsOfMeasure[this.params.measure] || {};
 
                 if (measureConfig.unitList) {
-                    measureConfig.unitList.forEach((v, k) => {
-                        this.unitList.push(v);
+                    if (this.localedOptions) {
+                        this.unitList = this.getLocaledUnitList(measureConfig);
+                    } else {
+                        this.unitList = measureConfig.unitList;
+                    }
+                    this.unitList.forEach((unitName, k) => {
                         if (measureConfig.unitListTranslates && measureConfig.unitListTranslates[this.getLanguage().name] && measureConfig.unitListTranslates[this.getLanguage().name][k]) {
-                            this.unitListTranslates[v] = measureConfig.unitListTranslates[this.getLanguage().name][k];
+                            this.unitListTranslates[unitName] = measureConfig.unitListTranslates[this.getLanguage().name][k];
                         }
                     });
                 }
@@ -118,7 +152,7 @@ Espo.define('views/fields/unit', 'views/fields/float',
         },
 
         validateFloat: function () {
-            if (Dep.prototype.validateFloat.call(this)){
+            if (Dep.prototype.validateFloat.call(this)) {
                 return true;
             }
 
@@ -141,6 +175,68 @@ Espo.define('views/fields/unit', 'views/fields/float',
             }
         },
 
+        getLocaledUnitsIds() {
+            let localeId = this.getPreferences().get('locale') || this.getConfig().get('localeId');
+            let localeMeasures = this.getConfig().get('locales')[localeId]['measures'] || [];
+
+            let ids = [];
+            localeMeasures.forEach(localeMeasure => {
+                if (localeMeasure.name === this.params.measure) {
+                    ids = localeMeasure.units;
+                }
+            });
+
+            return ids;
+        },
+
+        getLocaledDefaultUnitId() {
+            let localeId = this.getPreferences().get('locale') || this.getConfig().get('localeId');
+            let localeMeasures = this.getConfig().get('locales')[localeId]['measures'] || [];
+
+            let id = null;
+            localeMeasures.forEach(localeMeasure => {
+                if (localeMeasure.name === this.params.measure) {
+                    id = localeMeasure.defaultUnit;
+                }
+            });
+
+            return id;
+        },
+
+        getLocaledUnitList(unitsOfMeasure) {
+            let result = [];
+            this.getLocaledUnitsIds().forEach(id => {
+                result.push(unitsOfMeasure.unitListData[id].name);
+            });
+
+            if (result.length === 0) {
+                result = measureConfig.unitList;
+            }
+
+            return result;
+        },
+
+        getUnitData(unitName) {
+            let result = null;
+
+            if (this.getConfig().get('unitsOfMeasure') && this.getConfig().get('unitsOfMeasure')[this.params.measure]) {
+                $.each(this.getConfig().get('unitsOfMeasure')[this.params.measure].unitListData, (id, row) => {
+                    if (unitName === row.name) {
+                        result = row;
+                    }
+                });
+            }
+
+            return result;
+        },
+
+        convertValue(value, from, to) {
+            value = value / this.getConfig().get('unitsOfMeasure')[this.params.measure].unitListData[from].multiplier;
+            value = value * this.getConfig().get('unitsOfMeasure')[this.params.measure].unitListData[to].multiplier;
+
+            return parseFloat(value.toFixed(4));
+        },
+
         fetch: function () {
             let data = {};
 
@@ -154,4 +250,3 @@ Espo.define('views/fields/unit', 'views/fields/float',
         },
     })
 );
-

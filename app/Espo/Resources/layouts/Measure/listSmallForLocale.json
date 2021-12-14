@@ -1,0 +1,14 @@
+[
+  {
+    "name": "name",
+    "link": true
+  },
+  {
+    "name": "localeUnits",
+    "notSortable": true
+  },
+  {
+    "name": "localeDefault",
+    "notSortable": true
+  }
+]

@@ -30,35 +30,14 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/admin/field-manager/fields/unit/default', 'views/fields/unit', function (Dep) {
+Espo.define('views/locale/record/record/panels/measures', 'views/record/panels/relationship',
+    Dep => Dep.extend({
 
-    return Dep.extend({
-
-        localedOptions: false,
-
-        setup: function () {
-            const measures = Object.keys(Espo.Utils.cloneDeep(this.getConfig().get('unitsOfMeasure') || {})) || [];
-
-            this.params.measure = this.model.get('measure') || measures.shift();
-
-            Dep.prototype.setup.call(this);
-
-            this.listenTo(this.model, 'change:measure', () => {
-                this.params.measure = this.model.get('measure');
-                this.loadUnitList();
-                this.reRender();
-            });
-        },
-
-        validate() {
-            if (this.model.get('prohibitedEmptyValue') && this.model.get('defaultUnit') === '') {
-                this.showValidationMessage(this.translate('defaultUnitCannotBeEmpty', 'messages'));
-                return true;
+        boolFilterData: {
+            notLinkedWithLocale() {
+                return this.model.id
             }
-
-            return Dep.prototype.validate.call(this);
         },
 
-    });
-
-});
+    })
+);

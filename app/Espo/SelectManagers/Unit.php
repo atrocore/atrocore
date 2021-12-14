@@ -1,3 +1,4 @@
+<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -30,35 +31,30 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/admin/field-manager/fields/unit/default', 'views/fields/unit', function (Dep) {
+declare(strict_types=1);
 
-    return Dep.extend({
+namespace Espo\SelectManagers;
 
-        localedOptions: false,
+use Treo\Core\SelectManagers\Base;
 
-        setup: function () {
-            const measures = Object.keys(Espo.Utils.cloneDeep(this.getConfig().get('unitsOfMeasure') || {})) || [];
+class Unit extends Base
+{
+    protected function boolFilterNotEntity(array &$result)
+    {
+        if (!empty($id = $this->getBoolFilterParameter('notEntity'))) {
+            $result['whereClause'][] = [
+                'id!=' => $id
+            ];
+        }
+    }
 
-            this.params.measure = this.model.get('measure') || measures.shift();
+    protected function boolFilterFromMeasure(array &$result)
+    {
+        if (!empty($measureId = $this->getBoolFilterParameter('fromMeasure'))) {
+            $result['whereClause'][] = [
+                'measureId' => $measureId
+            ];
+        }
+    }
+}
 
-            Dep.prototype.setup.call(this);
-
-            this.listenTo(this.model, 'change:measure', () => {
-                this.params.measure = this.model.get('measure');
-                this.loadUnitList();
-                this.reRender();
-            });
-        },
-
-        validate() {
-            if (this.model.get('prohibitedEmptyValue') && this.model.get('defaultUnit') === '') {
-                this.showValidationMessage(this.translate('defaultUnitCannotBeEmpty', 'messages'));
-                return true;
-            }
-
-            return Dep.prototype.validate.call(this);
-        },
-
-    });
-
-});

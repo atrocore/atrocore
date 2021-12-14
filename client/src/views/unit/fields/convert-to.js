@@ -30,35 +30,19 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/admin/field-manager/fields/unit/default', 'views/fields/unit', function (Dep) {
+Espo.define('views/unit/fields/convert-to', 'treo-core:views/fields/filtered-link',
 
-    return Dep.extend({
+    Dep => Dep.extend({
 
-        localedOptions: false,
+        selectBoolFilterList: ['notEntity', 'fromMeasure'],
 
-        setup: function () {
-            const measures = Object.keys(Espo.Utils.cloneDeep(this.getConfig().get('unitsOfMeasure') || {})) || [];
-
-            this.params.measure = this.model.get('measure') || measures.shift();
-
-            Dep.prototype.setup.call(this);
-
-            this.listenTo(this.model, 'change:measure', () => {
-                this.params.measure = this.model.get('measure');
-                this.loadUnitList();
-                this.reRender();
-            });
-        },
-
-        validate() {
-            if (this.model.get('prohibitedEmptyValue') && this.model.get('defaultUnit') === '') {
-                this.showValidationMessage(this.translate('defaultUnitCannotBeEmpty', 'messages'));
-                return true;
+        boolFilterData: {
+            notEntity() {
+                return this.model.get('id');
+            },
+            fromMeasure() {
+                return this.model.get('measureId');
             }
-
-            return Dep.prototype.validate.call(this);
         },
 
-    });
-
-});
+    }));

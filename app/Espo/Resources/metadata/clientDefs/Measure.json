@@ -1,9 +1,17 @@
 {
   "controller": "controllers/record",
+  "modalViews": {
+    "edit": "views/measure/modals/edit"
+  },
   "boolFilterList": [
     "onlyMy",
     "assignedToMe",
-    "ownedByMe"
+    "ownedByMe",
+    "notLinkedWithLocale"
+  ],
+  "hiddenBoolFilterList": [
+    "notEntity",
+    "notLinkedWithLocale"
   ],
   "iconClass": "fas fa-ruler",
   "relationshipPanels": {

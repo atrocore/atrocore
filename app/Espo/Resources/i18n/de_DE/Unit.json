@@ -2,12 +2,21 @@
   "fields": {
     "name": "Name",
     "description": "Beschreibung",
-    "measure": "Maß"
+    "measure": "Maß",
+    "isDefault": "Standard",
+    "multiplier": "Multiplikator",
+    "convertTo": "Konvertieren zu"
   },
   "links": {
-    "measure": "Maß"
+    "measure": "Maß",
+    "convertTo": "Konvertieren zu"
   },
   "labels": {
     "Create Unit": "Maßeinheit erstellen"
+  },
+  "exceptions": {
+    "defaultIsRequired": "Das Maß soll eine Standardeinheit haben.",
+    "newUnitCanNotBeDefault": "Die hinzuzufügende Einheit kann nicht als Standardwert eingestellt werden.",
+    "isUsedUnit": "Diese Einheit wird verwendet."
   }
 }

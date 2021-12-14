@@ -76,6 +76,8 @@ class Base
      */
     protected $selectManagerFactory;
 
+    protected array $selectParameters;
+
     /**
      * @var bool
      */
@@ -802,6 +804,8 @@ class Base
 
     public function getSelectParams(array $params, $withAcl = false, $checkWherePermission = false)
     {
+        $this->selectParameters = $params;
+
         $result = array();
         $this->prepareResult($result);
 
@@ -2069,6 +2073,24 @@ class Base
                 subscription.entity_id = ".$query->toDb($this->getEntityType()).".id AND
                 subscription.user_id = ".$query->quote($this->getUser()->id)."
         ";
+    }
+
+    /**
+     * @param string $filterName
+     *
+     * @return mixed
+     */
+    protected function getBoolFilterParameter(string $filterName)
+    {
+        if (isset($this->selectParameters['where'])) {
+            foreach ($this->selectParameters['where'] as $key => $row) {
+                if ($row['type'] == 'bool' && !empty($row['data'][$filterName])) {
+                    return $row['data'][$filterName];
+                }
+            }
+        }
+
+        return null;
     }
 
     protected function boolFilterFollowed(&$result)

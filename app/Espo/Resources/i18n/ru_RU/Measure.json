@@ -2,10 +2,14 @@
   "fields": {
     "name": "Название",
     "description": "Описание",
-    "units": "Единицы измерения"
+    "units": "Единицы измерения",
+    "locales": "Локали",
+    "localeUnits": "Единицы измерения",
+    "localeDefault": "По умолчанию"
   },
   "links": {
-    "units": "Единицы измерения"
+    "units": "Единицы измерения",
+    "locales": "Локали"
   },
   "labels": {
     "Create Measure": "Создать меру"

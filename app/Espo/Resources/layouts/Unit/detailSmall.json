@@ -6,7 +6,17 @@
         {
           "name": "name"
         },
-        false
+        {
+          "name": "isDefault"
+        }
+      ],
+      [
+        {
+          "name": "multiplier"
+        },
+        {
+          "name": "convertTo"
+        }
       ]
     ]
   }

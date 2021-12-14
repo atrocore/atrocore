@@ -2,5 +2,14 @@
   {
     "name": "name",
     "link": true
+  },
+  {
+    "name": "isDefault"
+  },
+  {
+    "name": "multiplier"
+  },
+  {
+    "name": "convertTo"
   }
 ]

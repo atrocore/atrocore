@@ -30,35 +30,12 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/admin/field-manager/fields/unit/default', 'views/fields/unit', function (Dep) {
+Espo.define('views/measure/modals/edit', 'views/modals/edit',
+    Dep => {
+        return Dep.extend({
 
-    return Dep.extend({
+            fullFormDisabled: true
 
-        localedOptions: false,
-
-        setup: function () {
-            const measures = Object.keys(Espo.Utils.cloneDeep(this.getConfig().get('unitsOfMeasure') || {})) || [];
-
-            this.params.measure = this.model.get('measure') || measures.shift();
-
-            Dep.prototype.setup.call(this);
-
-            this.listenTo(this.model, 'change:measure', () => {
-                this.params.measure = this.model.get('measure');
-                this.loadUnitList();
-                this.reRender();
-            });
-        },
-
-        validate() {
-            if (this.model.get('prohibitedEmptyValue') && this.model.get('defaultUnit') === '') {
-                this.showValidationMessage(this.translate('defaultUnitCannotBeEmpty', 'messages'));
-                return true;
-            }
-
-            return Dep.prototype.validate.call(this);
-        },
+        });
 
     });
-
-});

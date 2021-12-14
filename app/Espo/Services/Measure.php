@@ -38,6 +38,7 @@ namespace Espo\Services;
 use Espo\Core\Templates\Services\Base;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
+use Espo\ORM\Entity;
 use Espo\Repositories\Measure as Repository;
 
 /**
@@ -59,10 +60,24 @@ class Measure extends Base
             if (!empty($data['total'])) {
                 $inputLanguageList = $this->getConfig()->get('inputLanguageList', []);
                 foreach ($data['collection'] as $measure) {
-                    $units = $measure->get('units')->toArray();
-                    $result[$measure->get('name')]['unitList'] = array_column($units, 'name');
+                    if (empty($units = $measure->get('units')) || count($units) == 0) {
+                        continue 1;
+                    }
+
+                    $result[$measure->get('name')]['unitListData'] = [];
+                    foreach ($units as $unit) {
+                        $result[$measure->get('name')]['unitList'][] = $unit->get('name');
+                        $result[$measure->get('name')]['unitListData'][$unit->get('id')] = [
+                            'id'          => $unit->get('id'),
+                            'name'        => $unit->get('name'),
+                            'isDefault'   => $unit->get('isDefault'),
+                            'multiplier'  => $unit->get('multiplier'),
+                            'convertToId' => $unit->get('convertToId'),
+                        ];
+                    }
+
                     foreach ($inputLanguageList as $locale) {
-                        $result[$measure->get('name')]['unitListTranslates'][$locale] = array_column($units, 'name' . ucfirst(Util::toCamelCase(strtolower($locale))));
+                        $result[$measure->get('name')]['unitListTranslates'][$locale] = array_column($units->toArray(), 'name' . ucfirst(Util::toCamelCase(strtolower($locale))));
                     }
                 }
             }

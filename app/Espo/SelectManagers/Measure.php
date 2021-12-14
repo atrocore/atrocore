@@ -1,3 +1,4 @@
+<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -30,35 +31,24 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/admin/field-manager/fields/unit/default', 'views/fields/unit', function (Dep) {
+declare(strict_types=1);
 
-    return Dep.extend({
+namespace Espo\SelectManagers;
 
-        localedOptions: false,
+use Treo\Core\SelectManagers\Base;
 
-        setup: function () {
-            const measures = Object.keys(Espo.Utils.cloneDeep(this.getConfig().get('unitsOfMeasure') || {})) || [];
-
-            this.params.measure = this.model.get('measure') || measures.shift();
-
-            Dep.prototype.setup.call(this);
-
-            this.listenTo(this.model, 'change:measure', () => {
-                this.params.measure = this.model.get('measure');
-                this.loadUnitList();
-                this.reRender();
-            });
-        },
-
-        validate() {
-            if (this.model.get('prohibitedEmptyValue') && this.model.get('defaultUnit') === '') {
-                this.showValidationMessage(this.translate('defaultUnitCannotBeEmpty', 'messages'));
-                return true;
+class Measure extends Base
+{
+    protected function boolFilterNotLinkedWithLocale(array &$result)
+    {
+        if (!empty($localeId = $this->getBoolFilterParameter('notLinkedWithLocale'))) {
+            $locale = $this->getEntityManager()->getRepository('Locale')->get($localeId);
+            if (!empty($measures = $locale->get('measures')) && count($measures) > 0) {
+                $result['whereClause'][] = [
+                    'id!=' => array_column($measures->toArray(), 'id')
+                ];
             }
+        }
+    }
+}
 
-            return Dep.prototype.validate.call(this);
-        },
-
-    });
-
-});

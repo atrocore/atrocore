@@ -5,5 +5,14 @@
   },
   {
     "name": "measure"
+  },
+  {
+    "name": "isDefault"
+  },
+  {
+    "name": "multiplier"
+  },
+  {
+    "name": "convertTo"
   }
 ]

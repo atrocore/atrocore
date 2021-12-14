@@ -6,13 +6,23 @@
         {
           "name": "name"
         },
-        false
+        {
+          "name": "isDefault"
+        }
       ],
       [
         {
           "name": "description"
         },
         false
+      ],
+      [
+        {
+          "name": "multiplier"
+        },
+        {
+          "name": "convertTo"
+        }
       ]
     ]
   }

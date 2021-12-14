@@ -7,6 +7,14 @@
           "name": "name"
         },
         false
+      ],
+      [
+        {
+          "name": "localeUnits"
+        },
+        {
+          "name": "localeDefault"
+        }
       ]
     ]
   }

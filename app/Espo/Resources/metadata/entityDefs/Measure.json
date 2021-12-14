@@ -15,6 +15,17 @@
       "type": "linkMultiple",
       "noLoad": true
     },
+    "localeUnits": {
+      "type": "array",
+      "notStorable": true,
+      "view": "views/measure/fields/locale-units"
+    },
+    "localeDefault": {
+      "type": "varchar",
+      "prohibitedEmptyValue": true,
+      "notStorable": true,
+      "view": "views/measure/fields/locale-default"
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
@@ -32,9 +43,41 @@
       "type": "link",
       "readOnly": true,
       "view": "views/fields/user"
+    },
+    "locales": {
+      "type": "linkMultiple"
+    },
+    "localeId": {
+      "type": "varchar",
+      "notStorable": true,
+      "noAsset": true,
+      "layoutDetailDisabled": true,
+      "layoutListDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "layoutFiltersDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "textFilterDisabled": true,
+      "emHidden": true
+    },
+    "data": {
+      "type": "jsonObject",
+      "layoutDetailDisabled": true,
+      "layoutListDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "layoutFiltersDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "textFilterDisabled": true,
+      "emHidden": true
     }
   },
   "links": {
+    "locales": {
+      "type": "hasMany",
+      "entity": "Locale",
+      "foreign": "measures"
+    },
     "units": {
       "type": "hasMany",
       "entity": "Unit",

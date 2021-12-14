@@ -2,12 +2,21 @@
   "fields": {
     "name": "Name",
     "description": "Description",
-    "measure": "Measure"
+    "measure": "Measure",
+    "isDefault": "Default",
+    "multiplier": "Multiplier",
+    "convertTo": "Convert to"
   },
   "links": {
-    "measure": "Measure"
+    "measure": "Measure",
+    "convertTo": "Convert to"
   },
   "labels": {
     "Create Unit": "Create Unit"
+  },
+  "exceptions": {
+    "defaultIsRequired": "The measure must have a default unit.",
+    "newUnitCanNotBeDefault": "Unit to be added cannot be set as default.",
+    "isUsedUnit": "This unit is in use."
   }
 }

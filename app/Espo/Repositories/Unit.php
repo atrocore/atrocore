@@ -35,6 +35,7 @@ declare(strict_types=1);
 
 namespace Espo\Repositories;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
@@ -53,20 +54,88 @@ class Unit extends Base
             throw new Forbidden();
         }
 
+        // default disabling
+        if (empty($options['cascadeChange']) && $entity->getFetched('isDefault') === true && $entity->get('isDefault') === false) {
+            $unit = $this
+                ->select(['id'])
+                ->where(['measureId' => $entity->get('measureId'), 'isDefault' => true, 'id!=' => $entity->get('id')])
+                ->findOne();
+
+            if (empty($unit)) {
+                throw new BadRequest($this->getInjection('language')->translate('defaultIsRequired', 'exceptions', 'Unit'));
+            }
+        }
+
+        if ($entity->isNew()) {
+            if ($entity->get('isDefault') && !empty($this->where(['measureId' => $entity->get('measureId'), 'isDefault' => true])->findOne())) {
+                throw new BadRequest($this->getInjection('language')->translate('newUnitCanNotBeDefault', 'exceptions', 'Unit'));
+            }
+
+            if (empty($this->where(['measureId' => $entity->get('measureId')])->findOne())) {
+                $entity->set('isDefault', true);
+                $entity->set('multiplier', 1);
+            }
+        }
+
         parent::beforeSave($entity, $options);
+
+        // recalculate multiplier
+        if ($entity->getFetched('isDefault') === false && $entity->get('isDefault') === true) {
+            $k = 1 / $entity->getFetched('multiplier');
+            foreach ($this->where(['measureId' => $entity->get('measureId'), 'id!=' => $entity->get('id')])->find() as $unit) {
+                $unit->set('multiplier', $k * $unit->get('multiplier'));
+                $unit->set('isDefault', false);
+                $this->getEntityManager()->saveEntity($unit, ['cascadeChange' => true]);
+            }
+            $entity->set('multiplier', 1);
+        }
     }
 
     protected function afterSave(Entity $entity, array $options = [])
     {
         parent::afterSave($entity, $options);
 
-        $this->getEntityManager()->getRepository('Measure')->refreshCache();
+        if (empty($options['cascadeChange'])) {
+            $this->getEntityManager()->getRepository('Measure')->refreshCache();
+        }
+    }
+
+    protected function beforeRemove(Entity $entity, array $options = [])
+    {
+        if ($entity->get('isDefault')) {
+            throw new BadRequest($this->getInjection('language')->translate('defaultIsRequired', 'exceptions', 'Unit'));
+        }
+
+        $measure = $this
+            ->getEntityManager()
+            ->getRepository('Measure')
+            ->select(['id'])
+            ->where(['data*' => '%"' . $entity->get('id') . '"%'])
+            ->findOne();
+
+        if (!empty($measure)) {
+            throw new BadRequest($this->getInjection('language')->translate('isUsedUnit', 'exceptions', 'Unit'));
+        }
+
+        parent::beforeRemove($entity, $options);
     }
 
     protected function afterRemove(Entity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);
 
+        foreach ($this->where(['convertToId' => $entity->get('id')])->find() as $unit) {
+            $unit->set('convertToId', null);
+            $this->getEntityManager()->saveEntity($unit, ['cascadeChange' => true]);
+        }
+
         $this->getEntityManager()->getRepository('Measure')->refreshCache();
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('language');
     }
 }

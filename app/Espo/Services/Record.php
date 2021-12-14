@@ -54,6 +54,7 @@ class Record extends \Espo\Core\Services\Base
     protected $dependencies = array(
         'entityManager',
         'user',
+        'preferences',
         'metadata',
         'acl',
         'aclManager',
@@ -2043,6 +2044,77 @@ class Record extends \Espo\Core\Services\Base
         return false;
     }
 
+    protected function getLocaleId(): string
+    {
+        $localeId = $this->getConfig()->get('localeId');
+        if (!empty($this->getInjection('preferences')->get('locale'))) {
+            $localeId = $this->getInjection('preferences')->get('locale');
+        }
+
+        return $localeId;
+    }
+
+    protected function prepareUnitFieldValue(Entity $entity, string $fieldName, string $measure): void
+    {
+        if (empty($value = $entity->get($fieldName))) {
+            return;
+        }
+
+        $unitsOfMeasure = Json::decode(Json::encode($this->getConfig()->get('unitsOfMeasure', [])), true);
+
+        if (!isset($unitsOfMeasure[$measure]['unitListData'])) {
+            return;
+        }
+
+        $locales = $this->getConfig()->get('locales', []);
+
+        $localeId = $this->getLocaleId();
+
+        $localedUnitsIds = [];
+        $localedUnitDefaultId = null;
+
+        if (isset($locales[$localeId]['measures'])) {
+            foreach ($locales[$localeId]['measures'] as $row) {
+                if ($row['name'] === $measure) {
+                    $localedUnitsIds = $row['units'];
+                    $localedUnitDefaultId = $row['defaultUnit'];
+                }
+            }
+        }
+
+        if (empty($localedUnitsIds)) {
+            return;
+        }
+
+        $unitName = (string)$entity->get($fieldName . 'Unit');
+
+        foreach ($unitsOfMeasure[$measure]['unitListData'] as $row) {
+            if ($row['name'] === $unitName) {
+                $unitData = $row;
+                break;
+            }
+        }
+
+        if (empty($unitData)) {
+            return;
+        }
+
+        if (in_array($unitData['id'], $localedUnitsIds)) {
+            return;
+        }
+
+        if (!empty($unitData['convertToId']) && in_array($unitData['convertToId'], $localedUnitsIds)) {
+            $convertTo = $unitsOfMeasure[$measure]['unitListData'][$unitData['convertToId']];
+        } else {
+            $convertTo = $unitsOfMeasure[$measure]['unitListData'][$localedUnitDefaultId];
+        }
+
+        $value = round($value / $unitData['multiplier'] * $convertTo['multiplier'], 4);
+
+        $entity->set($fieldName, $value);
+        $entity->set($fieldName . 'Unit', $convertTo['name']);
+    }
+
     public function prepareEntityForOutput(Entity $entity)
     {
         foreach ($this->internalAttributeList as $field) {
@@ -2050,6 +2122,12 @@ class Record extends \Espo\Core\Services\Base
         }
         foreach ($this->getAcl()->getScopeForbiddenAttributeList($entity->getEntityType(), 'read') as $attribute) {
             $entity->clear($attribute);
+        }
+
+        foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []) as $name => $data) {
+            if (!empty($data['type']) && $data['type'] === 'unit' && $entity->has($name) && !empty($data['measure'])) {
+                $this->prepareUnitFieldValue($entity, $name, $data['measure']);
+            }
         }
 
         $this->dispatchEvent('prepareEntityForOutput', new Event(['entity' => $entity]));
@@ -2613,6 +2691,13 @@ class Record extends \Espo\Core\Services\Base
             // for link multiple
             if ($this->hasSuffix($field, 'Ids') && !empty($collection = $entity->get($this->removeSuffix($field, 'Ids'))) && $collection instanceof EntityCollection) {
                 $entity->set($field, array_column($collection->toArray(), 'id'));
+            }
+
+            $fieldMetadata = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $field], []);
+
+            // prepare unit field
+            if (!empty($fieldMetadata['type']) && $fieldMetadata['type'] === 'unit' && !empty($fieldMetadata['measure'])) {
+                $this->prepareUnitFieldValue($entity, $field, $fieldMetadata['measure']);
             }
 
             if ($entity->has($field) && Util::toMd5($entity->get($field)) != Util::toMd5($prev[$field])) {
