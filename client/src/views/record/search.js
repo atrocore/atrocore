@@ -142,6 +142,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
             $.each((this.getMetadata().get(`entityDefs.${this.entityType}.fields`) || {}), (field, row) => {
                 if (~forbiddenFieldList.indexOf(field)) return;
                 if (row.layoutFilterDisabled) return;
+                if (row.layoutFiltersDisabled) return;
                 if (row.filterDisabled) return;
                 this.moreFieldList.push(field);
             });
