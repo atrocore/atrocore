@@ -2056,7 +2056,7 @@ class Record extends \Espo\Core\Services\Base
 
     protected function prepareUnitFieldValue(Entity $entity, string $fieldName, string $measure): void
     {
-        if (empty($value = $entity->get($fieldName))) {
+        if (empty($value = $entity->get($fieldName)) || empty($unitName = (string)$entity->get($fieldName . 'Unit'))) {
             return;
         }
 
@@ -2065,6 +2065,26 @@ class Record extends \Espo\Core\Services\Base
         if (!isset($unitsOfMeasure[$measure]['unitListData'])) {
             return;
         }
+
+        $unitListData = $unitsOfMeasure[$measure]['unitListData'];
+
+        foreach ($unitListData as $row) {
+            if ($row['name'] === $unitName) {
+                $unitData = $row;
+                break;
+            }
+        }
+
+        if (empty($unitData)) {
+            return;
+        }
+
+        $allUnits = [];
+        foreach ($unitListData as $row) {
+            $allUnits[$row['name']] = round($value / $unitData['multiplier'] * $row['multiplier'], 4);
+        }
+
+        $entity->set($fieldName . 'AllUnits', $allUnits);
 
         $locales = $this->getConfig()->get('locales', []);
 
@@ -2086,32 +2106,17 @@ class Record extends \Espo\Core\Services\Base
             return;
         }
 
-        $unitName = (string)$entity->get($fieldName . 'Unit');
-
-        foreach ($unitsOfMeasure[$measure]['unitListData'] as $row) {
-            if ($row['name'] === $unitName) {
-                $unitData = $row;
-                break;
-            }
-        }
-
-        if (empty($unitData)) {
-            return;
-        }
-
         if (in_array($unitData['id'], $localedUnitsIds)) {
             return;
         }
 
         if (!empty($unitData['convertToId']) && in_array($unitData['convertToId'], $localedUnitsIds)) {
-            $convertTo = $unitsOfMeasure[$measure]['unitListData'][$unitData['convertToId']];
+            $convertTo = $unitListData[$unitData['convertToId']];
         } else {
-            $convertTo = $unitsOfMeasure[$measure]['unitListData'][$localedUnitDefaultId];
+            $convertTo = $unitListData[$localedUnitDefaultId];
         }
 
-        $value = round($value / $unitData['multiplier'] * $convertTo['multiplier'], 4);
-
-        $entity->set($fieldName, $value);
+        $entity->set($fieldName, $allUnits[$convertTo['name']]);
         $entity->set($fieldName . 'Unit', $convertTo['name']);
     }
 
