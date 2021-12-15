@@ -61,8 +61,14 @@ Espo.define('views/record/search', 'view', function (Dep) {
             kanban: 'fas fa-grip-horizontal'
         },
 
+        typesWithOneFilter: ['array', 'bool', 'enum', 'multiEnum', 'linkMultiple'],
+
+        hiddenBoolFilterList: [],
+
+        boolFilterData: {},
+
         data: function () {
-             return {
+            let data = {
                 scope: this.scope,
                 entityType: this.entityType,
                 textFilter: this.textFilter,
@@ -78,9 +84,23 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 viewModeDataList: this.viewModeDataList || [],
                 hasViewModeSwitcher: this.viewModeList && this.viewModeList.length > 1
             };
+
+            data.boolFilterListLength = 0;
+            data.boolFilterListComplex = data.boolFilterList.map(item => {
+                let includes = this.hiddenBoolFilterList.includes(item);
+                if (!includes) {
+                    data.boolFilterListLength++;
+                }
+                return {name: item, hidden: includes};
+            });
+
+            return _.extend({isModalDialog: this.viewMode !== 'list'}, data);
         },
 
         setup: function () {
+            this.hiddenBoolFilterList = this.options.hiddenBoolFilterList || this.hiddenBoolFilterList;
+            this.boolFilterData = this.options.boolFilterData || this.boolFilterData;
+
             this.entityType = this.collection.name;
             this.scope = this.options.scope || this.entityType;
 
@@ -208,7 +228,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
         },
 
         isLeftDropdown: function () {
-            return this.presetFilterList.length || this.boolFilterList.length || Object.keys(this.advanced || {}).length;
+            return this.presetFilterList.length || this.boolFilterList.length || Object.keys(this.advanced || {}).length || this.getAdvancedDefs().length;
         },
 
         handleLeftDropdownVisibility: function () {
@@ -252,46 +272,6 @@ Espo.define('views/record/search', 'view', function (Dep) {
             },
             'click button[data-action="search"]': function (e) {
                 this.search();
-            },
-            'click a[data-action="addFilter"]': function (e) {
-                var $target = $(e.currentTarget);
-                var name = $target.data('name');
-                this.advanced[name] = {};
-
-                $target.closest('li').addClass('hide');
-
-                this.presetName = this.primary;
-
-                this.createFilter(name, {}, function (view) {
-                    view.populateDefaults();
-                    this.fetch();
-                    this.updateSearch();
-                }.bind(this));
-                this.updateAddFilterButton();
-                this.handleLeftDropdownVisibility();
-
-                this.manageLabels();
-            },
-            'click .advanced-filters a.remove-filter': function (e) {
-                var $target = $(e.currentTarget);
-                var name = $target.data('name');
-
-                this.$el.find('ul.filter-list li[data-name="' + name + '"]').removeClass('hide');
-                var container = this.getView('filter-' + name).$el.closest('div.filter');
-                this.clearView('filter-' + name);
-                container.remove();
-                delete this.advanced[name];
-
-
-                this.presetName = this.primary;
-
-                this.updateAddFilterButton();
-
-                this.fetch();
-                this.updateSearch();
-
-                this.manageLabels();
-                this.handleLeftDropdownVisibility();
             },
             'click button[data-action="reset"]': function (e) {
                 this.resetFilters();
@@ -338,7 +318,82 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 if (mode === this.viewMode) return;
 
                 this.setViewMode(mode, false, true);
+            },
+            'click a[data-action="addFilter"]': function (e) {
+                var $target = $(e.currentTarget);
+                var name = $target.data('name');
+                var nameCount = 1;
+                var getLastIndexName = function () {
+                    if (this.advanced.hasOwnProperty(name + '-' + nameCount)) {
+                        nameCount++;
+                        getLastIndexName.call(this);
+                    }
+                };
+                getLastIndexName.call(this);
+                name = name + '-' + nameCount;
+                this.advanced[name] = {};
+                this.advanced = this.sortAdvanced(this.advanced);
+
+                var nameType = this.model.getFieldType(name.split('-')[0]);
+                if (this.typesWithOneFilter.includes(nameType)) {
+                    $target.closest('li').addClass('hide');
+                }
+
+                this.presetName = this.primary;
+
+                this.createFilter(name, {}, function (view) {
+                    view.populateDefaults();
+                    this.fetch();
+                    this.updateSearch();
+                    this.setupOperatorLabels();
+                }.bind(this));
+                this.updateAddFilterButton();
+                this.handleLeftDropdownVisibility();
+
+                this.manageLabels();
+            },
+            'click .advanced-filters a.remove-filter': function (e) {
+                var $target = $(e.currentTarget);
+                var name = $target.data('name');
+
+                this.$el.find('ul.filter-list li[data-name="' + name.split('-')[0] + '"]').removeClass('hide');
+                var container = this.getView('filter-' + name).$el.closest('div.filter');
+                this.clearView('filter-' + name);
+                container.remove();
+                delete this.advanced[name];
+                this.presetName = this.primary;
+
+                this.updateAddFilterButton();
+
+                this.fetch();
+                this.updateSearch();
+
+                this.manageLabels();
+                this.handleLeftDropdownVisibility();
+                this.setupOperatorLabels();
+            },
+            'keypress .field input[type="text"]': function (e) {
+                if (e.keyCode === 13) {
+                    this.search();
+                }
+            },
+            'click .dropdown-submenu > a.add-filter-button': function (e) {
+                let a = $(e.currentTarget);
+                a.parents('.dropdown-menu').find('> .dropdown-submenu > a:not(.add-filter-button)').next('ul').toggle(false);
+                a.next('ul').toggle();
+                e.stopPropagation();
+                e.preventDefault();
             }
+        },
+
+        sortAdvanced: function (advanced) {
+            var result = {};
+            Object.keys(advanced).sort(function (item1, item2) {
+                return item1.localeCompare(item2, undefined, {numeric: true});
+            }).forEach(function (item) {
+                result[item] = advanced[item];
+            }.bind(this));
+            return result;
         },
 
         refresh: function () {
@@ -388,22 +443,22 @@ Espo.define('views/record/search', 'view', function (Dep) {
             this.selectPreset(this.presetName, true);
         },
 
-        savePreset: function (name) {
-            var id = 'f' + (Math.floor(Math.random() * 1000001)).toString();
+        savePreset(name) {
+            let id = 'f' + (Math.floor(Math.random() * 1000001)).toString();
 
             this.fetch();
             this.updateSearch();
 
-            var presetFilters = this.getPreferences().get('presetFilters') || {};
+            let presetFilters = this.getPreferences().get('presetFilters') || {};
             if (!(this.scope in presetFilters)) {
                 presetFilters[this.scope] = [];
             }
 
-            var data = {
+            let data = {
                 id: id,
                 name: id,
                 label: name,
-                data: this.advanced,
+                data: Espo.Utils.cloneDeep(this.advanced),
                 primary: this.primary
             };
 
@@ -411,10 +466,10 @@ Espo.define('views/record/search', 'view', function (Dep) {
 
             this.presetFilterList.push(data);
 
-            this.getPreferences().once('sync', function () {
+            this.getPreferences().once('sync', () => {
                 this.getPreferences().trigger('update');
                 this.updateSearch()
-            }, this);
+            });
 
             this.getPreferences().save({
                 'presetFilters': presetFilters
@@ -464,15 +519,15 @@ Espo.define('views/record/search', 'view', function (Dep) {
         updateAddFilterButton: function () {
             var $ul = this.$el.find('ul.filter-list');
             if ($ul.children().not('.hide').size() == 0) {
-                this.$el.find('button.add-filter-button').addClass('disabled');
+                this.$el.find('a.add-filter-button').addClass('hidden');
             } else {
-                this.$el.find('button.add-filter-button').removeClass('disabled');
+                this.$el.find('a.add-filter-button').removeClass('hidden');
             }
         },
 
         afterRender: function () {
-        	this.$filtersLabel = this.$el.find('.search-row span.filters-label');
-        	this.$filtersButton = this.$el.find('.search-row button.filters-button');
+            this.$filtersLabel = this.$el.find('.search-row span.filters-label');
+            this.$filtersButton = this.$el.find('.search-row button.filters-button');
             this.$leftDropdown = this.$el.find('div.search-row div.left-dropdown');
 
             this.updateAddFilterButton();
@@ -481,6 +536,77 @@ Espo.define('views/record/search', 'view', function (Dep) {
             this.$advancedFiltersPanel = this.$el.find('.advanced-filters');
 
             this.manageLabels();
+            this.setupOperatorLabels();
+            this.setupAdvancedFiltersPosition();
+        },
+
+        getFilterName(filter) {
+            let name = '';
+            let nextView = this.getView('filter-' + filter);
+            if (nextView) {
+                if (nextView.options.params.isAttribute) {
+                    name = nextView.options.params.label;
+                } else {
+                    name = this.translate(nextView.generalName, 'fields', this.scope);
+                }
+            }
+            return name;
+        },
+
+        setupOperatorLabels() {
+            let filters = this.$advancedFiltersPanel.find('.filter');
+
+            let el = $(filters[0]);
+            let curLabel = el.find('label.control-label');
+            curLabel.text(this.getFilterName(el.data('name')));
+
+            filters.each((index, filter) => {
+                if (filters[index + 1]) {
+                    let prevFilter = $(filter);
+                    let prevName = prevFilter.data('name');
+                    let nextFilter = $(filters[index + 1]);
+                    let nextName = nextFilter.data('name');
+                    let nextLabel = nextFilter.find('label.control-label');
+                    if (prevName.split('-')[0] === nextName.split('-')[0]) {
+                        nextLabel.text('OR ' + this.getFilterName(nextName));
+                    } else {
+                        nextLabel.text('AND ' + this.getFilterName(nextName));
+                    }
+                }
+            });
+        },
+
+        setupAdvancedFiltersPosition() {
+            let entityName = $('.row > div > h3');
+            let searchContainer = $('.page-header .search-container');
+            let positionLeft = entityName.find('span').innerWidth() + parseFloat(entityName.css('marginRight')) + parseFloat(entityName.css('paddingRight')) + parseFloat(searchContainer.css('paddingLeft')) + parseFloat(searchContainer.css('marginLeft'));
+
+            if (searchContainer.has(this.$advancedFiltersPanel).length) {
+                let main = $('#main');
+                let $window = $(window);
+
+                this.$advancedFiltersPanel.css({
+                    'left': '-' + positionLeft + 'px'
+                });
+
+                if ($window.outerWidth() >= 768) {
+                    this.$advancedFiltersPanel.css({
+                        'width': (main.outerWidth() - 40) + 'px'
+                    });
+                }
+
+                $window.resize(function () {
+                    if ($window.outerWidth() >= 768) {
+                        this.$advancedFiltersPanel.css({
+                            'width': (main.outerWidth() - 40) + 'px'
+                        });
+                    } else {
+                        this.$advancedFiltersPanel.css({
+                            'width': 'unset'
+                        });
+                    }
+                }.bind(this));
+            }
         },
 
         manageLabels: function () {
@@ -532,8 +658,6 @@ Espo.define('views/record/search', 'view', function (Dep) {
             }
 
             if (presetName && presetName != primary) {
-                this.$advancedFiltersPanel.addClass('hidden');
-
                 var label = null;
                 var style = 'default';
                 var id = null;
@@ -552,13 +676,11 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 filterStyle = style;
 
                 if (id) {
-	                this.$el.find('ul.dropdown-menu > li.divider.preset-control').removeClass('hidden');
-	                this.$el.find('ul.dropdown-menu > li.preset-control.remove-preset').removeClass('hidden');
-            	}
+                    this.$el.find('ul.dropdown-menu > li.divider.preset-control').removeClass('hidden');
+                    this.$el.find('ul.dropdown-menu > li.preset-control.remove-preset').removeClass('hidden');
+                }
 
             } else {
-                this.$advancedFiltersPanel.removeClass('hidden');
-
                 if (Object.keys(this.advanced).length !== 0) {
                     if (!this.disableSavePreset) {
                         this.$el.find('ul.dropdown-menu > li.divider.preset-control').removeClass('hidden');
@@ -569,20 +691,20 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 }
 
                 if (primary) {
-                	var label = this.translate(primary, 'presetFilters', this.entityType);
-                	var style = this.getPrimaryFilterStyle();
-                	filterLabel = label;
-                	filterStyle = style;
+                    var label = this.translate(primary, 'presetFilters', this.entityType);
+                    var style = this.getPrimaryFilterStyle();
+                    filterLabel = label;
+                    filterStyle = style;
                 }
             }
 
             this.currentFilterLabelList.push(filterLabel);
 
             this.$filtersButton.removeClass('btn-default')
-                               .removeClass('btn-primary')
-                               .removeClass('btn-danger')
-                               .removeClass('btn-success')
-                               .removeClass('btn-info');
+                .removeClass('btn-primary')
+                .removeClass('btn-danger')
+                .removeClass('btn-success')
+                .removeClass('btn-info');
             this.$filtersButton.addClass('btn-' + filterStyle);
 
             presetName = presetName || '';
@@ -590,13 +712,12 @@ Espo.define('views/record/search', 'view', function (Dep) {
             this.$el.find('ul.filter-menu a.preset[data-name="'+presetName+'"]').prepend('<span class="fas fa-check pull-right"></span>');
         },
 
-        manageBoolFilters: function () {
-            (this.boolFilterList || []).forEach(function (item) {
-                if (this.bool[item]) {
-                	var label = this.translate(item, 'boolFilters', this.entityType);
-                	this.currentFilterLabelList.push(label);
+        manageBoolFilters() {
+            (this.boolFilterList || []).forEach(item => {
+                if (this.bool[item] && !this.hiddenBoolFilterList.includes(item)) {
+                    this.currentFilterLabelList.push(this.translate(item, 'boolFilters', this.entityType));
                 }
-            }, this);
+            });
         },
 
         search: function () {
@@ -626,14 +747,26 @@ Espo.define('views/record/search', 'view', function (Dep) {
             return !!this.getMetadata().get(['entityDefs', this.scope, 'fields', field]);
         },
 
-        updateCollection: function () {
-            this.collection.abortLastFetch();
+        updateCollection() {
             this.collection.reset();
             this.notify('Please wait...');
-            this.collection.where = this.searchManager.getWhere();
-            this.collection.fetch().then(function () {
-                Espo.Ui.notify(false);
+            this.listenTo(this.collection, 'sync', function () {
+                this.notify(false);
+            }.bind(this));
+            let where = this.searchManager.getWhere();
+            where.forEach(item => {
+                if (item.type === 'bool') {
+                    let data = {};
+                    item.value.forEach(elem => {
+                        if (elem in this.boolFilterData) {
+                            data[elem] = this.boolFilterData[elem];
+                        }
+                    });
+                    _.extend(item.data, data);
+                }
             });
+            this.collection.where = where;
+            this.collection.fetch();
         },
 
 		getPresetFilterList: function () {
@@ -718,10 +851,29 @@ Espo.define('views/record/search', 'view', function (Dep) {
             var rendered = false;
             if (this.isRendered()) {
                 rendered = true;
-                this.$advancedFiltersPanel.append('<div data-name="'+name+'" class="filter filter-' + name + '" />');
+                var div = document.createElement('div');
+                div.className = "filter filter-" + name;
+                div.setAttribute("data-name", name);
+                var nameIndex = name.split('-')[1];
+                var beforeFilterName = name.split('-')[0] + '-' + (+nameIndex - 1);
+                var beforeFilter = this.$advancedFiltersPanel.find('.filter.filter-' + beforeFilterName + '.col-sm-4.col-md-3')[0];
+                var afterFilterName = name.split('-')[0] + '-' + (+nameIndex + 1);
+                var afterFilter = this.$advancedFiltersPanel.find('.filter.filter-' + afterFilterName + '.col-sm-4.col-md-3')[0];
+                if (beforeFilter) {
+                    var nextFilter = beforeFilter.nextElementSibling;
+                    if (nextFilter) {
+                        this.$advancedFiltersPanel[0].insertBefore(div, beforeFilter.nextElementSibling);
+                    } else {
+                        this.$advancedFiltersPanel[0].appendChild(div);
+                    }
+                } else if (afterFilter) {
+                    this.$advancedFiltersPanel[0].insertBefore(div, afterFilter);
+                } else {
+                    this.$advancedFiltersPanel[0].appendChild(div);
+                }
             }
 
-            this.createView('filter-' + name, 'views/search/filter', {
+            this.createView('filter-' + name, 'treo-core:views/search/filter', {
                 name: name,
                 model: this.model,
                 params: params,
@@ -770,14 +922,31 @@ Espo.define('views/record/search', 'view', function (Dep) {
             var defs = [];
             for (var i in this.moreFieldList) {
                 var field = this.moreFieldList[i];
+                var fieldType = this.model.getFieldType(field.split('-')[0]);
+                var advancedFieldsList = [];
+                Object.keys(this.advanced).forEach(function (item) {
+                    advancedFieldsList.push(item.split('-')[0]);
+                });
                 var o = {
                     name: field,
-                    checked: (field in this.advanced),
+                    label: this.translate(field, 'fields', this.scope),
+                    checked: (this.typesWithOneFilter.indexOf(fieldType) > -1 && advancedFieldsList.indexOf(field) > -1),
                 };
                 defs.push(o);
             }
+
+            defs.sort((a, b) => {
+                if (a.label < b.label) {
+                    return -1;
+                }
+                if (a.label > b.label) {
+                    return 1;
+                }
+                return 0;
+            })
+
             return defs;
-        }
+        },
 
     });
 });

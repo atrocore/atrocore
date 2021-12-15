@@ -68,9 +68,6 @@
   "views/record/panels/relationship": [
     "treo-core"
   ],
-  "views/record/search": [
-    "treo-core"
-  ],
   "views/record/row-actions/default": [
     "treo-core"
   ],
