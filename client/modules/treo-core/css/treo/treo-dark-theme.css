@@ -20827,6 +20827,7 @@ button.category:focus {
     position: absolute;
     overflow-y: auto;
     height: 500px;
+    width: 220px;
 }
 
 .filter-menu .dropdown-submenu .attribute-filter-list > li > a {
