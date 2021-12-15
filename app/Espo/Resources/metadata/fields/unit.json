@@ -56,7 +56,8 @@
     "allUnits": {
       "type": "jsonObject",
       "disabled": true,
-      "notStorable": true
+      "notStorable": true,
+      "layoutFilterDisabled": true
     }
   },
   "filter": true,

@@ -19862,6 +19862,8 @@ button.category:focus {
   -webkit-box-shadow: 0 0 13px rgba(0, 0, 0, 0.175);
           box-shadow: 0 0 13px rgba(0, 0, 0, 0.175);
   position: absolute;
+  overflow-y: auto;
+  height: 500px;
 }
 
 .filter-menu .dropdown-submenu .attribute-filter-list > li > a {
