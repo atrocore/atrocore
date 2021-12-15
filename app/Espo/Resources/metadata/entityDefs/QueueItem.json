@@ -53,7 +53,7 @@
       "type": "jsonObject",
       "notStorable": true,
       "layoutDetailDisabled": true,
-      "layoutFiltersDisabled": true,
+      "filterDisabled": true,
       "layoutMassUpdateDisabled": true,
       "layoutListDisabled": true
     },

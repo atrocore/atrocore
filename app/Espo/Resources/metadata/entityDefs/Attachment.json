@@ -15,7 +15,7 @@
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
       "layoutMassUpdateDisabled": true,
-      "layoutFiltersDisabled": true,
+      "filterDisabled": true,
       "importDisabled": false,
       "exportDisabled": false
     },

@@ -213,7 +213,7 @@
             "notStorable": true,
             "readOnly": true,
             "layoutListDisabled": true,
-            "layoutFiltersDisabled": true,
+            "filterDisabled": true,
             "layoutMassUpdateDisabled": true,
             "layoutDetailDisabled": true,
             "directAccessDisabled": true

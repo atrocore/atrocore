@@ -49,7 +49,7 @@ class Helper
         'layoutListDisabled',
         'layoutDetailDisabled',
         'layoutMassUpdateDisabled',
-        'layoutFiltersDisabled',
+        'filterDisabled',
     );
 
     public function __construct(\Espo\Core\Utils\Metadata $metadata)

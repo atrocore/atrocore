@@ -124,7 +124,7 @@
             "notStorable": true,
             "layoutDetailDisabled": true,
             "layoutMassUpdateDisabled": true,
-            "layoutFiltersDisabled": true,
+            "filterDisabled": true,
             "exportDisabled": true,
             "importDisabled": true,
             "view": "views/contact/fields/account-role",
