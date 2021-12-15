@@ -18,12 +18,14 @@
     "localeUnits": {
       "type": "array",
       "notStorable": true,
+      "filterDisabled": true,
       "view": "views/measure/fields/locale-units"
     },
     "localeDefault": {
       "type": "varchar",
       "prohibitedEmptyValue": true,
       "notStorable": true,
+      "filterDisabled": true,
       "view": "views/measure/fields/locale-default"
     },
     "createdAt": {
