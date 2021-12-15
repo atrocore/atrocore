@@ -118,14 +118,13 @@ Espo.define('views/record/search', 'view', function (Dep) {
 
             var forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType) || [];
 
-            this._helper.layoutManager.get(this.entityType, 'filters', function (list) {
-                this.moreFieldList = [];
-                (list || []).forEach(function (field) {
-                    if (~forbiddenFieldList.indexOf(field)) return;
+            this.moreFieldList = [];
+            $.each((this.getMetadata().get(`entityDefs.${this.entityType}.fields`) || {}), (field, row) => {
+                if (~forbiddenFieldList.indexOf(field)) return;
+                if (!row.layoutFilterDisabled) {
                     this.moreFieldList.push(field);
-                }, this);
-                this.tryReady();
-            }.bind(this));
+                }
+            });
 
             this.presetFilterList = (Espo.Utils.clone(this.getMetadata().get('clientDefs.' + this.scope + '.filterList') || [])).filter(function (item) {
                 if (typeof item === 'string') return true;
