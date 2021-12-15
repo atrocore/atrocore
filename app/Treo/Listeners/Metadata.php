@@ -152,7 +152,10 @@ class Metadata extends AbstractListener
             if (!isset($rows['fields']) || !is_array($rows['fields'])) {
                 continue 1;
             }
+
+            $newFields = [];
             foreach ($rows['fields'] as $field => $params) {
+                $newFields[$field] = $params;
                 if (!empty($params['isMultilang'])) {
                     foreach ($locales as $locale) {
                         // prepare locale
@@ -185,10 +188,11 @@ class Metadata extends AbstractListener
                             $mParams['layoutMassUpdateDisabled'] = true;
                         }
 
-                        $data['entityDefs'][$scope]['fields'][$mField] = $mParams;
+                        $newFields[$mField] = $mParams;
                     }
                 }
             }
+            $data['entityDefs'][$scope]['fields'] = $newFields;
         }
 
         return $data;
