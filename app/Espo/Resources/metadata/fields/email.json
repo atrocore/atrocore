@@ -36,6 +36,9 @@
       "type": "bool"
     }
   ],
+  "fieldDefs": {
+    "type": "varchar"
+  },
   "filter": true,
   "personalData": true,
   "textFilter": true,

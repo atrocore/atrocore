@@ -46,6 +46,19 @@ class V1Dot3Dot43 extends Base
         $this->execute("DROP INDEX IDX_CONTACT_ID ON `user`");
         $this->execute("ALTER TABLE `user` DROP contact_id");
         $this->execute("ALTER TABLE `account` DROP website, DROP type, DROP industry, DROP sic_code, DROP billing_address_street, DROP billing_address_city, DROP billing_address_state, DROP billing_address_country, DROP billing_address_postal_code, DROP shipping_address_street, DROP shipping_address_city, DROP shipping_address_state, DROP shipping_address_country, DROP shipping_address_postal_code, ADD email_address VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci, ADD phone_number VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
+        $this->execute("ALTER TABLE `user` ADD email_address VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
+
+        $data = $this
+            ->getPDO()
+            ->query("SELECT ea.name as email, eea.entity_id as user_id FROM `entity_email_address` eea JOIN email_address ea ON eea.email_address_id = ea.id AND ea.deleted=0 WHERE eea.deleted=0 AND eea.entity_type='User'")
+            ->fetchAll(\PDO::FETCH_ASSOC);
+
+        foreach ($data as $v) {
+            $this->execute("UPDATE `user` SET email_address='{$v['email']}' WHERE id='{$v['user_id']}'");
+        }
+
+        $this->execute("DROP TABLE email_address");
+        $this->execute("DROP TABLE entity_email_address");
     }
 
     public function down(): void
