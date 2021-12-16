@@ -310,19 +310,6 @@ Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
                     attributes.parentName = this.model.get('name');
                     attributes.parentId = this.model.id;
                     break;
-                case 'Contact':
-                    if (this.getConfig().get('b2cMode')) {
-                        attributes.parentType = 'Contact';
-                        attributes.parentName = this.model.get('name');
-                        attributes.parentId = this.model.id;
-                    } else {
-                        if (this.model.get('accountId')) {
-                            attributes.parentType = 'Account';
-                            attributes.parentName = this.model.get('accountName');
-                            attributes.parentId = this.model.get('accountId');
-                        }
-                    }
-                    break;
             }
 
 
@@ -341,7 +328,7 @@ Espo.define('views/fields/email', 'views/fields/varchar', function (Dep) {
             }
 
 
-            if (~['Contact', 'Lead', 'Account'].indexOf(this.model.name)) {
+            if (~['Lead', 'Account'].indexOf(this.model.name)) {
                 attributes.nameHash = {};
                 attributes.nameHash[emailAddress] = this.model.get('name');
             }

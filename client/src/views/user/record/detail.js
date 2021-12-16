@@ -85,7 +85,6 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
                 'password',
                 'portals',
                 'portalRoles',
-                'contact',
                 'accounts'
             ];
 
@@ -128,7 +127,6 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
                 this.hideField('defaultTeam');
                 this.showField('portals');
                 this.showField('portalRoles');
-                this.showField('contact');
                 this.showField('accounts');
                 this.showPanel('portal');
                 this.hideField('title');
@@ -139,7 +137,6 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
                 this.showField('defaultTeam');
                 this.hideField('portals');
                 this.hideField('portalRoles');
-                this.hideField('contact');
                 this.hideField('accounts');
                 this.hidePanel('portal');
                 this.showField('title');
@@ -214,7 +211,7 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
                         "label": "Portal",
                         "name": "portal",
                         "rows": [
-                            [{"name":"portals"}, {"name":"contact"}],
+                            [{"name":"portals"}, false],
                             [{"name":"portalRoles"}, {"name":"accounts"}]
                         ]
                     });
