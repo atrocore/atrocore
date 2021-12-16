@@ -1,1 +1,0 @@
-{{#if value}}<span class="glyphicon glyphicon-paperclip small"></span>{{/if}}

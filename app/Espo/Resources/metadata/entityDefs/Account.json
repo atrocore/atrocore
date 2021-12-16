@@ -10,8 +10,7 @@
       "type": "text"
     },
     "emailAddress": {
-      "type": "varchar",
-      "isPersonalData": true
+      "type": "email"
     },
     "phoneNumber": {
       "type": "varchar"
