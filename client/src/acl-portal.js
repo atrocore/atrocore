@@ -44,7 +44,6 @@ Espo.define('acl-portal', ['acl'], function (Dep) {
             entityAccessData = entityAccessData || {};
 
             var inAccount = entityAccessData.inAccount;
-            var isOwnContact = entityAccessData.isOwnContact;
             var isOwner = entityAccessData.isOwner;
 
             if (this.getUser().isAdmin()) {
@@ -92,7 +91,7 @@ Espo.define('acl-portal', ['acl'], function (Dep) {
             }
 
             if (isOwner) {
-                if (value === 'own' || value === 'account' || value === 'contact') {
+                if (value === 'own' || value === 'account') {
                     return true;
                 }
             }
@@ -108,19 +107,6 @@ Espo.define('acl-portal', ['acl'], function (Dep) {
                         return true;
                     }
                 } else if (inAccount) {
-                    return true;
-                }
-            }
-
-            if (value === 'contact') {
-                result = isOwnContact;
-                if (isOwnContact === null) {
-                    if (precise) {
-                        result = null;
-                    } else {
-                        return true;
-                    }
-                } else if (isOwnContact) {
                     return true;
                 }
             }
@@ -143,7 +129,6 @@ Espo.define('acl-portal', ['acl'], function (Dep) {
             var entityAccessData = {
                 isOwner: this.checkIsOwner(model),
                 inAccount: this.checkInAccount(model),
-                isOwnContact: this.checkIsOwnContact(model),
             };
             return this.checkScope(data, action, precise, entityAccessData);
         },
@@ -202,48 +187,6 @@ Espo.define('acl-portal', ['acl'], function (Dep) {
 
             return result;
         },
-
-        checkIsOwnContact: function (model) {
-            var contactId = this.getUser().get('contactId');
-            if (!contactId) {
-                return false;
-            }
-
-            if (model.hasField('contact')) {
-                if (model.get('contactId')) {
-                    if (contactId === model.get('contactId')) {
-                        return true;
-                    }
-                }
-            }
-
-            var result = false;
-
-            if (model.hasField('contacts') && model.hasLink('contacts')) {
-                if (!model.has('contactsIds')) {
-                    result = null;
-                }
-                (model.getLinkMultipleIdList('contacts')).forEach(function (id) {
-                    if (contactId === id) {
-                        result = true;
-                    }
-                }, this);
-            }
-
-            if (model.hasField('parent') && model.hasLink('parent')) {
-                if (model.get('parentType') === 'Contact' && model.get('parentId') === contactId) {
-                    return true;
-                }
-            }
-
-            if (result === false) {
-                if (!model.hasField('contacts') && model.hasLink('contacts')) {
-                    return true;
-                }
-            }
-
-            return result;
-        }
 
     });
 

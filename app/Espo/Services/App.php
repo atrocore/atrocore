@@ -75,8 +75,6 @@ class App extends Base
 
         $userData = $user->getValueMap();
 
-        $userData->emailAddressList = $this->getEmailAddressList();
-
         $settings = (object)[];
         foreach ($this->getConfig()->get('userItems') as $item) {
             $settings->$item = $this->getConfig()->get($item);
@@ -127,27 +125,6 @@ class App extends Base
             );
 
         return true;
-    }
-
-    protected function getEmailAddressList(): array
-    {
-        $user = $this->getUser();
-
-        $emailAddressList = [];
-        foreach ($user->get('emailAddresses') as $emailAddress) {
-            if ($emailAddress->get('invalid')) {
-                continue;
-            }
-            if ($user->get('emailAddress') === $emailAddress->get('name')) {
-                continue;
-            }
-            $emailAddressList[] = $emailAddress->get('name');
-        }
-        if ($user->get('emailAddress')) {
-            array_unshift($emailAddressList, $user->get('emailAddress'));
-        }
-
-        return $emailAddressList;
     }
 
     protected function getMaxUploadSize(): int

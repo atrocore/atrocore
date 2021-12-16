@@ -75,8 +75,7 @@
     "sidePanelsDetailSmall": "Side Panels (Detail Small)",
     "sidePanelsEditSmall": "Side Panels (Edit Small)",
     "kanban": "Kanban",
-    "listForAccount": "List (for Account)",
-    "listForContact": "List (for Contact)"
+    "listForAccount": "List (for Account)"
   },
   "fieldTypes": {
     "color": "Color",

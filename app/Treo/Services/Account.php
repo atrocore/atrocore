@@ -42,14 +42,7 @@ use \Espo\ORM\Entity;
  */
 class Account extends \Espo\Services\Record
 {
-    protected $linkSelectParams = array(
-        'contacts' => array(
-            'additionalColumns' => array(
-                'role' => 'accountRole',
-                'isInactive' => 'accountIsInactive'
-            )
-        )
-    );
+    protected $linkSelectParams = [];
 
     /**
      * @param Entity $entity
@@ -74,14 +67,5 @@ class Account extends \Espo\Services\Record
      */
     protected function afterMerge(Entity $entity, array $sourceList, $attributes)
     {
-        foreach ($sourceList as $source) {
-            $contactList = $this->getEntityManager()->getRepository('Contact')->where([
-                'accountId' => $source->id
-            ])->find();
-            foreach ($contactList as $contact) {
-                $contact->set('accountId', $entity->id);
-                $this->getEntityManager()->saveEntity($contact);
-            }
-        }
     }
 }

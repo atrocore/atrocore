@@ -1,9 +1,5 @@
 {
     "fields": {
-        "contact": {
-            "type": "link",
-            "view": "views/user/fields/contact"
-        },
         "accounts": {
             "type": "linkMultiple"
         },
@@ -119,9 +115,7 @@
             "required": true
         },
         "phoneNumber": {
-            "type": "phone",
-            "typeList": ["Mobile", "Office", "Home", "Fax", "Other"],
-            "defaultType": "Mobile"
+            "type": "varchar"
         },
         "token": {
             "type": "varchar",
@@ -220,11 +214,6 @@
         }
     },
     "links": {
-        "contact": {
-            "type": "belongsTo",
-            "entity": "Contact",
-            "foreign": "portalUser"
-        },
         "accounts": {
             "type": "hasMany",
             "entity": "Account",

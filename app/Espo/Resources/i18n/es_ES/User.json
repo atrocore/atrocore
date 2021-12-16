@@ -17,7 +17,6 @@
     "newPasswordConfirm": "Confirmar Contraseña Nueva",
     "isActive": "Está activo",
     "isPortalUser": "Es usuario del portal",
-    "contact": "Contacto",
     "accounts": "Cuentas",
     "account": "Cuenta (principal)",
     "sendAccessInfo": "Enviar información de acceso al usuario",
@@ -36,7 +35,6 @@
     "notes": "Notas",
     "portals": "Portales",
     "portalRoles": "Roles del portal",
-    "contact": "Contacto",
     "accounts": "Cuentas",
     "account": "Cuenta (principal)",
     "tasks": "Tareas",
@@ -55,7 +53,6 @@
     "External Accounts": "Cuentas externas",
     "Email Accounts": "Cuentas de correo",
     "Create Portal User": "Crear usuario del portal",
-    "Proceed w/o Contact": "Continuar sin contacto",
     "Portal": "Portal"
   },
   "tooltips": {

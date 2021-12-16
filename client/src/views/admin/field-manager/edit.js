@@ -36,7 +36,7 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
 
         template: 'admin/field-manager/edit',
 
-        entityTypeWithTranslatedOptionsList: ['enum', 'multiEnum', 'array', 'phone'],
+        entityTypeWithTranslatedOptionsList: ['enum', 'multiEnum', 'array'],
 
         paramWithTooltipList: ['audited', 'required', 'default', 'min', 'max', 'maxLength', 'after', 'before', 'readOnly'],
 

@@ -1,5 +1,0 @@
-[
-    {"name":"name", "width": 35,"link":"true", "view": "views/contact/fields/name-for-account"},
-    {"name":"accountRole", "width": 35, "notSortable": true},
-    {"name":"emailAddress"}
-]

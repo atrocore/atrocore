@@ -1,20 +1,10 @@
 {
-   "controller": "controllers/record",
-   "views": {
-      "detail":"views/account/detail"
-   },
-   "relationshipPanels": {
-      "contacts": {
-         "filterList": ["all", "accountActive"],
-         "layout":"listForAccount",
-         "orderBy": "name"
-      }
-   },
-   "filterList": [
-      {
-         "name":"recentlyCreated"
-      }
-   ],
-   "boolFilterList": ["onlyMy"],
-   "iconClass": "fas fa-building"
+  "controller": "controllers/record",
+  "views": {
+    "detail": "views/account/detail"
+  },
+  "boolFilterList": [
+    "onlyMy"
+  ],
+  "iconClass": "fas fa-building"
 }

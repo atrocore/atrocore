@@ -373,8 +373,6 @@ class Record extends \Espo\Core\Services\Base
         $this->loadParentNameFields($entity);
         $this->loadIsFollowed($entity);
         $this->loadFollowers($entity);
-        $this->loadEmailAddressField($entity);
-        $this->loadPhoneNumberField($entity);
         $this->loadNotJoinedLinkFields($entity);
         $this->loadPreview($entity);
     }
@@ -463,28 +461,6 @@ class Record extends \Espo\Core\Services\Base
     public function loadAdditionalFieldsForList(Entity $entity)
     {
         $this->loadParentNameFields($entity);
-    }
-
-    protected function loadEmailAddressField(Entity $entity)
-    {
-        $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', array());
-        if (!empty($fieldDefs['emailAddress']) && $fieldDefs['emailAddress']['type'] == 'email') {
-            $dataAttributeName = 'emailAddressData';
-            $emailAddressData = $this->getEntityManager()->getRepository('EmailAddress')->getEmailAddressData($entity);
-            $entity->set($dataAttributeName, $emailAddressData);
-            $entity->setFetched($dataAttributeName, $emailAddressData);
-        }
-    }
-
-    protected function loadPhoneNumberField(Entity $entity)
-    {
-        $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', array());
-        if (!empty($fieldDefs['phoneNumber']) && $fieldDefs['phoneNumber']['type'] == 'phone') {
-            $dataAttributeName = 'phoneNumberData';
-            $phoneNumberData = $this->getEntityManager()->getRepository('PhoneNumber')->getPhoneNumberData($entity);
-            $entity->set($dataAttributeName, $phoneNumberData);
-            $entity->setFetched($dataAttributeName, $phoneNumberData);
-        }
     }
 
     protected function getSelectManager($entityType = null)
@@ -2175,32 +2151,6 @@ class Record extends \Espo\Core\Services\Base
 
         $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', array());
 
-        $hasPhoneNumber = false;
-        if (!empty($fieldDefs['phoneNumber']) && $fieldDefs['phoneNumber']['type'] == 'phone') {
-            $hasPhoneNumber = true;
-        }
-
-        $hasEmailAddress = false;
-        if (!empty($fieldDefs['emailAddress']) && $fieldDefs['emailAddress']['type'] == 'email') {
-            $hasEmailAddress = true;
-        }
-
-        if ($hasPhoneNumber) {
-            $phoneNumberToRelateList = [];
-            $phoneNumberList = $repository->findRelated($entity, 'phoneNumbers');
-            foreach ($phoneNumberList as $phoneNumber) {
-                $phoneNumberToRelateList[] = $phoneNumber;
-            }
-        }
-
-        if ($hasEmailAddress) {
-            $emailAddressToRelateList = [];
-            $emailAddressList = $repository->findRelated($entity, 'emailAddresses');
-            foreach ($emailAddressList as $emailAddress) {
-                $emailAddressToRelateList[] = $emailAddress;
-            }
-        }
-
         $pdo = $this->getEntityManager()->getPDO();
 
         foreach ($sourceList as $source) {
@@ -2216,19 +2166,6 @@ class Record extends \Espo\Core\Services\Base
                     `deleted` = 0
             ";
             $pdo->query($sql);
-
-            if ($hasPhoneNumber) {
-                $phoneNumberList = $repository->findRelated($source, 'phoneNumbers');
-                foreach ($phoneNumberList as $phoneNumber) {
-                    $phoneNumberToRelateList[] = $phoneNumber;
-                }
-            }
-            if ($hasEmailAddress) {
-                $emailAddressList = $repository->findRelated($source, 'emailAddresses');
-                foreach ($emailAddressList as $emailAddress) {
-                    $emailAddressToRelateList[] = $emailAddress;
-                }
-            }
         }
 
         $mergeLinkList = [];
@@ -2253,45 +2190,6 @@ class Record extends \Espo\Core\Services\Base
 
         foreach ($sourceList as $source) {
             $this->getEntityManager()->removeEntity($source);
-        }
-
-        if ($hasEmailAddress) {
-            $emailAddressData = [];
-            foreach ($emailAddressToRelateList as $i => $emailAddress) {
-                $o = (object) [];
-                $o->emailAddress = $emailAddress->get('name');
-                $o->primary = false;
-                if (empty($attributes->emailAddress)) {
-                    if ($i === 0) {
-                        $o->primary = true;
-                    }
-                } else {
-                    $o->primary = $o->emailAddress === $attributes->emailAddress;
-                }
-                $o->optOut = $emailAddress->get('optOut');
-                $o->invalid = $emailAddress->get('invalid');
-                $emailAddressData[] = $o;
-            }
-            $attributes->emailAddressData = $emailAddressData;
-        }
-
-        if ($hasPhoneNumber) {
-            $phoneNumberData = [];
-            foreach ($phoneNumberToRelateList as $i => $phoneNumber) {
-                $o = (object) [];
-                $o->phoneNumber = $phoneNumber->get('name');
-                $o->primary = false;
-                if (empty($attributes->phoneNumber)) {
-                    if ($i === 0) {
-                        $o->primary = true;
-                    }
-                } else {
-                    $o->primary = $o->phoneNumber === $attributes->phoneNumber;
-                }
-                $o->type = $phoneNumber->get('type');
-                $phoneNumberData[] = $o;
-            }
-            $attributes->phoneNumberData = $phoneNumberData;
         }
 
         $entity->set($attributes);
@@ -2528,7 +2426,6 @@ class Record extends \Espo\Core\Services\Base
 
             if ($this->getUser()->isPortal()) {
                 $aclAttributeList[] = 'accountId';
-                $aclAttributeList[] = 'contactId';
             }
 
             foreach ($aclAttributeList as $attribute) {

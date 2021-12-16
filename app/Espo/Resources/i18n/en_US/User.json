@@ -19,7 +19,6 @@
     "avatar": "Avatar",
     "isActive": "Is Active",
     "isPortalUser": "Is Portal User",
-    "contact": "Contact",
     "accounts": "Accounts",
     "account": "Account (Primary)",
     "sendAccessInfo": "Send Email with Access Info to User",
@@ -37,7 +36,6 @@
     "notes": "Notes",
     "portals": "Portals",
     "portalRoles": "Portal Roles",
-    "contact": "Contact",
     "accounts": "Accounts",
     "account": "Account (Primary)",
     "tasks": "Tasks"
@@ -55,8 +53,7 @@
     "External Accounts": "External Accounts",
     "Email Accounts": "Email Accounts",
     "Portal": "Portal",
-    "Create Portal User": "Create Portal User",
-    "Proceed w/o Contact": "Proceed w/o Contact"
+    "Create Portal User": "Create Portal User"
   },
   "tooltips": {
     "defaultTeam": "All records created by this user will be related to this team by default.",

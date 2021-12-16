@@ -576,12 +576,6 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
                         defaultHash['accountName'] = this.getUser().get('accountName');
                     }
                 }
-                if (this.model.hasField('contact') && ~['belongsTo', 'hasOne'].indexOf(this.model.getLinkType('contact'))) {
-                    if (this.getUser().get('contactId')) {
-                        defaultHash['contactId'] = this.getUser().get('contactId');
-                        defaultHash['contactName'] = this.getUser().get('contactName');
-                    }
-                }
                 if (this.model.hasField('parent') && this.model.getLinkType('parent') === 'belongsToParent') {
                     if (!this.getConfig().get('b2cMode')) {
                         if (this.getUser().get('accountId')) {
@@ -591,28 +585,12 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
                                 defaultHash['parentType'] = 'Account';
                             }
                         }
-                    } else {
-                        if (this.getUser().get('contactId')) {
-                            if (~(this.model.getFieldParam('parent', 'entityList') || []).indexOf('Contact')) {
-                                defaultHash['contactId'] = this.getUser().get('contactId');
-                                defaultHash['parentName'] = this.getUser().get('contactName');
-                                defaultHash['parentType'] = 'Contact';
-                            }
-                        }
                     }
                 }
                 if (this.model.hasField('accounts') && this.model.getLinkType('accounts') === 'hasMany') {
                     if (this.getUser().get('accountsIds')) {
                         defaultHash['accountsIds'] = this.getUser().get('accountsIds');
                         defaultHash['accountsNames'] = this.getUser().get('accountsNames');
-                    }
-                }
-                if (this.model.hasField('contacts') && this.model.getLinkType('contacts') === 'hasMany') {
-                    if (this.getUser().get('contactId')) {
-                        defaultHash['contactsIds'] = [this.getUser().get('contactId')];
-                        var names = {};
-                        names[this.getUser().get('contactId')] = this.getUser().get('contactName');
-                        defaultHash['contactsNames'] = names;
                     }
                 }
             }

@@ -206,6 +206,10 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
                             levelList = this.booleanLevelList;
                         }
 
+                        levelList = levelList.filter(v => {
+                            return v !== 'contact'
+                        });
+
                         list.push({
                             level: level,
                             name: scope + '-' + action,

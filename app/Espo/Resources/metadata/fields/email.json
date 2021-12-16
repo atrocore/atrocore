@@ -1,33 +1,46 @@
 {
-   "params": [
-      {
-         "name":"required",
-         "type":"bool",
-         "default":false
-      }
-   ],
-   "actualFields":[
-      "isOptedOut",
-      ""
-   ],
-   "notActualFields":[
-      "data"
-   ],
-   "fields":{
-      "isOptedOut":{
-         "type": "bool",
-         "notStorable": true,
-         "layoutDetailDisabled": true,
-         "mergeDisabled": true,
-         "customizationDefaultDisabled": true,
-         "customizationReadOnlyDisabled": true
-      }
-   },
-   "notCreatable": true,
-   "filter": true,
-   "fieldDefs":{
-      "notStorable":true
-   },
-   "textFilter": true,
-   "personalData": true
+  "params": [
+    {
+      "name": "required",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "default",
+      "type": "varchar"
+    },
+    {
+      "name": "maxLength",
+      "type": "int"
+    },
+    {
+      "name": "trim",
+      "type": "bool",
+      "default": true
+    },
+    {
+      "name": "audited",
+      "type": "bool"
+    },
+    {
+      "name": "readOnly",
+      "type": "bool"
+    },
+    {
+      "name": "pattern",
+      "type": "varchar",
+      "tooltip": true
+    },
+    {
+      "name": "unique",
+      "type": "bool"
+    }
+  ],
+  "fieldDefs": {
+    "type": "varchar"
+  },
+  "filter": true,
+  "personalData": true,
+  "textFilter": true,
+  "fullTextSearch": true
 }
