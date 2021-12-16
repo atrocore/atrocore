@@ -237,6 +237,18 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $this->dispatch('afterUnrelate', $entity, $options, $relationName, null, $foreign);
     }
 
+    protected function validateFieldsByType(Entity $entity): void
+    {
+        foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []) as $fieldName => $fieldData) {
+            if (isset($fieldData['type'])) {
+                $method = "validate" . ucfirst($fieldData['type']);
+                if (method_exists($this, $method)) {
+                    $this->$method($entity, $fieldName, $fieldData);
+                }
+            }
+        }
+    }
+
     protected function validateEmail(Entity $entity, string $fieldName, array $fieldData): void
     {
         if ($entity->isAttributeChanged($fieldName) && !empty($entity->get($fieldName))) {
@@ -315,14 +327,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         parent::beforeSave($entity, $options);
 
         if (empty($options['skipAll'])) {
-            foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []) as $fieldName => $fieldData) {
-                if (isset($fieldData['type'])) {
-                    $method = "validate" . ucfirst($fieldData['type']);
-                    if (method_exists($this, $method)) {
-                        $this->$method($entity, $fieldName, $fieldData);
-                    }
-                }
-            }
+            $this->validateFieldsByType($entity);
         }
 
         // dispatch an event
