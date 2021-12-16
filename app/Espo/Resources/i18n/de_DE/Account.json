@@ -16,14 +16,11 @@
     "description": "Beschreibung",
     "sicCode": "ISIC Code",
     "industry": "Branche",
-    "type": "Typ",
-    "contactRole": "Rolle",
-    "contactIsInactive": "Inaktiv"
+    "type": "Typ"
   },
   "links": {
     "emails": "E-Mails",
     "emailsPrimary": "E-Mail (vorgezogen)",
-    "contacts": "Kontakte",
     "portalUsers": "Portal Benutzer"
   },
   "options": {

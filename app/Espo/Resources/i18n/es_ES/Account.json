@@ -8,8 +8,6 @@
     "sicCode": "Código SIC",
     "industry": "Industria",
     "type": "Tipo",
-    "contactRole": "Título",
-    "contactIsInactive": "Inactivo",
     "billingAddressStreet": "Street",
     "billingAddressCity": "City",
     "billingAddressState": "State",
@@ -22,7 +20,6 @@
     "shippingAddressPostalCode": "Postal Code"
   },
   "links": {
-    "contacts": "Contactos",
     "portalUsers": "Usuarios del portal"
   },
   "options": {

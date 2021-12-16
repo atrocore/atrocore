@@ -2528,7 +2528,6 @@ class Record extends \Espo\Core\Services\Base
 
             if ($this->getUser()->isPortal()) {
                 $aclAttributeList[] = 'accountId';
-                $aclAttributeList[] = 'contactId';
             }
 
             foreach ($aclAttributeList as $attribute) {

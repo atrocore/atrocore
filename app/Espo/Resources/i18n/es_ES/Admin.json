@@ -74,8 +74,7 @@
     "listPortal": "List (Portal)",
     "relationshipsPortal": "Relationship Panels (Portal)",
     "kanban": "Kanban",
-    "listForAccount": "List (for Account)",
-    "listForContact": "List (for Contact)"
+    "listForAccount": "List (for Account)"
   },
   "fieldTypes": {
     "array": "Lista ordenable",
@@ -148,7 +147,6 @@
     "typeList": "Tipo de lista",
     "rows": "Número de filas del área de texto",
     "lengthOfCut": "Longitud del corte",
-    "sourceList": "Lista de tomas de contacto",
     "tooltipText": "Texto de la ayuda",
     "prefix": "Prefijo",
     "nextNumber": "Siguiente Número",

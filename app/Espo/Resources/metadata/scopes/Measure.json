@@ -7,7 +7,6 @@
   "aclPortalLevelList": [
     "all",
     "account",
-    "contact",
     "own",
     "no"
   ],

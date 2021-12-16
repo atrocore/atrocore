@@ -66,7 +66,6 @@ class User extends Record
         'password',
         'portalsIds',
         'portalRolesIds',
-        'contactId',
         'accountsIds'
     ];
 
@@ -501,22 +500,6 @@ class User extends Record
         parent::afterUpdate($entity, $data);
         if (array_key_exists('rolesIds', $data) || array_key_exists('teamsIds', $data) || array_key_exists('isAdmin', $data)) {
             $this->clearRoleCache($entity->id);
-        }
-
-        if ($entity->get('isPortalUser') && $entity->get('contactId')) {
-            if (array_key_exists('firstName', $data) || array_key_exists('lastName', $data) || array_key_exists('salutationName', $data)) {
-                $contact = $this->getEntityManager()->getEntity('Contact', $entity->get('contactId'));
-                if (array_key_exists('firstName', $data)) {
-                    $contact->set('firstName', $data['firstName']);
-                }
-                if (array_key_exists('lastName', $data)) {
-                    $contact->set('lastName', $data['lastName']);
-                }
-                if (array_key_exists('salutationName', $data)) {
-                    $contact->set('salutationName', $data['salutationName']);
-                }
-                $this->getEntityManager()->saveEntity($contact);
-            }
         }
     }
 

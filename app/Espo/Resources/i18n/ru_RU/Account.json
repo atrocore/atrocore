@@ -17,12 +17,9 @@
     "description": "Описание",
     "sicCode": "Код SIC",
     "industry": "Вид деятельности",
-    "type": "Тип",
-    "contactRole": "Должность",
-    "contactIsInactive": "Неактивный"
+    "type": "Тип"
   },
   "links": {
-    "contacts": "Контакты",
     "portalUsers": "Пользователи портала"
   },
   "options": {

@@ -564,9 +564,7 @@ class Base
                 if ($this->getAcl()->checkReadOnlyAccount($this->getEntityType())) {
                     $this->accessPortalOnlyAccount($result);
                 } else {
-                    if ($this->getAcl()->checkReadOnlyContact($this->getEntityType())) {
-                        $this->accessPortalOnlyContact($result);
-                    } else if ($this->getAcl()->checkReadNo($this->getEntityType())) {
+                    if ($this->getAcl()->checkReadNo($this->getEntityType())) {
                         $this->accessNo($result);
                     }
                 }
@@ -652,54 +650,11 @@ class Base
         }
     }
 
-    protected function accessPortalOnlyContact(&$result)
-    {
-        $d = array();
-
-        $contactId = $this->getUser()->get('contactId');
-
-        if ($contactId) {
-            if ($this->getSeed()->hasAttribute('contactId')) {
-                $d['contactId'] = $contactId;
-            }
-            if ($this->getSeed()->hasRelation('contacts')) {
-                $this->addLeftJoin(['contacts', 'contactsAccess'], $result);
-                $this->setDistinct(true, $result);
-                $d['contactsAccess.id'] = $contactId;
-            }
-        }
-
-        if ($this->getSeed()->hasAttribute('createdById')) {
-            $d['createdById'] = $this->getUser()->id;
-        }
-
-        if ($this->getSeed()->hasAttribute('parentId') && $this->getSeed()->hasRelation('parent')) {
-            $contactId = $this->getUser()->get('contactId');
-            if ($contactId) {
-                $d[] = array(
-                    'parentType' => 'Contact',
-                    'parentId' => $contactId
-                );
-            }
-        }
-
-        if (!empty($d)) {
-            $result['whereClause'][] = array(
-                'OR' => $d
-            );
-        } else {
-            $result['whereClause'][] = array(
-                'id' => null
-            );
-        }
-    }
-
     protected function accessPortalOnlyAccount(&$result)
     {
         $d = array();
 
         $accountIdList = $this->getUser()->getLinkMultipleIdList('accounts');
-        $contactId = $this->getUser()->get('contactId');
 
         if (count($accountIdList)) {
             if ($this->getSeed()->hasAttribute('accountId')) {
@@ -715,23 +670,6 @@ class Base
                     'parentType' => 'Account',
                     'parentId' => $accountIdList
                 );
-                if ($contactId) {
-                    $d[] = array(
-                        'parentType' => 'Contact',
-                        'parentId' => $contactId
-                    );
-                }
-            }
-        }
-
-        if ($contactId) {
-            if ($this->getSeed()->hasAttribute('contactId')) {
-                $d['contactId'] = $contactId;
-            }
-            if ($this->getSeed()->hasRelation('contacts')) {
-                $this->addLeftJoin(['contacts', 'contactsAccess'], $result);
-                $this->setDistinct(true, $result);
-                $d['contactsAccess.id'] = $contactId;
             }
         }
 

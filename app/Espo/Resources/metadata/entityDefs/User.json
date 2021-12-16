@@ -1,9 +1,5 @@
 {
     "fields": {
-        "contact": {
-            "type": "link",
-            "view": "views/user/fields/contact"
-        },
         "accounts": {
             "type": "linkMultiple"
         },
@@ -220,11 +216,6 @@
         }
     },
     "links": {
-        "contact": {
-            "type": "belongsTo",
-            "entity": "Contact",
-            "foreign": "portalUser"
-        },
         "accounts": {
             "type": "hasMany",
             "entity": "Account",

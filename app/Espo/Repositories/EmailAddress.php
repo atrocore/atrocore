@@ -189,7 +189,7 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
         }
 
         $sql .= "
-            ORDER BY entity_email_address.primary DESC, FIELD(entity_email_address.entity_type, 'User', 'Contact', 'Lead', 'Account')
+            ORDER BY entity_email_address.primary DESC, FIELD(entity_email_address.entity_type, 'User', 'Lead', 'Account')
         ";
 
         $sth = $pdo->prepare($sql);
@@ -214,7 +214,7 @@ class EmailAddress extends \Espo\Core\ORM\Repositories\RDB
         }
     }
 
-    public function getEntityByAddress($address, $entityType = null, $order = ['User', 'Contact', 'Lead', 'Account'])
+    public function getEntityByAddress($address, $entityType = null, $order = ['User', 'Lead', 'Account'])
     {
         $pdo = $this->getEntityManager()->getPDO();
         $a = [];

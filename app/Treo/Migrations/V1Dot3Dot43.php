@@ -1,3 +1,4 @@
+<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -30,24 +31,32 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/contact/record/detail', 'views/record/detail', function (Dep) {
+declare(strict_types=1);
 
-    return Dep.extend({
+namespace Treo\Migrations;
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+use Treo\Core\Migration\Base;
 
-            this.controlPortalUserVisibility();
-            this.listenTo(this.model, 'change:portalUserId', this.controlPortalUserVisibility, this);
-        },
+class V1Dot3Dot43 extends Base
+{
+    public function up(): void
+    {
+        $this->execute("DROP TABLE account_contact");
+        $this->execute("DROP TABLE contact");
+        $this->execute("DROP INDEX IDX_CONTACT_ID ON `user`");
+        $this->execute("ALTER TABLE `user` DROP contact_id");
+    }
 
-        controlPortalUserVisibility: function () {
-            if (this.model.get('portalUserId')) {
-                this.showField('portalUser');
-            } else {
-                this.hideField('portalUser');
-            }
+    public function down(): void
+    {
+    }
+
+    protected function execute(string $sql): void
+    {
+        try {
+            $this->getPDO()->exec($sql);
+        } catch (\Throwable $e) {
+            // ignore all
         }
-
-    });
-});
+    }
+}

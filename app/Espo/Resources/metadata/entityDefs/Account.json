@@ -88,18 +88,6 @@
             "maxLength": 40,
             "trim": true
         },
-        "contactRole": {
-            "type": "varchar",
-            "notStorable": true,
-            "disabled": true,
-            "maxLength": 100
-        },
-        "contactIsInactive": {
-            "type": "bool",
-            "notStorable": true,
-            "default": false,
-            "disabled": true
-        },
         "billingAddressStreet": {
             "type": "text",
             "maxLength": 255,
@@ -191,11 +179,6 @@
             "entity": "Team",
             "relationName": "entityTeam",
             "layoutRelationshipsDisabled": true
-        },
-        "contacts": {
-            "type": "hasMany",
-            "entity": "Contact",
-            "foreign": "accounts"
         },
         "portalUsers": {
             "type": "hasMany",

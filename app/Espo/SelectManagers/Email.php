@@ -239,36 +239,6 @@ class Email extends \Espo\Core\SelectManagers\Base
             $d['accountId'] = $accountIdList;
         }
 
-        $contactId = $this->getUser()->get('contactId');
-        if ($contactId) {
-            $d[] = array(
-                'parentId' => $contactId,
-                'parentType' => 'Contact'
-            );
-        }
-
-        $result['whereClause'][] = array(
-            'OR' => $d
-        );
-    }
-
-    protected function accessPortalOnlyContact(&$result)
-    {
-        $this->setDistinct(true, $result);
-        $this->addLeftJoin(['users', 'usersAccess'], $result);
-
-        $d = array(
-            'usersAccess.id' => $this->getUser()->id
-        );
-
-        $contactId = $this->getUser()->get('contactId');
-        if ($contactId) {
-            $d[] = array(
-                'parentId' => $contactId,
-                'parentType' => 'Contact'
-            );
-        }
-
         $result['whereClause'][] = array(
             'OR' => $d
         );

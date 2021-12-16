@@ -199,7 +199,7 @@ class EmailAddress extends Record
         $this->findInAddressBookUsers($query, $limit, $result);
         $scopes = $this->getMetadata()->get(['scopes']);
 
-        foreach (['Contact','Lead','Account'] as $item) {
+        foreach (['Lead','Account'] as $item) {
             if (in_array($item, array_keys($scopes))) {
                 if ($this->getAcl()->checkScope($item)) {
                     $this->findInAddressBookByEntityType($query, $limit, $item, $result);

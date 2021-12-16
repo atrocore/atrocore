@@ -84,7 +84,6 @@
   "layouts": {
     "kanban": "Канбан",
     "listForAccount": "Список (для аккаунта)",
-    "listForContact": "Список (для контакта)",
     "list": "Список",
     "detail": "Детализация",
     "listSmall": "Список (сжатый)",

@@ -17,7 +17,6 @@
     "newPassword": "Neues Passwort",
     "newPasswordConfirm": "Neues Passwort bestätigen",
     "isPortalUser": "Ist Portal Benutzer",
-    "contact": "Kontakt",
     "accounts": "Firmen",
     "account": "Benutzerkonto (Primär)",
     "sendAccessInfo": "E-Mail mit Zugangsinformationen an Benutzer senden",
@@ -34,7 +33,6 @@
     "notes": "Notizen",
     "portals": "Portale",
     "portalRoles": "Portal Rollen",
-    "contact": "Kontakt",
     "accounts": "Firmen",
     "tasks": "Aufgaben"
   },
@@ -50,8 +48,7 @@
     "Email Address": "E-Mail Adresse",
     "External Accounts": "Externe Konten",
     "Email Accounts": "E-Mail Konten",
-    "Create Portal User": "Portalbenutzer erstellen",
-    "Proceed w/o Contact": "Weiter mit Kontakt"
+    "Create Portal User": "Portalbenutzer erstellen"
   },
   "tooltips": {
     "defaultTeam": "Alle Datensätze dieses Benutzers werden standardmäßig seinem Team zugeordnet.",

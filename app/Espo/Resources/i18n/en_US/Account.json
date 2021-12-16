@@ -17,12 +17,9 @@
     "shippingAddressPostalCode": "Postal Code",
     "sicCode": "Sic Code",
     "industry": "Industry",
-    "type": "Type",
-    "contactRole": "Title",
-    "contactIsInactive": "Inactive"
+    "type": "Type"
   },
   "links": {
-    "contacts": "Contacts",
     "portalUsers": "Portal Users"
   },
   "options": {

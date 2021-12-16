@@ -179,7 +179,7 @@ class PhoneNumber extends \Espo\Core\ORM\Repositories\RDB
         }
 
         $sql .= "
-            ORDER BY entity_phone_number.primary DESC, FIELD(entity_phone_number.entity_type, 'User', 'Contact', 'Lead', 'Account')
+            ORDER BY entity_phone_number.primary DESC, FIELD(entity_phone_number.entity_type, 'User', 'Lead', 'Account')
         ";
 
         $sth = $pdo->prepare($sql);

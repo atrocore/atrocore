@@ -3,13 +3,6 @@
    "views": {
       "detail":"views/account/detail"
    },
-   "relationshipPanels": {
-      "contacts": {
-         "filterList": ["all", "accountActive"],
-         "layout":"listForAccount",
-         "orderBy": "name"
-      }
-   },
    "filterList": [
       {
          "name":"recentlyCreated"

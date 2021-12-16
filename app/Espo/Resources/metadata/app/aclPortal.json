@@ -68,7 +68,6 @@
             },
             "User": {
                 "isAdmin": false,
-                "contact": false,
                 "accounts": false,
                 "portalRoles": false,
                 "portals": false,
