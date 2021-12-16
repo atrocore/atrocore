@@ -115,9 +115,7 @@
             "required": true
         },
         "phoneNumber": {
-            "type": "phone",
-            "typeList": ["Mobile", "Office", "Home", "Fax", "Other"],
-            "defaultType": "Mobile"
+            "type": "varchar"
         },
         "token": {
             "type": "varchar",

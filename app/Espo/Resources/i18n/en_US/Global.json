@@ -46,8 +46,6 @@
     "Admin": "Admin",
     "Global": "Global",
     "Preferences": "Preferences",
-    "EmailAddress": "Email Address",
-    "PhoneNumber": "Phone Number",
     "AuthLogRecord": "Auth Log Record",
     "AuthFailLogRecord": "Auth Fail Log Record",
     "ArrayValue": "Array Value",
@@ -67,10 +65,8 @@
     "AuthLogRecord": "Auth Log Records",
     "Currency": "Currencies",
     "Dashboard": "Dashboards",
-    "EmailAddress": "Email Addresses",
     "Note": "Notes",
     "Notification": "Notifications",
-    "PhoneNumber": "Phone Numbers",
     "Preferences": "Preferences",
     "Stream": "Streams",
     "User": "Users",
@@ -412,13 +408,6 @@
     "createdBy": "Created By",
     "modifiedBy": "Modified By",
     "description": "Description",
-    "phoneNumber": "Phone",
-    "phoneNumberMobile": "Phone (Mobile)",
-    "phoneNumberHome": "Phone (Home)",
-    "phoneNumberFax": "Phone (Fax)",
-    "phoneNumberOffice": "Phone (Office)",
-    "phoneNumberOther": "Phone (Other)",
-    "phoneNumberData": "Phone Number Data",
     "order": "Order",
     "parent": "Parent",
     "children": "Children",
@@ -737,13 +726,6 @@
       "2": "2 minutes",
       "5": "5 minutes",
       "10": "10 minutes"
-    },
-    "phoneNumber": {
-      "Mobile": "Mobile",
-      "Office": "Office",
-      "Fax": "Fax",
-      "Home": "Home",
-      "Other": "Other"
     }
   },
   "sets": {

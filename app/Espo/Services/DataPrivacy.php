@@ -117,26 +117,7 @@ class DataPrivacy extends \Espo\Core\Services\Base
             $type = $this->getMetadata()->get(['entityDefs', $entityType, 'fields', $field, 'type']);
             $attributeList = $filedManager->getActualAttributeList($entityType, $field);
 
-            if ($type === 'phone') {
-                $phoneNumberList = $entity->get('phoneNumbers');
-                foreach ($phoneNumberList as $phoneNumber) {
-                    if (
-                        $this
-                        ->getInjection('aclManager')
-                        ->getImplementation('PhoneNumber')
-                        ->checkEditInEntity($this->getInjection('user'), $phoneNumber, $entity)
-                    ) {
-                        $phoneNumber->set('name', 'ERASED:' . $phoneNumber->id);
-                        $this->getEntityManager()->saveEntity($phoneNumber);
-                    }
-                }
-
-                $entity->clear($field);
-                $entity->clear($field . 'Data');
-
-                continue;
-            }
-            else if ($type === 'file' || $type === 'image') {
+            if ($type === 'file' || $type === 'image') {
                 $attachmentId = $entity->get($field . 'Id');
                 if ($attachmentId) {
                     $attachment = $this->getEntityManager()->getEntity('Attachment', $attachmentId);

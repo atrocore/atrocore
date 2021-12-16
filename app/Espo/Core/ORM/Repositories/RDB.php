@@ -122,7 +122,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     public function handleSelectParams(&$params)
     {
-        $this->handlePhoneNumberParams($params);
         if (empty($params['skipCurrencyConvertedParams'])) {
             $this->handleCurrencyParams($params);
         }
@@ -150,18 +149,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                     $alias . '.id:' => $field . 'Currency'
                 ]];
             }
-        }
-
-    }
-
-    protected function handlePhoneNumberParams(&$params)
-    {
-        $defs = $this->getEntityManager()->getMetadata()->get($this->entityType);
-        if (!empty($defs['relations']) && array_key_exists('phoneNumbers', $defs['relations'])) {
-            if (empty($params['leftJoins'])) $params['leftJoins'] = [];
-            $params['leftJoins'][] = ['phoneNumbers', null, [
-                'primary' => 1
-            ]];
         }
     }
 
@@ -361,7 +348,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $this->assignmentNotifications($entity);
 
         if (!$this->processFieldsAfterSaveDisabled) {
-            $this->processPhoneNumberSave($entity);
             $this->processSpecifiedRelationsSave($entity);
             if (empty($entity->skipProcessFileFieldsSave)) {
                 $this->processFileFieldsSave($entity);
@@ -515,13 +501,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             if (!$entity->getAttributeParam($attribute, 'storeArrayValues')) continue;
             if ($entity->getAttributeParam($attribute, 'notStorable')) continue;
             $this->getEntityManager()->getRepository('ArrayValue')->deleteEntityAttribute($entity, $attribute);
-        }
-    }
-
-    protected function processPhoneNumberSave(Entity $entity)
-    {
-        if ($entity->hasRelation('phoneNumbers') && $entity->hasAttribute('phoneNumber')) {
-            $this->getEntityManager()->getRepository('PhoneNumber')->storeEntityPhoneNumber($entity);
         }
     }
 

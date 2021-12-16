@@ -373,7 +373,6 @@ class Record extends \Espo\Core\Services\Base
         $this->loadParentNameFields($entity);
         $this->loadIsFollowed($entity);
         $this->loadFollowers($entity);
-        $this->loadPhoneNumberField($entity);
         $this->loadNotJoinedLinkFields($entity);
         $this->loadPreview($entity);
     }
@@ -462,17 +461,6 @@ class Record extends \Espo\Core\Services\Base
     public function loadAdditionalFieldsForList(Entity $entity)
     {
         $this->loadParentNameFields($entity);
-    }
-
-    protected function loadPhoneNumberField(Entity $entity)
-    {
-        $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', array());
-        if (!empty($fieldDefs['phoneNumber']) && $fieldDefs['phoneNumber']['type'] == 'phone') {
-            $dataAttributeName = 'phoneNumberData';
-            $phoneNumberData = $this->getEntityManager()->getRepository('PhoneNumber')->getPhoneNumberData($entity);
-            $entity->set($dataAttributeName, $phoneNumberData);
-            $entity->setFetched($dataAttributeName, $phoneNumberData);
-        }
     }
 
     protected function getSelectManager($entityType = null)
@@ -2163,19 +2151,6 @@ class Record extends \Espo\Core\Services\Base
 
         $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', array());
 
-        $hasPhoneNumber = false;
-        if (!empty($fieldDefs['phoneNumber']) && $fieldDefs['phoneNumber']['type'] == 'phone') {
-            $hasPhoneNumber = true;
-        }
-
-        if ($hasPhoneNumber) {
-            $phoneNumberToRelateList = [];
-            $phoneNumberList = $repository->findRelated($entity, 'phoneNumbers');
-            foreach ($phoneNumberList as $phoneNumber) {
-                $phoneNumberToRelateList[] = $phoneNumber;
-            }
-        }
-
         $pdo = $this->getEntityManager()->getPDO();
 
         foreach ($sourceList as $source) {
@@ -2191,13 +2166,6 @@ class Record extends \Espo\Core\Services\Base
                     `deleted` = 0
             ";
             $pdo->query($sql);
-
-            if ($hasPhoneNumber) {
-                $phoneNumberList = $repository->findRelated($source, 'phoneNumbers');
-                foreach ($phoneNumberList as $phoneNumber) {
-                    $phoneNumberToRelateList[] = $phoneNumber;
-                }
-            }
         }
 
         $mergeLinkList = [];
@@ -2222,25 +2190,6 @@ class Record extends \Espo\Core\Services\Base
 
         foreach ($sourceList as $source) {
             $this->getEntityManager()->removeEntity($source);
-        }
-
-        if ($hasPhoneNumber) {
-            $phoneNumberData = [];
-            foreach ($phoneNumberToRelateList as $i => $phoneNumber) {
-                $o = (object) [];
-                $o->phoneNumber = $phoneNumber->get('name');
-                $o->primary = false;
-                if (empty($attributes->phoneNumber)) {
-                    if ($i === 0) {
-                        $o->primary = true;
-                    }
-                } else {
-                    $o->primary = $o->phoneNumber === $attributes->phoneNumber;
-                }
-                $o->type = $phoneNumber->get('type');
-                $phoneNumberData[] = $o;
-            }
-            $attributes->phoneNumberData = $phoneNumberData;
         }
 
         $entity->set($attributes);
