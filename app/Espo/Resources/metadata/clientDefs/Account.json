@@ -1,13 +1,10 @@
 {
-   "controller": "controllers/record",
-   "views": {
-      "detail":"views/account/detail"
-   },
-   "filterList": [
-      {
-         "name":"recentlyCreated"
-      }
-   ],
-   "boolFilterList": ["onlyMy"],
-   "iconClass": "fas fa-building"
+  "controller": "controllers/record",
+  "views": {
+    "detail": "views/account/detail"
+  },
+  "boolFilterList": [
+    "onlyMy"
+  ],
+  "iconClass": "fas fa-building"
 }

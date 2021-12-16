@@ -45,6 +45,7 @@ class V1Dot3Dot43 extends Base
         $this->execute("DROP TABLE contact");
         $this->execute("DROP INDEX IDX_CONTACT_ID ON `user`");
         $this->execute("ALTER TABLE `user` DROP contact_id");
+        $this->execute("ALTER TABLE `account` DROP website, DROP type, DROP industry, DROP sic_code, DROP billing_address_street, DROP billing_address_city, DROP billing_address_state, DROP billing_address_country, DROP billing_address_postal_code, DROP shipping_address_street, DROP shipping_address_city, DROP shipping_address_state, DROP shipping_address_country, DROP shipping_address_postal_code, ADD email_address VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci, ADD phone_number VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
     }
 
     public function down(): void
@@ -53,6 +54,7 @@ class V1Dot3Dot43 extends Base
         $this->execute("CREATE TABLE `account_contact` (`id` INT AUTO_INCREMENT NOT NULL UNIQUE COLLATE utf8mb4_unicode_ci, `account_id` VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci, `contact_id` VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci, `role` VARCHAR(100) DEFAULT NULL COLLATE utf8mb4_unicode_ci, `is_inactive` TINYINT(1) DEFAULT '0' COLLATE utf8mb4_unicode_ci, `deleted` TINYINT(1) DEFAULT '0' COLLATE utf8mb4_unicode_ci, INDEX `IDX_8549F2709B6B5FBA` (account_id), INDEX `IDX_8549F270E7A1254A` (contact_id), UNIQUE INDEX `UNIQ_8549F2709B6B5FBAE7A1254A` (account_id, contact_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB");
         $this->execute("ALTER TABLE `user` ADD contact_id VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
         $this->execute("CREATE INDEX IDX_CONTACT_ID ON `user` (contact_id)");
+        $this->execute("ALTER TABLE `account` DROP email_address, DROP phone_number, ADD website VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci, ADD type VARCHAR(255) DEFAULT '' COLLATE utf8mb4_unicode_ci, ADD industry VARCHAR(255) DEFAULT '' COLLATE utf8mb4_unicode_ci, ADD sic_code VARCHAR(40) DEFAULT NULL COLLATE utf8mb4_unicode_ci, ADD billing_address_street VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci, ADD billing_address_city VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci, ADD billing_address_state VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci, ADD billing_address_country VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci, ADD billing_address_postal_code VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci, ADD shipping_address_street VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci, ADD shipping_address_city VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci, ADD shipping_address_state VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci, ADD shipping_address_country VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci, ADD shipping_address_postal_code VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
     }
 
     protected function execute(string $sql): void

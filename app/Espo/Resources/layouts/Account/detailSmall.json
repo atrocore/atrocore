@@ -4,40 +4,22 @@
     "rows": [
       [
         {
-          "name": "name",
-          "fullWidth": true
-        }
-      ],
-      [
-        {
-          "name": "website",
-          "fullWidth": true
-        }
-      ],
-      [
-        {
-          "name": "emailAddress",
-          "fullWidth": true
-        }
-      ],
-      [
-        {
-          "name": "phoneNumber",
-          "fullWidth": true
-        }
-      ],
-      [
-        {
-          "name": "type"
+          "name": "name"
         },
-        {
-          "name": "industry"
-        }
+        false
       ],
       [
         {
           "name": "description",
           "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "emailAddress"
+        },
+        {
+          "name": "phoneNumber"
         }
       ]
     ]

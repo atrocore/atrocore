@@ -10,95 +10,10 @@
       ],
       [
         {
-          "name": "website"
+          "name": "emailAddress"
         },
         {
           "name": "phoneNumber"
-        }
-      ],
-      [
-        {
-          "name": "emailAddress"
-        },
-        false
-      ]
-    ]
-  },
-  {
-    "label": "billingAddress",
-    "rows": [
-      [
-        {
-          "name": "billingAddressStreet"
-        },
-        {
-          "name": "billingAddressCity"
-        }
-      ],
-      [
-        {
-          "name": "billingAddressState"
-        },
-        {
-          "name": "billingAddressCountry"
-        }
-      ],
-      [
-        {
-          "name": "billingAddressPostalCode"
-        },
-        false
-      ]
-    ]
-  },
-  {
-    "label": "shippingAddress",
-    "rows": [
-      [
-        {
-          "name": "shippingAddressStreet"
-        },
-        {
-          "name": "shippingAddressCity"
-        }
-      ],
-      [
-        {
-          "name": "shippingAddressState"
-        },
-        {
-          "name": "shippingAddressCountry"
-        }
-      ],
-      [
-        {
-          "name": "shippingAddressPostalCode"
-        },
-        false
-      ]
-    ]
-  },
-  {
-    "label": "Details",
-    "rows": [
-      [
-        {
-          "name": "type"
-        },
-        {
-          "name": "sicCode"
-        }
-      ],
-      [
-        {
-          "name": "industry"
-        },
-        false
-      ],
-      [
-        {
-          "name": "description",
-          "fullWidth": true
         }
       ]
     ]

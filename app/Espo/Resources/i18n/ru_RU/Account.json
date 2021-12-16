@@ -1,98 +1,14 @@
 {
   "fields": {
-    "billingAddressStreet": "Улица",
-    "billingAddressCity": "Город",
-    "billingAddressState": "Штат",
-    "billingAddressCountry": "Страна",
-    "billingAddressPostalCode": "Почтовый индекс",
-    "shippingAddressStreet": "Улица",
-    "shippingAddressCity": "Город",
-    "shippingAddressState": "Штат",
-    "shippingAddressCountry": "Страна",
-    "shippingAddressPostalCode": "Почтовый индекс",
     "name": "Имя",
     "emailAddress": "Адрес эл. почты",
-    "website": "Сайт",
     "phoneNumber": "Телефон",
-    "description": "Описание",
-    "sicCode": "Код SIC",
-    "industry": "Вид деятельности",
-    "type": "Тип"
+    "description": "Описание"
   },
   "links": {
     "portalUsers": "Пользователи портала"
   },
-  "options": {
-    "type": {
-      "Customer": "Заказчик",
-      "Investor": "Инвестор",
-      "Partner": "Партнер",
-      "Reseller": "Посредник"
-    },
-    "industry": {
-      "Agriculture": "Сельское хохяйство",
-      "Advertising": "Реклама",
-      "Apparel & Accessories": "Одежда и аксессуары",
-      "Automotive": "Автомобильная промышленность",
-      "Banking": "Банкинг",
-      "Biotechnology": "Биотехнология",
-      "Building Materials & Equipment": "Строительные материалы и оборудование",
-      "Chemical": "Химическая промышленность",
-      "Computer": "Компьютеры",
-      "Education": "Образование",
-      "Electronics": "Электроника",
-      "Energy": "Энергия",
-      "Entertainment & Leisure": "Развлечение и досуг",
-      "Finance": "Финансы",
-      "Food & Beverage": "Еда и напитки",
-      "Grocery": "Бакалея",
-      "Healthcare": "Здравоохранение",
-      "Insurance": "Страхование",
-      "Legal": "Право",
-      "Manufacturing": "Производство",
-      "Publishing": "Издательство",
-      "Real Estate": "Недвижимость",
-      "Service": "Сервис",
-      "Sports": "Спорт",
-      "Software": "Программное обеспечение",
-      "Technology": "Технологии",
-      "Telecommunications": "Телекоммуникации",
-      "Television": "Телевидение",
-      "Transportation": "Транспорт",
-      "Venture Capital": "Венчурный капитал",
-      "Aerospace": "Авиационно-космическая",
-      "Architecture": "Архитектура",
-      "Construction": "Сроительство",
-      "Defense": "Оборона",
-      "Creative": "Творчество",
-      "Culture": "Культура",
-      "Consulting": "Консалтинг",
-      "Electric Power": "Электроэнергия",
-      "Hospitality": "Гостиничное хозяйство",
-      "Mass Media": "СМИ",
-      "Mining": "Горная промышленность",
-      "Music": "Музыка",
-      "Marketing": "Маркетинг",
-      "Petroleum": "Нефть",
-      "Retail": "Розничная торговля",
-      "Shipping": "Доставка",
-      "Support": "Служба поддержки",
-      "Testing, Inspection & Certification": "Тестирование, проверка и сертификация",
-      "Wholesale": "Оптовая торговля",
-      "Water": "Вода",
-      "Travel": "Путешествия"
-    }
-  },
   "labels": {
-    "billingAddress": "Адрес выставления счета",
-    "shippingAddress": "Адрес доставки",
-    "Create Account": "Создать контрагента",
-    "Copy Billing": "Копировать адрес",
-    "Set Primary": "Установить как основной"
-  },
-  "presetFilters": {
-    "customers": "Заказчики",
-    "partners": "Партнеры",
-    "recentlyCreated": "Недавно созданный"
+    "Create Account": "Создать контрагента"
   }
 }
