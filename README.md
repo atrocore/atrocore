@@ -99,14 +99,12 @@ AtroCore has a REST API and can be integrated with any third-party system. You c
 
 ### Installation
 
-Installation Guide is available [here](https://github.com/atrocore/atrocore-docs/blob/master/en/administration/installation.md).
+Installation Guide is available [here](https://github.com/atrocore/docs/blob/master/atrocore/admin-guide/installation.md).
 
 ### Demo
 - URL: https://demo.atropim.com/
 - Login: admin
 - Password: admin
-
-Installation Guide is available [here](https://github.com/atrocore/atrocore-docs/blob/master/en/administration/installation.md).
 
 ### License
 
