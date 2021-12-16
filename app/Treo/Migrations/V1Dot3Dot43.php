@@ -59,6 +59,20 @@ class V1Dot3Dot43 extends Base
 
         $this->execute("DROP TABLE email_address");
         $this->execute("DROP TABLE entity_email_address");
+
+        $this->execute("ALTER TABLE `user` ADD phone_number VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
+
+        $data = $this
+            ->getPDO()
+            ->query("SELECT pn.name as phone, epn.entity_id as user_id FROM `entity_phone_number` epn JOIN phone_number pn ON epn.phone_number_id = pn.id AND pn.deleted=0 WHERE epn.deleted=0 AND epn.entity_type='User'")
+            ->fetchAll(\PDO::FETCH_ASSOC);
+
+        foreach ($data as $v) {
+            $this->execute("UPDATE `user` SET phone_number='{$v['phone']}' WHERE id='{$v['user_id']}'");
+        }
+
+        $this->execute("DROP TABLE entity_phone_number");
+        $this->execute("DROP TABLE phone_number");
     }
 
     public function down(): void
