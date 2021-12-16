@@ -122,7 +122,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     public function handleSelectParams(&$params)
     {
-        $this->handleEmailAddressParams($params);
         $this->handlePhoneNumberParams($params);
         if (empty($params['skipCurrencyConvertedParams'])) {
             $this->handleCurrencyParams($params);
@@ -153,17 +152,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             }
         }
 
-    }
-
-    protected function handleEmailAddressParams(&$params)
-    {
-        $defs = $this->getEntityManager()->getMetadata()->get($this->entityType);
-        if (!empty($defs['relations']) && array_key_exists('emailAddresses', $defs['relations'])) {
-            if (empty($params['leftJoins'])) $params['leftJoins'] = [];
-            $params['leftJoins'][] = ['emailAddresses', null, [
-                'primary' => 1
-            ]];
-        }
     }
 
     protected function handlePhoneNumberParams(&$params)
@@ -366,7 +354,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $this->assignmentNotifications($entity);
 
         if (!$this->processFieldsAfterSaveDisabled) {
-            $this->processEmailAddressSave($entity);
             $this->processPhoneNumberSave($entity);
             $this->processSpecifiedRelationsSave($entity);
             if (empty($entity->skipProcessFileFieldsSave)) {
@@ -521,13 +508,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             if (!$entity->getAttributeParam($attribute, 'storeArrayValues')) continue;
             if ($entity->getAttributeParam($attribute, 'notStorable')) continue;
             $this->getEntityManager()->getRepository('ArrayValue')->deleteEntityAttribute($entity, $attribute);
-        }
-    }
-
-    protected function processEmailAddressSave(Entity $entity)
-    {
-        if ($entity->hasRelation('emailAddresses') && $entity->hasAttribute('emailAddress')) {
-            $this->getEntityManager()->getRepository('EmailAddress')->storeEntityEmailAddress($entity);
         }
     }
 

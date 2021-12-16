@@ -117,27 +117,7 @@ class DataPrivacy extends \Espo\Core\Services\Base
             $type = $this->getMetadata()->get(['entityDefs', $entityType, 'fields', $field, 'type']);
             $attributeList = $filedManager->getActualAttributeList($entityType, $field);
 
-            if ($type === 'email') {
-                $emailAddressList = $entity->get('emailAddresses');
-                foreach ($emailAddressList as $emailAddress) {
-                    if (
-                        $this
-                        ->getInjection('aclManager')
-                        ->getImplementation('EmailAddress')
-                        ->checkEditInEntity($this->getInjection('user'), $emailAddress, $entity)
-                    ) {
-                        $emailAddress->set('name', 'ERASED:' . $emailAddress->id);
-                        $emailAddress->set('optOut', true);
-                        $this->getEntityManager()->saveEntity($emailAddress);
-                    }
-                }
-
-                $entity->clear($field);
-                $entity->clear($field . 'Data');
-
-                continue;
-            }
-            else if ($type === 'phone') {
+            if ($type === 'phone') {
                 $phoneNumberList = $entity->get('phoneNumbers');
                 foreach ($phoneNumberList as $phoneNumber) {
                     if (
