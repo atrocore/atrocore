@@ -881,6 +881,7 @@
   },
   "exceptions": {
     "unitValueIsRequired": "Die Einheit für das Feld '%s' erforderlich.",
+    "emailIsInvalid": "E-Mail für das Feld '%s' ist ungültig.",
     "noSuchUnit": "Die Einheit für das Feld '%s' ist ungültig.",
     "noSuchOptions": "Der Wert für das Feld '%s' ist ungültig.",
     "fieldIsRequired": "Validierung fehlgeschlagen. '%s' ist erforderlich.",

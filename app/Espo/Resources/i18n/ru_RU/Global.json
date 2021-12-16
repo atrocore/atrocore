@@ -909,6 +909,7 @@
   },
   "exceptions": {
     "unitValueIsRequired": "Единица измерения для поля '%s' необходима.",
+    "emailIsInvalid": "Email для поля '%s' не допустим.",
     "noSuchUnit": "Единица измерения для поля '%s' не допустима.",
     "noSuchOptions": "Значение для поля '%s' не допустимо.",
     "fieldIsRequired": "Проверка не удалась. '%s' необходим.",

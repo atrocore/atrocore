@@ -250,65 +250,66 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $this->dispatch('afterUnrelate', $entity, $options, $relationName, null, $foreign);
     }
 
-    protected function validateEnum(Entity $entity): void
+    protected function validateEmail(Entity $entity, string $fieldName, array $fieldData): void
     {
-        $fields = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []);
-        $language = $this->getInjection('container')->get('language');
+        if ($entity->isAttributeChanged($fieldName) && !empty($entity->get($fieldName))) {
+            if (!filter_var($entity->get($fieldName), FILTER_VALIDATE_EMAIL)) {
+                $language = $this->getInjection('container')->get('language');
+                throw new BadRequest(sprintf($language->translate('emailIsInvalid', 'exceptions', 'Global'), $language->translate($fieldName, 'fields', $entity->getEntityType())));
+            }
+        }
+    }
 
-        foreach ($fields as $fieldName => $fieldData) {
-            if (
-                isset($fieldData['type'])
-                && in_array($fieldData['type'], ['enum', 'multiEnum'])
-                && !isset($fieldData['view'])
-                && $entity->isAttributeChanged($fieldName)
-                && !empty($entity->get($fieldName))
-            ) {
-                $fieldOptions = empty($fieldData['options']) ? [] : $fieldData['options'];
+    protected function validateEnum(Entity $entity, string $fieldName, array $fieldData): void
+    {
+        if (!isset($fieldData['view']) && $entity->isAttributeChanged($fieldName) && !empty($entity->get($fieldName))) {
+            $fieldOptions = empty($fieldData['options']) ? [] : $fieldData['options'];
+            if (empty($fieldOptions) && $fieldData['type'] === 'multiEnum') {
+                return;
+            }
 
-                if (empty($fieldOptions) && $fieldData['type'] === 'multiEnum') {
-                    continue 1;
-                }
+            $value = $entity->get($fieldName);
+            if ($fieldData['type'] == 'enum') {
+                $value = [$value];
+            }
 
-                $value = $entity->get($fieldName);
-                if ($fieldData['type'] == 'enum') {
-                    $value = [$value];
-                }
-
-                foreach ($value as $v) {
-                    if (!in_array($v, $fieldOptions)) {
-                        throw new BadRequest(sprintf($language->translate('noSuchOptions', 'exceptions', 'Global'), $language->translate($fieldName, 'fields', $entity->getEntityType())));
-                    }
+            foreach ($value as $v) {
+                if (!in_array($v, $fieldOptions)) {
+                    $language = $this->getInjection('container')->get('language');
+                    throw new BadRequest(
+                        sprintf($language->translate('noSuchOptions', 'exceptions', 'Global'), $language->translate($fieldName, 'fields', $entity->getEntityType()))
+                    );
                 }
             }
         }
     }
 
-    protected function validateUnit(Entity $entity): void
+    protected function validateMultiEnum(Entity $entity, string $fieldName, array $fieldData): void
     {
-        $fields = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []);
+        $this->validateEnum($entity, $fieldName, $fieldData);
+    }
+
+    protected function validateUnit(Entity $entity, string $fieldName, array $fieldData): void
+    {
         $language = $this->getInjection('container')->get('language');
 
         $unitsOfMeasure = $this->getConfig()->get('unitsOfMeasure');
         $unitsOfMeasure = empty($unitsOfMeasure) ? [] : Json::decode(Json::encode($unitsOfMeasure), true);
 
-        foreach ($fields as $fieldName => $fieldData) {
-            if (isset($fieldData['type']) && $fieldData['type'] === 'unit') {
-                $value = $entity->get($fieldName);
-                $unit = $entity->get($fieldName . 'Unit');
+        $value = $entity->get($fieldName);
+        $unit = $entity->get($fieldName . 'Unit');
 
-                $fieldLabel = $language->translate($fieldName, 'fields', $entity->getEntityType());
+        $fieldLabel = $language->translate($fieldName, 'fields', $entity->getEntityType());
 
-                if ($value !== null && $value !== '' && empty($unit)) {
-                    throw new BadRequest(sprintf($language->translate('unitValueIsRequired', 'exceptions', 'Global'), $fieldLabel));
-                }
+        if ($value !== null && $value !== '' && empty($unit)) {
+            throw new BadRequest(sprintf($language->translate('unitValueIsRequired', 'exceptions', 'Global'), $fieldLabel));
+        }
 
-                if (!empty($unit)) {
-                    $measure = $this->getUnitFieldMeasure($fieldName, $entity);
-                    $units = empty($unitsOfMeasure[$measure]['unitList']) ? [] : $unitsOfMeasure[$measure]['unitList'];
-                    if (!in_array($unit, $units)) {
-                        throw new BadRequest(sprintf($language->translate('noSuchUnit', 'exceptions', 'Global'), $fieldLabel));
-                    }
-                }
+        if (!empty($unit)) {
+            $measure = $this->getUnitFieldMeasure($fieldName, $entity);
+            $units = empty($unitsOfMeasure[$measure]['unitList']) ? [] : $unitsOfMeasure[$measure]['unitList'];
+            if (!in_array($unit, $units)) {
+                throw new BadRequest(sprintf($language->translate('noSuchUnit', 'exceptions', 'Global'), $fieldLabel));
             }
         }
     }
@@ -327,8 +328,14 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         parent::beforeSave($entity, $options);
 
         if (empty($options['skipAll'])) {
-            $this->validateEnum($entity);
-            $this->validateUnit($entity);
+            foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []) as $fieldName => $fieldData) {
+                if (isset($fieldData['type'])) {
+                    $method = "validate" . ucfirst($fieldData['type']);
+                    if (method_exists($this, $method)) {
+                        $this->$method($entity, $fieldName, $fieldData);
+                    }
+                }
+            }
         }
 
         // dispatch an event

@@ -909,6 +909,7 @@
   },
   "exceptions": {
     "unitValueIsRequired": "Unit for the field '%s' is required.",
+    "emailIsInvalid": "Email for the field '%s' is not valid.",
     "noSuchUnit": "Unit for the field '%s' is not valid.",
     "noSuchOptions": "Value for the field '%s' is not valid.",
     "fieldIsRequired": "Validation failed. '%s' is required.",
