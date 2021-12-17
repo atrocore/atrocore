@@ -21,12 +21,6 @@
         {
           "name": "phoneNumber"
         }
-      ],
-      [
-        {
-          "name": "channel"
-        },
-        false
       ]
     ]
   }
