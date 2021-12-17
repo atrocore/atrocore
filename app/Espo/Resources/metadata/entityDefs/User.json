@@ -1,12 +1,7 @@
 {
     "fields": {
-        "accounts": {
-            "type": "linkMultiple"
-        },
         "account": {
-            "type": "link",
-            "notStorable": true,
-            "readOnly": true
+            "type": "link"
         },
         "isAdmin": {
             "type": "bool",
@@ -207,8 +202,8 @@
         }
     },
     "links": {
-        "accounts": {
-            "type": "hasMany",
+        "account": {
+            "type": "belongsTo",
             "entity": "Account",
             "foreign": "portalUsers",
             "relationName": "AccountPortalUser"

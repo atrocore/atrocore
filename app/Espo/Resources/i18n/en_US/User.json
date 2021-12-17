@@ -18,8 +18,7 @@
     "avatar": "Avatar",
     "isActive": "Is Active",
     "isPortalUser": "Is Portal User",
-    "accounts": "Accounts",
-    "account": "Account (Primary)",
+    "account": "Account",
     "sendAccessInfo": "Send Email with Access Info to User",
     "portal": "Portal",
     "gender": "Gender",
@@ -35,8 +34,7 @@
     "notes": "Notes",
     "portal": "Portal",
     "portalRoles": "Portal Roles",
-    "accounts": "Accounts",
-    "account": "Account (Primary)",
+    "account": "Account",
     "tasks": "Tasks"
   },
   "labels": {

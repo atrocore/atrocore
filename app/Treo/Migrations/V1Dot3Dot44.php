@@ -54,12 +54,29 @@ class V1Dot3Dot44 extends Base
         }
 
         $this->execute("DROP TABLE portal_user");
+
+        $this->execute("ALTER TABLE `user` ADD account_id VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
+        $this->execute("CREATE INDEX IDX_ACCOUNT_ID ON `user` (account_id)");
+
+        $data = $this
+            ->getPDO()
+            ->query("SELECT * FROM `account_portal_user` WHERE deleted=0")
+            ->fetchAll(\PDO::FETCH_ASSOC);
+
+        foreach ($data as $v) {
+            $this->execute("UPDATE `user` SET account_id='{$v['account_id']}' WHERE id='{$v['user_id']}'");
+        }
+
+        $this->execute("DROP TABLE account_portal_user;");
     }
 
     public function down(): void
     {
         $this->execute(
             "CREATE TABLE `portal_user` (`id` INT AUTO_INCREMENT NOT NULL UNIQUE COLLATE utf8mb4_unicode_ci, `portal_id` VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci, `user_id` VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci, `deleted` TINYINT(1) DEFAULT '0' COLLATE utf8mb4_unicode_ci, INDEX `IDX_76511E4B887E1DD` (portal_id), INDEX `IDX_76511E4A76ED395` (user_id), UNIQUE INDEX `UNIQ_76511E4B887E1DDA76ED395` (portal_id, user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB"
+        );
+        $this->execute(
+            "CREATE TABLE `account_portal_user` (`id` INT AUTO_INCREMENT NOT NULL UNIQUE COLLATE utf8mb4_unicode_ci, `user_id` VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci, `account_id` VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci, `deleted` TINYINT(1) DEFAULT '0' COLLATE utf8mb4_unicode_ci, INDEX `IDX_D622EDE7A76ED395` (user_id), INDEX `IDX_D622EDE79B6B5FBA` (account_id), UNIQUE INDEX `UNIQ_D622EDE7A76ED3959B6B5FBA` (user_id, account_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB"
         );
     }
 

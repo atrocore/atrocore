@@ -212,7 +212,7 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
                         "name": "portal",
                         "rows": [
                             [{"name":"portal"}, false],
-                            [{"name":"portalRoles"}, {"name":"accounts"}]
+                            [{"name":"portalRoles"}, {"name":"account"}]
                         ]
                     });
                 }

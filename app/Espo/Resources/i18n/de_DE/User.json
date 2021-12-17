@@ -17,8 +17,7 @@
     "newPassword": "Neues Passwort",
     "newPasswordConfirm": "Neues Passwort bestätigen",
     "isPortalUser": "Ist Portal Benutzer",
-    "accounts": "Firmen",
-    "account": "Benutzerkonto (Primär)",
+    "account": "Benutzerkonto",
     "sendAccessInfo": "E-Mail mit Zugangsinformationen an Benutzer senden",
     "gender": "Geschlecht",
     "position": "Position im Team",
@@ -28,12 +27,11 @@
     "lastAccess": "Letzter Zugriff"
   },
   "links": {
-    "account": "Benutzerkonto (Primär)",
+    "account": "Benutzerkonto",
     "roles": "Rollen",
     "notes": "Notizen",
     "portal": "Portal",
     "portalRoles": "Portal Rollen",
-    "accounts": "Firmen",
     "tasks": "Aufgaben"
   },
   "labels": {
