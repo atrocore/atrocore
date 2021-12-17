@@ -64,7 +64,7 @@ class User extends Record
         'rolesIds',
         'rolesNames',
         'password',
-        'portalsIds',
+        'portalId',
         'portalRolesIds',
         'accountsIds'
     ];

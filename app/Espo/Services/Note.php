@@ -92,25 +92,25 @@ class Note extends Record
             case 'all':
                 $entity->clear('usersIds');
                 $entity->clear('teamsIds');
-                $entity->clear('portalsIds');
+                $entity->clear('portalId');
                 $entity->set('isGlobal', true);
                 break;
             case 'self':
                 $entity->clear('usersIds');
                 $entity->clear('teamsIds');
-                $entity->clear('portalsIds');
+                $entity->clear('portalId');
                 $entity->set('usersIds', [$this->getUser()->id]);
                 $entity->set('isForSelf', true);
                 break;
             case 'users':
                 $entity->clear('teamsIds');
-                $entity->clear('portalsIds');
+                $entity->clear('portalId');
                 break;
             case 'teams':
                 $entity->clear('usersIds');
-                $entity->clear('portalsIds');
+                $entity->clear('portalId');
                 break;
-            case 'portals':
+            case 'portal':
                 $entity->clear('usersIds');
                 $entity->clear('teamsIds');
                 break;
@@ -124,7 +124,7 @@ class Note extends Record
         $entity->clear('targetType');
         $entity->clear('usersIds');
         $entity->clear('teamsIds');
-        $entity->clear('portalsIds');
+        $entity->clear('portalId');
         $entity->clear('isGlobal');
     }
 
@@ -154,8 +154,7 @@ class Note extends Record
                     }
                 }
                 if ($targetType === 'portals') {
-                    $portalIdList = $entity->get('portalsIds');
-                    if (empty($portalIdList) || !is_array($portalIdList)) {
+                    if (empty($entity->get('portalId'))) {
                         throw new BadRequest();
                     }
                     if ($this->getAcl()->get('portalPermission') !== 'yes') {
@@ -204,7 +203,8 @@ class Note extends Record
         if ($link === 'teams' || $link === 'users') {
             throw new Forbidden();
         }
-        return parant::linkEntity($id, $link, $foreignId);
+
+        return parent::linkEntity($id, $link, $foreignId);
     }
 
     public function unlinkEntity($id, $link, $foreignId)
@@ -212,6 +212,7 @@ class Note extends Record
         if ($link === 'teams' || $link === 'users') {
             throw new Forbidden();
         }
-        return parant::unlinkEntity($id, $link, $foreignId);
+
+        return parent::unlinkEntity($id, $link, $foreignId);
     }
 }
