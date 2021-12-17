@@ -268,6 +268,11 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             }
 
             $value = $entity->get($fieldName);
+
+            if (empty($value)) {
+                return;
+            }
+
             if ($fieldData['type'] == 'enum') {
                 $value = [$value];
             }
