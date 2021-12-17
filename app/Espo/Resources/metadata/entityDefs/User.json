@@ -164,19 +164,13 @@
             "type": "linkMultiple",
             "tooltip": true
         },
-        "portals": {
-            "type": "linkMultiple",
+        "portal": {
+            "type": "link",
             "tooltip": true
         },
         "portalRoles": {
             "type": "linkMultiple",
             "tooltip": true
-        },
-        "portal": {
-            "type": "link",
-            "notStorable": true,
-            "readOnly": true,
-            "disabled": true
         },
         "avatar": {
             "type": "image",
@@ -246,11 +240,10 @@
             "foreign": "users",
             "layoutRelationshipsDisabled": true
         },
-        "portals": {
-            "type": "hasMany",
+        "portal": {
+            "type": "belongsTo",
             "entity": "Portal",
-            "foreign": "users",
-            "layoutRelationshipsDisabled": true
+            "foreign": "users"
         },
         "portalRoles": {
             "type": "hasMany",
