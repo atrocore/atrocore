@@ -121,7 +121,7 @@
         "users": {
             "type": "hasMany",
             "entity": "User",
-            "foreign": "portals"
+            "foreign": "portal"
         },
         "portalRoles": {
             "type": "hasMany",

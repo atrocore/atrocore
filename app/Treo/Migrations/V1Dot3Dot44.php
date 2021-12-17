@@ -58,7 +58,9 @@ class V1Dot3Dot44 extends Base
 
     public function down(): void
     {
-//        $this->execute("");
+        $this->execute(
+            "CREATE TABLE `portal_user` (`id` INT AUTO_INCREMENT NOT NULL UNIQUE COLLATE utf8mb4_unicode_ci, `portal_id` VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci, `user_id` VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci, `deleted` TINYINT(1) DEFAULT '0' COLLATE utf8mb4_unicode_ci, INDEX `IDX_76511E4B887E1DD` (portal_id), INDEX `IDX_76511E4A76ED395` (user_id), UNIQUE INDEX `UNIQ_76511E4B887E1DDA76ED395` (portal_id, user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB"
+        );
     }
 
     protected function execute(string $sql): void

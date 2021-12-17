@@ -113,8 +113,8 @@ class User extends \Espo\Core\ORM\Repositories\RDB
             $entity->set('isPortalUser', false);
             $entity->set('portalRolesIds', []);
             $entity->set('portalRolesNames', (object)[]);
-            $entity->set('portalsIds', []);
-            $entity->set('portalsNames', (object)[]);
+            $entity->set('portalId', null);
+            $entity->set('portalName', null);
         }
 
         if ($entity->has('isPortalUser') && $entity->get('isPortalUser')) {

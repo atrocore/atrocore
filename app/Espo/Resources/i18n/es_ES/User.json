@@ -62,7 +62,6 @@
     "teams": "Equipos a los que este usuario pertenece. Nivel de control de acceso se hereda de los roles de equipo.",
     "roles": "Roles de acceso adicionales. Úsalo si el usuario no pertenece a ningún equipo o si necesita ampliar el nivel de control de acceso solo para este usuario.",
     "portalRoles": "Roles adicionales del portal. Utilícelos para extender el nivel de acceso exclusivamente para este usuario.",
-    "portal": "El usuario tiene accesos a los siguientes portal.",
     "password": "Deje este campo vacío si desea mantener la contraseña anterior.",
     "passwordConfirm": "Deje este campo vacío si desea mantener la contraseña anterior."
   },

@@ -165,8 +165,7 @@
             "tooltip": true
         },
         "portal": {
-            "type": "link",
-            "tooltip": true
+            "type": "link"
         },
         "portalRoles": {
             "type": "linkMultiple",
