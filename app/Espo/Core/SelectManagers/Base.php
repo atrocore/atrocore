@@ -654,21 +654,21 @@ class Base
     {
         $d = array();
 
-        $accountIdList = $this->getUser()->getLinkMultipleIdList('accounts');
+        $accountId = $this->getUser()->get('accountId');
 
-        if (count($accountIdList)) {
+        if (!empty($accountId)) {
             if ($this->getSeed()->hasAttribute('accountId')) {
-                $d['accountId'] = $accountIdList;
+                $d['accountId'] = $accountId;
             }
             if ($this->getSeed()->hasRelation('accounts')) {
                 $this->addLeftJoin(['accounts', 'accountsAccess'], $result);
                 $this->setDistinct(true, $result);
-                $d['accountsAccess.id'] = $accountIdList;
+                $d['accountsAccess.id'] = $accountId;
             }
             if ($this->getSeed()->hasAttribute('parentId') && $this->getSeed()->hasRelation('parent')) {
                 $d[] = array(
                     'parentType' => 'Account',
-                    'parentId' => $accountIdList
+                    'parentId' => $accountId
                 );
             }
         }

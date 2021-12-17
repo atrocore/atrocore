@@ -83,9 +83,9 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
                 'teams',
                 'roles',
                 'password',
-                'portals',
+                'portal',
                 'portalRoles',
-                'accounts'
+                'account'
             ];
 
             nonAdminReadOnlyFieldList.forEach(function (field) {
@@ -125,9 +125,9 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
                 this.hideField('roles');
                 this.hideField('teams');
                 this.hideField('defaultTeam');
-                this.showField('portals');
+                this.showField('portal');
                 this.showField('portalRoles');
-                this.showField('accounts');
+                this.showField('account');
                 this.showPanel('portal');
                 this.hideField('title');
             } else {
@@ -137,7 +137,7 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
                 this.showField('defaultTeam');
                 this.hideField('portals');
                 this.hideField('portalRoles');
-                this.hideField('accounts');
+                this.hideField('account');
                 this.hidePanel('portal');
                 this.showField('title');
             }

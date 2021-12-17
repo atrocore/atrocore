@@ -68,10 +68,6 @@ class App extends Base
         if (!$user->has('teamsIds')) {
             $user->loadLinkMultipleField('teams');
         }
-        if ($user->get('isPortalUser')) {
-            $user->loadAccountField();
-            $user->loadLinkMultipleField('accounts');
-        }
 
         $userData = $user->getValueMap();
 

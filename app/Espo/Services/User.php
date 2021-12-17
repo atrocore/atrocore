@@ -66,7 +66,7 @@ class User extends Record
         'password',
         'portalId',
         'portalRolesIds',
-        'accountsIds'
+        'accountId'
     ];
 
     protected $mandatorySelectAttributeList = [

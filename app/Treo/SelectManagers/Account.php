@@ -45,11 +45,11 @@ class Account extends \Espo\Core\SelectManagers\Base
      */
     protected function accessPortalOnlyAccount(&$result)
     {
-        $accountIdList = $this->getUser()->getLinkMultipleIdList('accounts');
+        $accountId = $this->getUser()->get('accountId');
 
-        if (count($accountIdList)) {
+        if (!empty($accountId)) {
             $result['whereClause'][] = array(
-                'id' => $accountIdList
+                'id' => $accountId
             );
         } else {
             $result['whereClause'][] = array(
