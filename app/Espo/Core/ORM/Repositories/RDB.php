@@ -269,20 +269,18 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
             $value = $entity->get($fieldName);
 
-            if (empty($value)) {
-                return;
-            }
-
             if ($fieldData['type'] == 'enum') {
                 $value = [$value];
+            }
+
+            if (!is_array($value)) {
+                return;
             }
 
             foreach ($value as $v) {
                 if (!in_array($v, $fieldOptions)) {
                     $language = $this->getInjection('container')->get('language');
-                    throw new BadRequest(
-                        sprintf($language->translate('noSuchOptions', 'exceptions', 'Global'), $language->translate($fieldName, 'fields', $entity->getEntityType()))
-                    );
+                    throw new BadRequest(sprintf($language->translate('noSuchOptions', 'exceptions', 'Global'), $language->translate($fieldName, 'fields', $entity->getEntityType())));
                 }
             }
         }
