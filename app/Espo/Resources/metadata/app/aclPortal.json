@@ -68,9 +68,9 @@
             },
             "User": {
                 "isAdmin": false,
-                "accounts": false,
+                "account": false,
                 "portalRoles": false,
-                "portals": false,
+                "portal": false,
                 "isActive": false
             }
         }

@@ -46,9 +46,9 @@ class Account extends \Espo\Core\AclPortal\Base
      */
     public function checkInAccount(User $user, Entity $entity)
     {
-        $accountIdList = $user->getLinkMultipleIdList('accounts');
-        if (count($accountIdList)) {
-            if (in_array($entity->id, $accountIdList)) {
+        $accountId = $user->get('accountId');
+        if (!empty($accountId)) {
+            if (in_array($entity->id, $accountId)) {
                 return true;
             }
         }

@@ -296,29 +296,19 @@ class Note extends RDB
                         }
                     } else {
                         if ($targetType === 'portals') {
-                            $targetPortalIdList = $entity->get('portalsIds');
-                            if (is_array($targetPortalIdList)) {
-                                foreach ($targetPortalIdList as $portalId) {
-                                    $portal = $this->getEntityManager()->getEntity('Portal', $portalId);
-                                    if (!$portal) {
+                            if (!empty($entity->get('portalId') && !empty($portal = $this->getEntityManager()->getEntity('Portal', $entity->get('portalId'))))) {
+                                $targetUserList = $this
+                                    ->getEntityManager()
+                                    ->getRepository('Portal')
+                                    ->findRelated($portal, 'users', ['whereClause' => ['isActive' => true]]);
+                                foreach ($targetUserList as $user) {
+                                    if ($user->id === $this->getUser()->id) {
                                         continue;
                                     }
-                                    $targetUserList = $this->getEntityManager()->getRepository('Portal')->findRelated(
-                                        $portal, 'users', array(
-                                            'whereClause' => array(
-                                                'isActive' => true
-                                            )
-                                        )
-                                    );
-                                    foreach ($targetUserList as $user) {
-                                        if ($user->id === $this->getUser()->id) {
-                                            continue;
-                                        }
-                                        if (in_array($user->id, $notifyUserIdList)) {
-                                            continue;
-                                        }
-                                        $notifyUserIdList[] = $user->id;
+                                    if (in_array($user->id, $notifyUserIdList)) {
+                                        continue;
                                     }
+                                    $notifyUserIdList[] = $user->id;
                                 }
                             }
                         } else {

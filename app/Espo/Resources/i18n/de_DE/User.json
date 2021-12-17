@@ -9,7 +9,7 @@
     "emailAddress": "E-Mail",
     "phoneNumber": "Telefon",
     "roles": "Rollen",
-    "portals": "Portale",
+    "portal": "Portal",
     "portalRoles": "Portal Rollen",
     "password": "Passwort",
     "currentPassword": "Aktuelles Passwort",
@@ -17,8 +17,7 @@
     "newPassword": "Neues Passwort",
     "newPasswordConfirm": "Neues Passwort bestätigen",
     "isPortalUser": "Ist Portal Benutzer",
-    "accounts": "Firmen",
-    "account": "Benutzerkonto (Primär)",
+    "account": "Benutzerkonto",
     "sendAccessInfo": "E-Mail mit Zugangsinformationen an Benutzer senden",
     "gender": "Geschlecht",
     "position": "Position im Team",
@@ -28,12 +27,11 @@
     "lastAccess": "Letzter Zugriff"
   },
   "links": {
-    "account": "Benutzerkonto (Primär)",
+    "account": "Benutzerkonto",
     "roles": "Rollen",
     "notes": "Notizen",
-    "portals": "Portale",
+    "portal": "Portal",
     "portalRoles": "Portal Rollen",
-    "accounts": "Firmen",
     "tasks": "Aufgaben"
   },
   "labels": {
@@ -58,7 +56,6 @@
     "teams": "Das Team zu dem dieser Benutzer gehört. Die Zugriffsberechtigung wird von der Team Rolle vererbt.",
     "roles": "Zusätzliche Zugriffsrollen. Wenn ein Benutzer zu keinem Team gehört oder wenn Sie die Zugriffsberechtigung nur für diesen Benutzer erweitern wollen.",
     "portalRoles": "Zusätzliche Portal Rollen. Benutzen Sie diese wenn Sie die Zugriffsberechtigung nur für diesen Benutzer erweitern wollen.",
-    "portals": "Portale auf die der Benutzer Zugriff hat.",
     "password": "Lassen Sie dieses Feld leer, wenn Sie das alte Password behalten wollen.",
     "passwordConfirm": "Lassen Sie dieses Feld leer, wenn Sie das alte Password behalten wollen."
   },

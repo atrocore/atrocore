@@ -64,7 +64,7 @@
     "portalUsers": {
       "type": "hasMany",
       "entity": "User",
-      "foreign": "accounts"
+      "foreign": "account"
     }
   },
   "collection": {

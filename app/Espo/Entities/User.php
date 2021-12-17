@@ -67,8 +67,4 @@ class User extends \Espo\Core\Entities\Person
         }
         return $this->get('teamsIds');
     }
-
-    public function loadAccountField()
-    {
-    }
 }

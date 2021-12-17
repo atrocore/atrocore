@@ -1,12 +1,7 @@
 {
     "fields": {
-        "accounts": {
-            "type": "linkMultiple"
-        },
         "account": {
-            "type": "link",
-            "notStorable": true,
-            "readOnly": true
+            "type": "link"
         },
         "isAdmin": {
             "type": "bool",
@@ -164,19 +159,12 @@
             "type": "linkMultiple",
             "tooltip": true
         },
-        "portals": {
-            "type": "linkMultiple",
-            "tooltip": true
+        "portal": {
+            "type": "link"
         },
         "portalRoles": {
             "type": "linkMultiple",
             "tooltip": true
-        },
-        "portal": {
-            "type": "link",
-            "notStorable": true,
-            "readOnly": true,
-            "disabled": true
         },
         "avatar": {
             "type": "image",
@@ -214,8 +202,8 @@
         }
     },
     "links": {
-        "accounts": {
-            "type": "hasMany",
+        "account": {
+            "type": "belongsTo",
             "entity": "Account",
             "foreign": "portalUsers",
             "relationName": "AccountPortalUser"
@@ -246,11 +234,10 @@
             "foreign": "users",
             "layoutRelationshipsDisabled": true
         },
-        "portals": {
-            "type": "hasMany",
+        "portal": {
+            "type": "belongsTo",
             "entity": "Portal",
-            "foreign": "users",
-            "layoutRelationshipsDisabled": true
+            "foreign": "users"
         },
         "portalRoles": {
             "type": "hasMany",

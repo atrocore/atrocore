@@ -44,7 +44,7 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
                     'users': [
                         {
                             action: 'hide',
-                            fields: ['teams', 'portals']
+                            fields: ['teams', 'portal']
                         },
                         {
                             action: 'show',
@@ -52,7 +52,7 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
                         },
                         {
                             action: 'setNotRequired',
-                            fields: ['teams', 'portals']
+                            fields: ['teams', 'portal']
                         },
                         {
                             action: 'setRequired',
@@ -62,7 +62,7 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
                     'teams': [
                         {
                             action: 'hide',
-                            fields: ['users', 'portals']
+                            fields: ['users', 'portal']
                         },
                         {
                             action: 'show',
@@ -74,21 +74,21 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
                         },
                         {
                             action: 'setNotRequired',
-                            fields: ['users', 'portals']
+                            fields: ['users', 'portal']
                         }
                     ],
-                    'portals': [
+                    'portal': [
                         {
                             action: 'hide',
                             fields: ['users', 'teams']
                         },
                         {
                             action: 'show',
-                            fields: ['portals']
+                            fields: ['portal']
                         },
                         {
                             action: 'setRequired',
-                            fields: ['portals']
+                            fields: ['portal']
                         },
                         {
                             action: 'setNotRequired',
@@ -99,11 +99,11 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
                 default: [
                     {
                         action: 'hide',
-                        fields: ['teams', 'users', 'portals']
+                        fields: ['teams', 'users', 'portal']
                     },
                     {
                         action: 'setNotRequired',
-                        fields: ['teams', 'users', 'portals']
+                        fields: ['teams', 'users', 'portal']
                     }
                 ]
             }
@@ -155,7 +155,7 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
                 optionList.push('all');
             }
             if (portalPermission === 'yes') {
-                optionList.push('portals');
+                optionList.push('portal');
             }
 
             this.createField('targetType', 'views/fields/enum', {
@@ -164,7 +164,7 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
 
             this.createField('users', 'views/fields/users', {});
             this.createField('teams', 'views/fields/teams', {});
-            this.createField('portals', 'views/fields/link-multiple', {});
+            this.createField('portal', 'views/fields/link', {});
             this.createField('post', 'views/note/fields/post', {required: true, rows: 1});
             this.createField('attachments', 'views/stream/fields/attachment-multiple', {});
 

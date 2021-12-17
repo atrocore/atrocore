@@ -8,7 +8,6 @@
     "emailAddress": "Email",
     "phoneNumber": "Phone",
     "roles": "Roles",
-    "portals": "Portals",
     "portalRoles": "Portal Roles",
     "teamRole": "Position",
     "password": "Password",
@@ -19,8 +18,7 @@
     "avatar": "Avatar",
     "isActive": "Is Active",
     "isPortalUser": "Is Portal User",
-    "accounts": "Accounts",
-    "account": "Account (Primary)",
+    "account": "Account",
     "sendAccessInfo": "Send Email with Access Info to User",
     "portal": "Portal",
     "gender": "Gender",
@@ -34,10 +32,9 @@
     "teams": "Teams",
     "roles": "Roles",
     "notes": "Notes",
-    "portals": "Portals",
+    "portal": "Portal",
     "portalRoles": "Portal Roles",
-    "accounts": "Accounts",
-    "account": "Account (Primary)",
+    "account": "Account",
     "tasks": "Tasks"
   },
   "labels": {
@@ -63,7 +60,6 @@
     "teams": "Teams which this user belongs to. Access control level is inherited from team's roles.",
     "roles": "Additional access roles. Use it if user doesn't belong to any team or you need to extend access control level exclusively for this user.",
     "portalRoles": "Additional portal roles. Use it to extend access control level exclusively for this user.",
-    "portals": "Portals which this user has access to.",
     "password": "Leave this field empty if you want to keep the old password.",
     "passwordConfirm": "Leave this field empty if you want to keep the old password."
   },

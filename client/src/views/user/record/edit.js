@@ -108,8 +108,8 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
                     "label": "Portal",
                     "name": "portal",
                     "rows": [
-                        [{"name":"portals"}, false],
-                        [{"name":"portalRoles"}, {"name":"accounts"}]
+                        [{"name":"portal"}, false],
+                        [{"name":"portalRoles"}, {"name":"account"}]
                     ]
                 });
 
