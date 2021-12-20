@@ -41,6 +41,10 @@ class V1Dot4Dot0 extends Base
 {
     public function up(): void
     {
+        $this->execute("ALTER TABLE `unit` DROP INDEX UNIQ_DCBB0C535E237E06EB3B4E33, ADD INDEX IDX_NAME (name, deleted)");
+        $this->execute("DROP INDEX UNIQ_DCBB0C5333E7211DEB3B4E33 ON `unit`");
+        $this->execute("CREATE UNIQUE INDEX UNIQ_DCBB0C535DA37D005E237E06EB3B4E33 ON `unit` (measure_id, name, deleted)");
+
         $this->execute("ALTER TABLE `user` ADD portal_id VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
         $this->execute("CREATE INDEX IDX_PORTAL_ID ON `user` (portal_id)");
 
@@ -67,7 +71,7 @@ class V1Dot4Dot0 extends Base
             $this->execute("UPDATE `user` SET account_id='{$v['account_id']}' WHERE id='{$v['user_id']}'");
         }
 
-        $this->execute("DROP TABLE account_portal_user;");
+        $this->execute("DROP TABLE account_portal_user");
     }
 
     public function down(): void
@@ -78,6 +82,10 @@ class V1Dot4Dot0 extends Base
         $this->execute(
             "CREATE TABLE `account_portal_user` (`id` INT AUTO_INCREMENT NOT NULL UNIQUE COLLATE utf8mb4_unicode_ci, `user_id` VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci, `account_id` VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci, `deleted` TINYINT(1) DEFAULT '0' COLLATE utf8mb4_unicode_ci, INDEX `IDX_D622EDE7A76ED395` (user_id), INDEX `IDX_D622EDE79B6B5FBA` (account_id), UNIQUE INDEX `UNIQ_D622EDE7A76ED3959B6B5FBA` (user_id, account_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB"
         );
+
+        $this->execute("ALTER TABLE `unit` DROP INDEX IDX_NAME, ADD UNIQUE INDEX UNIQ_DCBB0C535E237E06EB3B4E33 (name, deleted)");
+        $this->execute("DROP INDEX UNIQ_DCBB0C535DA37D005E237E06EB3B4E33 ON `unit`");
+        $this->execute("CREATE UNIQUE INDEX UNIQ_DCBB0C5333E7211DEB3B4E33 ON `unit` (name_de_de, deleted)");
     }
 
     protected function execute(string $sql): void
