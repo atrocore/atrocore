@@ -188,51 +188,10 @@ class ControllerManager
         }
 
         if (is_array($result) || $result instanceof StdClass) {
-            $result = Json::encode($result);
-
-            // prepare result if header language exist
-            if (!empty($language = $this->getHeaderLanguage())) {
-                $result = Json::decode($result, true);
-                if (isset($result['total']) && isset($result['list'])) {
-                    foreach ($result['list'] as $k => $v) {
-                        $result['list'][$k] = $this->viaLanguagePrism($language, $controllerName, $v);
-                    }
-                } else {
-                    $result = $this->viaLanguagePrism($language, $controllerName, $result);
-                }
-                $result = Json::encode($result);
-            }
-
-            return $result;
+            return Json::encode($result);
         }
 
         return $result;
-    }
-
-    protected function viaLanguagePrism(string $language, string $scope, array $data): array
-    {
-        $metadata = $this->container->get('metadata');
-
-        $result = [];
-        foreach ($data as $field => $value) {
-            $mainField = $metadata->get(['entityDefs', $scope, 'fields', $field, 'multilangField']);
-            if ($mainField) {
-                if (Util::toCamelCase($mainField . '_' . strtolower($language)) === $field) {
-                    $result[$mainField] = $value;
-                }
-            } else {
-                if (!isset($result[$field])) {
-                    $result[$field] = $value;
-                }
-            }
-        }
-
-        return $result;
-    }
-
-    protected function getHeaderLanguage(): ?string
-    {
-        return \Espo\Core\Services\Base::getHeaderLanguage($this->container->get('config'));
     }
 
     /**

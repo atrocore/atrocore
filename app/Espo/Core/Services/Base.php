@@ -71,15 +71,12 @@ abstract class Base implements Injectable
         $this->init();
     }
 
-    public static function getHeaderLanguage(Config $config): ?string
+    public static function getHeader(string $name): ?string
     {
-        $headers = \getallheaders();
-        if (!empty($headers['language'])) {
-            if ($config->get('isMultilangActive') && in_array($headers['language'], $config->get('inputLanguageList', []))) {
-                return $headers['language'];
+        foreach (\getallheaders() as $k => $v) {
+            if (strtolower($name) === strtolower($k)) {
+                return $v;
             }
-
-            throw new BadRequest('No such language is available.');
         }
 
         return null;
@@ -90,6 +87,21 @@ abstract class Base implements Injectable
      */
     protected function init()
     {
+    }
+
+    protected function getHeaderLanguage(): ?string
+    {
+        $language = self::getHeader('language');
+        if (!empty($language)) {
+            $config = $this->getConfig();
+            if ($config->get('isMultilangActive') && in_array($language, $config->get('inputLanguageList', []))) {
+                return $language;
+            }
+
+            throw new BadRequest('No such language is available.');
+        }
+
+        return null;
     }
 
     /**
