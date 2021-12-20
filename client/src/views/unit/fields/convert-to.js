@@ -34,6 +34,8 @@ Espo.define('views/unit/fields/convert-to', 'treo-core:views/fields/filtered-lin
 
     Dep => Dep.extend({
 
+        createDisabled: true,
+
         selectBoolFilterList: ['notEntity', 'fromMeasure'],
 
         boolFilterData: {
