@@ -41,6 +41,15 @@ class V1Dot4Dot0 extends Base
 {
     public function up(): void
     {
+        $existsUnit = [];
+        foreach ($this->getPDO()->query("SELECT * FROM `unit` WHERE deleted=0")->fetchAll(\PDO::FETCH_ASSOC) as $unit) {
+            $key = "{$unit['measure_id']}_{$unit['name']}_{$unit['deleted']}";
+            if (isset($existsUnit[$key])) {
+                $this->execute("DELETE FROM `unit` WHERE id='{$unit['id']}'");
+            }
+            $existsUnit[$key] = true;
+        }
+
         $this->execute("ALTER TABLE `unit` DROP INDEX UNIQ_DCBB0C535E237E06EB3B4E33, ADD INDEX IDX_NAME (name, deleted)");
         $this->execute("DROP INDEX UNIQ_DCBB0C5333E7211DEB3B4E33 ON `unit`");
         $this->execute("CREATE UNIQUE INDEX UNIQ_DCBB0C535DA37D005E237E06EB3B4E33 ON `unit` (measure_id, name, deleted)");
