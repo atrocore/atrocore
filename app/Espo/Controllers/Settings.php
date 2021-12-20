@@ -86,6 +86,10 @@ class Settings extends \Espo\Core\Controllers\Base
         // clear cache
         $this->getContainer()->get('dataManager')->clearCache();
 
+        if (property_exists($data, 'siteUrl')) {
+            $data->siteUrl = rtrim($data->siteUrl, '/');
+        }
+
         $this->getConfig()->setData($data, $this->getUser()->isAdmin());
         $result = $this->getConfig()->save();
         if ($result === false) {
