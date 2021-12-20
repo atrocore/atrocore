@@ -115,9 +115,15 @@ Espo.define('views/fields/unit', 'views/fields/float',
                     } else {
                         this.unitList = measureConfig.unitList;
                     }
-                    this.unitList.forEach((unitName, k) => {
-                        if (measureConfig.unitListTranslates && measureConfig.unitListTranslates[this.getLanguage().name] && measureConfig.unitListTranslates[this.getLanguage().name][k]) {
-                            this.unitListTranslates[unitName] = measureConfig.unitListTranslates[this.getLanguage().name][k];
+
+                    let unitListTranslates = [];
+                    if (measureConfig.unitListTranslates && measureConfig.unitListTranslates[this.getLanguage().name]) {
+                        unitListTranslates = measureConfig.unitListTranslates[this.getLanguage().name];
+                    }
+
+                    measureConfig.unitList.forEach((unitName, k) => {
+                        if (unitListTranslates[k] && this.unitList.includes(unitName)) {
+                            this.unitListTranslates[unitName] = unitListTranslates[k];
                         }
                     });
                 }
