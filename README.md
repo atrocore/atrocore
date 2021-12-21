@@ -4,7 +4,7 @@
 
 AtroCore is an open-source software distributed under GPLv3 License for free. 
 
-AtroCore is a Data Platform, Data Management and Master Data Management (MDM) software. It is a software ecosystem designed for rapid development of responsive web-based business applications of any kind (ERP, PIM, CRM, DMS, MDM, DAM, etc.). It is an excellent tool for cost-effective and timely application development that comes with the powerful out-of-the-box functionality.
+AtroCore is a Data Platform, Data Management and Master Data Management (MDM) software. It is a software ecosystem designed for rapid development of responsive web-based business applications of any kind (ERP, PIM, CRM, DMS, MDM, DAM, etc.). Thanks to its configuration possibilities it is an excellent tool for cost-effective and timely application development that comes with the powerful out-of-the-box functionality.
 
 AtroCore is a single page application (SPA) with API-first architecture and flexible data model based on configurable entities and relations. You can organize any data and business-related processes directly in AtroCore, many of them via a simple and user-friendly configuration.
 
@@ -25,6 +25,7 @@ AtroCore is the best fit **for businesses**, who want to:
 The following full-fledged software products are already available on the AtroCore basis:
 * [AtroPIM](https://github.com/atrocore/atropim)
 * [AtroDAM](https://github.com/atrocore/atrodam)
+* [AtroPM](https://github.com/atrocore/atropm)
 
 
 ### What Is On Board?
@@ -53,10 +54,10 @@ Here is a AtroCore package description in detail:
 
 ### What Are the Advantages of Using It?
 
-* Really quick time to market and low implementation costs!
+* Really quick time-to-market and low implementation costs!
 * Configurable, flexible and customizable
 * Free – 100% open source, licensed under GPLv3
-* REST API
+* REST API for everything
 * Web-based and platform independent
 * Based on modern technologies
 * Good code quality
@@ -64,10 +65,10 @@ Here is a AtroCore package description in detail:
 * Responsive and user-friendly UI
 * Configurable (entities, relations, layouts, labels, navigation)
 * Extensible with modules
-* Very fast
 * Easy to maintain and support
+* Powertful export and import feeds
 * Many out-of-the-box features
-* Best for Rapid Application Development
+
 
 ### What Technologies are used?
 
