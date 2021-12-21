@@ -51,13 +51,15 @@
   "fields": {
     "unit": {
       "type": "varchar",
-      "disabled": true
+      "disabled": true,
+      "emHidden": true
     },
     "allUnits": {
       "type": "jsonObject",
       "disabled": true,
       "notStorable": true,
-      "filterDisabled": true
+      "filterDisabled": true,
+      "emHidden": true
     }
   },
   "filter": true,

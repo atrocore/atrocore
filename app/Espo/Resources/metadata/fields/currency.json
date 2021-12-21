@@ -34,13 +34,15 @@
       "currency":{
          "type":"varchar",
          "disabled": true,
-         "maxLength": 6
+         "maxLength": 6,
+         "emHidden": true
       },
       "converted":{
          "type":"currencyConverted",
          "readOnly": true,
          "importDisabled": true,
-         "layoutListDisabled": true
+         "layoutListDisabled": true,
+         "emHidden": true
       }
    },
    "filter": true,
