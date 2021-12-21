@@ -73,7 +73,13 @@ abstract class Base implements Injectable
 
     public static function getHeader(string $name): ?string
     {
-        foreach (\getallheaders() as $k => $v) {
+        try {
+            $headers = \getallheaders();
+        } catch (\Throwable $e) {
+            $headers = [];
+        }
+
+        foreach ($headers as $k => $v) {
             if (strtolower($name) === strtolower($k)) {
                 return $v;
             }
