@@ -218,7 +218,7 @@ Espo.define('views/fields/unit', 'views/fields/float',
             });
 
             if (result.length === 0) {
-                result = measureConfig.unitList;
+                result = unitsOfMeasure.unitList;
             }
 
             return result;
