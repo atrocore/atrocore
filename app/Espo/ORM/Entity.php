@@ -554,6 +554,14 @@ abstract class Entity implements IEntity
             if (array_key_exists('default', $defs)) {
                 $this->valuesContainer[$field] = $defs['default'];
             }
+
+            // default for unit
+            if (isset($this->fields[$field . 'Unit'])) {
+                $fieldData = $this->getEntityManager()->getEspoMetadata()->get(['entityDefs', $this->entityType, 'fields', $field], []);
+                if (!empty($fieldData['type']) && $fieldData['type'] === 'unit' && !empty($fieldData['defaultUnit'])) {
+                    $this->valuesContainer[$field . 'Unit'] = $fieldData['defaultUnit'];
+                }
+            }
         }
     }
 
