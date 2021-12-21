@@ -46,16 +46,20 @@ Espo.define('views/measure/fields/locale-default', 'views/fields/enum',
                 });
 
                 this.listenTo(this.model, 'change:localeUnits', () => {
-                    const selected = $("select[name=\"localeDefault\"] option:selected").attr('value');
-                    if (selected && selected !== this.model.get('localeDefault')) {
-                        this.model.set('localeDefault', selected);
+                    if (this.mode === 'edit') {
+                        const selected = $("select[name=\"localeDefault\"] option:selected").attr('value');
+                        if (selected && selected !== this.model.get('localeDefault')) {
+                            this.model.set('localeDefault', selected);
+                        }
                     }
                 });
 
                 this.listenTo(this.model, 'change:localeDefault', () => {
-                    let data = this.model.get('data') || {};
-                    data[`locale_${this.model.get('localeId')}_default`] = this.model.get('localeDefault');
-                    this.model.set('data', data);
+                    if (this.mode === 'edit') {
+                        let data = this.model.get('data') || {};
+                        data[`locale_${this.model.get('localeId')}_default`] = this.model.get('localeDefault');
+                        this.model.set('data', data);
+                    }
                 });
             },
 

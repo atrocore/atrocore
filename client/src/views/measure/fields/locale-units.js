@@ -50,9 +50,11 @@ Espo.define('views/measure/fields/locale-units', 'views/fields/multi-enum',
                 Dep.prototype.setup.call(this);
 
                 this.listenTo(this.model, 'change:localeUnits', () => {
-                    let data = this.model.get('data') || {};
-                    data[`locale_${this.localeId}`] = this.model.get('localeUnits');
-                    this.model.set('data', data);
+                    if (this.mode === 'edit') {
+                        let data = this.model.get('data') || {};
+                        data[`locale_${this.localeId}`] = this.model.get('localeUnits');
+                        this.model.set('data', data);
+                    }
                 });
             },
 
