@@ -28,7 +28,7 @@ The following full-fledged software products are already available on the AtroCo
 * [AtroPM](https://github.com/atrocore/atropm)
 
 
-### What Is On Board?
+### What is on Board?
 
 Here is a AtroCore package description in detail:
 
@@ -96,7 +96,7 @@ AtroCore has a REST API and can be integrated with any third-party system. You c
 * PHP 7.4 or above.
 * MySQL 5.5.3 or above **(not MariaDB)**.
 
-> Please note, system will definitely NOT work on usual hostings, managed server hostings should be checked on a case-by-case basis – with a high probability it will NOT work.
+> Please note, system will definitely NOT work on a usual hosting, a managed server hosting should be checked on a case-by-case basis – with a high probability it will NOT work.
 
 ### Installation
 
