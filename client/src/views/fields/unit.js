@@ -212,7 +212,9 @@ Espo.define('views/fields/unit', 'views/fields/float',
         getLocaledUnitList(unitsOfMeasure) {
             let result = [];
             this.getLocaledUnitsIds().forEach(id => {
-                result.push(unitsOfMeasure.unitListData[id].name);
+                if (unitsOfMeasure.unitListData[id] && unitsOfMeasure.unitListData[id].name) {
+                    result.push(unitsOfMeasure.unitListData[id].name);
+                }
             });
 
             if (result.length === 0) {
