@@ -49,7 +49,7 @@ Here is a AtroCore package description in detail:
 | Portals                     | Use this additional layer to give access to third parties to your system. Use portal roles to restrict their access. |
 | Change Log and Stream       | See all changes to the entries (who, old and new value, when) and add your own posts with a timestamp and attachments. |
 | Queue Manager               | Use it if you want to run or control processes in the background. |
-| Access Control Lists (ACL)  | Enterprise Level ACL based on Teams and Roles, with access level (own, team, all). You are able to edit the permissions even for each field separately. |
+| Access Control Lists (ACL)  | Enterprise Level ACL based on Teams and Roles, with access level (own, team, all). You can edit permissions even for each field separately. |
 | REST API                    | Integrate it with any third-party software, fully automated. |
 
 ### What Are the Advantages of Using It?
