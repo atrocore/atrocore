@@ -54,10 +54,10 @@ Here is a AtroCore package description in detail:
 
 ### What Are the Advantages of Using It?
 
-* Really quick time-to-market and low implementation costs!
+* Really quick time-to-market and low implementation costs
 * Configurable, flexible and customizable
 * Free – 100% open source, licensed under GPLv3
-* REST API for everything
+* API-first development approarch – REST API for everything
 * Web-based and platform independent
 * Based on modern technologies
 * Good code quality
@@ -66,8 +66,8 @@ Here is a AtroCore package description in detail:
 * Configurable (entities, relations, layouts, labels, navigation)
 * Extensible with modules
 * Easy to maintain and support
-* Powertful export and import feeds
-* Many out-of-the-box features
+•	Powerful export and import feeds (additional free modules are needed)
+* Many other out-of-the-box features
 
 
 ### What Technologies are used?
