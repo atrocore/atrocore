@@ -297,6 +297,11 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
         $unitsOfMeasure = $this->getConfig()->get('unitsOfMeasure');
         $unitsOfMeasure = empty($unitsOfMeasure) ? [] : Json::decode(Json::encode($unitsOfMeasure), true);
+        $measure = $this->getUnitFieldMeasure($fieldName, $entity);
+
+        if (!isset($unitsOfMeasure[$measure]['unitList'])) {
+            return;
+        }
 
         $value = $entity->get($fieldName);
         $unit = $entity->get($fieldName . 'Unit');
@@ -307,12 +312,8 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             throw new BadRequest(sprintf($language->translate('unitValueIsRequired', 'exceptions', 'Global'), $fieldLabel));
         }
 
-        if (!empty($unit)) {
-            $measure = $this->getUnitFieldMeasure($fieldName, $entity);
-            $units = empty($unitsOfMeasure[$measure]['unitList']) ? [] : $unitsOfMeasure[$measure]['unitList'];
-            if (!in_array($unit, $units)) {
-                throw new BadRequest(sprintf($language->translate('noSuchUnit', 'exceptions', 'Global'), $fieldLabel));
-            }
+        if (!empty($unit) && !in_array($unit, $unitsOfMeasure[$measure]['unitList'])) {
+            throw new BadRequest(sprintf($language->translate('noSuchUnit', 'exceptions', 'Global'), $fieldLabel));
         }
     }
 
