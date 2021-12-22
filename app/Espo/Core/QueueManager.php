@@ -39,6 +39,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Entities\User;
 use Espo\ORM\Entity;
 use Espo\Orm\EntityManager;
+use Espo\Repositories\QueueItem as Repository;
 use Espo\Services\QueueManagerServiceInterface;
 use Treo\Core\ServiceFactory;
 
@@ -93,10 +94,16 @@ class QueueManager
 
     protected function createQueueItem(string $name, string $serviceName, array $data, string $priority): bool
     {
+        /** @var Repository $repository */
+        $repository = $this->getEntityManager()->getRepository('QueueItem');
+
+        // delete old
+        $repository->where(['modifiedAt<' => (new \DateTime())->modify('-7 days')->format('Y-m-d H:i:s')])->removeCollection();
+
         /** @var User $user */
         $user = $this->getContainer()->get('user');
 
-        $item = $this->getEntityManager()->getEntity('QueueItem');
+        $item = $repository->get();
         $item->set(
             [
                 'name'           => $name,
@@ -112,7 +119,7 @@ class QueueManager
         $this->getEntityManager()->saveEntity($item, ['skipAll' => true]);
 
         foreach ($user->get('teams')->toArray() as $row) {
-            $this->getEntityManager()->getRepository('QueueItem')->relate($item, 'teams', $row['id']);
+            $repository->relate($item, 'teams', $row['id']);
         }
 
         file_put_contents(self::FILE_PATH, '1');
@@ -160,6 +167,11 @@ class QueueManager
         $item = $this->getRepository()->getPendingItemForStream();
 
         if (empty($item)) {
+            return false;
+        }
+
+        $activatedTime = $item->get('sortOrder') % (int)$this->getContainer()->get('config')->get('queueManagerWorkersCount', 4);
+        if ($activatedTime != $stream) {
             return false;
         }
 

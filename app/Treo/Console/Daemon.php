@@ -136,9 +136,6 @@ class Daemon extends AbstractConsole
         }
     }
 
-    /**
-     * @param string $id
-     */
     protected function qmDaemon(string $id): void
     {
         /** @var string $stream */
@@ -149,8 +146,7 @@ class Daemon extends AbstractConsole
                 break;
             }
 
-            $activatedTime = time() % (int)$this->getConfig()->get('queueManagerWorkersCount', 4);
-            if (file_exists(\Espo\Core\QueueManager::FILE_PATH) && $activatedTime == $stream) {
+            if (file_exists(\Espo\Core\QueueManager::FILE_PATH)) {
                 exec($this->getPhpBin() . " index.php qm $stream --run");
             }
 

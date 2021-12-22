@@ -66,20 +66,17 @@ class QueueItem extends Base
         return $this->where(['stream' => $stream, 'status' => 'Running'])->order('sortOrder', 'ASC')->findOne();
     }
 
-    /**
-     * @return Entity
-     */
     public function getPendingItemForStream(): ?Entity
     {
-        if (!empty($job = $this->where(['stream' => null, 'status' => 'Pending', 'priority' => 'High'])->order('sortOrder', 'ASC')->findOne())) {
+        if (!empty($job = $this->where(['stream' => null, 'status' => 'Pending', 'priority' => 'High'])->order('sortOrder')->findOne())) {
             return $job;
         }
 
-        if (!empty($job = $this->where(['stream' => null, 'status' => 'Pending', 'priority' => 'Normal'])->order('sortOrder', 'ASC')->findOne())) {
+        if (!empty($job = $this->where(['stream' => null, 'status' => 'Pending', 'priority' => 'Normal'])->order('sortOrder')->findOne())) {
             return $job;
         }
 
-        return $this->where(['stream' => null, 'status' => 'Pending', 'priority' => 'Low'])->order('sortOrder', 'ASC')->findOne();
+        return $this->where(['stream' => null, 'status' => 'Pending', 'priority' => 'Low'])->order('sortOrder')->findOne();
     }
 
     /**
