@@ -96,7 +96,7 @@
   },
   "collection": {
     "sortBy": "sortOrder",
-    "asc": true
+    "asc": false
   },
   "indexes": {
     "name": {

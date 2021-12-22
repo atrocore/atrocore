@@ -81,33 +81,17 @@ class QueueManager
         return $result;
     }
 
-    /**
-     * @param string $name
-     * @param string $serviceName
-     * @param array  $data
-     *
-     * @return bool
-     * @throws Error
-     */
-    public function push(string $name, string $serviceName, array $data = []): bool
+    public function push(string $name, string $serviceName, array $data = [], string $priority = 'Normal'): bool
     {
         // validation
         if (!$this->isService($serviceName)) {
             return false;
         }
 
-        return $this->createQueueItem($name, $serviceName, $data);
+        return $this->createQueueItem($name, $serviceName, $data, $priority);
     }
 
-    /**
-     * @param string $name
-     * @param string $serviceName
-     * @param array  $data
-     *
-     * @return bool
-     * @throws Error
-     */
-    protected function createQueueItem(string $name, string $serviceName, array $data): bool
+    protected function createQueueItem(string $name, string $serviceName, array $data, string $priority): bool
     {
         /** @var User $user */
         $user = $this->getContainer()->get('user');
@@ -117,6 +101,7 @@ class QueueManager
             [
                 'name'           => $name,
                 'serviceName'    => $serviceName,
+                'priority'       => $priority,
                 'data'           => $data,
                 'createdById'    => $user->get('id'),
                 'ownerUserId'    => $user->get('id'),
