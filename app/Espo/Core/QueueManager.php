@@ -39,6 +39,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Entities\User;
 use Espo\ORM\Entity;
 use Espo\Orm\EntityManager;
+use Espo\Repositories\QueueItem as Repository;
 use Espo\Services\QueueManagerServiceInterface;
 use Treo\Core\ServiceFactory;
 
@@ -81,44 +82,34 @@ class QueueManager
         return $result;
     }
 
-    /**
-     * @param string $name
-     * @param string $serviceName
-     * @param array  $data
-     *
-     * @return bool
-     * @throws Error
-     */
-    public function push(string $name, string $serviceName, array $data = []): bool
+    public function push(string $name, string $serviceName, array $data = [], string $priority = 'Normal'): bool
     {
         // validation
         if (!$this->isService($serviceName)) {
             return false;
         }
 
-        return $this->createQueueItem($name, $serviceName, $data);
+        return $this->createQueueItem($name, $serviceName, $data, $priority);
     }
 
-    /**
-     * @param string $name
-     * @param string $serviceName
-     * @param array  $data
-     *
-     * @return bool
-     * @throws Error
-     */
-    protected function createQueueItem(string $name, string $serviceName, array $data): bool
+    protected function createQueueItem(string $name, string $serviceName, array $data, string $priority): bool
     {
+        /** @var Repository $repository */
+        $repository = $this->getEntityManager()->getRepository('QueueItem');
+
+        // delete old
+        $repository->where(['modifiedAt<' => (new \DateTime())->modify('-30 days')->format('Y-m-d H:i:s')])->removeCollection();
+
         /** @var User $user */
         $user = $this->getContainer()->get('user');
 
-        $item = $this->getEntityManager()->getEntity('QueueItem');
+        $item = $repository->get();
         $item->set(
             [
                 'name'           => $name,
                 'serviceName'    => $serviceName,
+                'priority'       => $priority,
                 'data'           => $data,
-                'sortOrder'      => $this->getNextSortOrder(),
                 'createdById'    => $user->get('id'),
                 'ownerUserId'    => $user->get('id'),
                 'assignedUserId' => $user->get('id'),
@@ -128,34 +119,12 @@ class QueueManager
         $this->getEntityManager()->saveEntity($item, ['skipAll' => true]);
 
         foreach ($user->get('teams')->toArray() as $row) {
-            $this->getEntityManager()->getRepository('QueueItem')->relate($item, 'teams', $row['id']);
+            $repository->relate($item, 'teams', $row['id']);
         }
 
         file_put_contents(self::FILE_PATH, '1');
 
         return true;
-    }
-
-    /**
-     * @return int
-     */
-    protected function getNextSortOrder(): int
-    {
-        // prepare result
-        $result = 0;
-
-        $data = $this
-            ->getEntityManager()
-            ->getRepository('QueueItem')
-            ->select(['sortOrder'])
-            ->find()
-            ->toArray();
-
-        if (!empty($data)) {
-            $result = (max(array_column($data, 'sortOrder'))) + 1;
-        }
-
-        return $result;
     }
 
     /**
@@ -195,7 +164,7 @@ class QueueManager
             return false;
         }
 
-        $item = $this->getRepository()->getPendingItemForStream();
+        $item = $this->getRepository()->getPendingItemForStream($stream);
 
         if (empty($item)) {
             return false;

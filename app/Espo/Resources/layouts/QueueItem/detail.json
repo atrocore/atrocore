@@ -27,7 +27,9 @@
         {
           "name": "stream"
         },
-        false
+        {
+          "name": "priority"
+        }
       ],
       [
         {
