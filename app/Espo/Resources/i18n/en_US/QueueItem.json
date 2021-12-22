@@ -6,7 +6,8 @@
     "data": "Data",
     "sortOrder": "Sort order",
     "status": "Status",
-    "message": "Message"
+    "message": "Message",
+    "priority": "Priority"
   },
   "links": {
   },

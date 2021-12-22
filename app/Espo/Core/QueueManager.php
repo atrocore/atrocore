@@ -118,7 +118,6 @@ class QueueManager
                 'name'           => $name,
                 'serviceName'    => $serviceName,
                 'data'           => $data,
-                'sortOrder'      => $this->getNextSortOrder(),
                 'createdById'    => $user->get('id'),
                 'ownerUserId'    => $user->get('id'),
                 'assignedUserId' => $user->get('id'),
@@ -134,28 +133,6 @@ class QueueManager
         file_put_contents(self::FILE_PATH, '1');
 
         return true;
-    }
-
-    /**
-     * @return int
-     */
-    protected function getNextSortOrder(): int
-    {
-        // prepare result
-        $result = 0;
-
-        $data = $this
-            ->getEntityManager()
-            ->getRepository('QueueItem')
-            ->select(['sortOrder'])
-            ->find()
-            ->toArray();
-
-        if (!empty($data)) {
-            $result = (max(array_column($data, 'sortOrder'))) + 1;
-        }
-
-        return $result;
     }
 
     /**

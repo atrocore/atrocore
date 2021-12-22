@@ -22,10 +22,18 @@
       "readOnly": true
     },
     "sortOrder": {
-      "type": "int",
-      "required": true,
+      "type": "autoincrement",
+      "readOnly": true
+    },
+    "priority": {
+      "type": "enum",
       "readOnly": true,
-      "default": 0
+      "default": "Normal",
+      "options": [
+        "Low",
+        "Normal",
+        "High"
+      ]
     },
     "status": {
       "type": "enum",
