@@ -98,7 +98,7 @@ class QueueManager
         $repository = $this->getEntityManager()->getRepository('QueueItem');
 
         // delete old
-        $repository->where(['modifiedAt<' => (new \DateTime())->modify('-7 days')->format('Y-m-d H:i:s')])->removeCollection();
+        $repository->where(['modifiedAt<' => (new \DateTime())->modify('-30 days')->format('Y-m-d H:i:s')])->removeCollection();
 
         /** @var User $user */
         $user = $this->getContainer()->get('user');
@@ -164,14 +164,9 @@ class QueueManager
             return false;
         }
 
-        $item = $this->getRepository()->getPendingItemForStream();
+        $item = $this->getRepository()->getPendingItemForStream($stream);
 
         if (empty($item)) {
-            return false;
-        }
-
-        $activatedTime = $item->get('sortOrder') % (int)$this->getContainer()->get('config')->get('queueManagerWorkersCount', 4);
-        if ($activatedTime != $stream) {
             return false;
         }
 
