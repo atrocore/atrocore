@@ -77,11 +77,7 @@ class Schema extends AbstractListener
         foreach ($queries as $key => $query) {
             // prepare fields
             $fields = [];
-            while (preg_match_all(
-                "/^.* (.*) (MEDIUMTEXT|LONGTEXT) DEFAULT NULL COMMENT 'default={(.*)}'/",
-                $query,
-                $matches
-            )) {
+            while (preg_match_all("/^.* (.*) (MEDIUMTEXT|LONGTEXT) DEFAULT NULL COMMENT 'default={(.*)}'/", $query, $matches)) {
                 // prepare data
                 $field = $matches[1][0];
                 $type = $matches[2][0];
@@ -91,8 +87,7 @@ class Schema extends AbstractListener
                 $fields[$field] = $value;
 
                 // remove from query
-                $query
-                    = str_replace("{$field} {$type} DEFAULT NULL COMMENT 'default={{$value}}'", "", $query);
+                $query = str_replace("{$field} {$type} DEFAULT NULL COMMENT 'default={{$value}}'", "", $query);
             }
 
             // prepare table name
