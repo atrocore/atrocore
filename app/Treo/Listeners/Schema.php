@@ -42,14 +42,8 @@ use Treo\Core\EventManager\Event;
  */
 class Schema extends AbstractListener
 {
-    /**
-     * Prepare entityDefs before rebuild action
-     *
-     * @param Event $event
-     */
-    public function beforeRebuild(Event $event)
+    public function prepareQueries(Event $event): void
     {
-        // prepare LONGTEXT default
         $this->prepareLongTextDefault($event);
     }
 
@@ -97,8 +91,8 @@ class Schema extends AbstractListener
                 $fields[$field] = $value;
 
                 // remove from query
-                $query =
-                    str_replace("{$field} {$type} DEFAULT NULL COMMENT 'default={{$value}}'", "", $query);
+                $query
+                    = str_replace("{$field} {$type} DEFAULT NULL COMMENT 'default={{$value}}'", "", $query);
             }
 
             // prepare table name

@@ -91,10 +91,8 @@ class Schema extends \Espo\Core\Utils\Database\Schema\Schema
         // get queries
         $queries = $this->getDiffSql($currentSchema, $metadataSchema);
 
-        // berore rebuild action
-        $queries = $this
-            ->dispatch('Schema', 'beforeRebuild', new Event(['queries' => $queries]))
-            ->getArgument('queries');
+        // prepare queries
+        $queries = $this->dispatch('Schema', 'prepareQueries', new Event(['queries' => $queries]))->getArgument('queries');
 
         // run rebuild
         $result = true;
@@ -137,6 +135,9 @@ class Schema extends \Espo\Core\Utils\Database\Schema\Schema
             ->getComparator()
             ->compare($this->getCurrentSchema(), $this->schemaConverter->process($this->ormMetadata->getData(), null))
             ->toSql($this->getPlatform());
+
+        // prepare queries
+        $queries = $this->dispatch('Schema', 'prepareQueries', new Event(['queries' => $queries]))->getArgument('queries');
 
         // set strict type
         $this->getPlatform()->strictType = false;
