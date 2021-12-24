@@ -48,8 +48,7 @@
     "Measure": "Мера",
     "Unit": "Единица измерения",
     "QueueItem": "Элемент очереди",
-    "TreoStore": "Магазин",
-    "InfoPage": "Инфостраница"
+    "TreoStore": "Магазин"
   },
   "scopeNamesPlural": {
     "Locale": "Локали",
@@ -84,8 +83,7 @@
     "Currency": "Валюты",
     "Note": "Примечания",
     "Notification": "Уведомления",
-    "Preferences": "Настройки",
-    "InfoPage": "Инфостраницы"
+    "Preferences": "Настройки"
   },
   "descriptions": {
     "Core": "AtroCore - это программная экосистема, предназначенная для быстрой разработки веб-приложений для бизнеса."

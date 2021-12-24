@@ -45,8 +45,7 @@
     "Global": "Global",
     "AuthLogRecord": "Auth Log Record",
     "AuthFailLogRecord": "Auth Fail Log Record",
-    "ArrayValue": "Array Value",
-    "InfoPage": "Info Page"
+    "ArrayValue": "Array Value"
   },
   "scopeNamesPlural": {
     "User": "Usuarios",
@@ -77,8 +76,7 @@
     "Notification": "Notifications",
     "Preferences": "Preferences",
     "Role": "Roles",
-    "ArrayValue": "Array Values",
-    "InfoPage": "Info Pages"
+    "ArrayValue": "Array Values"
   },
   "descriptions": {
     "Core": "AtroCore is a software ecosystem, designed for rapid development of web-based responsive business applications."

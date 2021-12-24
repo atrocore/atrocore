@@ -35,8 +35,7 @@
     "Preferences": "Benutzereinstellungen",
     "AuthLogRecord": "Auth Log-Datensatz",
     "AuthFailLogRecord": "Auth-Fehlerprotokoll Datensatz",
-    "ArrayValue": "Array-Wert",
-    "InfoPage": "Info Seite"
+    "ArrayValue": "Array-Wert"
   },
   "scopeNamesPlural": {
     "Locale": "Gebietsschemas",
@@ -69,8 +68,7 @@
     "LastViewed": "Zuletzt angezeigt",
     "AuthLogRecord": "Auth-Protokoll",
     "AuthFailLogRecord": "Auth-Fehlerprotokoll",
-    "ArrayValue": "Array-Werte",
-    "InfoPage": "Info Seiten"
+    "ArrayValue": "Array-Werte"
   },
   "descriptions": {
     "Core": "AtroCore ist ein Software-Ökosystem, das für die schnelle Entwicklung webbasierter responsiver Geschäftsanwendungen entwickelt wurde."

@@ -1,6 +1,0 @@
-{
-  "controller": "controllers/record",
-  "boolFilterList": [
-    "onlyMy"
-  ]
-}
