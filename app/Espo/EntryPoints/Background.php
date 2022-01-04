@@ -58,7 +58,7 @@ class Background extends AbstractEntryPoint
             $imageMetadata = \exif_read_data($_SESSION['background']['imagePath']);
 
             $_SESSION['background']['authorName'] = isset($imageMetadata['Artist']) ? $imageMetadata['Artist'] : '';
-            $_SESSION['background']['authorLink'] = isset($imageMetadata['UserComment']) ? $imageMetadata['UserComment'] : '';
+            $_SESSION['background']['authorLink'] = isset($imageMetadata['COMPUTED']['UserComment']) ? $imageMetadata['COMPUTED']['UserComment'] : '';
         }
     }
 
