@@ -35,30 +35,11 @@ declare(strict_types=1);
 
 namespace Espo\Services;
 
-use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Services\Base;
 use Espo\Core\Utils\Language;
 
-/**
- * Class App
- */
 class App extends Base
 {
-    /**
-     * @return array
-     * @throws NotFound
-     */
-    public function getBackground(): array
-    {
-        session_start();
-
-        if (!isset($_SESSION['background'])) {
-            throw new NotFound();
-        }
-
-        return $_SESSION['background'];
-    }
-
     public function getUserData(): array
     {
         $preferencesData = $this->getInjection('preferences')->getValueMap();
@@ -95,13 +76,13 @@ class App extends Base
         unset($userData->password);
 
         return [
-            'user'        => $userData,
-            'acl'         => $this->getInjection('acl')->getMap(),
+            'user' => $userData,
+            'acl' => $this->getInjection('acl')->getMap(),
             'preferences' => $preferencesData,
-            'token'       => $this->getUser()->get('token'),
-            'settings'    => $settings,
-            'language'    => Language::detectLanguage($this->getConfig(), $this->getInjection('preferences')),
-            'appParams'   => [
+            'token' => $this->getUser()->get('token'),
+            'settings' => $settings,
+            'language' => Language::detectLanguage($this->getConfig(), $this->getInjection('preferences')),
+            'appParams' => [
                 'maxUploadSize' => $this->getMaxUploadSize() / 1024.0 / 1024.0
             ]
         ];

@@ -55,7 +55,9 @@ class App extends Base
      */
     public function actionBackground($params, $data, $request)
     {
-        return $this->getService('App')->getBackground();
+        \Espo\EntryPoints\Background::setBackground();
+
+        return $_SESSION['background'];
     }
 
     /**

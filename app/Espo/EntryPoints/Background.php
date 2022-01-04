@@ -33,105 +33,48 @@
 
 namespace Espo\EntryPoints;
 
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\NotFound;
-use Espo\Entities\Attachment;
+use Espo\Core\Utils\Util;
 
-/**
- * Class Background
- */
 class Background extends AbstractEntryPoint
 {
     public static $authRequired = false;
 
-    protected $backgrounds
-        = [
-            [
-                'authorName' => 'Alesia Kazantceva',
-                'authorLink' => 'https://unsplash.com/@saltnstreets',
-                'imageName'  => 'alesia-kazantceva-VWcPlbHglYc-unsplash-min.jpg',
-                'imagePath'  => 'client/img/background/alesia-kazantceva-VWcPlbHglYc-unsplash-min.jpg',
-            ],
-            [
-                'authorName' => 'Austin Distel',
-                'authorLink' => 'https://unsplash.com/@austindistel',
-                'imageName'  => 'austin-distel-wawEfYdpkag-unsplash.jpg',
-                'imagePath'  => 'client/img/background/austin-distel-wawEfYdpkag-unsplash.jpg',
-            ],
-            [
-                'authorName' => 'Dane Deaner',
-                'authorLink' => 'https://unsplash.com/@danedeaner',
-                'imageName'  => 'dane-deaner-_-KLkj7on_c-unsplash-min.jpg',
-                'imagePath'  => 'client/img/background/dane-deaner-_-KLkj7on_c-unsplash-min.jpg',
-            ],
-            [
-                'authorName' => 'Lance Anderson',
-                'authorLink' => 'https://unsplash.com/@lanceanderson',
-                'imageName'  => 'lance-anderson-QdAAasrZhdk-unsplash-min.jpg',
-                'imagePath'  => 'client/img/background/lance-anderson-QdAAasrZhdk-unsplash-min.jpg',
-            ],
-            [
-                'authorName' => 'Laura Davidson',
-                'authorLink' => 'https://unsplash.com/@lauradavidson',
-                'imageName'  => 'laura-davidson-QBAH4IldaZY-unsplash-min.jpg',
-                'imagePath'  => 'client/img/background/laura-davidson-QBAH4IldaZY-unsplash-min.jpg',
-            ],
-            [
-                'authorName' => 'Liane Metzler',
-                'authorLink' => 'https://unsplash.com/@liane',
-                'imageName'  => 'liane-metzler-v3bWNXeInQA-unsplash-min.jpg',
-                'imagePath'  => 'client/img/background/liane-metzler-v3bWNXeInQA-unsplash-min.jpg',
-            ],
-            [
-                'authorName' => 'Luca Bravo',
-                'authorLink' => 'https://unsplash.com/@lucabravo',
-                'imageName'  => 'luca-bravo-SRjZtxsK3Os-unsplash-min.jpg',
-                'imagePath'  => 'client/img/background/luca-bravo-SRjZtxsK3Os-unsplash-min.jpg',
-            ],
-            [
-                'authorName' => 'LYCS Architecture',
-                'authorLink' => 'https://unsplash.com/@lycs',
-                'imageName'  => 'lycs-architecture-aKij95Mmus8-unsplash-min.jpg',
-                'imagePath'  => 'client/img/background/lycs-architecture-aKij95Mmus8-unsplash-min.jpg',
-            ],
-            [
-                'authorName' => 'Scott Webb',
-                'authorLink' => 'https://unsplash.com/@scottwebb',
-                'imageName'  => 'scott-webb--udZnjsCzsE-unsplash-min.jpg',
-                'imagePath'  => 'client/img/background/scott-webb--udZnjsCzsE-unsplash-min.jpg',
-            ],
-            [
-                'authorName' => 'Viktor Jakovlev',
-                'authorLink' => 'https://unsplash.com/@apviktor',
-                'imageName'  => 'viktor-jakovlev-H0vuplqoX0c-unsplash-min.jpg',
-                'imagePath'  => 'client/img/background/viktor-jakovlev-H0vuplqoX0c-unsplash-min.jpg',
-            ],
-            [
-                'authorName' => 'Toa Heftiba',
-                'authorLink' => 'https://unsplash.com/@apviktor',
-                'imageName'  => 'toa-heftiba-FV3GConVSss-unsplash-min.jpg',
-                'imagePath'  => 'client/img/background/toa-heftiba-FV3GConVSss-unsplash-min.jpg',
-            ],
-            [
-                'authorName' => 'Martin Sanchez',
-                'authorLink' => 'https://unsplash.com/@martinsanchez',
-                'imageName'  => 'martin-sanchez-U4wRSVKO2Q0-unsplash-min.jpg',
-                'imagePath'  => 'client/img/background/martin-sanchez-U4wRSVKO2Q0-unsplash-min.jpg',
-            ],
-        ];
+    public static function setBackground(): void
+    {
+        $imagesPath = 'client/img/background';
+        if (!file_exists($imagesPath)) {
+            header("HTTP/1.0 404 Not Found");
+            exit;
+        }
+
+        session_start();
+        if (!isset($_SESSION['background']) || $_SESSION['background']['till'] < new \DateTime() || !file_exists($_SESSION['background']['imagePath'])) {
+            $images = Util::scanDir($imagesPath);
+
+            $_SESSION['background']['till'] = (new \DateTime())->modify('+2 hours');
+            $_SESSION['background']['imageName'] = $images[array_rand($images)];
+            $_SESSION['background']['imagePath'] = $imagesPath . '/' . $_SESSION['background']['imageName'];
+
+            $imageMetadata = \exif_read_data($_SESSION['background']['imagePath']);
+
+            $_SESSION['background']['authorName'] = isset($imageMetadata['Artist']) ? $imageMetadata['Artist'] : '';
+            $_SESSION['background']['authorLink'] = isset($imageMetadata['UserComment']) ? $imageMetadata['UserComment'] : '';
+        }
+    }
 
     public function run()
     {
-        session_start();
+        self::setBackground();
 
-        if (!isset($_SESSION['background']) || $_SESSION['background']['till'] < new \DateTime() || !file_exists($_SESSION['background']['imagePath'])) {
-            $_SESSION['background'] = $this->backgrounds[array_rand($this->backgrounds)];
-            $_SESSION['background']['till'] = (new \DateTime())->modify('+2 hours');
-        }
+        $content = file_get_contents($_SESSION['background']['imagePath']);
 
-        header("Location: {$_SESSION['background']['imagePath']}", true, 302);
+        header('Content-Disposition:inline;filename="' . $_SESSION['background']['imageName'] . '"');
+        header('Content-Type: ' . mime_content_type($_SESSION['background']['imagePath']));
+        header('Pragma: public');
+        header('Cache-Control: max-age=360000, must-revalidate');
+        header('Content-Length: ' . mb_strlen($content, "8bit"));
+
+        echo $content;
         exit;
     }
 }
