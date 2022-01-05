@@ -71,6 +71,9 @@ Espo.define('views/role/modals/add-field', 'views/modal', function (Dep) {
                 var d = fields[field];
                 if (field in this.options.ignoreFieldList) return;
                 if (d.disabled) return;
+                if (d.aclFieldDisabled) return;
+                if (d.notStorable && d.aclFieldDisabled !== false) return;
+
                 if (this.getMetadata().get(['app', this.options.type, 'mandatory', 'scopeFieldLevel', this.scope, field]) !== null) {
                     return;
                 }
