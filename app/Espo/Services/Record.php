@@ -2597,7 +2597,7 @@ class Record extends \Espo\Core\Services\Base
 
         $fieldsThatConflict = [];
         foreach ($data as $field => $newValue) {
-            if ($field == 'data' || $this->hasSuffix($field, 'Name') || $this->hasSuffix($field, 'Names')) {
+            if ($field == 'data' || $this->hasSuffix($field, 'Name') || $this->hasSuffix($field, 'Names') || mb_substr($field, 0, 8) === 'complete') {
                 continue 1;
             }
 
