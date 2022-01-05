@@ -1789,7 +1789,7 @@ class Base
             $textFilter = str_replace('*', '%', $textFilter);
         } else {
             if (!$useFullTextSearch) {
-                $textFilterForFullTextSearch .= '*';
+                $textFilterForFullTextSearch .= ' *';
             }
         }
 
