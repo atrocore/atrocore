@@ -9,6 +9,7 @@
   "fields": {
     "hasAssignedUser": "Assigned User",
     "hasTeam": "Team",
+    "hasAccount": "Account",
     "hasOwner": "Owner",
     "name": "Name",
     "type": "Type",
@@ -68,6 +69,7 @@
   "tooltips": {
     "hasAssignedUser": "Has Assigned User",
     "hasTeam": "Has Team",
+    "hasAccount": "Has Account",
     "hasOwner": "Has Owner",
     "statusField": "Updates of this field are logged in stream.",
     "textFilterFields": "Fields used by text search.",

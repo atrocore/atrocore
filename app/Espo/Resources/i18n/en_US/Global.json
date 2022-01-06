@@ -391,6 +391,7 @@
     "shippingAddressPostalCode": "Postal Code (Shipping)",
     "shippingAddressMap": "Map (Shipping)",
     "name": "Name",
+    "assignedAccounts": "Accounts",
     "firstName": "First Name",
     "lastName": "Last Name",
     "salutationName": "Salutation",
@@ -423,6 +424,7 @@
     "team": "Team",
     "roles": "Roles",
     "teams": "Teams",
+    "assignedAccounts": "Accounts",
     "users": "Users",
     "parent": "Parent",
     "children": "Children"
