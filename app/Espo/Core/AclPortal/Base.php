@@ -140,7 +140,12 @@ class Base extends \Espo\Core\Acl\Base
                 }
             }
 
-            if ($entity->hasRelation('accounts')) {
+            if ($entity->hasRelation('assignedAccounts')) {
+                $repository = $this->getEntityManager()->getRepository($entity->getEntityType());
+                if ($repository->isRelated($entity, 'assignedAccounts', $accountId)) {
+                    return true;
+                }
+            } elseif ($entity->hasRelation('accounts')) {
                 $repository = $this->getEntityManager()->getRepository($entity->getEntityType());
                 if ($repository->isRelated($entity, 'accounts', $accountId)) {
                     return true;

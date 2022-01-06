@@ -171,6 +171,17 @@ Espo.define('acl-portal', ['acl'], function (Dep) {
                 }, this);
             }
 
+            if (model.hasField('assignedAccounts') && model.hasLink('assignedAccounts')) {
+                if (!model.has('assignedAccountsIds')) {
+                    result = null;
+                }
+                (model.getLinkMultipleIdList('assignedAccounts')).forEach(function (id) {
+                    if (~accountIdList.indexOf(id)) {
+                        result = true;
+                    }
+                }, this);
+            }
+
             if (model.hasField('parent') && model.hasLink('parent')) {
                 if (model.get('parentType') === 'Account') {
                     if (!accountIdList.indexOf(model.get('parentId'))) {
@@ -180,7 +191,7 @@ Espo.define('acl-portal', ['acl'], function (Dep) {
             }
 
             if (result === false) {
-                if (!model.hasField('accounts') && model.hasLink('accounts')) {
+                if (!model.hasField('accounts') && model.hasLink('accounts') && model.hasLink('assignedAccounts')) {
                     return true;
                 }
             }

@@ -9,6 +9,11 @@
     "default": false,
     "tooltip": true
   },
+  "hasAccount": {
+    "type": "bool",
+    "default": false,
+    "tooltip": true
+  },
   "hasOwner": {
     "type": "bool",
     "default": false,

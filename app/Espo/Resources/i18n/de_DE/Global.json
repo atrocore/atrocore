@@ -387,6 +387,7 @@
     "convertCurrency": "Währung umrechnen"
   },
   "fields": {
+    "assignedAccounts": "Accounts",
     "prohibitedEmptyValue": "Leeren Wert deaktivieren",
     "amount": "Anzahl",
     "measure": "Maß",
@@ -440,6 +441,7 @@
   "links": {
     "parent": "Parent",
     "ownerUser": "Besitzer",
+    "assignedAccounts": "Accounts",
     "assignedUser": "Zugewiesener Benutzer",
     "createdBy": "Erstellt von",
     "modifiedBy": "Geändert von",

@@ -366,6 +366,7 @@
     "removeRelation": "Удалить связь"
   },
   "fields": {
+    "assignedAccounts": "Контрагенты",
     "prohibitedEmptyValue": "Запретить пустые значения",
     "name": "Название",
     "firstName": "Имя",
@@ -414,6 +415,7 @@
     "ids": "IDs"
   },
   "links": {
+    "assignedAccounts": "Контрагенты",
     "assignedUser": "Ответственный",
     "createdBy": "Создан (кем)",
     "modifiedBy": "Изменен (кем)",
