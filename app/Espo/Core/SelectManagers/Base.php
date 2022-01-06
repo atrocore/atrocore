@@ -660,7 +660,11 @@ class Base
             if ($this->getSeed()->hasAttribute('accountId')) {
                 $d['accountId'] = $accountId;
             }
-            if ($this->getSeed()->hasRelation('accounts')) {
+            if ($this->getSeed()->hasRelation('assignedAccounts')) {
+                $this->addLeftJoin(['assignedAccounts', 'accountsAccess'], $result);
+                $this->setDistinct(true, $result);
+                $d['accountsAccess.id'] = $accountId;
+            } elseif ($this->getSeed()->hasRelation('accounts')) {
                 $this->addLeftJoin(['accounts', 'accountsAccess'], $result);
                 $this->setDistinct(true, $result);
                 $d['accountsAccess.id'] = $accountId;

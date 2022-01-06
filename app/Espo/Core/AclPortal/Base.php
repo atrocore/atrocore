@@ -134,20 +134,18 @@ class Base extends \Espo\Core\Acl\Base
     public function checkInAccount(User $user, Entity $entity)
     {
         if (!empty($accountId = $user->get('accountId'))) {
-            if ($entity->hasRelation('assignedAccounts')) {
-                $repository = $this->getEntityManager()->getRepository($entity->getEntityType());
-                if ($repository->isRelated($entity, 'assignedAccounts', $accountId)) {
-                    return true;
-                }
-            }
-
             if ($entity->hasAttribute('accountId')) {
                 if ($entity->get('accountId') === $accountId) {
                     return true;
                 }
             }
 
-            if ($entity->hasRelation('accounts')) {
+            if ($entity->hasRelation('assignedAccounts')) {
+                $repository = $this->getEntityManager()->getRepository($entity->getEntityType());
+                if ($repository->isRelated($entity, 'assignedAccounts', $accountId)) {
+                    return true;
+                }
+            } elseif ($entity->hasRelation('accounts')) {
                 $repository = $this->getEntityManager()->getRepository($entity->getEntityType());
                 if ($repository->isRelated($entity, 'accounts', $accountId)) {
                     return true;
