@@ -33,16 +33,10 @@
 
 namespace Espo\Services;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
 
 class PortalRole extends Record
 {
-    protected function init()
-    {
-        parent::init();
-        $this->addDependency('fileManager');
-    }
-
     protected $forceSelectAllAttributes = true;
 
     public function afterCreate(Entity $entity, array $data = array())
@@ -57,14 +51,18 @@ class PortalRole extends Record
         $this->clearRolesCache();
     }
 
-    protected function clearRolesCache()
+    protected function init()
     {
-        $this->getInjection('fileManager')->removeInDir('data/cache/application/acl-portal');
+        parent::init();
+
+        $this->addDependency('container');
     }
 
-    /**
-     * @inheritDoc
-     */
+    protected function clearRolesCache()
+    {
+        $this->getInjection('container')->get('aclManager')->clearAclCache();
+    }
+
     protected function getFieldsThatConflict(Entity $entity, \stdClass $data): array
     {
         return [];
