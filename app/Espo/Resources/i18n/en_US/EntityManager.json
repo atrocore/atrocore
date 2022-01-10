@@ -8,8 +8,8 @@
   },
   "fields": {
     "hasAssignedUser": "Assigned User",
-    "hasTeam": "Team",
-    "hasAccount": "Account",
+    "hasTeam": "Teams",
+    "hasAccount": "Accounts",
     "hasOwner": "Owner",
     "name": "Name",
     "type": "Type",
@@ -67,10 +67,10 @@
     "linkConflict": "Name conflict: link or field with the same name already exists."
   },
   "tooltips": {
-    "hasAssignedUser": "Has Assigned User",
-    "hasTeam": "Has Team",
-    "hasAccount": "Has Account",
-    "hasOwner": "Has Owner",
+    "hasAssignedUser": "Show Assigned User in Access Management",
+    "hasTeam": "Show Teams in Access Management",
+    "hasAccount": "Show Accounts in Access Management",
+    "hasOwner": "Show Owner in Access Management",
     "statusField": "Updates of this field are logged in stream.",
     "textFilterFields": "Fields used by text search.",
     "stream": "Whether entity has a Stream.",
