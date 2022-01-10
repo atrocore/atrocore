@@ -45,10 +45,7 @@ use Treo\Core\EventManager\Event;
  */
 class FieldManagerController extends AbstractListener
 {
-    /**
-     * @param Event $event
-     */
-    public function beforePostActionCreate(Event $event)
+    public function beforePostActionCreate(Event $event): void
     {
         $data = $event->getArgument('data');
         $params = $event->getArgument('params');
@@ -61,36 +58,44 @@ class FieldManagerController extends AbstractListener
         }
 
         if (!empty($pattern = $data->pattern)) {
-            if (!preg_match('/^\/((?:(?:[^?+*{}()[\]\\\\|]+|\\\\.|\[(?:\^?\\\\.|\^[^\\\\]|[^\\\\^])(?:[^\]\\\\]+|\\\\.)*\]|\((?:\?[:=!]|\?<[=!]|\?>)?(?1)??\)|\(\?(?:R|[+-]?\d+)\))(?:(?:[?+*]|\{\d+(?:,\d*)?\})[?+]?)?|\|)*)\/[gmixsuAJD]*$/', $pattern)) {
+            if (!preg_match("/^\/(.*)\/$/", $pattern)) {
                 throw new BadRequest($this->getLanguage()->translate('regexNotValid', 'exceptions', 'FieldManager'));
             }
 
-            if (preg_match('/\^(.*)\$/', $pattern, $matches)) {
-                $sqlPattern = $matches[0];
+            $field = Util::toUnderScore($data->name);
 
-                $table = Util::toUnderScore($params['scope']);
-                $field = Util::toUnderScore($data->name);
+            if (!$this->getMetadata()->get(['entityDefs', $params['scope'], 'fields', $field])) {
+                return;
+            }
 
-                $where = "$field IS NOT NULL AND $field != '' AND $field NOT REGEXP '{$sqlPattern}'";
+            $table = Util::toUnderScore($params['scope']);
 
-                if (!empty($data->isMultilang) && $this->getConfig()->get('isMultilangActive', false)) {
-                    foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
-                        $locale = strtolower($locale);
-                        $where .= " OR {$field}_{$locale} IS NOT NULL AND {$field}_{$locale} != '' AND {$field}_{$locale} NOT REGEXP '{$sqlPattern}'";
+            $fields = [$field];
+            if ($this->getConfig()->get('isMultilangActive', false)) {
+                foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
+                    $languageField = $field . '_' . strtolower($locale);
+                    if ($this->getMetadata()->get(['entityDefs', $params['scope'], 'fields', Util::toCamelCase($languageField)])) {
+                        $fields[] = $languageField;
                     }
                 }
+            }
 
-                $sql = "SELECT id FROM {$table}
-                    WHERE deleted = 0
-                        AND ({$where})";
+            $wheres = [];
+            foreach ($fields as $v) {
+                $wheres[] = "$v IS NOT NULL AND $v != ''";
+            }
 
-                $result = $this
-                    ->getEntityManager()
-                    ->nativeQuery($sql)
-                    ->fetch(\PDO::FETCH_ASSOC);
+            $records = $this
+                ->getEntityManager()
+                ->getPDO()
+                ->query("SELECT * FROM $table WHERE deleted=0 AND (" . implode(' OR ', $wheres) . ")")
+                ->fetchAll(\PDO::FETCH_ASSOC);
 
-                if (!empty($result)) {
-                    throw new BadRequest($this->getLanguage()->translate('someFieldDontMathToPattern', 'exceptions', 'FieldManager'));
+            foreach ($records as $valueData) {
+                foreach ($fields as $v) {
+                    if (!preg_match($pattern, $valueData[$v])) {
+                        throw new BadRequest($this->getLanguage()->translate('someFieldDontMathToPattern', 'exceptions', 'FieldManager'));
+                    }
                 }
             }
         }
