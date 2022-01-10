@@ -82,7 +82,7 @@ class FieldManagerController extends AbstractListener
 
             $wheres = [];
             foreach ($fields as $v) {
-                $wheres[] = "$v IS NOT NULL AND $v != ''";
+                $wheres[] = "`$v` IS NOT NULL AND `$v` != ''";
             }
 
             $records = $this
