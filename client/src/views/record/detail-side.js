@@ -205,7 +205,7 @@ Espo.define('views/record/detail-side', ['view'], function (Dep) {
                 return (scopeDefs.hasOwner && fieldDefs.name === ':ownerUser' && this.getAcl().check('User', 'read'))
                     || (scopeDefs.hasAssignedUser && fieldDefs.name === ':assignedUser' && this.getAcl().check('User', 'read'))
                     || (scopeDefs.hasTeam && fieldDefs.name === 'teams' && this.getAcl().check('Team', 'read'))
-                    || (scopeDefs.hasTeam && fieldDefs.name === 'assignedAccounts' && this.getAcl().check('Account', 'read'));
+                    || (scopeDefs.hasAccount && fieldDefs.name === 'assignedAccounts' && this.getAcl().check('Account', 'read'));
             });
 
             let hasAnyField = (this.defaultPanelDefs.options.fieldList || []).some(fieldDefs => {
