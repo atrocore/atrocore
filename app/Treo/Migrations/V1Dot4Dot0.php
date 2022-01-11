@@ -57,10 +57,14 @@ class V1Dot4Dot0 extends Base
         $this->execute("ALTER TABLE `user` ADD portal_id VARCHAR(24) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
         $this->execute("CREATE INDEX IDX_PORTAL_ID ON `user` (portal_id)");
 
-        $data = $this
-            ->getPDO()
-            ->query("SELECT * FROM `portal_user` WHERE deleted=0")
-            ->fetchAll(\PDO::FETCH_ASSOC);
+        try {
+            $data = $this
+                ->getPDO()
+                ->query("SELECT * FROM `portal_user` WHERE deleted=0")
+                ->fetchAll(\PDO::FETCH_ASSOC);
+        } catch (\Throwable $e) {
+            $data = [];
+        }
 
         foreach ($data as $v) {
             $this->execute("UPDATE `user` SET portal_id='{$v['portal_id']}' WHERE id='{$v['user_id']}'");
