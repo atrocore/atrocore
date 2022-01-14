@@ -63,6 +63,7 @@ class File extends Base
         );
         if (!empty($fieldParams['notStorable'])) {
             $data[$entityName]['fields'][$fieldName.'Id']['notStorable'] = true;
+            $data[$entityName]['fields'][$fieldName.'Name']['notStorable'] = true;
             $data[$entityName]['fields'][$fieldName.'Name']['type'] = 'varchar';
         }
 
