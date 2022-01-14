@@ -102,6 +102,14 @@ class Layout
         // remove fields from layout if this fields not exist in metadata
         $layout = $this->disableNotExistingFields($scope, $name, $layout);
 
+        if (in_array($name, ['list', 'listSmall'])) {
+            foreach ($layout as $k => $row) {
+                if (!empty($row['name']) && empty($row['notSortable']) && !empty($this->getMetadata()->get(['entityDefs', $scope, 'fields', $row['name'], 'notStorable']))) {
+                    $layout[$k]['notSortable'] = true;
+                }
+            }
+        }
+
         return Json::encode($layout);
     }
 
