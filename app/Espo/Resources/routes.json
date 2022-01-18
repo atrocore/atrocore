@@ -287,6 +287,14 @@
     }
   },
   {
+    "route": "/Admin/rebuildDb",
+    "method": "post",
+    "params": {
+      "controller": "Admin",
+      "action": "rebuildDb"
+    }
+  },
+  {
     "route": "/Admin/jobs",
     "method": "get",
     "params": {

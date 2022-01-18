@@ -47,16 +47,28 @@ class Admin extends \Espo\Core\Controllers\Base
         }
     }
 
-    public function postActionClearCache($params)
+    public function postActionClearCache(): bool
     {
-        $result = $this->getContainer()->get('dataManager')->clearCache();
-        return $result;
+        return $this->getContainer()->get('dataManager')->clearCache();
+    }
+
+    public function postActionRebuildDb(): bool
+    {
+        try {
+            $queries = $this->getContainer()->get('schema')->getDiffQueries();
+        } catch (\Throwable $e) {
+            $queries = [];
+        }
+
+        foreach ($queries as $query) {
+            $this->getContainer()->get('pdo')->exec($query);
+        }
+
+        return true;
     }
 
     public function actionJobs()
     {
-        $scheduledJob = $this->getContainer()->get('scheduledJob');
-
-        return $scheduledJob->getAvailableList();
+        return $this->getContainer()->get('scheduledJob')->getAvailableList();
     }
 }

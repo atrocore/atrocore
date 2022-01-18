@@ -231,6 +231,23 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
                     Espo.Ui.success(msg);
                 }.bind(this)
             });
+        },
+
+        rebuildDb: function (options) {
+            let master = this.get('master');
+            this.getRouter().navigate('#Admin');
+            Espo.Ui.confirm(master.translate('rebuildDb', 'messages', 'Admin'), {
+                confirmText: master.translate('Apply'),
+                cancelText: master.translate('Cancel')
+            }, () => {
+                $.ajax({
+                    url: 'Admin/rebuildDb',
+                    type: 'POST',
+                    success: () => {
+                        Espo.Ui.success('Success');
+                    }
+                });
+            });
         }
     });
 

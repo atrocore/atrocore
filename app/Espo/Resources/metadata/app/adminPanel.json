@@ -53,6 +53,11 @@
         "description": "clearCache"
       },
       {
+        "url": "#Admin/rebuildDb",
+        "label": "rebuildDb",
+        "description": "rebuildDb"
+      },
+      {
         "url": "#Composer/list",
         "label": "Composer",
         "description": "composer"

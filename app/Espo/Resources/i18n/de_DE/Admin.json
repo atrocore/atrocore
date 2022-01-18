@@ -25,6 +25,7 @@
     "Settings": "Einstellungen",
     "Scheduled Jobs": "Geplante Jobs",
     "Clear Cache": "Cache leeren",
+    "rebuildDb": "Datenbankstruktur aktualisieren",
     "Roles": "Rollen",
     "Portals": "Portale",
     "Portal Roles": "Portal-Rollen",
@@ -160,12 +161,12 @@
     "foreignName": "Fremdfeld"
   },
   "messages": {
-    "upgradeFailed": "Upgrade fehlgeschlagen",
     "selectEntityType": "Entitätstyp im linken Menü auswählen.",
     "selectLayout": "Layout zum Editieren links auswählen",
     "thousandSeparatorEqualsDecimalMark": "Das Tausendertrennzeichen und das Dezimaltrennzeichen können nicht gleich sein",
     "userHasNoEmailAddress": "Der Benutzer hat keine E-Mail Adresse.",
-    "incorrectThousandSeparatorOrDecimalMark": "Es sind nur die folgenden Trennzeichen zulässig: '.' und ','."
+    "incorrectThousandSeparatorOrDecimalMark": "Es sind nur die folgenden Trennzeichen zulässig: '.' und ','.",
+    "rebuildDb": "Möchten Sie die Datenbankstruktur wirklich anpassen? Alle unbenutzten Spalten und Tabellen werden entfernt."
   },
   "descriptions": {
     "locale": "Gebietsschemaeinstellungen",
@@ -178,6 +179,7 @@
     "settings": "Systemeinstellungen der Webanwendung.",
     "scheduledJob": "Cronjob-Aufgaben.",
     "clearCache": "Cache leeren.",
+    "rebuildDb": "Datenbankstruktur mit konfigurierten Metadaten abgleichen",
     "users": "Benutzerverwaltung.",
     "teams": "Teamverwaltung.",
     "roles": "Rollenverwaltung.",
