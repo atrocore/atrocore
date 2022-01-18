@@ -152,9 +152,12 @@ class Metadata extends AbstractListener
             if (!isset($rows['fields']) || !is_array($rows['fields'])) {
                 continue 1;
             }
-
+            $toSkip = [];
             $newFields = [];
             foreach ($rows['fields'] as $field => $params) {
+                if (in_array($field, $toSkip)){
+                    continue 1;
+                }
                 $newFields[$field] = $params;
                 if (!empty($params['isMultilang'])) {
                     foreach ($locales as $locale) {
@@ -188,6 +191,11 @@ class Metadata extends AbstractListener
                                 $mParams['hideParams'], ['options', 'default', 'required', 'isSorted', 'audited', 'readOnly', 'prohibitedEmptyValue']
                             );
                             $mParams['layoutMassUpdateDisabled'] = true;
+                        }
+
+                        if (isset($data['entityDefs'][$scope]['fields'][$mField])) {
+                            $mParams = array_merge($mParams, $data['entityDefs'][$scope]['fields'][$mField]);
+                            $toSkip[] = $mField;
                         }
 
                         $newFields[$mField] = $mParams;
