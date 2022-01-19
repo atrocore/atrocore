@@ -93,7 +93,7 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             this.setupTranslation();
 
             if (this.translatedOptions === null) {
-                this.translatedOptions = [];
+                this.translatedOptions = {};
                 (this.params.options || []).map(function (item) {
                     this.translatedOptions[item] = this.getLanguage().translate(item, 'labels', this.model.name) || item;
                 }.bind(this));
@@ -320,7 +320,7 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
         },
 
         fetch: function () {
-            var value = this.$el.find('[name="' + this.name + '"]').val();
+            var value = this.$el.find('[name="' + this.name + '"]').val().replace(/~dbq~/g, '"');
             var data = {};
             data[this.name] = value;
             return data;
