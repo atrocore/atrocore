@@ -3,10 +3,13 @@
   "layouts": true,
   "tab": true,
   "acl": true,
-  "aclPortal": true,
   "aclActionList": [
     "read",
-    "edit",
+    "delete"
+  ],
+  "aclPortal": true,
+  "aclPortalActionList": [
+    "read",
     "delete"
   ],
   "type": "Base",
