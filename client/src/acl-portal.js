@@ -144,8 +144,7 @@ Espo.define('acl-portal', ['acl'], function (Dep) {
         },
 
         checkInAccount: function (model) {
-            var accountIdList = this.getUser().getLinkMultipleIdList('accounts');
-
+            var accountIdList = [this.getUser().get('accountId')];
             if (!accountIdList.length) {
                 return false;
             }
