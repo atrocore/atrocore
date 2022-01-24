@@ -68,9 +68,15 @@ class QueueItem extends AbstractConsole
             self::show('No such queue item!', self::ERROR, true);
         }
 
+        $user = $item->get('createdBy');
+
         // set user
-        $this->getContainer()->setUser($item->get('createdBy'));
-        $entityManager->setUser($item->get('createdBy'));
+        $this->getContainer()->setUser($user);
+        $entityManager->setUser($user);
+
+        if (!empty($user->get('portalId'))) {
+            $this->getContainer()->setPortal($user->get('portal'));
+        }
 
         // create service
         $service = $this->getContainer()->get('serviceFactory')->create($item->get('serviceName'));
