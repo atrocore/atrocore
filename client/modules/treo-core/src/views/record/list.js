@@ -350,7 +350,7 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
 
             if (this.dragableListRows && !((this.getParentView() || {}).defs || {}).readOnly) {
                 let allowed = true;
-                this.collection.models.forEach(model => {
+                (this.collection.models || []).forEach(model => {
                     if (this.getAcl().checkModel(model, 'edit') === false) {
                         allowed = false;
                     }
