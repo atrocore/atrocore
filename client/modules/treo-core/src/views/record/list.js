@@ -349,10 +349,23 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
             this.changeDropDownPosition();
 
             if (this.dragableListRows && !((this.getParentView() || {}).defs || {}).readOnly) {
-                this.initDraggableList();
-                $(window).off(this.dragndropEventName).on(this.dragndropEventName, () => {
-                    this.initDraggableList();
+                let allowed = true;
+                this.collection.models.forEach(model => {
+                    if (this.getAcl().checkModel(model, 'edit') === false) {
+                        allowed = false;
+                    }
                 });
+
+                if (!allowed) {
+                    $("td[data-name='draggableIcon'] span").remove();
+                }
+
+                if (allowed) {
+                    this.initDraggableList();
+                    $(window).off(this.dragndropEventName).on(this.dragndropEventName, () => {
+                        this.initDraggableList();
+                    });
+                }
             }
         },
 
