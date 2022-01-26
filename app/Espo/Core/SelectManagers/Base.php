@@ -559,7 +559,7 @@ class Base
             }
         } else {
             if ($this->getAcl()->checkReadOnlyOwn($this->getEntityType())) {
-                $this->accessPortalOnlyOwn($result);
+                $this->accessOnlyOwn($result);
             } else {
                 if ($this->getAcl()->checkReadOnlyAccount($this->getEntityType())) {
                     $this->accessPortalOnlyAccount($result);
@@ -635,19 +635,6 @@ class Base
         $result['whereClause'][] = array(
             'OR' => $d
         );
-    }
-
-    protected function accessPortalOnlyOwn(&$result)
-    {
-        if ($this->getSeed()->hasAttribute('createdById')) {
-            $result['whereClause'][] = array(
-                'createdById' => $this->getUser()->id
-            );
-        } else {
-            $result['whereClause'][] = array(
-                'id' => null
-            );
-        }
     }
 
     protected function accessPortalOnlyAccount(&$result)

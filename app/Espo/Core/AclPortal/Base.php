@@ -119,18 +119,6 @@ class Base extends \Espo\Core\Acl\Base
         return $data->read === 'account';
     }
 
-    public function checkIsOwner(User $user, Entity $entity)
-    {
-        if ($entity->hasAttribute('createdById')) {
-            if ($entity->has('createdById')) {
-                if ($user->id === $entity->get('createdById')) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     public function checkInAccount(User $user, Entity $entity)
     {
         if (!empty($accountId = $user->get('accountId'))) {

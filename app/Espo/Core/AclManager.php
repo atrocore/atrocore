@@ -87,9 +87,6 @@ class AclManager
                     $className = '\\Espo\\Acl\\' . $normalizedName;
                 }
                 if (!class_exists($className)) {
-                    $className = '\\Treo\\Core\\Acl\\Base';
-                }
-                if (!class_exists($className)) {
                     $className = '\\Espo\\Core\\Acl\\Base';
                 }
             }

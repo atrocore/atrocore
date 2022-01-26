@@ -103,13 +103,6 @@ class User extends \Espo\Core\SelectManagers\Base
         );
     }
 
-    protected function accessPortalOnlyOwn(&$result)
-    {
-        $result['whereClause'][] = array(
-            'id' => $this->getUser()->id
-        );
-    }
-
     protected function accessOnlyTeam(&$result)
     {
         $this->setDistinct(true, $result);
