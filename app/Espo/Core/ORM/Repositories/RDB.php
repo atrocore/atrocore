@@ -280,7 +280,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             foreach ($value as $v) {
                 if (!in_array($v, $fieldOptions)) {
                     $language = $this->getInjection('container')->get('language');
-                    throw new BadRequest(sprintf($language->translate('noSuchOptions', 'exceptions', 'Global'), $language->translate($fieldName, 'fields', $entity->getEntityType())));
+                    throw new BadRequest(sprintf($language->translate('noSuchOptions', 'exceptions', 'Global'), $v, $language->translate($fieldName, 'fields', $entity->getEntityType())));
                 }
             }
         }
@@ -313,7 +313,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
 
         if (!empty($unit) && !in_array($unit, $unitsOfMeasure[$measure]['unitList'])) {
-            throw new BadRequest(sprintf($language->translate('noSuchUnit', 'exceptions', 'Global'), $fieldLabel));
+            throw new BadRequest(sprintf($language->translate('noSuchUnit', 'exceptions', 'Global'), $unit, $fieldLabel));
         }
     }
 
