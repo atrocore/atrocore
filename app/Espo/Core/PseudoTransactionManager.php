@@ -44,13 +44,13 @@ use Treo\Core\ServiceFactory;
 class PseudoTransactionManager
 {
     private PDO $pdo;
-    private User $user;
+//    private User $user;
     private ServiceFactory $serviceFactory;
 
-    public function __construct(PDO $pdo, User $user, ServiceFactory $serviceFactory)
+    public function __construct(PDO $pdo, ?User $user, ServiceFactory $serviceFactory)
     {
         $this->pdo = $pdo;
-        $this->user = $user;
+//        $this->user = $user;
         $this->serviceFactory = $serviceFactory;
     }
 
