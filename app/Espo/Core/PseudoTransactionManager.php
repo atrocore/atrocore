@@ -38,52 +38,83 @@ namespace Espo\Core;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
 use Espo\Entities\User;
+use Espo\ORM\EntityManager;
 use PDO;
 use Treo\Core\ServiceFactory;
 
 class PseudoTransactionManager
 {
-    private PDO $pdo;
-//    private User $user;
-    private ServiceFactory $serviceFactory;
+    private Container $container;
 
-    public function __construct(PDO $pdo, ?User $user, ServiceFactory $serviceFactory)
+    public function __construct(Container $container)
     {
-        $this->pdo = $pdo;
-//        $this->user = $user;
-        $this->serviceFactory = $serviceFactory;
+        $this->container = $container;
     }
 
-    public function push(string $entityType, string $entityId, string $action, array $data): void
+    public function push(string $entityType, string $entityId, string $action, array $input): void
     {
         $id = Util::generateId();
-        $entityType = $this->pdo->quote($entityType);
-        $entityId = $this->pdo->quote($entityId);
-        $action = $this->pdo->quote($action);
-        $data = Json::encode($data);
-        $createdById = $this->user->get('id');
+        $entityType = $this->getPDO()->quote($entityType);
+        $entityId = $this->getPDO()->quote($entityId);
+        $action = $this->getPDO()->quote($action);
+        $input = Json::encode($input);
+        $createdById = $this->getUser()->get('id');
 
         $this
-            ->pdo
-            ->exec("INSERT INTO `pseudo_transaction` (id,entity_type,entity_id,action,data,created_by_id) VALUES ('$id',$entityType,$entityId,$action,'$data','$createdById')");
+            ->getPDO()
+            ->exec(
+                "INSERT INTO `pseudo_transaction` (id,entity_type,entity_id,action,input_data,created_by_id) VALUES ('$id',$entityType,$entityId,$action,'$input','$createdById')"
+            );
     }
 
     public function run(string $entityType, string $entityId): void
     {
-        $entityType = $this->pdo->quote($entityType);
-        $entityId = $this->pdo->quote($entityId);
+        $entityType = $this->getPDO()->quote($entityType);
+        $entityId = $this->getPDO()->quote($entityId);
 
         $jobs = $this
-            ->pdo
+            ->getPDO()
             ->query("SELECT * FROM `pseudo_transaction` WHERE deleted=0 AND entity_type=$entityType AND entity_id=$entityId ORDER BY sort_order ASC")
             ->fetchAll(PDO::FETCH_ASSOC);
 
-//        foreach ($jobs as $job) {
-//            if (!$this->serviceFactory->checkExists($job['entity_type'])) {
-//                continue 1;
-//            }
-//
-//            $service = $this->serviceFactory->create($job['entity_type']);
-//        }
+        foreach ($jobs as $job) {
+            try {
+                $service = $this->getServiceFactory()->create($job['entity_type']);
+                $user = $this->getEntityManager()->getEntity('User', $job['created_by_id']);
+
+                $this->container->setUser($user);
+                $this->getEntityManager()->setUser($user);
+                if (!empty($user->get('portalId'))) {
+                    $this->container->setPortal($user->get('portal'));
+                }
+
+                $inputData = @json_decode($job['input_data'], true);
+                $service->{$job['action']}(...$inputData);
+            } catch (\Throwable $e) {
+                $GLOBALS['log']->error("PseudoTransaction job failed: {$e->getMessage()}");
+            }
+
+            $this->getPDO()->exec("DELETE FROM `pseudo_transaction` WHERE id='{$job['id']}'");
+        }
+    }
+
+    protected function getPDO(): PDO
+    {
+        return $this->container->get('pdo');
+    }
+
+    protected function getServiceFactory(): ServiceFactory
+    {
+        return $this->container->get('serviceFactory');
+    }
+
+    protected function getUser(): User
+    {
+        return $this->container->get('user');
+    }
+
+    protected function getEntityManager(): EntityManager
+    {
+        return $this->container->get('entityManager');
     }
 }
