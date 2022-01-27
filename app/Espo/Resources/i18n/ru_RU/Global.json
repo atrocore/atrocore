@@ -70,7 +70,7 @@
     "ScheduledJobLogRecord": "Записи журнала запланированных работ",
     "PasswordChangeRequest": "Запросы смены пароля",
     "ActionHistoryRecord": "История действий",
-    "AuthToken": "Токены сессий аутентификации",
+    "AuthToken": "Токены аутентификации",
     "LastViewed": "Последние просмотренные",
     "AuthLogRecord": "Лог Аутентификации",
     "AuthFailLogRecord": "Сбой Лога Аутентификации",
