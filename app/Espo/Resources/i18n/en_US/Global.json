@@ -892,8 +892,8 @@
   "exceptions": {
     "unitValueIsRequired": "Unit for the field '%s' is required.",
     "emailIsInvalid": "Email for the field '%s' is not valid.",
-    "noSuchUnit": "Unit for the field '%s' is not valid.",
-    "noSuchOptions": "Value for the field '%s' is not valid.",
+    "noSuchUnit": "Unit '%s' for the field '%s' is not valid.",
+    "noSuchOptions": "Value '%s' for the field '%s' is not valid.",
     "fieldIsRequired": "Validation failed. '%s' is required.",
     "urlIsInvalid": "URL is invalid",
     "suchUrlExists": "Such URL is already exists",
