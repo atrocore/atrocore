@@ -33,16 +33,16 @@
 
 namespace Espo\Services;
 
+use Espo\Core\PseudoTransactionManager;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Language;
-use \Espo\ORM\Entity;
-
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\BadRequest;
-use \Espo\Core\Exceptions\Conflict;
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Utils\Util;
+use Espo\ORM\Entity;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Conflict;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Utils\Util;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\IEntity;
 use Treo\Core\EventManager\Event;
@@ -66,7 +66,8 @@ class Record extends \Espo\Core\Services\Base
         'injectableFactory',
         'fieldManagerUtil',
         'eventManager',
-        'language'
+        'language',
+        'pseudoTransactionManager'
     );
 
     protected $getEntityBeforeUpdate = false;
@@ -2753,5 +2754,10 @@ class Record extends \Espo\Core\Services\Base
 
         // dispatch target listener
         return $this->getInjection('eventManager')->dispatch($event->getArgument('target'), $action, $event);
+    }
+
+    protected function getPseudoTransactionManager(): PseudoTransactionManager
+    {
+        return $this->getInjection('pseudoTransactionManager');
     }
 }

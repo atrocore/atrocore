@@ -1,0 +1,68 @@
+{
+  "fields": {
+    "sortOrder": {
+      "type": "autoincrement",
+      "readOnly": true
+    },
+    "entityType": {
+      "type": "varchar",
+      "readOnly": true
+    },
+    "entityId": {
+      "type": "varchar",
+      "readOnly": true
+    },
+    "action": {
+      "type": "varchar",
+      "readOnly": true
+    },
+    "pid": {
+      "type": "varchar",
+      "readOnly": true
+    },
+    "data": {
+      "type": "jsonObject",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true
+    }
+  },
+  "links": {
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    }
+  },
+  "collection": {
+    "sortBy": "sortOrder",
+    "asc": true
+  },
+  "indexes": {
+    "entityType": {
+      "columns": [
+        "entityType",
+        "deleted"
+      ]
+    },
+    "entityId": {
+      "columns": [
+        "entityId",
+        "deleted"
+      ]
+    },
+    "action": {
+      "columns": [
+        "action",
+        "deleted"
+      ]
+    },
+    "pid": {
+      "columns": [
+        "pid",
+        "deleted"
+      ]
+    }
+  }
+}
