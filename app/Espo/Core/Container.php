@@ -345,6 +345,6 @@ class Container
 
     protected function loadPseudoTransactionManager(): PseudoTransactionManager
     {
-        return new PseudoTransactionManager($this->get('pdo'), $this->get('user'));
+        return new PseudoTransactionManager($this->get('pdo'), $this->get('user'), $this->get('serviceFactory'));
     }
 }

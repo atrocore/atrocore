@@ -39,16 +39,19 @@ use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
 use Espo\Entities\User;
 use PDO;
+use Treo\Core\ServiceFactory;
 
 class PseudoTransactionManager
 {
     private PDO $pdo;
     private User $user;
+    private ServiceFactory $serviceFactory;
 
-    public function __construct(PDO $pdo, User $user)
+    public function __construct(PDO $pdo, User $user, ServiceFactory $serviceFactory)
     {
         $this->pdo = $pdo;
         $this->user = $user;
+        $this->serviceFactory = $serviceFactory;
     }
 
     public function push(string $entityType, string $entityId, string $action, array $data): void
@@ -67,5 +70,20 @@ class PseudoTransactionManager
 
     public function run(string $entityType, string $entityId): void
     {
+        $entityType = $this->pdo->quote($entityType);
+        $entityId = $this->pdo->quote($entityId);
+
+        $jobs = $this
+            ->pdo
+            ->query("SELECT * FROM `pseudo_transaction` WHERE deleted=0 AND entity_type=$entityType AND entity_id=$entityId ORDER BY sort_order ASC")
+            ->fetchAll(PDO::FETCH_ASSOC);
+
+//        foreach ($jobs as $job) {
+//            if (!$this->serviceFactory->checkExists($job['entity_type'])) {
+//                continue 1;
+//            }
+//
+//            $service = $this->serviceFactory->create($job['entity_type']);
+//        }
     }
 }
