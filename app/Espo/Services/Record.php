@@ -246,6 +246,8 @@ class Record extends \Espo\Core\Services\Base
             ->dispatchEvent('beforeGetEntity', new Event(['id' => $id]))
             ->getArgument('id');
 
+        $this->getPseudoTransactionManager()->runForEntity($this->getEntityType(), $id);
+
         $entity = $this->getRepository()->get($id);
         if (!empty($entity) && !empty($id)) {
             $this->loadAdditionalFields($entity);
@@ -1442,6 +1444,8 @@ class Record extends \Espo\Core\Services\Base
         $id = $event->getArgument('id');
         $link = $event->getArgument('link');
         $params = $event->getArgument('params');
+
+        $this->getPseudoTransactionManager()->runForEntity($this->getEntityType(), $id);
 
         $entity = $this->getRepository()->get($id);
         if (!$entity) {

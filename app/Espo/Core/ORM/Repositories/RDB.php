@@ -33,7 +33,6 @@
 
 namespace Espo\Core\ORM\Repositories;
 
-use Espo\Core\PseudoTransactionManager;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Json;
 use Espo\ORM\EntityManager;
@@ -51,8 +50,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         'config',
         'fieldManagerUtil',
         'eventManager',
-        'workflow',
-        'pseudoTransactionManager'
+        'workflow'
     );
 
     protected $injections = [];
@@ -107,11 +105,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     protected function getFieldManagerUtil()
     {
         return $this->getInjection('fieldManagerUtil');
-    }
-
-    protected function getPseudoTransactionManager(): PseudoTransactionManager
-    {
-        return $this->getInjection('pseudoTransactionManager');
     }
 
     public function __construct($entityType, EntityManager $entityManager, EntityFactory $entityFactory)

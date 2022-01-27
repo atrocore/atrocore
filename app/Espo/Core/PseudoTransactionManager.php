@@ -51,13 +51,17 @@ class PseudoTransactionManager
         $this->container = $container;
     }
 
-    public function push(string $entityType, string $entityId, string $action, array $input): void
+    public function push(string $entityType, string $entityId, string $action, $input): void
     {
         $id = Util::generateId();
         $entityType = $this->getPDO()->quote($entityType);
         $entityId = $this->getPDO()->quote($entityId);
         $action = $this->getPDO()->quote($action);
-        $input = Json::encode($input);
+
+        if (is_array($input) || $input instanceof \stdClass) {
+            $input = Json::encode($input);
+        }
+
         $createdById = $this->getUser()->get('id');
 
         $this
@@ -67,7 +71,7 @@ class PseudoTransactionManager
             );
     }
 
-    public function run(string $entityType, string $entityId): void
+    public function runForEntity(string $entityType, string $entityId): void
     {
         $entityType = $this->getPDO()->quote($entityType);
         $entityId = $this->getPDO()->quote($entityId);
@@ -79,7 +83,6 @@ class PseudoTransactionManager
 
         foreach ($jobs as $job) {
             try {
-                $service = $this->getServiceFactory()->create($job['entity_type']);
                 $user = $this->getEntityManager()->getEntity('User', $job['created_by_id']);
 
                 $this->container->setUser($user);
@@ -88,8 +91,13 @@ class PseudoTransactionManager
                     $this->container->setPortal($user->get('portal'));
                 }
 
-                $inputData = @json_decode($job['input_data'], true);
-                $service->{$job['action']}(...$inputData);
+                $service = $this->getServiceFactory()->create($job['entity_type']);
+
+                switch ($job['action']) {
+                    case 'updateEntity':
+                        $service->updateEntity($job['entity_id'], @json_decode($job['input_data']));
+                        break;
+                }
             } catch (\Throwable $e) {
                 $GLOBALS['log']->error("PseudoTransaction job failed: {$e->getMessage()}");
             }
