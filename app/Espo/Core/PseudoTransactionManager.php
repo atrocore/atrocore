@@ -66,6 +66,11 @@ class PseudoTransactionManager
         $this->push($entityType, $entityId, 'unlinkEntity', Json::encode(['link' => $link, 'foreignId' => $foreignId]));
     }
 
+    public function pushCustomEntityJob(string $entityType, string $entityId, string $action, array $data): void
+    {
+        $this->push($entityType, $entityId, $this->getPDO()->quote($action), Json::encode($data));
+    }
+
     public function runForEntity(string $entityType, string $entityId): void
     {
         $entityType = $this->getPDO()->quote($entityType);
@@ -119,6 +124,9 @@ class PseudoTransactionManager
                 case 'unlinkEntity':
                     $inputData = Json::decode($job['input_data']);
                     $service->unlinkEntity($job['entity_id'], $inputData->link, $inputData->foreignId);
+                    break;
+                default:
+                    $service->{$job['action']}(Json::decode($job['input_data'], true));
                     break;
             }
         } catch (\Throwable $e) {
