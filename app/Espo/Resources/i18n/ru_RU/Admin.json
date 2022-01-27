@@ -98,7 +98,7 @@
     "detailSmallPortal": "Детали (Cжатые, Портал)",
     "listSmallPortal": "Список (Сжатые, Портал)",
     "listPortal": "Список (Портал)",
-    "relationshipsPortal": "Отношения (Портал)"
+    "relationshipsPortal": "Связи (Портал)"
   },
   "fieldTypes": {
     "color": "Цвет",
