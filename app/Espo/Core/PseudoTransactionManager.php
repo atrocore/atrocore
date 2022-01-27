@@ -51,24 +51,19 @@ class PseudoTransactionManager
         $this->container = $container;
     }
 
-    public function push(string $entityType, string $entityId, string $action, $input): void
+    public function pushUpdateEntityJob(string $entityType, string $entityId, $data): void
     {
-        $id = Util::generateId();
-        $entityType = $this->getPDO()->quote($entityType);
-        $entityId = $this->getPDO()->quote($entityId);
-        $action = $this->getPDO()->quote($action);
+        $this->push($entityType, $entityId, 'updateEntity', Json::encode($data));
+    }
 
-        if (is_array($input) || $input instanceof \stdClass) {
-            $input = Json::encode($input);
-        }
+    public function pushLinkEntityJob(string $entityType, string $entityId, string $link, string $foreignId): void
+    {
+        $this->push($entityType, $entityId, 'linkEntity', Json::encode(['link' => $link, 'foreignId' => $foreignId]));
+    }
 
-        $createdById = $this->getUser()->get('id');
-
-        $this
-            ->getPDO()
-            ->exec(
-                "INSERT INTO `pseudo_transaction` (id,entity_type,entity_id,action,input_data,created_by_id) VALUES ('$id',$entityType,$entityId,$action,'$input','$createdById')"
-            );
+    public function pushUnLinkEntityJob(string $entityType, string $entityId, string $link, string $foreignId): void
+    {
+        $this->push($entityType, $entityId, 'unlinkEntity', Json::encode(['link' => $link, 'foreignId' => $foreignId]));
     }
 
     public function runForEntity(string $entityType, string $entityId): void
@@ -82,28 +77,55 @@ class PseudoTransactionManager
             ->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($jobs as $job) {
-            try {
-                $user = $this->getEntityManager()->getEntity('User', $job['created_by_id']);
+            $this->runJob($job);
+        }
+    }
 
-                $this->container->setUser($user);
-                $this->getEntityManager()->setUser($user);
-                if (!empty($user->get('portalId'))) {
-                    $this->container->setPortal($user->get('portal'));
-                }
+    protected function push(string $entityType, string $entityId, string $action, string $input): void
+    {
+        $id = Util::generateId();
+        $entityType = $this->getPDO()->quote($entityType);
+        $entityId = $this->getPDO()->quote($entityId);
+        $createdById = $this->getUser()->get('id');
 
-                $service = $this->getServiceFactory()->create($job['entity_type']);
+        $this
+            ->getPDO()
+            ->exec(
+                "INSERT INTO `pseudo_transaction` (id,entity_type,entity_id,action,input_data,created_by_id) VALUES ('$id',$entityType,$entityId,'$action','$input','$createdById')"
+            );
+    }
 
-                switch ($job['action']) {
-                    case 'updateEntity':
-                        $service->updateEntity($job['entity_id'], @json_decode($job['input_data']));
-                        break;
-                }
-            } catch (\Throwable $e) {
-                $GLOBALS['log']->error("PseudoTransaction job failed: {$e->getMessage()}");
+    protected function runJob(array $job): void
+    {
+        try {
+            $user = $this->getEntityManager()->getEntity('User', $job['created_by_id']);
+
+            $this->container->setUser($user);
+            $this->getEntityManager()->setUser($user);
+            if (!empty($user->get('portalId'))) {
+                $this->container->setPortal($user->get('portal'));
             }
 
-            $this->getPDO()->exec("DELETE FROM `pseudo_transaction` WHERE id='{$job['id']}'");
+            $service = $this->getServiceFactory()->create($job['entity_type']);
+
+            switch ($job['action']) {
+                case 'updateEntity':
+                    $service->updateEntity($job['entity_id'], Json::decode($job['input_data']));
+                    break;
+                case 'linkEntity':
+                    $inputData = Json::decode($job['input_data']);
+                    $service->linkEntity($job['entity_id'], $inputData->link, $inputData->foreignId);
+                    break;
+                case 'unlinkEntity':
+                    $inputData = Json::decode($job['input_data']);
+                    $service->unlinkEntity($job['entity_id'], $inputData->link, $inputData->foreignId);
+                    break;
+            }
+        } catch (\Throwable $e) {
+            $GLOBALS['log']->error("PseudoTransaction job failed: {$e->getMessage()}");
         }
+
+        $this->getPDO()->exec("DELETE FROM `pseudo_transaction` WHERE id='{$job['id']}'");
     }
 
     protected function getPDO(): PDO
