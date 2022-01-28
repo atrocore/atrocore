@@ -66,24 +66,51 @@ class PseudoTransactionManager
         $this->push($entityType, $entityId, 'unlinkEntity', Json::encode(['link' => $link, 'foreignId' => $foreignId]));
     }
 
-    public function pushCustomEntityJob(string $entityType, string $entityId, string $action, array $data): void
+    public function pushCustomJob(string $entityType, string $entityId, string $action, array $data): void
     {
         $this->push($entityType, $entityId, $this->getPDO()->quote($action), Json::encode($data));
     }
 
-    public function runForEntity(string $entityType, string $entityId): void
+    public function run(): void
     {
-        $entityType = $this->getPDO()->quote($entityType);
-        $entityId = $this->getPDO()->quote($entityId);
-
-        $jobs = $this
-            ->getPDO()
-            ->query("SELECT * FROM `pseudo_transaction` WHERE deleted=0 AND entity_type=$entityType AND entity_id=$entityId ORDER BY sort_order ASC")
-            ->fetchAll(PDO::FETCH_ASSOC);
-
-        foreach ($jobs as $job) {
+        while (!empty($job = $this->fetchJob())) {
             $this->runJob($job);
         }
+    }
+
+    public function runForEntity(string $entityType, string $entityId): void
+    {
+        while (!empty($job = $this->fetchJob($entityType, $entityId))) {
+            $this->runJob($job);
+        }
+    }
+
+    protected function fetchJob(string $entityType = '', string $entityId = '', string $parentId = ''): array
+    {
+        $query = "SELECT * FROM `pseudo_transaction` WHERE deleted=0";
+
+        if (!empty($entityType)) {
+            $query .= " AND entity_type=" . $this->getPDO()->quote($entityType);
+        }
+
+        if (!empty($entityId)) {
+            $query .= " AND entity_id=" . $this->getPDO()->quote($entityId);
+        }
+
+        if (!empty($parentId)) {
+            $query .= " AND id=" . $this->getPDO()->quote($parentId);
+        }
+
+        $query .= " ORDER BY sort_order ASC LIMIT 0,1";
+
+        $record = $this->getPDO()->query($query)->fetch(PDO::FETCH_ASSOC);
+        $job = empty($record) ? [] : $record;
+
+        if (!empty($job['parent_id']) && !empty($parentJob = $this->fetchJob($entityType, $entityId, $job['parent_id']))) {
+            $job = $parentJob;
+        }
+
+        return $job;
     }
 
     protected function push(string $entityType, string $entityId, string $action, string $input): void

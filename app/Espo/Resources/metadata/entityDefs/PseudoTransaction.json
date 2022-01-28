@@ -16,15 +16,15 @@
       "type": "varchar",
       "readOnly": true
     },
-    "pid": {
-      "type": "varchar",
-      "readOnly": true
-    },
     "inputData": {
       "type": "jsonObject",
       "readOnly": true
     },
     "createdBy": {
+      "type": "link",
+      "readOnly": true
+    },
+    "parent": {
       "type": "link",
       "readOnly": true
     }
@@ -33,6 +33,10 @@
     "createdBy": {
       "type": "belongsTo",
       "entity": "User"
+    },
+    "parent": {
+      "type": "belongsTo",
+      "entity": "PseudoTransaction"
     }
   },
   "collection": {
@@ -49,18 +53,6 @@
     "entityId": {
       "columns": [
         "entityId",
-        "deleted"
-      ]
-    },
-    "action": {
-      "columns": [
-        "action",
-        "deleted"
-      ]
-    },
-    "pid": {
-      "columns": [
-        "pid",
         "deleted"
       ]
     }
