@@ -91,7 +91,7 @@ class Measure extends Base
     protected function beforeRemove(Entity $entity, array $options = [])
     {
         foreach ($entity->get('units') as $unit) {
-            $this->getEntityManager()->removeEntity($unit);
+            $this->getEntityManager()->removeEntity($unit, ['skipIsDefaultValidation' => true]);
         }
 
         parent::beforeRemove($entity, $options);
