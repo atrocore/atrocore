@@ -26,7 +26,8 @@
     },
     "private": {
       "type": "bool",
-      "default": true
+      "default": true,
+      "importDisabled": true
     },
     "size": {
       "type": "float",
