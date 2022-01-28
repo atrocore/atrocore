@@ -102,7 +102,7 @@ class Unit extends Base
 
     protected function beforeRemove(Entity $entity, array $options = [])
     {
-        if ($entity->get('isDefault')) {
+        if ($entity->get('isDefault') && empty($options['skipIsDefaultValidation'])) {
             throw new BadRequest($this->getInjection('language')->translate('defaultIsRequired', 'exceptions', 'Unit'));
         }
 
