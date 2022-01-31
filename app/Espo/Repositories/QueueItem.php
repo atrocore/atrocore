@@ -68,23 +68,14 @@ class QueueItem extends Base
 
     public function getPendingItemForStream(int $stream): ?Entity
     {
-        $workersCount = (int)$this->getConfig()->get('queueManagerWorkersCount', 4);
         foreach (['High', 'Normal', 'Low'] as $priority) {
-            $jobs = $this
+            $job = $this
                 ->where(['stream' => null, 'status' => 'Pending', 'priority' => $priority])
-                ->limit(0, $stream + 1)
                 ->order('sortOrder')
-                ->find();
+                ->findOne();
 
-            foreach ($jobs as $job) {
-                // via time
-                if (time() % $workersCount == $stream) {
-                    return $job;
-                }
-                // via sort order
-                if ($job->get('sortOrder') % $workersCount == $stream) {
-                    return $job;
-                }
+            if (!empty($job)) {
+                return $job;
             }
         }
 
