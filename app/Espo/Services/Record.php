@@ -2550,8 +2550,10 @@ class Record extends \Espo\Core\Services\Base
             if (in_array($field, $linkMultipleIds)) {
                 $collection = $entity->get(substr($field, 0, -3));
                 $value = (!empty($collection) && count($collection) > 0) ? array_column($collection->toArray(), 'id') : [];
+                $value = array_unique($value);
                 sort($value);
                 if (is_array($data->$field)) {
+                    $data->$field = array_unique($data->$field);
                     sort($data->$field);
                 }
             } else {
