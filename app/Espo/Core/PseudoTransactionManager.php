@@ -44,6 +44,8 @@ use Treo\Core\ServiceFactory;
 
 class PseudoTransactionManager
 {
+    private const FILE_PATH = 'data/has-transactions-jobs.log';
+
     private Container $container;
 
     public function __construct(Container $container)
@@ -51,30 +53,39 @@ class PseudoTransactionManager
         $this->container = $container;
     }
 
-    public function pushUpdateEntityJob(string $entityType, string $entityId, $data): void
+    public static function hasJobs(): bool
     {
-        $this->push($entityType, $entityId, 'updateEntity', Json::encode($data));
+        return file_exists(self::FILE_PATH);
     }
 
-    public function pushLinkEntityJob(string $entityType, string $entityId, string $link, string $foreignId): void
+    public function pushUpdateEntityJob(string $entityType, string $entityId, $data): string
     {
-        $this->push($entityType, $entityId, 'linkEntity', Json::encode(['link' => $link, 'foreignId' => $foreignId]));
+        return $this->push($entityType, $entityId, 'updateEntity', Json::encode($data));
     }
 
-    public function pushUnLinkEntityJob(string $entityType, string $entityId, string $link, string $foreignId): void
+    public function pushLinkEntityJob(string $entityType, string $entityId, string $link, string $foreignId): string
     {
-        $this->push($entityType, $entityId, 'unlinkEntity', Json::encode(['link' => $link, 'foreignId' => $foreignId]));
+        return $this->push($entityType, $entityId, 'linkEntity', Json::encode(['link' => $link, 'foreignId' => $foreignId]));
     }
 
-    public function pushCustomJob(string $entityType, string $entityId, string $action, array $data): void
+    public function pushUnLinkEntityJob(string $entityType, string $entityId, string $link, string $foreignId): string
     {
-        $this->push($entityType, $entityId, $this->getPDO()->quote($action), Json::encode($data));
+        return $this->push($entityType, $entityId, 'unlinkEntity', Json::encode(['link' => $link, 'foreignId' => $foreignId]));
+    }
+
+    public function pushCustomJob(string $entityType, string $entityId, string $action, array $data): string
+    {
+        return $this->push($entityType, $entityId, $this->getPDO()->quote($action), Json::encode($data));
     }
 
     public function run(): void
     {
         while (!empty($job = $this->fetchJob())) {
             $this->runJob($job);
+        }
+
+        if (self::hasJobs()) {
+            unlink(self::FILE_PATH);
         }
     }
 
@@ -113,7 +124,7 @@ class PseudoTransactionManager
         return $job;
     }
 
-    protected function push(string $entityType, string $entityId, string $action, string $input): void
+    protected function push(string $entityType, string $entityId, string $action, string $input): string
     {
         $id = Util::generateId();
         $entityType = $this->getPDO()->quote($entityType);
@@ -125,6 +136,10 @@ class PseudoTransactionManager
             ->exec(
                 "INSERT INTO `pseudo_transaction` (id,entity_type,entity_id,action,input_data,created_by_id) VALUES ('$id',$entityType,$entityId,'$action','$input','$createdById')"
             );
+
+        file_put_contents(self::FILE_PATH, '1');
+
+        return $id;
     }
 
     protected function runJob(array $job): void
