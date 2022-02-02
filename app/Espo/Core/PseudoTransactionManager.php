@@ -58,24 +58,24 @@ class PseudoTransactionManager
         return file_exists(self::FILE_PATH);
     }
 
-    public function pushUpdateEntityJob(string $entityType, string $entityId, $data): string
+    public function pushUpdateEntityJob(string $entityType, string $entityId, $data, string $parentId = null): string
     {
-        return $this->push($entityType, $entityId, 'updateEntity', Json::encode($data));
+        return $this->push($entityType, $entityId, 'updateEntity', Json::encode($data), $parentId);
     }
 
-    public function pushLinkEntityJob(string $entityType, string $entityId, string $link, string $foreignId): string
+    public function pushLinkEntityJob(string $entityType, string $entityId, string $link, string $foreignId, string $parentId = null): string
     {
-        return $this->push($entityType, $entityId, 'linkEntity', Json::encode(['link' => $link, 'foreignId' => $foreignId]));
+        return $this->push($entityType, $entityId, 'linkEntity', Json::encode(['link' => $link, 'foreignId' => $foreignId]), $parentId);
     }
 
-    public function pushUnLinkEntityJob(string $entityType, string $entityId, string $link, string $foreignId): string
+    public function pushUnLinkEntityJob(string $entityType, string $entityId, string $link, string $foreignId, string $parentId = null): string
     {
-        return $this->push($entityType, $entityId, 'unlinkEntity', Json::encode(['link' => $link, 'foreignId' => $foreignId]));
+        return $this->push($entityType, $entityId, 'unlinkEntity', Json::encode(['link' => $link, 'foreignId' => $foreignId]), $parentId);
     }
 
-    public function pushCustomJob(string $entityType, string $entityId, string $action, array $data): string
+    public function pushCustomJob(string $entityType, string $entityId, string $action, array $data, string $parentId = null): string
     {
-        return $this->push($entityType, $entityId, $this->getPDO()->quote($action), Json::encode($data));
+        return $this->push($entityType, $entityId, $this->getPDO()->quote($action), Json::encode($data), $parentId);
     }
 
     public function run(): void
@@ -124,17 +124,18 @@ class PseudoTransactionManager
         return $job;
     }
 
-    protected function push(string $entityType, string $entityId, string $action, string $input): string
+    protected function push(string $entityType, string $entityId, string $action, string $input, string $parentId = null): string
     {
         $id = Util::generateId();
         $entityType = $this->getPDO()->quote($entityType);
         $entityId = $this->getPDO()->quote($entityId);
         $createdById = $this->getUser()->get('id');
+        $parentId = empty($parentId) ? 'NULL' : $this->getPDO()->quote($parentId);
 
         $this
             ->getPDO()
             ->exec(
-                "INSERT INTO `pseudo_transaction` (id,entity_type,entity_id,action,input_data,created_by_id) VALUES ('$id',$entityType,$entityId,'$action','$input','$createdById')"
+                "INSERT INTO `pseudo_transaction` (id,entity_type,entity_id,action,input_data,created_by_id,parent_id) VALUES ('$id',$entityType,$entityId,'$action','$input','$createdById',$parentId)"
             );
 
         file_put_contents(self::FILE_PATH, '1');

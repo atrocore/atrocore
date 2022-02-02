@@ -1535,6 +1535,27 @@ class Record extends \Espo\Core\Services\Base
             ->getArgument('result');
     }
 
+    public function linkEntityViaTransaction(string $id, string $link, string $foreignId)
+    {
+        $this->getEntityManager()->getPDO()->beginTransaction();
+
+        try {
+            $result = $this->linkEntity($id, $link, $foreignId);
+            $this->onLinkEntityViaTransaction($id, $link, $foreignId);
+
+            $this->getEntityManager()->getPDO()->commit();
+        } catch (\Throwable $e) {
+            $this->getEntityManager()->getPDO()->rollBack();
+            throw $e;
+        }
+
+        return $result;
+    }
+
+    protected function onLinkEntityViaTransaction(string $id, string $link, string $foreignId): void
+    {
+    }
+
     public function linkEntity($id, $link, $foreignId)
     {
         if ($this->getMetadata()->get(['entityDefs', $this->entityName, 'links', $link, 'type']) === 'belongsTo') {

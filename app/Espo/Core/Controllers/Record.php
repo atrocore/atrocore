@@ -364,7 +364,7 @@ class Record extends Base
 
             $result = false;
             foreach ($foreignIdList as $foreignId) {
-                if ($this->getRecordService()->linkEntity($id, $link, $foreignId)) {
+                if ($this->getRecordService()->linkEntityViaTransaction($id, $link, $foreignId)) {
                     $result = true;
                 }
             }
