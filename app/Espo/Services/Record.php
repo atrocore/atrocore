@@ -2536,6 +2536,14 @@ class Record extends \Espo\Core\Services\Base
         }
 
         foreach ($entity->getFields() as $field => $params) {
+            if (in_array($field, $skip)) {
+                continue 1;
+            }
+
+            if (!property_exists($data, $field)) {
+                continue 1;
+            }
+
             if (in_array($field, $linkNames)) {
                 continue 1;
             }
@@ -2545,20 +2553,25 @@ class Record extends \Espo\Core\Services\Base
             }
 
             if (in_array($field, $linkMultipleIds)) {
-                $value = array_column($entity->get(substr($field, 0, -3))->toArray(), 'id');
+                $collection = $entity->get(substr($field, 0, -3));
+                $value = (!empty($collection) && count($collection) > 0) ? array_column($collection->toArray(), 'id') : [];
+                $value = array_unique($value);
+                sort($value);
+                if (is_array($data->$field)) {
+                    $data->$field = array_unique($data->$field);
+                    sort($data->$field);
+                }
             } else {
                 $value = $entity->get($field);
             }
 
-            if (!in_array($field, $skip) && property_exists($data, $field)) {
-                // strict type for NULL
-                if (($data->$field === null && $value !== null) || ($data->$field !== null && $value === null)){
-                    return true;
-                }
+            // strict type for NULL
+            if (($data->$field === null && $value !== null) || ($data->$field !== null && $value === null)) {
+                return true;
+            }
 
-                if (!$this->areValuesEqual($entity, $field, $data->$field, $value)) {
-                    return true;
-                }
+            if (!$this->areValuesEqual($entity, $field, $data->$field, $value)) {
+                return true;
             }
         }
 
