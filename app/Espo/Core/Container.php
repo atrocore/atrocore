@@ -342,4 +342,9 @@ class Container
 
         return $eventManager;
     }
+
+    protected function loadPseudoTransactionManager(): PseudoTransactionManager
+    {
+        return new PseudoTransactionManager($this);
+    }
 }

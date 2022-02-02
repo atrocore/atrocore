@@ -35,7 +35,7 @@ declare(strict_types=1);
 
 namespace Treo\Console;
 
-use Espo\Core\Utils\Util;
+use Espo\Core\PseudoTransactionManager;
 use Espo\Entities\User;
 use Treo\Core\Application;
 use Treo\Core\ORM\EntityManager;
@@ -149,6 +149,21 @@ class Daemon extends AbstractConsole
             $expectedStream = time() % (int)$this->getConfig()->get('queueManagerWorkersCount', 4);
             if (file_exists(\Espo\Core\QueueManager::FILE_PATH) && $expectedStream == $stream) {
                 exec($this->getPhpBin() . " index.php qm $stream --run");
+            }
+
+            sleep(1);
+        }
+    }
+
+    protected function ptDaemon(string $id): void
+    {
+        while (true) {
+            if (file_exists(Cron::DAEMON_KILLER)) {
+                break;
+            }
+
+            if (PseudoTransactionManager::hasJobs()) {
+                $this->getContainer()->get('pseudoTransactionManager')->run();
             }
 
             sleep(1);

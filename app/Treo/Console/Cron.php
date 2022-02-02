@@ -109,6 +109,11 @@ class Cron extends AbstractConsole
             exec("$php index.php daemon notification $id >/dev/null 2>&1 &");
         }
 
+        // open daemon for pseudo transaction manager
+        if (empty(strpos($processes, "index.php daemon pt $id"))) {
+            exec("$php index.php daemon pt $id >/dev/null 2>&1 &");
+        }
+
         // check auth tokens
         $this->authTokenControl();
 

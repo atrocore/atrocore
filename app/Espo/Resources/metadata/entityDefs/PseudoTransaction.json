@@ -1,0 +1,60 @@
+{
+  "fields": {
+    "sortOrder": {
+      "type": "autoincrement",
+      "readOnly": true
+    },
+    "entityType": {
+      "type": "varchar",
+      "readOnly": true
+    },
+    "entityId": {
+      "type": "varchar",
+      "readOnly": true
+    },
+    "action": {
+      "type": "varchar",
+      "readOnly": true
+    },
+    "inputData": {
+      "type": "jsonObject",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true
+    },
+    "parent": {
+      "type": "link",
+      "readOnly": true
+    }
+  },
+  "links": {
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "parent": {
+      "type": "belongsTo",
+      "entity": "PseudoTransaction"
+    }
+  },
+  "collection": {
+    "sortBy": "sortOrder",
+    "asc": true
+  },
+  "indexes": {
+    "entityType": {
+      "columns": [
+        "entityType",
+        "deleted"
+      ]
+    },
+    "entityId": {
+      "columns": [
+        "entityId",
+        "deleted"
+      ]
+    }
+  }
+}
