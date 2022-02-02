@@ -37,7 +37,7 @@ use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\NotFound;
 use \Espo\Core\Exceptions\BadRequest;
-use \Espo\Core\Utils\Util;
+use Espo\Core\PseudoTransactionManager;
 
 class Record extends Base
 {
@@ -509,5 +509,10 @@ class Record extends Base
         }
 
         return $where;
+    }
+
+    protected function getPseudoTransactionManager(): PseudoTransactionManager
+    {
+        return $this->getContainer()->get('pseudoTransactionManager');
     }
 }
