@@ -1552,7 +1552,7 @@ class Record extends \Espo\Core\Services\Base
         return $result;
     }
 
-    protected function onLinkEntityViaTransaction(string $id, string $link, string $foreignId): void
+    public function onLinkEntityViaTransaction(string $id, string $link, string $foreignId): void
     {
     }
 
@@ -1629,7 +1629,7 @@ class Record extends \Espo\Core\Services\Base
         return $result;
     }
 
-    protected function onUnLinkEntityViaTransaction(string $id, string $link, string $foreignId): void
+    public function onUnLinkEntityViaTransaction(string $id, string $link, string $foreignId): void
     {
     }
 
