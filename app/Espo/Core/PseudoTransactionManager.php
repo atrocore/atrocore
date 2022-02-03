@@ -80,8 +80,10 @@ class PseudoTransactionManager
 
     public function run(): void
     {
-        while (!empty($job = $this->fetchJob())) {
-            $this->runJob($job);
+        while (!empty($jobs = $this->fetchJob())) {
+            foreach ($jobs as $job) {
+                $this->runJob($job);
+            }
         }
 
         if (self::hasJobs()) {
@@ -94,6 +96,14 @@ class PseudoTransactionManager
         while (!empty($job = $this->fetchJob($entityType, $entityId))) {
             $this->runJob($job);
         }
+    }
+
+    protected function fetchJobs(): array
+    {
+        return $this
+            ->getPDO()
+            ->query("SELECT * FROM `pseudo_transaction` WHERE deleted=0 ORDER BY sort_order ASC LIMIT 0,50")
+            ->fetchAll(PDO::FETCH_ASSOC);
     }
 
     protected function fetchJob(string $entityType = '', string $entityId = '', string $parentId = ''): array
