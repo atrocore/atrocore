@@ -165,6 +165,7 @@ class PseudoTransactionManager
             }
 
             $service = $this->getServiceFactory()->create($job['entity_type']);
+            $service->setPseudoTransactionId($job['id']);
 
             switch ($job['action']) {
                 case 'updateEntity':

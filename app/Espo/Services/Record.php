@@ -110,6 +110,8 @@ class Record extends \Espo\Core\Services\Base
 
     protected $forceSelectAllAttributes = false;
 
+    protected string $pseudoTransactionId = '';
+
     /**
      * @var bool|array
      */
@@ -143,6 +145,16 @@ class Record extends \Espo\Core\Services\Base
     public function getEntityType()
     {
         return $this->entityType;
+    }
+
+    public function setPseudoTransactionId(string $id): void
+    {
+        $this->pseudoTransactionId = $id;
+    }
+
+    public function getPseudoTransactionId(): string
+    {
+        return $this->pseudoTransactionId;
     }
 
     protected function getServiceFactory()
@@ -1535,27 +1547,6 @@ class Record extends \Espo\Core\Services\Base
             ->getArgument('result');
     }
 
-    public function linkEntityViaTransaction(string $id, string $link, string $foreignId)
-    {
-        $this->getEntityManager()->getPDO()->beginTransaction();
-
-        try {
-            $result = $this->linkEntity($id, $link, $foreignId);
-            $this->onLinkEntityViaTransaction($id, $link, $foreignId);
-
-            $this->getEntityManager()->getPDO()->commit();
-        } catch (\Throwable $e) {
-            $this->getEntityManager()->getPDO()->rollBack();
-            throw $e;
-        }
-
-        return $result;
-    }
-
-    public function onLinkEntityViaTransaction(string $id, string $link, string $foreignId): void
-    {
-    }
-
     public function linkEntity($id, $link, $foreignId)
     {
         if ($this->getMetadata()->get(['entityDefs', $this->entityName, 'links', $link, 'type']) === 'belongsTo') {
@@ -1605,31 +1596,22 @@ class Record extends \Espo\Core\Services\Base
             throw new Forbidden();
         }
 
-        $this->getRepository()->relate($entity, $link, $foreignEntity);
-
-        return $this
-            ->dispatchEvent('afterLinkEntity', new Event(['id' => $id, 'link' => $link, 'foreignEntity' => $foreignEntity, 'result' => true]))
-            ->getArgument('result');
-    }
-
-    public function unlinkEntityViaTransaction(string $id, string $link, string $foreignId)
-    {
         $this->getEntityManager()->getPDO()->beginTransaction();
-
         try {
-            $result = $this->unlinkEntity($id, $link, $foreignId);
-            $this->onUnLinkEntityViaTransaction($id, $link, $foreignId);
-
+            $this->getRepository()->relate($entity, $link, $foreignEntity);
+            $this->onLinkEntity($entity, $link, $foreignEntity);
             $this->getEntityManager()->getPDO()->commit();
         } catch (\Throwable $e) {
             $this->getEntityManager()->getPDO()->rollBack();
             throw $e;
         }
 
-        return $result;
+        return $this
+            ->dispatchEvent('afterLinkEntity', new Event(['id' => $id, 'link' => $link, 'foreignEntity' => $foreignEntity, 'result' => true]))
+            ->getArgument('result');
     }
 
-    public function onUnLinkEntityViaTransaction(string $id, string $link, string $foreignId): void
+    public function onLinkEntity(Entity $entity, string $link, Entity $foreignEntity): void
     {
     }
 
@@ -1682,11 +1664,25 @@ class Record extends \Espo\Core\Services\Base
             throw new Forbidden();
         }
 
+        $this->getEntityManager()->getPDO()->beginTransaction();
+        try {
+            $this->getRepository()->unrelate($entity, $link, $foreignEntity);
+            $this->onUnLinkEntity($entity, $link, $foreignEntity);
+            $this->getEntityManager()->getPDO()->commit();
+        } catch (\Throwable $e) {
+            $this->getEntityManager()->getPDO()->rollBack();
+            throw $e;
+        }
+
         $this->getRepository()->unrelate($entity, $link, $foreignEntity);
 
         return $this
             ->dispatchEvent('afterUnlinkEntity', new Event(['id' => $id, 'link' => $link, 'foreignEntity' => $foreignEntity, 'result' => true]))
             ->getArgument('result');
+    }
+
+    public function onUnLinkEntity(Entity $entity, string $link, Entity $foreignEntity): void
+    {
     }
 
     public function linkEntityMass($id, $link, $where, $selectData = null)
