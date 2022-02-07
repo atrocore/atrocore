@@ -491,7 +491,7 @@ class Record extends \Espo\Core\Services\Base
         $result = null;
 
         try {
-            $result = $this->getRepository()->save($entity);
+            $result = $this->getRepository()->save($entity, $this->getDefaultRepositoryOptions());
         } catch (\PDOException $e) {
             if (!empty($e->errorInfo[1]) && $e->errorInfo[1] == 1062) {
                 $message = $e->getMessage();
@@ -1596,23 +1596,11 @@ class Record extends \Espo\Core\Services\Base
             throw new Forbidden();
         }
 
-        $this->getEntityManager()->getPDO()->beginTransaction();
-        try {
-            $this->getRepository()->relate($entity, $link, $foreignEntity);
-            $this->onLinkEntity($entity, $link, $foreignEntity);
-            $this->getEntityManager()->getPDO()->commit();
-        } catch (\Throwable $e) {
-            $this->getEntityManager()->getPDO()->rollBack();
-            throw $e;
-        }
+        $this->getRepository()->relate($entity, $link, $foreignEntity, null, $this->getDefaultRepositoryOptions());
 
         return $this
             ->dispatchEvent('afterLinkEntity', new Event(['id' => $id, 'link' => $link, 'foreignEntity' => $foreignEntity, 'result' => true]))
             ->getArgument('result');
-    }
-
-    public function onLinkEntity(Entity $entity, string $link, Entity $foreignEntity): void
-    {
     }
 
     public function unlinkEntity($id, $link, $foreignId)
@@ -1664,25 +1652,11 @@ class Record extends \Espo\Core\Services\Base
             throw new Forbidden();
         }
 
-        $this->getEntityManager()->getPDO()->beginTransaction();
-        try {
-            $this->getRepository()->unrelate($entity, $link, $foreignEntity);
-            $this->onUnLinkEntity($entity, $link, $foreignEntity);
-            $this->getEntityManager()->getPDO()->commit();
-        } catch (\Throwable $e) {
-            $this->getEntityManager()->getPDO()->rollBack();
-            throw $e;
-        }
-
-        $this->getRepository()->unrelate($entity, $link, $foreignEntity);
+        $this->getRepository()->unrelate($entity, $link, $foreignEntity, $this->getDefaultRepositoryOptions());
 
         return $this
             ->dispatchEvent('afterUnlinkEntity', new Event(['id' => $id, 'link' => $link, 'foreignEntity' => $foreignEntity, 'result' => true]))
             ->getArgument('result');
-    }
-
-    public function onUnLinkEntity(Entity $entity, string $link, Entity $foreignEntity): void
-    {
     }
 
     public function linkEntityMass($id, $link, $where, $selectData = null)
@@ -2814,5 +2788,13 @@ class Record extends \Espo\Core\Services\Base
     protected function getPseudoTransactionManager(): PseudoTransactionManager
     {
         return $this->getInjection('pseudoTransactionManager');
+    }
+
+    protected function getDefaultRepositoryOptions(): array
+    {
+        return [
+            'pseudoTransactionId'      => $this->getPseudoTransactionId(),
+            'pseudoTransactionManager' => $this->getPseudoTransactionManager()
+        ];
     }
 }
