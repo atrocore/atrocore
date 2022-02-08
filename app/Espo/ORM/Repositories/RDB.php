@@ -490,7 +490,7 @@ class RDB extends \Espo\ORM\Repository
         $result = false;
         $methodName = 'unrelate' . ucfirst($relationName);
         if (method_exists($this, $methodName)) {
-            $result = $this->$methodName($entity, $foreign);
+            $result = $this->$methodName($entity, $foreign, $options);
         } else {
             if ($foreign instanceof Entity) {
                 $result = $this->getMapper()->unrelate($entity, $relationName, $foreign, !empty($options['force']));
