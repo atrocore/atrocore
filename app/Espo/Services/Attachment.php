@@ -109,13 +109,18 @@ class Attachment extends Record
                 file_put_contents($attachment->fileName, file_get_contents($path . '/' . $chunk), FILE_APPEND);
             }
 
-            // create attachment
             try {
-                $result['attachment'] = $this->createEntity($attachment)->toArray();
+                $attachmentEntity = $this->createEntity($attachment);
             } catch (\Throwable $e) {
                 unlink($attachment->fileName);
                 throw $e;
             }
+
+            if (strpos($attachment->fileName, $attachmentEntity->get('storageFilePath')) === false) {
+                unlink($attachment->fileName);
+            }
+
+            $result['attachment'] = $attachmentEntity->toArray();
 
             // remove chunks
             Util::removeDir(self::CHUNKS_DIR . $attachment->chunkId);
