@@ -488,24 +488,17 @@ Espo.define('views/fields/file', ['views/fields/link', 'lib!MD5'], function (Dep
             // create file pieces
             this.createFilePieces(file, sliceSize, 0, 1);
 
-            let promiseList = [];
-            promiseList.push(new Promise(function (resolve) {
-                let stream = 1;
-                while (stream <= this.streams) {
-                    let pieces = [];
-                    this.pieces.forEach(function (row) {
-                        if (row.stream === stream) {
-                            pieces.push(row);
-                        }
-                    });
-                    this.sendChunk(resolve, file, pieces, chunkId, $attachmentBox);
-                    stream++;
-                }
-            }.bind(this)));
-
-            Promise.all(promiseList).then(function () {
-                this.createByChunks(file, chunkId, $attachmentBox);
-            }.bind(this));
+            let stream = 1;
+            while (stream <= this.streams) {
+                let pieces = [];
+                this.pieces.forEach(function (row) {
+                    if (row.stream === stream) {
+                        pieces.push(row);
+                    }
+                });
+                this.sendChunk(file, pieces, chunkId, $attachmentBox);
+                stream++;
+            }
         },
 
         createFilePieces: function (file, sliceSize, start, stream) {
@@ -542,7 +535,7 @@ Espo.define('views/fields/file', ['views/fields/link', 'lib!MD5'], function (Dep
             $('.uploading-progress-message').html(percent.toFixed(0) + '%');
         },
 
-        sendChunk: function (resolve, file, pieces, chunkId, $attachmentBox) {
+        sendChunk: function (file, pieces, chunkId, $attachmentBox) {
             if (!this.isUploading) {
                 return;
             }
@@ -558,7 +551,7 @@ Espo.define('views/fields/file', ['views/fields/link', 'lib!MD5'], function (Dep
 
             reader.onloadend = function () {
                 if (this.uploadedChunks.indexOf(item.start.toString()) !== -1) {
-                    this.onChunkSaved(file, resolve, pieces, chunkId, $attachmentBox);
+                    this.onChunkSaved(file, pieces, chunkId, $attachmentBox);
                 } else {
                     $.ajax({
                         type: 'POST',
@@ -568,55 +561,40 @@ Espo.define('views/fields/file', ['views/fields/link', 'lib!MD5'], function (Dep
                             chunkId: chunkId,
                             start: item.start,
                             piece: reader.result,
+                            piecesCount: this.pieces.length,
+                            name: file.name,
+                            type: file.type || 'text/plain',
+                            size: file.size,
+                            role: 'Attachment',
+                            relatedType: this.model.name,
+                            field: this.name,
+                            modelAttributes: this.model.attributes
                         }),
                     }).done(function (data) {
                         this.uploadedChunks = data.chunks;
-                        this.onChunkSaved(file, resolve, pieces, chunkId, $attachmentBox);
+                        this.onChunkSaved(file, pieces, chunkId, $attachmentBox);
+
+                        if (data.attachment) {
+                            this.model.set(this.namePathsData, data.attachment.pathsData);
+                            this.model.set(this.nameName, data.attachment.name);
+                            this.model.set(this.idName, data.attachment.id);
+                            this.isUploading = false;
+                            this.pieces = [];
+                        }
                     }.bind(this)).error(function (data) {
                         this.chunkUploadFailed($attachmentBox);
-                        resolve();
                     }.bind(this));
                 }
             }.bind(this)
         },
 
-        onChunkSaved: function (file, resolve, pieces, chunkId, $attachmentBox) {
+        onChunkSaved: function (file, pieces, chunkId, $attachmentBox) {
             this.pieceNumber++;
             this.setProgressMessage(this.pieceNumber, this.piecesTotal);
 
             if (pieces.length > 0) {
-                this.sendChunk(resolve, file, pieces, chunkId, $attachmentBox);
+                this.sendChunk(file, pieces, chunkId, $attachmentBox);
             }
-
-            if (this.pieceNumber === this.piecesTotal) {
-                resolve();
-            }
-        },
-
-        createByChunks: function (file, chunkId, $attachmentBox) {
-            $.ajax({
-                type: 'POST',
-                url: 'Attachment/action/CreateByChunks',
-                contentType: "application/json",
-                data: JSON.stringify({
-                    chunkId: chunkId,
-                    name: file.name,
-                    type: file.type || 'text/plain',
-                    size: file.size,
-                    role: 'Attachment',
-                    relatedType: this.model.name,
-                    field: this.name,
-                    modelAttributes: this.model.attributes
-                }),
-            }).done(function (data) {
-                this.model.set(this.namePathsData, data.pathData);
-                this.model.set(this.nameName, data.name);
-                this.model.set(this.idName, data.id);
-                this.isUploading = false;
-                this.pieces = [];
-            }.bind(this)).error(function (data) {
-                this.chunkUploadFailed($attachmentBox);
-            }.bind(this));
         },
 
         chunkUploadFailed: function ($attachmentBox) {

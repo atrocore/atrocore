@@ -74,11 +74,6 @@ class Attachment extends Record
         return $attachment;
     }
 
-    /**
-     * @param \stdClass $attachment
-     *
-     * @return bool
-     */
     public function createChunks(\stdClass $attachment): array
     {
         $this->clearTrash();
@@ -98,44 +93,31 @@ class Attachment extends Record
 
         file_put_contents($path . '/' . $attachment->start, $contents);
 
-        return ['chunks' => Util::scanDir($path)];
-    }
+        $chunks = Util::scanDir($path);
+        sort($chunks);
 
-    /**
-     * @param \stdClass $attachment
-     *
-     * @return Entity
-     * @throws Error
-     * @throws Forbidden
-     * @throws NotFound
-     */
-    public function createByChunks(\stdClass $attachment): Entity
-    {
-        $dirPath = self::CHUNKS_DIR . $attachment->chunkId . '/';
+        $result = [
+            'chunks' => $chunks
+        ];
 
-        if (!file_exists($dirPath) || !is_dir($dirPath)) {
-            sleep(1);
-            if (!file_exists($dirPath) || !is_dir($dirPath)) {
-                throw new Error();
+        if (count($chunks) === $attachment->piecesCount) {
+            $this->prepareAttachmentFilePath($attachment);
+
+            // create file from chunks
+            file_put_contents($attachment->fileName, '');
+            foreach ($chunks as $chunk) {
+                file_put_contents($attachment->fileName, file_get_contents($path . '/' . $chunk), FILE_APPEND);
             }
+
+            // create attachment
+            $result['attachment'] = $this->createEntity($attachment)->toArray();
+
+
+            // remove chunks
+            Util::removeDir(self::CHUNKS_DIR . $attachment->chunkId);
         }
 
-        foreach (Util::scanDir($dirPath) as $dir) {
-            $dirPath .= $dir . '/';
-            break;
-        }
-
-        $files = Util::scanDir($dirPath);
-        sort($files);
-
-        $this->prepareAttachmentFilePath($attachment);
-
-        file_put_contents($attachment->fileName, '');
-        foreach ($files as $file) {
-            file_put_contents($attachment->fileName, file_get_contents($dirPath . $file), FILE_APPEND);
-        }
-
-        return $this->createEntity($attachment);
+        return $result;
     }
 
     /**
