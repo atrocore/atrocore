@@ -582,7 +582,7 @@ Espo.define('views/fields/file', ['views/fields/link', 'lib!MD5'], function (Dep
                             this.pieces = [];
                         }
                     }.bind(this)).error(function (data) {
-                        this.chunkUploadFailed($attachmentBox);
+                        this.chunkUploadFailed($attachmentBox, data);
                     }.bind(this));
                 }
             }.bind(this)
@@ -597,12 +597,13 @@ Espo.define('views/fields/file', ['views/fields/link', 'lib!MD5'], function (Dep
             }
         },
 
-        chunkUploadFailed: function ($attachmentBox) {
+        chunkUploadFailed: function ($attachmentBox, response) {
             $attachmentBox.remove();
             this.$el.find('.uploading-message').remove();
             this.$el.find('.attachment-button').removeClass('hidden');
 
-            Espo.Ui.notify(this.translate('chunkUploadFailed', 'exceptions', 'Attachment'), 'error', 1000 * 120, true);
+            let message = response.getResponseHeader('X-Status-Reason') || this.translate('chunkUploadFailed', 'exceptions', 'Attachment');
+            Espo.Ui.notify(message, 'error', 1000 * 120, true);
 
             this.isUploading = false;
             this.pieces = [];
