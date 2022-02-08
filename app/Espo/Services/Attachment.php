@@ -110,8 +110,12 @@ class Attachment extends Record
             }
 
             // create attachment
-            $result['attachment'] = $this->createEntity($attachment)->toArray();
-
+            try {
+                $result['attachment'] = $this->createEntity($attachment)->toArray();
+            } catch (\Throwable $e) {
+                unlink($attachment->fileName);
+                throw $e;
+            }
 
             // remove chunks
             Util::removeDir(self::CHUNKS_DIR . $attachment->chunkId);
