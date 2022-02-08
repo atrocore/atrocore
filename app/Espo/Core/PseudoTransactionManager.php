@@ -80,7 +80,7 @@ class PseudoTransactionManager
 
     public function run(): void
     {
-        while (!empty($jobs = $this->fetchJob())) {
+        while (!empty($jobs = $this->fetchJobs())) {
             foreach ($jobs as $job) {
                 $this->runJob($job);
             }
