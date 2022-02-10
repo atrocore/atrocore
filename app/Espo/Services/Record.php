@@ -1230,16 +1230,14 @@ class Record extends \Espo\Core\Services\Base
 
         $this->beforeDeleteEntity($entity);
 
-        $result = $this->getRepository()->remove($entity);
+        $result = $this->getRepository()->remove($entity, $this->getDefaultRepositoryOptions());
         if ($result) {
             $this->afterDeleteEntity($entity);
-
             $this->processActionHistoryRecord('delete', $entity);
-
-            return $this
-                ->dispatchEvent('afterDeleteEntity', new Event(['id' => $id, 'result' => $result]))
-                ->getArgument('result');
+            $result = $this->dispatchEvent('afterDeleteEntity', new Event(['id' => $id, 'result' => $result]))->getArgument('result');
         }
+
+        return $result;
     }
 
     protected function getSelectParams($params)
