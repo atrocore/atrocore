@@ -63,6 +63,11 @@ class PseudoTransactionManager
         return $this->push($entityType, $entityId, 'updateEntity', Json::encode($data), $parentId);
     }
 
+    public function pushDeleteEntityJob(string $entityType, string $entityId, string $parentId = null): string
+    {
+        return $this->push($entityType, $entityId, 'deleteEntity', '', $parentId);
+    }
+
     public function pushLinkEntityJob(string $entityType, string $entityId, string $link, string $foreignId, string $parentId = null): string
     {
         return $this->push($entityType, $entityId, 'linkEntity', Json::encode(['link' => $link, 'foreignId' => $foreignId]), $parentId);
@@ -170,6 +175,9 @@ class PseudoTransactionManager
             switch ($job['action']) {
                 case 'updateEntity':
                     $service->updateEntity($job['entity_id'], Json::decode($job['input_data']));
+                    break;
+                case 'deleteEntity':
+                    $service->deleteEntity($job['entity_id']);
                     break;
                 case 'linkEntity':
                     $inputData = Json::decode($job['input_data']);
