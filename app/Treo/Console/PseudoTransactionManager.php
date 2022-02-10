@@ -33,26 +33,25 @@
 
 declare(strict_types=1);
 
-namespace Treo\Configs;
+namespace Treo\Console;
 
-use Treo\Console;
+use Treo\Core\Application;
 
-return [
-    "refresh translations"         => Console\RefreshTranslations::class,
-    "list"                         => Console\ListCommand::class,
-    "install demo-project"         => Console\InstallDemoProject::class,
-    "clear cache"                  => Console\ClearCache::class,
-    "cleanup"                      => Console\Cleanup::class,
-    "sql diff --show"              => Console\SqlDiff::class,
-    "sql diff --run"               => Console\SqlDiffRun::class,
-    "cron"                         => Console\Cron::class,
-    "store --refresh"              => Console\StoreRefresh::class,
-    "migrate <module> <from> <to>" => Console\Migrate::class,
-    "qm <stream> --run"            => Console\QueueManager::class,
-    "qm item <id> --run"           => Console\QueueItem::class,
-    "notifications --refresh"      => Console\Notification::class,
-    "kill daemons"                 => Console\KillDaemons::class,
-    "daemon <name> <id>"           => Console\Daemon::class,
-    "check updates"                => Console\CheckUpdates::class,
-    "pt --run"                     => Console\PseudoTransactionManager::class,
-];
+class PseudoTransactionManager extends AbstractConsole
+{
+    public static function getDescription(): string
+    {
+        return 'Run pseudo transaction jobs.';
+    }
+
+    public function run(array $data): void
+    {
+        if (empty($this->getConfig()->get('isInstalled')) || Application::isSystemUpdating()) {
+            exit(1);
+        }
+
+        $this->getContainer()->get('pseudoTransactionManager')->run();
+
+        self::show('Pseudo transaction jobs run successfully', self::SUCCESS, true);
+    }
+}

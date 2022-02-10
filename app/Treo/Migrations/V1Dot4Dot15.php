@@ -33,26 +33,20 @@
 
 declare(strict_types=1);
 
-namespace Treo\Configs;
+namespace Treo\Migrations;
 
-use Treo\Console;
+use Treo\Console\Cron;
+use Treo\Core\Migration\Base;
 
-return [
-    "refresh translations"         => Console\RefreshTranslations::class,
-    "list"                         => Console\ListCommand::class,
-    "install demo-project"         => Console\InstallDemoProject::class,
-    "clear cache"                  => Console\ClearCache::class,
-    "cleanup"                      => Console\Cleanup::class,
-    "sql diff --show"              => Console\SqlDiff::class,
-    "sql diff --run"               => Console\SqlDiffRun::class,
-    "cron"                         => Console\Cron::class,
-    "store --refresh"              => Console\StoreRefresh::class,
-    "migrate <module> <from> <to>" => Console\Migrate::class,
-    "qm <stream> --run"            => Console\QueueManager::class,
-    "qm item <id> --run"           => Console\QueueItem::class,
-    "notifications --refresh"      => Console\Notification::class,
-    "kill daemons"                 => Console\KillDaemons::class,
-    "daemon <name> <id>"           => Console\Daemon::class,
-    "check updates"                => Console\CheckUpdates::class,
-    "pt --run"                     => Console\PseudoTransactionManager::class,
-];
+class V1Dot4Dot15 extends Base
+{
+    public function up(): void
+    {
+        file_put_contents(Cron::DAEMON_KILLER, '1');
+    }
+
+    public function down(): void
+    {
+        file_put_contents(Cron::DAEMON_KILLER, '1');
+    }
+}

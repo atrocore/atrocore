@@ -163,7 +163,7 @@ class Daemon extends AbstractConsole
             }
 
             if (PseudoTransactionManager::hasJobs()) {
-                $this->getContainer()->get('pseudoTransactionManager')->run();
+                exec($this->getPhpBin() . " index.php pt --run");
             }
 
             sleep(1);
