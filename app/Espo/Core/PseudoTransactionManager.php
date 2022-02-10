@@ -102,13 +102,13 @@ class PseudoTransactionManager
     {
         return $this
             ->getPDO()
-            ->query("SELECT * FROM `pseudo_transaction` WHERE deleted=0 ORDER BY sort_order ASC LIMIT 0,50")
+            ->query("SELECT * FROM `pseudo_transaction_job` WHERE deleted=0 ORDER BY sort_order ASC LIMIT 0,50")
             ->fetchAll(PDO::FETCH_ASSOC);
     }
 
     protected function fetchJob(string $entityType = '', string $entityId = '', string $parentId = ''): array
     {
-        $query = "SELECT * FROM `pseudo_transaction` WHERE deleted=0";
+        $query = "SELECT * FROM `pseudo_transaction_job` WHERE deleted=0";
 
         if (!empty($entityType)) {
             $query .= " AND entity_type=" . $this->getPDO()->quote($entityType);
@@ -145,7 +145,7 @@ class PseudoTransactionManager
         $this
             ->getPDO()
             ->exec(
-                "INSERT INTO `pseudo_transaction` (id,entity_type,entity_id,action,input_data,created_by_id,parent_id) VALUES ('$id',$entityType,$entityId,'$action','$input','$createdById',$parentId)"
+                "INSERT INTO `pseudo_transaction_job` (id,entity_type,entity_id,action,input_data,created_by_id,parent_id) VALUES ('$id',$entityType,$entityId,'$action','$input','$createdById',$parentId)"
             );
 
         file_put_contents(self::FILE_PATH, '1');
@@ -187,7 +187,7 @@ class PseudoTransactionManager
             $GLOBALS['log']->error("PseudoTransaction job failed: {$e->getMessage()}");
         }
 
-        $this->getPDO()->exec("DELETE FROM `pseudo_transaction` WHERE id='{$job['id']}'");
+        $this->getPDO()->exec("DELETE FROM `pseudo_transaction_job` WHERE id='{$job['id']}'");
     }
 
     protected function getPDO(): PDO
