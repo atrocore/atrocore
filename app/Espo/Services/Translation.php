@@ -59,7 +59,7 @@ class Translation extends Base
         $data['smtpUsername'] = $this->getConfig()->get('smtpUsername');
         $data['emailFrom'] = $this->getConfig()->get('outboundEmailFromAddress');
 
-        $ch = curl_init('https://pm.atrocore.com/api/v1/PushedTranslation');
+        $ch = curl_init('https://my.atrocore.com/api/v1/PushedTranslation');
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:application/json']);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
