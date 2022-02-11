@@ -17,28 +17,79 @@
       "default": "true",
       "view": "views/translation/fields/is-customized"
     },
-    "enUs": {
-      "type": "text",
-      "required": true,
-      "isValue": true
-    },
-    "deDe": {
-      "type": "text",
-      "isValue": true
-    },
-    "esEs": {
-      "type": "text",
-      "isValue": true
-    },
-    "frFr": {
-      "type": "text",
-      "isValue": true
-    },
-    "ruRu": {
-      "type": "text",
-      "isValue": true
-    },
     "afZa": {
+      "type": "text",
+      "isValue": true
+    },
+    "sqAl": {
+      "type": "text",
+      "isValue": true
+    },
+    "arDz": {
+      "type": "text",
+      "isValue": true
+    },
+    "arBh": {
+      "type": "text",
+      "isValue": true
+    },
+    "arEg": {
+      "type": "text",
+      "isValue": true
+    },
+    "arIq": {
+      "type": "text",
+      "isValue": true
+    },
+    "arJo": {
+      "type": "text",
+      "isValue": true
+    },
+    "arKw": {
+      "type": "text",
+      "isValue": true
+    },
+    "arLb": {
+      "type": "text",
+      "isValue": true
+    },
+    "arLy": {
+      "type": "text",
+      "isValue": true
+    },
+    "arMa": {
+      "type": "text",
+      "isValue": true
+    },
+    "arOm": {
+      "type": "text",
+      "isValue": true
+    },
+    "arQa": {
+      "type": "text",
+      "isValue": true
+    },
+    "arSa": {
+      "type": "text",
+      "isValue": true
+    },
+    "arSy": {
+      "type": "text",
+      "isValue": true
+    },
+    "arTn": {
+      "type": "text",
+      "isValue": true
+    },
+    "arAe": {
+      "type": "text",
+      "isValue": true
+    },
+    "arYe": {
+      "type": "text",
+      "isValue": true
+    },
+    "hyAm": {
       "type": "text",
       "isValue": true
     },
@@ -46,11 +97,11 @@
       "type": "text",
       "isValue": true
     },
-    "beBy": {
+    "euEs": {
       "type": "text",
       "isValue": true
     },
-    "bgBg": {
+    "beBy": {
       "type": "text",
       "isValue": true
     },
@@ -62,7 +113,35 @@
       "type": "text",
       "isValue": true
     },
+    "bgBg": {
+      "type": "text",
+      "isValue": true
+    },
     "caEs": {
+      "type": "text",
+      "isValue": true
+    },
+    "zhCn": {
+      "type": "text",
+      "isValue": true
+    },
+    "zhHk": {
+      "type": "text",
+      "isValue": true
+    },
+    "zhMo": {
+      "type": "text",
+      "isValue": true
+    },
+    "zhSg": {
+      "type": "text",
+      "isValue": true
+    },
+    "zhTw": {
+      "type": "text",
+      "isValue": true
+    },
+    "hrHr": {
       "type": "text",
       "isValue": true
     },
@@ -70,15 +149,55 @@
       "type": "text",
       "isValue": true
     },
-    "cyGb": {
-      "type": "text",
-      "isValue": true
-    },
     "daDk": {
       "type": "text",
       "isValue": true
     },
-    "elGr": {
+    "nlBe": {
+      "type": "text",
+      "isValue": true
+    },
+    "nlNl": {
+      "type": "text",
+      "isValue": true
+    },
+    "enAu": {
+      "type": "text",
+      "isValue": true
+    },
+    "enBz": {
+      "type": "text",
+      "isValue": true
+    },
+    "enCa": {
+      "type": "text",
+      "isValue": true
+    },
+    "enIe": {
+      "type": "text",
+      "isValue": true
+    },
+    "enJm": {
+      "type": "text",
+      "isValue": true
+    },
+    "enNz": {
+      "type": "text",
+      "isValue": true
+    },
+    "enPh": {
+      "type": "text",
+      "isValue": true
+    },
+    "enZa": {
+      "type": "text",
+      "isValue": true
+    },
+    "enTt": {
+      "type": "text",
+      "isValue": true
+    },
+    "enVi": {
       "type": "text",
       "isValue": true
     },
@@ -86,19 +205,16 @@
       "type": "text",
       "isValue": true
     },
+    "enUs": {
+      "type": "text",
+      "required": true,
+      "isValue": true
+    },
+    "enZw": {
+      "type": "text",
+      "isValue": true
+    },
     "etEe": {
-      "type": "text",
-      "isValue": true
-    },
-    "euEs": {
-      "type": "text",
-      "isValue": true
-    },
-    "faIr": {
-      "type": "text",
-      "isValue": true
-    },
-    "fiFi": {
       "type": "text",
       "isValue": true
     },
@@ -106,11 +222,31 @@
       "type": "text",
       "isValue": true
     },
+    "fiFi": {
+      "type": "text",
+      "isValue": true
+    },
+    "frBe": {
+      "type": "text",
+      "isValue": true
+    },
     "frCa": {
       "type": "text",
       "isValue": true
     },
-    "gaIe": {
+    "frFr": {
+      "type": "text",
+      "isValue": true
+    },
+    "frLu": {
+      "type": "text",
+      "isValue": true
+    },
+    "frMc": {
+      "type": "text",
+      "isValue": true
+    },
+    "frCh": {
       "type": "text",
       "isValue": true
     },
@@ -118,7 +254,35 @@
       "type": "text",
       "isValue": true
     },
-    "gnPy": {
+    "kaGe": {
+      "type": "text",
+      "isValue": true
+    },
+    "deAt": {
+      "type": "text",
+      "isValue": true
+    },
+    "deDe": {
+      "type": "text",
+      "isValue": true
+    },
+    "deLi": {
+      "type": "text",
+      "isValue": true
+    },
+    "deLu": {
+      "type": "text",
+      "isValue": true
+    },
+    "deCh": {
+      "type": "text",
+      "isValue": true
+    },
+    "elGr": {
+      "type": "text",
+      "isValue": true
+    },
+    "guIn": {
       "type": "text",
       "isValue": true
     },
@@ -130,19 +294,7 @@
       "type": "text",
       "isValue": true
     },
-    "hrHr": {
-      "type": "text",
-      "isValue": true
-    },
     "huHu": {
-      "type": "text",
-      "isValue": true
-    },
-    "hyAm": {
-      "type": "text",
-      "isValue": true
-    },
-    "idId": {
       "type": "text",
       "isValue": true
     },
@@ -150,7 +302,15 @@
       "type": "text",
       "isValue": true
     },
+    "idId": {
+      "type": "text",
+      "isValue": true
+    },
     "itIt": {
+      "type": "text",
+      "isValue": true
+    },
+    "itCh": {
       "type": "text",
       "isValue": true
     },
@@ -158,11 +318,15 @@
       "type": "text",
       "isValue": true
     },
-    "kaGe": {
+    "knIn": {
       "type": "text",
       "isValue": true
     },
-    "kmKh": {
+    "kkKz": {
+      "type": "text",
+      "isValue": true
+    },
+    "kokIn": {
       "type": "text",
       "isValue": true
     },
@@ -170,7 +334,7 @@
       "type": "text",
       "isValue": true
     },
-    "kuTr": {
+    "lvLv": {
       "type": "text",
       "isValue": true
     },
@@ -178,11 +342,15 @@
       "type": "text",
       "isValue": true
     },
-    "lvLv": {
+    "mkMk": {
       "type": "text",
       "isValue": true
     },
-    "mkMk": {
+    "msBn": {
+      "type": "text",
+      "isValue": true
+    },
+    "msMy": {
       "type": "text",
       "isValue": true
     },
@@ -190,7 +358,19 @@
       "type": "text",
       "isValue": true
     },
-    "msMy": {
+    "mtMt": {
+      "type": "text",
+      "isValue": true
+    },
+    "mrIn": {
+      "type": "text",
+      "isValue": true
+    },
+    "mnMn": {
+      "type": "text",
+      "isValue": true
+    },
+    "seNo": {
       "type": "text",
       "isValue": true
     },
@@ -202,23 +382,11 @@
       "type": "text",
       "isValue": true
     },
-    "neNp": {
-      "type": "text",
-      "isValue": true
-    },
-    "nlNl": {
-      "type": "text",
-      "isValue": true
-    },
-    "paIn": {
+    "faIr": {
       "type": "text",
       "isValue": true
     },
     "plPl": {
-      "type": "text",
-      "isValue": true
-    },
-    "psAf": {
       "type": "text",
       "isValue": true
     },
@@ -230,7 +398,23 @@
       "type": "text",
       "isValue": true
     },
+    "paIn": {
+      "type": "text",
+      "isValue": true
+    },
     "roRo": {
+      "type": "text",
+      "isValue": true
+    },
+    "ruRu": {
+      "type": "text",
+      "isValue": true
+    },
+    "srBa": {
+      "type": "text",
+      "isValue": true
+    },
+    "srCs": {
       "type": "text",
       "isValue": true
     },
@@ -242,11 +426,87 @@
       "type": "text",
       "isValue": true
     },
-    "sqAl": {
+    "esAr": {
       "type": "text",
       "isValue": true
     },
-    "srRs": {
+    "esBo": {
+      "type": "text",
+      "isValue": true
+    },
+    "esCl": {
+      "type": "text",
+      "isValue": true
+    },
+    "esCo": {
+      "type": "text",
+      "isValue": true
+    },
+    "esCr": {
+      "type": "text",
+      "isValue": true
+    },
+    "esDo": {
+      "type": "text",
+      "isValue": true
+    },
+    "esEc": {
+      "type": "text",
+      "isValue": true
+    },
+    "esSv": {
+      "type": "text",
+      "isValue": true
+    },
+    "esGt": {
+      "type": "text",
+      "isValue": true
+    },
+    "esHn": {
+      "type": "text",
+      "isValue": true
+    },
+    "esMx": {
+      "type": "text",
+      "isValue": true
+    },
+    "esNi": {
+      "type": "text",
+      "isValue": true
+    },
+    "esPa": {
+      "type": "text",
+      "isValue": true
+    },
+    "esPy": {
+      "type": "text",
+      "isValue": true
+    },
+    "esPe": {
+      "type": "text",
+      "isValue": true
+    },
+    "esPr": {
+      "type": "text",
+      "isValue": true
+    },
+    "esEs": {
+      "type": "text",
+      "isValue": true
+    },
+    "esUy": {
+      "type": "text",
+      "isValue": true
+    },
+    "esVe": {
+      "type": "text",
+      "isValue": true
+    },
+    "swKe": {
+      "type": "text",
+      "isValue": true
+    },
+    "svFi": {
       "type": "text",
       "isValue": true
     },
@@ -254,7 +514,7 @@
       "type": "text",
       "isValue": true
     },
-    "swKe": {
+    "syrSy": {
       "type": "text",
       "isValue": true
     },
@@ -270,7 +530,7 @@
       "type": "text",
       "isValue": true
     },
-    "tlPh": {
+    "tnZa": {
       "type": "text",
       "isValue": true
     },
@@ -282,7 +542,7 @@
       "type": "text",
       "isValue": true
     },
-    "urPk": {
+    "uzUz": {
       "type": "text",
       "isValue": true
     },
@@ -290,15 +550,15 @@
       "type": "text",
       "isValue": true
     },
-    "zhCn": {
+    "cyGb": {
       "type": "text",
       "isValue": true
     },
-    "zhHk": {
+    "xhZa": {
       "type": "text",
       "isValue": true
     },
-    "zhTw": {
+    "zuZa": {
       "type": "text",
       "isValue": true
     },
