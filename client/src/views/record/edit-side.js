@@ -52,6 +52,9 @@ Espo.define('views/record/edit-side', 'views/record/detail-side', function (Dep)
                     {
                         name: 'teams',
                         view: 'views/fields/teams'
+                    },
+                    {
+                        name: 'assignedAccounts'
                     }
                 ]
             }
