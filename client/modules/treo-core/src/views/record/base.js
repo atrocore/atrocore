@@ -103,14 +103,10 @@ Espo.define('treo-core:views/record/base', 'class-replace!treo-core:views/record
                 return;
             }
 
-            // get current page url
-            let url = window.location.href;
-
-            // parse
-            let urlParts = url.split('/view/');
-
-            if (typeof urlParts[1] !== 'undefined') {
-                attrs._mainEntityId = urlParts[1];
+            let hashParts = window.location.hash.split('/view/');
+            if (typeof hashParts[1] !== 'undefined') {
+                attrs._relatingEntity = hashParts[0].replace('#', '');
+                attrs._relatingEntityId = hashParts[1];
             }
 
             let _prev = {};
@@ -148,6 +144,8 @@ Espo.define('treo-core:views/record/base', 'class-replace!treo-core:views/record
         },
 
         saveModel(model, callback, skipExit, attrs) {
+            console.log(attrs)
+
             this.notify('Saving...');
 
             let self = this;
