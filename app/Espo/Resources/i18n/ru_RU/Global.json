@@ -355,7 +355,7 @@
   "massActions": {
     "remove": "Удалить",
     "merge": "Объединить",
-    "massUpdate": "Обновить все",
+    "massUpdate": "Обновить массово",
     "export": "Экспортировать",
     "follow": "Подписаться",
     "unfollow": "Отписаться",
