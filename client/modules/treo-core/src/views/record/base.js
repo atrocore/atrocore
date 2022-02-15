@@ -144,10 +144,7 @@ Espo.define('treo-core:views/record/base', 'class-replace!treo-core:views/record
         },
 
         saveModel(model, callback, skipExit, attrs) {
-            console.log(attrs)
-
             this.notify('Saving...');
-
             let self = this;
             model.save(attrs, {
                 success: function () {
