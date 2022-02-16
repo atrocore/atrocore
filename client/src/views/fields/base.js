@@ -419,13 +419,15 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             if (scope) {
                 let relatingEntities = this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'relatingEntityField']);
                 if (relatingEntities) {
-                    if (this.model.has(this.name) && (this.mode === 'edit' || this.mode === 'detail')) {
-                        let entityType = window.location.hash.split('/').shift().replace('#', '');
-                        if (relatingEntities.includes(entityType)) {
-                            return;
+                    if (this.mode === 'edit' || this.mode === 'detail') {
+                        if (this.model.has(this.name)) {
+                            let entityType = window.location.hash.split('/').shift().replace('#', '');
+                            if (relatingEntities.includes(entityType)) {
+                                return;
+                            }
                         }
+                        this.hide();
                     }
-                    this.hide();
                 }
             }
         },
