@@ -394,6 +394,8 @@ class Record extends \Espo\Core\Services\Base
 
     public function loadPreviewForCollection(EntityCollection $collection): void
     {
+        $this->dispatchEvent('loadPreviewForCollection', new Event(['collection' => $collection]));
+
         $fields = [];
         foreach ($this->getMetadata()->get(['entityDefs', $collection->getEntityName(), 'fields'], []) as $field => $data) {
             if (in_array($data['type'], ['asset', 'image', 'file'])) {
