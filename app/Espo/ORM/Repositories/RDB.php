@@ -510,13 +510,13 @@ class RDB extends \Espo\ORM\Repository
             $result = $this->$methodName($entity, $foreign, $options);
         } else {
             if ($foreign instanceof Entity) {
-                $result = $this->getMapper()->unrelate($entity, $relationName, $foreign, !empty($options['force']));
+                $result = $this->getMapper()->unrelate($entity, $relationName, $foreign, true);
             }
             if (is_string($foreign)) {
-                $result = $this->getMapper()->removeRelation($entity, $relationName, $foreign, !empty($options['force']));
+                $result = $this->getMapper()->removeRelation($entity, $relationName, $foreign, true);
             }
             if ($foreign === true) {
-                $result = $this->getMapper()->removeAllRelations($entity, $relationName, !empty($options['force']));
+                $result = $this->getMapper()->removeAllRelations($entity, $relationName, true);
             }
         }
 
