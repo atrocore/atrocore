@@ -813,29 +813,33 @@ Espo.define('views/record/list', 'view', function (Dep) {
         setupMassActionItems: function () {},
 
         filterListLayout: function (listLayout) {
-            if (this._cachedFilteredListLayout) {
-                return this._cachedFilteredListLayout;
-            }
-
-            var forbiddenFieldList =this._cachedScopeForbiddenFieldList =
-                this._cachedScopeForbiddenFieldList || this.getAcl().getScopeForbiddenFieldList(this.entityType, 'read');
-
-            if (!forbiddenFieldList.length) {
-                this._cachedFilteredListLayout = listLayout;
-                return this._cachedFilteredListLayout;
-            }
-
+            let entityType = window.location.hash.split('/').shift().replace('#', '');
             let filteredListLayout = [];
 
             listLayout.forEach(item => {
-                if (item.name && forbiddenFieldList.indexOf(item.name) < 0) {
+                let relatingEntityField = this.getMetadata().get(['entityDefs', this.entityType, 'fields', item.name, 'relatingEntityField']);
+                if (relatingEntityField && entityType) {
+                    if (relatingEntityField.includes(entityType)) {
+                        filteredListLayout.push(item);
+                    }
+                } else {
                     filteredListLayout.push(item);
                 }
             });
 
-            this._cachedFilteredListLayout = filteredListLayout;
+            let forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'read');
+            if (!forbiddenFieldList.length) {
+                return filteredListLayout;
+            }
 
-            return this._cachedFilteredListLayout;
+            let checkedViaAclListLayout = [];
+            filteredListLayout.forEach(item => {
+                if (item.name && forbiddenFieldList.indexOf(item.name) < 0) {
+                    checkedViaAclListLayout.push(item);
+                }
+            });
+
+            return checkedViaAclListLayout;
         },
 
         _loadListLayout: function (callback) {
