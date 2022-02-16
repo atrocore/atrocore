@@ -474,6 +474,23 @@ class RDB extends \Espo\ORM\Repository
         return $result;
     }
 
+    public function updateRelationData(string $relationName, array $setData, string $re1, string $re1Id, string $re2, string $re2Id): void
+    {
+        $setPart = [];
+        foreach ($setData as $field => $value) {
+            $setPart[] = Util::toUnderScore($field) . '=' . $this->getMapper()->quote($value);
+        }
+
+        if (empty($setPart)) {
+            return;
+        }
+
+        $query = "UPDATE `" . Util::toUnderScore($relationName) . "` SET " . implode(',', $setPart) . " WHERE deleted=0";
+        $query .= " AND " . Util::toUnderScore(lcfirst($re1)) . "_id=" . $this->getPDO()->quote($re1Id);
+        $query .= " AND " . Util::toUnderScore(lcfirst($re2)) . "_id=" . $this->getPDO()->quote($re2Id);
+
+        $this->getPDO()->exec($query);
+    }
 
     public function unrelate(Entity $entity, $relationName, $foreign, array $options = [])
     {

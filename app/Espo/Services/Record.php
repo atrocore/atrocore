@@ -1109,6 +1109,7 @@ class Record extends \Espo\Core\Services\Base
         }
 
         if ($this->storeEntity($entity)) {
+            $this->updateRelationData($entity, $data);
             $this->afterUpdateEntity($entity, $data);
             $this->prepareEntityForOutput($entity);
             $this->loadPreview($entity);
@@ -1121,6 +1122,34 @@ class Record extends \Espo\Core\Services\Base
         }
 
         throw new Error();
+    }
+
+    protected function updateRelationData(Entity $entity, \stdClass $data): void
+    {
+        if (!property_exists($data, '_relationName') || !property_exists($data, '_relationEntity') || !property_exists($data, '_relationEntityId')) {
+            return;
+        }
+
+        $linkData = $this->getMetadata()->get(['entityDefs', $data->_relationEntity, 'links', $data->_relationName]);
+
+        if (empty($linkData['additionalColumns']) || empty($linkData['relationName']) || empty($linkData['entity'])) {
+            return;
+        }
+
+        $setData = [];
+        foreach ($linkData['additionalColumns'] as $field => $fieldData) {
+            if (property_exists($data, $field)) {
+                $setData[$field] = $data->$field;
+            }
+        }
+
+        if (empty($setData)) {
+            return;
+        }
+
+        $this
+            ->getRepository()
+            ->updateRelationData($linkData['relationName'], $setData, $data->_relationEntity, $data->_relationEntityId, $entity->getEntityType(), $entity->get('id'));
     }
 
     protected function beforeCreateEntity(Entity $entity, $data)

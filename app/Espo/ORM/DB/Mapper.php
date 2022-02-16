@@ -713,7 +713,7 @@ abstract class Mapper implements IMapper
         $this->removeRelation($entity, $relationName, null, true, null, $force);
     }
 
-    protected function quote($value)
+    public function quote($value)
     {
         if (is_null($value)) {
             return 'NULL';
