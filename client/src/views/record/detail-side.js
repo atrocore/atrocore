@@ -130,7 +130,11 @@ Espo.define('views/record/detail-side', ['view'], function (Dep) {
 
             var additionalPanels = this.getMetadata().get('clientDefs.' + this.scope + '.sidePanels.' + this.type) || [];
             additionalPanels.forEach(function (panel) {
-                this.panelList.push(panel);
+                if (panel.unshift && panel.unshift === true) {
+                    this.panelList.unshift(panel);
+                } else {
+                    this.panelList.push(panel);
+                }
             }, this);
 
             this.panelList = this.panelList.filter(function (p) {
