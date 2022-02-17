@@ -33,6 +33,7 @@
 
 namespace Espo\ORM\Repositories;
 
+use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
 use \Espo\ORM\EntityManager;
 use \Espo\ORM\EntityFactory;
@@ -478,6 +479,9 @@ class RDB extends \Espo\ORM\Repository
     {
         $setPart = [];
         foreach ($setData as $field => $value) {
+            if (is_array($value)) {
+                $value = Json::encode($value);
+            }
             $setPart[] = Util::toUnderScore($field) . '=' . $this->getMapper()->quote($value);
         }
 
