@@ -108,6 +108,9 @@ Espo.define('treo-core:views/record/base', 'class-replace!treo-core:views/record
                 attrs._relationName = this.model.defs._relationName;
                 attrs._relationEntity = hashParts[0].replace('#', '');
                 attrs._relationEntityId = hashParts[1];
+
+                // @todo remove it soon
+                attrs._mainEntityId = hashParts[1];
             }
 
             let _prev = {};
