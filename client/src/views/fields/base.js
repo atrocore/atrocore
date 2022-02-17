@@ -420,11 +420,9 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 let relatingEntities = this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'relatingEntityField']);
                 if (relatingEntities) {
                     if (this.mode === 'edit' || this.mode === 'detail') {
-                        if (this.model.has(this.name)) {
-                            let entityType = window.location.hash.split('/').shift().replace('#', '');
-                            if (relatingEntities.includes(entityType)) {
-                                return;
-                            }
+                        let entityType = window.location.hash.split('/').shift().replace('#', '');
+                        if (relatingEntities.includes(entityType)) {
+                            return;
                         }
                         this.hide();
                     }
