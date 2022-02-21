@@ -463,6 +463,10 @@ class Language
             $this->init();
         }
 
+        if (!isset($this->data[$currentLanguage])) {
+            $this->data[$currentLanguage] = $this->data['en_US'];
+        }
+
         return $this->data[$currentLanguage];
     }
 
