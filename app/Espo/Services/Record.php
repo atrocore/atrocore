@@ -2560,6 +2560,11 @@ class Record extends \Espo\Core\Services\Base
 
     protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
     {
+        $event = $this->dispatchEvent('beforeCheckingIsEntityUpdated', new Event(['entity' => $entity, 'data' => $data]));
+
+        $entity = $event->getArgument('entity');
+        $data = $event->getArgument('data');
+
         $skip = [
             'id',
             'deleted',
