@@ -98,7 +98,7 @@ class QueueManager
         $repository = $this->getEntityManager()->getRepository('QueueItem');
 
         // delete old
-        $repository->where(['modifiedAt<' => (new \DateTime())->modify('-30 days')->format('Y-m-d H:i:s')])->removeCollection();
+        $repository->deleteOldRecords();
 
         /** @var User $user */
         $user = $this->getContainer()->get('user');

@@ -46,6 +46,12 @@ use Espo\Services\QueueManagerServiceInterface;
  */
 class QueueItem extends Base
 {
+    public function deleteOldRecords(): void
+    {
+        $date = (new \DateTime())->modify('-30 days')->format('Y-m-d H:i:s');
+        $this->getPDO()->exec("DELETE FROM `queue_item` WHERE modified_at<'$date'");
+    }
+
     /**
      * @return bool
      */
