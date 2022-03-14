@@ -93,6 +93,34 @@ class Connection extends Base
                     throw new BadRequest(sprintf($errorMessage, implode(', ', array_column(\sqlsrv_errors(), 'message'))));
                 }
                 break;
+            case 'ftp':
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, "ftp://{$connection->get('host')}/");
+                if (!empty($connection->get('port'))) {
+                    curl_setopt($ch, CURLOPT_PORT, $connection->get('port'));
+                }
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_USERPWD, $connection->get('user') . ":" . $this->decryptPassword($connection->get('password')));
+                curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+                curl_setopt($ch, CURLOPT_DIRLISTONLY, true);
+                $data = curl_exec($ch);
+                curl_close($ch);
+                if ($data === false) {
+                    throw new BadRequest(sprintf($errorMessage, 'Connection failed.'));
+                }
+                $result = 'curl';
+                break;
+            case 'sftp':
+                try {
+                    $result = new \phpseclib3\Net\SFTP($connection->get('host'), empty($connection->get('port')) ? 22 : (int)$connection->get('port'));
+                    $login = $result->login($connection->get('user'), $this->decryptPassword($connection->get('password')));
+                } catch (\Throwable $e) {
+                    throw new BadRequest(sprintf($errorMessage, $e->getMessage()));
+                }
+                if ($login === false) {
+                    throw new BadRequest(sprintf($errorMessage, 'Wrong auth data.'));
+                }
+                break;
             default:
                 throw new BadRequest(sprintf($errorMessage, $this->getInjection('language')->translate('noSuchType', 'exceptions', 'Connection')));
         }

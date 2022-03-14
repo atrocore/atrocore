@@ -15,15 +15,15 @@
         {
           "name": "host"
         },
-        false
+        {
+          "name": "port"
+        }
       ],
       [
         {
           "name": "dbName"
         },
-        {
-          "name": "port"
-        }
+        false
       ],
       [
         {

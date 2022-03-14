@@ -13,6 +13,8 @@
     "mysql": "MySQL Server",
     "psql": "PostgreSQL Server",
     "msql": "Microsoft SQL Server",
+    "ftp": "FTP",
+    "sftp": "SFTP",
     "Create Connection": "Verbindung erstellen"
   },
   "exceptions": {

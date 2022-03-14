@@ -6,5 +6,37 @@
   },
   "recordViews": {
     "detail": "views/connection/record/detail"
+  },
+  "dynamicLogic": {
+    "fields": {
+      "dbName": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "mysql",
+                "psql",
+                "msql"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "mysql",
+                "psql",
+                "msql"
+              ]
+            }
+          ]
+        }
+      }
+    }
   }
 }

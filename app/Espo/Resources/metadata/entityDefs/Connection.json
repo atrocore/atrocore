@@ -7,8 +7,11 @@
       "options": [
         "mysql",
         "psql",
-        "msql"
-      ]
+        "msql",
+        "ftp",
+        "sftp"
+      ],
+      "default": "mysql"
     },
     "name": {
       "type": "varchar",
@@ -23,7 +26,7 @@
     },
     "dbName": {
       "type": "varchar",
-      "required": true,
+      "required": false,
       "trim": true
     },
     "port": {
