@@ -1,6 +1,6 @@
 This software is not allowed to be used in Russia and Belarus.
 
-Otherwise the following applies:
+In addition, the following shall apply:
 
                       GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
