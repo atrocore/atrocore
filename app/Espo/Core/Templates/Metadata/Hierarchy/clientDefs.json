@@ -7,10 +7,10 @@
   ],
   "views": {
     "list": "views/list-tree",
-    "detail": "pim:views/category/detail"
+    "detail": "views/detail-tree"
   },
   "recordViews": {
-    "detail": "pim:views/category/record/detail"
+    "detail": "views/record/detail-tree"
   },
   "dynamicLogic": {
     "fields": {
