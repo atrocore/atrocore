@@ -366,6 +366,8 @@
     "convertCurrency": "Convert Currency"
   },
   "fields": {
+    "sortOrder": "Sort Order",
+    "parents": "Parents",
     "prohibitedEmptyValue": "Disable empty value",
     "addressCity": "City",
     "addressStreet": "Street",

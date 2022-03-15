@@ -35,10 +35,33 @@
 
 declare(strict_types=1);
 
-namespace Espo\Core\Templates\Entities;
+namespace Espo\Core\Templates\Repositories;
 
-use Espo\Core\ORM\Entity;
+use Espo\Core\ORM\Repositories\RDB;
 
-class Hierarchical extends Entity
+class Hierarchy extends RDB
 {
+    public function getChildrenArray(string $parentId): array
+    {
+        $tableName = $this->getEntityManager()->getQuery()->toDb($this->entityType);
+
+        if (empty($parentId)) {
+            $query = "SELECT e.id, e.name, (SELECT COUNT(id) FROM `{$tableName}_hierarchy` WHERE parent_id=e.id) as childrenCount
+                      FROM `{$tableName}` e
+                      WHERE e.id NOT IN (SELECT entity_id FROM `{$tableName}_hierarchy` WHERE deleted=0)
+                      AND e.deleted=0
+                      ORDER BY e.sort_order";
+        } else {
+            $parentId = $this->getPDO()->quote($parentId);
+            $query = "SELECT e.id, e.name, (SELECT COUNT(id) FROM `{$tableName}_hierarchy` WHERE parent_id=e.id) as childrenCount
+                  FROM `{$tableName}_hierarchy` h
+                  LEFT JOIN `{$tableName}` e ON e.id=h.entity_id
+                  WHERE h.deleted=0
+                    AND e.deleted=0
+                    AND h.parent_id={$parentId}
+                  ORDER BY h.hierarchy_sort_order";
+        }
+
+        return $this->getPDO()->query($query)->fetchAll(\PDO::FETCH_ASSOC);
+    }
 }

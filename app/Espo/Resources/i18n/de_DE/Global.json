@@ -387,6 +387,8 @@
     "convertCurrency": "Währung umrechnen"
   },
   "fields": {
+    "sortOrder": "Sortierreihenfolge",
+    "parents": "Eltern",
     "assignedAccounts": "Accounts",
     "prohibitedEmptyValue": "Leeren Wert deaktivieren",
     "amount": "Anzahl",

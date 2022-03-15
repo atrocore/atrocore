@@ -35,10 +35,23 @@
 
 declare(strict_types=1);
 
-namespace Espo\Core\Templates\Repositories;
+namespace Espo\Core\Templates\Services;
 
-use Espo\Core\ORM\Repositories\RDB;
+use Espo\Services\Record;
 
-class Hierarchical extends RDB
+class Hierarchy extends Record
 {
+    public function getChildren(string $parentId): array
+    {
+        $result = [];
+        foreach ($this->getRepository()->getChildrenArray($parentId) as $record) {
+            $result[] = [
+                'id'             => $record['id'],
+                'name'           => $record['name'],
+                'load_on_demand' => !empty($record['childrenCount'])
+            ];
+        }
+
+        return $result;
+    }
 }

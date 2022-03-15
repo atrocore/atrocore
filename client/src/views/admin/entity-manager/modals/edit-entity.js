@@ -134,7 +134,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                     name: 'type',
                     params: {
                         required: true,
-                        options: ['Base', 'Hierarchical']
+                        options: ['Base', 'Hierarchy']
                     }
                 },
                 readOnly: !this.isNew

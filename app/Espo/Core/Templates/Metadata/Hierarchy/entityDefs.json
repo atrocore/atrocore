@@ -37,6 +37,12 @@
       "layoutDetailDisabled": true,
       "layoutMassUpdateDisabled": true,
       "noLoad": true
+    },
+    "sortOrder": {
+      "type": "int",
+      "default": null,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true
     }
   },
   "links": {
@@ -57,7 +63,12 @@
       "midKeys": [
         "entityId",
         "parentId"
-      ]
+      ],
+      "additionalColumns": {
+        "hierarchySortOrder": {
+          "type": "int"
+        }
+      }
     },
     "parents": {
       "type": "hasMany",
