@@ -5,6 +5,13 @@
     "assignedToMe",
     "ownedByMe"
   ],
+  "views": {
+    "list": "views/list-tree",
+    "detail": "pim:views/category/detail"
+  },
+  "recordViews": {
+    "detail": "pim:views/category/record/detail"
+  },
   "dynamicLogic": {
     "fields": {
       "sortOrder": {
