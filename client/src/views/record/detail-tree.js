@@ -66,12 +66,35 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
         },
 
         selectNode(data) {
+            let route = [];
+            (data.route || '').split('|').forEach(item => {
+                if (item) {
+                    route.push(item);
+                }
+            });
+
+            this.getStorage().set(`tree-route-${data.id}-time`, this.scope, this.getCurrentTime() + 7);
+            this.getStorage().set(`tree-route-${data.id}`, this.scope, route);
+
             window.location.href = `/#${this.scope}/view/${data.id}`;
+        },
+
+        getCurrentTime() {
+            return Math.floor(new Date().getTime() / 1000);
         },
 
         treeInit(view) {
             if (view.model && view.model.get('id')) {
-                view.selectTreeNode(view.model.get('route'), view.model.get('id'));
+                const id = view.model.get('id');
+
+                const storedTime = this.getStorage().get(`tree-route-${id}-time`, this.scope);
+                if (!storedTime || storedTime < this.getCurrentTime()) {
+                    this.getStorage().clear(`tree-route-${id}`, this.scope);
+                }
+
+                const storedRoute = this.getStorage().get(`tree-route-${id}`, this.scope);
+
+                view.selectTreeNode(storedRoute ? storedRoute : view.model.get('route'), view.model.get('id'));
             }
         },
 
