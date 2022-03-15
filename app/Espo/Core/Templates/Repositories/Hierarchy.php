@@ -44,17 +44,18 @@ class Hierarchy extends RDB
     public function getChildrenArray(string $parentId): array
     {
         $tableName = $this->getEntityManager()->getQuery()->toDb($this->entityType);
+        $hierarchyTableName = $this->getHierarchyTableName();
 
         if (empty($parentId)) {
-            $query = "SELECT e.id, e.name, (SELECT COUNT(id) FROM `{$tableName}_hierarchy` WHERE parent_id=e.id) as childrenCount
+            $query = "SELECT e.id, e.name, (SELECT COUNT(id) FROM `$hierarchyTableName` WHERE parent_id=e.id) as childrenCount
                       FROM `{$tableName}` e
-                      WHERE e.id NOT IN (SELECT entity_id FROM `{$tableName}_hierarchy` WHERE deleted=0)
+                      WHERE e.id NOT IN (SELECT entity_id FROM `$hierarchyTableName` WHERE deleted=0)
                       AND e.deleted=0
                       ORDER BY e.sort_order";
         } else {
             $parentId = $this->getPDO()->quote($parentId);
-            $query = "SELECT e.id, e.name, (SELECT COUNT(id) FROM `{$tableName}_hierarchy` WHERE parent_id=e.id) as childrenCount
-                  FROM `{$tableName}_hierarchy` h
+            $query = "SELECT e.id, e.name, (SELECT COUNT(id) FROM `$hierarchyTableName` WHERE parent_id=e.id) as childrenCount
+                  FROM `$hierarchyTableName` h
                   LEFT JOIN `{$tableName}` e ON e.id=h.entity_id
                   WHERE h.deleted=0
                     AND e.deleted=0
@@ -68,15 +69,46 @@ class Hierarchy extends RDB
     public function isRoot(string $id): bool
     {
         $id = $this->getPDO()->quote($id);
-        $tableName = $this->getEntityManager()->getQuery()->toDb($this->entityType);
+        $hierarchyTableName = $this->getHierarchyTableName();
 
         $query = "SELECT id
-                  FROM `{$tableName}_hierarchy`
+                  FROM `$hierarchyTableName`
                   WHERE deleted=0
                     AND entity_id={$id}";
 
         $record = $this->getPDO()->query($query)->fetch(\PDO::FETCH_COLUMN);
 
         return empty($record);
+    }
+
+    public function getRoute(string $id): array
+    {
+        $hierarchyTableName = $this->getHierarchyTableName();
+
+        $records = $this
+            ->getPDO()
+            ->query("SELECT entity_id, parent_id FROM `$hierarchyTableName` WHERE deleted=0")
+            ->fetchAll(\PDO::FETCH_ASSOC);
+
+        $route = [];
+        $this->createRoute($records, $id, $route);
+
+        return array_reverse($route);
+    }
+
+    protected function createRoute(array $records, string $id, array &$route): void
+    {
+        foreach ($records as $record) {
+            if ($record['entity_id'] === $id) {
+                $route[] = $record['parent_id'];
+                $this->createRoute($records, $record['parent_id'], $route);
+                return;
+            }
+        }
+    }
+
+    protected function getHierarchyTableName(): string
+    {
+        return $this->getEntityManager()->getQuery()->toDb($this->entityType) . '_hierarchy';
     }
 }

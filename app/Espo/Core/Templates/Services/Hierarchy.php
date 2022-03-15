@@ -62,6 +62,7 @@ class Hierarchy extends Record
 
         if (!empty($entity)) {
             $entity->set('isRoot', $this->getRepository()->isRoot($entity->get('id')));
+            $entity->set('route', $this->getRepository()->getRoute($entity->get('id')));
         }
 
         return $entity;

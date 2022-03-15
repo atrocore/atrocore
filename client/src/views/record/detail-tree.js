@@ -71,7 +71,7 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
 
         treeInit(view) {
             if (view.model && view.model.get('id')) {
-                view.selectTreeNode(view.parseRoute(view.model.get('categoryRoute')), view.model.get('id'));
+                view.selectTreeNode(view.model.get('route'), view.model.get('id'));
             }
         },
 

@@ -100,17 +100,6 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             }
         },
 
-        parseRoute(routeStr) {
-            let route = [];
-            (routeStr || '').split('|').forEach(item => {
-                if (item) {
-                    route.push(item);
-                }
-            });
-
-            return route;
-        },
-
         buildTree() {
             const $tree = this.getTreeEl();
 
