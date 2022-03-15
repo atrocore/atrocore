@@ -35,13 +35,10 @@
 
 declare(strict_types=1);
 
-namespace Espo\Core\Templates\Repositories;
+namespace Espo\Core\Templates\Entities;
 
-use Espo\Core\Repositories\CategoryTree as Base;
+use Espo\Core\ORM\Entity;
 
-/**
- * Class CategoryTree
- */
-class CategoryTree extends Base
+class Hierarchical extends Entity
 {
 }

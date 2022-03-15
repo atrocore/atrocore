@@ -134,12 +134,10 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                     name: 'type',
                     params: {
                         required: true,
-                        options: this.getMetadata().get('app.entityTemplateList') || ['Base']
+                        options: ['Base', 'Hierarchical']
                     }
                 },
-                readOnly: scope != false,
-                tooltip: true,
-                tooltipText: this.translate('entityType', 'tooltips', 'EntityManager')
+                readOnly: !this.isNew
             });
 
             if (this.hasStreamField) {

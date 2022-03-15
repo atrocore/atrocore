@@ -173,10 +173,6 @@ class EntityManager
             throw new Error('Bad entity name.');
         }
 
-        if (!in_array($type, $this->getMetadata()->get(['app', 'entityTemplateList'], []))) {
-            throw new Error('Type \''.$type.'\' does not exist.');
-        }
-
         $templateDefs = $this->getMetadata()->get(['app', 'entityTemplates', $type], []);
 
         if (!empty($templateDefs['isNotCreatable']) && empty($params['forceCreate'])) {

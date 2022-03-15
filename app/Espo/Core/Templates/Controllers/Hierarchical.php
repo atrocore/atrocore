@@ -37,11 +37,8 @@ declare(strict_types=1);
 
 namespace Espo\Core\Templates\Controllers;
 
-use Espo\Core\Controllers\RecordTree;
+use Espo\Core\Controllers\Record;
 
-/**
- * Class CategoryTree
- */
-class CategoryTree extends RecordTree
+class Hierarchical extends Record
 {
 }

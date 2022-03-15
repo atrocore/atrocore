@@ -35,13 +35,10 @@
 
 declare(strict_types=1);
 
-namespace Espo\Core\Templates\Entities;
+namespace Espo\Core\Templates\Repositories;
 
-use Espo\Core\Entities\CategoryTreeItem;
+use Espo\Core\ORM\Repositories\RDB;
 
-/**
- * Class CategoryTree
- */
-class CategoryTree extends CategoryTreeItem
+class Hierarchical extends RDB
 {
 }

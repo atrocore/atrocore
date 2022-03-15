@@ -37,11 +37,8 @@ declare(strict_types=1);
 
 namespace Espo\Core\Templates\Services;
 
-use Espo\Services\RecordTree;
+use Espo\Services\Record;
 
-/**
- * Class CategoryTree
- */
-class CategoryTree extends RecordTree
+class Hierarchical extends Record
 {
 }
