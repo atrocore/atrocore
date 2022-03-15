@@ -25,6 +25,18 @@
       "type": "link",
       "readOnly": true,
       "view": "views/fields/user"
+    },
+    "children": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "noLoad": true
+    },
+    "parents": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "noLoad": true
     }
   },
   "links": {
@@ -35,6 +47,28 @@
     "modifiedBy": {
       "type": "belongsTo",
       "entity": "User"
+    },
+    "children": {
+      "type": "hasMany",
+      "relationName": "{entityType}Hierarchy",
+      "foreign": "parents",
+      "entity": "{entityType}",
+      "audited": false,
+      "midKeys": [
+        "entityId",
+        "parentId"
+      ]
+    },
+    "parents": {
+      "type": "hasMany",
+      "relationName": "{entityType}Hierarchy",
+      "foreign": "children",
+      "entity": "{entityType}",
+      "audited": false,
+      "midKeys": [
+        "parentId",
+        "entityId"
+      ]
     }
   },
   "collection": {
