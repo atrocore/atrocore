@@ -6,6 +6,14 @@
         {
           "name": "name"
         },
+        {
+          "name": "sortOrder"
+        }
+      ],
+      [
+        {
+          "name": "description"
+        },
         false
       ]
     ]

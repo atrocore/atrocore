@@ -64,4 +64,19 @@ class Hierarchy extends RDB
 
         return $this->getPDO()->query($query)->fetchAll(\PDO::FETCH_ASSOC);
     }
+
+    public function isRoot(string $id): bool
+    {
+        $id = $this->getPDO()->quote($id);
+        $tableName = $this->getEntityManager()->getQuery()->toDb($this->entityType);
+
+        $query = "SELECT id
+                  FROM `{$tableName}_hierarchy`
+                  WHERE deleted=0
+                    AND entity_id={$id}";
+
+        $record = $this->getPDO()->query($query)->fetch(\PDO::FETCH_COLUMN);
+
+        return empty($record);
+    }
 }

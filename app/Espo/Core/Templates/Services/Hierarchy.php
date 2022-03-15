@@ -37,6 +37,7 @@ declare(strict_types=1);
 
 namespace Espo\Core\Templates\Services;
 
+use Espo\ORM\Entity;
 use Espo\Services\Record;
 
 class Hierarchy extends Record
@@ -53,5 +54,16 @@ class Hierarchy extends Record
         }
 
         return $result;
+    }
+
+    public function getEntity($id = null)
+    {
+        $entity = parent::getEntity($id);
+
+        if (!empty($entity)) {
+            $entity->set('isRoot', $this->getRepository()->isRoot($entity->get('id')));
+        }
+
+        return $entity;
     }
 }
