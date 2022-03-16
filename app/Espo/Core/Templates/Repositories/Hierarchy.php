@@ -41,6 +41,17 @@ use Espo\Core\ORM\Repositories\RDB;
 
 class Hierarchy extends RDB
 {
+    public function updateHierarchySortOrder(string $parentId, array $ids): void
+    {
+        $parentId = $this->getPDO()->quote($parentId);
+        $hierarchyTableName = $this->getHierarchyTableName();
+        foreach ($ids as $k => $id) {
+            $id = $this->getPDO()->quote($id);
+            $sortOrder = $k * 10;
+            $this->getPDO()->exec("UPDATE `$hierarchyTableName` SET hierarchy_sort_order=$sortOrder WHERE parent_id=$parentId AND entity_id=$id AND deleted=0");
+        }
+    }
+
     public function getChildrenArray(string $parentId): array
     {
         $tableName = $this->getEntityManager()->getQuery()->toDb($this->entityType);

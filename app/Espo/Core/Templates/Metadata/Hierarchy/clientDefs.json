@@ -12,6 +12,14 @@
   "recordViews": {
     "detail": "views/record/detail-tree"
   },
+  "relationshipPanels": {
+    "children": {
+      "dragDrop": {
+        "isActive": true,
+        "sortField": "sortOrder"
+      }
+    }
+  },
   "dynamicLogic": {
     "fields": {
       "sortOrder": {

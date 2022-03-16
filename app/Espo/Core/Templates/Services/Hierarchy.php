@@ -38,6 +38,7 @@ declare(strict_types=1);
 namespace Espo\Core\Templates\Services;
 
 use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 use Espo\Services\Record;
 
 class Hierarchy extends Record
@@ -66,5 +67,56 @@ class Hierarchy extends Record
         }
 
         return $entity;
+    }
+
+    public function updateEntity($id, $data)
+    {
+        if (property_exists($data, '_sortedIds') && property_exists($data, '_id')) {
+            $this->getRepository()->updateHierarchySortOrder($data->_id, $data->_sortedIds);
+            return $this->getEntity($id);
+        }
+
+        return parent::updateEntity($id, $data);
+    }
+
+    public function prepareEntityForOutput(Entity $entity)
+    {
+        parent::prepareEntityForOutput($entity);
+
+        if ($entity->has('hierarchySortOrder')) {
+            $entity->set('sortOrder', $entity->get('hierarchySortOrder'));
+        }
+    }
+
+    public function findLinkedEntities($id, $link, $params)
+    {
+        $result = parent::findLinkedEntities($id, $link, $params);
+
+        if ($link === 'children' && !empty($result['total'])) {
+            $result['collection'] = $this->sortCollection($result['collection']);
+        }
+
+        return $result;
+    }
+
+    protected function sortCollection(EntityCollection $inputCollection): EntityCollection
+    {
+        $ids = [];
+        foreach ($inputCollection as $entity) {
+            $ids[$entity->get('id')] = $entity->get('sortOrder');
+        }
+        asort($ids);
+
+        $collection = new EntityCollection();
+        foreach ($ids as $id => $sortOrder) {
+            foreach ($inputCollection as $entity) {
+                if ($entity->get('id') === $id) {
+                    $collection->append($entity);
+                    break;
+                }
+            }
+        }
+
+        return $collection;
     }
 }
