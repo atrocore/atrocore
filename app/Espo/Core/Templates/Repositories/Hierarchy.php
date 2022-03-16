@@ -37,10 +37,37 @@ declare(strict_types=1);
 
 namespace Espo\Core\Templates\Repositories;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\ORM\Repositories\RDB;
+use Espo\ORM\Entity;
 
 class Hierarchy extends RDB
 {
+    protected function beforeRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
+    {
+        parent::beforeRelate($entity, $relationName, $foreign, $data, $options);
+
+        if ($relationName === 'parents') {
+            if (is_bool($foreign)) {
+                throw new BadRequest("Action blocked. Please, specify {$this->entityType}.");
+            }
+            $foreignId = is_string($foreign) ? $foreign : $foreign->get('id');
+            if (in_array($foreignId, $this->getChildrenRecursivelyArray($entity->get('id')))) {
+                throw new BadRequest("Child record cannot be chosen as a parent.");
+            }
+        }
+
+        if ($relationName === 'children') {
+            if (is_bool($foreign)) {
+                throw new BadRequest("Action blocked. Please, specify {$this->entityType}.");
+            }
+            $foreignId = is_string($foreign) ? $foreign : $foreign->get('id');
+            if (in_array($foreignId, $this->getParentsRecursivelyArray($entity->get('id')))) {
+                throw new BadRequest("Parent record cannot be chosen as a child.");
+            }
+        }
+    }
+
     public function updateHierarchySortOrder(string $parentId, array $ids): void
     {
         $parentId = $this->getPDO()->quote($parentId);
@@ -143,7 +170,7 @@ class Hierarchy extends RDB
     protected function collectParents(string $id, array &$ids): void
     {
         $id = $this->getPDO()->quote($id);
-        $query = "SELECT entity_id FROM `{$this->getHierarchyTableName()}` WHERE deleted=0 AND parent_id=$id";
+        $query = "SELECT parent_id FROM `{$this->getHierarchyTableName()}` WHERE deleted=0 AND entity_id=$id";
         if (!empty($res = $this->getPDO()->query($query)->fetchAll(\PDO::FETCH_COLUMN))) {
             $ids = array_values(array_unique(array_merge($ids, $res)));
             foreach ($res as $v) {
@@ -155,7 +182,7 @@ class Hierarchy extends RDB
     protected function collectChildren(string $id, array &$ids): void
     {
         $id = $this->getPDO()->quote($id);
-        $query = "SELECT parent_id FROM `{$this->getHierarchyTableName()}` WHERE deleted=0 AND entity_id=$id";
+        $query = "SELECT entity_id FROM `{$this->getHierarchyTableName()}` WHERE deleted=0 AND parent_id=$id";
         if (!empty($res = $this->getPDO()->query($query)->fetchAll(\PDO::FETCH_COLUMN))) {
             $ids = array_values(array_unique(array_merge($ids, $res)));
             foreach ($res as $v) {

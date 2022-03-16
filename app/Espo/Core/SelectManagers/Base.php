@@ -45,6 +45,7 @@ use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Config;
 use Espo\Core\InjectableFactory;
 use Treo\Core\SelectManagerFactory;
+use Espo\Core\ORM\Repositories\RDB;
 
 class Base
 {
@@ -1995,23 +1996,29 @@ class Base
         }
     }
 
+    /**
+     * @return RDB
+     */
+    protected function getRepository()
+    {
+        return $this
+            ->getEntityManager()
+            ->getRepository($this->entityType);
+    }
+
     protected function boolFilterNotParents(array &$result)
     {
+        $id = $this->getBoolFilterParameter('notParents');
         $result['whereClause'][] = [
-            'id!=' => $this
-                ->getEntityManager()
-                ->getRepository($this->entityType)
-                ->getChildrenRecursivelyArray($this->getBoolFilterParameter('notParents'))
+            'id!=' => array_merge($this->getRepository()->getParentsRecursivelyArray($id), array_column($this->getRepository()->get($id)->get('children')->toArray(), 'id'))
         ];
     }
 
     protected function boolFilterNotChildren(array &$result)
     {
+        $id = $this->getBoolFilterParameter('notChildren');
         $result['whereClause'][] = [
-            'id!=' => $this
-                ->getEntityManager()
-                ->getRepository($this->entityType)
-                ->getParentsRecursivelyArray($this->getBoolFilterParameter('notChildren'))
+            'id!=' => array_merge($this->getRepository()->getChildrenRecursivelyArray($id), array_column($this->getRepository()->get($id)->get('parents')->toArray(), 'id'))
         ];
     }
 
