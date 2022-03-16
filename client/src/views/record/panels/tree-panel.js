@@ -77,14 +77,16 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                 this.actionCollapsePanel();
             }
 
-            let interval = setInterval(() => {
-                if ($('.catalog-tree-panel').length === 0) {
-                    clearInterval(interval);
-                    return;
-                }
-                const title = this.translate("useDragAndDrop");
-                $('.jqtree-title:not([title="' + title + '"])').attr('title', title);
-            }, 100);
+            if (this.getMetadata().get(`scopes.${this.treeScope}.multiParents`) !== true) {
+                let interval = setInterval(() => {
+                    if ($('.catalog-tree-panel').length === 0) {
+                        clearInterval(interval);
+                        return;
+                    }
+                    const title = this.translate("useDragAndDrop");
+                    $('.jqtree-title:not([title="' + title + '"])').attr('title', title);
+                }, 100);
+            }
         },
 
         selectTreeNode(route, id) {
@@ -107,7 +109,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             $tree.tree({
                 dataUrl: this.treeScope + '/action/Tree',
                 selectable: true,
-                dragAndDrop: true,
+                dragAndDrop: this.getMetadata().get(`scopes.${this.treeScope}.multiParents`) !== true,
                 useContextMenu: false,
                 closedIcon: $('<i class="fa fa-angle-right"></i>'),
                 openedIcon: $('<i class="fa fa-angle-down"></i>')

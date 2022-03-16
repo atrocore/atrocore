@@ -92,9 +92,13 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
                     this.getStorage().clear(`tree-route-${id}`, this.scope);
                 }
 
-                const storedRoute = this.getStorage().get(`tree-route-${id}`, this.scope);
+                let route = this.getStorage().get(`tree-route-${id}`, this.scope);
 
-                view.selectTreeNode(storedRoute ? storedRoute : view.model.get('route'), view.model.get('id'));
+                if (route === null || route.length === 0) {
+                    route = view.model.get('route');
+                }
+
+                view.selectTreeNode(route, view.model.get('id'));
             }
         },
 
