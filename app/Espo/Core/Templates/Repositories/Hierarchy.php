@@ -52,6 +52,22 @@ class Hierarchy extends RDB
         }
     }
 
+    public function getParentsRecursivelyArray(string $id): array
+    {
+        $ids = [$id];
+        $this->collectParents($id, $ids);
+
+        return $ids;
+    }
+
+    public function getChildrenRecursivelyArray(string $id): array
+    {
+        $ids = [$id];
+        $this->collectChildren($id, $ids);
+
+        return $ids;
+    }
+
     public function getChildrenArray(string $parentId): array
     {
         $tableName = $this->getEntityManager()->getQuery()->toDb($this->entityType);
@@ -122,5 +138,29 @@ class Hierarchy extends RDB
     protected function getHierarchyTableName(): string
     {
         return $this->getEntityManager()->getQuery()->toDb($this->entityType) . '_hierarchy';
+    }
+
+    protected function collectParents(string $id, array &$ids): void
+    {
+        $id = $this->getPDO()->quote($id);
+        $query = "SELECT entity_id FROM `{$this->getHierarchyTableName()}` WHERE deleted=0 AND parent_id=$id";
+        if (!empty($res = $this->getPDO()->query($query)->fetchAll(\PDO::FETCH_COLUMN))) {
+            $ids = array_values(array_unique(array_merge($ids, $res)));
+            foreach ($res as $v) {
+                $this->collectParents($v, $ids);
+            }
+        }
+    }
+
+    protected function collectChildren(string $id, array &$ids): void
+    {
+        $id = $this->getPDO()->quote($id);
+        $query = "SELECT parent_id FROM `{$this->getHierarchyTableName()}` WHERE deleted=0 AND entity_id=$id";
+        if (!empty($res = $this->getPDO()->query($query)->fetchAll(\PDO::FETCH_COLUMN))) {
+            $ids = array_values(array_unique(array_merge($ids, $res)));
+            foreach ($res as $v) {
+                $this->collectChildren($v, $ids);
+            }
+        }
     }
 }

@@ -1995,6 +1995,26 @@ class Base
         }
     }
 
+    protected function boolFilterNotParents(array &$result)
+    {
+        $result['whereClause'][] = [
+            'id!=' => $this
+                ->getEntityManager()
+                ->getRepository($this->entityType)
+                ->getChildrenRecursivelyArray($this->getBoolFilterParameter('notParents'))
+        ];
+    }
+
+    protected function boolFilterNotChildren(array &$result)
+    {
+        $result['whereClause'][] = [
+            'id!=' => $this
+                ->getEntityManager()
+                ->getRepository($this->entityType)
+                ->getParentsRecursivelyArray($this->getBoolFilterParameter('notChildren'))
+        ];
+    }
+
     protected function filterFollowed(&$result)
     {
         $query = $this->getEntityManager()->getQuery();
