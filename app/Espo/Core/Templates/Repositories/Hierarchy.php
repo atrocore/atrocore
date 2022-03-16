@@ -94,17 +94,19 @@ class Hierarchy extends RDB
 
     public function getRoute(string $id): array
     {
-        $hierarchyTableName = $this->getHierarchyTableName();
-
         $records = $this
             ->getPDO()
-            ->query("SELECT entity_id, parent_id FROM `$hierarchyTableName` WHERE deleted=0")
+            ->query("SELECT entity_id, parent_id FROM `{$this->getHierarchyTableName()}` WHERE deleted=0")
             ->fetchAll(\PDO::FETCH_ASSOC);
+
+        if (empty($records)) {
+            return [];
+        }
 
         $route = [];
         $this->createRoute($records, $id, $route);
 
-        return array_reverse($route);
+        return $route;
     }
 
     protected function createRoute(array $records, string $id, array &$route): void
@@ -113,7 +115,6 @@ class Hierarchy extends RDB
             if ($record['entity_id'] === $id) {
                 $route[] = $record['parent_id'];
                 $this->createRoute($records, $record['parent_id'], $route);
-                return;
             }
         }
     }

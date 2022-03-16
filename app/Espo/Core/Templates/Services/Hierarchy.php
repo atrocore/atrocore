@@ -43,6 +43,13 @@ use Espo\Services\Record;
 
 class Hierarchy extends Record
 {
+    public function getRoute(string $id): array
+    {
+        return $this
+            ->getRepository()
+            ->getRoute($id);
+    }
+
     public function getChildren(string $parentId): array
     {
         $result = [];
@@ -63,7 +70,6 @@ class Hierarchy extends Record
 
         if (!empty($entity)) {
             $entity->set('isRoot', $this->getRepository()->isRoot($entity->get('id')));
-            $entity->set('route', $this->getRepository()->getRoute($entity->get('id')));
         }
 
         return $entity;

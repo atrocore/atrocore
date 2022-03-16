@@ -89,17 +89,36 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             }
         },
 
-        selectTreeNode(route, id) {
+        openNodes($tree, ids) {
+            let result = false
+
+            ids.forEach(item => {
+                let $els = $tree.find(`.jqtree-title[data-id="${item}"]`);
+                if ($els.length > 0) {
+                    $els.each((k, el) => {
+                        let $el = $(el);
+                        let $li = $el.parent().parent();
+                        if ($li.hasClass('jqtree-closed')) {
+                            result = true;
+                            let node = $tree.tree('getNodeByHtmlElement', $el);
+                            $tree.tree('openNode', node, false);
+                        }
+                    });
+                }
+            });
+
+            return result;
+        },
+
+        selectTreeNode(ids, id) {
+            const locationHash = window.location.hash;
             const $tree = this.getTreeEl();
-
-            $tree.tree('selectNode', $tree.tree('getNodeById', id));
-
-            if (route.length > 0) {
-                let node = $tree.tree('getNodeById', route.shift());
-                $tree.tree('openNode', node, () => {
-                    this.selectTreeNode(route, id);
-                });
-            }
+            let interval = setInterval(() => {
+                if (!this.openNodes($tree, ids) || locationHash !== window.location.hash) {
+                    clearInterval(interval);
+                }
+                $tree.tree('selectNode', $tree.tree('getNodeById', id));
+            }, 500);
         },
 
         buildTree() {
@@ -112,7 +131,10 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                 dragAndDrop: this.getMetadata().get(`scopes.${this.treeScope}.multiParents`) !== true,
                 useContextMenu: false,
                 closedIcon: $('<i class="fa fa-angle-right"></i>'),
-                openedIcon: $('<i class="fa fa-angle-down"></i>')
+                openedIcon: $('<i class="fa fa-angle-down"></i>'),
+                onCreateLi: function (node, $li, is_selected) {
+                    $li.find('.jqtree-title').attr('data-id', node.id);
+                }
             }).on('tree.init', () => {
                     this.trigger('tree-init');
                 }

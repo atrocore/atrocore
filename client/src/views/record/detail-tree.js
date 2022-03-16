@@ -66,16 +66,6 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
         },
 
         selectNode(data) {
-            let route = [];
-            (data.route || '').split('|').forEach(item => {
-                if (item) {
-                    route.push(item);
-                }
-            });
-
-            this.getStorage().set(`tree-route-${data.id}-time`, this.scope, this.getCurrentTime() + 7);
-            this.getStorage().set(`tree-route-${data.id}`, this.scope, route);
-
             window.location.href = `/#${this.scope}/view/${data.id}`;
         },
 
@@ -85,20 +75,9 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
 
         treeInit(view) {
             if (view.model && view.model.get('id')) {
-                const id = view.model.get('id');
-
-                const storedTime = this.getStorage().get(`tree-route-${id}-time`, this.scope);
-                if (!storedTime || storedTime < this.getCurrentTime()) {
-                    this.getStorage().clear(`tree-route-${id}`, this.scope);
-                }
-
-                let route = this.getStorage().get(`tree-route-${id}`, this.scope);
-
-                if (route === null || route.length === 0) {
-                    route = view.model.get('route');
-                }
-
-                view.selectTreeNode(route, view.model.get('id'));
+                this.ajaxGetRequest(`${this.scope}/action/route?id=${view.model.get('id')}`).then(route => {
+                    view.selectTreeNode(route, view.model.get('id'));
+                });
             }
         },
 
