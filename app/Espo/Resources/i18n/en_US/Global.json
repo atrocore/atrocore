@@ -429,6 +429,7 @@
     "assignedAccounts": "Accounts",
     "users": "Users",
     "parent": "Parent",
+    "parents": "Parents",
     "children": "Children"
   },
   "dashlets": {
