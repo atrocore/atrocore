@@ -54,6 +54,44 @@ class Hierarchy extends RDB
         $this->hierarchyTableName = $entityManager->getQuery()->toDb($this->entityType) . '_hierarchy';
     }
 
+    public function updatePositionInTree(string $entityId, string $position, string $target, string $parentId): void
+    {
+        // prepare vars
+        $preparedEntityId = $this->getPDO()->quote($entityId);
+        $preparedParentId = $this->getPDO()->quote($parentId);
+        $tableName = $this->getEntityManager()->getQuery()->toDb($this->entityType);
+
+        $this->getPDO()->exec("DELETE FROM `$this->hierarchyTableName` WHERE entity_id=$preparedEntityId");
+        if (!empty($parentId)) {
+            $this->getPDO()->exec("INSERT INTO `$this->hierarchyTableName` (entity_id, parent_id) VALUES ($preparedEntityId, $preparedParentId)");
+        }
+
+        $ids = array_column($this->getChildrenArray($parentId, false), 'id');
+        unset($ids[array_search($entityId, $ids)]);
+        $ids = array_values($ids);
+
+        $sortedIds = [];
+        if ($position === 'after') {
+            foreach ($ids as $id) {
+                $sortedIds[] = $id;
+                if ($id === $target) {
+                    $sortedIds[] = $entityId;
+                }
+            }
+        } elseif ($position === 'inside') {
+            $sortedIds = array_merge([$entityId], $ids);
+        }
+
+        foreach ($sortedIds as $k => $id) {
+            $sortOrder = $k * 10;
+            if (empty($parentId)) {
+                $this->getPDO()->exec("UPDATE `$tableName` SET sort_order=$sortOrder WHERE id='$id' AND deleted=0");
+            } else {
+                $this->getPDO()->exec("UPDATE `$this->hierarchyTableName` SET hierarchy_sort_order=$sortOrder WHERE entity_id='$id' AND deleted=0");
+            }
+        }
+    }
+
     public function hasMultipleParents(): bool
     {
         $count = $this
@@ -90,19 +128,21 @@ class Hierarchy extends RDB
         return $ids;
     }
 
-    public function getChildrenArray(string $parentId): array
+    public function getChildrenArray(string $parentId, bool $withChildrenCount = true): array
     {
         $tableName = $this->getEntityManager()->getQuery()->toDb($this->entityType);
 
+        $additionalSelect = $withChildrenCount ? ", (SELECT COUNT(id) FROM `$this->hierarchyTableName` WHERE parent_id=e.id) as childrenCount" : "";
+
         if (empty($parentId)) {
-            $query = "SELECT e.id, e.name, (SELECT COUNT(id) FROM `$this->hierarchyTableName` WHERE parent_id=e.id) as childrenCount
+            $query = "SELECT e.id, e.name{$additionalSelect} 
                       FROM `{$tableName}` e
                       WHERE e.id NOT IN (SELECT entity_id FROM `$this->hierarchyTableName` WHERE deleted=0)
                       AND e.deleted=0
                       ORDER BY e.sort_order";
         } else {
             $parentId = $this->getPDO()->quote($parentId);
-            $query = "SELECT e.id, e.name, (SELECT COUNT(id) FROM `$this->hierarchyTableName` WHERE parent_id=e.id) as childrenCount
+            $query = "SELECT e.id, e.name{$additionalSelect}
                   FROM `$this->hierarchyTableName` h
                   LEFT JOIN `{$tableName}` e ON e.id=h.entity_id
                   WHERE h.deleted=0

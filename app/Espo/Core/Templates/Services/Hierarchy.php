@@ -37,6 +37,8 @@ declare(strict_types=1);
 
 namespace Espo\Core\Templates\Services;
 
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\Services\Record;
@@ -79,6 +81,17 @@ class Hierarchy extends Record
     {
         if (property_exists($data, '_sortedIds') && property_exists($data, '_id')) {
             $this->getRepository()->updateHierarchySortOrder($data->_id, $data->_sortedIds);
+            return $this->getEntity($id);
+        }
+
+        if (property_exists($data, '_position') && property_exists($data, '_target') && property_exists($data, 'parentId')) {
+            if (empty($entity = $this->getRepository()->get($id))) {
+                throw new NotFound();
+            }
+            if (!$this->getAcl()->check($entity, 'edit')) {
+                throw new Forbidden();
+            }
+            $this->getRepository()->updatePositionInTree((string)$id, (string)$data->_position, (string)$data->_target, (string)$data->parentId);
             return $this->getEntity($id);
         }
 
