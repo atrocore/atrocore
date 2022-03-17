@@ -32,7 +32,7 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('views/admin/entity-manager/fields/multi-parents', 'views/fields/bool', function (Dep) {
+Espo.define('views/admin/entity-manager/fields/bool-for-hierarchy', 'views/fields/bool', function (Dep) {
 
     return Dep.extend({
 
@@ -45,7 +45,7 @@ Espo.define('views/admin/entity-manager/fields/multi-parents', 'views/fields/boo
         },
 
         fetch: function () {
-            let value = $('input[type="checkbox"][name="multiParents"]').get(0).checked;
+            let value = $(`input[type="checkbox"][name="${this.name}"]`).get(0).checked;
             let data = {};
             data[this.name] = value;
             return data;

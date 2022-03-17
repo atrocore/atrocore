@@ -8,6 +8,8 @@
   },
   "fields": {
     "multiParents": "Несколько родительских элементов",
+    "fieldValueInheritance": "Наследование значений полей",
+    "relationInheritance": "Наследование связей",
     "hasAssignedUser": "Назначеный пользователь",
     "hasTeam": "Команды",
     "hasAccount": "Контрагенты",

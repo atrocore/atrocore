@@ -16,6 +16,5 @@
   "hasOwner": true,
   "hasAssignedUser": true,
   "hasTeam": true,
-  "hasAccount": false,
-  "multiParents": true
+  "hasAccount": false
 }

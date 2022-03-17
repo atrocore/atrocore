@@ -8,6 +8,8 @@
   },
   "fields": {
     "multiParents": "Multiple parents",
+    "fieldValueInheritance": "Field Value Inheritance",
+    "relationInheritance": "Relation Inheritance",
     "hasAssignedUser": "Assigned User",
     "hasTeam": "Teams",
     "hasAccount": "Accounts",

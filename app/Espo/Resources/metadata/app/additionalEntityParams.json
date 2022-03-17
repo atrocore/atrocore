@@ -1,8 +1,18 @@
 {
   "multiParents": {
     "type": "bool",
-    "view": "views/admin/entity-manager/fields/multi-parents",
+    "view": "views/admin/entity-manager/fields/bool-for-hierarchy",
     "default": true
+  },
+  "fieldValueInheritance": {
+    "type": "bool",
+    "view": "views/admin/entity-manager/fields/bool-for-hierarchy",
+    "default": false
+  },
+  "relationInheritance": {
+    "type": "bool",
+    "view": "views/admin/entity-manager/fields/bool-for-hierarchy",
+    "default": false
   },
   "hasAssignedUser": {
     "type": "bool",
