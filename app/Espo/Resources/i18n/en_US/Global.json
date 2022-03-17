@@ -957,6 +957,7 @@
     "cd": "cd"
   },
   "exceptions": {
+    "hasMultipleParents": "There is one or more records with multiple parents.",
     "unitValueIsRequired": "Unit for the field '%s' is required.",
     "emailIsInvalid": "Email for the field '%s' is not valid.",
     "noSuchUnit": "Unit '%s' for the field '%s' is not valid.",

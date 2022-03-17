@@ -865,6 +865,7 @@
     "list": "Liste"
   },
   "exceptions": {
+    "hasMultipleParents": "Es gibt einen oder mehr Datensätze mit mehreren Elterndatensätzen.",
     "unitValueIsRequired": "Die Einheit für das Feld '%s' erforderlich.",
     "emailIsInvalid": "E-Mail für das Feld '%s' ist ungültig.",
     "noSuchUnit": "Die Einheit '%s' für das Feld '%s' ist ungültig.",

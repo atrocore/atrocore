@@ -40,42 +40,37 @@ namespace Espo\Core\Templates\Repositories;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\ORM\Repositories\RDB;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityFactory;
+use Espo\ORM\EntityManager;
 
 class Hierarchy extends RDB
 {
-    protected function beforeRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
+    protected string $hierarchyTableName;
+
+    public function __construct($entityType, EntityManager $entityManager, EntityFactory $entityFactory)
     {
-        parent::beforeRelate($entity, $relationName, $foreign, $data, $options);
+        parent::__construct($entityType, $entityManager, $entityFactory);
 
-        if ($relationName === 'parents') {
-            if (is_bool($foreign)) {
-                throw new BadRequest("Action blocked. Please, specify {$this->entityType}.");
-            }
-            $foreignId = is_string($foreign) ? $foreign : $foreign->get('id');
-            if (in_array($foreignId, $this->getChildrenRecursivelyArray($entity->get('id')))) {
-                throw new BadRequest("Child record cannot be chosen as a parent.");
-            }
-        }
+        $this->hierarchyTableName = $entityManager->getQuery()->toDb($this->entityType) . '_hierarchy';
+    }
 
-        if ($relationName === 'children') {
-            if (is_bool($foreign)) {
-                throw new BadRequest("Action blocked. Please, specify {$this->entityType}.");
-            }
-            $foreignId = is_string($foreign) ? $foreign : $foreign->get('id');
-            if (in_array($foreignId, $this->getParentsRecursivelyArray($entity->get('id')))) {
-                throw new BadRequest("Parent record cannot be chosen as a child.");
-            }
-        }
+    public function hasMultipleParents(): bool
+    {
+        $count = $this
+            ->getPDO()
+            ->query("SELECT count(*) AS duplicates FROM (SELECT entity_id FROM `$this->hierarchyTableName` GROUP BY entity_id HAVING COUNT(entity_id) > 1) AS t")
+            ->fetch(\PDO::FETCH_COLUMN);
+
+        return !empty($count);
     }
 
     public function updateHierarchySortOrder(string $parentId, array $ids): void
     {
         $parentId = $this->getPDO()->quote($parentId);
-        $hierarchyTableName = $this->getHierarchyTableName();
         foreach ($ids as $k => $id) {
             $id = $this->getPDO()->quote($id);
             $sortOrder = $k * 10;
-            $this->getPDO()->exec("UPDATE `$hierarchyTableName` SET hierarchy_sort_order=$sortOrder WHERE parent_id=$parentId AND entity_id=$id AND deleted=0");
+            $this->getPDO()->exec("UPDATE `$this->hierarchyTableName` SET hierarchy_sort_order=$sortOrder WHERE parent_id=$parentId AND entity_id=$id AND deleted=0");
         }
     }
 
@@ -98,18 +93,17 @@ class Hierarchy extends RDB
     public function getChildrenArray(string $parentId): array
     {
         $tableName = $this->getEntityManager()->getQuery()->toDb($this->entityType);
-        $hierarchyTableName = $this->getHierarchyTableName();
 
         if (empty($parentId)) {
-            $query = "SELECT e.id, e.name, (SELECT COUNT(id) FROM `$hierarchyTableName` WHERE parent_id=e.id) as childrenCount
+            $query = "SELECT e.id, e.name, (SELECT COUNT(id) FROM `$this->hierarchyTableName` WHERE parent_id=e.id) as childrenCount
                       FROM `{$tableName}` e
-                      WHERE e.id NOT IN (SELECT entity_id FROM `$hierarchyTableName` WHERE deleted=0)
+                      WHERE e.id NOT IN (SELECT entity_id FROM `$this->hierarchyTableName` WHERE deleted=0)
                       AND e.deleted=0
                       ORDER BY e.sort_order";
         } else {
             $parentId = $this->getPDO()->quote($parentId);
-            $query = "SELECT e.id, e.name, (SELECT COUNT(id) FROM `$hierarchyTableName` WHERE parent_id=e.id) as childrenCount
-                  FROM `$hierarchyTableName` h
+            $query = "SELECT e.id, e.name, (SELECT COUNT(id) FROM `$this->hierarchyTableName` WHERE parent_id=e.id) as childrenCount
+                  FROM `$this->hierarchyTableName` h
                   LEFT JOIN `{$tableName}` e ON e.id=h.entity_id
                   WHERE h.deleted=0
                     AND e.deleted=0
@@ -123,10 +117,9 @@ class Hierarchy extends RDB
     public function isRoot(string $id): bool
     {
         $id = $this->getPDO()->quote($id);
-        $hierarchyTableName = $this->getHierarchyTableName();
 
         $query = "SELECT id
-                  FROM `$hierarchyTableName`
+                  FROM `$this->hierarchyTableName`
                   WHERE deleted=0
                     AND entity_id={$id}";
 
@@ -150,6 +143,31 @@ class Hierarchy extends RDB
         $this->createRoute($records, $id, $route);
 
         return $route;
+    }
+
+    protected function beforeRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
+    {
+        parent::beforeRelate($entity, $relationName, $foreign, $data, $options);
+
+        if ($relationName === 'parents') {
+            if (is_bool($foreign)) {
+                throw new BadRequest("Action blocked. Please, specify {$this->entityType}.");
+            }
+            $foreignId = is_string($foreign) ? $foreign : $foreign->get('id');
+            if (in_array($foreignId, $this->getChildrenRecursivelyArray($entity->get('id')))) {
+                throw new BadRequest("Child record cannot be chosen as a parent.");
+            }
+        }
+
+        if ($relationName === 'children') {
+            if (is_bool($foreign)) {
+                throw new BadRequest("Action blocked. Please, specify {$this->entityType}.");
+            }
+            $foreignId = is_string($foreign) ? $foreign : $foreign->get('id');
+            if (in_array($foreignId, $this->getParentsRecursivelyArray($entity->get('id')))) {
+                throw new BadRequest("Parent record cannot be chosen as a child.");
+            }
+        }
     }
 
     protected function createRoute(array $records, string $id, array &$route): void
