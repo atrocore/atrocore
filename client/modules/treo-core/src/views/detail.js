@@ -108,6 +108,9 @@ Espo.define('treo-core:views/detail', 'class-replace!treo-core:views/detail',
                 dialog.render();
                 this.notify(false);
                 dialog.once('select', selectObj => {
+                    if (selectObj && !Array.isArray(selectObj)) {
+                        selectObj = [selectObj];
+                    }
                     if (selectObj && selectObj.length) {
                         if (afterSelectCallback && panelView && typeof panelView[afterSelectCallback] === 'function') {
                             panelView[afterSelectCallback](selectObj);
