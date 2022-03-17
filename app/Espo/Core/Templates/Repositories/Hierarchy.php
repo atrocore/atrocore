@@ -157,6 +157,15 @@ class Hierarchy extends RDB
             if (in_array($foreignId, $this->getChildrenRecursivelyArray($entity->get('id')))) {
                 throw new BadRequest("Child record cannot be chosen as a parent.");
             }
+
+            if (empty($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']))) {
+                $parents = $entity->get('parents');
+                if (!empty($parents) && count($parents) > 0) {
+                    foreach ($parents as $parent) {
+                        $this->unrelate($entity, 'parents', $parent);
+                    }
+                }
+            }
         }
 
         if ($relationName === 'children') {
