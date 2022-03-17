@@ -44,6 +44,13 @@ Espo.define('views/admin/entity-manager/fields/multi-parents', 'views/fields/boo
             });
         },
 
+        fetch: function () {
+            let value = $('input[type="checkbox"][name="multiParents"]').get(0).checked;
+            let data = {};
+            data[this.name] = value;
+            return data;
+        },
+
         afterRender() {
             Dep.prototype.setup.call(this);
 
