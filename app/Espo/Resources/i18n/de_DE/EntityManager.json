@@ -6,6 +6,7 @@
     "Formula": "Formel"
   },
   "fields": {
+    "multiParents": "Mehrere Elterndatensätze",
     "statusField": "Statusfeld",
     "hasAssignedUser": "Zugewiesener Benutzer",
     "hasTeam": "Teams",

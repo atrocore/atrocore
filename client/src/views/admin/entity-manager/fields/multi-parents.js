@@ -32,10 +32,27 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('treo-core:views/admin/entity-manager/index', 'class-replace!treo-core:views/admin/entity-manager/index', function (Dep) {
+Espo.define('views/admin/entity-manager/fields/multi-parents', 'views/fields/bool', function (Dep) {
 
     return Dep.extend({
-        template: 'treo-core:admin/entity-manager/index'
 
-    })
+        setup: function () {
+            Dep.prototype.setup.call(this);
+
+            this.listenTo(this.model, 'change:type', () => {
+                this.reRender();
+            });
+        },
+
+        afterRender() {
+            Dep.prototype.setup.call(this);
+
+            if (this.model.get('type') !== 'Hierarchy') {
+                this.hide();
+            } else {
+                this.show();
+            }
+        },
+
+    });
 });

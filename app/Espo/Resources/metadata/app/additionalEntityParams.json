@@ -1,4 +1,9 @@
 {
+  "multiParents": {
+    "type": "bool",
+    "view": "views/admin/entity-manager/fields/multi-parents",
+    "default": true
+  },
   "hasAssignedUser": {
     "type": "bool",
     "default": false,

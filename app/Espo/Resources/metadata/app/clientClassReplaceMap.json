@@ -74,9 +74,6 @@
   "views/admin/index": [
     "treo-core"
   ],
-  "views/admin/entity-manager/modals/edit-entity": [
-    "treo-core"
-  ],
   "views/admin/layouts/list-small": [
     "treo-core"
   ],
@@ -162,9 +159,6 @@
     "treo-core"
   ],
   "views/admin/integrations/index": [
-    "treo-core"
-  ],
-  "views/admin/entity-manager/index": [
     "treo-core"
   ],
   "views/preferences/edit": [

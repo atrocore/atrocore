@@ -7,6 +7,7 @@
     "Formula": "Формула"
   },
   "fields": {
+    "multiParents": "Несколько родительских элементов",
     "hasAssignedUser": "Назначеный пользователь",
     "hasTeam": "Команды",
     "hasAccount": "Контрагенты",
