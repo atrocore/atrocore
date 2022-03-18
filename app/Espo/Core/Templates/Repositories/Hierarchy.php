@@ -114,7 +114,7 @@ class Hierarchy extends RDB
 
     public function getParentsRecursivelyArray(string $id): array
     {
-        $ids = [$id];
+        $ids = [];
         $this->collectParents($id, $ids);
 
         return $ids;
@@ -122,7 +122,7 @@ class Hierarchy extends RDB
 
     public function getChildrenRecursivelyArray(string $id): array
     {
-        $ids = [$id];
+        $ids = [];
         $this->collectChildren($id, $ids);
 
         return $ids;
@@ -135,14 +135,14 @@ class Hierarchy extends RDB
         $additionalSelect = $withChildrenCount ? ", (SELECT COUNT(id) FROM `$this->hierarchyTableName` WHERE parent_id=e.id) as childrenCount" : "";
 
         if (empty($parentId)) {
-            $query = "SELECT e.id, e.name{$additionalSelect} 
+            $query = "SELECT e.*{$additionalSelect} 
                       FROM `{$tableName}` e
                       WHERE e.id NOT IN (SELECT entity_id FROM `$this->hierarchyTableName` WHERE deleted=0)
                       AND e.deleted=0
                       ORDER BY e.sort_order";
         } else {
             $parentId = $this->getPDO()->quote($parentId);
-            $query = "SELECT e.id, e.name{$additionalSelect}
+            $query = "SELECT e.*{$additionalSelect}
                   FROM `$this->hierarchyTableName` h
                   LEFT JOIN `{$tableName}` e ON e.id=h.entity_id
                   WHERE h.deleted=0

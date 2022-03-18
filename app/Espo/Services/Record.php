@@ -159,6 +159,11 @@ class Record extends \Espo\Core\Services\Base
         return $this->pseudoTransactionId;
     }
 
+    public function isPseudoTransaction(): bool
+    {
+        return !empty($this->getPseudoTransactionId());
+    }
+
     protected function getServiceFactory()
     {
         return $this->injections['serviceFactory'];

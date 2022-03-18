@@ -39,6 +39,7 @@ namespace Espo\Core\Templates\Services;
 
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\Services\Record;
@@ -95,7 +96,26 @@ class Hierarchy extends Record
             return $this->getEntity($id);
         }
 
-        return parent::updateEntity($id, $data);
+        if ($this->isPseudoTransaction()) {
+            return parent::updateEntity($id, $data);
+        }
+
+        if (empty($this->getMetadata()->get(['scopes', $this->entityType, 'fieldValueInheritance']))) {
+            return parent::updateEntity($id, $data);
+        }
+
+        $this->getEntityManager()->getPDO()->beginTransaction();
+        try {
+            $entity = $this->getRepository()->get($id);
+            $result = parent::updateEntity($id, $data);
+            $this->createPseudoTransactionJobs($entity, clone $data);
+            $this->getEntityManager()->getPDO()->commit();
+        } catch (\Throwable $e) {
+            $this->getEntityManager()->getPDO()->rollBack();
+            throw $e;
+        }
+
+        return $result;
     }
 
     public function prepareEntityForOutput(Entity $entity)
@@ -118,6 +138,34 @@ class Hierarchy extends Record
         return $result;
     }
 
+    protected function createPseudoTransactionJobs(Entity $entity, \stdClass $data, string $parentTransactionId = null): void
+    {
+        $children = $this->getRepository()->getChildrenArray($entity->get('id'));
+        foreach ($children as $child) {
+            if (!empty($inputData = $this->createInputDataForPseudoTransactionJob($entity, $child, clone $data))) {
+                $transactionId = $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->entityType, $child['id'], $inputData, $parentTransactionId);
+                if ($child['childrenCount'] > 0) {
+                    $this->createPseudoTransactionJobs($this->getRepository()->get($child['id']), clone $inputData, $transactionId);
+                }
+            }
+        }
+    }
+
+    protected function createInputDataForPseudoTransactionJob(Entity $parentEntity, array $child, \stdClass $data): \stdClass
+    {
+        $inputData = new \stdClass();
+        foreach ($data as $field => $value) {
+            if (!$parentEntity->has($field)) {
+                continue 1;
+            }
+            if ($this->areValuesEqual($parentEntity, $field, $parentEntity->get($field), $child[Util::toCamelCase($field)])) {
+                $inputData->$field = $value;
+            }
+        }
+
+        return $inputData;
+    }
+
     protected function sortCollection(EntityCollection $inputCollection): EntityCollection
     {
         $ids = [];
@@ -137,5 +185,14 @@ class Hierarchy extends Record
         }
 
         return $collection;
+    }
+
+    protected function beforeUpdateEntity(Entity $entity, $data)
+    {
+        parent::beforeUpdateEntity($entity, $data);
+
+        if (property_exists($data, '_hierarchicalChange') && $data->_hierarchicalChange) {
+
+        }
     }
 }

@@ -2009,17 +2009,21 @@ class Base
     protected function boolFilterNotParents(array &$result)
     {
         $id = $this->getBoolFilterParameter('notParents');
-        $result['whereClause'][] = [
-            'id!=' => array_merge($this->getRepository()->getParentsRecursivelyArray($id), array_column($this->getRepository()->get($id)->get('children')->toArray(), 'id'))
-        ];
+
+        $ids = array_merge([$id], $this->getRepository()->getParentsRecursivelyArray($id));
+        $ids = array_merge($ids, array_column($this->getRepository()->get($id)->get('children')->toArray(), 'id'));
+
+        $result['whereClause'][] = ['id!=' => $ids];
     }
 
     protected function boolFilterNotChildren(array &$result)
     {
         $id = $this->getBoolFilterParameter('notChildren');
-        $result['whereClause'][] = [
-            'id!=' => array_merge($this->getRepository()->getChildrenRecursivelyArray($id), array_column($this->getRepository()->get($id)->get('parents')->toArray(), 'id'))
-        ];
+
+        $ids = array_merge([$id], $this->getRepository()->getChildrenRecursivelyArray($id));
+        $ids = array_merge($ids, array_column($this->getRepository()->get($id)->get('parents')->toArray(), 'id'));
+
+        $result['whereClause'][] = ['id!=' => $ids];
     }
 
     protected function filterFollowed(&$result)
