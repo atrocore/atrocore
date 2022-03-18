@@ -47,21 +47,6 @@ use Treo\Core\EventManager\Event;
  */
 class MassActions extends \Espo\Core\Controllers\Base
 {
-    public function actionMassUpdate(array $params, \stdClass $data, Request $request): bool
-    {
-        if (!$request->isPut() || !isset($params['scope'])) {
-            throw new BadRequest();
-        }
-        if (!$this->getAcl()->check($params['scope'], 'edit')) {
-            throw new Forbidden();
-        }
-        if (empty($data->attributes)) {
-            throw new BadRequest();
-        }
-
-        return $this->getService('MassActions')->massUpdate($params['scope'], $data);
-    }
-
     public function actionMassDelete(array $params, \stdClass $data, Request $request): bool
     {
         if (!$request->isPost() || !isset($params['scope'])) {

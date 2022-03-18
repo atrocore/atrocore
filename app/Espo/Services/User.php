@@ -516,17 +516,6 @@ class User extends Record
         return parent::massUpdate($data, $params);
     }
 
-    protected function afterMassUpdate(array $idList, $data)
-    {
-        parent::afterMassUpdate($idList, $data);
-
-        if (array_key_exists('rolesIds', $data) || array_key_exists('teamsIds', $data) || array_key_exists('isAdmin', $data)) {
-            foreach ($idList as $id) {
-                $this->clearRoleCache($id);
-            }
-        }
-    }
-
     public function loadAdditionalFields(Entity $entity)
     {
         parent::loadAdditionalFields($entity);

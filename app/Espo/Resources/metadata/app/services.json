@@ -4,7 +4,6 @@
   "Person": "\\Treo\\Services\\Person",
   "Portal": "\\Treo\\Services\\Portal",
   "QueueManagerMassDelete": "\\Espo\\Services\\QueueManagerMassDelete",
-  "QueueManagerMassUpdate": "\\Espo\\Services\\QueueManagerMassUpdate",
   "QueueManagerCreateThumbnails": "\\Espo\\Services\\QueueManagerCreateThumbnails",
   "MassActions": "\\Treo\\Services\\MassActions",
   "ScheduledJob": "\\Treo\\Services\\ScheduledJob"

@@ -1238,10 +1238,6 @@ class Record extends \Espo\Core\Services\Base
     {
     }
 
-    protected function afterMassUpdate(array $idList, $data)
-    {
-    }
-
     protected function afterMassRemove(array $idList)
     {
     }
@@ -1782,80 +1778,35 @@ class Record extends \Espo\Core\Services\Base
         $data = $event->getArgument('data');
         $params = $event->getArgument('params');
 
-        $idsUpdated = array();
-        $repository = $this->getRepository();
-
-        $count = 0;
-
-        $data = $data;
         $this->filterInput($data);
 
+        $ids = [];
         if (array_key_exists('ids', $params) && is_array($params['ids'])) {
             $ids = $params['ids'];
-            foreach ($ids as $id) {
-                $entity = $this->getEntity($id);
-                if ($this->getAcl()->check($entity, 'edit') && $this->checkEntityForMassUpdate($entity, $data)) {
-                    $entity->set($data);
-                    if ($this->checkAssignment($entity)) {
-                        if ($repository->save($entity, ['massUpdate' => true])) {
-                            $idsUpdated[] = $entity->id;
-                            $count++;
-
-                            $this->processActionHistoryRecord('update', $entity);
-                        }
-                    }
-                }
-            }
         }
 
         if (array_key_exists('where', $params)) {
-            $where = $params['where'];
-            $p = array();
-            $p['where'] = $where;
-
-            if (!empty($params['selectData']) && is_array($params['selectData'])) {
-                foreach ($params['selectData'] as $k => $v) {
-                    $p[$k] = $v;
-                }
-            }
-
-            $selectParams = $this->getSelectParams($p);
-
+            $selectParams = $this->getSelectParams(['where' => $params['where']]);
             $this->getEntityManager()->getRepository($this->getEntityType())->handleSelectParams($selectParams);
 
-            $sql = $this->getEntityManager()->getQuery()->createSelectQuery($this->getEntityType(), $selectParams);
-            $sth = $this->getEntityManager()->getPdo()->prepare($sql);
-            $sth->execute();
+            $query = $this
+                ->getEntityManager()
+                ->getQuery()
+                ->createSelectQuery($this->getEntityType(), array_merge($selectParams, ['select' => ['id']]));
 
-            while ($dataRow = $sth->fetch(\PDO::FETCH_ASSOC)) {
-                $entity = $this->getEntityManager()->getEntityFactory()->create($this->getEntityType());
-                $entity->set($dataRow);
-                $entity->setAsFetched();
-
-                if ($this->getAcl()->check($entity, 'edit') && $this->checkEntityForMassUpdate($entity, $data)) {
-                    $entity->set($data);
-                    if ($this->checkAssignment($entity)) {
-                        if ($repository->save($entity, ['massUpdate' => true, 'skipStreamNotesAcl' => true])) {
-                            $idsUpdated[] = $entity->id;
-                            $count++;
-
-                            $this->processActionHistoryRecord('update', $entity);
-                        }
-                    }
-                }
-            }
-
-            $this->afterMassUpdate($idsUpdated, $data);
-
-            return $this
-                ->dispatchEvent('afterMassUpdate', new Event(['idsUpdated' => $idsUpdated, 'data' => $data, 'result' => ['count' => $count]]))
-                ->getArgument('result');
+            $ids = $this
+                ->getEntityManager()
+                ->getPDO()
+                ->query($query)
+                ->fetchAll(\PDO::FETCH_COLUMN);
         }
 
-        $this->afterMassUpdate($idsUpdated, $data);
+        foreach ($ids as $id) {
+            $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->entityType, $id, $data);
+        }
 
         return $this
-            ->dispatchEvent('afterMassUpdate', new Event(['idsUpdated' => $idsUpdated, 'data' => $data, 'result' => ['count' => $count, 'ids' => $idsUpdated]]))
+            ->dispatchEvent('afterMassUpdate', new Event(['data' => $data, 'result' => ['count' => count($ids), 'ids' => $ids]]))
             ->getArgument('result');
     }
 

@@ -623,11 +623,7 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
                 view.once('after:update', function () {
                     view.close();
                     this.listenToOnce(this.collection, 'sync', function () {
-                        if (this.entityType === 'QueueItem') {
-                            Espo.Ui.success(this.translate('Done'));
-                        } else {
-                            Espo.Ui.success(this.translate('byQueueManager', 'messages', 'QueueItem'));
-                        }
+                        Espo.Ui.success(this.translate('Done'));
                         if (allResultIsChecked) {
                             this.selectAllResult();
                         } else {
@@ -636,7 +632,7 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
                             }, this);
                         }
                     }.bind(this));
-                    this.collection.fetch();
+                    setTimeout(this.collection.fetch(), 3000);
                 }, this);
             }.bind(this));
         },

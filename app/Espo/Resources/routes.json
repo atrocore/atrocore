@@ -88,15 +88,6 @@
     }
   },
   {
-    "route": "/:controller/action/massUpdate",
-    "method": "put",
-    "params": {
-      "controller": "MassActions",
-      "action": "massUpdate",
-      "scope": ":controller"
-    }
-  },
-  {
     "route": "/QueueItem/action/massDelete",
     "method": "post",
     "params": {

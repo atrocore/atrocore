@@ -96,7 +96,7 @@ class Hierarchy extends Record
             return $this->getEntity($id);
         }
 
-        if ($this->isPseudoTransaction()) {
+        if (property_exists($data, '_fieldValueInheritance') && $data->_fieldValueInheritance) {
             return parent::updateEntity($id, $data);
         }
 
@@ -144,6 +144,7 @@ class Hierarchy extends Record
         foreach ($children as $child) {
             $inputData = $this->createInputDataForPseudoTransactionJob($parent, $child, clone $data);
             if (!empty((array)$inputData)) {
+                $inputData->_fieldValueInheritance = true;
                 $transactionId = $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->entityType, $child['id'], $inputData, $parentTransactionId);
                 if ($child['childrenCount'] > 0) {
                     $this->createPseudoTransactionJobs($child, clone $inputData, $transactionId);
@@ -187,14 +188,5 @@ class Hierarchy extends Record
         }
 
         return $collection;
-    }
-
-    protected function beforeUpdateEntity(Entity $entity, $data)
-    {
-        parent::beforeUpdateEntity($entity, $data);
-
-        if (property_exists($data, '_hierarchicalChange') && $data->_hierarchicalChange) {
-
-        }
     }
 }
