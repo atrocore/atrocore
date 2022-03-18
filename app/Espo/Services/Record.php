@@ -1806,16 +1806,6 @@ class Record extends \Espo\Core\Services\Base
             ->getArgument('result');
     }
 
-    protected function checkEntityForMassRemove(Entity $entity)
-    {
-        return true;
-    }
-
-    protected function checkEntityForMassUpdate(Entity $entity, $data)
-    {
-        return true;
-    }
-
     public function massRemove(array $params)
     {
         $params = $this

@@ -467,36 +467,6 @@ class User extends Record
         return parent::deleteEntity($id);
     }
 
-    protected function checkEntityForMassRemove(Entity $entity)
-    {
-        if ($entity->id == 'system') {
-            return false;
-        }
-        if ($entity->id == $this->getUser()->id) {
-            return false;
-        }
-        return true;
-    }
-
-    protected function checkEntityForMassUpdate(Entity $entity, $data)
-    {
-        if ($entity->id == 'system') {
-            return false;
-        }
-        if ($entity->id == $this->getUser()->id) {
-            if (property_exists($data, 'isActive')) {
-                return false;
-            }
-            if (property_exists($data, 'isPortalUser')) {
-                return false;
-            }
-            if (property_exists($data, 'isSuperAdmin')) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     public function afterUpdate(Entity $entity, array $data = array())
     {
         parent::afterUpdate($entity, $data);
