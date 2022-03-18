@@ -118,6 +118,23 @@ class Hierarchy extends Record
         return $result;
     }
 
+    public function deleteEntity($id)
+    {
+        $this->getEntityManager()->getPDO()->beginTransaction();
+        try {
+            $result = parent::deleteEntity($id);
+            foreach ($this->getRepository()->getChildrenRecursivelyArray($id) as $childId) {
+                parent::deleteEntity($childId);
+            }
+            $this->getEntityManager()->getPDO()->commit();
+        } catch (\Throwable $e) {
+            $this->getEntityManager()->getPDO()->rollBack();
+            throw $e;
+        }
+
+        return $result;
+    }
+
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);
