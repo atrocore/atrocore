@@ -46,6 +46,8 @@ use Espo\Services\Record;
 
 class Hierarchy extends Record
 {
+    public const NON_INHERITED_FIELDS = ['modifiedAt', 'sortOrder', 'createdBy', 'createdBy', 'modifiedBy', 'ownerUser', 'assignedUser'];
+
     public function getRoute(string $id): array
     {
         return $this
@@ -73,6 +75,7 @@ class Hierarchy extends Record
 
         if (!empty($entity)) {
             $entity->set('isRoot', $this->getRepository()->isRoot($entity->get('id')));
+            $entity->set('inheritedFields', $this->getInheritedFields($entity));
         }
 
         return $entity;
@@ -205,5 +208,34 @@ class Hierarchy extends Record
         }
 
         return $collection;
+    }
+
+    protected function getInheritedFields(Entity $entity): array
+    {
+        $inheritedFields = [];
+        if (!empty($parents = $entity->get('parents')) && count($parents) > 0) {
+            foreach ($parents as $parent) {
+                foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []) as $field => $fieldData) {
+                    if (in_array($field, $inheritedFields) || in_array($field, self::NON_INHERITED_FIELDS)) {
+                        continue 1;
+                    }
+
+                    if ($fieldData['type'] === 'linkMultiple' || !empty($fieldData['notStorable'])) {
+                        continue 1;
+                    }
+
+                    $fieldKey = $field;
+
+                    if ($fieldData['type'] === 'link') {
+                        $fieldKey .= 'Id';
+                    }
+                    if ($this->areValuesEqual($this->getRepository()->get(), $field, $parent->get($fieldKey), $entity->get($fieldKey))) {
+                        $inheritedFields[] = $field;
+                    }
+                }
+            }
+        }
+
+        return $inheritedFields;
     }
 }
