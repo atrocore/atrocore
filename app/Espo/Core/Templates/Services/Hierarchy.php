@@ -106,9 +106,9 @@ class Hierarchy extends Record
 
         $this->getEntityManager()->getPDO()->beginTransaction();
         try {
-            $entity = $this->getRepository()->get($id);
+            $entityData = $this->getRepository()->fetchById($id);
             $result = parent::updateEntity($id, $data);
-            $this->createPseudoTransactionJobs($entity, clone $data);
+            $this->createPseudoTransactionJobs($entityData, clone $data);
             $this->getEntityManager()->getPDO()->commit();
         } catch (\Throwable $e) {
             $this->getEntityManager()->getPDO()->rollBack();
@@ -138,27 +138,29 @@ class Hierarchy extends Record
         return $result;
     }
 
-    protected function createPseudoTransactionJobs(Entity $entity, \stdClass $data, string $parentTransactionId = null): void
+    protected function createPseudoTransactionJobs(array $parent, \stdClass $data, string $parentTransactionId = null): void
     {
-        $children = $this->getRepository()->getChildrenArray($entity->get('id'));
+        $children = $this->getRepository()->getChildrenArray($parent['id']);
         foreach ($children as $child) {
-            if (!empty($inputData = $this->createInputDataForPseudoTransactionJob($entity, $child, clone $data))) {
+            $inputData = $this->createInputDataForPseudoTransactionJob($parent, $child, clone $data);
+            if (!empty((array)$inputData)) {
                 $transactionId = $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->entityType, $child['id'], $inputData, $parentTransactionId);
                 if ($child['childrenCount'] > 0) {
-                    $this->createPseudoTransactionJobs($this->getRepository()->get($child['id']), clone $inputData, $transactionId);
+                    $this->createPseudoTransactionJobs($child, clone $inputData, $transactionId);
                 }
             }
         }
     }
 
-    protected function createInputDataForPseudoTransactionJob(Entity $parentEntity, array $child, \stdClass $data): \stdClass
+    protected function createInputDataForPseudoTransactionJob(array $parent, array $child, \stdClass $data): \stdClass
     {
         $inputData = new \stdClass();
         foreach ($data as $field => $value) {
-            if (!$parentEntity->has($field)) {
+            $underScoredField = Util::toUnderScore($field);
+            if (!isset($parent[$underScoredField])) {
                 continue 1;
             }
-            if ($this->areValuesEqual($parentEntity, $field, $parentEntity->get($field), $child[Util::toCamelCase($field)])) {
+            if ($this->areValuesEqual($this->getRepository()->get(), $field, $parent[$underScoredField], $child[$underScoredField])) {
                 $inputData->$field = $value;
             }
         }
