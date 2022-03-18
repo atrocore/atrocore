@@ -157,7 +157,7 @@ class Hierarchy extends Record
         $inputData = new \stdClass();
         foreach ($data as $field => $value) {
             $underScoredField = Util::toUnderScore($field);
-            if (!isset($parent[$underScoredField])) {
+            if (!array_key_exists($underScoredField, $parent)) {
                 continue 1;
             }
             if ($this->areValuesEqual($this->getRepository()->get(), $field, $parent[$underScoredField], $child[$underScoredField])) {
