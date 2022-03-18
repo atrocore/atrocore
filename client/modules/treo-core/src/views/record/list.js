@@ -61,7 +61,7 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
             });
 
             $(window).on(`keydown.${this.cid} keyup.${this.cid}`, e => {
-                document.onselectstart = function() {
+                document.onselectstart = function () {
                     return !e.shiftKey;
                 }
             });
@@ -224,12 +224,12 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
                 var $bar = $('<div class="fixed-scrollbar"><div></div></div>').appendTo(list).css({
                     width: list.outerWidth()
                 });
-                $bar.scroll(function() {
+                $bar.scroll(function () {
                     list.scrollLeft($bar.scrollLeft());
                 });
                 $bar.data("status", "off");
 
-                var fixSize = function() {
+                var fixSize = function () {
                     var $container = $bar.parent();
 
                     $bar.children('div').height(1).width($container[0].scrollWidth);
@@ -237,16 +237,16 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
                 };
 
                 fixSize();
-                $(window).on("resize.fixed-scrollbar", function() {
+                $(window).on("resize.fixed-scrollbar", function () {
                     fixSize();
                 });
 
                 var scrollTimeout = null;
 
-                $(window).on("scroll.fixed-scrollbar", function() {
+                $(window).on("scroll.fixed-scrollbar", function () {
                     clearTimeout(scrollTimeout);
-                    scrollTimeout = setTimeout(function() {
-                        list.each(function() {
+                    scrollTimeout = setTimeout(function () {
+                        list.each(function () {
                             var $container = $(this);
                             var $bar = $container.children('.fixed-scrollbar');
 
@@ -643,11 +643,6 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
                 return false;
             }
 
-            var count = this.checkedList.length;
-            var deletedCount = 0;
-
-            var self = this;
-
             this.confirm({
                 message: this.translate('removeSelectedRecordsConfirmation', 'messages'),
                 confirmText: this.translate('Remove')
@@ -673,12 +668,10 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
                     type: 'POST',
                     data: JSON.stringify(data)
                 }).done(function (result) {
-                    if (this.entityType === 'QueueItem') {
+                    setTimeout(() => {
                         Espo.Ui.success(this.translate('Done'));
-                        this.collection.fetch();
-                    } else {
-                        Espo.Ui.success(this.translate('byQueueManager', 'messages', 'QueueItem'));
-                    }
+                        this.collection.fetch()
+                    }, 3000);
                 }.bind(this));
             }, this);
         },

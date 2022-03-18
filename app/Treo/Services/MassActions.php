@@ -45,13 +45,6 @@ use Espo\Core\Templates\Services\HasContainer;
  */
 class MassActions extends HasContainer
 {
-    public function massDelete(string $entityType, \stdClass $data): bool
-    {
-        $this->createMassDeleteJobs($entityType, $data);
-
-        return true;
-    }
-
     /**
      * Add relation to entities
      *
@@ -213,17 +206,6 @@ class MassActions extends HasContainer
     protected function getRepository(string $entityType)
     {
         return $this->getEntityManager()->getRepository($entityType);
-    }
-
-    /**
-     * @param string    $entityType
-     * @param \stdClass $data
-     */
-    protected function createMassDeleteJobs(string $entityType, \stdClass $data): void
-    {
-        $name = $entityType . ". " . $this->translate('remove', 'massActions');
-
-        $this->qmPush($name, "QueueManagerMassDelete", ['entityType' => $entityType, 'data' => $data]);
     }
 
     /**

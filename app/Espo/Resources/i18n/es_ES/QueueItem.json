@@ -37,8 +37,5 @@
     "success": "%s was successfully completed",
     "error": "%s failed",
     "queueItemDone": "Queue item \"%s\" was executed with status \"%s\"."
-  },
-  "messages": {
-    "byQueueManager": "Processed by Queue Manager"
   }
 }
