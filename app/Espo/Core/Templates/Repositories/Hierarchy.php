@@ -54,6 +54,19 @@ class Hierarchy extends RDB
         $this->hierarchyTableName = $entityManager->getQuery()->toDb($this->entityType) . '_hierarchy';
     }
 
+    public function fetchById(string $id): array
+    {
+        $id = $this->getPDO()->quote($id);
+        $tableName = $this->getEntityManager()->getQuery()->toDb($this->entityType);
+
+        $result = $this
+            ->getPDO()
+            ->query("SELECT * FROM `$tableName` WHERE deleted=0 AND id=$id")
+            ->fetch(\PDO::FETCH_ASSOC);
+
+        return empty($result) ? [] : $result;
+    }
+
     public function updatePositionInTree(string $entityId, string $position, string $target, string $parentId): void
     {
         // prepare vars
