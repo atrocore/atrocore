@@ -46,7 +46,7 @@ use Espo\Services\Record;
 
 class Hierarchy extends Record
 {
-    public const NON_INHERITED_FIELDS = ['modifiedAt', 'sortOrder', 'createdBy', 'createdBy', 'modifiedBy', 'ownerUser', 'assignedUser'];
+    public const NON_INHERITED_FIELDS = ['deleted', 'modifiedAt', 'sortOrder', 'createdAt', 'createdBy', 'modifiedBy', 'ownerUser', 'assignedUser'];
 
     public function getRoute(string $id): array
     {
@@ -79,6 +79,25 @@ class Hierarchy extends Record
         }
 
         return $entity;
+    }
+
+    public function createEntity($attachment)
+    {
+        $this->prepareChildInputData($attachment);
+
+        return parent::createEntity($attachment);
+    }
+
+    public function prepareChildInputData(\stdClass $attachment): void
+    {
+        if (property_exists($attachment, 'parentsIds') && !empty($attachment->parentsIds[0])) {
+            foreach ($this->getDuplicateAttributes($attachment->parentsIds[0]) as $field => $value) {
+                if (property_exists($attachment, $field) || in_array($field, $this->getNonInheritedFieldsKeys())) {
+                    continue 1;
+                }
+                $attachment->$field = $value;
+            }
+        }
     }
 
     public function updateEntity($id, $data)
@@ -121,12 +140,6 @@ class Hierarchy extends Record
         return $result;
     }
 
-    protected function afterUpdateEntity(Entity $entity, $data)
-    {
-        $entity->set('isRoot', $this->getRepository()->isRoot($entity->get('id')));
-        $entity->set('inheritedFields', $this->getInheritedFields($entity));
-    }
-
     public function deleteEntity($id)
     {
         $this->getEntityManager()->getPDO()->beginTransaction();
@@ -162,6 +175,22 @@ class Hierarchy extends Record
         }
 
         return $result;
+    }
+
+    protected function duplicateParents($entity, $duplicatingEntity): void
+    {
+        // ignore duplicating for link 'parents'
+    }
+
+    protected function duplicateChildren($entity, $duplicatingEntity): void
+    {
+        // ignore duplicating for link 'children'
+    }
+
+    protected function afterUpdateEntity(Entity $entity, $data)
+    {
+        $entity->set('isRoot', $this->getRepository()->isRoot($entity->get('id')));
+        $entity->set('inheritedFields', $this->getInheritedFields($entity));
     }
 
     protected function createPseudoTransactionJobs(array $parent, \stdClass $data, string $parentTransactionId = null): void
@@ -243,5 +272,30 @@ class Hierarchy extends Record
         }
 
         return $inheritedFields;
+    }
+
+    protected function getNonInheritedFieldsKeys(): array
+    {
+        $result = [];
+
+        foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []) as $field => $fieldData) {
+            if (!in_array($field, self::NON_INHERITED_FIELDS)) {
+                continue 1;
+            }
+
+            if ($fieldData['type'] === 'linkMultiple' || !empty($fieldData['notStorable'])) {
+                continue 1;
+            }
+
+            if ($fieldData['type'] === 'link') {
+                $result[] = $field . 'Id';
+                $result[] = $field . 'Name';
+            } else {
+                $result[] = $field;
+            }
+        }
+
+        return $result;
+
     }
 }
