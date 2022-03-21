@@ -46,7 +46,18 @@ use Espo\Services\Record;
 
 class Hierarchy extends Record
 {
-    public const NON_INHERITED_FIELDS = ['deleted', 'modifiedAt', 'sortOrder', 'createdAt', 'createdBy', 'modifiedBy', 'ownerUser', 'assignedUser'];
+    public const NON_INHERITED_FIELDS
+        = [
+            'id',
+            'deleted',
+            'modifiedAt',
+            'sortOrder',
+            'createdAt',
+            'createdBy',
+            'modifiedBy',
+            'ownerUser',
+            'assignedUser'
+        ];
 
     public function getRoute(string $id): array
     {
