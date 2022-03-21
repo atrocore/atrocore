@@ -121,6 +121,12 @@ class Hierarchy extends Record
         return $result;
     }
 
+    protected function afterUpdateEntity(Entity $entity, $data)
+    {
+        $entity->set('isRoot', $this->getRepository()->isRoot($entity->get('id')));
+        $entity->set('inheritedFields', $this->getInheritedFields($entity));
+    }
+
     public function deleteEntity($id)
     {
         $this->getEntityManager()->getPDO()->beginTransaction();

@@ -259,6 +259,11 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }, this);
 
             this.on('after:render', function () {
+                if (this.isInheritedField()) {
+                    this.showInheritedFieldMarker();
+                } else {
+                    this.hideInheritedFieldMarker();
+                }
                 if (this.hasRequiredMarker()) {
                     this.showRequiredSign();
                 } else {
@@ -432,7 +437,15 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }
         },
 
-        setup: function () {},
+        setup: function () {
+            this.listenTo(this.model, 'after:save', function () {
+                if (this.isInheritedField()) {
+                    this.showInheritedFieldMarker();
+                } else {
+                    this.hideInheritedFieldMarker();
+                }
+            }, this);
+        },
 
         setupSearch: function () {},
 
@@ -617,6 +630,24 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         hasRequiredMarker: function () {
             return this.isRequired();
+        },
+
+        isInheritedField: function () {
+            if (!['detail', 'edit'].includes(this.mode) || !this.model.has('inheritedFields')) {
+                return false;
+            }
+
+            const inheritedFields = this.model.get('inheritedFields');
+
+            return inheritedFields && Array.isArray(inheritedFields) && inheritedFields.includes(this.name);
+        },
+
+        showInheritedFieldMarker: function () {
+            this.getLabelElement().find('.label-text').addClass('inherited-field');
+        },
+
+        hideInheritedFieldMarker: function () {
+            this.getLabelElement().find('.label-text').removeClass('inherited-field');
         },
 
         fetchToModel: function () {
