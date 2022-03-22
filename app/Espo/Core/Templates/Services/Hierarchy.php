@@ -177,6 +177,29 @@ class Hierarchy extends Record
         return $result;
     }
 
+    public function unlinkEntity($id, $link, $foreignId)
+    {
+        if (empty($this->getMetadata()->get(['scopes', $this->entityType, 'relationInheritance']))) {
+            return parent::unlinkEntity($id, $link, $foreignId);
+        }
+
+        if ($this->isPseudoTransaction()) {
+            return parent::unlinkEntity($id, $link, $foreignId);
+        }
+
+        $this->getEntityManager()->getPDO()->beginTransaction();
+        try {
+            $result = parent::unlinkEntity($id, $link, $foreignId);
+            $this->createPseudoTransactionUnlinkJobs($id, $link, $foreignId);
+            $this->getEntityManager()->getPDO()->commit();
+        } catch (\Throwable $e) {
+            $this->getEntityManager()->getPDO()->rollBack();
+            throw $e;
+        }
+
+        return $result;
+    }
+
     public function deleteEntity($id)
     {
         $this->getEntityManager()->getPDO()->beginTransaction();
@@ -252,6 +275,17 @@ class Hierarchy extends Record
             $transactionId = $this->getPseudoTransactionManager()->pushLinkEntityJob($this->entityType, $child['id'], $link, $foreignId, $parentTransactionId);
             if ($child['childrenCount'] > 0) {
                 $this->createPseudoTransactionLinkJobs($child['id'], $link, $foreignId, $transactionId);
+            }
+        }
+    }
+
+    protected function createPseudoTransactionUnlinkJobs(string $id, string $link, string $foreignId, string $parentTransactionId = null): void
+    {
+        $children = $this->getRepository()->getChildrenArray($id);
+        foreach ($children as $child) {
+            $transactionId = $this->getPseudoTransactionManager()->pushUnLinkEntityJob($this->entityType, $child['id'], $link, $foreignId, $parentTransactionId);
+            if ($child['childrenCount'] > 0) {
+                $this->createPseudoTransactionUnlinkJobs($child['id'], $link, $foreignId, $transactionId);
             }
         }
     }
