@@ -122,6 +122,7 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
             const nonInheritedFields = [
                 'id',
                 'deleted',
+                'isRoot',
                 'createdAt',
                 'modifiedAt',
                 'sortOrder',
