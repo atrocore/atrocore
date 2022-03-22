@@ -1,0 +1,139 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "children": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "noLoad": true
+    },
+    "parents": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "noLoad": true
+    },
+    "sortOrder": {
+      "type": "int",
+      "default": null,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true
+    },
+    "hierarchySortOrder": {
+      "type": "int",
+      "notStorable": true,
+      "relatingEntityField": [
+        "{entityType}"
+      ],
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true,
+      "emHidden": true
+    },
+    "isRoot": {
+      "type": "bool",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true,
+      "emHidden": true
+    },
+    "inheritedFields": {
+      "type": "array",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true,
+      "emHidden": true
+    }
+  },
+  "links": {
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "children": {
+      "type": "hasMany",
+      "relationName": "{entityType}Hierarchy",
+      "foreign": "parents",
+      "entity": "{entityType}",
+      "audited": false,
+      "midKeys": [
+        "entityId",
+        "parentId"
+      ],
+      "additionalColumns": {
+        "hierarchySortOrder": {
+          "type": "int"
+        }
+      }
+    },
+    "parents": {
+      "type": "hasMany",
+      "relationName": "{entityType}Hierarchy",
+      "foreign": "children",
+      "entity": "{entityType}",
+      "audited": false,
+      "midKeys": [
+        "parentId",
+        "entityId"
+      ]
+    }
+  },
+  "collection": {
+    "sortBy": "createdAt",
+    "asc": false
+  },
+  "indexes": {
+    "name": {
+      "columns": [
+        "name",
+        "deleted"
+      ]
+    }
+  }
+}

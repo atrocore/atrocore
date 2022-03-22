@@ -35,13 +35,37 @@
 
 declare(strict_types=1);
 
-namespace Espo\Core\Templates\Repositories;
+namespace Espo\Core\Templates\Controllers;
 
-use Espo\Core\Repositories\CategoryTree as Base;
+use Espo\Core\Controllers\Record;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
 
-/**
- * Class CategoryTree
- */
-class CategoryTree extends Base
+class Hierarchy extends Record
 {
+    public function actionTree($params, $data, $request): array
+    {
+        if (!$request->isGet()) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($this->name, 'read')) {
+            throw new Forbidden();
+        }
+
+        return $this->getRecordService()->getChildren((string)$request->get('node'));
+    }
+
+    public function actionRoute($params, $data, $request): array
+    {
+        if (!$request->isGet()) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($this->name, 'read')) {
+            throw new Forbidden();
+        }
+
+        return $this->getRecordService()->getRoute((string)$request->get('id'));
+    }
 }

@@ -387,6 +387,8 @@
     "convertCurrency": "Währung umrechnen"
   },
   "fields": {
+    "sortOrder": "Sortierreihenfolge",
+    "parents": "Eltern",
     "assignedAccounts": "Accounts",
     "prohibitedEmptyValue": "Leeren Wert deaktivieren",
     "amount": "Anzahl",
@@ -447,6 +449,7 @@
     "modifiedBy": "Geändert von",
     "roles": "Rollen",
     "users": "Benutzer",
+    "parents": "Eltern",
     "children": "Kinder"
   },
   "dashlets": {
@@ -862,6 +865,7 @@
     "list": "Liste"
   },
   "exceptions": {
+    "hasMultipleParents": "Es gibt einen oder mehr Datensätze mit mehreren Elterndatensätzen.",
     "unitValueIsRequired": "Die Einheit für das Feld '%s' erforderlich.",
     "emailIsInvalid": "E-Mail für das Feld '%s' ist ungültig.",
     "noSuchUnit": "Die Einheit '%s' für das Feld '%s' ist ungültig.",

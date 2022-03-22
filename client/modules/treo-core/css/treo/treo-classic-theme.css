@@ -5349,6 +5349,10 @@ a.label:hover, a.label:focus {
     background-color: #999
 }
 
+.label-text.inherited-field, .inherited-relation {
+    font-style: italic
+}
+
 .label-default[href]:hover, .label-default[href]:focus {
     background-color: #808080
 }

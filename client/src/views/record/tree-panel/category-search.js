@@ -32,58 +32,53 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('views/list-tree', 'views/list', function (Dep) {
+Espo.define('views/record/tree-panel/category-search', 'view',
+    Dep => Dep.extend({
 
-    return Dep.extend({
+        template: 'record/tree-panel/category-search',
 
-        template: 'list-tree',
+        data() {
+            return {
+                scope: this.scope
+            }
+        },
 
         setup() {
-            Dep.prototype.setup.call(this);
-
-            this.setupTreePanel();
+            this.scope = this.options.scope || this.scope;
         },
 
         afterRender() {
-            this.collection.isFetched = false;
-            this.clearView('list');
-
-            if ($('.catalog-tree-panel').length) {
-                $('#footer').addClass('is-collapsed');
+            if (this.el) {
+                this.$el.find('input').autocomplete({
+                    serviceUrl: function () {
+                        return this.getAutocompleteUrl();
+                    }.bind(this),
+                    paramName: 'q',
+                    minChars: 1,
+                    autoSelectFirst: true,
+                    transformResult: function (json) {
+                        let response = JSON.parse(json);
+                        let list = [];
+                        response.list.forEach(category => {
+                            let item = Espo.Utils.cloneDeep(category);
+                            item.value = item.name;
+                            list.push(item);
+                        });
+                        return {
+                            suggestions: list
+                        };
+                    }.bind(this),
+                    onSelect: function (category) {
+                        this.$el.find('input').val('');
+                        this.trigger('category-search-select', category);
+                    }.bind(this)
+                });
             }
-
-            Dep.prototype.afterRender.call(this);
         },
 
-        setupTreePanel() {
-            this.createView('treePanel', 'views/record/panels/tree-panel', {
-                el: `${this.options.el} .catalog-tree-panel`,
-                scope: this.scope,
-                model: this.model
-            }, view => {
-                view.listenTo(view, 'select-node', data => {
-                    this.selectNode(data);
-                });
-                view.listenTo(view, 'tree-init', () => {
-                    this.treeInit(view);
-                });
-                view.listenTo(view, 'tree-reset', () => {
-                    this.treeReset(view);
-                });
-            });
-        },
+        getAutocompleteUrl() {
+            return this.scope + '?sortBy=createdAt';
+        }
 
-        treeInit(view) {
-        },
-
-        treeReset(view) {
-            window.location.href = `/#${this.scope}`;
-        },
-
-        selectNode(data) {
-            window.location.href = `/#${this.scope}/view/${data.id}`;
-        },
-
-    });
-});
-
+    })
+);

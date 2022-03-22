@@ -80,40 +80,6 @@
     }
   },
   {
-    "route": "/QueueItem/action/massUpdate",
-    "method": "put",
-    "params": {
-      "controller": "QueueItem",
-      "action": "massUpdate"
-    }
-  },
-  {
-    "route": "/:controller/action/massUpdate",
-    "method": "put",
-    "params": {
-      "controller": "MassActions",
-      "action": "massUpdate",
-      "scope": ":controller"
-    }
-  },
-  {
-    "route": "/QueueItem/action/massDelete",
-    "method": "post",
-    "params": {
-      "controller": "QueueItem",
-      "action": "massDelete"
-    }
-  },
-  {
-    "route": "/:controller/action/massDelete",
-    "method": "post",
-    "params": {
-      "controller": "MassActions",
-      "action": "massDelete",
-      "scope": ":controller"
-    }
-  },
-  {
     "route": "/:controller/:link/relation",
     "method": "post",
     "params": {

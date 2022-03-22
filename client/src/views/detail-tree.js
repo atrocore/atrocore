@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -33,15 +32,17 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-declare(strict_types=1);
+Espo.define('views/detail-tree', 'views/detail',
+    Dep => Dep.extend({
 
-namespace Espo\Core\Templates\Services;
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
 
-use Espo\Services\RecordTree;
+            if ($('.catalog-tree-panel').length) {
+                $('#footer').addClass('is-collapsed');
+            }
+        },
 
-/**
- * Class CategoryTree
- */
-class CategoryTree extends RecordTree
-{
-}
+    })
+);
+

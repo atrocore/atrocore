@@ -42,44 +42,8 @@ use Espo\Core\Exceptions\Forbidden;
 use Slim\Http\Request;
 use Treo\Core\EventManager\Event;
 
-/**
- * Class MassActions
- */
 class MassActions extends \Espo\Core\Controllers\Base
 {
-    public function actionMassUpdate(array $params, \stdClass $data, Request $request): bool
-    {
-        if (!$request->isPut() || !isset($params['scope'])) {
-            throw new BadRequest();
-        }
-        if (!$this->getAcl()->check($params['scope'], 'edit')) {
-            throw new Forbidden();
-        }
-        if (empty($data->attributes)) {
-            throw new BadRequest();
-        }
-
-        return $this->getService('MassActions')->massUpdate($params['scope'], $data);
-    }
-
-    public function actionMassDelete(array $params, \stdClass $data, Request $request): bool
-    {
-        if (!$request->isPost() || !isset($params['scope'])) {
-            throw new BadRequest();
-        }
-        if (!$this->getAcl()->check($params['scope'], 'delete')) {
-            throw new Forbidden();
-        }
-
-        $event = new Event(['params' => $params, 'data' => $data, 'request' => $request]);
-        $this
-            ->getContainer()
-            ->get('eventManager')
-            ->dispatch($params['scope'] . 'Controller', 'beforeActionMassDelete', $event);
-
-        return $this->getService('MassActions')->massDelete($params['scope'], $data);
-    }
-
     public function actionAddRelation($params, $data, $request): array
     {
         if (!$request->isPost()) {

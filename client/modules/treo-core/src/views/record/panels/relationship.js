@@ -38,6 +38,15 @@ Espo.define('treo-core:views/record/panels/relationship', ['class-replace!treo-c
 
         filtersLayoutLoaded: false,
 
+        boolFilterData: {
+            notParents() {
+                return this.model.get('id');
+            },
+            notChildren() {
+                return this.model.get('id');
+            }
+        },
+
         setup() {
             Dep.prototype.setup.call(this);
 

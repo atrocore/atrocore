@@ -74,9 +74,16 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
             this.filters = this.options.filters || {};
             this.boolFilterList = this.options.boolFilterList || [];
             this.primaryFilterName = this.options.primaryFilterName || null;
+            this.scope = this.entityType = this.options.scope || this.scope;
 
             if ('multiple' in this.options) {
                 this.multiple = this.options.multiple;
+            }
+
+            if (this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy' && this.getMetadata().get(`scopes.${this.scope}.multiParents`) !== true) {
+                if (this.options.boolFilterList && this.options.boolFilterList.includes('notChildren')) {
+                    this.multiple = false;
+                }
             }
 
             if ('createButton' in this.options) {
@@ -117,8 +124,6 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
                     }.bind(this),
                 });
             }
-
-            this.scope = this.entityType = this.options.scope || this.scope;
 
             if (this.noCreateScopeList.indexOf(this.scope) !== -1) {
                 this.createButton = false;

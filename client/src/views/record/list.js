@@ -76,7 +76,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
         events: {
             'click a.link': function (e) {
                 e.stopPropagation();
-                if (!this.scope || this.selectable) {
+                if (e.ctrlKey || !this.scope || this.selectable) {
                     return;
                 }
                 e.preventDefault();
@@ -121,18 +121,31 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }
                 this.deactivate();
             },
-
             'click .record-checkbox': function (e) {
-                var $target = $(e.currentTarget);
-                var id = $target.data('id');
-                if (e.currentTarget.checked) {
+                const $target = $(e.currentTarget);
+                const id = $target.data('id');
+
+                if ($target.prop('checked')) {
                     this.checkRecord(id, $target);
+                    this.checkIntervalRecords(e, $target);
                 } else {
                     this.uncheckRecord(id, $target);
                 }
             },
             'click .select-all': function (e) {
+                let checkbox = this.$el.find('.full-table').find('.select-all');
+                let checkboxFixed = this.$el.find('.fixed-header-table').find('.select-all');
+
+                if (!this.checkedAll) {
+                    checkbox.prop('checked', true);
+                    checkboxFixed.prop('checked', true);
+                } else {
+                    checkbox.prop('checked', false);
+                    checkboxFixed.prop('checked', false);
+                }
+
                 this.selectAllHandler(e.currentTarget.checked);
+                this.checkedAll = e.currentTarget.checked;
             },
             'click .action': function (e) {
                 var $el = $(e.currentTarget);
@@ -142,6 +155,22 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     var data = $el.data();
                     this[method](data, e);
                     e.preventDefault();
+                }
+            },
+            'click tr': function (e) {
+                if (e.target.tagName === 'TD') {
+                    const row = $(e.currentTarget);
+                    const id = row.data('id');
+                    const $target = row.find('.record-checkbox');
+
+                    if ($target) {
+                        if (!$target.prop('checked')) {
+                            this.checkRecord(id);
+                            this.checkIntervalRecords(e, $target);
+                        } else {
+                            this.uncheckRecord(id);
+                        }
+                    }
                 }
             },
             'click .checkbox-dropdown [data-action="selectAllResult"]': function (e) {

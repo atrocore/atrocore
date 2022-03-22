@@ -45,8 +45,5 @@
     "success": "%s was successfully completed",
     "error": "%s failed",
     "queueItemDone": "Queue item \"%s\" was executed with status \"%s\"."
-  },
-  "messages": {
-    "byQueueManager": "Job will be processed by Queue Manager."
   }
 }

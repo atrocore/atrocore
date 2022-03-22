@@ -45,20 +45,6 @@ use Espo\Core\Templates\Services\HasContainer;
  */
 class MassActions extends HasContainer
 {
-    public function massUpdate(string $entityType, \stdClass $data): bool
-    {
-        $this->createMassUpdateJobs($entityType, $data->attributes, $data);
-
-        return true;
-    }
-
-    public function massDelete(string $entityType, \stdClass $data): bool
-    {
-        $this->createMassDeleteJobs($entityType, $data);
-
-        return true;
-    }
-
     /**
      * Add relation to entities
      *
@@ -220,29 +206,6 @@ class MassActions extends HasContainer
     protected function getRepository(string $entityType)
     {
         return $this->getEntityManager()->getRepository($entityType);
-    }
-
-    /**
-     * @param string    $entityType
-     * @param \stdClass $attributes
-     * @param \stdClass $datas
-     */
-    protected function createMassUpdateJobs(string $entityType, \stdClass $attributes, \stdClass $data): void
-    {
-        $name = $entityType . ". " . $this->translate('massUpdate', 'massActions');
-
-        $this->qmPush($name, "QueueManagerMassUpdate", ['entityType' => $entityType, 'attributes' => $attributes, 'data' => $data]);
-    }
-
-    /**
-     * @param string    $entityType
-     * @param \stdClass $data
-     */
-    protected function createMassDeleteJobs(string $entityType, \stdClass $data): void
-    {
-        $name = $entityType . ". " . $this->translate('remove', 'massActions');
-
-        $this->qmPush($name, "QueueManagerMassDelete", ['entityType' => $entityType, 'data' => $data]);
     }
 
     /**

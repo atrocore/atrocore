@@ -366,6 +366,8 @@
     "convertCurrency": "Convert Currency"
   },
   "fields": {
+    "sortOrder": "Sort Order",
+    "parents": "Parents",
     "prohibitedEmptyValue": "Disable empty value",
     "addressCity": "City",
     "addressStreet": "Street",
@@ -427,6 +429,7 @@
     "assignedAccounts": "Accounts",
     "users": "Users",
     "parent": "Parent",
+    "parents": "Parents",
     "children": "Children"
   },
   "dashlets": {
@@ -954,6 +957,7 @@
     "cd": "cd"
   },
   "exceptions": {
+    "hasMultipleParents": "There is one or more records with multiple parents.",
     "unitValueIsRequired": "Unit for the field '%s' is required.",
     "emailIsInvalid": "Email for the field '%s' is not valid.",
     "noSuchUnit": "Unit '%s' for the field '%s' is not valid.",

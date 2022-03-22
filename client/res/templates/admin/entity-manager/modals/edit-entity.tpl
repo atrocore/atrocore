@@ -102,7 +102,6 @@
 </div>
 {{/unless}}
 
-
 <div class="row">
 	<div class="cell form-group col-md-6" data-name="iconClass">
 		<label class="control-label" data-name="iconClass">{{translate 'iconClass' category='fields' scope='EntityManager'}}</label>
@@ -120,3 +119,15 @@
 	{{/if}}
 </div>
 
+{{#each additionalParamsLayout}}
+<div class="row">
+    {{#each this}}
+	<div class="cell form-group col-md-6" data-name="{{this}}">
+		<label class="control-label" data-name="{{this}}">{{translate this category='fields' scope='EntityManager'}}</label>
+		<div class="field" data-name="{{this}}">
+            {{{var this ./../..}}}
+		</div>
+	</div>
+	{{/each}}
+</div>
+{{/each}}

@@ -159,6 +159,11 @@ class Record extends \Espo\Core\Services\Base
         return $this->pseudoTransactionId;
     }
 
+    public function isPseudoTransaction(): bool
+    {
+        return !empty($this->getPseudoTransactionId());
+    }
+
     protected function getServiceFactory()
     {
         return $this->injections['serviceFactory'];
@@ -1233,14 +1238,6 @@ class Record extends \Espo\Core\Services\Base
     {
     }
 
-    protected function afterMassUpdate(array $idList, $data)
-    {
-    }
-
-    protected function afterMassRemove(array $idList)
-    {
-    }
-
     public function deleteEntity($id)
     {
         $id = $this
@@ -1699,16 +1696,14 @@ class Record extends \Espo\Core\Services\Base
 
     public function linkEntityMass($id, $link, $where, $selectData = null)
     {
-        $event = $this
-            ->dispatchEvent('beforeLinkEntityMass', new Event(['id' => $id, 'link' => $link, 'where' => $where, 'selectData' => $selectData]));
+        $event = $this->dispatchEvent('beforeLinkEntityMass', new Event(['id' => $id, 'link' => $link, 'where' => $where]));
 
         $id = $event->getArgument('id');
         $link = $event->getArgument('link');
         $where = $event->getArgument('where');
-        $selectData = $event->getArgument('selectData');
 
         if (empty($id) || empty($link)) {
-            throw new BadRequest;
+            throw new BadRequest("'id' and 'link' is required parameters.");
         }
 
         $entity = $this->getRepository()->get($id);
@@ -1719,7 +1714,6 @@ class Record extends \Espo\Core\Services\Base
             throw new Forbidden();
         }
 
-        $entityType = $entity->getEntityType();
         $foreignEntityType = $entity->getRelationParam($link, 'entity');
 
         if (empty($foreignEntityType)) {
@@ -1735,39 +1729,29 @@ class Record extends \Espo\Core\Services\Base
             throw new Forbidden();
         }
 
-        if (!is_array($where)) {
-            $where = array();
-        }
-        $params['where'] = $where;
-
-        if (is_array($selectData)) {
-            foreach ($selectData as $k => $v) {
-                $params[$k] = $v;
-            }
+        if (empty($where) || !is_array($where)) {
+            $where = [];
         }
 
-        $selectParams = $this->getRecordService($foreignEntityType)->getSelectParams($params);
+        $selectParams = $this->getRecordService($foreignEntityType)->getSelectParams(['where' => $where]);
+        $this->getEntityManager()->getRepository($foreignEntityType)->handleSelectParams($selectParams);
 
-        if ($this->getAcl()->getLevel($foreignEntityType, $accessActionRequired) === 'all') {
-            return $this
-                ->dispatchEvent('afterLinkEntityMass', new Event(['entity' => $entity, 'link' => $link, 'selectParams' => $selectParams, 'result' => $this->getRepository()->massRelate($entity, $link, $selectParams)]))
-                ->getArgument('result');
-        } else {
-            $foreignEntityList = $this->getEntityManager()->getRepository($foreignEntityType)->find($selectParams);
-            $countRelated = 0;
-            foreach ($foreignEntityList as $foreignEntity) {
-                if (!$this->getAcl()->check($foreignEntity, $accessActionRequired)) {
-                    continue;
-                }
-                $this->getRepository()->relate($entity, $link, $foreignEntity);
-                $countRelated++;
-            }
-            if ($countRelated) {
-                return $this
-                    ->dispatchEvent('afterLinkEntityMass', new Event(['entity' => $entity, 'link' => $link, 'result' => true]))
-                    ->getArgument('result');
-            }
+        $query = $this
+            ->getEntityManager()
+            ->getQuery()
+            ->createSelectQuery($this->getEntityType(), array_merge($selectParams, ['select' => ['id']]));
+
+        $foreignIds = $this
+            ->getEntityManager()
+            ->getPDO()
+            ->query($query)
+            ->fetchAll(\PDO::FETCH_COLUMN);
+
+        foreach ($foreignIds as $foreignId) {
+            $this->getPseudoTransactionManager()->pushLinkEntityJob($this->entityType, $id, $link, $foreignId);
         }
+
+        return $this->dispatchEvent('afterLinkEntityMass', new Event(['entity' => $entity, 'link' => $link, 'result' => true]))->getArgument('result');
     }
 
     public function massUpdate($data, array $params)
@@ -1777,91 +1761,36 @@ class Record extends \Espo\Core\Services\Base
         $data = $event->getArgument('data');
         $params = $event->getArgument('params');
 
-        $idsUpdated = array();
-        $repository = $this->getRepository();
-
-        $count = 0;
-
-        $data = $data;
         $this->filterInput($data);
 
+        $ids = [];
         if (array_key_exists('ids', $params) && is_array($params['ids'])) {
             $ids = $params['ids'];
-            foreach ($ids as $id) {
-                $entity = $this->getEntity($id);
-                if ($this->getAcl()->check($entity, 'edit') && $this->checkEntityForMassUpdate($entity, $data)) {
-                    $entity->set($data);
-                    if ($this->checkAssignment($entity)) {
-                        if ($repository->save($entity, ['massUpdate' => true])) {
-                            $idsUpdated[] = $entity->id;
-                            $count++;
-
-                            $this->processActionHistoryRecord('update', $entity);
-                        }
-                    }
-                }
-            }
         }
 
         if (array_key_exists('where', $params)) {
-            $where = $params['where'];
-            $p = array();
-            $p['where'] = $where;
-
-            if (!empty($params['selectData']) && is_array($params['selectData'])) {
-                foreach ($params['selectData'] as $k => $v) {
-                    $p[$k] = $v;
-                }
-            }
-
-            $selectParams = $this->getSelectParams($p);
-
+            $selectParams = $this->getSelectParams(['where' => $params['where']]);
             $this->getEntityManager()->getRepository($this->getEntityType())->handleSelectParams($selectParams);
 
-            $sql = $this->getEntityManager()->getQuery()->createSelectQuery($this->getEntityType(), $selectParams);
-            $sth = $this->getEntityManager()->getPdo()->prepare($sql);
-            $sth->execute();
+            $query = $this
+                ->getEntityManager()
+                ->getQuery()
+                ->createSelectQuery($this->getEntityType(), array_merge($selectParams, ['select' => ['id']]));
 
-            while ($dataRow = $sth->fetch(\PDO::FETCH_ASSOC)) {
-                $entity = $this->getEntityManager()->getEntityFactory()->create($this->getEntityType());
-                $entity->set($dataRow);
-                $entity->setAsFetched();
-
-                if ($this->getAcl()->check($entity, 'edit') && $this->checkEntityForMassUpdate($entity, $data)) {
-                    $entity->set($data);
-                    if ($this->checkAssignment($entity)) {
-                        if ($repository->save($entity, ['massUpdate' => true, 'skipStreamNotesAcl' => true])) {
-                            $idsUpdated[] = $entity->id;
-                            $count++;
-
-                            $this->processActionHistoryRecord('update', $entity);
-                        }
-                    }
-                }
-            }
-
-            $this->afterMassUpdate($idsUpdated, $data);
-
-            return $this
-                ->dispatchEvent('afterMassUpdate', new Event(['idsUpdated' => $idsUpdated, 'data' => $data, 'result' => ['count' => $count]]))
-                ->getArgument('result');
+            $ids = $this
+                ->getEntityManager()
+                ->getPDO()
+                ->query($query)
+                ->fetchAll(\PDO::FETCH_COLUMN);
         }
 
-        $this->afterMassUpdate($idsUpdated, $data);
+        foreach ($ids as $id) {
+            $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->entityType, $id, $data);
+        }
 
         return $this
-            ->dispatchEvent('afterMassUpdate', new Event(['idsUpdated' => $idsUpdated, 'data' => $data, 'result' => ['count' => $count, 'ids' => $idsUpdated]]))
+            ->dispatchEvent('afterMassUpdate', new Event(['data' => $data, 'result' => ['count' => count($ids), 'ids' => $ids]]))
             ->getArgument('result');
-    }
-
-    protected function checkEntityForMassRemove(Entity $entity)
-    {
-        return true;
-    }
-
-    protected function checkEntityForMassUpdate(Entity $entity, $data)
-    {
-        return true;
     }
 
     public function massRemove(array $params)
@@ -1870,71 +1799,33 @@ class Record extends \Espo\Core\Services\Base
             ->dispatchEvent('beforeMassRemove', new Event(['params' => $params]))
             ->getArgument('params');
 
-        $idsRemoved = array();
-        $repository = $this->getRepository();
-
-        $count = 0;
-
+        $ids = [];
         if (array_key_exists('ids', $params) && !empty($params['ids']) && is_array($params['ids'])) {
-            foreach ($params['ids'] as $id) {
-                $entity = $this->getEntity($id);
-                if ($entity && $this->getAcl()->check($entity, 'delete') && $this->checkEntityForMassRemove($entity)) {
-                    if ($repository->remove($entity)) {
-                        $idsRemoved[] = $entity->id;
-                        $count++;
-
-                        $this->processActionHistoryRecord('delete', $entity);
-                    }
-                }
-            }
+            $ids = $params['ids'];
         }
 
         if (array_key_exists('where', $params)) {
-            $where = $params['where'];
-            $p = array();
-            $p['where'] = $where;
-
-            if (!empty($params['selectData']) && is_array($params['selectData'])) {
-                foreach ($params['selectData'] as $k => $v) {
-                    $p[$k] = $v;
-                }
-            }
-
-            $selectParams = $this->getSelectParams($p);
-            $selectParams['skipTextColumns'] = true;
-
+            $selectParams = $this->getSelectParams(['where' => $params['where']]);
             $this->getEntityManager()->getRepository($this->getEntityType())->handleSelectParams($selectParams);
 
-            $sql = $this->getEntityManager()->getQuery()->createSelectQuery($this->getEntityType(), $selectParams);
-            $sth = $this->getEntityManager()->getPdo()->prepare($sql);
-            $sth->execute();
+            $query = $this
+                ->getEntityManager()
+                ->getQuery()
+                ->createSelectQuery($this->getEntityType(), array_merge($selectParams, ['select' => ['id']]));
 
-            while ($dataRow = $sth->fetch(\PDO::FETCH_ASSOC)) {
-                $entity = $this->getEntityManager()->getEntityFactory()->create($this->getEntityType());
-                $entity->set($dataRow);
-                $entity->setAsFetched();
-
-                if ($this->getAcl()->check($entity, 'delete') && $this->checkEntityForMassRemove($entity)) {
-                    if ($repository->remove($entity)) {
-                        $idsRemoved[] = $entity->id;
-                        $count++;
-
-                        $this->processActionHistoryRecord('delete', $entity);
-                    }
-                }
-            }
-
-            $this->afterMassRemove($idsRemoved);
-
-            return $this
-                ->dispatchEvent('afterMassRemove', new Event(['idsRemoved' => $idsRemoved, 'result' => ['count' => $count]]))
-                ->getArgument('result');
+            $ids = $this
+                ->getEntityManager()
+                ->getPDO()
+                ->query($query)
+                ->fetchAll(\PDO::FETCH_COLUMN);
         }
 
-        $this->afterMassRemove($idsRemoved);
+        foreach ($ids as $id) {
+            $this->getPseudoTransactionManager()->pushDeleteEntityJob($this->entityType, $id);
+        }
 
         return $this
-            ->dispatchEvent('afterMassRemove', new Event(['idsRemoved' => $idsRemoved, 'result' => ['count' => $count, 'ids' => $idsRemoved]]))
+            ->dispatchEvent('afterMassRemove', new Event(['result' => ['count' => count($ids), 'ids' => $ids]]))
             ->getArgument('result');
     }
 

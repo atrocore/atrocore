@@ -45,6 +45,7 @@ use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Config;
 use Espo\Core\InjectableFactory;
 use Treo\Core\SelectManagerFactory;
+use Espo\Core\ORM\Repositories\RDB;
 
 class Base
 {
@@ -1993,6 +1994,36 @@ class Base
                 'createdById' => $this->getUser()->id
             ];
         }
+    }
+
+    /**
+     * @return RDB
+     */
+    protected function getRepository()
+    {
+        return $this
+            ->getEntityManager()
+            ->getRepository($this->entityType);
+    }
+
+    protected function boolFilterNotParents(array &$result)
+    {
+        $id = $this->getBoolFilterParameter('notParents');
+
+        $ids = array_merge([$id], $this->getRepository()->getParentsRecursivelyArray($id));
+        $ids = array_merge($ids, array_column($this->getRepository()->get($id)->get('children')->toArray(), 'id'));
+
+        $result['whereClause'][] = ['id!=' => $ids];
+    }
+
+    protected function boolFilterNotChildren(array &$result)
+    {
+        $id = $this->getBoolFilterParameter('notChildren');
+
+        $ids = array_merge([$id], $this->getRepository()->getChildrenRecursivelyArray($id));
+        $ids = array_merge($ids, array_column($this->getRepository()->get($id)->get('parents')->toArray(), 'id'));
+
+        $result['whereClause'][] = ['id!=' => $ids];
     }
 
     protected function filterFollowed(&$result)

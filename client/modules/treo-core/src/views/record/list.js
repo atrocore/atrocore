@@ -61,7 +61,7 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
             });
 
             $(window).on(`keydown.${this.cid} keyup.${this.cid}`, e => {
-                document.onselectstart = function() {
+                document.onselectstart = function () {
                     return !e.shiftKey;
                 }
             });
@@ -70,76 +70,6 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
             this.listenToOnce(this, 'remove', () => {
                 $(window).off(this.dragndropEventName);
                 $(window).off(`keydown.${this.cid} keyup.${this.cid}`);
-            });
-
-            _.extend(this.events, {
-                'click a.link': function (e) {
-                    e.stopPropagation();
-                    if (e.ctrlKey || !this.scope || this.selectable) {
-                        return;
-                    }
-                    e.preventDefault();
-                    var id = $(e.currentTarget).data('id');
-                    var model = this.collection.get(id);
-
-                    var scope = this.getModelScope(id);
-
-                    var options = {
-                        id: id,
-                        model: model
-                    };
-                    if (this.options.keepCurrentRootUrl) {
-                        options.rootUrl = this.getRouter().getCurrentUrl();
-                    }
-
-                    this.getRouter().navigate('#' + scope + '/view/' + id, {trigger: false});
-                    this.getRouter().dispatch(scope, 'view', options);
-                },
-
-                'click .select-all': function (e) {
-                    let checkbox = this.$el.find('.full-table').find('.select-all');
-                    let checkboxFixed = this.$el.find('.fixed-header-table').find('.select-all');
-
-                    if (!this.checkedAll) {
-                        checkbox.prop('checked', true);
-                        checkboxFixed.prop('checked', true);
-                    } else {
-                        checkbox.prop('checked', false);
-                        checkboxFixed.prop('checked', false);
-                    }
-
-                    this.selectAllHandler(e.currentTarget.checked);
-                    this.checkedAll = e.currentTarget.checked;
-                },
-
-                'click tr': function (e) {
-                    if (e.target.tagName === 'TD') {
-                        const row = $(e.currentTarget);
-                        const id = row.data('id');
-                        const $target = row.find('.record-checkbox');
-
-                        if ($target) {
-                            if (!$target.prop('checked')) {
-                                this.checkRecord(id);
-                                this.checkIntervalRecords(e, $target);
-                            } else {
-                                this.uncheckRecord(id);
-                            }
-                        }
-                    }
-                },
-
-                'click .record-checkbox': function (e) {
-                    const $target = $(e.currentTarget);
-                    const id = $target.data('id');
-
-                    if ($target.prop('checked')) {
-                        this.checkRecord(id, $target);
-                        this.checkIntervalRecords(e, $target);
-                    } else {
-                        this.uncheckRecord(id, $target);
-                    }
-                },
             });
         },
 
@@ -294,12 +224,12 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
                 var $bar = $('<div class="fixed-scrollbar"><div></div></div>').appendTo(list).css({
                     width: list.outerWidth()
                 });
-                $bar.scroll(function() {
+                $bar.scroll(function () {
                     list.scrollLeft($bar.scrollLeft());
                 });
                 $bar.data("status", "off");
 
-                var fixSize = function() {
+                var fixSize = function () {
                     var $container = $bar.parent();
 
                     $bar.children('div').height(1).width($container[0].scrollWidth);
@@ -307,16 +237,16 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
                 };
 
                 fixSize();
-                $(window).on("resize.fixed-scrollbar", function() {
+                $(window).on("resize.fixed-scrollbar", function () {
                     fixSize();
                 });
 
                 var scrollTimeout = null;
 
-                $(window).on("scroll.fixed-scrollbar", function() {
+                $(window).on("scroll.fixed-scrollbar", function () {
                     clearTimeout(scrollTimeout);
-                    scrollTimeout = setTimeout(function() {
-                        list.each(function() {
+                    scrollTimeout = setTimeout(function () {
+                        list.each(function () {
                             var $container = $(this);
                             var $bar = $container.children('.fixed-scrollbar');
 
@@ -693,11 +623,7 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
                 view.once('after:update', function () {
                     view.close();
                     this.listenToOnce(this.collection, 'sync', function () {
-                        if (this.entityType === 'QueueItem') {
-                            Espo.Ui.success(this.translate('Done'));
-                        } else {
-                            Espo.Ui.success(this.translate('byQueueManager', 'messages', 'QueueItem'));
-                        }
+                        Espo.Ui.success(this.translate('Done'));
                         if (allResultIsChecked) {
                             this.selectAllResult();
                         } else {
@@ -706,7 +632,7 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
                             }, this);
                         }
                     }.bind(this));
-                    this.collection.fetch();
+                    setTimeout(this.collection.fetch(), 3000);
                 }, this);
             }.bind(this));
         },
@@ -716,11 +642,6 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
                 this.notify('Access denied', 'error');
                 return false;
             }
-
-            var count = this.checkedList.length;
-            var deletedCount = 0;
-
-            var self = this;
 
             this.confirm({
                 message: this.translate('removeSelectedRecordsConfirmation', 'messages'),
@@ -747,12 +668,10 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
                     type: 'POST',
                     data: JSON.stringify(data)
                 }).done(function (result) {
-                    if (this.entityType === 'QueueItem') {
+                    setTimeout(() => {
                         Espo.Ui.success(this.translate('Done'));
-                        this.collection.fetch();
-                    } else {
-                        Espo.Ui.success(this.translate('byQueueManager', 'messages', 'QueueItem'));
-                    }
+                        this.collection.fetch()
+                    }, 3000);
                 }.bind(this));
             }, this);
         },

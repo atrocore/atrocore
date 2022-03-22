@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -33,15 +32,34 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-declare(strict_types=1);
+Espo.define('views/admin/entity-manager/fields/bool-for-hierarchy', 'views/fields/bool', function (Dep) {
 
-namespace Espo\Core\Templates\Entities;
+    return Dep.extend({
 
-use Espo\Core\Entities\CategoryTreeItem;
+        setup: function () {
+            Dep.prototype.setup.call(this);
 
-/**
- * Class CategoryTree
- */
-class CategoryTree extends CategoryTreeItem
-{
-}
+            this.listenTo(this.model, 'change:type', () => {
+                this.reRender();
+            });
+        },
+
+        fetch: function () {
+            let value = $(`input[type="checkbox"][name="${this.name}"]`).get(0).checked;
+            let data = {};
+            data[this.name] = value;
+            return data;
+        },
+
+        afterRender() {
+            Dep.prototype.setup.call(this);
+
+            if (this.model.get('type') !== 'Hierarchy') {
+                this.hide();
+            } else {
+                this.show();
+            }
+        },
+
+    });
+});

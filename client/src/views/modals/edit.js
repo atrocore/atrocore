@@ -119,6 +119,22 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
 
             this.waitForView('edit');
 
+            const nonInheritedFields = [
+                'id',
+                'deleted',
+                'createdAt',
+                'modifiedAt',
+                'sortOrder',
+                'createdById',
+                'createdByName',
+                'modifiedById',
+                'modifiedByName',
+                'ownerUserId',
+                'ownerUserName',
+                'assignedUserId',
+                'assignedUserName'
+            ];
+
             this.getModelFactory().create(this.scope, function (model) {
                 if (this.id) {
                     if (this.sourceModel) {
@@ -132,6 +148,17 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
                     }, this);
                     model.fetch();
                 } else {
+                    if (
+                        this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
+                        && this.getMetadata().get(`scopes.${this.scope}.fieldValueInheritance`) === true
+                        && this.options.relate.model.attributes
+                    ) {
+                        $.each(this.options.relate.model.attributes, (field, value) => {
+                            if (!nonInheritedFields.includes(field)) {
+                                model.set(field, value);
+                            }
+                        });
+                    }
                     this.model = model;
                     if (this.options.relate) {
                         model.setRelate(this.options.relate);

@@ -50,6 +50,8 @@ class PseudoTransactionManager
 
     private Container $container;
 
+    private array $canceledJobs = [];
+
     public function __construct(Container $container)
     {
         $this->container = $container;
@@ -87,9 +89,12 @@ class PseudoTransactionManager
 
     public function run(): void
     {
+        $this->canceledJobs = [];
         while (!empty($jobs = $this->fetchJobs())) {
             foreach ($jobs as $job) {
-                $this->runJob($job);
+                if (!in_array($job['id'], $this->canceledJobs)) {
+                    $this->runJob($job);
+                }
             }
         }
 
@@ -195,9 +200,28 @@ class PseudoTransactionManager
             }
         } catch (\Throwable $e) {
             $GLOBALS['log']->error("PseudoTransaction job failed: {$e->getMessage()}");
+
+            $childrenIds = [];
+            $this->collectChildren($job['id'], $childrenIds);
+            $this->canceledJobs = array_merge($this->canceledJobs, $childrenIds);
+            $this->getPDO()->exec("DELETE FROM `pseudo_transaction_job` WHERE id IN ('" . implode("','", $childrenIds) . "')");
         }
 
         $this->getPDO()->exec("DELETE FROM `pseudo_transaction_job` WHERE id='{$job['id']}'");
+    }
+
+    protected function collectChildren(string $parentId, array &$childrenIds): void
+    {
+        $ids = $this
+            ->getPDO()
+            ->query("SELECT id FROM `pseudo_transaction_job` WHERE parent_id='$parentId' AND deleted=0")
+            ->fetchAll(\PDO::FETCH_COLUMN);
+
+        $childrenIds = array_merge($childrenIds, $ids);
+
+        foreach ($ids as $id) {
+            $this->collectChildren($id, $childrenIds);
+        }
     }
 
     protected function getPDO(): PDO

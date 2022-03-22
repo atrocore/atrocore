@@ -366,6 +366,8 @@
     "removeRelation": "Удалить связь"
   },
   "fields": {
+    "sortOrder": "Порядок сортировки",
+    "parents": "Родители",
     "assignedAccounts": "Контрагенты",
     "prohibitedEmptyValue": "Запретить пустые значения",
     "name": "Название",
@@ -424,6 +426,7 @@
     "teams": "Группы",
     "users": "Пользователи",
     "parent": "Источник",
+    "parents": "Родители",
     "children": "Потомок",
     "ownerUser": "Owner"
   },
@@ -888,6 +891,7 @@
     "cd": "Кд"
   },
   "exceptions": {
+    "hasMultipleParents": "Есть одна или больше записей с несколькими родительскими элементами.",
     "unitValueIsRequired": "Единица измерения для поля '%s' необходима.",
     "emailIsInvalid": "Email для поля '%s' не допустим.",
     "noSuchUnit": "Единица измерения '%s' для поля '%s' не допустима.",

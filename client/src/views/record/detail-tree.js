@@ -32,27 +32,22 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('views/list-tree', 'views/list', function (Dep) {
+Espo.define('views/record/detail-tree', 'views/record/detail',
+    Dep => Dep.extend({
 
-    return Dep.extend({
-
-        template: 'list-tree',
+        template: 'record/detail-tree',
 
         setup() {
             Dep.prototype.setup.call(this);
 
-            this.setupTreePanel();
+            if (!this.isWide && this.type !== 'editSmall' && this.type !== 'detailSmall') {
+                this.isTreePanel = true;
+                this.setupTreePanel();
+            }
         },
 
-        afterRender() {
-            this.collection.isFetched = false;
-            this.clearView('list');
-
-            if ($('.catalog-tree-panel').length) {
-                $('#footer').addClass('is-collapsed');
-            }
-
-            Dep.prototype.afterRender.call(this);
+        data() {
+            return _.extend({isTreePanel: this.isTreePanel}, Dep.prototype.data.call(this))
         },
 
         setupTreePanel() {
@@ -67,23 +62,25 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
                 view.listenTo(view, 'tree-init', () => {
                     this.treeInit(view);
                 });
-                view.listenTo(view, 'tree-reset', () => {
-                    this.treeReset(view);
-                });
             });
-        },
-
-        treeInit(view) {
-        },
-
-        treeReset(view) {
-            window.location.href = `/#${this.scope}`;
         },
 
         selectNode(data) {
             window.location.href = `/#${this.scope}/view/${data.id}`;
         },
 
-    });
-});
+        getCurrentTime() {
+            return Math.floor(new Date().getTime() / 1000);
+        },
+
+        treeInit(view) {
+            if (view.model && view.model.get('id')) {
+                this.ajaxGetRequest(`${this.scope}/action/route?id=${view.model.get('id')}`).then(route => {
+                    view.selectTreeNode(route, view.model.get('id'));
+                });
+            }
+        },
+
+    })
+);
 

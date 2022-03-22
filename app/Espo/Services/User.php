@@ -467,36 +467,6 @@ class User extends Record
         return parent::deleteEntity($id);
     }
 
-    protected function checkEntityForMassRemove(Entity $entity)
-    {
-        if ($entity->id == 'system') {
-            return false;
-        }
-        if ($entity->id == $this->getUser()->id) {
-            return false;
-        }
-        return true;
-    }
-
-    protected function checkEntityForMassUpdate(Entity $entity, $data)
-    {
-        if ($entity->id == 'system') {
-            return false;
-        }
-        if ($entity->id == $this->getUser()->id) {
-            if (property_exists($data, 'isActive')) {
-                return false;
-            }
-            if (property_exists($data, 'isPortalUser')) {
-                return false;
-            }
-            if (property_exists($data, 'isSuperAdmin')) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     public function afterUpdate(Entity $entity, array $data = array())
     {
         parent::afterUpdate($entity, $data);
@@ -514,17 +484,6 @@ class User extends Record
     {
         unset($data->isPortalUser);
         return parent::massUpdate($data, $params);
-    }
-
-    protected function afterMassUpdate(array $idList, $data)
-    {
-        parent::afterMassUpdate($idList, $data);
-
-        if (array_key_exists('rolesIds', $data) || array_key_exists('teamsIds', $data) || array_key_exists('isAdmin', $data)) {
-            foreach ($idList as $id) {
-                $this->clearRoleCache($id);
-            }
-        }
     }
 
     public function loadAdditionalFields(Entity $entity)

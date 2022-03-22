@@ -72,7 +72,6 @@
     "disabled": "Marque si no necesita esta entidad en su sistema.",
     "linkAudited": "Crear un registro relacionado y vincularlo con el registro existente, hará que se registre en la historia.",
     "linkMultipleField": "El campo de relaciones múltiples proporciona una manera práctica de editar relaciones. No lo use si puede tener un gran número de registros relacionados.",
-    "entityType": "Base: Sin elementos adicionales \n\nBase Plus - Similar a Posibles clientes y Oportunidades (tiene paneles de Actividades planeadas, Historial de actividades y Tareas).\n\nEvento - Similar a Reuniones y Llamadas (disponible en Calendario y en el Panel de Actividades).\n\nEmpresa - Similar a Cuenta.",
     "hasAssignedUser": "Has Assigned User",
     "hasTeam": "Has Team",
     "hasOwner": "Has Owner",

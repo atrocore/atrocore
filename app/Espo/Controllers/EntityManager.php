@@ -171,6 +171,12 @@ class EntityManager extends \Espo\Core\Controllers\Base
             $this->prepareFullTextSearchFields($name, $data['textFilterFields']);
         }
 
+        if ($this->getMetadata()->get(['scopes', $name, 'type']) === 'Hierarchy' && empty($data['multiParents']) && $this->getMetadata()->get(['scopes', $name, 'multiParents'])) {
+            if ($this->getContainer()->get('entityManager')->getRepository($name)->hasMultipleParents()) {
+                throw new BadRequest($this->getContainer()->get('language')->translate('hasMultipleParents', 'exceptions'));
+            }
+        }
+
         $result = $this->getContainer()->get('entityManagerUtil')->update($name, $data);
 
         // update scopes
