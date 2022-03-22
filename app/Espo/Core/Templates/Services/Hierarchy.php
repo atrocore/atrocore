@@ -108,6 +108,9 @@ class Hierarchy extends Record
                 }
                 $attachment->$field = $value;
             }
+            if (empty($this->getMetadata()->get(['scopes', $this->entityType, 'relationInheritance'])) && property_exists($attachment, '_duplicatingEntityId')) {
+                unset($attachment->_duplicatingEntityId);
+            }
         }
     }
 
@@ -142,6 +145,29 @@ class Hierarchy extends Record
             $entityData = $this->getRepository()->fetchById($id);
             $result = parent::updateEntity($id, $data);
             $this->createPseudoTransactionJobs($entityData, clone $data);
+            $this->getEntityManager()->getPDO()->commit();
+        } catch (\Throwable $e) {
+            $this->getEntityManager()->getPDO()->rollBack();
+            throw $e;
+        }
+
+        return $result;
+    }
+
+    public function linkEntity($id, $link, $foreignId)
+    {
+        if (empty($this->getMetadata()->get(['scopes', $this->entityType, 'relationInheritance']))) {
+            return parent::linkEntity($id, $link, $foreignId);
+        }
+
+        if ($this->isPseudoTransaction()) {
+            return parent::linkEntity($id, $link, $foreignId);
+        }
+
+        $this->getEntityManager()->getPDO()->beginTransaction();
+        try {
+            $result = parent::linkEntity($id, $link, $foreignId);
+            $this->createPseudoTransactionLinkJobs($id, $link, $foreignId);
             $this->getEntityManager()->getPDO()->commit();
         } catch (\Throwable $e) {
             $this->getEntityManager()->getPDO()->rollBack();
@@ -215,6 +241,17 @@ class Hierarchy extends Record
                 if ($child['childrenCount'] > 0) {
                     $this->createPseudoTransactionJobs($child, clone $inputData, $transactionId);
                 }
+            }
+        }
+    }
+
+    protected function createPseudoTransactionLinkJobs(string $id, string $link, string $foreignId, string $parentTransactionId = null): void
+    {
+        $children = $this->getRepository()->getChildrenArray($id);
+        foreach ($children as $child) {
+            $transactionId = $this->getPseudoTransactionManager()->pushLinkEntityJob($this->entityType, $child['id'], $link, $foreignId, $parentTransactionId);
+            if ($child['childrenCount'] > 0) {
+                $this->createPseudoTransactionLinkJobs($child['id'], $link, $foreignId, $transactionId);
             }
         }
     }

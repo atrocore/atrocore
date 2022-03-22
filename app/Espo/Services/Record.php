@@ -1696,16 +1696,14 @@ class Record extends \Espo\Core\Services\Base
 
     public function linkEntityMass($id, $link, $where, $selectData = null)
     {
-        $event = $this
-            ->dispatchEvent('beforeLinkEntityMass', new Event(['id' => $id, 'link' => $link, 'where' => $where, 'selectData' => $selectData]));
+        $event = $this->dispatchEvent('beforeLinkEntityMass', new Event(['id' => $id, 'link' => $link, 'where' => $where]));
 
         $id = $event->getArgument('id');
         $link = $event->getArgument('link');
         $where = $event->getArgument('where');
-        $selectData = $event->getArgument('selectData');
 
         if (empty($id) || empty($link)) {
-            throw new BadRequest;
+            throw new BadRequest("'id' and 'link' is required parameters.");
         }
 
         $entity = $this->getRepository()->get($id);
@@ -1716,7 +1714,6 @@ class Record extends \Espo\Core\Services\Base
             throw new Forbidden();
         }
 
-        $entityType = $entity->getEntityType();
         $foreignEntityType = $entity->getRelationParam($link, 'entity');
 
         if (empty($foreignEntityType)) {
@@ -1732,39 +1729,29 @@ class Record extends \Espo\Core\Services\Base
             throw new Forbidden();
         }
 
-        if (!is_array($where)) {
-            $where = array();
-        }
-        $params['where'] = $where;
-
-        if (is_array($selectData)) {
-            foreach ($selectData as $k => $v) {
-                $params[$k] = $v;
-            }
+        if (empty($where) || !is_array($where)) {
+            $where = [];
         }
 
-        $selectParams = $this->getRecordService($foreignEntityType)->getSelectParams($params);
+        $selectParams = $this->getRecordService($foreignEntityType)->getSelectParams(['where' => $where]);
+        $this->getEntityManager()->getRepository($foreignEntityType)->handleSelectParams($selectParams);
 
-        if ($this->getAcl()->getLevel($foreignEntityType, $accessActionRequired) === 'all') {
-            return $this
-                ->dispatchEvent('afterLinkEntityMass', new Event(['entity' => $entity, 'link' => $link, 'selectParams' => $selectParams, 'result' => $this->getRepository()->massRelate($entity, $link, $selectParams)]))
-                ->getArgument('result');
-        } else {
-            $foreignEntityList = $this->getEntityManager()->getRepository($foreignEntityType)->find($selectParams);
-            $countRelated = 0;
-            foreach ($foreignEntityList as $foreignEntity) {
-                if (!$this->getAcl()->check($foreignEntity, $accessActionRequired)) {
-                    continue;
-                }
-                $this->getRepository()->relate($entity, $link, $foreignEntity);
-                $countRelated++;
-            }
-            if ($countRelated) {
-                return $this
-                    ->dispatchEvent('afterLinkEntityMass', new Event(['entity' => $entity, 'link' => $link, 'result' => true]))
-                    ->getArgument('result');
-            }
+        $query = $this
+            ->getEntityManager()
+            ->getQuery()
+            ->createSelectQuery($this->getEntityType(), array_merge($selectParams, ['select' => ['id']]));
+
+        $foreignIds = $this
+            ->getEntityManager()
+            ->getPDO()
+            ->query($query)
+            ->fetchAll(\PDO::FETCH_COLUMN);
+
+        foreach ($foreignIds as $foreignId) {
+            $this->getPseudoTransactionManager()->pushLinkEntityJob($this->entityType, $id, $link, $foreignId);
         }
+
+        return $this->dispatchEvent('afterLinkEntityMass', new Event(['entity' => $entity, 'link' => $link, 'result' => true]))->getArgument('result');
     }
 
     public function massUpdate($data, array $params)
