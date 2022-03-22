@@ -229,9 +229,34 @@ class Hierarchy extends Record
     public function findLinkedEntities($id, $link, $params)
     {
         $result = parent::findLinkedEntities($id, $link, $params);
+        if (empty($result['total'])) {
+            return $result;
+        }
 
-        if ($link === 'children' && !empty($result['total'])) {
+        if ($link === 'children') {
             $result['collection'] = $this->sortCollection($result['collection']);
+            return $result;
+        }
+
+        if ($link === 'parents') {
+            return $result;
+        }
+
+        $parents = $this->getRepository()->get($id)->get('parents');
+        if (empty($parents) || count($parents) === 0) {
+            return $result;
+        }
+
+        $parentsRelatedIds = [];
+        foreach ($parents as $parent) {
+            $parentsRelatedIds = array_merge($parentsRelatedIds, array_column($parent->get($link)->toArray(), 'id'));
+        }
+
+        $result['list'] = $result['collection']->toArray();
+        unset($result['collection']);
+
+        foreach ($result['list'] as $k => $record) {
+            $result['list'][$k]['isInherited'] = in_array($record['id'], $parentsRelatedIds);
         }
 
         return $result;

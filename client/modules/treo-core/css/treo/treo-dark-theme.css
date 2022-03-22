@@ -5366,7 +5366,7 @@ a.label:hover, a.label:focus {
     background-color: #999
 }
 
-.label-text.inherited-field {
+.label-text.inherited-field, .inherited-relation {
     font-style: italic
 }
 

@@ -419,6 +419,13 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 this.initElement();
             }
             this.hideRelationField();
+
+            if (this.mode === 'listLink' && this.name === 'name') {
+                const scope = window.location.hash.split('/').shift().replace('#', '');
+                if (this.getMetadata().get(`scopes.${scope}.relationInheritance`) === true && this.model.get('isInherited') === true) {
+                    this.$el.find('.link').addClass('inherited-relation');
+                }
+            }
         },
 
         hideRelationField: function () {
