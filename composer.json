@@ -31,7 +31,7 @@
     "phpseclib/phpseclib": "^3.0"
   },
   "conflict": {
-    "atrocore/pim": "^1.4.12"
+    "atrocore/pim": "<1.4.12"
   },
   "autoload": {
     "psr-0": {
