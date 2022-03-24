@@ -30,6 +30,9 @@
     "symfony/workflow": "~4.3.0",
     "phpseclib/phpseclib": "^3.0"
   },
+  "conflict": {
+    "atrocore/pim": "^1.4.12"
+  },
   "autoload": {
     "psr-0": {
       "": [
