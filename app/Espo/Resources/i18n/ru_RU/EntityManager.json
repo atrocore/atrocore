@@ -9,7 +9,9 @@
   "fields": {
     "multiParents": "Несколько родительских элементов",
     "fieldValueInheritance": "Наследование значений полей",
+    "unnheritedFields": "Ненаследуемые поля",
     "relationInheritance": "Наследование связей",
+    "unnheritedRelations": "Ненаследуемые связи",
     "hasAssignedUser": "Назначеный пользователь",
     "hasTeam": "Команды",
     "hasAccount": "Контрагенты",

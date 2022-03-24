@@ -9,7 +9,9 @@
   "fields": {
     "multiParents": "Multiple Parents",
     "fieldValueInheritance": "Field Value Inheritance",
+    "unnheritedFields": "Uninherited Fields",
     "relationInheritance": "Relation Inheritance",
+    "unnheritedRelations": "Uninherited Relations",
     "hasAssignedUser": "Assigned User",
     "hasTeam": "Teams",
     "hasAccount": "Accounts",

@@ -8,7 +8,9 @@
   "fields": {
     "multiParents": "Mehrere Elterndatensätze",
     "fieldValueInheritance": "Feldwertvererbung",
+    "unnheritedFields": "Nicht Vererbte Felder",
     "relationInheritance": "Relationsvererbung",
+    "unnheritedRelations": "Nicht Vererbte Relationen",
     "statusField": "Statusfeld",
     "hasAssignedUser": "Zugewiesener Benutzer",
     "hasTeam": "Teams",

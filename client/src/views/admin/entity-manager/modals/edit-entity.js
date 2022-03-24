@@ -43,7 +43,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
         data: function () {
             return {
                 isNew: this.isNew,
-                additionalParamsLayout: this.additionalParamsLayout
+                additionalParamsLayout: this.getMetadata().get('app.additionalEntityParams.layout') || []
             };
         },
 
@@ -377,16 +377,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
             }
             this.model.fetchedAttributes = this.model.getClonedAttributes();
 
-            this.additionalParamsLayout = [];
-            this.additionalParams = this.getMetadata().get(['app', 'additionalEntityParams']) || {};
-
-            // set scope specified additional params
-            const additionalScopeParams = this.getMetadata().get(['app', 'additional' + this.scope + 'Params']);
-            if (additionalScopeParams) {
-                $.each(additionalScopeParams, function (field, data) {
-                    this.additionalParams[field] = data;
-                }.bind(this));
-            }
+            this.additionalParams = this.getMetadata().get('app.additionalEntityParams.fields') || {};
 
             for (let param in this.additionalParams) {
                 this.model.set(param, this.getMetadata().get(['scopes', this.scope, param]));
@@ -401,12 +392,6 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                     tooltip: this.additionalParams[param].tooltip,
                     tooltipText: this.translate(param, 'tooltips', 'EntityManager')
                 });
-
-                if (!this.additionalParamsLayout.length || this.additionalParamsLayout[this.additionalParamsLayout.length - 1].length > 1) {
-                    this.additionalParamsLayout.push([param]);
-                } else {
-                    this.additionalParamsLayout[this.additionalParamsLayout.length - 1].push(param);
-                }
             }
 
             /**
