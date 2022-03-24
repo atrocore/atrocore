@@ -400,58 +400,19 @@ class EntityManager extends \Espo\Core\Controllers\Base
         return true;
     }
 
-
-
-    /**
-     * Set data to scope
-     *
-     * @param array $data
-     */
     protected function updateScope(array $data): void
     {
-        // prepare name
-        $name = trim(ucfirst($data['name']));
+        $additionalFields = array_keys($this->getMetadata()->get(['app', 'additionalEntityParams', 'fields'], []));
 
-        $this->getMetadata()->set('scopes', $name, $this->getPreparedScopesData($data));
-
-        // save
-        $this->getMetadata()->save();
-    }
-
-    /**
-     * Get prepared scopes data
-     *
-     * @param array $data
-     *
-     * @return array
-     */
-    protected function getPreparedScopesData(array $data): array
-    {
-        // prepare result
         $scopeData = [];
-
         foreach ($data as $key => $value) {
-            if (in_array($key, $this->getScopesConfig((string)$data['name']))) {
+            if (in_array($key, $additionalFields)) {
                 $scopeData[$key] = $value;
             }
         }
 
-        return $scopeData;
-    }
-
-    /**
-     * Get scopes config
-     *
-     * @param string $scope
-     *
-     * @return array
-     */
-    protected function getScopesConfig(string $scope): array
-    {
-        $data = $this->getMetadata()->get(['app', 'additionalEntityParams'], []);
-        $data = array_merge($data, $this->getMetadata()->get(['app', "additional{$scope}Params"], []));
-
-        return array_keys($data);
+        $this->getMetadata()->set('scopes', trim(ucfirst($data['name'])), $scopeData);
+        $this->getMetadata()->save();
     }
 
     /**
