@@ -54,6 +54,14 @@ Espo.define('views/admin/entity-manager/fields/unnherited-fields', 'views/fields
                     this.translatedOptions[field] = this.translate(field, 'fields', this.model.get('name'));
                 }
             });
+
+            let newValue = [];
+            (this.model.get(this.name) || []).forEach(field => {
+                if (this.params.options.includes(field)){
+                    newValue.push(field);
+                }
+            });
+            this.model.set(this.name, newValue);
         },
 
         afterRender() {
