@@ -67,6 +67,8 @@
     "linkConflict": "Eine Relation mit diesem Namen existiert bereits"
   },
   "tooltips": {
+    "unnheritedFields": "Werte für diese Felder werden nicht vom übergeordneten Element geerbt.",
+    "unnheritedRelations": "Relationen zu diesen Entitäten werden nicht vom übergeordneten Element geerbt.",
     "disabled": "Überprüfen Sie, ob Sie diese Entität in Ihrem System nicht benötigen.",
     "hasAssignedUser": "Zugewiesene Benutzer in der Zugangsverwaltung anzeigen",
     "hasTeam": "Teams in der Zugangsverwaltung anzeigen",

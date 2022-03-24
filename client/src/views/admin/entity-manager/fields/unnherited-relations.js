@@ -80,7 +80,6 @@ Espo.define('views/admin/entity-manager/fields/unnherited-relations', 'views/fie
                 this.$el.parent().show();
             } else {
                 this.$el.parent().hide();
-                this.model.set(this.name, null);
             }
         },
 

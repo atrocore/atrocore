@@ -12,7 +12,8 @@
     },
     "unnheritedFields": {
       "type": "array",
-      "view": "views/admin/entity-manager/fields/unnherited-fields"
+      "view": "views/admin/entity-manager/fields/unnherited-fields",
+      "tooltip": true
     },
     "relationInheritance": {
       "type": "bool",
@@ -21,7 +22,8 @@
     },
     "unnheritedRelations": {
       "type": "array",
-      "view": "views/admin/entity-manager/fields/unnherited-relations"
+      "view": "views/admin/entity-manager/fields/unnherited-relations",
+      "tooltip": true
     },
     "hasAssignedUser": {
       "type": "bool",
