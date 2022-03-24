@@ -7,7 +7,7 @@
     "Formula": "Formula"
   },
   "fields": {
-    "multiParents": "Multiple parents",
+    "multiParents": "Multiple Parents",
     "fieldValueInheritance": "Field Value Inheritance",
     "relationInheritance": "Relation Inheritance",
     "hasAssignedUser": "Assigned User",
