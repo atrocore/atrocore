@@ -640,7 +640,11 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         isInheritedField: function () {
-            if (!['detail', 'edit'].includes(this.mode) || !this.model.has('inheritedFields')) {
+            if (!['detail', 'edit'].includes(this.mode) || !this.model || !this.model.urlRoot) {
+                return false;
+            }
+
+            if (!this.model.has('inheritedFields') || this.getMetadata().get(`scopes.${this.model.urlRoot}.fieldValueInheritance`) !== true) {
                 return false;
             }
 
