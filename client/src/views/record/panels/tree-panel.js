@@ -117,7 +117,9 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                 if (!this.openNodes($tree, ids) || locationHash !== window.location.hash) {
                     clearInterval(interval);
                 }
-                $tree.tree('selectNode', $tree.tree('getNodeById', id));
+                $tree.find(`.jqtree-title[data-id="${id}"]`).each((k, el) => {
+                    $(el).parent().parent().addClass('jqtree-selected');
+                });
             }, 500);
         },
 

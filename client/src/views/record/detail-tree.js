@@ -62,6 +62,11 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
                 view.listenTo(view, 'tree-init', () => {
                     this.treeInit(view);
                 });
+                this.listenTo(this.model, 'after:relate after:unrelate', link => {
+                    if (['parents', 'children'].includes(link)) {
+                        view.reRender();
+                    }
+                });
             });
         },
 
