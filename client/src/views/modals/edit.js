@@ -136,6 +136,15 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
                 'assignedUserName'
             ];
 
+            (this.getMetadata().get(`scopes.${this.scope}.unInheritedFields`) || []).forEach(field => {
+                if (this.getMetadata().get(`entityDefs.${this.scope}.fields.${field}.type`) === 'link') {
+                    nonInheritedFields.push(field + 'Id');
+                    nonInheritedFields.push(field + 'Name');
+                } else {
+                    nonInheritedFields.push(field);
+                }
+            });
+
             this.getModelFactory().create(this.scope, function (model) {
                 if (this.id) {
                     if (this.sourceModel) {

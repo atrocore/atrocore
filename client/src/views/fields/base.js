@@ -648,6 +648,11 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 return false;
             }
 
+            const unInheritedFields = this.getMetadata().get(`scopes.${this.model.urlRoot}.unInheritedFields`) || [];
+            if (unInheritedFields.includes(this.name)) {
+                return false;
+            }
+
             const inheritedFields = this.model.get('inheritedFields');
 
             return inheritedFields && Array.isArray(inheritedFields) && inheritedFields.includes(this.name);

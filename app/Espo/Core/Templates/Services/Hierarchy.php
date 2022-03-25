@@ -46,24 +46,9 @@ use Espo\Services\Record;
 
 class Hierarchy extends Record
 {
-    public const NON_INHERITED_FIELDS
-        = [
-            'id',
-            'deleted',
-            'modifiedAt',
-            'sortOrder',
-            'createdAt',
-            'createdBy',
-            'modifiedBy',
-            'ownerUser',
-            'assignedUser'
-        ];
-
     public function getRoute(string $id): array
     {
-        return $this
-            ->getRepository()
-            ->getRoute($id);
+        return $this->getRepository()->getRoute($id);
     }
 
     public function getChildren(string $parentId): array
@@ -317,8 +302,12 @@ class Hierarchy extends Record
 
     protected function createInputDataForPseudoTransactionJob(array $parent, array $child, \stdClass $data): \stdClass
     {
+        $unInheritedFields = $this->getMetadata()->get(['scopes', $this->entityType, 'unInheritedFields'], []);
         $inputData = new \stdClass();
         foreach ($data as $field => $value) {
+            if (in_array($field, $unInheritedFields)) {
+                continue 1;
+            }
             $underScoredField = Util::toUnderScore($field);
             if (!array_key_exists($underScoredField, $parent)) {
                 continue 1;
@@ -356,9 +345,10 @@ class Hierarchy extends Record
     {
         $inheritedFields = [];
         if (!empty($parents = $entity->get('parents')) && count($parents) > 0) {
+            $unInheritedFields = $this->getNonInheritedFields();
             foreach ($parents as $parent) {
                 foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []) as $field => $fieldData) {
-                    if (in_array($field, $inheritedFields) || in_array($field, self::NON_INHERITED_FIELDS)) {
+                    if (in_array($field, $inheritedFields) || in_array($field, $unInheritedFields)) {
                         continue 1;
                     }
 
@@ -381,12 +371,31 @@ class Hierarchy extends Record
         return $inheritedFields;
     }
 
+    protected function getNonInheritedFields(): array
+    {
+        $system = [
+            'id',
+            'deleted',
+            'modifiedAt',
+            'sortOrder',
+            'createdAt',
+            'createdBy',
+            'modifiedBy',
+            'ownerUser',
+            'assignedUser'
+        ];
+
+        return array_merge($system, $this->getMetadata()->get(['scopes', $this->entityType, 'unInheritedFields'], []));
+    }
+
     protected function getNonInheritedFieldsKeys(): array
     {
         $result = [];
 
+        $unInheritedFields = $this->getNonInheritedFields();
+
         foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []) as $field => $fieldData) {
-            if (!in_array($field, self::NON_INHERITED_FIELDS)) {
+            if (!in_array($field, $unInheritedFields)) {
                 continue 1;
             }
 
