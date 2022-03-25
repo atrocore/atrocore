@@ -384,14 +384,26 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
         saveListItemOrder(e, ui) {
             let url;
             let data;
+            let parentView = this.getParentView();
+            let link = null;
+            let parentModel = null;
+            if (parentView) {
+                if (parentView.link) {
+                    link = parentView.link;
+                }
+                if (parentView.model) {
+                    parentModel = parentView.model;
+                }
+            }
+
             if (this.dragableSortField) {
                 const itemId = this.getItemId(ui);
                 if (itemId) {
                     const sortFieldValue = this.getSortFieldValue(itemId);
                     url = `${this.scope}/${itemId}`;
-                    const parent = this.getParentView();
+
                     data = {
-                        _id: parent ? parent.model ? parent.model.id : null : null,
+                        _id: parentModel ? parentModel.id : null,
                         _sortedIds: this.getIdsFromDom(),
                         [this.dragableSortField]: sortFieldValue
                     };
@@ -412,6 +424,9 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
                             type = 'success';
                         }
                         this.notify(statusMsg, type, 3000);
+                        if (parentModel) {
+                            parentModel.trigger('after:dragDrop', link);
+                        }
                     }, error => {
                         this.collection.fetch();
                     })
