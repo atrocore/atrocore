@@ -10,9 +10,9 @@
       "view": "views/admin/entity-manager/fields/bool-for-hierarchy",
       "default": false
     },
-    "unnheritedFields": {
+    "unInheritedFields": {
       "type": "array",
-      "view": "views/admin/entity-manager/fields/unnherited-fields",
+      "view": "views/admin/entity-manager/fields/un-inherited-fields",
       "tooltip": true
     },
     "relationInheritance": {
@@ -20,9 +20,9 @@
       "view": "views/admin/entity-manager/fields/bool-for-hierarchy",
       "default": false
     },
-    "unnheritedRelations": {
+    "unInheritedRelations": {
       "type": "array",
-      "view": "views/admin/entity-manager/fields/unnherited-relations",
+      "view": "views/admin/entity-manager/fields/un-inherited-relations",
       "tooltip": true
     },
     "hasAssignedUser": {
@@ -52,11 +52,11 @@
     ],
     [
       "fieldValueInheritance",
-      "unnheritedFields"
+      "unInheritedFields"
     ],
     [
       "relationInheritance",
-      "unnheritedRelations"
+      "unInheritedRelations"
     ],
     [
       "hasOwner",

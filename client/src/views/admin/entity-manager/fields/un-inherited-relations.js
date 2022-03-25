@@ -32,7 +32,7 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('views/admin/entity-manager/fields/unnherited-relations', 'views/fields/multi-enum', function (Dep) {
+Espo.define('views/admin/entity-manager/fields/un-inherited-relations', 'views/fields/multi-enum', function (Dep) {
 
     return Dep.extend({
 

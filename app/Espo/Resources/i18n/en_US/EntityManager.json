@@ -9,9 +9,9 @@
   "fields": {
     "multiParents": "Multiple Parents",
     "fieldValueInheritance": "Field Value Inheritance",
-    "unnheritedFields": "Uninherited Fields",
+    "unInheritedFields": "Uninherited Fields",
     "relationInheritance": "Relation Inheritance",
-    "unnheritedRelations": "Uninherited Relations",
+    "unInheritedRelations": "Uninherited Relations",
     "hasAssignedUser": "Assigned User",
     "hasTeam": "Teams",
     "hasAccount": "Accounts",
@@ -72,8 +72,8 @@
     "linkConflict": "Name conflict: link or field with the same name already exists."
   },
   "tooltips": {
-    "unnheritedFields": "Values for these fields will not be inherited from parent item.",
-    "unnheritedRelations": "Relations with these entities will not be inherited from parent item.",
+    "unInheritedFields": "Values for these fields will not be inherited from parent item.",
+    "unInheritedRelations": "Relations with these entities will not be inherited from parent item.",
     "hasAssignedUser": "Show Assigned User in Access Management",
     "hasTeam": "Show Teams in Access Management",
     "hasAccount": "Show Accounts in Access Management",

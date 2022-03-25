@@ -8,9 +8,9 @@
   "fields": {
     "multiParents": "Mehrere Elterndatensätze",
     "fieldValueInheritance": "Feldwertvererbung",
-    "unnheritedFields": "Nicht Vererbte Felder",
+    "unInheritedFields": "Nicht Vererbte Felder",
     "relationInheritance": "Relationsvererbung",
-    "unnheritedRelations": "Nicht Vererbte Relationen",
+    "unInheritedRelations": "Nicht Vererbte Relationen",
     "statusField": "Statusfeld",
     "hasAssignedUser": "Zugewiesener Benutzer",
     "hasTeam": "Teams",
@@ -67,8 +67,8 @@
     "linkConflict": "Eine Relation mit diesem Namen existiert bereits"
   },
   "tooltips": {
-    "unnheritedFields": "Werte für diese Felder werden nicht vom übergeordneten Element geerbt.",
-    "unnheritedRelations": "Relationen zu diesen Entitäten werden nicht vom übergeordneten Element geerbt.",
+    "unInheritedFields": "Werte für diese Felder werden nicht vom übergeordneten Element geerbt.",
+    "unInheritedRelations": "Relationen zu diesen Entitäten werden nicht vom übergeordneten Element geerbt.",
     "disabled": "Überprüfen Sie, ob Sie diese Entität in Ihrem System nicht benötigen.",
     "hasAssignedUser": "Zugewiesene Benutzer in der Zugangsverwaltung anzeigen",
     "hasTeam": "Teams in der Zugangsverwaltung anzeigen",
