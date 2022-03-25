@@ -285,6 +285,10 @@ class Hierarchy extends Record
             return;
         }
 
+        if (empty($this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $link, 'relationName']))) {
+            return;
+        }
+
         $children = $this->getRepository()->getChildrenArray($id);
         foreach ($children as $child) {
             $transactionId = $this->getPseudoTransactionManager()->pushLinkEntityJob($this->entityType, $child['id'], $link, $foreignId, $parentTransactionId);
@@ -298,6 +302,10 @@ class Hierarchy extends Record
     {
         $unInheritedRelations = array_merge(['parents', 'children'], $this->getMetadata()->get(['scopes', $this->entityType, 'unInheritedRelations'], []));
         if (in_array($link, $unInheritedRelations)){
+            return;
+        }
+
+        if (empty($this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $link, 'relationName']))) {
             return;
         }
 

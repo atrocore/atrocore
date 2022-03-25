@@ -428,7 +428,12 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 });
 
                 const link = this.$el.parents('.panel').data('name');
-                if (this.getMetadata().get(`scopes.${scope}.relationInheritance`) === true && !unInheritedRelations.includes(link) && this.model.get('isInherited') === true) {
+                if (
+                    this.getMetadata().get(`scopes.${scope}.relationInheritance`) === true
+                    && !unInheritedRelations.includes(link)
+                    && this.model.get('isInherited') === true
+                    && this.getMetadata().get(['entityDefs', scope, 'links', link, 'relationName'])
+                ) {
                     this.$el.find('.link').addClass('inherited-relation');
                 }
             }
