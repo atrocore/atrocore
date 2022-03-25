@@ -407,7 +407,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         initElement: function () {
             this.$element = this.$el.find('[name="' + this.name + '"]');
-            if (this.mode == 'edit') {
+            if (this.mode === 'edit') {
                 this.$element.on('change', function () {
                     this.trigger('change');
                 }.bind(this));
@@ -415,14 +415,20 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         afterRender: function () {
-            if (this.mode == 'edit' || this.mode == 'search') {
+            if (this.mode === 'edit' || this.mode === 'search') {
                 this.initElement();
             }
             this.hideRelationField();
 
             if (this.mode === 'listLink' && this.name === 'name') {
                 const scope = window.location.hash.split('/').shift().replace('#', '');
-                if (this.getMetadata().get(`scopes.${scope}.relationInheritance`) === true && this.model.get('isInherited') === true) {
+                let unInheritedRelations = ['parents', 'children'];
+                (this.getMetadata().get(`scopes.${scope}.unInheritedRelations`) || []).forEach(field => {
+                    unInheritedRelations.push(field);
+                });
+
+                const link = this.$el.parents('.panel').data('name');
+                if (this.getMetadata().get(`scopes.${scope}.relationInheritance`) === true && !unInheritedRelations.includes(link) && this.model.get('isInherited') === true) {
                     this.$el.find('.link').addClass('inherited-relation');
                 }
             }
