@@ -213,8 +213,8 @@ class Hierarchy extends RDB
             if (is_bool($foreign)) {
                 throw new BadRequest("Action blocked. Please, specify {$this->entityType}.");
             }
-            $foreignId = is_string($foreign) ? $foreign : $foreign->get('id');
-            if (in_array($foreignId, $this->getChildrenRecursivelyArray($entity->get('id')))) {
+            $foreign = is_string($foreign) ? $this->get($foreign) : $foreign;
+            if (in_array($foreign->get('id'), $this->getChildrenRecursivelyArray($entity->get('id')))) {
                 throw new BadRequest("Child record cannot be chosen as a parent.");
             }
 
@@ -232,9 +232,18 @@ class Hierarchy extends RDB
             if (is_bool($foreign)) {
                 throw new BadRequest("Action blocked. Please, specify {$this->entityType}.");
             }
-            $foreignId = is_string($foreign) ? $foreign : $foreign->get('id');
-            if (in_array($foreignId, $this->getParentsRecursivelyArray($entity->get('id')))) {
+            $foreign = is_string($foreign) ? $this->get($foreign) : $foreign;
+            if (in_array($foreign->get('id'), $this->getParentsRecursivelyArray($entity->get('id')))) {
                 throw new BadRequest("Parent record cannot be chosen as a child.");
+            }
+
+            if (empty($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']))) {
+                $parents = $foreign->get('parents');
+                if (!empty($parents) && count($parents) > 0) {
+                    foreach ($parents as $parent) {
+                        $this->unrelate($foreign, 'parents', $parent);
+                    }
+                }
             }
         }
     }
