@@ -107,9 +107,11 @@ class Hierarchy extends RDB
 
     public function hasMultipleParents(): bool
     {
+        $tableName = $this->getEntityManager()->getQuery()->toDb($this->entityType);
+
         $count = $this
             ->getPDO()
-            ->query("SELECT count(*) AS duplicates FROM (SELECT entity_id FROM `$this->hierarchyTableName` GROUP BY entity_id HAVING COUNT(entity_id) > 1) AS t")
+            ->query("SELECT COUNT(e.id) as total FROM (SELECT entity_id, deleted FROM `$this->hierarchyTableName` WHERE deleted=0 GROUP BY entity_id, deleted HAVING COUNT(entity_id) > 1) AS rel LEFT JOIN `$tableName` e ON e.id=rel.entity_id WHERE e.deleted=0")
             ->fetch(\PDO::FETCH_COLUMN);
 
         return !empty($count);
