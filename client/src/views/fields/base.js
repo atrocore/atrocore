@@ -405,9 +405,10 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         initInheritedFieldMarker: function () {
-            if (!this.isInheritableField() || this.mode !== 'detail') {
-                this.getUnlockLinkEl().remove();
-                this.getLockLinkEl().remove();
+            this.getUnlockLinkEl().remove();
+            this.getLockLinkEl().remove();
+
+            if (!this.isInheritableField() || this.mode !== 'detail' || this.model.get('isRoot') === true) {
                 return;
             }
 

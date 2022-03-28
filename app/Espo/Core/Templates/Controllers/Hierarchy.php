@@ -69,7 +69,7 @@ class Hierarchy extends Record
         return $this->getRecordService()->getRoute((string)$request->get('id'));
     }
 
-    public function actionInheritField($params, $data, $request): array
+    public function actionInheritField($params, $data, $request): bool
     {
         if (!$request->isPost() || !property_exists($data, 'field') || !property_exists($data, 'id')) {
             throw new BadRequest();

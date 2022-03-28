@@ -144,14 +144,17 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             },
             'click a[data-action="setAsInherited"]': function (e) {
-                const $currentTarget = $(e.currentTarget);
-                const field = $currentTarget.data('name');
-
+                const field = $(e.currentTarget).data('name');
                 this.ajaxPostRequest(`${this.scope}/action/inheritField`, {
                     field: field,
                     id: this.model.get('id')
-                }).then(() => {
-                    this.model.fetch()
+                }).then(response => {
+                    this.afterSave();
+                    this.trigger('after:save');
+                    this.model.trigger('after:save');
+                    this.notify('Saved', 'success');
+
+                    this.model.fetch();
                 });
             },
         },

@@ -38,12 +38,14 @@ declare(strict_types=1);
 namespace Espo\Core\Templates\Services;
 
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\Services\Record;
+use Treo\Core\Exceptions\NotModified;
 
 class Hierarchy extends Record
 {
@@ -64,22 +66,31 @@ class Hierarchy extends Record
             throw new BadRequest('No parents found.');
         }
 
+        $parent = $parents[0];
+
         $input = new \stdClass();
-        $input->$field = $parents[0]->get($field);
-
-        $fieldType = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type'], 'varchar');
-
-        if ($fieldType === 'currency') {
-            $input->{$field . 'Currency'} = $parents[0]->get($field . 'Currency');
+        switch ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type'], 'varchar')) {
+            case 'asset':
+            case 'image':
+            case 'link':
+                $input->{$field . 'Id'} = $parent->get($field . 'Id');
+                $input->{$field . 'Name'} = $parent->get($field . 'Name');
+                break;
+            case 'currency':
+                $input->$field = $parent->get($field);
+                $input->{$field . 'Currency'} = $parent->get($field . 'Currency');
+                break;
+            case 'unit':
+                $input->$field = $parent->get($field);
+                $input->{$field . 'Unit'} = $parent->get($field . 'Unit');
+                break;
         }
 
-        if ($fieldType === 'unit') {
-            $input->{$field . 'Unit'} = $parents[0]->get($field . 'Unit');
+        try {
+            $this->updateEntity($id, $input);
+        } catch (Conflict $e) {
+        } catch (NotModified $e) {
         }
-
-        echo '<pre>';
-        print_r($fieldType);
-        die();
 
         return true;
     }
@@ -319,7 +330,7 @@ class Hierarchy extends Record
     protected function createPseudoTransactionLinkJobs(string $id, string $link, string $foreignId, string $parentTransactionId = null): void
     {
         $unInheritedRelations = array_merge(['parents', 'children'], $this->getMetadata()->get(['scopes', $this->entityType, 'unInheritedRelations'], []));
-        if (in_array($link, $unInheritedRelations)){
+        if (in_array($link, $unInheritedRelations)) {
             return;
         }
 
@@ -339,7 +350,7 @@ class Hierarchy extends Record
     protected function createPseudoTransactionUnlinkJobs(string $id, string $link, string $foreignId, string $parentTransactionId = null): void
     {
         $unInheritedRelations = array_merge(['parents', 'children'], $this->getMetadata()->get(['scopes', $this->entityType, 'unInheritedRelations'], []));
-        if (in_array($link, $unInheritedRelations)){
+        if (in_array($link, $unInheritedRelations)) {
             return;
         }
 
@@ -412,13 +423,35 @@ class Hierarchy extends Record
                         continue 1;
                     }
 
-                    $fieldKey = $field;
-
-                    if ($fieldData['type'] === 'link') {
-                        $fieldKey .= 'Id';
-                    }
-                    if ($this->areValuesEqual($this->getRepository()->get(), $field, $parent->get($fieldKey), $entity->get($fieldKey))) {
-                        $inheritedFields[] = $field;
+                    switch ($fieldData['type']) {
+                        case 'asset':
+                        case 'image':
+                        case 'link':
+                            if ($this->areValuesEqual($this->getRepository()->get(), $field, $parent->get($field . 'Id'), $entity->get($field . 'Id'))) {
+                                $inheritedFields[] = $field;
+                            }
+                            break;
+                        case 'currency':
+                            if (
+                                $this->areValuesEqual($this->getRepository()->get(), $field, $parent->get($field), $entity->get($field))
+                                && $this->areValuesEqual($this->getRepository()->get(), $field . 'Currency', $parent->get($field . 'Currency'), $entity->get($field . 'Currency'))
+                            ) {
+                                $inheritedFields[] = $field;
+                            }
+                            break;
+                        case 'unit':
+                            if (
+                                $this->areValuesEqual($this->getRepository()->get(), $field, $parent->get($field), $entity->get($field))
+                                && $this->areValuesEqual($this->getRepository()->get(), $field . 'Unit', $parent->get($field . 'Unit'), $entity->get($field . 'Unit'))
+                            ) {
+                                $inheritedFields[] = $field;
+                            }
+                            break;
+                        default:
+                            if ($this->areValuesEqual($this->getRepository()->get(), $field, $parent->get($field), $entity->get($field))) {
+                                $inheritedFields[] = $field;
+                            }
+                            break;
                     }
                 }
             }
