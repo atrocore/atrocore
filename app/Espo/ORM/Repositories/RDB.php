@@ -37,11 +37,10 @@ namespace Espo\ORM\Repositories;
 
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
-use \Espo\ORM\EntityManager;
-use \Espo\ORM\EntityFactory;
-use \Espo\ORM\EntityCollection;
-use \Espo\ORM\Entity;
-use \Espo\ORM\IEntity;
+use Espo\ORM\EntityManager;
+use Espo\ORM\EntityFactory;
+use Espo\ORM\EntityCollection;
+use Espo\ORM\Entity;
 use Espo\Core\Exceptions\Forbidden;
 use Symfony\Component\Workflow\Exception\LogicException;
 

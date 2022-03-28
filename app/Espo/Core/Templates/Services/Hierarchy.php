@@ -37,6 +37,7 @@ declare(strict_types=1);
 
 namespace Espo\Core\Templates\Services;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Utils\Util;
@@ -46,6 +47,43 @@ use Espo\Services\Record;
 
 class Hierarchy extends Record
 {
+    public function inheritField(string $field, string $id): bool
+    {
+        $entity = $this->getRepository()->get($id);
+
+        if (empty($entity)) {
+            throw new NotFound();
+        }
+
+        if (!$this->getAcl()->check($entity, 'edit')) {
+            throw new Forbidden();
+        }
+
+        $parents = $entity->get('parents');
+        if (empty($parents) || empty($parents[0])) {
+            throw new BadRequest('No parents found.');
+        }
+
+        $input = new \stdClass();
+        $input->$field = $parents[0]->get($field);
+
+        $fieldType = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type'], 'varchar');
+
+        if ($fieldType === 'currency') {
+            $input->{$field . 'Currency'} = $parents[0]->get($field . 'Currency');
+        }
+
+        if ($fieldType === 'unit') {
+            $input->{$field . 'Unit'} = $parents[0]->get($field . 'Unit');
+        }
+
+        echo '<pre>';
+        print_r($fieldType);
+        die();
+
+        return true;
+    }
+
     public function getRoute(string $id): array
     {
         return $this->getRepository()->getRoute($id);

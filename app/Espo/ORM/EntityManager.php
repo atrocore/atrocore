@@ -121,7 +121,7 @@ class EntityManager
         return $className;
     }
 
-    public function getMapper($name)
+    public function getMapper($name = 'RDB')
     {
         if (substr($name, 0, 1) == '\\') {
             $className = $name;

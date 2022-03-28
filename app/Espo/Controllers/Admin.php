@@ -56,17 +56,7 @@ class Admin extends \Espo\Core\Controllers\Base
 
     public function postActionRebuildDb(): bool
     {
-        try {
-            $queries = $this->getContainer()->get('schema')->getDiffQueries();
-        } catch (\Throwable $e) {
-            $queries = [];
-        }
-
-        foreach ($queries as $query) {
-            $this->getContainer()->get('pdo')->exec($query);
-        }
-
-        return true;
+        return $this->getContainer()->get('dataManager')->rebuildDatabase();
     }
 
     public function actionJobs()

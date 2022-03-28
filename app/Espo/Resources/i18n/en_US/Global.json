@@ -89,6 +89,8 @@
     "Core": "AtroCore is a software ecosystem, designed for rapid development of web-based responsive business applications."
   },
   "labels": {
+    "setAsInherited": "Set as inherited",
+    "inherited": "Inherited",
     "resetAllToDefault": "Reset all to Default",
     "pleaseReloadPage": "Please <a href=\"javascript:\" onClick=\"window.location.reload();\">refresh</a> the page to update the metadata.",
     "youHaveNewNotification": "You have new notification!",

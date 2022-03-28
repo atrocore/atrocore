@@ -142,7 +142,18 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         e.preventDefault();
                     }
                 }
-            }
+            },
+            'click a[data-action="setAsInherited"]': function (e) {
+                const $currentTarget = $(e.currentTarget);
+                const field = $currentTarget.data('name');
+
+                this.ajaxPostRequest(`${this.scope}/action/inheritField`, {
+                    field: field,
+                    id: this.model.get('id')
+                }).then(() => {
+                    this.model.fetch()
+                });
+            },
         },
 
         actionEdit: function () {

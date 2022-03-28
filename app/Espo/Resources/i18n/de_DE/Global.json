@@ -74,6 +74,8 @@
     "Core": "AtroCore ist ein Software-Ökosystem, das für die schnelle Entwicklung webbasierter responsiver Geschäftsanwendungen entwickelt wurde."
   },
   "labels": {
+    "setAsInherited": "Als vererbt setzen",
+    "inherited": "Vererbt",
     "resetAllToDefault": "Alles auf Standardwerte zurücksetzen",
     "pleaseReloadPage": "Bitte <a href=\"javascript:\" onClick=\"window.location.reload();\">laden</a> Sie die Seite neu, um die Metadaten zu aktualisieren.",
     "youHaveNewNotification": "Sie haben eine neue Benachrichtigung!",

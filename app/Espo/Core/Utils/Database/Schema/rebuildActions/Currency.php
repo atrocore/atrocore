@@ -35,9 +35,10 @@
 
 namespace Espo\Core\Utils\Database\Schema\rebuildActions;
 
+use Espo\ORM\DB\IMapper;
+
 class Currency extends \Espo\Core\Utils\Database\Schema\BaseRebuildActions
 {
-
     public function afterRebuild()
     {
         $defaultCurrency = $this->getConfig()->get('defaultCurrency');
@@ -51,20 +52,14 @@ class Currency extends \Espo\Core\Utils\Database\Schema\BaseRebuildActions
 
         $currencyRates[$defaultCurrency] = '1.00';
 
+        /** @var IMapper $mapper */
+        $mapper = $this->getEntityManager()->getMapper();
+
         $pdo = $this->getEntityManager()->getPDO();
 
-        $sql = "TRUNCATE `currency`";
-        $pdo->prepare($sql)->execute();
-
+        $pdo->exec("TRUNCATE `currency`");
         foreach ($currencyRates as $currencyName => $rate) {
-
-            $sql = "
-                INSERT INTO `currency`
-                (id, rate)
-                VALUES
-                (".$pdo->quote($currencyName) . ", " . $pdo->quote($rate) . ")
-            ";
-            $pdo->prepare($sql)->execute();
+            $pdo->exec("INSERT INTO `currency` (id, rate) VALUES ({$mapper->quote($currencyName)}, {$mapper->quote($rate)})");
         }
     }
 

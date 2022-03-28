@@ -259,11 +259,6 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }, this);
 
             this.on('after:render', function () {
-                if (this.isInheritedField()) {
-                    this.showInheritedFieldMarker();
-                } else {
-                    this.hideInheritedFieldMarker();
-                }
                 if (this.hasRequiredMarker()) {
                     this.showRequiredSign();
                 } else {
@@ -300,6 +295,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
             if (this.mode == 'detail') {
                 this.initInlineActions();
+                this.initInheritanceActions();
             }
 
             if (this.mode != 'search') {
@@ -337,6 +333,10 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }
         },
 
+        initInheritanceActions: function () {
+            this.listenTo(this, 'after:render', this.initInheritedFieldMarker, this);
+        },
+
         showRequiredSign: function () {
             var $label = this.getLabelElement();
             var $sign = $label.find('span.required-sign');
@@ -369,6 +369,56 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         getSearchTypeList: function () {
             return this.searchTypeList;
+        },
+
+        getUnlockLinkEl: function () {
+            return $(`.unlock-link[data-name="${this.name}"]`);
+        },
+
+        getLockLinkEl: function () {
+            return $(`.lock-link[data-name="${this.name}"]`);
+        },
+
+        isInheritableField: function () {
+            if (!this.model.has('inheritedFields') || this.getMetadata().get(`scopes.${this.model.urlRoot}.fieldValueInheritance`) !== true) {
+                return false;
+            }
+
+            const nonInheritedFields = [
+                'id',
+                'deleted',
+                'isRoot',
+                'createdAt',
+                'modifiedAt',
+                'sortOrder',
+                'createdBy',
+                'modifiedBy',
+                'ownerUser',
+                'assignedUser',
+            ];
+
+            (this.getMetadata().get(`scopes.${this.model.urlRoot}.unInheritedFields`) || []).forEach(field => {
+                nonInheritedFields.push(field);
+            });
+
+            return !nonInheritedFields.includes(this.name);
+        },
+
+        initInheritedFieldMarker: function () {
+            if (!this.isInheritableField() || this.mode !== 'detail') {
+                this.getUnlockLinkEl().remove();
+                this.getLockLinkEl().remove();
+                return;
+            }
+
+            if (this.getUnlockLinkEl().length === 0 && this.isInheritedField()) {
+                this.getCellElement().prepend(`<a href="javascript:" data-name="${this.name}" class="action pull-right text-muted unlock-link" title="${this.translate('inherited')}" style="margin-left: 3px"><span class="fas fa-link fa-sm"></span></a>`);
+                return;
+            }
+
+            if (this.getLockLinkEl().length === 0 && !this.isInheritedField()) {
+                this.getCellElement().prepend(`<a href="javascript:" data-name="${this.name}" data-action="setAsInherited" style="margin-left: 3px" class="action pull-right lock-link" title="${this.translate('setAsInherited')}"><span class="fas fa-unlink fa-sm"></span></a>`);
+            }
         },
 
         initInlineEdit: function () {
@@ -455,15 +505,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }
         },
 
-        setup: function () {
-            this.listenTo(this.model, 'after:save', function () {
-                if (this.isInheritedField()) {
-                    this.showInheritedFieldMarker();
-                } else {
-                    this.hideInheritedFieldMarker();
-                }
-            }, this);
-        },
+        setup: function () {},
 
         setupSearch: function () {},
 
@@ -651,30 +693,13 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         isInheritedField: function () {
-            if (!['detail', 'edit'].includes(this.mode) || !this.model || !this.model.urlRoot) {
-                return false;
-            }
-
-            if (!this.model.has('inheritedFields') || this.getMetadata().get(`scopes.${this.model.urlRoot}.fieldValueInheritance`) !== true) {
-                return false;
-            }
-
-            const unInheritedFields = this.getMetadata().get(`scopes.${this.model.urlRoot}.unInheritedFields`) || [];
-            if (unInheritedFields.includes(this.name)) {
+            if (!['detail', 'edit'].includes(this.mode) || !this.model || !this.model.urlRoot || !this.isInheritableField()) {
                 return false;
             }
 
             const inheritedFields = this.model.get('inheritedFields');
 
             return inheritedFields && Array.isArray(inheritedFields) && inheritedFields.includes(this.name);
-        },
-
-        showInheritedFieldMarker: function () {
-            this.getLabelElement().find('.label-text').addClass('inherited-field');
-        },
-
-        hideInheritedFieldMarker: function () {
-            this.getLabelElement().find('.label-text').removeClass('inherited-field');
         },
 
         fetchToModel: function () {
