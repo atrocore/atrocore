@@ -84,6 +84,9 @@ class Hierarchy extends Record
                 $input->$field = $parent->get($field);
                 $input->{$field . 'Unit'} = $parent->get($field . 'Unit');
                 break;
+            default:
+                $input->$field = $parent->get($field);
+                break;
         }
 
         try {
