@@ -161,6 +161,8 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
                     if (
                         this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
                         && this.getMetadata().get(`scopes.${this.scope}.fieldValueInheritance`) === true
+                        && this.options.relate
+                        && this.options.relate.model
                         && this.options.relate.model.attributes
                     ) {
                         $.each(this.options.relate.model.attributes, (field, value) => {
