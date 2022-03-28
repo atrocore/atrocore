@@ -149,12 +149,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     field: field,
                     id: this.model.get('id')
                 }).then(response => {
-                    this.afterSave();
-                    this.trigger('after:save');
-                    this.model.trigger('after:save');
-                    this.notify('Saved', 'success');
-
-                    this.model.fetch();
+                    this.model.fetch().then(() => {
+                        this.afterSave();
+                        this.trigger('after:save');
+                        this.model.trigger('after:save');
+                        this.notify('Saved', 'success');
+                    });
                 });
             },
         },
@@ -295,8 +295,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
 
             if (this.isRendered()) {
-                this.$detailButtonContainer.find('li > .action[data-action="'+name+'"]').parent().addClass('hidden');
-                this.$detailButtonContainer.find('button.action[data-action="'+name+'"]').addClass('hidden');
+                this.$detailButtonContainer.find('li > .action[data-action="' + name + '"]').parent().addClass('hidden');
+                this.$detailButtonContainer.find('button.action[data-action="' + name + '"]').addClass('hidden');
                 if (this.isDropdownItemListEmpty()) {
                     this.$dropdownItemListButton.addClass('hidden');
                 }
@@ -318,8 +318,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
 
             if (this.isRendered()) {
-                this.$detailButtonContainer.find('li > .action[data-action="'+name+'"]').parent().removeClass('hidden');
-                this.$detailButtonContainer.find('button.action[data-action="'+name+'"]').removeClass('hidden');
+                this.$detailButtonContainer.find('li > .action[data-action="' + name + '"]').parent().removeClass('hidden');
+                this.$detailButtonContainer.find('button.action[data-action="' + name + '"]').removeClass('hidden');
                 if (!this.isDropdownItemListEmpty()) {
                     this.$dropdownItemListButton.removeClass('hidden');
                 }
@@ -570,11 +570,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         resetSidebar() {
-          let side = $('#main > .record .row > .side');
+            let side = $('#main > .record .row > .side');
 
-          if (side) {
-              side.removeClass('scrolled fixed-bottom fixed-top');
-          }
+            if (side) {
+                side.removeClass('scrolled fixed-bottom fixed-top');
+            }
         },
 
         fetch: function () {
@@ -725,7 +725,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         // TODO remove
-        handleDataBeforeRender: function (data) {},
+        handleDataBeforeRender: function (data) {
+        },
 
         data: function () {
             var navigateButtonsEnabled = !this.navigateButtonsDisabled && !!this.model.collection;
@@ -1277,7 +1278,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             }
             if (this.isRendered()) {
-            	this.$el.find('.detail-button-container .action[data-action="'+name+'"]').remove();
+                this.$el.find('.detail-button-container .action[data-action="' + name + '"]').remove();
             }
         },
 
@@ -1514,7 +1515,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 });
                 return true;
             }
-        },/**
+        }, /**
          * Called after save or cancel.
          * By default redirects page. Can be orverriden in options.
          * @param {String} after Name of action (save, cancel, etc.) after which #exit is invoked.
