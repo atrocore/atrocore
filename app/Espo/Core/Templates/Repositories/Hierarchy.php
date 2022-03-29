@@ -54,17 +54,72 @@ class Hierarchy extends RDB
         $this->hierarchyTableName = $entityManager->getQuery()->toDb($this->entityType) . '_hierarchy';
     }
 
+    public function getUnInheritedFields(): array
+    {
+        $system = [
+            'id',
+            'deleted',
+            'modifiedAt',
+            'sortOrder',
+            'createdAt',
+            'createdBy',
+            'modifiedBy',
+            'ownerUser',
+            'assignedUser',
+            'parents',
+            'children'
+        ];
+
+        $unInheritedFields = array_merge($system, $this->getMetadata()->get(['scopes', $this->entityType, 'unInheritedFields'], []));
+
+        foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'links'], []) as $link => $linkDefs) {
+            if (!empty($linkDefs['type']) && $linkDefs['type'] === 'hasMany') {
+                if (empty($linkDefs['relationName'])) {
+                    $unInheritedFields[] = $link;
+                }
+                if (in_array($link, $this->getMetadata()->get(['scopes', $this->entityType, 'unInheritedRelations'], []))) {
+                    $unInheritedFields[] = $link;
+                }
+            }
+        }
+
+        return $unInheritedFields;
+    }
+
     public function fetchById(string $id): array
     {
-        $id = $this->getPDO()->quote($id);
         $tableName = $this->getEntityManager()->getQuery()->toDb($this->entityType);
-
         $result = $this
             ->getPDO()
-            ->query("SELECT * FROM `$tableName` WHERE deleted=0 AND id=$id")
+            ->query("SELECT * FROM `$tableName` WHERE deleted=0 AND id={$this->getPDO()->quote($id)}")
             ->fetch(\PDO::FETCH_ASSOC);
 
-        return empty($result) ? [] : $result;
+        if (empty($result)) {
+            return [];
+        }
+
+        $this->pushLinkMultipleFields($result);
+
+        return $result;
+    }
+
+    public function pushLinkMultipleFields(array &$result): void
+    {
+        foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields']) as $field => $fieldData) {
+            if (
+                array_key_exists('type', $fieldData)
+                && $fieldData['type'] === 'linkMultiple'
+                && array_key_exists('noLoad', $fieldData)
+                && $fieldData['noLoad'] === false
+                && !in_array($field, $this->getUnInheritedFields())
+            ) {
+                if (empty($entity)) {
+                    $entity = $this->get($result['id']);
+                }
+                $result["{$field}_ids"] = array_column($entity->get($field)->toArray(), 'id');
+                sort($result["{$field}_ids"]);
+            }
+        }
     }
 
     public function updatePositionInTree(string $entityId, string $position, string $target, string $parentId): void
@@ -152,17 +207,20 @@ class Hierarchy extends RDB
     {
         $tableName = $this->getEntityManager()->getQuery()->toDb($this->entityType);
 
-        $additionalSelect = $withChildrenCount ? ", (SELECT COUNT(id) FROM `$this->hierarchyTableName` WHERE parent_id=e.id) as childrenCount" : "";
+        $select = 'e.*';
+        if ($withChildrenCount) {
+            $select .= ", (SELECT COUNT(r1.id) FROM `$this->hierarchyTableName` r1 JOIN `$tableName` e1 ON e1.id=r1.entity_id WHERE r1.parent_id=e.id AND e1.deleted=0) as childrenCount";
+        }
 
         if (empty($parentId)) {
-            $query = "SELECT e.*{$additionalSelect} 
+            $query = "SELECT {$select} 
                       FROM `{$tableName}` e
                       WHERE e.id NOT IN (SELECT entity_id FROM `$this->hierarchyTableName` WHERE deleted=0)
                       AND e.deleted=0
                       ORDER BY e.sort_order";
         } else {
             $parentId = $this->getPDO()->quote($parentId);
-            $query = "SELECT e.*{$additionalSelect}
+            $query = "SELECT {$select}
                   FROM `$this->hierarchyTableName` h
                   LEFT JOIN `{$tableName}` e ON e.id=h.entity_id
                   WHERE h.deleted=0

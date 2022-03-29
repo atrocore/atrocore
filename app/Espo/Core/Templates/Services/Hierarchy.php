@@ -84,6 +84,9 @@ class Hierarchy extends Record
                 $input->$field = $parent->get($field);
                 $input->{$field . 'Unit'} = $parent->get($field . 'Unit');
                 break;
+            case 'linkMultiple':
+                $input->{$field . 'Ids'} = array_column($parent->get($field)->toArray(), 'id');
+                break;
             default:
                 $input->$field = $parent->get($field);
                 break;
@@ -319,6 +322,7 @@ class Hierarchy extends Record
     {
         $children = $this->getRepository()->getChildrenArray($parent['id']);
         foreach ($children as $child) {
+            $this->getRepository()->pushLinkMultipleFields($child);
             $inputData = $this->createInputDataForPseudoTransactionJob($parent, $child, clone $data);
             if (!empty((array)$inputData)) {
                 $inputData->_fieldValueInheritance = true;
@@ -372,7 +376,7 @@ class Hierarchy extends Record
 
     protected function createInputDataForPseudoTransactionJob(array $parent, array $child, \stdClass $data): \stdClass
     {
-        $unInheritedFields = $this->getMetadata()->get(['scopes', $this->entityType, 'unInheritedFields'], []);
+        $unInheritedFields = $this->getRepository()->getUnInheritedFields();
         $inputData = new \stdClass();
         foreach ($data as $field => $value) {
             if (in_array($field, $unInheritedFields)) {
@@ -415,14 +419,14 @@ class Hierarchy extends Record
     {
         $inheritedFields = [];
         if (!empty($parents = $entity->get('parents')) && count($parents) > 0) {
-            $unInheritedFields = $this->getNonInheritedFields();
+            $unInheritedFields = $this->getRepository()->getUnInheritedFields();
             foreach ($parents as $parent) {
                 foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []) as $field => $fieldData) {
                     if (in_array($field, $inheritedFields) || in_array($field, $unInheritedFields)) {
                         continue 1;
                     }
 
-                    if ($fieldData['type'] === 'linkMultiple' || !empty($fieldData['notStorable'])) {
+                    if (!empty($fieldData['notStorable'])) {
                         continue 1;
                     }
 
@@ -450,6 +454,17 @@ class Hierarchy extends Record
                                 $inheritedFields[] = $field;
                             }
                             break;
+                        case 'linkMultiple':
+                            if (!in_array($field, $this->getRepository()->getUnInheritedFields())) {
+                                $parentIds = array_column($parent->get($field)->toArray(), 'id');
+                                sort($parentIds);
+                                $entityIds = array_column($entity->get($field)->toArray(), 'id');
+                                sort($entityIds);
+                                if ($this->areValuesEqual($this->getRepository()->get(), $field . 'Ids', $parentIds, $entityIds)) {
+                                    $inheritedFields[] = $field;
+                                }
+                            }
+                            break;
                         default:
                             if ($this->areValuesEqual($this->getRepository()->get(), $field, $parent->get($field), $entity->get($field))) {
                                 $inheritedFields[] = $field;
@@ -463,28 +478,11 @@ class Hierarchy extends Record
         return $inheritedFields;
     }
 
-    protected function getNonInheritedFields(): array
-    {
-        $system = [
-            'id',
-            'deleted',
-            'modifiedAt',
-            'sortOrder',
-            'createdAt',
-            'createdBy',
-            'modifiedBy',
-            'ownerUser',
-            'assignedUser'
-        ];
-
-        return array_merge($system, $this->getMetadata()->get(['scopes', $this->entityType, 'unInheritedFields'], []));
-    }
-
     protected function getNonInheritedFieldsKeys(): array
     {
         $result = [];
 
-        $unInheritedFields = $this->getNonInheritedFields();
+        $unInheritedFields = $this->getRepository()->getUnInheritedFields();
 
         foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []) as $field => $fieldData) {
             if (!in_array($field, $unInheritedFields)) {
