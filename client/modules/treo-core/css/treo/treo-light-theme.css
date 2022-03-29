@@ -20661,9 +20661,14 @@ select {
   display: none !important;
 }
 
+.unlock-link {
+  color: #ccc;
+}
+
 .lock-link,
 .unlock-link {
   padding-left: 5px;
+  margin-left: 3px;
 }
 
 .attribute-cell .inline-remove-link {

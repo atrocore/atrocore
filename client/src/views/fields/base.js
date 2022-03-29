@@ -413,12 +413,12 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }
 
             if (this.getUnlockLinkEl().length === 0 && this.isInheritedField()) {
-                this.getCellElement().prepend(`<a href="javascript:" data-name="${this.name}" class="action pull-right text-muted unlock-link" title="${this.translate('inherited')}" style="margin-left: 3px"><span class="fas fa-link fa-sm"></span></a>`);
+                this.getCellElement().prepend(`<a href="javascript:" data-name="${this.name}" class="action pull-right unlock-link" title="${this.translate('inherited')}"><span class="fas fa-link fa-sm"></span></a>`);
                 return;
             }
 
             if (this.getLockLinkEl().length === 0 && !this.isInheritedField()) {
-                this.getCellElement().prepend(`<a href="javascript:" data-name="${this.name}" data-action="setAsInherited" style="margin-left: 3px" class="action pull-right lock-link" title="${this.translate('setAsInherited')}"><span class="fas fa-unlink fa-sm"></span></a>`);
+                this.getCellElement().prepend(`<a href="javascript:" data-name="${this.name}" data-action="setAsInherited" class="action pull-right lock-link" title="${this.translate('setAsInherited')}"><span class="fas fa-unlink fa-sm"></span></a>`);
             }
         },
 
