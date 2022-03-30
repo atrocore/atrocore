@@ -518,7 +518,7 @@ class RDB extends \Espo\ORM\Repository
                 $result = $this->getMapper()->unrelate($entity, $relationName, $foreign, true);
             }
             if (is_string($foreign)) {
-                $result = $this->getMapper()->removeRelation($entity, $relationName, $foreign, true);
+                $result = $this->getMapper()->removeRelation($entity, $relationName, $foreign, false, null, true);
             }
             if ($foreign === true) {
                 $result = $this->getMapper()->removeAllRelations($entity, $relationName, true);
