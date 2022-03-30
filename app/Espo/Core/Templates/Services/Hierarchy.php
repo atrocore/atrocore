@@ -153,6 +153,46 @@ class Hierarchy extends Record
         return true;
     }
 
+    public function unlinkAllHierarchically(string $id, string $link): bool
+    {
+        $event = $this->dispatchEvent('beforeUnlinkAllHierarchically', new Event(['id' => $id, 'link' => $link]));
+
+        $id = $event->getArgument('id');
+        $link = $event->getArgument('link');
+
+        if (empty($id) || empty($link)) {
+            throw new BadRequest("'id' and 'link' is required parameters.");
+        }
+
+        if (empty($entity = $this->getRepository()->get($id))) {
+            throw new NotFound();
+        }
+
+        if (!$this->getAcl()->check($entity, 'edit')) {
+            throw new Forbidden();
+        }
+
+        if (empty($foreignEntityType = $entity->getRelationParam($link, 'entity'))) {
+            throw new Error();
+        }
+
+        if (!$this->getAcl()->check($foreignEntityType, in_array($link, $this->noEditAccessRequiredLinkList) ? 'read' : 'edit')) {
+            throw new Forbidden();
+        }
+
+        $foreignIds = $entity->getLinkMultipleIdList($link);
+
+        foreach ($foreignIds as $k => $foreignId) {
+            if ($k < $this->maxMassUnlinkCount) {
+                $this->unlinkEntity($id, $link, $foreignId);
+            } else {
+                $this->getPseudoTransactionManager()->pushUnLinkEntityJob($this->entityType, $id, $link, $foreignId);
+            }
+        }
+
+        return $this->dispatchEvent('afterUnlinkAllHierarchically', new Event(['entity' => $entity, 'link' => $link, 'result' => true]))->getArgument('result');
+    }
+
     public function getRoute(string $id): array
     {
         return $this->getRepository()->getRoute($id);
@@ -271,7 +311,7 @@ class Hierarchy extends Record
 
     public function unlinkEntity($id, $link, $foreignId)
     {
-        if (!empty($this->isUnlinkAllAction)) {
+        if (!empty($this->originUnlinkAction)) {
             return parent::unlinkEntity($id, $link, $foreignId);
         }
 

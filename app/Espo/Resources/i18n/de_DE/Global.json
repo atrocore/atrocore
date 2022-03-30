@@ -77,6 +77,7 @@
     "setAsInherited": "Als vererbt setzen",
     "inheritAll": "Alle vererben",
     "unlinkAll": "Alle Verknüpfungen aufheben",
+    "unlinkAllHierarchically": "Verknüpfung hierarchisch entfernen",
     "inherited": "Vererbt",
     "resetAllToDefault": "Alles auf Standardwerte zurücksetzen",
     "pleaseReloadPage": "Bitte <a href=\"javascript:\" onClick=\"window.location.reload();\">laden</a> Sie die Seite neu, um die Metadaten zu aktualisieren.",

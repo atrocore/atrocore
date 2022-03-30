@@ -125,20 +125,25 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 });
             }
 
+            let inheritedRelation = false;
             if (this.getMetadata().get(`scopes.${this.model.urlRoot}.type`) === 'Hierarchy') {
                 let unInheritedRelations = ['parents', 'children'];
                 (this.getMetadata().get(`scopes.${this.model.urlRoot}.unInheritedRelations`) || []).forEach(field => {
                     unInheritedRelations.push(field);
                 });
-                if (!unInheritedRelations.includes(this.link) && this.model.get('isRoot') !== true) {
-                    this.actionList.push({
-                        label: 'inheritAll',
-                        action: 'inheritAll',
-                        data: data,
-                        acl: 'edit',
-                        aclScope: this.model.name
-                    });
+                if (!unInheritedRelations.includes(this.link)) {
+                    inheritedRelation = true;
                 }
+            }
+
+            if (inheritedRelation && this.model.get('isRoot') !== true) {
+                this.actionList.push({
+                    label: 'inheritAll',
+                    action: 'inheritAll',
+                    data: data,
+                    acl: 'edit',
+                    aclScope: this.model.name
+                });
             }
 
             this.actionList.push({
@@ -148,6 +153,16 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 acl: 'edit',
                 aclScope: this.model.name
             });
+
+            if (inheritedRelation) {
+                this.actionList.push({
+                    label: 'unlinkAllHierarchically',
+                    action: 'unlinkAllRelatedHierarchically',
+                    data: data,
+                    acl: 'edit',
+                    aclScope: this.model.name
+                });
+            }
 
             this.setupActions();
 
@@ -428,6 +443,25 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 this.notify('Please wait...');
                 $.ajax({
                     url: this.model.name + '/action/unlinkAll',
+                    type: 'POST',
+                    data: JSON.stringify({
+                        link: data.link,
+                        id: this.model.id
+                    }),
+                }).done(function () {
+                    this.notify(false);
+                    this.notify('Unlinked', 'success');
+                    this.collection.fetch();
+                    this.model.trigger('after:unrelate');
+                }.bind(this));
+            }, this);
+        },
+
+        actionUnlinkAllRelatedHierarchically: function (data) {
+            this.confirm(this.translate('unlinkAllHierarchicallyConfirmation', 'messages'), function () {
+                this.notify('Please wait...');
+                $.ajax({
+                    url: this.model.name + '/action/unlinkAllHierarchically',
                     type: 'POST',
                     data: JSON.stringify({
                         link: data.link,

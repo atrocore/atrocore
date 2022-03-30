@@ -91,6 +91,7 @@
   "labels": {
     "inheritAll": "Inherit All",
     "unlinkAll": "Unlink All",
+    "unlinkAllHierarchically": "Unlink All Hierarchically",
     "setAsInherited": "Set as inherited",
     "inherited": "Inherited",
     "resetAllToDefault": "Reset all to Default",

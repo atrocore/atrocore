@@ -94,4 +94,17 @@ class Hierarchy extends Record
 
         return $this->getRecordService()->inheritAll((string)$data->id, (string)$data->link);
     }
+
+    public function actionUnlinkAllHierarchically($params, $data, $request)
+    {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+
+        if (!property_exists($data, 'id') || !property_exists($data, 'link')) {
+            throw new BadRequest();
+        }
+
+        return $this->getRecordService()->unlinkAllHierarchically((string)$data->id, (string)$data->link);
+    }
 }

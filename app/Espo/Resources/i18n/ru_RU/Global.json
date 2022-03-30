@@ -91,6 +91,7 @@
   "labels": {
     "inheritAll": "Унаследовать все",
     "unlinkAll": "Убрать все",
+    "unlinkAllHierarchically": "Убрать все иерархично",
     "setAsInherited": "Унаследовать значение",
     "inherited": "Наследуется",
     "resetAllToDefault": "Восстановить все по умолчанию",
