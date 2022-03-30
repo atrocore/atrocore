@@ -38,7 +38,7 @@ Espo.define('views/record/row-actions/relationship-unlink-only', 'views/record/r
 
         getActionList: function () {
             if (this.options.acl.edit) {
-                return [
+                let list = [
                     {
                         action: 'unlinkRelated',
                         label: 'Unlink',
@@ -47,6 +47,18 @@ Espo.define('views/record/row-actions/relationship-unlink-only', 'views/record/r
                         }
                     }
                 ];
+
+                if (this.isInheritingRelation()) {
+                    list.push({
+                        action: 'unlinkRelatedHierarchically',
+                        label: 'unlinkHierarchically',
+                        data: {
+                            id: this.model.id
+                        }
+                    });
+                }
+
+                return list;
             }
         }
     });

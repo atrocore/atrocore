@@ -63,6 +63,16 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
                         }
                     }
                 ]);
+
+                if (this.isInheritingRelation()) {
+                    list.push({
+                        action: 'unlinkRelatedHierarchically',
+                        label: 'unlinkHierarchically',
+                        data: {
+                            id: this.model.id
+                        }
+                    });
+                }
             }
 
             if (this.options.acl.delete) {

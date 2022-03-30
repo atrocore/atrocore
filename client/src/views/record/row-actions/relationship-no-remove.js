@@ -63,6 +63,15 @@ Espo.define('views/record/row-actions/relationship-no-remove', 'views/record/row
                         }
                     }
                 ]);
+                if (this.isInheritingRelation()) {
+                    list.push({
+                        action: 'unlinkRelatedHierarchically',
+                        label: 'unlinkHierarchically',
+                        data: {
+                            id: this.model.id
+                        }
+                    });
+                }
             }
             return list;
         }

@@ -125,18 +125,8 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 });
             }
 
-            let inheritedRelation = false;
-            if (this.getMetadata().get(`scopes.${this.model.urlRoot}.type`) === 'Hierarchy') {
-                let unInheritedRelations = ['parents', 'children'];
-                (this.getMetadata().get(`scopes.${this.model.urlRoot}.unInheritedRelations`) || []).forEach(field => {
-                    unInheritedRelations.push(field);
-                });
-                if (!unInheritedRelations.includes(this.link)) {
-                    inheritedRelation = true;
-                }
-            }
-
-            if (inheritedRelation && this.model.get('isRoot') !== true) {
+            let isInheritingRelation = this.isInheritingRelation();
+            if (isInheritingRelation && this.model.get('isRoot') !== true) {
                 this.actionList.push({
                     label: 'inheritAll',
                     action: 'inheritAll',
@@ -154,7 +144,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 aclScope: this.model.name
             });
 
-            if (inheritedRelation) {
+            if (isInheritingRelation) {
                 this.actionList.push({
                     label: 'unlinkAllHierarchically',
                     action: 'unlinkAllRelatedHierarchically',
@@ -283,6 +273,20 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             }
         },
 
+        isInheritingRelation: function () {
+            if (this.getMetadata().get(`scopes.${this.model.urlRoot}.type`) === 'Hierarchy') {
+                let unInheritedRelations = ['parents', 'children'];
+                (this.getMetadata().get(`scopes.${this.model.urlRoot}.unInheritedRelations`) || []).forEach(field => {
+                    unInheritedRelations.push(field);
+                });
+                if (!unInheritedRelations.includes(this.link)) {
+                    return true;
+                }
+            }
+
+            return false;
+        },
+
         getStoredFilter: function () {
             var key = 'panelFilter' + this.scope + '-' + this.panelName;
             return this.getStorage().get('state', key) || null;
@@ -386,6 +390,35 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     type: 'DELETE',
                     data: JSON.stringify({
                         id: id
+                    }),
+                    contentType: 'application/json',
+                    success: function () {
+                        this.notify('Unlinked', 'success');
+                        this.collection.fetch();
+                        this.model.trigger('after:unrelate');
+                    }.bind(this),
+                    error: function () {
+                        this.notify('Error occurred', 'error');
+                    }.bind(this),
+                });
+            }, this);
+        },
+
+        actionUnlinkRelatedHierarchically: function (data) {
+            var id = data.id;
+
+            this.confirm({
+                message: this.translate('unlinkRecordConfirmationHierarchically', 'messages'),
+                confirmText: this.translate('Unlink')
+            }, function () {
+                var model = this.collection.get(id);
+                this.notify('Unlinking...');
+                $.ajax({
+                    url: this.collection.url,
+                    type: 'DELETE',
+                    data: JSON.stringify({
+                        id: id,
+                        hierarchically: true
                     }),
                     contentType: 'application/json',
                     success: function () {
