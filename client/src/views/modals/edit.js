@@ -119,29 +119,20 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
 
             this.waitForView('edit');
 
-            const nonInheritedFields = [
-                'id',
-                'deleted',
-                'isRoot',
-                'createdAt',
-                'modifiedAt',
-                'sortOrder',
-                'createdById',
-                'createdByName',
-                'modifiedById',
-                'modifiedByName',
-                'ownerUserId',
-                'ownerUserName',
-                'assignedUserId',
-                'assignedUserName'
-            ];
-
+            let nonInheritedFields = this.getMetadata().get(`app.nonInheritedFields`);
             (this.getMetadata().get(`scopes.${this.scope}.unInheritedFields`) || []).forEach(field => {
+                nonInheritedFields.push(field);
+            });
+
+            let preparedNonInheritedFields = [];
+            nonInheritedFields.forEach(field => {
                 if (this.getMetadata().get(`entityDefs.${this.scope}.fields.${field}.type`) === 'link') {
-                    nonInheritedFields.push(field + 'Id');
-                    nonInheritedFields.push(field + 'Name');
+                    preparedNonInheritedFields.push(field + 'Id');
+                    preparedNonInheritedFields.push(field + 'Name');
+                } else if (this.getMetadata().get(`entityDefs.${this.scope}.fields.${field}.type`) === 'linkMultiple') {
+                    preparedNonInheritedFields.push(field + 'Ids');
                 } else {
-                    nonInheritedFields.push(field);
+                    preparedNonInheritedFields.push(field);
                 }
             });
 
@@ -166,7 +157,7 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
                         && this.options.relate.model.attributes
                     ) {
                         $.each(this.options.relate.model.attributes, (field, value) => {
-                            if (!nonInheritedFields.includes(field)) {
+                            if (!preparedNonInheritedFields.includes(field)) {
                                 model.set(field, value);
                             }
                         });

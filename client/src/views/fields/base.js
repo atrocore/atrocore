@@ -384,19 +384,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 return false;
             }
 
-            const nonInheritedFields = [
-                'id',
-                'deleted',
-                'isRoot',
-                'createdAt',
-                'modifiedAt',
-                'sortOrder',
-                'createdBy',
-                'modifiedBy',
-                'ownerUser',
-                'assignedUser',
-            ];
-
+            const nonInheritedFields = this.getMetadata().get(`app.nonInheritedFields`);
             (this.getMetadata().get(`scopes.${this.model.urlRoot}.unInheritedFields`) || []).forEach(field => {
                 nonInheritedFields.push(field);
             });

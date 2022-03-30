@@ -1,0 +1,17 @@
+[
+  "id",
+  "deleted",
+  "isRoot",
+  "createdAt",
+  "modifiedAt",
+  "sortOrder",
+  "createdBy",
+  "modifiedBy",
+  "ownerUser",
+  "assignedUser",
+  "teams",
+  "assignedAccounts",
+  "parents",
+  "children",
+  "followers"
+]

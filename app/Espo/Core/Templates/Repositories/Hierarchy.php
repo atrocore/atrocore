@@ -56,19 +56,7 @@ class Hierarchy extends RDB
 
     public function getUnInheritedFields(): array
     {
-        $system = [
-            'id',
-            'deleted',
-            'modifiedAt',
-            'sortOrder',
-            'createdAt',
-            'createdBy',
-            'modifiedBy',
-            'ownerUser',
-            'assignedUser',
-            'parents',
-            'children'
-        ];
+        $system = $this->getMetadata()->get('app.nonInheritedFields');
 
         $unInheritedFields = array_merge($system, $this->getMetadata()->get(['scopes', $this->entityType, 'unInheritedFields'], []));
 
