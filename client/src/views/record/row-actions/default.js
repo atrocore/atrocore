@@ -62,7 +62,12 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
         },
 
         isInheritingRelation: function () {
-            if (this.getParentView() && this.getParentView().getParentView() && this.getParentView().getParentView().getParentView()) {
+            if (
+                this.getParentView()
+                && this.getParentView().getParentView()
+                && this.getParentView().getParentView().getParentView()
+                && typeof this.getParentView().getParentView().getParentView().isInheritingRelation() === 'function'
+            ) {
                 return this.getParentView().getParentView().getParentView().isInheritingRelation();
             }
 

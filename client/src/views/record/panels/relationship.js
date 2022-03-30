@@ -274,12 +274,14 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
         },
 
         isInheritingRelation: function () {
-            if (this.getMetadata().get(`scopes.${this.model.urlRoot}.type`) === 'Hierarchy') {
+            const scope = this.model.urlRoot;
+            const link = this.link;
+            if (this.getMetadata().get(`scopes.${scope}.type`) === 'Hierarchy' && this.getMetadata().get(`scopes.${scope}.relationInheritance`) === true) {
                 let unInheritedRelations = ['parents', 'children'];
-                (this.getMetadata().get(`scopes.${this.model.urlRoot}.unInheritedRelations`) || []).forEach(field => {
+                (this.getMetadata().get(`scopes.${scope}.unInheritedRelations`) || []).forEach(field => {
                     unInheritedRelations.push(field);
                 });
-                if (!unInheritedRelations.includes(this.link)) {
+                if (!unInheritedRelations.includes(link) && this.getMetadata().get(['entityDefs', scope, 'links', link, 'relationName'])) {
                     return true;
                 }
             }
