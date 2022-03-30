@@ -180,7 +180,10 @@ class Attachment extends Record
 
         $attachment->md5 = md5_file($attachment->fileName);
         $attachment->size = filesize($attachment->fileName);
-        $attachment->type = mime_content_type($attachment->fileName);
+
+        if (!property_exists($attachment, 'type')) {
+            $attachment->type = mime_content_type($attachment->fileName);
+        }
 
         $duplicateParam = $this->getConfig()->get('attachmentDuplicates', 'notAllowByContent');
 
