@@ -66,7 +66,7 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                 this.getParentView()
                 && this.getParentView().getParentView()
                 && this.getParentView().getParentView().getParentView()
-                && typeof this.getParentView().getParentView().getParentView().isInheritingRelation() === 'function'
+                && typeof this.getParentView().getParentView().getParentView().isInheritingRelation === 'function'
             ) {
                 return this.getParentView().getParentView().getParentView().isInheritingRelation();
             }

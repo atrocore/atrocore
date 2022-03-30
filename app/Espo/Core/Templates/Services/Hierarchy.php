@@ -217,7 +217,6 @@ class Hierarchy extends Record
         $entity = parent::getEntity($id);
 
         if (!empty($entity)) {
-            $entity->set('isRoot', $this->getRepository()->isRoot($entity->get('id')));
             $entity->set('inheritedFields', $this->getInheritedFields($entity));
         }
 
@@ -357,6 +356,8 @@ class Hierarchy extends Record
     {
         parent::prepareEntityForOutput($entity);
 
+        $entity->set('isRoot', $this->getRepository()->isRoot($entity->get('id')));
+
         if ($entity->has('hierarchySortOrder')) {
             $entity->set('sortOrder', $entity->get('hierarchySortOrder'));
         }
@@ -410,7 +411,6 @@ class Hierarchy extends Record
 
     protected function afterUpdateEntity(Entity $entity, $data)
     {
-        $entity->set('isRoot', $this->getRepository()->isRoot($entity->get('id')));
         $entity->set('inheritedFields', $this->getInheritedFields($entity));
     }
 
