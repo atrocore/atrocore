@@ -1792,6 +1792,8 @@ class Record extends \Espo\Core\Services\Base
 
         $foreignIds = $entity->getLinkMultipleIdList($link);
 
+        $this->isUnlinkAllAction = true;
+
         foreach ($foreignIds as $k => $foreignId) {
             if ($k < $this->maxMassUnlinkCount) {
                 $this->unlinkEntity($id, $link, $foreignId);

@@ -62,10 +62,6 @@ class Hierarchy extends Record
             throw new BadRequest("'id' and 'link' is required parameters.");
         }
 
-        echo '<pre>';
-        print_r('123');
-        die();
-
         if (empty($entity = $this->getRepository()->get($id))) {
             throw new NotFound();
         }
@@ -82,13 +78,18 @@ class Hierarchy extends Record
             throw new Forbidden();
         }
 
-        $foreignIds = $entity->getLinkMultipleIdList($link);
+        $parents = $entity->get('parents');
+        if (empty($parents[0])) {
+            throw new NotFound();
+        }
+
+        $foreignIds = $parents[0]->getLinkMultipleIdList($link);
 
         foreach ($foreignIds as $k => $foreignId) {
             if ($k < 20) {
-                $this->unlinkEntity($id, $link, $foreignId);
+                $this->linkEntity($id, $link, $foreignId);
             } else {
-                $this->getPseudoTransactionManager()->pushUnLinkEntityJob($this->entityType, $id, $link, $foreignId);
+                $this->getPseudoTransactionManager()->pushLinkEntityJob($this->entityType, $id, $link, $foreignId);
             }
         }
 
@@ -270,6 +271,10 @@ class Hierarchy extends Record
 
     public function unlinkEntity($id, $link, $foreignId)
     {
+        if (!empty($this->isUnlinkAllAction)) {
+            return parent::unlinkEntity($id, $link, $foreignId);
+        }
+
         if (empty($this->getMetadata()->get(['scopes', $this->entityType, 'relationInheritance']))) {
             return parent::unlinkEntity($id, $link, $foreignId);
         }
