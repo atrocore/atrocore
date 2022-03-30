@@ -89,6 +89,8 @@
     "Core": "AtroCore - это программная экосистема, предназначенная для быстрой разработки веб-приложений для бизнеса."
   },
   "labels": {
+    "inheritAll": "Унаследовать все",
+    "unlinkAll": "Убрать все",
     "setAsInherited": "Унаследовать значение",
     "inherited": "Наследуется",
     "resetAllToDefault": "Восстановить все по умолчанию",
@@ -173,6 +175,7 @@
     "Cancel": "Отменить",
     "Apply": "Применить",
     "Unlink": "Убрать ссылку",
+    "unlinkHierarchically": "Убрать ссылку иерархично",
     "Mass Update": "Массовое обновление",
     "Export": "Экспортировать",
     "No Data": "Нет данных",
@@ -285,7 +288,9 @@
     "fieldBadPasswordConfirm": "{field} подтверждено неверно",
     "resetPreferencesDone": "Были восстановлены значения по умолчанию",
     "confirmation": "Вы уверены?",
+    "inheritAllConfirmation": "Вы уверены, что хотите унаследовать все записи?",
     "unlinkAllConfirmation": "Вы действительно хотите убрать все связанные записи?",
+    "unlinkAllHierarchicallyConfirmation": "Вы действительно хотите убрать все связанные записи иерархично?",
     "resetPreferencesConfirmation": "Вы действительно хотите восстановить значения по умолчанию?",
     "removeRecordConfirmation": "Вы действительно хотите удалить запись?",
     "unlinkRecordConfirmation": "Вы действительно хотите убрать связанную запись?",

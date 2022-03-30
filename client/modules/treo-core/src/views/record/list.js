@@ -647,7 +647,7 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
                             }, this);
                         }
                     }.bind(this));
-                    setTimeout(this.collection.fetch(), 3000);
+                    this.collection.fetch();
                 }, this);
             }.bind(this));
         },
@@ -683,10 +683,8 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
                     type: 'POST',
                     data: JSON.stringify(data)
                 }).done(function (result) {
-                    setTimeout(() => {
-                        Espo.Ui.success(this.translate('Done'));
-                        this.collection.fetch()
-                    }, 3000);
+                    Espo.Ui.success(this.translate('Done'));
+                    this.collection.fetch();
                 }.bind(this));
             }, this);
         },

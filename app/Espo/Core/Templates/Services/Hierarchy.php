@@ -39,18 +39,69 @@ namespace Espo\Core\Templates\Services;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Conflict;
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\Services\Record;
+use Treo\Core\EventManager\Event;
 use Treo\Core\Exceptions\NotModified;
 
 class Hierarchy extends Record
 {
+    public function inheritAll(string $id, string $link): bool
+    {
+        $event = $this->dispatchEvent('beforeInheritAll', new Event(['id' => $id, 'link' => $link]));
+
+        $id = $event->getArgument('id');
+        $link = $event->getArgument('link');
+
+        if (empty($id) || empty($link)) {
+            throw new BadRequest("'id' and 'link' is required parameters.");
+        }
+
+        echo '<pre>';
+        print_r('123');
+        die();
+
+        if (empty($entity = $this->getRepository()->get($id))) {
+            throw new NotFound();
+        }
+
+        if (!$this->getAcl()->check($entity, 'edit')) {
+            throw new Forbidden();
+        }
+
+        if (empty($foreignEntityType = $entity->getRelationParam($link, 'entity'))) {
+            throw new Error();
+        }
+
+        if (!$this->getAcl()->check($foreignEntityType, in_array($link, $this->noEditAccessRequiredLinkList) ? 'read' : 'edit')) {
+            throw new Forbidden();
+        }
+
+        $foreignIds = $entity->getLinkMultipleIdList($link);
+
+        foreach ($foreignIds as $k => $foreignId) {
+            if ($k < 20) {
+                $this->unlinkEntity($id, $link, $foreignId);
+            } else {
+                $this->getPseudoTransactionManager()->pushUnLinkEntityJob($this->entityType, $id, $link, $foreignId);
+            }
+        }
+
+        return $this->dispatchEvent('afterUnlinkAll', new Event(['entity' => $entity, 'link' => $link, 'result' => true]))->getArgument('result');
+    }
+
     public function inheritField(string $field, string $id): bool
     {
+        $event = $this->dispatchEvent('beforeInheritField', new Event(['id' => $id, 'field' => $field]));
+
+        $id = $event->getArgument('id');
+        $field = $event->getArgument('field');
+
         $entity = $this->getRepository()->get($id);
 
         if (empty($entity)) {

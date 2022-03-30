@@ -89,6 +89,8 @@
     "Core": "AtroCore is a software ecosystem, designed for rapid development of web-based responsive business applications."
   },
   "labels": {
+    "inheritAll": "Inherit All",
+    "unlinkAll": "Unlink All",
     "setAsInherited": "Set as inherited",
     "inherited": "Inherited",
     "resetAllToDefault": "Reset all to Default",
@@ -196,6 +198,7 @@
     "Cancel": "Cancel",
     "Apply": "Apply",
     "Unlink": "Unlink",
+    "unlinkHierarchically": "Unlink Hierarchically",
     "Mass Update": "Mass Update",
     "Export": "Export",
     "No Data": "No Data",
@@ -310,7 +313,9 @@
     "fieldIsUploading": "Uploading in progress",
     "resetPreferencesDone": "Preferences has been reset to defaults",
     "confirmation": "Are you sure?",
-    "unlinkAllConfirmation": "Are you sure you want to unlink all related records?",
+    "inheritAllConfirmation": "Are you sure you want to inherit all records?",
+    "unlinkAllConfirmation": "Are you sure you want to unlink all records?",
+    "unlinkAllHierarchicallyConfirmation": "Are you sure you want to unlink all records hierarchically?",
     "resetPreferencesConfirmation": "Are you sure you want to reset preferences to defaults?",
     "removeRecordConfirmation": "Are you sure you want to remove the record?",
     "unlinkRecordConfirmation": "Are you sure you want to unlink the related record?",

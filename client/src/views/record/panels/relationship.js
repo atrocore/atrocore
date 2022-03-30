@@ -125,6 +125,30 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 });
             }
 
+            if (this.getMetadata().get(`scopes.${this.model.urlRoot}.type`) === 'Hierarchy') {
+                let unInheritedRelations = ['parents', 'children'];
+                (this.getMetadata().get(`scopes.${this.model.urlRoot}.unInheritedRelations`) || []).forEach(field => {
+                    unInheritedRelations.push(field);
+                });
+                if (!unInheritedRelations.includes(this.link)) {
+                    this.actionList.push({
+                        label: 'inheritAll',
+                        action: 'inheritAll',
+                        data: data,
+                        acl: 'edit',
+                        aclScope: this.model.name
+                    });
+                }
+            }
+
+            this.actionList.push({
+                label: 'unlinkAll',
+                action: 'unlinkAllRelated',
+                data: data,
+                acl: 'edit',
+                aclScope: this.model.name
+            });
+
             this.setupActions();
 
             var layoutName = 'listSmall';
@@ -380,6 +404,25 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             }, this);
         },
 
+        actionInheritAll: function (data) {
+            this.confirm(this.translate('inheritAllConfirmation', 'messages'), function () {
+                this.notify('Please wait...');
+                $.ajax({
+                    url: this.model.name + '/action/inheritAll',
+                    type: 'POST',
+                    data: JSON.stringify({
+                        link: data.link,
+                        id: this.model.id
+                    }),
+                }).done(function () {
+                    this.notify(false);
+                    this.notify('Linked', 'success');
+                    this.collection.fetch();
+                    this.model.trigger('after:relate');
+                }.bind(this));
+            }, this);
+        },
+
         actionUnlinkAllRelated: function (data) {
             this.confirm(this.translate('unlinkAllConfirmation', 'messages'), function () {
                 this.notify('Please wait...');
@@ -398,6 +441,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 }.bind(this));
             }, this);
         },
+
     });
 });
 

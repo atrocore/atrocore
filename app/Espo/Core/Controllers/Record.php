@@ -418,6 +418,19 @@ class Record extends Base
         throw new Error();
     }
 
+    public function actionUnlinkAll($params, $data, $request)
+    {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+
+        if (!property_exists($data, 'id') || !property_exists($data, 'link')) {
+            throw new BadRequest();
+        }
+
+        return $this->getRecordService()->unlinkAll((string)$data->id, (string)$data->link);
+    }
+
     public function actionFollow($params, $data, $request)
     {
         if (!$request->isPut()) {

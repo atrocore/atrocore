@@ -114,6 +114,11 @@ class Record extends \Espo\Core\Services\Base
 
     protected string $pseudoTransactionId = '';
 
+    protected int $maxMassUpdateCount = 20;
+    protected int $maxMassRemoveCount = 20;
+    protected int $maxMassLinkCount = 20;
+    protected int $maxMassUnlinkCount = 20;
+
     /**
      * @var bool|array
      */
@@ -1747,11 +1752,55 @@ class Record extends \Espo\Core\Services\Base
             ->query($query)
             ->fetchAll(\PDO::FETCH_COLUMN);
 
-        foreach ($foreignIds as $foreignId) {
-            $this->getPseudoTransactionManager()->pushLinkEntityJob($this->entityType, $id, $link, $foreignId);
+        foreach ($foreignIds as $k => $foreignId) {
+            if ($k < $this->maxMassLinkCount) {
+                $this->linkEntity($id, $link, $foreignId);
+            } else {
+                $this->getPseudoTransactionManager()->pushLinkEntityJob($this->entityType, $id, $link, $foreignId);
+            }
         }
 
         return $this->dispatchEvent('afterLinkEntityMass', new Event(['entity' => $entity, 'link' => $link, 'result' => true]))->getArgument('result');
+    }
+
+    public function unlinkAll(string $id, string $link): bool
+    {
+        $event = $this->dispatchEvent('beforeUnlinkAll', new Event(['id' => $id, 'link' => $link]));
+
+        $id = $event->getArgument('id');
+        $link = $event->getArgument('link');
+
+        if (empty($id) || empty($link)) {
+            throw new BadRequest("'id' and 'link' is required parameters.");
+        }
+
+        if (empty($entity = $this->getRepository()->get($id))) {
+            throw new NotFound();
+        }
+
+        if (!$this->getAcl()->check($entity, 'edit')) {
+            throw new Forbidden();
+        }
+
+        if (empty($foreignEntityType = $entity->getRelationParam($link, 'entity'))) {
+            throw new Error();
+        }
+
+        if (!$this->getAcl()->check($foreignEntityType, in_array($link, $this->noEditAccessRequiredLinkList) ? 'read' : 'edit')) {
+            throw new Forbidden();
+        }
+
+        $foreignIds = $entity->getLinkMultipleIdList($link);
+
+        foreach ($foreignIds as $k => $foreignId) {
+            if ($k < $this->maxMassUnlinkCount) {
+                $this->unlinkEntity($id, $link, $foreignId);
+            } else {
+                $this->getPseudoTransactionManager()->pushUnLinkEntityJob($this->entityType, $id, $link, $foreignId);
+            }
+        }
+
+        return $this->dispatchEvent('afterUnlinkAll', new Event(['entity' => $entity, 'link' => $link, 'result' => true]))->getArgument('result');
     }
 
     public function massUpdate($data, array $params)
@@ -1784,8 +1833,16 @@ class Record extends \Espo\Core\Services\Base
                 ->fetchAll(\PDO::FETCH_COLUMN);
         }
 
-        foreach ($ids as $id) {
-            $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->entityType, $id, $data);
+        foreach ($ids as $k => $id) {
+            if ($k < $this->maxMassUpdateCount) {
+                try {
+                    $this->updateEntity($id, $data);
+                } catch (\Throwable $e) {
+                    $GLOBALS['log']->error("Update $this->entityType '$id' failed: {$e->getMessage()}");
+                }
+            } else {
+                $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->entityType, $id, $data);
+            }
         }
 
         return $this
@@ -1820,8 +1877,16 @@ class Record extends \Espo\Core\Services\Base
                 ->fetchAll(\PDO::FETCH_COLUMN);
         }
 
-        foreach ($ids as $id) {
-            $this->getPseudoTransactionManager()->pushDeleteEntityJob($this->entityType, $id);
+        foreach ($ids as $k => $id) {
+            if ($k < $this->maxMassRemoveCount) {
+                try {
+                    $this->deleteEntity($id);
+                } catch (\Throwable $e) {
+                    $GLOBALS['log']->error("Delete $this->entityType '$id' failed: {$e->getMessage()}");
+                }
+            } else {
+                $this->getPseudoTransactionManager()->pushDeleteEntityJob($this->entityType, $id);
+            }
         }
 
         return $this
