@@ -64,7 +64,7 @@ class PseudoTransactionManager
 
     public function pushCreateEntityJob(string $entityType, $data, string $parentId = null): string
     {
-        return $this->push($entityType, 'createEntity', Json::encode($data), $parentId);
+        return $this->push($entityType, '', 'createEntity', Json::encode($data), $parentId);
     }
 
     public function pushUpdateEntityJob(string $entityType, string $entityId, $data, string $parentId = null): string
