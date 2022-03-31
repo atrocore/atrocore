@@ -62,6 +62,11 @@ class PseudoTransactionManager
         return file_exists(self::FILE_PATH);
     }
 
+    public function pushCreateEntityJob(string $entityType, $data, string $parentId = null): string
+    {
+        return $this->push($entityType, 'createEntity', Json::encode($data), $parentId);
+    }
+
     public function pushUpdateEntityJob(string $entityType, string $entityId, $data, string $parentId = null): string
     {
         return $this->push($entityType, $entityId, 'updateEntity', Json::encode($data), $parentId);
@@ -180,6 +185,9 @@ class PseudoTransactionManager
             $service->setPseudoTransactionId($job['id']);
 
             switch ($job['action']) {
+                case 'createEntity':
+                    $service->createEntity(Json::decode($job['input_data']));
+                    break;
                 case 'updateEntity':
                     $service->updateEntity($job['entity_id'], Json::decode($job['input_data']));
                     break;
