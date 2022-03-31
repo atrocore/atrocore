@@ -966,6 +966,8 @@
     "cd": "cd"
   },
   "exceptions": {
+    "parentRecordsHaveDifferentValues": "Parent records have different values, value to inherit cannot be determined.",
+    "nothingToInherit": "There is nothing to inherit.",
     "hasMultipleParents": "There is one or more records with multiple parents.",
     "unitValueIsRequired": "Unit for the field '%s' is required.",
     "emailIsInvalid": "Email for the field '%s' is not valid.",
