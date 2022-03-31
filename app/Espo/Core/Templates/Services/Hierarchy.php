@@ -412,8 +412,10 @@ class Hierarchy extends Record
             $parentsRelatedIds = array_merge($parentsRelatedIds, array_column($parent->get($link)->toArray(), 'id'));
         }
 
-        $result['list'] = $result['collection']->toArray();
-        unset($result['collection']);
+        if (isset($result['collection'])) {
+            $result['list'] = $result['collection']->toArray();
+            unset($result['collection']);
+        }
 
         foreach ($result['list'] as $k => $record) {
             $result['list'][$k]['isInherited'] = in_array($record['id'], $parentsRelatedIds);
