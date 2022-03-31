@@ -309,6 +309,7 @@
     "removeRecordConfirmation": "Sind Sie sicher, dass Sie den Eintrag löschen wollen?",
     "unlinkRecordConfirmation": "Wollen Sie die Verknüpfung mit dem Datensatz wirklich entfernen?",
     "unlinkRecordConfirmationHierarchically": "Wollen Sie wirklich die Verknüpfung mit dem Datensatz hierarchisch entfernen?",
+    "removeRecordConfirmationHierarchically": "Wollen Sie wirklich den Datensatz hierarchisch entfernen?",
     "removeSelectedRecordsConfirmation": "Sind Sie sicher, dass Sie die ausgewählten Sätze löschen möchten?",
     "massUpdateResultSingle": "{count} Eintrag wurde aktualisiert",
     "noRecordsUpdated": "Es wurden keine Einträge aktualisiert",

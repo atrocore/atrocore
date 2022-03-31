@@ -322,6 +322,7 @@
     "removeRecordConfirmation": "Are you sure you want to remove the record?",
     "unlinkRecordConfirmation": "Are you sure you want to unlink the related record?",
     "unlinkRecordConfirmationHierarchically": "Are you sure you want to unlink the related record hierarchically?",
+    "removeRecordConfirmationHierarchically": "Are you sure you want to remove the record hierarchically?",
     "removeSelectedRecordsConfirmation": "Are you sure you want to remove selected records?",
     "massUpdateResultSingle": "{count} record has been updated",
     "noRecordsUpdated": "No records were updated",
