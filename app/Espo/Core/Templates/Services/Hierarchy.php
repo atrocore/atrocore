@@ -137,6 +137,11 @@ class Hierarchy extends Record
                     $input->{$field . 'Id'} = $parent->get($field . 'Id');
                     $input->{$field . 'Name'} = $parent->get($field . 'Name');
                     break;
+                case 'multiEnum':
+                case 'enum':
+                    $field = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'multilangField'], $field);
+                    $input->$field = $parent->get($field);
+                    break;
                 case 'currency':
                     $input->$field = $parent->get($field);
                     $input->{$field . 'Currency'} = $parent->get($field . 'Currency');

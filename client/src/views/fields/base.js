@@ -404,6 +404,13 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         initInheritedFieldMarker: function () {
+            const scope = this.model.urlRoot;
+            const type = this.getMetadata().get(`entityDefs.${scope}.fields.${this.name}.type`);
+
+            if (['enum', 'multiEnum'].includes(type) && this.getMetadata().get(`entityDefs.${scope}.fields.${this.name}.multilangLocale`)) {
+                return;
+            }
+
             this.getUnlockLinkEl().remove();
             this.getLockLinkEl().remove();
 
