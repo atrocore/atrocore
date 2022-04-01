@@ -49,19 +49,17 @@ Espo.define('views/admin/entity-manager/fields/un-inherited-relations', 'views/f
             this.translatedOptions = {};
 
             $.each((this.getMetadata().get(['entityDefs', this.model.get('name'), 'fields']) || {}), (field, fieldDefs) => {
-                if (
-                    'linkMultiple' === fieldDefs.type
-                    && !['parents', 'children'].includes(field)
-                    && this.getMetadata().get(['entityDefs', this.model.get('name'), 'links', field, 'relationName'])
-                ) {
-                    this.params.options.push(field);
-                    this.translatedOptions[field] = this.translate(field, 'fields', this.model.get('name'));
+                if ('linkMultiple' === fieldDefs.type && !(this.getMetadata().get('app.nonInheritedRelations') || []).includes(field)) {
+                    if (this.getMetadata().get(['entityDefs', this.model.get('name'), 'links', field, 'relationName']) || this.getMetadata().get(['entityDefs', this.model.get('name'), 'fields', field, 'nonInheritedRelation']) === false) {
+                        this.params.options.push(field);
+                        this.translatedOptions[field] = this.translate(field, 'fields', this.model.get('name'));
+                    }
                 }
             });
 
             let newValue = [];
             (this.model.get(this.name) || []).forEach(field => {
-                if (this.params.options.includes(field)){
+                if (this.params.options.includes(field)) {
                     newValue.push(field);
                 }
             });
