@@ -1589,10 +1589,34 @@ class Record extends \Espo\Core\Services\Base
 
     public function linkEntity($id, $link, $foreignId)
     {
+        /**
+         * Delegate to Update if ManyToOne or OneToOne relation
+         */
         if ($this->getMetadata()->get(['entityDefs', $this->entityName, 'links', $link, 'type']) === 'belongsTo') {
             $data = new \stdClass();
             $data->{"{$link}Id"} = $foreignId;
-            return $this->updateEntity($id, $data);
+            try {
+                $this->updateEntity($id, $data);
+            } catch (NotModified $e) {
+                // ignore
+            }
+
+            return true;
+        }
+
+        /**
+         * Delegate to Update if OneToMany relation
+         */
+        if (!empty($linkData = $this->getOneToManyRelationData($link))) {
+            $data = new \stdClass();
+            $data->{"{$linkData['foreign']}Id"} = $id;
+            try {
+                $this->getServiceFactory()->create($linkData['entity'])->updateEntity($foreignId, $data);
+            } catch (NotModified $e) {
+                // ignore
+            }
+
+            return true;
         }
 
         $event = $this
@@ -1645,10 +1669,34 @@ class Record extends \Espo\Core\Services\Base
 
     public function unlinkEntity($id, $link, $foreignId)
     {
+        /**
+         * Delegate to Update if ManyToOne or OneToOne relation
+         */
         if ($this->getMetadata()->get(['entityDefs', $this->entityName, 'links', $link, 'type']) === 'belongsTo') {
             $data = new \stdClass();
             $data->{"{$link}Id"} = null;
-            return $this->updateEntity($id, $data);
+            try {
+                $this->updateEntity($id, $data);
+            } catch (NotModified $e) {
+                // ignore
+            }
+
+            return true;
+        }
+
+        /**
+         * Delegate to Update if OneToMany relation
+         */
+        if (!empty($linkData = $this->getOneToManyRelationData($link))) {
+            $data = new \stdClass();
+            $data->{"{$linkData['foreign']}Id"} = null;
+            try {
+                $this->getServiceFactory()->create($linkData['entity'])->updateEntity($foreignId, $data);
+            } catch (NotModified $e) {
+                // ignore
+            }
+
+            return true;
         }
 
         $event = $this
@@ -1697,6 +1745,22 @@ class Record extends \Espo\Core\Services\Base
         return $this
             ->dispatchEvent('afterUnlinkEntity', new Event(['id' => $id, 'link' => $link, 'foreignEntity' => $foreignEntity, 'result' => true]))
             ->getArgument('result');
+    }
+
+    protected function getOneToManyRelationData(string $link): ?array
+    {
+        $linkData = $this->getMetadata()->get(['entityDefs', $this->entityName, 'links', $link], []);
+        if (
+            array_key_exists('type', $linkData)
+            && $linkData['type'] === 'hasMany'
+            && array_key_exists('entity', $linkData)
+            && array_key_exists('foreign', $linkData)
+            && $this->getMetadata()->get(['entityDefs', $linkData['entity'], 'links', $linkData['foreign'], 'type']) === 'belongsTo'
+        ) {
+            return $linkData;
+        }
+
+        return null;
     }
 
     public function linkEntityMass($id, $link, $where, $selectData = null)
