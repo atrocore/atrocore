@@ -49,7 +49,13 @@ Espo.define('views/admin/entity-manager/fields/un-inherited-fields', 'views/fiel
             this.translatedOptions = {};
 
             $.each((this.getMetadata().get(['entityDefs', this.model.get('name'), 'fields']) || {}), (field, fieldDefs) => {
-                if (!['linkMultiple'].includes(fieldDefs.type) && fieldDefs.notStorable !== true) {
+                if (
+                    fieldDefs.type !== 'linkMultiple'
+                    && !(this.getMetadata().get('app.nonInheritedFields') || []).includes(field)
+                    && !(this.getMetadata().get(['scopes', this.model.get('name'), 'mandatoryUnInheritedFields']) || []).includes(field)
+                    && fieldDefs.notStorable !== true
+                    && fieldDefs.disabled !== true
+                ) {
                     this.params.options.push(field);
                     this.translatedOptions[field] = this.translate(field, 'fields', this.model.get('name'));
                 }
@@ -57,7 +63,7 @@ Espo.define('views/admin/entity-manager/fields/un-inherited-fields', 'views/fiel
 
             let newValue = [];
             (this.model.get(this.name) || []).forEach(field => {
-                if (this.params.options.includes(field)){
+                if (this.params.options.includes(field)) {
                     newValue.push(field);
                 }
             });

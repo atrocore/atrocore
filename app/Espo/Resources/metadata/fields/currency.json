@@ -39,6 +39,7 @@
       },
       "converted":{
          "type":"currencyConverted",
+         "notStorable": true,
          "readOnly": true,
          "importDisabled": true,
          "layoutListDisabled": true,

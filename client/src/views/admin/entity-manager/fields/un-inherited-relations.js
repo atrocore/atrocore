@@ -49,8 +49,12 @@ Espo.define('views/admin/entity-manager/fields/un-inherited-relations', 'views/f
             this.translatedOptions = {};
 
             $.each((this.getMetadata().get(['entityDefs', this.model.get('name'), 'fields']) || {}), (field, fieldDefs) => {
-                if ('linkMultiple' === fieldDefs.type && !(this.getMetadata().get('app.nonInheritedRelations') || []).includes(field)) {
-                    if (this.getMetadata().get(['entityDefs', this.model.get('name'), 'links', field, 'relationName']) || this.getMetadata().get(['entityDefs', this.model.get('name'), 'fields', field, 'nonInheritedRelation']) === false) {
+                if (
+                    fieldDefs.type === 'linkMultiple'
+                    && !(this.getMetadata().get('app.nonInheritedRelations') || []).includes(field)
+                    && !(this.getMetadata().get(['scopes', this.model.get('name'), 'mandatoryUnInheritedRelations']) || []).includes(field)
+                ) {
+                    if (this.getMetadata().get(['entityDefs', this.model.get('name'), 'links', field, 'relationName']) || (this.getMetadata().get(['scopes', this.model.get('name'), 'inheritedRelations']) || []).includes(field)) {
                         this.params.options.push(field);
                         this.translatedOptions[field] = this.translate(field, 'fields', this.model.get('name'));
                     }
