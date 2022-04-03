@@ -1161,9 +1161,12 @@ class Record extends \Espo\Core\Services\Base
             return;
         }
 
+        $rel1 = !empty($linkData['midKeys'][1]) ? $linkData['midKeys'][1] : $entity->getEntityType() . 'Id';
+        $rel2 = !empty($linkData['midKeys'][0]) ? $linkData['midKeys'][0] : $data->_relationEntity . 'Id';
+
         $this
             ->getRepository()
-            ->updateRelationData($linkData['relationName'], $setData, $data->_relationEntity, $data->_relationEntityId, $entity->getEntityType(), $entity->get('id'));
+            ->updateRelationData($linkData['relationName'], $setData, $rel1, $data->_relationEntityId, $rel2, $entity->get('id'));
     }
 
     protected function beforeCreateEntity(Entity $entity, $data)

@@ -491,8 +491,8 @@ class RDB extends \Espo\ORM\Repository
         }
 
         $query = "UPDATE `" . Util::toUnderScore($relationName) . "` SET " . implode(',', $setPart) . " WHERE deleted=0";
-        $query .= " AND " . Util::toUnderScore(lcfirst($re1)) . "_id=" . $this->getPDO()->quote($re1Id);
-        $query .= " AND " . Util::toUnderScore(lcfirst($re2)) . "_id=" . $this->getPDO()->quote($re2Id);
+        $query .= " AND " . Util::toUnderScore(lcfirst($re1)) . "=" . $this->getPDO()->quote($re1Id);
+        $query .= " AND " . Util::toUnderScore(lcfirst($re2)) . "=" . $this->getPDO()->quote($re2Id);
 
         $this->getPDO()->exec($query);
     }
