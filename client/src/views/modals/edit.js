@@ -119,13 +119,8 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
 
             this.waitForView('edit');
 
-            let nonInheritedFields = this.getMetadata().get(`app.nonInheritedFields`);
-            (this.getMetadata().get(`scopes.${this.scope}.unInheritedFields`) || []).forEach(field => {
-                nonInheritedFields.push(field);
-            });
-
             let preparedNonInheritedFields = [];
-            nonInheritedFields.forEach(field => {
+            this.getNonInheritedFields().forEach(field => {
                 if (this.getMetadata().get(`entityDefs.${this.scope}.fields.${field}.type`) === 'link') {
                     preparedNonInheritedFields.push(field + 'Id');
                     preparedNonInheritedFields.push(field + 'Name');
@@ -172,6 +167,40 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
                     this.createRecordView(model);
                 }
             }.bind(this));
+        },
+
+        getNonInheritedFields: function () {
+            let nonInheritedFields = this.getMetadata().get(`app.nonInheritedFields`) || [];
+
+            (this.getMetadata().get(`scopes.${this.scope}.mandatoryUnInheritedFields`) || []).forEach(field => {
+                nonInheritedFields.push(field);
+            });
+
+            (this.getMetadata().get(`scopes.${this.scope}.unInheritedFields`) || []).forEach(field => {
+                nonInheritedFields.push(field);
+            });
+
+            (this.getMetadata().get(`app.nonInheritedRelations`) || []).forEach(field => {
+                nonInheritedFields.push(field);
+            });
+
+            (this.getMetadata().get(`scopes.${this.scope}.mandatoryUnInheritedRelations`) || []).forEach(field => {
+                nonInheritedFields.push(field);
+            });
+
+            (this.getMetadata().get(`scopes.${this.scope}.unInheritedRelations`) || []).forEach(field => {
+                nonInheritedFields.push(field);
+            });
+
+            $.each(this.getMetadata().get(`entityDefs.${this.scope}.links`), (link, linkDefs) => {
+                if (linkDefs.type && linkDefs.type === 'hasMany') {
+                    if (!linkDefs.relationName) {
+                        nonInheritedFields.push(link);
+                    }
+                }
+            });
+
+            return nonInheritedFields;
         },
 
         createRecordView: function (model, callback) {

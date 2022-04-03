@@ -56,22 +56,30 @@ class Hierarchy extends RDB
 
     public function getUnInheritedFields(): array
     {
-        $system = $this->getMetadata()->get('app.nonInheritedFields');
+        $result = array_merge($this->getMetadata()->get('app.nonInheritedFields', []), $this->getMetadata()->get(['scopes', $this->entityType, 'mandatoryUnInheritedFields'], []));
+        $result = array_merge($result, $this->getMetadata()->get(['scopes', $this->entityType, 'unInheritedFields'], []));
 
-        $unInheritedFields = array_merge($system, $this->getMetadata()->get(['scopes', $this->entityType, 'unInheritedFields'], []));
+        // add relations
+        $result = array_merge($result, $this->getUnInheritedRelations());
+
+        return $result;
+    }
+
+    public function getUnInheritedRelations(): array
+    {
+        $result = array_merge([], $this->getMetadata()->get('app.nonInheritedRelations', []));
+        $result = array_merge($result, $this->getMetadata()->get(['scopes', $this->entityType, 'mandatoryUnInheritedRelations'], []));
+        $result = array_merge($result, $this->getMetadata()->get(['scopes', $this->entityType, 'unInheritedRelations'], []));
 
         foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'links'], []) as $link => $linkDefs) {
             if (!empty($linkDefs['type']) && $linkDefs['type'] === 'hasMany') {
                 if (empty($linkDefs['relationName'])) {
-                    $unInheritedFields[] = $link;
-                }
-                if (in_array($link, $this->getMetadata()->get(['scopes', $this->entityType, 'unInheritedRelations'], []))) {
-                    $unInheritedFields[] = $link;
+                    $result[] = $link;
                 }
             }
         }
 
-        return $unInheritedFields;
+        return $result;
     }
 
     public function fetchById(string $id): array

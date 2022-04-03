@@ -379,26 +379,48 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             return $(`.lock-link[data-name="${this.name}"]`);
         },
 
+        getNonInheritedFields: function () {
+            const scope = this.model.urlRoot;
+
+            let nonInheritedFields = this.getMetadata().get(`app.nonInheritedFields`) || [];
+
+            (this.getMetadata().get(`scopes.${scope}.mandatoryUnInheritedFields`) || []).forEach(field => {
+                nonInheritedFields.push(field);
+            });
+
+            (this.getMetadata().get(`scopes.${scope}.unInheritedFields`) || []).forEach(field => {
+                nonInheritedFields.push(field);
+            });
+
+            (this.getMetadata().get(`app.nonInheritedRelations`) || []).forEach(field => {
+                nonInheritedFields.push(field);
+            });
+
+            (this.getMetadata().get(`scopes.${scope}.mandatoryUnInheritedRelations`) || []).forEach(field => {
+                nonInheritedFields.push(field);
+            });
+
+            (this.getMetadata().get(`scopes.${scope}.unInheritedRelations`) || []).forEach(field => {
+                nonInheritedFields.push(field);
+            });
+
+            $.each(this.getMetadata().get(`entityDefs.${scope}.links`), (link, linkDefs) => {
+                if (linkDefs.type && linkDefs.type === 'hasMany') {
+                    if (!linkDefs.relationName) {
+                        nonInheritedFields.push(link);
+                    }
+                }
+            });
+
+            return nonInheritedFields;
+        },
+
         isInheritableField: function () {
             if (!this.model.has('inheritedFields') || this.getMetadata().get(`scopes.${this.model.urlRoot}.fieldValueInheritance`) !== true) {
                 return false;
             }
 
-            const nonInheritedFields = this.getMetadata().get(`app.nonInheritedFields`);
-            (this.getMetadata().get(`scopes.${this.model.urlRoot}.unInheritedFields`) || []).forEach(field => {
-                nonInheritedFields.push(field);
-            });
-
-            $.each(this.getMetadata().get(`entityDefs.${this.model.urlRoot}.links`), (link, linkDefs) => {
-                if (linkDefs.type && linkDefs.type === 'hasMany') {
-                    if (!linkDefs.relationName) {
-                        nonInheritedFields.push(link);
-                    }
-                    if ((this.getMetadata().get(`scopes.${this.model.urlRoot}.unInheritedRelations`) || []).includes(link)) {
-                        nonInheritedFields.push(link);
-                    }
-                }
-            });
+            const nonInheritedFields = this.getNonInheritedFields();
 
             return !nonInheritedFields.includes(this.name);
         },
