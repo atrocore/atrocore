@@ -457,10 +457,7 @@ class Hierarchy extends Record
 
     protected function createPseudoTransactionLinkJobs(string $id, string $link, string $foreignId, string $parentTransactionId = null): void
     {
-        $unInheritedRelations = array_merge(
-            $this->getMetadata()->get(['app', 'nonInheritedRelations'], []), $this->getMetadata()->get(['scopes', $this->entityType, 'unInheritedRelations'], [])
-        );
-        if (in_array($link, $unInheritedRelations)) {
+        if (in_array($link, $this->getRepository()->getUnInheritedRelations())) {
             return;
         }
 
@@ -479,10 +476,7 @@ class Hierarchy extends Record
 
     protected function createPseudoTransactionUnlinkJobs(string $id, string $link, string $foreignId, string $parentTransactionId = null): void
     {
-        $unInheritedRelations = array_merge(
-            $this->getMetadata()->get(['app', 'nonInheritedRelations'], []), $this->getMetadata()->get(['scopes', $this->entityType, 'unInheritedRelations'], [])
-        );
-        if (in_array($link, $unInheritedRelations)) {
+        if (in_array($link, $this->getRepository()->getUnInheritedRelations())) {
             return;
         }
 
