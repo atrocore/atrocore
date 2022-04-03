@@ -66,6 +66,10 @@ class Hierarchy extends Record
             throw new NotFound();
         }
 
+        if (in_array($link, $this->getRepository()->getUnInheritedRelations())) {
+            return false;
+        }
+
         if (!$this->getAcl()->check($entity, 'edit')) {
             throw new Forbidden();
         }
@@ -111,6 +115,10 @@ class Hierarchy extends Record
 
         $id = $event->getArgument('id');
         $field = $event->getArgument('field');
+
+        if (in_array($field, $this->getRepository()->getUnInheritedFields())) {
+            return false;
+        }
 
         $entity = $this->getRepository()->get($id);
 
@@ -185,6 +193,10 @@ class Hierarchy extends Record
 
         if (empty($id) || empty($link)) {
             throw new BadRequest("'id' and 'link' is required parameters.");
+        }
+
+        if (in_array($link, $this->getRepository()->getUnInheritedRelations())) {
+            return false;
         }
 
         if (empty($entity = $this->getRepository()->get($id))) {

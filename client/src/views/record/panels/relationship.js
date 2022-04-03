@@ -273,14 +273,38 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             }
         },
 
+        getUnInheritedRelations: function () {
+            let unInheritedRelations = [];
+
+            (this.getMetadata().get(`app.nonInheritedRelations`) || []).forEach(field => {
+                unInheritedRelations.push(field);
+            });
+
+            (this.getMetadata().get(`scopes.${this.scope}.mandatoryUnInheritedRelations`) || []).forEach(field => {
+                unInheritedRelations.push(field);
+            });
+
+            (this.getMetadata().get(`scopes.${this.scope}.unInheritedRelations`) || []).forEach(field => {
+                unInheritedRelations.push(field);
+            });
+
+            $.each(this.getMetadata().get(`entityDefs.${this.scope}.links`), (link, linkDefs) => {
+                if (linkDefs.type && linkDefs.type === 'hasMany') {
+                    if (!linkDefs.relationName) {
+                        unInheritedRelations.push(link);
+                    }
+                }
+            });
+
+            return unInheritedRelations;
+        },
+
         isInheritingRelation: function () {
             const scope = this.model.urlRoot;
             const link = this.link;
+
             if (this.getMetadata().get(`scopes.${scope}.type`) === 'Hierarchy' && this.getMetadata().get(`scopes.${scope}.relationInheritance`) === true) {
-                let unInheritedRelations = ['parents', 'children'];
-                (this.getMetadata().get(`scopes.${scope}.unInheritedRelations`) || []).forEach(field => {
-                    unInheritedRelations.push(field);
-                });
+                let unInheritedRelations = this.getUnInheritedRelations();
                 if (!unInheritedRelations.includes(link) && this.getMetadata().get(['entityDefs', scope, 'links', link, 'relationName'])) {
                     return true;
                 }
