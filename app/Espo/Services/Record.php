@@ -1161,8 +1161,8 @@ class Record extends \Espo\Core\Services\Base
             return;
         }
 
-        $rel1 = !empty($linkData['midKeys'][1]) ? $linkData['midKeys'][1] : $entity->getEntityType() . 'Id';
-        $rel2 = !empty($linkData['midKeys'][0]) ? $linkData['midKeys'][0] : $data->_relationEntity . 'Id';
+        $rel1 = !empty($linkData['midKeys'][1]) ? $linkData['midKeys'][1] : $data->_relationEntity . 'Id';
+        $rel2 = !empty($linkData['midKeys'][0]) ? $linkData['midKeys'][0] : $entity->getEntityType() . 'Id';
 
         $this
             ->getRepository()
