@@ -414,23 +414,20 @@ class Hierarchy extends Record
             return $result;
         }
 
-        $parents = $this->getRepository()->get($id)->get('parents');
-        if (empty($parents) || count($parents) === 0) {
-            return $result;
-        }
-
-        $parentsRelatedIds = [];
-        foreach ($parents as $parent) {
-            $parentsRelatedIds = array_merge($parentsRelatedIds, array_column($parent->get($link)->toArray(), 'id'));
-        }
-
-        if (isset($result['collection'])) {
-            $result['list'] = $result['collection']->toArray();
-            unset($result['collection']);
-        }
-
-        foreach ($result['list'] as $k => $record) {
-            $result['list'][$k]['isInherited'] = in_array($record['id'], $parentsRelatedIds);
+        /**
+         * Mark records as inherited
+         */
+        if (!in_array($link, $this->getRepository()->getUnInheritedRelations())) {
+            $parents = $this->getRepository()->get($id)->get('parents');
+            if (!empty($parents[0])) {
+                $parentsRelatedIds = [];
+                foreach ($parents as $parent) {
+                    $parentsRelatedIds = array_merge($parentsRelatedIds, array_column($parent->get($link)->toArray(), 'id'));
+                }
+                foreach ($result['collection'] as $entity) {
+                    $entity->isInherited = in_array($entity->get('id'), $parentsRelatedIds);
+                }
+            }
         }
 
         return $result;

@@ -355,8 +355,12 @@ abstract class Entity implements IEntity
             if ($this->has($field)) {
                 $arr[$field] = $this->get($field);
             }
-
         }
+
+        if (property_exists($this, 'isInherited')) {
+            $arr['isInherited'] = $this->isInherited;
+        }
+
         return $arr;
     }
 
