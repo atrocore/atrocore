@@ -22362,4 +22362,19 @@ body.minimized #header > #navbar .navbar-inverse .navbar-nav .more .dropdown-men
   line-height: 1;
 }
 
-/*# sourceMappingURL=treo-light-theme.css.map */
+::-webkit-scrollbar {
+  width: 10px;
+  background: #efefef;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #bbb;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #aaa;
+}
