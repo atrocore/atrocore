@@ -405,7 +405,8 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
                     data = {
                         _id: parentModel.id,
                         _sortedIds: this.getIdsFromDom(),
-                        _relationName: this.getMetadata().get(`entityDefs.${parentModel.urlRoot}.links.${link}.relationName`),
+                        _scope: parentModel.urlRoot,
+                        _link: link,
                         [this.dragableSortField]: sortFieldValue
                     };
                 }
