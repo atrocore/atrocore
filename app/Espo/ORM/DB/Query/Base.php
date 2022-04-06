@@ -188,14 +188,9 @@ abstract class Base
                 foreach ($params['additionalColumns'] as $column => $field) {
                     $relTableName = $this->toDb($this->sanitize($params['relationName']));
                     $relColumnName = $this->toDb($this->sanitize($column));
-                    $selectPart .= ", `$relTableName`.$relColumnName AS `{$field}`";
+                    $selectPart .= ", `$relTableName`.$relColumnName AS `$field`";
                     if ($params['orderBy'] === $field) {
-                        $orderPart = "ORDER BY `$relTableName`.$relColumnName ";
-                        if (!empty($params['order'])) {
-                            $orderPart .= 'DESC';
-                        } else {
-                            $orderPart .= 'ASC';
-                        }
+                        $orderPart = "ORDER BY `$relTableName`.$relColumnName " . $this->prepareOrderParameter($params['order']);
                     }
                 }
             }
@@ -602,17 +597,7 @@ abstract class Base
                 return $part;
             }
 
-            if (!is_null($order)) {
-                if (is_bool($order)) {
-                    $order = $order ? 'DESC' : 'ASC';
-                }
-                $order = strtoupper($order);
-                if (!in_array($order, ['ASC', 'DESC'])) {
-                    $order = 'ASC';
-                }
-            } else {
-                $order = 'ASC';
-            }
+            $order = $this->prepareOrderParameter($order);
 
             if (is_integer($orderBy)) {
                 return "{$orderBy} " . $order;
@@ -630,6 +615,23 @@ abstract class Base
                 return "{$fieldPath} " . $order;
             }
         }
+    }
+
+    protected function prepareOrderParameter($order): string
+    {
+        if (!is_null($order)) {
+            if (is_bool($order)) {
+                $order = $order ? 'DESC' : 'ASC';
+            }
+            $order = strtoupper($order);
+            if (!in_array($order, ['ASC', 'DESC'])) {
+                $order = 'ASC';
+            }
+        } else {
+            $order = 'ASC';
+        }
+
+        return $order;
     }
 
     protected function getOrder(IEntity $entity, $orderBy = null, $order = null)
