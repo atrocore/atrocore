@@ -403,10 +403,10 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
                     url = `${this.scope}/${itemId}`;
 
                     data = {
-                        _id: parentModel.id,
-                        _sortedIds: this.getIdsFromDom(),
                         _scope: parentModel.urlRoot,
+                        _id: parentModel.id,
                         _link: link,
+                        _sortedIds: this.getIdsFromDom(),
                         [this.dragableSortField]: sortFieldValue
                     };
                 }
