@@ -398,13 +398,14 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
 
             if (this.dragableSortField) {
                 const itemId = this.getItemId(ui);
-                if (itemId) {
+                if (itemId && parentModel) {
                     const sortFieldValue = this.getSortFieldValue(itemId);
                     url = `${this.scope}/${itemId}`;
 
                     data = {
-                        _id: parentModel ? parentModel.id : null,
+                        _id: parentModel.id,
                         _sortedIds: this.getIdsFromDom(),
+                        _relationName: this.getMetadata().get(`entityDefs.${parentModel.urlRoot}.links.${link}.relationName`),
                         [this.dragableSortField]: sortFieldValue
                     };
                 }
