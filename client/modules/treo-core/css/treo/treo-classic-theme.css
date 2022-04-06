@@ -21698,8 +21698,9 @@ select {
     display: none !important;
 }
 
-.unlock-link {
+.unlock-link, .unlock-link:hover {
     color: #ccc;
+    cursor: default;
 }
 
 .lock-link,
