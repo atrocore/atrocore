@@ -189,7 +189,7 @@ abstract class Base
                     $relTableName = $this->toDb($this->sanitize($params['relationName']));
                     $relColumnName = $this->toDb($this->sanitize($column));
                     $selectPart .= ", `$relTableName`.$relColumnName AS `{$field}`";
-                    if ($params['orderBy'] === $column) {
+                    if ($params['orderBy'] === $field) {
                         $orderPart = "ORDER BY `$relTableName`.$relColumnName ";
                         if (!empty($params['order'])) {
                             $orderPart .= 'DESC';
