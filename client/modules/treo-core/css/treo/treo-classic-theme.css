@@ -21866,3 +21866,32 @@ select {
 ::-webkit-scrollbar-thumb:hover {
     background: #aaa;
 }
+
+/* Scrollbar Buttons */
+::-webkit-scrollbar-button:single-button {
+    background-color: #efefef;
+    display: block;
+    border-style: solid;
+    height: 10px;
+    width: 10px;
+}
+
+/* Up */
+::-webkit-scrollbar-button:single-button:vertical:decrement {
+    border-width: 0 5px 5px 5px;
+    border-color: transparent transparent #777 transparent;
+}
+
+::-webkit-scrollbar-button:single-button:vertical:decrement:hover {
+    border-color: transparent transparent #555 transparent;
+}
+
+/* Down */
+::-webkit-scrollbar-button:single-button:vertical:increment {
+    border-width: 5px 5px 0 5px;
+    border-color: #777 transparent transparent transparent;
+}
+
+::-webkit-scrollbar-button:vertical:single-button:increment:hover {
+    border-color: #555 transparent transparent transparent;
+}
