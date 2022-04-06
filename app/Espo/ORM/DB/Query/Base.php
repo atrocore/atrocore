@@ -186,7 +186,17 @@ abstract class Base
 
             if (!empty($params['additionalColumns']) && is_array($params['additionalColumns']) && !empty($params['relationName'])) {
                 foreach ($params['additionalColumns'] as $column => $field) {
-                    $selectPart .= ", `" . $this->toDb($this->sanitize($params['relationName'])) . "`." . $this->toDb($this->sanitize($column)) . " AS `{$field}`";
+                    $relTableName = $this->toDb($this->sanitize($params['relationName']));
+                    $relColumnName = $this->toDb($this->sanitize($column));
+                    $selectPart .= ", `$relTableName`.$relColumnName AS `{$field}`";
+                    if ($params['orderBy'] === $column) {
+                        $orderPart = "ORDER BY `$relTableName`.$relColumnName ";
+                        if (!empty($params['order'])) {
+                            $orderPart .= 'DESC';
+                        } else {
+                            $orderPart .= 'ASC';
+                        }
+                    }
                 }
             }
 
