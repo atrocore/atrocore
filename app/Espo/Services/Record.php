@@ -1666,7 +1666,7 @@ class Record extends \Espo\Core\Services\Base
         $this->getRepository()->relate($entity, $link, $foreignEntity, null, $this->getDefaultRepositoryOptions());
 
         return $this
-            ->dispatchEvent('afterLinkEntity', new Event(['id' => $id, 'link' => $link, 'foreignEntity' => $foreignEntity, 'result' => true]))
+            ->dispatchEvent('afterLinkEntity', new Event(['id' => $id, 'entity' => $entity, 'link' => $link, 'foreignEntity' => $foreignEntity, 'result' => true]))
             ->getArgument('result');
     }
 
