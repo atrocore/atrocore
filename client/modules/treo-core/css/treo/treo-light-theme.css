@@ -22388,22 +22388,33 @@ body.minimized #header > #navbar .navbar-inverse .navbar-nav .more .dropdown-men
   width: 10px;
 }
 
+/* Scrollbar Buttons */
+::-webkit-scrollbar-button:single-button {
+  background-color: #efefef;
+  display: block;
+  border-style: solid;
+  height: 10px;
+  width: 10px;
+}
+
 /* Up */
 ::-webkit-scrollbar-button:single-button:vertical:decrement {
   border-width: 0 5px 5px 5px;
-  border-color: transparent transparent #777 transparent;
+  border-color: transparent transparent #bbb transparent;
 }
 
 ::-webkit-scrollbar-button:single-button:vertical:decrement:hover {
-  border-color: transparent transparent #555 transparent;
+  border-color: transparent transparent #aaa transparent;
+  background-color: #efefef;
 }
 
 /* Down */
 ::-webkit-scrollbar-button:single-button:vertical:increment {
   border-width: 5px 5px 0 5px;
-  border-color: #777 transparent transparent transparent;
+  border-color: #bbb transparent transparent transparent;
 }
 
 ::-webkit-scrollbar-button:vertical:single-button:increment:hover {
-  border-color: #555 transparent transparent transparent;
+  border-color: #aaa transparent transparent transparent;
+  background-color: #efefef;
 }
