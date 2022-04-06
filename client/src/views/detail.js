@@ -218,6 +218,8 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             var scope = this.model.defs['links'][link].entity;
             var foreignLink = this.model.defs['links'][link].foreign;
 
+            this.model.defs['_relationName'] = link;
+
             var attributes = {};
 
             if (this.relatedAttributeFunctions[link] && typeof this.relatedAttributeFunctions[link] == 'function') {

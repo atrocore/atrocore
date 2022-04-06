@@ -231,6 +231,9 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
             var editView = this.getView('edit');
 
             var model = editView.model;
+            if (this.options.relate && this.options.relate.model) {
+                model.defs['_relationName'] = this.options.relate.model.defs['_relationName'];
+            }
             editView.once('after:save', function () {
                 this.trigger('after:save', model);
                 this.dialog.close();

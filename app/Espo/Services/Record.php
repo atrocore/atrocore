@@ -1041,6 +1041,7 @@ class Record extends \Espo\Core\Services\Base
         $this->processDuplicateCheck($entity, $attachment);
 
         if ($this->storeEntity($entity)) {
+            $this->updateRelationData($entity, $attachment);
             $this->afterCreateEntity($entity, $attachment);
             $this->afterCreateProcessDuplicating($entity, $attachment);
             $this->prepareEntityForOutput($entity);
