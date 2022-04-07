@@ -483,12 +483,17 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
 
         _getHeaderDefs() {
             let defs = Dep.prototype._getHeaderDefs.call(this);
+
+            const urlParts = (this.collection.url || '').split('/');
+            const hasDragDrop = !!(this.getMetadata().get(['clientDefs', urlParts.shift(), 'relationshipPanels', urlParts.pop(), 'dragDrop']));
+
             let model = this.collection.model.prototype;
             defs.forEach(item => {
-                if (item.name && ['currency', 'wysiwyg', 'wysiwygMultiLang'].includes(model.getFieldType(item.name))) {
+                if (hasDragDrop || item.name && ['currency', 'wysiwyg', 'wysiwygMultiLang'].includes(model.getFieldType(item.name))) {
                     item.sortable = false;
                 }
             });
+
             return defs;
         },
 
