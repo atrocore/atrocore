@@ -321,6 +321,13 @@ class EntityManager
             $scopesData['kanbanStatusIgnoreList'] = $params['kanbanStatusIgnoreList'];
         }
 
+        $additionalFields = array_keys($this->getMetadata()->get(['app', 'additionalEntityParams', 'fields'], []));
+        foreach ($params as $key => $value) {
+            if (in_array($key, $additionalFields)) {
+                $scopesData[$key] = empty($value) ? null : $value;
+            }
+        }
+
         $this->getMetadata()->set('scopes', $name, $scopesData);
 
         $filePath = $templatePath . "/Metadata/{$type}/entityDefs.json";
@@ -394,6 +401,14 @@ class EntityManager
 
         if (array_key_exists('statusField', $data)) {
             $scopeData['statusField'] = $data['statusField'];
+            $this->getMetadata()->set('scopes', $name, $scopeData);
+        }
+
+        $additionalFields = array_keys($this->getMetadata()->get(['app', 'additionalEntityParams', 'fields'], []));
+        foreach ($data as $key => $value) {
+            if (in_array($key, $additionalFields)) {
+                $scopeData[$key] = empty($value) ? null : $value;
+            }
             $this->getMetadata()->set('scopes', $name, $scopeData);
         }
 

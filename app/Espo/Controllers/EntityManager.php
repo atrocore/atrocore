@@ -118,10 +118,14 @@ class EntityManager extends \Espo\Core\Controllers\Base
             $this->prepareFullTextSearchFields($name, $data['textFilterFields']);
         }
 
-        $result = $this->getContainer()->get('entityManagerUtil')->create($name, $type, $params);
+        $additionalFields = array_keys($this->getMetadata()->get(['app', 'additionalEntityParams', 'fields'], []));
+        foreach ($data as $key => $value) {
+            if (in_array($key, $additionalFields)) {
+                $params[$key] = $value;
+            }
+        }
 
-        // update scopes
-        $this->updateScope($data);
+        $result = $this->getContainer()->get('entityManagerUtil')->create($name, $type, $params);
 
         if ($result) {
             $tabList = $this->getConfig()->get('tabList', []);
@@ -178,9 +182,6 @@ class EntityManager extends \Espo\Core\Controllers\Base
         }
 
         $result = $this->getContainer()->get('entityManagerUtil')->update($name, $data);
-
-        // update scopes
-        $this->updateScope($data);
 
         if ($result) {
             $this->getContainer()->get('dataManager')->clearCache();
@@ -398,21 +399,6 @@ class EntityManager extends \Espo\Core\Controllers\Base
         $this->getContainer()->get('dataManager')->clearCache();
 
         return true;
-    }
-
-    protected function updateScope(array $data): void
-    {
-        $additionalFields = array_keys($this->getMetadata()->get(['app', 'additionalEntityParams', 'fields'], []));
-
-        $scopeData = [];
-        foreach ($data as $key => $value) {
-            if (in_array($key, $additionalFields)) {
-                $scopeData[$key] = $value;
-            }
-        }
-
-        $this->getMetadata()->set('scopes', trim(ucfirst($data['name'])), $scopeData);
-        $this->getMetadata()->save();
     }
 
     /**
