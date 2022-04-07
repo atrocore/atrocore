@@ -448,7 +448,7 @@ class Hierarchy extends Record
         $entity->set('inheritedFields', $this->getInheritedFields($entity));
     }
 
-    protected function createPseudoTransactionJobs(array $parent, \stdClass $data, string $parentTransactionId = null): void
+    public function createPseudoTransactionJobs(array $parent, \stdClass $data, string $parentTransactionId = null): void
     {
         $children = $this->getRepository()->getChildrenArray($parent['id']);
         foreach ($children as $child) {
@@ -464,7 +464,7 @@ class Hierarchy extends Record
         }
     }
 
-    protected function createPseudoTransactionLinkJobs(string $id, string $link, string $foreignId, string $parentTransactionId = null): void
+    public function createPseudoTransactionLinkJobs(string $id, string $link, string $foreignId, string $parentTransactionId = null): void
     {
         if (in_array($link, $this->getRepository()->getUnInheritedRelations())) {
             return;
@@ -483,7 +483,7 @@ class Hierarchy extends Record
         }
     }
 
-    protected function createPseudoTransactionUnlinkJobs(string $id, string $link, string $foreignId, string $parentTransactionId = null): void
+    public function createPseudoTransactionUnlinkJobs(string $id, string $link, string $foreignId, string $parentTransactionId = null): void
     {
         if (in_array($link, $this->getRepository()->getUnInheritedRelations())) {
             return;

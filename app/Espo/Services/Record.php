@@ -1041,6 +1041,7 @@ class Record extends \Espo\Core\Services\Base
         $this->processDuplicateCheck($entity, $attachment);
 
         if ($this->storeEntity($entity)) {
+            $this->linkHierarchically($entity, $attachment);
             $this->updateRelationData($entity, $attachment);
             $this->afterCreateEntity($entity, $attachment);
             $this->afterCreateProcessDuplicating($entity, $attachment);
@@ -1124,7 +1125,10 @@ class Record extends \Espo\Core\Services\Base
         }
 
         if ($this->storeEntity($entity)) {
-            $this->updateRelationData($entity, $data);
+            if ($this->isRelationPanelChanges($data)) {
+                $this->updateRelationData($entity, $data);
+            }
+
             $this->afterUpdateEntity($entity, $data);
             $this->prepareEntityForOutput($entity);
             $this->loadPreview($entity);
@@ -1139,9 +1143,32 @@ class Record extends \Espo\Core\Services\Base
         throw new Error();
     }
 
+    protected function isRelationPanelChanges(\stdClass $data): bool
+    {
+        return property_exists($data, '_relationName') && property_exists($data, '_relationEntity') && property_exists($data, '_relationEntityId');
+    }
+
+    protected function linkHierarchically(Entity $entity, \stdClass $attachment): void
+    {
+        if (!$this->isRelationPanelChanges($attachment) || $this->getMetadata()->get(['scopes', $attachment->_relationEntity, 'type']) !== 'Hierarchy') {
+            return;
+        }
+
+        $field = $this->getMetadata()->get(['entityDefs', $attachment->_relationEntity, 'links', $attachment->_relationName, 'foreign'], '') . 'Ids';
+        if (!property_exists($attachment, $field) || !is_array($attachment->$field)) {
+            return;
+        }
+
+        $foreignService = $this->getServiceFactory()->create($attachment->_relationEntity);
+
+        foreach ($attachment->$field as $foreignId) {
+            $foreignService->createPseudoTransactionLinkJobs($foreignId, $attachment->_relationName, $entity->get('id'));
+        }
+    }
+
     protected function updateRelationData(Entity $entity, \stdClass $data): void
     {
-        if (!property_exists($data, '_relationName') || !property_exists($data, '_relationEntity') || !property_exists($data, '_relationEntityId')) {
+        if (!$this->isRelationPanelChanges($data)) {
             return;
         }
 
