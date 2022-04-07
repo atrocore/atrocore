@@ -274,21 +274,23 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
         },
 
         getUnInheritedRelations: function () {
+            const scope = this.model.urlRoot;
+
             let unInheritedRelations = [];
 
             (this.getMetadata().get(`app.nonInheritedRelations`) || []).forEach(field => {
                 unInheritedRelations.push(field);
             });
 
-            (this.getMetadata().get(`scopes.${this.scope}.mandatoryUnInheritedRelations`) || []).forEach(field => {
+            (this.getMetadata().get(`scopes.${scope}.mandatoryUnInheritedRelations`) || []).forEach(field => {
                 unInheritedRelations.push(field);
             });
 
-            (this.getMetadata().get(`scopes.${this.scope}.unInheritedRelations`) || []).forEach(field => {
+            (this.getMetadata().get(`scopes.${scope}.unInheritedRelations`) || []).forEach(field => {
                 unInheritedRelations.push(field);
             });
 
-            $.each(this.getMetadata().get(`entityDefs.${this.scope}.links`), (link, linkDefs) => {
+            $.each(this.getMetadata().get(`entityDefs.${scope}.links`), (link, linkDefs) => {
                 if (linkDefs.type && linkDefs.type === 'hasMany') {
                     if (!linkDefs.relationName) {
                         unInheritedRelations.push(link);
