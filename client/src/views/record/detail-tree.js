@@ -56,6 +56,9 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
                 scope: this.scope,
                 model: this.model
             }, view => {
+                this.listenTo(this.model, 'after:save', () => {
+                    view.reRender();
+                });
                 view.listenTo(view, 'select-node', data => {
                     this.selectNode(data);
                 });
