@@ -514,7 +514,11 @@ class Hierarchy extends Record
             if (!array_key_exists($underScoredField, $parent)) {
                 continue 1;
             }
-            if ($this->areValuesEqual($this->getRepository()->get(), $field, $parent[$underScoredField], $child[$underScoredField])) {
+
+            $parentValue = $parent[$underScoredField];
+            $childValue = $child[$underScoredField];
+
+            if ($this->areValuesEqual($this->getRepository()->get(), $field, $parentValue, $childValue)) {
                 $inputData->$field = $value;
             }
         }
