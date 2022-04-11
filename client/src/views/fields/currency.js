@@ -52,6 +52,8 @@ Espo.define('views/fields/currency', 'views/fields/float', function (Dep) {
 
         listTemplate2: 'fields/currency/list-2',
 
+        listLinkTemplate: 'fields/currency/list-link',
+
         detailTemplateNoCurrency: 'fields/currency/detail-no-currency',
 
         maxDecimalPlaces: 3,
