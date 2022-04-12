@@ -64,12 +64,12 @@ class PseudoTransactionManager
 
     public function pushCreateEntityJob(string $entityType, $data, string $parentId = null): string
     {
-        return $this->push($entityType, '', 'createEntity', Json::encode($data), $parentId);
+        return $this->push($entityType, '', 'createEntity', Json::encode($data, JSON_UNESCAPED_UNICODE), $parentId);
     }
 
     public function pushUpdateEntityJob(string $entityType, string $entityId, $data, string $parentId = null): string
     {
-        return $this->push($entityType, $entityId, 'updateEntity', Json::encode($data), $parentId);
+        return $this->push($entityType, $entityId, 'updateEntity', Json::encode($data, JSON_UNESCAPED_UNICODE), $parentId);
     }
 
     public function pushDeleteEntityJob(string $entityType, string $entityId, string $parentId = null): string
@@ -79,17 +79,17 @@ class PseudoTransactionManager
 
     public function pushLinkEntityJob(string $entityType, string $entityId, string $link, string $foreignId, string $parentId = null): string
     {
-        return $this->push($entityType, $entityId, 'linkEntity', Json::encode(['link' => $link, 'foreignId' => $foreignId]), $parentId);
+        return $this->push($entityType, $entityId, 'linkEntity', Json::encode(['link' => $link, 'foreignId' => $foreignId], JSON_UNESCAPED_UNICODE), $parentId);
     }
 
     public function pushUnLinkEntityJob(string $entityType, string $entityId, string $link, string $foreignId, string $parentId = null): string
     {
-        return $this->push($entityType, $entityId, 'unlinkEntity', Json::encode(['link' => $link, 'foreignId' => $foreignId]), $parentId);
+        return $this->push($entityType, $entityId, 'unlinkEntity', Json::encode(['link' => $link, 'foreignId' => $foreignId], JSON_UNESCAPED_UNICODE), $parentId);
     }
 
     public function pushCustomJob(string $entityType, string $entityId, string $action, array $data, string $parentId = null): string
     {
-        return $this->push($entityType, $entityId, $this->getPDO()->quote($action), Json::encode($data), $parentId);
+        return $this->push($entityType, $entityId, $this->getPDO()->quote($action), Json::encode($data, JSON_UNESCAPED_UNICODE), $parentId);
     }
 
     public function run(): void
