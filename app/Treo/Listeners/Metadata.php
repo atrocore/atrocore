@@ -69,8 +69,34 @@ class Metadata extends AbstractListener
 
         $data = $this->showConnections($data);
 
+        $data = $this->prepareFieldsInheritance($data);
+
         // set data
         $event->setArgument('data', $data);
+    }
+
+    protected function prepareFieldsInheritance(array $data): array
+    {
+        foreach ($data['entityDefs'] as $scope => $scopeData) {
+            if (empty($scopeData['fields'])) {
+                continue;
+            }
+
+            foreach ($scopeData['fields'] as $fieldName => $fieldData) {
+                if (empty($fieldData['type'])) {
+                    continue 1;
+                }
+
+                if ($fieldData['type'] === 'currencyConverted') {
+                    if (!isset($data['scopes'][$scope]['mandatoryUnInheritedFields'])) {
+                        $data['scopes'][$scope]['mandatoryUnInheritedFields'] = [];
+                    }
+                    $data['scopes'][$scope]['mandatoryUnInheritedFields'][] = $fieldName;
+                }
+            }
+        }
+
+        return $data;
     }
 
     protected function showConnections(array $data): array
