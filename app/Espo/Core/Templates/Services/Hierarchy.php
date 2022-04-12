@@ -322,6 +322,36 @@ class Hierarchy extends Record
 
     public function linkEntity($id, $link, $foreignId)
     {
+        /**
+         * Delegate to Update if ManyToOne or OneToOne relation
+         */
+        if ($this->getMetadata()->get(['entityDefs', $this->entityName, 'links', $link, 'type']) === 'belongsTo') {
+            $data = new \stdClass();
+            $data->{"{$link}Id"} = $foreignId;
+            try {
+                $this->updateEntity($id, $data);
+            } catch (NotModified $e) {
+                // ignore
+            }
+
+            return true;
+        }
+
+        /**
+         * Delegate to Update if OneToMany relation
+         */
+        if (!empty($linkData = $this->getOneToManyRelationData($link))) {
+            $data = new \stdClass();
+            $data->{"{$linkData['foreign']}Id"} = $id;
+            try {
+                $this->getServiceFactory()->create($linkData['entity'])->updateEntity($foreignId, $data);
+            } catch (NotModified $e) {
+                // ignore
+            }
+
+            return true;
+        }
+
         if (empty($this->getMetadata()->get(['scopes', $this->entityType, 'relationInheritance']))) {
             return parent::linkEntity($id, $link, $foreignId);
         }
@@ -345,6 +375,36 @@ class Hierarchy extends Record
 
     public function unlinkEntity($id, $link, $foreignId)
     {
+        /**
+         * Delegate to Update if ManyToOne or OneToOne relation
+         */
+        if ($this->getMetadata()->get(['entityDefs', $this->entityName, 'links', $link, 'type']) === 'belongsTo') {
+            $data = new \stdClass();
+            $data->{"{$link}Id"} = null;
+            try {
+                $this->updateEntity($id, $data);
+            } catch (NotModified $e) {
+                // ignore
+            }
+
+            return true;
+        }
+
+        /**
+         * Delegate to Update if OneToMany relation
+         */
+        if (!empty($linkData = $this->getOneToManyRelationData($link))) {
+            $data = new \stdClass();
+            $data->{"{$linkData['foreign']}Id"} = null;
+            try {
+                $this->getServiceFactory()->create($linkData['entity'])->updateEntity($foreignId, $data);
+            } catch (NotModified $e) {
+                // ignore
+            }
+
+            return true;
+        }
+
         if (!empty($this->originUnlinkAction)) {
             return parent::unlinkEntity($id, $link, $foreignId);
         }
@@ -571,7 +631,7 @@ class Hierarchy extends Record
                     case 'asset':
                     case 'image':
                     case 'link':
-                        if ($this->areValuesEqual($this->getRepository()->get(), $field, $parent->get($field . 'Id'), $entity->get($field . 'Id'))) {
+                        if ($this->areValuesEqual($this->getRepository()->get(), $field. 'Id', $parent->get($field . 'Id'), $entity->get($field . 'Id'))) {
                             $inheritedFields[] = $field;
                         }
                         break;
