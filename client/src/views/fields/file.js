@@ -296,41 +296,31 @@ Espo.define('views/fields/file', ['views/fields/link', 'lib!MD5'], function (Dep
             this.$el.find('img.image-preview').css('maxWidth', width + 'px');
         },
 
-        getDetailPreview: function (name, type, id) {
-            name = Handlebars.Utils.escapeExpression(name);
-            var preview = name;
-
-            switch (type) {
-                case 'image/png':
-                case 'image/jpeg':
-                case 'image/gif':
-                    preview = '<a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="' + this.getImageUrl(id, this.previewSize) + '" class="image-preview"></a>';
-            }
-            return preview;
-        },
-
         getEditPreview: function (name, type, id) {
             return name;
         },
 
+        hasPreview: function (name) {
+            const hasPreviewExtensions = this.getMetadata().get('fields.asset.hasPreviewExtensions') || [];
+            const fileExt = (name || '').split('.').pop().toLowerCase();
+
+            return $.inArray(fileExt, hasPreviewExtensions) !== -1;
+        },
+
         getValueForDisplay: function () {
-            if (this.mode == 'detail' || this.mode == 'list') {
-                var name = this.model.get(this.nameName);
-                var type = this.model.get(this.typeName) || this.defaultType;
-                var id = this.model.get(this.idName);
+            if (this.mode === 'detail' || this.mode === 'list') {
+                let id = this.model.get(this.idName);
+                let name = this.model.get(this.nameName);
 
                 if (!id) {
                     return false;
                 }
 
-                var string = '';
-
-                if (this.showPreview && ~this.previewTypeList.indexOf(type)) {
-                    string = '<div class="attachment-preview">' + this.getDetailPreview(name, type, id) + '</div>';
-                } else {
-                    string = '<span class="glyphicon glyphicon-paperclip small"></span> <a href="'+ this.getDownloadUrl(id) +'" target="_BLANK">' + Handlebars.Utils.escapeExpression(name) + '</a>';
+                if (this.hasPreview(name)) {
+                    return '<div class="attachment-preview"><a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="' + this.getImageUrl(id, this.previewSize) + '" class="image-preview"></a></div>';
                 }
-                return string;
+
+                return '<span class="glyphicon glyphicon-paperclip small"></span> <a href="' + this.getDownloadUrl(id) + '" target="_BLANK">' + Handlebars.Utils.escapeExpression(name) + '</a>';
             }
         },
 
