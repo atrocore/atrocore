@@ -306,14 +306,23 @@ class Hierarchy extends Record
             return parent::updateEntity($id, $data);
         }
 
-        $this->getEntityManager()->getPDO()->beginTransaction();
+        $inTransaction = false;
+        if (!$this->getEntityManager()->getPDO()->inTransaction()) {
+            $this->getEntityManager()->getPDO()->beginTransaction();
+            $inTransaction = true;
+        }
+
         try {
             $entityData = $this->getRepository()->fetchById($id);
             $result = parent::updateEntity($id, $data);
             $this->createPseudoTransactionJobs($entityData, clone $data);
-            $this->getEntityManager()->getPDO()->commit();
+            if ($inTransaction) {
+                $this->getEntityManager()->getPDO()->commit();
+            }
         } catch (\Throwable $e) {
-            $this->getEntityManager()->getPDO()->rollBack();
+            if ($inTransaction) {
+                $this->getEntityManager()->getPDO()->rollBack();
+            }
             throw $e;
         }
 
@@ -360,13 +369,21 @@ class Hierarchy extends Record
             return parent::linkEntity($id, $link, $foreignId);
         }
 
-        $this->getEntityManager()->getPDO()->beginTransaction();
+        $inTransaction = false;
+        if (!$this->getEntityManager()->getPDO()->inTransaction()) {
+            $this->getEntityManager()->getPDO()->beginTransaction();
+            $inTransaction = true;
+        }
         try {
             $result = parent::linkEntity($id, $link, $foreignId);
             $this->createPseudoTransactionLinkJobs($id, $link, $foreignId);
-            $this->getEntityManager()->getPDO()->commit();
+            if ($inTransaction) {
+                $this->getEntityManager()->getPDO()->commit();
+            }
         } catch (\Throwable $e) {
-            $this->getEntityManager()->getPDO()->rollBack();
+            if ($inTransaction) {
+                $this->getEntityManager()->getPDO()->rollBack();
+            }
             throw $e;
         }
 
@@ -417,13 +434,21 @@ class Hierarchy extends Record
             return parent::unlinkEntity($id, $link, $foreignId);
         }
 
-        $this->getEntityManager()->getPDO()->beginTransaction();
+        $inTransaction = false;
+        if (!$this->getEntityManager()->getPDO()->inTransaction()) {
+            $this->getEntityManager()->getPDO()->beginTransaction();
+            $inTransaction = true;
+        }
         try {
             $result = parent::unlinkEntity($id, $link, $foreignId);
             $this->createPseudoTransactionUnlinkJobs($id, $link, $foreignId);
-            $this->getEntityManager()->getPDO()->commit();
+            if ($inTransaction) {
+                $this->getEntityManager()->getPDO()->commit();
+            }
         } catch (\Throwable $e) {
-            $this->getEntityManager()->getPDO()->rollBack();
+            if ($inTransaction) {
+                $this->getEntityManager()->getPDO()->rollBack();
+            }
             throw $e;
         }
 
@@ -432,15 +457,23 @@ class Hierarchy extends Record
 
     public function deleteEntity($id)
     {
-        $this->getEntityManager()->getPDO()->beginTransaction();
+        $inTransaction = false;
+        if (!$this->getEntityManager()->getPDO()->inTransaction()) {
+            $this->getEntityManager()->getPDO()->beginTransaction();
+            $inTransaction = true;
+        }
         try {
             $result = parent::deleteEntity($id);
             foreach ($this->getRepository()->getChildrenRecursivelyArray($id) as $childId) {
                 parent::deleteEntity($childId);
             }
-            $this->getEntityManager()->getPDO()->commit();
+            if ($inTransaction) {
+                $this->getEntityManager()->getPDO()->commit();
+            }
         } catch (\Throwable $e) {
-            $this->getEntityManager()->getPDO()->rollBack();
+            if ($inTransaction) {
+                $this->getEntityManager()->getPDO()->rollBack();
+            }
             throw $e;
         }
 
