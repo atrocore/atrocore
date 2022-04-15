@@ -117,8 +117,22 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                 if (!this.openNodes($tree, ids) || locationHash !== window.location.hash) {
                     clearInterval(interval);
                 }
-                $tree.find(`.jqtree-title[data-id="${id}"]`).each((k, el) => {
-                    $(el).parent().parent().addClass('jqtree-selected');
+
+                let node = $tree.tree('getNodeById', id);
+                if (node) {
+                    $tree.tree('addToSelection', node);
+                }
+
+                $tree.find(`.jqtree-title`).each((k, el) => {
+                    let $el = $(el);
+                    let $li = $el.parent().parent();
+
+                    if ($el.data('id') !== id) {
+                        $tree.tree('removeFromSelection', $tree.tree('getNodeById', $el.data('id')));
+                        $li.removeClass('jqtree-selected');
+                    } else if (!$li.hasClass('jqtree-selected')) {
+                        $li.addClass('jqtree-selected');
+                    }
                 });
             }, 500);
         },
