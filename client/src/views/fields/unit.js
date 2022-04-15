@@ -132,24 +132,6 @@ Espo.define('views/fields/unit', 'views/fields/float',
             }
         },
 
-        formatNumber(value) {
-            if (this.mode === 'list' || this.mode === 'detail') {
-                return this.formatNumberDetail(value);
-            }
-
-            return value;
-        },
-
-        formatNumberDetail(value) {
-            if (value !== null) {
-                let parts = value.toString().split(".");
-                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, this.thousandSeparator);
-
-                return parts.join(this.decimalMark);
-            }
-            return '';
-        },
-
         validateFloat: function () {
             if (Dep.prototype.validateFloat.call(this)) {
                 return true;

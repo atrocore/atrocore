@@ -99,52 +99,6 @@ Espo.define('views/fields/currency', 'views/fields/float', function (Dep) {
             return Dep.prototype._getTemplateName.call(this);
         },
 
-        formatNumber: function (value) {
-            if (this.mode === 'list' || this.mode === 'detail') {
-                return this.formatNumberDetail(value);
-            }
-
-            return value;
-        },
-
-        formatNumberDetail: function (value) {
-            if (value !== null) {
-                var currencyDecimalPlaces = this.getConfig().get('currencyDecimalPlaces');
-
-                if (currencyDecimalPlaces === 0) {
-                    value = Math.round(value);
-                } else if (currencyDecimalPlaces) {
-                     value = Math.round(value * Math.pow(10, currencyDecimalPlaces)) / (Math.pow(10, currencyDecimalPlaces));
-                } else {
-                    value = Math.round(value * Math.pow(10, this.maxDecimalPlaces)) / (Math.pow(10, this.maxDecimalPlaces));
-                }
-
-                var parts = value.toString().split(".");
-                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, this.thousandSeparator);
-
-                if (currencyDecimalPlaces === 0) {
-                    return parts[0];
-                } else if (currencyDecimalPlaces) {
-                    var decimalPartLength = 0;
-                    if (parts.length > 1) {
-                        decimalPartLength = parts[1].length;
-                    } else {
-                        parts[1] = '';
-                    }
-
-                    if (currencyDecimalPlaces && decimalPartLength < currencyDecimalPlaces) {
-                        var limit = currencyDecimalPlaces - decimalPartLength;
-                        for (var i = 0; i < limit; i++) {
-                            parts[1] += '0';
-                        }
-                    }
-                }
-
-                return parts.join(this.decimalMark);
-            }
-            return '';
-        },
-
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
             if (this.mode == 'edit') {
