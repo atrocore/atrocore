@@ -248,7 +248,9 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             locales.forEach(function (v, k) {
                 let localeField = this.name + v.charAt(0).toUpperCase() + v.charAt(1) + v.charAt(3) + v.charAt(4).toLowerCase();
                 let localeFieldOptions = this.model.getFieldParam(localeField, 'options');
-                this.model.set(localeField, localeFieldOptions[key]);
+                if (localeFieldOptions && localeFieldOptions[key]) {
+                    this.model.set(localeField, localeFieldOptions[key]);
+                }
             }, this);
         },
 
