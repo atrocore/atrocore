@@ -103,28 +103,8 @@ Espo.define('views/fields/currency', 'views/fields/float', function (Dep) {
             if (this.mode === 'list' || this.mode === 'detail') {
                 return this.formatNumberDetail(value);
             }
-            return this.formatNumberEdit(value);
-        },
 
-        formatNumberEdit: function (value) {
-            var currencyDecimalPlaces = this.getConfig().get('currencyDecimalPlaces');
-
-            if (value !== null) {
-                var parts = value.toString().split(".");
-                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, this.thousandSeparator);
-
-                if (parts.length > 1) {
-                    if (currencyDecimalPlaces && parts[1].length < currencyDecimalPlaces) {
-                        var limit = currencyDecimalPlaces - parts[1].length;
-                        for (var i = 0; i < limit; i++) {
-                            parts[1] += '0';
-                        }
-                    }
-                }
-
-                return parts.join(this.decimalMark);
-            }
-            return '';
+            return value;
         },
 
         formatNumberDetail: function (value) {

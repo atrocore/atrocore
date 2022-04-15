@@ -136,17 +136,8 @@ Espo.define('views/fields/unit', 'views/fields/float',
             if (this.mode === 'list' || this.mode === 'detail') {
                 return this.formatNumberDetail(value);
             }
-            return this.formatNumberEdit(value);
-        },
 
-        formatNumberEdit(value) {
-            if (value !== null) {
-                let parts = value.toString().split(".");
-                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, this.thousandSeparator);
-
-                return parts.join(this.decimalMark);
-            }
-            return '';
+            return value;
         },
 
         formatNumberDetail(value) {

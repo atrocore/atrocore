@@ -107,6 +107,11 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
             if (this.disableFormatting) {
                 return value;
             }
+
+            if (this.mode === 'edit') {
+                return value;
+            }
+
             if (value !== null) {
                 var stringValue = value.toString();
                 stringValue = stringValue.replace(/\B(?=(\d{3})+(?!\d))/g, this.thousandSeparator);
