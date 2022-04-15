@@ -87,7 +87,7 @@ class Metadata extends AbstractListener
                     continue 1;
                 }
 
-                if ($fieldData['type'] === 'currencyConverted') {
+                if (in_array($fieldData['type'], ['currencyConverted', 'autoincrement'])) {
                     if (!isset($data['scopes'][$scope]['mandatoryUnInheritedFields'])) {
                         $data['scopes'][$scope]['mandatoryUnInheritedFields'] = [];
                     }
