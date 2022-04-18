@@ -686,9 +686,9 @@ class Hierarchy extends Record
                         break;
                     case 'linkMultiple':
                         if (!in_array($field, $this->getRepository()->getUnInheritedFields())) {
-                            $parentIds = array_column($parent->get($field)->toArray(), 'id');
+                            $parentIds = $parent->getLinkMultipleIdList($field);
                             sort($parentIds);
-                            $entityIds = array_column($entity->get($field)->toArray(), 'id');
+                            $entityIds = $entity->getLinkMultipleIdList($field);
                             sort($entityIds);
                             if ($this->areValuesEqual($this->getRepository()->get(), $field . 'Ids', $parentIds, $entityIds)) {
                                 $inheritedFields[] = $field;
