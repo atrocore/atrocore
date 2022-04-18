@@ -8,9 +8,6 @@
   "search-manager": [
     "treo-core"
   ],
-  "controllers/about": [
-    "treo-core"
-  ],
   "controllers/admin": [
     "treo-core"
   ],
@@ -33,9 +30,6 @@
     "treo-core"
   ],
   "views/main": [
-    "treo-core"
-  ],
-  "views/header": [
     "treo-core"
   ],
   "views/list": [
