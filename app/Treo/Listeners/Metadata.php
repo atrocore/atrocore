@@ -69,18 +69,64 @@ class Metadata extends AbstractListener
 
         $data = $this->showConnections($data);
 
-        $data = $this->prepareFieldsInheritance($data);
+        $data = $this->prepareHierarchyEntities($data);
 
         // set data
         $event->setArgument('data', $data);
     }
 
-    protected function prepareFieldsInheritance(array $data): array
+    protected function prepareHierarchyEntities(array $data): array
     {
         foreach ($data['entityDefs'] as $scope => $scopeData) {
             if (empty($scopeData['fields'])) {
                 continue;
             }
+
+            if (!isset($data['scopes'][$scope]['type']) || $data['scopes'][$scope]['type'] !== 'Hierarchy') {
+                continue;
+            }
+
+            $data['entityDefs'][$scope]['fields']['isRoot'] = [
+                "type"                      => "bool",
+                "notStorable"               => true,
+                "layoutListDisabled"        => true,
+                "layoutListSmallDisabled"   => true,
+                "layoutDetailDisabled"      => true,
+                "layoutDetailSmallDisabled" => true,
+                "layoutMassUpdateDisabled"  => true,
+                "filterDisabled"            => true,
+                "importDisabled"            => true,
+                "exportDisabled"            => true,
+                "emHidden"                  => true
+            ];
+
+            $data['entityDefs'][$scope]['fields']['hierarchyRoute'] = [
+                "type"                      => "jsonObject",
+                "notStorable"               => true,
+                "layoutListDisabled"        => true,
+                "layoutListSmallDisabled"   => true,
+                "layoutDetailDisabled"      => true,
+                "layoutDetailSmallDisabled" => true,
+                "layoutMassUpdateDisabled"  => true,
+                "filterDisabled"            => true,
+                "importDisabled"            => true,
+                "exportDisabled"            => true,
+                "emHidden"                  => true
+            ];
+
+            $data['entityDefs'][$scope]['fields']['inheritedFields'] = [
+                "type"                      => "array",
+                "notStorable"               => true,
+                "layoutListDisabled"        => true,
+                "layoutListSmallDisabled"   => true,
+                "layoutDetailDisabled"      => true,
+                "layoutDetailSmallDisabled" => true,
+                "layoutMassUpdateDisabled"  => true,
+                "filterDisabled"            => true,
+                "importDisabled"            => true,
+                "exportDisabled"            => true,
+                "emHidden"                  => true
+            ];
 
             foreach ($scopeData['fields'] as $fieldName => $fieldData) {
                 if (empty($fieldData['type'])) {
@@ -183,7 +229,7 @@ class Metadata extends AbstractListener
             $toSkip = [];
             $newFields = [];
             foreach ($rows['fields'] as $field => $params) {
-                if (in_array($field, $toSkip)){
+                if (in_array($field, $toSkip)) {
                     continue 1;
                 }
                 $newFields[$field] = $params;

@@ -242,6 +242,34 @@ class Hierarchy extends RDB
         return empty($record);
     }
 
+    public function getHierarchyRoute(string $id): array
+    {
+        $route = [];
+        while (!empty($record = $this->getParentRecord($id))) {
+            $route[$record['id']] = $record['name'];
+            $id = $record['id'];
+        }
+
+        return array_reverse($route);
+    }
+
+    public function getParentRecord(string $id): array
+    {
+        $id = $this->getPDO()->quote($id);
+        $tableName = $this->getEntityManager()->getQuery()->toDb($this->entityType);
+
+        $query = "SELECT t.*
+                  FROM `$this->hierarchyTableName` h
+                  LEFT JOIN `$tableName` t ON t.id=h.parent_id
+                  WHERE h.deleted=0
+                    AND t.deleted=0
+                    AND h.entity_id={$id}";
+
+        $record = $this->getPDO()->query($query)->fetch(\PDO::FETCH_ASSOC);
+
+        return empty($record) ? [] : $record;
+    }
+
     public function getRoute(string $id): array
     {
         $records = $this

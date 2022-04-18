@@ -23,13 +23,7 @@
   "views/admin/layouts/index": [
     "treo-core"
   ],
-  "views/detail": [
-    "treo-core"
-  ],
   "views/modal": [
-    "treo-core"
-  ],
-  "views/main": [
     "treo-core"
   ],
   "views/list": [
