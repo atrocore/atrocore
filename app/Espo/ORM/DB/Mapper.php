@@ -803,6 +803,10 @@ abstract class Mapper implements IMapper
             $value = json_encode($value, \JSON_UNESCAPED_UNICODE);
         }
 
+        if ($type === IEntity::BOOL && $value === null) {
+            $value = 0;
+        }
+
         if (is_bool($value)) {
             $value = (int) $value;
         }
