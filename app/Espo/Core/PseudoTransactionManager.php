@@ -41,6 +41,7 @@ use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
+use Espo\Services\Record;
 use PDO;
 use Treo\Core\ServiceFactory;
 
@@ -89,7 +90,7 @@ class PseudoTransactionManager
 
     public function pushCustomJob(string $entityType, string $entityId, string $action, array $data, string $parentId = null): string
     {
-        return $this->push($entityType, $entityId, $this->getPDO()->quote($action), Json::encode($data, JSON_UNESCAPED_UNICODE), $parentId);
+        return $this->push($entityType, $entityId, $action, Json::encode($data, JSON_UNESCAPED_UNICODE), $parentId);
     }
 
     public function run(): void
@@ -182,7 +183,9 @@ class PseudoTransactionManager
             }
 
             $service = $this->getServiceFactory()->create($job['entity_type']);
-            $service->setPseudoTransactionId($job['id']);
+            if ($service instanceof Record) {
+                $service->setPseudoTransactionId($job['id']);
+            }
 
             switch ($job['action']) {
                 case 'createEntity':
