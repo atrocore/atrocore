@@ -43,6 +43,7 @@ use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Config;
 use Espo\Entities\Preferences;
+use Espo\Core\Services\Base as BaseService;
 use Espo\Entities\User;
 
 /**
@@ -85,11 +86,9 @@ abstract class AbstractListener
     }
 
     /**
-     * Get service
-     *
      * @param string $name
      *
-     * @return object
+     * @return BaseService
      */
     protected function getService(string $name)
     {
