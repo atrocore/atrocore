@@ -190,7 +190,7 @@
     "composer": "Installation / uninstallation / updating of modules, which is dependency consistent",
     "representationSettings": "Representation settings",
     "measure": "Measure settings",
-    "connection": "Connections settings",
+    "connection": "Connection settings",
     "settings": "General system settings",
     "scheduledJob": "Jobs executed by cron",
     "clearCache": "Backend cache clearing",
