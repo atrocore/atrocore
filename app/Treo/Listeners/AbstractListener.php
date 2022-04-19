@@ -41,93 +41,48 @@ use Espo\Core\Container;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Language;
+use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Config;
 use Espo\Entities\Preferences;
-use Espo\Core\Services\Base as BaseService;
 use Espo\Entities\User;
 
-/**
- * AbstractListener class
- */
 abstract class AbstractListener
 {
-    /**
-     * @var Container
-     */
-    protected $container;
+    protected Container $container;
 
-    /**
-     * @var array
-     */
-    protected $services = [];
+    protected array $services = [];
 
-    /**
-     * Set container
-     *
-     * @param Container $container
-     *
-     * @return $this
-     */
-    public function setContainer(Container $container)
+    public function setContainer(Container $container): AbstractListener
     {
         $this->container = $container;
 
         return $this;
     }
 
-    /**
-     * Get container
-     *
-     * @return Container
-     */
     protected function getContainer(): Container
     {
         return $this->container;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return BaseService
-     */
     protected function getService(string $name)
     {
         if (!isset($this->services[$name])) {
-            $this->services[$name] = $this
-                ->getContainer()
-                ->get('serviceFactory')
-                ->create($name);
+            $this->services[$name] = $this->getContainer()->get('serviceFactory')->create($name);
         }
 
         return $this->services[$name];
     }
 
-    /**
-     * Get entity manager
-     *
-     * @return EntityManager
-     */
     protected function getEntityManager(): EntityManager
     {
         return $this->getContainer()->get('entityManager');
     }
 
-    /**
-     * Get config
-     *
-     * @return Config
-     */
     protected function getConfig(): Config
     {
         return $this->getContainer()->get('config');
     }
 
-    /**
-     * Get language
-     *
-     * @return Language
-     * @throws Error
-     */
     protected function getLanguage(): Language
     {
         if (is_null($this->getContainer()->get('preferences'))) {
@@ -137,7 +92,7 @@ abstract class AbstractListener
         return $this->getContainer()->get('language');
     }
 
-    protected function getMetadata(): \Espo\Core\Utils\Metadata
+    protected function getMetadata(): Metadata
     {
         return $this->getContainer()->get('metadata');
     }
