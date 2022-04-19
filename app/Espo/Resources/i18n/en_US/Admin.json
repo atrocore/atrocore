@@ -209,7 +209,7 @@
     "currency": "Select available currencies, default currency settings, define base currency and currency exchange rates",
     "notifications": "Manage settings for in-app and email notifications",
     "actionHistory": "See the history of all user actions in the system, including username, target data record, action type, IP address, access date and time",
-    "labelManager": "Manage label translations for pre-selected languages, reset your translations to default values as well as push your translations for the review by AtroCore team",
+    "labelManager": "Manage label translations for pre-selected languages, push your translations for the review by AtroCore team as well as reset your translations to default values",
     "authLog": "Review the login history",
     "attachments": "Manage all files (attachments) stored in the system"
   },
