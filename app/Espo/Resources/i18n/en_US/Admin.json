@@ -183,12 +183,12 @@
     "rebuildDb": "Are you sure you want to rebuild the database structure? All unused columns and tables will be removed."
   },
   "descriptions": {
-    "locale": "Locale Settings",
-    "inputLanguage": "Input languages for translatable fields",
-    "multiLanguagesSettings": "Configure multiple languages to be used",
-    "composer": "Installation / uninstallation / updating of modules, which is dependency consistent",
-    "representationSettings": "Representation settings",
-    "measure": "Measure settings",
+    "locale": "Manage locale settings such as language, date and time format, decimal mark, thousend separator, as well as locale-spesific measure units",
+    "inputLanguage": "Activate multilinguality and choose additional languages to manage your data",
+    "multiLanguagesSettings": "Configure additional languages to be used",
+    "composer": "Dependency consistent installation / uninstallation / updating of modules",
+    "representationSettings": "Manage general settings and preferences for data representation",
+    "measure": "Manage your mesures and measure units, set default measure units and multipliers for automatic measure unit conversion",
     "connection": "Connection settings",
     "settings": "General system settings",
     "scheduledJob": "Jobs executed by cron",
