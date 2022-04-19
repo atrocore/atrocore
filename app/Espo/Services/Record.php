@@ -404,6 +404,13 @@ class Record extends \Espo\Core\Services\Base
         $this->loadPreview($entity);
     }
 
+    public function prepareCollectionForOutput(EntityCollection $collection): void
+    {
+        $this->loadPreviewForCollection($collection);
+
+        $this->dispatchEvent('prepareCollectionForOutput', new Event(['collection' => $collection]));
+    }
+
     public function loadPreviewForCollection(EntityCollection $collection): void
     {
         $this->dispatchEvent('loadPreviewForCollection', new Event(['collection' => $collection]));
@@ -1351,7 +1358,7 @@ class Record extends \Espo\Core\Services\Base
 
         $collection = $this->getRepository()->find($selectParams);
 
-        $this->loadPreviewForCollection($collection);
+        $this->prepareCollectionForOutput($collection);
 
         foreach ($collection as $e) {
             $this->loadAdditionalFieldsForList($e);
@@ -1458,7 +1465,7 @@ class Record extends \Espo\Core\Services\Base
                 }
             }
 
-            $this->loadPreviewForCollection($collectionSub);
+            $this->prepareCollectionForOutput($collectionSub);
 
             foreach ($collectionSub as $e) {
                 $this->loadAdditionalFieldsForList($e);
@@ -1589,7 +1596,7 @@ class Record extends \Espo\Core\Services\Base
         $collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
 
         if (!empty($collection) && count($collection) > 0) {
-            $recordService->loadPreviewForCollection($collection);
+            $this->prepareCollectionForOutput($collection);
             foreach ($collection as $e) {
                 $recordService->loadAdditionalFieldsForList($e);
                 if (!empty($params['loadAdditionalFields'])) {
