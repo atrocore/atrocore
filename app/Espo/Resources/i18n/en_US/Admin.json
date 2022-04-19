@@ -2,7 +2,7 @@
   "labels": {
     "multiLanguagesSettings": "Languages",
     "multiLanguages": "Languages",
-    "Composer": "Update & Modules",
+    "Composer": "Modules",
     "log": "log",
     "Validate": "Validate",
     "Connection": "Connections",
@@ -18,7 +18,7 @@
     "Customization": "Customization",
     "Available Fields": "Available Fields",
     "Layout": "Layout",
-    "Entity Manager": "Entity Manager",
+    "Entity Manager": "Entities",
     "Add Panel": "Add Panel",
     "Add Field": "Add Field",
     "Settings": "Settings",
@@ -33,7 +33,7 @@
     "Portal Roles": "Portal Roles",
     "Portal Users": "Portal Users",
     "Outbound Emails": "Outbound Emails",
-    "Layout Manager": "Layout Manager",
+    "Layout Manager": "Layouts",
     "User Interface": "User Interface",
     "Auth Tokens": "Auth Tokens",
     "Auth Log": "Auth Log",
@@ -55,8 +55,7 @@
     "Jobs": "Jobs",
     "Reset to Default": "Reset to Default",
     "Action History": "Action History",
-    "Label Manager": "Label Manager",
-    "Lead Capture": "Lead Capture",
+    "Label Manager": "Labels",
     "Attachments": "Attachments"
   },
   "layouts": {
