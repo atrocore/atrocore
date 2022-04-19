@@ -214,7 +214,7 @@ Espo.define('treo-core:views/composer/list', 'views/list',
             this.notify(this.translate('settingModuleForInstalling', 'labels', 'Composer'));
             this.ajaxRequest('Composer/installModule', 'POST', JSON.stringify({id: data.id}), {timeout: 180000}).then(response => {
                 if (response) {
-                    this.notify(this.translate('settedModuleForInstalling', 'labels', 'Composer'), 'success');
+                    Espo.Ui.notify(this.translate('setModuleForInstalling', 'labels', 'Composer'), 'info', 1000 * 60, true);
                     this.storeCollection.fetch();
                     this.installedCollection.fetch();
                 }
@@ -232,7 +232,7 @@ Espo.define('treo-core:views/composer/list', 'views/list',
             this.notify(this.translate('settingModuleForRemoving', 'labels', 'Composer'));
             this.ajaxRequest('Composer/deleteModule?id=' + data.id, 'DELETE').then(response => {
                 if (response) {
-                    this.notify(this.translate('settedModuleForRemoving', 'labels', 'Composer'), 'success');
+                    Espo.Ui.notify(this.translate('setModuleForRemoving', 'labels', 'Composer'), 'info', 1000 * 60, true);
                     this.installedCollection.fetch();
                 }
             }).always(() => {
