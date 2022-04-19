@@ -88,9 +88,9 @@ class PseudoTransactionManager
         return $this->push($entityType, $entityId, 'unlinkEntity', Json::encode(['link' => $link, 'foreignId' => $foreignId], JSON_UNESCAPED_UNICODE), $parentId);
     }
 
-    public function pushCustomJob(string $entityType, string $entityId, string $action, array $data, string $parentId = null): string
+    public function pushCustomJob(string $entityType, string $action, array $data, string $parentId = null): string
     {
-        return $this->push($entityType, $entityId, $action, Json::encode($data, JSON_UNESCAPED_UNICODE), $parentId);
+        return $this->push($entityType, '', $action, Json::encode($data, JSON_UNESCAPED_UNICODE), $parentId);
     }
 
     public function run(): void
