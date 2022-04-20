@@ -237,7 +237,12 @@ class Config
 
     public function save()
     {
+        if (!file_exists($this->configPath)) {
+            return false;
+        }
+
         $data = include($this->configPath);
+
         if (empty($data) || !is_array($data)) {
             return false;
         }
