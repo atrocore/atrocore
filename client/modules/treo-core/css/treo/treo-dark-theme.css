@@ -2916,6 +2916,19 @@ table td[class*="col-"], table th[class*="col-"] {
     .table-responsive > .table-bordered > tbody > tr:last-child > th, .table-responsive > .table-bordered > tfoot > tr:last-child > th, .table-responsive > .table-bordered > tbody > tr:last-child > td, .table-responsive > .table-bordered > tfoot > tr:last-child > td {
         border-bottom: 0
     }
+
+    body > footer > p {
+        text-align: center;
+    }
+
+    body > footer > p > a,
+    body > footer > p > span:not(.copyright) {
+        display: none;
+    }
+
+    body > footer > p > span.copyright {
+        float: none !important;
+    }
 }
 
 fieldset {
