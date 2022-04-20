@@ -282,7 +282,7 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
         try {
             $this->isConnectToDb($this->prepareDbParams($dbSettings));
         } catch (\PDOException $e) {
-            $message = $this->translateError('notCorrectDatabaseConfig'). ': ' . $e->getMessage();
+            $message = $this->translateError('notCorrectDatabaseConfig') . ': ' . $e->getMessage();
         }
 
         return ['status' => empty($message), 'message' => $message];
@@ -689,14 +689,23 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
             unlink($file);
         }
 
-        // Insert default locale
-        $this->getPdo()->exec(
-            "INSERT INTO `locale` (id, name, language, date_format, time_zone, week_start, time_format, thousand_separator, decimal_mark) VALUES ('1', 'Main', 'en_US', 'DD.MM.YYYY', 'UTC', 'monday', 'HH:mm', '.', ',')"
+        $this->exec(
+            "INSERT INTO `locale` (id, `name`, `language`, date_format, time_zone, week_start, time_format, thousand_separator, decimal_mark) VALUES ('1', 'Main', 'en_US', 'DD.MM.YYYY', 'UTC', 'monday', 'HH:mm', '.', ',')"
+        );
+        $this->exec(
+            "INSERT INTO scheduled_job (id, `name`, job, `status`, scheduling) VALUES ('ComposerAutoUpdate', 'Auto-updating of modules', 'ComposerAutoUpdate', 'Active', '0 0 * * SUN')"
+        );
+        $this->exec(
+            "INSERT INTO scheduled_job (id, `name`, job, `status`, scheduling) VALUES ('TreoCleanup','Unused data cleanup. Deleting old data and unused db tables, db columns, etc.','TreoCleanup','Active','0 0 1 * *')"
         );
 
-        $this->createScheduledJobs();
-
-        $this->afterInstallModules();
+        foreach ($this->getModuleManager()->getModulesList() as $name) {
+            try {
+                $this->getModuleManager()->getModuleInstallDeleteObject($name)->afterInstall();
+            } catch (\Throwable $e) {
+                $GLOBALS['log']->error("After Install Module Error: {$e->getMessage()}");
+            }
+        }
 
         // refresh translations
         exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " index.php refresh translations >/dev/null");
@@ -719,35 +728,13 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
         $this->getConfig()->save();
     }
 
-    /**
-     * Create scheduled jobs
-     */
-    protected function createScheduledJobs(): void
+    private function exec(string $query): void
     {
-        $this->getPdo()->exec(
-            "INSERT INTO scheduled_job (id, name, job, status, scheduling) VALUES ('ComposerAutoUpdate', 'Auto-updating of modules', 'ComposerAutoUpdate', 'Active', '0 0 * * SUN')"
-        );
-        $this->getPdo()->exec(
-            "INSERT INTO scheduled_job (id, name, job, status, scheduling) VALUES ('TreoCleanup','Unused data cleanup. Deleting old data and unused db tables, db columns, etc.','TreoCleanup','Active','0 0 1 * *')"
-        );
-    }
-
-    /**
-     * Call after install events for modules
-     */
-    protected function afterInstallModules(): void
-    {
-        foreach ($this->getModuleManager()->getModulesList() as $name) {
-            $this->getModuleManager()->getModuleInstallDeleteObject($name)->afterInstall();
+        try {
+            $this->getContainer()->get('pdo')->exec($query);
+        } catch (\Throwable $e) {
+            $GLOBALS['log']->error("PDO Error: {$e->getMessage()}. For query '$query'");
         }
-    }
-
-    /**
-     * @return \PDO
-     */
-    private function getPdo(): \PDO
-    {
-        return $this->getContainer()->get('pdo');
     }
 
     /**
