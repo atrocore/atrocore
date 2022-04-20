@@ -193,7 +193,7 @@
     "authentication": "Verwalten Sie Authentifizierungsmethoden und -einstellungen",
     "currency": "Wählen Sie verfügbare Währungen aus, definieren Sie eine Standardwährung, eine Basiswährung und die Wechselkurse",
     "notifications": "Verwalten Sie die Einstellungen für In-App- und E-Mail-Benachrichtigungen",
-    "entityManager": "Verwalten Sie vorkonfigurierte und erstellen Sie neue Entitäten unterschiedlicher Typen (Basis, Hierarchie), verwalten Sie deren Konfigurationen, Felder unterschiedlicher Typen (es stehen über 20 Feldtypen zur Verfügung) und Relationen (Viele-zu-Viele, Eins-zu-Viele, Viele-zu-Eins) zwischen Entitäten und definieren Sie dynamische Logikbedingungen, um Felder sichtbar, schreibgeschützt oder erforderlich zu machen",
+    "entityManager": "Konfigurieren Sie Ihr Datenmodell – verwalten Sie vorkonfigurierte und erstellen Sie neue Entitäten unterschiedlicher Typen (Basis, Hierarchie), verwalten Sie deren Konfigurationen, Felder unterschiedlicher Typen (es stehen über 20 Feldtypen zur Verfügung) und Relationen (Viele-zu-Viele, Eins-zu-Viele, Viele-zu-Eins) zwischen Entitäten und definieren Sie dynamische Logikbedingungen, um Felder sichtbar, schreibgeschützt oder erforderlich zu machen",
     "actionHistory": "Sehen Sie den Verlauf aller Benutzeraktionen im System an, einschließlich Benutzername, Zieldatensatz, Aktionstyp, IP-Adresse, Zugriffsdatum und -zeit",
     "labelManager": "Verwalten Sie Label-Übersetzungen für vorausgewählte Sprachen, übermitteln Sie Ihre Übersetzungen zur Überprüfung durch das AtroCore-Team, setzen Sie Ihre Übersetzungen auf Standardwerte zurück",
     "authLog": "Überprüfen Sie den Anmeldeverlauf",
