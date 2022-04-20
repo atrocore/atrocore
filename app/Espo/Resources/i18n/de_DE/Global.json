@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "Translation": "Label",
     "Locale": "Gebietsschema",
     "Connection": "Verbindung",
     "Stream": "Stream",
@@ -38,6 +39,7 @@
     "ArrayValue": "Array-Wert"
   },
   "scopeNamesPlural": {
+    "Translation": "Labels",
     "Locale": "Gebietsschemas",
     "Connection": "Verbindungen",
     "Measure": "Maße",

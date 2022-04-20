@@ -2,7 +2,7 @@
   "labels": {
     "reset": "Zurücksetzen",
     "push": "Zur Überprüfung senden",
-    "Create Label": "Label erstellen"
+    "Create Translation": "Label erstellen"
   },
   "messages": {
     "resetConfirm": "Möchten Sie die Labels wirklich auf die Standardwerte zurücksetzen?",

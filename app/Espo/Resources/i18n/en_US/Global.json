@@ -2,7 +2,7 @@
   "scopeNames": {
     "Locale": "Locale",
     "Connection": "Connection",
-    "Translation": "Translation",
+    "Translation": "Label",
     "Account": "Account",
     "Country": "Country",
     "DocumentFolder": "Document Folder",
@@ -55,7 +55,7 @@
     "Connection": "Connections",
     "Measure": "Measures",
     "Unit": "Units",
-    "Translation": "Translations",
+    "Translation": "Labels",
     "QueueItem": "Queue Items",
     "Account": "Accounts",
     "DocumentFolder": "Document Folders",
