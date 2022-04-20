@@ -32,10 +32,10 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('treo-core:views/record/panel-navigation', 'view',
+Espo.define('views/record/panel-navigation', 'view',
     Dep => Dep.extend({
 
-        template: 'treo-core:record/panel-navigation',
+        template: 'record/panel-navigation',
 
         panelList: [],
 

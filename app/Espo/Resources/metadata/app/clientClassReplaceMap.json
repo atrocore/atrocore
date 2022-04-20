@@ -95,9 +95,6 @@
   "views/fields/wysiwyg": [
     "treo-core"
   ],
-  "views/record/detail": [
-    "treo-core"
-  ],
   "views/preferences/record/edit": [
     "treo-core"
   ],
