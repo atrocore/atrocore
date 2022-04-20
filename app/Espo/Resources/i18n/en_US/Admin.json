@@ -202,7 +202,7 @@
     "portalUsers": "Manage portal users, their preferences, portal roles, portals and accounts",
     "outboundEmails": "Set SMTP server settings for outgoing emails",
     "layoutManager": "Manage standard system layouts for (side) list view, (side) detail view, relation panels and their sorting order, mass update, etc.",
-    "entityManager": "Manage pre-configured and create new entities of different types (base, hierarchy), manage their configurations, fields of different types (there are over 20 field types available), and relations (many-to-many, one-to-many, many-to-one) between entities as well as define dynamic logic conditions for making fields visible, read-only or required",
+    "entityManager": "Configure your data model – manage pre-configured and create new entities of different types (base, hierarchy), manage their configurations, fields of different types (there are over 20 field types available), and relations (many-to-many, one-to-many, many-to-one) between entities as well as define dynamic logic conditions for making fields visible, read-only or required",
     "userInterface": "Select your theme, configure main navigation items, default dashboards and entities, available for quick create as well as manage other settings for user interfaces",
     "authTokens": "Investigate active authorization sessions, including users' IP address and last access date and time",
     "authentication": "Manage authentication methods and settings",
