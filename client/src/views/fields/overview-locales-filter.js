@@ -32,23 +32,40 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('treo-core:views/fields/bool-with-inline-label', 'views/fields/bool',
+Espo.define('views/fields/overview-locales-filter', 'views/fields/dropdown-enum',
     Dep => Dep.extend({
 
-        editTemplate: 'treo-core:fields/bool-with-inline-label/base',
-
-        events: _.extend({
-            'click label': function (e) {
-                e.preventDefault();
-                this.$element.prop('checked', !this.model.get(this.name));
-                this.trigger('change');
+        optionsList: [
+            {
+                name: '',
+                selectable: true
+            },
+            {
+                name: 'showGenericFields',
+                action: 'showGenericFields',
+                field: true,
+                type: 'bool',
+                view: 'views/fields/bool-with-inline-label',
+                default: true
             }
-        }, Dep.prototype.events),
+        ],
 
-        data() {
-            return _.extend({
-                label: this.options.label || this.translate(this.name, 'fields', this.scope),
-            }, Dep.prototype.data.call(this));
+        prepareOptionsList() {
+            let locales = this.getConfig().get('inputLanguageList') || [];
+            if (this.getConfig().get('isMultilangActive') && locales.length) {
+                locales.forEach((locale, index) => {
+                    if (!this.optionsList.find(item => item.name === locale)) {
+                        let item = {
+                            name: locale,
+                            selectable: true,
+                            label: this.getLanguage().translateOption(locale, 'language', 'Global')
+                        };
+                        this.optionsList.splice(1 + index, 0, item);
+                    }
+                });
+            }
+
+            Dep.prototype.prepareOptionsList.call(this);
         }
 
     })

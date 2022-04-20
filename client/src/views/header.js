@@ -43,11 +43,11 @@ Espo.define('views/header', 'view', function (Dep) {
         baseOverviewFilters: [
             {
                 name: 'fieldsFilter',
-                view: 'treo-core:views/fields/overview-fields-filter'
+                view: 'views/fields/overview-fields-filter'
             },
             {
                 name: 'localesFilter',
-                view: 'treo-core:views/fields/overview-locales-filter'
+                view: 'views/fields/overview-locales-filter'
             }
         ],
 
@@ -87,7 +87,7 @@ Espo.define('views/header', 'view', function (Dep) {
                     }
                 }, this);
             }
-            if (this.model && !this.model.isNew() && this.getMetadata().get(['scopes', this.scope, 'advancedFilters'])) {
+            if (this.model && !this.model.isNew()) {
                 this.createOverviewFilters();
             }
         },

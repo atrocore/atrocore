@@ -32,10 +32,10 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('treo-core:views/fields/dropdown-enum', 'view',
+Espo.define('views/fields/dropdown-enum', 'view',
     Dep => Dep.extend({
 
-        template: 'treo-core:fields/dropdown-enum/base',
+        template: 'fields/dropdown-enum/base',
 
         optionsList: [],
 
