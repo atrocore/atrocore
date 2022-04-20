@@ -35,33 +35,41 @@
 Espo.define('views/fields/overview-locales-filter', 'views/fields/dropdown-enum',
     Dep => Dep.extend({
 
-        optionsList: [
-            {
-                name: '',
-                selectable: true
-            },
-            {
-                name: 'showGenericFields',
-                action: 'showGenericFields',
-                field: true,
-                type: 'bool',
-                view: 'views/fields/bool-with-inline-label',
-                default: true
-            }
-        ],
+        optionsList: [],
 
         prepareOptionsList() {
-            let locales = this.getConfig().get('inputLanguageList') || [];
-            if (this.getConfig().get('isMultilangActive') && locales.length) {
-                locales.forEach((locale, index) => {
-                    if (!this.optionsList.find(item => item.name === locale)) {
-                        let item = {
-                            name: locale,
-                            selectable: true,
-                            label: this.getLanguage().translateOption(locale, 'language', 'Global')
-                        };
-                        this.optionsList.splice(1 + index, 0, item);
-                    }
+            this.optionsList.push(
+                {
+                    name: '',
+                    selectable: true,
+                    label: this.translate("allLanguages"),
+                }
+            );
+            this.optionsList.push(
+                {
+                    name: "showLocaleFields_main",
+                    action: "showLocaleFields_main",
+                    field: true,
+                    type: "bool",
+                    label: this.translate("mainLanguage"),
+                    view: "views/fields/bool-with-inline-label",
+                    default: true
+                }
+            );
+
+            if (this.getConfig().get('isMultilangActive')) {
+                (this.getConfig().get('inputLanguageList') || []).forEach(locale => {
+                    this.optionsList.push(
+                        {
+                            name: "showLocaleFields_" + locale,
+                            action: "showLocaleFields_" + locale,
+                            field: true,
+                            type: "bool",
+                            label: this.getLanguage().translateOption(locale, 'language', 'Global').split(' ›').shift(),
+                            view: "views/fields/bool-with-inline-label",
+                            default: true
+                        }
+                    );
                 });
             }
 
