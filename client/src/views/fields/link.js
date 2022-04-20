@@ -193,6 +193,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
         select: function (model) {
             const foreignName = this.model.getFieldParam(this.name, 'foreignName') || 'name';
+            this.$elementName.attr('value', model.get(foreignName));
             this.$elementName.val(model.get(foreignName));
             this.$elementId.val(model.get('id'));
             if (this.mode === 'search') {
@@ -276,7 +277,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                     }.bind(this));
                 } else if (this.mode == 'search') {
                     this.$elementName.on('blur', function (e) {
-                        e.currentTarget.value = '';
+                        e.currentTarget.value = this.$elementName.attr('value');
                     }.bind(this));
                 }
 
