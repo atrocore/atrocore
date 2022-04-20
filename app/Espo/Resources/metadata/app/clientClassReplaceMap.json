@@ -41,9 +41,6 @@
   "views/modals/select-records": [
     "treo-core"
   ],
-  "views/record/base": [
-    "treo-core"
-  ],
   "views/record/detail-bottom": [
     "treo-core"
   ],
