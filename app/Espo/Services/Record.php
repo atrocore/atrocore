@@ -547,44 +547,6 @@ class Record extends \Espo\Core\Services\Base
         return $result;
     }
 
-    /**
-     * @param Entity    $entity
-     * @param \stdClass $data
-     *
-     * @return bool
-     * @throws BadRequest
-     * @throws Error
-     */
-    protected function checkRequired(Entity $entity, \stdClass $data): bool
-    {
-        if ($entity->isSkippedValidation('requiredField')) {
-            return true;
-        }
-
-        /** @var Language $language */
-        $language = $this->getInjection('language');
-
-        $hasCompleteness = !empty($this->getMetadata()->get("scopes.{$entity->getEntityType()}.hasCompleteness")) && !empty($this->getMetadata()->get("app.additionalEntityParams.hasCompleteness"));
-        foreach ($entity->getAttributes() as $field => $data) {
-            if (!$hasCompleteness && (!empty($data['required']) || $this->isRequiredField($field, $entity, 'required')) && $this->isNullField($entity, $field)) {
-                $label = htmlentities($language->translate($field, 'fields', $entity->getEntityType()));
-                throw new BadRequest(sprintf($language->translate('fieldIsRequired', 'exceptions', 'Global'), $label));
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Are all required fields filled ?
-     *
-     * @param Entity    $entity
-     * @param \stdClass $data
-     *
-     * @return bool
-     * @throws BadRequest
-     * @throws Error
-     */
     protected function checkRequiredFields(Entity $entity, \stdClass $data): bool
     {
         if ($entity->isSkippedValidation('requiredField')) {
@@ -663,8 +625,11 @@ class Record extends \Espo\Core\Services\Base
 
     protected function hasCompleteness(Entity $entity): bool
     {
-        return !empty($this->getMetadata()->get("scopes.{$entity->getEntityType()}.hasCompleteness"))
-            && !empty($this->getMetadata()->get("app.additionalEntityParams.hasCompleteness"));
+        if (!$this->getMetadata()->isModuleInstalled('Completeness')) {
+            return false;
+        }
+
+        return !empty($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'hasCompleteness']));
     }
 
     public function checkAssignment(Entity $entity)
