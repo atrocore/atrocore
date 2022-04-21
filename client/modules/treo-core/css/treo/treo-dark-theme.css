@@ -7485,7 +7485,7 @@ button.close {
 
 .selectize-control.plugin-remove_button [data-value] {
     position: relative;
-    padding-right: 24px !important
+    padding-right: 18px !important
 }
 
 .selectize-control.plugin-remove_button [data-value] .remove {
@@ -7547,7 +7547,7 @@ button.close {
 }
 
 .selectize-input {
-    border: 1px solid #d1d5d6;
+    border: 1px solid #eeeeee;
     padding: 6px 10px;
     display: inline-block;
     width: 100%;
@@ -7601,7 +7601,8 @@ button.close {
     padding: 1px 3px;
     background: #efefef;
     color: #333;
-    border: 0 solid rgba(0, 0, 0, 0)
+    border: 0 solid rgba(0, 0, 0, 0);
+    border-radius:3px
 }
 
 .selectize-control.multi .selectize-input > div.active {
@@ -19622,7 +19623,7 @@ ul.dropdown-menu > li.checkbox {
 .page-header .header-buttons .filter-cell,
 .page-header .overview-filters-container .filter-cell {
     display: inline-block;
-    width: 170px;
+    min-width: 170px;
     margin-right: -1px;
 }
 

@@ -1233,40 +1233,45 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         applyOverviewFilters() {
-            let currentFieldFilter = (this.model.advancedEntityView || {}).fieldsFilter;
-            let currentLocaleFilter = (this.model.advancedEntityView || {}).localesFilter;
-            let showGenericFields = (this.model.advancedEntityView || {}).showGenericFields;
 
-            // console.log(this.model.advancedEntityView);
+            console.log(this.getStorage().get('fieldsFilter', 'OverviewFilter'));
 
-            let fields = this.getFieldViews();
-            Object.keys(fields).forEach(name => {
-                let fieldView = fields[name];
-                if (!fieldView.model.getFieldParam(name, 'advancedFilterDisabled')) {
-                    if (
-                        currentLocaleFilter !== null && typeof currentLocaleFilter !== 'undefined'
-                        &&
-                        this.getConfig().get('isMultilangActive')
-                        &&
-                        fieldView.model.getFieldParam(name, 'isMultilang')
-                        &&
-                        (this.getConfig().get('inputLanguageList') || []).length
-                    ) {
-                        let hiddenLocales = currentLocaleFilter ? this.getConfig().get('inputLanguageList').filter(lang => lang !== currentLocaleFilter) : [];
-                        fieldView.hideMainOption = (showGenericFields !== null && typeof showGenericFields !== 'undefined' && !showGenericFields)
-                            || !this.checkFieldValue(currentFieldFilter, fieldView.model.get(name), fieldView.isRequired());
-                        fieldView.expandLocales = fieldView.hideMainOption || !!(hiddenLocales.length || currentLocaleFilter);
-                        this.controlFieldVisibility(fieldView, fieldView.hideMainOption);
-                        fieldView.reRender();
-                    } else {
-                        let actualFields = this.getFieldManager().getActualAttributeList(fieldView.model.getFieldType(name), name);
-                        let actualFieldValues = actualFields.map(field => fieldView.model.get(field));
-                        actualFieldValues = actualFieldValues.concat(this.getAlternativeValues(fieldView));
-                        let hide = !actualFieldValues.every(value => this.checkFieldValue(currentFieldFilter, value, fieldView.isRequired()));
-                        this.controlFieldVisibility(fieldView, hide);
-                    }
-                }
-            });
+            // this.getStorage().get('fieldsFilter', 'OverviewFilter') || 'allFields';
+
+            // let currentFieldFilter = (this.model.advancedEntityView || {}).fieldsFilter;
+            // let currentLocaleFilter = (this.model.advancedEntityView || {}).localesFilter;
+            // let showGenericFields = (this.model.advancedEntityView || {}).showGenericFields;
+            //
+            // // console.log(this.model.advancedEntityView);
+            //
+            // let fields = this.getFieldViews();
+            // Object.keys(fields).forEach(name => {
+            //     let fieldView = fields[name];
+            //     if (!fieldView.model.getFieldParam(name, 'advancedFilterDisabled')) {
+            //         if (
+            //             currentLocaleFilter !== null && typeof currentLocaleFilter !== 'undefined'
+            //             &&
+            //             this.getConfig().get('isMultilangActive')
+            //             &&
+            //             fieldView.model.getFieldParam(name, 'isMultilang')
+            //             &&
+            //             (this.getConfig().get('inputLanguageList') || []).length
+            //         ) {
+            //             let hiddenLocales = currentLocaleFilter ? this.getConfig().get('inputLanguageList').filter(lang => lang !== currentLocaleFilter) : [];
+            //             fieldView.hideMainOption = (showGenericFields !== null && typeof showGenericFields !== 'undefined' && !showGenericFields)
+            //                 || !this.checkFieldValue(currentFieldFilter, fieldView.model.get(name), fieldView.isRequired());
+            //             fieldView.expandLocales = fieldView.hideMainOption || !!(hiddenLocales.length || currentLocaleFilter);
+            //             this.controlFieldVisibility(fieldView, fieldView.hideMainOption);
+            //             fieldView.reRender();
+            //         } else {
+            //             let actualFields = this.getFieldManager().getActualAttributeList(fieldView.model.getFieldType(name), name);
+            //             let actualFieldValues = actualFields.map(field => fieldView.model.get(field));
+            //             actualFieldValues = actualFieldValues.concat(this.getAlternativeValues(fieldView));
+            //             let hide = !actualFieldValues.every(value => this.checkFieldValue(currentFieldFilter, value, fieldView.isRequired()));
+            //             this.controlFieldVisibility(fieldView, hide);
+            //         }
+            //     }
+            // });
 
             this.model.trigger('overview-filters-applied');
         },

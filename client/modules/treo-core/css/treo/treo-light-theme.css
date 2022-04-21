@@ -7350,7 +7350,7 @@ button.close {
 
 .selectize-control.plugin-remove_button [data-value] {
   position: relative;
-  padding-right: 24px !important;
+  padding-right: 18px !important;
 }
 
 .selectize-control.plugin-remove_button [data-value] .remove {
@@ -7410,7 +7410,7 @@ button.close {
 }
 
 .selectize-input {
-  border: 1px solid #d1d5d6;
+  border: 1px solid #eee;
   padding: 6px 10px;
   display: inline-block;
   width: 100%;
@@ -7462,6 +7462,7 @@ button.close {
   background: #efefef;
   color: #333;
   border: 0 solid rgba(0, 0, 0, 0);
+  border-radius:3px
 }
 
 .selectize-control.multi .selectize-input > div.active {
