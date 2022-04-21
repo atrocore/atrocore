@@ -94,7 +94,12 @@ Espo.define('views/fields/colored-enum', 'views/fields/enum', function (Dep) {
                 g = 0;
             }
 
-            return "1px solid #" + (g | (b << 8) | (r << 16)).toString(16);
+            let color = (g | (b << 8) | (r << 16)).toString(16);
+            while (color.length < 6) {
+                color = '0' + color;
+            }
+
+            return "1px solid #" + color;
         },
 
         getFieldStyles(fieldValue) {
