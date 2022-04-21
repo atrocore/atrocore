@@ -1237,7 +1237,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             let currentLocaleFilter = (this.model.advancedEntityView || {}).localesFilter;
             let showGenericFields = (this.model.advancedEntityView || {}).showGenericFields;
 
-            console.log(this.model.advancedEntityView);
+            // console.log(this.model.advancedEntityView);
 
             let fields = this.getFieldViews();
             Object.keys(fields).forEach(name => {

@@ -59,6 +59,7 @@ Espo.define('views/fields/dropdown-enum', 'view',
 
         data() {
             return {
+                name: this.name,
                 options: this.optionsList,
                 selected: this.getSelectedLabel()
             }
@@ -153,7 +154,7 @@ Espo.define('views/fields/dropdown-enum', 'view',
             this.setDataToModel({[this.name]: this.selected});
             this.reRender();
 
-            this.model.trigger('overview-filters-changed');
+            this.model.trigger('overview-filters-changed', name);
         },
 
         setDataToModel(data, isField) {

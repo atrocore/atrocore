@@ -37,18 +37,32 @@ Espo.define('views/fields/overview-locales-filter', 'views/fields/dropdown-enum'
 
         optionsList: [],
 
+        setup() {
+            Dep.prototype.setup.call(this);
+
+            this.listenTo(this.model, 'overview-filters-changed', name => {
+                if (name === 'showAllLanguages') {
+                    this.getView('showLanguageFields_main').$el.prop('checked', true);
+                    this.model.advancedEntityView.showLanguageFields_main = true;
+
+                    console.log(this.model)
+                    // console.log(this.getView('showLanguageFields_main').$el)
+                }
+            });
+        },
+
         prepareOptionsList() {
             this.optionsList.push(
                 {
-                    name: '',
+                    name: 'showAllLanguages',
                     selectable: true,
                     label: this.translate("allLanguages"),
                 }
             );
             this.optionsList.push(
                 {
-                    name: "showLocaleFields_main",
-                    action: "showLocaleFields_main",
+                    name: "showLanguageFields_main",
+                    action: "showLanguageFields_main",
                     field: true,
                     type: "bool",
                     label: this.translate("mainLanguage"),
@@ -61,8 +75,8 @@ Espo.define('views/fields/overview-locales-filter', 'views/fields/dropdown-enum'
                 (this.getConfig().get('inputLanguageList') || []).forEach(locale => {
                     this.optionsList.push(
                         {
-                            name: "showLocaleFields_" + locale,
-                            action: "showLocaleFields_" + locale,
+                            name: "showLanguageFields_" + locale,
+                            action: "showLanguageFields_" + locale,
                             field: true,
                             type: "bool",
                             label: this.getLanguage().translateOption(locale, 'language', 'Global').split(' ›').shift(),
@@ -74,7 +88,7 @@ Espo.define('views/fields/overview-locales-filter', 'views/fields/dropdown-enum'
             }
 
             Dep.prototype.prepareOptionsList.call(this);
-        }
+        },
 
     })
 );
