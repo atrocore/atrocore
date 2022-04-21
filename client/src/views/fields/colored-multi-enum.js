@@ -32,7 +32,7 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('views/fields/colored-multi-enum', 'views/fields/multi-enum', function (Dep) {
+Espo.define('views/fields/colored-multi-enum', ['views/fields/multi-enum', 'views/fields/colored-enum'], function (Dep, Enum) {
 
     return Dep.extend({
 
@@ -56,7 +56,7 @@ Espo.define('views/fields/colored-multi-enum', 'views/fields/multi-enum', functi
         setSelectizeColors() {
             window.setTimeout(() => {
                 let values = [];
-                if (this.$element[0].selectize.currentResults){
+                if (this.$element[0].selectize.currentResults) {
                     values = this.$element[0].selectize.currentResults.items || [];
                 }
                 values.forEach(item => {
@@ -89,16 +89,21 @@ Espo.define('views/fields/colored-multi-enum', 'views/fields/multi-enum', functi
         },
 
         getFieldStyles(fieldValue) {
-            let backgroundColor = this.getBackgroundColor(fieldValue);
-            let fontSize = this.model.getFieldParam(this.name, 'fontSize');
+            const enumView = new Enum();
+            const backgroundColor = this.getBackgroundColor(fieldValue);
+            const fontSize = this.model.getFieldParam(this.name, 'fontSize');
+
             let data = {
+                fontWeight: 'normal',
                 backgroundColor: backgroundColor,
-                color: this.getFontColor(backgroundColor),
-                fontWeight: 'normal'
+                color: enumView.getFontColor(backgroundColor),
+                border: enumView.getBorder(backgroundColor)
             };
+
             if (this.mode !== 'edit') {
                 data.fontSize = fontSize ? fontSize + 'em' : '100%';
             }
+
             return data;
         },
 
@@ -117,21 +122,6 @@ Espo.define('views/fields/colored-multi-enum', 'views/fields/multi-enum', functi
 
             return '#' + ((this.model.getFieldParam(this.name, 'optionColors') || {})[key] || this.defaultBackgroundColor);
         },
-
-        getFontColor(backgroundColor) {
-            let color = '#000';
-            if (backgroundColor) {
-                backgroundColor = backgroundColor.slice(1);
-                let r = parseInt(backgroundColor.substr(0, 2), 16);
-                let g = parseInt(backgroundColor.substr(2, 2), 16);
-                let b = parseInt(backgroundColor.substr(4, 2), 16);
-                let l = 1 - ( 0.299 * r + 0.587 * g + 0.114 * b) / 255;
-                if (l >= 0.5) {
-                    color = '#fff';
-                }
-            }
-            return color;
-        }
 
     });
 });

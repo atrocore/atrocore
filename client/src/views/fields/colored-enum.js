@@ -63,20 +63,55 @@ Espo.define('views/fields/colored-enum', 'views/fields/enum', function (Dep) {
                 }, this.getFieldStyles(item));
             });
             data = _.extend(this.getFieldStyles(data.value), data);
+
             return data;
         },
 
+        getBorder(col) {
+            let amt = -10;
+            let num = parseInt(col.slice(1), 16);
+            let r = (num >> 16) + amt;
+
+            if (r > 255) {
+                r = 255;
+            } else if (r < 0) {
+                r = 0;
+            }
+
+            let b = ((num >> 8) & 0x00FF) + amt;
+
+            if (b > 255) {
+                b = 255;
+            } else if (b < 0) {
+                b = 0;
+            }
+
+            let g = (num & 0x0000FF) + amt;
+
+            if (g > 255) {
+                g = 255;
+            } else if (g < 0) {
+                g = 0;
+            }
+
+            return "1px solid #" + (g | (b << 8) | (r << 16)).toString(16);
+        },
+
         getFieldStyles(fieldValue) {
-            let backgroundColor = this.getBackgroundColor(fieldValue);
-            let fontSize = this.model.getFieldParam(this.name, 'fontSize');
+            const backgroundColor = this.getBackgroundColor(fieldValue);
+            const fontSize = this.model.getFieldParam(this.name, 'fontSize');
+
             let data = {
+                fontWeight: 'normal',
                 backgroundColor: backgroundColor,
                 color: this.getFontColor(backgroundColor),
-                fontWeight: 'normal'
+                border: this.getBorder(backgroundColor)
             };
+
             if (this.mode !== 'edit') {
                 data.fontSize = fontSize ? fontSize + 'em' : '100%';
             }
+
             return data;
         },
 
@@ -109,7 +144,7 @@ Espo.define('views/fields/colored-enum', 'views/fields/enum', function (Dep) {
                 let r = parseInt(backgroundColor.substr(0, 2), 16);
                 let g = parseInt(backgroundColor.substr(2, 2), 16);
                 let b = parseInt(backgroundColor.substr(4, 2), 16);
-                let l = 1 - ( 0.299 * r + 0.587 * g + 0.114 * b) / 255;
+                let l = 1 - (0.299 * r + 0.587 * g + 0.114 * b) / 255;
                 if (l >= 0.5) {
                     color = '#fff';
                 }
