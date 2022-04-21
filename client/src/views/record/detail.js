@@ -1257,9 +1257,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
 
                 // for languages
-                if (this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
+                if (!hide && this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
                     let fieldLanguage = fieldView.model.getFieldParam(name, 'multilangLocale') || 'main';
-                    if (!hide && !languageFilter.includes(fieldLanguage)) {
+                    if (!languageFilter.includes(fieldLanguage)) {
                         hide = true;
                     }
                 }
