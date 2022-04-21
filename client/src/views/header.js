@@ -58,7 +58,7 @@ Espo.define('views/header', 'view', function (Dep) {
             data.isXsSingleRow = this.options.isXsSingleRow;
 
             if (this.model && !this.model.isNew()) {
-                data.overviewFilters = this.getOverviewFiltersList();
+                data.overviewFilters = this.getOverviewFiltersList().map(filter => filter.name);
             }
 
             if ((data.items.buttons || []).length < 2) {
@@ -95,11 +95,17 @@ Espo.define('views/header', 'view', function (Dep) {
 
         getOverviewFiltersList: function () {
             let result = [
-                'fieldsFilter'
+                {
+                    name: "fieldFilter",
+                    options: ["filled", "empty"]
+                }
             ];
 
             if (this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
-                result.push('localesFilter');
+                result.push({
+                    name: "languageFilter",
+                    options: ['main'].concat(this.getConfig().get('inputLanguageList'))
+                });
             }
 
             return result;
@@ -107,87 +113,40 @@ Espo.define('views/header', 'view', function (Dep) {
 
         createOverviewFilters() {
             this.getModelFactory().create(null, model => {
-                this.getOverviewFiltersList().forEach(name => {
-                    let method = "createOverview" + name.charAt(0).toUpperCase() + name.slice(1);
-                    if (typeof this[method] === "function") {
-                        this[method](model);
-                    }
+                this.getOverviewFiltersList().forEach(filter => {
+                    this.createOverviewFilter(filter, model);
                 });
-
-                // this.createOverviewFieldsFilter(model);
-
-                // if (this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
-                //     // this.createView('localesFilter', 'views/fields/overview-locales-filter', {
-                //     //     el: `${this.options.el} .field[data-name="localesFilter"]`,
-                //     //     model: model,
-                //     //     entityModel: this.model,
-                //     //     name: 'localesFilter'
-                //     // }, view => {
-                //     //     view.render();
-                //     // });
-                // }
             });
         },
 
-        createOverviewFieldsFilter(model) {
-            if (!this.getStorage().get('fieldsFilter', 'OverviewFilter')) {
-                this.getStorage().set('fieldsFilter', 'OverviewFilter', ['filled', 'empty']);
+        createOverviewFilter(filter, model) {
+            if (!this.getStorage().get(filter.name, 'OverviewFilter')) {
+                this.getStorage().set(filter.name, 'OverviewFilter', filter.options);
             }
-            model.set('fieldsFilter', this.getStorage().get('fieldsFilter', 'OverviewFilter'));
-            this.createView('fieldsFilter', 'views/fields/multi-enum', {
-                el: `${this.options.el} .field[data-name="fieldsFilter"]`,
-                name: 'fieldsFilter',
+
+            model.set(filter.name, this.getStorage().get(filter.name, 'OverviewFilter'));
+
+            let translatedOptions = {};
+            filter.options.forEach(option => {
+                translatedOptions[option] = this.getLanguage().translateOption(option, filter.name, 'Global');
+            });
+
+            this.createView(filter.name, 'views/fields/multi-enum', {
+                el: `${this.options.el} .field[data-name="${filter.name}"]`,
+                name: filter.name,
                 mode: 'edit',
                 model: model,
                 entityModel: this.model,
                 prohibitedEmptyValue: true,
                 params: {
-                    options: ['filled', 'empty'],
-                    translatedOptions: {
-                        "filled": this.getLanguage().translateOption('allFields', 'fieldsFilter', 'Global'),
-                        "empty": this.getLanguage().translateOption('empty', 'fieldsFilter', 'Global')
-                    }
+                    options: filter.options,
+                    translatedOptions: translatedOptions
                 }
             }, view => {
-                this.listenTo(model, 'change:fieldsFilter', () => {
-                    this.getStorage().set('fieldsFilter', 'OverviewFilter', model.get('fieldsFilter'));
+                this.listenTo(model, `change:${filter.name}`, () => {
+                    this.getStorage().set(filter.name, 'OverviewFilter', model.get(filter.name));
                     this.model.trigger('overview-filters-changed');
                 });
-                view.render();
-            });
-        },
-
-        createOverviewLocalesFilter(model) {
-            // if (!this.getStorage().get('localesFilter', 'OverviewFilter')) {
-            //     this.getStorage().set('localesFilter', 'OverviewFilter', 'allFields');
-            // }
-            // model.set('localesFilter', this.getStorage().get('fieldsFilter', 'OverviewFilter'));
-
-            // 1px solid #eaeaea
-            model.set('localesFilter', ['1', '2', '3']);
-            this.createView('localesFilter', 'views/fields/multi-enum', {
-                el: `${this.options.el} .field[data-name="localesFilter"]`,
-                name: 'localesFilter',
-                mode: 'edit',
-                model: model,
-                entityModel: this.model,
-                prohibitedEmptyValue: true,
-                placeholder: "qwe",
-                params: {
-                    placeholder: "qwe",
-                    options: ['1', '2', '3'],
-                    translatedOptions: {
-                        "1": 'Main',
-                        "2": 'de_DE',
-                        "3": 'en_US',
-                        // "emptyAndRequired": this.getLanguage().translateOption('emptyAndRequired', 'fieldsFilter', 'Global')
-                    }
-                }
-            }, view => {
-                // this.listenTo(model, 'change:fieldsFilter', () => {
-                //     this.getStorage().set('fieldsFilter', 'OverviewFilter', model.get('fieldsFilter'));
-                //     this.model.trigger('overview-filters-changed');
-                // });
                 view.render();
             });
         },

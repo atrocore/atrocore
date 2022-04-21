@@ -594,10 +594,12 @@
       "Ms.": "Ms.",
       "Dr.": "Dr."
     },
-    "fieldsFilter": {
-      "allFields": "All Fields",
-      "empty": "Empty Fields",
-      "emptyAndRequired": "Empty Required Fields"
+    "fieldFilter": {
+      "filled": "Filled",
+      "empty": "Empty"
+    },
+    "languageFilter": {
+      "main": "Main language"
     },
     "language": {
       "af_ZA": "Afrikaans (South Africa) › af_ZA",

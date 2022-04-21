@@ -594,10 +594,12 @@
       "Ms.": "Мисс.",
       "Dr.": "Д-р."
     },
-    "fieldsFilter": {
-      "allFields": "Все поля",
-      "empty": "Пустые поля",
-      "emptyAndRequired": "Пустые обязательные поля"
+    "fieldFilter": {
+      "filled": "Заполненные",
+      "empty": "Пустые"
+    },
+    "languageFilter": {
+      "main": "Ocн. язык"
     },
     "language": {
       "af_ZA": "Африкаанс",

@@ -709,10 +709,12 @@
       "isNotOneOf": "Keiner von",
       "noneOf": "Keiner von"
     },
-    "fieldsFilter": {
-      "allFields": "Alle Felder",
-      "empty": "Leere Felder",
-      "emptyAndRequired": "Leere Pflichtfelder"
+    "fieldFilter": {
+      "filled": "Ausgefüllt",
+      "empty": "Leer"
+    },
+    "languageFilter": {
+      "main": "Hauptsprache"
     },
     "varcharSearchRanges": {
       "equals": "Gleich",
