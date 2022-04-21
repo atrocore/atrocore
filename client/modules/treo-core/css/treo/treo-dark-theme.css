@@ -19161,6 +19161,7 @@ input#sn-checkbox-open-in-new-window {
 }
 
 .detail .record-buttons ~ .edit-buttons.hidden ~ .row .panel-body .form-group .field {
+    padding-bottom: 6px;
     border-bottom: 1px solid #f5f5f5
 }
 
