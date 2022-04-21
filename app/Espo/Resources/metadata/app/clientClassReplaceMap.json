@@ -77,9 +77,6 @@
   "views/fields/link-parent": [
     "treo-core"
   ],
-  "views/fields/multi-enum": [
-    "treo-core"
-  ],
   "views/fields/varchar": [
     "treo-core"
   ],

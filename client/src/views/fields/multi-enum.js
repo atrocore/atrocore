@@ -44,6 +44,8 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
 
         editTemplate: 'fields/multi-enum/edit',
 
+        dragDrop: true,
+
         events: {
         },
 
@@ -65,12 +67,22 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
         },
 
         setup: function () {
+            if (this.options.dragDrop === false || this.model.getFieldParam(this.name, 'dragDrop') === false) {
+                this.dragDrop = false;
+            }
+
             Dep.prototype.setup.call(this);
         },
 
         afterRender: function () {
-            if (this.mode == 'edit') {
-                var $element = this.$element = this.$el.find('[name="' + this.name + '"]');
+            if (this.mode === 'edit') {
+                if (this.options.defs && this.options.defs.params && this.options.defs.params.isMultilang) {
+                    this.listenTo(this.model, 'change:' + this.name, function (model, value) {
+                        this.updateLocaleFields(model, value);
+                    }.bind(this));
+                }
+
+                this.$element = this.$el.find('[name="' + this.name + '"]');
 
                 var data = [];
 
@@ -87,7 +99,7 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                         });
                     }
                 }
-
+                valueList = valueList.map(item => item.replace(/"/g, '-quote-').replace(/\\/g, '-backslash-'));
                 this.$element.val(valueList.join(':,:'));
 
                 (this.params.options || []).forEach(function (value) {
@@ -109,6 +121,13 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                     });
                 }, this);
 
+                data.forEach(item => item.value = item.value.replace(/"/g, '-quote-').replace(/\\/g, '-backslash-'));
+
+                let plugins = ['remove_button'];
+                if (this.dragDrop) {
+                    plugins.push('drag_drop');
+                }
+
                 var selectizeOptions = {
                     options: data,
                     delimiter: ':,:',
@@ -116,7 +135,7 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                     valueField: 'value',
                     highlight: false,
                     searchField: ['label'],
-                    plugins: ['remove_button', 'drag_drop'],
+                    plugins: plugins,
                     score: function (search) {
                         var score = this.getScoreFunction(search);
                         search = search.toLowerCase();
@@ -146,6 +165,23 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
 
                 this.$element.selectize(selectizeOptions);
 
+                if (this.$element.size()) {
+                    let depPositionDropdown = this.$element[0].selectize.positionDropdown;
+                    this.$element[0].selectize.positionDropdown = function () {
+                        depPositionDropdown.call(this);
+
+                        this.$dropdown.hide();
+                        let pageHeight = $(document).height();
+                        this.$dropdown.show();
+                        let dropdownHeight = this.$dropdown.outerHeight(true);
+                        if (this.$dropdown.offset().top + dropdownHeight > pageHeight) {
+                            this.$dropdown.css({
+                                'top': `-${dropdownHeight}px`
+                            });
+                        }
+                    };
+                }
+
                 this.$element.on('change', function () {
                     this.trigger('change');
                 }.bind(this));
@@ -168,7 +204,8 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                 }
             }
             var data = {};
-            data[this.name] = list;
+            data[this.name] = list.map(item => item.replace(/-quote-/g, '"').replace(/-backslash-/g, '\\'));
+
             return data;
         },
 
@@ -181,7 +218,39 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                     return true;
                 }
             }
-        }
+        },
+
+        updateLocaleFields: function (model, value) {
+            if (!this.getConfig().get('isMultilangActive')) {
+                return;
+            }
+
+            let keys = [];
+            if (value) {
+                value.forEach(function (item) {
+                    (this.options.defs.params.options || []).forEach(function (v, k) {
+                        if (v === item) {
+                            keys.push(k)
+                        }
+                    }, this);
+                }, this);
+            }
+
+            let locales = this.getConfig().get('inputLanguageList') || [];
+            locales.forEach(function (v, k) {
+                let localeField = this.name + v.charAt(0).toUpperCase() + v.charAt(1) + v.charAt(3) + v.charAt(4).toLowerCase();
+                let localeFieldOptions = this.model.getFieldParam(localeField, 'options');
+
+                let localeValue = [];
+                if (localeFieldOptions) {
+                    keys.forEach(function (key) {
+                        localeValue.push(typeof localeFieldOptions[key] === 'undefined' ? null : localeFieldOptions[key]);
+                    });
+                }
+
+                this.model.set(localeField, localeValue);
+            }, this);
+        },
 
     });
 });

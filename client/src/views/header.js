@@ -136,8 +136,7 @@ Espo.define('views/header', 'view', function (Dep) {
                 name: filter.name,
                 mode: 'edit',
                 model: model,
-                entityModel: this.model,
-                prohibitedEmptyValue: true,
+                dragDrop: false,
                 params: {
                     options: filter.options,
                     translatedOptions: translatedOptions
