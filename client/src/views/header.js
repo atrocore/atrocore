@@ -58,7 +58,10 @@ Espo.define('views/header', 'view', function (Dep) {
             data.scope = this.scope || this.getParentView().scope;
             data.items = this.getItems();
             data.isXsSingleRow = this.options.isXsSingleRow;
-            data.overviewFilters = this.overviewFilters;
+
+            if (this.model && !this.model.isNew()) {
+                data.overviewFilters = this.overviewFilters;
+            }
 
             if ((data.items.buttons || []).length < 2) {
                 data.isHeaderAdditionalSpace = true;
@@ -94,34 +97,48 @@ Espo.define('views/header', 'view', function (Dep) {
 
         createOverviewFilters() {
             this.getModelFactory().create(null, model => {
-                this.overviewFilters.push('fieldsFilter');
-                this.createView('fieldsFilter', 'views/fields/overview-fields-filter', {
-                    el: `${this.options.el} .field[data-name="fieldsFilter"]`,
-                    model: model,
-                    entityModel: this.model,
-                    name: 'fieldsFilter',
-                    storageKey: 'overview-filters',
-                    modelKey: 'advancedEntityView'
-                }, view => {
-                    view.render();
-                });
-
+                this.overviewFilters = [];
+                this.createOverviewFieldsFilter(model);
                 if (this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
-                    this.overviewFilters.push('localesFilter');
-                    this.createView('localesFilter', 'views/fields/overview-locales-filter', {
-                        el: `${this.options.el} .field[data-name="localesFilter"]`,
-                        model: model,
-                        entityModel: this.model,
-                        name: 'localesFilter',
-                        storageKey: 'overview-filters',
-                        modelKey: 'advancedEntityView'
-                    }, view => {
-                        view.render();
-                    });
+                    // this.overviewFilters.push('localesFilter');
+                    // this.createView('localesFilter', 'views/fields/overview-locales-filter', {
+                    //     el: `${this.options.el} .field[data-name="localesFilter"]`,
+                    //     model: model,
+                    //     entityModel: this.model,
+                    //     name: 'localesFilter'
+                    // }, view => {
+                    //     view.render();
+                    // });
                 }
             });
         },
 
+        createOverviewFieldsFilter(model) {
+            model.set('fieldsFilter', this.getStorage().get('overview-filters-fieldsFilter', 'Global') || 'allFields');
+            this.overviewFilters.push('fieldsFilter');
+            this.createView('fieldsFilter', 'views/fields/enum', {
+                el: `${this.options.el} .field[data-name="fieldsFilter"]`,
+                name: 'fieldsFilter',
+                mode: 'edit',
+                model: model,
+                entityModel: this.model,
+                prohibitedEmptyValue: true,
+                params: {
+                    options: ['allFields', 'empty', 'emptyAndRequired'],
+                    translatedOptions: {
+                        "allFields": this.getLanguage().translateOption('allFields', 'fieldsFilter', 'Global'),
+                        "empty": this.getLanguage().translateOption('empty', 'fieldsFilter', 'Global'),
+                        "emptyAndRequired": this.getLanguage().translateOption('emptyAndRequired', 'fieldsFilter', 'Global')
+                    }
+                }
+            }, view => {
+                this.listenTo(model, 'change:fieldsFilter', () => {
+                    this.getStorage().set('overview-filters-fieldsFilter', 'Global', model.get('fieldsFilter'));
+                    this.model.trigger('overview-filters-changed', model);
+                });
+                view.render();
+            });
+        },
 
     });
 });

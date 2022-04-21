@@ -595,7 +595,7 @@
       "Dr.": "Dr."
     },
     "fieldsFilter": {
-      "": "All Fields",
+      "allFields": "All Fields",
       "empty": "Empty Fields",
       "emptyAndRequired": "Empty Required Fields"
     },

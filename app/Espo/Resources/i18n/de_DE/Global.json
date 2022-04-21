@@ -710,7 +710,7 @@
       "noneOf": "Keiner von"
     },
     "fieldsFilter": {
-      "": "Alle Felder",
+      "allFields": "Alle Felder",
       "empty": "Leere Felder",
       "emptyAndRequired": "Leere Pflichtfelder"
     },
