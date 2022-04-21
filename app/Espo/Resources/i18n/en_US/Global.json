@@ -595,8 +595,8 @@
       "Dr.": "Dr."
     },
     "fieldFilter": {
-      "filled": "Filled",
-      "empty": "Empty"
+      "filled": "Filled values",
+      "empty": "Empty values"
     },
     "languageFilter": {
       "main": "Main language"

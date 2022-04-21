@@ -595,8 +595,8 @@
       "Dr.": "Д-р."
     },
     "fieldFilter": {
-      "filled": "Заполненные",
-      "empty": "Пустые"
+      "filled": "Заполненые значения",
+      "empty": "Пустые значения"
     },
     "languageFilter": {
       "main": "Ocн. язык"

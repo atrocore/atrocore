@@ -710,8 +710,8 @@
       "noneOf": "Keiner von"
     },
     "fieldFilter": {
-      "filled": "Ausgefüllt",
-      "empty": "Leer"
+      "filled": "Ausgefüllte Werte",
+      "empty": "Leere Werte"
     },
     "languageFilter": {
       "main": "Hauptsprache"

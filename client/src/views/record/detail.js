@@ -644,7 +644,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 let headerBreadcrumbs = $('.header-breadcrumbs:not(.fixed-header-breadcrumbs)');
 
                 if (main.length && headerBreadcrumbs.length && headerButtonsContainer.outerWidth() > main.outerWidth() - headerBreadcrumbs.outerWidth()) {
-                    headerButtonsContainer.addClass('full-row');
+                    // headerButtonsContainer.addClass('full-row');
                 }
             }
 
@@ -1233,7 +1233,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         applyOverviewFilters() {
-
             console.log(this.getStorage().get('fieldsFilter', 'OverviewFilter'));
 
             // this.getStorage().get('fieldsFilter', 'OverviewFilter') || 'allFields';
