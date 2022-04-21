@@ -43,8 +43,6 @@ Espo.define('views/fields/dropdown-enum', 'view',
 
         storageKey: null,
 
-        fieldModel: null,
-
         events: _.extend({
             'click .action[data-action="saveFilter"]': function (e) {
                 let el = $(e.currentTarget);
@@ -69,6 +67,8 @@ Espo.define('views/fields/dropdown-enum', 'view',
             this.name = this.options.name || this.name;
             this.scope = this.options.scope || this.scope || this.model.name;
 
+            console.log(this.options)
+
             this.optionsList = this.options.optionsList || this.optionsList;
             this.prepareOptionsList();
 
@@ -82,10 +82,6 @@ Espo.define('views/fields/dropdown-enum', 'view',
             this.selected = this.selected || (this.optionsList.find(option => option.selectable) || {}).name;
             this.modelKey = this.options.modelKey || this.modelKey;
             this.setDataToModel({[this.name]: this.selected});
-
-            this.getModelFactory().create(null, model => {
-                this.fieldModel = model;
-            });
 
             this.listenTo(this, 'after:render', () => {
                 this.options.hidden ? this.hide() : this.show();
@@ -106,7 +102,7 @@ Espo.define('views/fields/dropdown-enum', 'view',
                     let view = option.view || this.getFieldManager().getFieldView(option.type) || 'views/fields/base';
                     this.createView(option.name, view, {
                         el: `${this.options.el} .dropdown-enum-menu li a .field[data-name="${option.name}"]`,
-                        model: this.fieldModel,
+                        model: this.model,
                         name: option.name,
                         inlineEditDisabled: true,
                         mode: 'edit',
@@ -166,7 +162,7 @@ Espo.define('views/fields/dropdown-enum', 'view',
                         this.model.set({[item]: data[item]}, {silent: true});
                     }
                     if (isField) {
-                        this.fieldModel.set({[item]: data[item]}, {silent: true});
+                        this.model.set({[item]: data[item]}, {silent: true});
                     }
                 });
             }

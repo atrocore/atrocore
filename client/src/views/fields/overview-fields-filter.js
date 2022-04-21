@@ -32,7 +32,7 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('views/fields/overview-fields-filter', 'views/fields/dropdown-enum',
+Espo.define('views/fields/overview-fields-filter', 'views/fields/enum',
     Dep => Dep.extend({
 
         optionsList: [

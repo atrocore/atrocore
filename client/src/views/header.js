@@ -104,15 +104,17 @@ Espo.define('views/header', 'view', function (Dep) {
 
         createOverviewFilters() {
             this.updatedOverviewFilters = this.filterOverviewFilters();
-
-            (this.updatedOverviewFilters || []).forEach(filter => {
-                this.createView(filter.name, filter.view, {
-                    el: `${this.options.el} .field[data-name="${filter.name}"]`,
-                    model: this.model,
-                    name: filter.name,
-                    storageKey: 'overview-filters',
-                    modelKey: 'advancedEntityView'
-                }, view => view.render());
+            this.getModelFactory().create(null, model => {
+                (this.updatedOverviewFilters || []).forEach(filter => {
+                    this.createView(filter.name, filter.view, {
+                        el: `${this.options.el} .field[data-name="${filter.name}"]`,
+                        model: model,
+                        entityModel: this.model,
+                        name: filter.name,
+                        storageKey: 'overview-filters',
+                        modelKey: 'advancedEntityView'
+                    }, view => view.render());
+                });
             });
         },
 
