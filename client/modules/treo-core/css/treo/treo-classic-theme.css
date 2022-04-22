@@ -16624,6 +16624,10 @@ h4.panel-title span.color-icon {
     padding: .09em .5em .2em
 }
 
+.cell span.colored-multi-enum {
+    display: inline-block;
+}
+
 .expanded-row span.label {
     position: relative;
     top: -2px
