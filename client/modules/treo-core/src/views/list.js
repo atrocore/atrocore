@@ -95,7 +95,7 @@ Espo.define('treo-core:views/list', ['class-replace!treo-core:views/list', 'sear
         afterRender() {
             let footer = $('#footer');
 
-            if (footer.length) {
+            if (footer.length && !$('.catalog-tree-panel').length) {
                 footer.removeClass('is-collapsed');
             }
 

@@ -18940,7 +18940,6 @@ input#sn-checkbox-open-in-new-window {
 .list-container .list-buttons-container .actions-button {
   color: #000;
   border: 0;
-  padding-left: 2px;
 }
 
 .list-container .list-buttons-container .actions-button:hover, .list-container .list-buttons-container .actions-button:focus, .list-container .list-buttons-container .actions-button:active {
@@ -20683,8 +20682,12 @@ select {
 
 .lock-link,
 .unlock-link {
-  padding-left: 5px;
-  margin-left: 3px;
+  width: 24px;
+  height: 24px;
+  text-align: center;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  line-height: 24px;
 }
 
 .attribute-cell .inline-remove-link {
