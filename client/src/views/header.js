@@ -57,7 +57,7 @@ Espo.define('views/header', 'view', function (Dep) {
             data.items = this.getItems();
             data.isXsSingleRow = this.options.isXsSingleRow;
 
-            if (this.model && !this.model.isNew()) {
+            if (this.model && !this.model.isNew() && this.getMetadata().get(`scopes.${this.model.urlRoot}.object`) && this.getMetadata().get(`scopes.${this.model.urlRoot}.overviewFilters`) !== false) {
                 data.overviewFilters = this.getOverviewFiltersList().map(filter => filter.name);
             }
 
