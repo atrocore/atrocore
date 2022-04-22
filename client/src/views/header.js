@@ -143,8 +143,24 @@ Espo.define('views/header', 'view', function (Dep) {
                 }
             }, view => {
                 this.listenTo(model, `change:${filter.name}`, () => {
-                    this.getStorage().set(filter.name, 'OverviewFilter', model.get(filter.name));
+                    let values = [];
+                    filter.options.forEach(option => {
+                        if (model.get(filter.name).includes(option)) {
+                            values.push(option);
+                        }
+                    });
+
+                    model.set(filter.name, values, {silent: true});
+                    this.getStorage().set(filter.name, 'OverviewFilter', values);
                     this.model.trigger('overview-filters-changed');
+
+                    values.reverse().forEach(option => {
+                        let optionHtml = view.$el.find(`.selectize-input .item[data-value="${option}"]`).html();
+                        if (optionHtml) {
+                            view.$el.find(`.selectize-input .item[data-value="${option}"]`).remove();
+                            view.$el.find(`.selectize-input`).prepend(`<div data-value="${option}" class="item">${optionHtml}</div>`);
+                        }
+                    });
                 });
                 view.render();
             });
