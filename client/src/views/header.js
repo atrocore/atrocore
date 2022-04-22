@@ -150,17 +150,15 @@ Espo.define('views/header', 'view', function (Dep) {
                         }
                     });
 
-                    model.set(filter.name, values, {silent: true});
+                    if (values.length === 0) {
+                        values = [filter.options[0]];
+                    }
+
                     this.getStorage().set(filter.name, 'OverviewFilter', values);
                     this.model.trigger('overview-filters-changed');
 
-                    values.reverse().forEach(option => {
-                        let optionHtml = view.$el.find(`.selectize-input .item[data-value="${option}"]`).html();
-                        if (optionHtml) {
-                            view.$el.find(`.selectize-input .item[data-value="${option}"]`).remove();
-                            view.$el.find(`.selectize-input`).prepend(`<div data-value="${option}" class="item">${optionHtml}</div>`);
-                        }
-                    });
+                    model.set(filter.name, values);
+                    view.reRender();
                 });
                 view.render();
             });
