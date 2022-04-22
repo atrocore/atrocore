@@ -78,6 +78,20 @@ Espo.define('treo-core:views/list', ['class-replace!treo-core:views/list', 'sear
             }
 
             searchManager.loadStored();
+
+            let filters = searchManager.get();
+            if (filters.advanced) {
+                for (let filter in filters.advanced) {
+                    let field = filter.split('-').shift();
+
+                    if (!this.getMetadata().get(['entityDefs', this.scope, 'fields', field])) {
+                        delete filters.advanced[filter]
+                    }
+                }
+
+                searchManager.set(filters);
+            }
+
             collection.where = searchManager.getWhere();
             this.searchManager = searchManager;
         },
