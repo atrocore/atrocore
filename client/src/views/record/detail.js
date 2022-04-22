@@ -1233,6 +1233,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         applyOverviewFilters() {
+            // skip overview filters
+            if (!this.model || this.getMetadata().get(`scopes.${this.model.urlRoot}.object`) !== true || this.getMetadata().get(`scopes.${this.model.urlRoot}.overviewFilters`) === false) {
+                return;
+            }
+
             const fieldFilter = this.getStorage().get('fieldFilter', 'OverviewFilter');
             const languageFilter = this.getStorage().get('languageFilter', 'OverviewFilter');
 
@@ -1264,16 +1269,21 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     }
                 }
 
-                if (hide) {
-                    fieldView.hide();
-                } else {
-                    fieldView.show();
-                }
+                this.controlFieldVisibility(fieldView, hide);
             });
         },
 
         isEmptyValue(value) {
             return value === null || value === '' || (Array.isArray(value) && !value.length);
+        },
+
+        controlFieldVisibility(field, hide) {
+            if (hide) {
+                field.hide();
+                field.overviewFiltersHidden = true;
+            } else if (field.overviewFiltersHidden) {
+                field.show();
+            }
         },
 
         setupFinal: function () {

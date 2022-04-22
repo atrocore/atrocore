@@ -217,6 +217,11 @@ Espo.define('views/modal', 'view', function (Dep) {
         },
 
         applyOverviewFilters: function () {
+            // skip overview filters
+            if (!this.model || this.getMetadata().get(`scopes.${this.model.urlRoot}.object`) !== true || this.getMetadata().get(`scopes.${this.model.urlRoot}.overviewFilters`) === false) {
+                return;
+            }
+
             const fieldFilter = this.getStorage().get('fieldFilter', 'OverviewFilter');
             const languageFilter = this.getStorage().get('languageFilter', 'OverviewFilter');
 
@@ -248,12 +253,17 @@ Espo.define('views/modal', 'view', function (Dep) {
                     }
                 }
 
-                if (hide) {
-                    fieldView.hide();
-                } else {
-                    fieldView.show();
-                }
+                this.controlFieldVisibility(fieldView, hide);
             });
+        },
+
+        controlFieldVisibility(field, hide) {
+            if (hide) {
+                field.hide();
+                field.overviewFiltersHidden = true;
+            } else if (field.overviewFiltersHidden) {
+                field.show();
+            }
         },
 
         getFieldViews: function (withHidden) {
