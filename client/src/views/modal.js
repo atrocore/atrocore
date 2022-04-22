@@ -216,6 +216,79 @@ Espo.define('views/modal', 'view', function (Dep) {
             this.$el.find('footer button[data-name="'+name+'"]').removeClass('disabled').removeAttr('disabled');
         },
 
+        applyOverviewFilters: function () {
+            const fieldFilter = this.getStorage().get('fieldFilter', 'OverviewFilter');
+            const languageFilter = this.getStorage().get('languageFilter', 'OverviewFilter');
+
+            $.each(this.getFieldViews(), (name, fieldView) => {
+                if (fieldView.model.getFieldParam(name, 'advancedFilterDisabled') === true) {
+                    return;
+                }
+
+                let fields = this.getFieldManager().getActualAttributeList(fieldView.model.getFieldType(name), name);
+                let fieldValues = fields.map(field => fieldView.model.get(field));
+
+                let hide = false;
+
+                // hide filled
+                if (!hide && !fieldFilter.includes('filled')) {
+                    hide = !fieldValues.every(value => this.isEmptyValue(value));
+                }
+
+                // hide empty
+                if (!hide && !fieldFilter.includes('empty')) {
+                    hide = fieldValues.every(value => this.isEmptyValue(value));
+                }
+
+                // for languages
+                if (!hide && this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
+                    let fieldLanguage = fieldView.model.getFieldParam(name, 'multilangLocale') || 'main';
+                    if (!languageFilter.includes(fieldLanguage)) {
+                        hide = true;
+                    }
+                }
+
+                if (hide) {
+                    fieldView.hide();
+                } else {
+                    fieldView.show();
+                }
+            });
+        },
+
+        getFieldViews: function (withHidden) {
+            let fields = {};
+
+            if (this.hasView('record')) {
+                if ('getFieldViews' in this.getView('record')) {
+                    _.extend(fields, Espo.Utils.clone(this.getView('record').getFieldViews(withHidden)));
+                }
+            }
+
+            if (this.hasView('edit')) {
+                if ('getFieldViews' in this.getView('edit')) {
+                    _.extend(fields, Espo.Utils.clone(this.getView('edit').getFieldViews(withHidden)));
+                }
+            }
+
+            if (this.hasView('middle')) {
+                if ('getFieldViews' in this.getView('middle')) {
+                    _.extend(fields, Espo.Utils.clone(this.getView('middle').getFieldViews(withHidden)));
+                }
+            }
+            if (this.hasView('side')) {
+                if ('getFieldViews' in this.getView('side')) {
+                    _.extend(fields, this.getView('side').getFieldViews(withHidden));
+                }
+            }
+
+            return fields;
+        },
+
+        isEmptyValue(value) {
+            return value === null || value === '' || (Array.isArray(value) && !value.length);
+        },
+
         addButton: function (o, toBeginnig, doNotReRender) {
             var index = -1;
             this.buttonList.forEach(function (item, i) {

@@ -97,24 +97,6 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
             this.scope = this.scope || this.options.scope;
             this.id = this.options.id;
 
-            if (!this.id) {
-                this.header = this.getLanguage().translate('Create ' + this.scope, 'labels', this.scope);
-            } else {
-                this.header = this.getLanguage().translate('Edit');
-                this.header += ': ' + this.getLanguage().translate(this.scope, 'scopeNames');
-            }
-
-            if (!this.fullFormDisabled) {
-                if (!this.id) {
-                    this.header = '<a href="#' + this.scope + '/create" class="action" title="'+this.translate('Full Form')+'" data-action="fullForm">' + this.header + '</a>';
-                } else {
-                    this.header = '<a href="#' + this.scope + '/edit/' + this.id+'" class="action" title="'+this.translate('Full Form')+'" data-action="fullForm">' + this.header + '</a>';
-                }
-            }
-
-            var iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
-            this.header = iconHtml + this.header;
-
             this.sourceModel = this.model;
 
             this.waitForView('edit');
@@ -167,6 +149,30 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
                     this.createRecordView(model);
                 }
             }.bind(this));
+
+            if (!this.id) {
+                this.header = `${this.getLanguage().translate(this.scope, 'scopeNames')}: ${this.translate('New')}`;
+            } else {
+                this.header = this.getLanguage().translate('Edit') + ': ' + this.getLanguage().translate(this.scope, 'scopeNames');
+            }
+
+            if (!this.fullFormDisabled) {
+                if (!this.id) {
+                    this.header = '<a href="#' + this.scope + '/create" class="action" title="' + this.translate('Full Form') + '" data-action="fullForm">' + this.header + '</a>';
+                } else {
+                    this.header = '<a href="#' + this.scope + '/edit/' + this.id + '" class="action" title="' + this.translate('Full Form') + '" data-action="fullForm">' + this.header + '</a>';
+                }
+            }
+
+            const iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
+
+            this.header = iconHtml + this.header;
+
+            if (!this.model.isNew()) {
+                this.listenTo(this, 'after:render', () => {
+                    this.applyOverviewFilters();
+                });
+            }
         },
 
         getNonInheritedFields: function () {

@@ -1270,8 +1270,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     fieldView.show();
                 }
             });
-
-            this.model.trigger('overview-filters-applied');
         },
 
         isEmptyValue(value) {

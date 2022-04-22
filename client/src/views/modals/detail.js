@@ -156,6 +156,12 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             this.listenToOnce(this.getRouter(), 'routed', function () {
                 this.remove();
             }, this);
+
+            if (!this.model.isNew()) {
+                this.listenTo(this, 'after:render', () => {
+                    this.applyOverviewFilters();
+                });
+            }
         },
 
         addEditButton: function () {
