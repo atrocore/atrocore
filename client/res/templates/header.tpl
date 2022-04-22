@@ -1,15 +1,13 @@
 <div class="row">
     {{#if overviewFilters.length}}
     <div class="col-lg-9 overview-filters-container">
-        <div class="pull-right">
-            {{#each overviewFilters}}
-            <div class="cell filter-cell" data-name="{{this}}">
-                <div class="field" data-name="{{this}}">
-                    {{{var this ../this}}}
-                </div>
+        {{#each overviewFilters}}
+        <div class="cell filter-cell" data-name="{{this}}">
+            <div class="field" data-name="{{this}}">
+                {{{var this ../this}}}
             </div>
-            {{/each}}
         </div>
+        {{/each}}
     </div>
     <div class="col-lg-4 col-sm-4 header-buttons-container">
         <div class="header-buttons btn-group pull-right">

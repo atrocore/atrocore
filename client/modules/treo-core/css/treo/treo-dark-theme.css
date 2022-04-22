@@ -19624,7 +19624,7 @@ ul.dropdown-menu > li.checkbox {
 .page-header .overview-filters-container .filter-cell {
     display: inline-block;
     min-width: 170px;
-    margin-right: -1px;
+    margin-right: 10px;
 }
 
 .page-header .header-buttons .filter-cell .field,
@@ -20320,7 +20320,6 @@ button.category:focus {
     #main > .page-header.collapsed .overview-filters-container
     {
         margin-left: 279px;
-        width: calc(100% - 279px);
     }
 
     #main > .record > .detail > .detail-button-container.stick-sub.collapsed {

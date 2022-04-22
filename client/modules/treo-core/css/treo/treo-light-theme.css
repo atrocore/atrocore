@@ -19104,12 +19104,13 @@ table.table > thead th > div > a {
 .page-header .header-buttons .filter-cell,
 .page-header .overview-filters-container .filter-cell {
   display: inline-block;
-  width: 170px;
+  min-width: 170px;
+  margin-right: 10px;
 }
 
 .page-header .header-buttons .filter-cell > .field,
 .page-header .overview-filters-container .filter-cell > .field {
-  border: 1px solid #e0e0e0;
+  position: relative;
 }
 
 .page-header .header-buttons .filter-cell:not(:first-child):not(:last-child) > .field,
@@ -19324,7 +19325,6 @@ table.table > thead th > div > a {
   #main > .record > .detail > .detail-button-container.collapsed,
   #main > .page-header.collapsed .overview-filters-container {
     margin-left: 279px;
-    width: calc(100% - 279px);
   }
 
   #main > .record > .detail > .detail-button-container.stick-sub.collapsed {
