@@ -91,6 +91,8 @@
     "Core": "AtroCore - это программная экосистема, предназначенная для быстрой разработки веб-приложений для бизнеса."
   },
   "labels": {
+    "allLanguages": "Все языки",
+    "mainLanguage": "Основной язык",
     "inheritAll": "Унаследовать все",
     "unlinkAll": "Убрать все",
     "unlinkAllHierarchically": "Убрать все иерархично",
@@ -592,14 +594,12 @@
       "Ms.": "Мисс.",
       "Dr.": "Д-р."
     },
-    "fieldsFilter": {
-      "": "Все поля",
-      "empty": "Пустые поля",
-      "emptyAndRequired": "Пустые обязательные поля"
+    "fieldFilter": {
+      "filled": "Заполненые значения",
+      "empty": "Пустые значения"
     },
-    "localesFilter": {
-      "": "Все языки",
-      "showGenericFields": "Показать основные языковые поля"
+    "languageFilter": {
+      "main": "Ocн. язык"
     },
     "language": {
       "af_ZA": "Африкаанс",

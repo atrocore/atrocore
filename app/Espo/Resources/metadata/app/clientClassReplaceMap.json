@@ -41,9 +41,6 @@
   "views/modals/select-records": [
     "treo-core"
   ],
-  "views/record/base": [
-    "treo-core"
-  ],
   "views/record/detail-bottom": [
     "treo-core"
   ],
@@ -80,9 +77,6 @@
   "views/fields/link-parent": [
     "treo-core"
   ],
-  "views/fields/multi-enum": [
-    "treo-core"
-  ],
   "views/fields/varchar": [
     "treo-core"
   ],
@@ -93,9 +87,6 @@
     "treo-core"
   ],
   "views/fields/wysiwyg": [
-    "treo-core"
-  ],
-  "views/record/detail": [
     "treo-core"
   ],
   "views/preferences/record/edit": [

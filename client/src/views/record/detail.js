@@ -130,6 +130,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         portalLayoutDisabled: false,
 
+        fetchOnModelAfterSaveError: true,
+
+        panelNavigationView: 'views/record/panel-navigation',
+
         events: {
             'click .button-container .action': function (e) {
                 var $target = $(e.currentTarget);
@@ -157,6 +161,21 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     });
                 });
             },
+            'click a[data-action="collapseAllPanels"]': function (e) {
+                this.collapseAllPanels('hide');
+            },
+            'click a[data-action="expandAllPanels"]': function (e) {
+                this.collapseAllPanels('show');
+            },
+        },
+
+        collapseAllPanels(type) {
+            let bottom = this.getView('bottom');
+            if (bottom) {
+                (bottom.panelList || []).forEach(panel => {
+                    bottom.trigger('collapsePanel', panel.name, type);
+                });
+            }
         },
 
         actionEdit: function () {
@@ -270,6 +289,52 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     });
                 }
             }
+
+            const dropDownItems = this.getMetadata().get(['clientDefs', this.scope, 'additionalDropdownItems']) || {};
+            Object.keys(dropDownItems).forEach(item => {
+                const check = (dropDownItems[item].conditions || []).every(condition => {
+                    let check;
+                    switch (condition.type) {
+                        case 'type':
+                            check = this.type === condition.value;
+                            break;
+                        default:
+                            check = true;
+                            break;
+                    }
+                    return check;
+                });
+
+                if (check) {
+                    let dropdownItem = {
+                        name: dropDownItems[item].name,
+                        label: dropDownItems[item].label
+                    };
+                    if (dropDownItems[item].iconClass) {
+                        let htmlLogo = `<span class="additional-action-icon ${dropDownItems[item].iconClass}"></span>`;
+                        dropdownItem.html = `${this.translate(dropDownItems[item].label, 'labels', this.scope)} ${htmlLogo}`;
+                    }
+                    this.dropdownItemList.push(dropdownItem);
+
+                    let method = 'action' + Espo.Utils.upperCaseFirst(dropDownItems[item].name);
+                    this[method] = function () {
+                        let path = dropDownItems[item].actionViewPath;
+
+                        let o = {};
+                        (dropDownItems[item].optionsToPass || []).forEach((option) => {
+                            if (option in this) {
+                                o[option] = this[option];
+                            }
+                        });
+
+                        this.createView(item, path, o, (view) => {
+                            if (typeof view[dropDownItems[item].action] === 'function') {
+                                view[dropDownItems[item].action]();
+                            }
+                        });
+                    };
+                }
+            }, this);
         },
 
         disableActionItems: function () {
@@ -567,6 +632,124 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     this.setIsNotChanged();
                 }, this);
             }
+
+            let searchContainer = $('.page-header .search-container');
+            if (searchContainer.length && !this.$el.parents('.modal-container').length) {
+                searchContainer.addClass('hidden');
+            }
+
+            let headerButtonsContainer = $('.header-buttons-container');
+            if (headerButtonsContainer.length) {
+                let main = $('#main');
+                let headerBreadcrumbs = $('.header-breadcrumbs:not(.fixed-header-breadcrumbs)');
+
+                if (main.length && headerBreadcrumbs.length && headerButtonsContainer.outerWidth() > main.outerWidth() - headerBreadcrumbs.outerWidth()) {
+                    // headerButtonsContainer.addClass('full-row');
+                }
+            }
+
+            let overview = $('.record .overview');
+            let side = $('#main > .record .row > .side');
+            if (overview.length && side.length) {
+                setTimeout(function () {
+                    if (overview.outerHeight() > side.outerHeight()) {
+                        overview.addClass('bordered');
+                    } else {
+                        side.addClass('bordered');
+                    }
+                }, 100);
+
+                $window.resize(function () {
+                    let row = $('.record > .detail > .row');
+
+                    if ($window.outerWidth() > 768) {
+                        if (row.length && (side.hasClass('fixed-top') || side.hasClass('fixed-bottom') || side.hasClass('scrolled'))) {
+
+                            side.css({
+                                'width': (row.outerWidth() - overview.outerWidth(true)) + 'px'
+                            });
+                        }
+                    }
+                });
+
+                let content = $('#content');
+
+                if (content.length) {
+                    let pageHeader = $('.page-header');
+                    let detailButtons = $('.detail-button-container.record-buttons');
+                    let mainOverview = $('#main > .record > .detail > .row > .overview');
+                    let mainSide = $('#main > .record > .detail > .row > .side');
+
+                    let minHeight = (content.height() - pageHeader.outerHeight(true) - detailButtons.outerHeight(true));
+
+                    if (mainOverview.outerHeight() > mainSide.outerHeight()) {
+                        mainOverview.css({
+                            'minHeight': minHeight + 'px'
+                        })
+                    } else {
+                        mainSide.css({
+                            'minHeight': minHeight + 'px'
+                        })
+                    }
+                }
+            }
+
+            $window.off('scroll.detail-' + this.numId);
+            $window.on('scroll.detail-' + this.numId, function (e) {
+                if ($(window.document).width() < screenWidthXs) {
+                    $container.removeClass('stick-sub');
+                    $block.hide();
+                    $container.show();
+                    return;
+                }
+
+                var edge = this.$el.position().top + this.$el.outerHeight(true);
+                var scrollTop = $window.scrollTop();
+
+                if (scrollTop < edge) {
+                    if (scrollTop > stickTop) {
+                        if (!$container.hasClass('stick-sub') && this.mode !== 'edit') {
+                            var $p = $('.popover:not(.note-popover)');
+                            $p.each(function (i, el) {
+                                var $el = $(el);
+                                $el.css('top', ($el.position().top - ($container.height() - blockHeight * 2 + 10)) + 'px');
+                            }.bind(this));
+                        }
+                        $container.addClass('stick-sub');
+                        $block.show();
+                    } else {
+                        if ($container.hasClass('stick-sub') && this.mode !== 'edit') {
+                            var $p = $('.popover:not(.note-popover)');
+                            $p.each(function (i, el) {
+                                var $el = $(el);
+                                $el.css('top', ($el.position().top + ($container.height() - blockHeight * 2 + 10)) + 'px');
+                            }.bind(this));
+                        }
+                        $container.removeClass('stick-sub');
+                        $block.hide();
+                    }
+                    var $p = $('.popover');
+                    $p.each(function (i, el) {
+                        var $el = $(el);
+                        let top = $el.css('top').slice(0, -2);
+                        if (top > 0 && scrollTop > 0 && top > scrollTop) {
+                            if (stickTop > $container.height()) {
+                                if (top - scrollTop > stickTop) {
+                                    $el.removeClass('hidden');
+                                } else {
+                                    $el.addClass('hidden');
+                                }
+                            } else {
+                                if (top - scrollTop > ($container.height() + blockHeight * 2 + 10)) {
+                                    $el.removeClass('hidden');
+                                } else {
+                                    $el.addClass('hidden');
+                                }
+                            }
+                        }
+                    }.bind(this));
+                }
+            }.bind(this));
         },
 
         resetSidebar() {
@@ -598,8 +781,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.trigger('before:set-edit-mode');
             this.$el.find('.record-buttons').addClass('hidden');
             this.$el.find('.edit-buttons').removeClass('hidden');
+            this.disableButtons();
 
             var fields = this.getFieldViews(true);
+            var count = Object.keys(fields || {}).length;
             for (var field in fields) {
                 var fieldView = fields[field];
                 if (!fieldView.readOnly) {
@@ -608,7 +793,17 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         fieldView.removeInlineEditLinks();
                     }
                     fieldView.setMode('edit');
-                    fieldView.render();
+                    fieldView.render(() => {
+                        count--;
+                        if (count === 0) {
+                            this.enableButtons();
+                        }
+                    });
+                } else {
+                    count--;
+                    if (count === 0) {
+                        this.enableButtons();
+                    }
                 }
             }
             this.mode = 'edit';
@@ -926,6 +1121,52 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     $('.panel-navigation .nav a[data-name="' + panelName + '"]').click();
                 }
             }.bind(this));
+
+            if (this.collection) {
+                this.stopListening(this.model, 'destroy');
+                this.listenTo(this.model, 'destroy', function () {
+                    this.collection.fetch();
+                }, this);
+            }
+
+            $(window).on('keydown', e => {
+                if (e.keyCode === 69 && e.ctrlKey && !$('body').hasClass('modal-open')) {
+                    this.hotKeyEdit(e);
+                }
+                if (e.keyCode === 83 && e.ctrlKey && !$('body').hasClass('modal-open')) {
+                    this.hotKeySave(e);
+                }
+            });
+
+            if (!this.model.isNew() && (this.type === 'detail' || this.type === 'edit')) {
+                this.listenTo(this, 'after:render', () => {
+                    this.applyOverviewFilters();
+                });
+                this.listenTo(this.model, 'sync overview-filters-changed', () => {
+                    this.applyOverviewFilters();
+                });
+            }
+        },
+
+        hotKeyEdit: function (e) {
+            e.preventDefault();
+            if (this.mode !== 'edit') {
+                this.actionEdit();
+            }
+        },
+
+        hotKeySave: function (e) {
+            e.preventDefault();
+            if (this.mode === 'edit') {
+                this.actionSave();
+            } else {
+                let viewsFields = this.getFieldViews();
+                Object.keys(viewsFields).forEach(item => {
+                    if (viewsFields[item].mode === "edit") {
+                        viewsFields[item].inlineEditSave();
+                    }
+                });
+            }
         },
 
         setupBeforeFinal: function () {
@@ -991,8 +1232,72 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
         },
 
+        applyOverviewFilters() {
+            const fieldFilter = this.getStorage().get('fieldFilter', 'OverviewFilter');
+            const languageFilter = this.getStorage().get('languageFilter', 'OverviewFilter');
+
+            $.each(this.getFieldViews(), (name, fieldView) => {
+                if (fieldView.model.getFieldParam(name, 'advancedFilterDisabled') === true) {
+                    return;
+                }
+
+                let fields = this.getFieldManager().getActualAttributeList(fieldView.model.getFieldType(name), name);
+                let fieldValues = fields.map(field => fieldView.model.get(field));
+
+                let hide = false;
+
+                // hide filled
+                if (!hide && !fieldFilter.includes('filled')) {
+                    hide = !fieldValues.every(value => this.isEmptyValue(value));
+                }
+
+                // hide empty
+                if (!hide && !fieldFilter.includes('empty')) {
+                    hide = fieldValues.every(value => this.isEmptyValue(value));
+                }
+
+                // for languages
+                if (!hide && this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
+                    let fieldLanguage = fieldView.model.getFieldParam(name, 'multilangLocale') || 'main';
+                    if (!languageFilter.includes(fieldLanguage)) {
+                        hide = true;
+                    }
+                }
+
+                if (hide) {
+                    fieldView.hide();
+                } else {
+                    fieldView.show();
+                }
+            });
+
+            this.model.trigger('overview-filters-applied');
+        },
+
+        isEmptyValue(value) {
+            return value === null || value === '' || (Array.isArray(value) && !value.length);
+        },
+
         setupFinal: function () {
-            this.build();
+            this.build(this.addCollapsingButtonsToMiddleView);
+        },
+
+        addCollapsingButtonsToMiddleView(view) {
+            view.listenTo(view, 'after:render', view => {
+                let bottom = this.getView('bottom');
+                if (bottom && bottom.panelList.length) {
+                    let html = `` +
+                        `<a class="btn btn-link collapsing-button" data-action="collapseAllPanels">` +
+                        `<span class="fas fa-chevron-up"></span>` +
+                        `${this.getLanguage().translate('collapseAllPanels', 'labels', 'Global')}` +
+                        `</a>` +
+                        `<a class="btn btn-link collapsing-button" data-action="expandAllPanels">` +
+                        `<span class="fas fa-chevron-down"></span>` +
+                        `${this.getLanguage().translate('expandAllPanels', 'labels', 'Global')}` +
+                        `</a>`;
+                    view.$el.find('.panel-heading:first').append(html);
+                }
+            });
         },
 
         setIsChanged: function () {
@@ -1062,6 +1367,21 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
         },
 
+        actionSave: function () {
+            let savingCanceled = false;
+
+            this.listenToOnce(this, 'cancel:save', () => savingCanceled = true);
+
+            const setDetailAndScroll = () => {
+                this.setDetailMode();
+                $(window).scrollTop(0)
+            };
+
+            if (this.save(setDetailAndScroll, true) && savingCanceled) {
+                setDetailAndScroll();
+            }
+        },
+
         actionViewPersonalData: function () {
             this.createView('viewPersonalData', 'views/personal-data/modals/personal-data', {
                 model: this.model
@@ -1095,6 +1415,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         afterSaveError: function () {
             this.enableButtons();
+
+            if (this.fetchOnModelAfterSaveError) {
+                this.model.fetch();
+            }
         },
 
         afterNotModified: function () {
@@ -1412,7 +1736,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
                 layout.push(panel);
             }
-            return layout
+            return this.prepareLayoutAfterConverting(layout);
+        },
+
+        prepareLayoutAfterConverting(layout) {
+            return layout;
         },
 
         getGridLayout: function (callback) {
@@ -1487,6 +1815,25 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 recordHelper: this.recordHelper,
                 recordViewObject: this,
                 portalLayoutDisabled: this.portalLayoutDisabled
+            }, view => {
+                this.listenToOnce(view, 'after:render', () => {
+                    this.createPanelNavigationView(view.panelList);
+                })
+            });
+        },
+
+        createPanelNavigationView(panelList) {
+            let el = this.options.el || '#' + (this.id);
+            this.createView('panelNavigation', this.panelNavigationView, {
+                panelList: panelList,
+                model: this.model,
+                scope: this.scope,
+                el: el + ' .panel-navigation',
+            }, function (view) {
+                this.listenTo(this, 'after:set-detail-mode', () => {
+                    view.reRender();
+                });
+                view.render();
             });
         },
 

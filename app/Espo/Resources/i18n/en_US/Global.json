@@ -89,6 +89,8 @@
     "Core": "AtroCore is a software ecosystem, designed for rapid development of web-based responsive business applications."
   },
   "labels": {
+    "allLanguages": "All Languages",
+    "mainLanguage": "Main Language",
     "inheritAll": "Inherit All",
     "unlinkAll": "Unlink All",
     "unlinkAllHierarchically": "Unlink All Hierarchically",
@@ -592,14 +594,12 @@
       "Ms.": "Ms.",
       "Dr.": "Dr."
     },
-    "fieldsFilter": {
-      "": "All Fields",
-      "empty": "Empty Fields",
-      "emptyAndRequired": "Empty Required Fields"
+    "fieldFilter": {
+      "filled": "Filled values",
+      "empty": "Empty values"
     },
-    "localesFilter": {
-      "": "All Languages",
-      "showGenericFields": "Show main language fields"
+    "languageFilter": {
+      "main": "Main language"
     },
     "language": {
       "af_ZA": "Afrikaans (South Africa) › af_ZA",

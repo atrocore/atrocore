@@ -32,10 +32,10 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('treo-core:views/fields/bool-with-inline-label', 'views/fields/bool',
+Espo.define('views/fields/bool-with-inline-label', 'views/fields/bool',
     Dep => Dep.extend({
 
-        editTemplate: 'treo-core:fields/bool-with-inline-label/base',
+        editTemplate: 'fields/bool-with-inline-label/base',
 
         events: _.extend({
             'click label': function (e) {

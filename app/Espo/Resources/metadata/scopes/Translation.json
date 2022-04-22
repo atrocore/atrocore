@@ -10,6 +10,7 @@
   "disabled": false,
   "type": "Base",
   "object": true,
+  "overviewFilters": false,
   "isCustom": false,
   "hasAssignedUser": false,
   "hasTeam": false,

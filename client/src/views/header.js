@@ -38,19 +38,6 @@ Espo.define('views/header', 'view', function (Dep) {
 
         template: 'header',
 
-        updatedOverviewFilters: [],
-
-        baseOverviewFilters: [
-            {
-                name: 'fieldsFilter',
-                view: 'treo-core:views/fields/overview-fields-filter'
-            },
-            {
-                name: 'localesFilter',
-                view: 'treo-core:views/fields/overview-locales-filter'
-            }
-        ],
-
         events: _.extend({
             'click a:not([data-action])': function (e) {
                 let path = e.currentTarget.getAttribute("href");
@@ -69,7 +56,10 @@ Espo.define('views/header', 'view', function (Dep) {
             data.scope = this.scope || this.getParentView().scope;
             data.items = this.getItems();
             data.isXsSingleRow = this.options.isXsSingleRow;
-            data.overviewFilters = this.updatedOverviewFilters.map(filter => filter.name);
+
+            if (this.model && !this.model.isNew() && this.getMetadata().get(`scopes.${this.model.urlRoot}.object`) && this.getMetadata().get(`scopes.${this.model.urlRoot}.overviewFilters`) !== false) {
+                data.overviewFilters = this.getOverviewFiltersList().map(filter => filter.name);
+            }
 
             if ((data.items.buttons || []).length < 2) {
                 data.isHeaderAdditionalSpace = true;
@@ -81,14 +71,15 @@ Espo.define('views/header', 'view', function (Dep) {
         setup: function () {
             this.scope = this.options.scope;
             if (this.model) {
-                this.listenTo(this.model, 'after:save', function () {
+                this.listenTo(this.model, 'after:save', () => {
                     if (this.isRendered()) {
                         this.reRender();
                     }
-                }, this);
-            }
-            if (this.model && !this.model.isNew() && this.getMetadata().get(['scopes', this.scope, 'advancedFilters'])) {
-                this.createOverviewFilters();
+                });
+
+                if (!this.model.isNew()) {
+                    this.createOverviewFilters();
+                }
             }
         },
 
@@ -102,28 +93,76 @@ Espo.define('views/header', 'view', function (Dep) {
             return items;
         },
 
-        createOverviewFilters() {
-            this.updatedOverviewFilters = this.filterOverviewFilters();
+        getOverviewFiltersList: function () {
+            let result = [
+                {
+                    name: "fieldFilter",
+                    options: ["filled", "empty"]
+                }
+            ];
 
-            (this.updatedOverviewFilters || []).forEach(filter => {
-                this.createView(filter.name, filter.view, {
-                    el: `${this.options.el} .field[data-name="${filter.name}"]`,
-                    model: this.model,
-                    name: filter.name,
-                    storageKey: 'overview-filters',
-                    modelKey: 'advancedEntityView'
-                }, view => view.render());
+            if (this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
+                result.push({
+                    name: "languageFilter",
+                    options: ['main'].concat(this.getConfig().get('inputLanguageList'))
+                });
+            }
+
+            return result;
+        },
+
+        createOverviewFilters() {
+            this.getModelFactory().create(null, model => {
+                this.getOverviewFiltersList().forEach(filter => {
+                    this.createOverviewFilter(filter, model);
+                });
             });
         },
 
-        filterOverviewFilters() {
-            return (this.baseOverviewFilters || []).filter(filter => {
-                if (filter.name === 'localesFilter') {
-                    return this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length
-                }
-                return true;
+        createOverviewFilter(filter, model) {
+            if (!this.getStorage().get(filter.name, 'OverviewFilter')) {
+                this.getStorage().set(filter.name, 'OverviewFilter', filter.options);
+            }
+
+            model.set(filter.name, this.getStorage().get(filter.name, 'OverviewFilter'));
+
+            let translatedOptions = {};
+            filter.options.forEach(option => {
+                translatedOptions[option] = this.getLanguage().translateOption(option, filter.name, 'Global');
             });
-        }
+
+            this.createView(filter.name, 'views/fields/multi-enum', {
+                el: `${this.options.el} .field[data-name="${filter.name}"]`,
+                name: filter.name,
+                mode: 'edit',
+                model: model,
+                dragDrop: false,
+                params: {
+                    options: filter.options,
+                    translatedOptions: translatedOptions
+                }
+            }, view => {
+                this.listenTo(model, `change:${filter.name}`, () => {
+                    let values = [];
+                    filter.options.forEach(option => {
+                        if (model.get(filter.name).includes(option)) {
+                            values.push(option);
+                        }
+                    });
+
+                    if (values.length === 0) {
+                        values = [filter.options[0]];
+                    }
+
+                    this.getStorage().set(filter.name, 'OverviewFilter', values);
+                    this.model.trigger('overview-filters-changed');
+
+                    model.set(filter.name, values);
+                    view.reRender();
+                });
+                view.render();
+            });
+        },
 
     });
 });

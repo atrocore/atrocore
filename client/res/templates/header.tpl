@@ -1,4 +1,28 @@
 <div class="row">
+    {{#if overviewFilters.length}}
+    <div class="col-lg-9 overview-filters-container">
+        {{#each overviewFilters}}
+        <div class="cell filter-cell" data-name="{{this}}">
+            <div class="field" data-name="{{this}}">
+                {{{var this ../this}}}
+            </div>
+        </div>
+        {{/each}}
+    </div>
+    <div class="col-lg-4 col-sm-4 header-buttons-container">
+        <div class="header-buttons btn-group pull-right">
+            <div class="header-items">
+                {{#each items.buttons}}
+                <a {{#if link}}href="{{link}}"{{else}}href="javascript:"{{/if}} style="{{cssStyle}}" class="btn btn-{{#if style}}{{style}}{{else}}default{{/if}} action{{#if hidden}} hidden{{/if}}" data-name="{{name}}" data-action="{{action}}"{{#each data}} data-{{@key}}="{{./this}}"{{/each}}>
+                    {{#if iconHtml}}{{{iconHtml}}}{{/if}}
+                    {{#if html}}{{{html}}}{{else}}{{translate label scope=../../scope}}{{/if}}
+                </a>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+    <h3 style="width: 100%">{{{header}}}</h3>
+    {{else}}
     <div>
         <h3>{{{header}}}</h3>
     </div>
@@ -41,18 +65,6 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-12 overview-filters-container">
-        <div class="pull-right">
-            {{#if overviewFilters.length}}
-            {{#each overviewFilters}}
-            <div class="cell filter-cell" data-name="{{this}}">
-                <div class="field" data-name="{{this}}">
-                    {{{var this ../this}}}
-                </div>
-            </div>
-            {{/each}}
-            {{/if}}
-        </div>
-    </div>
+    {{/if}}
 </div>
 

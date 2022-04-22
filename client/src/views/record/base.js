@@ -54,6 +54,34 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
 
         mode: null,
 
+        getConfirmMessage: function (_prev, attrs, model) {
+            let confirmMessage = null;
+            if (this.model.get('id')) {
+                let confirmations = this.getMetadata().get(`clientDefs.${model.urlRoot}.confirm`) || {};
+                $.each(confirmations, (field, data) => {
+                    if (_prev[field] !== attrs[field]) {
+                        let key = null;
+                        if (typeof data.values !== 'undefined') {
+                            data.values.forEach(value => {
+                                if (attrs[field] === value) {
+                                    key = data.message;
+                                }
+                            });
+                        } else {
+                            key = data;
+                        }
+
+                        if (key) {
+                            let parts = key.split('.');
+                            confirmMessage = this.translate(parts[2], parts[1], parts[0]);
+                        }
+                    }
+                });
+            }
+
+            return confirmMessage;
+        },
+
         hideField: function (name, locked) {
             this.recordHelper.setFieldStateParam(name, 'hidden', true);
             if (locked) {
@@ -474,71 +502,117 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
                 return;
             }
 
+            let hashParts = window.location.hash.split('/view/');
+            if (typeof hashParts[1] !== 'undefined' && this.model.defs._relationName) {
+                attrs._relationName = this.model.defs._relationName;
+                attrs._relationEntity = hashParts[0].replace('#', '');
+                attrs._relationEntityId = hashParts[1];
+
+                // @todo remove it soon
+                attrs._mainEntityId = hashParts[1];
+            }
+
+            let _prev = {};
+            $.each(attrs, function (field, value) {
+                _prev[field] = initialAttributes[field];
+            });
+
+            attrs['_prev'] = _prev;
+            attrs['_silentMode'] = true;
+
             this.beforeSave();
 
-            this.trigger('before:save');
-            model.trigger('before:save');
+            this.trigger('before:save', attrs);
+            model.trigger('before:save', attrs);
 
+            let confirmMessage = this.getConfirmMessage(_prev, attrs, model);
+
+            this.notify(false);
+            if (confirmMessage) {
+                Espo.Ui.confirm(confirmMessage, {
+                    confirmText: self.translate('Apply'),
+                    cancelText: self.translate('Cancel'),
+                    cancelCallback(){
+                        self.enableButtons();
+                        self.trigger('cancel:save');
+                    }
+                }, (result) => {
+                    this.saveModel(model, callback, skipExit, attrs);
+                });
+            } else {
+                this.saveModel(model, callback, skipExit, attrs);
+            }
+
+            return true;
+        },
+
+        saveModel(model, callback, skipExit, attrs) {
+            this.notify('Saving...');
+            let self = this;
             model.save(attrs, {
                 success: function () {
-                    this.afterSave();
-                    var isNew = self.isNew;
+                    self.afterSave();
+                    let isNew = self.isNew;
                     if (self.isNew) {
                         self.isNew = false;
                     }
-                    this.trigger('after:save');
+                    self.trigger('after:save');
                     model.trigger('after:save');
 
                     if (!callback) {
                         if (!skipExit) {
                             if (isNew) {
-                                this.exit('create');
+                                self.exit('create');
                             } else {
-                                this.exit('save');
+                                self.exit('save');
                             }
                         }
                     } else {
-                        callback(this);
+                        callback(self);
                     }
-                }.bind(this),
+                },
                 error: function (e, xhr) {
-                    var r = xhr.getAllResponseHeaders();
-                    var response = null;
+                    let statusReason = xhr.responseText || '';
+                    if (xhr.status === 409) {
+                        self.notify(false);
+                        self.enableButtons();
+                        self.trigger('cancel:save');
+                        Espo.Ui.confirm(statusReason, {
+                            confirmText: self.translate('Apply'),
+                            cancelText: self.translate('Cancel')
+                        }, function () {
+                            attrs['_prev'] = null;
+                            attrs['_silentMode'] = false;
+                            model.save(attrs, {
+                                success: function () {
+                                    self.afterSave();
+                                    self.isNew = false;
+                                    self.trigger('after:save');
+                                    model.trigger('after:save');
+                                    if (!callback) {
+                                        if (!skipExit) {
+                                            self.exit('save');
+                                        }
+                                    } else {
+                                        callback(self);
+                                    }
+                                },
+                                patch: true
+                            });
+                        })
+                    } else {
+                        self.enableButtons();
+                        self.trigger('cancel:save');
 
-                    if (~[409, 500].indexOf(xhr.status)) {
-                        var statusReasonHeader = xhr.responseText;
-                        if (statusReasonHeader) {
-                            try {
-                                var response = JSON.parse(statusReasonHeader);
-                            } catch (e) {
-                                console.error('Could not parse X-Status-Reason header');
-                            }
+                        if (xhr.status === 304) {
+                            Espo.Ui.notify(self.translate('notModified', 'messages'), 'warning', 1000 * 60 * 60 * 2, true);
+                        } else {
+                            Espo.Ui.notify(`${self.translate("Error")} ${xhr.status}: ${statusReason}`, "error", 1000 * 60 * 60 * 2, true);
                         }
                     }
-
-                    if (xhr.status == 400) {
-                        if (!this.isNew) {
-                            this.resetModelChanges();
-                        }
-                    }
-
-                    if (response && response.reason) {
-                        var methodName = 'errorHandler' + Espo.Utils.upperCaseFirst(response.reason.toString());
-                        if (methodName in this) {
-                            xhr.errorIsHandled = true;
-                            this[methodName](response.data);
-                        }
-                    }
-
-                    this.afterSaveError();
-
-                    model.attributes = beforeSaveAttributes;
-                    self.trigger('cancel:save');
-
-                }.bind(this),
+                },
                 patch: !model.isNew()
             });
-            return true;
         },
 
         fetch: function () {
