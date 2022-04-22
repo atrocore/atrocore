@@ -6310,7 +6310,7 @@ button.close {
 }
 
 .modal-open {
-  overflow: hidden;
+  padding-right: 0 !important;
 }
 
 .modal {
@@ -6347,6 +6347,9 @@ button.close {
 .modal-open .modal {
   overflow-x: hidden;
   overflow-y: auto;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.5);
 }
 
 .modal-dialog {
@@ -6413,7 +6416,7 @@ button.close {
 
 .modal-body {
   position: relative;
-  padding-top: 14px;
+  padding-top: 30px;
 }
 
 .modal-body > div:not(.record-container):not(.edit-container) {
@@ -6467,7 +6470,7 @@ button.close {
 }
 
 .dialog-confirm .modal-body {
-  padding-bottom: 14px;
+  padding-bottom: 30px;
 }
 
 .dialog-confirm .modal-body .confirm-message {
