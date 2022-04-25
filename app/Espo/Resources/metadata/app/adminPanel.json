@@ -8,11 +8,6 @@
         "description": "settings"
       },
       {
-        "url": "#Admin/userInterface",
-        "label": "User Interface",
-        "description": "userInterface"
-      },
-      {
         "url": "#Locale",
         "label": "Locale",
         "description": "locale"
@@ -105,9 +100,9 @@
     "label": "Customization",
     "itemList": [
       {
-        "url": "#RepresentationSettings",
-        "label": "Settings",
-        "description": "representationSettings"
+        "url": "#Admin/userInterface",
+        "label": "User Interface",
+        "description": "userInterface"
       },
       {
         "url": "#Admin/layouts",

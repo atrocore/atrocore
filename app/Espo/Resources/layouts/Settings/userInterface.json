@@ -11,5 +11,11 @@
             [{"name": "tabIconsDisabled"}, false],
             [{"name": "dashboardLayout", "fullWidth": true}]
         ]
+    },
+    {
+        "label": "Representation",
+        "rows": [
+            [{"name": "isStreamSide"}, {"name": "isStreamPanelFirst"}]
+        ]
     }
 ]

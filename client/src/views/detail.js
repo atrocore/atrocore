@@ -87,6 +87,8 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 footer.removeClass('is-collapsed');
             }
 
+            $('.page-header').addClass('detail-page-header');
+
             Dep.prototype.afterRender.call(this);
         },
 

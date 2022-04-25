@@ -204,7 +204,6 @@
     "inputLanguage": "Input languages for translatable fields.",
     "multiLanguagesSettings": "Configure multiple languages to be used",
     "composer": "Installation / uninstallation / updating of modules, which is dependency consistent",
-    "representationSettings": "Representation settings",
     "unit": "Units of measure settings"
   },
   "options": {
