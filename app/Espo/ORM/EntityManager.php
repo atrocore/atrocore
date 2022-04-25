@@ -35,8 +35,7 @@
 
 namespace Espo\ORM;
 
-use \Espo\Core\Exceptions\Error;
-use Treo\Core\Loaders\Pdo as PdoLoader;
+use Espo\Core\Exceptions\Error;
 
 class EntityManager
 {
@@ -59,7 +58,7 @@ class EntityManager
 
     protected $query;
 
-    protected $driverPlatformMap = PdoLoader::DRIVER_PLATFORM_MAP;
+    protected $driverPlatformMap = ['pdo_mysql' => 'Mysql', 'mysqli' => 'Mysql'];
 
     public function __construct($params)
     {
