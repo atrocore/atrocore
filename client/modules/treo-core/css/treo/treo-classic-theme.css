@@ -6443,9 +6443,9 @@ button.close {
 .modal-open .modal {
     overflow-x: hidden;
     overflow-y: auto;
-    display: flex;
     align-items: center;
     background: rgba(255, 255, 255, 0.5);
+    padding-right: 0 !important;
 }
 
 .modal-dialog {
@@ -19137,10 +19137,6 @@ input#sn-checkbox-open-in-new-window {
 .detail .record-buttons ~ .edit-buttons.hidden ~ .row .panel-body .form-group .field {
     padding-bottom: 6px;
     border-bottom: 1px solid #f5f5f5
-}
-
-.modal-open .modal {
-    padding-right: 0 !important;
 }
 
 .modal-header {
