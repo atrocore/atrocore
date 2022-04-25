@@ -2,7 +2,7 @@
 
 ## What Is AtroCore?
 
-AtroCore is an open-source software distributed under GPLv3 License for free. 
+AtroCore is an open-source software distributed under GPLv3 License for free. This software is not allowed to be used in Russia and Belarus.
 
 AtroCore is a Data Platform, Data Management and Master Data Management (MDM) software. It is a software ecosystem designed for rapid development of responsive web-based business applications of any kind (ERP, PIM, CRM, DMS, MDM, DAM, etc.). Thanks to its configuration possibilities it is an excellent tool for cost-effective and timely application development that comes with the powerful out-of-the-box functionality.
 
