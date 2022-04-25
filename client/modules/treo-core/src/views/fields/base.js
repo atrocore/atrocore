@@ -60,7 +60,7 @@ Espo.define('treo-core:views/fields/base', 'class-replace!treo-core:views/fields
             }
 
             if (this.validate()) {
-                this.notify('Not valid', 'error');
+                this.notify(this.translate('Record cannot be saved'), 'error');
                 model.set(prev, {silent: true});
                 return;
             }

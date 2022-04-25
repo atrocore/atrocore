@@ -273,7 +273,9 @@
     "Move Over": "Move Over",
     "oneToMany": "One-to-Many",
     "manyToOne": "Many-to-One",
-    "manyToMany": "Many-to-Many"
+    "manyToMany": "Many-to-Many",
+    "Record cannot be saved": "Record cannot be saved",
+    "click to add...": "click to add..."
   },
   "messages": {
     "optionValueCannotBeEmpty": "Option value cannot be empty",

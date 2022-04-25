@@ -1436,7 +1436,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         afterNotValid: function () {
-            this.notify('Not valid', 'error');
+            this.notify(this.translate('Record cannot be saved'), 'error');
             this.enableButtons();
         },
 

@@ -275,7 +275,9 @@
     "quickCreate": "Быстрое создание",
     "oneToMany": "Один-ко-многим",
     "manyToOne": "Многие-к-одному",
-    "manyToMany": "Многие-ко-многим"
+    "manyToMany": "Многие-ко-многим",
+    "Record cannot be saved": "Запись не может быть сохранена",
+    "click to add...": "нажмите, чтобы добавить..."
   },
   "messages": {
     "optionValueCannotBeEmpty": "Значение опции не может быть пустым",

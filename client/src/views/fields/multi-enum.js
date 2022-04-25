@@ -135,6 +135,7 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                     valueField: 'value',
                     highlight: false,
                     searchField: ['label'],
+                    placeholder: this.translate('click to add...'),
                     plugins: plugins,
                     score: function (search) {
                         var score = this.getScoreFunction(search);
