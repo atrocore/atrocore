@@ -6461,9 +6461,14 @@ button.close {
 .modal-open .modal {
     overflow-x: hidden;
     overflow-y: auto;
-    display: flex;
     align-items: center;
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.modal-open .modal .modal-dialog {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .modal-dialog {
@@ -16659,11 +16664,7 @@ h4.panel-title span.color-icon {
 }
 
 .label {
-    padding: .09em .5em .2em
-}
-
-.cell span.colored-multi-enum {
-    display: inline-block;
+    padding: 0 5px 3px 5px;
 }
 
 .expanded-row span.label {
@@ -19610,6 +19611,14 @@ ul.dropdown-menu > li.checkbox {
     padding-right: 8px;
 }
 
+.page-header.detail-page-header {
+    margin: 14px 0 10px 0
+}
+
+.page-header.detail-page-header h3 {
+    padding-top: 30px;
+}
+
 .page-header h3 {
     font-size: 24px;
 }
@@ -19698,6 +19707,10 @@ select,
     -webkit-justify-content: flex-start;
     -ms-flex-pack: start;
     justify-content: flex-start;
+}
+
+.page-header .overview-filters-container .selectize-input input {
+    width: 40px !important;
 }
 
 .selectize-input.focus {
@@ -19815,6 +19828,7 @@ select,
 
 #main .catalog-tree-panel.catalog-tree-panel-hidden + .list-container {
     margin-left: 25px;
+    width: calc(100% - 25px);
 }
 
 #main .catalog-tree-panel + .list-buttons-container::before,
@@ -20327,6 +20341,7 @@ button.category:focus {
     #main > .page-header.collapsed .overview-filters-container
     {
         margin-left: 279px;
+        width: calc(100% - 279px);
     }
 
     #main > .record > .detail > .detail-button-container.stick-sub.collapsed {

@@ -256,7 +256,9 @@
     "Erase": "Löschen",
     "oneToMany": "One-to-Many",
     "manyToOne": "Many-to-One",
-    "manyToMany": "Many-to-Many"
+    "manyToMany": "Many-to-Many",
+    "Record cannot be saved": "Datensatz kann nicht gespeichert werden",
+    "click to add...": "zum Hinzufügen klicken..."
   },
   "messages": {
     "optionValueCannotBeEmpty": "Option darf nicht leer sein",
