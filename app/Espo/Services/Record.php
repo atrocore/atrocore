@@ -2632,6 +2632,10 @@ class Record extends \Espo\Core\Services\Base
                 continue 1;
             }
 
+            if (!isset($params['type'])) {
+                continue 1;
+            }
+
             if (in_array($field, $linkMultipleIds)) {
                 $collection = $entity->get(substr($field, 0, -3));
                 $value = (!empty($collection) && count($collection) > 0) ? array_column($collection->toArray(), 'id') : [];
@@ -2643,6 +2647,10 @@ class Record extends \Espo\Core\Services\Base
                 }
             } else {
                 $value = $entity->get($field);
+            }
+
+            if ($params['type'] === 'bool') {
+                return !empty($data->$field) !== !empty($value);
             }
 
             // strict type for NULL

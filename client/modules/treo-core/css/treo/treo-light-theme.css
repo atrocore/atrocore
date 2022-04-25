@@ -6334,7 +6334,6 @@ button.close {
   -o-transition: -o-transform .3s ease-out;
   transition: -webkit-transform .3s ease-out;
   -o-transition: transform .3s ease-out;
-  transition: transform .3s ease-out;
   transition: transform .3s ease-out, -webkit-transform .3s ease-out;
 }
 
@@ -6355,6 +6354,7 @@ button.close {
   position: relative;
   top: 50%;
   transform: translateY(-50%);
+  padding-right: 0 !important;
 }
 
 .modal-dialog {
@@ -22043,10 +22043,6 @@ ul.dropdown-menu > li.checkbox {
 
 .search-container .input-group > .input-group-btn:last-child > .btn:last-child {
   padding-right: 0;
-}
-
-.modal-open .modal {
-  padding-right: 0 !important;
 }
 
 .modal-header {
