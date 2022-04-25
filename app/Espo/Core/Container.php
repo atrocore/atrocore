@@ -160,7 +160,7 @@ class Container
                 $className = null;
             }
 
-            if ($className === null || !class_exists($className)) {
+            if (!is_string($className) || !class_exists($className)) {
                 $className = '\Treo\Core\Loaders\\' . ucfirst($name);
             }
 
