@@ -236,7 +236,7 @@ class Metadata extends AbstractListener
                     continue 1;
                 }
                 $newFields[$field] = $params;
-                if (!empty($params['isMultilang']) && !in_array($params['type'], ['enum', 'multiEnum'])) {
+                if (!empty($params['isMultilang'])) {
                     foreach ($locales as $locale) {
                         // prepare locale
                         $preparedLocale = ucfirst(Util::toCamelCase(strtolower($locale)));
@@ -255,7 +255,11 @@ class Metadata extends AbstractListener
                             $mParams['required'] = $params['requiredForMultilang'];
                         }
                         if (in_array($mParams['type'], ['enum', 'multiEnum'])) {
-                            $mParams['options'] = $mParams['options' . $preparedLocale];
+                            $mParams['notStorable'] = true;
+                            $mParams['optionsOriginal'] = $params['options'];
+                            if (!empty($mParams['options' . $preparedLocale])) {
+                                $mParams['options'] = $mParams['options' . $preparedLocale];
+                            }
                             if ($mParams['type'] == 'enum' && !empty($params['options'])) {
                                 $index = array_search($params['default'], $params['options']);
                                 $mParams['default'] = $index !== false ? $mParams['options'][$index] : null;
