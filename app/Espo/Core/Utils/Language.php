@@ -115,12 +115,16 @@ class Language
 
     public static function detectLanguage(Config $config, Preferences $preferences = null): string
     {
-        $language = self::DEFAULT_LANGUAGE;
         if ($preferences) {
             $language = $preferences->get('language');
         }
-        if (!$language) {
+
+        if (empty($language)) {
             $language = $config->get('language');
+        }
+
+        if (empty($language)) {
+            $language = self::DEFAULT_LANGUAGE;
         }
 
         return $language;
