@@ -73,7 +73,7 @@ class FieldManagerController extends AbstractListener
             $table = Util::toUnderScore($params['scope']);
 
             $fields = [$field];
-            if ($this->getConfig()->get('isMultilangActive', false)) {
+            if (!in_array($data->type, ['enum', 'multiEnum']) && $this->getConfig()->get('isMultilangActive', false)) {
                 foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
                     $languageField = $field . '_' . strtolower($locale);
                     if ($this->getMetadata()->get(['entityDefs', $params['scope'], 'fields', Util::toCamelCase($languageField)])) {

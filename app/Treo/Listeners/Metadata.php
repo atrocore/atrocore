@@ -232,8 +232,11 @@ class Metadata extends AbstractListener
                 if (in_array($field, $toSkip)) {
                     continue 1;
                 }
+                if (empty($params['type'])) {
+                    continue 1;
+                }
                 $newFields[$field] = $params;
-                if (!empty($params['isMultilang'])) {
+                if (!empty($params['isMultilang']) && !in_array($params['type'], ['enum', 'multiEnum'])) {
                     foreach ($locales as $locale) {
                         // prepare locale
                         $preparedLocale = ucfirst(Util::toCamelCase(strtolower($locale)));
