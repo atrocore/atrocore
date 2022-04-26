@@ -20342,6 +20342,11 @@ button.category:focus {
         width: calc(100% - 279px);
     }
 
+    #main > .page-header.collapsed .overview-filters-container
+    {
+        width: auto;
+    }
+
     #main > .record > .detail > .detail-button-container.stick-sub.collapsed {
         margin-left: 265px;
         width: calc(100% - 500px);
