@@ -419,15 +419,16 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
         },
 
         validate: function () {
-            var notValid = false;
-            var fields = this.getFields();
-            for (var i in fields) {
-                if (fields[i].mode == 'edit') {
-                    if (!fields[i].disabled && !fields[i].readOnly) {
-                        notValid = fields[i].validate() || notValid;
+            let notValid = false;
+
+            $.each(this.getFields(), (name, fieldData) => {
+                if (fieldData.mode === 'edit') {
+                    if (!fieldData.disabled && !fieldData.readOnly && !fieldData.$el.hasClass('hidden')) {
+                        notValid = fieldData.validate() || notValid;
                     }
                 }
-            };
+            });
+
             return notValid
         },
 
