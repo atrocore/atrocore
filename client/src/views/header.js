@@ -120,11 +120,15 @@ Espo.define('views/header', 'view', function (Dep) {
         },
 
         createOverviewFilter(filter, model) {
-            if (!this.getStorage().get(filter.name, 'OverviewFilter')) {
-                this.getStorage().set(filter.name, 'OverviewFilter', filter.options);
-            }
+            let selected = [];
+            (this.getStorage().get(filter.name, 'OverviewFilter') || filter.options).forEach(option => {
+                if (filter.options.includes(option)){
+                    selected.push(option);
+                }
+            });
 
-            model.set(filter.name, this.getStorage().get(filter.name, 'OverviewFilter'));
+            this.getStorage().set(filter.name, 'OverviewFilter', selected);
+            model.set(filter.name, selected);
 
             let translatedOptions = {};
             filter.options.forEach(option => {
