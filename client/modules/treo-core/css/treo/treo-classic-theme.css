@@ -19450,6 +19450,10 @@ ul.dropdown-menu > li.checkbox {
     margin-top: 50px;
 }
 
+#login.panel-updating label {
+    font-weight: normal;
+}
+
 #login.panel > .panel-heading {
     text-align: center;
     padding: 6px;
@@ -21738,12 +21742,10 @@ select {
 
 .lock-link,
 .unlock-link {
-    width: 24px;
-    height: 24px;
+    padding: 0 5px;
     text-align: center;
     -webkit-border-radius: 3px;
     border-radius: 3px;
-    line-height: 24px;
 }
 
 .attribute-cell .inline-remove-link {
