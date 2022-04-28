@@ -131,6 +131,18 @@ Espo.define('views/edit', 'views/main', function (Dep) {
             }
             this.setPageTitle(title);
         },
+
+        afterRender() {
+            let footer = $('#footer');
+
+            if (footer.length) {
+                footer.removeClass('is-collapsed');
+            }
+
+            $('.page-header').addClass('detail-page-header');
+
+            Dep.prototype.afterRender.call(this);
+        }
     });
 });
 
