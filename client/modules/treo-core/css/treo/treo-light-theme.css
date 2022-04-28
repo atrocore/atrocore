@@ -20841,6 +20841,10 @@ select {
   margin-top: 50px;
 }
 
+#login.panel-updating label {
+  font-weight: normal;
+}
+
 #login.panel > .panel-heading {
   text-align: center;
   padding: 6px;
