@@ -74,6 +74,7 @@ Espo.define('views/admin/field-manager/list', 'view', function (Dep) {
                         type: 'DELETE',
                         success: function () {
                             this.notify('Removed', 'success');
+                            this.clearFilters(field)
                             var data = this.getMetadata().data;
                             delete data['entityDefs'][this.scope]['fields'][field];
                             this.getMetadata().storeToCache();
@@ -125,6 +126,44 @@ Espo.define('views/admin/field-manager/list', 'view', function (Dep) {
 
         },
 
+        clearFilters(field) {
+            let presetFilters = this.getPreferences().get('presetFilters') || {};
+            if (!(this.scope in presetFilters)) {
+                presetFilters[this.scope] = [];
+            }
+
+            presetFilters[this.scope].forEach(function (item, index, obj) {
+                for (let filterField in item.data) {
+                    let name = filterField.split('-')[0];
+
+                    if (name === field) {
+                        delete obj[index].data[filterField]
+                    }
+                }
+            }, this);
+            presetFilters[this.scope] = presetFilters[this.scope].filter(item => Object.keys(item.data).length > 0);
+
+            this.getPreferences().set('presetFilters', presetFilters);
+            this.getPreferences().save({patch: true});
+            this.getPreferences().trigger('update');
+
+            let filters = this.getStorage().get('listSearch', this.scope);
+            if (filters && filters.advanced) {
+                for (let filter in filters.advanced) {
+                    let name = filter.split('-')[0];
+
+                    if (name === field) {
+                        delete filters.advanced[filter]
+                    }
+                }
+
+                if (filters.presetName && !presetFilters[this.scope].includes(filters.presetName)) {
+                    filters.presetName = null
+                }
+
+                this.getStorage().set('listSearch', this.scope, filters);
+            }
+        }
     });
 
 });
