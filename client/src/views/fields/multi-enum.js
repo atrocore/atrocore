@@ -76,11 +76,9 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
 
         afterRender: function () {
             if (this.mode === 'edit') {
-                if (this.options.defs && this.options.defs.params && this.options.defs.params.isMultilang) {
-                    this.listenTo(this.model, 'change:' + this.name, function (model, value) {
-                        this.updateLocaleFields(model, value);
-                    }.bind(this));
-                }
+                this.listenTo(this.model, 'change:' + this.name, (model, value) => {
+                    this.updateLanguagesFields(model, value);
+                });
 
                 this.$element = this.$el.find('[name="' + this.name + '"]');
 
@@ -221,36 +219,44 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
             }
         },
 
-        updateLocaleFields: function (model, value) {
+        updateLanguagesFields: function (model, value) {
             if (!this.getConfig().get('isMultilangActive')) {
                 return;
             }
 
+            // find keys for selected options
             let keys = [];
             if (value) {
-                value.forEach(function (item) {
-                    (this.options.defs.params.options || []).forEach(function (v, k) {
+                value.forEach((item) => {
+                    (this.options.defs.params.options || []).forEach((v, k) => {
                         if (v === item) {
                             keys.push(k)
                         }
-                    }, this);
-                }, this);
+                    });
+                });
             }
 
-            let locales = this.getConfig().get('inputLanguageList') || [];
-            locales.forEach(function (v, k) {
-                let localeField = this.name + v.charAt(0).toUpperCase() + v.charAt(1) + v.charAt(3) + v.charAt(4).toLowerCase();
-                let localeFieldOptions = this.model.getFieldParam(localeField, 'options');
-
-                let localeValue = [];
-                if (localeFieldOptions) {
-                    keys.forEach(function (key) {
-                        localeValue.push(typeof localeFieldOptions[key] === 'undefined' ? null : localeFieldOptions[key]);
-                    });
+            // collect fields that need to be updated
+            let fields = [];
+            let mainField = this.model.getFieldParam(this.name, 'multilangField') || this.name;
+            if (mainField !== this.name) {
+                fields.push(mainField);
+            }
+            $.each((this.getMetadata().get(`entityDefs.${this.model.urlRoot}.fields`) || {}), (field, defs) => {
+                if (defs.multilangField && defs.multilangField === mainField && this.name !== field) {
+                    fields.push(field);
                 }
+            });
 
-                this.model.set(localeField, localeValue);
-            }, this);
+            // update fields
+            fields.forEach(field => {
+                let options = this.model.getFieldParam(field, 'options') || this.model.getFieldParam(mainField, 'options');
+                let languageValue = [];
+                keys.forEach(key => {
+                    languageValue.push(options[key]);
+                });
+                this.model.set(field, languageValue);
+            });
         },
 
     });

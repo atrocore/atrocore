@@ -266,7 +266,6 @@ class Metadata extends AbstractListener
                             } else {
                                 $mParams['default'] = null;
                             }
-                            $mParams['readOnly'] = true;
                             $mParams['required'] = false;
                             $mParams['hideParams'] = array_merge(
                                 $mParams['hideParams'], ['options', 'default', 'required', 'isSorted', 'audited', 'readOnly', 'prohibitedEmptyValue']
