@@ -2636,13 +2636,6 @@ class Record extends \Espo\Core\Services\Base
                 continue 1;
             }
 
-            if (!empty($params['notStorable'])) {
-                $fieldName = str_replace('Ids', '', $field);
-                if ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $fieldName, 'type']) !== 'linkMultiple') {
-                    return true;
-                }
-            }
-
             if (in_array($field, $linkMultipleIds)) {
                 $collection = $entity->get(substr($field, 0, -3));
                 $value = (!empty($collection) && count($collection) > 0) ? array_column($collection->toArray(), 'id') : [];
