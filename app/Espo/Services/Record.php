@@ -2673,6 +2673,13 @@ class Record extends \Espo\Core\Services\Base
             if (!isset($params['type'])) {
                 continue 1;
             }
+            
+            if (!empty($params['notStorable'])) {
+                $fieldName = str_replace('Ids', '', $field);
+                if ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $fieldName, 'type']) !== 'linkMultiple') {
+                    continue 1;
+                }
+            }
 
             if (in_array($field, $linkMultipleIds)) {
                 $collection = $entity->get(substr($field, 0, -3));
@@ -2687,8 +2694,8 @@ class Record extends \Espo\Core\Services\Base
                 $value = $entity->get($field);
             }
 
-            if ($params['type'] === 'bool') {
-                return !empty($data->$field) !== !empty($value);
+            if ($params['type'] === 'bool' && !empty($data->$field) !== !empty($value)) {
+                return true;
             }
 
             // strict type for NULL
