@@ -227,8 +227,8 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
             // find keys for selected options
             let keys = [];
             if (value) {
-                value.forEach((item) => {
-                    (this.options.defs.params.options || []).forEach((v, k) => {
+                value.forEach(item => {
+                    (this.model.getFieldParam(this.name, 'options') || []).forEach((v, k) => {
                         if (v === item) {
                             keys.push(k)
                         }
@@ -249,14 +249,14 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
             });
 
             // update fields
+            let languageValue = [];
             fields.forEach(field => {
                 let options = this.model.getFieldParam(field, 'options') || this.model.getFieldParam(mainField, 'options');
-                let languageValue = [];
                 keys.forEach(key => {
                     languageValue.push(options[key]);
                 });
-                this.model.set(field, languageValue);
             });
+            this.model.set(field, languageValue);
         },
 
     });
