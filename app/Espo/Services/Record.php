@@ -912,6 +912,35 @@ class Record extends \Espo\Core\Services\Base
         foreach ($this->getAcl()->getScopeForbiddenAttributeList($this->entityType, 'edit') as $attribute) {
             unset($data->$attribute);
         }
+
+        if (!empty($this->getConfig()->get('isMultilangActive'))) {
+            foreach ($data as $field => $value) {
+                $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $field]);
+                if (empty($fieldDefs['type']) || empty($fieldDefs['multilangField'])) {
+                    continue 1;
+                }
+
+                switch ($fieldDefs['type']) {
+                    case 'enum':
+                        $key = array_search($value, $fieldDefs['options']);
+                        $data->{$fieldDefs['multilangField']} = $key === false ? null : $fieldDefs['optionsOriginal'][$key];
+                        break;
+                    case 'multiEnum':
+                        $keys = [];
+                        if (!empty($value)) {
+                            foreach ($value as $item) {
+                                $keys[] = array_search($item, $fieldDefs['options']);
+                            }
+                        }
+                        $values = [];
+                        foreach ($keys as $key) {
+                            $values[] = $fieldDefs['optionsOriginal'][$key];
+                        }
+                        $data->{$fieldDefs['multilangField']} = $values;
+                        break;
+                }
+            }
+        }
     }
 
     protected function handleInput($data)
