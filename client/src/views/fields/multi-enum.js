@@ -249,14 +249,14 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
             });
 
             // update fields
-            let languageValue = [];
             fields.forEach(field => {
                 let options = this.model.getFieldParam(field, 'options') || this.model.getFieldParam(mainField, 'options');
+                let languageValue = [];
                 keys.forEach(key => {
                     languageValue.push(options[key]);
                 });
+                this.model.set(field, languageValue);
             });
-            this.model.set(field, languageValue);
         },
 
     });
