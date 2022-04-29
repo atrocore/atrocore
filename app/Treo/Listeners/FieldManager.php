@@ -106,39 +106,11 @@ class FieldManager extends AbstractListener
             ->toArray();
 
         foreach ($records as $record) {
-            $sqlValues = [];
-
-            /**
-             * First, prepare main value
-             */
+            $value = "null";
             if (!empty($becameValues[$record[$field]])) {
-                $sqlValues[] = "`{$columnName}`='{$becameValues[$record[$field]]}'";
-            } else {
-                $sqlValues[] = "`{$columnName}`=null";
+                $value = "'{$becameValues[$record[$field]]}'";
             }
-
-            /**
-             * Second, update locales
-             */
-            if (!empty($defs['isMultilang']) && $this->getConfig()->get('isMultilangActive', false)) {
-                foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
-                    if (!empty($becameValues[$record[$field]])) {
-                        $locale = ucfirst(Util::toCamelCase(strtolower($language)));
-                        $value = "'" . $defs['options' . $locale][array_search($record[$field], $oldDefs['options'])] . "'";
-                    } else {
-                        $value = "null";
-                    }
-
-                    $sqlValues[] = "`{$columnName}_" . strtolower($language) . "`=$value";
-                }
-            }
-
-            /**
-             * Third, set to DB
-             */
-            $this
-                ->getEntityManager()
-                ->nativeQuery("UPDATE {$tableName} SET " . implode(",", $sqlValues) . " WHERE id='{$record['id']}'");
+            $this->getEntityManager()->getPDO()->exec("UPDATE {$tableName} SET `{$columnName}`={$value} WHERE id='{$record['id']}'");
         }
     }
 
@@ -174,9 +146,6 @@ class FieldManager extends AbstractListener
             ->toArray();
 
         foreach ($records as $record) {
-            /**
-             * First, prepare main value
-             */
             if (!empty($record[$field])) {
                 $newValues = [];
                 foreach ($record[$field] as $value) {
@@ -187,47 +156,11 @@ class FieldManager extends AbstractListener
                 $record[$field] = $newValues;
             }
 
-            $sqlValues = ["{$columnName}='" . Json::encode($record[$field]) . "'"];
-
-            /**
-             * Second, update locales
-             */
-            if (!empty($defs['isMultilang']) && $this->getConfig()->get('isMultilangActive', false)) {
-                foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
-                    $locale = ucfirst(Util::toCamelCase(strtolower($language)));
-                    $localeValues = [];
-                    foreach ($record[$field] as $value) {
-                        $localeValues[] = $defs['options' . $locale][array_search($value, $defs['options'])];
-                    }
-                    $sqlValues[] = "{$columnName}_" . strtolower($language) . "='" . Json::encode($localeValues) . "'";
-                }
-            }
-
-            /**
-             * Third, set to DB
-             */
             $this
                 ->getEntityManager()
-                ->nativeQuery("UPDATE {$tableName} SET " . implode(",", $sqlValues) . " WHERE id='{$record['id']}'");
+                ->getPDO()
+                ->exec("UPDATE {$tableName} SET {$columnName}='" . Json::encode($record[$field]) . "' WHERE id='{$record['id']}'");
         }
-    }
-
-    /**
-     * @param array $defs
-     *
-     * @return array
-     */
-    protected function getTypeValuesFields(array $defs): array
-    {
-        $fields[] = 'options';
-        if ($this->getConfig()->get('isMultilangActive', false)) {
-            foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
-                $fields[] = 'options' . ucfirst(Util::toCamelCase(strtolower($locale)));
-            }
-        }
-        $fields[] = 'optionColors';
-
-        return $fields;
     }
 
     /**

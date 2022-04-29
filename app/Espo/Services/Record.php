@@ -912,6 +912,35 @@ class Record extends \Espo\Core\Services\Base
         foreach ($this->getAcl()->getScopeForbiddenAttributeList($this->entityType, 'edit') as $attribute) {
             unset($data->$attribute);
         }
+
+        if (!empty($this->getConfig()->get('isMultilangActive'))) {
+            foreach ($data as $field => $value) {
+                $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $field]);
+                if (empty($fieldDefs['type']) || empty($fieldDefs['multilangField'])) {
+                    continue 1;
+                }
+
+                switch ($fieldDefs['type']) {
+                    case 'enum':
+                        $key = array_search($value, $fieldDefs['options']);
+                        $data->{$fieldDefs['multilangField']} = $key === false ? null : $fieldDefs['optionsOriginal'][$key];
+                        break;
+                    case 'multiEnum':
+                        $keys = [];
+                        if (!empty($value)) {
+                            foreach ($value as $item) {
+                                $keys[] = array_search($item, $fieldDefs['options']);
+                            }
+                        }
+                        $values = [];
+                        foreach ($keys as $key) {
+                            $values[] = $fieldDefs['optionsOriginal'][$key];
+                        }
+                        $data->{$fieldDefs['multilangField']} = $values;
+                        break;
+                }
+            }
+        }
     }
 
     protected function handleInput($data)
@@ -2185,9 +2214,43 @@ class Record extends \Espo\Core\Services\Base
             $entity->clear($attribute);
         }
 
-        foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []) as $name => $data) {
-            if (!empty($data['type']) && $data['type'] === 'unit' && $entity->has($name) && !empty($data['measure'])) {
-                $this->prepareUnitFieldValue($entity, $name, $data['measure']);
+        foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []) as $name => $defs) {
+            if (empty($defs['type'])) {
+                continue 1;
+            }
+
+            switch ($defs['type']) {
+                case 'unit':
+                    if ($entity->has($name) && !empty($defs['measure'])) {
+                        $this->prepareUnitFieldValue($entity, $name, $defs['measure']);
+                    }
+                    break;
+                case 'enum':
+                    if (!empty($defs['multilangField'])) {
+                        $value = $entity->get($defs['multilangField']);
+                        $key = array_search($value, $defs['optionsOriginal']);
+                        if ($key !== false) {
+                            $value = $defs['options'][$key];
+                        }
+                        $entity->set($name, $value);
+                    }
+                    break;
+                case 'multiEnum':
+                    if (!empty($defs['multilangField'])) {
+                        $value = $entity->get($defs['multilangField']);
+                        if (!empty($value)) {
+                            $newValue = [];
+                            foreach ($value as $v) {
+                                $key = array_search($v, $defs['optionsOriginal']);
+                                if ($key !== false) {
+                                    $newValue[] = $defs['options'][$key];
+                                }
+                            }
+                            $value = $newValue;
+                        }
+                        $entity->set($name, $value);
+                    }
+                    break;
             }
         }
 
@@ -2528,6 +2591,10 @@ class Record extends \Espo\Core\Services\Base
             foreach ($passedAttributeList as $attribute) {
                 if (!in_array($attribute, $attributeList) && $seed->hasAttribute($attribute)) {
                     $attributeList[] = $attribute;
+                    $mainField = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $attribute, 'multilangField']);
+                    if (!empty($mainField) && !in_array($attributeList)) {
+                        $attributeList[] = $mainField;
+                    }
                 }
             }
 

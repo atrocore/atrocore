@@ -232,37 +232,50 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             }
         },
 
-        updateLocaleFields: function (model, value) {
+        updateLanguagesFields: function (model, value) {
             if (!this.getConfig().get('isMultilangActive')) {
                 return;
             }
 
+            // find key for selected option
             let key = null;
-            (this.model.getFieldParam(this.name, 'options') || []).forEach(function (v, k) {
+            (this.model.getFieldParam(this.name, 'options') || []).forEach((v, k) => {
                 if (v === value) {
                     key = k;
                 }
-            }, this);
+            });
 
-            let locales = this.getConfig().get('inputLanguageList') || [];
-            locales.forEach(function (v, k) {
-                let localeField = this.name + v.charAt(0).toUpperCase() + v.charAt(1) + v.charAt(3) + v.charAt(4).toLowerCase();
-                let localeFieldOptions = this.model.getFieldParam(localeField, 'options');
-                if (localeFieldOptions && localeFieldOptions[key]) {
-                    this.model.set(localeField, localeFieldOptions[key]);
+            // collect fields that need to be updated
+            let fields = [];
+            let mainField = this.model.getFieldParam(this.name, 'multilangField') || this.name;
+            if (mainField !== this.name) {
+                fields.push(mainField);
+            }
+            $.each((this.getMetadata().get(`entityDefs.${this.model.urlRoot}.fields`) || {}), (field, defs) => {
+                if (defs.multilangField && defs.multilangField === mainField && this.name !== field) {
+                    fields.push(field);
                 }
-            }, this);
+            });
+
+            // update fields
+            fields.forEach(field => {
+                let options = this.model.getFieldParam(field, 'options') || this.model.getFieldParam(mainField, 'options');
+
+                if (key && options[key]) {
+                    this.model.set(field, options[key]);
+                } else {
+                    this.model.set(field, null);
+                }
+            });
         },
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
             if (this.mode === 'edit') {
-                if (this.options.defs && this.options.defs.params && this.options.defs.params.isMultilang) {
-                    this.listenTo(this.model, 'change:' + this.name, function (model, value) {
-                        this.updateLocaleFields(model, value);
-                    }.bind(this));
-                }
+                this.listenTo(this.model, 'change:' + this.name, (model, value) => {
+                    this.updateLanguagesFields(model, value);
+                });
             }
 
             if (this.mode == 'search') {

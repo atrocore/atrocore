@@ -232,6 +232,9 @@ class Metadata extends AbstractListener
                 if (in_array($field, $toSkip)) {
                     continue 1;
                 }
+                if (empty($params['type'])) {
+                    continue 1;
+                }
                 $newFields[$field] = $params;
                 if (!empty($params['isMultilang'])) {
                     foreach ($locales as $locale) {
@@ -252,14 +255,17 @@ class Metadata extends AbstractListener
                             $mParams['required'] = $params['requiredForMultilang'];
                         }
                         if (in_array($mParams['type'], ['enum', 'multiEnum'])) {
-                            $mParams['options'] = $mParams['options' . $preparedLocale];
+                            $mParams['notStorable'] = true;
+                            $mParams['optionsOriginal'] = $params['options'];
+                            if (!empty($mParams['options' . $preparedLocale])) {
+                                $mParams['options'] = $mParams['options' . $preparedLocale];
+                            }
                             if ($mParams['type'] == 'enum' && !empty($params['options'])) {
                                 $index = array_search($params['default'], $params['options']);
                                 $mParams['default'] = $index !== false ? $mParams['options'][$index] : null;
                             } else {
                                 $mParams['default'] = null;
                             }
-                            $mParams['readOnly'] = true;
                             $mParams['required'] = false;
                             $mParams['hideParams'] = array_merge(
                                 $mParams['hideParams'], ['options', 'default', 'required', 'isSorted', 'audited', 'readOnly', 'prohibitedEmptyValue']
