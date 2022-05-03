@@ -2592,7 +2592,7 @@ class Record extends \Espo\Core\Services\Base
                 if (!in_array($attribute, $attributeList) && $seed->hasAttribute($attribute)) {
                     $attributeList[] = $attribute;
                     $mainField = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $attribute, 'multilangField']);
-                    if (!empty($mainField) && !in_array($attributeList)) {
+                    if (!empty($mainField) && !in_array($mainField, $attributeList)) {
                         $attributeList[] = $mainField;
                     }
                 }
