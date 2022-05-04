@@ -337,7 +337,7 @@ class Metadata
     /**
      * @return EventManager
      */
-    protected function getEventManager(): EventManager
+    public function getEventManager(): EventManager
     {
         return $this->eventManager;
     }

@@ -46,6 +46,7 @@ use Espo\Core\Utils\Config;
 use Espo\Core\InjectableFactory;
 use Treo\Core\SelectManagerFactory;
 use Espo\Core\ORM\Repositories\RDB;
+use Treo\Core\EventManager\Event;
 
 class Base
 {
@@ -734,8 +735,17 @@ class Base
         return $this->getSelectParams($params, $withAcl, $checkWherePermission);
     }
 
+    public function dispatch(string $scope, string $action, Event $event): Event
+    {
+        return $this->getMetadata()->getEventManager()->dispatch($scope, $action, $event);
+    }
+
     public function getSelectParams(array $params, $withAcl = false, $checkWherePermission = false)
     {
+        $params = $this
+            ->dispatch('Entity', 'beforeGetSelectParams', new Event(['params' => $params, 'entityType' => $this->entityType]))
+            ->getArgument('params');
+
         $this->selectParameters = $params;
 
         $result = array();
@@ -791,7 +801,9 @@ class Base
 
         $this->applyAdditional($result, $params);
 
-        return $result;
+        return $this
+            ->dispatch('Entity', 'afterGetSelectParams', new Event(['result' => $result, 'params' => $params, 'entityType' => $this->entityType]))
+            ->getArgument('result');
     }
 
     protected function checkWhere($where)
