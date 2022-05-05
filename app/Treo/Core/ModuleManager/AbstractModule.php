@@ -361,7 +361,7 @@ abstract class AbstractModule
     /**
      * @return string
      */
-    protected function getAppPath(): string
+    public function getAppPath(): string
     {
         return $this->path . 'app/';
     }
