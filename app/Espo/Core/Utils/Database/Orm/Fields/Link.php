@@ -41,25 +41,25 @@ class Link extends Base
     {
         $fieldParams = $this->getFieldParams();
 
-        $data = array(
-            $entityName => array (
-                'fields' => array(
-                    $fieldName.'Id' => array(
-                        'type' => 'foreignId',
+        $data = [
+            $entityName => [
+                'fields' => [
+                    $fieldName => [
+                        'type'         => 'jsonArray',
+                        'notStorable'  => true,
+                        'isLinkEntity' => true,
+                    ],
+                    $fieldName . 'Id'   => [
+                        'type'  => 'foreignId',
                         'index' => $fieldName
-                    ),
-                    $fieldName.'Name' => array(
-                        'type' => 'varchar',
+                    ],
+                    $fieldName . 'Name' => [
+                        'type'        => 'varchar',
                         'notStorable' => true
-                    )
-                )
-            ),
-            'unset' => array(
-                $entityName => array(
-                    'fields.'.$fieldName
-                )
-            )
-        );
+                    ]
+                ]
+            ]
+        ];
 
         // prepare required
         if (!empty($fieldParams['required'])) {

@@ -42,25 +42,25 @@ class LinkMultiple extends Base
         $data = [
             $entityName => [
                 'fields' => [
-                    $fieldName.'Ids' => [
-                        'type' => 'jsonArray',
-                        'notStorable' => true,
-                        'isLinkMultipleIdList' => true,
-                        'relation' => $fieldName,
-                        'isUnordered' => true
+                    $fieldName           => [
+                        'type'                     => 'jsonArray',
+                        'notStorable'              => true,
+                        'isLinkMultipleCollection' => true,
                     ],
-                    $fieldName.'Names' => [
-                        'type' => 'jsonObject',
-                        'notStorable' => true,
+                    $fieldName . 'Ids'   => [
+                        'type'                 => 'jsonArray',
+                        'notStorable'          => true,
+                        'isLinkMultipleIdList' => true,
+                        'relation'             => $fieldName,
+                        'isUnordered'          => true
+                    ],
+                    $fieldName . 'Names' => [
+                        'type'                  => 'jsonObject',
+                        'notStorable'           => true,
                         'isLinkMultipleNameMap' => true
                     ]
                 ]
             ],
-            'unset' => [
-                $entityName => [
-                    'fields.' . $fieldName
-                ]
-            ]
         ];
 
         $fieldParams = $this->getFieldParams();

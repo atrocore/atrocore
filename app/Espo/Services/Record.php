@@ -335,11 +335,29 @@ class Record extends \Espo\Core\Services\Base
     protected function loadLinkMultipleFieldsForList(Entity $entity, $selectAttributeList)
     {
         foreach ($selectAttributeList as $attribute) {
-            if ($entity->getAttributeParam($attribute, 'isLinkMultipleIdList')) {
+            if ($entity->getAttributeParam($attribute, 'isLinkMultipleIdList') && !$entity->has($attribute)) {
                 $field = $entity->getAttributeParam($attribute, 'relation');
-                if (!$field) continue;
-                if ($entity->has($attribute)) continue;
-                $entity->loadLinkMultipleField($field);
+                if ($field) {
+                    $entity->loadLinkMultipleField($field);
+                }
+            }
+
+            if ($entity->getAttributeParam($attribute, 'isLinkEntity') && !$entity->has($attribute)) {
+                $linkedEntities = $this->findLinkedEntities($entity->get('id'), $attribute, []);
+                $entity->set($attribute, null);
+                if ($linkedEntities['total'] > 0) {
+                    $linkedEntitiesList = array_key_exists('collection', $linkedEntities) ? $linkedEntities['collection']->toArray() : $linkedEntities['list'];
+                    $entity->set($attribute, $linkedEntitiesList[0]);
+                }
+            }
+
+            if ($entity->getAttributeParam($attribute, 'isLinkMultipleCollection') && !$entity->has($attribute)) {
+                $linkedEntities = $this->findLinkedEntities($entity->get('id'), $attribute, []);
+                $entity->set($attribute, []);
+                if ($linkedEntities['total'] > 0) {
+                    $linkedEntitiesList = array_key_exists('collection', $linkedEntities) ? $linkedEntities['collection']->toArray() : $linkedEntities['list'];
+                    $entity->set($attribute, $linkedEntitiesList);
+                }
             }
         }
     }
