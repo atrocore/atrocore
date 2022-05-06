@@ -77,7 +77,7 @@
   "fieldTypes": {
     "color": "Farbe",
     "unit": "Maßeinheit",
-    "array": "Liste",
+    "array": "Anordnung",
     "foreign": "Fremdbezug",
     "duration": "Dauer",
     "password": "Passwort",
