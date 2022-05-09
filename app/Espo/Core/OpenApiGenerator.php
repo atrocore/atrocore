@@ -37,7 +37,9 @@ declare(strict_types=1);
 
 namespace Espo\Core;
 
+use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
+use Espo\ORM\EntityManager;
 use Treo\Core\ControllerManager;
 
 class OpenApiGenerator
@@ -162,6 +164,17 @@ class OpenApiGenerator
         /** @var Metadata $metadata */
         $metadata = $this->container->get('metadata');
 
+        /** @var EntityManager $entityManager */
+        $entityManager = $this->container->get('entityManager');
+
+        /** @var Config $config */
+        $config = $this->container->get('config');
+
+        $languages = [];
+        if (!empty($config->get('isMultilangActive'))) {
+            $languages = $config->get('inputLanguageList', []);
+        }
+
         foreach ($metadata->get(['entityDefs'], []) as $entityName => $data) {
             if (empty($data['fields'])) {
                 continue;
@@ -262,6 +275,11 @@ class OpenApiGenerator
                 }
             }
 
+            $fields = [];
+            if (!empty($entity = $entityManager->getRepository($scopeName)->get())) {
+                $fields = array_keys($entity->getFields());
+            }
+
             $result['paths']["/{$scopeName}"]['get'] = [
                 'tags'        => [$scopeName],
                 "summary"     => "Returns a collection of $scopeName records",
@@ -270,12 +288,27 @@ class OpenApiGenerator
                 'security'    => [['Authorization-Token' => []]],
                 'parameters'  => [
                     [
+                        "name"        => "language",
+                        "in"          => "header",
+                        "required"    => false,
+                        "description" => self::HEADER_LANGUAGE_DESCRIPTION,
+                        "schema"      => [
+                            "type" => "string",
+                            "enum" => $languages,
+                        ]
+                    ],
+                    [
                         "name"     => "select",
                         "in"       => "query",
                         "required" => false,
+                        "style"    => "form",
+                        "explode"  => false,
                         "schema"   => [
-                            "type"    => "string",
-                            "example" => "name,createdAt"
+                            "type"  => "array",
+                            "items" => [
+                                "type" => "string",
+                                "enum" => $fields,
+                            ]
                         ]
                     ],
                     [
@@ -290,8 +323,8 @@ class OpenApiGenerator
                                     "items"   => [
                                         "type" => "object",
                                     ],
-                                    'example' => [['type'  => 'or', 'value' => [['type' => 'like', 'attribute' => 'name', 'value' => '%find-me-1%'],
-                                                                                ['type' => 'equals', 'attribute' => 'name', 'value' => 'find-me-2']]]]
+                                    'example' => [['type' => 'or', 'value' => [['type' => 'like', 'attribute' => 'name', 'value' => '%find-me-1%'],
+                                                                               ['type' => 'equals', 'attribute' => 'name', 'value' => 'find-me-2']]]]
                                 ],
                             ],
                         ],
@@ -332,16 +365,6 @@ class OpenApiGenerator
                             "example" => "true"
                         ]
                     ],
-                    [
-                        "name"        => "language",
-                        "in"          => "header",
-                        "required"    => false,
-                        "description" => self::HEADER_LANGUAGE_DESCRIPTION,
-                        "schema"      => [
-                            "type"    => "string",
-                            "example" => "de_DE"
-                        ]
-                    ],
                 ],
                 "responses"   => self::prepareResponses([
                     "type"       => "object",
@@ -367,21 +390,21 @@ class OpenApiGenerator
                 'security'    => [['Authorization-Token' => []]],
                 'parameters'  => [
                     [
-                        "name"     => "id",
-                        "in"       => "path",
-                        "required" => true,
-                        "schema"   => [
-                            "type" => "string"
-                        ]
-                    ],
-                    [
                         "name"        => "language",
                         "in"          => "header",
                         "required"    => false,
                         "description" => self::HEADER_LANGUAGE_DESCRIPTION,
                         "schema"      => [
-                            "type"    => "string",
-                            "example" => "de_DE"
+                            "type" => "string",
+                            "enum" => $languages,
+                        ]
+                    ],
+                    [
+                        "name"     => "id",
+                        "in"       => "path",
+                        "required" => true,
+                        "schema"   => [
+                            "type" => "string"
                         ]
                     ],
                 ],
@@ -459,6 +482,16 @@ class OpenApiGenerator
                 'security'    => [['Authorization-Token' => []]],
                 'parameters'  => [
                     [
+                        "name"        => "language",
+                        "in"          => "header",
+                        "required"    => false,
+                        "description" => self::HEADER_LANGUAGE_DESCRIPTION,
+                        "schema"      => [
+                            "type" => "string",
+                            "enum" => $languages,
+                        ]
+                    ],
+                    [
                         "name"     => "id",
                         "in"       => "path",
                         "required" => true,
@@ -472,16 +505,6 @@ class OpenApiGenerator
                         "required" => true,
                         "schema"   => [
                             "type" => "string"
-                        ]
-                    ],
-                    [
-                        "name"        => "language",
-                        "in"          => "header",
-                        "required"    => false,
-                        "description" => self::HEADER_LANGUAGE_DESCRIPTION,
-                        "schema"      => [
-                            "type"    => "string",
-                            "example" => "de_DE"
                         ]
                     ],
                 ],
@@ -775,114 +798,6 @@ class OpenApiGenerator
                     ]
                 ],
                 "responses"   => self::prepareResponses(['type' => 'boolean'])
-            ];
-
-            $result['paths']["/{$scopeName}/action/getDuplicateAttributes"]['post'] = [
-                'tags'        => [$scopeName],
-                "summary"     => "Get duplicate attributes from $scopeName",
-                "description" => "Get duplicate attributes from $scopeName",
-                "operationId" => "getDuplicateAttributes{$scopeName}",
-                'security'    => [['Authorization-Token' => []]],
-                'requestBody' => [
-                    'required' => true,
-                    'content'  => [
-                        'application/json' => [
-                            'schema' => [
-                                "type"       => "object",
-                                "properties" => [
-                                    "id" => [
-                                        "type" => "string"
-                                    ],
-                                ],
-                            ]
-                        ]
-                    ],
-                ],
-                "responses"   => self::prepareResponses($schema)
-            ];
-
-            $result['paths']["/{$scopeName}/action/massFollow"]['post'] = [
-                'tags'        => [$scopeName],
-                "summary"     => "Mass follow to $scopeName records",
-                "description" => "Mass follow to $scopeName records",
-                "operationId" => "massFollow{$scopeName}",
-                'security'    => [['Authorization-Token' => []]],
-                'requestBody' => [
-                    'required' => true,
-                    'content'  => [
-                        'application/json' => [
-                            'schema' => [
-                                "type"       => "object",
-                                "properties" => [
-                                    "ids" => [
-                                        "type"    => "array",
-                                        "items"   => [
-                                            "type" => "string"
-                                        ],
-                                        'example' => ["613219736ca7a1c68", "6132197390d69afa5"]
-                                    ],
-                                ],
-                            ]
-                        ]
-                    ],
-                ],
-                "responses"   => self::prepareResponses([
-                    "type"       => "object",
-                    "properties" => [
-                        "ids"   => [
-                            "type"    => "array",
-                            "items"   => [
-                                "type" => "string"
-                            ],
-                            'example' => ["613219736ca7a1c68", "6132197390d69afa5"]
-                        ],
-                        "count" => [
-                            "type" => "integer",
-                        ]
-                    ],
-                ])
-            ];
-
-            $result['paths']["/{$scopeName}/action/massUnfollow"]['post'] = [
-                'tags'        => [$scopeName],
-                "summary"     => "Mass unfollow from $scopeName records",
-                "description" => "Mass unfollow from $scopeName records",
-                "operationId" => "massUnfollow{$scopeName}",
-                'security'    => [['Authorization-Token' => []]],
-                'requestBody' => [
-                    'required' => true,
-                    'content'  => [
-                        'application/json' => [
-                            'schema' => [
-                                "type"       => "object",
-                                "properties" => [
-                                    "ids" => [
-                                        "type"    => "array",
-                                        "items"   => [
-                                            "type" => "string"
-                                        ],
-                                        'example' => ["613219736ca7a1c68", "6132197390d69afa5"]
-                                    ],
-                                ],
-                            ]
-                        ]
-                    ],
-                ],
-                "responses"   => self::prepareResponses([
-                    "type"       => "object",
-                    "properties" => [
-                        "ids"   => [
-                            "type"    => "array",
-                            "items"   => [
-                                "type" => "string"
-                            ],
-                            'example' => ["613219736ca7a1c68", "6132197390d69afa5"]
-                        ],
-                        "count" => [
-                            "type" => "integer",
-                        ]
-                    ],
-                ])
             ];
         }
 
