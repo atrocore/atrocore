@@ -155,7 +155,7 @@ class OpenApiGenerator
             ],
             'externalDocs' => [
                 'description' => 'How to authorize?',
-                'url'         => 'https://github.com/atrocore/atrocore-docs/blob/master/en/developer-guide/rest-api.md'
+                'url'         => 'https://github.com/atrocore/docs/blob/master/atrocore/developer-guide/rest-api.md'
             ]
         ];
 
