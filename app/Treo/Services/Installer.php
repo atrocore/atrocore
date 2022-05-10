@@ -696,7 +696,7 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
             "INSERT INTO scheduled_job (id, `name`, job, `status`, scheduling) VALUES ('ComposerAutoUpdate', 'Automatic system update', 'ComposerAutoUpdate', 'Active', '0 0 * * SUN')"
         );
         $this->exec(
-            "INSERT INTO scheduled_job (id, `name`, job, `status`, scheduling) VALUES ('TreoCleanup','Unused data cleanup. Deleting old data and unused db tables, db columns, etc.','TreoCleanup','Active','0 0 1 * *')"
+            "INSERT INTO scheduled_job (id, `name`, job, `status`, scheduling) VALUES ('TreoCleanup','Old deleted data cleanup','TreoCleanup','Active','0 0 1 * *')"
         );
 
         foreach ($this->getModuleManager()->getModulesList() as $name) {
