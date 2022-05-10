@@ -70,6 +70,27 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
                 view.listenTo(view, 'tree-reset', () => {
                     this.treeReset(view);
                 });
+                view.listenTo(view, 'tree-width-changed', function (width) {
+                    const content = $('#content');
+                    const main = content.find('#main');
+
+                    const header = content.find('.page-header');
+                    const listContainer = content.find('#tree-list-table.list-container');
+                    const footer = $('footer');
+
+                    header.css('width', (main.width() - width) + 'px');
+                    header.css('marginLeft', width + 'px');
+
+                    listContainer.css('width', (main.width() - width) + 'px');
+                    listContainer.css('marginLeft', width + 'px');
+
+                    footer.css('width', (content.outerWidth() - width) + 'px');
+                });
+                view.listenTo(view, 'tree-width-unset', function () {
+                    $('.page-header').css({'width': 'unset', 'marginLeft': 'unset'});
+                    $('#tree-list-table.list-container').css({'width': 'unset', 'marginLeft': 'unset'});
+                    $('footer').css({'width': 'unset', 'marginLeft': 'unset'});
+                })
             });
         },
 

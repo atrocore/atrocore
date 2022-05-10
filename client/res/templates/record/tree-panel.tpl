@@ -18,3 +18,4 @@
     {{/if}}
     <div class="panel-group category-tree"></div>
 </div>
+<div class="category-panel-resizer"></div>
