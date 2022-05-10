@@ -105,21 +105,38 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
         },
 
         validate: function () {
-            const data = Espo.Utils.cloneDeep(this.model.get(this.name)) || [];
+            let isNotValid = false;
 
+            let data = Espo.Utils.cloneDeep(this.model.get(this.name)) || [];
             if (!data.length && this.isEnums()) {
                 this.showValidationMessage(this.translate('minimumOneOptionsRequired', 'messages'), `div[data-name="${this.name}"]`);
-                return true;
+                isNotValid = true;
             }
 
-            const emptyOptionId = this.emptyOptionId(data);
-
-            if (emptyOptionId) {
-                this.showValidationMessage(this.translate('optionValueCannotBeEmpty', 'messages'), `input[data-name="${this.name}"][data-id="${emptyOptionId}"]`);
-                return true;
+            if (!isNotValid) {
+                let emptyOptionId = this.emptyOptionId(data);
+                if (emptyOptionId) {
+                    this.showValidationMessage(this.translate('optionValueCannotBeEmpty', 'messages'), `input[data-name="${this.name}"][data-id="${emptyOptionId}"]`);
+                    isNotValid = true;
+                }
             }
 
-            return this.findDuplicates(data).length > 0;
+            if (!isNotValid && this.getConfig().get('isMultilangActive')) {
+                (this.langFieldNames || []).forEach(name => {
+                    let languageData = Espo.Utils.cloneDeep(this.model.get(name)) || [];
+                    let languageEmptyOptionId = this.emptyOptionId(languageData)
+                    if (languageEmptyOptionId) {
+                        this.showValidationMessage(this.translate('optionValueCannotBeEmpty', 'messages'), `input[data-name="${name}"][data-id="${languageEmptyOptionId}"]`);
+                        isNotValid = true;
+                    }
+                });
+            }
+
+            if (!isNotValid) {
+                isNotValid = this.findDuplicates(data).length > 0;
+            }
+
+            return isNotValid;
         },
 
         emptyOptionId(data) {
