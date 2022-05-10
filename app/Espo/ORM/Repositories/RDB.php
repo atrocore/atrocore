@@ -238,7 +238,7 @@ class RDB extends \Espo\ORM\Repository
         if (is_null($value)) {
             $result = "`" . Util::toUnderScore($field) . "` IS NULL";
         } else {
-            $result = "`" . Util::toUnderScore($field) . "`='" . $value . "'";
+            $result = "`" . Util::toUnderScore($field) . "`=" . $this->getPDO()->quote($value);
         }
 
         return $result;
