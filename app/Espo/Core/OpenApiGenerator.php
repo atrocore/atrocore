@@ -278,6 +278,7 @@ class OpenApiGenerator
             $fields = [];
             if (!empty($entity = $entityManager->getRepository($scopeName)->get())) {
                 $fields = array_keys($entity->getFields());
+                sort($fields);
             }
 
             $result['paths']["/{$scopeName}"]['get'] = [
@@ -298,17 +299,13 @@ class OpenApiGenerator
                         ]
                     ],
                     [
-                        "name"     => "select",
-                        "in"       => "query",
-                        "required" => false,
-                        "style"    => "form",
-                        "explode"  => false,
-                        "schema"   => [
-                            "type"  => "array",
-                            "items" => [
-                                "type" => "string",
-                                "enum" => $fields,
-                            ]
+                        "name"        => "select",
+                        "in"          => "query",
+                        "required"    => false,
+                        "description" => "Available fields: " . implode(', ', $fields),
+                        "schema"      => [
+                            "type"    => "string",
+                            "example" => "name,createdAt"
                         ]
                     ],
                     [
