@@ -16,8 +16,8 @@
   },
   "options": {
     "job": {
-      "TreoCleanup": "Unused data cleanup. Deleting old data and unused db tables, db columns, etc.",
-      "ComposerAutoUpdate": "Auto-updating of modules"
+      "TreoCleanup": "Antigua limpieza de datos eliminados",
+      "ComposerAutoUpdate": "Actualización automática del sistema"
     },
     "status": {
       "Active": "Activo",
