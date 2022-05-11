@@ -125,6 +125,9 @@ class OpenApiGenerator
                                     ]
                                 ]
                             ],
+                            "304" => [
+                                "description" => "Not Modified"
+                            ],
                             "400" => [
                                 "description" => "Bad Request"
                             ],
@@ -816,6 +819,9 @@ class OpenApiGenerator
                         "schema" => $success
                     ]
                 ]
+            ],
+            "304" => [
+                "description" => "Not Modified"
             ],
             "400" => [
                 "description" => "Bad Request"
