@@ -134,7 +134,7 @@
     "entityList": "Entitätsliste",
     "isSorted": "Sortiert (alphabetisch)",
     "audited": "Änderungen verfolgen",
-    "trim": "Abschneiden",
+    "trim": "Führende und abschließende Leerzeichen entfernen",
     "height": "Höhe (px)",
     "minHeight": "Min. Höhe (px)",
     "typeList": "Typenliste",
