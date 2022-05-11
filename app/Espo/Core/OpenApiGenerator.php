@@ -60,7 +60,7 @@ class OpenApiGenerator
             'info'         => [
                 'version'     => '1.0.0',
                 'title'       => 'AtroCore REST API documentation',
-                'description' => "This is REST API documentation for AtroCore, AtroPim, AtroDam and other modules, which is based on OpenApi (swagger). You can find out more about Swagger at [http://swagger.io](http://swagger.io). You can generate your client [here](https://openapi-generator.tech/docs/generators)."
+                'description' => "This is REST API documentation for AtroCore, AtroPim, AtroDam and other modules, which is based on OpenApi (swagger). You can find out more about Swagger at [http://swagger.io](http://swagger.io). You can generate your client [here](https://openapi-generator.tech/docs/generators).<br><br><h3>Video tutorials:</h3><ul><li>[How to authorize?](https://youtu.be/GWfNRvCswXg)</li><li>[How to select specific fields?](https://youtu.be/i7o0aENuyuY)</li><li>[How to filter data records?](https://youtu.be/irgWkN4wlkM)</li></ul>"
             ],
             'servers'      => [
                 [
@@ -92,6 +92,7 @@ class OpenApiGenerator
                                 "name"     => "Authorization-Token-Lifetime",
                                 "in"       => "header",
                                 "required" => false,
+                                "description" => "Lifetime should be set in hours. 0 means no expiration. If this parameter is not passed, the globally configured parameter is used.",
                                 "schema"   => [
                                     "type"    => "integer",
                                     "example" => "0"
@@ -101,6 +102,7 @@ class OpenApiGenerator
                                 "name"     => "Authorization-Token-Idletime",
                                 "in"       => "header",
                                 "required" => false,
+                                "description" => "Idletime should be set in hours. 0 means no expiration. If this parameter is not passed, the globally configured parameter is used.",
                                 "schema"   => [
                                     "type"    => "integer",
                                     "example" => "0"
@@ -154,10 +156,6 @@ class OpenApiGenerator
                         'in'   => 'header'
                     ]
                 ]
-            ],
-            'externalDocs' => [
-                'description' => 'How to authorize?',
-                'url'         => 'https://github.com/atrocore/docs/blob/master/atrocore/developer-guide/rest-api.md'
             ]
         ];
 
