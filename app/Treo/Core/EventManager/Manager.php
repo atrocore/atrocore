@@ -130,16 +130,13 @@ class Manager extends EventDispatcher
         $dataManager = $this->container->get('dataManager');
 
         if (empty($data = $dataManager->getCacheData('listeners'))) {
-            // prepare listeners
             $listeners = [];
 
-            // for core
-            $corePath = CORE_PATH . '/Treo/Listeners';
+            $corePath = CORE_PATH . '/Espo/Listeners';
             if (file_exists($corePath)) {
-                $this->parseDir('Treo', $corePath, $listeners);
+                $this->parseDir('Espo', $corePath, $listeners);
             }
 
-            // for modules
             foreach ($this->container->get('moduleManager')->getModules() as $id => $module) {
                 $module->loadListeners($listeners);
             }

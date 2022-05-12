@@ -35,37 +35,34 @@
 
 declare(strict_types=1);
 
-namespace Treo\Listeners;
+namespace Espo\Listeners;
 
-use Espo\Core\Utils\Metadata;
 use Treo\Core\EventManager\Event;
 
 /**
- * Class ActionHistoryRecordController
+ * Class Controller
  */
-class ActionHistoryRecordController extends AbstractListener
+class Controller extends AbstractListener
 {
     /**
      * @param Event $event
      */
-    public function beforeActionList(Event $event)
+    public function beforeAction(Event $event)
     {
-        // get where
-        $where = $event->getArgument('request')->get('where', []);
+        $this
+            ->getContainer()
+            ->get('eventManager')
+            ->dispatch($event->getArgument('controller') . 'Controller', $event->getArgument('action'), $event);
+    }
 
-        // get scopes
-        $scopes = $this
-            ->getMetadata()
-            ->get('scopes');
-
-        // prepare where
-        $where[] = [
-            'type'      => 'in',
-            'attribute' => 'targetType',
-            'value'     => array_keys($scopes)
-        ];
-
-        // set where
-        $event->getArgument('request')->setQuery('where', $where);
+    /**
+     * @param Event $event
+     */
+    public function afterAction(Event $event)
+    {
+        $this
+            ->getContainer()
+            ->get('eventManager')
+            ->dispatch($event->getArgument('controller') . 'Controller', $event->getArgument('action'), $event);
     }
 }

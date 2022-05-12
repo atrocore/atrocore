@@ -37,73 +37,9 @@ declare(strict_types=1);
 
 namespace Treo\Listeners;
 
-use Espo\Core\Container;
-use Espo\Core\Exceptions\Error;
-use Espo\Core\ORM\EntityManager;
-use Espo\Core\Utils\Language;
-use Espo\Core\Utils\Metadata;
-use Espo\Core\Utils\Config;
-use Espo\Entities\Preferences;
-use Espo\Entities\User;
-
-abstract class AbstractListener
+/**
+ * @deprecated from 12.05.2022
+ */
+abstract class AbstractListener extends \Espo\Listeners\AbstractListener
 {
-    protected Container $container;
-
-    protected array $services = [];
-
-    public function setContainer(Container $container): AbstractListener
-    {
-        $this->container = $container;
-
-        return $this;
-    }
-
-    protected function getContainer(): Container
-    {
-        return $this->container;
-    }
-
-    protected function getService(string $name)
-    {
-        if (!isset($this->services[$name])) {
-            $this->services[$name] = $this->getContainer()->get('serviceFactory')->create($name);
-        }
-
-        return $this->services[$name];
-    }
-
-    protected function getEntityManager(): EntityManager
-    {
-        return $this->getContainer()->get('entityManager');
-    }
-
-    protected function getConfig(): Config
-    {
-        return $this->getContainer()->get('config');
-    }
-
-    protected function getLanguage(): Language
-    {
-        if (is_null($this->getContainer()->get('preferences'))) {
-            throw new Error('No preferences defined');
-        }
-
-        return $this->getContainer()->get('language');
-    }
-
-    protected function getMetadata(): Metadata
-    {
-        return $this->getContainer()->get('metadata');
-    }
-
-    protected function getUser(): User
-    {
-        return $this->getContainer()->get('user');
-    }
-
-    protected function getPreferences(): Preferences
-    {
-        return $this->getContainer()->get('Preferences');
-    }
 }

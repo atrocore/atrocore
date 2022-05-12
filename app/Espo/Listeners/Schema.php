@@ -35,7 +35,7 @@
 
 declare(strict_types=1);
 
-namespace Treo\Listeners;
+namespace Espo\Listeners;
 
 use Treo\Core\EventManager\Event;
 

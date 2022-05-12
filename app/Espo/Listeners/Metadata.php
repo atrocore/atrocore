@@ -35,10 +35,10 @@
 
 declare(strict_types=1);
 
-namespace Treo\Listeners;
+namespace Espo\Listeners;
 
-use Treo\Core\EventManager\Event;
 use Espo\Core\Utils\Util;
+use Treo\Core\EventManager\Event;
 
 /**
  * Class Metadata

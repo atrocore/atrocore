@@ -35,9 +35,8 @@
 
 declare(strict_types=1);
 
-namespace Treo\Listeners;
+namespace Espo\Listeners;
 
-use Espo\Entities\Preferences;
 use Espo\ORM\Entity;
 use stdClass;
 use Treo\Core\EventManager\Event;
@@ -66,7 +65,7 @@ class AppController extends AbstractListener
         }
 
         if (!empty($result['user']) && !empty($language) && $currentLanguage !== $language) {
-            /** @var Entity $preferences */
+            /** @var \Espo\Listeners\Entity $preferences */
             $preferences = $this->getPreferences();
 
             // change language for user
@@ -82,7 +81,7 @@ class AppController extends AbstractListener
     /**
      * Save entity
      *
-     * @param Entity $entity
+     * @param \Espo\Listeners\Entity $entity
      */
     protected function saveEntity(Entity $entity): void
     {

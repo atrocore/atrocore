@@ -35,49 +35,36 @@
 
 declare(strict_types=1);
 
-namespace Treo\Listeners;
+namespace Espo\Listeners;
 
 use Treo\Core\EventManager\Event;
 
 /**
- * Class JobController
+ * Class ActionHistoryRecordController
  */
-class JobEntity extends AbstractListener
+class ActionHistoryRecordController extends AbstractListener
 {
     /**
      * @param Event $event
      */
-    public function beforeSave(Event $event)
+    public function beforeActionList(Event $event)
     {
-        // prepare data
-        $entity = $event->getArgument('entity');
+        // get where
+        $where = $event->getArgument('request')->get('where', []);
 
-        // set scheduledJobId to data
-        if (!empty($scheduledJobId = $entity->get('scheduledJobId'))) {
-            $entity->set('targetType', 'ScheduledJob');
-            $entity->set('targetId', $scheduledJobId);
-        }
+        // get scopes
+        $scopes = $this
+            ->getMetadata()
+            ->get('scopes');
 
-        // skip saving for Stream action
-        if ($entity->get('serviceName') == 'Stream' && $entity->get('methodName') == 'controlFollowersJob') {
-            // for skip saving
-            $entity->setIsSaved(true);
+        // prepare where
+        $where[] = [
+            'type'      => 'in',
+            'attribute' => 'targetType',
+            'value'     => array_keys($scopes)
+        ];
 
-            // call service method
-            $this->controlFollowersJob($entity->get('data'));
-        }
-    }
-
-    /**
-     * @param array $data
-     */
-    protected function controlFollowersJob(array $data): void
-    {
-        // prepare input
-        $input = new \stdClass();
-        $input->entityId = $data['entityId'];
-        $input->entityType = $data['entityType'];
-
-        $this->getContainer()->get('serviceFactory')->create('Stream')->controlFollowersJob($input);
+        // set where
+        $event->getArgument('request')->setQuery('where', $where);
     }
 }

@@ -35,57 +35,23 @@
 
 declare(strict_types=1);
 
-namespace Treo\Listeners;
+namespace Espo\Listeners;
 
 use Treo\Core\EventManager\Event;
-use Espo\Core\Utils\Util;
 
 /**
- * Class Language
+ * Class SettingsController
  */
-class Language extends AbstractListener
+class SettingsController extends AbstractListener
 {
     /**
      * @param Event $event
      */
-    public function modify(Event $event)
+    public function afterActionUpdate(Event $event): void
     {
-        if (empty($this->getConfig()->get('isMultilangActive'))) {
-            return;
+        // regenerate multilang fields
+        if (isset($event->getArgument('data')->inputLanguageList) || !empty($event->getArgument('data')->isMultilangActive)) {
+            $this->getContainer()->get('dataManager')->rebuild();
         }
-
-        // get languages
-        if (empty($languages = $this->getConfig()->get('inputLanguageList', []))) {
-            return;
-        }
-
-        // get data
-        $data = $event->getArgument('data');
-
-        foreach ($data as $locale => $rows) {
-            foreach ($rows as $scope => $items) {
-                foreach (['fields', 'tooltips'] as $type) {
-                    if (isset($items[$type])) {
-                        foreach ($items[$type] as $field => $value) {
-                            foreach ($languages as $language) {
-                                // prepare multi-lang field
-                                $mField = $field . ucfirst(Util::toCamelCase(strtolower($language)));
-
-                                if (!isset($data[$locale][$scope][$type][$mField])) {
-                                    if ($type == 'fields') {
-                                        $data[$locale][$scope][$type][$mField] = $value . ' › ' . $language;
-                                    } else {
-                                        $data[$locale][$scope][$type][$mField] = $value;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        // set data
-        $event->setArgument('data', $data);
     }
 }

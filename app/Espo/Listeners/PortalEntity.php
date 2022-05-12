@@ -35,11 +35,11 @@
 
 declare(strict_types=1);
 
-namespace Treo\Listeners;
+namespace Espo\Listeners;
 
+use Espo\Core\Application as App;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
-use Espo\Core\Application as App;
 use Treo\Core\EventManager\Event;
 
 /**
@@ -84,7 +84,7 @@ class PortalEntity extends AbstractListener
     /**
      * Prepare portal url
      *
-     * @param Entity $entity
+     * @param \Espo\Listeners\Entity $entity
      *
      * @throws BadRequest
      */
@@ -163,7 +163,7 @@ class PortalEntity extends AbstractListener
     /**
      * Set url
      *
-     * @param Entity $entity
+     * @param \Espo\Listeners\Entity $entity
      */
     protected function setUrl(Entity $entity): void
     {
@@ -182,7 +182,7 @@ class PortalEntity extends AbstractListener
     /**
      * Unset url
      *
-     * @param Entity $entity
+     * @param \Espo\Listeners\Entity $entity
      */
     protected function unsetUrl(Entity $entity): void
     {
