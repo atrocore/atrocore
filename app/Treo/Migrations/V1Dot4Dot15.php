@@ -37,7 +37,7 @@ declare(strict_types=1);
 
 namespace Treo\Migrations;
 
-use Treo\Console\Cron;
+use Espo\Console\Cron;
 use Treo\Core\Migration\Base;
 
 class V1Dot4Dot15 extends Base

@@ -35,14 +35,12 @@
 
 declare(strict_types=1);
 
-namespace Treo\Console;
-
-use Treo\Core\ConsoleManager;
+namespace Espo\Console;
 
 /**
- * ListCommand console
+ * Class StoreRefresh
  */
-class ListCommand extends AbstractConsole
+class StoreRefresh extends AbstractConsole
 {
     /**
      * Get console command description
@@ -51,7 +49,7 @@ class ListCommand extends AbstractConsole
      */
     public static function getDescription(): string
     {
-        return 'Show all existing commands and their descriptions.';
+        return 'Refresh store.';
     }
 
     /**
@@ -61,35 +59,21 @@ class ListCommand extends AbstractConsole
      */
     public function run(array $data): void
     {
-        // get console config
-        $config = $this->getConsoleConfig();
+        // refresh
+        $this->refresh();
 
-        // prepare data
-        foreach ($config as $command => $class) {
-            if (method_exists($class, 'getDescription') && empty($class::$isHidden)) {
-                $data[$command] = [$command, $class::getDescription()];
-            }
-        }
-
-        // sorting
-        $sorted = array_keys($data);
-        natsort($sorted);
-        foreach ($sorted as $command) {
-            $result[] = $data[$command];
-        }
-
-        // render
-        self::show('Available commands:', self::INFO);
-        echo self::arrayToTable($result);
+        self::show('Store refreshed successfully', self::SUCCESS);
     }
 
     /**
-     * Get console config
-     *
-     * @return array
+     * Refresh
      */
-    protected function getConsoleConfig(): array
+    protected function refresh(): void
     {
-        return include CORE_PATH . '/Treo/Configs/Console.php';
+        // auth
+        (new \Espo\Core\Utils\Auth($this->getContainer()))->useNoAuth();
+
+        // refresh
+        $this->getContainer()->get("serviceFactory")->create("TreoStore")->refresh();
     }
 }

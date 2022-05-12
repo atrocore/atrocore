@@ -35,10 +35,10 @@
 
 declare(strict_types=1);
 
-namespace Treo\Console;
+namespace Espo\Console;
 
-use Espo\ORM\EntityManager;
 use Espo\Core\Application;
+use Espo\ORM\EntityManager;
 
 /**
  * Cron console

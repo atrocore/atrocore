@@ -35,39 +35,34 @@
 
 declare(strict_types=1);
 
-namespace Treo\Console;
+namespace Espo\Console;
 
 /**
- * Class SqlDiff
+ * Class Cleanup
  */
-class SqlDiff extends AbstractConsole
+class Cleanup extends AbstractConsole
 {
     /**
-     * @inheritDoc
+     * Get console command description
+     *
+     * @return string
      */
     public static function getDescription(): string
     {
-        return 'Show SQL diff.';
+        return 'Database and attachments clearing.';
     }
 
     /**
-     * @inheritDoc
+     * Run action
+     *
+     * @param array $data
      */
     public function run(array $data): void
     {
-        try {
-            /** @var array $queries */
-            $queries = $this->getContainer()->get('schema')->getDiffQueries();
-        } catch (\Throwable $e) {
-            echo $e->getMessage() . PHP_EOL . $e->getTraceAsString() . PHP_EOL;
-            die();
+        if ((new \Espo\Jobs\TreoCleanup($this->getContainer()))->run()) {
+            self::show('Cleanup successfully finished', self::SUCCESS);
+        } else {
+            self::show('Something wrong. Cleanup failed. Check log for details', self::ERROR);
         }
-
-        if (empty($queries)) {
-            self::show('No database changes were detected.', self::SUCCESS, true);
-        }
-
-        echo implode(';' . PHP_EOL, $queries) . PHP_EOL;
-        die();
     }
 }

@@ -37,13 +37,13 @@ declare(strict_types=1);
 
 namespace Espo\Services;
 
+use Espo\Console\AbstractConsole;
 use Espo\Core\Exceptions;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\PasswordHash;
 use Espo\Core\Utils\Util;
 use Espo\Entities\User;
-use Treo\Console\AbstractConsole;
 use Treo\Core\ModuleManager\Manager;
 
 class Installer extends \Espo\Core\Templates\Services\HasContainer

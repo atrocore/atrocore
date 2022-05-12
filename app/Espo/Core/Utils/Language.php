@@ -37,12 +37,12 @@ declare(strict_types=1);
 
 namespace Espo\Core\Utils;
 
+use Espo\Console\RefreshTranslations;
 use Espo\Core\Container;
 use Espo\Core\EventManager\Event;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\File\Unifier;
 use Espo\Entities\Preferences;
-use Treo\Console\RefreshTranslations;
 
 /**
  * Class Language

@@ -37,8 +37,8 @@ declare(strict_types=1);
 
 namespace Treo\Core;
 
+use Espo\Console\AbstractConsole;
 use Espo\Core\Container;
-use Treo\Console\AbstractConsole;
 use Espo\Core\Utils\Metadata;
 
 /**

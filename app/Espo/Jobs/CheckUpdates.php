@@ -37,9 +37,9 @@ declare(strict_types=1);
 
 namespace Espo\Jobs;
 
+use Espo\Console\AbstractConsole;
 use Espo\Core\DataManager;
 use Espo\Core\Jobs\Base;
-use Treo\Console\AbstractConsole;
 
 class CheckUpdates extends Base
 {

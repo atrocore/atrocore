@@ -35,8 +35,7 @@
 
 namespace Treo\Migrations;
 
-use Espo\Core\Utils\Json;
-use Treo\Console\Cron;
+use Espo\Console\Cron;
 use Treo\Core\Migration\Base;
 
 /**

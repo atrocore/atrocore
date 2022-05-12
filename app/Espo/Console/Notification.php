@@ -35,21 +35,22 @@
 
 declare(strict_types=1);
 
-namespace Treo\Console;
+namespace Espo\Console;
 
 use Espo\Core\Application;
+use Espo\Repositories\Notification as NotificationRepository;
 
 /**
- * Class QueueManager
+ * Class Notification
  */
-class QueueManager extends AbstractConsole
+class Notification extends AbstractConsole
 {
     /**
      * @inheritdoc
      */
     public static function getDescription(): string
     {
-        return 'Run Queue Manager job.';
+        return 'Refresh users notifications cache.';
     }
 
     /**
@@ -61,9 +62,8 @@ class QueueManager extends AbstractConsole
             exit(1);
         }
 
-        // run
-        $this->getContainer()->get('queueManager')->run((int)$data['stream']);
+        NotificationRepository::refreshNotReadCount($this->getContainer()->get('pdo'));
 
-        self::show('Queue Manager run successfully', self::SUCCESS, true);
+        self::show('Users notifications cache refreshed successfully', self::SUCCESS, true);
     }
 }

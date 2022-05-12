@@ -35,48 +35,33 @@
 
 declare(strict_types=1);
 
-namespace Treo\Console;
+namespace Espo\Console;
 
 /**
- * Class SqlDiffRun
+ * Migrate console
  */
-class SqlDiffRun extends AbstractConsole
+class Migrate extends AbstractConsole
 {
     /**
-     * @inheritDoc
+     * Get console command description
+     *
+     * @return string
      */
     public static function getDescription(): string
     {
-        return 'Run SQL diff.';
+        return 'Run migration.';
     }
 
     /**
-     * @inheritDoc
+     * Run action
+     *
+     * @param array $data
      */
     public function run(array $data): void
     {
-        try {
-            /** @var array $queries */
-            $queries = $this->getContainer()->get('schema')->getDiffQueries();
-        } catch (\Throwable $e) {
-            echo $e->getMessage() . PHP_EOL . $e->getTraceAsString() . PHP_EOL;
-            die();
-        }
-
-        if (!empty($queries)) {
-            foreach ($queries as $query) {
-                $this->getContainer()->get('pdo')->exec($query);
-                echo $query;
-                self::show(' Done!', self::SUCCESS);
-            }
-            die();
-        }
-
-        if (empty($queries)) {
-            self::show('No database changes were detected.', self::SUCCESS, true);
-        }
-
-        echo implode(';' . PHP_EOL, $queries) . PHP_EOL;
-        die();
+        $this
+            ->getContainer()
+            ->get('migration')
+            ->run($data['module'], $data['from'], $data['to']);
     }
 }

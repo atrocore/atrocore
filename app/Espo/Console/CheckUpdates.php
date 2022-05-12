@@ -35,7 +35,7 @@
 
 declare(strict_types=1);
 
-namespace Treo\Console;
+namespace Espo\Console;
 
 use Espo\Jobs\CheckUpdates as Job;
 

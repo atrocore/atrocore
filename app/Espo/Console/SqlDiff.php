@@ -35,25 +35,41 @@
 
 declare(strict_types=1);
 
-namespace Treo\Console;
+namespace Espo\Console;
 
-use Espo\Core\Application;
+use const Treo\Console\PHP_EOL;
 
-class PseudoTransactionManager extends AbstractConsole
+/**
+ * Class SqlDiff
+ */
+class SqlDiff extends AbstractConsole
 {
+    /**
+     * @inheritDoc
+     */
     public static function getDescription(): string
     {
-        return 'Run pseudo transaction jobs.';
+        return 'Show SQL diff.';
     }
 
+    /**
+     * @inheritDoc
+     */
     public function run(array $data): void
     {
-        if (empty($this->getConfig()->get('isInstalled')) || Application::isSystemUpdating()) {
-            exit(1);
+        try {
+            /** @var array $queries */
+            $queries = $this->getContainer()->get('schema')->getDiffQueries();
+        } catch (\Throwable $e) {
+            echo $e->getMessage() . PHP_EOL . $e->getTraceAsString() . PHP_EOL;
+            die();
         }
 
-        $this->getContainer()->get('pseudoTransactionManager')->run();
+        if (empty($queries)) {
+            self::show('No database changes were detected.', self::SUCCESS, true);
+        }
 
-        self::show('Pseudo transaction jobs run successfully', self::SUCCESS, true);
+        echo implode(';' . PHP_EOL, $queries) . PHP_EOL;
+        die();
     }
 }

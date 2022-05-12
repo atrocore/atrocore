@@ -35,12 +35,12 @@
 
 declare(strict_types=1);
 
-namespace Treo\Console;
+namespace Espo\Console;
 
+use Espo\Core\Application;
 use Espo\Core\PseudoTransactionManager;
 use Espo\Entities\User;
 use Espo\Services\Composer;
-use Espo\Core\Application;
 use Treo\Core\ORM\EntityManager;
 
 /**

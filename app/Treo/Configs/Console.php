@@ -37,7 +37,7 @@ declare(strict_types=1);
 
 namespace Treo\Configs;
 
-use Treo\Console;
+use Espo\Console;
 
 return [
     "refresh translations"         => Console\RefreshTranslations::class,

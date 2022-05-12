@@ -35,45 +35,25 @@
 
 declare(strict_types=1);
 
-namespace Treo\Console;
+namespace Espo\Console;
 
-/**
- * Class StoreRefresh
- */
-class StoreRefresh extends AbstractConsole
+use Espo\Core\Application;
+
+class PseudoTransactionManager extends AbstractConsole
 {
-    /**
-     * Get console command description
-     *
-     * @return string
-     */
     public static function getDescription(): string
     {
-        return 'Refresh store.';
+        return 'Run pseudo transaction jobs.';
     }
 
-    /**
-     * Run action
-     *
-     * @param array $data
-     */
     public function run(array $data): void
     {
-        // refresh
-        $this->refresh();
+        if (empty($this->getConfig()->get('isInstalled')) || Application::isSystemUpdating()) {
+            exit(1);
+        }
 
-        self::show('Store refreshed successfully', self::SUCCESS);
-    }
+        $this->getContainer()->get('pseudoTransactionManager')->run();
 
-    /**
-     * Refresh
-     */
-    protected function refresh(): void
-    {
-        // auth
-        (new \Espo\Core\Utils\Auth($this->getContainer()))->useNoAuth();
-
-        // refresh
-        $this->getContainer()->get("serviceFactory")->create("TreoStore")->refresh();
+        self::show('Pseudo transaction jobs run successfully', self::SUCCESS, true);
     }
 }

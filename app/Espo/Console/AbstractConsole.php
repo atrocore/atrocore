@@ -35,11 +35,11 @@
 
 declare(strict_types=1);
 
-namespace Treo\Console;
+namespace Espo\Console;
 
 use Espo\Core\Container;
-use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
 
 /**
  * AbtractConsole class

@@ -35,7 +35,7 @@
 
 declare(strict_types=1);
 
-namespace Treo\Console;
+namespace Espo\Console;
 
 /**
  * Class KillDaemons

@@ -35,34 +35,50 @@
 
 declare(strict_types=1);
 
-namespace Treo\Console;
+namespace Espo\Console;
+
+use const Treo\Console\PHP_EOL;
 
 /**
- * Class Cleanup
+ * Class SqlDiffRun
  */
-class Cleanup extends AbstractConsole
+class SqlDiffRun extends AbstractConsole
 {
     /**
-     * Get console command description
-     *
-     * @return string
+     * @inheritDoc
      */
     public static function getDescription(): string
     {
-        return 'Database and attachments clearing.';
+        return 'Run SQL diff.';
     }
 
     /**
-     * Run action
-     *
-     * @param array $data
+     * @inheritDoc
      */
     public function run(array $data): void
     {
-        if ((new \Espo\Jobs\TreoCleanup($this->getContainer()))->run()) {
-            self::show('Cleanup successfully finished', self::SUCCESS);
-        } else {
-            self::show('Something wrong. Cleanup failed. Check log for details', self::ERROR);
+        try {
+            /** @var array $queries */
+            $queries = $this->getContainer()->get('schema')->getDiffQueries();
+        } catch (\Throwable $e) {
+            echo $e->getMessage() . PHP_EOL . $e->getTraceAsString() . PHP_EOL;
+            die();
         }
+
+        if (!empty($queries)) {
+            foreach ($queries as $query) {
+                $this->getContainer()->get('pdo')->exec($query);
+                echo $query;
+                self::show(' Done!', self::SUCCESS);
+            }
+            die();
+        }
+
+        if (empty($queries)) {
+            self::show('No database changes were detected.', self::SUCCESS, true);
+        }
+
+        echo implode(';' . PHP_EOL, $queries) . PHP_EOL;
+        die();
     }
 }

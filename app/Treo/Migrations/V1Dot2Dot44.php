@@ -35,7 +35,7 @@
 
 namespace Treo\Migrations;
 
-use Treo\Console\AbstractConsole;
+use Espo\Console\AbstractConsole;
 
 /**
  * Migration for version 1.2.44

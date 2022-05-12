@@ -35,22 +35,21 @@
 
 declare(strict_types=1);
 
-namespace Treo\Console;
+namespace Espo\Console;
 
-use Espo\Repositories\Notification as NotificationRepository;
-use Espo\Core\Application;
+use Espo\ORM\EntityManager;
 
 /**
- * Class Notification
+ * Class QueueItem
  */
-class Notification extends AbstractConsole
+class QueueItem extends AbstractConsole
 {
     /**
      * @inheritdoc
      */
     public static function getDescription(): string
     {
-        return 'Refresh users notifications cache.';
+        return 'Run Queue Manager job item.';
     }
 
     /**
@@ -58,12 +57,38 @@ class Notification extends AbstractConsole
      */
     public function run(array $data): void
     {
-        if (empty($this->getConfig()->get('isInstalled')) || Application::isSystemUpdating()) {
+        if (empty($this->getConfig()->get('isInstalled'))) {
             exit(1);
         }
 
-        NotificationRepository::refreshNotReadCount($this->getContainer()->get('pdo'));
+        /** @var EntityManager $entityManager */
+        $entityManager = $this->getContainer()->get('entityManager');
 
-        self::show('Users notifications cache refreshed successfully', self::SUCCESS, true);
+        // get item
+        $item = $entityManager->getEntity('QueueItem', $data['id']);
+        if (empty($item)) {
+            self::show('No such queue item!', self::ERROR, true);
+        }
+
+        $user = $item->get('createdBy');
+
+        // set user
+        $this->getContainer()->setUser($user);
+        $entityManager->setUser($user);
+
+        if (!empty($user->get('portalId'))) {
+            $this->getContainer()->setPortal($user->get('portal'));
+        }
+
+        // create service
+        $service = $this->getContainer()->get('serviceFactory')->create($item->get('serviceName'));
+
+        // get data
+        $data = json_decode(json_encode($item->get('data')), true);
+
+        // run
+        $service->run($data);
+
+        self::show('Queue Manager item ran!', self::SUCCESS, true);
     }
 }

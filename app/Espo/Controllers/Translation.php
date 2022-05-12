@@ -35,13 +35,13 @@
 
 namespace Espo\Controllers;
 
+use Espo\Console\AbstractConsole;
+use Espo\Console\RefreshTranslations;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Templates\Controllers\Base;
 use Espo\Core\Utils\Language;
-use Treo\Console\AbstractConsole;
-use Treo\Console\RefreshTranslations;
 
 /**
  * Class Translation

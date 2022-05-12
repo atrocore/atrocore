@@ -35,8 +35,6 @@
 
 namespace Treo\Migrations;
 
-use Treo\Console\Cron;
-
 /**
  * Migration for version 1.2.0
  */

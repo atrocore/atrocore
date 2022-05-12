@@ -35,12 +35,12 @@
 
 declare(strict_types=1);
 
-namespace Treo\Console;
+namespace Espo\Console;
 
 /**
- * Migrate console
+ * ListCommand console
  */
-class Migrate extends AbstractConsole
+class ListCommand extends AbstractConsole
 {
     /**
      * Get console command description
@@ -49,7 +49,7 @@ class Migrate extends AbstractConsole
      */
     public static function getDescription(): string
     {
-        return 'Run migration.';
+        return 'Show all existing commands and their descriptions.';
     }
 
     /**
@@ -59,9 +59,35 @@ class Migrate extends AbstractConsole
      */
     public function run(array $data): void
     {
-        $this
-            ->getContainer()
-            ->get('migration')
-            ->run($data['module'], $data['from'], $data['to']);
+        // get console config
+        $config = $this->getConsoleConfig();
+
+        // prepare data
+        foreach ($config as $command => $class) {
+            if (method_exists($class, 'getDescription') && empty($class::$isHidden)) {
+                $data[$command] = [$command, $class::getDescription()];
+            }
+        }
+
+        // sorting
+        $sorted = array_keys($data);
+        natsort($sorted);
+        foreach ($sorted as $command) {
+            $result[] = $data[$command];
+        }
+
+        // render
+        self::show('Available commands:', self::INFO);
+        echo self::arrayToTable($result);
+    }
+
+    /**
+     * Get console config
+     *
+     * @return array
+     */
+    protected function getConsoleConfig(): array
+    {
+        return include CORE_PATH . '/Treo/Configs/Console.php';
     }
 }
