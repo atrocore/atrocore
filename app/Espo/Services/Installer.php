@@ -35,7 +35,7 @@
 
 declare(strict_types=1);
 
-namespace Treo\Services;
+namespace Espo\Services;
 
 use Espo\Core\Exceptions;
 use Espo\Core\Utils\File\Manager as FileManager;
@@ -43,13 +43,9 @@ use Espo\Core\Utils\Language;
 use Espo\Core\Utils\PasswordHash;
 use Espo\Core\Utils\Util;
 use Espo\Entities\User;
-use Espo\Core\Utils\Config;
 use Treo\Console\AbstractConsole;
 use Treo\Core\ModuleManager\Manager;
 
-/**
- * Service Installer
- */
 class Installer extends \Espo\Core\Templates\Services\HasContainer
 {
 

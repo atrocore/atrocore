@@ -35,14 +35,11 @@
 
 declare(strict_types=1);
 
-namespace Treo\Services;
+namespace Espo\Services;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Services\HasContainer;
 
-/**
- * Class MassActions
- */
 class MassActions extends HasContainer
 {
     /**

@@ -39,8 +39,8 @@ namespace Espo\Controllers;
 
 use Espo\Core\Controllers\Base;
 use Espo\Core\Exceptions;
+use Espo\Services\DashletInterface;
 use Slim\Http\Request;
-use Treo\Services\DashletInterface;
 
 class Dashlet extends Base
 {

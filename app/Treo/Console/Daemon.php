@@ -39,9 +39,9 @@ namespace Treo\Console;
 
 use Espo\Core\PseudoTransactionManager;
 use Espo\Entities\User;
+use Espo\Services\Composer;
 use Treo\Core\Application;
 use Treo\Core\ORM\EntityManager;
-use Treo\Services\Composer;
 
 /**
  * Class Daemon

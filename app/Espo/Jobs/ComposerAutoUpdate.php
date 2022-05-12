@@ -38,7 +38,7 @@ declare(strict_types=1);
 namespace Espo\Jobs;
 
 use Espo\Core\Jobs\Base;
-use Treo\Services\Composer;
+use Espo\Services\Composer;
 
 /**
  * Class ComposerAutoUpdate

@@ -33,25 +33,25 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-declare(strict_types=1);
+namespace Espo\Services;
 
-namespace Treo\Services;
+use Espo\ORM\Entity;
 
-/**
- * AdminNotifications service
- */
-class AdminNotifications extends \Espo\Core\Services\Base
+class Account extends \Espo\Services\Record
 {
+    protected $linkSelectParams = [];
 
-    /**
-     * New version checker
-     *
-     * @param array $data
-     *
-     * @return bool
-     */
-    public function newVersionChecker($data): bool
+    protected function getDuplicateWhereClause(Entity $entity, $data)
     {
-        return true;
+        if (!$entity->get('name')) {
+            return false;
+        }
+        return array(
+            'name' => $entity->get('name')
+        );
+    }
+
+    protected function afterMerge(Entity $entity, array $sourceList, $attributes)
+    {
     }
 }

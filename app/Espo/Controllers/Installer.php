@@ -39,8 +39,8 @@ namespace Espo\Controllers;
 
 use Espo\Core\Controllers\Base;
 use Espo\Core\Exceptions;
+use Espo\Services\Installer as InstallerService;
 use Slim\Http\Request;
-use Treo\Services\Installer as InstallerService;
 
 class Installer extends Base
 {

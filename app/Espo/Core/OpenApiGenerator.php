@@ -40,8 +40,8 @@ namespace Espo\Core;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\EntityManager;
+use Espo\Services\Composer;
 use Treo\Core\ControllerManager;
-use Treo\Services\Composer;
 
 class OpenApiGenerator
 {

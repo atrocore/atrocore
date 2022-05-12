@@ -33,34 +33,68 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
+declare(strict_types=1);
+
 namespace Espo\Services;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
+use Treo\Core\Application as App;
 
-class Portal extends Record
+class Portal extends \Espo\Services\Record
 {
-    protected $getEntityBeforeUpdate = true;
+    /**
+     * @var null|array
+     */
+    protected $urls = null;
 
+    /**
+     * @param Entity $entity
+     */
     public function loadAdditionalFields(Entity $entity)
     {
         parent::loadAdditionalFields($entity);
-        $this->loadUrlField($entity);
+
+        $this->setUrl($entity);
     }
 
+    /**
+     * @param Entity $entity
+     */
     public function loadAdditionalFieldsForList(Entity $entity)
     {
         parent::loadAdditionalFieldsForList($entity);
-        $this->loadUrlField($entity);
+
+        $this->setUrl($entity);
     }
 
-    protected function afterUpdateEntity(Entity $entity, $data)
+    /**
+     * Set url
+     *
+     * @param Entity $entity
+     */
+    protected function setUrl(Entity $entity): void
     {
-        $this->loadUrlField($entity);
+        if (!empty($url = $this->getUrls()[$entity->get('id')])) {
+            $entity->set('url', $url);
+        }
     }
 
-    protected function loadUrlField(Entity $entity)
+    /**
+     * Get urls
+     *
+     * @return array
+     */
+    protected function getUrls(): array
     {
-        $this->getRepository()->loadUrlField($entity);
+        if (is_null($this->urls)) {
+            $this->urls = App::getPortalUrlFileData();
+        }
+
+        return $this->urls;
+    }
+
+    protected function getFieldsThatConflict(Entity $entity, \stdClass $data): array
+    {
+        return [];
     }
 }
-

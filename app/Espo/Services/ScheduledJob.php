@@ -35,15 +35,12 @@
 
 declare(strict_types=1);
 
-namespace Treo\Services;
+namespace Espo\Services;
 
-use Espo\ORM\Entity;
-use Espo\Core\Exceptions\Error;
 use Cron\CronExpression;
+use Espo\Core\Exceptions\Error;
+use Espo\ORM\Entity;
 
-/**
- * ScheduledJob service
- */
 class ScheduledJob extends \Espo\Core\Templates\Services\Base
 {
     /**

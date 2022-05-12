@@ -37,16 +37,16 @@ declare(strict_types=1);
 
 namespace Treo\Core;
 
+use Espo\Core\EntryPointManager;
 use Espo\Core\OpenApiGenerator;
 use Espo\Core\Utils\Api\Auth as ApiAuth;
-use Espo\Core\Utils\Json;
-use Espo\Core\EntryPointManager;
-use Espo\Entities\Portal;
-use Espo\Core\Utils\Route;
 use Espo\Core\Utils\Auth;
 use Espo\Core\Utils\Config;
-use Treo\Services\Installer;
+use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Route;
+use Espo\Entities\Portal;
+use Espo\Services\Installer;
 
 /**
  * Class Application

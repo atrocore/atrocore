@@ -38,7 +38,7 @@ declare(strict_types=1);
 namespace Treo\Core\ModuleManager;
 
 use Espo\Core\Container;
-use Treo\Services\Composer;
+use Espo\Services\Composer;
 
 /**
  * Class Manager

@@ -33,15 +33,10 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-namespace Treo\Services;
+namespace Espo\Services;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
 
-/**
- * Class Person
- *
- * @package Treo\Services
- */
 class Person extends \Espo\Services\Record
 {
     /**

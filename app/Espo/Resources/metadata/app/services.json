@@ -1,10 +1,10 @@
 {
-  "AdminNotifications": "\\Treo\\Services\\AdminNotifications",
-  "Installer": "\\Treo\\Services\\Installer",
-  "Person": "\\Treo\\Services\\Person",
-  "Portal": "\\Treo\\Services\\Portal",
+  "AdminNotifications": "\\Espo\\Services\\AdminNotifications",
+  "Installer": "\\Espo\\Services\\Installer",
+  "Person": "\\Espo\\Services\\Person",
+  "Portal": "\\Espo\\Services\\Portal",
   "QueueManagerMassDelete": "\\Espo\\Services\\QueueManagerMassDelete",
   "QueueManagerCreateThumbnails": "\\Espo\\Services\\QueueManagerCreateThumbnails",
-  "MassActions": "\\Treo\\Services\\MassActions",
-  "ScheduledJob": "\\Treo\\Services\\ScheduledJob"
+  "MassActions": "\\Espo\\Services\\MassActions",
+  "ScheduledJob": "\\Espo\\Services\\ScheduledJob"
 }

@@ -35,19 +35,15 @@
 
 declare(strict_types=1);
 
-namespace Treo\Services;
+namespace Espo\Services;
 
+use Espo\Core\Exceptions;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Json;
-use Espo\Core\Exceptions;
 use Slim\Http\Request;
-use Treo\Composer\PostUpdate;
 use Treo\Core\Application;
 use Treo\Core\ModuleManager\Manager as ModuleManager;
 
-/**
- * Composer service
- */
 class Composer extends \Espo\Core\Templates\Services\HasContainer
 {
     const CHECK_UP_FILE = 'data/composer-check-up.log';

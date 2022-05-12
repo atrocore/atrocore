@@ -35,13 +35,8 @@
 
 declare(strict_types = 1);
 
-namespace Treo\Services;
+namespace Espo\Services;
 
-/**
- * Interface DashletInterface
- *
- * @package Treo\Services
- */
 interface DashletInterface
 {
     /**

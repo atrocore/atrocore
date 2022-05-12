@@ -35,14 +35,11 @@
 
 declare(strict_types=1);
 
-namespace Treo\Services;
+namespace Espo\Services;
 
 use Espo\Core\Templates\Services\Base;
 use Espo\Core\Utils\Json;
 
-/**
- * Class TreoStore
- */
 class TreoStore extends Base
 {
     /**

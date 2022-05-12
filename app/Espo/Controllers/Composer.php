@@ -40,8 +40,8 @@ namespace Espo\Controllers;
 use Espo\Core\Controllers\Base;
 use Espo\Core\Exceptions;
 use Espo\Core\Utils\Json;
+use Espo\Services\Composer as ComposerService;
 use Slim\Http\Request;
-use Treo\Services\Composer as ComposerService;
 
 class Composer extends Base
 {
