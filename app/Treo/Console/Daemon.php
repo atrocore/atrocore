@@ -40,7 +40,7 @@ namespace Treo\Console;
 use Espo\Core\PseudoTransactionManager;
 use Espo\Entities\User;
 use Espo\Services\Composer;
-use Treo\Core\Application;
+use Espo\Core\Application;
 use Treo\Core\ORM\EntityManager;
 
 /**

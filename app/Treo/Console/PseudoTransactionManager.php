@@ -37,7 +37,7 @@ declare(strict_types=1);
 
 namespace Treo\Console;
 
-use Treo\Core\Application;
+use Espo\Core\Application;
 
 class PseudoTransactionManager extends AbstractConsole
 {

@@ -9,7 +9,7 @@ set_include_path(dirname(__FILE__));
 require_once 'vendor/autoload.php';
 
 // create app
-$app = new \Treo\Core\Application();
+$app = new \Espo\Core\Application();
 
 // run
 if (substr(php_sapi_name(), 0, 3) == 'cli') {

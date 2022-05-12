@@ -38,7 +38,7 @@ declare(strict_types=1);
 namespace Treo\Composer;
 
 use Espo\Core\Container;
-use Treo\Core\Application as App;
+use Espo\Core\Application as App;
 
 /**
  * Class PostUpdate

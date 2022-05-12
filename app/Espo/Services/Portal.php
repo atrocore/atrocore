@@ -38,7 +38,7 @@ declare(strict_types=1);
 namespace Espo\Services;
 
 use Espo\ORM\Entity;
-use Treo\Core\Application as App;
+use Espo\Core\Application as App;
 
 class Portal extends \Espo\Services\Record
 {

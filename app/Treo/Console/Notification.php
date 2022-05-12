@@ -38,7 +38,7 @@ declare(strict_types=1);
 namespace Treo\Console;
 
 use Espo\Repositories\Notification as NotificationRepository;
-use Treo\Core\Application;
+use Espo\Core\Application;
 
 /**
  * Class Notification

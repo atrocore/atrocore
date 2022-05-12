@@ -44,7 +44,7 @@ class V1Dot3Dot7 extends Base
     public function up(): void
     {
         try {
-            $container = (new \Treo\Core\Application())->getContainer();
+            $container = (new \Espo\Core\Application())->getContainer();
             $container->get('dataManager')->rebuildScheduledJobs();
         } catch (\Throwable $e) {
             // ignore all errors

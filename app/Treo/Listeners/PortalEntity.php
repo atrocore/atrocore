@@ -39,7 +39,7 @@ namespace Treo\Listeners;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
-use Treo\Core\Application as App;
+use Espo\Core\Application as App;
 use Treo\Core\EventManager\Event;
 
 /**
