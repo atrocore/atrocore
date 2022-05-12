@@ -33,13 +33,8 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-namespace Treo\SelectManagers;
+namespace Espo\SelectManagers;
 
-/**
- * Class Account
- *
- * @package Treo\SelectManagers
- */
 class Account extends \Espo\Core\SelectManagers\Base
 {
     /**

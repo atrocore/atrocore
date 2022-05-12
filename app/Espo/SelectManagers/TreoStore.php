@@ -35,14 +35,11 @@
 
 declare(strict_types=1);
 
-namespace Treo\SelectManagers;
+namespace Espo\SelectManagers;
 
 use Espo\Core\SelectManagers\Base;
 use Treo\Services\Composer;
 
-/**
- * Class TreoStore
- */
 class TreoStore extends Base
 {
     /**

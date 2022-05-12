@@ -35,13 +35,10 @@
 
 declare(strict_types=1);
 
-namespace Treo\SelectManagers;
+namespace Espo\SelectManagers;
 
 use Espo\Core\SelectManagers\Base;
 
-/**
- * Class QueueItem
- */
 class QueueItem extends Base
 {
 }
