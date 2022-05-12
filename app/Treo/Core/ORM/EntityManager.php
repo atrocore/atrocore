@@ -37,8 +37,6 @@ declare(strict_types=1);
 
 namespace Treo\Core\ORM;
 
-use Treo\ORM\DB\MysqlMapper;
-
 /**
  * Class EntityManager
  */
@@ -66,6 +64,6 @@ class EntityManager extends \Espo\Core\ORM\EntityManager
      */
     protected function getMysqlMapperClassName(): string
     {
-        return MysqlMapper::class;
+        return \Espo\ORM\DB\MysqlMapper::class;
     }
 }

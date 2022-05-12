@@ -35,16 +35,13 @@
 
 declare(strict_types=1);
 
-namespace Treo\Jobs;
+namespace Espo\Jobs;
 
-use Espo\Core\Jobs\Base;
 use Espo\Core\Container;
+use Espo\Core\Jobs\Base;
 use Espo\Core\Utils\Util;
 use Treo\Core\EventManager\Event;
 
-/**
- * Class TreoCleanup
- */
 class TreoCleanup extends Base
 {
     /**

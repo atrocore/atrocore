@@ -35,36 +35,34 @@
 
 declare(strict_types=1);
 
-namespace Treo\Jobs;
+namespace Espo\Jobs;
 
-use Espo\Core\DataManager;
 use Espo\Core\Jobs\Base;
-use Treo\Console\AbstractConsole;
+use Treo\Services\Composer;
 
-class CheckUpdates extends Base
+/**
+ * Class ComposerAutoUpdate
+ */
+class ComposerAutoUpdate extends Base
 {
-    public const CHECK_UPDATES_LOG_FILE = 'data/check-updates.log';
-
-    public function run(): void
+    /**
+     * Run job
+     *
+     * @return bool
+     */
+    public function run()
     {
-        $php = AbstractConsole::getPhpBinPath($this->getConfig());
-        $log = self::CHECK_UPDATES_LOG_FILE;
+        // cancel changes
+        $this->getComposerService()->cancelChanges();
 
-        if (file_exists($log)) {
-            unlink($log);
-        }
-
-        exec("$php composer.phar update --dry-run >> $log 2>&1");
-
-        DataManager::pushPublicData('isNeedToUpdate', self::isUpdatesAvailable());
+        return $this->getComposerService()->runUpdate();
     }
 
-    public static function isUpdatesAvailable(): bool
+    /**
+     * @return Composer
+     */
+    protected function getComposerService(): Composer
     {
-        if (!file_exists(self::CHECK_UPDATES_LOG_FILE)) {
-            return false;
-        }
-
-        return strpos(file_get_contents(self::CHECK_UPDATES_LOG_FILE), 'Package operations:') !== false;
+        return $this->getServiceFactory()->create('Composer');
     }
 }

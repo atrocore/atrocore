@@ -35,13 +35,12 @@
 
 namespace Espo\Core\Utils;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Container;
 use Espo\Core\Exceptions\Conflict;
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\FieldManager\Hooks\Base as BaseHook;
 use Espo\Core\Utils\Metadata\Helper;
-use Espo\Core\Container;
 use Treo\Core\EventManager\Event;
-use Espo\Core\Utils\Util;
 
 /**
  * Class FieldManager
@@ -322,7 +321,7 @@ class FieldManager
             $result &= $this->getMetadata()->save();
 
             if (isset($oldFieldDefs['isMultilang']) && $oldFieldDefs['isMultilang'] == true && !$this->getMetadata()->get(['entityDefs', $scope, 'fields', $name, 'isMultilang'], false)) {
-                (new \Treo\Jobs\TreoCleanup($this->container))->run();
+                (new \Espo\Jobs\TreoCleanup($this->container))->run();
             }
 
             $event = new Event(['scope' => $scope, 'field' => $name, 'oldFieldDefs' => $oldFieldDefs]);

@@ -37,7 +37,7 @@ declare(strict_types=1);
 
 namespace Treo\Console;
 
-use Treo\Jobs\CheckUpdates as Job;
+use Espo\Jobs\CheckUpdates as Job;
 
 class CheckUpdates extends AbstractConsole
 {

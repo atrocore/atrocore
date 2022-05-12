@@ -35,13 +35,36 @@
 
 declare(strict_types=1);
 
-namespace Treo\ORM\DB;
+namespace Espo\Jobs;
 
-use Espo\ORM\DB\MysqlMapper as Base;
+use Espo\Core\DataManager;
+use Espo\Core\Jobs\Base;
+use Treo\Console\AbstractConsole;
 
-/**
- * Class MysqlMapper
- */
-class MysqlMapper extends Base
+class CheckUpdates extends Base
 {
+    public const CHECK_UPDATES_LOG_FILE = 'data/check-updates.log';
+
+    public function run(): void
+    {
+        $php = AbstractConsole::getPhpBinPath($this->getConfig());
+        $log = self::CHECK_UPDATES_LOG_FILE;
+
+        if (file_exists($log)) {
+            unlink($log);
+        }
+
+        exec("$php composer.phar update --dry-run >> $log 2>&1");
+
+        DataManager::pushPublicData('isNeedToUpdate', self::isUpdatesAvailable());
+    }
+
+    public static function isUpdatesAvailable(): bool
+    {
+        if (!file_exists(self::CHECK_UPDATES_LOG_FILE)) {
+            return false;
+        }
+
+        return strpos(file_get_contents(self::CHECK_UPDATES_LOG_FILE), 'Package operations:') !== false;
+    }
 }
