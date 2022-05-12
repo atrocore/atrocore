@@ -37,6 +37,8 @@ declare(strict_types=1);
 
 namespace Espo\Console;
 
+use Treo\Core\ConsoleManager;
+
 /**
  * ListCommand console
  */
@@ -88,6 +90,6 @@ class ListCommand extends AbstractConsole
      */
     protected function getConsoleConfig(): array
     {
-        return include CORE_PATH . '/Treo/Configs/Console.php';
+        return ConsoleManager::loadRoutes();
     }
 }

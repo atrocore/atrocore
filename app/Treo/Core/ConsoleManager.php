@@ -37,6 +37,7 @@ declare(strict_types=1);
 
 namespace Treo\Core;
 
+use Espo\Console;
 use Espo\Console\AbstractConsole;
 use Espo\Core\Container;
 use Espo\Core\Utils\Metadata;
@@ -91,7 +92,7 @@ class ConsoleManager
         // prepare result
         $result = [];
 
-        foreach ($this->loadRoutes() as $route => $handler) {
+        foreach (self::loadRoutes() as $route => $handler) {
             if ($route == $command) {
                 $result = [
                     'handler' => $handler,
@@ -124,14 +125,27 @@ class ConsoleManager
         return $result;
     }
 
-    /**
-     * Load routes
-     *
-     * @return array
-     */
-    protected function loadRoutes(): array
+    public static function loadRoutes(): array
     {
-        return include CORE_PATH . '/Treo/Configs/Console.php';
+        return [
+            "refresh translations"         => Console\RefreshTranslations::class,
+            "list"                         => Console\ListCommand::class,
+            "install demo-project"         => Console\InstallDemoProject::class,
+            "clear cache"                  => Console\ClearCache::class,
+            "cleanup"                      => Console\Cleanup::class,
+            "sql diff --show"              => Console\SqlDiff::class,
+            "sql diff --run"               => Console\SqlDiffRun::class,
+            "cron"                         => Console\Cron::class,
+            "store --refresh"              => Console\StoreRefresh::class,
+            "migrate <module> <from> <to>" => Console\Migrate::class,
+            "qm <stream> --run"            => Console\QueueManager::class,
+            "qm item <id> --run"           => Console\QueueItem::class,
+            "notifications --refresh"      => Console\Notification::class,
+            "kill daemons"                 => Console\KillDaemons::class,
+            "daemon <name> <id>"           => Console\Daemon::class,
+            "check updates"                => Console\CheckUpdates::class,
+            "pt --run"                     => Console\PseudoTransactionManager::class,
+        ];
     }
 
     /**
