@@ -19317,14 +19317,22 @@ table.table > thead th > div > a {
   #main .catalog-tree-panel {
     position: fixed;
     top: 56px;
-    max-width: 280px;
     height: calc(100% - 47px);
     overflow-y: auto;
     z-index: 2;
   }
 
-  #main .catalog-tree-panel:not(.catalog-tree-panel-hidden) {
-    width: 280px;
+  #main .catalog-tree-panel > .category-panel-resizer {
+    width: 2px;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: col-resize;
+  }
+
+  #main .catalog-tree-panel.catalog-tree-panel-hidden > .category-panel-resizer {
+    cursor: default;
   }
 
   #main .catalog-tree-panel .bottom-collapse {
@@ -19332,19 +19340,15 @@ table.table > thead th > div > a {
     bottom: 0;
   }
 
-  #main > .page-header.not-collapsed .header-breadcrumbs:not(.fixed-header-breadcrumbs),
-  #main > .record > .detail > .detail-button-container.not-collapsed,
-  #main > .page-header.not-collapsed .overview-filters-container {
-    margin-left: 26px;
-  }
-
   #main > .list-container.collapsed,
   #main > .page-header.collapsed .header-breadcrumbs:not(.fixed-header-breadcrumbs),
   #main > .page-header.collapsed .header-buttons-container.full-row,
-  #main > .record > .detail > .detail-button-container.collapsed,
   #main > .page-header.collapsed .overview-filters-container {
-    margin-left: 279px;
     width: calc(100% - 279px);
+  }
+
+  #main > .record > .detail > .detail-button-container.collapsed {
+    left: 220px;
   }
 
   #main > .page-header.collapsed .overview-filters-container
@@ -19352,13 +19356,8 @@ table.table > thead th > div > a {
     width: auto;
   }
 
-  #main > .record > .detail > .detail-button-container.stick-sub.collapsed {
-    margin-left: 265px !important;
-    width: calc(100% - 500px);
-  }
-
   #main > .record > .detail > .detail-button-container.stick-sub.not-collapsed {
-    margin-left: 11px;
+    margin-left: 11px !important;
   }
 
   body.minimized #main > .record > .detail > .detail-button-container.stick-sub.collapsed {
@@ -19390,13 +19389,13 @@ table.table > thead th > div > a {
   }
 
   #main .detail .row > .overview.collapsed {
-    margin-left: 279px;
-    width: calc(75% - 279px);
+    margin-left: 0;
+    width: 75%;
   }
 
   #main .detail .row > .overview.not-collapsed {
-    margin-left: 25px;
-    width: calc(75% - 25px) !important;
+    margin-left: 26px;
+    width: calc(75% - 26px) !important;
   }
 }
 
@@ -20970,6 +20969,7 @@ body,
 .fixed-header-breadcrumbs {
   position: fixed;
   top: 15px;
+  left: 235px;
   z-index: 1040;
   white-space: nowrap;
   overflow: hidden;

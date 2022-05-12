@@ -37,6 +37,12 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
 
         template: 'record/tree-panel',
 
+        minWidth: 200,
+
+        maxWidth: 600,
+
+        currentWidth: null,
+
         events: {
             'click button[data-action="collapsePanel"]': function () {
                 this.actionCollapsePanel();
@@ -58,6 +64,8 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             this.wait(true);
             this.buildSearch();
             this.wait(false);
+
+            this.currentWidth = this.getStorage().get('panelWidth', this.scope) || this.minWidth
         },
 
         data() {
@@ -86,6 +94,66 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                     const title = this.translate("useDragAndDrop");
                     $('.jqtree-title:not([title="' + title + '"])').attr('title', title);
                 }, 100);
+            }
+
+            this.treePanelResize();
+
+            $(window).on('resize', () => {
+                this.treePanelResize()
+            });
+        },
+
+        treePanelResize() {
+            if ($(window).width() >= 768) {
+                const resizer = this.$el.find('.category-panel-resizer');
+
+                if (resizer) {
+                    resizer.off('mousedown');
+                    resizer.off('mouseup');
+
+                    if (!this.$el.hasClass('catalog-tree-panel-hidden')) {
+                        this.trigger('tree-width-changed', this.currentWidth);
+                        this.$el.css('width', this.currentWidth + 'px');
+
+                        // click on resize bar
+                        resizer.mousedown(function (e) {
+                            let initPositionX = e.pageX;
+                            let initWidth = this.$el.outerWidth();
+
+                            // change tree panel width
+                            $('body').mousemove(function (event) {
+                                let positionX = event.pageX;
+
+                                // if horizontal mouse move
+                                if (initPositionX !== positionX) {
+                                    let width = initWidth + (positionX - initPositionX);
+
+                                    if (width >= this.minWidth && width <= this.maxWidth) {
+                                        this.currentWidth = width;
+
+                                        this.trigger('tree-width-changed', this.currentWidth);
+                                        this.$el.css('width', this.currentWidth + 'px');
+                                    }
+                                }
+                            }.bind(this));
+                        }.bind(this));
+
+                        // setup new width
+                        resizer.add('body').mouseup(function () {
+                            if (this.currentWidth) {
+                                this.getStorage().set('panelWidth', this.scope, this.currentWidth)
+                            }
+
+                            $('body').off('mousemove');
+                        }.bind(this));
+                    } else {
+                        this.$el.css('width', 'unset');
+
+                        this.trigger('tree-width-changed', this.$el.outerWidth());
+                    }
+                }
+            } else {
+                this.trigger('tree-width-unset');
             }
         },
 
@@ -314,6 +382,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                 this.getStorage().set('catalog-tree-panel', this.scope, isCollapsed ? '' : 'collapsed');
             }
 
+            this.treePanelResize();
             $(window).trigger('resize');
         },
 
