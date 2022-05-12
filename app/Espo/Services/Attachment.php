@@ -35,15 +35,12 @@
 
 namespace Espo\Services;
 
-use Espo\Core\Exceptions\NotFound;
-use \Espo\ORM\Entity;
-
-use \Espo\Core\Exceptions\BadRequest;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\Error;
-use Treo\Core\EventManager\Event;
-use Treo\Core\FilePathBuilder;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Utils\Util;
+use Espo\ORM\Entity;
+use Treo\Core\FilePathBuilder;
 
 class Attachment extends Record
 {

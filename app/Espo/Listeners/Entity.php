@@ -37,9 +37,9 @@ declare(strict_types=1);
 
 namespace Espo\Listeners;
 
+use Espo\Core\EventManager\Event;
 use Espo\Hooks\Common;
 use Espo\ORM\Entity as OrmEntity;
-use Treo\Core\EventManager\Event;
 
 /**
  * Class Entity

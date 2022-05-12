@@ -38,9 +38,9 @@ declare(strict_types=1);
 namespace Espo\Listeners;
 
 use Espo\Core\Application as App;
+use Espo\Core\EventManager\Event;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
-use Treo\Core\EventManager\Event;
 
 /**
  * Class PortalEntity

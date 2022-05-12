@@ -38,13 +38,13 @@ declare(strict_types=1);
 namespace Treo\Core;
 
 use Espo\Core\Container;
+use Espo\Core\EventManager\Event;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Util;
-use Espo\Core\Utils\Json;
-use Espo\Core\Exceptions\NotFound;
 use Slim\Http\Request;
 use StdClass;
-use Treo\Core\EventManager\Event;
 
 /**
  * ControllerManager class

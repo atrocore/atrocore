@@ -38,7 +38,7 @@ declare(strict_types=1);
 namespace Treo\Core\Utils\Database\Schema;
 
 use Espo\Core\Container;
-use Treo\Core\EventManager\Event;
+use Espo\Core\EventManager\Event;
 
 /**
  * Class Schema

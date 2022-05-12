@@ -38,11 +38,11 @@ declare(strict_types=1);
 namespace Espo\Core\Templates\Services;
 
 use Espo\Core\Container;
+use Espo\Core\EventManager\Event;
 use Espo\Core\Services\Base;
 use Espo\Core\Utils\Config;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
-use Treo\Core\EventManager\Event;
 
 /**
  * Class HasContainer

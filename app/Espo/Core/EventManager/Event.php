@@ -35,23 +35,70 @@
 
 declare(strict_types=1);
 
-namespace Espo\Listeners;
-
-use Espo\Core\EventManager\Event;
+namespace Espo\Core\EventManager;
 
 /**
- * Class SettingsController
+ * Class Event
  */
-class SettingsController extends AbstractListener
+class Event extends \Symfony\Contracts\EventDispatcher\Event
 {
     /**
-     * @param Event $event
+     * @var array
      */
-    public function afterActionUpdate(Event $event): void
+    protected $arguments = [];
+
+    /**
+     * Event constructor.
+     *
+     * @param array $arguments
+     */
+    public function __construct(array $arguments = [])
     {
-        // regenerate multilang fields
-        if (isset($event->getArgument('data')->inputLanguageList) || !empty($event->getArgument('data')->isMultilangActive)) {
-            $this->getContainer()->get('dataManager')->rebuild();
+        $this->arguments = $arguments;
+    }
+
+    /**
+     * @return array
+     */
+    public function getArguments(): array
+    {
+        return $this->arguments;
+    }
+
+    /**
+     * @param mixed $key
+     *
+     * @return mixed
+     */
+    public function getArgument($key)
+    {
+        if (!$this->hasArgument($key)) {
+            return null;
         }
+
+        return $this->arguments[$key];
+    }
+
+    /**
+     * @param mixed $key
+     *
+     * @return bool
+     */
+    public function hasArgument($key): bool
+    {
+        return isset($this->arguments[$key]);
+    }
+
+    /**
+     * @param mixed $key
+     * @param mixed $value
+     *
+     * @return Event
+     */
+    public function setArgument($key, $value): Event
+    {
+        $this->arguments[$key] = $value;
+
+        return $this;
     }
 }

@@ -36,11 +36,11 @@
 namespace Espo\Core\Utils;
 
 use Espo\Core\Container;
+use Espo\Core\EventManager\Event;
 use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\FieldManager\Hooks\Base as BaseHook;
 use Espo\Core\Utils\Metadata\Helper;
-use Treo\Core\EventManager\Event;
 
 /**
  * Class FieldManager

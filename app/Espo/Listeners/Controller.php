@@ -37,7 +37,7 @@ declare(strict_types=1);
 
 namespace Espo\Listeners;
 
-use Treo\Core\EventManager\Event;
+use Espo\Core\EventManager\Event;
 
 /**
  * Class Controller

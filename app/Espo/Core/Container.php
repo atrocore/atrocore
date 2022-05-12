@@ -37,18 +37,18 @@ declare(strict_types=1);
 
 namespace Espo\Core;
 
-use Espo\Core\Utils\Language;
-use Espo\Entities\Portal;
-use Espo\Entities\User;
+use Espo\Core\EventManager\Manager as EventManager;
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Log;
 use Espo\Core\Utils\Log\Monolog\Handler\RotatingFileHandler;
 use Espo\Core\Utils\Log\Monolog\Handler\StreamHandler;
+use Espo\Core\Utils\Metadata;
+use Espo\Entities\Portal;
+use Espo\Entities\User;
 use Monolog\ErrorHandler;
-use Treo\Core\EventManager\Manager as EventManager;
 use Treo\Core\ModuleManager\Manager as ModuleManager;
 use Treo\Core\Utils\File\Manager as FileManager;
-use Espo\Core\Utils\Metadata;
 
 /**
  * Class Container

@@ -38,10 +38,10 @@ declare(strict_types=1);
 namespace Espo\Core\Utils;
 
 use Espo\Core\DataManager;
+use Espo\Core\EventManager\Event;
+use Espo\Core\EventManager\Manager as EventManager;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\File\Unifier;
-use Treo\Core\EventManager\Event;
-use Treo\Core\EventManager\Manager as EventManager;
 use Treo\Core\ModuleManager\Manager as ModuleManager;
 
 /**

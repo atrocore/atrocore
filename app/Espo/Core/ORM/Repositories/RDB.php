@@ -35,14 +35,14 @@
 
 namespace Espo\Core\ORM\Repositories;
 
+use Espo\Core\EventManager\Event;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Utils\Json;
-use Espo\ORM\EntityManager;
-use Espo\ORM\EntityFactory;
-use Espo\ORM\Entity;
 use Espo\Core\Interfaces\Injectable;
+use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
-use Treo\Core\EventManager\Event;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityFactory;
+use Espo\ORM\EntityManager;
 
 class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 {

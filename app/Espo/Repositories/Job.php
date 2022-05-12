@@ -35,8 +35,8 @@
 
 namespace Espo\Repositories;
 
+use Espo\Core\EventManager\Event;
 use Espo\ORM\Entity;
-use Treo\Core\EventManager\Event;
 
 class Job extends \Espo\Core\ORM\Repositories\RDB
 {

@@ -37,9 +37,9 @@ declare(strict_types=1);
 
 namespace Espo\Listeners;
 
+use Espo\Core\EventManager\Event;
 use Espo\ORM\Entity;
 use stdClass;
-use Treo\Core\EventManager\Event;
 
 /**
  * Class AppController

@@ -37,16 +37,16 @@ namespace Espo\Core\SelectManagers;
 
 use Espo\Core\Acl;
 use Espo\Core\AclManager;
+use Espo\Core\EventManager\Event;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\InjectableFactory;
+use Espo\Core\ORM\Repositories\RDB;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
-use Espo\Core\Utils\Metadata;
-use Espo\Core\Utils\Config;
-use Espo\Core\InjectableFactory;
 use Treo\Core\SelectManagerFactory;
-use Espo\Core\ORM\Repositories\RDB;
-use Treo\Core\EventManager\Event;
 
 class Base
 {

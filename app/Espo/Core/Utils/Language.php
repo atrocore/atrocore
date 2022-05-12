@@ -38,11 +38,11 @@ declare(strict_types=1);
 namespace Espo\Core\Utils;
 
 use Espo\Core\Container;
-use Espo\Core\Utils\File\Unifier;
+use Espo\Core\EventManager\Event;
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Utils\File\Unifier;
 use Espo\Entities\Preferences;
 use Treo\Console\RefreshTranslations;
-use Treo\Core\EventManager\Event;
 
 /**
  * Class Language

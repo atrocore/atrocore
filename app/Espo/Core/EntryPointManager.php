@@ -35,9 +35,9 @@
 
 namespace Espo\Core;
 
+use Espo\Core\EventManager\Event;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Utils\Util;
-use Treo\Core\EventManager\Event;
 
 class EntryPointManager
 {

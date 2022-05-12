@@ -37,6 +37,7 @@ declare(strict_types=1);
 
 namespace Espo\Core\Templates\Services;
 
+use Espo\Core\EventManager\Event;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Error;
@@ -46,7 +47,6 @@ use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\Services\Record;
-use Treo\Core\EventManager\Event;
 use Treo\Core\Exceptions\NotModified;
 
 class Hierarchy extends Record

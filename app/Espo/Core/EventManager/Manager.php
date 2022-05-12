@@ -35,7 +35,7 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core\EventManager;
+namespace Espo\Core\EventManager;
 
 use Espo\Core\Container;
 use Espo\Core\DataManager;

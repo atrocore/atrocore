@@ -37,10 +37,10 @@ declare(strict_types=1);
 
 namespace Espo\Listeners;
 
+use Espo\Core\EventManager\Event;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
-use Treo\Core\EventManager\Event;
 
 /**
  * Class FieldManager
