@@ -33,27 +33,16 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-namespace Treo\AclPortal;
+namespace Espo\AclPortal;
 
-use \Espo\Entities\User;
-use \Espo\ORM\Entity;
+use Espo\Core\AclPortal\Base;
+use Espo\Entities\User;
+use Espo\ORM\Entity;
 
-class Account extends \Espo\Core\AclPortal\Base
+class Account extends Base
 {
-    /**
-     * @param User $user
-     * @param Entity $entity
-     *
-     * @return bool
-     */
     public function checkInAccount(User $user, Entity $entity)
     {
-        $accountId = $user->get('accountId');
-        if (!empty($accountId)) {
-            if (in_array($entity->id, $accountId)) {
-                return true;
-            }
-        }
-        return false;
+        return !empty($accountId = $user->get('accountId')) && in_array($entity->id, $accountId);
     }
 }
