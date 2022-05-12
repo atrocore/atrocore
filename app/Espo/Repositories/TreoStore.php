@@ -35,11 +35,8 @@
 
 declare(strict_types=1);
 
-namespace Treo\Repositories;
+namespace Espo\Repositories;
 
-/**
- * Class TreoStore
- */
 class TreoStore extends \Espo\Core\Templates\Repositories\Base
 {
 }

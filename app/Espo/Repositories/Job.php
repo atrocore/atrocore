@@ -36,6 +36,7 @@
 namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
+use Treo\Core\EventManager\Event;
 
 class Job extends \Espo\Core\ORM\Repositories\RDB
 {
@@ -47,19 +48,13 @@ class Job extends \Espo\Core\ORM\Repositories\RDB
 
     protected $processFieldsAfterRemoveDisabled = true;
 
-    protected function init()
-    {
-        parent::init();
-        $this->addDependency('config');
-    }
-
-    protected function getConfig()
-    {
-        return $this->getInjection('config');
-    }
-
     public function beforeSave(Entity $entity, array $options = array())
     {
+        $event = $this->dispatch('JobEntity', 'beforeSave', ['entity' => $entity, 'options' => $options]);
+
+        $entity = $event->getArgument('entity');
+        $options = $event->getArgument('options');
+
         if (!$entity->has('executeTime') && $entity->isNew()) {
             $entity->set('executeTime', date('Y-m-d H:i:s'));
         }
@@ -68,5 +63,33 @@ class Job extends \Espo\Core\ORM\Repositories\RDB
             $attempts = $this->getConfig()->get('jobRerunAttemptNumber', 0);
             $entity->set('attempts', $attempts);
         }
+    }
+
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        $event = $this->dispatch('JobEntity', 'afterRemove', ['entity' => $entity, 'options' => $options]);
+
+        $entity = $event->getArgument('entity');
+        $options = $event->getArgument('options');
+
+        parent::afterRemove($entity, $options);
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('config');
+        $this->addDependency('eventManager');
+    }
+
+    protected function getConfig()
+    {
+        return $this->getInjection('config');
+    }
+
+    protected function dispatch(string $target, string $action, array $data = []): Event
+    {
+        return $this->getInjection('eventManager')->dispatch($target, $action, new Event($data));
     }
 }
