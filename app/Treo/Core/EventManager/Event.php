@@ -40,6 +40,6 @@ namespace Treo\Core\EventManager;
 /**
  * @deprecated from 12.05.2022
  */
-class Event extends \Espo\Core\EventManager\Event
+class Event extends \Symfony\Contracts\EventDispatcher\Event
 {
 }
