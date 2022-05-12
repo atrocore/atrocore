@@ -48,16 +48,10 @@ use Treo\Core\ModuleManager\Manager;
 
 class Installer extends \Espo\Core\Templates\Services\HasContainer
 {
-
     /**
      * @var PasswordHash
      */
     protected $passwordHash = null;
-
-    /**
-     * @var null|array
-     */
-    protected $installConfig = null;
 
     /**
      * Get requireds list
@@ -432,15 +426,30 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
      */
     protected function getInstallConfig(): array
     {
-        if (is_null($this->installConfig)) {
-            // prepare path to file
-            $configFile = CORE_PATH . '/Treo/Configs/Install.php';
-
-            // get data
-            $this->installConfig = include $configFile;
-        }
-
-        return $this->installConfig;
+        return [
+            'requirements' => [
+                'phpVersion'   => '7.1',
+                'phpRequires'  => [
+                    'json',
+                    'openssl',
+                    'pdo_mysql',
+                    'mbstring',
+                    'zip',
+                    'gd',
+                    'curl',
+                    'xml',
+                    'exif'
+                ],
+                'phpSettings'  => [
+                    'max_execution_time'  => 180,
+                    'max_input_time'      => 180,
+                    'memory_limit'        => '256M',
+                    'post_max_size'       => '20M',
+                    'upload_max_filesize' => '20M'
+                ],
+                'mysqlVersion' => '5.5.3'
+            ]
+        ];
     }
 
     /**
