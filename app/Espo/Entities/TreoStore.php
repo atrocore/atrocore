@@ -33,14 +33,11 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-namespace Treo\Entities;
+declare(strict_types=1);
 
-/**
- * Class Account
- *
- * @package Treo\Entities
- */
-class Account extends \Espo\Core\ORM\Entity
+namespace Espo\Entities;
+
+class TreoStore extends \Espo\Core\Templates\Entities\Base
 {
-
+    protected $entityType = "TreoStore";
 }

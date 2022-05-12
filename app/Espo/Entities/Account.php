@@ -33,13 +33,8 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-namespace Treo\Services;
+namespace Espo\Entities;
 
-/**
- * Class AbstractService
- *
- * @deprecated from 23.02.2021
- */
-abstract class AbstractService extends \Espo\Core\Templates\Services\HasContainer
+class Account extends \Espo\Core\ORM\Entity
 {
 }
