@@ -33,23 +33,8 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-declare(strict_types=1);
+namespace Espo\Controllers;
 
-namespace Treo\Controllers;
-
-use Espo\Controllers\Admin as Base;
-use Espo\Core\Exceptions\NotFound;
-
-/**
- * Controller Admin
- */
-class Admin extends Base
+class Account extends \Espo\Core\Controllers\Record
 {
-    /**
-     * @throws NotFound
-     */
-    public function actionNotFound()
-    {
-        throw new NotFound();
-    }
 }

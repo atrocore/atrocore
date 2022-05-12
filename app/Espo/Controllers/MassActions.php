@@ -35,12 +35,10 @@
 
 declare(strict_types=1);
 
-namespace Treo\Controllers;
+namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
-use Slim\Http\Request;
-use Treo\Core\EventManager\Event;
 
 class MassActions extends \Espo\Core\Controllers\Base
 {

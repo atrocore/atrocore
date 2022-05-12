@@ -35,16 +35,10 @@
 
 declare(strict_types=1);
 
-namespace Treo\Controllers;
+namespace Espo\Controllers;
 
-/**
- * Class TreoStore
- */
 class TreoStore extends \Espo\Core\Templates\Controllers\Base
 {
-    /**
-     * @inheritdoc
-     */
     protected function fetchListParamsFromRequest(&$params, $request, $data)
     {
         // parent

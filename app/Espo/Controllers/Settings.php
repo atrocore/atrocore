@@ -60,6 +60,8 @@ class Settings extends \Espo\Core\Controllers\Base
         $data['jsLibs'] = $this->getMetadata()->get('app.jsLibs');
         $data['themes'] = $this->getMetadata()->get('themes');
 
+        $data = $this->prepareTabList($data);
+
         return $data;
     }
 
@@ -124,5 +126,20 @@ class Settings extends \Espo\Core\Controllers\Base
         $ldapClient->bind(); //an exception if no connection
 
         return true;
+    }
+
+    protected function prepareTabList(array $config): array
+    {
+        if (!empty($config['tabList'])) {
+            $newTabList = [];
+            foreach ($config['tabList'] as $item) {
+                if (is_string($item) && ($this->getMetadata()->get("scopes.$item.tab") || $item == '_delimiter_')) {
+                    $newTabList[] = $item;
+                }
+            }
+            $config['tabList'] = $newTabList;
+        }
+
+        return $config;
     }
 }

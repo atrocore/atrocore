@@ -35,16 +35,13 @@
 
 declare(strict_types=1);
 
-namespace Treo\Controllers;
+namespace Espo\Controllers;
 
 use Espo\Core\Controllers\Base;
-use Slim\Http\Request;
 use Espo\Core\Exceptions;
+use Slim\Http\Request;
 use Treo\Services\Installer as InstallerService;
 
-/**
- * Class Installer
- */
 class Installer extends Base
 {
     public function actionGetTranslations($params, $data, Request $request): array

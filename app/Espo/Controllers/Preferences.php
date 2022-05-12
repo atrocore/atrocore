@@ -137,7 +137,10 @@ class Preferences extends \Espo\Core\Controllers\Base
             $entity->clear($attribute);
         }
 
-        return $entity->getValueMap();
+        $result = $entity->getValueMap();
+        $result->defaultCurrency = null;
+
+        return $result;
     }
 
     public function postActionResetDashboard($params, $data)

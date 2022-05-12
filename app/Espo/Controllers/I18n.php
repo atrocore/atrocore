@@ -39,9 +39,14 @@ class I18n extends \Espo\Core\Controllers\Base
 {
     public function actionRead($params, $data, $request)
     {
+        if (!empty($request->get('locale'))) {
+            $this->getContainer()->get('language')->setLanguage($request->get('locale'));
+        }
+
         if ($request->get('default')) {
             return $this->getContainer()->get('defaultLanguage')->getAll();
         }
+
         return $this->getContainer()->get('language')->getAll();
     }
 }

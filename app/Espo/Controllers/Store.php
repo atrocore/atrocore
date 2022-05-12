@@ -35,32 +35,23 @@
 
 declare(strict_types=1);
 
-namespace Treo\Controllers;
+namespace Espo\Controllers;
 
-/**
- * Controller I18n
- */
-class I18n extends \Espo\Controllers\I18n
+use Espo\Core\Exceptions;
+use Slim\Http\Request;
+
+class Store extends \Espo\Core\Controllers\Base
 {
-    /**
-     * Read action
-     *
-     * @param array $params
-     * @param array $data
-     * @param mixed $request
-     *
-     * @return mixed
-     */
-    public function actionRead($params, $data, $request)
+    public function actionList($params, $data, Request $request): array
     {
-        if (!empty($locale = $request->get('locale'))) {
-            // set locale
-            $this
-                ->getContainer()
-                ->get('language')
-                ->setLanguage($locale);
+        if (!$this->getUser()->isAdmin()) {
+            throw new Exceptions\Forbidden();
         }
 
-        return parent::actionRead($params, $data, $request);
+        if (!$request->isGet()) {
+            throw new Exceptions\BadRequest();
+        }
+
+        return $this->getService('Store')->getList();
     }
 }

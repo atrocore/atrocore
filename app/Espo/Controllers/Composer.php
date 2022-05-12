@@ -35,7 +35,7 @@
 
 declare(strict_types=1);
 
-namespace Treo\Controllers;
+namespace Espo\Controllers;
 
 use Espo\Core\Controllers\Base;
 use Espo\Core\Exceptions;
@@ -43,9 +43,6 @@ use Espo\Core\Utils\Json;
 use Slim\Http\Request;
 use Treo\Services\Composer as ComposerService;
 
-/**
- * Composer controller
- */
 class Composer extends Base
 {
     public function actionRunUpdate($params, $data, Request $request): bool

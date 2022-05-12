@@ -35,16 +35,13 @@
 
 declare(strict_types=1);
 
-namespace Treo\Controllers;
+namespace Espo\Controllers;
 
-use Espo\Core\Exceptions;
-use Treo\Services\DashletInterface;
-use Slim\Http\Request;
 use Espo\Core\Controllers\Base;
+use Espo\Core\Exceptions;
+use Slim\Http\Request;
+use Treo\Services\DashletInterface;
 
-/**
- * Class DashletController
- */
 class Dashlet extends Base
 {
     public function actionGetDashlet($params, $data, Request $request): array

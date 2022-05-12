@@ -49,6 +49,11 @@ class Admin extends \Espo\Core\Controllers\Base
         }
     }
 
+    public function actionNotFound()
+    {
+        throw new NotFound();
+    }
+
     public function postActionClearCache(): bool
     {
         return $this->getContainer()->get('dataManager')->clearCache();
