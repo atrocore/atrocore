@@ -42,6 +42,7 @@ use Espo\ORM\Metadata;
 use Treo\Core\Utils\File\Manager;
 use Treo\Core\Utils\Random;
 use Espo\Core\Utils\Util;
+use Espo\Core\Container;
 
 /**
  * Class FilePathBuilder

@@ -47,6 +47,7 @@ use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Route;
 use Espo\Entities\Portal;
 use Espo\Services\Installer;
+use Espo\Core\Container;
 
 /**
  * Class Application

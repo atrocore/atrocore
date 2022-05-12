@@ -37,6 +37,7 @@ declare(strict_types=1);
 
 namespace Treo\Core;
 
+use Espo\Core\Container;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Interfaces\Injectable;
 
