@@ -37,7 +37,7 @@ declare(strict_types=1);
 
 namespace Treo\Core\Loaders;
 
-use Treo\Core\CronManager as Instance;
+use Espo\Core\CronManager as Instance;
 
 /**
  * CronManager loader

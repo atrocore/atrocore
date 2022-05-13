@@ -49,6 +49,13 @@ class InjectableFactory
 
     public function createByClassName($className)
     {
+        if (strpos($className, 'Espo\\') !== false) {
+            $treoClassName = str_replace('Espo\\', 'Treo\\', $className);
+            if (class_exists($treoClassName)) {
+                $className = $treoClassName;
+            }
+        }
+
         if (class_exists($className)) {
             $service = new $className();
             if (!($service instanceof \Espo\Core\Interfaces\Injectable)) {
