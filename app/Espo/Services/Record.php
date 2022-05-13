@@ -44,6 +44,7 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Core\PseudoTransactionManager;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Language;
+use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
@@ -194,6 +195,9 @@ class Record extends \Espo\Core\Services\Base
         return $this->getInjection('fileManager');
     }
 
+    /**
+     * @return Metadata
+     */
     protected function getMetadata()
     {
         return $this->getInjection('metadata');

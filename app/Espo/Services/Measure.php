@@ -40,8 +40,6 @@ namespace Espo\Services;
 use Espo\Core\Templates\Services\Base;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
-use Espo\ORM\Entity;
-use Espo\Repositories\Measure as Repository;
 
 /**
  * Class Measure
@@ -50,45 +48,43 @@ class Measure extends Base
 {
     public function getUnitsOfMeasure()
     {
-        if (!file_exists(Repository::CACHE_DIR)) {
-            Util::createDir(Repository::CACHE_DIR);
+        $cacheName = 'measures_' . $this->getUser()->get('id');
+
+        $result = $this->getMetadata()->getDataManager()->getCacheData($cacheName, false);
+        if (!empty($result)) {
+            return $result;
         }
 
-        $cacheFile = sprintf(Repository::CACHE_FILE, $this->getUser()->get('id'));
-        if (!file_exists($cacheFile)) {
-            $data = $this->findEntities(['maxSize' => \PHP_INT_MAX]);
+        $data = $this->findEntities(['maxSize' => \PHP_INT_MAX]);
 
-            $result = [];
-            if (!empty($data['total'])) {
-                $inputLanguageList = $this->getConfig()->get('inputLanguageList', []);
-                foreach ($data['collection'] as $measure) {
-                    if (empty($units = $measure->get('units')) || count($units) == 0) {
-                        continue 1;
-                    }
+        $result = [];
+        if (!empty($data['total'])) {
+            $inputLanguageList = $this->getConfig()->get('inputLanguageList', []);
+            foreach ($data['collection'] as $measure) {
+                if (empty($units = $measure->get('units')) || count($units) == 0) {
+                    continue 1;
+                }
 
-                    $result[$measure->get('name')]['unitListData'] = [];
-                    foreach ($units as $unit) {
-                        $result[$measure->get('name')]['unitList'][] = $unit->get('name');
-                        $result[$measure->get('name')]['unitListData'][$unit->get('id')] = [
-                            'id'          => $unit->get('id'),
-                            'name'        => $unit->get('name'),
-                            'isDefault'   => $unit->get('isDefault'),
-                            'multiplier'  => $unit->get('multiplier'),
-                            'convertToId' => $unit->get('convertToId'),
-                        ];
-                    }
+                $result[$measure->get('name')]['unitListData'] = [];
+                foreach ($units as $unit) {
+                    $result[$measure->get('name')]['unitList'][] = $unit->get('name');
+                    $result[$measure->get('name')]['unitListData'][$unit->get('id')] = [
+                        'id'          => $unit->get('id'),
+                        'name'        => $unit->get('name'),
+                        'isDefault'   => $unit->get('isDefault'),
+                        'multiplier'  => $unit->get('multiplier'),
+                        'convertToId' => $unit->get('convertToId'),
+                    ];
+                }
 
-                    foreach ($inputLanguageList as $locale) {
-                        $result[$measure->get('name')]['unitListTranslates'][$locale] = array_column($units->toArray(), 'name' . ucfirst(Util::toCamelCase(strtolower($locale))));
-                    }
+                foreach ($inputLanguageList as $locale) {
+                    $result[$measure->get('name')]['unitListTranslates'][$locale] = array_column($units->toArray(), 'name' . ucfirst(Util::toCamelCase(strtolower($locale))));
                 }
             }
-            $result = Json::encode($result);
-            file_put_contents($cacheFile, $result);
-        } else {
-            $result = file_get_contents($cacheFile);
+
+            $this->getMetadata()->getDataManager()->setCacheData($cacheName, $result);
         }
 
-        return Json::decode($result);
+        return Json::decode(Json::encode($result));
     }
 }

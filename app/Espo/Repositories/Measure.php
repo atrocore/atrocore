@@ -48,9 +48,6 @@ use Espo\ORM\Entity;
  */
 class Measure extends Base
 {
-    public const CACHE_DIR = 'data/cache/measures';
-    public const CACHE_FILE = self::CACHE_DIR . '/measures_%s.json';
-
     public function refreshCache(): void
     {
         $this->getInjection('dataManager')->clearCache();
