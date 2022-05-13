@@ -62,8 +62,6 @@ class CronManager
 
     const FAILED = 'Failed';
 
-    protected $lastRunTime = 'data/cache/application/cronLastRunTime.php';
-
     public function __construct(\Espo\Core\Container $container)
     {
         $this->container = $container;
@@ -120,7 +118,7 @@ class CronManager
 
     protected function getLastRunTime()
     {
-        $lastRunData = $this->getFileManager()->getPhpContents($this->lastRunTime);
+        $lastRunData = $this->container->get('dataManager')->getCacheData('cronLastRunTime');
 
         if (is_array($lastRunData) && !empty($lastRunData['time'])) {
             $lastRunTime = $lastRunData['time'];
@@ -133,10 +131,7 @@ class CronManager
 
     protected function setLastRunTime($time)
     {
-        $data = array(
-            'time' => $time,
-        );
-        return $this->getFileManager()->putPhpContents($this->lastRunTime, $data);
+        return $this->container->get('dataManager')->setCacheData('cronLastRunTime', ['time' => $time]);
     }
 
     protected function checkLastRunTime()
