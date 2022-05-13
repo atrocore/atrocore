@@ -120,7 +120,8 @@ class DataManager
 
         $cacheTimestamp = $this->getConfig()->get('cacheTimestamp');
         if (empty($cacheTimestamp)) {
-            $this->getConfig()->set('cacheTimestamp', time());
+            $cacheTimestamp = time();
+            $this->getConfig()->set('cacheTimestamp', $cacheTimestamp);
             $this->getConfig()->save();
         }
 

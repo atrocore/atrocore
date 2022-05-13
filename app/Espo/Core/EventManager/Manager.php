@@ -38,7 +38,6 @@ declare(strict_types=1);
 namespace Espo\Core\EventManager;
 
 use Espo\Core\Container;
-use Espo\Core\DataManager;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -126,43 +125,44 @@ class Manager extends EventDispatcher
      */
     protected function getClassNames(): array
     {
-        /** @var DataManager $dataManager */
         $dataManager = $this->container->get('dataManager');
 
-        if (empty($data = $dataManager->getCacheData('listeners'))) {
-            $listeners = [];
+        if (!empty($data = $dataManager->getCacheData('listeners'))) {
+            return $data;
+        }
 
-            $corePath = CORE_PATH . '/Espo/Listeners';
-            if (file_exists($corePath)) {
-                $this->parseDir('Espo', $corePath, $listeners);
-            }
+        $listeners = [];
 
-            foreach ($this->container->get('moduleManager')->getModules() as $id => $module) {
-                $module->loadListeners($listeners);
-            }
+        $corePath = CORE_PATH . '/Espo/Listeners';
+        if (file_exists($corePath)) {
+            $this->parseDir('Espo', $corePath, $listeners);
+        }
 
-            $data = [];
-            foreach ($listeners as $target => $classes) {
-                foreach ($classes as $listener) {
-                    // skip abstract classes
-                    try {
-                        $obj = new $listener;
-                    } catch (\Throwable $e) {
-                        continue 1;
-                    }
-                    if (!empty($methods = \get_class_methods($listener))) {
-                        foreach ($methods as $method) {
-                            if ($method != 'setContainer') {
-                                $data["$target.$method"][] = [$listener, $method];
-                            }
+        foreach ($this->container->get('moduleManager')->getModules() as $id => $module) {
+            $module->loadListeners($listeners);
+        }
+
+        $data = [];
+        foreach ($listeners as $target => $classes) {
+            foreach ($classes as $listener) {
+                // skip abstract classes
+                try {
+                    $obj = new $listener;
+                } catch (\Throwable $e) {
+                    continue 1;
+                }
+                if (!empty($methods = \get_class_methods($listener))) {
+                    foreach ($methods as $method) {
+                        if ($method != 'setContainer') {
+                            $data["$target.$method"][] = [$listener, $method];
                         }
                     }
                 }
             }
-
-            // caching
-            $dataManager->setCacheData('listeners', $data);
         }
+
+        // caching
+        $dataManager->setCacheData('listeners', $data);
 
         return $data;
     }
