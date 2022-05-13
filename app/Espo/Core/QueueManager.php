@@ -43,7 +43,6 @@ use Espo\ORM\Entity;
 use Espo\Orm\EntityManager;
 use Espo\Repositories\QueueItem as Repository;
 use Espo\Services\QueueManagerServiceInterface;
-use Treo\Core\ServiceFactory;
 
 /**
  * Class QueueManager

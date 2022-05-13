@@ -37,9 +37,6 @@ declare(strict_types=1);
 
 namespace Treo\Core\Loaders;
 
-/**
- * ServiceFactory loader
- */
 class ServiceFactory extends Base
 {
 
@@ -48,6 +45,6 @@ class ServiceFactory extends Base
      */
     public function load()
     {
-        return new \Treo\Core\ServiceFactory($this->getContainer());
+        return new \Espo\Core\ServiceFactory($this->getContainer());
     }
 }

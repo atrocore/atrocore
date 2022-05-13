@@ -43,7 +43,6 @@ use Espo\Entities\User;
 use Espo\ORM\EntityManager;
 use Espo\Services\Record;
 use PDO;
-use Treo\Core\ServiceFactory;
 
 class PseudoTransactionManager
 {
