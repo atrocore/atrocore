@@ -41,7 +41,6 @@ use Espo\Core\Application;
 use Espo\Core\PseudoTransactionManager;
 use Espo\Entities\User;
 use Espo\Services\Composer;
-use Treo\Core\ORM\EntityManager;
 
 /**
  * Class Daemon
@@ -91,7 +90,6 @@ class Daemon extends AbstractConsole
             }
 
             if (file_exists($log)) {
-                /** @var EntityManager $em */
                 $em = $this->getContainer()->get('entityManager');
 
                 /** @var User $user */

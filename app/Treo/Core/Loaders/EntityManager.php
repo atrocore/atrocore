@@ -84,7 +84,7 @@ class EntityManager extends Base
      */
     protected function getEntityManagerClassName(): string
     {
-        return \Treo\Core\ORM\EntityManager::class;
+        return \Espo\Core\ORM\EntityManager::class;
     }
 
     /**

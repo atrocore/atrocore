@@ -112,12 +112,16 @@ class EntityManager
 
         switch ($name) {
             case 'RDB':
-                $platform = $this->params['platform'];
-                $className = '\\Espo\\ORM\\DB\\' . ucfirst($platform) . 'Mapper';
+                $className = $this->getMysqlMapperClassName();
                 break;
         }
 
         return $className;
+    }
+
+    protected function getMysqlMapperClassName(): string
+    {
+        return \Espo\ORM\DB\MysqlMapper::class;
     }
 
     public function getMapper($name = 'RDB')

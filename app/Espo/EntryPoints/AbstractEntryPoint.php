@@ -44,7 +44,7 @@ use Espo\Core\Utils\NumberUtil;
 use Espo\Core\Utils\Language;
 use Espo\Entities\User;
 use Espo\Core\Container;
-use Treo\Core\ORM\EntityManager;
+use Espo\ORM\EntityManager;
 use Treo\Core\ServiceFactory;
 use Espo\Core\Utils\Config;
 use Treo\Core\Utils\File\Manager;
@@ -104,9 +104,6 @@ abstract class AbstractEntryPoint
         return $this->getContainer()->get('acl');
     }
 
-    /**
-     * @return EntityManager
-     */
     protected function getEntityManager(): EntityManager
     {
         return $this->getContainer()->get('entityManager');
