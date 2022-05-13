@@ -126,7 +126,7 @@ class DataManager
         }
 
         $timeDiff = time() - $cacheTimestamp;
-        if ($timeDiff < 30) {
+        if ($timeDiff < 10) {
             return false;
         }
 
