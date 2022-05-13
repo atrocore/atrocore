@@ -328,8 +328,8 @@ class Config
 
     public function getCachedLocales(): array
     {
-        if (file_exists(Locale::CACHE_FILE)) {
-            return Json::decode(file_get_contents(Locale::CACHE_FILE), true);
+        if (!empty($data = $this->container->get('dataManager')->getCacheData('locales'))) {
+            return $data;
         }
 
         $data = $this
@@ -351,9 +351,9 @@ class Config
             if (!empty($row['measure_id'])) {
                 $measureData = empty($row['measure_data']) ? [] : Json::decode($row['measure_data'], true);
                 $result[$row['id']]['measures'][$row['measure_id']] = [
-                    'id'    => $row['measure_id'],
-                    'name'  => $row['measure_name'],
-                    'units' => isset($measureData["locale_{$row['id']}"]) ? $measureData["locale_{$row['id']}"] : [],
+                    'id'          => $row['measure_id'],
+                    'name'        => $row['measure_name'],
+                    'units'       => isset($measureData["locale_{$row['id']}"]) ? $measureData["locale_{$row['id']}"] : [],
                     'defaultUnit' => isset($measureData["locale_{$row['id']}_default"]) ? $measureData["locale_{$row['id']}_default"] : ''
                 ];
             }
@@ -364,7 +364,7 @@ class Config
         }
 
         if (!empty($result)) {
-            file_put_contents(Locale::CACHE_FILE, Json::encode($result));
+            $this->container->get('dataManager')->setCacheData('locales', $result);
         }
 
         return $result;

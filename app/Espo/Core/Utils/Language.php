@@ -51,8 +51,6 @@ class Language
 {
     public const DEFAULT_LANGUAGE = 'en_US';
 
-    public const CACHE_FILE = 'data/cache/translations.json';
-
     /**
      * @var Unifier
      */
@@ -379,26 +377,27 @@ class Language
         }
     }
 
-    public function reload(): void
+    public function reload(): array
     {
         $data = [];
         $languageList = $this->container->get('metadata')->get('multilang.languageList', []);
         $dbData = $this->container->get('entityManager')->getRepository('Translation')->find();
-        if (count($dbData) > 0) {
-            foreach ($dbData as $record) {
-                foreach ($languageList as $locale) {
-                    $row = [];
-                    $field = Util::toCamelCase(strtolower($locale));
-                    if ($record->get($field) !== null) {
-                        $insideRow = [];
-                        $this->prepareTreeValue(explode('.', $record->get('name')), $insideRow, $record->get($field));
-                        $row[$record->get('module')][$locale] = $insideRow;
-                        $data = Util::merge($data, $row);
-                    }
+        foreach ($dbData as $record) {
+            foreach ($languageList as $locale) {
+                $row = [];
+                $field = Util::toCamelCase(strtolower($locale));
+                if ($record->get($field) !== null) {
+                    $insideRow = [];
+                    $this->prepareTreeValue(explode('.', $record->get('name')), $insideRow, $record->get($field));
+                    $row[$record->get('module')][$locale] = $insideRow;
+                    $data = Util::merge($data, $row);
                 }
             }
         }
-        file_put_contents(self::CACHE_FILE, Json::encode($data));
+
+        $this->container->get('dataManager')->setCacheData('translations', $data);
+
+        return $data;
     }
 
     protected function undelete(string $scope, string $category, string $name): void
@@ -420,10 +419,10 @@ class Language
         $data = [];
 
         if ($installed) {
-            if (!file_exists(self::CACHE_FILE)) {
-                $this->reload();
+            $data = $this->container->get('dataManager')->getCacheData('translations');
+            if (empty($data)) {
+                $data = $this->reload();
             }
-            $data = Json::decode(file_get_contents(self::CACHE_FILE), true);
         }
 
         if (empty($data)) {

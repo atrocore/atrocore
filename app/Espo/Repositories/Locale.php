@@ -42,19 +42,9 @@ use Espo\ORM\Entity;
 
 class Locale extends Base
 {
-    public const CACHE_FILE = 'data/cache/locales.json';
-
     public function refreshCache(): void
     {
-        if (!file_exists(self::CACHE_FILE)) {
-            return;
-        }
-
-        unlink(self::CACHE_FILE);
-
-        $this->getConfig()->set('cacheTimestamp', time());
-        $this->getConfig()->save();
-        DataManager::pushPublicData('dataTimestamp', time());
+        $this->getInjection('dataManager')->clearCache();
     }
 
     protected function afterSave(Entity $entity, array $options = [])
@@ -97,5 +87,6 @@ class Locale extends Base
         parent::init();
 
         $this->addDependency('language');
+        $this->addDependency('dataManager');
     }
 }

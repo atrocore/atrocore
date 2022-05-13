@@ -53,14 +53,7 @@ class Measure extends Base
 
     public function refreshCache(): void
     {
-        Util::removeDir(self::CACHE_DIR);
-        if (file_exists(Locale::CACHE_FILE)) {
-            unlink(Locale::CACHE_FILE);
-        }
-
-        $this->getConfig()->set('cacheTimestamp', time());
-        $this->getConfig()->save();
-        DataManager::pushPublicData('dataTimestamp', time());
+        $this->getInjection('dataManager')->clearCache();
     }
 
     /**
@@ -111,5 +104,12 @@ class Measure extends Base
         parent::afterRemove($entity, $options);
 
         $this->refreshCache();
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('dataManager');
     }
 }

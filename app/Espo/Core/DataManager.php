@@ -118,11 +118,19 @@ class DataManager
             return false;
         }
 
+        $cacheTimestamp = $this->getConfig()->get('cacheTimestamp');
+        if (empty($cacheTimestamp)) {
+            $this->getConfig()->set('cacheTimestamp', time());
+            $this->getConfig()->save();
+        }
+
+        $timeDiff = time() - $cacheTimestamp;
+        if ($timeDiff < 30) {
+            return false;
+        }
+
         self::createCacheDir();
         file_put_contents(self::CACHE_DIR_PATH . "/{$name}.json", Json::encode($data));
-
-        $this->getConfig()->set('cacheTimestamp', time());
-        $this->getConfig()->save();
 
         return true;
     }
