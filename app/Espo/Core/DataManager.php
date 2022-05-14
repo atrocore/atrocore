@@ -110,7 +110,7 @@ class DataManager
      */
     public function setCacheData(string $name, $data): bool
     {
-        if (!$this->getConfig()->get('useCache', false) || substr(php_sapi_name(), 0, 3) == 'cli') {
+        if (!$this->isUseCache($name)) {
             return false;
         }
 
@@ -136,6 +136,21 @@ class DataManager
         return true;
     }
 
+    public function isUseCache(string $name): bool
+    {
+        if (substr(php_sapi_name(), 0, 3) == 'cli') {
+            return false;
+        }
+
+        $useCache = $this->getConfig()->get('useCache', false);
+
+        if (in_array($name, ['translations'])) {
+            $useCache = true;
+        }
+
+        return $useCache;
+    }
+
     /**
      * @param string $name
      * @param bool   $isArray
@@ -144,7 +159,7 @@ class DataManager
      */
     public function getCacheData(string $name, $isArray = true)
     {
-        if (!$this->getConfig()->get('useCache', false) || !$this->isCacheExist($name)) {
+        if (!$this->isUseCache($name) || !$this->isCacheExist($name)) {
             return null;
         }
 
