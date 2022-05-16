@@ -6,5 +6,6 @@
   "QueueManagerMassDelete": "\\Espo\\Services\\QueueManagerMassDelete",
   "QueueManagerCreateThumbnails": "\\Espo\\Services\\QueueManagerCreateThumbnails",
   "MassActions": "\\Espo\\Services\\MassActions",
-  "ScheduledJob": "\\Espo\\Services\\ScheduledJob"
+  "ScheduledJob": "\\Espo\\Services\\ScheduledJob",
+  "Composer": "\\Espo\\Services\\Composer"
 }
