@@ -137,7 +137,8 @@
     "route": "/Settings",
     "method": "get",
     "params": {
-      "controller": "Settings"
+      "controller": "Settings",
+      "action": "read"
     },
     "conditions": {
       "auth": false
@@ -147,14 +148,16 @@
     "route": "/Settings",
     "method": "patch",
     "params": {
-      "controller": "Settings"
+      "controller": "Settings",
+      "action": "patch"
     }
   },
   {
     "route": "/Settings",
     "method": "put",
     "params": {
-      "controller": "Settings"
+      "controller": "Settings",
+      "action": "patch"
     }
   },
   {
