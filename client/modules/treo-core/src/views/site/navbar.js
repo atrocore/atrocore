@@ -122,6 +122,10 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                 ]
             });
 
+            this.createView('footer', 'treo-core:views/site/navbar-footer', {
+                el: `${this.options.el} footer`
+            })
+
             if (!this.getConfig().get('actionHistoryDisabled')) {
                 this.createView('lastViewedBadge', 'views/last-viewed/badge', {
                     el: this.options.el + ' .last-viewed-badge-container'

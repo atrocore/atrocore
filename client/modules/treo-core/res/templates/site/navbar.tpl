@@ -92,6 +92,7 @@
             </li>
             {{/if}}
         </ul>
+        <footer>{{{footer}}}</footer>
     </div>
 
     <div class="collapse navbar-collapse navbar-body">
