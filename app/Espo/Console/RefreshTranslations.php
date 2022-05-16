@@ -119,14 +119,7 @@ class RefreshTranslations extends AbstractConsole
             }
         }
 
-        $this->getContainer()->get('language')->reload();
-
-        $this->getConfig()->set('cacheTimestamp', time());
-        $this->getConfig()->save();
-        DataManager::pushPublicData('dataTimestamp', time());
-
-        // delete deprecated dir
-        Util::removeDir('custom/Espo/Custom/Resources/i18n');
+        $this->getContainer()->get('dataManager')->clearCache();
 
         // render
         self::show('Translations refreshed successfully.', self::SUCCESS);
