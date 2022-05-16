@@ -49,6 +49,8 @@ class DataManager
 
     public const PUBLIC_DATA_FILE_PATH = 'data/publicData.json';
 
+    public const MANDATORY_CACHED = ['translations', 'locales', 'cronLastRunTime'];
+
     /**
      * @var Container
      */
@@ -144,7 +146,7 @@ class DataManager
 
         $useCache = $this->getConfig()->get('useCache', false);
 
-        if (in_array($name, ['translations'])) {
+        if (in_array($name, self::MANDATORY_CACHED)) {
             $useCache = true;
         }
 
