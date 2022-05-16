@@ -144,13 +144,11 @@ class DataManager
             return false;
         }
 
-        $useCache = $this->getConfig()->get('useCache', false);
-
         if (in_array($name, self::MANDATORY_CACHED)) {
-            $useCache = true;
+            return true;
         }
 
-        return $useCache;
+        return $this->getConfig()->get('useCache', false);
     }
 
     /**
