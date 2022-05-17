@@ -214,6 +214,9 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
             Dep.prototype.afterRender.call(this);
 
             this.fullTableScroll();
+            $(window).on("resize.fixed-scrollbar tree-width-changed tree-width-unset", function () {
+                this.fullTableScroll();
+            }.bind(this));
 
             if (this.enabledFixedHeader) {
                 this.fixedTableHead()
@@ -237,7 +240,7 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
                 };
 
                 fixSize();
-                $(window).on("resize.fixed-scrollbar", function () {
+                $(window).on("resize.fixed-scrollbar tree-width-changed tree-width-unset", function () {
                     fixSize();
                 });
 
@@ -343,6 +346,7 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
 
                         let prevScrollLeft = 0;
 
+                        list.off('scroll');
                         list.on('scroll', () => {
                             if (prevScrollLeft !== list.scrollLeft()) {
                                 let fixedTableHeaderBasePosition = list.offset().left + 1 || 0;
@@ -549,7 +553,7 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
                 toggleClass();
 
                 $window.on('scroll', toggleClass);
-                $window.on('resize', function () {
+                $window.on('resize tree-width-changed tree-width-unset', function () {
                     this.fullTableScroll();
                     setPosition();
                     setWidth();
@@ -559,6 +563,7 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
 
         changeDropDownPosition() {
             let el = this.$el;
+
 
             el.on('show.bs.dropdown', function (e) {
                 let target = e.relatedTarget;

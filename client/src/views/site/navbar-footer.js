@@ -32,17 +32,55 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('views/home', 'view', function (Dep) {
+Espo.define('views/site/navbar-footer', 'treo-core:views/site/footer', function (Dep) {
 
     return Dep.extend({
 
-        template: 'home',
+        template: 'site/navbar-footer',
 
-        setup: function () {
-            this.createView('dashboard', 'views/dashboard', {
-                el: this.options.el + ' > .home-content'
-            });
+        version: null,
+
+        events: {
+            'click span.toggle-icon-up': function (e) {
+                $(e.target).addClass('hidden');
+
+
+                $('.footer-links').removeClass('hidden');
+                $('span.toggle-icon-down').removeClass('hidden');
+            },
+            'click span.toggle-icon-down': function (e) {
+                $(e.target).addClass('hidden');
+                $('.footer-links').addClass('hidden');
+
+                $('span.toggle-icon-up').removeClass('hidden');
+            }
+        },
+
+        setup() {
+            Dep.prototype.setup.call(this);
+
+            this.wait(true);
+            this.ajaxGetRequest('Composer/list').then(function (response) {
+                if (response.list) {
+                    response.list.forEach(item => {
+                        if (!this.version && item.id === 'TreoCore') {
+                            this.version = item.currentVersion;
+                        }
+                    });
+                }
+
+                this.wait(false);
+            }.bind(this));
+        },
+
+        data() {
+            return {
+                version: this.version
+            }
         }
+
     });
+
 });
+
 

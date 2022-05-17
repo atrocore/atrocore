@@ -70,7 +70,7 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
                         view.reRender();
                     }
                 });
-                view.listenTo(view, 'tree-width-changed', function (width) {
+                this.listenTo(view, 'tree-width-changed', function (width) {
                     const content = $('#content');
                     const main = content.find('#main');
 
@@ -79,24 +79,19 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
                     const overview = content.find('.overview');
                     const side = content.find('.side');
 
-                    const footer = $('footer');
-
-                    header.css('width', (main.width() - width) + 'px');
+                    header.outerWidth(main.width() - width - 9);
                     header.css('marginLeft', width + 'px');
 
-                    btnContainer.css('width', (main.outerWidth() - width) + 'px');
+                    btnContainer.outerWidth(main.width() - width - 9);
                     btnContainer.css('marginLeft', width + 'px');
 
-                    overview.css('width', (content.outerWidth() - side.outerWidth() - width) + 'px');
-                    overview.css('marginLeft', width + 'px');
-
-                    footer.css('width', (content.outerWidth() - width) + 'px');
+                    overview.outerWidth(content.innerWidth() - side.outerWidth() - width - 9);
+                    overview.css('marginLeft', (width - 1) + 'px');
                 });
-                view.listenTo(view, 'tree-width-unset', function () {
+                this.listenTo(view, 'tree-width-unset', function () {
                     $('.page-header').css({'width': 'unset', 'marginLeft': 'unset'});
                     $('.detail-button-container').css({'width': 'unset', 'marginLeft': 'unset'});
                     $('.overview').css({'width': 'unset', 'marginLeft': 'unset'});
-                    $('footer').css({'width': 'unset', 'marginLeft': 'unset'});
                 })
             });
         },

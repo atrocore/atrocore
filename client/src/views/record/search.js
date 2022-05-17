@@ -585,7 +585,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
             let positionLeft = entityName.find('span').innerWidth() + parseFloat(entityName.css('marginRight')) + parseFloat(entityName.css('paddingRight')) + parseFloat(searchContainer.css('paddingLeft')) + parseFloat(searchContainer.css('marginLeft'));
 
             if (searchContainer.has(this.$advancedFiltersPanel).length) {
-                let main = $('#main');
+                let list = $('.list-container');
                 let $window = $(window);
 
                 this.$advancedFiltersPanel.css({
@@ -594,14 +594,14 @@ Espo.define('views/record/search', 'view', function (Dep) {
 
                 if ($window.outerWidth() >= 768) {
                     this.$advancedFiltersPanel.css({
-                        'width': (main.outerWidth() - 40) + 'px'
+                        'width': list.outerWidth() + 'px'
                     });
                 }
 
                 $window.resize(function () {
                     if ($window.outerWidth() >= 768) {
                         this.$advancedFiltersPanel.css({
-                            'width': (main.outerWidth() - 40) + 'px'
+                            'width': list.outerWidth() + 'px'
                         });
                     } else {
                         this.$advancedFiltersPanel.css({

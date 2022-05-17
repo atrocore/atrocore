@@ -101,8 +101,6 @@ Espo.define('treo-core:views/admin/index', 'class-replace!treo-core:views/admin/
                     }
                 });
             }
-
-            $('footer').removeClass('is-collapsed not-collapsed');
         }
     })
 );

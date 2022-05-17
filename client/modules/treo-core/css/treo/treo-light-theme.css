@@ -4354,12 +4354,14 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
 
 .nav-pills > li {
   float: left;
+  margin-left: 4px;
+  margin-bottom: 5px;
 }
 
 .nav-pills > li > a {
-  -webkit-border-radius: 0;
-          border-radius: 0;
-  border-right: 1px solid #f4f4f4;
+  -webkit-border-radius: 3px;
+          border-radius: 3px;
+  border: 1px solid #eee;
 }
 
 .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
@@ -14650,7 +14652,6 @@ body > #header .navbar-brand span.home-icon {
   body > .content {
     height: auto;
     min-height: 100%;
-    padding-bottom: 42px;
   }
   body > footer {
     clear: both;
@@ -17415,9 +17416,72 @@ table.table {
   -moz-box-shadow: none;
 }
 
+#navbar footer > .copyright {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 10px;
+  position: relative;
+  border-top: 1px solid #e0e0e0;
+}
+
+#navbar footer span,
+#navbar footer a {
+  color: #111111;
+}
+
+#navbar footer > ul {
+  list-style: none;
+  border-top: 1px solid #e0e0e0;
+}
+
+@media screen and (max-width: 767px) {
+  #navbar footer {
+    margin: 0 -8px;
+  }
+
+  #navbar footer > ul {
+    padding-left: 0;
+  }
+
+  #navbar footer > .copyright,
+  #navbar footer > ul > li {
+    padding: 10px 15px;
+  }
+}
+
 @media screen and (min-width: 768px) {
   #navbar .nav.navbar-nav.navbar-right {
     background-color: #ececec;
+  }
+
+  #navbar footer {
+    width: 220px;
+    margin-left: -9px;
+    font-size: 12px;
+  }
+
+  .minimized #navbar footer {
+    display: none;
+  }
+
+  #navbar footer > ul {
+    width: 100%;
+    background-color: #ffffff;
+    padding: 10px 0 0 10px;
+    margin: 0;
+    position: absolute;
+    bottom: 27px;
+  }
+
+  #navbar footer > ul > li {
+    padding: 3px 0;
+  }
+
+  #navbar footer > .copyright {
+    background-color: #ffffff;
+    height: 28px;
   }
 }
 
@@ -19603,7 +19667,6 @@ button.category:focus {
     background-color: #dcdcdc;
   }
   body > .content {
-    padding-bottom: 28px;
     padding-left: 0;
   }
 
@@ -19663,7 +19726,7 @@ button.category:focus {
     right: 0;
   }
   .nav > li > a {
-    padding: 7px 15px;
+    padding: 6px 15px;
   }
   .home-content > .row.dashlets {
     margin-left: -15px;
@@ -20971,6 +21034,7 @@ body,
 }
 
 .fixed-header-breadcrumbs {
+  width: auto !important;
   position: fixed;
   top: 15px;
   left: 235px;
@@ -21426,7 +21490,7 @@ body,
   .stick-sub.button-container {
     margin: 56px 0 0 -15px;
     padding-top: 9px !important;
-    padding-bottom: 9px !important;
+    padding-bottom: 4px !important;
   }
   body .stick-sub.button-container.not-collapsed {
     width: calc(100% - 246px);

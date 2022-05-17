@@ -43,12 +43,6 @@ Espo.define('treo-core:views/preferences/record/edit', 'class-replace!treo-core:
             if (!this.model.get('isPortalUser')) {
                 this.showPanel('notifications');
             }
-        },
-
-        afterRender() {
-            Dep.prototype.afterRender.call(this);
-
-            $('footer').removeClass('is-collapsed not-collapsed');
         }
     });
 });
