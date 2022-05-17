@@ -122,7 +122,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                 ]
             });
 
-            this.createView('footer', 'treo-core:views/site/navbar-footer', {
+            this.createView('footer', 'views/site/navbar-footer', {
                 el: `${this.options.el} footer`
             })
 

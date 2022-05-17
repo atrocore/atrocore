@@ -32,11 +32,11 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('treo-core:views/site/navbar-footer', 'treo-core:views/site/footer', function (Dep) {
+Espo.define('views/site/navbar-footer', 'treo-core:views/site/footer', function (Dep) {
 
     return Dep.extend({
 
-        template: 'treo-core:site/navbar-footer',
+        template: 'site/navbar-footer',
 
         version: null,
 
