@@ -35,14 +35,6 @@
 Espo.define('views/detail-tree', 'views/detail',
     Dep => Dep.extend({
 
-        afterRender() {
-            Dep.prototype.afterRender.call(this);
-
-            if ($('.catalog-tree-panel').length) {
-                $('#footer').addClass('is-collapsed');
-            }
-        },
-
     })
 );
 

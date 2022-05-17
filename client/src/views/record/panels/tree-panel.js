@@ -98,7 +98,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
 
             this.treePanelResize();
 
-            $(window).on('resize', () => {
+            $(window).on('resize load', () => {
                 this.treePanelResize()
             });
         },
@@ -113,6 +113,8 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
 
                     if (!this.$el.hasClass('catalog-tree-panel-hidden')) {
                         this.trigger('tree-width-changed', this.currentWidth);
+                        $(window).trigger('tree-width-changed', this.currentWidth);
+
                         this.$el.css('width', this.currentWidth + 'px');
 
                         // click on resize bar
@@ -132,6 +134,8 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                                         this.currentWidth = width;
 
                                         this.trigger('tree-width-changed', this.currentWidth);
+                                        $(window).trigger('tree-width-changed', this.currentWidth);
+
                                         this.$el.css('width', this.currentWidth + 'px');
                                     }
                                 }
@@ -150,6 +154,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                         this.$el.css('width', 'unset');
 
                         this.trigger('tree-width-changed', this.$el.outerWidth());
+                        $(window).trigger('tree-width-changed', this.currentWidth);
                     }
                 }
             } else {
@@ -357,7 +362,6 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             if (isCollapsed) {
                 $categoryPanel.removeClass('hidden');
                 $('.page-header').addClass('collapsed').removeClass('not-collapsed');
-                $('#footer').addClass('collapsed').removeClass('not-collapsed');
                 if ($list.length > 0) {
                     $list.addClass('collapsed');
                 } else {
@@ -368,7 +372,6 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             } else {
                 $categoryPanel.addClass('hidden');
                 $('.page-header').removeClass('collapsed').addClass('not-collapsed');
-                $('#footer').addClass('not-collapsed').removeClass('collapsed');
                 if ($list.length > 0) {
                     $list.removeClass('collapsed');
                 } else {
