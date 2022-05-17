@@ -16692,6 +16692,10 @@ stream-head-text-container .span {
     padding: 2px 0 5px 37px
 }
 
+.log-list-container .complex-text b {
+    font-weight: normal;
+}
+
 .link-container .list-group-item {
     padding: 6px 10px;
     line-height: 19px
