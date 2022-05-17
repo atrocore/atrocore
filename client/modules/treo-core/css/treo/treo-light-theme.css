@@ -4354,12 +4354,14 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
 
 .nav-pills > li {
   float: left;
+  margin-left: 4px;
+  margin-bottom: 5px;
 }
 
 .nav-pills > li > a {
-  -webkit-border-radius: 0;
-          border-radius: 0;
-  border-right: 1px solid #f4f4f4;
+  -webkit-border-radius: 3px;
+          border-radius: 3px;
+  border: 1px solid #eee;
 }
 
 .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
@@ -19720,7 +19722,7 @@ button.category:focus {
     right: 0;
   }
   .nav > li > a {
-    padding: 7px 15px;
+    padding: 6px 15px;
   }
   .home-content > .row.dashlets {
     margin-left: -15px;
@@ -21484,7 +21486,7 @@ body,
   .stick-sub.button-container {
     margin: 56px 0 0 -15px;
     padding-top: 9px !important;
-    padding-bottom: 9px !important;
+    padding-bottom: 4px !important;
   }
   body .stick-sub.button-container.not-collapsed {
     width: calc(100% - 246px);

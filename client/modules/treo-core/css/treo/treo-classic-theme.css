@@ -4482,12 +4482,14 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
 }
 
 .nav-pills > li {
-    float: left
+    float: left;
+    margin-left: 4px;
+    margin-bottom: 5px;
 }
 
 .nav-pills > li > a {
     border-radius: 0;
-    border-right: 1px solid #f4f4f4;
+    border: 1px solid #eee;
 }
 
 .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
@@ -20336,13 +20338,13 @@ button.category:focus {
     }
 
     .nav > li > a {
-        padding: 7px 15px;
+        padding: 6px 15px;
     }
 
     .stick-sub.button-container {
         margin: 44px 0 0 -15px;
         padding-top: 9px !important;
-        padding-bottom: 5px !important
+        padding-bottom: 0 !important
     }
 
     body .stick-sub.button-container.not-collapsed {
