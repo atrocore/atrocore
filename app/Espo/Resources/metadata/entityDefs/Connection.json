@@ -21,27 +21,37 @@
     },
     "host": {
       "type": "varchar",
+      "notStorable": true,
+      "dataField": true,
       "required": false,
       "trim": true,
       "default": "localhost"
     },
     "dbName": {
       "type": "varchar",
+      "notStorable": true,
+      "dataField": true,
       "required": false,
       "trim": true
     },
     "port": {
       "type": "varchar",
+      "notStorable": true,
+      "dataField": true,
       "required": false,
       "trim": true
     },
     "user": {
       "type": "varchar",
+      "notStorable": true,
+      "dataField": true,
       "required": false,
       "trim": true
     },
     "password": {
       "type": "password",
+      "notStorable": true,
+      "dataField": true,
       "required": false,
       "trim": true
     },

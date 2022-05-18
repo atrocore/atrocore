@@ -37,6 +37,7 @@ declare(strict_types=1);
 
 namespace Treo\Migrations;
 
+use Espo\Core\Exceptions\Error;
 use Treo\Core\Migration\Base;
 
 class V1Dot4Dot41 extends Base
@@ -44,11 +45,34 @@ class V1Dot4Dot41 extends Base
     public function up(): void
     {
         $this->execute("ALTER TABLE `connection` ADD `data` MEDIUMTEXT DEFAULT NULL COLLATE utf8mb4_unicode_ci");
+
+        try {
+            $connections = $this->getPDO()->query("SELECT * FROM `connection` WHERE deleted=0")->fetchAll(\PDO::FETCH_ASSOC);
+        } catch (\Throwable $e) {
+            $connections = [];
+        }
+
+        foreach ($connections as $connection) {
+            $data = [
+                'db_name'  => $connection['db_name'],
+                'host'     => $connection['host'],
+                'password' => $connection['password'],
+                'port'     => $connection['port'],
+                'user'     => $connection['user'],
+            ];
+            $this->execute("UPDATE `connection` SET `data`='" . json_encode($data) . "' WHERE id='{$connection['id']}'");
+        }
+
+        $this->execute("ALTER TABLE `connection` DROP db_name");
+        $this->execute("ALTER TABLE `connection` DROP `host`");
+        $this->execute("ALTER TABLE `connection` DROP `password`");
+        $this->execute("ALTER TABLE `connection` DROP `port`");
+        $this->execute("ALTER TABLE `connection` DROP `user`");
     }
 
     public function down(): void
     {
-        $this->execute("ALTER TABLE `connection` DROP `data`");
+        throw new Error('Downgrade is prohibited!');
     }
 
     protected function execute(string $query): void

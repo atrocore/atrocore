@@ -51,6 +51,7 @@ class Connection extends Base
 
         $data[$name] = $value;
 
+        $this->valuesContainer[$name] = $value;
         $this->set('data', $data);
     }
 
@@ -79,7 +80,6 @@ class Connection extends Base
 
     public function _setOauthGrantType($value)
     {
-        $this->valuesContainer['oauthGrantType'] = $value;
         $this->setDataField('oauthGrantType', $value);
     }
 
@@ -90,7 +90,6 @@ class Connection extends Base
 
     public function _setOauthClientId($value)
     {
-        $this->valuesContainer['oauthClientId'] = $value;
         $this->setDataField('oauthClientId', $value);
     }
 
@@ -101,7 +100,6 @@ class Connection extends Base
 
     public function _setOauthClientSecret($value)
     {
-        $this->valuesContainer['oauthClientSecret'] = $value;
         $this->setDataField('oauthClientSecret', $value);
     }
 
