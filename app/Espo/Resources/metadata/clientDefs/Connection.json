@@ -36,6 +36,127 @@
             }
           ]
         }
+      },
+      "host": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "mysql",
+                "psql",
+                "msql",
+                "ftp",
+                "sftp"
+              ]
+            }
+          ]
+        }
+      },
+      "port": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "mysql",
+                "psql",
+                "msql",
+                "ftp",
+                "sftp"
+              ]
+            }
+          ]
+        }
+      },
+      "user": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "mysql",
+                "psql",
+                "msql",
+                "ftp",
+                "sftp"
+              ]
+            }
+          ]
+        }
+      },
+      "password": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "mysql",
+                "psql",
+                "msql",
+                "ftp",
+                "sftp"
+              ]
+            }
+          ]
+        }
+      },
+      "oauthGrantType": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "oauth2"
+              ]
+            }
+          ]
+        }
+      },
+      "oauthClientId": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "oauth2"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "oauthGrantType",
+              "value": [
+                "client_credentials"
+              ]
+            }
+          ]
+        }
+      },
+      "oauthClientSecret": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "oauth2"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "oauthGrantType",
+              "value": [
+                "client_credentials"
+              ]
+            }
+          ]
+        }
       }
     }
   }

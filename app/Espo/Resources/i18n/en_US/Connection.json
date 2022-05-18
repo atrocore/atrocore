@@ -5,7 +5,10 @@
     "host": "Host",
     "port": "Port",
     "user": "User",
-    "password": "Password"
+    "password": "Password",
+    "oauthGrantType": "OAuth Grant Type",
+    "oauthClientId": "OAuth Client ID",
+    "oauthClientSecret": "OAuth Client Secret"
   },
   "labels": {
     "connectionSuccess": "Connection is successfully established",
@@ -15,6 +18,8 @@
     "msql": "Microsoft SQL Server",
     "ftp": "FTP",
     "sftp": "SFTP",
+    "oauth2": "OAuth 2.0",
+    "client_credentials": "Client Credentials",
     "Create Connection": "Create Connection"
   },
   "exceptions": {

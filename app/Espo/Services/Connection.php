@@ -42,6 +42,8 @@ use Espo\ORM\Entity;
 
 class Connection extends Base
 {
+    protected $mandatorySelectAttributeList = ['data'];
+
     public function testConnection(string $id): bool
     {
         $connection = $this->getRepository()->get($id);
@@ -156,6 +158,15 @@ class Connection extends Base
     public function decryptPassword(string $hash): string
     {
         return openssl_decrypt($hash, $this->getCypherMethod(), $this->getSecretKey(), 0, $this->getByteSecretIv());
+    }
+
+    public function prepareEntityForOutput(Entity $entity)
+    {
+        parent::prepareEntityForOutput($entity);
+
+        foreach ($entity->getDataFields() as $name => $value) {
+            $entity->set($name, $value);
+        }
     }
 
     protected function init()

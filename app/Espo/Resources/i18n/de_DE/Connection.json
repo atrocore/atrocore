@@ -10,11 +10,6 @@
   "labels": {
     "connectionSuccess": "Verbindung wurde erfolgreich hergestellt",
     "testConnection": "Verbindung testen",
-    "mysql": "MySQL Server",
-    "psql": "PostgreSQL Server",
-    "msql": "Microsoft SQL Server",
-    "ftp": "FTP",
-    "sftp": "SFTP",
     "Create Connection": "Verbindung erstellen"
   },
   "exceptions": {

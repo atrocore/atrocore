@@ -35,7 +35,78 @@
 
 namespace Espo\Entities;
 
-class Connection extends \Espo\Core\Templates\Entities\Base
+use Espo\Core\Templates\Entities\Base;
+use Espo\Core\Utils\Json;
+
+class Connection extends Base
 {
     protected $entityType = "Connection";
+
+    public function setDataField(string $name, $value): void
+    {
+        $data = [];
+        if (!empty($this->get('data'))) {
+            $data = Json::decode(Json::encode($this->get('data')), true);
+        }
+
+        $data[$name] = $value;
+
+        $this->set('data', $data);
+    }
+
+    public function getDataField(string $name)
+    {
+        $data = $this->getDataFields();
+
+        if (!isset($data[$name])) {
+            return null;
+        }
+
+        return $data[$name];
+    }
+
+    public function getDataFields(): array
+    {
+        if (!empty($data = $this->get('data'))) {
+            $data = Json::decode(Json::encode($data), true);
+            if (!empty($data) && is_array($data)) {
+                return $data;
+            }
+        }
+
+        return [];
+    }
+
+    public function _setOauthGrantType($value)
+    {
+        $this->valuesContainer['oauthGrantType'] = $value;
+        $this->setDataField('oauthGrantType', $value);
+    }
+
+    public function _getOauthGrantType()
+    {
+        return $this->getDataField('oauthGrantType');
+    }
+
+    public function _setOauthClientId($value)
+    {
+        $this->valuesContainer['oauthClientId'] = $value;
+        $this->setDataField('oauthClientId', $value);
+    }
+
+    public function _getOauthClientId()
+    {
+        return $this->getDataField('oauthClientId');
+    }
+
+    public function _setOauthClientSecret($value)
+    {
+        $this->valuesContainer['oauthClientSecret'] = $value;
+        $this->setDataField('oauthClientSecret', $value);
+    }
+
+    public function _getOauthClientSecret()
+    {
+        return $this->getDataField('oauthClientSecret');
+    }
 }

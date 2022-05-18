@@ -9,7 +9,8 @@
         "psql",
         "msql",
         "ftp",
-        "sftp"
+        "sftp",
+        "oauth2"
       ],
       "default": "mysql"
     },
@@ -43,6 +44,44 @@
       "type": "password",
       "required": false,
       "trim": true
+    },
+    "oauthGrantType": {
+      "type": "enum",
+      "notStorable": true,
+      "dataField": true,
+      "required": false,
+      "prohibitedEmptyValue": true,
+      "options": [
+        "client_credentials"
+      ],
+      "default": "client_credentials"
+    },
+    "oauthClientId": {
+      "type": "varchar",
+      "notStorable": true,
+      "dataField": true,
+      "required": false,
+      "trim": true
+    },
+    "oauthClientSecret": {
+      "type": "password",
+      "notStorable": true,
+      "dataField": true,
+      "required": false,
+      "trim": true
+    },
+    "data": {
+      "type": "jsonObject",
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "textFilterDisabled": true,
+      "emHidden": true
     },
     "createdAt": {
       "type": "datetime",

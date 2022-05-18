@@ -27,6 +27,20 @@
       ],
       [
         {
+          "name": "oauthGrantType"
+        },
+        false
+      ],
+      [
+        {
+          "name": "oauthClientId"
+        },
+        {
+          "name": "oauthClientSecret"
+        }
+      ],
+      [
+        {
           "name": "user"
         },
         {
