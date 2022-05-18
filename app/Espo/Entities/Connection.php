@@ -40,20 +40,6 @@ use Espo\Core\Utils\Json;
 
 class Connection extends Base
 {
-    public const DATA_FIELDS
-        = [
-            'host',
-            'dbName',
-            'port',
-            'user',
-            'dbName',
-            'password',
-            'oauthUrl',
-            'oauthGrantType',
-            'oauthClientId',
-            'oauthClientSecret',
-        ];
-
     protected $entityType = "Connection";
 
     public function setDataField(string $name, $value): void
@@ -94,7 +80,7 @@ class Connection extends Base
 
     protected function setFieldValue(string $field, $value): void
     {
-        if (in_array($field, self::DATA_FIELDS)) {
+        if (!empty($this->getAttributeParam($field, 'dataField'))) {
             $this->setDataField($field, $value);
         }
 
@@ -103,7 +89,7 @@ class Connection extends Base
 
     protected function getFieldValue(string $field)
     {
-        if (in_array($field, self::DATA_FIELDS)) {
+        if (!empty($this->getAttributeParam($field, 'dataField'))) {
             return $this->getDataField($field);
         }
 

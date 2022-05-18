@@ -46,28 +46,10 @@ use Espo\Core\Utils\Util;
  */
 class OrmMetadata
 {
-    /**
-     * @var Metadata
-     */
-    protected $metadata;
+    protected Metadata $metadata;
+    protected Manager $fileManager;
+    protected Config $config;
 
-    /**
-     * @var Manager
-     */
-    protected $fileManager;
-
-    /**
-     * @var Config
-     */
-    protected $config;
-
-    /**
-     * OrmMetadata constructor.
-     *
-     * @param Metadata $metadata
-     * @param Manager  $fileManager
-     * @param Config   $config
-     */
     public function __construct(Metadata $metadata, Manager $fileManager, Config $config)
     {
         $this->metadata = $metadata;
@@ -75,69 +57,40 @@ class OrmMetadata
         $this->config = $config;
     }
 
-    /**
-     * @return array
-     */
     public function getData(): array
     {
-        return $this->unsetLinkName($this->getConverter()->process());
-    }
+        $converter = new Converter($this->metadata, $this->fileManager, $this->config);
 
-    /**
-     * @param mixed $key
-     * @param mixed $default
-     *
-     * @return mixed
-     * @throws \Espo\Core\Exceptions\Error
-     */
-    public function get($key = null, $default = null)
-    {
-        return Util::getValueByKey($this->getData(), $key, $default);
-    }
+        $data = $converter->process();
 
-    /**
-     * @return Converter
-     */
-    protected function getConverter(): Converter
-    {
-        if (!isset($this->converter)) {
-            $this->converter = new Converter($this->metadata, $this->fileManager, $this->config);
-        }
-
-        return $this->converter;
-    }
-
-    /**
-     * Unset link field name if it needs
-     *
-     * @param array $data
-     *
-     * @return array
-     */
-    protected function unsetLinkName(array $data): array
-    {
         $entityDefs = $this->metadata->get('entityDefs', []);
-        foreach ($entityDefs as $scope => $rows) {
-            if (!isset($rows['links'])) {
-                continue 1;
+
+        foreach ($entityDefs as $scope => $scopeData) {
+            if (!empty($scopeData['fields'])) {
+                foreach ($scopeData['fields'] as $field => $fieldData) {
+                    $data[$scope]['fields'][$field]['dataField'] = !empty($fieldData['dataField']);
+                }
             }
 
-            foreach ($rows['links'] as $link => $settings) {
-                if (isset($settings['type'])) {
-                    if ($settings['type'] == 'belongsTo'
-                        && !isset($entityDefs[$settings['entity']]['fields']['name'])
-                        && isset($data[$scope]['fields'][$link . 'Name'])) {
-                        unset($data[$scope]['fields'][$link . 'Name']);
-                    }
-                    if ($settings['type'] == 'hasMany'
-                        && !isset($entityDefs[$settings['entity']]['fields']['name'])
-                        && isset($data[$scope]['fields'][$link . 'Names'])) {
-                        unset($data[$scope]['fields'][$link . 'Names']);
+            if (!empty($scopeData['links'])) {
+                foreach ($scopeData['links'] as $link => $linkData) {
+                    if (isset($linkData['type'])) {
+                        if ($linkData['type'] == 'belongsTo' && !isset($entityDefs[$linkData['entity']]['fields']['name']) && isset($data[$scope]['fields'][$link . 'Name'])) {
+                            unset($data[$scope]['fields'][$link . 'Name']);
+                        }
+                        if ($linkData['type'] == 'hasMany' && !isset($entityDefs[$linkData['entity']]['fields']['name']) && isset($data[$scope]['fields'][$link . 'Names'])) {
+                            unset($data[$scope]['fields'][$link . 'Names']);
+                        }
                     }
                 }
             }
         }
 
         return $data;
+    }
+
+    public function get($key = null, $default = null)
+    {
+        return Util::getValueByKey($this->getData(), $key, $default);
     }
 }
