@@ -27,9 +27,11 @@
       ],
       [
         {
-          "name": "oauthGrantType"
+          "name": "oauthUrl"
         },
-        false
+        {
+          "name": "oauthGrantType"
+        }
       ],
       [
         {

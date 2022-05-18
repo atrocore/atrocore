@@ -40,6 +40,20 @@ use Espo\Core\Utils\Json;
 
 class Connection extends Base
 {
+    public const DATA_FIELDS
+        = [
+            'host',
+            'dbName',
+            'port',
+            'user',
+            'dbName',
+            'password',
+            'oauthUrl',
+            'oauthGrantType',
+            'oauthClientId',
+            'oauthClientSecret',
+        ];
+
     protected $entityType = "Connection";
 
     public function setDataField(string $name, $value): void
@@ -78,33 +92,21 @@ class Connection extends Base
         return [];
     }
 
-    public function _setOauthGrantType($value)
+    protected function setFieldValue(string $field, $value): void
     {
-        $this->setDataField('oauthGrantType', $value);
+        if (in_array($field, self::DATA_FIELDS)) {
+            $this->setDataField($field, $value);
+        }
+
+        parent::setFieldValue($field, $value);
     }
 
-    public function _getOauthGrantType()
+    protected function getFieldValue(string $field)
     {
-        return $this->getDataField('oauthGrantType');
-    }
+        if (in_array($field, self::DATA_FIELDS)) {
+            return $this->getDataField($field);
+        }
 
-    public function _setOauthClientId($value)
-    {
-        $this->setDataField('oauthClientId', $value);
-    }
-
-    public function _getOauthClientId()
-    {
-        return $this->getDataField('oauthClientId');
-    }
-
-    public function _setOauthClientSecret($value)
-    {
-        $this->setDataField('oauthClientSecret', $value);
-    }
-
-    public function _getOauthClientSecret()
-    {
-        return $this->getDataField('oauthClientSecret');
+        return parent::getFieldValue($field);
     }
 }

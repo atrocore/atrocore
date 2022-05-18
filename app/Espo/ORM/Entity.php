@@ -116,11 +116,6 @@ abstract class Entity implements IEntity
         $this->valuesContainer = array();
     }
 
-    protected function setValue($name, $value)
-    {
-        $this->valuesContainer[$name] = $value;
-    }
-
     public function set($p1, $p2 = null)
     {
         if (is_array($p1) || is_object($p1)) {
@@ -142,7 +137,7 @@ abstract class Entity implements IEntity
                 if (method_exists($this, $method)) {
                     $this->$method($value);
                 } else {
-                    $this->valuesContainer[$name] = $value;
+                    $this->setFieldValue($name, $value);
                 }
             }
         }
@@ -158,8 +153,8 @@ abstract class Entity implements IEntity
             return $this->$method();
         }
 
-        if ($this->hasAttribute($name) && isset($this->valuesContainer[$name])) {
-            return $this->valuesContainer[$name];
+        if ($this->hasAttribute($name) && array_key_exists($name, $this->valuesContainer)) {
+            return $this->getFieldValue($name);
         }
 
         if ($this->hasRelation($name) && $this->id) {
@@ -276,7 +271,7 @@ abstract class Entity implements IEntity
                 if (method_exists($this, $method)) {
                     $this->$method($value);
                 } else {
-                    $this->valuesContainer[$field] = $value;
+                    $this->setFieldValue($field, $value);
                 }
             }
         }
@@ -558,17 +553,31 @@ abstract class Entity implements IEntity
     {
         foreach ($this->fields as $field => $defs) {
             if (array_key_exists('default', $defs)) {
-                $this->valuesContainer[$field] = $defs['default'];
+                $this->setFieldValue($field, $defs['default']);
             }
 
             // default for unit
             if (isset($this->fields[$field . 'Unit'])) {
                 $fieldData = $this->getEntityManager()->getEspoMetadata()->get(['entityDefs', $this->entityType, 'fields', $field], []);
                 if (!empty($fieldData['type']) && $fieldData['type'] === 'unit' && !empty($fieldData['defaultUnit'])) {
-                    $this->valuesContainer[$field . 'Unit'] = $fieldData['defaultUnit'];
+                    $this->setFieldValue($field . 'Unit', $fieldData['defaultUnit']);
                 }
             }
         }
+    }
+
+    protected function setFieldValue(string $field, $value): void
+    {
+        $this->valuesContainer[$field] = $value;
+    }
+
+    protected function getFieldValue(string $field)
+    {
+        if (!array_key_exists($field, $this->valuesContainer)) {
+            return null;
+        }
+
+        return $this->valuesContainer[$field];
     }
 
     protected function getEntityManager()

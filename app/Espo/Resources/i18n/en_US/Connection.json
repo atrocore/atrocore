@@ -6,6 +6,7 @@
     "port": "Port",
     "user": "User",
     "password": "Password",
+    "oauthUrl": "OAuth URL",
     "oauthGrantType": "OAuth Grant Type",
     "oauthClientId": "OAuth Client ID",
     "oauthClientSecret": "OAuth Client Secret"

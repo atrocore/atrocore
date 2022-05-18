@@ -39,25 +39,25 @@ class Person extends \Espo\Core\ORM\Entity
 {
     public function _setLastName($value)
     {
-        $this->setValue('lastName', $value);
+        $this->setFieldValue('lastName', $value);
 
         $firstName = $this->get('firstName');
         if (empty($firstName)) {
-            $this->setValue('name', $value);
+            $this->setFieldValue('name', $value);
         } else {
-            $this->setValue('name', $firstName . ' ' . $value);
+            $this->setFieldValue('name', $firstName . ' ' . $value);
         }
     }
 
     public function _setFirstName($value)
     {
-        $this->setValue('firstName', $value);
+        $this->setFieldValue('firstName', $value);
 
         $lastName = $this->get('lastName');
         if (empty($lastName)) {
-            $this->setValue('name', $value);
+            $this->setFieldValue('name', $value);
         } else {
-            $this->setValue('name', $value . ' ' . $lastName);
+            $this->setFieldValue('name', $value . ' ' . $lastName);
         }
     }
 }

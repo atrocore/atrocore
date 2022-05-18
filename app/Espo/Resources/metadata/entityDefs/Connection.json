@@ -66,6 +66,13 @@
       ],
       "default": "client_credentials"
     },
+    "oauthUrl": {
+      "type": "varchar",
+      "notStorable": true,
+      "dataField": true,
+      "required": false,
+      "trim": true
+    },
     "oauthClientId": {
       "type": "varchar",
       "notStorable": true,
