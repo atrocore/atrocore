@@ -125,6 +125,11 @@ class Connection extends Base
                     throw new BadRequest(sprintf($errorMessage, 'Wrong auth data.'));
                 }
                 break;
+            case 'oauth2':
+                echo '<pre>';
+                print_r('123');
+                die();
+                break;
             default:
                 throw new BadRequest(sprintf($errorMessage, $this->getInjection('language')->translate('noSuchType', 'exceptions', 'Connection')));
         }
@@ -134,18 +139,14 @@ class Connection extends Base
 
     public function createEntity($attachment)
     {
-        if (property_exists($attachment, 'password')) {
-            $attachment->password = $this->encryptPassword((string)$attachment->password);
-        }
+        $this->encryptPasswordFields($attachment);
 
         return parent::createEntity($attachment);
     }
 
     public function updateEntity($id, $data)
     {
-        if (property_exists($data, 'password')) {
-            $data->password = $this->encryptPassword((string)$data->password);
-        }
+        $this->encryptPasswordFields($data);
 
         return parent::updateEntity($id, $data);
     }
@@ -174,6 +175,15 @@ class Connection extends Base
         parent::init();
 
         $this->addDependency('language');
+    }
+
+    protected function encryptPasswordFields(\stdClass $inputData): void
+    {
+        foreach ($this->getMetadata()->get(['entityDefs', 'Connection', 'fields'], []) as $field => $fieldData) {
+            if (!empty($fieldData['type']) && $fieldData['type'] === 'password' && property_exists($inputData, $field)) {
+                $inputData->$field = $this->encryptPassword((string)$inputData->$field);
+            }
+        }
     }
 
     protected function getByteSecretIv(): string

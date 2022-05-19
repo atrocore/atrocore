@@ -359,8 +359,16 @@ class Hierarchy extends RDB
 
     protected function collectChildren(string $id, array &$ids): void
     {
+        $tableName = $this->getEntityManager()->getQuery()->toDb($this->entityType);
+
         $id = $this->getPDO()->quote($id);
-        $query = "SELECT entity_id FROM `{$this->getHierarchyTableName()}` WHERE deleted=0 AND parent_id=$id";
+        $query = "SELECT r.entity_id 
+                  FROM `{$this->getHierarchyTableName()}` r
+                  LEFT JOIN `$tableName` m ON r.entity_id=m.id
+                  WHERE r.deleted=0 
+                    AND r.parent_id=$id
+                    AND m.deleted=0";
+
         if (!empty($res = $this->getPDO()->query($query)->fetchAll(\PDO::FETCH_COLUMN))) {
             $ids = array_values(array_unique(array_merge($ids, $res)));
             foreach ($res as $v) {
