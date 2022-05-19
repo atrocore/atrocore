@@ -19942,7 +19942,6 @@ button.category:focus {
 @media screen and (min-width: 768px) and (max-width: 1199px) {
     #main .catalog-tree-panel {
         padding: 0 10px 10px 10px;
-        margin: 0 0 10px 0;
         float: none;
         min-height: 53px;
     }
@@ -21974,6 +21973,7 @@ select {
 
 ::-webkit-scrollbar {
     width: 10px;
+    height: 10px;
     background: #efefef;
 }
 
@@ -21999,18 +21999,18 @@ select {
 }
 
 /* Up */
-::-webkit-scrollbar-button:single-button:vertical:decrement {
+::-webkit-scrollbar-button:vertical:single-button:decrement {
     border-width: 0 5px 5px 5px;
     border-color: transparent transparent #bbb transparent;
 }
 
-::-webkit-scrollbar-button:single-button:vertical:decrement:hover {
+::-webkit-scrollbar-button:vertical:single-button:decrement:hover {
     border-color: transparent transparent #aaa transparent;
     background-color: #efefef;
 }
 
 /* Down */
-::-webkit-scrollbar-button:single-button:vertical:increment {
+::-webkit-scrollbar-button:vertical:single-button:increment {
     border-width: 5px 5px 0 5px;
     border-color: #bbb transparent transparent transparent;
 }
@@ -22020,22 +22020,22 @@ select {
     background-color: #efefef;
 }
 
-::-webkit-scrollbar-button:single-button:horizontal:decrement {
+::-webkit-scrollbar-button:horizontal:single-button:decrement {
     border-width: 5px 5px 5px 0;
     border-color: transparent #bbb transparent transparent;
 }
 
-::-webkit-scrollbar-button:single-button:horizontal:decrement:hover {
-    border-color: transparent transparent #aaa transparent;
+::-webkit-scrollbar-button:horizontal:single-button:decrement:hover {
+    border-color: transparent #aaa transparent transparent;
     background-color: #efefef;
 }
 
-::-webkit-scrollbar-button:single-button:horizontal:increment {
+::-webkit-scrollbar-button:horizontal:single-button:increment {
     border-width: 5px 0 5px 5px;
     border-color: transparent transparent transparent #bbb;
 }
 
 ::-webkit-scrollbar-button:horizontal:single-button:increment:hover {
-    border-color: #aaa transparent transparent transparent;
+    border-color: transparent transparent transparent #aaa;
     background-color: #efefef;
 }
