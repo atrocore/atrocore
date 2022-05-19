@@ -50,6 +50,20 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
             return _.extend({isTreePanel: this.isTreePanel}, Dep.prototype.data.call(this))
         },
 
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            let observer = new ResizeObserver(() => {
+                let view = this.getView('treePanel'),
+                    width = view.$el.innerWidth();
+
+                this.onTreeResize(width);
+
+                observer.unobserve($('#content').get(0));
+            });
+            observer.observe($('#content').get(0));
+        },
+
         setupTreePanel() {
             this.createView('treePanel', 'views/record/panels/tree-panel', {
                 el: `${this.options.el} .catalog-tree-panel`,
@@ -71,23 +85,7 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
                     }
                 });
                 this.listenTo(view, 'tree-width-changed', function (width) {
-                    const content = $('#content');
-                    const main = content.find('#main');
-
-                    const header = content.find('.page-header');
-                    const btnContainer = content.find('.detail-button-container');
-                    const overview = content.find('.overview');
-                    const side = content.find('.side');
-
-                    header.outerWidth(main.width() - width);
-                    header.css('marginLeft', width + 'px');
-
-                    btnContainer.outerWidth(content.innerWidth() - width);
-                    btnContainer.addClass('detail-tree-button-container');
-                    btnContainer.css('marginLeft', width + 'px');
-
-                    overview.outerWidth(content.innerWidth() - side.outerWidth() - width);
-                    overview.css('marginLeft', (width - 1) + 'px');
+                    this.onTreeResize(width)
                 });
                 this.listenTo(view, 'tree-width-unset', function () {
                     $('.page-header').css({'width': 'unset', 'marginLeft': 'unset'});
@@ -113,6 +111,25 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
             }
         },
 
+        onTreeResize(width) {
+            const content = $('#content');
+            const main = content.find('#main');
+
+            const header = content.find('.page-header');
+            const btnContainer = content.find('.detail-button-container');
+            const overview = content.find('.overview');
+            const side = content.find('.side');
+
+            header.outerWidth(main.width() - width);
+            header.css('marginLeft', width + 'px');
+
+            btnContainer.outerWidth(content.innerWidth() - width);
+            btnContainer.addClass('detail-tree-button-container');
+            btnContainer.css('marginLeft', width + 'px');
+
+            overview.outerWidth(content.innerWidth() - side.outerWidth() - width);
+            overview.css('marginLeft', (width - 1) + 'px');
+        }
     })
 );
 
