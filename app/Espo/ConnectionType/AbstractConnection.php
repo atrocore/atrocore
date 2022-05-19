@@ -37,45 +37,13 @@ declare(strict_types=1);
 
 namespace Espo\ConnectionType;
 
-use Espo\Core\Interfaces\Injectable;
+use Espo\Core\Injectable;
 
-abstract class AbstractConnection implements ConnectionInterface, Injectable
+abstract class AbstractConnection extends Injectable implements ConnectionInterface
 {
-    protected array $dependencies = ['config', 'entityManager', 'user', 'language', 'serviceFactory'];
-    protected array $injections = [];
-
-    /**
-     * @param string $name
-     * @param mixed  $object
-     *
-     * @return void
-     */
-    public function inject($name, $object)
+    public function __construct()
     {
-        $this->injections[$name] = $object;
-    }
-
-    /**
-     * @param string $name
-     *
-     * @return mixed
-     */
-    protected function getInjection(string $name)
-    {
-        return $this->injections[$name];
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getDependencyList()
-    {
-        return $this->dependencies;
-    }
-
-    protected function addDependency($name): void
-    {
-        $this->dependencies[] = $name;
+        $this->addDependencyList(['config', 'entityManager', 'user', 'language', 'serviceFactory']);
     }
 
     protected function decryptPassword(string $hash): string
