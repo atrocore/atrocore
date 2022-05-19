@@ -68,7 +68,9 @@ class OrmMetadata
         foreach ($entityDefs as $scope => $scopeData) {
             if (!empty($scopeData['fields'])) {
                 foreach ($scopeData['fields'] as $field => $fieldData) {
-                    $data[$scope]['fields'][$field]['dataField'] = !empty($fieldData['dataField']);
+                    if (!empty($fieldData['dataField'])) {
+                        $data[$scope]['fields'][$field]['dataField'] = true;
+                    }
                 }
             }
 
