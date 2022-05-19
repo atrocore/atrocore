@@ -45,13 +45,15 @@ use Espo\ORM\EntityManager;
 
 class Hierarchy extends RDB
 {
+    protected string $tableName;
     protected string $hierarchyTableName;
 
     public function __construct($entityType, EntityManager $entityManager, EntityFactory $entityFactory)
     {
         parent::__construct($entityType, $entityManager, $entityFactory);
 
-        $this->hierarchyTableName = $entityManager->getQuery()->toDb($this->entityType) . '_hierarchy';
+        $this->tableName = $entityManager->getQuery()->toDb($this->entityType);
+        $this->hierarchyTableName = $this->tableName . '_hierarchy';
     }
 
     public function getUnInheritedFields(): array
@@ -274,7 +276,7 @@ class Hierarchy extends RDB
     {
         $records = $this
             ->getPDO()
-            ->query("SELECT entity_id, parent_id FROM `{$this->getHierarchyTableName()}` WHERE deleted=0")
+            ->query("SELECT entity_id, parent_id FROM `$this->hierarchyTableName` WHERE deleted=0")
             ->fetchAll(\PDO::FETCH_ASSOC);
 
         if (empty($records)) {
@@ -340,15 +342,10 @@ class Hierarchy extends RDB
         }
     }
 
-    protected function getHierarchyTableName(): string
-    {
-        return $this->getEntityManager()->getQuery()->toDb($this->entityType) . '_hierarchy';
-    }
-
     protected function collectParents(string $id, array &$ids): void
     {
         $id = $this->getPDO()->quote($id);
-        $query = "SELECT parent_id FROM `{$this->getHierarchyTableName()}` WHERE deleted=0 AND entity_id=$id";
+        $query = "SELECT r.parent_id FROM `$this->hierarchyTableName` r LEFT JOIN `$this->tableName` m ON r.parent_id=m.id WHERE r.deleted=0 AND r.entity_id=$id AND m.deleted=0";
         if (!empty($res = $this->getPDO()->query($query)->fetchAll(\PDO::FETCH_COLUMN))) {
             $ids = array_values(array_unique(array_merge($ids, $res)));
             foreach ($res as $v) {
@@ -360,7 +357,7 @@ class Hierarchy extends RDB
     protected function collectChildren(string $id, array &$ids): void
     {
         $id = $this->getPDO()->quote($id);
-        $query = "SELECT entity_id FROM `{$this->getHierarchyTableName()}` WHERE deleted=0 AND parent_id=$id";
+        $query = "SELECT r.entity_id FROM `$this->hierarchyTableName` r LEFT JOIN `$this->tableName` m ON r.entity_id=m.id WHERE r.deleted=0 AND r.parent_id=$id AND m.deleted=0";
         if (!empty($res = $this->getPDO()->query($query)->fetchAll(\PDO::FETCH_COLUMN))) {
             $ids = array_values(array_unique(array_merge($ids, $res)));
             foreach ($res as $v) {
