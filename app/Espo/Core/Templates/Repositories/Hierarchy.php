@@ -45,13 +45,15 @@ use Espo\ORM\EntityManager;
 
 class Hierarchy extends RDB
 {
+    protected string $tableName;
     protected string $hierarchyTableName;
 
     public function __construct($entityType, EntityManager $entityManager, EntityFactory $entityFactory)
     {
         parent::__construct($entityType, $entityManager, $entityFactory);
 
-        $this->hierarchyTableName = $entityManager->getQuery()->toDb($this->entityType) . '_hierarchy';
+        $this->tableName = $entityManager->getQuery()->toDb($this->entityType);
+        $this->hierarchyTableName = $this->tableName . '_hierarchy';
     }
 
     public function getUnInheritedFields(): array
@@ -84,10 +86,9 @@ class Hierarchy extends RDB
 
     public function fetchById(string $id): array
     {
-        $tableName = $this->getEntityManager()->getQuery()->toDb($this->entityType);
         $result = $this
             ->getPDO()
-            ->query("SELECT * FROM `$tableName` WHERE deleted=0 AND id={$this->getPDO()->quote($id)}")
+            ->query("SELECT * FROM `$this->tableName` WHERE deleted=0 AND id={$this->getPDO()->quote($id)}")
             ->fetch(\PDO::FETCH_ASSOC);
 
         if (empty($result)) {
@@ -123,7 +124,6 @@ class Hierarchy extends RDB
         // prepare vars
         $preparedEntityId = $this->getPDO()->quote($entityId);
         $preparedParentId = $this->getPDO()->quote($parentId);
-        $tableName = $this->getEntityManager()->getQuery()->toDb($this->entityType);
 
         $this->getPDO()->exec("DELETE FROM `$this->hierarchyTableName` WHERE entity_id=$preparedEntityId");
         if (!empty($parentId)) {
@@ -149,7 +149,7 @@ class Hierarchy extends RDB
         foreach ($sortedIds as $k => $id) {
             $sortOrder = $k * 10;
             if (empty($parentId)) {
-                $this->getPDO()->exec("UPDATE `$tableName` SET sort_order=$sortOrder WHERE id='$id' AND deleted=0");
+                $this->getPDO()->exec("UPDATE `$this->tableName` SET sort_order=$sortOrder WHERE id='$id' AND deleted=0");
             } else {
                 $this->getPDO()->exec("UPDATE `$this->hierarchyTableName` SET hierarchy_sort_order=$sortOrder WHERE entity_id='$id' AND deleted=0");
             }
@@ -158,11 +158,9 @@ class Hierarchy extends RDB
 
     public function hasMultipleParents(): bool
     {
-        $tableName = $this->getEntityManager()->getQuery()->toDb($this->entityType);
-
         $query = "SELECT COUNT(e.id) as total 
                   FROM (SELECT entity_id FROM `$this->hierarchyTableName` WHERE deleted=0 GROUP BY entity_id HAVING COUNT(entity_id) > 1) AS rel 
-                  LEFT JOIN `$tableName` e ON e.id=rel.entity_id 
+                  LEFT JOIN `$this->tableName` e ON e.id=rel.entity_id 
                   WHERE e.deleted=0";
 
         $count = $this
@@ -201,16 +199,14 @@ class Hierarchy extends RDB
 
     public function getChildrenArray(string $parentId, bool $withChildrenCount = true): array
     {
-        $tableName = $this->getEntityManager()->getQuery()->toDb($this->entityType);
-
         $select = 'e.*';
         if ($withChildrenCount) {
-            $select .= ", (SELECT COUNT(r1.id) FROM `$this->hierarchyTableName` r1 JOIN `$tableName` e1 ON e1.id=r1.entity_id WHERE r1.parent_id=e.id AND e1.deleted=0) as childrenCount";
+            $select .= ", (SELECT COUNT(r1.id) FROM `$this->hierarchyTableName` r1 JOIN `$this->tableName` e1 ON e1.id=r1.entity_id WHERE r1.parent_id=e.id AND e1.deleted=0) as childrenCount";
         }
 
         if (empty($parentId)) {
             $query = "SELECT {$select} 
-                      FROM `{$tableName}` e
+                      FROM `$this->tableName` e
                       WHERE e.id NOT IN (SELECT entity_id FROM `$this->hierarchyTableName` WHERE deleted=0)
                       AND e.deleted=0
                       ORDER BY e.sort_order";
@@ -218,7 +214,7 @@ class Hierarchy extends RDB
             $parentId = $this->getPDO()->quote($parentId);
             $query = "SELECT {$select}
                   FROM `$this->hierarchyTableName` h
-                  LEFT JOIN `{$tableName}` e ON e.id=h.entity_id
+                  LEFT JOIN `$this->tableName` e ON e.id=h.entity_id
                   WHERE h.deleted=0
                     AND e.deleted=0
                     AND h.parent_id={$parentId}
@@ -256,11 +252,10 @@ class Hierarchy extends RDB
     public function getParentRecord(string $id): array
     {
         $id = $this->getPDO()->quote($id);
-        $tableName = $this->getEntityManager()->getQuery()->toDb($this->entityType);
 
         $query = "SELECT t.*
                   FROM `$this->hierarchyTableName` h
-                  LEFT JOIN `$tableName` t ON t.id=h.parent_id
+                  LEFT JOIN `$this->tableName` t ON t.id=h.parent_id
                   WHERE h.deleted=0
                     AND t.deleted=0
                     AND h.entity_id={$id}";
@@ -274,7 +269,7 @@ class Hierarchy extends RDB
     {
         $records = $this
             ->getPDO()
-            ->query("SELECT entity_id, parent_id FROM `{$this->getHierarchyTableName()}` WHERE deleted=0")
+            ->query("SELECT entity_id, parent_id FROM `$this->hierarchyTableName` WHERE deleted=0")
             ->fetchAll(\PDO::FETCH_ASSOC);
 
         if (empty($records)) {
@@ -340,15 +335,10 @@ class Hierarchy extends RDB
         }
     }
 
-    protected function getHierarchyTableName(): string
-    {
-        return $this->getEntityManager()->getQuery()->toDb($this->entityType) . '_hierarchy';
-    }
-
     protected function collectParents(string $id, array &$ids): void
     {
         $id = $this->getPDO()->quote($id);
-        $query = "SELECT parent_id FROM `{$this->getHierarchyTableName()}` WHERE deleted=0 AND entity_id=$id";
+        $query = "SELECT r.parent_id FROM `$this->hierarchyTableName` r LEFT JOIN `$this->tableName` m ON r.parent_id=m.id WHERE r.deleted=0 AND r.entity_id=$id AND m.deleted=0";
         if (!empty($res = $this->getPDO()->query($query)->fetchAll(\PDO::FETCH_COLUMN))) {
             $ids = array_values(array_unique(array_merge($ids, $res)));
             foreach ($res as $v) {
@@ -359,16 +349,8 @@ class Hierarchy extends RDB
 
     protected function collectChildren(string $id, array &$ids): void
     {
-        $tableName = $this->getEntityManager()->getQuery()->toDb($this->entityType);
-
         $id = $this->getPDO()->quote($id);
-        $query = "SELECT r.entity_id 
-                  FROM `{$this->getHierarchyTableName()}` r
-                  LEFT JOIN `$tableName` m ON r.entity_id=m.id
-                  WHERE r.deleted=0 
-                    AND r.parent_id=$id
-                    AND m.deleted=0";
-
+        $query = "SELECT r.entity_id FROM `$this->hierarchyTableName` r LEFT JOIN `$this->tableName` m ON r.entity_id=m.id WHERE r.deleted=0 AND r.parent_id=$id AND m.deleted=0";
         if (!empty($res = $this->getPDO()->query($query)->fetchAll(\PDO::FETCH_COLUMN))) {
             $ids = array_values(array_unique(array_merge($ids, $res)));
             foreach ($res as $v) {
