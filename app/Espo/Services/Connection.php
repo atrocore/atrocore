@@ -35,6 +35,7 @@
 
 namespace Espo\Services;
 
+use Espo\ConnectionType\ConnectionInterface;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Templates\Services\Base;
@@ -56,85 +57,14 @@ class Connection extends Base
         return true;
     }
 
-    public function connect(Entity $connection)
+    public function connect(Entity $connectionEntity)
     {
-        $errorMessage = $this->getInjection('language')->translate('connectionFailed', 'exceptions', 'Connection');
-
-        switch ($connection->get('type')) {
-            case 'mysql':
-                try {
-                    $port = !empty($connection->get('port')) ? ';port=' . $connection->get('port') : '';
-                    $dsn = 'mysql:host=' . $connection->get('host') . $port . ';dbname=' . $connection->get('dbName') . ';';
-                    $result = new \PDO($dsn, $connection->get('user'), $this->decryptPassword($connection->get('password')));
-                    $result->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-                } catch (\PDOException $e) {
-                    throw new BadRequest(sprintf($errorMessage, $e->getMessage()));
-                }
-                break;
-            case 'psql':
-                try {
-                    $port = !empty($connection->get('port')) ? ';port=' . $connection->get('port') : '';
-                    $dsn = 'pgsql:host=' . $connection->get('host') . $port . ';dbname=' . $connection->get('dbName') . ';';
-                    $result = new \PDO($dsn, $connection->get('user'), $this->decryptPassword($connection->get('password')));
-                    $result->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-                } catch (\PDOException $e) {
-                    throw new BadRequest(sprintf($errorMessage, $e->getMessage()));
-                }
-                break;
-            case 'msql':
-                if (!function_exists('sqlsrv_connect')) {
-                    throw new BadRequest($this->getInjection('language')->translate('sqlsrvMissing', 'exceptions', 'Connection'));
-                }
-                $serverName = "{$connection->get('host')},{$connection->get('port')}";
-                $connectionInfo = [
-                    "Database"     => $connection->get('dbName'),
-                    "Uid"          => $connection->get('user'),
-                    "PWD"          => $this->decryptPassword($connection->get('password')),
-                    "LoginTimeout" => 5
-                ];
-                $result = \sqlsrv_connect($serverName, $connectionInfo);
-                if ($result === false) {
-                    throw new BadRequest(sprintf($errorMessage, implode(', ', array_column(\sqlsrv_errors(), 'message'))));
-                }
-                break;
-            case 'ftp':
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL, "ftp://{$connection->get('host')}/");
-                if (!empty($connection->get('port'))) {
-                    curl_setopt($ch, CURLOPT_PORT, $connection->get('port'));
-                }
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_USERPWD, $connection->get('user') . ":" . $this->decryptPassword($connection->get('password')));
-                curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-                curl_setopt($ch, CURLOPT_DIRLISTONLY, true);
-                $data = curl_exec($ch);
-                curl_close($ch);
-                if ($data === false) {
-                    throw new BadRequest(sprintf($errorMessage, 'Connection failed.'));
-                }
-                $result = 'curl';
-                break;
-            case 'sftp':
-                try {
-                    $result = new \phpseclib3\Net\SFTP($connection->get('host'), empty($connection->get('port')) ? 22 : (int)$connection->get('port'));
-                    $login = $result->login($connection->get('user'), $this->decryptPassword($connection->get('password')));
-                } catch (\Throwable $e) {
-                    throw new BadRequest(sprintf($errorMessage, $e->getMessage()));
-                }
-                if ($login === false) {
-                    throw new BadRequest(sprintf($errorMessage, 'Wrong auth data.'));
-                }
-                break;
-            case 'oauth2':
-                echo '<pre>';
-                print_r('123');
-                die();
-                break;
-            default:
-                throw new BadRequest(sprintf($errorMessage, $this->getInjection('language')->translate('noSuchType', 'exceptions', 'Connection')));
+        $connection = $this->getInjection('container')->get('\\Espo\\ConnectionType\\Connection' . ucfirst($connectionEntity->get('type')));
+        if (empty($connection) || !$connection instanceof ConnectionInterface) {
+            throw new BadRequest(sprintf($this->exception('connectionFailed'), $this->exception('noSuchType')));
         }
 
-        return $result;
+        return $connection->connect($connectionEntity);
     }
 
     public function createEntity($attachment)
@@ -175,6 +105,7 @@ class Connection extends Base
         parent::init();
 
         $this->addDependency('language');
+        $this->addDependency('container');
     }
 
     protected function encryptPasswordFields(\stdClass $inputData): void
@@ -217,5 +148,10 @@ class Connection extends Base
     protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
     {
         return true;
+    }
+
+    protected function exception(string $name, string $scope = 'Connection'): string
+    {
+        return $this->getInjection('language')->translate($name, 'exceptions', $scope);
     }
 }

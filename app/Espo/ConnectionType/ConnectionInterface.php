@@ -37,6 +37,14 @@ declare(strict_types=1);
 
 namespace Espo\ConnectionType;
 
+use Espo\ORM\Entity;
+
 interface ConnectionInterface
 {
+    /**
+     * @param Entity $connection
+     *
+     * @return mixed
+     */
+    public function connect(Entity $connection);
 }

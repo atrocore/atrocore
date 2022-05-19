@@ -40,19 +40,25 @@ namespace Espo\ConnectionType;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
-class ConnectionMysql extends AbstractConnection
+class ConnectionFtp extends AbstractConnection
 {
     public function connect(Entity $connection)
     {
-        try {
-            $port = !empty($connection->get('port')) ? ';port=' . $connection->get('port') : '';
-            $dsn = 'mysql:host=' . $connection->get('host') . $port . ';dbname=' . $connection->get('dbName') . ';';
-            $result = new \PDO($dsn, $connection->get('user'), $this->decryptPassword($connection->get('password')));
-            $result->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        } catch (\PDOException $e) {
-            throw new BadRequest(sprintf($this->getInjection('language')->translate('connectionFailed', 'exceptions', 'Connection'), $e->getMessage()));
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "ftp://{$connection->get('host')}/");
+        if (!empty($connection->get('port'))) {
+            curl_setopt($ch, CURLOPT_PORT, $connection->get('port'));
+        }
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_USERPWD, $connection->get('user') . ":" . $this->decryptPassword($connection->get('password')));
+        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        curl_setopt($ch, CURLOPT_DIRLISTONLY, true);
+        $data = curl_exec($ch);
+        curl_close($ch);
+        if ($data === false) {
+            throw new BadRequest(sprintf($this->getInjection('language')->translate('connectionFailed', 'exceptions', 'Connection'), 'Connection failed.'));
         }
 
-        return $result;
+        return 'curl';
     }
 }

@@ -40,17 +40,27 @@ namespace Espo\ConnectionType;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
-class ConnectionMysql extends AbstractConnection
+class ConnectionMsql extends AbstractConnection
 {
     public function connect(Entity $connection)
     {
-        try {
-            $port = !empty($connection->get('port')) ? ';port=' . $connection->get('port') : '';
-            $dsn = 'mysql:host=' . $connection->get('host') . $port . ';dbname=' . $connection->get('dbName') . ';';
-            $result = new \PDO($dsn, $connection->get('user'), $this->decryptPassword($connection->get('password')));
-            $result->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        } catch (\PDOException $e) {
-            throw new BadRequest(sprintf($this->getInjection('language')->translate('connectionFailed', 'exceptions', 'Connection'), $e->getMessage()));
+        if (!function_exists('sqlsrv_connect')) {
+            throw new BadRequest($this->getInjection('language')->translate('sqlsrvMissing', 'exceptions', 'Connection'));
+        }
+
+        $serverName = "{$connection->get('host')},{$connection->get('port')}";
+        $connectionInfo = [
+            "Database"     => $connection->get('dbName'),
+            "Uid"          => $connection->get('user'),
+            "PWD"          => $this->decryptPassword($connection->get('password')),
+            "LoginTimeout" => 5
+        ];
+        $result = \sqlsrv_connect($serverName, $connectionInfo);
+
+        if ($result === false) {
+            throw new BadRequest(
+                sprintf($this->getInjection('language')->translate('connectionFailed', 'exceptions', 'Connection'), implode(', ', array_column(\sqlsrv_errors(), 'message')))
+            );
         }
 
         return $result;

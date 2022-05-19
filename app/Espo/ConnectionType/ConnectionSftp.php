@@ -40,17 +40,18 @@ namespace Espo\ConnectionType;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
-class ConnectionMysql extends AbstractConnection
+class ConnectionSftp extends AbstractConnection
 {
     public function connect(Entity $connection)
     {
         try {
-            $port = !empty($connection->get('port')) ? ';port=' . $connection->get('port') : '';
-            $dsn = 'mysql:host=' . $connection->get('host') . $port . ';dbname=' . $connection->get('dbName') . ';';
-            $result = new \PDO($dsn, $connection->get('user'), $this->decryptPassword($connection->get('password')));
-            $result->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        } catch (\PDOException $e) {
+            $result = new \phpseclib3\Net\SFTP($connection->get('host'), empty($connection->get('port')) ? 22 : (int)$connection->get('port'));
+            $login = $result->login($connection->get('user'), $this->decryptPassword($connection->get('password')));
+        } catch (\Throwable $e) {
             throw new BadRequest(sprintf($this->getInjection('language')->translate('connectionFailed', 'exceptions', 'Connection'), $e->getMessage()));
+        }
+        if ($login === false) {
+            throw new BadRequest(sprintf($this->getInjection('language')->translate('connectionFailed', 'exceptions', 'Connection'), 'Wrong auth data.'));
         }
 
         return $result;

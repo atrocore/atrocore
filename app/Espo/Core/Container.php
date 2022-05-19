@@ -38,6 +38,7 @@ declare(strict_types=1);
 namespace Espo\Core;
 
 use Espo\Core\EventManager\Manager as EventManager;
+use Espo\Core\Interfaces\Injectable;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Log;
@@ -83,6 +84,16 @@ class Container
         if (empty($this->data[$name])) {
             $this->load($name);
         }
+
+        if (!isset($this->data[$name]) && class_exists($name)) {
+            $this->data[$name] = new $name();
+            if ($this->data[$name] instanceof Injectable) {
+                foreach ($this->data[$name]->getDependencyList() as $dependency) {
+                    $this->data[$name]->inject($dependency, $this->get($dependency));
+                }
+            }
+        }
+
         if (isset($this->data[$name])) {
             return $this->data[$name];
         }

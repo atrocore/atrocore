@@ -37,22 +37,12 @@ declare(strict_types=1);
 
 namespace Espo\ConnectionType;
 
-use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
-class ConnectionMysql extends AbstractConnection
+class ConnectionOauth2 extends AbstractConnection
 {
     public function connect(Entity $connection)
     {
-        try {
-            $port = !empty($connection->get('port')) ? ';port=' . $connection->get('port') : '';
-            $dsn = 'mysql:host=' . $connection->get('host') . $port . ';dbname=' . $connection->get('dbName') . ';';
-            $result = new \PDO($dsn, $connection->get('user'), $this->decryptPassword($connection->get('password')));
-            $result->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        } catch (\PDOException $e) {
-            throw new BadRequest(sprintf($this->getInjection('language')->translate('connectionFailed', 'exceptions', 'Connection'), $e->getMessage()));
-        }
-
-        return $result;
+        return null;
     }
 }
