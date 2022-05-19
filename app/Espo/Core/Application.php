@@ -44,6 +44,7 @@ use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Route;
 use Espo\Entities\Portal;
+use Espo\ORM\EntityManager;
 use Espo\Services\Installer;
 
 class Application
@@ -352,8 +353,7 @@ class Application
         }
         if (!empty($_COOKIE['auth-token'])) {
             $token = $this
-                ->getContainer()
-                ->get('entityManager')
+                ->getEntityManager()
                 ->getRepository('AuthToken')
                 ->where(['token' => $_COOKIE['auth-token']])
                 ->findOne();
@@ -670,6 +670,16 @@ class Application
      */
     private function logoutAll(): void
     {
-        $this->getContainer()->get('pdo')->exec("DELETE FROM auth_token WHERE lifetime IS NULL AND idle_time IS NULL");
+        $this->getPDO()->exec("DELETE FROM auth_token WHERE lifetime IS NULL AND idle_time IS NULL");
+    }
+
+    private function getPDO(): \PDO
+    {
+        return $this->getContainer()->get('pdo');
+    }
+
+    private function getEntityManager(): EntityManager
+    {
+        return $this->getContainer()->get('entityManager');
     }
 }
