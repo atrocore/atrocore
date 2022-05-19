@@ -51,25 +51,23 @@ use Monolog\ErrorHandler;
 use Treo\Core\ModuleManager\Manager as ModuleManager;
 use Treo\Core\Utils\File\Manager as FileManager;
 
-/**
- * Class Container
- */
 class Container
 {
-    /**
-     * @var array
-     */
-    protected $data = [];
+    protected array $data = [];
 
-    /**
-     * Container constructor.
-     */
+    protected array $classAliases = [];
+
     public function __construct()
     {
-        // load modules
-        foreach ($this->get('moduleManager')->getModules() as $module) {
+        $this->data['moduleManager'] = new ModuleManager($this);
+        foreach ($this->data['moduleManager']->getModules() as $module) {
             $module->onLoad();
         }
+    }
+
+    public function setClassAlias(string $alias, string $className): void
+    {
+        $this->classAliases[$alias] = $className;
     }
 
     /**
@@ -81,20 +79,41 @@ class Container
      */
     public function get(string $name)
     {
-        if (empty($this->data[$name])) {
-            $this->load($name);
+        if (isset($this->data[$name])) {
+            return $this->data[$name];
         }
 
-        if (!isset($this->data[$name]) && class_exists($name)) {
-            $this->data[$name] = new $name();
+        // load via load method
+        $loadMethod = 'load' . ucfirst($name);
+        if (method_exists($this, $loadMethod)) {
+            $this->data[$name] = $this->$loadMethod();
+            return $this->data[$name];
+        }
+
+        // load via metadata loader
+        try {
+            $className = $this->get('metadata')->get('app.loaders.' . ucfirst($name), null);
+        } catch (\Exception $e) {
+            $className = null;
+        }
+        if (!is_string($className) || !class_exists($className)) {
+            $className = '\Treo\Core\Loaders\\' . ucfirst($name);
+        }
+        if (!empty($className) && class_exists($className)) {
+            $this->data[$name] = (new $className($this))->load();
+            return $this->data[$name];
+        }
+
+        // load via classname
+        $className = isset($this->classAliases[$name]) ? $this->classAliases[$name] : $name;
+        if (class_exists($className)) {
+            $this->data[$name] = new $className();
             if ($this->data[$name] instanceof Injectable) {
                 foreach ($this->data[$name]->getDependencyList() as $dependency) {
                     $this->data[$name]->inject($dependency, $this->get($dependency));
                 }
             }
-        }
 
-        if (isset($this->data[$name])) {
             return $this->data[$name];
         }
 
@@ -148,37 +167,6 @@ class Container
     protected function set($name, $obj)
     {
         $this->data[$name] = $obj;
-    }
-
-    /**
-     * Load
-     *
-     * @param string $name
-     *
-     * @throws \ReflectionException
-     */
-    protected function load(string $name): void
-    {
-        // prepare load method
-        $loadMethod = 'load' . ucfirst($name);
-
-        if (method_exists($this, $loadMethod)) {
-            $this->data[$name] = $this->$loadMethod();
-        } else {
-            try {
-                $className = $this->get('metadata')->get('app.loaders.' . ucfirst($name), null);
-            } catch (\Exception $e) {
-                $className = null;
-            }
-
-            if (!is_string($className) || !class_exists($className)) {
-                $className = '\Treo\Core\Loaders\\' . ucfirst($name);
-            }
-
-            if (class_exists($className)) {
-                $this->data[$name] = (new $className($this))->load();
-            }
-        }
     }
 
     /**
@@ -332,16 +320,6 @@ class Container
     protected function loadFileManager(): FileManager
     {
         return new FileManager($this->get('config'));
-    }
-
-    /**
-     * Load module manager
-     *
-     * @return ModuleManager
-     */
-    protected function loadModuleManager(): ModuleManager
-    {
-        return new ModuleManager($this);
     }
 
     /**
