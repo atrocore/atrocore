@@ -86,10 +86,9 @@ class Hierarchy extends RDB
 
     public function fetchById(string $id): array
     {
-        $tableName = $this->getEntityManager()->getQuery()->toDb($this->entityType);
         $result = $this
             ->getPDO()
-            ->query("SELECT * FROM `$tableName` WHERE deleted=0 AND id={$this->getPDO()->quote($id)}")
+            ->query("SELECT * FROM `$this->tableName` WHERE deleted=0 AND id={$this->getPDO()->quote($id)}")
             ->fetch(\PDO::FETCH_ASSOC);
 
         if (empty($result)) {
@@ -125,7 +124,6 @@ class Hierarchy extends RDB
         // prepare vars
         $preparedEntityId = $this->getPDO()->quote($entityId);
         $preparedParentId = $this->getPDO()->quote($parentId);
-        $tableName = $this->getEntityManager()->getQuery()->toDb($this->entityType);
 
         $this->getPDO()->exec("DELETE FROM `$this->hierarchyTableName` WHERE entity_id=$preparedEntityId");
         if (!empty($parentId)) {
@@ -151,7 +149,7 @@ class Hierarchy extends RDB
         foreach ($sortedIds as $k => $id) {
             $sortOrder = $k * 10;
             if (empty($parentId)) {
-                $this->getPDO()->exec("UPDATE `$tableName` SET sort_order=$sortOrder WHERE id='$id' AND deleted=0");
+                $this->getPDO()->exec("UPDATE `$this->tableName` SET sort_order=$sortOrder WHERE id='$id' AND deleted=0");
             } else {
                 $this->getPDO()->exec("UPDATE `$this->hierarchyTableName` SET hierarchy_sort_order=$sortOrder WHERE entity_id='$id' AND deleted=0");
             }
@@ -160,11 +158,9 @@ class Hierarchy extends RDB
 
     public function hasMultipleParents(): bool
     {
-        $tableName = $this->getEntityManager()->getQuery()->toDb($this->entityType);
-
         $query = "SELECT COUNT(e.id) as total 
                   FROM (SELECT entity_id FROM `$this->hierarchyTableName` WHERE deleted=0 GROUP BY entity_id HAVING COUNT(entity_id) > 1) AS rel 
-                  LEFT JOIN `$tableName` e ON e.id=rel.entity_id 
+                  LEFT JOIN `$this->tableName` e ON e.id=rel.entity_id 
                   WHERE e.deleted=0";
 
         $count = $this
@@ -203,16 +199,14 @@ class Hierarchy extends RDB
 
     public function getChildrenArray(string $parentId, bool $withChildrenCount = true): array
     {
-        $tableName = $this->getEntityManager()->getQuery()->toDb($this->entityType);
-
         $select = 'e.*';
         if ($withChildrenCount) {
-            $select .= ", (SELECT COUNT(r1.id) FROM `$this->hierarchyTableName` r1 JOIN `$tableName` e1 ON e1.id=r1.entity_id WHERE r1.parent_id=e.id AND e1.deleted=0) as childrenCount";
+            $select .= ", (SELECT COUNT(r1.id) FROM `$this->hierarchyTableName` r1 JOIN `$this->tableName` e1 ON e1.id=r1.entity_id WHERE r1.parent_id=e.id AND e1.deleted=0) as childrenCount";
         }
 
         if (empty($parentId)) {
             $query = "SELECT {$select} 
-                      FROM `{$tableName}` e
+                      FROM `$this->tableName` e
                       WHERE e.id NOT IN (SELECT entity_id FROM `$this->hierarchyTableName` WHERE deleted=0)
                       AND e.deleted=0
                       ORDER BY e.sort_order";
@@ -220,7 +214,7 @@ class Hierarchy extends RDB
             $parentId = $this->getPDO()->quote($parentId);
             $query = "SELECT {$select}
                   FROM `$this->hierarchyTableName` h
-                  LEFT JOIN `{$tableName}` e ON e.id=h.entity_id
+                  LEFT JOIN `$this->tableName` e ON e.id=h.entity_id
                   WHERE h.deleted=0
                     AND e.deleted=0
                     AND h.parent_id={$parentId}
@@ -258,11 +252,10 @@ class Hierarchy extends RDB
     public function getParentRecord(string $id): array
     {
         $id = $this->getPDO()->quote($id);
-        $tableName = $this->getEntityManager()->getQuery()->toDb($this->entityType);
 
         $query = "SELECT t.*
                   FROM `$this->hierarchyTableName` h
-                  LEFT JOIN `$tableName` t ON t.id=h.parent_id
+                  LEFT JOIN `$this->tableName` t ON t.id=h.parent_id
                   WHERE h.deleted=0
                     AND t.deleted=0
                     AND h.entity_id={$id}";
