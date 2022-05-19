@@ -19419,6 +19419,13 @@ table.table > thead th > div > a {
     left: 220px;
   }
 
+  #main > .record > .detail > .detail-button-container.detail-tree-button-container:not(.stick-sub) {
+    position: relative;
+    padding-right: 15px;
+    padding-left: 15px;
+    left: -15px;
+  }
+
   #main > .page-header.collapsed .overview-filters-container
   {
     width: auto;

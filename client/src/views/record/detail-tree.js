@@ -79,13 +79,14 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
                     const overview = content.find('.overview');
                     const side = content.find('.side');
 
-                    header.outerWidth(main.width() - width - 9);
+                    header.outerWidth(main.width() - width);
                     header.css('marginLeft', width + 'px');
 
-                    btnContainer.outerWidth(main.width() - width - 9);
+                    btnContainer.outerWidth(content.innerWidth() - width);
+                    btnContainer.addClass('detail-tree-button-container');
                     btnContainer.css('marginLeft', width + 'px');
 
-                    overview.outerWidth(content.innerWidth() - side.outerWidth() - width - 9);
+                    overview.outerWidth(content.innerWidth() - side.outerWidth() - width);
                     overview.css('marginLeft', (width - 1) + 'px');
                 });
                 this.listenTo(view, 'tree-width-unset', function () {
