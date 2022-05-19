@@ -42,6 +42,15 @@ class Connection extends Base
 {
     protected $entityType = "Connection";
 
+    public function get($name, $params = [])
+    {
+        if (!empty($this->getAttributeParam($name, 'dataField'))) {
+            return $this->getDataField($name);
+        }
+
+        return parent::get($name, $params);
+    }
+
     public function setDataField(string $name, $value): void
     {
         $data = [];
@@ -85,14 +94,5 @@ class Connection extends Base
         }
 
         parent::setFieldValue($field, $value);
-    }
-
-    protected function getFieldValue(string $field)
-    {
-        if (!empty($this->getAttributeParam($field, 'dataField'))) {
-            return $this->getDataField($field);
-        }
-
-        return parent::getFieldValue($field);
     }
 }

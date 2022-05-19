@@ -60,6 +60,7 @@ class Connection extends Base
     public function connect(Entity $connectionEntity)
     {
         $connection = $this->getInjection('container')->get('\\Espo\\ConnectionType\\Connection' . ucfirst($connectionEntity->get('type')));
+
         if (empty($connection) || !$connection instanceof ConnectionInterface) {
             throw new BadRequest(sprintf($this->exception('connectionFailed'), $this->exception('noSuchType')));
         }
