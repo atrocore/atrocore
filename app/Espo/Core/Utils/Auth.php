@@ -43,7 +43,7 @@ use Espo\Entities\AuthLogRecord;
 use Espo\Entities\Portal;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
-use Treo\Core\Slim\Http\Request;
+use Espo\Core\Slim\Http\Request;
 
 /**
  * Class Auth

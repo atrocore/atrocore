@@ -60,6 +60,7 @@ class Container
             'crypt'          => \Espo\Core\Utils\Crypt::class,
             'cronManager'    => \Espo\Core\CronManager::class,
             'consoleManager' => \Espo\Core\ConsoleManager::class,
+            'slim'           => \Espo\Core\Utils\Api\Slim::class,
         ];
 
     public function __construct()

@@ -35,6 +35,8 @@
 
 namespace Espo\Core\Utils\Api;
 
+use Espo\Core\Slim\Http\Request;
+
 class Slim extends \Slim\Slim
 {
     public function __construct(array $userSettings = array())
@@ -45,10 +47,7 @@ class Slim extends \Slim\Slim
 
         // Default environment
         $this->container->singleton('environment', function ($c) {
-            /* ESPOCRM: change Environment class */
-            //return \Slim\Environment::getInstance();
             return \Espo\Core\Utils\Api\Slim\Environment::getInstance();
-            /* ESPOCRM: end */
         });
 
         // Default request
@@ -119,6 +118,11 @@ class Slim extends \Slim\Slim
         if (is_null(static::getInstance())) {
             $this->setName('default');
         }
+
+        // set request
+        $this->container->singleton('request', function ($c) {
+            return new Request($c['environment']);
+        });
     }
 
     /**
