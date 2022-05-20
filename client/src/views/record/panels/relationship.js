@@ -190,6 +190,9 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             this.wait(true);
             this.getCollectionFactory().create(this.scope, function (collection) {
                 collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
+                if (this.defs.dragDrop) {
+                    collection.maxSize = 9999;
+                }
 
                 if (this.defs.filters) {
                     var searchManager = new SearchManager(collection, 'listRelationship', false, this.getDateTime());
