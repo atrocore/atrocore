@@ -35,26 +35,23 @@
 
 namespace Espo\Core\Utils;
 
-class Crypt
+use Espo\Core\Injectable;
+
+class Crypt extends Injectable
 {
-    private $config;
-
     private $key = null;
-
-    private $cryptKey = null;
 
     private $iv = null;
 
-    public function __construct($config)
+    public function __construct()
     {
-        $this->config = $config;
-        $this->cryptKey = $config->get('cryptKey', '');
+        $this->addDependency('config');
     }
 
     protected function getKey()
     {
         if (empty($this->key)) {
-            $this->key = hash('sha256', $this->cryptKey, true);
+            $this->key = hash('sha256', $this->getInjection('config')->get('cryptKey', ''), true);
         }
         return $this->key;
     }

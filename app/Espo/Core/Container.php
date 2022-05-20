@@ -55,7 +55,11 @@ class Container
 {
     protected array $data = [];
 
-    protected array $classAliases = [];
+    protected array $classAliases
+        = [
+            'crypt'       => \Espo\Core\Utils\Crypt::class,
+            'cronManager' => \Espo\Core\CronManager::class
+        ];
 
     public function __construct()
     {

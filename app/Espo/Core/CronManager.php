@@ -34,26 +34,12 @@
  */
 
 namespace Espo\Core;
-use \PDO;
+
 use Espo\Core\Utils\Json;
 use Espo\Core\Exceptions\NotFound;
 
-class CronManager
+class CronManager extends Injectable
 {
-    private $container;
-
-    private $config;
-
-    private $fileManager;
-
-    private $entityManager;
-
-    private $scheduledJobUtil;
-
-    private $cronJobUtil;
-
-    private $cronScheduledJobUtil;
-
     const PENDING = 'Pending';
 
     const RUNNING = 'Running';
@@ -62,63 +48,54 @@ class CronManager
 
     const FAILED = 'Failed';
 
-    public function __construct(\Espo\Core\Container $container)
+    public function __construct()
     {
-        $this->container = $container;
-
-        $this->config = $this->container->get('config');
-        $this->fileManager = $this->container->get('fileManager');
-        $this->entityManager = $this->container->get('entityManager');
-        $this->serviceFactory = $this->container->get('serviceFactory');
-
-        $this->scheduledJobUtil = $this->container->get('scheduledJob');
-        $this->cronJobUtil = new \Espo\Core\Utils\Cron\Job($this->config, $this->entityManager);
-        $this->cronScheduledJobUtil = new \Espo\Core\Utils\Cron\ScheduledJob($this->config, $this->entityManager);
+        $this->addDependency('container');
     }
 
     protected function getContainer()
     {
-        return $this->container;
+        return $this->getInjection('container');
     }
 
     protected function getConfig()
     {
-        return $this->config;
+        return $this->getContainer()->get('config');
     }
 
     protected function getFileManager()
     {
-        return $this->fileManager;
+        return $this->getContainer()->get('fileManager');
     }
 
     protected function getEntityManager()
     {
-        return $this->entityManager;
+        return $this->getContainer()->get('entityManager');
     }
 
     protected function getServiceFactory()
     {
-        return $this->serviceFactory;
+        return $this->getContainer()->get('serviceFactory');
     }
 
     protected function getScheduledJobUtil()
     {
-        return $this->scheduledJobUtil;
+        return $this->getContainer()->get('scheduledJob');
     }
 
     protected function getCronJobUtil()
     {
-        return $this->cronJobUtil;
+        return new \Espo\Core\Utils\Cron\Job($this->getConfig(), $this->getEntityManager());
     }
 
     protected function getCronScheduledJobUtil()
     {
-        return $this->cronScheduledJobUtil;
+        return new \Espo\Core\Utils\Cron\ScheduledJob($this->getConfig(), $this->getEntityManager());
     }
 
     protected function getLastRunTime()
     {
-        $lastRunData = $this->container->get('dataManager')->getCacheData('cronLastRunTime');
+        $lastRunData = $this->getContainer()->get('dataManager')->getCacheData('cronLastRunTime');
 
         if (is_array($lastRunData) && !empty($lastRunData['time'])) {
             $lastRunTime = $lastRunData['time'];
@@ -131,7 +108,7 @@ class CronManager
 
     protected function setLastRunTime($time)
     {
-        return $this->container->get('dataManager')->setCacheData('cronLastRunTime', ['time' => $time]);
+        return $this->getContainer()->get('dataManager')->setCacheData('cronLastRunTime', ['time' => $time]);
     }
 
     protected function checkLastRunTime()
@@ -230,7 +207,7 @@ class CronManager
             throw new NotFound();
         }
 
-        $jobClass = new $className($this->container);
+        $jobClass = new $className($this->getContainer());
         $method = 'run';
         if (!method_exists($jobClass, $method)) {
             throw new NotFound();
@@ -322,7 +299,7 @@ class CronManager
             $className = $this->getScheduledJobUtil()->get($scheduledJob->get('job'));
             if ($className) {
                 if (method_exists($className, 'prepare')) {
-                    $implementation = new $className($this->container);
+                    $implementation = new $className($this->getContainer());
                     $implementation->prepare($scheduledJob, $nextDate);
                     continue;
                 }
