@@ -108,7 +108,7 @@ class Container
         $className = isset($this->classAliases[$name]) ? $this->classAliases[$name] : $name;
         if (class_exists($className)) {
             $this->data[$name] = new $className();
-            if ($this->data[$name] instanceof Injectable) {
+            if (is_a($className, Injectable::class, true)) {
                 foreach ($this->data[$name]->getDependencyList() as $dependency) {
                     $this->data[$name]->inject($dependency, $this->get($dependency));
                 }
