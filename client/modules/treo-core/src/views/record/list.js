@@ -213,36 +213,48 @@ Espo.define('treo-core:views/record/list', 'class-replace!treo-core:views/record
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
+            let list = $('#main > .list-container > .list');
+            if (!list) {
+                return;
+            }
+
+            var $bar = $('<div class="fixed-scrollbar" style="display: none"><div></div></div>').appendTo(list).css({
+                width: list.outerWidth()
+            });
+            $bar.scroll(function () {
+                list.scrollLeft($bar.scrollLeft());
+            });
+            $bar.data("status", "off");
+
+            var fixSize = function () {
+                var $container = $bar.parent();
+
+                $bar.children('div').height(1).width($container[0].scrollWidth);
+                $bar.width($container.width()).scrollLeft($container.scrollLeft());
+            };
+
             this.fullTableScroll();
             $(window).on("resize.fixed-scrollbar tree-width-changed tree-width-unset", function () {
                 this.fullTableScroll();
+
+                if (list) {
+                    if (!this.hasHorizontalScroll() || $(window).width() < 768) {
+                        $('.fixed-scrollbar').css('display', 'none');
+                        $('td[data-name="buttons"]').removeClass('fixed-button');
+                    } else {
+                        $('.fixed-scrollbar').css('display', 'block');
+                        $('td[data-name="buttons"]').addClass('fixed-button');
+                        fixSize();
+                    }
+                }
             }.bind(this));
 
             if (this.enabledFixedHeader) {
                 this.fixedTableHead()
             }
 
-            let list = $('#main > .list-container > .list');
-            if (list && this.hasHorizontalScroll()) {
-                var $bar = $('<div class="fixed-scrollbar"><div></div></div>').appendTo(list).css({
-                    width: list.outerWidth()
-                });
-                $bar.scroll(function () {
-                    list.scrollLeft($bar.scrollLeft());
-                });
-                $bar.data("status", "off");
-
-                var fixSize = function () {
-                    var $container = $bar.parent();
-
-                    $bar.children('div').height(1).width($container[0].scrollWidth);
-                    $bar.width($container.width()).scrollLeft($container.scrollLeft());
-                };
-
+            if (this.hasHorizontalScroll()) {
                 fixSize();
-                $(window).on("resize.fixed-scrollbar tree-width-changed tree-width-unset", function () {
-                    fixSize();
-                });
 
                 var scrollTimeout = null;
 
