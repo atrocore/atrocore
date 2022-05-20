@@ -35,31 +35,17 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core;
+namespace Espo\Core;
 
 use Espo\Console;
 use Espo\Console\AbstractConsole;
-use Espo\Core\Container;
 use Espo\Core\Utils\Metadata;
 
-/**
- * ConsoleManager
- */
-class ConsoleManager
+class ConsoleManager extends Injectable
 {
-    /**
-     * @var Container
-     */
-    private $container;
-
-    /**
-     * ConsoleManager constructor.
-     *
-     * @param Container $container
-     */
-    public function __construct(Container $container)
+    public function __construct()
     {
-        $this->container = $container;
+        $this->addDependency('container');
     }
 
     /**
@@ -71,7 +57,7 @@ class ConsoleManager
     {
         if (!empty($data = $this->getRouteHandler($command))) {
             if (is_a($data['handler'], AbstractConsole::class, true)) {
-                (new $data['handler']($this->container))->run($data['data']);
+                (new $data['handler']($this->getInjection('container')))->run($data['data']);
                 die();
             }
             AbstractConsole::show('No such console handler as ' . $data['handler'], 2, true);
@@ -155,6 +141,6 @@ class ConsoleManager
      */
     protected function getMetadata(): Metadata
     {
-        return $this->container->get('metadata');
+        return $this->getInjection('container')->get('metadata');
     }
 }
