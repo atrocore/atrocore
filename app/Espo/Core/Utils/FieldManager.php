@@ -35,41 +35,26 @@
 
 namespace Espo\Core\Utils;
 
-use Espo\Core\Container;
 use Espo\Core\EventManager\Event;
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Injectable;
 use Espo\Core\Utils\FieldManager\Hooks\Base as BaseHook;
 use Espo\Core\Utils\Metadata\Helper;
 
 /**
  * Class FieldManager
  */
-class FieldManager
+class FieldManager extends Injectable
 {
-    /**
-     * @var Helper
-     */
-    protected $metadataHelper;
-
     protected $isChanged = null;
-
-    /**
-     * @var Container|null
-     */
-    protected $container;
 
     protected $forbiddenFieldNameList = ['id', 'deleted'];
 
-    /**
-     * FieldManager constructor.
-     *
-     * @param Container $container
-     */
-    public function __construct(Container $container)
+    public function __construct()
     {
-        $this->container = $container;
-        $this->metadataHelper = new Helper($this->getMetadata());
+        $this->addDependency('container');
     }
 
     /**
@@ -77,17 +62,17 @@ class FieldManager
      */
     protected function getMetadata()
     {
-        return $this->container->get('metadata');
+        return $this->getInjection('container')->get('metadata');
     }
 
     protected function getLanguage()
     {
-        return $this->container->get('language');
+        return $this->getInjection('container')->get('language');
     }
 
     protected function getBaseLanguage()
     {
-        return $this->container->get('baseLanguage');
+        return $this->getInjection('container')->get('baseLanguage');
     }
 
     /**
@@ -95,12 +80,12 @@ class FieldManager
      */
     protected function getMetadataHelper()
     {
-        return $this->metadataHelper;
+        return new Helper($this->getMetadata());
     }
 
     protected function getDefaultLanguage()
     {
-        return $this->container->get('defaultLanguage');
+        return $this->getInjection('container')->get('defaultLanguage');
     }
 
     public function read($scope, $name)
@@ -175,7 +160,7 @@ class FieldManager
             $label = Util::toCamelCase('label_' . strtolower($locale));
             $fieldKey = empty($fieldDefs['multilangField']) ? $name : $fieldDefs['multilangField'];
             if (isset($fieldDefs[$label])) {
-                $languageObj = new Language($this->container, $locale);
+                $languageObj = new Language($this->getInjection('container'), $locale);
                 $languageObj->set($scope, 'fields', $fieldKey, $fieldDefs[$label]);
                 $languageObj->save();
                 unset($fieldDefs[$label]);
@@ -321,7 +306,7 @@ class FieldManager
             $result &= $this->getMetadata()->save();
 
             if (isset($oldFieldDefs['isMultilang']) && $oldFieldDefs['isMultilang'] == true && !$this->getMetadata()->get(['entityDefs', $scope, 'fields', $name, 'isMultilang'], false)) {
-                (new \Espo\Jobs\TreoCleanup($this->container))->run();
+                (new \Espo\Jobs\TreoCleanup($this->getInjection('container')))->run();
             }
 
             $event = new Event(['scope' => $scope, 'field' => $name, 'oldFieldDefs' => $oldFieldDefs]);
@@ -783,7 +768,7 @@ class FieldManager
 
             // inject dependencies
             foreach ($hook->getDependencyList() as $name) {
-                $hook->inject($name, $this->container->get($name));
+                $hook->inject($name, $this->getInjection('container')->get($name));
             }
         }
 
@@ -792,11 +777,11 @@ class FieldManager
 
     protected function getConfig():Config
     {
-        return $this->container->get('config');
+        return $this->getInjection('container')->get('config');
     }
 
     protected function dispatch(string $target, string $action, Event $event): Event
     {
-        return $this->container->get('eventManager')->dispatch($target, $action, $event);
+        return $this->getInjection('container')->get('eventManager')->dispatch($target, $action, $event);
     }
 }

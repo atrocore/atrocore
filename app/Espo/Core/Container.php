@@ -64,6 +64,7 @@ class Container
             'thumbnail'      => \Espo\Core\Thumbnail\Image::class,
             'migration'      => \Espo\Core\Migration\Migration::class,
             'classParser'    => \Espo\Core\Utils\File\ClassParser::class,
+            'fieldManager'   => \Espo\Core\Utils\FieldManager::class,
         ];
 
     public function __construct()
