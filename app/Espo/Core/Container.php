@@ -61,7 +61,8 @@ class Container
             'cronManager'    => \Espo\Core\CronManager::class,
             'consoleManager' => \Espo\Core\ConsoleManager::class,
             'slim'           => \Espo\Core\Utils\Api\Slim::class,
-            'thumbnail'      => \Espo\Core\Thumbnail\Image::class
+            'thumbnail'      => \Espo\Core\Thumbnail\Image::class,
+            'migration'      => \Espo\Core\Migration\Migration::class,
         ];
 
     public function __construct()

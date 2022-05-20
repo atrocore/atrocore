@@ -35,35 +35,20 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core\Migration;
+namespace Espo\Core\Migration;
 
-use Espo\Core\Utils\Config;
+use Espo\Core\Injectable;
+use Treo\Core\Migration\Base;
 
 /**
  * Migration
  */
-class Migration
+class Migration extends Injectable
 {
-    /**
-     * @var \PDO
-     */
-    private $pdo;
-
-    /**
-     * @var Config
-     */
-    private $config;
-
-    /**
-     * Migration constructor.
-     *
-     * @param \PDO   $pdo
-     * @param Config $config
-     */
-    public function __construct(\PDO $pdo, Config $config)
+    public function __construct()
     {
-        $this->pdo = $pdo;
-        $this->config = $config;
+        $this->addDependency('pdo');
+        $this->addDependency('config');
     }
 
     /**
@@ -207,7 +192,7 @@ class Migration
             return null;
         }
 
-        return new $className($this->pdo, $this->config);
+        return new $className($this->getInjection('pdo'), $this->getInjection('config'));
     }
 
     /**
