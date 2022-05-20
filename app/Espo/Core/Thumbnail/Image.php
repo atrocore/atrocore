@@ -35,50 +35,30 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core\Thumbnail;
+namespace Espo\Core\Thumbnail;
 
 use Espo\Core\Exceptions\Error;
-use Espo\ORM\EntityManager;
-use Gumlet\ImageResize;
-use Espo\Core\Container;
+use Espo\Core\Injectable;
 use Espo\Core\Utils\Config;
-use Treo\Core\Utils\File\Manager;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\Attachment;
+use Espo\ORM\EntityManager;
+use Gumlet\ImageResize;
+use Treo\Core\Utils\File\Manager;
 
 /**
  * Class Image
  */
-class Image
+class Image extends Injectable
 {
-    /**
-     * @var Container
-     */
-    private $container;
-
-    /**
-     * @var array
-     */
-    protected $imageSizes;
-
-    /**
-     * Image constructor.
-     *
-     * @param Container $container
-     */
-    public function __construct(Container $container)
+    public function __construct()
     {
-        $this->container = $container;
-        $this->imageSizes = $this->getMetadata()->get(['app', 'imageSizes'], []);
+        $this->addDependency('metadata');
+        $this->addDependency('config');
+        $this->addDependency('fileManager');
+        $this->addDependency('entityManager');
     }
 
-    /**
-     * @param string $path
-     *
-     * @return Attachment|null
-     * @throws Error
-     * @throws \Gumlet\ImageResizeException
-     */
     public function createThumbnailByPath(string $path): ?Attachment
     {
         $thumbsPath = $this->getConfig()->get('thumbnailsPath', 'upload/thumbnails/');
@@ -109,14 +89,6 @@ class Image
         return null;
     }
 
-    /**
-     * @param Attachment $attachment
-     * @param string     $size
-     *
-     * @return bool
-     * @throws Error
-     * @throws \Gumlet\ImageResizeException
-     */
     public function createThumbnail(Attachment $attachment, string $size): bool
     {
         if (empty($attachment->getThumbPath($size)) || file_exists($attachment->getThumbPath($size)) || empty($attachment->getFilePath())) {
@@ -125,58 +97,41 @@ class Image
 
         $image = new ImageResize($this->getImageFilePath($attachment));
 
-        if (!$this->imageSizes[$size]) {
+        $imageSizes = $this->getMetadata()->get(['app', 'imageSizes'], []);
+
+        if (!$imageSizes[$size]) {
             throw new Error('Wrong file size');
         }
 
-        list($w, $h) = $this->imageSizes[$size];
+        list($w, $h) = $imageSizes[$size];
 
         $image->resizeToBestFit($w, $h);
 
         return $this->getFileManager()->putContents($attachment->getThumbPath($size), $image->getImageAsString());
     }
 
-    /**
-     * @param Attachment $attachment
-     *
-     * @return string
-     */
     protected function getImageFilePath(Attachment $attachment): string
     {
         return $attachment->getFilePath();
     }
 
-    /**
-     * @return Metadata
-     */
     protected function getMetadata(): Metadata
     {
-        return $this->container->get('metadata');
+        return $this->getInjection('metadata');
     }
 
-    /**
-     * @return Manager
-     */
     protected function getFileManager(): Manager
     {
-        return $this->container->get('fileManager');
+        return $this->getInjection('fileManager');
     }
 
-    /**
-     * @return EntityManager
-     */
     protected function getEntityManager(): EntityManager
     {
-        return $this->container->get('entityManager');
+        return $this->getInjection('entityManager');
     }
 
-    /**
-     * Get config
-     *
-     * @return Config
-     */
     protected function getConfig(): Config
     {
-        return $this->container->get('config');
+        return $this->getInjection('config');
     }
 }
