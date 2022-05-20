@@ -603,6 +603,10 @@ abstract class Base
                 return "{$orderBy} " . $order;
             }
 
+            if (!empty($entity->fields[$orderBy]['isLinkEntity'])) {
+                $orderBy = $orderBy . 'Id';
+            }
+
             if (!empty($entity->fields[$orderBy])) {
                 $fieldDefs = $entity->fields[$orderBy];
             }
