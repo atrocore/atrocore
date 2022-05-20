@@ -65,6 +65,7 @@ class Container
             'migration'      => \Espo\Core\Migration\Migration::class,
             'classParser'    => \Espo\Core\Utils\File\ClassParser::class,
             'fieldManager'   => \Espo\Core\Utils\FieldManager::class,
+            'layout'         => \Espo\Core\Utils\Layout::class,
         ];
 
     public function __construct()

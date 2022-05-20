@@ -36,19 +36,18 @@
 namespace Espo\Core\Utils;
 
 use Espo\Core\Container;
+use Espo\Core\Injectable;
 
 /**
  * Class Layout
  */
-class Layout
+class Layout extends Injectable
 {
-    protected Container $container;
-
     protected array $changedData = [];
 
-    public function __construct(Container $container)
+    public function __construct()
     {
-        $this->container = $container;
+        $this->addDependency('container');
     }
 
     public function isCustom(string $scope, string $name): bool
@@ -501,7 +500,7 @@ class Layout
 
     protected function getContainer(): Container
     {
-        return $this->container;
+        return $this->getInjection('container');
     }
 
     protected function getFileManager(): File\Manager
