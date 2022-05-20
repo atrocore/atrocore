@@ -63,6 +63,7 @@ class Container
             'slim'           => \Espo\Core\Utils\Api\Slim::class,
             'thumbnail'      => \Espo\Core\Thumbnail\Image::class,
             'migration'      => \Espo\Core\Migration\Migration::class,
+            'classParser'    => \Espo\Core\Utils\File\ClassParser::class,
         ];
 
     public function __construct()
@@ -87,6 +88,8 @@ class Container
      */
     public function get(string $name)
     {
+        $name = lcfirst($name);
+
         if (isset($this->data[$name])) {
             return $this->data[$name];
         }

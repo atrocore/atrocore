@@ -34,42 +34,34 @@
  */
 
 namespace Espo\Core\Utils\File;
-use \Espo\Core\Utils\Util;
 
-class ClassParser
+use Espo\Core\Injectable;
+use Espo\Core\Utils\Util;
+
+class ClassParser extends Injectable
 {
-    private $fileManager;
+    protected $allowedMethods = ['run'];
 
-    private $config;
-
-    private $metadata;
-
-    protected $cacheFile = null;
-
-    protected $allowedMethods = array(
-        'run',
-    );
-
-    public function __construct(\Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\Config $config, \Espo\Core\Utils\Metadata $metadata)
+    public function __construct()
     {
-        $this->fileManager = $fileManager;
-        $this->config = $config;
-        $this->metadata = $metadata;
+        $this->addDependency('fileManager');
+        $this->addDependency('config');
+        $this->addDependency('metadata');
     }
 
     protected function getFileManager()
     {
-        return $this->fileManager;
+        return $this->getInjection('fileManager');
     }
 
     protected function getConfig()
     {
-        return $this->config;
+        return $this->getInjection('config');
     }
 
     protected function getMetadata()
     {
-        return $this->metadata;
+        return $this->getInjection('metadata');
     }
 
     public function setAllowedMethods($methods)
