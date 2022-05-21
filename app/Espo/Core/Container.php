@@ -72,6 +72,7 @@ class Container
             'clientManager'     => \Espo\Core\Factories\ClientManager::class,
             'controllerManager' => \Espo\Core\ControllerManager::class,
             'dateTime'          => \Espo\Core\Factories\DateTime::class,
+            'entityManager'     => \Espo\Core\Factories\EntityManager::class,
         ];
 
     public function __construct()

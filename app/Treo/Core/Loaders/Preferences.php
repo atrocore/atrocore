@@ -37,9 +37,9 @@ declare(strict_types=1);
 
 namespace Treo\Core\Loaders;
 
+use Espo\Core\Exceptions\Error;
 use Espo\Core\ORM\EntityManager;
 use Espo\Entities\User;
-use Espo\Core\Exceptions\Error;
 
 /**
  * Preferences loader
@@ -64,7 +64,7 @@ class Preferences extends Base
     /**
      * Get entity manager
      *
-     * @return EntityManager
+     * @return \Espo\Core\Factories\EntityManager
      */
     protected function getEntityManager()
     {

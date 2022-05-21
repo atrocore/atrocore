@@ -35,20 +35,17 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core\Loaders;
+namespace Espo\Core\Factories;
 
-/**
- * Class EntityManager
- */
-class EntityManager extends Base
+use Espo\Core\Container;
+use Espo\Core\Interfaces\Factory;
+
+class EntityManager implements Factory
 {
-    /**
-     * @inheritdoc
-     */
-    public function load()
+    public function create(Container $container)
     {
         // get config
-        $config = $this->getContainer()->get('config');
+        $config = $container->get('config');
 
         $params = [
             'host'                       => $config->get('database.host'),
@@ -57,7 +54,7 @@ class EntityManager extends Base
             'user'                       => $config->get('database.user'),
             'charset'                    => $config->get('database.charset', 'utf8'),
             'password'                   => $config->get('database.password'),
-            'metadata'                   => $this->getContainer()->get('ormMetadata')->getData(),
+            'metadata'                   => $container->get('ormMetadata')->getData(),
             'repositoryFactoryClassName' => $this->getRepositoryFactoryClassName(),
             'driver'                     => $config->get('database.driver'),
             'platform'                   => $config->get('database.platform'),
@@ -66,15 +63,15 @@ class EntityManager extends Base
             'sslKey'                     => $config->get('database.sslKey'),
             'sslCAPath'                  => $config->get('database.sslCAPath'),
             'sslCipher'                  => $config->get('database.sslCipher'),
-            'pdo'                        => $this->getContainer()->get('pdo')
+            'pdo'                        => $container->get('pdo')
         ];
 
         // get class name
         $className = $this->getEntityManagerClassName();
 
         $entityManager = new $className($params);
-        $entityManager->setEspoMetadata($this->getContainer()->get('metadata'));
-        $entityManager->setContainer($this->getContainer());
+        $entityManager->setEspoMetadata($container->get('metadata'));
+        $entityManager->setContainer($container);
 
         return $entityManager;
     }

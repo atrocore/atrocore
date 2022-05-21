@@ -37,14 +37,14 @@ declare(strict_types=1);
 
 namespace Treo\Core\Loaders;
 
-use Treo\Core\Utils\Database\Schema\Converter;
-use Treo\Core\Utils\Database\Schema\Schema as Instance;
+use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config;
-use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\File\ClassParser;
 use Espo\Core\Utils\File\Manager;
-use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Metadata\OrmMetadata;
+use Treo\Core\Utils\Database\Schema\Converter;
+use Treo\Core\Utils\Database\Schema\Schema as Instance;
 
 /**
  * Schema loader
@@ -82,12 +82,12 @@ class Schema extends Base
     /**
      * Get schema
      *
-     * @param Config $config
-     * @param Metadata $metadata
-     * @param Manager $fileManager
-     * @param EntityManager $entityManager
-     * @param ClassParser $classParser
-     * @param OrmMetadata $ormMetadata
+     * @param Config                             $config
+     * @param Metadata                           $metadata
+     * @param Manager                            $fileManager
+     * @param \Espo\Core\Factories\EntityManager $entityManager
+     * @param ClassParser                        $classParser
+     * @param OrmMetadata                        $ormMetadata
      *
      * @return Instance
      */
@@ -135,7 +135,7 @@ class Schema extends Base
     /**
      * Get entity manager
      *
-     * @return EntityManager
+     * @return \Espo\Core\Factories\EntityManager
      */
     protected function getEntityManager()
     {
