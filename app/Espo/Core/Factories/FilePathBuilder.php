@@ -35,20 +35,15 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core\Loaders;
+namespace Espo\Core\Factories;
 
-/**
- * Class FilePathBuilder
- *
- * @package Treo\Core\Loaders
- */
-class FilePathBuilder extends Base
+use Espo\Core\Container;
+use Espo\Core\Interfaces\Factory;
+
+class FilePathBuilder implements Factory
 {
-    /**
-     * @return \Treo\Core\FilePathBuilder
-     */
-    public function load()
+    public function create(Container $container)
     {
-        return new \Treo\Core\FilePathBuilder($this->getContainer());
+        return new \Espo\Core\FilePathBuilder($container);
     }
 }

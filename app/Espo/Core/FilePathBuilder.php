@@ -35,19 +35,14 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core;
+namespace Espo\Core;
 
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Utils\Util;
 use Espo\ORM\Metadata;
 use Treo\Core\Utils\File\Manager;
 use Treo\Core\Utils\Random;
-use Espo\Core\Utils\Util;
-use Espo\Core\Container;
 
-/**
- * Class FilePathBuilder
- * @package Treo\Core
- */
 class FilePathBuilder
 {
     const UPLOAD = 'upload';

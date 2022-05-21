@@ -43,7 +43,7 @@ use Espo\Core\Utils\Config;
 use Espo\Entities\Attachment as AttachmentEntity;
 use Espo\ORM\Entity;
 use Espo\Core\ORM\Repositories\RDB;
-use Treo\Core\FilePathBuilder;
+use Espo\Core\FilePathBuilder;
 use Espo\Core\Utils\Util;
 
 /**

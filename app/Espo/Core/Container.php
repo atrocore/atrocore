@@ -76,6 +76,7 @@ class Container
             'entityManagerUtil' => \Espo\Core\Factories\EntityManagerUtil::class,
             'fieldManagerUtil'  => \Espo\Core\Factories\FieldManagerUtil::class,
             'workflow'          => \Espo\Core\Factories\Workflow::class,
+            'filePathBuilder'   => \Espo\Core\Factories\FilePathBuilder::class,
         ];
 
     public function __construct()

@@ -40,7 +40,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
-use Treo\Core\FilePathBuilder;
+use Espo\Core\FilePathBuilder;
 
 class Attachment extends Record
 {
