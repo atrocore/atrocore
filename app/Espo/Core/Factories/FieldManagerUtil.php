@@ -35,34 +35,15 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core\Loaders;
+namespace Espo\Core\Factories;
 
-use Espo\Core\Utils\FieldManagerUtil as Instance;
-use Espo\Core\Utils\Metadata;
+use Espo\Core\Container;
+use Espo\Core\Interfaces\Factory;
 
-/**
- * FieldManagerUtil loader
- */
-class FieldManagerUtil extends Base
+class FieldManagerUtil implements Factory
 {
-
-    /**
-     * Load FieldManagerUtil
-     *
-     * @return \Espo\Core\Utils\FieldManagerUtil
-     */
-    public function load()
+    public function create(Container $container)
     {
-        return new Instance($this->getMetadata());
-    }
-
-    /**
-     * Get metadata
-     *
-     * @return Metadata
-     */
-    protected function getMetadata()
-    {
-        return $this->getContainer()->get('metadata');
+        return new \Espo\Core\Utils\FieldManagerUtil($container->get('metadata'));
     }
 }

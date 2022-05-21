@@ -74,6 +74,7 @@ class Container
             'dateTime'          => \Espo\Core\Factories\DateTime::class,
             'entityManager'     => \Espo\Core\Factories\EntityManager::class,
             'entityManagerUtil' => \Espo\Core\Factories\EntityManagerUtil::class,
+            'fieldManagerUtil'  => \Espo\Core\Factories\FieldManagerUtil::class,
         ];
 
     public function __construct()
