@@ -35,33 +35,15 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core\Loaders;
+namespace Espo\Core\Factories;
 
-use Espo\Core\Utils\Api\Slim;
+use Espo\Core\Container;
+use Espo\Core\Interfaces\Factory;
 
-/**
- * Output loader
- */
-class Output extends Base
+class Output implements Factory
 {
-
-    /**
-     * Load Output
-     *
-     * @return \Espo\Core\Utils\Api\Output
-     */
-    public function load()
+    public function create(Container $container)
     {
-        return new \Espo\Core\Utils\Api\Output($this->getSlim());
-    }
-
-    /**
-     * Get slim
-     *
-     * @return Slim
-     */
-    protected function getSlim()
-    {
-        return $this->getContainer()->get('slim');
+        return new \Espo\Core\Utils\Api\Output($container->get('slim'));
     }
 }

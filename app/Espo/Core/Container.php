@@ -83,6 +83,7 @@ class Container
             'mailSender'         => \Espo\Core\Factories\MailSender::class,
             'number'             => \Espo\Core\Factories\Number::class,
             'ormMetadata'        => \Espo\Core\Factories\OrmMetadata::class,
+            'output'             => \Espo\Core\Factories\Output::class,
         ];
 
     public function __construct()
