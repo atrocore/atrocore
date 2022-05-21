@@ -58,39 +58,41 @@ class Container
 
     protected array $classAliases
         = [
-            'crypt'                => \Espo\Core\Utils\Crypt::class,
-            'cronManager'          => \Espo\Core\CronManager::class,
-            'consoleManager'       => \Espo\Core\ConsoleManager::class,
-            'slim'                 => \Espo\Core\Utils\Api\Slim::class,
-            'thumbnail'            => \Espo\Core\Thumbnail\Image::class,
-            'migration'            => \Espo\Core\Migration\Migration::class,
-            'classParser'          => \Espo\Core\Utils\File\ClassParser::class,
-            'fieldManager'         => \Espo\Core\Utils\FieldManager::class,
-            'layout'               => \Espo\Core\Utils\Layout::class,
-            'acl'                  => \Espo\Core\Factories\Acl::class,
-            'aclManager'           => \Espo\Core\Factories\AclManager::class,
-            'clientManager'        => \Espo\Core\Factories\ClientManager::class,
-            'controllerManager'    => \Espo\Core\ControllerManager::class,
-            'dateTime'             => \Espo\Core\Factories\DateTime::class,
-            'entityManager'        => \Espo\Core\Factories\EntityManager::class,
-            'entityManagerUtil'    => \Espo\Core\Factories\EntityManagerUtil::class,
-            'fieldManagerUtil'     => \Espo\Core\Factories\FieldManagerUtil::class,
-            'workflow'             => \Espo\Core\Factories\Workflow::class,
-            'filePathBuilder'      => \Espo\Core\Factories\FilePathBuilder::class,
-            'fileStorageManager'   => \Espo\Core\Factories\FileStorageManager::class,
-            'formulaManager'       => \Espo\Core\Factories\FormulaManager::class,
-            'injectableFactory'    => \Espo\Core\Factories\InjectableFactory::class,
-            'mailSender'           => \Espo\Core\Factories\MailSender::class,
-            'number'               => \Espo\Core\Factories\Number::class,
-            'ormMetadata'          => \Espo\Core\Factories\OrmMetadata::class,
-            'output'               => \Espo\Core\Factories\Output::class,
-            'preferences'          => \Espo\Core\Factories\Preferences::class,
-            'scheduledJob'         => \Espo\Core\Factories\ScheduledJob::class,
-            'schema'               => \Espo\Core\Factories\Schema::class,
-            'selectManagerFactory' => \Espo\Core\Factories\SelectManagerFactory::class,
-            'serviceFactory'       => \Espo\Core\Factories\ServiceFactory::class,
-            'templateFileManager'  => \Espo\Core\Factories\TemplateFileManager::class,
-            'themeManager'         => \Espo\Core\Factories\ThemeManager::class,
+            'crypt'                    => \Espo\Core\Utils\Crypt::class,
+            'cronManager'              => \Espo\Core\CronManager::class,
+            'consoleManager'           => \Espo\Core\ConsoleManager::class,
+            'slim'                     => \Espo\Core\Utils\Api\Slim::class,
+            'thumbnail'                => \Espo\Core\Thumbnail\Image::class,
+            'migration'                => \Espo\Core\Migration\Migration::class,
+            'classParser'              => \Espo\Core\Utils\File\ClassParser::class,
+            'fieldManager'             => \Espo\Core\Utils\FieldManager::class,
+            'layout'                   => \Espo\Core\Utils\Layout::class,
+            'acl'                      => \Espo\Core\Factories\Acl::class,
+            'aclManager'               => \Espo\Core\Factories\AclManager::class,
+            'clientManager'            => \Espo\Core\Factories\ClientManager::class,
+            'controllerManager'        => \Espo\Core\ControllerManager::class,
+            'dateTime'                 => \Espo\Core\Factories\DateTime::class,
+            'entityManager'            => \Espo\Core\Factories\EntityManager::class,
+            'entityManagerUtil'        => \Espo\Core\Factories\EntityManagerUtil::class,
+            'fieldManagerUtil'         => \Espo\Core\Factories\FieldManagerUtil::class,
+            'workflow'                 => \Espo\Core\Factories\Workflow::class,
+            'filePathBuilder'          => \Espo\Core\Factories\FilePathBuilder::class,
+            'fileStorageManager'       => \Espo\Core\Factories\FileStorageManager::class,
+            'formulaManager'           => \Espo\Core\Factories\FormulaManager::class,
+            'injectableFactory'        => \Espo\Core\Factories\InjectableFactory::class,
+            'mailSender'               => \Espo\Core\Factories\MailSender::class,
+            'number'                   => \Espo\Core\Factories\Number::class,
+            'ormMetadata'              => \Espo\Core\Factories\OrmMetadata::class,
+            'output'                   => \Espo\Core\Factories\Output::class,
+            'preferences'              => \Espo\Core\Factories\Preferences::class,
+            'scheduledJob'             => \Espo\Core\Factories\ScheduledJob::class,
+            'schema'                   => \Espo\Core\Factories\Schema::class,
+            'selectManagerFactory'     => \Espo\Core\Factories\SelectManagerFactory::class,
+            'serviceFactory'           => \Espo\Core\Factories\ServiceFactory::class,
+            'templateFileManager'      => \Espo\Core\Factories\TemplateFileManager::class,
+            'themeManager'             => \Espo\Core\Factories\ThemeManager::class,
+            'queueManager'             => \Espo\Core\QueueManager::class,
+            'pseudoTransactionManager' => \Espo\Core\PseudoTransactionManager::class,
         ];
 
     public function __construct()
@@ -270,16 +272,6 @@ class Container
     }
 
     /**
-     * Load QueueManager
-     *
-     * @return QueueManager
-     */
-    protected function loadQueueManager(): QueueManager
-    {
-        return new QueueManager($this);
-    }
-
-    /**
      * Load Language
      *
      * @return Language
@@ -361,11 +353,6 @@ class Container
         $eventManager->loadListeners();
 
         return $eventManager;
-    }
-
-    protected function loadPseudoTransactionManager(): PseudoTransactionManager
-    {
-        return new PseudoTransactionManager($this);
     }
 
     protected function loadPdo(): \PDO

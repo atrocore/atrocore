@@ -47,23 +47,13 @@ use Espo\Services\QueueManagerServiceInterface;
 /**
  * Class QueueManager
  */
-class QueueManager
+class QueueManager extends Injectable
 {
     const FILE_PATH = 'data/queue-exist.log';
 
-    /**
-     * @var Container
-     */
-    private $container;
-
-    /**
-     * QueueManager constructor.
-     *
-     * @param Container $container
-     */
-    public function __construct(Container $container)
+    public function __construct()
     {
-        $this->container = $container;
+        $this->addDependency('container');
     }
 
     /**
@@ -251,7 +241,7 @@ class QueueManager
      */
     protected function getContainer(): Container
     {
-        return $this->container;
+        return $this->getInjection('container');
     }
 
     protected function getRepository(): \Espo\Repositories\QueueItem

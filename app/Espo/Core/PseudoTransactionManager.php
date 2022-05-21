@@ -44,17 +44,15 @@ use Espo\ORM\EntityManager;
 use Espo\Services\Record;
 use PDO;
 
-class PseudoTransactionManager
+class PseudoTransactionManager extends Injectable
 {
     private const FILE_PATH = 'data/has-transactions-jobs.log';
 
-    private Container $container;
-
     private array $canceledJobs = [];
 
-    public function __construct(Container $container)
+    public function __construct()
     {
-        $this->container = $container;
+        $this->addDependency('container');
     }
 
     public static function hasJobs(): bool
@@ -175,10 +173,10 @@ class PseudoTransactionManager
         try {
             $user = $this->getEntityManager()->getEntity('User', $job['created_by_id']);
 
-            $this->container->setUser($user);
+            $this->getInjection('container')->setUser($user);
             $this->getEntityManager()->setUser($user);
             if (!empty($user->get('portalId'))) {
-                $this->container->setPortal($user->get('portal'));
+                $this->getInjection('container')->setPortal($user->get('portal'));
             }
 
             $service = $this->getServiceFactory()->create($job['entity_type']);
@@ -236,21 +234,21 @@ class PseudoTransactionManager
 
     protected function getPDO(): PDO
     {
-        return $this->container->get('pdo');
+        return $this->getInjection('container')->get('pdo');
     }
 
     protected function getServiceFactory(): ServiceFactory
     {
-        return $this->container->get('serviceFactory');
+        return $this->getInjection('container')->get('serviceFactory');
     }
 
     protected function getUser(): User
     {
-        return $this->container->get('user');
+        return $this->getInjection('container')->get('user');
     }
 
     protected function getEntityManager(): EntityManager
     {
-        return $this->container->get('entityManager');
+        return $this->getInjection('container')->get('entityManager');
     }
 }
