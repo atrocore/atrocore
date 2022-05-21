@@ -44,7 +44,7 @@ use Espo\Core\Utils\Metadata;
 use Espo\Entities\Attachment;
 use Espo\ORM\EntityManager;
 use Gumlet\ImageResize;
-use Treo\Core\Utils\File\Manager;
+use Espo\Core\Utils\File\Manager;
 
 /**
  * Class Image

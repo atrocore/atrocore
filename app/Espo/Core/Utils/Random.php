@@ -35,7 +35,7 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core\Utils;
+namespace Espo\Core\Utils;
 
 /**
  * Class Random

@@ -284,9 +284,6 @@ class Attachment extends RDB
         return $this->getInjection('filePathBuilder');
     }
 
-    /**
-     * @return \Treo\Core\Utils\File\Manager
-     */
     protected function getFileManager()
     {
         return $this->getInjection('fileManager');

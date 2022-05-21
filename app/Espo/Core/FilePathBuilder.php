@@ -38,10 +38,10 @@ declare(strict_types=1);
 namespace Espo\Core;
 
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Utils\Random;
+use Espo\Core\Utils\File\Manager;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Metadata;
-use Treo\Core\Utils\File\Manager;
-use Treo\Core\Utils\Random;
 
 class FilePathBuilder
 {

@@ -50,7 +50,7 @@ use Espo\Entities\Portal;
 use Espo\Entities\User;
 use Monolog\ErrorHandler;
 use Treo\Core\ModuleManager\Manager as ModuleManager;
-use Treo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\File\Manager as FileManager;
 
 class Container
 {

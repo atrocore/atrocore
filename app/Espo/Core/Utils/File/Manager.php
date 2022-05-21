@@ -806,19 +806,50 @@ class Manager
      */
     public function wrapForDataExport($content, $withObjects = false)
     {
-        if (!isset($content)) {
+        if (!isset($content) || !is_array($content)) {
             return false;
         }
 
-        if (!$withObjects) {
-            return "<?php\n".
-            "return " . var_export($content, true) . ";\n".
-            "?>";
-        } else {
-            return "<?php\n".
-            "return " . $this->varExport($content) . ";\n".
-            "?>";
+        // prepare data
+        $data = (!$withObjects) ? var_export($content, true) : $this->varExport($content);
+
+        if ($data == '1' || $data == '0') {
+            return false;
         }
+
+        return "<?php\nreturn {$data};\n?>";
+    }
+
+    public function move($oldPath, $newPath, $removeEmptyDirs = true): bool
+    {
+        if (!file_exists($oldPath)) {
+            throw new Error("File not found");
+        }
+
+        if ($this->checkCreateFile($newPath) === false) {
+            throw new Error('Permission denied for ' . $newPath);
+        }
+
+        if (!rename($oldPath, $newPath)) {
+            return false;
+        }
+
+        if ($removeEmptyDirs) {
+            $this->removeEmptyDirs($oldPath);
+        }
+
+        return true;
+    }
+
+    public function createOnTemp($contents): string
+    {
+        $tmpfile = tempnam("", uniqid());
+
+        if ($tmpfile && file_put_contents($tmpfile, $contents) !== false) {
+            return $tmpfile;
+        }
+
+        return '';
     }
 
     public function varExport($variable, $level = 0)
