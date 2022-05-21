@@ -89,6 +89,7 @@ class Container
             'schema'               => \Espo\Core\Factories\Schema::class,
             'selectManagerFactory' => \Espo\Core\Factories\SelectManagerFactory::class,
             'serviceFactory'       => \Espo\Core\Factories\ServiceFactory::class,
+            'templateFileManager'  => \Espo\Core\Factories\TemplateFileManager::class,
         ];
 
     public function __construct()

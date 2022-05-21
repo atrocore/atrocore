@@ -35,23 +35,15 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core\Loaders;
+namespace Espo\Core\Factories;
 
-/**
- * Class TemplateFileManager
- */
-class TemplateFileManager extends Base
+use Espo\Core\Container;
+use Espo\Core\Interfaces\Factory;
+
+class TemplateFileManager implements Factory
 {
-    /**
-     * @inheritDoc
-     */
-    public function load()
+    public function create(Container $container)
     {
-        $templateFileManager = new \Espo\Core\Utils\TemplateFileManager(
-            $this->getContainer()->get('config'),
-            $this->getContainer()->get('metadata')
-        );
-
-        return $templateFileManager;
+        return new \Espo\Core\Utils\TemplateFileManager($container->get('config'), $container->get('metadata'));
     }
 }
