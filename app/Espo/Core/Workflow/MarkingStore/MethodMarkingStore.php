@@ -35,7 +35,7 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core\Workflow\MarkingStore;
+namespace Espo\Core\Workflow\MarkingStore;
 
 use Symfony\Component\Workflow\Marking;
 use Symfony\Component\Workflow\MarkingStore\MarkingStoreInterface;

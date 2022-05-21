@@ -35,38 +35,34 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core\Loaders;
+namespace Espo\Core\Factories;
 
+use Espo\Core\Container;
+use Espo\Core\Interfaces\Factory;
+use Espo\Core\Workflow\MarkingStore\MethodMarkingStore;
 use Symfony\Component\Workflow\DefinitionBuilder;
 use Symfony\Component\Workflow\Metadata\InMemoryMetadataStore;
 use Symfony\Component\Workflow\Registry;
 use Symfony\Component\Workflow\SupportStrategy\InstanceOfSupportStrategy;
 use Symfony\Component\Workflow\Transition;
 use Symfony\Component\Workflow\Workflow as Item;
-use Treo\Core\Workflow\MarkingStore\MethodMarkingStore;
 
-/**
- * Class Workflow
- */
-class Workflow extends Base
+class Workflow implements Factory
 {
-    /**
-     * @inheritDoc
-     */
-    public function load()
+    public function create(Container $container)
     {
         // create registry
         $registry = new Registry();
 
         // get metadata
-        $metadata = $this->getContainer()->get('metadata');
+        $metadata = $container->get('metadata');
 
         if (!empty($workflows = $metadata->get('workflow', []))) {
             // get entity manager
-            $entityManager = $this->getContainer()->get('entityManager');
+            $entityManager = $container->get('entityManager');
 
             // get event manager
-            $eventManager = $this->getContainer()->get('eventManager');
+            $eventManager = $container->get('eventManager');
 
             foreach ($workflows as $entity => $data) {
                 foreach ($data as $field => $settings) {
@@ -80,17 +76,17 @@ class Workflow extends Base
                             $definitionBuilder->addTransition(new Transition($from . '_' . $to, $from, $to));
                         }
                     }
-                    
+
                     // set conditions
                     if (!empty($settings['conditions'][$from . '_' . $to])) {
                         // prepare conditions
                         $conditions = [
                             'conditions' => $settings['conditions'][$from . '_' . $to]
                         ];
-                        
+
                         $definitionBuilder->setMetadataStore(new InMemoryMetadataStore([$from . '_' . $to => $conditions]));
                     }
-                    
+
                     $definition = $definitionBuilder->build();
 
                     // prepare id
