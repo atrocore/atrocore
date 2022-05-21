@@ -35,26 +35,21 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core\Loaders;
+namespace Espo\Core\Factories;
 
-/**
- * Class EntityManagerUtil
- */
-class EntityManagerUtil extends Base
+use Espo\Core\Container;
+use Espo\Core\Interfaces\Factory;
+
+class EntityManagerUtil implements Factory
 {
-    /**
-     * @inheritDoc
-     */
-    public function load()
+    public function create(Container $container)
     {
-        $entityManager = new \Espo\Core\Utils\EntityManager(
-            $this->getContainer()->get('metadata'),
-            $this->getContainer()->get('language'),
-            $this->getContainer()->get('fileManager'),
-            $this->getContainer()->get('config'),
-            $this->getContainer()
+        return new \Espo\Core\Utils\EntityManager(
+            $container->get('metadata'),
+            $container->get('language'),
+            $container->get('fileManager'),
+            $container->get('config'),
+            $container
         );
-
-        return $entityManager;
     }
 }
