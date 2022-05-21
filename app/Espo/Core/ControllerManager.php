@@ -35,35 +35,20 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core;
+namespace Espo\Core;
 
-use Espo\Core\Container;
 use Espo\Core\EventManager\Event;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Util;
 use Slim\Http\Request;
-use StdClass;
 
-/**
- * ControllerManager class
- */
-class ControllerManager
+class ControllerManager extends Injectable
 {
-    /**
-     * @var Container
-     */
-    private $container;
-
-    /**
-     * ControllerManager constructor.
-     *
-     * @param Container $container
-     */
-    public function __construct(Container $container)
+    public function __construct()
     {
-        $this->container = $container;
+        $this->addDependency('container');
     }
 
     public static function getControllerClassName(string $controllerName, Metadata $metadata): string
@@ -189,7 +174,7 @@ class ControllerManager
             return Json::encode($result);
         }
 
-        if (is_array($result) || $result instanceof StdClass) {
+        if (is_array($result) || $result instanceof \stdClass) {
             return Json::encode($result);
         }
 
@@ -250,6 +235,6 @@ class ControllerManager
      */
     protected function getContainer(): Container
     {
-        return $this->container;
+        return $this->getInjection('container');
     }
 }

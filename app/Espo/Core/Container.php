@@ -58,18 +58,19 @@ class Container
 
     protected array $classAliases
         = [
-            'crypt'          => \Espo\Core\Utils\Crypt::class,
-            'cronManager'    => \Espo\Core\CronManager::class,
-            'consoleManager' => \Espo\Core\ConsoleManager::class,
-            'slim'           => \Espo\Core\Utils\Api\Slim::class,
-            'thumbnail'      => \Espo\Core\Thumbnail\Image::class,
-            'migration'      => \Espo\Core\Migration\Migration::class,
-            'classParser'    => \Espo\Core\Utils\File\ClassParser::class,
-            'fieldManager'   => \Espo\Core\Utils\FieldManager::class,
-            'layout'         => \Espo\Core\Utils\Layout::class,
-            'acl'            => \Espo\Core\Factories\Acl::class,
-            'aclManager'     => \Espo\Core\Factories\AclManager::class,
-            'clientManager'  => \Espo\Core\Factories\ClientManager::class,
+            'crypt'             => \Espo\Core\Utils\Crypt::class,
+            'cronManager'       => \Espo\Core\CronManager::class,
+            'consoleManager'    => \Espo\Core\ConsoleManager::class,
+            'slim'              => \Espo\Core\Utils\Api\Slim::class,
+            'thumbnail'         => \Espo\Core\Thumbnail\Image::class,
+            'migration'         => \Espo\Core\Migration\Migration::class,
+            'classParser'       => \Espo\Core\Utils\File\ClassParser::class,
+            'fieldManager'      => \Espo\Core\Utils\FieldManager::class,
+            'layout'            => \Espo\Core\Utils\Layout::class,
+            'acl'               => \Espo\Core\Factories\Acl::class,
+            'aclManager'        => \Espo\Core\Factories\AclManager::class,
+            'clientManager'     => \Espo\Core\Factories\ClientManager::class,
+            'controllerManager' => \Espo\Core\ControllerManager::class,
         ];
 
     public function __construct()
