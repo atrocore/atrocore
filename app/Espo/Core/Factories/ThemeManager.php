@@ -35,59 +35,20 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core\Loaders;
+namespace Espo\Core\Factories;
 
-use Espo\Entities\Portal;
-use Espo\Core\Utils\Config;
-use Espo\Core\Utils\Metadata;
+use Espo\Core\Container;
+use Espo\Core\Interfaces\Factory;
 
-/**
- * ThemeManager loader
- */
-class ThemeManager extends Base
+class ThemeManager implements Factory
 {
-
-    /**
-     * Load ThemeManager
-     *
-     * @return \Espo\Core\Utils\ThemeManager
-     */
-    public function load()
+    public function create(Container $container)
     {
-        /** @var Portal $portal */
-        $portal = $this->getContainer()->get('portal');
-
+        $portal = $container->get('portal');
         if (!empty($portal)) {
-            return new \Espo\Core\Portal\Utils\ThemeManager(
-                $this->getConfig(),
-                $this->getMetadata(),
-                $portal
-            );
+            return new \Espo\Core\Portal\Utils\ThemeManager($container->get('config'), $container->get('metadata'), $portal);
         }
 
-        return new \Espo\Core\Utils\ThemeManager(
-            $this->getConfig(),
-            $this->getMetadata()
-        );
-    }
-
-    /**
-     * Get config
-     *
-     * @return Config
-     */
-    protected function getConfig(): Config
-    {
-        return $this->getContainer()->get('config');
-    }
-
-    /**
-     * Get metadata
-     *
-     * @return Metadata
-     */
-    protected function getMetadata(): Metadata
-    {
-        return $this->getContainer()->get('metadata');
+        return new \Espo\Core\Utils\ThemeManager($container->get('config'), $container->get('metadata'));
     }
 }
