@@ -71,6 +71,7 @@ class Container
             'aclManager'        => \Espo\Core\Factories\AclManager::class,
             'clientManager'     => \Espo\Core\Factories\ClientManager::class,
             'controllerManager' => \Espo\Core\ControllerManager::class,
+            'dateTime'          => \Espo\Core\Factories\DateTime::class,
         ];
 
     public function __construct()

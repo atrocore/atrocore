@@ -35,38 +35,19 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core\Loaders;
+namespace Espo\Core\Factories;
 
-use Espo\Core\Utils\Config;
-use Espo\Core\Utils\DateTime as Instance;
+use Espo\Core\Container;
+use Espo\Core\Interfaces\Factory;
 
-/**
- * DateTime loader
- */
-class DateTime extends Base
+class DateTime implements Factory
 {
-
-    /**
-     * Load DateTime
-     *
-     * @return \Espo\Core\Utils\DateTime
-     */
-    public function load()
+    public function create(Container $container)
     {
-        return new Instance(
-            $this->getConfig()->get('dateFormat'),
-            $this->getConfig()->get('timeFormat'),
-            $this->getConfig()->get('timeZone')
+        return new \Espo\Core\Utils\DateTime(
+            $container->get('config')->get('dateFormat'),
+            $container->get('config')->get('timeFormat'),
+            $container->get('config')->get('timeZone')
         );
-    }
-
-    /**
-     * Get config
-     *
-     * @return Config
-     */
-    protected function getConfig()
-    {
-        return $this->getContainer()->get('config');
     }
 }
