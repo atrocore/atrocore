@@ -35,42 +35,15 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core\Loaders;
+namespace Espo\Core\Factories;
 
-use Espo\Core\Utils\ThemeManager;
-use Espo\Core\Utils\Config;
+use Espo\Core\Container;
+use Espo\Core\Interfaces\Factory;
 
-/**
- * ClientManager loader
- */
-class ClientManager extends Base
+class ClientManager implements Factory
 {
-
-    /**
-     * @inheritDoc
-     */
-    public function load()
+    public function create(Container $container)
     {
-        return new \Espo\Core\Utils\ClientManager($this->getConfig(), $this->getThemeManager());
-    }
-
-    /**
-     * Get config
-     *
-     * @return Config
-     */
-    protected function getConfig()
-    {
-        return $this->getContainer()->get('config');
-    }
-
-    /**
-     * Get theme manager
-     *
-     * @return ThemeManager
-     */
-    protected function getThemeManager()
-    {
-        return $this->getContainer()->get('themeManager');
+        return new \Espo\Core\Utils\ClientManager($container->get('config'), $container->get('themeManager'));
     }
 }

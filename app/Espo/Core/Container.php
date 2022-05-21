@@ -69,6 +69,7 @@ class Container
             'layout'         => \Espo\Core\Utils\Layout::class,
             'acl'            => \Espo\Core\Factories\Acl::class,
             'aclManager'     => \Espo\Core\Factories\AclManager::class,
+            'clientManager'  => \Espo\Core\Factories\ClientManager::class,
         ];
 
     public function __construct()
