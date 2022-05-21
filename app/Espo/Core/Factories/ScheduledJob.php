@@ -35,21 +35,15 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core\Loaders;
+namespace Espo\Core\Factories;
 
-/**
- * ScheduledJob loader
- */
-class ScheduledJob extends Base
+use Espo\Core\Container;
+use Espo\Core\Interfaces\Factory;
+
+class ScheduledJob implements Factory
 {
-
-    /**
-     * Load ScheduledJob
-     *
-     * @return \Treo\Core\Utils\ScheduledJob
-     */
-    public function load()
+    public function create(Container $container)
     {
-        return new \Treo\Core\Utils\ScheduledJob($this->getContainer());
+        return new \Espo\Core\Utils\ScheduledJob($container);
     }
 }

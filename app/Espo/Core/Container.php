@@ -85,6 +85,7 @@ class Container
             'ormMetadata'        => \Espo\Core\Factories\OrmMetadata::class,
             'output'             => \Espo\Core\Factories\Output::class,
             'preferences'        => \Espo\Core\Factories\Preferences::class,
+            'scheduledJob'       => \Espo\Core\Factories\ScheduledJob::class,
         ];
 
     public function __construct()
