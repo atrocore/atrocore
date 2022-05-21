@@ -35,18 +35,15 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core\Loaders;
+namespace Espo\Core\Factories;
 
-/**
- * MailSender loader
- */
-class MailSender extends Base
+use Espo\Core\Container;
+use Espo\Core\Interfaces\Factory;
+
+class MailSender implements Factory
 {
-    /**
-     * @inheritDoc
-     */
-    public function load()
+    public function create(Container $container)
     {
-        return new \Espo\Core\Mail\Sender($this->getContainer()->get('config'), $this->getContainer()->get('queueManager'));
+        return new \Espo\Core\Mail\Sender($container->get('config'), $container->get('queueManager'));
     }
 }
