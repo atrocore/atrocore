@@ -82,6 +82,7 @@ class Container
             'injectableFactory'  => \Espo\Core\Factories\InjectableFactory::class,
             'mailSender'         => \Espo\Core\Factories\MailSender::class,
             'number'             => \Espo\Core\Factories\Number::class,
+            'ormMetadata'        => \Espo\Core\Factories\OrmMetadata::class,
         ];
 
     public function __construct()

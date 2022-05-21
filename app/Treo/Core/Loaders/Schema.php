@@ -79,18 +79,6 @@ class Schema extends Base
         return $schema;
     }
 
-    /**
-     * Get schema
-     *
-     * @param Config                             $config
-     * @param Metadata                           $metadata
-     * @param Manager                            $fileManager
-     * @param \Espo\Core\Factories\EntityManager $entityManager
-     * @param ClassParser                        $classParser
-     * @param OrmMetadata                        $ormMetadata
-     *
-     * @return Instance
-     */
     protected function getSchema(
         Config $config,
         Metadata $metadata,

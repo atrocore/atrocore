@@ -35,52 +35,15 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core\Loaders;
+namespace Espo\Core\Factories;
 
-use Espo\Core\Utils\Metadata;
-use Espo\Core\Utils\File\Manager;
-use Espo\Core\Utils\Config;
+use Espo\Core\Container;
+use Espo\Core\Interfaces\Factory;
 
-/**
- * OrmMetadata loader
- */
-class OrmMetadata extends Base
+class OrmMetadata implements Factory
 {
-    /**
-     * @inheritDoc
-     */
-    public function load()
+    public function create(Container $container)
     {
-        return new \Espo\Core\Utils\Metadata\OrmMetadata($this->getMetadata(), $this->getFileManager(), $this->getConfig());
-    }
-
-    /**
-     * Get metadata
-     *
-     * @return Metadata
-     */
-    protected function getMetadata()
-    {
-        return $this->getContainer()->get('metadata');
-    }
-
-    /**
-     * Get file manager
-     *
-     * @return Manager
-     */
-    protected function getFileManager()
-    {
-        return $this->getContainer()->get('fileManager');
-    }
-
-    /**
-     * Get config
-     *
-     * @return Config
-     */
-    protected function getConfig()
-    {
-        return $this->getContainer()->get('config');
+        return new \Espo\Core\Utils\Metadata\OrmMetadata($container->get('metadata'), $container->get('fileManager'), $container->get('config'));
     }
 }
