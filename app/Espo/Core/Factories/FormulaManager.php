@@ -35,23 +35,15 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core\Loaders;
+namespace Espo\Core\Factories;
 
-/**
- * Class FormulaManager
- */
-class FormulaManager extends Base
+use Espo\Core\Container;
+use Espo\Core\Interfaces\Factory;
+
+class FormulaManager implements Factory
 {
-    /**
-     * @inheritDoc
-     */
-    public function load()
+    public function create(Container $container)
     {
-        $formulaManager = new \Espo\Core\Formula\Manager(
-            $this->getContainer(),
-            $this->getContainer()->get('metadata')
-        );
-
-        return $formulaManager;
+        return new \Espo\Core\Formula\Manager($container, $container->get('metadata'));
     }
 }

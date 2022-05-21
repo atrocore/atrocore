@@ -78,6 +78,7 @@ class Container
             'workflow'           => \Espo\Core\Factories\Workflow::class,
             'filePathBuilder'    => \Espo\Core\Factories\FilePathBuilder::class,
             'fileStorageManager' => \Espo\Core\Factories\FileStorageManager::class,
+            'formulaManager'     => \Espo\Core\Factories\FormulaManager::class,
         ];
 
     public function __construct()
