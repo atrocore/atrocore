@@ -33,16 +33,12 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-namespace Treo\Core\FileStorage;
+namespace Espo\Core\FileStorage;
 
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Container;
+use Espo\Core\Exceptions\Error;
 use Espo\Entities\Attachment;
 
-/**
- * Class Manager
- * @package Treo\Core\FileStorage
- */
 class Manager
 {
     /**

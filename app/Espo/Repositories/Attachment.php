@@ -39,12 +39,12 @@ namespace Espo\Repositories;
 
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\InternalServerError;
+use Espo\Core\FilePathBuilder;
+use Espo\Core\ORM\Repositories\RDB;
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Util;
 use Espo\Entities\Attachment as AttachmentEntity;
 use Espo\ORM\Entity;
-use Espo\Core\ORM\Repositories\RDB;
-use Espo\Core\FilePathBuilder;
-use Espo\Core\Utils\Util;
 
 /**
  * Class Attachment
@@ -269,7 +269,7 @@ class Attachment extends RDB
     }
 
     /**
-     * @return \Treo\Core\FileStorage\Manager
+     * @return \Espo\Core\FileStorage\Manager
      */
     protected function getFileStorageManager()
     {

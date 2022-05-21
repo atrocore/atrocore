@@ -35,37 +35,15 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core\Loaders;
+namespace Espo\Core\Factories;
 
-use Espo\Core\Utils\Metadata;
-use Treo\Core\FileStorage\Manager;
+use Espo\Core\Container;
+use Espo\Core\Interfaces\Factory;
 
-/**
- * FileStorageManager loader
- */
-class FileStorageManager extends Base
+class FileStorageManager implements Factory
 {
-
-    /**
-     * Load FileStorageManager
-     *
-     * @return \Treo\Core\FileStorage\Manager
-     */
-    public function load()
+    public function create(Container $container)
     {
-        return new Manager(
-            $this->getMetadata()->get(['app', 'fileStorage', 'implementationClassNameMap']),
-            $this->getContainer()
-        );
-    }
-
-    /**
-     * Get metadata
-     *
-     * @return Metadata
-     */
-    protected function getMetadata()
-    {
-        return $this->getContainer()->get('metadata');
+        return new \Espo\Core\FileStorage\Manager($container->get('metadata')->get(['app', 'fileStorage', 'implementationClassNameMap']), $container);
     }
 }
