@@ -35,16 +35,15 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core\Loaders;
+namespace Espo\Core\Factories;
 
-class ServiceFactory extends Base
+use Espo\Core\Container;
+use Espo\Core\Interfaces\Factory;
+
+class ServiceFactory implements Factory
 {
-
-    /**
-     * @inheritDoc
-     */
-    public function load()
+    public function create(Container $container)
     {
-        return new \Espo\Core\ServiceFactory($this->getContainer());
+        return new \Espo\Core\ServiceFactory($container);
     }
 }

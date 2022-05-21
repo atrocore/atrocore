@@ -88,6 +88,7 @@ class Container
             'scheduledJob'         => \Espo\Core\Factories\ScheduledJob::class,
             'schema'               => \Espo\Core\Factories\Schema::class,
             'selectManagerFactory' => \Espo\Core\Factories\SelectManagerFactory::class,
+            'serviceFactory'       => \Espo\Core\Factories\ServiceFactory::class,
         ];
 
     public function __construct()
