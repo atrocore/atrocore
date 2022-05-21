@@ -68,6 +68,7 @@ class Container
             'fieldManager'   => \Espo\Core\Utils\FieldManager::class,
             'layout'         => \Espo\Core\Utils\Layout::class,
             'acl'            => \Espo\Core\Factories\Acl::class,
+            'aclManager'     => \Espo\Core\Factories\AclManager::class,
         ];
 
     public function __construct()

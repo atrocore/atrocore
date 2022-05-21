@@ -39,11 +39,11 @@ namespace Espo\Repositories;
 
 use Espo\Core\Acl;
 use Espo\Core\AclManager;
+use Espo\Core\Factories\AclManager as AclManagerFactory;
 use Espo\Core\ORM\Repositories\RDB;
+use Espo\Entities\User;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
-use Espo\Entities\User;
-use Treo\Core\Loaders\AclManager as AclManagerLoader;
 
 /**
  * Class Note
@@ -401,14 +401,14 @@ class Note extends RDB
     protected function checkByAclManager(User $user, Entity $parent, string $action): bool
     {
         if (!$user->isPortalUser()) {
-            return (AclManagerLoader::createAclManager($this->getInjection('container')))->check($user, $parent, $action);
+            return (AclManagerFactory::createAclManager($this->getInjection('container')))->check($user, $parent, $action);
         }
 
         $result = false;
         $portals = $user->get('portals');
         if (count($portals) > 0) {
             foreach ($portals as $portal) {
-                $result = (AclManagerLoader::createPortalAclManager($this->getInjection('container'), $portal))->check($user, $parent, $action);
+                $result = (AclManagerFactory::createPortalAclManager($this->getInjection('container'), $portal))->check($user, $parent, $action);
                 if ($result) {
                     return $result;
                 }
