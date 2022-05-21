@@ -86,6 +86,7 @@ class Container
             'output'             => \Espo\Core\Factories\Output::class,
             'preferences'        => \Espo\Core\Factories\Preferences::class,
             'scheduledJob'       => \Espo\Core\Factories\ScheduledJob::class,
+            'schema'             => \Espo\Core\Factories\Schema::class,
         ];
 
     public function __construct()

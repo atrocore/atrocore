@@ -35,8 +35,10 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core\Loaders;
+namespace Espo\Core\Factories;
 
+use Espo\Core\Container;
+use Espo\Core\Interfaces\Factory;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\File\ClassParser;
@@ -46,32 +48,22 @@ use Espo\Core\Utils\Metadata\OrmMetadata;
 use Treo\Core\Utils\Database\Schema\Converter;
 use Treo\Core\Utils\Database\Schema\Schema as Instance;
 
-/**
- * Schema loader
- */
-class Schema extends Base
+class Schema implements Factory
 {
-
-    /**
-     * Load Schema
-     *
-     * @return Instance
-     */
-    public function load()
+    public function create(Container $container)
     {
-        // prepare data
-        $config = $this->getConfig();
-        $metadata = $this->getMetadata();
-        $fileManager = $this->getFileManager();
-        $entityManager = $this->getEntityManager();
-        $classParser = $this->getClassParser();
-        $ormMetadata = $this->getOrmMetadata();
+        $config = $container->get('config');
+        $metadata = $container->get('metadata');
+        $fileManager = $container->get('fileManager');
+        $entityManager = $container->get('entityManager');
+        $classParser = $container->get('classParser');
+        $ormMetadata = $container->get('ormMetadata');
 
         // create
         $schema = $this->getSchema($config, $metadata, $fileManager, $entityManager, $classParser, $ormMetadata);
 
         // set container
-        $schema->setContainer($this->getContainer());
+        $schema->setContainer($container);
 
         // set converter
         $schema->schemaConverter = new Converter($metadata, $fileManager, $schema, $config);
@@ -88,65 +80,5 @@ class Schema extends Base
         OrmMetadata $ormMetadata
     ) {
         return new Instance($config, $metadata, $fileManager, $entityManager, $classParser, $ormMetadata);
-    }
-
-    /**
-     * Get config
-     *
-     * @return Config
-     */
-    protected function getConfig()
-    {
-        return $this->getContainer()->get('config');
-    }
-
-    /**
-     * Get metadata
-     *
-     * @return Metadata
-     */
-    protected function getMetadata()
-    {
-        return $this->getContainer()->get('metadata');
-    }
-
-    /**
-     * Get file manager
-     *
-     * @return Manager
-     */
-    protected function getFileManager()
-    {
-        return $this->getContainer()->get('fileManager');
-    }
-
-    /**
-     * Get entity manager
-     *
-     * @return \Espo\Core\Factories\EntityManager
-     */
-    protected function getEntityManager()
-    {
-        return $this->getContainer()->get('entityManager');
-    }
-
-    /**
-     * Get class parser
-     *
-     * @return ClassParser
-     */
-    protected function getClassParser()
-    {
-        return $this->getContainer()->get('classParser');
-    }
-
-    /**
-     * Get ORM metadata
-     *
-     * @return OrmMetadata
-     */
-    protected function getOrmMetadata()
-    {
-        return $this->getContainer()->get('ormMetadata');
     }
 }
