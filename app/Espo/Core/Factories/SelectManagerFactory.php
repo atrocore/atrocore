@@ -35,20 +35,15 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core\Loaders;
+namespace Espo\Core\Factories;
 
-/**
- * SelectManagerFactory loader
- */
-class SelectManagerFactory extends Base
+use Espo\Core\Container;
+use Espo\Core\Interfaces\Factory;
+
+class SelectManagerFactory implements Factory
 {
-    /**
-     * Load class
-     *
-     * @return \Treo\Core\SelectManagerFactory
-     */
-    public function load()
+    public function create(Container $container)
     {
-        return new \Treo\Core\SelectManagerFactory($this->getContainer());
+        return new \Espo\Core\SelectManagerFactory($container);
     }
 }

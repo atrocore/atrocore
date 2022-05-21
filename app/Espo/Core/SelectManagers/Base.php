@@ -42,11 +42,11 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\InjectableFactory;
 use Espo\Core\ORM\Repositories\RDB;
+use Espo\Core\SelectManagerFactory;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
-use Treo\Core\SelectManagerFactory;
 
 class Base
 {

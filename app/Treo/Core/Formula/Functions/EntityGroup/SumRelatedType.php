@@ -38,9 +38,9 @@ declare(strict_types=1);
 namespace Treo\Core\Formula\Functions\EntityGroup;
 
 use Espo\Core\Exceptions\Error;
-use Espo\ORM\EntityManager;
 use Espo\Core\Formula\Functions\EntityGroup\SumRelatedType as EspoSumRelatedType;
-use Treo\Core\SelectManagerFactory;
+use Espo\Core\SelectManagerFactory;
+use Espo\ORM\EntityManager;
 
 /**
  * Class SumRelatedType

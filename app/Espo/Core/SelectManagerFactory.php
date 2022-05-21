@@ -35,14 +35,10 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core;
+namespace Espo\Core;
 
 use Espo\Core\Utils\Util;
-use Espo\Core\Container;
 
-/**
- * Class SelectManagerFactory
- */
 class SelectManagerFactory
 {
     /**
