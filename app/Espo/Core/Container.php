@@ -84,6 +84,7 @@ class Container
             'number'             => \Espo\Core\Factories\Number::class,
             'ormMetadata'        => \Espo\Core\Factories\OrmMetadata::class,
             'output'             => \Espo\Core\Factories\Output::class,
+            'preferences'        => \Espo\Core\Factories\Preferences::class,
         ];
 
     public function __construct()

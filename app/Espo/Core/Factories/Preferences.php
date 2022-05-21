@@ -35,49 +35,16 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core\Loaders;
+namespace Espo\Core\Factories;
 
-use Espo\Core\Exceptions\Error;
-use Espo\Core\ORM\EntityManager;
-use Espo\Entities\User;
+use Espo\Core\Container;
+use Espo\Core\Interfaces\Factory;
 
-/**
- * Preferences loader
- */
-class Preferences extends Base
+class Preferences implements Factory
 {
-
-    /**
-     * Load Preferences
-     *
-     * @return mixed
-     *
-     * @throws Error
-     */
-    public function load()
+    public function create(Container $container)
     {
-        return $this
-            ->getEntityManager()
-            ->getEntity('Preferences', (!is_object($this->getUser())) ? $this->getUser() : $this->getUser()->id);
-    }
-
-    /**
-     * Get entity manager
-     *
-     * @return \Espo\Core\Factories\EntityManager
-     */
-    protected function getEntityManager()
-    {
-        return $this->getContainer()->get('entityManager');
-    }
-
-    /**
-     * Get user
-     *
-     * @return User
-     */
-    protected function getUser()
-    {
-        return $this->getContainer()->get('user');
+        $user = $container->get('user');
+        return $container->get('entityManager')->getEntity('Preferences', (!is_object($user)) ? $user : $user->id);
     }
 }
