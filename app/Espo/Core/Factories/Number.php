@@ -35,36 +35,15 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core\Loaders;
+namespace Espo\Core\Factories;
 
-use Espo\Core\Utils\Config;
+use Espo\Core\Container;
+use Espo\Core\Interfaces\Factory;
 
-/**
- * Number loader
- */
-class Number extends Base
+class Number implements Factory
 {
-
-    /**
-     * Load Number
-     *
-     * @return \Espo\Core\Utils\NumberUtil
-     */
-    public function load()
+    public function create(Container $container)
     {
-        return new \Espo\Core\Utils\NumberUtil(
-            $this->getConfig()->get('decimalMark'),
-            $this->getConfig()->get('thousandSeparator')
-        );
-    }
-
-    /**
-     * Get config
-     *
-     * @return Config
-     */
-    protected function getConfig()
-    {
-        return $this->getContainer()->get('config');
+        return new \Espo\Core\Utils\NumberUtil($container->get('config')->get('decimalMark'), $container->get('config')->get('thousandSeparator'));
     }
 }

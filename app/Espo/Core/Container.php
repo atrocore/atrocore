@@ -81,6 +81,7 @@ class Container
             'formulaManager'     => \Espo\Core\Factories\FormulaManager::class,
             'injectableFactory'  => \Espo\Core\Factories\InjectableFactory::class,
             'mailSender'         => \Espo\Core\Factories\MailSender::class,
+            'number'             => \Espo\Core\Factories\Number::class,
         ];
 
     public function __construct()
