@@ -128,20 +128,6 @@ class Container
             return $this->data[$name];
         }
 
-        // load via metadata loader
-        try {
-            $className = $this->get('metadata')->get('app.loaders.' . ucfirst($name), null);
-        } catch (\Exception $e) {
-            $className = null;
-        }
-        if (!is_string($className) || !class_exists($className)) {
-            $className = '\Treo\Core\Loaders\\' . ucfirst($name);
-        }
-        if (!empty($className) && class_exists($className)) {
-            $this->data[$name] = (new $className($this))->load();
-            return $this->data[$name];
-        }
-
         // load via classname
         $className = isset($this->classAliases[$name]) ? $this->classAliases[$name] : $name;
         if (class_exists($className)) {
