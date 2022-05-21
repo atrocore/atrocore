@@ -79,6 +79,7 @@ class Container
             'filePathBuilder'    => \Espo\Core\Factories\FilePathBuilder::class,
             'fileStorageManager' => \Espo\Core\Factories\FileStorageManager::class,
             'formulaManager'     => \Espo\Core\Factories\FormulaManager::class,
+            'injectableFactory'  => \Espo\Core\Factories\InjectableFactory::class,
         ];
 
     public function __construct()
