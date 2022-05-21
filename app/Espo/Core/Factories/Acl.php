@@ -35,47 +35,19 @@
 
 declare(strict_types=1);
 
-namespace Treo\Core\Loaders;
+namespace Espo\Core\Factories;
 
-use Espo\Core\AclManager;
-use Espo\Entities\User;
+use Espo\Core\Container;
+use Espo\Core\Interfaces\Factory;
 
-/**
- * Class Acl
- */
-class Acl extends Base
+class Acl implements Factory
 {
-    /**
-     * Load Acl
-     *
-     * @return mixed
-     */
-    public function load()
+    public function create(Container $container)
     {
-        if (!empty($this->getContainer()->get('portal'))) {
-            return new \Espo\Core\Portal\Acl($this->getAclManager(), $this->getUser());
+        if (!empty($container->get('portal'))) {
+            return new \Espo\Core\Portal\Acl($container->get('aclManager'), $container->get('user'));
         }
 
-        return new \Espo\Core\Acl($this->getAclManager(), $this->getUser());
-    }
-
-    /**
-     * Get acl manager
-     *
-     * @return AclManager
-     */
-    protected function getAclManager()
-    {
-        return $this->getContainer()->get('aclManager');
-    }
-
-    /**
-     * Get user
-     *
-     * @return User
-     */
-    protected function getUser()
-    {
-        return $this->getContainer()->get('user');
+        return new \Espo\Core\Acl($container->get('aclManager'), $container->get('user'));
     }
 }

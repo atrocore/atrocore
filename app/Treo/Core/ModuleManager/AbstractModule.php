@@ -43,7 +43,6 @@ use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Route;
 use Espo\Core\Container;
 use Espo\Core\Utils\Util;
-use Treo\Core\Loaders\Layout;
 
 /**
  * Class AbstractModule
@@ -221,7 +220,7 @@ abstract class AbstractModule
     public function loadLayouts(string $scope, string $name, array &$data)
     {
         // load layout class
-        $layout = (new Layout($this->container))->load();
+        $layout = $this->container->get('layout');
 
         // prepare file path
         $filePath = $layout->concatPath($this->getAppPath() . 'Resources/layouts', $scope);

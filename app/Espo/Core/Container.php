@@ -38,6 +38,7 @@ declare(strict_types=1);
 namespace Espo\Core;
 
 use Espo\Core\EventManager\Manager as EventManager;
+use Espo\Core\Interfaces\Factory;
 use Espo\Core\Interfaces\Injectable;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Language;
@@ -66,6 +67,7 @@ class Container
             'classParser'    => \Espo\Core\Utils\File\ClassParser::class,
             'fieldManager'   => \Espo\Core\Utils\FieldManager::class,
             'layout'         => \Espo\Core\Utils\Layout::class,
+            'acl'            => \Espo\Core\Factories\Acl::class,
         ];
 
     public function __construct()
@@ -120,13 +122,17 @@ class Container
         // load via classname
         $className = isset($this->classAliases[$name]) ? $this->classAliases[$name] : $name;
         if (class_exists($className)) {
+            if (is_a($className, Factory::class, true)) {
+                $this->data[$name] = (new $className())->create($this);
+                return $this->data[$name];
+            }
+
             $this->data[$name] = new $className();
             if (is_a($className, Injectable::class, true)) {
                 foreach ($this->data[$name]->getDependencyList() as $dependency) {
                     $this->data[$name]->inject($dependency, $this->get($dependency));
                 }
             }
-
             return $this->data[$name];
         }
 
