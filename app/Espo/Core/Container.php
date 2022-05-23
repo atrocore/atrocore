@@ -40,7 +40,6 @@ namespace Espo\Core;
 use Espo\Core\Interfaces\Factory;
 use Espo\Core\Interfaces\Injectable;
 use Espo\Core\Utils\Config;
-use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\Portal;
 use Espo\Entities\User;
@@ -91,6 +90,9 @@ class Container
             'eventManager'             => \Espo\Core\Factories\EventManager::class,
             'fileManager'              => \Espo\Core\Factories\FileManager::class,
             'log'                      => \Espo\Core\Factories\Log::class,
+            'defaultLanguage'          => \Espo\Core\Factories\DefaultLanguage::class,
+            'baseLanguage'             => \Espo\Core\Factories\BaseLanguage::class,
+            'language'                 => \Espo\Core\Factories\Language::class,
         ];
 
     public function __construct()
@@ -267,35 +269,5 @@ class Container
     protected function loadDataManager(): DataManager
     {
         return new DataManager($this);
-    }
-
-    /**
-     * Load Language
-     *
-     * @return Language
-     */
-    protected function loadLanguage(): Language
-    {
-        return new Language($this, Language::detectLanguage($this->get('config'), $this->get('preferences')));
-    }
-
-    /**
-     * Load BaseLanguage
-     *
-     * @return Language
-     */
-    protected function loadBaseLanguage(): Language
-    {
-        return new Language($this);
-    }
-
-    /**
-     * Load DefaultLanguage
-     *
-     * @return Language
-     */
-    protected function loadDefaultLanguage(): Language
-    {
-        return new Language($this, Language::detectLanguage($this->get('config')));
     }
 }
