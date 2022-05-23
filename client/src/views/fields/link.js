@@ -62,6 +62,20 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
         searchTypeList: ['is', 'isEmpty', 'isNotEmpty', 'isNot', 'isOneOf', 'isNotOneOf'],
 
+        selectBoolFilterList:  [],
+
+        boolFilterData: {},
+
+        getBoolFilterData() {
+            let data = {};
+            this.selectBoolFilterList.forEach(item => {
+                if (typeof this.boolFilterData[item] === 'function') {
+                    data[item] = this.boolFilterData[item].call(this);
+                }
+            });
+            return data;
+        },
+
         data: function () {
             var nameValue = this.model.has(this.nameName) ? this.model.get(this.nameName) : this.model.get(this.idName);
             if (nameValue === null) {
@@ -138,6 +152,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         createButton: !this.createDisabled && this.mode != 'search',
                         filters: this.getSelectFilters(),
                         boolFilterList: this.getSelectBoolFilterList(),
+                        boolFilterData: this.getBoolFilterData(),
                         primaryFilterName: this.getSelectPrimaryFilterName(),
                         createAttributes: (this.mode === 'edit') ? this.getCreateAttributes() : null,
                         mandatorySelectAttributeList: this.mandatorySelectAttributeList,
@@ -167,6 +182,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         createButton: !this.createDisabled && this.mode != 'search',
                         filters: this.getSelectFilters(),
                         boolFilterList: this.getSelectBoolFilterList(),
+                        boolFilterData: this.getBoolFilterData(),
                         primaryFilterName: this.getSelectPrimaryFilterName(),
                         multiple: true
                     }, function (view) {
@@ -238,16 +254,23 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         },
 
         getAutocompleteUrl: function () {
-            var url = this.foreignScope + '?sortBy=name&maxCount=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT;
-            var boolList = this.getSelectBoolFilterList();
-            var where = [];
+            let url = this.foreignScope + '?sortBy=name&maxCount=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT;
+
+            let boolList = this.getSelectBoolFilterList();
             if (boolList) {
                 url += '&' + $.param({'boolFilterList': boolList});
             }
-            var primary = this.getSelectPrimaryFilterName();
+
+            let primary = this.getSelectPrimaryFilterName();
             if (primary) {
                 url += '&' + $.param({'primaryFilter': primary});
             }
+
+            let boolData = this.getBoolFilterData();
+            if (boolData) {
+                url += '&' + $.param({'where': [{'type': 'bool', 'data': boolData}]});
+            }
+
             return url;
         },
 
