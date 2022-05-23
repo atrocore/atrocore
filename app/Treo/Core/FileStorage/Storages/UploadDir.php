@@ -162,7 +162,7 @@ class UploadDir extends Base
 
         $this->addDependency('config');
         $this->addDependency('entityManager');
-        $this->addDependency('Thumbnail');
+        $this->addDependency('thumbnail');
         $this->addDependency('metadata');
     }
 

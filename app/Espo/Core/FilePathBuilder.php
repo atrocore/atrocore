@@ -63,9 +63,6 @@ class FilePathBuilder
         $this->container = $container;
     }
 
-    /**
-     * @return array
-     */
     public function folderPath()
     {
         return [
@@ -73,14 +70,6 @@ class FilePathBuilder
         ];
     }
 
-    /**
-     * @param string $type
-     * @param string|null $route
-     * @return string
-     * @throws Error
-     *
-     * This method use in migration DAM V3.21.0
-     */
     public function createPath(string $type, ?string $route = null): string
     {
         $baseFolder = $this->folderPath()[$type];
