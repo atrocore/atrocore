@@ -17467,7 +17467,7 @@ table.table {
   }
 
   #navbar footer > ul {
-    width: 100%;
+    width: 220px;
     background-color: #ffffff;
     padding: 10px 0 10px 10px;
     margin: 0;
@@ -17618,6 +17618,12 @@ table.table {
 
 .pull-left {
   float: left !important;
+}
+
+@media (min-width: 768px) {
+  .panel-navigation.pull-left {
+    padding-left: 20px;
+  }
 }
 
 .stream-head-container .pull-left {

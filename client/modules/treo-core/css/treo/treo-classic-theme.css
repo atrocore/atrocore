@@ -17792,6 +17792,12 @@ table.table {
     float: left !important
 }
 
+@media (min-width: 768px) {
+    .panel-navigation.pull-left {
+        padding-left: 20px;
+    }
+}
+
 .stream-head-container .pull-left {
     margin-top: 5px;
     margin-right: 5px;
@@ -20091,7 +20097,7 @@ button.category:focus {
     }
 
     #navbar footer > ul {
-        width: 100%;
+        width: 220px;
         background-color: #f5f5f5;
         padding: 10px 0 10px 10px;
         margin: 0;
