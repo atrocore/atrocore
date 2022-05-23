@@ -50,7 +50,7 @@ class ConnectionPsql extends AbstractConnection
             $result = new \PDO($dsn, $connection->get('user'), $this->decryptPassword($connection->get('password')));
             $result->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         } catch (\PDOException $e) {
-            throw new BadRequest(sprintf($this->getInjection('language')->translate('connectionFailed', 'exceptions', 'Connection'), $e->getMessage()));
+            throw new BadRequest(sprintf($this->exception('connectionFailed'), $e->getMessage()));
         }
 
         return $result;

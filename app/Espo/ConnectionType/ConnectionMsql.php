@@ -45,7 +45,7 @@ class ConnectionMsql extends AbstractConnection
     public function connect(Entity $connection)
     {
         if (!function_exists('sqlsrv_connect')) {
-            throw new BadRequest($this->getInjection('language')->translate('sqlsrvMissing', 'exceptions', 'Connection'));
+            throw new BadRequest($this->exception('sqlsrvMissing'));
         }
 
         $serverName = "{$connection->get('host')},{$connection->get('port')}";
@@ -59,7 +59,7 @@ class ConnectionMsql extends AbstractConnection
 
         if ($result === false) {
             throw new BadRequest(
-                sprintf($this->getInjection('language')->translate('connectionFailed', 'exceptions', 'Connection'), implode(', ', array_column(\sqlsrv_errors(), 'message')))
+                sprintf($this->exception('connectionFailed'), implode(', ', array_column(\sqlsrv_errors(), 'message')))
             );
         }
 

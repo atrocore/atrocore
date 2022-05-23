@@ -48,10 +48,10 @@ class ConnectionSftp extends AbstractConnection
             $result = new \phpseclib3\Net\SFTP($connection->get('host'), empty($connection->get('port')) ? 22 : (int)$connection->get('port'));
             $login = $result->login($connection->get('user'), $this->decryptPassword($connection->get('password')));
         } catch (\Throwable $e) {
-            throw new BadRequest(sprintf($this->getInjection('language')->translate('connectionFailed', 'exceptions', 'Connection'), $e->getMessage()));
+            throw new BadRequest(sprintf($this->exception('connectionFailed'), $e->getMessage()));
         }
         if ($login === false) {
-            throw new BadRequest(sprintf($this->getInjection('language')->translate('connectionFailed', 'exceptions', 'Connection'), 'Wrong auth data.'));
+            throw new BadRequest(sprintf($this->exception('connectionFailed'), 'Wrong auth data.'));
         }
 
         return $result;

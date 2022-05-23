@@ -56,7 +56,7 @@ class ConnectionFtp extends AbstractConnection
         $data = curl_exec($ch);
         curl_close($ch);
         if ($data === false) {
-            throw new BadRequest(sprintf($this->getInjection('language')->translate('connectionFailed', 'exceptions', 'Connection'), 'Connection failed.'));
+            throw new BadRequest(sprintf($this->exception('connectionFailed'), 'Connection failed.'));
         }
 
         return 'curl';

@@ -37,12 +37,42 @@ declare(strict_types=1);
 
 namespace Espo\ConnectionType;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
 class ConnectionOauth2 extends AbstractConnection
 {
     public function connect(Entity $connection)
     {
-        return null;
+        $body = ['grant_type' => $connection->get('oauthGrantType')];
+
+        switch ($body['grant_type']) {
+            case 'client_credentials':
+                $body['client_id'] = $connection->get('oauthClientId');
+                $body['client_secret'] = $this->decryptPassword($connection->get('oauthClientSecret'));
+                break;
+            default:
+                throw new BadRequest(sprintf($this->exception('connectionFailed'), 'Connection failed.'));
+        }
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $connection->get('oauthUrl'));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($body));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        if (!empty($response)) {
+            $result = @json_decode($response, true);
+            if (isset($result['access_token'])) {
+                return $result['access_token'];
+            }
+        }
+
+        throw new BadRequest(sprintf($this->exception('connectionFailed'), 'Connection failed.'));
     }
 }

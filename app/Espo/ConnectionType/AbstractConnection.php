@@ -50,4 +50,9 @@ abstract class AbstractConnection extends Injectable implements ConnectionInterf
     {
         return $this->getInjection('serviceFactory')->create('Connection')->decryptPassword($hash);
     }
+
+    protected function exception(string $name, string $scope = 'Connection'): string
+    {
+        return $this->getInjection('language')->translate($name, 'exceptions', 'Connection');
+    }
 }
