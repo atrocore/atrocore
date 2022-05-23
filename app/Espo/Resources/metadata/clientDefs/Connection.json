@@ -1,6 +1,14 @@
 {
   "controller": "controllers/record",
   "iconClass": "fas fa-database",
+  "boolFilterList": [
+    "notEntity",
+    "connectionType"
+  ],
+  "hiddenBoolFilterList": [
+    "notEntity",
+    "connectionType"
+  ],
   "views": {
     "list": "views/connection/list"
   },
