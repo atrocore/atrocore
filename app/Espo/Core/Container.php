@@ -37,20 +37,14 @@ declare(strict_types=1);
 
 namespace Espo\Core;
 
-use Espo\Core\EventManager\Manager as EventManager;
 use Espo\Core\Interfaces\Factory;
 use Espo\Core\Interfaces\Injectable;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Language;
-use Espo\Core\Utils\Log;
-use Espo\Core\Utils\Log\Monolog\Handler\RotatingFileHandler;
-use Espo\Core\Utils\Log\Monolog\Handler\StreamHandler;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\Portal;
 use Espo\Entities\User;
-use Monolog\ErrorHandler;
 use Treo\Core\ModuleManager\Manager as ModuleManager;
-use Espo\Core\Utils\File\Manager as FileManager;
 
 class Container
 {
@@ -93,6 +87,10 @@ class Container
             'themeManager'             => \Espo\Core\Factories\ThemeManager::class,
             'queueManager'             => \Espo\Core\QueueManager::class,
             'pseudoTransactionManager' => \Espo\Core\PseudoTransactionManager::class,
+            'pdo'                      => \Espo\Core\Factories\Pdo::class,
+            'eventManager'             => \Espo\Core\Factories\EventManager::class,
+            'fileManager'              => \Espo\Core\Factories\FileManager::class,
+            'log'                      => \Espo\Core\Factories\Log::class,
         ];
 
     public function __construct()
@@ -299,104 +297,5 @@ class Container
     protected function loadDefaultLanguage(): Language
     {
         return new Language($this, Language::detectLanguage($this->get('config')));
-    }
-
-    /**
-     * Load Log
-     *
-     * @return Log
-     * @throws \Exception
-     */
-    protected function loadLog(): Log
-    {
-        $config = $this->get('config');
-
-        $path = $config->get('logger.path', 'data/logs/log.log');
-        $rotation = $config->get('logger.rotation', true);
-
-        $log = new Log('Log');
-        $levelCode = $log->getLevelCode($config->get('logger.level', 'WARNING'));
-
-        if ($rotation) {
-            $maxFileNumber = $config->get('logger.maxFileNumber', 30);
-            $handler = new RotatingFileHandler($path, $maxFileNumber, $levelCode);
-        } else {
-            $handler = new StreamHandler($path, $levelCode);
-        }
-        $log->pushHandler($handler);
-
-        $errorHandler = new ErrorHandler($log);
-        $errorHandler->registerExceptionHandler(null, false);
-        $errorHandler->registerErrorHandler(array(), false);
-
-        return $log;
-    }
-
-    /**
-     * Load file manager
-     *
-     * @return FileManager
-     */
-    protected function loadFileManager(): FileManager
-    {
-        return new FileManager($this->get('config'));
-    }
-
-    /**
-     * Load EventManager
-     *
-     * @return EventManager
-     */
-    protected function loadEventManager(): EventManager
-    {
-        $eventManager = new EventManager($this);
-        $eventManager->loadListeners();
-
-        return $eventManager;
-    }
-
-    protected function loadPdo(): \PDO
-    {
-        /** @var Config $config */
-        $config = $this->get('config');
-
-        $params = [
-            'host'      => $config->get('database.host'),
-            'port'      => $config->get('database.port'),
-            'dbname'    => $config->get('database.dbname'),
-            'user'      => $config->get('database.user'),
-            'charset'   => $config->get('database.charset', 'utf8'),
-            'password'  => $config->get('database.password'),
-            'sslCA'     => $config->get('database.sslCA'),
-            'sslCert'   => $config->get('database.sslCert'),
-            'sslKey'    => $config->get('database.sslKey'),
-            'sslCAPath' => $config->get('database.sslCAPath'),
-            'sslCipher' => $config->get('database.sslCipher')
-        ];
-
-        // prepare params
-        $port = empty($params['port']) ? '' : "port={$params['port']};";
-
-        $options = [];
-        if (isset($params['sslCA'])) {
-            $options[\PDO::MYSQL_ATTR_SSL_CA] = $params['sslCA'];
-        }
-        if (isset($params['sslCert'])) {
-            $options[\PDO::MYSQL_ATTR_SSL_CERT] = $params['sslCert'];
-        }
-        if (isset($params['sslKey'])) {
-            $options[\PDO::MYSQL_ATTR_SSL_KEY] = $params['sslKey'];
-        }
-        if (isset($params['sslCAPath'])) {
-            $options[\PDO::MYSQL_ATTR_SSL_CAPATH] = $params['sslCAPath'];
-        }
-        if (isset($params['sslCipher'])) {
-            $options[\PDO::MYSQL_ATTR_SSL_CIPHER] = $params['sslCipher'];
-        }
-
-        $pdo = new \PDO("mysql:host={$params['host']};{$port}dbname={$params['dbname']};charset={$params['charset']}", $params['user'], $params['password'], $options);
-        $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-
-        return $pdo;
     }
 }
