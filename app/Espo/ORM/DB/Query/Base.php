@@ -615,8 +615,7 @@ abstract class Base
                 return "{$orderPart}";
             } else {
                 $fieldPath = $this->getFieldPathForOrderBy($entity, $orderBy);
-
-                return "{$fieldPath} " . $order;
+                return !empty($fieldPath) && is_string($fieldPath) ? "$fieldPath $order" : false;
             }
         }
     }
