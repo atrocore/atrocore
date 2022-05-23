@@ -56,26 +56,9 @@ Espo.define('views/site/navbar-footer', 'treo-core:views/site/footer', function 
             }
         },
 
-        setup() {
-            Dep.prototype.setup.call(this);
-
-            this.wait(true);
-            this.ajaxGetRequest('Composer/list').then(function (response) {
-                if (response.list) {
-                    response.list.forEach(item => {
-                        if (!this.version && item.id === 'TreoCore') {
-                            this.version = item.currentVersion;
-                        }
-                    });
-                }
-
-                this.wait(false);
-            }.bind(this));
-        },
-
         data() {
             return {
-                version: this.version
+                version: this.getConfig().get('coreVersion')
             }
         }
 
