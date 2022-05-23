@@ -125,14 +125,12 @@ class Container
             return $this->data[$name];
         }
 
-        // load via load method
-        $loadMethod = 'load' . ucfirst($name);
-        if (method_exists($this, $loadMethod)) {
-            $this->data[$name] = $this->$loadMethod();
+        // load itself
+        if ($name === 'container') {
+            $this->data[$name] = $this;
             return $this->data[$name];
         }
 
-        // load via classname
         $className = isset($this->classAliases[$name]) ? $this->classAliases[$name] : $name;
         if (class_exists($className)) {
             if (is_a($className, Factory::class, true)) {
@@ -215,16 +213,6 @@ class Container
             unset($this->data[$name]);
         }
 
-        return $this;
-    }
-
-    /**
-     * Load container
-     *
-     * @return Container
-     */
-    protected function loadContainer(): Container
-    {
         return $this;
     }
 }
