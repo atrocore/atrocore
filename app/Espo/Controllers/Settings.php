@@ -59,6 +59,7 @@ class Settings extends \Espo\Core\Controllers\Base
 
         $data['jsLibs'] = $this->getMetadata()->get('app.jsLibs');
         $data['themes'] = $this->getMetadata()->get('themes');
+        $data['coreVersion'] = \Espo\Services\Composer::getCoreVersion();
 
         $data = $this->prepareTabList($data);
 
