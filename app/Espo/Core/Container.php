@@ -39,8 +39,6 @@ namespace Espo\Core;
 
 use Espo\Core\Interfaces\Factory;
 use Espo\Core\Interfaces\Injectable;
-use Espo\Core\Utils\Config;
-use Espo\Core\Utils\Metadata;
 use Espo\Entities\Portal;
 use Espo\Entities\User;
 use Treo\Core\ModuleManager\Manager as ModuleManager;
@@ -93,6 +91,10 @@ class Container
             'defaultLanguage'          => \Espo\Core\Factories\DefaultLanguage::class,
             'baseLanguage'             => \Espo\Core\Factories\BaseLanguage::class,
             'language'                 => \Espo\Core\Factories\Language::class,
+            'dataManager'              => \Espo\Core\Factories\DataManager::class,
+            'metadata'                 => \Espo\Core\Factories\Metadata::class,
+            'config'                   => \Espo\Core\Factories\Config::class,
+            'internalAclManager'       => \Espo\Core\Factories\InternalAclManager::class,
         ];
 
     public function __construct()
@@ -224,50 +226,5 @@ class Container
     protected function loadContainer(): Container
     {
         return $this;
-    }
-
-    /**
-     * Load internal ACL manager
-     *
-     * @return mixed
-     */
-    protected function loadInternalAclManager()
-    {
-        // get class name
-        $className = $this
-            ->get('metadata')
-            ->get('app.serviceContainer.classNames.acl', AclManager::class);
-
-        return new $className($this->get('container'));
-    }
-
-    /**
-     * Load config
-     *
-     * @return Config
-     */
-    protected function loadConfig(): Config
-    {
-        return new Config($this->get('container'));
-    }
-
-    /**
-     * Load metadata
-     *
-     * @return Metadata
-     */
-    protected function loadMetadata(): Metadata
-    {
-        return new Metadata($this->get('fileManager'), $this->get('dataManager'), $this->get('moduleManager'), $this->get('eventManager'));
-    }
-
-    /**
-     * Load DataManager
-     *
-     * @return DataManager
-     */
-    protected function loadDataManager(): DataManager
-    {
-        return new DataManager($this);
     }
 }
