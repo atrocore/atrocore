@@ -38,8 +38,6 @@ Espo.define('views/site/navbar-footer', 'treo-core:views/site/footer', function 
 
         template: 'site/navbar-footer',
 
-        version: null,
-
         events: {
             'click span.toggle-icon-up': function (e) {
                 $(e.target).addClass('hidden');
@@ -58,7 +56,7 @@ Espo.define('views/site/navbar-footer', 'treo-core:views/site/footer', function 
 
         data() {
             return {
-                version: this.getConfig().get('coreVersion')
+                version: this.getConfig().get('coreVersion') || ''
             }
         }
 
