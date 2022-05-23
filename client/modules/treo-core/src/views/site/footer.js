@@ -51,7 +51,8 @@ Espo.define('treo-core:views/site/footer', 'class-replace!treo-core:views/site/f
 
         data() {
             return {
-                year: moment().format("YYYY")
+                year: moment().format("YYYY"),
+                version: this.getConfig().get('coreVersion') || ''
             }
         },
 

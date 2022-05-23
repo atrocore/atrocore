@@ -45,6 +45,7 @@ use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Route;
 use Espo\Entities\Portal;
 use Espo\ORM\EntityManager;
+use Espo\Services\Composer;
 use Espo\Services\Installer;
 
 class Application
@@ -305,7 +306,7 @@ class Application
         }
 
         if (self::isSystemUpdating()) {
-            $this->display('client/html/updating.html', ['year' => date('Y'), 'logFile' => self::COMPOSER_LOG_FILE]);
+            $this->display('client/html/updating.html', ['year' => date('Y'), 'logFile' => self::COMPOSER_LOG_FILE, 'version' => Composer::getCoreVersion()]);
         }
 
         // for entryPoint
@@ -465,7 +466,8 @@ class Application
             'status'          => $result['status'],
             'message'         => $result['message'],
             'classReplaceMap' => json_encode($this->getMetadata()->get(['app', 'clientClassReplaceMap'], [])),
-            'year'            => date('Y')
+            'year'            => date('Y'),
+            'version'         => Composer::getCoreVersion()
         ];
 
         $this->display('client/html/installation.html', $vars);
