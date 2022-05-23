@@ -497,15 +497,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                                         side.addClass('fixed-bottom');
                                     }
                                 } else {
-                                    if (!side.hasClass('fixed-bottom')) {
+                                    if (!side.hasClass('fixed-bottom') && side.hasClass('fixed-top')) {
                                         side.css({
                                             'top': side.offset().top + 'px',
                                             'width': sideWidth + 'px'
                                         });
                                         side.addClass('scrolled');
-                                        if (side.hasClass('fixed-top')) {
-                                            side.removeClass('fixed-top');
-                                        }
+                                        side.removeClass('fixed-top');
                                     }
                                 }
 
