@@ -80,6 +80,12 @@ class FilePathBuilder
         } else {
             $path = $this->buildPath($type, $lastPath, $route);
         }
+
+        $uploadRootPath = $this->container->get('config')->get('uploadRootPath');
+        if (!empty($uploadRootPath)) {
+            $path = array_merge([$uploadRootPath], $path);
+        }
+
         $res = implode("/", $path);
         array_pop($path);
         $this->saveInFile($baseFolder, implode('/', $path), $route);
