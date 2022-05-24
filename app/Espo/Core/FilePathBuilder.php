@@ -82,7 +82,7 @@ class FilePathBuilder
         }
 
         $uploadRootPath = $this->container->get('config')->get('uploadRootPath');
-        if (!empty($uploadRootPath)) {
+        if (!empty($uploadRootPath) && !empty($path[0]) && $path[0] !== $uploadRootPath) {
             $path = array_merge([$uploadRootPath], $path);
         }
 
