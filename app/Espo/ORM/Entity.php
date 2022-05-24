@@ -584,4 +584,23 @@ abstract class Entity implements IEntity
     {
         return $this->entityManager;
     }
+
+    public function __isset($name)
+    {
+        return $this->hasAttribute($name);
+    }
+
+    public function __get($name)
+    {
+        if ($this->hasAttribute($name)) {
+            return $this->get($name);
+        }
+
+        return null;
+    }
+
+    public function __toString()
+    {
+        return $this->hasAttribute('name') ? $this->get('name') : $this->get('id');
+    }
 }
