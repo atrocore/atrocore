@@ -14892,6 +14892,22 @@ label {
   flex-wrap: wrap;
 }
 
+#main .page-header .search-container {
+  flex-basis: 100%;
+}
+
+#main .page-header .search-container .search-row .input-group {
+  margin-left: 0;
+}
+
+#main .list-container .list-buttons-container .btn-group .dropdown-toggle {
+  padding-left: 0;
+}
+
+#main .list-container .list-buttons-container .btn-group.open .dropdown-toggle {
+  background-color: unset;
+}
+
 #main .page-header .search-container,
 #main .page-header .search-row .form-group {
   margin-bottom: 0;
@@ -19415,7 +19431,6 @@ table.table > thead th > div > a {
   }
 
   #main > .list-container.collapsed,
-  #main > .page-header.collapsed .header-breadcrumbs:not(.fixed-header-breadcrumbs),
   #main > .page-header.collapsed .header-buttons-container.full-row,
   #main > .page-header.collapsed .overview-filters-container {
     width: calc(100% - 279px);
