@@ -17431,6 +17431,11 @@ table.table {
   color: #111111;
 }
 
+#navbar footer .toggle-icon-up,
+#navbar footer .toggle-icon-down {
+  cursor: pointer;
+}
+
 #navbar footer > ul {
   list-style: none;
   border-top: 1px solid #e0e0e0;

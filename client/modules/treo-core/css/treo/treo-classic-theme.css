@@ -20000,6 +20000,11 @@ button.category:focus {
     color: #000;
 }
 
+#navbar footer .toggle-icon-up,
+#navbar footer .toggle-icon-down {
+    cursor: pointer;
+}
+
 #navbar footer > ul {
     list-style: none;
     border-top: 1px solid #dcdcdc;
