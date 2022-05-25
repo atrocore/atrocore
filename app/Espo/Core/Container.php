@@ -119,8 +119,6 @@ class Container
      */
     public function get(string $name)
     {
-        $name = lcfirst($name);
-
         if (isset($this->data[$name])) {
             return $this->data[$name];
         }
