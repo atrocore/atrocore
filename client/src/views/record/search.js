@@ -580,17 +580,11 @@ Espo.define('views/record/search', 'view', function (Dep) {
         },
 
         setupAdvancedFiltersPosition() {
-            let entityName = $('.row > div > h3');
             let searchContainer = $('.page-header .search-container');
-            let positionLeft = entityName.find('span').innerWidth() + parseFloat(entityName.css('marginRight')) + parseFloat(entityName.css('paddingRight')) + parseFloat(searchContainer.css('paddingLeft')) + parseFloat(searchContainer.css('marginLeft'));
 
             if (searchContainer.has(this.$advancedFiltersPanel).length) {
                 let list = $('.list-container');
                 let $window = $(window);
-
-                this.$advancedFiltersPanel.css({
-                    'left': '-' + positionLeft + 'px'
-                });
 
                 if ($window.outerWidth() >= 768) {
                     this.$advancedFiltersPanel.css({
