@@ -7,5 +7,6 @@
   "QueueManagerCreateThumbnails": "\\Espo\\Services\\QueueManagerCreateThumbnails",
   "MassActions": "\\Espo\\Services\\MassActions",
   "ScheduledJob": "\\Espo\\Services\\ScheduledJob",
-  "Composer": "\\Espo\\Services\\Composer"
+  "Composer": "\\Espo\\Services\\Composer",
+  "TreoStore": "\\Espo\\Services\\TreoStore"
 }
