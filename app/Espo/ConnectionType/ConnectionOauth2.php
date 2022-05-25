@@ -69,7 +69,7 @@ class ConnectionOauth2 extends AbstractConnection
         if (!empty($response)) {
             $result = @json_decode($response, true);
             if (isset($result['access_token'])) {
-                return $result['access_token'];
+                return $result;
             }
         }
 
