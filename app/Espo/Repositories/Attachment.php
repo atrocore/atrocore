@@ -205,7 +205,7 @@ class Attachment extends RDB
         $this->addDependency('fileStorageManager');
         $this->addDependency('filePathBuilder');
         $this->addDependency('fileManager');
-        $this->addDependency('Thumbnail');
+        $this->addDependency('thumbnail');
     }
 
     /**

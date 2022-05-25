@@ -303,7 +303,7 @@ class Attachment extends Record
         $name = sprintf($this->getInjection('language')->translate('createThumbnailsNotification', 'labels', 'Attachment'), $entity->get('name'));
 
         try {
-            $this->getInjection('Thumbnail')->createThumbnail($entity, 'small');
+            $this->getInjection('thumbnail')->createThumbnail($entity, 'small');
             $this->getInjection('queueManager')->push($name, 'QueueManagerCreateThumbnails', ['id' => $entity->get('id')]);
         } catch (\Throwable $e) {
             // ignore all errors
@@ -319,7 +319,7 @@ class Attachment extends Record
 
         $this->addDependency('language');
         $this->addDependency('queueManager');
-        $this->addDependency('Thumbnail');
+        $this->addDependency('thumbnail');
     }
 }
 
