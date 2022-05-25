@@ -72,7 +72,7 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
 
                     const header = content.find('.page-header');
                     const filters = content.find('.advanced-filters');
-                    const listContainer = content.find('#tree-list-table.list-container');
+                    const listContainer = content.find('#main > #tree-list-table.list-container');
 
                     header.outerWidth(main.width() - width - 9);
                     header.css('marginLeft', width + 'px');
