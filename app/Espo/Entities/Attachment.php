@@ -87,6 +87,6 @@ class Attachment extends Base
 
     public function isPrivate(): bool
     {
-        return $this->get('private');
+        return !empty($this->get('private'));
     }
 }
