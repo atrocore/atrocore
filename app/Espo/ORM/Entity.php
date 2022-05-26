@@ -158,6 +158,17 @@ abstract class Entity implements IEntity
         }
 
         if ($this->hasRelation($name) && $this->id) {
+            if (empty($params['orderBy']) && !empty($this->relations[$name]['defaultOrderBy'])) {
+                $params['orderBy'] = $this->relations[$name]['defaultOrderBy'];
+                $params['order'] = empty($this->relations[$name]['defaultOrderByAsc']) ? 'DESC' : 'ASC';
+            }
+
+            if (empty($params['additionalColumns']) && !empty($this->relations[$name]['additionalColumns'])) {
+                foreach ($this->relations[$name]['additionalColumns'] as $columnName => $columnData) {
+                    $params['additionalColumns'][$columnName] = $columnName;
+                }
+            }
+
             $value = $this->entityManager->getRepository($this->getEntityType())->findRelated($this, $name, $params);
             return $value;
         }
