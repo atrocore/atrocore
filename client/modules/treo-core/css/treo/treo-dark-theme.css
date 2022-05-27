@@ -20419,6 +20419,19 @@ button.category:focus {
         cursor: col-resize;
     }
 
+    #main > .record > .detail > .row > .side {
+        float: right;
+    }
+
+    #main > .record > .detail > .row > .side > .side-panel-resizer {
+        width: 2px;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        cursor: col-resize;
+    }
+
     #main .catalog-tree-panel.catalog-tree-panel-hidden > .category-panel-resizer {
         cursor: default;
     }
@@ -20473,11 +20486,6 @@ button.category:focus {
         width: calc(66.6666666667% - 279px);
     }
 
-    #main .detail .row > .overview.not-collapsed {
-        margin-left: 25px;
-        width: calc(66.6666666667% - 25px) !important;
-    }
-
     #main .catalog-tree-panel.catalog-tree-panel-hidden {
         padding: 0 8px 0 17px;
     }
@@ -20498,11 +20506,6 @@ button.category:focus {
     #main .detail .row > .overview.collapsed {
         margin-left: 0;
         width: 75%;
-    }
-
-    #main .detail .row > .overview.not-collapsed {
-        margin-left: 26px;
-        width: calc(75% - 26px) !important;
     }
 }
 
@@ -20530,8 +20533,14 @@ button.category:focus {
         margin: 0 -15px;
     }
 
+    .detail .overview {
+        width: 100% !important;
+    }
+
     .detail .side {
-        margin: 0 -15px;
+        margin: 0;
+        padding: 0;
+        width: 100% !important;
     }
 
     .detail .side > .panel-default > .panel-heading {
