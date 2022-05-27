@@ -141,6 +141,7 @@
     "Are you sure?": "Sind Sie sicher?",
     "Record has been removed": "Datensatz wurde gelöscht",
     "Wrong username/password": "Falscher Benutzername/Passwort",
+    "Auth error": "Authentifizierung fehlgeschlagen. Bitte melden Sie sich erneut an.",
     "Post cannot be empty": "Notiz darf nicht leer sein",
     "Removing...": "Lösche...",
     "Unlinking...": "Lösche Verknüpfung...",

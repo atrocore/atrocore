@@ -50,6 +50,12 @@ Espo.define('views/record/detail-side', ['view'], function (Dep) {
 
         panelList: [],
 
+        minWidth: 200,
+
+        maxWidth: 600,
+
+        currentWidth: null,
+
         defaultPanelDefs: {
             name: 'default',
             label: 'Ownership Information',
@@ -163,6 +169,8 @@ Espo.define('views/record/detail-side', ['view'], function (Dep) {
                 return item;
             }, this);
 
+            this.currentWidth = this.getStorage().get('sideWidth', this.scope) || this.minWidth;
+
             this.wait(true);
             this.getHelper().layoutManager.get(this.scope, 'sidePanels' + Espo.Utils.upperCaseFirst(this.type), function (layoutData) {
                 if (layoutData) {
@@ -200,6 +208,68 @@ Espo.define('views/record/detail-side', ['view'], function (Dep) {
             });
 
             this.panelList = newList;
+        },
+
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            this.sidePanelResize();
+
+            $(window).on('resize load', () => {
+                this.sidePanelResize()
+            });
+        },
+
+        sidePanelResize() {
+            if ($(window).width() >= 768) {
+                const resizer = this.$el.find('.side-panel-resizer');
+
+                if (resizer) {
+                    resizer.off('mousedown');
+                    resizer.off('mouseup');
+
+                    this.trigger('side-width-changed', this.currentWidth);
+                    $(window).trigger('side-width-changed', this.currentWidth);
+
+                    this.$el.css({
+                        'width': this.currentWidth + 'px'
+                    });
+
+                    // click on resize bar
+                    resizer.mousedown(function (e) {
+                        let initPositionX = e.pageX;
+                        let initWidth = this.$el.outerWidth();
+
+                        // change tree panel width
+                        $('body').mousemove(function (event) {
+                            let positionX = event.pageX;
+
+                            // if horizontal mouse move
+                            if (initPositionX !== positionX) {
+                                let width = initWidth + (initPositionX - positionX);
+
+                                if (width >= this.minWidth && width <= this.maxWidth) {
+                                    this.currentWidth = width;
+
+                                    this.trigger('side-width-changed', this.currentWidth);
+                                    $(window).trigger('side-width-changed', this.currentWidth);
+
+                                    this.$el.css('width', this.currentWidth + 'px');
+                                }
+                            }
+                        }.bind(this));
+                    }.bind(this));
+
+                    // setup new width
+                    resizer.add('body').mouseup(function () {
+                        if (this.currentWidth) {
+                            this.getStorage().set('sideWidth', this.scope, this.currentWidth)
+                        }
+
+                        $('body').off('mousemove');
+                    }.bind(this));
+                }
+            }
         },
 
         setupDefaultPanel: function () {

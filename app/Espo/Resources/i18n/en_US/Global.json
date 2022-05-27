@@ -144,6 +144,7 @@
     "Are you sure?": "Are you sure?",
     "Record has been removed": "Record has been removed",
     "Wrong username/password": "Wrong username/password",
+    "Auth error": "Authentication failed. Please re-login again.",
     "Post cannot be empty": "Post cannot be empty",
     "Removing...": "Removing...",
     "Unlinking...": "Unlinking...",

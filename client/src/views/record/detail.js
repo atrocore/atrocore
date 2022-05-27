@@ -455,11 +455,41 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             if ($side) {
                 let prevScroll = 0;
 
+                let observer = new ResizeObserver(() => {
+                    let width = $side.$el.innerWidth();
+
+                    width = parseInt(width);
+
+                    const content = $('#content');
+                    const overview = content.find('.overview');
+
+                    overview.outerWidth(content.outerWidth() - $('.catalog-tree-panel').outerWidth() - width);
+                    $side.$el.css({'min-height': ($window.innerHeight() - $side.$el.offset().top) + 'px'});
+
+                    observer.unobserve($('#content').get(0));
+                });
+                observer.observe($('#content').get(0));
+                $side.$el.css({'min-height': ($window.innerHeight() - $side.$el.offset().top) + 'px'});
+
                 $window.resize(function () {
                     let side = $('.side');
-                    if (side.outerHeight() < $window.height() - (parseInt($('body').css('padding-top')) + $('.record-buttons').outerHeight())) {
-                        side.attr('style', '');
-                        side.removeClass('fixed-top fixed-bottom scrolled');
+
+                    if (side.length) {
+                        let width = side.outerWidth();
+
+                        if (side.outerHeight() < $window.height() - (parseInt($('body').css('padding-top')) + $('.record-buttons').outerHeight())) {
+                            side.attr('style', '');
+                            side.removeClass('fixed-top fixed-bottom scrolled');
+                        }
+
+                        if ($window.width() >= 768) {
+                            side.css({
+                                'width': width + 'px',
+                                'min-height': ($window.innerHeight() - side.offset().top) + 'px'
+                            });
+                        } else {
+                            side.css({'min-height': 'unset'});
+                        }
                     }
                 });
 
@@ -474,7 +504,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     let scroll = $window.scrollTop();
 
                     // if screen width more than 768 pixels and side panel height more than screen height
-                    if (side.length && $window.width() >= 768 && overview.outerHeight() > side.outerHeight()) {
+                    if ($window.width() >= 768 && overview.outerHeight() > side.outerHeight()) {
                         let sideWidth = side.outerWidth();
 
                         if (side.outerHeight() > $window.height() - topHeight) {
@@ -485,7 +515,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                                 // if side panel scrolled to end
                                 if (scroll > side.outerHeight() - ($window.height() - side.offset().top)) {
                                     side.attr('style', '');
-                                    side.css({'width': sideWidth + 'px'});
 
                                     if (side.hasClass('fixed-top')) {
                                         side.addClass('scrolled');
@@ -499,8 +528,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                                 } else {
                                     if (!side.hasClass('fixed-bottom') && side.hasClass('fixed-top')) {
                                         side.css({
-                                            'top': side.offset().top + 'px',
-                                            'width': sideWidth + 'px'
+                                            'top': side.offset().top + 'px'
                                         });
                                         side.addClass('scrolled');
                                         side.removeClass('fixed-top');
@@ -535,9 +563,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                                             side.attr('style', '');
                                             side.removeClass('scrolled');
                                             side.addClass('fixed-top');
-                                            side.css({
-                                                'width': sideWidth + 'px'
-                                            })
                                         }
                                     }
                                 }
@@ -550,9 +575,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             if (scroll > prevScroll) {
                                 if (scroll > side.offset().top - topHeight) {
                                     side.addClass('fixed-top');
-                                    side.css({
-                                        'width': sideWidth + 'px'
-                                    })
                                 }
                             } else {
                                 if (scroll < parseInt($('body').css('padding-top')) + $('.record-buttons').outerHeight()) {
@@ -561,9 +583,14 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                                 }
                             }
                         }
+
+                        side.css({
+                            'width': sideWidth + 'px'
+                        });
                     }
 
                     prevScroll = scroll;
+                    side.css({'min-height': ($(window).innerHeight() - side.offset().top) + 'px'});
                 }.bind(this));
             }
 
@@ -1786,6 +1813,15 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 inlineEditDisabled: this.inlineEditDisabled,
                 recordHelper: this.recordHelper,
                 recordViewObject: this
+            }, view => {
+                this.listenTo(view, 'side-width-changed', width => {
+                    width = parseInt(width);
+
+                    const content = $('#content');
+                    const overview = content.find('.overview');
+
+                    overview.outerWidth(content.outerWidth() - $('.catalog-tree-panel').outerWidth() - width);
+                })
             });
         },
 
