@@ -232,8 +232,7 @@ Espo.define('views/record/detail-side', ['view'], function (Dep) {
                     $(window).trigger('side-width-changed', this.currentWidth);
 
                     this.$el.css({
-                        'width': this.currentWidth + 'px',
-                        'min-height': ($(window).innerHeight() - this.$el.offset().top) + 'px'
+                        'width': this.currentWidth + 'px'
                     });
 
                     // click on resize bar
