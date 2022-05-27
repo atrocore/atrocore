@@ -158,7 +158,7 @@ abstract class Entity implements IEntity
         }
 
         if ($this->hasRelation($name) && $this->id) {
-            return $this->entityManager->getRepository($this->getEntityType())->findRelated($this, $name, $params);
+            return $this->getEntityManager()->getRepository($this->getEntityType())->findRelated($this, $name, $params);
         }
 
         return null;
@@ -584,6 +584,46 @@ abstract class Entity implements IEntity
         return $this->entityManager;
     }
 
+    protected function checkViaAcl($value)
+    {
+        // exit if empty
+        if (empty($value) || ($value instanceof EntityCollection && count($value) === 0)) {
+            return $value;
+        }
+
+        $container = $this->getEntityManager()->getContainer();
+
+        if (empty($container->get('user'))) {
+            return $value;
+        }
+
+        if ($value instanceof Entity) {
+            if (!$container->get('acl')->check($value, 'read')) {
+                return null;
+            }
+            foreach ($container->get('acl')->getScopeForbiddenAttributeList($value->getEntityType(), 'read') as $attribute) {
+                $value->clear($attribute);
+            }
+            return $value;
+        }
+
+        if ($value instanceof EntityCollection) {
+            foreach ($value as $key => $item) {
+                if (!$container->get('acl')->check($item, 'read')) {
+                    $item->offsetUnset($key);
+                    continue 1;
+                }
+
+                foreach ($container->get('acl')->getScopeForbiddenAttributeList($item->getEntityType(), 'read') as $attribute) {
+                    $item->clear($attribute);
+                }
+            }
+            return $value;
+        }
+
+        return $value;
+    }
+
     public function __isset($name)
     {
         return $this->hasAttribute($name);
@@ -592,7 +632,7 @@ abstract class Entity implements IEntity
     public function __get($name)
     {
         if ($this->hasAttribute($name)) {
-            return $this->get($name);
+            return $this->checkViaAcl($this->get($name));
         }
 
         return null;
