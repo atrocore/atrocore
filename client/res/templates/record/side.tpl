@@ -43,3 +43,4 @@
     </div>
 </div>
 {{/each}}
+<div class="side-panel-resizer"></div>

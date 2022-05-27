@@ -106,6 +106,7 @@
     "Are you sure?": "¿Está seguro?",
     "Record has been removed": "Registro Eliminado",
     "Wrong username/password": "Nombre de usuario/contraseña incorrectos",
+    "Auth error": "Authentication failed. Please re-login again.",
     "Post cannot be empty": "La entrada no puede estar vacia",
     "Removing...": "Removiendo...",
     "Unlinking...": "Desenlazando...",
