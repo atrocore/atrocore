@@ -371,6 +371,30 @@ class RDB extends \Espo\ORM\Repository
             $entityType = $entity->getRelationParam($relationName, 'entity');
         }
 
+        /**
+         * Set default sort order
+         */
+        if (empty($params['orderBy'])) {
+            $defaultOrderBy = $this->getMetadata()->get(['clientDefs', $entity->getEntityType(), 'relationshipPanels', $relationName, 'sortBy']);
+            if (!empty($defaultOrderBy)) {
+                $defaultOrderByAsc = !empty($this->getMetadata()->get(['clientDefs', $entity->getEntityType(), 'relationshipPanels', $relationName, 'asc']));
+                $params['orderBy'] = $defaultOrderBy;
+                $params['order'] = $defaultOrderByAsc ? 'ASC' : 'DESC';
+            }
+        }
+
+        /**
+         * Set additional relation columns
+         */
+        if (empty($params['additionalColumns'])) {
+            $additionalColumns = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $relationName, 'additionalColumns']);
+            if (!empty($additionalColumns)) {
+                foreach ($additionalColumns as $column => $columnData) {
+                    $params['additionalColumns'][$column] = $column;
+                }
+            }
+        }
+
         if ($entityType) {
             if (empty($params['skipAdditionalSelectParams'])) {
                 $this->getEntityManager()->getRepository($entityType)->handleSelectParams($params);

@@ -1595,13 +1595,6 @@ class Record extends \Espo\Core\Services\Base
             $selectParams = array_merge($selectParams, $this->linkSelectParams[$link]);
         }
 
-        $additionalColumns = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $link, 'additionalColumns']);
-        if (!empty($additionalColumns)) {
-            foreach ($additionalColumns as $column => $columnData) {
-                $selectParams['additionalColumns'][$column] = $column;
-            }
-        }
-
         $selectParams['maxTextColumnsLength'] = $recordService->getMaxSelectTextAttributeLength();
 
         $selectAttributeList = $recordService->getSelectAttributeList($params);

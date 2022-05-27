@@ -52,11 +52,6 @@ class ManyMany extends Base
             $relationName = $this->getJoinTable($entityName, $foreignEntityName);
         }
 
-        $clientDefs = $this->getMetadata()->get(['clientDefs', $entityName, 'relationshipPanels', $linkName]);
-
-        $defaultOrderBy = !empty($clientDefs['sortBy']) ? $clientDefs['sortBy'] : null;
-        $defaultOrderByAsc = !empty($clientDefs['asc']);
-
         return array(
             $entityName => array(
                 'fields' => array(
@@ -81,8 +76,6 @@ class ManyMany extends Base
                             lcfirst($foreignEntityName).'Id',
                         ),
                         'foreign' => $foreignLinkName,
-                        'defaultOrderBy' => $defaultOrderBy,
-                        'defaultOrderByAsc' => $defaultOrderByAsc,
                     ),
                 ),
             ),
