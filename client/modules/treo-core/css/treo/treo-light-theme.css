@@ -19400,6 +19400,42 @@ table.table > thead th > div > a {
   border: 0;
   color: #ccc;
 }
+.side > button.collapse-panel {
+  display: none;
+}
+
+@media screen and (max-width: 767px) {
+  #main .detail .side > button.collapse-panel {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  #main .detail .side > button.collapse-panel {
+    position: absolute;
+    z-index: 100;
+    display: block;
+    right: 10px;
+    font-size: 10px;
+    padding: 0;
+    border: 0;
+    background-color: transparent;
+    color: #ccc;
+  }
+
+  #main .detail .side > button.collapse-panel {
+    top: 20px;
+  }
+
+  #main .detail .side.collapsed {
+    padding: 0 8px 0 17px !important;
+    border-top: solid 5px #EEEEEE;
+  }
+
+  #main .detail .side.collapsed > .panel {
+    display: none;
+  }
+}
 
 #main .catalog-tree-panel > button.collapsed {
   left: 50%;
