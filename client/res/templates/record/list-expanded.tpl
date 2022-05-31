@@ -41,7 +41,7 @@
     {{#if showMoreEnabled}}
     <div class="show-more{{#unless showMoreActive}} hide{{/unless}}">
         <a type="button" href="javascript:" class="btn btn-default btn-block"  data-action="showMore" {{#if showCount}}title="{{translate 'Total'}}: {{collection.total}}"{{/if}}>
-            <span >{{countLabel}}</span>
+            <span class="more-label">{{countLabel}}</span>
         </a>
     </div>
     {{/if}}
