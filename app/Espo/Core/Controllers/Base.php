@@ -34,7 +34,9 @@
  */
 
 namespace Espo\Core\Controllers;
-use \Espo\Core\Container;
+
+use Espo\Core\Container;
+use Espo\Core\Utils\Config;
 
 abstract class Base
 {
@@ -105,6 +107,9 @@ abstract class Base
         return $this->container->get('aclManager');
     }
 
+    /**
+     * @return Config
+     */
     protected function getConfig()
     {
         return $this->container->get('config');
