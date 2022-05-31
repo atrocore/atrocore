@@ -505,94 +505,96 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                     let scroll = $window.scrollTop();
 
-                    // if screen width more than 768 pixels and side panel height more than screen height
-                    if ($window.width() >= 768 && overview.outerHeight() > side.outerHeight()) {
-                        let sideWidth = side.outerWidth();
+                    if (side.length) {
+                        // if screen width more than 768 pixels and side panel height more than screen height
+                        if ($window.width() >= 768 && overview.outerHeight() > side.outerHeight()) {
+                            let sideWidth = side.outerWidth();
 
-                        if (side.outerHeight() > $window.height() - topHeight) {
+                            if (side.outerHeight() > $window.height() - topHeight) {
 
-                            // define scrolling direction
-                            if (scroll > prevScroll) {
+                                // define scrolling direction
+                                if (scroll > prevScroll) {
 
-                                // if side panel scrolled to end
-                                if (scroll > side.outerHeight() - ($window.height() - side.offset().top)) {
-                                    side.attr('style', '');
+                                    // if side panel scrolled to end
+                                    if (scroll > side.outerHeight() - ($window.height() - side.offset().top)) {
+                                        side.attr('style', '');
 
-                                    if (side.hasClass('fixed-top')) {
-                                        side.addClass('scrolled');
-                                        side.css({
-                                            'top': side.offset().top + 'px'
-                                        });
+                                        if (side.hasClass('fixed-top')) {
+                                            side.addClass('scrolled');
+                                            side.css({
+                                                'top': side.offset().top + 'px'
+                                            });
+                                        } else {
+                                            side.removeClass('scrolled');
+                                            side.addClass('fixed-bottom');
+                                        }
                                     } else {
-                                        side.removeClass('scrolled');
-                                        side.addClass('fixed-bottom');
+                                        if (!side.hasClass('fixed-bottom') && side.hasClass('fixed-top')) {
+                                            side.css({
+                                                'top': side.offset().top + 'px'
+                                            });
+                                            side.addClass('scrolled');
+                                            side.removeClass('fixed-top');
+                                        }
+                                    }
+
+                                    if (scroll > $('body').prop('scrollHeight') - $window.outerHeight() - 28) {
+                                        if (side.hasClass('scrolled')) {
+                                            let top = parseFloat(side.css('top'));
+                                            side.css({'top': (top - 28) + 'px'});
+                                        } else {
+                                            side.css({'bottom': '28px'});
+                                        }
                                     }
                                 } else {
-                                    if (!side.hasClass('fixed-bottom') && side.hasClass('fixed-top')) {
-                                        side.css({
-                                            'top': side.offset().top + 'px'
-                                        });
+
+                                    // if side panel has just start scrolling up
+                                    if (side.hasClass('fixed-bottom') && scroll !== 0) {
+                                        side.removeClass('fixed-bottom');
+
                                         side.addClass('scrolled');
+                                        side.css({
+                                            'top': (scroll - (side.outerHeight() - $window.height())) + 'px'
+                                        });
+                                    } else {
+                                        // if panel scrolled to end
+                                        if (scroll < topHeight) {
+                                            side.attr('style', '');
+                                            side.removeClass('fixed-top fixed-bottom scrolled');
+                                        } else {
+                                            if (scroll < side.offset().top - topHeight) {
+                                                side.attr('style', '');
+                                                side.removeClass('scrolled');
+                                                side.addClass('fixed-top');
+                                            }
+                                        }
+                                    }
+
+                                    if (scroll < $('body').prop('scrollHeight') - $window.outerHeight()) {
+                                        side.css({'bottom': 'unset'});
+                                    }
+                                }
+                            } else {
+                                if (scroll > prevScroll) {
+                                    if (scroll > side.offset().top - topHeight) {
+                                        side.addClass('fixed-top');
+                                    }
+                                } else {
+                                    if (scroll < parseInt($('body').css('padding-top')) + $('.record-buttons').outerHeight()) {
+                                        side.attr('style', '');
                                         side.removeClass('fixed-top');
                                     }
                                 }
-
-                                if (scroll > $('body').prop('scrollHeight') - $window.outerHeight() - 28) {
-                                    if (side.hasClass('scrolled')) {
-                                        let top = parseFloat(side.css('top'));
-                                        side.css({'top': (top - 28) + 'px'});
-                                    } else {
-                                        side.css({'bottom': '28px'});
-                                    }
-                                }
-                            } else {
-
-                                // if side panel has just start scrolling up
-                                if (side.hasClass('fixed-bottom')) {
-                                    side.removeClass('fixed-bottom');
-
-                                    side.addClass('scrolled');
-                                    side.css({
-                                        'top': (scroll - (side.outerHeight() - $window.height())) + 'px'
-                                    });
-                                } else {
-                                    // if panel scrolled to end
-                                    if (scroll < topHeight) {
-                                        side.attr('style', '');
-                                        side.removeClass('fixed-top scrolled');
-                                    } else {
-                                        if (scroll < side.offset().top - topHeight) {
-                                            side.attr('style', '');
-                                            side.removeClass('scrolled');
-                                            side.addClass('fixed-top');
-                                        }
-                                    }
-                                }
-
-                                if (scroll < $('body').prop('scrollHeight') - $window.outerHeight()) {
-                                    side.css({'bottom': 'unset'});
-                                }
                             }
-                        } else {
-                            if (scroll > prevScroll) {
-                                if (scroll > side.offset().top - topHeight) {
-                                    side.addClass('fixed-top');
-                                }
-                            } else {
-                                if (scroll < parseInt($('body').css('padding-top')) + $('.record-buttons').outerHeight()) {
-                                    side.attr('style', '');
-                                    side.removeClass('fixed-top');
-                                }
-                            }
+
+                            side.css({
+                                'width': sideWidth + 'px'
+                            });
                         }
 
-                        side.css({
-                            'width': sideWidth + 'px'
-                        });
+                        prevScroll = scroll;
+                        side.css({'min-height': ($(window).innerHeight() - side.offset().top) + 'px'});
                     }
-
-                    prevScroll = scroll;
-                    side.css({'min-height': ($(window).innerHeight() - side.offset().top) + 'px'});
                 }.bind(this));
             }
 
