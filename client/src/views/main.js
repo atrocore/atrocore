@@ -126,17 +126,21 @@ Espo.define('views/main', 'view', function (Dep) {
                 $window.off('scroll.fixed-header');
                 $window.on('scroll.fixed-header', () => {
                     let scrollTop = $window.scrollTop();
+                    let pageHeader = this.$el.find('.header.page-header');
                     let header = this.$el.find('.header-breadcrumbs');
                     let navBarRight = $('#header .navbar-right');
                     let width = $('#header ul.navbar-right > li').get().reduce((prev, curr) => {
                         return prev - $(curr).outerWidth()
                     }, navBarRight.outerWidth() - 30);
                     if (scrollTop > this.$el.find('.page-header').outerHeight() && !$('#header .navbar .menu').hasClass('open-menu')) {
+                        let height = pageHeader.innerHeight();
                         header.addClass('fixed-header-breadcrumbs')
                             .css('width', width + 'px');
+                        pageHeader.innerHeight(height);
                     } else {
                         header.removeClass('fixed-header-breadcrumbs')
                             .css('width', 'auto');
+                        pageHeader.css('height', 'auto');
                     }
                 });
             });
