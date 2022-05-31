@@ -48,6 +48,10 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
         fetchOnModelAfterRelate: false,
 
+        dragableListRows: undefined,
+
+        listRowsOrderSaveUrl: undefined,
+
         init: function () {
             Dep.prototype.init.call(this);
         },
@@ -232,7 +236,9 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                         rowActionsView: this.defs.readOnly ? false : (this.defs.rowActionsView || this.rowActionsView),
                         buttonsDisabled: true,
                         el: this.options.el + ' .list-container',
-                        skipBuildRows: true
+                        skipBuildRows: true,
+                        dragableListRows: this.dragableListRows,
+                        listRowsOrderSaveUrl: this.listRowsOrderSaveUrl,
                     }, function (view) {
                         view.getSelectAttributeList(function (selectAttributeList) {
                             if (selectAttributeList) {
