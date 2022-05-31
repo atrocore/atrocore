@@ -248,17 +248,21 @@ class Config
         }
 
         $values = $this->changedData;
-        $removeData = empty($this->removeData) ? null : $this->removeData;
-
         if (is_array($values)) {
             foreach ($values as $key => $value) {
                 $data[$key] = $value;
             }
         }
 
+        $removeData = empty($this->removeData) ? [] : $this->removeData;
         if (is_array($removeData)) {
+            $removeData[] = '_prev';
+            $removeData[] = '_silentMode';
+
             foreach ($removeData as $key) {
-                unset($data[$key]);
+                if (array_key_exists($key, $data)) {
+                    unset($data[$key]);
+                }
             }
         }
 
