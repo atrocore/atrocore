@@ -283,8 +283,21 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 bottomBar: paginationBottom,
                 checkAllResultDisabled: this.checkAllResultDisabled,
                 buttonList: this.buttonList,
-                displayTotalCount: this.displayTotalCount && this.collection.total > 0
+                displayTotalCount: this.displayTotalCount && this.collection.total > 0,
+                countLabel: this.getShowMoreLabel()
             };
+        },
+
+        getShowMoreLabel() {
+            let label = this.getLanguage().translate('Show more');
+
+            if (this.showCount && this.collection.total > 0) {
+                let more = this.collection.total - this.collection.length;
+
+                label = this.getLanguage().translate('Show %s more').replace('%s', more);
+            }
+
+            return label;
         },
 
         init: function () {
@@ -1234,7 +1247,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 if (
                     (collection.total > collection.length + collection.lengthCorrection || collection.total == -1)
                 ) {
-                    this.$el.find('.more-count').text(collection.total - collection.length - collection.lengthCorrection);
+                    $showMore.find('span.more-label').text(this.getShowMoreLabel());
                     $showMore.removeClass('hidden');
                 }
                 $showMore.children('a').removeClass('disabled');
