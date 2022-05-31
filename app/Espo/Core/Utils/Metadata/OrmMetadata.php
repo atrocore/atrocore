@@ -59,36 +59,7 @@ class OrmMetadata
 
     public function getData(): array
     {
-        $converter = new Converter($this->metadata, $this->fileManager, $this->config);
-
-        $data = $converter->process();
-
-        $entityDefs = $this->metadata->get('entityDefs', []);
-
-        foreach ($entityDefs as $scope => $scopeData) {
-            if (!empty($scopeData['fields'])) {
-                foreach ($scopeData['fields'] as $field => $fieldData) {
-                    if (!empty($fieldData['dataField'])) {
-                        $data[$scope]['fields'][$field]['dataField'] = true;
-                    }
-                }
-            }
-
-            if (!empty($scopeData['links'])) {
-                foreach ($scopeData['links'] as $link => $linkData) {
-                    if (isset($linkData['type'])) {
-                        if ($linkData['type'] == 'belongsTo' && !isset($entityDefs[$linkData['entity']]['fields']['name']) && isset($data[$scope]['fields'][$link . 'Name'])) {
-                            unset($data[$scope]['fields'][$link . 'Name']);
-                        }
-                        if ($linkData['type'] == 'hasMany' && !isset($entityDefs[$linkData['entity']]['fields']['name']) && isset($data[$scope]['fields'][$link . 'Names'])) {
-                            unset($data[$scope]['fields'][$link . 'Names']);
-                        }
-                    }
-                }
-            }
-        }
-
-        return $data;
+        return (new Converter($this->metadata, $this->fileManager, $this->config))->process();
     }
 
     public function get($key = null, $default = null)

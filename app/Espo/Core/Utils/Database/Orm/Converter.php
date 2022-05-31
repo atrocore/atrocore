@@ -175,6 +175,9 @@ class Converter
 
         $ormMetadata = array();
         foreach($entityDefs as $entityName => $entityMetadata) {
+            if (!empty($this->getMetadata()->get(['scopes', $entityName, 'notStorable']))) {
+                continue 1;
+            }
 
             if (empty($entityMetadata)) {
                 $GLOBALS['log']->critical('Orm\Converter:process(), Entity:'.$entityName.' - metadata cannot be converted into ORM format');
@@ -267,6 +270,31 @@ class Converter
                     case 'bool':
                         $fieldParams['default'] = isset($fieldParams['default']) ? (bool) $fieldParams['default'] : $this->defaultValue['bool'];
                         break;
+                }
+            }
+        }
+
+        $entityDefs = $this->getEntityDefs(true);
+
+        foreach ($entityDefs as $scope => $scopeData) {
+            if (!empty($scopeData['fields'])) {
+                foreach ($scopeData['fields'] as $field => $fieldData) {
+                    if (!empty($fieldData['dataField'])) {
+                        $ormMetadata[$scope]['fields'][$field]['dataField'] = true;
+                    }
+                }
+            }
+
+            if (!empty($scopeData['links'])) {
+                foreach ($scopeData['links'] as $link => $linkData) {
+                    if (isset($linkData['type'])) {
+                        if ($linkData['type'] == 'belongsTo' && !isset($entityDefs[$linkData['entity']]['fields']['name']) && isset($ormMetadata[$scope]['fields'][$link . 'Name'])) {
+                            unset($ormMetadata[$scope]['fields'][$link . 'Name']);
+                        }
+                        if ($linkData['type'] == 'hasMany' && !isset($entityDefs[$linkData['entity']]['fields']['name']) && isset($ormMetadata[$scope]['fields'][$link . 'Names'])) {
+                            unset($ormMetadata[$scope]['fields'][$link . 'Names']);
+                        }
+                    }
                 }
             }
         }
