@@ -5144,10 +5144,6 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
         background-color: transparent
     }
 
-    .navbar-inverse .navbar-nav .open .dropdown-menu > li > a {
-        color: #dfdfdf
-    }
-
     .navbar-inverse .navbar-nav .open .dropdown-menu > li > a:hover, .navbar-inverse .navbar-nav .open .dropdown-menu > li > a:focus {
         color: #fff;
         background-color: transparent
