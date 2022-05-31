@@ -104,6 +104,9 @@ Espo.define('views/record/detail-side', ['view'], function (Dep) {
                     }
                 }
             },
+            'click button[data-action="collapsePanel"]': function () {
+                this.actionCollapsePanel();
+            }
         },
 
         init: function () {
@@ -213,11 +216,18 @@ Espo.define('views/record/detail-side', ['view'], function (Dep) {
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            this.sidePanelResize();
+            if (['detail', 'edit'].includes(this.type)) {
+                this.actionCollapsePanel('open');
+                if ($(window).width() <= 767 || !!this.getStorage().get('side-panel', this.scope)) {
+                    this.actionCollapsePanel();
+                }
 
-            $(window).on('resize load', () => {
-                this.sidePanelResize()
-            });
+                this.sidePanelResize();
+
+                $(window).on('resize load', () => {
+                    this.sidePanelResize()
+                });
+            }
         },
 
         sidePanelResize() {
@@ -228,48 +238,81 @@ Espo.define('views/record/detail-side', ['view'], function (Dep) {
                     resizer.off('mousedown');
                     resizer.off('mouseup');
 
-                    this.trigger('side-width-changed', this.currentWidth);
-                    $(window).trigger('side-width-changed', this.currentWidth);
+                    if (!this.$el.hasClass('collapsed')) {
+                        this.trigger('side-width-changed', this.currentWidth);
+                        $(window).trigger('side-width-changed', this.currentWidth);
 
-                    this.$el.css({
-                        'width': this.currentWidth + 'px'
-                    });
+                        this.$el.css({
+                            'width': this.currentWidth + 'px'
+                        });
 
-                    // click on resize bar
-                    resizer.mousedown(function (e) {
-                        let initPositionX = e.pageX;
-                        let initWidth = this.$el.outerWidth();
+                        // click on resize bar
+                        resizer.mousedown(function (e) {
+                            let initPositionX = e.pageX;
+                            let initWidth = this.$el.outerWidth();
 
-                        // change tree panel width
-                        $('body').mousemove(function (event) {
-                            let positionX = event.pageX;
+                            // change tree panel width
+                            $('body').mousemove(function (event) {
+                                let positionX = event.pageX;
 
-                            // if horizontal mouse move
-                            if (initPositionX !== positionX) {
-                                let width = initWidth + (initPositionX - positionX);
+                                // if horizontal mouse move
+                                if (initPositionX !== positionX) {
+                                    let width = initWidth + (initPositionX - positionX);
 
-                                if (width >= this.minWidth && width <= this.maxWidth) {
-                                    this.currentWidth = width;
+                                    if (width >= this.minWidth && width <= this.maxWidth) {
+                                        this.currentWidth = width;
 
-                                    this.trigger('side-width-changed', this.currentWidth);
-                                    $(window).trigger('side-width-changed', this.currentWidth);
+                                        this.trigger('side-width-changed', this.currentWidth);
+                                        $(window).trigger('side-width-changed', this.currentWidth);
 
-                                    this.$el.css('width', this.currentWidth + 'px');
+                                        this.$el.css('width', this.currentWidth + 'px');
+                                    }
                                 }
-                            }
+                            }.bind(this));
                         }.bind(this));
-                    }.bind(this));
 
-                    // setup new width
-                    resizer.add('body').mouseup(function () {
-                        if (this.currentWidth) {
-                            this.getStorage().set('sideWidth', this.scope, this.currentWidth)
-                        }
+                        // setup new width
+                        resizer.add('body').mouseup(function () {
+                            if (this.currentWidth) {
+                                this.getStorage().set('sideWidth', this.scope, this.currentWidth)
+                            }
 
-                        $('body').off('mousemove');
-                    }.bind(this));
+                            $('body').off('mousemove');
+                        }.bind(this));
+                    } else {
+                        this.$el.css('width', 'unset');
+
+                        this.trigger('side-width-changed', this.$el.outerWidth());
+                        $(window).trigger('side-width-changed', this.currentWidth);
+                    }
                 }
             }
+        },
+
+        actionCollapsePanel(type) {
+            let isCollapsed = this.$el.hasClass('collapsed'),
+                button = this.$el.find('button[data-action="collapsePanel"]');
+
+            if (type === 'open') {
+                isCollapsed = true;
+            }
+
+            if (isCollapsed) {
+                this.$el.removeClass('collapsed');
+                button.find('span.toggle-icon-left').addClass('hidden');
+                button.find('span.toggle-icon-right').removeClass('hidden');
+            } else {
+                this.$el.addClass('collapsed');
+                button.find('span.toggle-icon-left').removeClass('hidden');
+                button.find('span.toggle-icon-right').addClass('hidden');
+            }
+
+            if (!type) {
+                this.getStorage().set('side-panel', this.scope, isCollapsed ? '' : 'collapsed');
+            }
+
+            this.sidePanelResize();
+            $(window).trigger('resize');
         },
 
         setupDefaultPanel: function () {

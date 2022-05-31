@@ -455,20 +455,22 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             if ($side) {
                 let prevScroll = 0;
 
-                let observer = new ResizeObserver(() => {
-                    let width = $side.$el.innerWidth();
+                if (['detail', 'edit'].includes($side.type)) {
+                    let observer = new ResizeObserver(() => {
+                        let width = $side.$el.innerWidth();
 
-                    width = parseInt(width);
+                        width = parseInt(width);
 
-                    const content = $('#content');
-                    const overview = content.find('.overview');
+                        const content = $('#content');
+                        const overview = content.find('.overview');
 
-                    overview.outerWidth(content.outerWidth() - $('.catalog-tree-panel').outerWidth() - width);
-                    $side.$el.css({'min-height': ($window.innerHeight() - $side.$el.offset().top) + 'px'});
+                        overview.outerWidth(content.outerWidth() - $('.catalog-tree-panel').outerWidth() - width);
+                        $side.$el.css({'min-height': ($window.innerHeight() - $side.$el.offset().top) + 'px'});
 
-                    observer.unobserve($('#content').get(0));
-                });
-                observer.observe($('#content').get(0));
+                        observer.unobserve($('#content').get(0));
+                    });
+                    observer.observe($('#content').get(0));
+                }
                 $side.$el.css({'min-height': ($window.innerHeight() - $side.$el.offset().top) + 'px'});
 
                 $window.resize(function () {

@@ -1,3 +1,7 @@
+<button type="button" class="btn btn-default collapse-panel" data-action="collapsePanel">
+    <span class="toggle-icon-left fas fa-angle-left hidden"></span>
+    <span class="toggle-icon-right fas fa-angle-right"></span>
+</button>
 {{#each panelList}}
 <div class="panel panel-{{#if style}}{{style}}{{else}}default{{/if}} panel-{{name}}{{#if hidden}} hidden{{/if}}{{#if sticked}} sticked{{/if}}" data-name="{{name}}" data-name="{{name}}">
     {{#if label}}
