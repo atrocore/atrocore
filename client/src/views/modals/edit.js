@@ -198,7 +198,7 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
                 nonInheritedFields.push(field);
             });
 
-            $.each(this.getMetadata().get(`entityDefs.${this.scope}.links`), (link, linkDefs) => {
+            $.each((this.getMetadata().get(`entityDefs.${this.scope}.links`) || {}), (link, linkDefs) => {
                 if (linkDefs.type && linkDefs.type === 'hasMany') {
                     if (!linkDefs.relationName) {
                         nonInheritedFields.push(link);
