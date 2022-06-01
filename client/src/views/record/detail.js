@@ -470,11 +470,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         observer.unobserve($('#content').get(0));
                     });
                     observer.observe($('#content').get(0));
+
+                    $side.$el.css({'min-height': ($window.innerHeight() - $side.$el.offset().top) + 'px'});
                 }
-                $side.$el.css({'min-height': ($window.innerHeight() - $side.$el.offset().top) + 'px'});
 
                 $window.resize(function () {
-                    let side = $('.side');
+                    let side = $('#main > .record .row > .side');
 
                     if (side.length) {
                         let width = side.outerWidth();
