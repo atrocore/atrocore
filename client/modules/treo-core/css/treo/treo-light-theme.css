@@ -19838,10 +19838,10 @@ button.category:focus {
   .detail .overview {
     width: 100% !important;
   }
-  .detail .side {
-    margin: 0;
+  #main .detail .side {
+    margin: 0 -7px;
     padding: 0;
-    width: 100% !important;
+    width: calc(100% + 14px) !important;
   }
   .detail .side > .panel-default > .panel-heading {
     margin: 0;
