@@ -105,6 +105,10 @@ class Settings extends \Espo\Core\Controllers\Base
             $this->getContainer()->get('dataManager')->rebuildDatabase([]);
         }
 
+        if (isset($data->inputLanguageList)) {
+            $this->getContainer()->get('dataManager')->rebuild();
+        }
+
         return $this->getConfigData();
     }
 
