@@ -20356,8 +20356,8 @@ button.category:focus {
         background-color: #fafafa;
     }
 
-    .edit > .row > .side,
-    .detail > .row > .side {
+    #main > .record > .edit > .row > .side,
+    #main > .record > .detail > .row > .side {
         padding: 0;
         position: relative;
         border-top: 1px solid #dcdcdc;
