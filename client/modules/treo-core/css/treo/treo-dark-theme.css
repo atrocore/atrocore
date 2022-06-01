@@ -19589,6 +19589,10 @@ ul.dropdown-menu > li.checkbox {
     background: #424242 !important
 }
 
+#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs .more-group > ul > li > a {
+    color: #dfdfdf;
+}
+
 #header .navbar-inverse.navbar[data-orientation="vertical"] .navbar-nav .active > a {
     background: #616161 !important
 }
@@ -20154,10 +20158,6 @@ button.category:focus {
     #navbar .nav.navbar-nav.navbar-right > li {
         float: right;
         position: static;
-    }
-
-    #header > #navbar > .navbar[data-orientation="vertical"] ul.tabs .more-group > ul > li > a {
-        color: #dfdfdf;
     }
 
     #header > #navbar > .navbar[data-orientation="vertical"] ul.tabs > li.open:not(.more-group-name) > a {
