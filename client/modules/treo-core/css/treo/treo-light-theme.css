@@ -20843,6 +20843,7 @@ select {
   cursor: default;
 }
 
+.info-field-icon,
 .lock-link,
 .unlock-link {
   width: 24px;
