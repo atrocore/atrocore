@@ -21889,6 +21889,10 @@ select {
     margin-right: 10px;
 }
 
+.field .metadata .checkbox-item input:hover, .field .metadata .checkbox-item label:hover {
+    cursor: pointer;
+}
+
 .field .metadata .checkbox-item label {
     margin-left: 3px;
 }
