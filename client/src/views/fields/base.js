@@ -301,10 +301,11 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                     this.createView(item.name, item.view, {
                         model: this.model,
                         name: this.name,
-                        el: this.$el
+                        el: this.$el,
+                        fieldView: this,
                     }, view => {
                         this.listenTo(this, 'after:render', () => {
-                            view.initFieldActions(this);
+                            view.initFieldActions();
                         });
                     });
                 });

@@ -38,6 +38,12 @@ Espo.define('views/field-actions', 'view', function (Dep) {
 
         template: 'home',
 
+        fieldView: null,
+
+        setup() {
+            this.fieldView = this.options.fieldView;
+        },
+
     });
 });
 
