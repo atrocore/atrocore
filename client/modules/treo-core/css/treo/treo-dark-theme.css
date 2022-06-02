@@ -21852,6 +21852,20 @@ select {
     display: none !important;
 }
 
+.field .metadata {
+    border: none;
+    padding: 0;
+    margin-top: 5px;
+}
+
+.field .metadata .checkbox-item {
+    margin-right: 10px;
+}
+
+.field .metadata .checkbox-item label {
+    margin-left: 3px;
+}
+
 .info-field-icon {
     color: #ccc;
 }
