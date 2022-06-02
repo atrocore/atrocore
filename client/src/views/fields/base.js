@@ -293,9 +293,21 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 }, this);
             }
 
-            if (this.mode == 'detail') {
+            if (this.mode === 'detail') {
                 this.initInlineActions();
                 this.initInheritanceActions();
+
+                (this.getMetadata().get('app.fieldActions') || []).forEach(item => {
+                    this.createView(item.name, item.view, {
+                        model: this.model,
+                        name: this.name,
+                        el: this.$el
+                    }, view => {
+                        this.listenTo(this, 'after:render', () => {
+                            view.initFieldActions(this);
+                        });
+                    });
+                });
             }
 
             if (this.mode != 'search') {
