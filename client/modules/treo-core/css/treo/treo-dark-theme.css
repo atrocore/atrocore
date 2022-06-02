@@ -21852,6 +21852,10 @@ select {
     display: none !important;
 }
 
+.info-field-icon {
+    color: #ccc;
+}
+
 .unlock-link, .unlock-link:hover {
     color: #ccc;
     cursor: default;
