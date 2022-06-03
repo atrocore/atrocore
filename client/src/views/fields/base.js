@@ -296,7 +296,9 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             if (this.mode === 'detail') {
                 this.initInlineActions();
                 this.initInheritanceActions();
+            }
 
+            if (this.mode === 'detail' || this.mode === 'edit') {
                 (this.getMetadata().get('app.fieldActions') || []).forEach(item => {
                     this.createView(item.name, item.view, {
                         model: this.model,
