@@ -15285,6 +15285,10 @@ div.list-kanban > div > table .item .panel .form-group .field {
     font-size: 14px
 }
 
+div.list-kanban > div > table .item .panel .form-group .field  span.label {
+    line-height: 24px;
+}
+
 div.list-kanban > div > table .item .panel .form-group .field.field-large {
     font-size: 18px;
     color: #555
