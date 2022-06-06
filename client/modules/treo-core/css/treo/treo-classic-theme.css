@@ -4484,7 +4484,6 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
 .nav-pills > li {
     float: left;
     margin-left: 4px;
-    margin-bottom: 5px;
 }
 
 .nav-pills > li > a {
@@ -15285,6 +15284,10 @@ div.list-kanban > div > table .item .panel .form-group .field {
     font-size: 14px
 }
 
+div.list-kanban > div > table .item .panel .form-group .field  span.label {
+    line-height: 24px;
+}
+
 div.list-kanban > div > table .item .panel .form-group .field.field-large {
     font-size: 18px;
     color: #555
@@ -17718,6 +17721,11 @@ table.table {
     padding-bottom: 0
 }
 
+.record .button-container > .btn-group,
+.record .button-container .nav-pills > li {
+    margin-bottom: 5px;
+}
+
 .list-nested-categories {
     background-color: #fff
 }
@@ -19258,6 +19266,16 @@ input#sn-checkbox-open-in-new-window {
     text-overflow: ellipsis;
 }
 
+@media screen and (min-width: 768px) {
+    #main > .page-header .fixed-header-breadcrumbs {
+        left: 232px;
+    }
+
+    .minimized #main > .page-header .fixed-header-breadcrumbs {
+        left: 50px;
+    }
+}
+
 .fixed-header-breadcrumbs > span {
     display: inline-block;
 }
@@ -20356,8 +20374,8 @@ button.category:focus {
         background-color: #fafafa;
     }
 
-    .edit > .row > .side,
-    .detail > .row > .side {
+    #main > .record > .edit > .row > .side,
+    #main > .record > .detail > .row > .side {
         padding: 0;
         position: relative;
         border-top: 1px solid #dcdcdc;
@@ -20565,10 +20583,10 @@ button.category:focus {
         width: 100% !important;
     }
 
-    .detail .side {
-        margin: 0;
+    #main .detail .side {
+        margin: 0 -7px;
         padding: 0;
-        width: 100% !important;
+        width: calc(100% + 14px) !important;
     }
 
     .detail .side > .panel-default > .panel-heading {
@@ -20735,7 +20753,7 @@ button.category:focus {
         left: 0;
         right: 0;
         top: 44px;
-        padding: 5px 15px;
+        padding: 5px 15px !important;
         box-shadow: rgba(255, 255, 255, 0.8) 0 3px 8px;
         width: 100% !important;
     }
@@ -21879,14 +21897,37 @@ select {
     display: none !important;
 }
 
+.field .metadata {
+    border: none;
+    padding: 0;
+    margin-top: 5px;
+}
+
+.field .metadata .checkbox-item {
+    margin-right: 10px;
+}
+
+.field .metadata .checkbox-item input:hover, .field .metadata .checkbox-item label:hover {
+    cursor: pointer;
+}
+
+.field .metadata .checkbox-item label {
+    margin-left: 3px;
+}
+
+.info-field-icon {
+    color: #ccc;
+}
+
 .unlock-link, .unlock-link:hover {
     color: #ccc;
     cursor: default;
 }
 
+.info-field-icon,
 .lock-link,
 .unlock-link {
-    padding: 0 5px;
+    padding-left: 5px;
     text-align: center;
     -webkit-border-radius: 3px;
     border-radius: 3px;

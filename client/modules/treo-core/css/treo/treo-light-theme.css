@@ -4355,7 +4355,6 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
 .nav-pills > li {
   float: left;
   margin-left: 4px;
-  margin-bottom: 5px;
 }
 
 .nav-pills > li > a {
@@ -15086,6 +15085,10 @@ div.list-kanban > div > table .item .panel .form-group .field {
   font-size: 14px;
 }
 
+div.list-kanban > div > table .item .panel .form-group .field  span.label {
+  line-height: 24px;
+}
+
 div.list-kanban > div > table .item .panel .form-group .field.field-large {
   font-size: 18px;
   color: #555;
@@ -17557,6 +17560,11 @@ table.table {
   padding-bottom: 0;
 }
 
+.record .button-container > .btn-group,
+.record .button-container .nav-pills > li {
+  margin-bottom: 9px;
+}
+
 .list-nested-categories {
   background-color: #fff;
 }
@@ -19838,10 +19846,10 @@ button.category:focus {
   .detail .overview {
     width: 100% !important;
   }
-  .detail .side {
-    margin: 0;
+  #main .detail .side {
+    margin: 0 -7px;
     padding: 0;
-    width: 100% !important;
+    width: calc(100% + 14px) !important;
   }
   .detail .side > .panel-default > .panel-heading {
     margin: 0;
@@ -20834,11 +20842,34 @@ select {
   display: none !important;
 }
 
+.field .metadata {
+  border: none;
+  padding: 0;
+  margin-top: 5px;
+}
+
+.field .metadata .checkbox-item {
+  margin-right: 10px;
+}
+
+.field .metadata .checkbox-item input:hover, .field .metadata .checkbox-item label:hover {
+  cursor: pointer;
+}
+
+.field .metadata .checkbox-item label {
+  margin-left: 3px;
+}
+
+.info-field-icon {
+  color: #ccc;
+}
+
 .unlock-link, .unlock-link:hover {
   color: #ccc;
   cursor: default;
 }
 
+.info-field-icon,
 .lock-link,
 .unlock-link {
   width: 24px;
@@ -21116,6 +21147,16 @@ body,
   -o-text-overflow: ellipsis;
      text-overflow: ellipsis;
   color: #737373;
+}
+
+@media screen and (min-width: 768px) {
+  #main > .page-header .fixed-header-breadcrumbs {
+    left: 232px;
+  }
+
+  .minimized #main > .page-header .fixed-header-breadcrumbs {
+    left: 58px;
+  }
 }
 
 .fixed-header-breadcrumbs > span {
