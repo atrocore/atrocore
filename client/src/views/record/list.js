@@ -1420,13 +1420,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         }
 
                         this.trigger('after:save', m);
-
-                        let parent = this.getParentView();
-                        let panelName = parent && parent.defs && parent.defs.name ? parent.defs.name : this.relationName;
-
-                        if (panelName) {
-                            $('.panel-navigation .nav a[data-name="' + panelName + '"]').click();
-                        }
                     }, this);
                 }, this);
             } else {
