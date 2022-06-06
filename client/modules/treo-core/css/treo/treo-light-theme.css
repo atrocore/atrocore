@@ -4355,7 +4355,6 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
 .nav-pills > li {
   float: left;
   margin-left: 4px;
-  margin-bottom: 5px;
 }
 
 .nav-pills > li > a {
@@ -17561,6 +17560,11 @@ table.table {
   padding-bottom: 0;
 }
 
+.record .button-container > .btn-group,
+.record .button-container .nav-pills > li {
+  margin-bottom: 9px;
+}
+
 .list-nested-categories {
   background-color: #fff;
 }
@@ -21143,6 +21147,16 @@ body,
   -o-text-overflow: ellipsis;
      text-overflow: ellipsis;
   color: #737373;
+}
+
+@media screen and (min-width: 768px) {
+  #main > .page-header .fixed-header-breadcrumbs {
+    left: 232px;
+  }
+
+  .minimized #main > .page-header .fixed-header-breadcrumbs {
+    left: 58px;
+  }
 }
 
 .fixed-header-breadcrumbs > span {

@@ -4484,7 +4484,6 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
 .nav-pills > li {
     float: left;
     margin-left: 4px;
-    margin-bottom: 5px;
 }
 
 .nav-pills > li > a {
@@ -17722,6 +17721,11 @@ table.table {
     padding-bottom: 0
 }
 
+.record .button-container > .btn-group,
+.record .button-container .nav-pills > li {
+    margin-bottom: 5px;
+}
+
 .list-nested-categories {
     background-color: #fff
 }
@@ -19262,6 +19266,16 @@ input#sn-checkbox-open-in-new-window {
     text-overflow: ellipsis;
 }
 
+@media screen and (min-width: 768px) {
+    #main > .page-header .fixed-header-breadcrumbs {
+        left: 232px;
+    }
+
+    .minimized #main > .page-header .fixed-header-breadcrumbs {
+        left: 50px;
+    }
+}
+
 .fixed-header-breadcrumbs > span {
     display: inline-block;
 }
@@ -20739,7 +20753,7 @@ button.category:focus {
         left: 0;
         right: 0;
         top: 44px;
-        padding: 5px 15px;
+        padding: 5px 15px !important;
         box-shadow: rgba(255, 255, 255, 0.8) 0 3px 8px;
         width: 100% !important;
     }
