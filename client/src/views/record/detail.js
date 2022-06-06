@@ -181,7 +181,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         actionEdit: function () {
             if (!this.editModeDisabled) {
                 this.setEditMode();
-                $(window).scrollTop(0);
                 this.resetSidebar();
             } else {
                 var options = {
@@ -203,20 +202,17 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         actionSave: function () {
             if (this.save(null, true)) {
                 this.setDetailMode();
-                $(window).scrollTop(0)
             }
         },
 
         actionSaveAndNext: function () {
             this.save(function () {
                 this.actionNext();
-                $(window).scrollTop(0)
             }.bind(this), true);
         },
 
         actionCancelEdit: function () {
             this.cancelEdit();
-            $(window).scrollTop(0);
             this.resetSidebar();
         },
 
@@ -1144,14 +1140,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.$dropdownItemListButton = this.$detailButtonContainer.find('.dropdown-item-list-button');
             }, this);
 
-            this.listenTo(this.model, 'after:save after:relate after:unrelate', function (link, defs) {
-                let panelName = defs !== undefined && defs.name ? defs.name : link;
-
-                if (panelName) {
-                    $('.panel-navigation .nav a[data-name="' + panelName + '"]').click();
-                }
-            }.bind(this));
-
             if (this.collection) {
                 this.stopListening(this.model, 'destroy');
                 this.listenTo(this.model, 'destroy', function () {
@@ -1412,7 +1400,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             const setDetailAndScroll = () => {
                 this.setDetailMode();
-                $(window).scrollTop(0)
             };
 
             if (this.save(setDetailAndScroll, true) && savingCanceled) {
