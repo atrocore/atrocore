@@ -282,6 +282,29 @@ class Hierarchy extends RDB
         return $route;
     }
 
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        if (!empty($entity->get('parentsIds'))) {
+            foreach ($entity->get('parentsIds') as $parentId) {
+                $ids = array_merge($this->getParentsRecursivelyArray($parentId), [$parentId]);
+                if (in_array($entity->get('id'), $ids)) {
+                    throw new BadRequest("Child record cannot be chosen as a parent.");
+                }
+            }
+        }
+
+        if (!empty($entity->get('childrenIds'))) {
+            foreach ($entity->get('childrenIds') as $childId) {
+                $ids = array_merge($this->getChildrenRecursivelyArray($childId), [$childId]);
+                if (in_array($entity->get('id'), $ids)) {
+                    throw new BadRequest("Parent record cannot be chosen as a child.");
+                }
+            }
+        }
+
+        parent::beforeSave($entity, $options);
+    }
+
     protected function beforeRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
     {
         parent::beforeRelate($entity, $relationName, $foreign, $data, $options);
