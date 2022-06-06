@@ -88,9 +88,11 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
                     this.onTreeResize(width)
                 });
                 this.listenTo(view, 'tree-width-unset', function () {
-                    $('.page-header').css({'width': 'unset', 'marginLeft': 'unset'});
-                    $('.detail-button-container').css({'width': 'unset', 'marginLeft': 'unset'});
-                    $('.overview').css({'width': 'unset', 'marginLeft': 'unset'});
+                    if ($('.catalog-tree-panel').length) {
+                        $('.page-header').css({'width': 'unset', 'marginLeft': 'unset'});
+                        $('.detail-button-container').css({'width': 'unset', 'marginLeft': 'unset'});
+                        $('.overview').css({'width': 'unset', 'marginLeft': 'unset'});
+                    }
                 })
             });
         },
@@ -112,25 +114,27 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
         },
 
         onTreeResize(width) {
-            width = parseInt(width);
+            if ($('.catalog-tree-panel').length) {
+                width = parseInt(width);
 
-            const content = $('#content');
-            const main = content.find('#main');
+                const content = $('#content');
+                const main = content.find('#main');
 
-            const header = content.find('.page-header');
-            const btnContainer = content.find('.detail-button-container');
-            const overview = content.find('.overview');
-            const side = content.find('.side');
+                const header = content.find('.page-header');
+                const btnContainer = content.find('.detail-button-container');
+                const overview = content.find('.overview');
+                const side = content.find('.side');
 
-            header.outerWidth(main.width() - width);
-            header.css('marginLeft', width + 'px');
+                header.outerWidth(main.width() - width);
+                header.css('marginLeft', width + 'px');
 
-            btnContainer.outerWidth(content.innerWidth() - width - 1);
-            btnContainer.addClass('detail-tree-button-container');
-            btnContainer.css('marginLeft', width + 1 + 'px');
+                btnContainer.outerWidth(content.innerWidth() - width - 1);
+                btnContainer.addClass('detail-tree-button-container');
+                btnContainer.css('marginLeft', width + 1 + 'px');
 
-            overview.outerWidth(content.innerWidth() - side.outerWidth() - width);
-            overview.css('marginLeft', (width - 1) + 'px');
+                overview.outerWidth(content.innerWidth() - side.outerWidth() - width);
+                overview.css('marginLeft', (width - 1) + 'px');
+            }
         }
     })
 );
