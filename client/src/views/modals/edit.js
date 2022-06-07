@@ -234,7 +234,10 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
         handleRecordViewOptions: function (options) {},
 
         actionSave: function () {
-            var editView = this.getView('edit');
+            let editView = this.getView('edit');
+            if (!editView) {
+                return;
+            }
 
             var model = editView.model;
             if (this.options.relate && this.options.relate.model) {
