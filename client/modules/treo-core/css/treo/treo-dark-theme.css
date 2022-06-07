@@ -21906,6 +21906,10 @@ select {
     border-radius: 3px;
 }
 
+.hidden-cell .info-field-icon {
+    display: none !important;
+}
+
 .attribute-cell .inline-remove-link {
     padding-left: 5px;
     padding-top: 1px;
