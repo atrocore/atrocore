@@ -21874,6 +21874,7 @@ select {
     border: none;
     padding: 0;
     margin-top: 5px;
+    background-color: transparent;
 }
 
 .field .metadata .checkbox-item {
