@@ -172,7 +172,7 @@ Espo.define('views/record/detail-side', ['view'], function (Dep) {
                 return item;
             }, this);
 
-            this.currentWidth = this.getStorage().get('sideWidth', this.scope) || this.minWidth;
+            this.currentWidth = this.getStorage().get('sideWidth', this.scope) || 300;
 
             this.wait(true);
             this.getHelper().layoutManager.get(this.scope, 'sidePanels' + Espo.Utils.upperCaseFirst(this.type), function (layoutData) {

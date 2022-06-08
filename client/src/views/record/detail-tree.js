@@ -58,8 +58,6 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
                     width = view.$el.innerWidth();
 
                 this.onTreeResize(width);
-
-                observer.unobserve($('#content').get(0));
             });
             observer.observe($('#content').get(0));
         },
