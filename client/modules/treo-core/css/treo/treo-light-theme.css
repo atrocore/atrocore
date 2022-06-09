@@ -19414,13 +19414,15 @@ table.table > thead th > div > a {
 }
 
 @media screen and (max-width: 767px) {
-  #main .detail .side > button.collapse-panel {
+  #main .detail .side > button.collapse-panel,
+  #main .edit .side > button.collapse-panel {
     display: none;
   }
 }
 
 @media screen and (min-width: 768px) {
-  #main .detail .side > button.collapse-panel {
+  #main .detail .side > button.collapse-panel,
+  #main .edit .side > button.collapse-panel {
     position: absolute;
     z-index: 100;
     display: block;
@@ -19432,16 +19434,19 @@ table.table > thead th > div > a {
     color: #ccc;
   }
 
-  #main .detail .side > button.collapse-panel {
+  #main .detail .side > button.collapse-panel,
+  #main .edit .side > button.collapse-panel {
     top: 20px;
   }
 
-  #main .detail .side.collapsed {
+  #main .detail .side.collapsed,
+  #main .edit .side.collapsed {
     padding: 0 8px 0 17px !important;
     border-top: solid 5px #EEEEEE;
   }
 
-  #main .detail .side.collapsed > .panel {
+  #main .detail .side.collapsed > .panel,
+  #main .edit .side.collapsed > .panel {
     display: none;
   }
 }
