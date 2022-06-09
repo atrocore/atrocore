@@ -15600,6 +15600,7 @@ ul.dropdown-menu > li > a > .check-icon + div {
   #main > .record > .detail > .row > .side.bordered,
   #main > .record > .edit > .row > .side.bordered {
     border-left: 1px solid #e0e0e0;
+    margin-left: -1px;
   }
 }
 

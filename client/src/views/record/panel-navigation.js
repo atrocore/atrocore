@@ -72,9 +72,9 @@ Espo.define('views/record/panel-navigation', 'view',
                 return;
             }
             let offset = this.getParentView().$el.find(`.panel[data-name="${name}"]`).offset();
-            let navbarHeight = $('#navbar .navbar-right').innerHeight() || 0;
+            let navbarHeight = $('#navbar .navbar-right').outerHeight() || 0;
             let navigationHeight = $('.record-buttons').innerHeight() || 0;
-            $(window).scrollTop(offset.top - navbarHeight - navigationHeight);
+            $(window).scrollTop(offset.top - navbarHeight - navigationHeight + 5);
         },
 
         afterRender() {

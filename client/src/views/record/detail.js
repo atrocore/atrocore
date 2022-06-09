@@ -437,7 +437,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             var $container = this.$el.find('.detail-button-container');
 
             var stickTop = this.getThemeManager().getParam('stickTop') || 62;
-            var blockHeight = this.getThemeManager().getParam('blockHeight') || 21;
+            var blockHeight = this.getThemeManager().getParam('blockHeight') || ($container.innerHeight() / 2);
 
             var $block = $('<div>').css('height', blockHeight + 'px').html('&nbsp;').hide().insertAfter($container);
             var $middle = this.getView('middle').$el;
@@ -462,8 +462,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                         overview.outerWidth(content.outerWidth() - $('.catalog-tree-panel').outerWidth() - width);
                         $side.$el.css({'min-height': ($window.innerHeight() - $side.$el.offset().top) + 'px'});
-
-                        observer.unobserve($('#content').get(0));
                     });
                     observer.observe($('#content').get(0));
 
@@ -498,6 +496,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     let pageHeader = $('.nav.navbar-nav.navbar-right');
                     let buttonContainer = $('.record-buttons');
                     let topHeight = pageHeader.outerHeight() + buttonContainer.outerHeight();
+                    if (buttonContainer.hasClass('stick-sub')) {
+                        topHeight = $('.nav.navbar-right').outerHeight() + buttonContainer.outerHeight();
+                    }
+
                     let overview = $('.overview');
 
                     let scroll = $window.scrollTop();
@@ -563,6 +565,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                                                 side.attr('style', '');
                                                 side.removeClass('scrolled');
                                                 side.addClass('fixed-top');
+                                                side.css('top', (topHeight - 5) + 'px');
                                             }
                                         }
                                     }
@@ -575,6 +578,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                                 if (scroll > prevScroll) {
                                     if (scroll > side.offset().top - topHeight) {
                                         side.addClass('fixed-top');
+                                        side.css('top', (topHeight - 5) + 'px');
                                     }
                                 } else {
                                     if (scroll < parseInt($('body').css('padding-top')) + $('.record-buttons').outerHeight()) {
