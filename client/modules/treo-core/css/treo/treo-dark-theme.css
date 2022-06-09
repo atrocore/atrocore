@@ -19334,6 +19334,10 @@ input#sn-checkbox-open-in-new-window {
     height: 29px;
 }
 
+.record .row .side > .panel-default:first-of-type > .panel-heading {
+    border-top: 0;
+}
+
 .panel-info > .panel-heading {
     padding: 6px 10px 6px 14px;
 }
@@ -20363,6 +20367,7 @@ button.category:focus {
     .record > .edit > .row > .side.bordered,
     .record > .detail > .row > .side.bordered {
         border-left: 1px solid #dcdcdc;
+        margin-left: -1px;
     }
 
     .modal-dialog .edit > .row > .overview.col-sm-12,

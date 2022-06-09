@@ -49,6 +49,17 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
             this.clearView('list');
 
             Dep.prototype.afterRender.call(this);
+
+            let observer = new ResizeObserver(() => {
+                let view = this.getView('treePanel');
+
+                if (view) {
+                    let width = view.$el.outerWidth();
+
+                    this.onTreeResize(width);
+                }
+            });
+            observer.observe($('#content').get(0));
         },
 
         setupTreePanel() {
@@ -67,22 +78,7 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
                     this.treeReset(view);
                 });
                 this.listenTo(view, 'tree-width-changed', function (width) {
-                    if ($('.catalog-tree-panel').length) {
-                        const content = $('#content');
-                        const main = content.find('#main');
-
-                        const header = content.find('.page-header');
-                        const filters = content.find('.advanced-filters');
-                        const listContainer = content.find('#main > #tree-list-table.list-container');
-
-                        header.outerWidth(main.width() - width - 9);
-                        header.css('marginLeft', width + 'px');
-
-                        filters.outerWidth(main.width() - width - 9);
-
-                        listContainer.outerWidth(main.width() - width - 9);
-                        listContainer.css('marginLeft', (width - 1) + 'px');
-                    }
+                    this.onTreeResize(width)
                 });
                 this.listenTo(view, 'tree-width-unset', function () {
                     if ($('.catalog-tree-panel').length) {
@@ -105,6 +101,25 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
             window.location.href = `/#${this.scope}/view/${data.id}`;
         },
 
+        onTreeResize(width) {
+            const content = $('#content');
+            const listContainer = content.find('#main > #tree-list-table.list-container');
+
+            if ($('.catalog-tree-panel').length && listContainer.length) {
+                const main = content.find('#main');
+
+                const header = content.find('.page-header');
+                const filters = content.find('.advanced-filters');
+
+                header.outerWidth(main.width() - width);
+                header.css('marginLeft', width + 'px');
+
+                filters.outerWidth(main.width() - width);
+
+                listContainer.outerWidth(main.width() - width);
+                listContainer.css('marginLeft', (width - 1) + 'px');
+            }
+        }
     });
 });
 
