@@ -19670,10 +19670,6 @@ ul.dropdown-menu > li.checkbox {
     margin: 14px 0 10px 0
 }
 
-.page-header.detail-page-header h3 {
-    padding-top: 30px;
-}
-
 .page-header h3 {
     font-size: 24px;
 }
@@ -19692,10 +19688,25 @@ ul.dropdown-menu > li.checkbox {
 }
 
 .page-header .header-buttons .filter-cell,
-.page-header .overview-filters-container .filter-cell {
+.overview-filters-container .filter-cell {
     display: inline-block;
     min-width: 170px;
     margin-right: 10px;
+}
+
+.overview-filters-container {
+    background-color: #FFFFFF;
+}
+
+.overview-filters-container .selectize-control.multi .selectize-input > div:not(.active) {
+    background-color: #fafafa;
+}
+
+@media screen and (min-width: 768px) {
+    .overview-filters-container {
+        padding: 0 15px;
+        margin-bottom: 10px;
+    }
 }
 
 .page-header .header-buttons .filter-cell .field,

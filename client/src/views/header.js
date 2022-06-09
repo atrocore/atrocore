@@ -57,10 +57,6 @@ Espo.define('views/header', 'view', function (Dep) {
             data.items = this.getItems();
             data.isXsSingleRow = this.options.isXsSingleRow;
 
-            if (this.model && !this.model.isNew() && this.getMetadata().get(`scopes.${this.model.urlRoot}.object`) && this.getMetadata().get(`scopes.${this.model.urlRoot}.overviewFilters`) !== false) {
-                data.overviewFilters = this.getOverviewFiltersList().map(filter => filter.name);
-            }
-
             if ((data.items.buttons || []).length < 2) {
                 data.isHeaderAdditionalSpace = true;
             }
@@ -76,10 +72,6 @@ Espo.define('views/header', 'view', function (Dep) {
                         this.reRender();
                     }
                 });
-
-                if (!this.model.isNew()) {
-                    this.createOverviewFilters();
-                }
             }
         },
 
@@ -91,81 +83,6 @@ Espo.define('views/header', 'view', function (Dep) {
             var items = this.getParentView().getMenu() || {};
 
             return items;
-        },
-
-        getOverviewFiltersList: function () {
-            let result = [
-                {
-                    name: "fieldFilter",
-                    options: ["filled", "empty"]
-                }
-            ];
-
-            if (this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
-                result.push({
-                    name: "languageFilter",
-                    options: ['main'].concat(this.getConfig().get('inputLanguageList'))
-                });
-            }
-
-            return result;
-        },
-
-        createOverviewFilters() {
-            this.getModelFactory().create(null, model => {
-                this.getOverviewFiltersList().forEach(filter => {
-                    this.createOverviewFilter(filter, model);
-                });
-            });
-        },
-
-        createOverviewFilter(filter, model) {
-            let selected = [];
-            (this.getStorage().get(filter.name, 'OverviewFilter') || filter.options).forEach(option => {
-                if (filter.options.includes(option)){
-                    selected.push(option);
-                }
-            });
-
-            this.getStorage().set(filter.name, 'OverviewFilter', selected);
-            model.set(filter.name, selected);
-
-            let translatedOptions = {};
-            filter.options.forEach(option => {
-                translatedOptions[option] = this.getLanguage().translateOption(option, filter.name, 'Global');
-            });
-
-            this.createView(filter.name, 'views/fields/multi-enum', {
-                el: `${this.options.el} .field[data-name="${filter.name}"]`,
-                name: filter.name,
-                mode: 'edit',
-                model: model,
-                dragDrop: false,
-                params: {
-                    options: filter.options,
-                    translatedOptions: translatedOptions
-                }
-            }, view => {
-                this.listenTo(model, `change:${filter.name}`, () => {
-                    let values = [];
-                    filter.options.forEach(option => {
-                        if (model.get(filter.name).includes(option)) {
-                            values.push(option);
-                        }
-                    });
-
-                    if (values.length === 0) {
-                        values = [filter.options[0]];
-                    }
-
-                    this.getStorage().set(filter.name, 'OverviewFilter', values);
-                    this.model.trigger('overview-filters-changed');
-
-                    model.set(filter.name, values);
-                    view.reRender();
-                });
-                view.render();
-            });
         },
 
     });
