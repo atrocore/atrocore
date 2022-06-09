@@ -19225,6 +19225,10 @@ table.table > thead th > div > a {
 .overview-filters-container {
   background-color: #FFFFFF;
 }
+
+.overview-filters-container .selectize-control.multi .selectize-input > div:not(.active) {
+  background-color: #fafafa;
+}
 @media screen and (min-width: 768px) {
   .overview-filters-container {
     padding: 0 15px;
