@@ -19149,10 +19149,6 @@ table.table > thead th > div > a {
   margin: 14px 0 10px 0
 }
 
-.page-header.detail-page-header h3 {
-  padding-top: 30px;
-}
-
 .page-header h3 {
   font-size: 24px;
 }
@@ -19219,10 +19215,14 @@ table.table > thead th > div > a {
 }
 
 .page-header .header-buttons .filter-cell,
-.page-header .overview-filters-container .filter-cell {
+.overview-filters-container .filter-cell {
   display: inline-block;
   min-width: 170px;
   margin-right: 10px;
+}
+
+.overview-filters-container {
+  padding: 0;
 }
 
 .page-header .header-buttons .filter-cell > .field,
