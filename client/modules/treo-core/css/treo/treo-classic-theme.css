@@ -21901,6 +21901,7 @@ select {
     border: none;
     padding: 0;
     margin-top: 5px;
+    background-color: transparent;
 }
 
 .field .metadata .checkbox-item {
@@ -21931,6 +21932,10 @@ select {
     text-align: center;
     -webkit-border-radius: 3px;
     border-radius: 3px;
+}
+
+.hidden-cell .info-field-icon {
+    display: none !important;
 }
 
 .attribute-cell .inline-remove-link {

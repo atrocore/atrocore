@@ -20846,6 +20846,7 @@ select {
   border: none;
   padding: 0;
   margin-top: 5px;
+  background-color: transparent;
 }
 
 .field .metadata .checkbox-item {
@@ -20878,6 +20879,10 @@ select {
   -webkit-border-radius: 3px;
   border-radius: 3px;
   line-height: 24px;
+}
+
+.hidden-cell .info-field-icon {
+  display: none !important;
 }
 
 .attribute-cell .inline-remove-link {

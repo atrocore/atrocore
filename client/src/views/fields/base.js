@@ -298,20 +298,18 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 this.initInheritanceActions();
             }
 
-            if (this.mode === 'detail' || this.mode === 'edit') {
-                (this.getMetadata().get('app.fieldActions') || []).forEach(item => {
-                    this.createView(item.name, item.view, {
-                        model: this.model,
-                        name: this.name,
-                        el: this.$el,
-                        fieldView: this,
-                    }, view => {
-                        this.listenTo(this, 'after:render', () => {
-                            view.initFieldActions();
-                        });
+            (this.getMetadata().get('app.fieldActions') || []).forEach(item => {
+                this.createView(item.name, item.view, {
+                    model: this.model,
+                    name: this.name,
+                    el: this.$el,
+                    fieldView: this,
+                }, view => {
+                    this.listenTo(this, 'after:render', () => {
+                        view.initFieldActions();
                     });
                 });
-            }
+            });
 
             if (this.mode != 'search') {
                 this.attributeList = this.getAttributeList();
