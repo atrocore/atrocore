@@ -19223,7 +19223,13 @@ table.table > thead th > div > a {
 }
 
 .overview-filters-container {
-  padding: 0;
+  background-color: #FFFFFF;
+}
+@media screen and (min-width: 768px) {
+  .overview-filters-container {
+    padding: 0 15px;
+    margin-bottom: 10px;
+  }
 }
 
 .page-header .header-buttons .filter-cell > .field,
