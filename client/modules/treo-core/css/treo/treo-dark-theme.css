@@ -19918,13 +19918,15 @@ select,
 }
 
 @media screen and (max-width: 767px) {
-    #main .detail .side > button.collapse-panel {
+    #main .detail .side > button.collapse-panel,
+    #main .edit .side > button.collapse-panel {
         display: none;
     }
 }
 
 @media screen and (min-width: 768px) {
-    #main .detail .side > button.collapse-panel {
+    #main .detail .side > button.collapse-panel,
+    #main .edit .side > button.collapse-panel {
         position: absolute;
         z-index: 100;
         display: block;
@@ -19936,15 +19938,18 @@ select,
         color: #ccc;
     }
 
-    #main .detail .side > button.collapse-panel {
+    #main .detail .side > button.collapse-panel,
+    #main .edit .side > button.collapse-panel {
         top: 6px;
     }
 
-    #main .detail .side.collapsed {
+    #main .detail .side.collapsed,
+    #main .edit .side.collapsed {
         padding: 0 8px 0 17px !important;
     }
 
-    #main .detail .side.collapsed > .panel {
+    #main .detail .side.collapsed > .panel,
+    #main .edit .side.collapsed > .panel {
         display: none;
     }
 }
