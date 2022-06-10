@@ -105,7 +105,7 @@
     "phone": "Phone",
     "text": "Text",
     "url": "Url",
-    "varchar": "Varchar",
+    "varchar": "String",
     "file": "File",
     "asset": "Asset",
     "image": "Image",
