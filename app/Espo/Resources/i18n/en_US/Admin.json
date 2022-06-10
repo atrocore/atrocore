@@ -114,7 +114,7 @@
     "rangeInt": "Integer range",
     "rangeFloat": "Float range",
     "rangeCurrency": "Currency range",
-    "wysiwyg": "Wysiwyg",
+    "wysiwyg": "HTML",
     "map": "Map",
     "number": "Number (auto-increment)",
     "colorpicker": "Color picker",
