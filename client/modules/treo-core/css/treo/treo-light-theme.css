@@ -19784,6 +19784,12 @@ button.category:focus {
   #main > .record > .detail > .row > .side {
     padding: 0;
     position: relative;
+    float: left;
+  }
+
+  #main > .record > .detail > .row > .overview,
+  #main > .record > .edit > .row > .overview {
+    float: left;
   }
 
   #main > .record > .edit > .row > .side.fixed-top,
@@ -19860,7 +19866,8 @@ button.category:focus {
   .edit .panel-default > .panel-heading {
     margin: 0 -15px;
   }
-  .detail .overview {
+  .detail .overview,
+  .edit .overview {
     width: 100% !important;
   }
   #main .detail .side {
