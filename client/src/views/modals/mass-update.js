@@ -84,20 +84,18 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
 
             this.header = this.translate(this.scope, 'scopeNamesPlural') + ' &raquo ' + this.translate('Mass Update');
 
-            this.wait(true);
             this.getModelFactory().create(this.scope, function (model) {
                 this.model = model;
-                this.getHelper().layoutManager.get(this.scope, 'massUpdate', function (layout) {
-                    layout = layout || [];
-                    this.fields = [];
-                    layout.forEach(function (field) {
-                        if (model.hasField(field)) {
-                            this.fields.push(field);
-                        }
-                    }, this);
+                this.model.set({ids: this.ids});
+                let forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.scope) || [];
 
-                    this.wait(false);
-                }.bind(this));
+                this.fields = [];
+                $.each((this.getMetadata().get(`entityDefs.${this.scope}.fields`) || {}), (field, row) => {
+                    if (~forbiddenFieldList.indexOf(field)) return;
+                    if (row.layoutMassUpdateDisabled) return;
+                    if (row.massUpdateDisabled) return;
+                    this.fields.push(field);
+                });
             }.bind(this));
 
             this.fieldList = [];
@@ -169,10 +167,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
                         byWhere: this.byWhere
                     }),
                     success: function (result) {
-                        var result = result || {};
-                        var count = result.count;
-
-                        self.trigger('after:update', count);
+                        self.trigger('after:update', result);
                     },
                     error: function () {
                         self.notify('Error occurred', 'error');

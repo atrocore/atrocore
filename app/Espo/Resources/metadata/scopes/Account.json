@@ -10,6 +10,7 @@
     "importable": true,
     "notifications": true,
     "object": true,
+    "type": "Base",
     "hasPersonalData": true,
     "hasAssignedUser": true
 }

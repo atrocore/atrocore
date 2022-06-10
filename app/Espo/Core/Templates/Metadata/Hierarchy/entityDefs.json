@@ -29,19 +29,19 @@
     "children": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "noLoad": true
     },
     "parents": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "noLoad": true
     },
     "sortOrder": {
       "type": "int",
       "default": null,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "filterDisabled": true
     },
     "hierarchySortOrder": {
@@ -54,7 +54,7 @@
       "layoutListSmallDisabled": true,
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "filterDisabled": true,
       "importDisabled": true,
       "exportDisabled": true,

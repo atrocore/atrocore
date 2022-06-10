@@ -62,7 +62,7 @@
       "notStorable": true,
       "layoutDetailDisabled": true,
       "filterDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "layoutListDisabled": true
     },
     "createdAt": {

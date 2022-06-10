@@ -93,7 +93,7 @@ class Metadata extends AbstractListener
                 "layoutListSmallDisabled"   => true,
                 "layoutDetailDisabled"      => true,
                 "layoutDetailSmallDisabled" => true,
-                "layoutMassUpdateDisabled"  => true,
+                "massUpdateDisabled"  => true,
                 "filterDisabled"            => true,
                 "importDisabled"            => true,
                 "exportDisabled"            => true,
@@ -107,7 +107,7 @@ class Metadata extends AbstractListener
                 "layoutListSmallDisabled"   => true,
                 "layoutDetailDisabled"      => true,
                 "layoutDetailSmallDisabled" => true,
-                "layoutMassUpdateDisabled"  => true,
+                "massUpdateDisabled"  => true,
                 "filterDisabled"            => true,
                 "importDisabled"            => true,
                 "exportDisabled"            => true,
@@ -121,7 +121,7 @@ class Metadata extends AbstractListener
                 "layoutListSmallDisabled"   => true,
                 "layoutDetailDisabled"      => true,
                 "layoutDetailSmallDisabled" => true,
-                "layoutMassUpdateDisabled"  => true,
+                "massUpdateDisabled"  => true,
                 "filterDisabled"            => true,
                 "importDisabled"            => true,
                 "exportDisabled"            => true,
@@ -270,7 +270,7 @@ class Metadata extends AbstractListener
                             $mParams['hideParams'] = array_merge(
                                 $mParams['hideParams'], ['options', 'default', 'required', 'isSorted', 'audited', 'readOnly', 'prohibitedEmptyValue']
                             );
-                            $mParams['layoutMassUpdateDisabled'] = true;
+                            $mParams['massUpdateDisabled'] = true;
                         }
 
                         if (isset($data['entityDefs'][$scope]['fields'][$mField])) {

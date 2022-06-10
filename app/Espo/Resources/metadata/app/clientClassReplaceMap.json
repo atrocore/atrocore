@@ -35,9 +35,6 @@
   "views/dashlets/options/base": [
     "treo-core"
   ],
-  "views/modals/mass-update": [
-    "treo-core"
-  ],
   "views/modals/select-records": [
     "treo-core"
   ],
