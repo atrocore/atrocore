@@ -14,7 +14,7 @@
             </ul>
             {{/if}}
         </div>
-        <div class="panel-navigation pull-left">{{{panelnavigation}}}</div>
+        <div class="panel-navigation pull-left">{{{panelDetailNavigation}}}</div>
         {{#if navigateButtonsEnabled}}
         <div class="pull-right">
             <div class="btn-group" role="group">
@@ -43,6 +43,7 @@
             </ul>
             {{/if}}
         </div>
+        <div class="panel-navigation pull-left">{{{panelEditNavigation}}}</div>
     </div>
     {{/unless}}
 

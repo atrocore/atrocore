@@ -1731,14 +1731,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 if ('customLabel' in simplifiedLayout[p]) {
                     panel.customLabel = simplifiedLayout[p].customLabel;
                 }
-                panel.name = simplifiedLayout[p].name || null;
+                panel.name = simplifiedLayout[p].name || 'panel-' + p.toString();
                 panel.style = simplifiedLayout[p].style || 'default';
                 panel.rows = [];
 
                 if (simplifiedLayout[p].dynamicLogicVisible) {
-                    if (!panel.name) {
-                        panel.name = 'panel-' + p.toString();
-                    }
                     if (this.dynamicLogic) {
                         this.dynamicLogic.defs.panels = this.dynamicLogic.defs.panels || {};
                         this.dynamicLogic.defs.panels[panel.name] = {
@@ -1940,20 +1937,42 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 portalLayoutDisabled: this.portalLayoutDisabled
             }, view => {
                 this.listenToOnce(view, 'after:render', () => {
-                    this.createPanelNavigationView(view.panelList);
+                    let middlePanels = [];
+                    if (this.gridLayout && 'layout' in this.gridLayout) {
+                        Object.values(this.gridLayout.layout).forEach(panel => {
+                            let name = panel.label || panel.customLabel;
+
+                            if (name) {
+                                middlePanels.push({title: name, name: panel.name});
+                            }
+                        });
+                    }
+
+                    this.createPanelNavigationView(middlePanels.concat(view.panelList));
                 })
             });
         },
 
         createPanelNavigationView(panelList) {
             let el = this.options.el || '#' + (this.id);
-            this.createView('panelNavigation', this.panelNavigationView, {
+            this.createView('panelDetailNavigation', this.panelNavigationView, {
                 panelList: panelList,
                 model: this.model,
                 scope: this.scope,
-                el: el + ' .panel-navigation',
+                el: el + ' .panel-navigation.panel-left',
             }, function (view) {
                 this.listenTo(this, 'after:set-detail-mode', () => {
+                    view.reRender();
+                });
+                view.render();
+            });
+            this.createView('panelEditNavigation', this.panelNavigationView, {
+                panelList: panelList,
+                model: this.model,
+                scope: this.scope,
+                el: el + ' .panel-navigation.panel-right',
+            }, function (view) {
+                this.listenTo(this, 'after:set-edit-mode', () => {
                     view.reRender();
                 });
                 view.render();
