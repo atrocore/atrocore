@@ -19956,6 +19956,7 @@ select,
 
     #main .detail .side.collapsed,
     #main .edit .side.collapsed {
+        width: 0 !important;
         padding: 0 8px 0 17px !important;
     }
 
