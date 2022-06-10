@@ -19613,7 +19613,7 @@ ul.dropdown-menu > li.checkbox {
 
 #main .page-header h3 > a::after,
 #main .page-header h3 > span.subsection::after {
-    content: '\203A';
+    content: '/';
     display: inline-block;
     color: #000;
     background: #fff;
