@@ -50,7 +50,7 @@ class Helper
         'notStorable',
         'layoutListDisabled',
         'layoutDetailDisabled',
-        'layoutMassUpdateDisabled',
+        'massUpdateDisabled',
         'filterDisabled',
     );
 

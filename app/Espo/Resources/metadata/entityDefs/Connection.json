@@ -93,7 +93,7 @@
       "layoutDetailSmallDisabled": true,
       "layoutListDisabled": true,
       "layoutListSmallDisabled": true,
-      "layoutMassUpdateDisabled": true,
+      "massUpdateDisabled": true,
       "filterDisabled": true,
       "exportDisabled": true,
       "importDisabled": true,
