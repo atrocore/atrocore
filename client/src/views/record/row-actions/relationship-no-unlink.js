@@ -60,7 +60,7 @@ Espo.define('views/record/row-actions/relationship-no-unlink', 'views/record/row
             if (this.options.acl.delete) {
                 list.push({
                     action: 'removeRelated',
-                    label: 'Remove',
+                    label: 'unlinkAndDelete',
                     data: {
                         id: this.model.id
                     }
