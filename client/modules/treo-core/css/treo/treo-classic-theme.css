@@ -17718,7 +17718,8 @@ table.table {
 
 .record .stick-sub.button-container {
     background-color: #ececec !important;
-    padding-bottom: 0
+    padding-bottom: 0;
+    z-index: 101;
 }
 
 .record .button-container > .btn-group,
