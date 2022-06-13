@@ -124,6 +124,18 @@ Espo.define('views/record/panels/bottom', 'view', function (Dep) {
             }, this);
 
             this.createFields();
+
+            let link = this.link || this.defs.link || this.panelName;
+            if (!this.defs.notRefreshable && (link in this.model.defs.links)) {
+                this.buttonList.push({
+                    title: this.translate('clickToRefresh', 'messages', 'Global'),
+                    action: 'refresh',
+                    link: this.link,
+                    acl: 'read',
+                    aclScope: this.scope,
+                    html: '<span class="fas fa-sync"></span>'
+                });
+            }
         },
 
         setupFields: function () {

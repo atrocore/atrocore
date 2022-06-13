@@ -52,6 +52,17 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
         listRowsOrderSaveUrl: undefined,
 
+        filtersLayoutLoaded: false,
+
+        boolFilterData: {
+            notParents() {
+                return this.model.get('id');
+            },
+            notChildren() {
+                return this.model.get('id');
+            }
+        },
+
         init: function () {
             Dep.prototype.init.call(this);
         },
@@ -253,6 +264,39 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             }, this);
 
             this.setupFilterActions();
+
+            this.addReadyCondition(() => {
+                return this.filtersLayoutLoaded;
+            });
+
+            this.getHelper().layoutManager.get(this.scope, 'filters', layout => {
+                this.filtersLayoutLoaded = true;
+                let foreign = this.model.getLinkParam(this.link, 'foreign');
+
+                if (foreign && layout.includes(foreign)) {
+                    this.actionList.push({
+                        label: 'showFullList',
+                        action: this.defs.showFullListAction || 'showFullList',
+                        data: {
+                            modelId: this.model.get('id'),
+                            modelName: this.model.get('name')
+                        }
+                    });
+                }
+
+                this.tryReady();
+            });
+
+            var select = this.actionList.find(item => item.action === (this.defs.selectAction || 'selectRelated'));
+            if (select) {
+                select.data = {
+                    link: this.link,
+                    scope: this.scope,
+                    boolFilterListCallback: 'getSelectBoolFilterList',
+                    boolFilterDataCallback: 'getSelectBoolFilterData',
+                    primaryFilterName: this.defs.selectPrimaryFilterName || null
+                };
+            }
         },
 
         setupListLayout: function () {},
@@ -280,6 +324,64 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     });
                 }, this);
             }
+        },
+
+        getSelectBoolFilterData(boolFilterList) {
+            let data = {};
+            if (Array.isArray(boolFilterList)) {
+                boolFilterList.forEach(item => {
+                    if (this.boolFilterData && typeof this.boolFilterData[item] === 'function') {
+                        data[item] = this.boolFilterData[item].call(this);
+                    }
+                });
+            }
+            return data;
+        },
+
+        getSelectBoolFilterList() {
+            return this.defs.selectBoolFilterList || null
+        },
+
+        actionShowFullList(data) {
+            let entity = this.model.getLinkParam(this.link, 'entity');
+            let foreign = this.model.getLinkParam(this.link, 'foreign');
+            let defs = this.getMetadata().get(['entityDefs', entity, 'fields', foreign]) || {};
+            let type = defs.type;
+
+            let advanced = {};
+            if (type === 'link') {
+                advanced = {
+                    [foreign]: {
+                        type: 'equals',
+                        field: foreign + 'Id',
+                        value: data.modelId,
+                        data: {
+                            type: 'is',
+                            idValue: data.modelId,
+                            nameValue: data.modelName
+                        }
+                    }
+                }
+            } else if (type === 'linkMultiple') {
+                advanced = {
+                    [foreign]: {
+                        type: 'linkedWith',
+                        value: [data.modelId],
+                        nameHash: {[data.modelId]: data.modelName},
+                        data: {
+                            type: 'anyOf'
+                        }
+                    }
+                }
+            }
+
+            let params = {
+                showFullListFilter: true,
+                advanced: advanced
+            };
+
+            this.getRouter().navigate(`#${this.scope}`, {trigger: true});
+            this.getRouter().dispatch(this.scope, 'list', params);
         },
 
         getUnInheritedRelations: function () {
@@ -414,13 +516,22 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
         },
 
         actionUnlinkRelated: function (data) {
-            var id = data.id;
+            let id = data.id;
+            let scope = this.collection.url.split('/').shift();
+            let link = this.collection.url.split('/').pop();
+            let message = this.translate('unlinkRecordConfirmation', 'messages');
+
+            const unlinkConfirm = this.getMetadata().get(`clientDefs.${scope}.relationshipPanels.${link}.unlinkConfirm`) || false;
+            if (unlinkConfirm) {
+                let parts = unlinkConfirm.split('.');
+                message = this.translate(parts[2], parts[1], parts[0]);
+            }
 
             this.confirm({
-                message: this.translate('unlinkRecordConfirmation', 'messages'),
+                message: message,
                 confirmText: this.translate('Unlink')
-            }, function () {
-                var model = this.collection.get(id);
+            }, () => {
+                let model = this.collection.get(id);
                 this.notify('Unlinking...');
                 $.ajax({
                     url: this.collection.url,
@@ -429,16 +540,16 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                         id: id
                     }),
                     contentType: 'application/json',
-                    success: function () {
+                    success: () => {
                         this.notify('Unlinked', 'success');
                         this.collection.fetch();
-                        this.model.trigger('after:unrelate');
-                    }.bind(this),
-                    error: function () {
+                        this.model.trigger('after:unrelate', this.link, this.defs);
+                    },
+                    error: () => {
                         this.notify('Error occurred', 'error');
-                    }.bind(this),
+                    },
                 });
-            }, this);
+            });
         },
 
         actionUnlinkRelatedHierarchically: function (data) {
@@ -471,22 +582,38 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
         },
 
         actionRemoveRelated: function (data) {
-            var id = data.id;
+            let id = data.id;
+
+            let message = 'Global.messages.removeRecordConfirmation';
+            if (this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy') {
+                message = 'Global.messages.removeRecordConfirmationHierarchically';
+            }
+
+            let scopeMessage = this.getMetadata().get(`clientDefs.${this.scope}.deleteConfirmation`);
+            if (scopeMessage) {
+                message = scopeMessage;
+            }
+
+            let parts = message.split('.');
 
             this.confirm({
-                message: this.translate('removeRecordConfirmation', 'messages'),
+                message: this.translate(parts.pop(), parts.pop(), parts.pop()),
                 confirmText: this.translate('Remove')
-            }, function () {
-                var model = this.collection.get(id);
+            }, () => {
+                let model = this.collection.get(id);
                 this.notify('Removing...');
                 model.destroy({
-                    success: function () {
+                    success: () => {
                         this.notify('Removed', 'success');
                         this.collection.fetch();
-                        this.model.trigger('after:unrelate');
-                    }.bind(this),
+                        this.model.trigger('after:unrelate', this.link, this.defs);
+                    },
+
+                    error: () => {
+                        this.collection.push(model);
+                    }
                 });
-            }, this);
+            });
         },
 
         actionInheritAll: function (data) {
