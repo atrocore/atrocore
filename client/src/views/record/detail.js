@@ -484,6 +484,14 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                                 'width': width + 'px',
                                 'min-height': ($window.innerHeight() - side.offset().top) + 'px'
                             });
+
+                            if (side.hasClass('collapsed')) {
+                                const recordButtons = $('.record-buttons.stick-sub');
+
+                                if (recordButtons.length && ($window.scrollTop() > recordButtons.outerHeight(true))) {
+                                    side.addClass('fixed-top');
+                                }
+                            }
                         } else {
                             side.css({'min-height': 'unset'});
                         }
