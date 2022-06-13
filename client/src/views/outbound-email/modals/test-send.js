@@ -38,7 +38,7 @@ Espo.define('views/outbound-email/modals/test-send', 'views/modal', function (De
 
         cssName: 'test-send',
 
-        _template: '<label class="control-label">{{translate \'Email Address\' scope=\'Email\'}}</label><input type="text" name="emailAddress" value="{{emailAddress}}" class="form-control">',
+        _template: '<div class="panel-body"><label class="control-label">{{translate \'Email Address\' scope=\'Email\'}}</label><input type="text" name="emailAddress" value="{{emailAddress}}" class="form-control"></div>',
 
         data: function () {
             return {
