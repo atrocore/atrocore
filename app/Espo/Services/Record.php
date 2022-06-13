@@ -2813,7 +2813,7 @@ class Record extends \Espo\Core\Services\Base
                 foreach (['Id', 'Ids', 'Currency', 'Unit'] as $suffix) {
                     $field = $this->removeSuffix($field, $suffix);
                 }
-                $fieldsThatConflict[$field] = str_replace('›', '&rsaquo;', $this->getInjection('language')->translate($field, 'fields', $this->entityName));
+                $fieldsThatConflict[$field] = $this->getInjection('language')->translate($field, 'fields', $this->entityName);
             }
         }
 

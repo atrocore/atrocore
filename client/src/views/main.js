@@ -114,7 +114,7 @@ Espo.define('views/main', 'view', function (Dep) {
                 a.push('<span>' + item + '</span>');
             }, this);
 
-            return '<div class="header-breadcrumbs">' + a.join('<span class="breadcrumb-separator"> &rsaquo; </span>') + '</div>';
+            return '<div class="header-breadcrumbs">' + a.join('<span class="breadcrumb-separator"> / </span>') + '</div>';
         },
 
         bindFixedHeaderOnScroll() {

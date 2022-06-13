@@ -19647,7 +19647,7 @@ ul.dropdown-menu > li.checkbox {
 
 #main .page-header h3 > a::after,
 #main .page-header h3 > span.subsection::after {
-    content: '\203A';
+    content: '/';
     display: inline-block;
     color: #000;
     background: #fff;
@@ -20405,6 +20405,12 @@ button.category:focus {
         padding: 0;
         position: relative;
         border-top: 1px solid #dcdcdc;
+        float: left;
+    }
+
+    #main > .record > .detail > .row > .overview,
+    #main > .record > .edit > .row > .overview {
+        float: left;
     }
 
     #main > .record > .edit > .row > .side.fixed-top,
@@ -20609,7 +20615,8 @@ button.category:focus {
         margin: 0 -15px;
     }
 
-    .detail .overview {
+    .detail .overview,
+    .edit .overview {
         width: 100% !important;
     }
 
