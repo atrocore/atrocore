@@ -1468,7 +1468,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 message = scopeMessage;
             }
 
-            // let message = this.getMetadata().get(`clientDefs.${this.scope}.deleteConfirmation`) || 'Global.messages.removeRecordConfirmation'
             let parts = message.split('.');
 
             this.confirm({
