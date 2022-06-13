@@ -54,23 +54,52 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
 
         className: 'dialog dialog-record',
 
+        boolFilterData: {},
+
+        disableSavePreset: false,
+
+        layoutName: "listSmall",
+
+        listLayout: null,
+
+        searchView: 'views/record/search',
+
+        selectedItems: [],
+
         data: function () {
             return {
                 createButton: this.createButton,
-                createText: this.translate('Create ' + this.scope, 'labels', this.scope)
+                createText: this.translate('Create ' + this.scope, 'labels', this.scope),
+                hasTree: this.isHierarchical()
             };
         },
 
         events: {
             'click button[data-action="create"]': function () {
-        this.create();
+                this.create();
             },
             'click .list a': function (e) {
                 e.preventDefault();
-            }
+            },
+            'click .change-view': function (e) {
+                let $current = $(e.currentTarget);
+
+                $('a.change-view').removeClass('btn-primary').addClass('btn-default');
+                $current.removeClass('btn-default').addClass('btn-primary');
+
+                this.getStorage().set('list-small-view-type', this.scope, $current.data('view'));
+
+                this.toggleViewType();
+            },
         },
 
         setup: function () {
+            this.boolFilterData = this.options.boolFilterData || this.boolFilterData;
+            this.disableSavePreset = this.options.disableSavePreset || this.disableSavePreset;
+            this.layoutName = this.options.layoutName || this.layoutName;
+            this.listLayout = this.options.listLayout || this.listLayout;
+            this.rowActionsDisabled = this.options.rowActionsDisabled || this.rowActionsDisabled;
+
             this.filters = this.options.filters || {};
             this.boolFilterList = this.options.boolFilterList || [];
             this.primaryFilterName = this.options.primaryFilterName || null;
@@ -106,18 +135,25 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
                     label: 'Select',
                     disabled: true,
                     onClick: function (dialog) {
-                        var listView = this.getView('list');
-
-                        if (listView.allResultIsChecked) {
-                            var where = this.collection.where;
-                            this.trigger('select', {
-                                massRelate: true,
-                                where: where
+                        if (this.getSelectedViewType() === 'tree') {
+                            let ids = [];
+                            this.selectedItems.forEach(id => {
+                                ids.push({id: id});
                             });
+                            this.trigger('select', ids);
                         } else {
-                            var list = listView.getSelected();
-                            if (list.length) {
-                                this.trigger('select', list);
+                            let listView = this.getView('list');
+                            if (listView.allResultIsChecked) {
+                                var where = this.collection.where;
+                                this.trigger('select', {
+                                    massRelate: true,
+                                    where: where
+                                });
+                            } else {
+                                var list = listView.getSelected();
+                                if (list.length) {
+                                    this.trigger('select', list);
+                                }
                             }
                         }
                         dialog.close();
@@ -183,15 +219,35 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
                 searchManager.setPrimary(primaryFilterName);
             }
 
-            this.collection.where = searchManager.getWhere();
+            let where = searchManager.getWhere();
+            where.forEach(item => {
+                if (item.type === 'bool') {
+                    let data = {};
+                    item.value.forEach(elem => {
+                        if (elem in this.boolFilterData) {
+                            data[elem] = this.boolFilterData[elem];
+                        }
+                    });
+                    item.data = data;
+                }
+            });
+            this.collection.where = where;
+
+            this.collection.whereAdditional = this.options.whereAdditional || [];
 
             if (this.searchPanel) {
-                this.createView('search', 'views/record/search', {
+                let hiddenBoolFilterList = this.getMetadata().get(`clientDefs.${this.scope}.hiddenBoolFilterList`) || [];
+                let searchView = this.getMetadata().get(`clientDefs.${this.scope}.recordViews.search`) || this.searchView;
+
+                this.createView('search', searchView, {
                     collection: this.collection,
                     el: this.containerSelector + ' .search-container',
                     searchManager: searchManager,
-                    disableSavePreset: true,
+                    disableSavePreset: this.disableSavePreset,
+                    hiddenBoolFilterList: hiddenBoolFilterList,
+                    boolFilterData: this.boolFilterData
                 }, function (view) {
+                    view.render();
                     this.listenTo(view, 'reset', function () {
                         this.collection.sortBy = this.defaultSortBy;
                         this.collection.asc = this.defaultAsc;
@@ -201,9 +257,9 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
         },
 
         loadList: function () {
-            var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.listSelect') ||
-                           this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') ||
-                           'views/record/list';
+            let viewName = this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.listSelect') ||
+                this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') ||
+                'views/record/list';
 
             this.createView('list', viewName, {
                 collection: this.collection,
@@ -212,13 +268,13 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
                 checkboxes: this.multiple,
                 massActionsDisabled: true,
                 rowActionsView: false,
-                layoutName: 'listSmall',
+                layoutName: this.layoutName,
                 searchManager: this.searchManager,
                 checkAllResultDisabled: !this.massRelateEnabled,
                 buttonsDisabled: true,
                 skipBuildRows: true
             }, function (view) {
-                this.listenToOnce(view, 'select', function (model) {
+                this.listenTo(view, 'select', function (model) {
                     this.trigger('select', model);
                     this.close();
                 }.bind(this));
@@ -264,6 +320,87 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
                     }.bind(this));
                 }
             });
+        },
+
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            if (this.isHierarchical()) {
+                let treeButtonClass = 'btn-primary';
+                let tableButtonClass = 'btn-default';
+
+                if (this.getSelectedViewType() === 'list') {
+                    treeButtonClass = 'btn-default';
+                    tableButtonClass = 'btn-primary';
+                }
+
+                let html = '<div class="btn-group main-btn-group pull-right">';
+                html += '<div class="page-header" style="margin-top: 0">';
+                html += '<div class="header-buttons"><div class="header-items">';
+                html += `<a href="javascript:" class="btn action ${treeButtonClass} change-view action" data-view="tree"><span class="fa fa-sitemap"></span></a>`
+                html += `<a href="javascript:" class="btn action ${tableButtonClass} change-view action" data-view="list"><span class="fa fa-th-list"></span></a>`;
+                html += '</div></div></div>';
+                this.$el.find('.modal-footer').append(html);
+
+                this.setupTree();
+                this.toggleViewType();
+            }
+        },
+
+        isHierarchical() {
+            return this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy';
+        },
+
+        getSelectedViewType() {
+            return this.getStorage().get('list-small-view-type', this.scope) || 'tree';
+        },
+
+        setupTree() {
+            const $tree = this.$el.find('.records-tree');
+            $tree.tree('destroy');
+            $tree.tree({
+                dataUrl: this.scope + '/action/Tree',
+                selectable: true,
+                dragAndDrop: false,
+                useContextMenu: false,
+                closedIcon: $('<i class="fa fa-angle-right"></i>'),
+                openedIcon: $('<i class="fa fa-angle-down"></i>'),
+            }).on('tree.click', e => {
+                if (this.multiple) {
+                    e.preventDefault();
+                    let selected_node = e.node;
+                    if ($tree.tree('isNodeSelected', selected_node)) {
+                        $tree.tree('removeFromSelection', selected_node);
+                    } else {
+                        $tree.tree('addToSelection', selected_node);
+                    }
+                }
+
+                let nodes = $tree.tree('getSelectedNodes') || [];
+
+                this.selectedItems = [];
+                nodes.forEach(node => {
+                    this.selectedItems.push(node.id);
+                });
+
+                if (this.selectedItems.length) {
+                    this.enableButton('select');
+                } else {
+                    this.disableButton('select');
+                }
+            });
+        },
+
+        toggleViewType() {
+            let viewType = this.getSelectedViewType();
+
+            if (viewType === 'tree') {
+                this.$el.find('.for-table-view').hide();
+                this.$el.find('.for-tree-view').show();
+            } else {
+                this.$el.find('.for-table-view').show();
+                this.$el.find('.for-tree-view').hide();
+            }
         },
 
         create: function () {
