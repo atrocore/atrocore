@@ -19656,8 +19656,11 @@ ul.dropdown-menu > li.checkbox {
 .page-header .header-buttons .filter-cell,
 .overview-filters-container .filter-cell {
     display: inline-block;
-    min-width: 170px;
     margin-right: 10px;
+}
+
+.page-header .header-buttons .filter-cell {
+    min-width: 170px;
 }
 
 .overview-filters-container {
@@ -19665,12 +19668,11 @@ ul.dropdown-menu > li.checkbox {
 }
 
 .overview-filters-container .selectize-control.multi .selectize-input > div:not(.active) {
-    background-color: #fafafa;
+    background-color: #f4f4f4;
 }
 @media screen and (min-width: 768px) {
     .overview-filters-container {
-        padding: 0 15px;
-        margin-bottom: 10px;
+        padding: 0 15px 10px 15px;
     }
 }
 
