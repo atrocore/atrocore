@@ -14,7 +14,7 @@
             </ul>
             {{/if}}
         </div>
-        <div class="panel-navigation pull-left">{{{panelDetailNavigation}}}</div>
+        <div class="panel-navigation panel-left pull-left">{{{panelDetailNavigation}}}</div>
         {{#if navigateButtonsEnabled}}
         <div class="pull-right">
             <div class="btn-group" role="group">
@@ -30,7 +30,7 @@
         <div class="clearfix"></div>
     </div>
     <div class="detail-button-container button-container edit-buttons hidden clearfix">
-        <div class="btn-group" role="group">
+        <div class="btn-group pull-left" role="group">
             {{#each buttonEditList}}{{button name scope=../../entityType label=label style=style hidden=hidden html=html}}{{/each}}
             {{#if dropdownEditItemList}}
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -43,7 +43,7 @@
             </ul>
             {{/if}}
         </div>
-        <div class="panel-navigation pull-left">{{{panelEditNavigation}}}</div>
+        <div class="panel-navigation panel-right pull-left">{{{panelEditNavigation}}}</div>
     </div>
     {{/unless}}
 

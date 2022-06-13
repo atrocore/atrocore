@@ -15,7 +15,7 @@
             {{/if}}
             {{#if additionalButtons}}{{#each additionalButtons}}<button type="button" class="btn btn-default additional-button action" data-action="{{action}}">{{label}}</button>{{/each}}{{/if}}
         </div>
-        <div class="panel-navigation panel-right pull-left">{{{panelDetailNavigation}}}</div>
+        <div class="panel-navigation panel-left pull-left">{{{panelDetailNavigation}}}</div>
         {{#if navigateButtonsEnabled}}
         <div class="pull-right">
             <div class="btn-group" role="group">
@@ -44,7 +44,7 @@
             </ul>
             {{/if}}
         </div>
-        <div class="panel-navigation panel-left pull-left">{{{panelEditNavigation}}}</div>
+        <div class="panel-navigation panel-right pull-left">{{{panelEditNavigation}}}</div>
     </div>
     {{/unless}}
 
