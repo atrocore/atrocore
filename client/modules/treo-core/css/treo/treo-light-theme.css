@@ -19873,6 +19873,7 @@ button.category:focus {
   #main .detail-button-container,
   #main .overview-filters-container {
     width: 100% !important;
+    margin-left: 0 !important;
   }
   .detail .overview,
   .edit .overview,
