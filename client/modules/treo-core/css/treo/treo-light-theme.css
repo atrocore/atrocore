@@ -19867,8 +19867,19 @@ button.category:focus {
     margin: 0 -15px;
   }
   .detail .overview,
-  .edit .overview {
+  .edit .overview,
+  #main > .list-container,
+  #main > .page-header,
+  #main .detail-button-container,
+  #main .overview-filters-container {
     width: 100% !important;
+    margin-left: 0 !important;
+  }
+  .detail .overview,
+  .edit .overview,
+  .detail .side,
+  .edit .side {
+    min-height: auto !important;
   }
   #main .detail .side {
     margin: 0 -7px;
