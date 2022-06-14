@@ -38,9 +38,6 @@
   "views/record/detail-bottom": [
     "treo-core"
   ],
-  "views/record/list": [
-    "treo-core"
-  ],
   "views/record/row-actions/default": [
     "treo-core"
   ],
