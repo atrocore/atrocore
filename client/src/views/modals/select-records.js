@@ -32,7 +32,7 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], function (Dep, SearchManager) {
+Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'lib!JsTree'], function (Dep, SearchManager) {
 
     return Dep.extend({
 
@@ -70,7 +70,9 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
             return {
                 createButton: this.createButton,
                 createText: this.translate('Create ' + this.scope, 'labels', this.scope),
-                hasTree: this.isHierarchical()
+                hasTree: this.isHierarchical(),
+                hasTotalCount: this.getConfig().get('displayListViewRecordCount') && this.multiple,
+                totalCount: this.collection.total,
             };
         },
 
@@ -88,6 +90,16 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
                 $current.removeClass('btn-default').addClass('btn-primary');
 
                 this.getStorage().set('list-small-view-type', this.scope, $current.data('view'));
+
+                // refresh tree selections
+                this.selectedItems = [];
+                this.setupTree();
+
+                // refresh list selections
+                this.$el.find('.checkbox-all:checked').click();
+                this.$el.find('input.record-checkbox:checked').click();
+
+                this.disableButton('select');
 
                 this.toggleViewType();
             },
@@ -355,8 +367,12 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
             return this.getStorage().get('list-small-view-type', this.scope) || 'tree';
         },
 
+        getTreeEl() {
+            return this.$el.find('.records-tree');
+        },
+
         setupTree() {
-            const $tree = this.$el.find('.records-tree');
+            const $tree = this.getTreeEl();
             $tree.tree('destroy');
             $tree.tree({
                 dataUrl: this.scope + '/action/Tree',
@@ -374,19 +390,22 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
                     } else {
                         $tree.tree('addToSelection', selected_node);
                     }
-                }
+                    this.selectedItems = [];
+                    ($tree.tree('getSelectedNodes') || []).forEach(node => {
+                        this.selectedItems.push(node.id);
+                    });
 
-                let nodes = $tree.tree('getSelectedNodes') || [];
-
-                this.selectedItems = [];
-                nodes.forEach(node => {
-                    this.selectedItems.push(node.id);
-                });
-
-                if (this.selectedItems.length) {
-                    this.enableButton('select');
+                    if (this.selectedItems.length) {
+                        this.enableButton('select');
+                    } else {
+                        this.disableButton('select');
+                    }
                 } else {
-                    this.disableButton('select');
+                    this.getModelFactory().create(this.scope, model => {
+                        model.set('id', e.node.id);
+                        model.set('name', e.node.name);
+                        this.trigger('select', model);
+                    });
                 }
             });
         },
