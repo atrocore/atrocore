@@ -45,7 +45,6 @@ Espo.define('views/admin/layouts/index', 'view', function (Dep) {
             'detail',
             'listSmall',
             'detailSmall',
-            'massUpdate',
             'relationships',
             'sidePanelsDetail',
             'sidePanelsEdit',

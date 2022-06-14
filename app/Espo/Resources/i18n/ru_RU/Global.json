@@ -90,6 +90,7 @@
     "Core": "AtroCore - это программная экосистема, предназначенная для быстрой разработки веб-приложений для бизнеса."
   },
   "labels": {
+    "unlinkAndDelete": "Отвязать и удалить",
     "allLanguages": "Все языки",
     "mainLanguage": "Основной язык",
     "inheritAll": "Унаследовать все",
@@ -304,7 +305,7 @@
     "removeRecordConfirmation": "Вы действительно хотите удалить запись?",
     "unlinkRecordConfirmation": "Вы действительно хотите убрать связанную запись?",
     "unlinkRecordConfirmationHierarchically": "Вы действительно хотите убрать связанную запись иерархично?",
-    "removeRecordConfirmationHierarchically": "Вы действительно хотите удалить запись иерархично?",
+    "removeRecordConfirmationHierarchically": "Вы действительно хотите удалить записи иерархично?",
     "removeSelectedRecordsConfirmation": "Вы действительно хотите удалить выбранные записи?",
     "massUpdateResult": "{count} записей было обновлено",
     "massUpdateResultSingle": "{count} запись была обновлена",

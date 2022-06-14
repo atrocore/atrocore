@@ -15600,6 +15600,7 @@ ul.dropdown-menu > li > a > .check-icon + div {
   #main > .record > .detail > .row > .side.bordered,
   #main > .record > .edit > .row > .side.bordered {
     border-left: 1px solid #e0e0e0;
+    margin-left: -1px;
   }
 }
 
@@ -17558,6 +17559,7 @@ table.table {
 .record .stick-sub.button-container {
   background-color: #ececec !important;
   padding-bottom: 0;
+  z-index: 101;
 }
 
 .record .button-container > .btn-group,
@@ -19131,7 +19133,7 @@ table.table > thead th > div > a {
 }
 
 #main .page-header h3 > a::after, #main .page-header h3 > span.subsection::after {
-  content: '›';
+  content: '/';
   display: inline-block;
   color: #000;
   background: #fff;
@@ -19147,10 +19149,6 @@ table.table > thead th > div > a {
 
 .page-header.detail-page-header {
   margin: 14px 0 10px 0
-}
-
-.page-header.detail-page-header h3 {
-  padding-top: 30px;
 }
 
 .page-header h3 {
@@ -19219,10 +19217,26 @@ table.table > thead th > div > a {
 }
 
 .page-header .header-buttons .filter-cell,
-.page-header .overview-filters-container .filter-cell {
+.overview-filters-container .filter-cell {
   display: inline-block;
-  min-width: 170px;
   margin-right: 10px;
+}
+
+.page-header .header-buttons .filter-cell {
+  min-width: 170px;
+}
+
+.overview-filters-container {
+  background-color: #FFFFFF;
+}
+
+.overview-filters-container .selectize-control.multi .selectize-input > div:not(.active) {
+  background-color: #f4f4f4;
+}
+@media screen and (min-width: 768px) {
+  .overview-filters-container {
+    padding: 0 15px 10px 15px;
+  }
 }
 
 .page-header .header-buttons .filter-cell > .field,
@@ -19413,13 +19427,15 @@ table.table > thead th > div > a {
 }
 
 @media screen and (max-width: 767px) {
-  #main .detail .side > button.collapse-panel {
+  #main .detail .side > button.collapse-panel,
+  #main .edit .side > button.collapse-panel {
     display: none;
   }
 }
 
 @media screen and (min-width: 768px) {
-  #main .detail .side > button.collapse-panel {
+  #main .detail .side > button.collapse-panel,
+  #main .edit .side > button.collapse-panel {
     position: absolute;
     z-index: 100;
     display: block;
@@ -19431,16 +19447,20 @@ table.table > thead th > div > a {
     color: #ccc;
   }
 
-  #main .detail .side > button.collapse-panel {
+  #main .detail .side > button.collapse-panel,
+  #main .edit .side > button.collapse-panel {
     top: 20px;
   }
 
-  #main .detail .side.collapsed {
+  #main .detail .side.collapsed,
+  #main .edit .side.collapsed {
+    width: 0 !important;
     padding: 0 8px 0 17px !important;
     border-top: solid 5px #EEEEEE;
   }
 
-  #main .detail .side.collapsed > .panel {
+  #main .detail .side.collapsed > .panel,
+  #main .edit .side.collapsed > .panel {
     display: none;
   }
 }
@@ -19767,6 +19787,12 @@ button.category:focus {
   #main > .record > .detail > .row > .side {
     padding: 0;
     position: relative;
+    float: left;
+  }
+
+  #main > .record > .detail > .row > .overview,
+  #main > .record > .edit > .row > .overview {
+    float: left;
   }
 
   #main > .record > .edit > .row > .side.fixed-top,
@@ -19843,8 +19869,20 @@ button.category:focus {
   .edit .panel-default > .panel-heading {
     margin: 0 -15px;
   }
-  .detail .overview {
+  .detail .overview,
+  .edit .overview,
+  #main > .list-container,
+  #main > .page-header,
+  #main .detail-button-container,
+  #main .overview-filters-container {
     width: 100% !important;
+    margin-left: 0 !important;
+  }
+  .detail .overview,
+  .edit .overview,
+  .detail .side,
+  .edit .side {
+    min-height: auto !important;
   }
   #main .detail .side {
     margin: 0 -7px;

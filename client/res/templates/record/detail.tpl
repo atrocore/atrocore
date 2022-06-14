@@ -15,7 +15,7 @@
             {{/if}}
             {{#if additionalButtons}}{{#each additionalButtons}}<button type="button" class="btn btn-default additional-button action" data-action="{{action}}">{{label}}</button>{{/each}}{{/if}}
         </div>
-        <div class="panel-navigation pull-left">{{{panelnavigation}}}</div>
+        <div class="panel-navigation panel-left pull-left">{{{panelDetailNavigation}}}</div>
         {{#if navigateButtonsEnabled}}
         <div class="pull-right">
             <div class="btn-group" role="group">
@@ -31,7 +31,7 @@
         <div class="clearfix"></div>
     </div>
     <div class="detail-button-container button-container edit-buttons hidden clearfix">
-        <div class="btn-group" role="group">
+        <div class="btn-group pull-left" role="group">
             {{#each buttonEditList}}{{button name scope=../../entityType label=label style=style hidden=hidden html=html}}{{/each}}
             {{#if dropdownEditItemList}}
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -44,11 +44,22 @@
             </ul>
             {{/if}}
         </div>
+        <div class="panel-navigation panel-right pull-left">{{{panelEditNavigation}}}</div>
     </div>
     {{/unless}}
 
-
     <div class="row">
+        {{#if overviewFilters.length}}
+        <div class="col-lg-12 overview-filters-container">
+            {{#each overviewFilters}}
+            <div class="cell filter-cell" data-name="{{this}}">
+                <div class="field" data-name="{{this}}">
+                    {{{var this ../this}}}
+                </div>
+            </div>
+            {{/each}}
+        </div>
+        {{/if}}
         <div class="overview {{#if isWide}}col-md-12{{else}}{{#if isSmall}}col-md-7{{else}}{{#if side}}col-md-8{{else}}col-md-12{{/if}}{{/if}}{{/if}}">
             <div class="middle">{{{middle}}}</div>
             <div class="extra">{{{extra}}}</div>

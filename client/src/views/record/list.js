@@ -1458,7 +1458,16 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 return false;
             }
 
-            let message = this.getMetadata().get(`clientDefs.${this.scope}.deleteConfirmation`) || 'Global.messages.removeRecordConfirmation'
+            let message = 'Global.messages.removeRecordConfirmation';
+            if (this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy') {
+                message = 'Global.messages.removeRecordConfirmationHierarchically';
+            }
+
+            let scopeMessage = this.getMetadata().get(`clientDefs.${this.scope}.deleteConfirmation`);
+            if (scopeMessage) {
+                message = scopeMessage;
+            }
+
             let parts = message.split('.');
 
             this.confirm({

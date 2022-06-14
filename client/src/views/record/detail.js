@@ -437,7 +437,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             var $container = this.$el.find('.detail-button-container');
 
             var stickTop = this.getThemeManager().getParam('stickTop') || 62;
-            var blockHeight = this.getThemeManager().getParam('blockHeight') || 21;
+            var blockHeight = this.getThemeManager().getParam('blockHeight') || ($container.innerHeight() / 2);
 
             var $block = $('<div>').css('height', blockHeight + 'px').html('&nbsp;').hide().insertAfter($container);
             var $middle = this.getView('middle').$el;
@@ -458,12 +458,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         width = parseInt(width);
 
                         const content = $('#content');
-                        const overview = content.find('.overview');
+                        if (content.length) {
+                            const contentWidth = Math.floor(content.get(0).getBoundingClientRect().width);
+                            const overview = content.find('.overview');
 
-                        overview.outerWidth(content.outerWidth() - $('.catalog-tree-panel').outerWidth() - width);
-                        $side.$el.css({'min-height': ($window.innerHeight() - $side.$el.offset().top) + 'px'});
-
-                        observer.unobserve($('#content').get(0));
+                            overview.outerWidth(contentWidth - $('.catalog-tree-panel').outerWidth() - width);
+                            $side.$el.css({'min-height': ($window.innerHeight() - $side.$el.offset().top) + 'px'});
+                        }
                     });
                     observer.observe($('#content').get(0));
 
@@ -486,6 +487,14 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                                 'width': width + 'px',
                                 'min-height': ($window.innerHeight() - side.offset().top) + 'px'
                             });
+
+                            if (side.hasClass('collapsed')) {
+                                const recordButtons = $('.record-buttons.stick-sub');
+
+                                if (recordButtons.length && ($window.scrollTop() > recordButtons.outerHeight(true))) {
+                                    side.addClass('fixed-top');
+                                }
+                            }
                         } else {
                             side.css({'min-height': 'unset'});
                         }
@@ -498,6 +507,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     let pageHeader = $('.nav.navbar-nav.navbar-right');
                     let buttonContainer = $('.record-buttons');
                     let topHeight = pageHeader.outerHeight() + buttonContainer.outerHeight();
+                    if (buttonContainer.hasClass('stick-sub')) {
+                        topHeight = $('.nav.navbar-right').outerHeight() + buttonContainer.outerHeight();
+                    }
+
                     let overview = $('.overview');
 
                     let scroll = $window.scrollTop();
@@ -563,6 +576,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                                                 side.attr('style', '');
                                                 side.removeClass('scrolled');
                                                 side.addClass('fixed-top');
+                                                side.css('top', (topHeight - 5) + 'px');
                                             }
                                         }
                                     }
@@ -575,6 +589,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                                 if (scroll > prevScroll) {
                                     if (scroll > side.offset().top - topHeight) {
                                         side.addClass('fixed-top');
+                                        side.css('top', (topHeight - 5) + 'px');
                                     }
                                 } else {
                                     if (scroll < parseInt($('body').css('padding-top')) + $('.record-buttons').outerHeight()) {
@@ -875,7 +890,16 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         delete: function () {
-            let message = this.getMetadata().get(`clientDefs.${this.scope}.deleteConfirmation`) || 'Global.messages.removeRecordConfirmation'
+            let message = 'Global.messages.removeRecordConfirmation';
+            if (this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy') {
+                message = 'Global.messages.removeRecordConfirmationHierarchically';
+            }
+
+            let scopeMessage = this.getMetadata().get(`clientDefs.${this.scope}.deleteConfirmation`);
+            if (scopeMessage) {
+                message = scopeMessage;
+            }
+
             let parts = message.split('.');
 
             this.confirm({
@@ -985,7 +1009,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 });
             }
 
-            return {
+            let data = {
                 additionalButtons: this.additionalButtons,
                 scope: this.scope,
                 entityType: this.entityType,
@@ -1002,7 +1026,88 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 navigateButtonsEnabled: navigateButtonsEnabled,
                 previousButtonEnabled: previousButtonEnabled,
                 nextButtonEnabled: nextButtonEnabled
+            };
+
+            if (this.model && !this.model.isNew() && this.getMetadata().get(`scopes.${this.model.urlRoot}.object`) && this.getMetadata().get(`scopes.${this.model.urlRoot}.overviewFilters`) !== false) {
+                data.overviewFilters = this.getOverviewFiltersList().map(filter => filter.name);
             }
+
+            return data;
+        },
+
+        getOverviewFiltersList: function () {
+            let result = [
+                {
+                    name: "fieldFilter",
+                    options: ["filled", "empty"]
+                }
+            ];
+
+            if (this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
+                result.push({
+                    name: "languageFilter",
+                    options: ['main'].concat(this.getConfig().get('inputLanguageList'))
+                });
+            }
+
+            return result;
+        },
+
+        createOverviewFilters() {
+            this.getModelFactory().create(null, model => {
+                this.getOverviewFiltersList().forEach(filter => {
+                    this.createOverviewFilter(filter, model);
+                });
+            });
+        },
+
+        createOverviewFilter(filter, model) {
+            let selected = [];
+            (this.getStorage().get(filter.name, 'OverviewFilter') || filter.options).forEach(option => {
+                if (filter.options.includes(option)){
+                    selected.push(option);
+                }
+            });
+
+            this.getStorage().set(filter.name, 'OverviewFilter', selected);
+            model.set(filter.name, selected);
+
+            let translatedOptions = {};
+            filter.options.forEach(option => {
+                translatedOptions[option] = this.getLanguage().translateOption(option, filter.name, 'Global');
+            });
+
+            this.createView(filter.name, 'views/fields/multi-enum', {
+                el: `${this.options.el} .field[data-name="${filter.name}"]`,
+                name: filter.name,
+                mode: 'edit',
+                model: model,
+                dragDrop: false,
+                params: {
+                    options: filter.options,
+                    translatedOptions: translatedOptions
+                }
+            }, view => {
+                this.listenTo(model, `change:${filter.name}`, () => {
+                    let values = [];
+                    filter.options.forEach(option => {
+                        if (model.get(filter.name).includes(option)) {
+                            values.push(option);
+                        }
+                    });
+
+                    if (values.length === 0) {
+                        values = [filter.options[0]];
+                    }
+
+                    this.getStorage().set(filter.name, 'OverviewFilter', values);
+                    this.model.trigger('overview-filters-changed');
+
+                    model.set(filter.name, values);
+                    view.reRender();
+                });
+                view.render();
+            });
         },
 
         getAdditionalButtons: function () {
@@ -1163,6 +1268,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.listenTo(this.model, 'sync overview-filters-changed', () => {
                     this.applyOverviewFilters();
                 });
+            }
+
+            if (!this.model.isNew()) {
+                this.createOverviewFilters();
             }
         },
 
@@ -1642,14 +1751,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 if ('customLabel' in simplifiedLayout[p]) {
                     panel.customLabel = simplifiedLayout[p].customLabel;
                 }
-                panel.name = simplifiedLayout[p].name || null;
+                panel.name = simplifiedLayout[p].name || 'panel-' + p.toString();
                 panel.style = simplifiedLayout[p].style || 'default';
                 panel.rows = [];
 
                 if (simplifiedLayout[p].dynamicLogicVisible) {
-                    if (!panel.name) {
-                        panel.name = 'panel-' + p.toString();
-                    }
                     if (this.dynamicLogic) {
                         this.dynamicLogic.defs.panels = this.dynamicLogic.defs.panels || {};
                         this.dynamicLogic.defs.panels[panel.name] = {
@@ -1810,9 +1916,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     width = parseInt(width);
 
                     const content = $('#content');
-                    const overview = content.find('.overview');
+                    if (content.length) {
+                        const contentWidth = Math.floor(content.get(0).getBoundingClientRect().width);
+                        const overview = content.find('.overview');
 
-                    overview.outerWidth(content.outerWidth() - $('.catalog-tree-panel').outerWidth() - width);
+                        overview.outerWidth(contentWidth - $('.catalog-tree-panel').outerWidth() - width);
+                    }
                 })
             });
         },
@@ -1851,20 +1960,42 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 portalLayoutDisabled: this.portalLayoutDisabled
             }, view => {
                 this.listenToOnce(view, 'after:render', () => {
-                    this.createPanelNavigationView(view.panelList);
+                    let middlePanels = [];
+                    if (this.gridLayout && 'layout' in this.gridLayout) {
+                        Object.values(this.gridLayout.layout).forEach(panel => {
+                            let name = panel.label || panel.customLabel;
+
+                            if (name) {
+                                middlePanels.push({title: name, name: panel.name});
+                            }
+                        });
+                    }
+
+                    this.createPanelNavigationView(middlePanels.concat(view.panelList));
                 })
             });
         },
 
         createPanelNavigationView(panelList) {
             let el = this.options.el || '#' + (this.id);
-            this.createView('panelNavigation', this.panelNavigationView, {
+            this.createView('panelDetailNavigation', this.panelNavigationView, {
                 panelList: panelList,
                 model: this.model,
                 scope: this.scope,
-                el: el + ' .panel-navigation',
+                el: el + ' .panel-navigation.panel-left',
             }, function (view) {
                 this.listenTo(this, 'after:set-detail-mode', () => {
+                    view.reRender();
+                });
+                view.render();
+            });
+            this.createView('panelEditNavigation', this.panelNavigationView, {
+                panelList: panelList,
+                model: this.model,
+                scope: this.scope,
+                el: el + ' .panel-navigation.panel-right',
+            }, function (view) {
+                this.listenTo(this, 'after:set-edit-mode', () => {
                     view.reRender();
                 });
                 view.render();

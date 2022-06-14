@@ -519,7 +519,10 @@ class Hierarchy extends Record
             if (!empty($parents[0])) {
                 $parentsRelatedIds = [];
                 foreach ($parents as $parent) {
-                    $parentsRelatedIds = array_merge($parentsRelatedIds, array_column($parent->get($link)->toArray(), 'id'));
+                    $ids = $parent->getLinkMultipleIdList($link);
+                    if (!empty($ids)){
+                        $parentsRelatedIds = array_merge($parentsRelatedIds, $ids);
+                    }
                 }
                 foreach ($result['collection'] as $entity) {
                     $entity->isInherited = in_array($entity->get('id'), $parentsRelatedIds);

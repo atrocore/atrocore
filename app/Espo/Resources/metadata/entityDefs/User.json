@@ -57,7 +57,7 @@
         },
         "isPortalUser": {
             "type": "bool",
-            "layoutMassUpdateDisabled": true
+            "massUpdateDisabled": true
         },
         "isSuperAdmin": {
             "type": "bool",
@@ -196,7 +196,7 @@
             "readOnly": true,
             "layoutListDisabled": true,
             "filterDisabled": true,
-            "layoutMassUpdateDisabled": true,
+            "massUpdateDisabled": true,
             "layoutDetailDisabled": true,
             "directAccessDisabled": true
         }

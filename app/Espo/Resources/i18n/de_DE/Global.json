@@ -75,6 +75,7 @@
     "Core": "AtroCore ist ein Software-Ökosystem, das für die schnelle Entwicklung webbasierter responsiver Geschäftsanwendungen entwickelt wurde."
   },
   "labels": {
+    "unlinkAndDelete": "Trennen und löschen",
     "allLanguages": "Alle Sprachen",
     "mainLanguage": "Hauptsprache",
     "setAsInherited": "Als vererbt setzen",
@@ -197,7 +198,7 @@
     "Apply": "Anwenden",
     "Unlink": "Verknüpfung entfernen",
     "unlinkHierarchically": "Verknüpfung hierarchisch entfernen",
-    "removeHierarchically": "Löschen hierarchisch",
+    "removeHierarchically": "Hierarchisch löschen",
     "Mass Update": "Massenänderung",
     "Export": "Export",
     "No Data": "Keine Daten",
@@ -314,10 +315,10 @@
     "unlinkAllHierarchicallyConfirmation": "Möchten Sie wirklich die Verknüpfung aller Datensätze hierarchisch aufheben?",
     "resetPreferencesConfirmation": "Sind Sie sicher, dass Sie die Einstellungen auf Standardwerte zurücksetzen wollen?",
     "removeRecordConfirmation": "Sind Sie sicher, dass Sie den Eintrag löschen wollen?",
-    "unlinkRecordConfirmation": "Wollen Sie die Verknüpfung mit dem Datensatz wirklich entfernen?",
-    "unlinkRecordConfirmationHierarchically": "Wollen Sie wirklich die Verknüpfung mit dem Datensatz hierarchisch entfernen?",
-    "removeRecordConfirmationHierarchically": "Wollen Sie wirklich den Datensatz hierarchisch entfernen?",
-    "removeSelectedRecordsConfirmation": "Sind Sie sicher, dass Sie die ausgewählten Sätze löschen möchten?",
+    "unlinkRecordConfirmation": "Wollen Sie die Verknüpfung mit dem Datensatz wirklich endgültig löschen?",
+    "unlinkRecordConfirmationHierarchically": "Wollen Sie wirklich die Verknüpfung mit dem Datensatz hierarchisch löschen?",
+    "removeRecordConfirmationHierarchically": "Wollen Sie wirklich die Datensätze hierarchisch löschen?",
+    "removeSelectedRecordsConfirmation": "Sind Sie sicher, dass Sie die ausgewählten Datensätze endgültig löschen möchten?",
     "massUpdateResultSingle": "{count} Eintrag wurde aktualisiert",
     "noRecordsUpdated": "Es wurden keine Einträge aktualisiert",
     "massRemoveResult": "{count} Einträge wurden gelöscht",
@@ -478,7 +479,7 @@
     "own": "Sie wurden als Eigentümer für {entityType} {entity} gesetzt.",
     "assign": "{entityType} {entity} wurde Ihnen zugewiesen.",
     "emailReceived": "E-Mail empfangen von {from}",
-    "entityRemoved": "{user} hat {entityType} {entity} entfernt"
+    "entityRemoved": "{user} hat {entityType} {entity} gelöscht"
   },
   "streamMessages": {
     "composerUpdateThis": "{user}",

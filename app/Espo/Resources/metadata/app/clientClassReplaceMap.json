@@ -35,9 +35,6 @@
   "views/dashlets/options/base": [
     "treo-core"
   ],
-  "views/modals/mass-update": [
-    "treo-core"
-  ],
   "views/modals/select-records": [
     "treo-core"
   ],
@@ -45,12 +42,6 @@
     "treo-core"
   ],
   "views/record/list": [
-    "treo-core"
-  ],
-  "views/record/panels/bottom": [
-    "treo-core"
-  ],
-  "views/record/panels/relationship": [
     "treo-core"
   ],
   "views/record/row-actions/default": [

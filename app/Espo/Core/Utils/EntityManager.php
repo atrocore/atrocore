@@ -693,7 +693,7 @@ class EntityManager
                         $link => array(
                             "type" => "linkMultiple",
                             "layoutDetailDisabled"  => !$linkMultipleField,
-                            "layoutMassUpdateDisabled"  => !$linkMultipleField,
+                            "massUpdateDisabled"  => !$linkMultipleField,
                             "noLoad"  => !$linkMultipleField,
                             'isCustom' => true
                         )
@@ -756,7 +756,7 @@ class EntityManager
                         $linkForeign => array(
                             "type" => "linkMultiple",
                             "layoutDetailDisabled"  => !$linkMultipleFieldForeign,
-                            "layoutMassUpdateDisabled"  => !$linkMultipleFieldForeign,
+                            "massUpdateDisabled"  => !$linkMultipleFieldForeign,
                             "noLoad"  => !$linkMultipleFieldForeign,
                             'isCustom' => true
                         )
@@ -778,7 +778,7 @@ class EntityManager
                         $link => array(
                             "type" => "linkMultiple",
                             "layoutDetailDisabled"  => !$linkMultipleField,
-                            "layoutMassUpdateDisabled"  => !$linkMultipleField,
+                            "massUpdateDisabled"  => !$linkMultipleField,
                             "noLoad"  => !$linkMultipleField,
                             'isCustom' => true
                         )
@@ -799,7 +799,7 @@ class EntityManager
                         $linkForeign => array(
                             "type" => "linkMultiple",
                             "layoutDetailDisabled"  => !$linkMultipleFieldForeign,
-                            "layoutMassUpdateDisabled"  => !$linkMultipleFieldForeign,
+                            "massUpdateDisabled"  => !$linkMultipleFieldForeign,
                             "noLoad"  => !$linkMultipleFieldForeign,
                             'isCustom' => true
                         )
@@ -871,7 +871,7 @@ class EntityManager
                         $link => array(
                             "type" => "linkMultiple",
                             "layoutDetailDisabled"  => !$linkMultipleField,
-                            "layoutMassUpdateDisabled"  => !$linkMultipleField,
+                            "massUpdateDisabled"  => !$linkMultipleField,
                             "noLoad"  => !$linkMultipleField,
                             'isCustom' => true
                         )
@@ -894,7 +894,7 @@ class EntityManager
                         $linkForeign => array(
                             "type" => "linkMultiple",
                             "layoutDetailDisabled"  => !$linkMultipleFieldForeign,
-                            "layoutMassUpdateDisabled"  => !$linkMultipleFieldForeign,
+                            "massUpdateDisabled"  => !$linkMultipleFieldForeign,
                             "noLoad"  => !$linkMultipleFieldForeign,
                             'isCustom' => true
                         )

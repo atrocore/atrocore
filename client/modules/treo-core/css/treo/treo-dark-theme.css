@@ -17757,7 +17757,8 @@ table.table {
 
 .record .stick-sub.button-container {
     background-color: #ececec !important;
-    padding-bottom: 0
+    padding-bottom: 0;
+    z-index: 101;
 }
 
 .record .button-container > .btn-group,
@@ -19334,6 +19335,10 @@ input#sn-checkbox-open-in-new-window {
     height: 29px;
 }
 
+.record .row .side > .panel-default:first-of-type > .panel-heading {
+    border-top: 0;
+}
+
 .panel-info > .panel-heading {
     padding: 6px 10px 6px 14px;
 }
@@ -19643,7 +19648,7 @@ ul.dropdown-menu > li.checkbox {
 
 #main .page-header h3 > a::after,
 #main .page-header h3 > span.subsection::after {
-    content: '\203A';
+    content: '/';
     display: inline-block;
     color: #000;
     background: #fff;
@@ -19666,10 +19671,6 @@ ul.dropdown-menu > li.checkbox {
     margin: 14px 0 10px 0
 }
 
-.page-header.detail-page-header h3 {
-    padding-top: 30px;
-}
-
 .page-header h3 {
     font-size: 24px;
 }
@@ -19688,10 +19689,27 @@ ul.dropdown-menu > li.checkbox {
 }
 
 .page-header .header-buttons .filter-cell,
-.page-header .overview-filters-container .filter-cell {
+.overview-filters-container .filter-cell {
     display: inline-block;
-    min-width: 170px;
     margin-right: 10px;
+}
+
+.page-header .header-buttons .filter-cell {
+    min-width: 170px;
+}
+
+.overview-filters-container {
+    background-color: #FFFFFF;
+}
+
+.overview-filters-container .selectize-control.multi .selectize-input > div:not(.active) {
+    background-color: #f4f4f4;
+}
+
+@media screen and (min-width: 768px) {
+    .overview-filters-container {
+        padding: 0 15px 10px 15px;
+    }
 }
 
 .page-header .header-buttons .filter-cell .field,
@@ -19914,13 +19932,15 @@ select,
 }
 
 @media screen and (max-width: 767px) {
-    #main .detail .side > button.collapse-panel {
+    #main .detail .side > button.collapse-panel,
+    #main .edit .side > button.collapse-panel {
         display: none;
     }
 }
 
 @media screen and (min-width: 768px) {
-    #main .detail .side > button.collapse-panel {
+    #main .detail .side > button.collapse-panel,
+    #main .edit .side > button.collapse-panel {
         position: absolute;
         z-index: 100;
         display: block;
@@ -19932,15 +19952,19 @@ select,
         color: #ccc;
     }
 
-    #main .detail .side > button.collapse-panel {
+    #main .detail .side > button.collapse-panel,
+    #main .edit .side > button.collapse-panel {
         top: 6px;
     }
 
-    #main .detail .side.collapsed {
+    #main .detail .side.collapsed,
+    #main .edit .side.collapsed {
+        width: 0 !important;
         padding: 0 8px 0 17px !important;
     }
 
-    #main .detail .side.collapsed > .panel {
+    #main .detail .side.collapsed > .panel,
+    #main .edit .side.collapsed > .panel {
         display: none;
     }
 }
@@ -20363,6 +20387,7 @@ button.category:focus {
     .record > .edit > .row > .side.bordered,
     .record > .detail > .row > .side.bordered {
         border-left: 1px solid #dcdcdc;
+        margin-left: -1px;
     }
 
     .modal-dialog .edit > .row > .overview.col-sm-12,
@@ -20383,6 +20408,12 @@ button.category:focus {
         padding: 0;
         position: relative;
         border-top: 1px solid #dcdcdc;
+        float: left;
+    }
+
+    #main > .record > .detail > .row > .overview,
+    #main > .record > .edit > .row > .overview {
+        float: left;
     }
 
     #main > .record > .edit > .row > .side.fixed-top,
@@ -20587,8 +20618,21 @@ button.category:focus {
         margin: 0 -15px;
     }
 
-    .detail .overview {
+    .detail .overview,
+    .edit .overview,
+    #main > .list-container,
+    #main > .page-header,
+    #main .detail-button-container,
+    #main .overview-filters-container {
         width: 100% !important;
+        margin-left: 0 !important;
+    }
+
+    .detail .overview,
+    .edit .overview,
+    .detail .side,
+    .edit .side {
+        min-height: auto !important;
     }
 
     #main .detail .side {
