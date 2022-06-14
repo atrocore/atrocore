@@ -1,7 +1,6 @@
-<div class="search-container for-table-view">{{{search}}}</div>
+<div class="search-container">{{{search}}}</div>
 <div class="list-container for-table-view">{{{list}}}</div>
 {{#if hasTree}}
-<div class="search-container for-tree-view"></div>
 <div class="list-container for-tree-view"><div class="list-buttons-container clearfix">{{#if hasTotalCount}}<div class="text-muted total-count">{{translate 'Total'}}: <span class="total-count-span">{{totalCount}}</span></div>{{/if}}<div class="records-tree"></div></div></div>
 {{/if}}
 {{#if createButton}}<div class="button-container"><button class="btn btn-default" data-action="create">{{createText}}</button></div>{{/if}}
