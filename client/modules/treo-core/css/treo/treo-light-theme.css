@@ -22266,6 +22266,10 @@ ul.dropdown-menu > li.checkbox {
   padding-right: 0;
 }
 
+.search-container .input-group > .input-group-btn .reset {
+  padding-right: 4px;
+}
+
 .modal-header {
   background-color: #ececec;
   padding-top: 16px;

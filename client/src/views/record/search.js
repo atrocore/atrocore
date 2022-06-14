@@ -265,10 +265,11 @@ Espo.define('views/record/search', 'view', function (Dep) {
         },
 
         events: {
-            'keypress input[name="textFilter"]': function (e) {
-                if (e.keyCode == 13) {
+            'keyup input[name="textFilter"]': function (e) {
+                if (e.keyCode === 13) {
                     this.search();
                 }
+                this.toggleResetVisibility();
             },
             'focus input[name="textFilter"]': function (e) {
                 e.currentTarget.select();
@@ -354,6 +355,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 this.handleLeftDropdownVisibility();
 
                 this.manageLabels();
+                this.toggleResetVisibility();
             },
             'click .advanced-filters a.remove-filter': function (e) {
                 var $target = $(e.currentTarget);
@@ -374,6 +376,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 this.manageLabels();
                 this.handleLeftDropdownVisibility();
                 this.setupOperatorLabels();
+                this.toggleResetVisibility();
             },
             'keypress .field input[type="text"]': function (e) {
                 if (e.keyCode === 13) {
@@ -387,6 +390,26 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 e.stopPropagation();
                 e.preventDefault();
             }
+        },
+
+        toggleResetVisibility() {
+            let $textFilter = this.$el.find(`[name="textFilter"]`);
+            if ($textFilter.length === 0) {
+                return;
+            }
+
+            let $reset = this.$el.find(`[data-action="reset"]`);
+            if ($textFilter.val().length > 0) {
+                $reset.show();
+                return;
+            }
+
+            if (Object.keys(this.advanced).length > 0) {
+                $reset.show();
+                return;
+            }
+
+            $reset.hide();
         },
 
         sortAdvanced: function (advanced) {
@@ -444,6 +467,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
 
             this.textFilter = '';
             this.selectPreset(this.presetName, true);
+            this.toggleResetVisibility();
         },
 
         savePreset(name) {
@@ -541,6 +565,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
             this.manageLabels();
             this.setupOperatorLabels();
             this.setupAdvancedFiltersPosition();
+            this.toggleResetVisibility();
         },
 
         getFilterName(filter) {

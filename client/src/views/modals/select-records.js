@@ -357,7 +357,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                 let html = '<div class="btn-group main-btn-group pull-right">';
                 html += '<div class="page-header" style="margin-top: 0">';
                 html += '<div class="header-buttons"><div class="header-items">';
-                html += `<a href="javascript:" class="btn action ${treeButtonClass} change-view action" data-view="tree"><span class="fa fa-sitemap"></span></a>`
+                html += `<a href="javascript:" class="btn action ${treeButtonClass} change-view action" data-view="tree"><span class="fa fa-stream"></span></a>`
                 html += `<a href="javascript:" class="btn action ${tableButtonClass} change-view action" data-view="list"><span class="fa fa-th-list"></span></a>`;
                 html += '</div></div></div>';
                 this.$el.find('.modal-footer').append(html);
