@@ -458,10 +458,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         width = parseInt(width);
 
                         const content = $('#content');
-                        const overview = content.find('.overview');
+                        if (content.length) {
+                            const contentWidth = Math.floor(content.get(0).getBoundingClientRect().width);
+                            const overview = content.find('.overview');
 
-                        overview.outerWidth(content.outerWidth() - $('.catalog-tree-panel').outerWidth() - width);
-                        $side.$el.css({'min-height': ($window.innerHeight() - $side.$el.offset().top) + 'px'});
+                            overview.outerWidth(contentWidth - $('.catalog-tree-panel').outerWidth() - width);
+                            $side.$el.css({'min-height': ($window.innerHeight() - $side.$el.offset().top) + 'px'});
+                        }
                     });
                     observer.observe($('#content').get(0));
 
@@ -1913,9 +1916,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     width = parseInt(width);
 
                     const content = $('#content');
-                    const overview = content.find('.overview');
+                    if (content.length) {
+                        const contentWidth = Math.floor(content.get(0).getBoundingClientRect().width);
+                        const overview = content.find('.overview');
 
-                    overview.outerWidth(content.outerWidth() - $('.catalog-tree-panel').outerWidth() - width);
+                        overview.outerWidth(contentWidth - $('.catalog-tree-panel').outerWidth() - width);
+                    }
                 })
             });
         },
