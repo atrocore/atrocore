@@ -348,9 +348,14 @@ Espo.define('views/record/list', 'view', function (Dep) {
             let label = this.getLanguage().translate('Show more');
 
             if (this.showCount && this.collection.total > 0) {
-                let more = this.collection.total - this.collection.length;
+                let limit = this.collection.maxSize;
+                let add = this.collection.total - this.collection.length;
 
-                label = this.getLanguage().translate('Show %s more').replace('%s', more);
+                if (limit < add) {
+                    add = limit;
+                }
+
+                label = this.getLanguage().translate('Show %s more').replace('%s', add);
             }
 
             return label;
