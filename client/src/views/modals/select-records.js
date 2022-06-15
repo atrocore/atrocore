@@ -261,7 +261,8 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                     searchManager: searchManager,
                     disableSavePreset: this.disableSavePreset,
                     hiddenBoolFilterList: hiddenBoolFilterList,
-                    boolFilterData: this.boolFilterData
+                    boolFilterData: this.boolFilterData,
+                    selectRecordsView: this,
                 }, function (view) {
                     view.render();
                     this.listenTo(view, 'reset', function () {
@@ -270,7 +271,16 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                     }, this);
 
                     this.listenTo(this, 'change-view', e => {
+                        view.bool = {};
                         view.resetFilters();
+                    });
+
+                    this.listenTo(view, 'after:search', collection => {
+                        this.findInTree(collection);
+                    });
+
+                    this.listenTo(view, 'after:render', e => {
+                        view.toggleSearchFilters(this.getSelectedViewType());
                     });
                 });
             }
@@ -377,6 +387,11 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
 
         getTreeEl() {
             return this.$el.find('.records-tree');
+        },
+
+        findInTree(collection) {
+            // @todo finish it
+            console.log(collection);
         },
 
         setupTree() {

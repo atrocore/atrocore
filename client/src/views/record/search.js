@@ -568,6 +568,19 @@ Espo.define('views/record/search', 'view', function (Dep) {
             this.toggleResetVisibility();
         },
 
+        toggleSearchFilters(selectedViewType) {
+            let $button = this.$el.find('.filters-button');
+            if ($button.length === 0) {
+                return
+            }
+
+            if (selectedViewType === 'tree') {
+                $button.addClass('disabled');
+            } else {
+                $button.removeClass('disabled');
+            }
+        },
+
         getFilterName(filter) {
             let name = '';
             let nextView = this.getView('filter-' + filter);
@@ -745,7 +758,9 @@ Espo.define('views/record/search', 'view', function (Dep) {
         search: function () {
             this.fetch();
             this.updateSearch();
-            this.updateCollection();
+            this.updateCollection(() => {
+                this.trigger('after:search', this.collection);
+            });
         },
 
         getFilterDataList: function () {
@@ -769,11 +784,14 @@ Espo.define('views/record/search', 'view', function (Dep) {
             return !!this.getMetadata().get(['entityDefs', this.scope, 'fields', field]);
         },
 
-        updateCollection() {
+        updateCollection(callback) {
             this.collection.reset();
             this.notify('Please wait...');
             this.listenTo(this.collection, 'sync', function () {
                 this.notify(false);
+                if (callback) {
+                    callback();
+                }
             }.bind(this));
             let where = this.searchManager.getWhere();
             where.forEach(item => {
@@ -787,6 +805,12 @@ Espo.define('views/record/search', 'view', function (Dep) {
                     _.extend(item.data, data);
                 }
             });
+
+            // @todo finish it
+            // if (this.options.selectRecordsView && this.options.selectRecordsView.getSelectedViewType() === 'tree') {
+            //     this.collection.maxSize = 20;
+            // }
+
             this.collection.where = where;
             this.collection.fetch();
         },
