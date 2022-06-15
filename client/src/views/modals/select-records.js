@@ -424,6 +424,17 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                 useContextMenu: false,
                 closedIcon: $('<i class="fa fa-angle-right"></i>'),
                 openedIcon: $('<i class="fa fa-angle-down"></i>'),
+                onCreateLi: function (node, $li, isSelected) {
+                    let search = $('.search-container .text-filter').val();
+                    if (search.length > 0) {
+                        search = search.replace(/\*/g, '');
+                        if (search.length > 0) {
+                            let $el = $li.find('.jqtree-title');
+                            let name = $el.html();
+                            $el.html(name.replace(new RegExp(search, 'g'), `<b>${search}</b>`));
+                        }
+                    }
+                }
             };
             if (data) {
                 treeData['data'] = data;
