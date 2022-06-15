@@ -863,6 +863,13 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.collection.fetch();
             });
 
+            this.listenTo(this.collection, 'sync', () => {
+                let $shown = this.$el.find('.shown-count-span');
+                if ($shown.length > 0) {
+                    $shown.html(this.collection.length);
+                }
+            });
+
             $(window).on(`keydown.${this.cid} keyup.${this.cid}`, e => {
                 document.onselectstart = function () {
                     return !e.shiftKey;

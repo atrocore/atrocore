@@ -559,6 +559,11 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
                         id: model.id
                     });
                 }, this);
+
+                let $shown = this.$el.find('.shown-count-span');
+                if ($shown.length > 0) {
+                    $shown.html(this.collection.length);
+                }
             });
         },
 

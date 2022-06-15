@@ -2,9 +2,7 @@
 {{#if topBar}}
 <div class="list-buttons-container clearfix">
     {{#if displayTotalCount}}
-        <div class="text-muted total-count">
-        {{translate 'Total'}}: <span class="total-count-span">{{totalCount}}</span>
-        </div>
+    <div class="text-muted total-count">{{translate 'Shown'}}: <span class="shown-count-span">{{collection.length}}</span> | {{translate 'Total'}}: <span class="total-count-span">{{collection.total}}</span></div>
     {{/if}}
 
     {{#each buttonList}}
