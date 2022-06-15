@@ -215,7 +215,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
 
             $tree.tree('destroy');
             $tree.tree({
-                dataUrl: this.treeScope + '/action/Tree',
+                dataUrl: this.treeScope + '/action/Tree?isTreePanel=1',
                 selectable: true,
                 dragAndDrop: this.getMetadata().get(`scopes.${this.treeScope}.multiParents`) !== true,
                 useContextMenu: false,

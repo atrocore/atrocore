@@ -53,7 +53,7 @@ class Hierarchy extends Record
             throw new Forbidden();
         }
 
-        return $this->getRecordService()->getChildren((string)$request->get('node'));
+        return $this->getRecordService()->getChildren((string)$request->get('node'), !empty($request->get('isTreePanel')));
     }
 
     public function actionTreeData($params, $data, $request): array

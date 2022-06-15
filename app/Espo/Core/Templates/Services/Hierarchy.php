@@ -289,7 +289,7 @@ class Hierarchy extends Record
         return $this->getRepository()->getRoute($id);
     }
 
-    public function getChildren(string $parentId): array
+    public function getChildren(string $parentId, bool $isTreePanel = false): array
     {
         $result = [];
         foreach ($this->getRepository()->getChildrenArray($parentId) as $record) {
