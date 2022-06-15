@@ -574,10 +574,9 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 return
             }
 
+            $button.removeClass('disabled');
             if (selectedViewType === 'tree') {
                 $button.addClass('disabled');
-            } else {
-                $button.removeClass('disabled');
             }
         },
 

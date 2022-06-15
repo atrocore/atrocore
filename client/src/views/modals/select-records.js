@@ -283,6 +283,10 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                     this.listenTo(view, 'after:render', e => {
                         view.toggleSearchFilters(this.getSelectedViewType());
                     });
+
+                    this.listenTo(this, 'after:toggleViewType', viewType => {
+                        view.toggleSearchFilters(viewType);
+                    });
                 });
             }
         },
@@ -431,7 +435,16 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                         if (search.length > 0) {
                             let $el = $li.find('.jqtree-title');
                             let name = $el.html();
-                            $el.html(name.replace(new RegExp(search, 'g'), `<b>${search}</b>`));
+                            let matches = name.match(new RegExp(search, 'ig'));
+                            if (matches) {
+                                let processed = [];
+                                matches.forEach(v => {
+                                    if (!processed.includes(v)) {
+                                        processed.push(v);
+                                        $el.html(name.replace(new RegExp(v, 'g'), `<b>${v}</b>`));
+                                    }
+                                });
+                            }
                         }
                     }
                 }
@@ -483,6 +496,8 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                 this.$el.find('.for-table-view').show();
                 this.$el.find('.for-tree-view').hide();
             }
+
+            this.trigger('after:toggleViewType', viewType);
         },
 
         create: function () {
