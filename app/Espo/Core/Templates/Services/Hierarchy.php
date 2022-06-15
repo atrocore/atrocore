@@ -289,15 +289,40 @@ class Hierarchy extends Record
         return $this->getRepository()->getRoute($id);
     }
 
-    public function getChildren(string $parentId, bool $isTreePanel = false): array
+    public function getChildren(string $parentId, array $params): array
     {
         $result = [];
-        foreach ($this->getRepository()->getChildrenArray($parentId) as $record) {
-            $result[] = [
-                'id'             => $record['id'],
-                'name'           => $record['name'],
-                'load_on_demand' => !empty($record['childrenCount'])
-            ];
+
+        $records = $this->getRepository()->getChildrenArray($parentId);
+        if (empty($records)) {
+            return $result;
+        }
+
+        $params['where'][] = [
+            'type'      => 'in',
+            'attribute' => 'id',
+            'value'     => array_column($records, 'id')
+        ];
+
+        $selectParams = $this->getSelectParams($params);
+        $selectParams['select'] = ['id'];
+
+        $ids = array_column($this->getRepository()->find($selectParams)->toArray(), 'id');
+        if (empty($ids)) {
+            return $result;
+        }
+
+        foreach ($ids as $id) {
+            foreach ($records as $record) {
+                if ($record['id'] === $id) {
+                    $result[] = [
+                        'id'             => $record['id'],
+                        'name'           => $record['name'],
+                        'load_on_demand' => !empty($record['childrenCount'])
+                    ];
+                    break 1;
+                }
+            }
         }
 
         return $result;

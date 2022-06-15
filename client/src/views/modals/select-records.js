@@ -479,7 +479,12 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                 treeData['data'] = data;
                 treeData['autoOpen'] = true;
             } else {
-                treeData['dataUrl'] = this.scope + '/action/Tree';
+                let queryParameters = {
+                    sortBy: this.collection.sortBy,
+                    asc: this.collection.asc,
+                    where: this.collection.getWhere(),
+                };
+                treeData['dataUrl'] = this.scope + '/action/Tree?' + $.param(queryParameters);
             }
 
             $tree.tree('destroy');
