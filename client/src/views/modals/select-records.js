@@ -276,7 +276,6 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                     }, this);
 
                     this.listenTo(this, 'change-view', e => {
-                        view.bool = {};
                         view.resetFilters();
                     });
 
