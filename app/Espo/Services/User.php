@@ -35,6 +35,7 @@
 
 namespace Espo\Services;
 
+use Espo\Core\Application as App;
 use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\NotFound;
@@ -402,20 +403,16 @@ class User extends Record
         $siteUrl = $this->getConfig()->getSiteUrl() . '/';
 
         if ($user->get('isPortalUser')) {
-            $urlList = [];
-            $portals = $this->findLinkedEntities($user->get('id'), 'portals', []);
-            if (!empty($portals['total'])) {
-                foreach ($portals['collection'] as $portal) {
-                    if (!$portal->get('isActive')) {
-                        continue 1;
-                    }
-                    $urlList[] = $portal->get('url');
-                }
-            }
-            if (!count($urlList)) {
+            $portal = $user->get('portal');
+
+            if (empty($portal) || !$portal->get('isActive')) {
                 return;
             }
-            $siteUrl = implode("\n", $urlList);
+
+            $portalsUrls = App::getPortalUrlFileData();
+            if (empty($siteUrl = $portalsUrls[$portal->id])) {
+                return;
+            }
         }
         $body = str_replace('{siteUrl}', $siteUrl, $body);
 
