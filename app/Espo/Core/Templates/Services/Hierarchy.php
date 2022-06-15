@@ -51,6 +51,35 @@ use Treo\Core\Exceptions\NotModified;
 
 class Hierarchy extends Record
 {
+    public function getTreeData(array $ids): array
+    {
+        $result = [
+            'total' => 2,
+            'tree'  => [
+                [
+                    'id'       => '1',
+                    'name'     => 'name 1',
+                    'children' => [
+                        [
+                            'id'   => '1_1',
+                            'name' => 'name 1_1',
+                        ],
+                        [
+                            'id'   => '1_2',
+                            'name' => 'name 1_2',
+                        ]
+                    ]
+                ],
+                [
+                    'id'   => '2',
+                    'name' => 'name 2',
+                ]
+            ]
+        ];
+
+        return $result;
+    }
+
     public function inheritAll(string $id, string $link): bool
     {
         $event = $this->dispatchEvent('beforeInheritAll', new Event(['id' => $id, 'link' => $link]));
@@ -520,7 +549,7 @@ class Hierarchy extends Record
                 $parentsRelatedIds = [];
                 foreach ($parents as $parent) {
                     $ids = $parent->getLinkMultipleIdList($link);
-                    if (!empty($ids)){
+                    if (!empty($ids)) {
                         $parentsRelatedIds = array_merge($parentsRelatedIds, $ids);
                     }
                 }
@@ -671,7 +700,7 @@ class Hierarchy extends Record
                     case 'asset':
                     case 'image':
                     case 'link':
-                        if ($this->areValuesEqual($this->getRepository()->get(), $field. 'Id', $parent->get($field . 'Id'), $entity->get($field . 'Id'))) {
+                        if ($this->areValuesEqual($this->getRepository()->get(), $field . 'Id', $parent->get($field . 'Id'), $entity->get($field . 'Id'))) {
                             $inheritedFields[] = $field;
                         }
                         break;

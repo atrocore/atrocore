@@ -213,6 +213,11 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                 this.toggleViewType();
             });
 
+            this.listenTo(this.collection, 'sync', () => {
+                if (this.getSelectedViewType() === 'tree') {
+                    this.findInTree();
+                }
+            });
         },
 
         loadSearch: function () {
@@ -273,10 +278,6 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                     this.listenTo(this, 'change-view', e => {
                         view.bool = {};
                         view.resetFilters();
-                    });
-
-                    this.listenTo(view, 'after:search', collection => {
-                        this.findInTree(collection);
                     });
 
                     this.listenTo(view, 'after:render', e => {
@@ -385,26 +386,54 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
             return this.getStorage().get('list-small-view-type', this.scope) || 'tree';
         },
 
-        getTreeEl() {
-            return this.$el.find('.records-tree');
+        findInTree() {
+            let $shown = this.$el.find('.for-tree-view .shown-count-span');
+            let $total = this.$el.find('.for-tree-view .total-count-span');
+
+            if (this.collection.where.length === 0) {
+                $shown.html(this.collection.total);
+                $total.html(this.collection.total);
+                this.setupTree();
+                return;
+            }
+
+            if (this.collection.total === 0) {
+                $shown.html(0);
+                $total.html(0);
+                this.setupTree([]);
+                return;
+            }
+
+            let ids = [];
+            this.collection.models.forEach(model => {
+                ids.push(model.get('id'));
+            });
+
+            this.ajaxGetRequest(`${this.scope}/action/TreeData`, {ids: ids}).then(response => {
+                $shown.html(response.total);
+                $total.html(response.total);
+                this.setupTree(response.tree);
+            });
         },
 
-        findInTree(collection) {
-            // @todo finish it
-            console.log(collection);
-        },
-
-        setupTree() {
-            const $tree = this.getTreeEl();
-            $tree.tree('destroy');
-            $tree.tree({
-                dataUrl: this.scope + '/action/Tree',
+        setupTree(data) {
+            const $tree = this.$el.find('.records-tree');
+            let treeData = {
                 selectable: true,
                 dragAndDrop: false,
                 useContextMenu: false,
                 closedIcon: $('<i class="fa fa-angle-right"></i>'),
                 openedIcon: $('<i class="fa fa-angle-down"></i>'),
-            }).on('tree.click', e => {
+            };
+            if (data) {
+                treeData['data'] = data;
+                treeData['autoOpen'] = true;
+            } else {
+                treeData['dataUrl'] = this.scope + '/action/Tree';
+            }
+
+            $tree.tree('destroy');
+            $tree.tree(treeData).on('tree.click', e => {
                 if (this.multiple) {
                     e.preventDefault();
                     let selected_node = e.node;

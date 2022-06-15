@@ -758,9 +758,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
         search: function () {
             this.fetch();
             this.updateSearch();
-            this.updateCollection(() => {
-                this.trigger('after:search', this.collection);
-            });
+            this.updateCollection();
         },
 
         getFilterDataList: function () {
@@ -784,14 +782,11 @@ Espo.define('views/record/search', 'view', function (Dep) {
             return !!this.getMetadata().get(['entityDefs', this.scope, 'fields', field]);
         },
 
-        updateCollection(callback) {
+        updateCollection() {
             this.collection.reset();
             this.notify('Please wait...');
             this.listenTo(this.collection, 'sync', function () {
                 this.notify(false);
-                if (callback) {
-                    callback();
-                }
             }.bind(this));
             let where = this.searchManager.getWhere();
             where.forEach(item => {
@@ -806,10 +801,15 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 }
             });
 
-            // @todo finish it
-            // if (this.options.selectRecordsView && this.options.selectRecordsView.getSelectedViewType() === 'tree') {
-            //     this.collection.maxSize = 20;
-            // }
+            if (this.options.selectRecordsView) {
+                const maxForTree = 500;
+                if (this.collection.maxSize === maxForTree) {
+                    this.collection.maxSize = this.getConfig().get('recordsPerPage');
+                }
+                if (this.options.selectRecordsView.getSelectedViewType() === 'tree' && where.length !== 0) {
+                    this.collection.maxSize = maxForTree;
+                }
+            }
 
             this.collection.where = where;
             this.collection.fetch();
