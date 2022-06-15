@@ -66,6 +66,8 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
 
         selectedItems: [],
 
+        lastTextFilter: null,
+
         data: function () {
             return {
                 createButton: this.createButton,
@@ -214,9 +216,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
             });
 
             this.listenTo(this.collection, 'sync', () => {
-                if (this.getSelectedViewType() === 'tree') {
-                    this.findInTree();
-                }
+                this.findInTree();
             });
         },
 
@@ -387,14 +387,38 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
         },
 
         getSelectedViewType() {
+            if (!this.isHierarchical()) {
+                return 'list';
+            }
             return this.getStorage().get('list-small-view-type', this.scope) || 'tree';
         },
 
         findInTree() {
+            if (this.getSelectedViewType() !== 'tree') {
+                return;
+            }
+
+            let textFilter = null;
+            if (this.collection.where) {
+                this.collection.where.forEach(item => {
+                    if (item.type && item.type === 'textFilter') {
+                        textFilter = item.value;
+                    }
+                });
+            }
+
+            if (textFilter === this.lastTextFilter) {
+                return;
+            }
+
+            this.lastTextFilter = textFilter;
+
             let $shown = this.$el.find('.for-tree-view .shown-count-span');
             let $total = this.$el.find('.for-tree-view .total-count-span');
 
-            if (this.collection.where.length === 0) {
+            $shown.parent().show();
+
+            if (textFilter === null) {
                 $shown.html(this.collection.total);
                 $total.html(this.collection.total);
                 this.setupTree();
@@ -402,8 +426,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
             }
 
             if (this.collection.total === 0) {
-                $shown.html(0);
-                $total.html(0);
+                $shown.parent().hide();
                 this.setupTree([]);
                 return;
             }
@@ -421,6 +444,10 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
         },
 
         setupTree(data) {
+            if (this.getSelectedViewType() !== 'tree') {
+                return;
+            }
+
             const $tree = this.$el.find('.records-tree');
             let treeData = {
                 selectable: true,
