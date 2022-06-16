@@ -455,19 +455,25 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                 closedIcon: $('<i class="fa fa-angle-right"></i>'),
                 openedIcon: $('<i class="fa fa-angle-down"></i>'),
                 onCreateLi: function (node, $li, isSelected) {
+                    if (node.disabled) {
+                        $li.addClass('disabled');
+                    } else {
+                        $li.removeClass('disabled');
+                    }
+
                     let search = $('.search-container .text-filter').val();
                     if (search.length > 0) {
                         search = search.replace(/\*/g, '');
                         if (search.length > 0) {
-                            let $el = $li.find('.jqtree-title');
-                            let name = $el.html();
+                            let $title = $li.find('.jqtree-title');
+                            let name = $title.html();
                             let matches = name.match(new RegExp(search, 'ig'));
                             if (matches) {
                                 let processed = [];
                                 matches.forEach(v => {
                                     if (!processed.includes(v)) {
                                         processed.push(v);
-                                        $el.html(name.replace(new RegExp(v, 'g'), `<b>${v}</b>`));
+                                        $title.html(name.replace(new RegExp(v, 'g'), `<b>${v}</b>`));
                                     }
                                 });
                             }
@@ -489,6 +495,11 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
 
             $tree.tree('destroy');
             $tree.tree(treeData).on('tree.click', e => {
+                if (e.node.disabled) {
+                    e.preventDefault();
+                    return false;
+                }
+
                 if (this.multiple) {
                     e.preventDefault();
                     let selected_node = e.node;

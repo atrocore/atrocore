@@ -298,31 +298,23 @@ class Hierarchy extends Record
             return $result;
         }
 
-        $params['where'][] = [
-            'type'      => 'in',
-            'attribute' => 'id',
-            'value'     => array_column($records, 'id')
-        ];
-
         $selectParams = $this->getSelectParams($params);
         $selectParams['select'] = ['id'];
 
-        $ids = array_column($this->getRepository()->find($selectParams)->toArray(), 'id');
-        if (empty($ids)) {
-            return $result;
+        $ids = [];
+        foreach ($this->getRepository()->find($selectParams) as $entity) {
+            if ($this->getAcl()->check($entity, 'read')) {
+                $ids[] = $entity->get('id');
+            }
         }
 
-        foreach ($ids as $id) {
-            foreach ($records as $record) {
-                if ($record['id'] === $id) {
-                    $result[] = [
-                        'id'             => $record['id'],
-                        'name'           => $record['name'],
-                        'load_on_demand' => !empty($record['childrenCount'])
-                    ];
-                    break 1;
-                }
-            }
+        foreach ($records as $record) {
+            $result[] = [
+                'id'             => $record['id'],
+                'name'           => $record['name'],
+                'disabled'       => !in_array($record['id'], $ids),
+                'load_on_demand' => !empty($record['childrenCount'])
+            ];
         }
 
         return $result;

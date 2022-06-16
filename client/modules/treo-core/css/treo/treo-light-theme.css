@@ -20206,6 +20206,14 @@ ul.jqtree-tree li.jqtree-folder.jqtree-closed {
   margin-bottom: 1px;
 }
 
+ul.jqtree-tree .jqtree_common.disabled > div > span {
+  color: #bbb;
+}
+
+ul.jqtree-tree .jqtree_common.disabled > div > span:hover {
+  cursor: not-allowed;
+}
+
 ul.jqtree-tree li.jqtree-ghost {
   position: relative;
   z-index: 10;
