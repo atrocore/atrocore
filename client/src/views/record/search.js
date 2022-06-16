@@ -805,18 +805,12 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 if (this.collection.maxSize === maxForTree) {
                     this.collection.maxSize = this.getConfig().get('recordsPerPage');
                 }
-                if (this.options.selectRecordsView.getSelectedViewType() === 'tree') {
-                    let textFilter = null;
-                    if (where) {
-                        where.forEach(item => {
-                            if (item.type && item.type === 'textFilter') {
-                                textFilter = item.value;
-                            }
-                        });
-                    }
-                    if (textFilter !== null) {
-                        this.collection.maxSize = maxForTree;
-                    }
+                if (this.options.selectRecordsView.getSelectedViewType() === 'tree' && where) {
+                    where.forEach(item => {
+                        if (item.type && item.type === 'textFilter') {
+                            this.collection.maxSize = maxForTree;
+                        }
+                    });
                 }
             }
 
