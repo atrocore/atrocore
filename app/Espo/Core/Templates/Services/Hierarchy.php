@@ -53,7 +53,6 @@ class Hierarchy extends Record
 {
     public function getTreeData(array $ids): array
     {
-        $total = 0;
         $tree = [];
 
         $treeBranches = [];
@@ -63,21 +62,20 @@ class Hierarchy extends Record
 
         if (!empty($treeBranches)) {
             foreach ($treeBranches as $entity) {
-                $this->prepareTreeNode($entity, $tree);
+                $this->prepareTreeNode($entity, $tree, $ids);
             }
-            $this->prepareTreeData($tree, $total);
+            $this->prepareTreeData($tree);
         }
 
-        return ['total' => $total, 'tree' => $tree];
+        return ['total' => count($ids), 'tree' => $tree];
     }
 
-    protected function prepareTreeData(array &$tree, &$total): void
+    protected function prepareTreeData(array &$tree): void
     {
         $tree = array_values($tree);
         foreach ($tree as &$v) {
-            $total++;
             if (!empty($v['children'])) {
-                $this->prepareTreeData($v['children'], $total);
+                $this->prepareTreeData($v['children']);
             }
         }
     }
@@ -95,15 +93,16 @@ class Hierarchy extends Record
         }
     }
 
-    protected function prepareTreeNode($entity, array &$tree): void
+    protected function prepareTreeNode($entity, array &$tree, array $ids): void
     {
         $tree[$entity->get('id')]['id'] = $entity->get('id');
         $tree[$entity->get('id')]['name'] = $entity->get('name');
+        $tree[$entity->get('id')]['disabled'] = !in_array($entity->get('id'), $ids);
         if (!empty($entity->child)) {
             if (empty($tree[$entity->get('id')]['children'])) {
                 $tree[$entity->get('id')]['children'] = [];
             }
-            $this->prepareTreeNode($entity->child, $tree[$entity->get('id')]['children']);
+            $this->prepareTreeNode($entity->child, $tree[$entity->get('id')]['children'], $ids);
         }
     }
 
