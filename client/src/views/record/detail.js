@@ -1096,16 +1096,25 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     translatedOptions: translatedOptions
                 }
             }, view => {
+                let all = options[0];
                 this.listenTo(model, `change:${filter.name}`, () => {
+                    let last = Espo.Utils.cloneDeep(model.get(filter.name)).pop();
                     let values = [];
-                    options.forEach(option => {
-                        if (model.get(filter.name).includes(option)) {
-                            values.push(option);
+                    if (last === all) {
+                        values = [all];
+                    } else {
+                        options.forEach(option => {
+                            if (model.get(filter.name).includes(option)) {
+                                values.push(option);
+                            }
+                        });
+                        if (values.length === 0) {
+                            values = [all];
                         }
-                    });
-
-                    if (values.length === 0) {
-                        values = [options[0]];
+                        // delete "all" if it needs
+                        if (values.includes(all) && values.length > 1) {
+                            values.shift();
+                        }
                     }
 
                     this.getStorage().set(filter.name, 'OverviewFilter', values);
@@ -1398,7 +1407,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     }
                 }
 
-                if (!fieldFilter.includes('allLanguages')) {
+                if (!languageFilter.includes('allLanguages')) {
                     // for languages
                     if (!hide && this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
                         let fieldLanguage = fieldView.model.getFieldParam(name, 'multilangLocale') || 'main';
