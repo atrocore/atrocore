@@ -14,6 +14,7 @@
       }
    ],
    "filter": true,
+   "multilingual": true,
    "fieldDefs":{
       "notNull": true
    }
