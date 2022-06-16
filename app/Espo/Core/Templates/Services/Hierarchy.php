@@ -51,6 +51,62 @@ use Treo\Core\Exceptions\NotModified;
 
 class Hierarchy extends Record
 {
+    public function getTreeData(array $ids): array
+    {
+        $total = 0;
+        $tree = [];
+
+        $treeBranches = [];
+        foreach ($this->getRepository()->where(['id' => $ids])->find() as $entity) {
+            $this->createTreeBranches($entity, $treeBranches);
+        }
+
+        if (!empty($treeBranches)) {
+            foreach ($treeBranches as $entity) {
+                $this->prepareTreeNode($entity, $tree);
+            }
+            $this->prepareTreeData($tree, $total);
+        }
+
+        return ['total' => $total, 'tree' => $tree];
+    }
+
+    protected function prepareTreeData(array &$tree, &$total): void
+    {
+        $tree = array_values($tree);
+        foreach ($tree as &$v) {
+            $total++;
+            if (!empty($v['children'])) {
+                $this->prepareTreeData($v['children'], $total);
+            }
+        }
+    }
+
+    protected function createTreeBranches(Entity $entity, array &$treeBranches): void
+    {
+        $parents = $entity->get('parents');
+        if ($parents === null || count($parents) == 0) {
+            $treeBranches[] = $entity;
+        } else {
+            foreach ($parents as $parent) {
+                $parent->child = $entity;
+                $this->createTreeBranches($parent, $treeBranches);
+            }
+        }
+    }
+
+    protected function prepareTreeNode($entity, array &$tree): void
+    {
+        $tree[$entity->get('id')]['id'] = $entity->get('id');
+        $tree[$entity->get('id')]['name'] = $entity->get('name');
+        if (!empty($entity->child)) {
+            if (empty($tree[$entity->get('id')]['children'])) {
+                $tree[$entity->get('id')]['children'] = [];
+            }
+            $this->prepareTreeNode($entity->child, $tree[$entity->get('id')]['children']);
+        }
+    }
+
     public function inheritAll(string $id, string $link): bool
     {
         $event = $this->dispatchEvent('beforeInheritAll', new Event(['id' => $id, 'link' => $link]));
@@ -233,13 +289,30 @@ class Hierarchy extends Record
         return $this->getRepository()->getRoute($id);
     }
 
-    public function getChildren(string $parentId): array
+    public function getChildren(string $parentId, array $params): array
     {
         $result = [];
-        foreach ($this->getRepository()->getChildrenArray($parentId) as $record) {
+
+        $records = $this->getRepository()->getChildrenArray($parentId);
+        if (empty($records)) {
+            return $result;
+        }
+
+        $selectParams = $this->getSelectParams($params);
+        $selectParams['select'] = ['id'];
+
+        $ids = [];
+        foreach ($this->getRepository()->find($selectParams) as $entity) {
+            if ($this->getAcl()->check($entity, 'read')) {
+                $ids[] = $entity->get('id');
+            }
+        }
+
+        foreach ($records as $record) {
             $result[] = [
                 'id'             => $record['id'],
                 'name'           => $record['name'],
+                'disabled'       => !in_array($record['id'], $ids),
                 'load_on_demand' => !empty($record['childrenCount'])
             ];
         }
@@ -520,7 +593,7 @@ class Hierarchy extends Record
                 $parentsRelatedIds = [];
                 foreach ($parents as $parent) {
                     $ids = $parent->getLinkMultipleIdList($link);
-                    if (!empty($ids)){
+                    if (!empty($ids)) {
                         $parentsRelatedIds = array_merge($parentsRelatedIds, $ids);
                     }
                 }
@@ -671,7 +744,7 @@ class Hierarchy extends Record
                     case 'asset':
                     case 'image':
                     case 'link':
-                        if ($this->areValuesEqual($this->getRepository()->get(), $field. 'Id', $parent->get($field . 'Id'), $entity->get($field . 'Id'))) {
+                        if ($this->areValuesEqual($this->getRepository()->get(), $field . 'Id', $parent->get($field . 'Id'), $entity->get($field . 'Id'))) {
                             $inheritedFields[] = $field;
                         }
                         break;

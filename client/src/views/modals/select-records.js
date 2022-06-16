@@ -32,7 +32,7 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], function (Dep, SearchManager) {
+Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'lib!JsTree'], function (Dep, SearchManager) {
 
     return Dep.extend({
 
@@ -54,23 +54,49 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
 
         className: 'dialog dialog-record',
 
+        boolFilterData: {},
+
+        disableSavePreset: false,
+
+        layoutName: "listSmall",
+
+        listLayout: null,
+
+        searchView: 'views/record/search',
+
+        selectedItems: [],
+
+        lastTextFilter: null,
+
         data: function () {
             return {
                 createButton: this.createButton,
-                createText: this.translate('Create ' + this.scope, 'labels', this.scope)
+                createText: this.translate('Create ' + this.scope, 'labels', this.scope),
+                hasTree: this.isHierarchical(),
+                hasTotalCount: this.getConfig().get('displayListViewRecordCount') && this.multiple,
+                totalCount: this.collection.total,
             };
         },
 
         events: {
             'click button[data-action="create"]': function () {
-        this.create();
+                this.create();
             },
             'click .list a': function (e) {
                 e.preventDefault();
-            }
+            },
+            'click .change-view': function (e) {
+                this.trigger('change-view', e);
+            },
         },
 
         setup: function () {
+            this.boolFilterData = this.options.boolFilterData || this.boolFilterData;
+            this.disableSavePreset = this.options.disableSavePreset || this.disableSavePreset;
+            this.layoutName = this.options.layoutName || this.layoutName;
+            this.listLayout = this.options.listLayout || this.listLayout;
+            this.rowActionsDisabled = this.options.rowActionsDisabled || this.rowActionsDisabled;
+
             this.filters = this.options.filters || {};
             this.boolFilterList = this.options.boolFilterList || [];
             this.primaryFilterName = this.options.primaryFilterName || null;
@@ -106,18 +132,25 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
                     label: 'Select',
                     disabled: true,
                     onClick: function (dialog) {
-                        var listView = this.getView('list');
-
-                        if (listView.allResultIsChecked) {
-                            var where = this.collection.where;
-                            this.trigger('select', {
-                                massRelate: true,
-                                where: where
+                        if (this.getSelectedViewType() === 'tree') {
+                            let ids = [];
+                            this.selectedItems.forEach(id => {
+                                ids.push({id: id});
                             });
+                            this.trigger('select', ids);
                         } else {
-                            var list = listView.getSelected();
-                            if (list.length) {
-                                this.trigger('select', list);
+                            let listView = this.getView('list');
+                            if (listView.allResultIsChecked) {
+                                var where = this.collection.where;
+                                this.trigger('select', {
+                                    massRelate: true,
+                                    where: where
+                                });
+                            } else {
+                                var list = listView.getSelected();
+                                if (list.length) {
+                                    this.trigger('select', list);
+                                }
                             }
                         }
                         dialog.close();
@@ -161,6 +194,30 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
                 this.loadList();
             }, this);
 
+            this.listenTo(this, 'change-view', e => {
+                let $current = $(e.currentTarget);
+
+                $('a.change-view').removeClass('btn-primary').addClass('btn-default');
+                $current.removeClass('btn-default').addClass('btn-primary');
+
+                this.getStorage().set('list-small-view-type', this.scope, $current.data('view'));
+
+                // refresh tree selections
+                this.selectedItems = [];
+                this.setupTree();
+
+                // refresh list selections
+                this.$el.find('.checkbox-all:checked').click();
+                this.$el.find('input.record-checkbox:checked').click();
+
+                this.disableButton('select');
+
+                this.toggleViewType();
+            });
+
+            this.listenTo(this.collection, 'sync', () => {
+                this.findInTree();
+            });
         },
 
         loadSearch: function () {
@@ -183,27 +240,60 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
                 searchManager.setPrimary(primaryFilterName);
             }
 
-            this.collection.where = searchManager.getWhere();
+            let where = searchManager.getWhere();
+            where.forEach(item => {
+                if (item.type === 'bool') {
+                    let data = {};
+                    item.value.forEach(elem => {
+                        if (elem in this.boolFilterData) {
+                            data[elem] = this.boolFilterData[elem];
+                        }
+                    });
+                    item.data = data;
+                }
+            });
+            this.collection.where = where;
+
+            this.collection.whereAdditional = this.options.whereAdditional || [];
 
             if (this.searchPanel) {
-                this.createView('search', 'views/record/search', {
+                let hiddenBoolFilterList = this.getMetadata().get(`clientDefs.${this.scope}.hiddenBoolFilterList`) || [];
+                let searchView = this.getMetadata().get(`clientDefs.${this.scope}.recordViews.search`) || this.searchView;
+
+                this.createView('search', searchView, {
                     collection: this.collection,
                     el: this.containerSelector + ' .search-container',
                     searchManager: searchManager,
-                    disableSavePreset: true,
+                    disableSavePreset: this.disableSavePreset,
+                    hiddenBoolFilterList: hiddenBoolFilterList,
+                    boolFilterData: this.boolFilterData,
+                    selectRecordsView: this,
                 }, function (view) {
+                    view.render();
                     this.listenTo(view, 'reset', function () {
                         this.collection.sortBy = this.defaultSortBy;
                         this.collection.asc = this.defaultAsc;
                     }, this);
+
+                    this.listenTo(this, 'change-view', e => {
+                        view.resetFilters();
+                    });
+
+                    this.listenTo(view, 'after:render', e => {
+                        view.toggleSearchFilters(this.getSelectedViewType());
+                    });
+
+                    this.listenTo(this, 'after:toggleViewType', viewType => {
+                        view.toggleSearchFilters(viewType);
+                    });
                 });
             }
         },
 
         loadList: function () {
-            var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.listSelect') ||
-                           this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') ||
-                           'views/record/list';
+            let viewName = this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.listSelect') ||
+                this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') ||
+                'views/record/list';
 
             this.createView('list', viewName, {
                 collection: this.collection,
@@ -212,13 +302,13 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
                 checkboxes: this.multiple,
                 massActionsDisabled: true,
                 rowActionsView: false,
-                layoutName: 'listSmall',
+                layoutName: this.layoutName,
                 searchManager: this.searchManager,
                 checkAllResultDisabled: !this.massRelateEnabled,
                 buttonsDisabled: true,
                 skipBuildRows: true
             }, function (view) {
-                this.listenToOnce(view, 'select', function (model) {
+                this.listenTo(view, 'select', function (model) {
                     this.trigger('select', model);
                     this.close();
                 }.bind(this));
@@ -264,6 +354,193 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
                     }.bind(this));
                 }
             });
+        },
+
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            if (this.isHierarchical()) {
+                let treeButtonClass = 'btn-primary';
+                let tableButtonClass = 'btn-default';
+
+                if (this.getSelectedViewType() === 'list') {
+                    treeButtonClass = 'btn-default';
+                    tableButtonClass = 'btn-primary';
+                }
+
+                let html = '<div class="btn-group main-btn-group pull-right">';
+                html += '<div class="page-header" style="margin-top: 0">';
+                html += '<div class="header-buttons"><div class="header-items">';
+                html += `<a href="javascript:" class="btn action ${treeButtonClass} change-view action" data-view="tree"><span class="fa fa-stream"></span></a>`
+                html += `<a href="javascript:" class="btn action ${tableButtonClass} change-view action" data-view="list"><span class="fa fa-th-list"></span></a>`;
+                html += '</div></div></div>';
+                this.$el.find('.modal-footer').append(html);
+
+                this.setupTree();
+                this.toggleViewType();
+            }
+        },
+
+        isHierarchical() {
+            return this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy';
+        },
+
+        getSelectedViewType() {
+            if (!this.isHierarchical()) {
+                return 'list';
+            }
+            return this.getStorage().get('list-small-view-type', this.scope) || 'tree';
+        },
+
+        findInTree() {
+            if (this.getSelectedViewType() !== 'tree') {
+                return;
+            }
+
+            let textFilter = null;
+            if (this.collection.where) {
+                this.collection.where.forEach(item => {
+                    if (item.type && item.type === 'textFilter') {
+                        textFilter = item.value;
+                    }
+                });
+            }
+
+            if (textFilter === this.lastTextFilter) {
+                return;
+            }
+
+            this.lastTextFilter = textFilter;
+
+            let $shown = this.$el.find('.for-tree-view .shown-count-span');
+            let $total = this.$el.find('.for-tree-view .total-count-span');
+
+            $shown.parent().show();
+
+            if (textFilter === null) {
+                $shown.html(this.collection.total);
+                $total.html(this.collection.total);
+                this.setupTree();
+                return;
+            }
+
+            if (this.collection.total === 0) {
+                $shown.parent().hide();
+                this.setupTree([]);
+                return;
+            }
+
+            let ids = [];
+            this.collection.models.forEach(model => {
+                ids.push(model.get('id'));
+            });
+
+            this.ajaxGetRequest(`${this.scope}/action/TreeData`, {ids: ids}).then(response => {
+                $shown.html(response.total);
+                $total.html(response.total);
+                this.setupTree(response.tree);
+            });
+        },
+
+        setupTree(data) {
+            if (this.getSelectedViewType() !== 'tree') {
+                return;
+            }
+
+            const $tree = this.$el.find('.records-tree');
+            let treeData = {
+                selectable: true,
+                dragAndDrop: false,
+                useContextMenu: false,
+                closedIcon: $('<i class="fa fa-angle-right"></i>'),
+                openedIcon: $('<i class="fa fa-angle-down"></i>'),
+                onCreateLi: function (node, $li, isSelected) {
+                    if (node.disabled) {
+                        $li.addClass('disabled');
+                    } else {
+                        $li.removeClass('disabled');
+                    }
+
+                    let search = $('.search-container .text-filter').val();
+                    if (search.length > 0) {
+                        search = search.replace(/\*/g, '');
+                        if (search.length > 0) {
+                            let $title = $li.find('.jqtree-title');
+                            let name = $title.html();
+                            let matches = name.match(new RegExp(search, 'ig'));
+                            if (matches) {
+                                let processed = [];
+                                matches.forEach(v => {
+                                    if (!processed.includes(v)) {
+                                        processed.push(v);
+                                        $title.html(name.replace(new RegExp(v, 'g'), `<b>${v}</b>`));
+                                    }
+                                });
+                            }
+                        }
+                    }
+                }
+            };
+            if (data) {
+                treeData['data'] = data;
+                treeData['autoOpen'] = true;
+            } else {
+                let queryParameters = {
+                    sortBy: this.collection.sortBy,
+                    asc: this.collection.asc,
+                    where: this.collection.getWhere(),
+                };
+                treeData['dataUrl'] = this.scope + '/action/Tree?' + $.param(queryParameters);
+            }
+
+            $tree.tree('destroy');
+            $tree.tree(treeData).on('tree.click', e => {
+                if (e.node.disabled) {
+                    e.preventDefault();
+                    return false;
+                }
+
+                if (this.multiple) {
+                    e.preventDefault();
+                    let selected_node = e.node;
+                    if ($tree.tree('isNodeSelected', selected_node)) {
+                        $tree.tree('removeFromSelection', selected_node);
+                    } else {
+                        $tree.tree('addToSelection', selected_node);
+                    }
+                    this.selectedItems = [];
+                    ($tree.tree('getSelectedNodes') || []).forEach(node => {
+                        this.selectedItems.push(node.id);
+                    });
+
+                    if (this.selectedItems.length) {
+                        this.enableButton('select');
+                    } else {
+                        this.disableButton('select');
+                    }
+                } else {
+                    this.getModelFactory().create(this.scope, model => {
+                        model.set('id', e.node.id);
+                        model.set('name', e.node.name);
+                        this.trigger('select', model);
+                        this.close();
+                    });
+                }
+            });
+        },
+
+        toggleViewType() {
+            let viewType = this.getSelectedViewType();
+
+            if (viewType === 'tree') {
+                this.$el.find('.for-table-view').hide();
+                this.$el.find('.for-tree-view').show();
+            } else {
+                this.$el.find('.for-table-view').show();
+                this.$el.find('.for-tree-view').hide();
+            }
+
+            this.trigger('after:toggleViewType', viewType);
         },
 
         create: function () {

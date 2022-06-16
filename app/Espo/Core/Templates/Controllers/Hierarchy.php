@@ -53,7 +53,27 @@ class Hierarchy extends Record
             throw new Forbidden();
         }
 
-        return $this->getRecordService()->getChildren((string)$request->get('node'));
+        $params = [
+            'where'       => $this->prepareWhereQuery($request->get('where')),
+            'asc'         => $request->get('asc', 'true') === 'true',
+            'sortBy'      => $request->get('sortBy'),
+            'isTreePanel' => !empty($request->get('isTreePanel'))
+        ];
+
+        return $this->getRecordService()->getChildren((string)$request->get('node'), $params);
+    }
+
+    public function actionTreeData($params, $data, $request): array
+    {
+        if (!$request->isGet()) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($this->name, 'read')) {
+            throw new Forbidden();
+        }
+
+        return $this->getRecordService()->getTreeData((array)$request->get('ids'));
     }
 
     public function actionRoute($params, $data, $request): array

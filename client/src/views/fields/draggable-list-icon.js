@@ -32,10 +32,10 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('treo-core:views/fields/draggable-list-icon', 'view',
+Espo.define('views/fields/draggable-list-icon', 'view',
     Dep => Dep.extend({
 
-        template: 'treo-core:fields/draggable-list-icon/base',
+        template: 'fields/draggable-list-icon/base',
 
         afterRender() {
             Dep.prototype.afterRender.call(this);
