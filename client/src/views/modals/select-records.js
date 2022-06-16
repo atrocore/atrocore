@@ -523,6 +523,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                         model.set('id', e.node.id);
                         model.set('name', e.node.name);
                         this.trigger('select', model);
+                        this.close();
                     });
                 }
             });
