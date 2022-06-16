@@ -194,30 +194,30 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                 this.loadList();
             }, this);
 
-            this.listenTo(this, 'change-view', e => {
-                let $current = $(e.currentTarget);
-
-                $('a.change-view').removeClass('btn-primary').addClass('btn-default');
-                $current.removeClass('btn-default').addClass('btn-primary');
-
-                this.getStorage().set('list-small-view-type', this.scope, $current.data('view'));
-
-                // refresh tree selections
-                this.selectedItems = [];
-                this.setupTree();
-
-                // refresh list selections
-                this.$el.find('.checkbox-all:checked').click();
-                this.$el.find('input.record-checkbox:checked').click();
-
-                this.disableButton('select');
-
-                this.toggleViewType();
-            });
-
             this.listenTo(this.collection, 'sync', () => {
                 this.findInTree();
             });
+        },
+
+        changeView(e) {
+            let $current = $(e.currentTarget);
+
+            $('a.change-view').removeClass('btn-primary').addClass('btn-default');
+            $current.removeClass('btn-default').addClass('btn-primary');
+
+            this.getStorage().set('list-small-view-type', this.scope, $current.data('view'));
+
+            // refresh tree selections
+            this.selectedItems = [];
+            this.setupTree();
+
+            // refresh list selections
+            this.$el.find('.checkbox-all:checked').click();
+            this.$el.find('input.record-checkbox:checked').click();
+
+            this.disableButton('select');
+
+            this.toggleViewType();
         },
 
         loadSearch: function () {
@@ -277,6 +277,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
 
                     this.listenTo(this, 'change-view', e => {
                         view.resetFilters();
+                        this.changeView(e);
                     });
 
                     this.listenTo(view, 'after:render', e => {
