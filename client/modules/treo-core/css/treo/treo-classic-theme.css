@@ -19459,10 +19459,9 @@ ul.dropdown-menu > li.checkbox {
 }
 .search-row .text-filter + .input-group-btn .search .fas {
     font-size: 14px;
-    margin-right: 2px;
 }
-.search-row .text-filter + .input-group-btn .reset .fas {
-    font-size: 13px;
+.search-row .text-filter + .input-group-btn .reset {
+    padding-right: 4px;
 }
 
 .search-row .text-filter + .input-group-btn .search::after:first-letter {
@@ -21208,6 +21207,14 @@ ul.jqtree-tree li.jqtree-folder {
 
 ul.jqtree-tree li.jqtree-folder.jqtree-closed {
     margin-bottom: 1px;
+}
+
+ul.jqtree-tree .jqtree_common.disabled > div > span {
+    color: #bbb;
+}
+
+ul.jqtree-tree .jqtree_common.disabled > div > span:hover {
+    cursor: not-allowed;
 }
 
 ul.jqtree-tree li.jqtree-ghost {

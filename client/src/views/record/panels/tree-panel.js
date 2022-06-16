@@ -85,17 +85,6 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                 this.actionCollapsePanel();
             }
 
-            if (this.getMetadata().get(`scopes.${this.treeScope}.multiParents`) !== true) {
-                let interval = setInterval(() => {
-                    if ($('.catalog-tree-panel').length === 0) {
-                        clearInterval(interval);
-                        return;
-                    }
-                    const title = this.translate("useDragAndDrop");
-                    $('.jqtree-title:not([title="' + title + '"])').attr('title', title);
-                }, 100);
-            }
-
             this.treePanelResize();
 
             $(window).on('resize load', () => {
@@ -215,15 +204,19 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
 
             $tree.tree('destroy');
             $tree.tree({
-                dataUrl: this.treeScope + '/action/Tree',
+                dataUrl: this.treeScope + '/action/Tree?isTreePanel=1',
                 selectable: true,
                 dragAndDrop: this.getMetadata().get(`scopes.${this.treeScope}.multiParents`) !== true,
                 useContextMenu: false,
                 closedIcon: $('<i class="fa fa-angle-right"></i>'),
                 openedIcon: $('<i class="fa fa-angle-down"></i>'),
                 onCreateLi: function (node, $li, is_selected) {
-                    $li.find('.jqtree-title').attr('data-id', node.id);
-                }
+                    const $title = $li.find('.jqtree-title');
+                    $title.attr('data-id', node.id);
+                    if (this.getMetadata().get(`scopes.${this.treeScope}.multiParents`) !== true) {
+                        $title.attr('title', this.translate("useDragAndDrop"));
+                    }
+                }.bind(this)
             }).on('tree.init', () => {
                     this.trigger('tree-init');
                 }

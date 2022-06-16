@@ -20220,6 +20220,14 @@ ul.jqtree-tree li.jqtree-folder.jqtree-closed {
   margin-bottom: 1px;
 }
 
+ul.jqtree-tree .jqtree_common.disabled > div > span {
+  color: #bbb;
+}
+
+ul.jqtree-tree .jqtree_common.disabled > div > span:hover {
+  cursor: not-allowed;
+}
+
 ul.jqtree-tree li.jqtree-ghost {
   position: relative;
   z-index: 10;
@@ -22278,6 +22286,10 @@ ul.dropdown-menu > li.checkbox {
 
 .search-container .input-group > .input-group-btn:last-child > .btn:last-child {
   padding-right: 0;
+}
+
+.search-container .input-group > .input-group-btn .reset {
+  padding-right: 4px;
 }
 
 .modal-header {

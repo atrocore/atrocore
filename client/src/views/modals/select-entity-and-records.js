@@ -32,10 +32,10 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('treo-core:views/modals/select-entity-and-records', 'views/modals/select-records',
+Espo.define('views/modals/select-entity-and-records', 'views/modals/select-records',
     Dep => Dep.extend({
 
-        template: 'treo-core:modals/select-entity-and-records',
+        template: 'modals/select-entity-and-records',
 
         selectBoolFilterList: [],
 
