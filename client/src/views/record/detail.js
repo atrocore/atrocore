@@ -1039,14 +1039,14 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             let result = [
                 {
                     name: "fieldFilter",
-                    options: ["filled", "empty"]
+                    options: ["allValues", "filled", "empty"]
                 }
             ];
 
             if (this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
                 result.push({
                     name: "languageFilter",
-                    options: ['main'].concat(this.getConfig().get('inputLanguageList'))
+                    options: ['allLanguages', 'main'].concat(this.getConfig().get('inputLanguageList'))
                 });
             }
 
@@ -1062,20 +1062,28 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         createOverviewFilter(filter, model) {
-            let selected = [];
-            (this.getStorage().get(filter.name, 'OverviewFilter') || filter.options).forEach(option => {
-                if (filter.options.includes(option)){
-                    selected.push(option);
-                }
-            });
+            let options = filter.options;
+            let translatedOptions = {};
+            if (filter.translatedOptions) {
+                translatedOptions = filter.translatedOptions;
+            } else {
+                options.forEach(option => {
+                    translatedOptions[option] = this.getLanguage().translateOption(option, filter.name, 'Global');
+                });
+            }
+
+            let selected = [options[0]];
+            if (this.getStorage().get(filter.name, 'OverviewFilter')) {
+                selected = [];
+                this.getStorage().get(filter.name, 'OverviewFilter').forEach(option => {
+                    if (options.includes(option)) {
+                        selected.push(option);
+                    }
+                });
+            }
 
             this.getStorage().set(filter.name, 'OverviewFilter', selected);
             model.set(filter.name, selected);
-
-            let translatedOptions = {};
-            filter.options.forEach(option => {
-                translatedOptions[option] = this.getLanguage().translateOption(option, filter.name, 'Global');
-            });
 
             this.createView(filter.name, 'views/fields/multi-enum', {
                 el: `${this.options.el} .field[data-name="${filter.name}"]`,
@@ -1084,20 +1092,20 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 model: model,
                 dragDrop: false,
                 params: {
-                    options: filter.options,
+                    options: options,
                     translatedOptions: translatedOptions
                 }
             }, view => {
                 this.listenTo(model, `change:${filter.name}`, () => {
                     let values = [];
-                    filter.options.forEach(option => {
+                    options.forEach(option => {
                         if (model.get(filter.name).includes(option)) {
                             values.push(option);
                         }
                     });
 
                     if (values.length === 0) {
-                        values = [filter.options[0]];
+                        values = [options[0]];
                     }
 
                     this.getStorage().set(filter.name, 'OverviewFilter', values);
@@ -1378,21 +1386,25 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                 let hide = false;
 
-                // hide filled
-                if (!hide && !fieldFilter.includes('filled')) {
-                    hide = !fieldValues.every(value => this.isEmptyValue(value));
+                if (!fieldFilter.includes('allValues')) {
+                    // hide filled
+                    if (!hide && !fieldFilter.includes('filled')) {
+                        hide = !fieldValues.every(value => this.isEmptyValue(value));
+                    }
+
+                    // hide empty
+                    if (!hide && !fieldFilter.includes('empty')) {
+                        hide = fieldValues.every(value => this.isEmptyValue(value));
+                    }
                 }
 
-                // hide empty
-                if (!hide && !fieldFilter.includes('empty')) {
-                    hide = fieldValues.every(value => this.isEmptyValue(value));
-                }
-
-                // for languages
-                if (!hide && this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
-                    let fieldLanguage = fieldView.model.getFieldParam(name, 'multilangLocale') || 'main';
-                    if (!languageFilter.includes(fieldLanguage)) {
-                        hide = true;
+                if (!fieldFilter.includes('allLanguages')) {
+                    // for languages
+                    if (!hide && this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
+                        let fieldLanguage = fieldView.model.getFieldParam(name, 'multilangLocale') || 'main';
+                        if (!languageFilter.includes(fieldLanguage)) {
+                            hide = true;
+                        }
                     }
                 }
 

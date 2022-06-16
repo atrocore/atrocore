@@ -602,10 +602,12 @@
       "Dr.": "Д-р."
     },
     "fieldFilter": {
+      "allValues": "Все значения",
       "filled": "Заполненые значения",
       "empty": "Пустые значения"
     },
     "languageFilter": {
+      "allLanguages": "Все языки",
       "main": "Ocн. язык"
     },
     "language": {

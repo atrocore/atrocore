@@ -717,10 +717,12 @@
       "noneOf": "Keiner von"
     },
     "fieldFilter": {
+      "allValues": "Alle Werte",
       "filled": "Ausgefüllte Werte",
       "empty": "Leere Werte"
     },
     "languageFilter": {
+      "allLanguages": "Alle Sprachen",
       "main": "Hauptsprache"
     },
     "varcharSearchRanges": {
