@@ -132,7 +132,8 @@ Espo.define('views/modal', 'view', function (Dep) {
                             o.text = this.translate(o.name, 'modalActions', this.scope);
                         }
                     }
-                    o.onClick = o.onClick || (this['action' + Espo.Utils.upperCaseFirst(o.name)] || function () {}).bind(this);
+                    o.onClick = o.onClick || (this['action' + Espo.Utils.upperCaseFirst(o.name)] || function () {
+                    }).bind(this);
 
                     buttonListExt.push(o);
                 }, this);
@@ -204,7 +205,7 @@ Espo.define('views/modal', 'view', function (Dep) {
                 d.disabled = true;
             }, this);
             if (!this.isRendered()) return;
-            this.$el.find('footer button[data-name="'+name+'"]').addClass('disabled').attr('disabled', 'disabled');
+            this.$el.find('footer button[data-name="' + name + '"]').addClass('disabled').attr('disabled', 'disabled');
         },
 
         enableButton: function (name) {
@@ -213,7 +214,7 @@ Espo.define('views/modal', 'view', function (Dep) {
                 d.disabled = false;
             }, this);
             if (!this.isRendered()) return;
-            this.$el.find('footer button[data-name="'+name+'"]').removeClass('disabled').removeAttr('disabled');
+            this.$el.find('footer button[data-name="' + name + '"]').removeClass('disabled').removeAttr('disabled');
         },
 
         applyOverviewFilters: function () {
@@ -235,21 +236,25 @@ Espo.define('views/modal', 'view', function (Dep) {
 
                 let hide = false;
 
-                // hide filled
-                if (!hide && !fieldFilter.includes('filled')) {
-                    hide = !fieldValues.every(value => this.isEmptyValue(value));
+                if (!fieldFilter.includes('allValues')) {
+                    // hide filled
+                    if (!hide && !fieldFilter.includes('filled')) {
+                        hide = !fieldValues.every(value => this.isEmptyValue(value));
+                    }
+
+                    // hide empty
+                    if (!hide && !fieldFilter.includes('empty')) {
+                        hide = fieldValues.every(value => this.isEmptyValue(value));
+                    }
                 }
 
-                // hide empty
-                if (!hide && !fieldFilter.includes('empty')) {
-                    hide = fieldValues.every(value => this.isEmptyValue(value));
-                }
-
-                // for languages
-                if (!hide && this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
-                    let fieldLanguage = fieldView.model.getFieldParam(name, 'multilangLocale') || 'main';
-                    if (!languageFilter.includes(fieldLanguage)) {
-                        hide = true;
+                if (!languageFilter.includes('allLanguages')) {
+                    // for languages
+                    if (!hide && this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
+                        let fieldLanguage = fieldView.model.getFieldParam(name, 'multilangLocale') || 'main';
+                        if (!languageFilter.includes(fieldLanguage)) {
+                            hide = true;
+                        }
                     }
                 }
 
@@ -341,7 +346,7 @@ Espo.define('views/modal', 'view', function (Dep) {
                 d.hidden = false;
             }, this);
             if (!this.isRendered()) return;
-            this.$el.find('footer button[data-name="'+name+'"]').removeClass('hidden');
+            this.$el.find('footer button[data-name="' + name + '"]').removeClass('hidden');
         },
 
         hideButton: function (name) {
@@ -350,7 +355,7 @@ Espo.define('views/modal', 'view', function (Dep) {
                 d.hidden = true;
             }, this);
             if (!this.isRendered()) return;
-            this.$el.find('footer button[data-name="'+name+'"]').addClass('hidden');
+            this.$el.find('footer button[data-name="' + name + '"]').addClass('hidden');
         },
     });
 });
