@@ -235,21 +235,25 @@ Espo.define('views/modal', 'view', function (Dep) {
 
                 let hide = false;
 
-                // hide filled
-                if (!hide && !fieldFilter.includes('filled')) {
-                    hide = !fieldValues.every(value => this.isEmptyValue(value));
+                if (!fieldFilter.includes('allValues')) {
+                    // hide filled
+                    if (!hide && !fieldFilter.includes('filled')) {
+                        hide = !fieldValues.every(value => this.isEmptyValue(value));
+                    }
+
+                    // hide empty
+                    if (!hide && !fieldFilter.includes('empty')) {
+                        hide = fieldValues.every(value => this.isEmptyValue(value));
+                    }
                 }
 
-                // hide empty
-                if (!hide && !fieldFilter.includes('empty')) {
-                    hide = fieldValues.every(value => this.isEmptyValue(value));
-                }
-
-                // for languages
-                if (!hide && this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
-                    let fieldLanguage = fieldView.model.getFieldParam(name, 'multilangLocale') || 'main';
-                    if (!languageFilter.includes(fieldLanguage)) {
-                        hide = true;
+                if (!languageFilter.includes('allLanguages')) {
+                    // for languages
+                    if (!hide && this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
+                        let fieldLanguage = fieldView.model.getFieldParam(name, 'multilangLocale') || 'main';
+                        if (!languageFilter.includes(fieldLanguage)) {
+                            hide = true;
+                        }
                     }
                 }
 
