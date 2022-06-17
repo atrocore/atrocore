@@ -132,8 +132,7 @@ Espo.define('views/modal', 'view', function (Dep) {
                             o.text = this.translate(o.name, 'modalActions', this.scope);
                         }
                     }
-                    o.onClick = o.onClick || (this['action' + Espo.Utils.upperCaseFirst(o.name)] || function () {
-                    }).bind(this);
+                    o.onClick = o.onClick || (this['action' + Espo.Utils.upperCaseFirst(o.name)] || function () {}).bind(this);
 
                     buttonListExt.push(o);
                 }, this);
@@ -205,7 +204,7 @@ Espo.define('views/modal', 'view', function (Dep) {
                 d.disabled = true;
             }, this);
             if (!this.isRendered()) return;
-            this.$el.find('footer button[data-name="' + name + '"]').addClass('disabled').attr('disabled', 'disabled');
+            this.$el.find('footer button[data-name="'+name+'"]').addClass('disabled').attr('disabled', 'disabled');
         },
 
         enableButton: function (name) {
@@ -214,7 +213,7 @@ Espo.define('views/modal', 'view', function (Dep) {
                 d.disabled = false;
             }, this);
             if (!this.isRendered()) return;
-            this.$el.find('footer button[data-name="' + name + '"]').removeClass('disabled').removeAttr('disabled');
+            this.$el.find('footer button[data-name="'+name+'"]').removeClass('disabled').removeAttr('disabled');
         },
 
         applyOverviewFilters: function () {
@@ -346,7 +345,7 @@ Espo.define('views/modal', 'view', function (Dep) {
                 d.hidden = false;
             }, this);
             if (!this.isRendered()) return;
-            this.$el.find('footer button[data-name="' + name + '"]').removeClass('hidden');
+            this.$el.find('footer button[data-name="'+name+'"]').removeClass('hidden');
         },
 
         hideButton: function (name) {
@@ -355,7 +354,7 @@ Espo.define('views/modal', 'view', function (Dep) {
                 d.hidden = true;
             }, this);
             if (!this.isRendered()) return;
-            this.$el.find('footer button[data-name="' + name + '"]').addClass('hidden');
+            this.$el.find('footer button[data-name="'+name+'"]').addClass('hidden');
         },
     });
 });
