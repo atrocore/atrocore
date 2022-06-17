@@ -210,7 +210,7 @@ class Metadata extends AbstractListener
 
         foreach ($data['fields'] as $field => $v) {
             $params = $defaultParams;
-            if (in_array($field, ['bool', 'enum', 'multiEnum', 'text', 'varchar', 'wysiwyg', 'asset'])) {
+            if (!empty($v['multilingual'])) {
                 $params[] = ['name' => 'isMultilang', 'type' => 'bool', 'tooltip' => true];
             }
 
@@ -235,8 +235,9 @@ class Metadata extends AbstractListener
                 if (empty($params['type'])) {
                     continue 1;
                 }
+
                 $newFields[$field] = $params;
-                if (!empty($params['isMultilang'])) {
+                if (!empty($data['fields'][$params['type']]['multilingual']) && !empty($params['isMultilang'])) {
                     foreach ($locales as $locale) {
                         // prepare locale
                         $preparedLocale = ucfirst(Util::toCamelCase(strtolower($locale)));

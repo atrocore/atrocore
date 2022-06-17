@@ -7634,6 +7634,7 @@ button.close {
 }
 
 .selectize-dropdown, .selectize-dropdown.form-control {
+  min-width: 160px;
   height: auto;
   padding: 0;
   margin: 2px 0 0 0;

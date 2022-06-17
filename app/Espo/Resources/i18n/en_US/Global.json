@@ -602,10 +602,12 @@
       "Dr.": "Dr."
     },
     "fieldFilter": {
+      "allValues": "All Values",
       "filled": "Filled values",
       "empty": "Empty values"
     },
     "languageFilter": {
+      "allLanguages": "All Languages",
       "main": "Main language"
     },
     "language": {

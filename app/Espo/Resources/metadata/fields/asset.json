@@ -38,6 +38,7 @@
     "name"
   ],
   "filter": true,
+  "multilingual": true,
   "linkDefs": {
     "type": "belongsTo",
     "entity": "Attachment",
