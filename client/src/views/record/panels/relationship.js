@@ -250,6 +250,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                         skipBuildRows: true,
                         dragableListRows: this.dragableListRows,
                         listRowsOrderSaveUrl: this.listRowsOrderSaveUrl,
+                        panelView: this,
                     }, function (view) {
                         view.getSelectAttributeList(function (selectAttributeList) {
                             if (selectAttributeList) {
