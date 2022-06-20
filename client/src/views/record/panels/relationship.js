@@ -151,13 +151,15 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 });
             }
 
-            this.actionList.push({
-                label: 'unlinkAll',
-                action: 'unlinkAllRelated',
-                data: data,
-                acl: 'edit',
-                aclScope: this.model.name
-            });
+            if (this.defs.select) {
+                this.actionList.push({
+                    label: 'unlinkAll',
+                    action: 'unlinkAllRelated',
+                    data: data,
+                    acl: 'edit',
+                    aclScope: this.model.name
+                });
+            }
 
             if (isInheritingRelation) {
                 this.actionList.push({

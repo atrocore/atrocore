@@ -65,6 +65,7 @@ class Layout extends \Espo\Core\Controllers\Base
             throw new BadRequest();
         }
 
+        /** @var \Espo\Core\Utils\Layout $layoutManager */
         $layoutManager = $this->getContainer()->get('layout');
         $layoutManager->set($data, $params['scope'], $params['name']);
         $result = $layoutManager->save();
