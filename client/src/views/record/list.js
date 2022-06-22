@@ -36,17 +36,17 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
     return Dep.extend({
 
-        template: 'record/list', /**
+        template: 'record/list',/**
          * @param {String} Type of the list. Can be 'list', 'listSmall'.
          */
         type: 'list',
 
         name: 'list',
 
-        presentationType: 'table', /**
+        presentationType: 'table',/**
          * @param {Bool} If true checkboxes will be shown.
          */
-        checkboxes: true, /**
+        checkboxes: true,/**
          * @param {Bool} If true clicking on the record link will trigger 'select' event with model passed.
          */
         selectable: false,
@@ -285,10 +285,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             this.trigger('check');
-        }, /**
+        },/**
          * @param {string} or {bool} ['both', 'top', 'bottom', false, true] Where to display paginations.
          */
-        pagination: false, /**
+        pagination: false,/**
          * @param {bool} To dispaly table header with column names.
          */
         header: true,
@@ -301,7 +301,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         quickDetailDisabled: false,
 
-        quickEditDisabled: false, /**
+        quickEditDisabled: false,/**
          * @param {array} Columns layout. Will be convered in 'Bull' typed layout for a fields rendering.
          *
          */
@@ -407,9 +407,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.$el.find('input.record-checkbox').prop('checked', true).attr('disabled', 'disabled');
             this.$el.find('input.select-all').prop('checked', true);
 
-            this.massActionList.forEach(function (item) {
+            this.massActionList.forEach(function(item) {
                 if (!~this.checkAllResultMassActionList.indexOf(item)) {
-                    this.$el.find('div.list-buttons-container .actions li a.mass-action[data-action="' + item + '"]').parent().addClass('hidden');
+                    this.$el.find('div.list-buttons-container .actions li a.mass-action[data-action="'+item+'"]').parent().addClass('hidden');
                 }
             }, this);
 
@@ -429,9 +429,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.$el.find('input.select-all').prop('checked', false);
 
 
-            this.massActionList.forEach(function (item) {
+            this.massActionList.forEach(function(item) {
                 if (!~this.checkAllResultMassActionList.indexOf(item)) {
-                    this.$el.find('div.list-buttons-container .actions li a.mass-action[data-action="' + item + '"]').parent().removeClass('hidden');
+                    this.$el.find('div.list-buttons-container .actions li a.mass-action[data-action="'+item+'"]').parent().removeClass('hidden');
                 }
             }, this);
         },
@@ -1500,8 +1500,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     }
                 }
                 defs.push(item);
-            }
-            ;
+            };
             if (this.rowActionsView && !this.rowActionsDisabled) {
                 defs.push({
                     width: this.rowActionsColumnWidth
@@ -1634,11 +1633,12 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 view: this.rowActionsView,
                 options: {
                     defs: {
-                        params: {}
+                        params: {
+                        }
                     }
                 }
             };
-        }, /**
+        },/**
          * Returns checked models.
          * @return {Array} Array of models
          */
@@ -1708,7 +1708,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 internalLayout = Espo.Utils.cloneDeep(internalLayout);
                 this.prepareInternalLayout(internalLayout, model);
 
-                var acl = {
+                var acl =  {
                     edit: this.getAcl().checkModel(model, 'edit'),
                     delete: this.getAcl().checkModel(model, 'delete')
                 };
@@ -1716,7 +1716,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.createView(key, 'views/base', {
                     model: model,
                     acl: acl,
-                    el: this.options.el + ' .list-row[data-id="' + key + '"]',
+                    el: this.options.el + ' .list-row[data-id="'+key+'"]',
                     optionsToPass: ['acl'],
                     noCache: true,
                     _layout: {
@@ -1778,7 +1778,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
         showMoreRecords: function (collection, $list, $showMore, callback) {
             collection = collection || this.collection;
 
-            $showMore = $showMore || this.$el.find('.show-more');
+            $showMore =  $showMore || this.$el.find('.show-more');
             $list = $list || this.$el.find(this.listContainerEl);
 
             $showMore.children('a').addClass('disabled');
@@ -1853,7 +1853,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         getRowContainerHtml: function (id) {
-            return '<tr data-id="' + id + '" class="list-row"></tr>';
+            return '<tr data-id="'+id+'" class="list-row"></tr>';
         },
 
         actionQuickView: function (data) {
