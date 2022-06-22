@@ -1382,8 +1382,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 return;
             }
 
-            const fieldFilter = this.getStorage().get('fieldFilter', 'OverviewFilter');
-            const languageFilter = this.getStorage().get('languageFilter', 'OverviewFilter');
+            const fieldFilter = this.getStorage().get('fieldFilter', 'OverviewFilter') || ['allValues'];
+            const languageFilter = this.getStorage().get('languageFilter', 'OverviewFilter') || ['allLanguages'];
 
             $.each(this.getFieldViews(), (name, fieldView) => {
                 if (fieldView.model.getFieldParam(name, 'advancedFilterDisabled') === true) {
