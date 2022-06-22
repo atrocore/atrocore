@@ -5,6 +5,7 @@
     "stream": "Warteschlange",
     "isWriting": "Ist Update Job?",
     "data": "Daten",
+    "pid": "Pid",
     "sortOrder": "Sortierreihenfolge",
     "status": "Status",
     "message": "Nachricht",

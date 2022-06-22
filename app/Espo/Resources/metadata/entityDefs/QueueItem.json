@@ -35,6 +35,10 @@
         "High"
       ]
     },
+    "pid": {
+      "type": "varchar",
+      "readOnly": true
+    },
     "status": {
       "type": "enum",
       "readOnly": true,
