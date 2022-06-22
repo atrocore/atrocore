@@ -1372,13 +1372,15 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 });
             }
 
-            let entityType = window.location.hash.split('/').shift().replace('#', '');
+            let hashParts = window.location.hash.split('/');
+            let entityType = hashParts.shift().replace('#', '');
+            let entityId = hashParts.pop();
             let filteredListLayout = [];
 
             listLayout.forEach(item => {
                 let relatingEntityField = this.getMetadata().get(['entityDefs', this.entityType, 'fields', item.name, 'relatingEntityField']);
                 if (relatingEntityField && entityType) {
-                    if (relatingEntityField.includes(entityType)) {
+                    if (relatingEntityField.includes(entityType) && entityId) {
                         filteredListLayout.push(item);
                     }
                 } else {
