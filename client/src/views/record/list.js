@@ -1383,6 +1383,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     if (relatingEntityField.includes(entityType) && entityId) {
                         filteredListLayout.push(item);
                     }
+                } else if (this.getMetadata().get(`entityDefs.${this.entityType}.links.${item.name}.type`) === 'belongsTo') {
+                    if (this.getMetadata().get(`entityDefs.${this.entityType}.links.${item.name}.entity`) !== entityType) {
+                        filteredListLayout.push(item);
+                    }
                 } else {
                     filteredListLayout.push(item);
                 }
