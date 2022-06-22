@@ -38,6 +38,7 @@ declare(strict_types=1);
 namespace Espo\Core;
 
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Utils\System;
 use Espo\Entities\User;
 use Espo\ORM\Entity;
 use Espo\Orm\EntityManager;
@@ -214,6 +215,10 @@ class QueueManager extends Injectable
     protected function setStatus(Entity $item, string $status, string $message = null): void
     {
         $item->set('status', $status);
+        if ($status === 'Running') {
+            $item->set('pid', System::getPid());
+        }
+
         if ($message !== null) {
             $item->set('message', $message);
         }
