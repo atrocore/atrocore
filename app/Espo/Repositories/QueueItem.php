@@ -101,6 +101,10 @@ class QueueItem extends Base
         if (!in_array($entity->get('status'), ['Pending', 'Running'])) {
             $this->notify($entity);
         }
+
+        if ($entity->get('status') === 'Canceled' && !empty($entity->get('pid'))) {
+            exec("kill -9 {$entity->get('pid')}");
+        }
     }
 
     /**

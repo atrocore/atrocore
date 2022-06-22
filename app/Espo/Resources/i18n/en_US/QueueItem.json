@@ -4,6 +4,7 @@
     "stream": "Queue",
     "isWriting": "Is Update Job?",
     "data": "Data",
+    "pid": "Pid",
     "sortOrder": "Sort order",
     "status": "Status",
     "message": "Message",
