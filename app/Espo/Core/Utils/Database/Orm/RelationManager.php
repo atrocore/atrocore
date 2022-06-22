@@ -142,9 +142,10 @@ class RelationManager
             $className = $this->getRelationClass($relationName);
         }
 
-        if (isset($className) && $className !== false && !empty($foreignLink['name'])) {
+        if (isset($className) && $className !== false) {
             $helperClass = new $className($this->metadata, $ormMetadata, $entityDefs);
-            return $helperClass->process($linkName, $entityName, $foreignLink['name'], $foreignEntityName);
+            $foreignLinkName = !empty($foreignLink['name']) ? $foreignLink['name'] : false;
+            return $helperClass->process($linkName, $entityName, $foreignLinkName, $foreignEntityName);
         }
         //END: relationDefs defined in separate file
 
