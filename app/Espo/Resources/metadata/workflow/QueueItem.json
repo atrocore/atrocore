@@ -11,7 +11,8 @@
         "Running"
       ],
       "Canceled": [
-        "Pending"
+        "Pending",
+        "Running"
       ],
       "Failed": [
         "Pending",

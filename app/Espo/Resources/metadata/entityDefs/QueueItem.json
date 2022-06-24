@@ -35,6 +35,10 @@
         "High"
       ]
     },
+    "pid": {
+      "type": "varchar",
+      "readOnly": true
+    },
     "status": {
       "type": "enum",
       "readOnly": true,
@@ -51,7 +55,7 @@
         "FFE208",
         "1DFF08",
         "FF0000",
-        "4F4F4F"
+        "DDDDDD"
       ]
     },
     "message": {

@@ -1,3 +1,4 @@
+<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -32,22 +33,29 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('treo-core:views/queue-manager/actions/cancel', 'treo-core:views/queue-manager/actions/abstract-action',
-    Dep => Dep.extend({
+declare(strict_types=1);
 
-        buttonLabel: 'cancel',
+namespace Treo\Migrations;
 
-        getSaveData() {
-            return {
-                status: 'Canceled'
-            };
-        },
+use Treo\Core\Migration\Base;
 
-        runAction() {
-            this.ajaxPutRequest(`${this.model.name}/${this.model.id}`, this.getSaveData())
-                .then(() => this.model.trigger('reloadList'));
-        },
+class V1Dot4Dot66 extends Base
+{
+    public function up(): void
+    {
+        $this->execute("ALTER TABLE `queue_item` ADD pid VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci");
+    }
 
-    })
-);
+    public function down(): void
+    {
+        $this->execute("ALTER TABLE `queue_item` DROP pid");
+    }
 
+    protected function execute(string $query): void
+    {
+        try {
+            $this->getPDO()->exec($query);
+        } catch (\Throwable $e) {
+        }
+    }
+}
