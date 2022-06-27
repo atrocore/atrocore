@@ -19271,6 +19271,8 @@ input#sn-checkbox-open-in-new-window {
 @media screen and (min-width: 768px) {
     #main > .page-header .fixed-header-breadcrumbs {
         left: 232px;
+        right: 470px;
+        white-space: nowrap;
     }
 
     .minimized #main > .page-header .fixed-header-breadcrumbs {
