@@ -48,7 +48,8 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                 this.actionCollapsePanel();
             },
 
-            'click .reset-tree-filter': function () {
+            'click .reset-tree-filter': function (e) {
+                e.preventDefault();
                 this.trigger('tree-reset');
             }
         },
