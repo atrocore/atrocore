@@ -801,7 +801,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
             });
 
             if (this.options.selectRecordsView) {
-                const maxForTree = 500;
+                const maxForTree = 200;
                 if (this.collection.maxSize === maxForTree) {
                     this.collection.maxSize = this.getConfig().get('recordsPerPage');
                 }
