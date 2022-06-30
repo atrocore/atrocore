@@ -995,6 +995,18 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     });
                 }
             }
+
+            if (this.showMore && this.$el.parent().prop('id') === 'main') {
+                $(window).on('scroll.' + this.$el, function () {
+                    if (this.collection.total > this.collection.length && $(window).scrollTop() + $(window).height() === $(document).height()) {
+                        const btnMore = this.$el.find('a[data-action="showMore"]');
+
+                        if (btnMore.length) {
+                            btnMore.click();
+                        }
+                    }
+                }.bind(this));
+            }
         },
 
         hasHorizontalScroll() {

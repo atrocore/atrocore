@@ -19406,6 +19406,16 @@ input#sn-checkbox-open-in-new-window {
     padding: 0 0 0 6px
 }
 
+.show-more > .btn-block.disabled + .preloader {
+    display: block !important;
+    margin-left: 10px;
+}
+
+#main > .list-container .show-more {
+    display: flex;
+    align-items: center;
+}
+
 .panel-heading .panel-title .text-muted.discussion-collapser span {
     color: #8e8e8e;
     font-size: 12px;
