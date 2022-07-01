@@ -15665,6 +15665,10 @@ ul.dropdown-menu > li.checkbox:last-child {
     white-space: pre;
 }
 
+.list table td a:not(.btn) > img {
+    display: block;
+}
+
 .field .row {
     margin-left: -3px !important;
     margin-right: -3px !important
