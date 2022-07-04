@@ -151,17 +151,23 @@ class PseudoTransactionManager extends Injectable
 
     protected function push(string $entityType, string $entityId, string $action, string $input, string $parentId = null): string
     {
+        $md5 = md5("{$entityType}_{$entityId}_{$action}_{$input}_{$parentId}");
         $id = Util::generateId();
         $entityType = $this->getPDO()->quote($entityType);
         $entityId = $this->getPDO()->quote($entityId);
         $createdById = $this->getUser()->get('id');
         $parentId = empty($parentId) ? 'NULL' : $this->getPDO()->quote($parentId);
 
-        $this
-            ->getPDO()
-            ->exec(
-                "INSERT INTO `pseudo_transaction_job` (id,entity_type,entity_id,action,input_data,created_by_id,parent_id) VALUES ('$id',$entityType,$entityId,'$action','$input','$createdById',$parentId)"
+        try {
+            $this->getPDO()->exec(
+                "INSERT INTO `pseudo_transaction_job` (id,entity_type,entity_id,`action`,input_data,created_by_id,parent_id,md5) VALUES ('$id',$entityType,$entityId,'$action','$input','$createdById',$parentId,'$md5')"
             );
+        } catch (\PDOException $e) {
+            if (!empty($e->errorInfo[1]) && $e->errorInfo[1] == 1062) {
+                return $this->getPDO()->query("SELECT id FROM `pseudo_transaction_job` WHERE md5='$md5'")->fetch(PDO::FETCH_COLUMN);
+            }
+            throw $e;
+        }
 
         file_put_contents(self::FILE_PATH, '1');
 
