@@ -83,6 +83,19 @@ class DataManager
         file_put_contents(self::PUBLIC_DATA_FILE_PATH, JSON::encode(array_merge($result, [$key => $value])));
     }
 
+    public static function getPublicData(string $key)
+    {
+        if (file_exists(self::PUBLIC_DATA_FILE_PATH)) {
+            $result = JSON::decode(file_get_contents(self::PUBLIC_DATA_FILE_PATH), true);
+        }
+
+        if (empty($result[$key])) {
+            return null;
+        }
+
+        return $result[$key];
+    }
+
     /**
      * Create cache dir
      */
