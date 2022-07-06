@@ -19147,11 +19147,10 @@ table.table > thead th > div > a {
   position: relative;
 }
 
-#main .page-header h3 > a::after, #main .page-header h3 > span.subsection::after {
-  content: '/';
+#main .page-header h3 .header-breadcrumbs > a::after, #main .page-header h3 .header-breadcrumbs> span.subsection::after {
+  content: '>';
   display: inline-block;
-  color: #000;
-  background: #fff;
+  color: #8e8e8e;
   height: 100%;
   width: 21px;
   text-align: center;
@@ -21204,15 +21203,16 @@ body,
 .fixed-header-breadcrumbs {
   width: auto !important;
   position: fixed;
-  top: 15px;
+  top: 0;
   left: 235px;
   z-index: 1040;
   white-space: nowrap;
   overflow: hidden;
-  height: 33px;
+  line-height: 56px;
   -o-text-overflow: ellipsis;
      text-overflow: ellipsis;
   color: #737373;
+  font-size: 16px;
 }
 
 @media screen and (min-width: 768px) {
