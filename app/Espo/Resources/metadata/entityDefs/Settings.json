@@ -46,9 +46,9 @@
     },
     "recordsPerPage": {
       "type": "int",
-      "min": 1,
+      "min": 50,
       "max": 200,
-      "default": 20,
+      "default": 50,
       "required": true,
       "tooltip": true
     },

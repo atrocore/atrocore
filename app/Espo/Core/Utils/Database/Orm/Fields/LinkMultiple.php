@@ -58,6 +58,11 @@ class LinkMultiple extends Base
                         'type'                  => 'jsonObject',
                         'notStorable'           => true,
                         'isLinkMultipleNameMap' => true
+                    ],
+                    $fieldName . 'AddOnlyMode' => [
+                        'type'                  => 'bool',
+                        'notStorable'           => true,
+                        'isLinkMultipleNameMap' => true
                     ]
                 ]
             ],

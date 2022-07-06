@@ -15626,6 +15626,10 @@ ul.dropdown-menu > li.checkbox:last-child {
     white-space: pre;
 }
 
+.list table td a:not(.btn) > img {
+    display: block;
+}
+
 .field .row {
     margin-left: -3px !important;
     margin-right: -3px !important
@@ -19375,6 +19379,16 @@ input#sn-checkbox-open-in-new-window {
 .show-more > .btn-block .text-muted {
     color: #fff;
     padding: 0 0 0 6px
+}
+
+.show-more > .btn-block.disabled + .preloader {
+    display: block !important;
+    margin-left: 10px;
+}
+
+#main > .list-container .show-more {
+    display: flex;
+    align-items: center;
 }
 
 .panel-heading .panel-title .text-muted.discussion-collapser span {

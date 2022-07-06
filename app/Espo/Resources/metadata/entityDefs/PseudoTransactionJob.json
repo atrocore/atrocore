@@ -27,6 +27,11 @@
     "parent": {
       "type": "link",
       "readOnly": true
+    },
+    "md5": {
+      "type": "varchar",
+      "readOnly": true,
+      "unique": true
     }
   },
   "links": {
