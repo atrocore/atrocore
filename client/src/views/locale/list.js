@@ -32,14 +32,13 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('treo-core:views/preferences/edit', 'class-replace!treo-core:views/preferences/edit', function (Dep) {
+Espo.define('views/locale/list', 'views/list', function (Dep) {
 
     return Dep.extend({
 
-        getHeader: function () {
-            return this.buildHeaderHtml([this.getLanguage().translate('Preferences')]);
+        getHeader() {
+            return this.buildHeaderHtml([this.getLanguage().translate('Locales', 'labels', 'Admin')]);
         },
 
     });
 });
-

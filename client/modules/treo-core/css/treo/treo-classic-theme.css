@@ -19273,6 +19273,10 @@ input#sn-checkbox-open-in-new-window {
     font-size: 16px;
 }
 
+.header-title {
+    font-size: 20px;
+}
+
 @media screen and (min-width: 768px) {
     #main > .page-header .fixed-header-breadcrumbs {
         left: 232px;
