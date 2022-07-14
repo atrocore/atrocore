@@ -197,7 +197,7 @@ class Hierarchy extends RDB
         return $ids;
     }
 
-    public function getChildrenArray(string $parentId, bool $withChildrenCount = true): array
+    public function getChildrenArray(string $parentId, bool $withChildrenCount = true, int $offset = null, $maxSize = null): array
     {
         $select = 'e.*';
         if ($withChildrenCount) {
@@ -209,7 +209,7 @@ class Hierarchy extends RDB
                       FROM `$this->tableName` e
                       WHERE e.id NOT IN (SELECT entity_id FROM `$this->hierarchyTableName` WHERE deleted=0)
                       AND e.deleted=0
-                      ORDER BY e.sort_order";
+                      ORDER BY e.sort_order, e.id";
         } else {
             $parentId = $this->getPDO()->quote($parentId);
             $query = "SELECT {$select}
@@ -218,10 +218,34 @@ class Hierarchy extends RDB
                   WHERE h.deleted=0
                     AND e.deleted=0
                     AND h.parent_id={$parentId}
-                  ORDER BY h.hierarchy_sort_order";
+                  ORDER BY h.hierarchy_sort_order, e.id";
+        }
+
+        if (!is_null($offset) && !is_null($maxSize)) {
+            $query .= " LIMIT $maxSize OFFSET $offset";
         }
 
         return $this->getPDO()->query($query)->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * @return int
+     */
+    public function getChildrenCount(string $parentId): int
+    {
+        if (empty($parentId)) {
+            $query = "SELECT COUNT(e.id) as count
+                      FROM `$this->tableName` e
+                      WHERE e.id NOT IN (SELECT entity_id FROM `$this->hierarchyTableName` WHERE deleted=0)
+                      AND e.deleted=0";
+        } else {
+            $query = "SELECT COUNT(id) as count
+                      FROM `$this->hierarchyTableName` h
+                      WHERE h.parent_id = '$parentId'
+                      AND h.deleted=0";
+        }
+
+        return (int)$this->getPDO()->query($query)->fetch(\PDO::FETCH_ASSOC)['count'];
     }
 
     public function isRoot(string $id): bool

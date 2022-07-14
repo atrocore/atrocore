@@ -292,11 +292,13 @@ class Hierarchy extends Record
     {
         $result = [];
 
-        $records = $this->getRepository()->getChildrenArray($parentId);
+        $records = $this->getRepository()->getChildrenArray($parentId, true, $params['offset'], $params['maxSize']);
         if (empty($records)) {
             return $result;
         }
 
+        unset($params['offset']);
+        unset($params['maxSize']);
         $selectParams = $this->getSelectParams($params);
         $selectParams['select'] = ['id'];
 
@@ -316,7 +318,10 @@ class Hierarchy extends Record
             ];
         }
 
-        return $result;
+        return [
+            'list' => $result,
+            'total' => $this->getRepository()->getChildrenCount($parentId)
+        ];
     }
 
     public function getEntity($id = null)
