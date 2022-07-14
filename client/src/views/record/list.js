@@ -83,6 +83,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         baseWidth: [],
 
+        isLoading: false,
+
         events: {
             'click a.link': function (e) {
                 e.stopPropagation();
@@ -996,16 +998,30 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }
             }
 
-            if (this.showMore && this.$el.parent().prop('id') === 'main') {
-                $(window).on('scroll.' + this.$el, function () {
-                    if (this.collection.total > this.collection.length && $(window).scrollTop() + $(window).height() === $(document).height()) {
-                        const btnMore = this.$el.find('a[data-action="showMore"]');
-
-                        if (btnMore.length) {
-                            btnMore.click();
+            if (this.showMore) {
+                if (this.$el.is(':visible') && this.$el.parent().hasClass('modal-body')) {
+                    this.$el.parent().on('scroll', function () {
+                        if (this.collection.total > this.collection.length && this.$el.parent().scrollTop() + this.$el.parent().outerHeight() === this.$el.parent().get(0).scrollHeight) {
+                            this.loadMore();
                         }
-                    }
-                }.bind(this));
+                    }.bind(this));
+                }
+
+                if (this.$el.parent().prop('id') === 'main') {
+                    $(window).on('scroll.' + this.$el, function () {
+                        if (this.collection.total > this.collection.length && $(window).scrollTop() + $(window).height() === $(document).height()) {
+                            this.loadMore();
+                        }
+                    }.bind(this));
+                }
+            }
+        },
+
+        loadMore() {
+            const btnMore = this.$el.find('a[data-action="showMore"]');
+
+            if (btnMore.length) {
+                btnMore.click();
             }
         },
 
@@ -1788,6 +1804,16 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         showMoreRecords: function (collection, $list, $showMore, callback) {
+            if (this.isLoading) {
+                setTimeout(function () {
+                    this.showMoreRecords(collection, $list, $showMore, callback);
+                }.bind(this), 500);
+
+                return;
+            }
+
+            this.isLoading = true;
+
             collection = collection || this.collection;
 
             $showMore =  $showMore || this.$el.find('.show-more');
@@ -1849,6 +1875,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     });
                 }
                 this.noRebuild = true;
+                this.isLoading = false;
             }.bind(this);
 
             this.listenToOnce(collection, 'update', function (collection, o) {

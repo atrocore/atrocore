@@ -6403,6 +6403,7 @@ button.close {
 
 .modal-open {
     padding-right: 0 !important;
+    overflow: hidden;
 }
 
 .modal {
@@ -19387,7 +19388,7 @@ input#sn-checkbox-open-in-new-window {
     margin-left: 10px;
 }
 
-#main > .list-container .show-more {
+.show-more {
     display: flex;
     align-items: center;
 }
