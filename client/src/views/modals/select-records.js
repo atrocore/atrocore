@@ -68,6 +68,12 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
 
         lastTextFilter: null,
 
+        offsets: {},
+
+        currentNode: null,
+
+        maxSize: null,
+
         data: function () {
             return {
                 createButton: this.createButton,
@@ -193,6 +199,9 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                 this.wait(true);
                 this.loadList();
             }, this);
+
+
+            this.maxSize = this.getConfig().get('recordsPerPage', 200);
 
             this.listenTo(this.collection, 'sync', () => {
                 this.findInTree();
@@ -379,6 +388,19 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
 
                 this.setupTree();
                 this.toggleViewType();
+
+                const modalBody = this.$el.find('.modal-body');
+                if (modalBody.length) {
+                    modalBody.on('scroll', function () {
+                        if (this.getSelectedViewType() === 'tree' && modalBody.outerHeight() + modalBody.scrollTop() === modalBody.get(0).scrollHeight) {
+                            const btnMore = modalBody.find('.jqtree-tree > .show-more span');
+
+                            if (btnMore.length) {
+                                btnMore.click();
+                            }
+                        }
+                    }.bind(this));
+                }
             }
         },
 
@@ -443,10 +465,66 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
             });
         },
 
+        generateUrl(node) {
+            let queryParameters = {
+                sortBy: this.collection.sortBy,
+                asc: this.collection.asc,
+                where: this.collection.getWhere(),
+            };
+            let url = this.scope + '/action/Tree?' + $.param(queryParameters);
+            let id = 'root';
+
+            if (node && node.id) {
+                url += '&node=' + node.id;
+                id = node.id;
+            }
+
+            if (!(id in this.offsets)) {
+                this.offsets[id] = 0;
+            }
+            url += '&offset=' + this.offsets[id] + '&maxSize=' + this.maxSize;
+
+            return url;
+        },
+
+        loadMore(node, previous) {
+            this.ajaxGetRequest(this.generateUrl(node)).then(function(response) {
+                if (response['list']) {
+                    const id = node ? node.id : 'root';
+                    response['list'] = this.filterResponse(id, response);
+                    const tree = this.$el.find('.records-tree');
+
+                    response['list'].reverse().forEach(item => {
+                        tree.tree('addNodeAfter', item, previous)
+                    });
+                }
+            }.bind(this));
+        },
+
+        filterResponse(id, response) {
+            let offset = this.offsets[id] || 0;
+
+            if (offset + this.maxSize < response['total']) {
+                this.offsets[id] += this.maxSize;
+
+                response['list'].push({
+                    id: 'show-more',
+                    name: this.getLanguage().translate('Show more')
+                });
+            }
+
+            return response['list'];
+        },
+
+        isRootNode(node) {
+            return !node.parent.getLevel();
+        },
+
         setupTree(data) {
             if (this.getSelectedViewType() !== 'tree') {
                 return;
             }
+            this.offsets = {root: 0};
 
             const $tree = this.$el.find('.records-tree');
             let treeData = {
@@ -480,18 +558,32 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                             }
                         }
                     }
-                }
+
+                    if (node.id === 'show-more') {
+                        $li.removeClass('jqtree-selected');
+
+                        if (this.isRootNode(node)) {
+                            $li.addClass('show-more');
+                            $li.find('.jqtree-element').addClass('btn btn-default btn-block');
+                            $li.find('.jqtree-title').addClass('more-label');
+                        }
+                    }
+                }.bind(this)
             };
             if (data) {
                 treeData['data'] = data;
                 treeData['autoOpen'] = true;
             } else {
-                let queryParameters = {
-                    sortBy: this.collection.sortBy,
-                    asc: this.collection.asc,
-                    where: this.collection.getWhere(),
-                };
-                treeData['dataUrl'] = this.scope + '/action/Tree?' + $.param(queryParameters);
+                treeData['dataUrl'] = function (node) {
+                    this.currentNode = node;
+
+                    return this.generateUrl(node);
+                }.bind(this);
+                treeData['dataFilter'] = function (response) {
+                    const currentNode = this.currentNode ? this.currentNode.id : 'root';
+
+                    return this.filterResponse(currentNode, response);
+                }.bind(this);
             }
 
             $tree.tree('destroy');
@@ -501,9 +593,23 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                     return false;
                 }
 
+                let selected_node = e.node;
+                this.currentNode = null;
+
+                if (selected_node.id === 'show-more') {
+                    const previous = selected_node.getPreviousSibling(),
+                          parent = selected_node.parent && selected_node.parent.id ? selected_node.parent : null;
+
+                    this.$el.find('.records-tree').tree('removeNode', selected_node);
+                    selected_node = null;
+                    return this.loadMore(parent, previous);
+                }
+
+                this.offsets = {root: 0};
+
                 if (this.multiple) {
                     e.preventDefault();
-                    let selected_node = e.node;
+
                     if ($tree.tree('isNodeSelected', selected_node)) {
                         $tree.tree('removeFromSelection', selected_node);
                     } else {
