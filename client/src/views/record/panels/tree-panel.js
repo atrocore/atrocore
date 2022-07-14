@@ -43,6 +43,12 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
 
         currentWidth: null,
 
+        offsets: {},
+
+        currentNode: null,
+
+        maxSize: null,
+
         events: {
             'click button[data-action="collapsePanel"]': function () {
                 this.actionCollapsePanel();
@@ -66,7 +72,9 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             this.buildSearch();
             this.wait(false);
 
-            this.currentWidth = this.getStorage().get('panelWidth', this.scope) || this.minWidth
+            this.currentWidth = this.getStorage().get('panelWidth', this.scope) || this.minWidth;
+
+            this.maxSize = this.getConfig().get('recordsPerPage', 200);
         },
 
         data() {
@@ -91,6 +99,16 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             $(window).on('resize load', () => {
                 this.treePanelResize()
             });
+
+            this.$el.on('scroll', function () {
+                if (this.$el.outerHeight() + this.$el.scrollTop() === this.$el.get(0).scrollHeight) {
+                    const btnMore = this.$el.find('.jqtree-tree > .show-more span[data-id="show-more"]');
+
+                    if (btnMore.length) {
+                        btnMore.click();
+                    }
+                }
+            }.bind(this))
         },
 
         treePanelResize() {
@@ -200,12 +218,72 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             }, 500);
         },
 
+        generateUrl(node) {
+            let url = this.treeScope + '/action/Tree?isTreePanel=1';
+            let id = 'root';
+
+            if (node && node.id) {
+                url += '&node=' + node.id;
+                id = node.id;
+            }
+
+            if (!(id in this.offsets)) {
+                this.offsets[id] = 0;
+            }
+            url += '&offset=' + this.offsets[id] + '&maxSize=' + this.maxSize;
+
+            return url;
+        },
+
+        loadMore(node, previous) {
+            this.ajaxGetRequest(this.generateUrl(node)).then(function(response) {
+                if (response['list']) {
+                    const id = node ? node.id : 'root';
+                    response['list'] = this.filterResponse(id, response);
+                    const tree = this.getTreeEl();
+
+                    response['list'].reverse().forEach(item => {
+                        tree.tree('addNodeAfter', item, previous)
+                    });
+                }
+            }.bind(this));
+        },
+
+        filterResponse(id, response) {
+            let offset = this.offsets[id] || 0;
+
+            if (offset + this.maxSize < response['total']) {
+                this.offsets[id] += this.maxSize;
+
+                response['list'].push({
+                    id: 'show-more',
+                    name: this.getLanguage().translate('Show more')
+                });
+            }
+
+            return response['list'];
+        },
+
+        isRootNode(node) {
+            return !node.parent.getLevel();
+        },
+
         buildTree() {
             const $tree = this.getTreeEl();
+            this.offsets = {root: 0};
 
             $tree.tree('destroy');
             $tree.tree({
-                dataUrl: this.treeScope + '/action/Tree?isTreePanel=1',
+                dataUrl: function (node) {
+                    this.currentNode = node;
+
+                    return this.generateUrl(node);
+                }.bind(this),
+                dataFilter: function (response) {
+                    const currentNode = this.currentNode ? this.currentNode.id : 'root';
+
+                    return this.filterResponse(currentNode, response);
+                }.bind(this),
                 selectable: true,
                 dragAndDrop: this.getMetadata().get(`scopes.${this.treeScope}.multiParents`) !== true,
                 useContextMenu: false,
@@ -216,6 +294,12 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                     $title.attr('data-id', node.id);
                     if (this.getMetadata().get(`scopes.${this.treeScope}.multiParents`) !== true) {
                         $title.attr('title', this.translate("useDragAndDrop"));
+                    }
+
+                    if (node.id === 'show-more' && this.isRootNode(node)) {
+                        $li.addClass('show-more');
+                        $li.find('.jqtree-element').addClass('btn btn-default btn-block');
+                        $li.find('.jqtree-title').addClass('more-label');
                     }
                 }.bind(this)
             }).on('tree.init', () => {
@@ -253,8 +337,20 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             }).on('tree.click', e => {
                 e.preventDefault();
 
+                this.currentNode = null;
+
                 if ($(e.click_event.target).hasClass('jqtree-title')) {
                     let node = e.node;
+
+                    if (node.id === 'show-more') {
+                        const previous = node.getPreviousSibling(),
+                              parent = node.parent && node.parent.id ? node.parent : null;
+
+                        this.getTreeEl().tree('removeNode', node);
+                        return this.loadMore(parent, previous);
+                    }
+
+                    this.offsets = {root: 0};
 
                     let route = [];
                     while (node.parent.id) {

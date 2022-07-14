@@ -57,7 +57,9 @@ class Hierarchy extends Record
             'where'       => $this->prepareWhereQuery($request->get('where')),
             'asc'         => $request->get('asc', 'true') === 'true',
             'sortBy'      => $request->get('sortBy'),
-            'isTreePanel' => !empty($request->get('isTreePanel'))
+            'isTreePanel' => !empty($request->get('isTreePanel')),
+            'offset'      => (int)$request->get('offset'),
+            'maxSize'     => (int)$request->get('maxSize')
         ];
 
         return $this->getRecordService()->getChildren((string)$request->get('node'), $params);

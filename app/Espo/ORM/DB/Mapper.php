@@ -480,7 +480,7 @@ abstract class Mapper implements IMapper
         $relOpt = $entity->relations[$relationName];
 
         if (!isset($relOpt['entity']) || !isset($relOpt['type'])) {
-            throw new \LogicException("Not appropriate defenition for relationship {$relationName} in " . $entity->getEntityType() . " entity");
+            return false;
         }
 
         $relType = $relOpt['type'];
