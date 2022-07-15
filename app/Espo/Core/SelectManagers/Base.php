@@ -272,7 +272,16 @@ class Base
 
     protected function getTextFilterFieldList()
     {
-        return $this->getMetadata()->get("entityDefs.{$this->entityType}.collection.textFilterFields", ['name']);
+        $result = [];
+        $textFilterFields = $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'textFilterFields'], ['name']);
+
+        foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []) as $field => $defs) {
+            if (in_array($field, $textFilterFields)) {
+                $result[] = $field;
+            }
+        }
+
+        return $result;
     }
 
     protected function getSeed()
