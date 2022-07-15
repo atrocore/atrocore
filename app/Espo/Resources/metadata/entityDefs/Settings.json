@@ -241,6 +241,7 @@
     },
     "authenticationMethod": {
       "type": "enum",
+      "prohibitedEmptyValue": true,
       "options": [
         "Token"
       ],
