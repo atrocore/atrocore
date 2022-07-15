@@ -112,27 +112,6 @@ class Settings extends \Espo\Core\Controllers\Base
         return $this->getConfigData();
     }
 
-    public function postActionTestLdapConnection($params, $data)
-    {
-        if (!$this->getUser()->isAdmin()) {
-            throw new Forbidden();
-        }
-
-        if (!isset($data->password)) {
-            $data->password = $this->getConfig()->get('ldapPassword');
-        }
-
-        $data = get_object_vars($data);
-
-        $ldapUtils = new \Espo\Core\Utils\Authentication\LDAP\Utils();
-        $options = $ldapUtils->normalizeOptions($data);
-
-        $ldapClient = new \Espo\Core\Utils\Authentication\LDAP\Client($options);
-        $ldapClient->bind(); //an exception if no connection
-
-        return true;
-    }
-
     protected function prepareTabList(array $config): array
     {
         if (!empty($config['tabList'])) {

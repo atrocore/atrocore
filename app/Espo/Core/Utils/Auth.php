@@ -90,13 +90,7 @@ class Auth
         $this->container = $container;
         $this->allowAnyAccess = $allowAnyAccess;
 
-        /** @var string $authenticationClassName */
-        $authenticationClassName = $this->getMetadata()->get(['app', 'authentication', $this->getConfig()->get('authenticationMethod', 'Token')]);
-        if (!is_a($authenticationClassName, AbstractAuthentication::class, true)) {
-            $authenticationClassName = $this->getMetadata()->get(['app', 'authentication', 'Token']);
-        }
-
-        $this->authentication = new $authenticationClassName($this, $container);
+        $this->authentication = new \Espo\Core\Utils\Authentication\Token($this, $container);
         $this->request = $this->container->get('slim')->request();
     }
 
