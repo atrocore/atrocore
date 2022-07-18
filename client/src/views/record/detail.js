@@ -114,8 +114,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         editModeDisabled: false,
 
-        navigateButtonsDisabled: false,
-
         readOnly: false,
 
         isWide: false,
@@ -207,7 +205,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         actionSaveAndNext: function () {
             this.save(function () {
-                this.actionNext();
+                this.getParentView().actionNext();
             }.bind(this), true);
         },
 
@@ -974,33 +972,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         data: function () {
-            var navigateButtonsEnabled = !this.navigateButtonsDisabled && !!this.model.collection;
-
-            var previousButtonEnabled = false;
-            var nextButtonEnabled = false;
-            if (navigateButtonsEnabled) {
-                if (this.indexOfRecord > 0) {
-                    previousButtonEnabled = true;
-                }
-
-                if (this.indexOfRecord < this.model.collection.total - 1) {
-                    nextButtonEnabled = true;
-                } else {
-                    if (this.model.collection.total === -1) {
-                        nextButtonEnabled = true;
-                    } else if (this.model.collection.total === -2) {
-                        if (this.indexOfRecord < this.model.collection.length - 1) {
-                            nextButtonEnabled = true;
-                        }
-                    }
-                }
-
-                if (!previousButtonEnabled && !nextButtonEnabled) {
-                    navigateButtonsEnabled = false;
-                }
-            }
-
-            if (!nextButtonEnabled) {
+            if (!this.options.hasNext) {
                 this.buttonEditList = (this.buttonEditList || []).filter(row => {
                     return row.name !== 'saveAndNext';
                 });
@@ -1022,10 +994,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 name: this.name,
                 id: this.id,
                 isWide: this.isWide,
-                isSmall: this.type == 'editSmall' || this.type == 'detailSmall',
-                navigateButtonsEnabled: navigateButtonsEnabled,
-                previousButtonEnabled: previousButtonEnabled,
-                nextButtonEnabled: nextButtonEnabled
+                isSmall: this.type == 'editSmall' || this.type == 'detailSmall'
             };
 
             if (this.model && !this.model.isNew() && this.getMetadata().get(`scopes.${this.model.urlRoot}.object`) && this.getMetadata().get(`scopes.${this.model.urlRoot}.overviewFilters`) !== false) {
@@ -1181,20 +1150,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             this.recordHelper = new ViewRecordHelper(this.defaultFieldStates, this.defaultFieldStates);
 
-            var collection = this.collection = this.model.collection;
-            if (collection) {
-                this.listenTo(this.model, 'destroy', function () {
-                    collection.remove(this.model.id);
-                    collection.trigger('sync');
-                }, this);
-
-                if ('indexOfRecord' in this.options) {
-                    this.indexOfRecord = this.options.indexOfRecord;
-                } else {
-                    this.indexOfRecord = collection.indexOf(this.model);
-                }
-            }
-
             if (this.getUser().isPortal() && !this.portalLayoutDisabled) {
                 if (this.getMetadata().get(['clientDefs', this.scope, 'additionalLayouts', this.layoutName + 'Portal'])) {
                     this.layoutName += 'Portal';
@@ -1251,7 +1206,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.inlineEditDisabled = this.inlineEditDisabled || this.getMetadata().get(['clientDefs', this.scope, 'inlineEditDisabled']) || false;
 
             this.inlineEditDisabled = this.options.inlineEditDisabled || this.inlineEditDisabled;
-            this.navigateButtonsDisabled = this.options.navigateButtonsDisabled || this.navigateButtonsDisabled;
             this.portalLayoutDisabled = this.options.portalLayoutDisabled || this.portalLayoutDisabled;
 
             this.setupActionItems();
@@ -1464,63 +1418,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         setIsNotChanged: function () {
             this.isChanged = false;
             this.setConfirmLeaveOut(false);
-        },
-
-        switchToModelByIndex: function (indexOfRecord) {
-            if (!this.model.collection) return;
-            var model = this.model.collection.at(indexOfRecord);
-            if (!model) {
-                throw new Error("Model is not found in collection by index.");
-            }
-            var id = model.id;
-
-            var scope = model.name || this.scope;
-
-            let mode = 'view';
-            if (this.mode === 'edit') {
-                mode = 'edit';
-            }
-
-            this.getRouter().navigate('#' + scope + '/' + mode + '/' + id, {trigger: false});
-            this.getRouter().dispatch(scope, mode, {
-                id: id,
-                model: model,
-                indexOfRecord: indexOfRecord
-            });
-        },
-
-        actionPrevious: function () {
-            if (!this.model.collection) return;
-            if (!(this.indexOfRecord > 0)) return;
-
-            var indexOfRecord = this.indexOfRecord - 1;
-            this.switchToModelByIndex(indexOfRecord);
-        },
-
-        actionNext: function () {
-            if (!this.model.collection) return;
-            if (!(this.indexOfRecord < this.model.collection.total - 1) && this.model.collection.total >= 0) return;
-            if (this.model.collection.total === -2 && this.indexOfRecord >= this.model.collection.length - 1) {
-                return;
-            }
-
-            var collection = this.model.collection;
-
-            var indexOfRecord = this.indexOfRecord + 1;
-            if (indexOfRecord <= collection.length - 1) {
-                this.switchToModelByIndex(indexOfRecord);
-            } else {
-                var initialCount = collection.length;
-
-                this.listenToOnce(collection, 'sync', function () {
-                    var model = collection.at(indexOfRecord);
-                    this.switchToModelByIndex(indexOfRecord);
-                }, this);
-                collection.fetch({
-                    more: true,
-                    remove: false,
-                });
-            }
         },
 
         actionSave: function () {
