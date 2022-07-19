@@ -41,6 +41,7 @@ use Espo\Core\Container;
 use Espo\Core\Utils\Auth;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\PasswordHash;
+use Espo\Entities\User;
 use Espo\ORM\EntityManager;
 
 /**
@@ -74,6 +75,8 @@ abstract class AbstractAuthentication
         $this->auth = $auth;
         $this->container = $container;
     }
+
+    abstract public function login(string $username, string $password, array $context = null): ?User;
 
     protected function getConfig(): Config
     {

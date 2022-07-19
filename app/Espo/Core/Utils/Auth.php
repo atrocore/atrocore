@@ -154,12 +154,12 @@ class Auth
         }
 
         $user = null;
-        foreach ($this->container->get('metadata')->get('app.authentication') as $authenticationClass) {
+        foreach (array_reverse($this->container->get('metadata')->get('app.authentication', [])) as $authenticationClass) {
             if (!is_a($authenticationClass, AbstractAuthentication::class, true)) {
                 continue 1;
             }
 
-            $user = (new $authenticationClass($this, $this->container))->login($username, $password, $authToken, $this->isPortal());
+            $user = (new $authenticationClass($this, $this->container))->login($username, $password, ['authToken' => $authToken]);
             if (!empty($user)) {
                 break;
             }

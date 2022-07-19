@@ -45,10 +45,10 @@ use Espo\Entities\User;
  */
 class Token extends AbstractAuthentication
 {
-    public function login(string $username, string $password, AuthToken $authToken = null, bool $isPortal = false): ?User
+    public function login(string $username, string $password, array $context = null): ?User
     {
-        if (!empty($authToken) && !empty($authToken->get('isActive'))) {
-            return $authToken->get('user');
+        if (!empty($context['authToken']) && !empty($context['authToken']->get('isActive'))) {
+            return $context['authToken']->get('user');
         }
 
         return $this
