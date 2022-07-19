@@ -60,11 +60,27 @@ Espo.define('views/detail', 'views/main', function (Dep) {
 
         boolFilterData: {},
 
+        navigateButtonsDisabled: false,
+
+        navigationButtons: {
+            next: {
+                html: '<span class="fas fa-chevron-right"></span>',
+                title: 'Next Entry',
+                disabled: true
+            },
+            previous: {
+                html: '<span class="fas fa-chevron-left"></span>',
+                title: 'Previous Entry',
+                disabled: true
+            }
+        },
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
             this.headerView = this.options.headerView || this.headerView;
             this.recordView = this.options.recordView || this.recordView;
+            this.navigateButtonsDisabled = this.options.navigateButtonsDisabled || this.navigateButtonsDisabled;
 
             this.setupHeader();
             this.setupRecord();
@@ -77,6 +93,122 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 this.listenTo(this.model, 'change:isFollowed', function () {
                     this.handleFollowButton();
                 }, this);
+            }
+
+            var collection = this.collection = this.model.collection;
+            if (collection) {
+                this.listenTo(this.model, 'destroy', function () {
+                    collection.remove(this.model.id);
+                    collection.trigger('sync');
+                }, this);
+
+                if ('indexOfRecord' in this.options) {
+                    this.indexOfRecord = this.options.indexOfRecord;
+                } else {
+                    this.indexOfRecord = collection.indexOf(this.model);
+                }
+            }
+
+            if (this.navigationButtons) {
+                const header = $('.header-items');
+
+                if (header.length) {
+                    let navigateButtonsEnabled = !this.navigateButtonsDisabled && !!this.model.collection;
+
+                    if (navigateButtonsEnabled) {
+                        this.navigationButtons.previous.disabled = true;
+                        this.navigationButtons.next.disabled = true;
+
+                        if (this.indexOfRecord > 0) {
+                            this.navigationButtons.previous.disabled = false;
+                        }
+
+                        if (this.indexOfRecord < this.model.collection.total - 1) {
+                            this.navigationButtons.next.disabled = false;
+                        } else {
+                            if (this.model.collection.total === -1) {
+                                this.navigationButtons.next.disabled = false;
+                            } else if (this.model.collection.total === -2) {
+                                if (this.indexOfRecord < this.model.collection.length - 1) {
+                                    this.navigationButtons.next.disabled = false;
+                                }
+                            }
+                        }
+
+                        if (this.navigationButtons.previous.disabled && this.navigationButtons.next.disabled) {
+                            navigateButtonsEnabled = false;
+                        }
+                    }
+
+                    if (navigateButtonsEnabled) {
+                        for (const [key, data] of Object.entries(this.navigationButtons)) {
+                            this.addMenuItem('buttons', {
+                                name: key,
+                                html: data.html,
+                                style: data.disabled ? 'default disabled' : 'default',
+                                action: key,
+                                title: this.translate(data.title)
+                            }, true)
+                        }
+                    }
+                }
+            }
+        },
+
+        switchToModelByIndex: function (indexOfRecord) {
+            if (!this.model.collection) return;
+            var model = this.model.collection.at(indexOfRecord);
+            if (!model) {
+                throw new Error("Model is not found in collection by index.");
+            }
+            var id = model.id;
+
+            var scope = model.name || this.scope;
+
+            let mode = 'view';
+            if (this.mode === 'edit') {
+                mode = 'edit';
+            }
+
+            this.getRouter().navigate('#' + scope + '/' + mode + '/' + id, {trigger: false});
+            this.getRouter().dispatch(scope, mode, {
+                id: id,
+                model: model,
+                indexOfRecord: indexOfRecord
+            });
+        },
+
+        actionPrevious: function () {
+            if (!this.model.collection) return;
+            if (!(this.indexOfRecord > 0)) return;
+
+            var indexOfRecord = this.indexOfRecord - 1;
+            this.switchToModelByIndex(indexOfRecord);
+        },
+
+        actionNext: function () {
+            if (!this.model.collection) return;
+            if (!(this.indexOfRecord < this.model.collection.total - 1) && this.model.collection.total >= 0) return;
+            if (this.model.collection.total === -2 && this.indexOfRecord >= this.model.collection.length - 1) {
+                return;
+            }
+
+            var collection = this.model.collection;
+
+            var indexOfRecord = this.indexOfRecord + 1;
+            if (indexOfRecord <= collection.length - 1) {
+                this.switchToModelByIndex(indexOfRecord);
+            } else {
+                var initialCount = collection.length;
+
+                this.listenToOnce(collection, 'sync', function () {
+                    var model = collection.at(indexOfRecord);
+                    this.switchToModelByIndex(indexOfRecord);
+                }, this);
+                collection.fetch({
+                    more: true,
+                    remove: false,
+                });
             }
         },
 
@@ -240,6 +372,9 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             }, this);
             if (this.options.params && this.options.params.rootUrl) {
                 o.rootUrl = this.options.params.rootUrl;
+            }
+            if (!this.navigateButtonsDisabled) {
+                o.hasNext = !this.navigationButtons.next.disabled;
             }
             this.createView('record', this.getRecordViewName(), o);
         },
