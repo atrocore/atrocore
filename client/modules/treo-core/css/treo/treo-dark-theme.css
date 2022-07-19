@@ -19670,7 +19670,7 @@ ul.dropdown-menu > li.checkbox {
 }
 
 #main .page-header h3 .header-breadcrumbs > a::after, #main .page-header h3 .header-breadcrumbs> span.subsection::after {
-    content: '>';
+    content: '/';
     display: inline-block;
     color: #8e8e8e;
     height: 100%;
