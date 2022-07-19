@@ -60,11 +60,6 @@ class Auth
     private $container;
 
     /**
-     * @var AbstractAuthentication
-     */
-    private $authentication;
-
-    /**
      * @var bool
      */
     private $allowAnyAccess;
@@ -89,14 +84,6 @@ class Auth
     {
         $this->container = $container;
         $this->allowAnyAccess = $allowAnyAccess;
-
-        /** @var string $authenticationClassName */
-        $authenticationClassName = $this->getMetadata()->get(['app', 'authentication', $this->getConfig()->get('authenticationMethod', 'Token')]);
-        if (!is_a($authenticationClassName, AbstractAuthentication::class, true)) {
-            $authenticationClassName = $this->getMetadata()->get(['app', 'authentication', 'Token']);
-        }
-
-        $this->authentication = new $authenticationClassName($this, $container);
         $this->request = $this->container->get('slim')->request();
     }
 
@@ -166,7 +153,23 @@ class Auth
             return false;
         }
 
-        $user = $this->authentication->login($username, $password, $authToken, $this->isPortal());
+        $user = null;
+
+        if (!empty($authToken) && !empty($authToken->get('isActive'))) {
+            $user = $authToken->get('user');
+        }
+
+        if (empty($user)) {
+            $authentications = array_reverse($this->container->get('metadata')->get('app.authentication', []));
+            foreach ($authentications as $authenticationClass) {
+                if (is_a($authenticationClass, AbstractAuthentication::class, true)) {
+                    $user = (new $authenticationClass($this, $this->container))->login($username, $password);
+                    if (!empty($user)) {
+                        break;
+                    }
+                }
+            }
+        }
 
         $authLogRecord = empty($authToken) ? $this->createAuthLogRecord($username, $user) : null;
 

@@ -1,19 +1,17 @@
 [
   {
-    "label": "Configuration",
+    "label": "Token",
     "rows": [
       [
         {
-          "name": "authenticationMethod"
+          "name": "authTokenPreventConcurrent"
         },
         {
           "name": "authTokenLifetime"
         }
       ],
       [
-        {
-          "name": "authTokenPreventConcurrent"
-        },
+        false,
         {
           "name": "authTokenMaxIdleTime"
         }
