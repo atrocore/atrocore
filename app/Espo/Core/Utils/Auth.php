@@ -60,11 +60,6 @@ class Auth
     private $container;
 
     /**
-     * @var AbstractAuthentication
-     */
-    private $authentication;
-
-    /**
      * @var bool
      */
     private $allowAnyAccess;
@@ -89,8 +84,6 @@ class Auth
     {
         $this->container = $container;
         $this->allowAnyAccess = $allowAnyAccess;
-
-        $this->authentication = new \Espo\Core\Utils\Authentication\Token($this, $container);
         $this->request = $this->container->get('slim')->request();
     }
 
@@ -160,7 +153,17 @@ class Auth
             return false;
         }
 
-        $user = $this->authentication->login($username, $password, $authToken, $this->isPortal());
+        $user = null;
+        foreach ($this->container->get('metadata')->get('app.authentication') as $authenticationClass) {
+            if (!is_a($authenticationClass, AbstractAuthentication::class, true)) {
+                continue 1;
+            }
+
+            $user = (new $authenticationClass($this, $this->container))->login($username, $password, $authToken, $this->isPortal());
+            if (!empty($user)) {
+                break;
+            }
+        }
 
         $authLogRecord = empty($authToken) ? $this->createAuthLogRecord($username, $user) : null;
 
