@@ -4361,6 +4361,7 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
   -webkit-border-radius: 3px;
           border-radius: 3px;
   border: 1px solid #eee;
+  background-color: #fafafa;
 }
 
 .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
@@ -6312,6 +6313,7 @@ button.close {
 
 .modal-open {
   padding-right: 0 !important;
+  overflow: hidden;
 }
 
 .modal {
@@ -14879,7 +14881,7 @@ label {
 }
 
 .page-header {
-  margin: 26px 0 10px 0;
+  margin: 14px 0 10px 0;
   border-bottom: 0;
   padding-bottom: 2px;
   min-height: 33px;
@@ -19036,7 +19038,7 @@ input#sn-checkbox-open-in-new-window {
   margin-left: 10px;
 }
 
-#main > .list-container .show-more {
+.show-more {
   display: flex;
   align-items: center;
 }
@@ -19626,18 +19628,27 @@ table.table > thead th > div > a {
   border-bottom: 1px solid #e8eced;
 }
 
-#main .catalog-tree-panel .btn {
+#main .catalog-tree-panel .btn.reset-tree-filter {
   background: none;
   color: #000;
   border: 0;
 }
 
-#main .catalog-tree-panel .btn.active {
+#main .catalog-tree-panel .btn.reset-tree-filter.active {
   color: #2895ea;
 }
 
 #main .catalog-tree-panel .category-buttons .btn + .btn {
   border-left: 1px solid #e8eced;
+}
+
+#main .catalog-tree-panel > .category-panel {
+  position: relative;
+}
+
+.jqtree-tree .show-more {
+  margin: 10px 0 0 0;
+  padding: 0;
 }
 
 button.category {
@@ -20213,7 +20224,7 @@ ul.jqtree-tree .jqtree-toggler.jqtree-toggler-right {
   margin-left: 0.5em;
 }
 
-ul.jqtree-tree .jqtree-element {
+ul.jqtree-tree .jqtree-element:not(.btn) {
   position: relative;
   padding: 5px 15px 0 5px;
 }

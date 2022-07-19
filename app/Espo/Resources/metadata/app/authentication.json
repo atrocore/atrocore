@@ -1,3 +1,3 @@
-{
-  "Token": "\\Espo\\Core\\Utils\\Authentication\\Token"
-}
+[
+  "\\Espo\\Core\\Utils\\Authentication\\Token"
+]

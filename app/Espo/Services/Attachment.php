@@ -111,12 +111,16 @@ class Attachment extends Record
             try {
                 $attachmentEntity = $this->createEntity($attachment);
             } catch (\Throwable $e) {
-                unlink($attachment->fileName);
+                if (file_exists($attachment->fileName)) {
+                    unlink($attachment->fileName);
+                }
                 throw $e;
             }
 
             if (strpos($attachment->fileName, $attachmentEntity->get('storageFilePath')) === false) {
-                unlink($attachment->fileName);
+                if (file_exists($attachment->fileName)) {
+                    unlink($attachment->fileName);
+                }
             }
 
             $result['attachment'] = $attachmentEntity->toArray();
