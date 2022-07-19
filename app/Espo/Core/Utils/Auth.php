@@ -154,14 +154,20 @@ class Auth
         }
 
         $user = null;
-        foreach (array_reverse($this->container->get('metadata')->get('app.authentication', [])) as $authenticationClass) {
-            if (!is_a($authenticationClass, AbstractAuthentication::class, true)) {
-                continue 1;
-            }
 
-            $user = (new $authenticationClass($this, $this->container))->login($username, $password, ['authToken' => $authToken]);
-            if (!empty($user)) {
-                break;
+        if (!empty($authToken) && !empty($authToken->get('isActive'))) {
+            $user = $authToken->get('user');
+        }
+
+        if (empty($user)) {
+            $authentications = array_reverse($this->container->get('metadata')->get('app.authentication', []));
+            foreach ($authentications as $authenticationClass) {
+                if (is_a($authenticationClass, AbstractAuthentication::class, true)) {
+                    $user = (new $authenticationClass($this, $this->container))->login($username, $password);
+                    if (!empty($user)) {
+                        break;
+                    }
+                }
             }
         }
 

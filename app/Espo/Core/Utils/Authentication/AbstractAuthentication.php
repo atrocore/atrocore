@@ -76,7 +76,7 @@ abstract class AbstractAuthentication
         $this->container = $container;
     }
 
-    abstract public function login(string $username, string $password, array $context = null): ?User;
+    abstract public function login(string $username, string $password): ?User;
 
     protected function getConfig(): Config
     {

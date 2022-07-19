@@ -37,29 +37,19 @@ declare(strict_types=1);
 
 namespace Espo\Core\Utils\Authentication;
 
-use Espo\Entities\AuthToken;
 use Espo\Entities\User;
 
-/**
- * Class Token
- */
 class Token extends AbstractAuthentication
 {
-    public function login(string $username, string $password, array $context = null): ?User
+    public function login(string $username, string $password): ?User
     {
-        if (!empty($context['authToken']) && !empty($context['authToken']->get('isActive'))) {
-            return $context['authToken']->get('user');
-        }
-
         return $this
             ->getEntityManager()
             ->getRepository('User')
-            ->where(
-                [
-                    'userName' => $username,
-                    'password' => $this->getPasswordHash()->hash($password),
-                ]
-            )
+            ->where([
+                'userName' => $username,
+                'password' => $this->getPasswordHash()->hash($password),
+            ])
             ->findOne();
     }
 }
