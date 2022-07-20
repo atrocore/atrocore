@@ -312,7 +312,7 @@ class Config
         return $this->data;
     }
 
-    protected function loadLocales():array
+    protected function loadLocales(): array
     {
         $result = self::DEFAULT_LOCALE;
 
@@ -324,7 +324,9 @@ class Config
 
         $localeId = $this->get('localeId');
         foreach (self::DEFAULT_LOCALE as $name => $value) {
-            $result[$name] = $result['locales'][$localeId][$name];
+            if (isset($result['locales'][$localeId][$name])) {
+                $result[$name] = $result['locales'][$localeId][$name];
+            }
         }
 
         return $result;
