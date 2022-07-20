@@ -1,1 +1,1 @@
-<h3><a href="#Admin">{{translate 'Administration'}}</a><span class="subsection">{{translate 'System'}}</span>{{translate 'multiLanguagesSettings' scope='Admin'}}</h3>
+<h3><div class="header-breadcrumbs fixed-header-breadcrumbs"><a href="#Admin">{{translate 'Administration'}}</a>{{translate 'multiLanguagesSettings' scope='Admin'}}</div><div class="header-title">{{translate 'multiLanguagesSettings' scope='Admin'}}</div></h3>

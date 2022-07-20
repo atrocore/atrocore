@@ -188,9 +188,9 @@ Espo.define('treo-core:views/composer/list', 'views/list',
         },
 
         getHeader() {
-            return  `<a href="#Admin">${this.translate('Administration')}</a>`+
-                    `<span class="subsection">${this.translate('System')}</span>` +
-                    this.getLanguage().translate('Composer', 'labels', 'Admin');
+            return this.buildHeaderHtml([
+                this.getLanguage().translate('Composer', 'labels', 'Admin')
+            ], true);
         },
 
         updatePageTitle() {

@@ -19266,12 +19266,17 @@ input#sn-checkbox-open-in-new-window {
 .fixed-header-breadcrumbs {
     width: auto !important;
     position: fixed;
-    top: 11px;
+    top: 0;
     z-index: 1040;
     white-space: nowrap;
     overflow: hidden;
-    height: 33px;
+    line-height: 56px;
     text-overflow: ellipsis;
+    font-size: 16px;
+}
+
+.header-title {
+    font-size: 20px;
 }
 
 @media screen and (min-width: 768px) {
@@ -19630,12 +19635,10 @@ ul.dropdown-menu > li.checkbox {
     position: relative;
 }
 
-#main .page-header h3 > a::after,
-#main .page-header h3 > span.subsection::after {
+#main .page-header h3 .header-breadcrumbs > a::after, #main .page-header h3 .header-breadcrumbs> span.subsection::after {
     content: '/';
     display: inline-block;
-    color: #000;
-    background: #fff;
+    color: #8e8e8e;
     height: 100%;
     width: 21px;
     text-align: center;
