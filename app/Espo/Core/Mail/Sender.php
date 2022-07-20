@@ -37,15 +37,20 @@ declare(strict_types=1);
 
 namespace Espo\Core\Mail;
 
-use Espo\Core\Exceptions\Error;
 use Espo\Core\QueueManager;
 use Espo\Core\Utils\Config;
-use Laminas\Mime\Message as MimeMessage;
-use Laminas\Mime\Part as MimePart;
-use Laminas\Mail\Message;
-use Laminas\Mail\Transport\Smtp as SmtpTransport;
-use Laminas\Mail\Transport\SmtpOptions;
+use Zend\Mime\Message as MimeMessage;
+use Zend\Mime\Part as MimePart;
 
+use Zend\Mail\Message;
+use Zend\Mail\Transport\Smtp as SmtpTransport;
+use Zend\Mail\Transport\SmtpOptions;
+
+use Espo\Core\Exceptions\Error;
+
+/**
+ * Class Sender
+ */
 class Sender
 {
     /**
@@ -117,7 +122,7 @@ class Sender
             throw new Error('outboundEmailFromAddress is not specified in config.');
         }
 
-        $sender = new \Laminas\Mail\Header\Sender();
+        $sender = new \Zend\Mail\Header\Sender();
         $sender->setAddress($fromEmail);
 
         $message = new Message();
