@@ -5,7 +5,7 @@
   "license": "GPL-3.0-only",
   "minimum-stability": "stable",
   "require": {
-    "php": "^7.4|^8.0",
+    "php": "^7.4 |^8.0",
     "ext-pdo_mysql": "*",
     "ext-openssl": "*",
     "ext-json": "*",
@@ -18,7 +18,7 @@
     "ext-imagick": "*",
     "gumlet/php-image-resize": "~1.9.2",
     "composer/semver": "~3.3.2",
-    "doctrine/dbal": "~3.3.7",
+    "atrocore/doctrine-dbal": "~2.4.2",
     "slim/slim": "~2.6.2",
     "mtdowling/cron-expression": "~1.0.3",
     "laminas/laminas-mail": "~2.16.0",
