@@ -40,32 +40,16 @@ namespace Espo\Core\EventManager;
 use Espo\Core\Container;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-/**
- * Manager class
- */
-class Manager extends EventDispatcher
+class Manager
 {
-    /**
-     * @var Container
-     */
-    private $container;
+    private Container $container;
+    private EventDispatcher $eventDispatcher;
+    private bool $isLoaded = false;
 
-    /**
-     * @var bool
-     */
-    private $isLoaded = false;
-
-    /**
-     * Manager constructor.
-     *
-     * @param Container $container
-     */
     public function __construct(Container $container)
     {
-        // call parent
-        parent::__construct();
-
         $this->container = $container;
+        $this->eventDispatcher = new EventDispatcher();
     }
 
     /**
@@ -84,7 +68,7 @@ class Manager extends EventDispatcher
             $eventName = \func_get_arg(1);
         }
 
-        return parent::dispatch($event, $eventName);
+        return $this->eventDispatcher->dispatch($event, $eventName);
     }
 
     /**
@@ -111,7 +95,7 @@ class Manager extends EventDispatcher
                 }
 
                 // add
-                $this->addListener($action, [$object, $row[1]]);
+                $this->eventDispatcher->addListener($action, [$object, $row[1]]);
             }
         }
 
