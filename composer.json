@@ -27,7 +27,7 @@
     "yzalis/identicon": "~1.1.0",
     "zordius/lightncandy": "~0.21",
     "symfony/event-dispatcher": "~6.1.0",
-    "symfony/workflow": "~4.3.0",
+    "symfony/workflow": "~6.0.10",
     "phpseclib/phpseclib": "^3.0"
   },
   "autoload": {
