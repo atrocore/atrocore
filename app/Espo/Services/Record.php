@@ -2901,13 +2901,17 @@ class Record extends \Espo\Core\Services\Base
 
         $result = false;
 
-        $item = $this->getMetadata()
-            ->get("clientDefs.{$entity->getEntityName()}.dynamicLogic.fields.$field.$typeResult.conditionGroup", []);
+        $item = $this->getMetadata()->get("clientDefs.{$entity->getEntityName()}.dynamicLogic.fields.$field.$typeResult.conditionGroup", []);
 
-        if (empty($item) && !empty($relation = $entity->getFields()[$field]['relation']) && empty($this->relationFields['usedRelation'][$relation])) {
-            $this->relationFields['usedRelation'][$relation] = $relation;
-            $item = $this->getMetadata()
-                ->get("clientDefs.{$entity->getEntityName()}.dynamicLogic.fields.$relation.$typeResult.conditionGroup", []);
+        if (empty($item)) {
+            $fields = $entity->getFields();
+            if (!empty($fields[$field]['relation'])) {
+                $relation = $fields[$field]['relation'];
+                if (empty($this->relationFields['usedRelation'][$relation])) {
+                    $this->relationFields['usedRelation'][$relation] = $relation;
+                    $item = $this->getMetadata()->get("clientDefs.{$entity->getEntityName()}.dynamicLogic.fields.$relation.$typeResult.conditionGroup", []);
+                }
+            }
         }
 
         if (!empty($item)) {

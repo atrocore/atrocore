@@ -330,9 +330,12 @@ class Layout extends Injectable
                         continue;
                     }
 
-                    if (empty(array_diff($row, [false]))) {
-                        $rows[] = $row;
-                        continue;
+                    if (is_array($row)) {
+                        $diff = array_diff($row, [false]);
+                        if (empty($diff)) {
+                            $rows[] = $row;
+                            continue;
+                        }
                     }
 
                     $newRow = [];
