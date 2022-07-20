@@ -617,7 +617,12 @@ class Record extends \Espo\Core\Services\Base
      */
     protected function validateFieldWithPattern(Entity $entity, string $field, array $defs): void
     {
-        if (!empty($pattern = $defs['pattern']) && !preg_match($pattern, $entity->get($field))) {
+        if (empty($defs['pattern'])) {
+            return;
+        }
+
+        $pattern = $defs['pattern'];
+        if (!preg_match($pattern, $entity->get($field))) {
             $message = $this->getInjection('language')->translate('dontMatchToPattern', 'exceptions', $entity->getEntityType());
             $message = str_replace('{field}', $field, $message);
             $message = str_replace('{pattern}', $pattern, $message);
