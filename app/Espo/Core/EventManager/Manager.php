@@ -52,6 +52,11 @@ class Manager
         $this->eventDispatcher = new EventDispatcher();
     }
 
+    public function getEventDispatcher(): EventDispatcher
+    {
+        return $this->eventDispatcher;
+    }
+
     /**
      * @inheritDoc
      */
@@ -68,7 +73,7 @@ class Manager
             $eventName = \func_get_arg(1);
         }
 
-        return $this->eventDispatcher->dispatch($event, $eventName);
+        return $this->getEventDispatcher()->dispatch($event, $eventName);
     }
 
     /**
@@ -94,8 +99,7 @@ class Manager
                     $object->setContainer($this->container);
                 }
 
-                // add
-                $this->eventDispatcher->addListener($action, [$object, $row[1]]);
+                $this->getEventDispatcher()->addListener($action, [$object, $row[1]]);
             }
         }
 
