@@ -1,5 +1,6 @@
 {
-   "notCreatable": true,
-   "notMergeable": true,
-   "filter": false
+  "dbType": "text",
+  "notCreatable": true,
+  "notMergeable": true,
+  "filter": false
 }

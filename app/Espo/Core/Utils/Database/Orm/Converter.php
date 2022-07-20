@@ -73,7 +73,7 @@ class Converter
     protected $fieldAccordances = array(
         'type' => 'type',
         'dbType' => 'dbType',
-        'maxLength' => 'len',
+        'maxLength' => 'length',
         'len' => 'len',
         'notNull' => 'notNull',
         'autoincrement' => 'autoincrement',
@@ -473,7 +473,11 @@ class Converter
 
         /** check and set the field length */
         if (isset($fieldDefs['type']) && !isset($fieldDefs['len']) && in_array($fieldDefs['type'], array_keys($this->defaultLength))) {
-            $fieldDefs['len'] = $this->defaultLength[$fieldDefs['type']];
+            $fieldDefs['length'] = $this->defaultLength[$fieldDefs['type']];
+        }
+
+        if (!empty($fieldTypeMetadata['dbType'])) {
+            $fieldDefs['type'] = $fieldTypeMetadata['dbType'];
         }
 
         return $fieldDefs;

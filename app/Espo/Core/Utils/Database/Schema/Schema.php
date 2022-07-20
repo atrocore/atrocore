@@ -90,7 +90,7 @@ class Schema
 
         $this->databaseHelper = new \Espo\Core\Utils\Database\Helper($this->config);
 
-        $this->comparator = new \Espo\Core\Utils\Database\DBAL\Schema\Comparator();
+        $this->comparator = new \Doctrine\DBAL\Schema\Comparator();
         $this->initFieldTypes();
 
         $this->converter = new \Espo\Core\Utils\Database\Converter($this->metadata, $this->fileManager, $this->config);
