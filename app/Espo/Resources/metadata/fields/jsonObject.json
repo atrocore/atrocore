@@ -1,5 +1,4 @@
 {
-  "dbType": "text",
   "notCreatable": true,
   "notMergeable": true,
   "filter": false
