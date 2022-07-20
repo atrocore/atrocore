@@ -120,13 +120,6 @@ class Schema extends \Espo\Core\Utils\Database\Schema\Schema
         return $result;
     }
 
-    /**
-     * Get diff queries
-     *
-     * @return array
-     * @throws \Doctrine\DBAL\DBALException
-     * @throws \Espo\Core\Exceptions\Error
-     */
     public function getDiffQueries(): array
     {
         // set strict type
@@ -135,7 +128,7 @@ class Schema extends \Espo\Core\Utils\Database\Schema\Schema
         // get queries
         $queries = $this
             ->getComparator()
-            ->compare($this->getCurrentSchema(), $this->schemaConverter->process($this->ormMetadata->getData(), null))
+            ->compareSchemas($this->getCurrentSchema(), $this->schemaConverter->process($this->ormMetadata->getData(), null))
             ->toSql($this->getPlatform());
 
         // prepare queries

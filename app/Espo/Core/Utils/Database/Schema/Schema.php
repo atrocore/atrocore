@@ -157,7 +157,7 @@ class Schema
             if ($typeList !== false) {
                 foreach ($typeList as $name) {
                     $typeName = preg_replace('/Type\.php$/i', '', $name);
-                    $dbalTypeName = strtolower($typeName);
+                    $dbalTypeName = lcfirst($typeName);
 
                     $filePath = Util::concatPath($path, $typeName . 'Type');
                     $class = Util::getClassName($filePath);

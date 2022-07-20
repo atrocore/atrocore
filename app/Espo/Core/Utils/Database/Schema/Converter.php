@@ -220,7 +220,6 @@ class Converter
                 }
 
                 $fieldType = isset($fieldParams['dbType']) ? $fieldParams['dbType'] : $fieldParams['type'];
-                $fieldType = strtolower($fieldType); /** doctrine uses strtolower for all field types */
                 if (!in_array($fieldType, $this->typeList)) {
                     $GLOBALS['log']->debug('Converters\Schema::process(): Field type ['.$fieldType.'] does not exist '.$entityName.':'.$fieldName);
                     continue;
