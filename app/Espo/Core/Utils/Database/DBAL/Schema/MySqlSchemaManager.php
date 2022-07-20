@@ -72,7 +72,7 @@ class MySqlSchemaManager extends \Doctrine\DBAL\Schema\MySQLSchemaManager
         }
         $indexes = $this->listTableIndexes($tableName);
 
-        return new Table($tableName, $columns, $indexes, $foreignKeys, [], []);
+        return new Table($tableName, $columns, $indexes, [], $foreignKeys, []);
     }
 
     public function listTableIndexes($table)
