@@ -127,7 +127,7 @@ class Helper
             return null;
         }
 
-        return $connection->fetchColumn("select version()");
+        return $connection->executeQuery("select version()")->fetchOne();
     }
 
     /**
@@ -149,7 +149,7 @@ class Helper
             $query = "SHOW TABLE STATUS WHERE Engine = 'MyISAM' AND Name = '" . $tableName . "'";
         }
 
-        $result = $connection->fetchColumn($query);
+        $result = $connection->executeQuery($query)->fetchOne();
 
         if (!empty($result)) {
             return 'MyISAM';
