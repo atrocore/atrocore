@@ -625,7 +625,7 @@ class Metadata
 
     public function getScopeModuleName(string $scopeName): ?string
     {
-        return $this->get('scopes.' . $scopeName . '.module');
+        return $this->get('scopes.' . $scopeName . '.module', 'Espo');
     }
 
     public function getModules(): array

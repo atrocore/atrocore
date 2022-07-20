@@ -287,7 +287,7 @@ class Converter
 
             if (!empty($scopeData['links'])) {
                 foreach ($scopeData['links'] as $link => $linkData) {
-                    if (isset($linkData['type'])) {
+                    if (isset($linkData['type']) && isset($linkData['entity'])) {
                         if ($linkData['type'] == 'belongsTo' && !isset($entityDefs[$linkData['entity']]['fields']['name']) && isset($ormMetadata[$scope]['fields'][$link . 'Name'])) {
                             unset($ormMetadata[$scope]['fields'][$link . 'Name']);
                         }
