@@ -40,16 +40,25 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
 
 class Driver extends AbstractMySQLDriver
 {
+    /**
+     * {@inheritdoc}
+     */
     public function connect(array $params)
     {
         return (new \Doctrine\DBAL\Driver\PDO\MySQL\Driver())->connect($params);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getDatabasePlatform()
     {
         return new \Espo\Core\Utils\Database\DBAL\Platforms\MySqlPlatform();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getSchemaManager(\Doctrine\DBAL\Connection $conn, AbstractPlatform $platform)
     {
         return new \Espo\Core\Utils\Database\DBAL\Schema\MySqlSchemaManager($conn, $platform);
