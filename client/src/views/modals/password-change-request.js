@@ -55,6 +55,10 @@ Espo.define('views/modals/password-change-request', 'views/modal', function (Dep
             ];
 
             this.header = this.translate('Password Change Request', 'labels', 'User');
+
+            this.listenTo(this, 'after:render', function() {
+                this.$el.addClass('password-change-request-modal');
+            }.bind(this))
         },
 
         actionSubmit: function () {
