@@ -330,14 +330,6 @@ class Layout extends Injectable
                         continue;
                     }
 
-                    if (is_array($row)) {
-                        $diff = array_diff($row, [false]);
-                        if (empty($diff)) {
-                            $rows[] = $row;
-                            continue;
-                        }
-                    }
-
                     $newRow = [];
                     $fullWidthRow = count($row) == 1;
 
