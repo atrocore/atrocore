@@ -6453,6 +6453,10 @@ button.close {
     padding-right: 0 !important;
 }
 
+.password-change-request-modal .modal-dialog {
+    margin: 0 auto;
+}
+
 .modal-dialog {
     position: relative;
     width: auto;
