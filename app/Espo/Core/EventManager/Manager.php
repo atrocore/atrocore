@@ -76,6 +76,11 @@ class Manager
         return $this->getEventDispatcher()->dispatch($event, $eventName);
     }
 
+    public function addListener($eventName, $listener)
+    {
+        $this->getEventDispatcher()->addListener($eventName, $listener);
+    }
+
     /**
      * Load all listeners
      */
@@ -99,7 +104,7 @@ class Manager
                     $object->setContainer($this->container);
                 }
 
-                $this->getEventDispatcher()->addListener($action, [$object, $row[1]]);
+                $this->addListener($action, [$object, $row[1]]);
             }
         }
 
