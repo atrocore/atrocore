@@ -75,7 +75,7 @@ class TreoStore extends Base
                 continue 1;
             }
 
-            $name = $package['name']['default'];
+            $name = !empty($package['name']['default']) ? $package['name']['default'] : $package['name'];
             $description = $package['description']['default'];
             $versions = Json::encode($package['versions']);
             $tags = Json::encode($package['tags']);
