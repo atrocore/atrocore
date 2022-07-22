@@ -2832,7 +2832,13 @@ class Record extends \Espo\Core\Services\Base
 
             if ($entity->has($field) && Util::toMd5($entity->get($field)) != Util::toMd5($prev[$field])) {
                 foreach (['Id', 'Ids', 'Currency', 'Unit'] as $suffix) {
-                    $field = $this->removeSuffix($field, $suffix);
+                    $name = $this->removeSuffix($field, $suffix);
+                    $type = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $name, 'type'], '');
+
+                    if (!empty($type) && in_array($type, ['link', 'linkMultiple', 'currency', 'unit'])) {
+                        $field = $name;
+                    }
+
                 }
                 $fieldsThatConflict[$field] = $this->getInjection('language')->translate($field, 'fields', $this->entityName);
             }
