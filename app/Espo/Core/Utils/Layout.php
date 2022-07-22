@@ -458,11 +458,11 @@ class Layout extends Injectable
                             if (isset($fieldData['name']) && !in_array($fieldData['name'], $fields)) {
                                 $data[0]['rows'][$key][$fieldKey] = false;
 
-                                if (empty(array_diff($data[0]['rows'][$key], [false]))) {
-                                    array_splice($data[0]['rows'], $key, 1);
-                                    $key--;
-                                    continue 2;
-                                }
+//                                if (empty(array_diff($data[0]['rows'][$key], [false]))) {
+//                                    array_splice($data[0]['rows'], $key, 1);
+//                                    $key--;
+//                                    continue 2;
+//                                }
                             }
                         }
                     }
