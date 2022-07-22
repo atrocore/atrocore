@@ -432,7 +432,9 @@ class Language
         $fullData = [];
 
         // load core
-        $fullData = Util::merge($fullData, $data['core']);
+        if (!empty($data['core'])) {
+            $fullData = Util::merge($fullData, $data['core']);
+        }
 
         // load modules
         foreach ($this->container->get('metadata')->getModules() as $name => $module) {
@@ -442,7 +444,7 @@ class Language
         }
 
         // load custom
-        if (!$this->noCustom) {
+        if (!$this->noCustom && !empty($data['custom'])) {
             $fullData = Util::merge($fullData, $data['custom']);
         }
 
