@@ -617,7 +617,12 @@ class Record extends \Espo\Core\Services\Base
      */
     protected function validateFieldWithPattern(Entity $entity, string $field, array $defs): void
     {
-        if (!empty($pattern = $defs['pattern']) && !preg_match($pattern, $entity->get($field))) {
+        if (empty($defs['pattern'])) {
+            return;
+        }
+
+        $pattern = $defs['pattern'];
+        if (!preg_match($pattern, $entity->get($field))) {
             $message = $this->getInjection('language')->translate('dontMatchToPattern', 'exceptions', $entity->getEntityType());
             $message = str_replace('{field}', $field, $message);
             $message = str_replace('{pattern}', $pattern, $message);
@@ -2827,7 +2832,13 @@ class Record extends \Espo\Core\Services\Base
 
             if ($entity->has($field) && Util::toMd5($entity->get($field)) != Util::toMd5($prev[$field])) {
                 foreach (['Id', 'Ids', 'Currency', 'Unit'] as $suffix) {
-                    $field = $this->removeSuffix($field, $suffix);
+                    $name = $this->removeSuffix($field, $suffix);
+                    $type = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $name, 'type'], '');
+
+                    if (!empty($type) && in_array($type, ['link', 'linkMultiple', 'currency', 'unit'])) {
+                        $field = $name;
+                    }
+
                 }
                 $fieldsThatConflict[$field] = $this->getInjection('language')->translate($field, 'fields', $this->entityName);
             }
@@ -2901,13 +2912,17 @@ class Record extends \Espo\Core\Services\Base
 
         $result = false;
 
-        $item = $this->getMetadata()
-            ->get("clientDefs.{$entity->getEntityName()}.dynamicLogic.fields.$field.$typeResult.conditionGroup", []);
+        $item = $this->getMetadata()->get("clientDefs.{$entity->getEntityName()}.dynamicLogic.fields.$field.$typeResult.conditionGroup", []);
 
-        if (empty($item) && !empty($relation = $entity->getFields()[$field]['relation']) && empty($this->relationFields['usedRelation'][$relation])) {
-            $this->relationFields['usedRelation'][$relation] = $relation;
-            $item = $this->getMetadata()
-                ->get("clientDefs.{$entity->getEntityName()}.dynamicLogic.fields.$relation.$typeResult.conditionGroup", []);
+        if (empty($item)) {
+            $fields = $entity->getFields();
+            if (!empty($fields[$field]['relation'])) {
+                $relation = $fields[$field]['relation'];
+                if (empty($this->relationFields['usedRelation'][$relation])) {
+                    $this->relationFields['usedRelation'][$relation] = $relation;
+                    $item = $this->getMetadata()->get("clientDefs.{$entity->getEntityName()}.dynamicLogic.fields.$relation.$typeResult.conditionGroup", []);
+                }
+            }
         }
 
         if (!empty($item)) {

@@ -38,7 +38,7 @@ namespace Espo\Core\Utils\Database\DBAL\Schema;
 use Doctrine\DBAL\Events;
 use Doctrine\DBAL\Event\SchemaIndexDefinitionEventArgs;
 
-class MySqlSchemaManager extends \Doctrine\DBAL\Schema\MySqlSchemaManager
+class MySqlSchemaManager extends \Doctrine\DBAL\Schema\MySQLSchemaManager
 {
     public function createSchema()
     {
@@ -72,14 +72,14 @@ class MySqlSchemaManager extends \Doctrine\DBAL\Schema\MySqlSchemaManager
         }
         $indexes = $this->listTableIndexes($tableName);
 
-        return new Table($tableName, $columns, $indexes, $foreignKeys, false, array());
+        return new Table($tableName, $columns, $indexes, [], $foreignKeys, []);
     }
 
     public function listTableIndexes($table)
     {
         $sql = $this->_platform->getListTableIndexesSQL($table, $this->_conn->getDatabase());
 
-        $tableIndexes = $this->_conn->fetchAll($sql);
+        $tableIndexes = $this->_conn->fetchAllAssociative($sql);
 
         return $this->_getPortableTableIndexesList($tableIndexes, $table);
     }

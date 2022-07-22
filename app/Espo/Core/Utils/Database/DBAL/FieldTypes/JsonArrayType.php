@@ -35,18 +35,64 @@
 
 namespace Espo\Core\Utils\Database\DBAL\FieldTypes;
 
-class JsonArrayType extends \Doctrine\DBAL\Types\JsonArrayType
+use Doctrine\DBAL\Platforms\AbstractPlatform;
+
+class JsonArrayType extends \Doctrine\DBAL\Types\Type
 {
     const JSON_ARRAY = 'jsonArray';
-
-    public function getName()
-    {
-        return self::JSON_ARRAY;
-    }
 
     public static function getDbTypeName()
     {
         return 'TEXT';
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
+    {
+        return $platform->getClobTypeDeclarationSQL($fieldDeclaration);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function convertToDatabaseValue($value, AbstractPlatform $platform)
+    {
+        if (null === $value) {
+            return null;
+        }
+
+        return json_encode($value);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function convertToPHPValue($value, AbstractPlatform $platform)
+    {
+        if ($value === null || $value === '') {
+            return array();
+        }
+
+        $value = (is_resource($value)) ? stream_get_contents($value) : $value;
+
+        return json_decode($value, true);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        return self::JSON_ARRAY;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function requiresSQLCommentHint(AbstractPlatform $platform)
+    {
+        return true;
+    }
 }

@@ -64,8 +64,8 @@ class Log implements Factory
         $log->pushHandler($handler);
 
         $errorHandler = new ErrorHandler($log);
-        $errorHandler->registerExceptionHandler(null, false);
-        $errorHandler->registerErrorHandler(array(), false);
+        $errorHandler->registerExceptionHandler([], false);
+        $errorHandler->registerErrorHandler([], false);
 
         return $log;
     }

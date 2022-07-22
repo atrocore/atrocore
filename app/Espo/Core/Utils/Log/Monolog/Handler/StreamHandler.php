@@ -56,7 +56,7 @@ class StreamHandler extends \Monolog\Handler\StreamHandler
     }
 
 
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         if (!$this->url) {
             throw new \LogicException('Missing logger path, the stream can not be opened. Please check logger options in the data/config.php.');

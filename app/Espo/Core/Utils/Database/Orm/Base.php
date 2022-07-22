@@ -222,21 +222,12 @@ class Base
         return $returns;
     }
 
-    /**
-     * Get Foreign field
-     *
-     * @param  string $name
-     * @param  string $entityName
-     * @return string
-     */
     protected function getForeignField($name, $entityName)
     {
-        $foreignField = $this->getMetadata()->get('entityDefs.'.$entityName.'.fields.'.$name);
+        $foreignFieldType = $this->getMetadata()->get('entityDefs.' . $entityName . '.fields.' . $name . '.type');
 
-        if ($foreignField['type'] != 'varchar') {
-            if ($foreignField['type'] == 'personName') {
-                return array('first' . ucfirst($name), ' ', 'last' . ucfirst($name));
-            }
+        if ($foreignFieldType === 'personName') {
+            return ['first' . ucfirst($name), ' ', 'last' . ucfirst($name)];
         }
 
         return $name;
