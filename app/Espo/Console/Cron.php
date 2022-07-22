@@ -159,10 +159,6 @@ class Cron extends AbstractConsole
 
     private function authTokenControl(): void
     {
-        if ($this->getConfig()->get('authenticationMethod') != 'Token') {
-            return;
-        }
-
         /** @var EntityManager $em */
         $em = $this->getContainer()->get('entityManager');
 

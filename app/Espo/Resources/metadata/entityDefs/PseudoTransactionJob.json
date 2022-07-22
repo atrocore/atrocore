@@ -41,7 +41,7 @@
     },
     "parent": {
       "type": "belongsTo",
-      "entity": "PseudoTransaction"
+      "entity": "PseudoTransactionJob"
     }
   },
   "collection": {

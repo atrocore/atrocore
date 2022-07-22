@@ -115,7 +115,6 @@ return [
     ],
     'defaultCurrency'                       => 'EUR',
     'baseCurrency'                          => 'EUR',
-    'authenticationMethod'                  => 'Token',
     'globalSearchEntityList'                => [],
     'tabList'                               => [],
     'quickCreateList'                       => [],

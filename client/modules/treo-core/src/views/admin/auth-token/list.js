@@ -36,9 +36,9 @@ Espo.define('treo-core:views/admin/auth-token/list', 'class-replace!treo-core:vi
     Dep => Dep.extend({
 
         getHeader: function () {
-            return  `<a href="#Admin">${this.translate('Administration')}</a>` +
-                    `<span class="subsection">${this.translate('Users', 'labels', 'Admin')}</span>` +
-                    this.getLanguage().translate('Auth Tokens', 'labels', 'Admin');
+            return  `<div class="header-breadcrumbs fixed-header-breadcrumbs"><a href="#Admin">${this.translate('Administration')}</a>` +
+                    this.getLanguage().translate('Auth Tokens', 'labels', 'Admin')
+                    + `</div><div class="header-title">${this.getLanguage().translate('Auth Tokens', 'labels', 'Admin')}</div>`
         }
 
     })

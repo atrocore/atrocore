@@ -37,7 +37,7 @@ Espo.define('views/locale/list', 'views/list', function (Dep) {
     return Dep.extend({
 
         getHeader() {
-            return `<a href="#Admin">${this.translate('Administration')}</a><span class="subsection">${this.translate('System')}</span>${this.getLanguage().translate('Locale', 'labels', 'Admin')}`;
+            return this.buildHeaderHtml([this.getLanguage().translate('Locales', 'labels', 'Admin')]);
         },
 
     });

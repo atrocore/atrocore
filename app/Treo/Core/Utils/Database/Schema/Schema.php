@@ -120,23 +120,17 @@ class Schema extends \Espo\Core\Utils\Database\Schema\Schema
         return $result;
     }
 
-    /**
-     * Get diff queries
-     *
-     * @return array
-     * @throws \Doctrine\DBAL\DBALException
-     * @throws \Espo\Core\Exceptions\Error
-     */
     public function getDiffQueries(): array
     {
         // set strict type
         $this->getPlatform()->strictType = true;
 
+        $fromSchema = $this->getCurrentSchema();
+        $toSchema = $this->schemaConverter->process($this->ormMetadata->getData(), null);
+        $diff = $this->getComparator()->compare($fromSchema, $toSchema);
+
         // get queries
-        $queries = $this
-            ->getComparator()
-            ->compare($this->getCurrentSchema(), $this->schemaConverter->process($this->ormMetadata->getData(), null))
-            ->toSql($this->getPlatform());
+        $queries = $diff->toSql($this->getPlatform());
 
         // prepare queries
         $queries = $this->dispatch('Schema', 'prepareQueries', new Event(['queries' => $queries]))->getArgument('queries');

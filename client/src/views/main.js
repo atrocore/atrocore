@@ -57,12 +57,6 @@ Espo.define('views/main', 'view', function (Dep) {
             },
         },
 
-        setupFinal() {
-            Dep.prototype.setupFinal.call(this);
-
-            this.bindFixedHeaderOnScroll();
-        },
-
         init: function () {
             this.scope = this.options.scope || this.scope;
             this.menu = {};
@@ -108,42 +102,24 @@ Espo.define('views/main', 'view', function (Dep) {
 
         getHeader: function () {},
 
-        buildHeaderHtml: function (arr) {
+        buildHeaderHtml: function (arr, isAdmin) {
             let a = [];
-            arr.forEach(function (item) {
-                a.push('<span>' + item + '</span>');
+
+            if (isAdmin) {
+                a.unshift(`<a href='#Admin' class="action">${this.getLanguage().translate('Administration', 'labels')}</a>`);
+            } else {
+                a.unshift(`<a href='#Dashboard' class="action">${this.getLanguage().translate('Dashboard', 'labels')}</a>`);
+            }
+
+            arr.forEach(function (item, index) {
+                if (index !== arr.length - 1) {
+                    a.push('<span class="subsection">' + item + '</span>');
+                } else {
+                    a.push('<span>' + item + '</span>');
+                }
             }, this);
 
-            return '<div class="header-breadcrumbs">' + a.join('<span class="breadcrumb-separator"> / </span>') + '</div>';
-        },
-
-        bindFixedHeaderOnScroll() {
-            let $window = $(window);
-            this.listenToOnce(this, 'remove', () => {
-                $window.off('scroll.fixed-header')
-            });
-            this.listenTo(this, 'after:render', () => {
-                $window.off('scroll.fixed-header');
-                $window.on('scroll.fixed-header', () => {
-                    let scrollTop = $window.scrollTop();
-                    let pageHeader = this.$el.find('.header.page-header');
-                    let header = this.$el.find('.header-breadcrumbs');
-                    let navBarRight = $('#header .navbar-right');
-                    let width = $('#header ul.navbar-right > li').get().reduce((prev, curr) => {
-                        return prev - $(curr).outerWidth()
-                    }, navBarRight.outerWidth() - 30);
-                    if (scrollTop > this.$el.find('.page-header').outerHeight() && !$('#header .navbar .menu').hasClass('open-menu')) {
-                        let height = pageHeader.innerHeight();
-                        header.addClass('fixed-header-breadcrumbs')
-                            .css('width', width + 'px');
-                        pageHeader.innerHeight(height);
-                    } else {
-                        header.removeClass('fixed-header-breadcrumbs')
-                            .css('width', 'auto');
-                        pageHeader.css('height', 'auto');
-                    }
-                });
-            });
+            return '<div class="header-breadcrumbs fixed-header-breadcrumbs">' + a.join('') + '</div><div class="header-title">' + arr.pop() + '</div>';
         },
 
         getHeaderIconHtml: function () {

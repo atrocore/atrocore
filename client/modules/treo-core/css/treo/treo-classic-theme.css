@@ -6403,6 +6403,7 @@ button.close {
 
 .modal-open {
     padding-right: 0 !important;
+    overflow: hidden;
 }
 
 .modal {
@@ -6450,6 +6451,10 @@ button.close {
     top: 50%;
     transform: translateY(-50%);
     padding-right: 0 !important;
+}
+
+.password-change-request-modal .modal-dialog {
+    margin: 0 auto;
 }
 
 .modal-dialog {
@@ -15080,7 +15085,7 @@ label {
 }
 
 .page-header {
-    margin: 16px 0 10px 0;
+    margin: 14px 0 10px 0;
     border-bottom: 0;
     padding-bottom: 2px;
     min-height: 33px
@@ -19265,12 +19270,17 @@ input#sn-checkbox-open-in-new-window {
 .fixed-header-breadcrumbs {
     width: auto !important;
     position: fixed;
-    top: 11px;
+    top: 0;
     z-index: 1040;
     white-space: nowrap;
     overflow: hidden;
-    height: 33px;
+    line-height: 56px;
     text-overflow: ellipsis;
+    font-size: 16px;
+}
+
+.header-title {
+    font-size: 20px;
 }
 
 @media screen and (min-width: 768px) {
@@ -19387,7 +19397,7 @@ input#sn-checkbox-open-in-new-window {
     margin-left: 10px;
 }
 
-#main > .list-container .show-more {
+.show-more {
     display: flex;
     align-items: center;
 }
@@ -19629,12 +19639,10 @@ ul.dropdown-menu > li.checkbox {
     position: relative;
 }
 
-#main .page-header h3 > a::after,
-#main .page-header h3 > span.subsection::after {
+#main .page-header h3 .header-breadcrumbs > a::after, #main .page-header h3 .header-breadcrumbs> span.subsection::after {
     content: '/';
     display: inline-block;
-    color: #000;
-    background: #fff;
+    color: #8e8e8e;
     height: 100%;
     width: 21px;
     text-align: center;

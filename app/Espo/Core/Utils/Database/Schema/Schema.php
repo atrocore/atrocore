@@ -90,7 +90,7 @@ class Schema
 
         $this->databaseHelper = new \Espo\Core\Utils\Database\Helper($this->config);
 
-        $this->comparator = new \Espo\Core\Utils\Database\DBAL\Schema\Comparator();
+        $this->comparator = new \Doctrine\DBAL\Schema\Comparator();
         $this->initFieldTypes();
 
         $this->converter = new \Espo\Core\Utils\Database\Converter($this->metadata, $this->fileManager, $this->config);
@@ -157,7 +157,7 @@ class Schema
             if ($typeList !== false) {
                 foreach ($typeList as $name) {
                     $typeName = preg_replace('/Type\.php$/i', '', $name);
-                    $dbalTypeName = strtolower($typeName);
+                    $dbalTypeName = lcfirst($typeName);
 
                     $filePath = Util::concatPath($path, $typeName . 'Type');
                     $class = Util::getClassName($filePath);

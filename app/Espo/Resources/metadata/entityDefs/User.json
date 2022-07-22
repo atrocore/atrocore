@@ -249,11 +249,6 @@
             "type": "hasOne",
             "entity": "Preferences"
         },
-        "emails": {
-            "type": "hasMany",
-            "entity": "Email",
-            "foreign": "users"
-        },
         "notes": {
             "type": "hasMany",
             "entity": "Note",

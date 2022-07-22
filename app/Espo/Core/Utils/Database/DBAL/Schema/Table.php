@@ -56,7 +56,7 @@ class Table extends \Doctrine\DBAL\Schema\Table
         return $column;
     }
 
-    public function addIndex(array $columnNames, $indexName = null, array $flags = array())
+    public function addIndex(array $columnNames, ?string $indexName = null, array $flags = [], array $options = [])
     {
         if($indexName == null) {
             $indexName = $this->_generateIdentifierName(

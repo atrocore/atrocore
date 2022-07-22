@@ -54,15 +54,15 @@ class Workflow implements Factory
         // create registry
         $registry = new Registry();
 
-        // get metadata
+        /** @var \Espo\Core\Utils\Metadata $metadata */
         $metadata = $container->get('metadata');
 
         if (!empty($workflows = $metadata->get('workflow', []))) {
             // get entity manager
             $entityManager = $container->get('entityManager');
 
-            // get event manager
-            $eventManager = $container->get('eventManager');
+            /** @var \Symfony\Component\EventDispatcher\EventDispatcher $eventDispatcher */
+            $eventDispatcher = $container->get('eventManager')->getEventDispatcher();
 
             foreach ($workflows as $entity => $data) {
                 foreach ($data as $field => $settings) {
@@ -94,7 +94,7 @@ class Workflow implements Factory
 
                     // add
                     $registry->addWorkflow(
-                        new Item($definition, new MethodMarkingStore(true, $field), $eventManager, $id),
+                        new Item($definition, new MethodMarkingStore(true, $field), $eventDispatcher, $id),
                         new InstanceOfSupportStrategy($entityManager->normalizeEntityName($entity))
                     );
                 }

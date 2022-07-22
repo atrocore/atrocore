@@ -155,12 +155,13 @@ class PseudoTransactionManager extends Injectable
         $id = Util::generateId();
         $entityType = $this->getPDO()->quote($entityType);
         $entityId = $this->getPDO()->quote($entityId);
+        $input = $this->getPDO()->quote($input);
         $createdById = $this->getUser()->get('id');
         $parentId = empty($parentId) ? 'NULL' : $this->getPDO()->quote($parentId);
 
         try {
             $this->getPDO()->exec(
-                "INSERT INTO `pseudo_transaction_job` (id,entity_type,entity_id,`action`,input_data,created_by_id,parent_id,md5) VALUES ('$id',$entityType,$entityId,'$action','$input','$createdById',$parentId,'$md5')"
+                "INSERT INTO `pseudo_transaction_job` (id,entity_type,entity_id,`action`,input_data,created_by_id,parent_id,md5) VALUES ('$id',$entityType,$entityId,'$action',$input,'$createdById',$parentId,'$md5')"
             );
         } catch (\PDOException $e) {
             if (!empty($e->errorInfo[1]) && $e->errorInfo[1] == 1062) {

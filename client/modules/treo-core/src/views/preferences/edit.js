@@ -37,7 +37,7 @@ Espo.define('treo-core:views/preferences/edit', 'class-replace!treo-core:views/p
     return Dep.extend({
 
         getHeader: function () {
-            return `<span class="subsection">${this.translate('Preferences')}</span>${this.userName}`
+            return this.buildHeaderHtml([this.getLanguage().translate('Preferences')]);
         },
 
     });
