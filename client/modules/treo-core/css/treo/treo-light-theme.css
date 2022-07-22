@@ -20685,9 +20685,14 @@ td[data-name="draggableIcon"] {
   border-bottom-width: 1px;
 }
 
-.field .add-attribute-type-value {
+.field .add-attribute-type-value,
+.field .add-attribute-type-value ~ .translate-action {
   margin-top: 10px;
   display: inline-block;
+}
+
+.field .add-attribute-type-value ~ .translate-action ~ .preloader {
+  margin-top: 12px !important;
 }
 
 .control-label.multilang-error-label {
