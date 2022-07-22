@@ -178,7 +178,7 @@ class TreoStore extends Base
                 'treoId'      => $treoId,
                 'packageId'   => $rows[$max]['name'],
                 'url'         => $rows[$max]['source']['url'],
-                'name'        => empty($rows[$max]['extra']['name']) ? $rows[$max]['extra']['name'] : $treoId,
+                'name'        => !empty($rows[$max]['extra']['name']) ? $rows[$max]['extra']['name'] : $treoId,
                 'description' => !empty($rows[$max]['extra']['description']) ? $rows[$max]['extra']['description'] : '',
                 'tags'        => $tags,
                 'status'      => $status
