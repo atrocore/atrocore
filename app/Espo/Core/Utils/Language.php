@@ -436,7 +436,9 @@ class Language
 
         // load modules
         foreach ($this->container->get('metadata')->getModules() as $name => $module) {
-            $fullData = Util::merge($fullData, $data[$name]);
+            if (!empty($data[$name])) {
+                $fullData = Util::merge($fullData, $data[$name]);
+            }
         }
 
         // load custom
