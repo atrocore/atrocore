@@ -19950,6 +19950,14 @@ select,
     top: 1px;
     border: 0;
     color: #ccc;
+    z-index: 10;
+    background-color: transparent;
+}
+
+#main .catalog-tree-panel .btn-group.category-buttons {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
 }
 
 .side > button.collapse-panel {
