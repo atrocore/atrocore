@@ -19919,6 +19919,14 @@ ul.dropdown-menu > li.checkbox {
     top: 1px;
     border: 0;
     color: #ccc;
+    z-index: 10;
+    background-color: transparent;
+}
+
+#main .catalog-tree-panel .btn-group.category-buttons {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
 }
 
 .side > button.collapse-panel {
@@ -21753,9 +21761,14 @@ td[data-name="draggableIcon"] {
     border-bottom-width: 1px;
 }
 
-.field .add-attribute-type-value {
+.field .add-attribute-type-value,
+.field .add-attribute-type-value ~ .translate-action {
     margin-top: 10px;
     display: inline-block;
+}
+
+.field .add-attribute-type-value ~ .translate-action ~ .preloader {
+    margin-top: 12px !important;
 }
 
 .control-label.multilang-error-label {
