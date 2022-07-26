@@ -601,7 +601,7 @@ class Record extends \Espo\Core\Services\Base
     protected function checkFieldsWithPattern(Entity $entity): void
     {
         foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields']) as $field => $defs) {
-            if (!empty($entity->get($field))) {
+            if (!empty($defs['pattern']) && !empty($entity->get($field))) {
                 $this->validateFieldWithPattern($entity, $field, $defs);
             }
         }
