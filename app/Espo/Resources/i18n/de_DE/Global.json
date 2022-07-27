@@ -267,6 +267,7 @@
     "click to add...": "zum Hinzufügen klicken..."
   },
   "messages": {
+    "massDeleting": "Entferne: {{deleted}} vom {{total}}",
     "optionValueCannotBeEmpty": "Option darf nicht leer sein",
     "minimumOneOptionsRequired": "Mindestens ein Optionswert ist erforderlich.",
     "defaultEnumValueCannotBeEmpty": "Der Standardwert sollte ausgewählt werden, wenn der leere Wert deaktiviert ist.",

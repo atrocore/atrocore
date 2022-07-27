@@ -283,6 +283,7 @@
     "click to add...": "click to add..."
   },
   "messages": {
+    "massDeleting": "Deleting: {{deleted}} from {{total}}",
     "optionValueCannotBeEmpty": "Option value cannot be empty",
     "minimumOneOptionsRequired": "Minimum one option value is required.",
     "defaultEnumValueCannotBeEmpty": "Default value should be selected if empty value is disabled.",

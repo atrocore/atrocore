@@ -37,6 +37,9 @@ declare(strict_types=1);
 
 namespace Espo\Services;
 
+use Espo\Core\DataManager;
+use Espo\Core\Utils\Util;
+
 class MassDelete extends QueueManagerBase
 {
     public function run(array $data = []): bool
@@ -45,20 +48,22 @@ class MassDelete extends QueueManagerBase
             return false;
         }
 
+        $entityType = $data['entityType'];
+
         $ids = [];
         if (array_key_exists('ids', $data) && !empty($data['ids']) && is_array($data['ids'])) {
             $ids = $data['ids'];
         }
 
         if (array_key_exists('where', $data)) {
-            $selectManager = $this->getContainer()->get('selectManagerFactory')->create($data['entityType']);
+            $selectManager = $this->getContainer()->get('selectManagerFactory')->create($entityType);
             $selectParams = $selectManager->getSelectParams(['where' => $data['where']], true, true);
-            $this->getEntityManager()->getRepository($data['entityType'])->handleSelectParams($selectParams);
+            $this->getEntityManager()->getRepository($entityType)->handleSelectParams($selectParams);
 
             $query = $this
                 ->getEntityManager()
                 ->getQuery()
-                ->createSelectQuery($data['entityType'], array_merge($selectParams, ['select' => ['id']]));
+                ->createSelectQuery($entityType, array_merge($selectParams, ['select' => ['id']]));
 
             $ids = $this
                 ->getEntityManager()
@@ -71,11 +76,17 @@ class MassDelete extends QueueManagerBase
             return false;
         }
 
-        $service = $this->getContainer()->get('serviceFactory')->create($data['entityType']);
+        $deleted = 0;
+        $total = count($ids);
 
+        self::updatePublicData($entityType, ['deleted' => $deleted, 'total' => $total]);
+
+        $service = $this->getContainer()->get('serviceFactory')->create($data['entityType']);
         foreach ($ids as $id) {
             try {
                 $service->deleteEntity($id);
+                $deleted++;
+                self::updatePublicData($entityType, ['deleted' => $deleted, 'total' => $total]);
             } catch (\Throwable $e) {
                 $message = "Delete {$data['entityType']} '$id' failed: {$e->getMessage()}";
                 $GLOBALS['log']->error($message);
@@ -84,6 +95,16 @@ class MassDelete extends QueueManagerBase
         }
 
         return true;
+    }
+
+    public static function updatePublicData(string $entityType, ?array $data): void
+    {
+        $publicData = DataManager::getPublicData('massDelete');
+        if (empty($publicData)) {
+            $publicData = [];
+        }
+        $publicData[$entityType] = $data;
+        DataManager::pushPublicData('massDelete', $publicData);
     }
 
     protected function notify(string $message): void

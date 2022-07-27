@@ -561,7 +561,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     type: 'POST',
                     data: JSON.stringify(data)
                 }).done(function (result) {
-                    Espo.Ui.success(this.translate('Done'));
                     this.collection.fetch();
                 }.bind(this));
             }, this);

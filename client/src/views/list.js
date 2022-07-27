@@ -72,6 +72,8 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
 
         defaultViewMode: 'list',
 
+        isMassDeletingNow: false,
+
         init: function () {
             Dep.prototype.init.call(this);
 
@@ -144,6 +146,29 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
             }
 
             this.getStorage().set('list-view', this.scope, this.viewMode);
+
+            this.listenTo(Backbone.Events, 'publicData', data => {
+                if (data.massDelete && data.massDelete[this.scope] && window.location.hash === `#${this.scope}`) {
+                    this.massDeleting(data.massDelete[this.scope]);
+                }
+            });
+        },
+
+        massDeleting: function (data) {
+            if (data.deleted) {
+                this.isMassDeletingNow = true;
+            }
+
+            if (this.isMassDeletingNow && !data.deleted) {
+                Espo.Ui.success(this.translate('Done'));
+                return;
+            }
+
+            if (!data.deleted) {
+                return;
+            }
+
+            this.notify(this.translate('massDeleting', 'messages', 'Global').replace('{{deleted}}', data.deleted).replace('{{total}}', data.total), null, 20 * 1000);
         },
 
         setupModes: function () {
