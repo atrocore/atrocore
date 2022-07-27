@@ -145,14 +145,17 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
 
             this.getStorage().set('list-view', this.scope, this.viewMode);
 
+            this.setupMassDeletingNotification();
+        },
+
+        setupMassDeletingNotification: function () {
             let isMassDeletingNow = false;
             this.listenTo(Backbone.Events, 'publicData', data => {
                 if (data.massDelete && window.location.hash === `#${this.scope}`) {
                     if (data.massDelete[this.scope]) {
                         isMassDeletingNow = true;
                         let scopeData = data.massDelete[this.scope];
-                        let message = this.translate('massDeleting', 'messages', 'Global').replace('{{deleted}}', scopeData.deleted).replace('{{total}}', scopeData.total);
-                        this.notify(message, null, 20 * 1000);
+                        this.notify(this.translate('massDeleting', 'messages', 'Global').replace('{{deleted}}', scopeData.deleted).replace('{{total}}', scopeData.total));
                     }
 
                     if (isMassDeletingNow && data.massDelete[this.scope] === null) {

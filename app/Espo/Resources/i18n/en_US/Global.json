@@ -150,7 +150,7 @@
     "Wrong username/password": "Wrong username/password",
     "Auth error": "Authentication failed. Please re-login again.",
     "Post cannot be empty": "Post cannot be empty",
-    "Removing...": "Removing...",
+    "removing": "Deleting...",
     "Unlinking...": "Unlinking...",
     "Posting...": "Posting...",
     "Username can not be empty!": "Username can not be empty!",

@@ -540,7 +540,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 message: this.translate('removeSelectedRecordsConfirmation', 'messages'),
                 confirmText: this.translate('Remove')
             }, function () {
-                this.notify('Removing...');
+                this.notify(this.translate('removing', 'labels', 'Global'));
 
                 var ids = [];
                 var data = {};

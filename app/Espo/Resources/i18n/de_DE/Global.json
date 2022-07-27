@@ -148,7 +148,7 @@
     "Wrong username/password": "Falscher Benutzername/Passwort",
     "Auth error": "Authentifizierung fehlgeschlagen. Bitte melden Sie sich erneut an.",
     "Post cannot be empty": "Notiz darf nicht leer sein",
-    "Removing...": "Lösche...",
+    "removing": "Lösche...",
     "Unlinking...": "Lösche Verknüpfung...",
     "Posting...": "Poste...",
     "Username can not be empty!": "Der Benutzername darf nicht leer sein!",

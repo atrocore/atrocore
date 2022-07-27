@@ -79,12 +79,16 @@ class MassDelete extends QueueManagerBase
         $deleted = 0;
         $total = count($ids);
 
+        self::updatePublicData($entityType, ['deleted' => $deleted, 'total' => $total]);
+
         $service = $this->getContainer()->get('serviceFactory')->create($data['entityType']);
         foreach ($ids as $id) {
             try {
                 $service->deleteEntity($id);
                 $deleted++;
-                self::updatePublicData($entityType, ['deleted' => $deleted, 'total' => $total]);
+                if (($deleted % 5) === 0) {
+                    self::updatePublicData($entityType, ['deleted' => $deleted, 'total' => $total]);
+                }
             } catch (\Throwable $e) {
                 $message = "Delete {$data['entityType']} '$id' failed: {$e->getMessage()}";
                 $GLOBALS['log']->error($message);
