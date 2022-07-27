@@ -1,1 +1,1 @@
-<h3><div class="header-breadcrumbs fixed-header-breadcrumbs"><a href="#Admin">{{translate 'Administration'}}</a>{{translate 'Outbound Emails' scope='Admin'}}</div><div class="header-title>{{translate 'Outbound Emails' scope='Admin'}}</div></h3>
+<h3><div class="header-breadcrumbs fixed-header-breadcrumbs"><a href="#Admin">{{translate 'Administration'}}</a>{{translate 'Outbound Emails' scope='Admin'}}</div><div class="header-title">{{translate 'Outbound Emails' scope='Admin'}}</div></h3>
