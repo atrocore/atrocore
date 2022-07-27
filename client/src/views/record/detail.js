@@ -745,7 +745,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 const position = this.$el.position();
 
                 if (position && 'top' in position) {
-                    var edge = this.$el.position().top + this.$el.outerHeight(true);
+                    var edge = position.top + this.$el.outerHeight(true);
                     var scrollTop = $window.scrollTop();
 
                     if (scrollTop < edge) {
