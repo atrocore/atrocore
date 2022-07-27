@@ -149,21 +149,19 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
         },
 
         setupMassDeletingNotification: function () {
-            let isMassDeletingNow = false;
             this.listenTo(Backbone.Events, 'publicData', data => {
                 if (data.massDelete && window.location.hash === `#${this.scope}`) {
                     if (data.massDelete[this.scope]) {
-                        isMassDeletingNow = true;
                         let scopeData = data.massDelete[this.scope];
-                        this.notify(this.translate('massDeleting', 'messages', 'Global').replace('{{deleted}}', scopeData.deleted).replace('{{total}}', scopeData.total));
-                    }
-
-                    if (isMassDeletingNow && data.massDelete[this.scope] === null) {
-                        setTimeout(() => {
-                            this.notify(this.translate('Done'), 'success');
-                            this.collection.fetch();
-                        }, 1100);
-                        isMassDeletingNow = false;
+                        if (scopeData.done) {
+                            if (this.getStorage().get('massDeleteDoneHash', this.scope) !== scopeData.done) {
+                                this.getStorage().set('massDeleteDoneHash', this.scope, scopeData.done);
+                                this.notify(this.translate('Done'), 'success');
+                                this.collection.fetch();
+                            }
+                        } else {
+                            this.notify(this.translate('massDeleting', 'messages', 'Global').replace('{{deleted}}', scopeData.deleted).replace('{{total}}', scopeData.total));
+                        }
                     }
                 }
             });
@@ -226,7 +224,7 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
                 this.menu.buttons.unshift({
                     link: '#' + this.scope + '/create',
                     action: 'create',
-                    label: 'Create ' +  this.scope,
+                    label: 'Create ' + this.scope,
                     style: 'primary',
                     acl: 'create',
                     aclScope: this.entityType || this.scope,
@@ -374,7 +372,8 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
             }
         },
 
-        prepareRecordViewOptions: function (options) {},
+        prepareRecordViewOptions: function (options) {
+        },
 
         createListRecordView: function (fetch) {
             var o = {
@@ -436,9 +435,11 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
             this.setPageTitle(this.getLanguage().translate(this.scope, 'scopeNamesPlural'));
         },
 
-        getCreateAttributes: function () {},
+        getCreateAttributes: function () {
+        },
 
-        prepareCreateReturnDispatchParams: function (params) {},
+        prepareCreateReturnDispatchParams: function (params) {
+        },
 
         actionQuickCreate: function () {
             var attributes = this.getCreateAttributes() || {};

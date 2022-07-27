@@ -39,6 +39,7 @@ namespace Espo\Services;
 
 use Espo\Core\DataManager;
 use Espo\Core\Utils\Util;
+use Espo\ORM\Entity;
 
 class MassDelete extends QueueManagerBase
 {
@@ -86,7 +87,7 @@ class MassDelete extends QueueManagerBase
             try {
                 $service->deleteEntity($id);
                 $deleted++;
-                if (($deleted % 5) === 0) {
+                if (($deleted % 50) === 0) {
                     self::updatePublicData($entityType, ['deleted' => $deleted, 'total' => $total]);
                 }
             } catch (\Throwable $e) {
@@ -96,7 +97,15 @@ class MassDelete extends QueueManagerBase
             }
         }
 
+        self::updatePublicData($entityType, ['deleted' => $deleted, 'total' => $total, 'done' => Util::generateId()]);
+        sleep(2);
+
         return true;
+    }
+
+    public function getNotificationMessage(Entity $queueItem): string
+    {
+        return '';
     }
 
     public static function updatePublicData(string $entityType, ?array $data): void
