@@ -111,7 +111,7 @@ class QueueItem extends Base
 
     protected function preparePublicDataForMassDelete(Entity $entity): void
     {
-        if ($entity->get('serviceName') !== 'MassDelete' || empty($entity->get('data'))) {
+        if ($entity->get('serviceName') !== 'MassDelete' || in_array($entity->get('status'), ['Pending', 'Running']) || empty($entity->get('data'))) {
             return;
         }
 
