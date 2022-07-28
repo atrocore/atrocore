@@ -149,6 +149,7 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
         },
 
         setupMassDeletingNotification: function () {
+            let prevDeleted = null;
             this.listenTo(Backbone.Events, 'publicData', data => {
                 if (data.massDelete && window.location.hash === `#${this.scope}`) {
                     if (data.massDelete[this.scope]) {
@@ -156,11 +157,15 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
                         if (scopeData.done) {
                             if (this.getStorage().get('massDeleteDoneHash', this.scope) !== scopeData.done) {
                                 this.getStorage().set('massDeleteDoneHash', this.scope, scopeData.done);
-                                this.notify(this.translate('Done'), 'success');
+                                Espo.Ui.notify(this.translate('Done'), 'success');
                                 this.collection.fetch();
                             }
                         } else {
-                            this.notify(this.translate('massDeleting', 'messages', 'Global').replace('{{deleted}}', scopeData.deleted).replace('{{total}}', scopeData.total));
+                            Espo.Ui.notify(this.translate('massDeleting', 'messages', 'Global').replace('{{deleted}}', scopeData.deleted).replace('{{total}}', scopeData.total), null, 2000);
+                            if (scopeData.deleted !== prevDeleted) {
+                                prevDeleted = scopeData.deleted;
+                                this.collection.fetch();
+                            }
                         }
                     }
                 }
