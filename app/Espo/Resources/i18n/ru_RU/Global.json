@@ -131,7 +131,7 @@
     "Wrong username/password": "Неверное имя пользователя/пароль",
     "Auth error": "Ошибка аутентификации. Пожалуйста, залогинтесь снова.",
     "Post cannot be empty": "Сообщение не может быть пустым",
-    "Removing...": "Удаляется...",
+    "removing": "Удаляется...",
     "Unlinking...": "Ссылка убирается...",
     "Posting...": "Размещается...",
     "Username can not be empty!": "Имя пользователя не может быть пустым!",
@@ -286,6 +286,7 @@
     "click to add...": "нажмите, чтобы добавить..."
   },
   "messages": {
+    "massDeleting": "Удаляется: {{deleted}} с {{total}}",
     "optionValueCannotBeEmpty": "Значение опции не может быть пустым",
     "minimumOneOptionsRequired": "Требуется минимум одно значение параметра.",
     "defaultEnumValueCannotBeEmpty": "Если пустые значение запрещено, следует выбрать значение по умолчанию.",

@@ -116,7 +116,6 @@ class Record extends \Espo\Core\Services\Base
     protected string $pseudoTransactionId = '';
 
     protected int $maxMassUpdateCount = 20;
-    protected int $maxMassRemoveCount = 20;
     protected int $maxMassLinkCount = 20;
     protected int $maxMassUnlinkCount = 20;
 
@@ -1977,42 +1976,23 @@ class Record extends \Espo\Core\Services\Base
             ->dispatchEvent('beforeMassRemove', new Event(['params' => $params]))
             ->getArgument('params');
 
-        $ids = [];
+        $name = $this->getInjection('language')->translate('remove', 'massActions', 'Global') . ': ' . $this->entityType;
+
+        $data = [
+            'entityType' => $this->entityType
+        ];
         if (array_key_exists('ids', $params) && !empty($params['ids']) && is_array($params['ids'])) {
-            $ids = $params['ids'];
+            $data['ids'] = $params['ids'];
         }
-
         if (array_key_exists('where', $params)) {
-            $selectParams = $this->getSelectParams(['where' => $params['where']]);
-            $this->getEntityManager()->getRepository($this->getEntityType())->handleSelectParams($selectParams);
-
-            $query = $this
-                ->getEntityManager()
-                ->getQuery()
-                ->createSelectQuery($this->getEntityType(), array_merge($selectParams, ['select' => ['id']]));
-
-            $ids = $this
-                ->getEntityManager()
-                ->getPDO()
-                ->query($query)
-                ->fetchAll(\PDO::FETCH_COLUMN);
+            $data['where'] = $params['where'];
         }
 
-        foreach ($ids as $k => $id) {
-            if ($k < $this->maxMassRemoveCount) {
-                try {
-                    $this->deleteEntity($id);
-                } catch (\Throwable $e) {
-                    $GLOBALS['log']->error("Delete $this->entityType '$id' failed: {$e->getMessage()}");
-                }
-            } else {
-                $this->getPseudoTransactionManager()->pushDeleteEntityJob($this->entityType, $id);
-            }
-        }
+        $this
+            ->getInjection('queueManager')
+            ->push($name, 'MassDelete', $data, 'High');
 
-        return $this
-            ->dispatchEvent('afterMassRemove', new Event(['result' => ['count' => count($ids), 'ids' => $ids]]))
-            ->getArgument('result');
+        return true;
     }
 
     public function follow($id, $userId = null)
@@ -2993,5 +2973,12 @@ class Record extends \Espo\Core\Services\Base
             'pseudoTransactionId'      => $this->getPseudoTransactionId(),
             'pseudoTransactionManager' => $this->getPseudoTransactionManager()
         ];
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('queueManager');
     }
 }

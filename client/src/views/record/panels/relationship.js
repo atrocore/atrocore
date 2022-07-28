@@ -604,7 +604,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 confirmText: this.translate('Remove')
             }, () => {
                 let model = this.collection.get(id);
-                this.notify('Removing...');
+                this.notify('removing');
                 model.destroy({
                     success: () => {
                         this.notify('Removed', 'success');

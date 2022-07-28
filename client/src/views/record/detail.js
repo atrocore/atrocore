@@ -911,7 +911,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.trigger('before:delete');
                 this.trigger('delete');
 
-                this.notify('Removing...');
+                this.notify('removing');
 
                 var collection = this.model.collection;
 

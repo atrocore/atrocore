@@ -68,7 +68,7 @@ Espo.define('views/admin/field-manager/list', 'view', function (Dep) {
                 var field = $(e.currentTarget).data('name');
 
                 this.confirm(this.translate('confirmation', 'messages'), function () {
-                    this.notify('Removing...');
+                    this.notify('removing');
                     $.ajax({
                         url: 'Admin/fieldManager/' + this.scope + '/' + field,
                         type: 'DELETE',

@@ -74,6 +74,30 @@ Espo.define('views/main', 'view', function (Dep) {
             }, this);
 
             this.updateLastUrl();
+            this.setupMassDeletingNotification();
+        },
+
+        setupMassDeletingNotification: function () {
+            this.listenTo(Backbone.Events, 'publicData', data => {
+                let hashParts = window.location.hash.split('/');
+                let hashScope = hashParts.shift().replace('#', '');
+                if (data.massDelete && hashScope === this.scope) {
+                    if (data.massDelete[this.scope]) {
+                        let scopeData = data.massDelete[this.scope];
+                        if (scopeData.done) {
+                            if (this.getStorage().get('massDeleteDoneHash', this.scope) !== scopeData.done) {
+                                this.getStorage().set('massDeleteDoneHash', this.scope, scopeData.done);
+                                Espo.Ui.notify(this.translate('Done'), 'success', 2000);
+                                if (this.collection) {
+                                    this.collection.fetch();
+                                }
+                            }
+                        } else {
+                            Espo.Ui.notify(this.translate('massDeleting', 'messages', 'Global').replace('{{deleted}}', scopeData.deleted).replace('{{total}}', scopeData.total), null, 2000);
+                        }
+                    }
+                }
+            });
         },
 
         updateLastUrl: function () {
