@@ -144,27 +144,6 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
             }
 
             this.getStorage().set('list-view', this.scope, this.viewMode);
-
-            this.setupMassDeletingNotification();
-        },
-
-        setupMassDeletingNotification: function () {
-            this.listenTo(Backbone.Events, 'publicData', data => {
-                if (data.massDelete && window.location.hash === `#${this.scope}`) {
-                    if (data.massDelete[this.scope]) {
-                        let scopeData = data.massDelete[this.scope];
-                        if (scopeData.done) {
-                            if (this.getStorage().get('massDeleteDoneHash', this.scope) !== scopeData.done) {
-                                this.getStorage().set('massDeleteDoneHash', this.scope, scopeData.done);
-                                Espo.Ui.notify(this.translate('Done'), 'success', 2000);
-                                this.collection.fetch();
-                            }
-                        } else {
-                            Espo.Ui.notify(this.translate('massDeleting', 'messages', 'Global').replace('{{deleted}}', scopeData.deleted).replace('{{total}}', scopeData.total), null, 2000);
-                        }
-                    }
-                }
-            });
         },
 
         setupModes: function () {
