@@ -2057,7 +2057,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }, function () {
                 this.collection.trigger('model-removing', id);
                 this.collection.remove(model);
-                this.notify('Removing...');
+                this.notify('removing');
                 model.destroy({
                     wait: true,
                     success: function () {
