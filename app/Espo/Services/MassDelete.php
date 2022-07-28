@@ -88,7 +88,7 @@ class MassDelete extends QueueManagerBase
             try {
                 $service->deleteEntity($id);
                 $deleted++;
-                if ((time() - $start) > 5) {
+                if ((time() - $start) > 3) {
                     self::updatePublicData($entityType, ['deleted' => $deleted, 'total' => $total]);
                     $start = time();
                 }
