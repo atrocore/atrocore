@@ -274,9 +274,10 @@ class Base
     {
         $result = [];
         $textFilterFields = $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'textFilterFields'], ['name']);
+        $fields = array_keys($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []));
 
-        foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []) as $field => $defs) {
-            if (in_array($field, $textFilterFields)) {
+        foreach ($textFilterFields as $field) {
+            if (in_array($field, $fields) || $field == 'id') {
                 $result[] = $field;
             }
         }
