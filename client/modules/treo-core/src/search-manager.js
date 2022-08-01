@@ -148,6 +148,7 @@ Espo.define('treo-core:search-manager', 'class-replace!treo-core:search-manager'
                          isAttribute: (defs.fieldParams || {}).isAttribute,
                          type: type,
                          attribute: attribute,
+                         subQuery: defs.subQuery ?? [],
                          value: value
                      };
                  }
