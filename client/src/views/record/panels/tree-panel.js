@@ -382,8 +382,9 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                 scope: this.treeScope,
             }, view => {
                 view.render();
-                this.listenTo(view, 'category-search-select', item => {
-                    this.selectNode({id: item.id, route: item.categoryRoute});
+                this.listenTo(view, 'find-in-tree-panel', value => {
+                    console.log(value);
+                    // this.selectNode({id: item.id, route: item.categoryRoute});
                 });
             });
 
