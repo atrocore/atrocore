@@ -60,7 +60,7 @@ class Attachment extends Base
      */
     public function _getStorage()
     {
-        return $this->valuesContainer['storage'] ? $this->valuesContainer['storage'] : "UploadDir";
+        return !empty($this->valuesContainer['storage']) ? $this->valuesContainer['storage'] : "UploadDir";
     }
 
     public function getFilePath(): string

@@ -105,6 +105,20 @@ class QueueItem extends Base
         if ($entity->get('status') === 'Canceled' && !empty($entity->get('pid'))) {
             exec("kill -9 {$entity->get('pid')}");
         }
+
+        $this->preparePublicDataForMassDelete($entity);
+    }
+
+    protected function preparePublicDataForMassDelete(Entity $entity): void
+    {
+        if ($entity->get('serviceName') !== 'MassDelete' || in_array($entity->get('status'), ['Pending', 'Running']) || empty($entity->get('data'))) {
+            return;
+        }
+
+        $data = json_decode(json_encode($entity->get('data')), true);
+        if (!empty($data['entityType'])) {
+            \Espo\Services\MassDelete::updatePublicData($data['entityType'], null);
+        }
     }
 
     /**

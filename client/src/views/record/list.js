@@ -540,7 +540,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 message: this.translate('removeSelectedRecordsConfirmation', 'messages'),
                 confirmText: this.translate('Remove')
             }, function () {
-                this.notify('Removing...');
+                this.notify(this.translate('removing', 'labels', 'Global'));
 
                 var ids = [];
                 var data = {};
@@ -561,7 +561,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     type: 'POST',
                     data: JSON.stringify(data)
                 }).done(function (result) {
-                    Espo.Ui.success(this.translate('Done'));
                     this.collection.fetch();
                 }.bind(this));
             }, this);
@@ -2058,7 +2057,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }, function () {
                 this.collection.trigger('model-removing', id);
                 this.collection.remove(model);
-                this.notify('Removing...');
+                this.notify('removing');
                 model.destroy({
                     wait: true,
                     success: function () {

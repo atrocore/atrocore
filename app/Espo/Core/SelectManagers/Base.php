@@ -1046,6 +1046,17 @@ class Base
             throw new Error('Bad attribute in where statement');
         }
 
+        if (!empty($item['subQuery'])) {
+            $foreignEntity = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', substr($attribute, 0, -2), 'entity']);
+            if (!empty($foreignEntity)) {
+                $sp = $this->createSelectManager($foreignEntity)->getSelectParams(['where' => $item['subQuery']], true, true);
+                $sp['select'] = ['id'];
+                $query = $this->getEntityManager()->getQuery()->createSelectQuery($foreignEntity, $sp);
+                $item['value'] = $this->getEntityManager()->getPDO()->query($query)->fetchAll(\PDO::FETCH_COLUMN);
+            }
+            unset($item['subQuery']);
+        }
+
         if (!empty($attribute) && !empty($item['type'])) {
             $methodName = 'getWherePart' . ucfirst($attribute) . ucfirst($item['type']);
             if (method_exists($this, $methodName)) {

@@ -21429,19 +21429,14 @@ body,
   .header-breadcrumbs {
     padding: 5px 2px;
   }
-  .fixed-header-breadcrumbs {
-    padding: 10px;
-    background: #FFFFFF;
+  .header-breadcrumbs {
+    position: relative;
     left: 0;
-    right: 0;
-    top: 53px;
+    margin-bottom: 14px;
+    padding: 0 !important;
     width: 100% !important;
-    min-height: 48px;
-    height: auto;
-    color: #111111;
-    -webkit-box-shadow: rgba(255, 255, 255, 0.8) 0 3px 8px;
-            box-shadow: rgba(255, 255, 255, 0.8) 0 3px 8px;
-    border-bottom: 1px solid #d5d5d5;
+    font-size: 16px;
+    line-height: 16px;
   }
   .fixed-header-breadcrumbs .header-with-dropdown {
     white-space: initial;

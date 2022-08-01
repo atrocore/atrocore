@@ -184,12 +184,17 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         boolFilterList: this.getSelectBoolFilterList(),
                         boolFilterData: this.getBoolFilterData(),
                         primaryFilterName: this.getSelectPrimaryFilterName(),
-                        multiple: true
+                        multiple: true,
+                        massRelateEnabled: true
                     }, function (view) {
                         view.render();
                         this.notify(false);
                         this.listenToOnce(view, 'select', function (models) {
                             this.clearView('dialog');
+                            if (models.massRelate) {
+                                this.addLinkSubQuery(models);
+                                return;
+                            }
                             if (Object.prototype.toString.call(models) !== '[object Array]') {
                                 models = [models];
                             }
@@ -203,6 +208,10 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 this.events['click a[data-action="clearLinkOneOf"]'] = function (e) {
                     var id = $(e.currentTarget).data('id').toString();
                     this.deleteLinkOneOf(id);
+                };
+
+                this.events['click a[data-action="clearLinkSubQuery"]'] = function (e) {
+                    this.deleteLinkSubQuery();
                 };
             }
         },
@@ -228,6 +237,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         setupSearch: function () {
             this.searchData.oneOfIdList = this.searchParams.oneOfIdList || [];
             this.searchData.oneOfNameHash = this.searchParams.oneOfNameHash || {};
+            this.searchData.subQuery = this.searchParams.subQuery || [];
             this.searchData.idValue = this.getSearchParamsData().idValue || this.searchParams.idValue || this.searchParams.value;
             this.searchData.nameValue = this.getSearchParamsData().nameValue ||  this.searchParams.valueName;
 
@@ -405,6 +415,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 this.handleSearchType(type);
 
                 if (~['isOneOf', 'isNotOneOf', 'isNotOneOfAndIsNotEmpty'].indexOf(type)) {
+                    this.addLinkSubQueryHtml(this.searchData.subQuery);
                     this.searchData.oneOfIdList.forEach(function (id) {
                         this.addLinkOneOfHtml(id, this.searchData.oneOfNameHash[id]);
                     }, this);
@@ -430,10 +441,28 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             this.deleteLinkOneOfHtml(id);
 
             var index = this.searchData.oneOfIdList.indexOf(id);
-            if (index > -1) {
+            if (index > -1 && this.searchParams.oneOfIdList) {
                 this.searchParams.oneOfIdList.splice(index, 1);
             }
-            delete this.searchParams.oneOfNameHash[id];
+
+            if (this.searchParams.oneOfNameHash && this.searchParams.oneOfNameHash[id]) {
+                delete this.searchParams.oneOfNameHash[id];
+            }
+        },
+
+        deleteLinkSubQuery: function () {
+            this.deleteLinkSubQueryHtml();
+            this.searchData.subQuery = [];
+        },
+
+        deleteLinkSubQueryHtml: function () {
+            this.$el.find('.link-one-of-container .link-subquery').remove();
+        },
+
+        addLinkSubQuery: function (data) {
+            let subQuery = data.where ?? [];
+            this.searchData.subQuery = subQuery;
+            this.addLinkSubQueryHtml(subQuery);
         },
 
         addLinkOneOf: function (id, name) {
@@ -453,6 +482,22 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             var $el = $('<div />').addClass('link-' + id).addClass('list-group-item');
             $el.html(name + '&nbsp');
             $el.prepend('<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLinkOneOf"><span class="fas fa-times"></a>');
+            $container.append($el);
+
+            return $el;
+        },
+
+        addLinkSubQueryHtml: function (subQuery) {
+            if (!subQuery || subQuery.length === 0){
+                return;
+            }
+
+            this.deleteLinkSubQueryHtml();
+
+            var $container = this.$el.find('.link-one-of-container');
+            var $el = $('<div />').addClass('link-subquery').addClass('list-group-item');
+            $el.html('(Subquery) &nbsp');
+            $el.prepend('<a href="javascript:" class="pull-right" data-action="clearLinkSubQuery"><span class="fas fa-times"></a>');
             $container.append($el);
 
             return $el;
@@ -495,6 +540,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                     value: this.searchData.oneOfIdList,
                     oneOfIdList: this.searchData.oneOfIdList,
                     oneOfNameHash: this.searchData.oneOfNameHash,
+                    subQuery: this.searchData.subQuery,
                     data: {
                         type: type
                     }
@@ -517,6 +563,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                     field: this.idName,
                     oneOfIdList: this.searchData.oneOfIdList,
                     oneOfNameHash: this.searchData.oneOfNameHash,
+                    subQuery: this.searchData.subQuery,
                     data: {
                         type: type
                     }
@@ -529,6 +576,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                     value: this.searchData.oneOfIdList,
                     oneOfIdList: this.searchData.oneOfIdList,
                     oneOfNameHash: this.searchData.oneOfNameHash,
+                    subQuery: this.searchData.subQuery,
                     data: {
                         type: type
                     }
