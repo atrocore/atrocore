@@ -117,6 +117,7 @@ Espo.define('treo-core:search-manager', 'class-replace!treo-core:search-manager'
                      var value = defs.value || {};
                      for (var n in value) {
                          a.push(this.getWherePart(n, _.extend({}, value[n], {
+                             subQuery: defs.subQuery ?? [],
                              fieldParams: {
                                  isAttribute: defs.isAttribute || (defs.fieldParams || {}).isAttribute
                              }
@@ -138,6 +139,7 @@ Espo.define('treo-core:search-manager', 'class-replace!treo-core:search-manager'
                          type: type,
                          attribute: attribute,
                          isAttribute: (defs.fieldParams || {}).isAttribute,
+                         subQuery: defs.subQuery ?? [],
                          value: defs.value,
                          dateTime: true,
                          timeZone: this.dateTime.timeZone || 'UTC'
