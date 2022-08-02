@@ -20008,10 +20008,16 @@ ul.dropdown-menu > li.checkbox {
     padding: 0 5px;
 }
 
-#main .catalog-tree-panel .field[data-name="category-search"] > span {
+#main .catalog-tree-panel .field[data-name="category-search"] > button {
     position: absolute;
     top: 10px;
     right: 5px;
+    border: none;
+    background: none;
+}
+
+#main .catalog-tree-panel .field[data-name="category-search"] > .reset-search-in-tree-button {
+    right: 30px;
 }
 
 #main .catalog-tree-panel .field[data-name="category-search"] > input.category-search,

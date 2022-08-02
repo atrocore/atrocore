@@ -37,6 +37,17 @@ Espo.define('views/record/tree-panel/category-search', 'view',
 
         template: 'record/tree-panel/category-search',
 
+        events: {
+            'click .reset-search-in-tree-button': function (e) {
+                e.preventDefault();
+                this.resetSearchInTree();
+            },
+            'click .search-in-tree-button': function (e) {
+                e.preventDefault();
+                this.searchInTree();
+            }
+        },
+
         data() {
             return {
                 scope: this.scope
@@ -45,40 +56,42 @@ Espo.define('views/record/tree-panel/category-search', 'view',
 
         setup() {
             this.scope = this.options.scope || this.scope;
+
+            this.listenTo(this, 'find-in-tree-panel', value => {
+                const $reset = this.$el.find('.reset-search-in-tree-button');
+                if (value && value !== '') {
+                    $reset.show();
+                } else {
+                    $reset.hide();
+                }
+            });
+
+            this.listenTo(this.options.treePanel, 'tree-reset', () => {
+                this.resetSearchInTree();
+            });
+        },
+
+        searchInTree() {
+            this.trigger('find-in-tree-panel', this.$el.find('input').val());
+        },
+
+        resetSearchInTree() {
+            this.$el.find('input').val('');
+            this.trigger('find-in-tree-panel', '');
         },
 
         afterRender() {
             if (this.el) {
-                this.$el.find('input').autocomplete({
-                    serviceUrl: function () {
-                        return this.getAutocompleteUrl();
-                    }.bind(this),
-                    paramName: 'q',
-                    minChars: 1,
-                    autoSelectFirst: true,
-                    transformResult: function (json) {
-                        let response = JSON.parse(json);
-                        let list = [];
-                        response.list.forEach(category => {
-                            let item = Espo.Utils.cloneDeep(category);
-                            item.value = item.name;
-                            list.push(item);
-                        });
-                        return {
-                            suggestions: list
-                        };
-                    }.bind(this),
-                    onSelect: function (category) {
-                        this.$el.find('input').val('');
-                        this.trigger('category-search-select', category);
-                    }.bind(this)
+                this.$el.find('input').on('keyup', e => {
+                    if (e.which === 13) {
+                        this.searchInTree();
+                    }
+                    if (e.which === 27) {
+                        this.resetSearchInTree();
+                    }
                 });
             }
         },
-
-        getAutocompleteUrl() {
-            return this.scope + '?sortBy=createdAt';
-        }
 
     })
 );
