@@ -373,6 +373,9 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                 });
             }).on('tree.click', e => {
                 e.preventDefault();
+                if (e.node.disabled) {
+                    return false;
+                }
 
                 this.currentNode = null;
 

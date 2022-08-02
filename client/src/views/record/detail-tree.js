@@ -77,6 +77,9 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
                 view.listenTo(view, 'tree-init', () => {
                     this.treeInit(view);
                 });
+                view.listenTo(view, 'tree-reset', () => {
+                    this.treeReset(view);
+                });
                 this.listenTo(this.model, 'after:relate after:unrelate after:dragDrop', link => {
                     if (['parents', 'children'].includes(link)) {
                         view.reRender();
@@ -110,6 +113,10 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
                     view.selectTreeNode(route, view.model.get('id'));
                 });
             }
+        },
+
+        treeReset(view) {
+            window.location.href = `/#${this.scope}`;
         },
 
         onTreeResize(width) {
