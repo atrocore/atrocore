@@ -314,7 +314,8 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                     }
 
                     $title.attr('data-id', node.id);
-                    if (this.getMetadata().get(`scopes.${this.treeScope}.multiParents`) !== true) {
+
+                    if (this.getMetadata().get(`scopes.${this.treeScope}.multiParents`) !== true && treeData.dragAndDrop) {
                         $title.attr('title', this.translate("useDragAndDrop"));
                     }
 
@@ -379,7 +380,8 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
 
                 this.currentNode = null;
 
-                if ($(e.click_event.target).hasClass('jqtree-title')) {
+                const $el = $(e.click_event.target);
+                if ($el.hasClass('jqtree-title') || $el.parent().hasClass('jqtree-title')) {
                     let node = e.node;
 
                     if (node.id === 'show-more') {
@@ -420,6 +422,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             this.createView('categorySearch', 'views/record/tree-panel/category-search', {
                 el: '.catalog-tree-panel > .category-panel > .category-search',
                 scope: this.treeScope,
+                treePanel: this
             }, view => {
                 view.render();
                 this.listenTo(view, 'find-in-tree-panel', value => {

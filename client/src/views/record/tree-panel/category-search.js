@@ -65,6 +65,10 @@ Espo.define('views/record/tree-panel/category-search', 'view',
                     $reset.hide();
                 }
             });
+
+            this.listenTo(this.options.treePanel, 'tree-reset', () => {
+                this.resetSearchInTree();
+            });
         },
 
         searchInTree() {
