@@ -6647,7 +6647,8 @@ button.close {
         width: 300px
     }
 
-    .modal-body .row > .overview .cell:not(.hidden-cell) + .cell {
+    .modal-body .row > .overview .cell:not(.hidden-cell) + .cell,
+    .modal-body .row > .overview .row > div:nth-last-of-type(1):not(.col-sm-12) {
         padding-left: 16px;
     }
 }
