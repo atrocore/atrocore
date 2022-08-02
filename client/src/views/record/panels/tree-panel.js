@@ -236,7 +236,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
         },
 
         loadMore(node, previous) {
-            this.ajaxGetRequest(this.generateUrl(node)).then(function(response) {
+            this.ajaxGetRequest(this.generateUrl(node)).then(function (response) {
                 if (response['list']) {
                     const id = node ? node.id : 'root';
                     response['list'] = this.filterResponse(id, response);
@@ -268,20 +268,14 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             return !node.parent.getLevel();
         },
 
-        buildTree() {
-            const $tree = this.getTreeEl();
-            this.offsets = {root: 0};
-
-            $tree.tree('destroy');
-            $tree.tree({
+        buildTree(data) {
+            let treeData = {
                 dataUrl: function (node) {
                     this.currentNode = node;
-
                     return this.generateUrl(node);
                 }.bind(this),
                 dataFilter: function (response) {
                     const currentNode = this.currentNode ? this.currentNode.id : 'root';
-
                     return this.filterResponse(currentNode, response);
                 }.bind(this),
                 selectable: true,
@@ -290,7 +284,35 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                 closedIcon: $('<i class="fa fa-angle-right"></i>'),
                 openedIcon: $('<i class="fa fa-angle-down"></i>'),
                 onCreateLi: function (node, $li, is_selected) {
+                    if (node.disabled) {
+                        $li.addClass('disabled');
+                    } else {
+                        $li.removeClass('disabled');
+                    }
+
                     const $title = $li.find('.jqtree-title');
+
+                    /**
+                     * Mark search str
+                     */
+                    let search = $('.search-in-tree-input').val();
+                    if (search.length > 0) {
+                        search = search.replace(/\*/g, '');
+                        if (search.length > 0) {
+                            let name = $title.html();
+                            let matches = name.match(new RegExp(search, 'ig'));
+                            if (matches) {
+                                let processed = [];
+                                matches.forEach(v => {
+                                    if (!processed.includes(v)) {
+                                        processed.push(v);
+                                        $title.html(name.replace(new RegExp(v, 'g'), `<b>${v}</b>`));
+                                    }
+                                });
+                            }
+                        }
+                    }
+
                     $title.attr('data-id', node.id);
                     if (this.getMetadata().get(`scopes.${this.treeScope}.multiParents`) !== true) {
                         $title.attr('title', this.translate("useDragAndDrop"));
@@ -302,7 +324,22 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                         $li.find('.jqtree-title').addClass('more-label');
                     }
                 }.bind(this)
-            }).on('tree.init', () => {
+            };
+
+            if (data) {
+                treeData['data'] = data;
+                treeData['autoOpen'] = true;
+                treeData['dragAndDrop'] = false;
+
+                delete treeData['dataUrl'];
+                delete treeData['dataFilter'];
+            }
+
+            const $tree = this.getTreeEl();
+            this.offsets = {root: 0};
+
+            $tree.tree('destroy');
+            $tree.tree(treeData).on('tree.init', () => {
                     this.trigger('tree-init');
                 }
             ).on('tree.move', e => {
@@ -344,7 +381,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
 
                     if (node.id === 'show-more') {
                         const previous = node.getPreviousSibling(),
-                              parent = node.parent && node.parent.id ? node.parent : null;
+                            parent = node.parent && node.parent.id ? node.parent : null;
 
                         this.getTreeEl().tree('removeNode', node);
                         return this.loadMore(parent, previous);
@@ -383,8 +420,28 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             }, view => {
                 view.render();
                 this.listenTo(view, 'find-in-tree-panel', value => {
-                    console.log(value);
-                    // this.selectNode({id: item.id, route: item.categoryRoute});
+                    if (value && value !== '') {
+                        this.ajaxGetRequest(this.treeScope, {
+                            "select": "id,name",
+                            "offset": 0,
+                            "maxSize": 200,
+                            "sortBy": "id",
+                            "asc": true,
+                            "where": [{"type": "textFilter", "value": value}]
+                        }).then(response => {
+                            let ids = [];
+                            if (response.list) {
+                                response.list.forEach(record => {
+                                    ids.push(record.id);
+                                });
+                            }
+                            this.ajaxGetRequest(`${this.treeScope}/action/TreeData`, {"ids": ids}).then(response => {
+                                this.buildTree(response.tree);
+                            });
+                        });
+                    } else {
+                        this.buildTree();
+                    }
                 });
             });
 

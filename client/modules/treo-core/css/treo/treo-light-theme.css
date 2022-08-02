@@ -19638,7 +19638,7 @@ table.table > thead th > div > a {
   background: none;
 }
 
-#main .catalog-tree-panel .field[data-name="category-search"] > .reset-search-in-tree-panel {
+#main .catalog-tree-panel .field[data-name="category-search"] > .reset-search-in-tree-button {
   right: 30px;
 }
 

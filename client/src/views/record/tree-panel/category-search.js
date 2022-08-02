@@ -38,11 +38,11 @@ Espo.define('views/record/tree-panel/category-search', 'view',
         template: 'record/tree-panel/category-search',
 
         events: {
-            'click .reset-search-in-tree-panel': function (e) {
+            'click .reset-search-in-tree-button': function (e) {
                 e.preventDefault();
                 this.resetSearchInTree();
             },
-            'click .search-in-tree-panel': function (e) {
+            'click .search-in-tree-button': function (e) {
                 e.preventDefault();
                 this.searchInTree();
             }
@@ -58,7 +58,7 @@ Espo.define('views/record/tree-panel/category-search', 'view',
             this.scope = this.options.scope || this.scope;
 
             this.listenTo(this, 'find-in-tree-panel', value => {
-                const $reset = this.$el.find('.reset-search-in-tree-panel');
+                const $reset = this.$el.find('.reset-search-in-tree-button');
                 if (value && value !== '') {
                     $reset.show();
                 } else {
