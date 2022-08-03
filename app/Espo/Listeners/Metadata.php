@@ -86,6 +86,11 @@ class Metadata extends AbstractListener
                 continue;
             }
 
+            if (!isset($data['entityDefs'][$scope]['fields']['parents']['view'])) {
+                $data['entityDefs'][$scope]['fields']['parents']['view'] = 'views/fields/hierarchy-parents';
+            }
+            $data['entityDefs'][$scope]['fields']['parents']['layoutDetailDisabled'] = false;
+
             $data['entityDefs'][$scope]['fields']['isRoot'] = [
                 "type"                      => "bool",
                 "notStorable"               => true,
