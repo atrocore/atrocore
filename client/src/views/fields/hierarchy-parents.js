@@ -52,31 +52,33 @@ Espo.define('views/fields/hierarchy-parents', 'views/fields/link-multiple',
         },
 
         loadParentData() {
-            let parentsIds = Espo.Utils.clone(this.model.get('parentsIds'));
-            if (!parentsIds || parentsIds.length !== 1) {
-                return;
-            }
+            setTimeout(() => {
+                let parentsIds = Espo.Utils.clone(this.model.get('parentsIds'));
+                if (!parentsIds || parentsIds.length !== 1) {
+                    return;
+                }
 
-            let scope = this.model.urlRoot;
+                let scope = this.model.urlRoot;
 
-            let nonInheritedFields = ['parentsIds'];
-            (this.getMetadata().get('app.nonInheritedFields') || []).forEach(field => {
-                this.pushFieldViaType(scope, field, nonInheritedFields);
-            });
-            (this.getMetadata().get(['scopes', scope, 'mandatoryUnInheritedFields']) || []).forEach(field => {
-                this.pushFieldViaType(scope, field, nonInheritedFields);
-            });
-            (this.getMetadata().get(['scopes', scope, 'unInheritedFields']) || []).forEach(field => {
-                this.pushFieldViaType(scope, field, nonInheritedFields);
-            });
-
-            this.ajaxPostRequest(`${scope}/action/getDuplicateAttributes`, {id: parentsIds.shift()}).then(data => {
-                $.each(data, (field, value) => {
-                    if (!nonInheritedFields.includes(field) && !this.model.get(field)) {
-                        this.model.set(field, value);
-                    }
+                let nonInheritedFields = ['parentsIds'];
+                (this.getMetadata().get('app.nonInheritedFields') || []).forEach(field => {
+                    this.pushFieldViaType(scope, field, nonInheritedFields);
                 });
-            });
+                (this.getMetadata().get(['scopes', scope, 'mandatoryUnInheritedFields']) || []).forEach(field => {
+                    this.pushFieldViaType(scope, field, nonInheritedFields);
+                });
+                (this.getMetadata().get(['scopes', scope, 'unInheritedFields']) || []).forEach(field => {
+                    this.pushFieldViaType(scope, field, nonInheritedFields);
+                });
+
+                this.ajaxPostRequest(`${scope}/action/getDuplicateAttributes`, {id: parentsIds.shift()}).then(data => {
+                    $.each(data, (field, value) => {
+                        if (!nonInheritedFields.includes(field) && !this.model.get(field)) {
+                            this.model.set(field, value);
+                        }
+                    });
+                });
+            }, 300);
         },
 
         pushFieldViaType(scope, field, nonInheritedFields) {

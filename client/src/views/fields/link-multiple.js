@@ -146,7 +146,13 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                                 models = [models];
                             }
                             models.forEach(function (model) {
-                                self.addLink(model.id, model.get('name'));
+                                if (typeof model.get !== "undefined") {
+                                    self.addLink(model.id, model.get('name'));
+                                } else if (model.name) {
+                                    self.addLink(model.id, model.name);
+                                } else {
+                                    self.addLink(model.id, model.id);
+                                }
                             });
                         });
                     }, this);
