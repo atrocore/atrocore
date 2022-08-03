@@ -64,6 +64,8 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         sortable: false,
 
+        linkMultiple: true,
+
         searchTypeList: ['anyOf', 'isEmpty', 'isNotEmpty', 'noneOf'],
 
         data: function () {
@@ -131,7 +133,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                         filters: this.getSelectFilters(),
                         boolFilterList: this.getSelectBoolFilterList(),
                         primaryFilterName: this.getSelectPrimaryFilterName(),
-                        multiple: true,
+                        multiple: this.linkMultiple,
                         createAttributes: (this.mode === 'edit') ? this.getCreateAttributes() : null,
                         mandatorySelectAttributeList: this.mandatorySelectAttributeList,
                         forceSelectAllAttributes: this.forceSelectAllAttributes
@@ -144,7 +146,13 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                                 models = [models];
                             }
                             models.forEach(function (model) {
-                                self.addLink(model.id, model.get('name'));
+                                if (typeof model.get !== "undefined") {
+                                    self.addLink(model.id, model.get('name'));
+                                } else if (model.name) {
+                                    self.addLink(model.id, model.name);
+                                } else {
+                                    self.addLink(model.id, model.id);
+                                }
                             });
                         });
                     }, this);

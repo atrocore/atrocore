@@ -6530,7 +6530,8 @@ button.close {
     width: 300px;
   }
 
-  .modal-body .row > .overview .cell:not(.hidden-cell) + .cell {
+  .modal-body .row > .overview .cell:not(.hidden-cell) + .cell,
+  .modal-body .row > .overview .row > div:nth-last-of-type(1):not(.col-sm-12) {
     padding-left: 16px;
   }
 }
@@ -19630,10 +19631,16 @@ table.table > thead th > div > a {
   padding: 0 5px;
 }
 
-#main .catalog-tree-panel .field[data-name="category-search"] > span {
+#main .catalog-tree-panel .field[data-name="category-search"] > button {
   position: absolute;
   top: 10px;
   right: 5px;
+  border: none;
+  background: none;
+}
+
+#main .catalog-tree-panel .field[data-name="category-search"] > .reset-search-in-tree-button {
+  right: 30px;
 }
 
 #main .catalog-tree-panel .field[data-name="category-search"] > input.category-search,
@@ -21241,7 +21248,7 @@ body,
   -o-text-overflow: ellipsis;
      text-overflow: ellipsis;
   color: #737373;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .header-title {
@@ -21435,8 +21442,8 @@ body,
     margin-bottom: 14px;
     padding: 0 !important;
     width: 100% !important;
-    font-size: 16px;
-    line-height: 16px;
+    font-size: 14px;
+    line-height: 14px;
   }
   .fixed-header-breadcrumbs .header-with-dropdown {
     white-space: initial;

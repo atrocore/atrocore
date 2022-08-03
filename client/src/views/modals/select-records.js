@@ -66,6 +66,8 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
 
         selectedItems: [],
 
+        selectedItemsNames: {},
+
         lastTextFilter: null,
 
         offsets: {},
@@ -141,7 +143,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                         if (this.getSelectedViewType() === 'tree') {
                             let ids = [];
                             this.selectedItems.forEach(id => {
-                                ids.push({id: id});
+                                ids.push({id: id, name: this.selectedItemsNames[id]});
                             });
                             this.trigger('select', ids);
                         } else {
@@ -218,6 +220,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
 
             // refresh tree selections
             this.selectedItems = [];
+            this.selectedItemsNames = {};
             this.setupTree();
 
             // refresh list selections
@@ -618,6 +621,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                     this.selectedItems = [];
                     ($tree.tree('getSelectedNodes') || []).forEach(node => {
                         this.selectedItems.push(node.id);
+                        this.selectedItemsNames[node.id] = node.name;
                     });
 
                     if (this.selectedItems.length) {

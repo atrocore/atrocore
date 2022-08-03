@@ -34,7 +34,7 @@
     },
     "parents": {
       "type": "linkMultiple",
-      "layoutDetailDisabled": true,
+      "view": "views/fields/hierarchy-parents",
       "massUpdateDisabled": true,
       "noLoad": true
     },
