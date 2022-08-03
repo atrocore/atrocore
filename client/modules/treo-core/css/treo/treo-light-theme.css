@@ -21248,7 +21248,7 @@ body,
   -o-text-overflow: ellipsis;
      text-overflow: ellipsis;
   color: #737373;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .header-title {
@@ -21442,8 +21442,8 @@ body,
     margin-bottom: 14px;
     padding: 0 !important;
     width: 100% !important;
-    font-size: 16px;
-    line-height: 16px;
+    font-size: 14px;
+    line-height: 14px;
   }
   .fixed-header-breadcrumbs .header-with-dropdown {
     white-space: initial;

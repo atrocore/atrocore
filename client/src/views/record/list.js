@@ -911,8 +911,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
             var fixSize = function () {
                 var $container = $bar.parent();
 
-                $bar.children('div').height(1).width($container[0].scrollWidth);
-                $bar.width($container.width()).scrollLeft($container.scrollLeft());
+                if ($container.length) {
+                    $bar.children('div').height(1).width($container[0].scrollWidth);
+                    $bar.width($container.width()).scrollLeft($container.scrollLeft());
+                }
             };
 
             this.fullTableScroll();
