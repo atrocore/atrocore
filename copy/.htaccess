@@ -18,7 +18,7 @@ RewriteRule ^(.*)$ index.php?treoq=$1 [L,QSA]
   Allow from all
 </FilesMatch>
 
-<FilesMatch "(composer\.json)$">
+<FilesMatch "((.*)\.sql|composer\.json)$">
   Deny from all
 </FilesMatch>
 

@@ -79,8 +79,15 @@ Espo.define('views/main', 'view', function (Dep) {
 
         setupMassDeletingNotification: function () {
             this.listenTo(Backbone.Events, 'publicData', data => {
-                let hashParts = window.location.hash.split('/');
-                let hashScope = hashParts.shift().replace('#', '');
+                let locationHash = window.location.hash;
+
+                let hashScope = null;
+                if (locationHash === '#Admin/jobs') {
+                    hashScope = 'Job';
+                } else {
+                    hashScope = locationHash.split('/').shift().replace('#', '');
+                }
+
                 if (data.massDelete && hashScope === this.scope) {
                     if (data.massDelete[this.scope]) {
                         let scopeData = data.massDelete[this.scope];
