@@ -1048,7 +1048,8 @@ class Base
         }
 
         if (!empty($item['subQuery'])) {
-            $foreignEntity = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', substr($attribute, 0, -2), 'entity']);
+            $link = substr($attribute, -2) === 'Id' ? substr($attribute, 0, -2) : $attribute;
+            $foreignEntity = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $link, 'entity']);
             if (!empty($foreignEntity)) {
                 $sp = $this->createSelectManager($foreignEntity)->getSelectParams(['where' => $item['subQuery']], true, true);
                 $sp['select'] = ['id'];
