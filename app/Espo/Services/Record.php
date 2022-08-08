@@ -2263,7 +2263,12 @@ class Record extends \Espo\Core\Services\Base
                 if (!empty($fieldData['isMultilang'])) {
                     $langField = $fieldName . ucfirst(Util::toCamelCase(strtolower($language)));
                     $entity->set($fieldName, $entity->get($langField));
-                    $entity->clear($langField);
+                }
+            }
+
+            foreach ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields'], []) as $fieldName => $fieldData) {
+                if (!empty($fieldData['multilangLocale'])) {
+                    $entity->clear($fieldName);
                 }
             }
         }
