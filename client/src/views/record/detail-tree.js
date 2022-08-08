@@ -132,17 +132,17 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
                 const overview = content.find('.overview');
                 const side = content.find('.side');
 
-                header.outerWidth(main.width() - width);
+                header.outerWidth(Math.floor(main.width() - width));
                 header.css('marginLeft', width + 'px');
 
-                filters.outerWidth(content.innerWidth() - width);
+                filters.outerWidth(Math.floor(content.get(0).getBoundingClientRect().width - width));
                 filters.css('marginLeft', width + 'px');
 
-                btnContainer.outerWidth(content.innerWidth() - width - 1);
+                btnContainer.outerWidth(Math.floor(content.get(0).getBoundingClientRect().width - width - 1));
                 btnContainer.addClass('detail-tree-button-container');
                 btnContainer.css('marginLeft', width + 1 + 'px');
 
-                overview.outerWidth(content.innerWidth() - side.outerWidth() - width);
+                overview.outerWidth(Math.floor(content.innerWidth() - side.outerWidth() - width));
                 overview.css('marginLeft', (width - 1) + 'px');
             }
         }
