@@ -134,6 +134,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                         boolFilterList: this.getSelectBoolFilterList(),
                         primaryFilterName: this.getSelectPrimaryFilterName(),
                         multiple: this.linkMultiple,
+                        massRelateEnabled: true,
                         createAttributes: (this.mode === 'edit') ? this.getCreateAttributes() : null,
                         mandatorySelectAttributeList: this.mandatorySelectAttributeList,
                         forceSelectAllAttributes: this.forceSelectAllAttributes
@@ -142,6 +143,10 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                         self.notify(false);
                         this.listenToOnce(dialog, 'select', function (models) {
                             this.clearView('dialog');
+                            if (models.massRelate) {
+                                this.addLinkSubQuery(models);
+                                return;
+                            }
                             if (Object.prototype.toString.call(models) !== '[object Array]') {
                                 models = [models];
                             }
@@ -162,6 +167,9 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                     var id = $(e.currentTarget).attr('data-id');
                     this.deleteLink(id);
                 };
+                this.events['click a[data-action="clearLinkSubQuery"]'] = function (e) {
+                    this.deleteLinkSubQuery();
+                };
             }
         },
 
@@ -174,6 +182,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
         },
 
         setupSearch: function () {
+            this.searchData.subQuery = this.searchParams.subQuery || [];
             this.events = _.extend({
                 'change select.search-type': function (e) {
                     var type = $(e.currentTarget).val();
@@ -261,6 +270,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 }
 
                 if (this.mode == 'search') {
+                    this.addLinkSubQueryHtml(this.searchData.subQuery);
                     var type = this.$el.find('select.search-type').val();
                     this.handleSearchType(type);
                 }
@@ -271,6 +281,11 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             this.ids.forEach(function (id) {
                 this.addLinkHtml(id, this.nameHash[id]);
             }, this);
+        },
+
+        deleteLinkSubQuery: function () {
+            this.deleteLinkSubQueryHtml();
+            this.searchData.subQuery = [];
         },
 
         deleteLink: function (id) {
@@ -284,6 +299,12 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             delete this.nameHash[id];
             this.afterDeleteLink(id);
             this.trigger('change');
+        },
+
+        addLinkSubQuery: function (data) {
+            let subQuery = data.where ?? [];
+            this.searchData.subQuery = subQuery;
+            this.addLinkSubQueryHtml(subQuery);
         },
 
         addLink: function (id, name) {
@@ -302,6 +323,26 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         deleteLinkHtml: function (id) {
             this.$el.find('.link-' + id).remove();
+        },
+
+        deleteLinkSubQueryHtml: function () {
+            this.$el.find('.link-container .link-subquery').remove();
+        },
+
+        addLinkSubQueryHtml: function (subQuery) {
+            if (!subQuery || subQuery.length === 0){
+                return;
+            }
+
+            this.deleteLinkSubQueryHtml();
+
+            var $container = this.$el.find('.link-container');
+            var $el = $('<div />').addClass('link-subquery').addClass('list-group-item');
+            $el.html('(Subquery) &nbsp');
+            $el.prepend('<a href="javascript:" class="pull-right" data-action="clearLinkSubQuery"><span class="fas fa-times"></a>');
+            $container.append($el);
+
+            return $el;
         },
 
         addLinkHtml: function (id, name) {
@@ -381,6 +422,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                     type: 'linkedWith',
                     value: idList,
                     nameHash: this.nameHash,
+                    subQuery: this.searchData.subQuery,
                     data: {
                         type: type
                     }
@@ -396,6 +438,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                     type: 'notLinkedWith',
                     value: this.ids || [],
                     nameHash: this.nameHash,
+                    subQuery: this.searchData.subQuery,
                     data: {
                         type: type
                     }
