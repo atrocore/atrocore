@@ -18,7 +18,7 @@
     "outboundEmailFromAddress": "Адрес отправителя",
     "recordsPerPage": "Записей на страницу",
     "recordsPerPageSmall": "Записей на страницу (сжатый вид)",
-    "tabList": "Список вкладок",
+    "tabList": "Меню навигации",
     "quickCreateList": "Список для быстрого создания",
     "globalSearchEntityList": "Список объектов глобального поиска",
     "b2cMode": "Режим B2C",

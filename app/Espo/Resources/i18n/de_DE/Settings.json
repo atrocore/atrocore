@@ -22,7 +22,7 @@
     "outboundEmailFromAddress": "Absenderadresse",
     "recordsPerPage": "Datensätze pro Seite",
     "recordsPerPageSmall": "Datensätze pro Seite (Klein)",
-    "tabList": "Menüliste",
+    "tabList": "Navigationsmenü",
     "quickCreateList": "Liste Schnellerstellung",
     "globalSearchEntityList": "Entitäten für globale Suche",
     "b2cMode": "B2C Modus",

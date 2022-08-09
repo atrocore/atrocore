@@ -1842,7 +1842,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         const contentWidth = Math.floor(content.get(0).getBoundingClientRect().width);
                         const overview = content.find('.overview');
 
-                        overview.outerWidth(contentWidth - $('.catalog-tree-panel').outerWidth() - width);
+                        overview.outerWidth(Math.floor(contentWidth - $('.catalog-tree-panel').outerWidth() - width));
                     }
                 })
             });
