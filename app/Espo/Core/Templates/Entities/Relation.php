@@ -35,10 +35,10 @@
 
 declare(strict_types=1);
 
-namespace Espo\Core\Templates\Repositories;
+namespace Espo\Core\Templates\Entities;
 
-use Espo\Core\ORM\Repositories\RDB;
+use Espo\Core\ORM\Entity;
 
-class RelationEntity extends RDB
+class Relation extends Entity
 {
 }
