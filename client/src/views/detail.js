@@ -499,7 +499,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 view.notify(false);
                 this.listenToOnce(view, 'after:save', function () {
                     this.updateRelationshipPanel(link);
-                    this.model.trigger('after:relate');
+                    this.model.trigger('after:relate', link);
                 }, this);
             }.bind(this));
         },
