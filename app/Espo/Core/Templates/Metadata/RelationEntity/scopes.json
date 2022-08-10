@@ -1,0 +1,20 @@
+{
+  "entity": true,
+  "layouts": true,
+  "tab": true,
+  "acl": true,
+  "aclPortal": true,
+  "aclPortalLevelList": [
+    "all",
+    "account",
+    "own",
+    "no"
+  ],
+  "customizable": true,
+  "importable": true,
+  "notifications": true,
+  "hasOwner": true,
+  "hasAssignedUser": true,
+  "hasTeam": true,
+  "hasAccount": false
+}
