@@ -633,7 +633,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     this.notify(false);
                     this.notify('Linked', 'success');
                     this.collection.fetch();
-                    this.model.trigger('after:relate');
+                    this.model.trigger('after:relate', data.link);
                 }.bind(this));
             }, this);
         },
