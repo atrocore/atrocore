@@ -39,6 +39,6 @@ namespace Espo\Core\Templates\Services;
 
 use Espo\Services\Record;
 
-class Relation extends Record
+class Relationship extends Record
 {
 }

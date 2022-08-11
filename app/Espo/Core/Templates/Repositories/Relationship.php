@@ -39,6 +39,6 @@ namespace Espo\Core\Templates\Repositories;
 
 use Espo\Core\ORM\Repositories\RDB;
 
-class Relation extends RDB
+class Relationship extends RDB
 {
 }

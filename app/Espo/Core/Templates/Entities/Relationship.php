@@ -35,10 +35,10 @@
 
 declare(strict_types=1);
 
-namespace Espo\Core\Templates\Controllers;
+namespace Espo\Core\Templates\Entities;
 
-use Espo\Core\Controllers\Record;
+use Espo\Core\ORM\Entity;
 
-class Relation extends Record
+class Relationship extends Entity
 {
 }

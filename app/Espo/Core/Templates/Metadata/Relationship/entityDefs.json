@@ -1,13 +1,5 @@
 {
   "fields": {
-    "name": {
-      "type": "varchar",
-      "required": true,
-      "trim": true
-    },
-    "description": {
-      "type": "text"
-    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
@@ -40,13 +32,5 @@
   "collection": {
     "sortBy": "createdAt",
     "asc": false
-  },
-  "indexes": {
-    "name": {
-      "columns": [
-        "name",
-        "deleted"
-      ]
-    }
   }
 }
