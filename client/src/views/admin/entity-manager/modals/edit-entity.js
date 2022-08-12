@@ -63,6 +63,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
             this.model.set('type', 'Base');
 
             if (scope) {
+                this.model.set('id', scope);
                 this.model.set('name', scope);
                 this.model.set('labelSingular', this.translate(scope, 'scopeNames'));
                 this.model.set('labelPlural', this.translate(scope, 'scopeNamesPlural'));
@@ -80,6 +81,10 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
 
                 if (this.hasColorField) {
                     this.model.set('color', this.getMetadata().get(['clientDefs', scope, 'color']) || null);
+                }
+
+                if (this.model.get('type') === 'Relationship') {
+                    this.model.set('relationshipEntities', this.getMetadata().get(['scopes', scope, 'relationshipEntities']) || null);
                 }
 
                 this.model.set('iconClass', this.getMetadata().get(['clientDefs', scope, 'iconClass']) || null);
