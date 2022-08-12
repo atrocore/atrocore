@@ -32,7 +32,7 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('views/admin/entity-manager/fields/bool-for-hierarchy', 'views/fields/bool', function (Dep) {
+Espo.define('views/admin/entity-manager/fields/bool-for-type', 'views/fields/bool', function (Dep) {
 
     return Dep.extend({
 
@@ -54,10 +54,10 @@ Espo.define('views/admin/entity-manager/fields/bool-for-hierarchy', 'views/field
         afterRender() {
             Dep.prototype.setup.call(this);
 
-            if (this.model.get('type') !== 'Hierarchy') {
-                this.hide();
-            } else {
+            if (this.getMetadata().get(`app.additionalEntityParams.fields.${this.name}.types`).includes(this.model.get('type'))) {
                 this.show();
+            } else {
+                this.hide();
             }
         },
 

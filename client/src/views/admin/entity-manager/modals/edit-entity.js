@@ -60,6 +60,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
 
             this.hasColorField = !this.getConfig().get('scopeColorsDisabled');
 
+            this.model.set('type', 'Base');
+
             if (scope) {
                 this.model.set('name', scope);
                 this.model.set('labelSingular', this.translate(scope, 'scopeNames'));
