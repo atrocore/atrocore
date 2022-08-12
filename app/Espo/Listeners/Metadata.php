@@ -91,18 +91,18 @@ class Metadata extends AbstractListener
                 $data['entityDefs'][$scope]['fields'][$link] = [
                     'type' => 'link',
                 ];
-                $data['entityDefs'][$entityType]['fields'][$foreign] = [
-                    'type' => 'linkMultiple',
-                ];
                 $data['entityDefs'][$scope]['links'][$link] = [
                     'type'    => 'belongsTo',
                     'foreign' => $foreign,
-                    'entity'  => $entityType
+                    'entity'  => $entityType,
+                ];
+                $data['entityDefs'][$entityType]['fields'][$foreign] = [
+                    'type' => 'linkMultiple',
                 ];
                 $data['entityDefs'][$entityType]['links'][$foreign] = [
                     'type'    => 'hasMany',
                     'foreign' => lcfirst($entityType),
-                    'entity'  => $scope
+                    'entity'  => $scope,
                 ];
                 $data['entityDefs'][$scope]['uniqueIndexes']['unique_1'][] = $link . '_id';
             }
