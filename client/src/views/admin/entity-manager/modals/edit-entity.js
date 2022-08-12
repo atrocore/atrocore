@@ -150,17 +150,20 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                     model: model,
                     mode: 'edit',
                     el: this.options.el + ' .field[data-name="relationshipEntities"]',
-                    defs: {name: 'relationshipEntities'}
+                    defs: {
+                        name: 'relationshipEntities'
+                    }
                 });
             }
 
             if (this.hasStreamField) {
-                this.createView('stream', 'views/fields/bool', {
+                this.createView('stream', 'views/admin/entity-manager/fields/bool-for-type', {
                     model: model,
                     mode: 'edit',
                     el: this.options.el + ' .field[data-name="stream"]',
                     defs: {
-                        name: 'stream'
+                        name: 'stream',
+                        types: ["Base", "Hierarchy"]
                     },
                     tooltip: true,
                     tooltipText: this.translate('stream', 'tooltips', 'EntityManager')
@@ -536,7 +539,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
         },
 
         actionSave: function () {
-            var arr = [
+            let arr = [
                 'name',
                 'type',
                 'labelSingular',
@@ -556,6 +559,10 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
 
             if (this.hasColorField) {
                 arr.push('color');
+            }
+
+            if (this.model.get('type') === 'Relationship') {
+                arr.push('relationshipEntities');
             }
 
             for (let param in this.additionalParams) {
@@ -605,6 +612,10 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
 
             if (this.hasColorField) {
                 data.color = this.model.get('color') || null
+            }
+
+            if (this.model.get('type') === 'Relationship') {
+                data['relationshipEntities'] = this.model.get('relationshipEntities') || [];
             }
 
             if (data.statusField === '') {

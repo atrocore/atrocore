@@ -54,7 +54,8 @@ Espo.define('views/admin/entity-manager/fields/bool-for-type', 'views/fields/boo
         afterRender() {
             Dep.prototype.setup.call(this);
 
-            if (this.getMetadata().get(`app.additionalEntityParams.fields.${this.name}.types`).includes(this.model.get('type'))) {
+            let types = this.options.defs.types ?? this.getMetadata().get(`app.additionalEntityParams.fields.${this.name}.types`);
+            if (types && types.includes(this.model.get('type'))) {
                 this.show();
             } else {
                 this.hide();
