@@ -87,6 +87,9 @@ class EntityManager
         return $this->language;
     }
 
+    /**
+     * @return Language
+     */
     protected function getBaseLanguage()
     {
         return $this->container->get('baseLanguage');
