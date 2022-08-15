@@ -163,7 +163,7 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 },
                 readOnly: !isNew
             });
-            this.createView('linkType', 'views/fields/enum', {
+            this.createView('linkType', 'views/admin/link-manager/fields/link-type', {
                 model: model,
                 mode: 'edit',
                 el: this.options.el + ' .field[data-name="linkType"]',
