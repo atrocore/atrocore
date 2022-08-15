@@ -40,17 +40,10 @@ namespace Espo\Listeners;
 use Espo\Core\EventManager\Event;
 use Espo\Core\Utils\Util;
 
-/**
- * Class Metadata
- */
 class Metadata extends AbstractListener
 {
-    /**
-     * @param Event $event
-     */
-    public function modify(Event $event)
+    public function modify(Event $event): void
     {
-        // get data
         $data = $event->getArgument('data');
 
         // add owner
@@ -71,42 +64,7 @@ class Metadata extends AbstractListener
 
         $data = $this->prepareHierarchyEntities($data);
 
-        $this->prepareRelationshipEntities($data);
-
-        // set data
         $event->setArgument('data', $data);
-    }
-
-    protected function prepareRelationshipEntities(array &$data): void
-    {
-        foreach ($data['scopes'] as $scope => $scopeData) {
-            if (empty($scopeData['type']) || $scopeData['type'] !== 'Relationship' || empty($scopeData['relationshipEntities'])) {
-                continue;
-            }
-
-            $data['entityDefs'][$scope]['uniqueIndexes']['unique_1'] = ['deleted'];
-            foreach ($scopeData['relationshipEntities'] as $entityType) {
-                $link = lcfirst($entityType);
-                $foreign = lcfirst($scope) . 's';
-                $data['entityDefs'][$scope]['fields'][$link] = [
-                    'type' => 'link',
-                ];
-                $data['entityDefs'][$scope]['links'][$link] = [
-                    'type'    => 'belongsTo',
-                    'foreign' => $foreign,
-                    'entity'  => $entityType,
-                ];
-                $data['entityDefs'][$entityType]['fields'][$foreign] = [
-                    'type' => 'linkMultiple',
-                ];
-                $data['entityDefs'][$entityType]['links'][$foreign] = [
-                    'type'    => 'hasMany',
-                    'foreign' => lcfirst($entityType),
-                    'entity'  => $scope,
-                ];
-                $data['entityDefs'][$scope]['uniqueIndexes']['unique_1'][] = $link . '_id';
-            }
-        }
     }
 
     protected function prepareHierarchyEntities(array $data): array
