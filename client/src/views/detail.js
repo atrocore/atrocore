@@ -560,10 +560,6 @@ Espo.define('views/detail', 'views/main', function (Dep) {
 
             var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.select') || 'views/modals/select-records';
 
-
-            console.log(scope);
-            console.log(viewName);
-
             this.notify('Loading...');
             this.createView('dialog', viewName, {
                 scope: scope,
