@@ -38,7 +38,17 @@ declare(strict_types=1);
 namespace Espo\Core\Templates\Repositories;
 
 use Espo\Core\ORM\Repositories\RDB;
+use Espo\ORM\Entity;
 
 class Relationship extends RDB
 {
+    public function remove(Entity $entity, array $options = [])
+    {
+        $this->beforeRemove($entity, $options);
+        $result = $this->deleteFromDb($entity->get('id'));
+        if ($result) {
+            $this->afterRemove($entity, $options);
+        }
+        return $result;
+    }
 }

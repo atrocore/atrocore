@@ -41,4 +41,15 @@ use Espo\Services\Record;
 
 class Relationship extends Record
 {
+    public function updateEntity($id, $data)
+    {
+        foreach ($this->getMetadata()->get(['scopes', $this->entityType, 'relationshipEntities']) as $relationshipEntity) {
+            $link = lcfirst($relationshipEntity) . 'Id';
+            if (property_exists($data, $link) && empty($data->$link)) {
+                return $this->deleteEntity($id);
+            }
+        }
+
+        return parent::updateEntity($id, $data);
+    }
 }
