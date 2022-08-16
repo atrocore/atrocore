@@ -37,19 +37,21 @@ declare(strict_types=1);
 
 namespace Espo\Core\Templates\Services;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Services\Record;
 
 class Relationship extends Record
 {
-    public function updateEntity($id, $data)
+    public function deleteAll(string $entityType, string $entityId): bool
     {
-        foreach ($this->getMetadata()->get(['scopes', $this->entityType, 'relationshipEntities']) as $relationshipEntity) {
-            $link = lcfirst($relationshipEntity) . 'Id';
-            if (property_exists($data, $link) && empty($data->$link)) {
-                return $this->deleteEntity($id);
-            }
+        if (!in_array($entityType, $this->getMetadata()->get(['scopes', $this->entityType, 'relationshipEntities'], []))) {
+            throw new BadRequest('Relationship entity is required.');
         }
 
-        return parent::updateEntity($id, $data);
+        foreach ($this->getRepository()->where([lcfirst($entityType) . 'Id' => $entityId])->find() as $entity) {
+            $this->getRepository()->remove($entity);
+        }
+
+        return true;
     }
 }
