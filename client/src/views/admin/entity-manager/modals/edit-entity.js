@@ -74,7 +74,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 this.model.set('sortBy', this.getMetadata().get('entityDefs.' + scope + '.collection.sortBy'));
                 this.model.set('sortDirection', this.getMetadata().get('entityDefs.' + scope + '.collection.asc') ? 'asc' : 'desc');
 
-                this.model.set('textFilterFields', this.getMetadata().get(['entityDefs', scope, 'collection', 'textFilterFields']) || ['name']);
+                this.model.set('textFilterFields', this.getMetadata().get(['entityDefs', scope, 'collection', 'textFilterFields']) || []);
                 this.model.set('fullTextSearch', this.getMetadata().get(['entityDefs', scope, 'collection', 'fullTextSearch']) || false);
 
                 this.model.set('statusField', this.getMetadata().get('scopes.' + scope + '.statusField') || null);
@@ -350,6 +350,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
 
                 var enumFieldList = Object.keys(fieldDefs).filter(function (item) {
                     if (fieldDefs[item].disabled) return;
+                    if (fieldDefs[item].notStorable && fieldDefs[item].notStorable === true) return;
                     if (fieldDefs[item].type == 'enum') {
                         return true;
                     }
