@@ -1,3 +1,4 @@
+<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -32,34 +33,40 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('views/admin/entity-manager/fields/bool-for-hierarchy', 'views/fields/bool', function (Dep) {
+declare(strict_types=1);
 
-    return Dep.extend({
+namespace Espo\Core\Templates\Controllers;
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+use Espo\Core\Controllers\Record;
+use Espo\Core\Exceptions\BadRequest;
 
-            this.listenTo(this.model, 'change:type', () => {
-                this.reRender();
-            });
-        },
+class Relationship extends Record
+{
+    public function actionCreateRelationshipEntitiesViaIds($params, $data, $request)
+    {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
 
-        fetch: function () {
-            let value = $(`input[type="checkbox"][name="${this.name}"]`).get(0).checked;
-            let data = {};
-            data[this.name] = value;
-            return data;
-        },
+        if (!property_exists($data, 'entityTypeFrom') || !property_exists($data, 'entityIdFrom')) {
+            throw new BadRequest();
+        }
 
-        afterRender() {
-            Dep.prototype.setup.call(this);
+        if (!property_exists($data, 'entityTypeTo') || !property_exists($data, 'entityIdsTo')) {
+            throw new BadRequest();
+        }
 
-            if (this.model.get('type') !== 'Hierarchy') {
-                this.hide();
-            } else {
-                this.show();
-            }
-        },
+        return $this
+            ->getRecordService()
+            ->createRelationshipEntitiesViaIds((string)$data->entityTypeFrom, (string)$data->entityIdFrom, (string)$data->entityTypeTo, (array)$data->entityIdsTo);
+    }
 
-    });
-});
+    public function actionDeleteAll($params, $data, $request)
+    {
+        if (!$request->isPost() || !property_exists($data, 'entityType') || !property_exists($data, 'entityId')) {
+            throw new BadRequest();
+        }
+
+        return $this->getRecordService()->deleteAll((string)$data->entityType, (string)$data->entityId);
+    }
+}

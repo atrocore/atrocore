@@ -40,17 +40,10 @@ namespace Espo\Listeners;
 use Espo\Core\EventManager\Event;
 use Espo\Core\Utils\Util;
 
-/**
- * Class Metadata
- */
 class Metadata extends AbstractListener
 {
-    /**
-     * @param Event $event
-     */
-    public function modify(Event $event)
+    public function modify(Event $event): void
     {
-        // get data
         $data = $event->getArgument('data');
 
         // add owner
@@ -71,7 +64,6 @@ class Metadata extends AbstractListener
 
         $data = $this->prepareHierarchyEntities($data);
 
-        // set data
         $event->setArgument('data', $data);
     }
 
@@ -98,7 +90,7 @@ class Metadata extends AbstractListener
                 "layoutListSmallDisabled"   => true,
                 "layoutDetailDisabled"      => true,
                 "layoutDetailSmallDisabled" => true,
-                "massUpdateDisabled"  => true,
+                "massUpdateDisabled"        => true,
                 "filterDisabled"            => true,
                 "importDisabled"            => true,
                 "exportDisabled"            => true,
@@ -112,7 +104,7 @@ class Metadata extends AbstractListener
                 "layoutListSmallDisabled"   => true,
                 "layoutDetailDisabled"      => true,
                 "layoutDetailSmallDisabled" => true,
-                "massUpdateDisabled"  => true,
+                "massUpdateDisabled"        => true,
                 "filterDisabled"            => true,
                 "importDisabled"            => true,
                 "exportDisabled"            => true,
@@ -126,7 +118,7 @@ class Metadata extends AbstractListener
                 "layoutListSmallDisabled"   => true,
                 "layoutDetailDisabled"      => true,
                 "layoutDetailSmallDisabled" => true,
-                "massUpdateDisabled"  => true,
+                "massUpdateDisabled"        => true,
                 "filterDisabled"            => true,
                 "importDisabled"            => true,
                 "exportDisabled"            => true,

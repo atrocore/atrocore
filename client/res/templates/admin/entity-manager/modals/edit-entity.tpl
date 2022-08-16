@@ -1,14 +1,26 @@
 <div class="row">
-	<div class="cell form-group col-md-6" data-name="name">
-		<label class="control-label" data-name="name">{{translate 'name' category='fields' scope='EntityManager'}}</label>
-		<div class="field" data-name="name">
-			{{{name}}}
-		</div>
-	</div>
 	<div class="cell form-group col-md-6" data-name="type">
 		<label class="control-label" data-name="type">{{translate 'type' category='fields' scope='EntityManager'}}</label>
 		<div class="field" data-name="type">
 			{{{type}}}
+		</div>
+	</div>
+</div>
+{{#if relationshipEntities}}
+<div class="row">
+	<div class="cell form-group col-md-6" data-name="relationshipEntities">
+		<label class="control-label" data-name="relationshipEntities">{{translate 'relationshipEntities' category='fields' scope='EntityManager'}}</label>
+		<div class="field" data-name="relationshipEntities">
+			{{{relationshipEntities}}}
+		</div>
+	</div>
+</div>
+{{/if}}
+<div class="row">
+	<div class="cell form-group col-md-6" data-name="name">
+		<label class="control-label" data-name="name">{{translate 'name' category='fields' scope='EntityManager'}}</label>
+		<div class="field" data-name="name">
+			{{{name}}}
 		</div>
 	</div>
 </div>

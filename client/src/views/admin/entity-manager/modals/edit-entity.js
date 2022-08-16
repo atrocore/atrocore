@@ -60,7 +60,10 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
 
             this.hasColorField = !this.getConfig().get('scopeColorsDisabled');
 
+            this.model.set('type', 'Base');
+
             if (scope) {
+                this.model.set('id', scope);
                 this.model.set('name', scope);
                 this.model.set('labelSingular', this.translate(scope, 'scopeNames'));
                 this.model.set('labelPlural', this.translate(scope, 'scopeNamesPlural'));
@@ -71,13 +74,17 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 this.model.set('sortBy', this.getMetadata().get('entityDefs.' + scope + '.collection.sortBy'));
                 this.model.set('sortDirection', this.getMetadata().get('entityDefs.' + scope + '.collection.asc') ? 'asc' : 'desc');
 
-                this.model.set('textFilterFields', this.getMetadata().get(['entityDefs', scope, 'collection', 'textFilterFields']) || ['name']);
+                this.model.set('textFilterFields', this.getMetadata().get(['entityDefs', scope, 'collection', 'textFilterFields']) || []);
                 this.model.set('fullTextSearch', this.getMetadata().get(['entityDefs', scope, 'collection', 'fullTextSearch']) || false);
 
                 this.model.set('statusField', this.getMetadata().get('scopes.' + scope + '.statusField') || null);
 
                 if (this.hasColorField) {
                     this.model.set('color', this.getMetadata().get(['clientDefs', scope, 'color']) || null);
+                }
+
+                if (this.model.get('type') === 'Relationship') {
+                    this.model.set('relationshipEntities', this.getMetadata().get(['scopes', scope, 'relationshipEntities']) || null);
                 }
 
                 this.model.set('iconClass', this.getMetadata().get(['clientDefs', scope, 'iconClass']) || null);
@@ -127,6 +134,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
 
             this.setupData();
 
+            let entityTypes = this.getMetadata().get('app.entityTypes') || [];
+
             this.createView('type', 'views/fields/enum', {
                 model: model,
                 mode: 'edit',
@@ -135,19 +144,31 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                     name: 'type',
                     params: {
                         required: true,
-                        options: ['Base', 'Hierarchy']
+                        options: entityTypes
                     }
                 },
                 readOnly: !this.isNew
             });
 
+            if (entityTypes.includes('Relationship')) {
+                this.createView('relationshipEntities', 'atrocore-toolbox:views/admin/entity-manager/fields/relationship-entities', {
+                    model: model,
+                    mode: 'edit',
+                    el: this.options.el + ' .field[data-name="relationshipEntities"]',
+                    defs: {
+                        name: 'relationshipEntities'
+                    }
+                });
+            }
+
             if (this.hasStreamField) {
-                this.createView('stream', 'views/fields/bool', {
+                this.createView('stream', 'views/admin/entity-manager/fields/bool-for-type', {
                     model: model,
                     mode: 'edit',
                     el: this.options.el + ' .field[data-name="stream"]',
                     defs: {
-                        name: 'stream'
+                        name: 'stream',
+                        types: ["Base", "Hierarchy"]
                     },
                     tooltip: true,
                     tooltipText: this.translate('stream', 'tooltips', 'EntityManager')
@@ -329,6 +350,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
 
                 var enumFieldList = Object.keys(fieldDefs).filter(function (item) {
                     if (fieldDefs[item].disabled) return;
+                    if (fieldDefs[item].notStorable && fieldDefs[item].notStorable === true) return;
                     if (fieldDefs[item].type == 'enum') {
                         return true;
                     }
@@ -523,7 +545,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
         },
 
         actionSave: function () {
-            var arr = [
+            let arr = [
                 'name',
                 'type',
                 'labelSingular',
@@ -543,6 +565,10 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
 
             if (this.hasColorField) {
                 arr.push('color');
+            }
+
+            if (this.model.get('type') === 'Relationship') {
+                arr.push('relationshipEntities');
             }
 
             for (let param in this.additionalParams) {
@@ -592,6 +618,10 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
 
             if (this.hasColorField) {
                 data.color = this.model.get('color') || null
+            }
+
+            if (this.model.get('type') === 'Relationship') {
+                data['relationshipEntities'] = this.model.get('relationshipEntities') || [];
             }
 
             if (data.statusField === '') {
