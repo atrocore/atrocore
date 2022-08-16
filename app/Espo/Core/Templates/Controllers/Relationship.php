@@ -42,6 +42,25 @@ use Espo\Core\Exceptions\BadRequest;
 
 class Relationship extends Record
 {
+    public function actionCreateRelationshipEntitiesViaIds($params, $data, $request)
+    {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+
+        if (!property_exists($data, 'entityTypeFrom') || !property_exists($data, 'entityIdFrom')) {
+            throw new BadRequest();
+        }
+
+        if (!property_exists($data, 'entityTypeTo') || !property_exists($data, 'entityIdsTo')) {
+            throw new BadRequest();
+        }
+
+        return $this
+            ->getRecordService()
+            ->createRelationshipEntitiesViaIds((string)$data->entityTypeFrom, (string)$data->entityIdFrom, (string)$data->entityTypeTo, (array)$data->entityIdsTo);
+    }
+
     public function actionDeleteAll($params, $data, $request)
     {
         if (!$request->isPost() || !property_exists($data, 'entityType') || !property_exists($data, 'entityId')) {
