@@ -32,42 +32,35 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('views/record/row-actions/relationship-no-unlink', 'views/record/row-actions/relationship', function (Dep) {
+Espo.define('views/admin/entity-manager/fields/bool-for-type', 'views/fields/bool', function (Dep) {
 
     return Dep.extend({
 
-        getActionList: function () {
-            var list = [{
-                action: 'quickView',
-                label: 'View',
-                data: {
-                    id: this.model.id
-                },
-                link: '#' + this.model.name + '/view/' + this.model.id
-            }];
-            if (this.options.acl.edit) {
-                list = list.concat([
-                    {
-                        action: 'quickEdit',
-                        label: 'Edit',
-                        data: {
-                            id: this.model.id
-                        },
-                        link: '#' + this.model.name + '/edit/' + this.model.id
-                    }
-                ]);
+        setup: function () {
+            Dep.prototype.setup.call(this);
+
+            this.listenTo(this.model, 'change:type', () => {
+                this.reRender();
+            });
+        },
+
+        fetch: function () {
+            let value = $(`input[type="checkbox"][name="${this.name}"]`).get(0).checked;
+            let data = {};
+            data[this.name] = value;
+            return data;
+        },
+
+        afterRender() {
+            Dep.prototype.setup.call(this);
+
+            let types = this.options.defs.types ?? this.getMetadata().get(`app.additionalEntityParams.fields.${this.name}.types`);
+            if (types && types.includes(this.model.get('type'))) {
+                this.show();
+            } else {
+                this.hide();
             }
-            if (this.options.acl.delete) {
-                list.push({
-                    action: 'removeRelated',
-                    label: 'Remove',
-                    data: {
-                        id: this.model.id
-                    }
-                });
-            }
-            return list;
-        }
+        },
 
     });
 });

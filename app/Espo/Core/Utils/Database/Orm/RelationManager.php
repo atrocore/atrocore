@@ -121,6 +121,10 @@ class RelationManager
         $foreignEntityName = $this->getLinkEntityName($entityName, $linkParams);
         $foreignLink = $this->getForeignLink($linkName, $linkParams, $entityDefs[$foreignEntityName]);
 
+        if (empty($linkParams['type'])){
+            return null;
+        }
+
         $currentType = $linkParams['type'];
 
         $relType = $currentType;

@@ -1,3 +1,4 @@
+<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -32,42 +33,22 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('views/record/row-actions/relationship-no-unlink', 'views/record/row-actions/relationship', function (Dep) {
+declare(strict_types=1);
 
-    return Dep.extend({
+namespace Espo\Core\Templates\Repositories;
 
-        getActionList: function () {
-            var list = [{
-                action: 'quickView',
-                label: 'View',
-                data: {
-                    id: this.model.id
-                },
-                link: '#' + this.model.name + '/view/' + this.model.id
-            }];
-            if (this.options.acl.edit) {
-                list = list.concat([
-                    {
-                        action: 'quickEdit',
-                        label: 'Edit',
-                        data: {
-                            id: this.model.id
-                        },
-                        link: '#' + this.model.name + '/edit/' + this.model.id
-                    }
-                ]);
-            }
-            if (this.options.acl.delete) {
-                list.push({
-                    action: 'removeRelated',
-                    label: 'Remove',
-                    data: {
-                        id: this.model.id
-                    }
-                });
-            }
-            return list;
+use Espo\Core\ORM\Repositories\RDB;
+use Espo\ORM\Entity;
+
+class Relationship extends RDB
+{
+    public function remove(Entity $entity, array $options = [])
+    {
+        $this->beforeRemove($entity, $options);
+        $result = $this->deleteFromDb($entity->get('id'));
+        if ($result) {
+            $this->afterRemove($entity, $options);
         }
-
-    });
-});
+        return $result;
+    }
+}
