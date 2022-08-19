@@ -151,14 +151,17 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
             });
 
             if (entityTypes.includes('Relationship')) {
-                this.createView('relationshipEntities', 'atrocore-toolbox:views/admin/entity-manager/fields/relationship-entities', {
-                    model: model,
-                    mode: 'edit',
-                    el: this.options.el + ' .field[data-name="relationshipEntities"]',
-                    defs: {
-                        name: 'relationshipEntities'
-                    }
-                });
+                let viewName = this.getMetadata().get('app.viewsMap.adminEntityManagerFieldsRelationshipEntities');
+                if (viewName) {
+                    this.createView('relationshipEntities', viewName, {
+                        model: model,
+                        mode: 'edit',
+                        el: this.options.el + ' .field[data-name="relationshipEntities"]',
+                        defs: {
+                            name: 'relationshipEntities'
+                        }
+                    });
+                }
             }
 
             if (this.hasStreamField) {
