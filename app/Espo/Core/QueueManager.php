@@ -84,6 +84,24 @@ class QueueManager extends Injectable
         return $this->createQueueItem($name, $serviceName, $data, $priority);
     }
 
+    public function tryAgain(string $id): bool
+    {
+        $item = $this->getEntityManager()->getRepository('QueueItem')->get($id);
+        if (empty($item)) {
+            return false;
+        }
+
+        $item->set('status', 'Pending');
+        $item->set('pid', null);
+        $item->set('message', null);
+        $item->set('stream', null);
+        $this->getEntityManager()->saveEntity($item);
+
+        file_put_contents(self::FILE_PATH, '1');
+
+        return true;
+    }
+
     protected function createQueueItem(string $name, string $serviceName, array $data, string $priority): bool
     {
         /** @var Repository $repository */
