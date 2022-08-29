@@ -67,9 +67,9 @@
                             </a>
                             {{#if this.sorted}}
                                 {{#if this.asc}}
-                                    &#8593;
+                                    <span>&#8593;</span>
                                 {{else}}
-                                    &#8595;
+                                    <span>&#8595;</span>
                                 {{/if}}
                         {{/if}}
                         </div>
