@@ -1006,9 +1006,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                             this.loadMore();
                         }
                     }.bind(this));
-                }
-
-                if (this.$el.parent().prop('id') === 'main') {
+                } else if (this.$el.parent().prop('id') === 'main') {
                     $(window).on('scroll.' + this.$el, function () {
                         if (this.collection.total > this.collection.length && $(window).scrollTop() + $(window).height() === $(document).height()) {
                             this.loadMore();
