@@ -46,15 +46,6 @@
                         twttr.events.bind(
                             'rendered',
                             function (event) {
-                                let frame = event.target;
-                                let h1 = frame.contentWindow.document.getElementsByTagName('h1');
-
-                                if (h1) {
-                                    h1[0].style.fontSize = '18px';
-                                    h1[0].style.lineHeight = '18px';
-                                    h1[0].style.marginTop = '8px';
-                                }
-
                                 $('.admin-right-column').css({
                                     animation: 'fadein 1s',
                                     opacity: 1
