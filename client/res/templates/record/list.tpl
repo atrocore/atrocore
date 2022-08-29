@@ -67,9 +67,9 @@
                             </a>
                             {{#if this.sorted}}
                                 {{#if this.asc}}
-                                    <span class="caret"></span>
+                                    &#8593;
                                 {{else}}
-                                    <span class="caret-up"></span>
+                                    &#8595;
                                 {{/if}}
                         {{/if}}
                         </div>
@@ -111,7 +111,7 @@
                     <div>
                         {{#if this.sortable}}
                             <a href="javascript:" class="sort" data-name="{{this.name}}">{{#if this.hasCustomLabel}}{{this.customLabel}}{{else}}{{translate this.name scope=../../../collection.name category='fields'}}{{/if}}</a>
-                            {{#if this.sorted}}{{#if this.asc}}<span class="caret"></span>{{else}}<span class="caret-up"></span>{{/if}}{{/if}}
+                            {{#if this.sorted}}{{#if this.asc}}<span>&#8593;</span>{{else}}<span>&#8595;</span>{{/if}}{{/if}}
                         {{else}}
                             {{#if this.hasCustomLabel}}
                                 {{this.customLabel}}
