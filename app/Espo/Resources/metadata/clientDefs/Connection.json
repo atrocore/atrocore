@@ -9,9 +9,6 @@
     "notEntity",
     "connectionType"
   ],
-  "views": {
-    "list": "views/connection/list"
-  },
   "recordViews": {
     "detail": "views/connection/record/detail"
   },

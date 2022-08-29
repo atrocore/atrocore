@@ -597,25 +597,22 @@ class Base
     {
         if ($this->hasAssignedUsersField()) {
             $this->setDistinct(true, $result);
-            $this->addLeftJoin(['assignedUsers', 'assignedUsersAccess'], $result);
-            $result['whereClause'][] = array(
-                'assignedUsersAccess.id' => $this->getUser()->id
-            );
+            $this->addLeftJoin('assignedUsers', $result);
+            $result['whereClause'][] = ['assignedUsers.id' => $this->getUser()->id];
             return;
         }
 
+        if ($this->hasOwnerUserField()) {
+            $d['ownerUserId'] = $this->getUser()->id;
+        }
         if ($this->hasAssignedUserField()) {
-            $result['whereClause'][] = array(
-                'assignedUserId' => $this->getUser()->id
-            );
-            return;
+            $d['assignedUserId'] = $this->getUser()->id;
+        }
+        if ($this->hasCreatedByField() && !$this->hasAssignedUserField() && !$this->hasOwnerUserField()) {
+            $d['createdById'] = $this->getUser()->id;
         }
 
-        if ($this->hasCreatedByField()) {
-            $result['whereClause'][] = array(
-                'createdById' => $this->getUser()->id
-            );
-        }
+        $result['whereClause'][] = ['OR' => $d];
     }
 
     protected function accessOnlyTeam(&$result)
@@ -629,31 +626,35 @@ class Base
 
         if ($this->hasAssignedUsersField()) {
             $this->addLeftJoin(['assignedUsers', 'assignedUsersAccess'], $result);
-            $result['whereClause'][] = array(
-                'OR' => array(
-                    'teamsAccess.id' => $this->getUser()->getLinkMultipleIdList('teams'),
+            $result['whereClause'][] = [
+                'OR' => [
+                    'teamsAccess.id'         => $this->getUser()->getLinkMultipleIdList('teams'),
                     'assignedUsersAccess.id' => $this->getUser()->id
-                )
-            );
+                ]
+            ];
             return;
         }
 
-        $d = array(
-            'teamsAccess.id' => $this->getUser()->getLinkMultipleIdList('teams')
-        );
+        $d = ['teamsAccess.id' => $this->getUser()->getLinkMultipleIdList('teams')];
+
+        if ($this->hasOwnerUserField()) {
+            $d['ownerUserId'] = $this->getUser()->id;
+        }
+
         if ($this->hasAssignedUserField()) {
             $d['assignedUserId'] = $this->getUser()->id;
-        } else if ($this->hasCreatedByField()) {
+        }
+
+        if ($this->hasCreatedByField() && !$this->hasAssignedUserField() && !$this->hasOwnerUserField()) {
             $d['createdById'] = $this->getUser()->id;
         }
-        $result['whereClause'][] = array(
-            'OR' => $d
-        );
+
+        $result['whereClause'][] = ['OR' => $d];
     }
 
     protected function accessPortalOnlyAccount(&$result)
     {
-        $d = array();
+        $d = [];
 
         $accountId = $this->getUser()->get('accountId');
 
@@ -698,7 +699,9 @@ class Base
      */
     protected function hasAssignedUsersField()
     {
-        return $this->getSeed()->hasRelation('assignedUsers') && $this->getSeed()->hasAttribute('assignedUsersIds');
+        return $this->getMetadata()->get('scopes.' . $this->getEntityType() . '.hasAssignedUser')
+            && $this->getSeed()->hasRelation('assignedUsers')
+            && $this->getSeed()->hasAttribute('assignedUsersIds');
     }
 
     /**
@@ -706,7 +709,7 @@ class Base
      */
     protected function hasOwnerUserField()
     {
-        return $this->getSeed()->hasAttribute('ownerUserId');
+        return !empty($this->getMetadata()->get('scopes.' . $this->getEntityType() . '.hasOwner'));
     }
 
     /**
@@ -714,7 +717,19 @@ class Base
      */
     protected function hasAssignedUserField()
     {
-        return $this->getSeed()->hasAttribute('assignedUserId');
+        return !empty($this->getMetadata()->get('scopes.' . $this->getEntityType() . '.hasAssignedUser'));
+    }
+
+    /**
+     * @param array $result
+     *
+     * @return void
+     */
+    protected function boolFilterOnlyActive(array &$result): void
+    {
+        $result['whereClause'][] = [
+            'isActive' => true
+        ];
     }
 
     /**

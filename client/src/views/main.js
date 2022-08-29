@@ -136,6 +136,13 @@ Espo.define('views/main', 'view', function (Dep) {
         buildHeaderHtml: function (arr, isAdmin) {
             let a = [];
 
+            if (!isAdmin && this.entityType) {
+                const tab = this.getMetadata().get(`scopes.${this.entityType}.tab`);
+                if (tab === false) {
+                    isAdmin = true;
+                }
+            }
+
             if (isAdmin) {
                 a.unshift(`<a href='#Admin' class="action">${this.getLanguage().translate('Administration', 'labels')}</a>`);
             } else {
