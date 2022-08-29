@@ -62,7 +62,28 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
             observer.observe($('#content').get(0));
         },
 
+        isTreeAllowed() {
+            let result = false;
+
+            let treeScopes = this.getMetadata().get(`clientDefs.${this.scope}.treeScopes`) || [this.scope];
+
+            treeScopes.forEach(scope => {
+                if (this.getAcl().check(scope, 'read')) {
+                    result = true;
+                    if (!this.getStorage().get('treeScope', this.scope)) {
+                        this.getStorage().set('treeScope', this.scope, scope);
+                    }
+                }
+            });
+
+            return result;
+        },
+
         setupTreePanel(scope) {
+            if (!this.isTreeAllowed()) {
+                return;
+            }
+
             this.createView('treePanel', 'views/record/panels/tree-panel', {
                 el: `${this.options.el} .catalog-tree-panel`,
                 scope: scope ? scope : this.scope,
@@ -90,15 +111,85 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
             });
         },
 
+        resetSorting() {
+            Dep.prototype.resetSorting.call(this);
+
+            this.getStorage().clear('selectedNodeId', this.scope);
+            this.getStorage().clear('selectedNodeRoute', this.scope);
+
+            let treeView = this.getView('treePanel');
+            if (treeView) {
+                treeView.buildTree();
+            }
+        },
+
         treeInit(view) {
+
+            if (this.getStorage().get('selectedNodeId', this.scope)) {
+                view.selectTreeNode(this.parseRoute(this.getStorage().get('selectedNodeRoute', this.scope)), this.getStorage().get('selectedNodeId', this.scope));
+
+                this.notify('Please wait...');
+                this.updateCollectionWithTree(this.getStorage().get('selectedNodeId', this.scope));
+                this.collection.fetch().then(() => this.notify(false));
+            }
         },
 
         treeReset(view) {
-            window.location.href = `/#${this.scope}`;
+            this.notify('Please wait...');
+
+            this.getStorage().clear('selectedNodeId', this.scope);
+            this.getStorage().clear('selectedNodeRoute', this.scope);
+
+            view.buildTree();
+            this.updateCollectionWithTree(null);
+            this.collection.fetch().then(() => this.notify(false));
         },
 
         selectNode(data) {
-            window.location.href = `/#${this.scope}/view/${data.id}`;
+            if (this.getStorage().get('treeScope', this.scope) === this.scope) {
+                window.location.href = `/#${this.scope}/view/${data.id}`;
+                return;
+            }
+
+            this.getStorage().set('selectedNodeId', this.scope, data.id);
+            this.getStorage().set('selectedNodeRoute', this.scope, data.route);
+
+            const $treeView = this.getView('treePanel');
+            $treeView.selectTreeNode(this.parseRoute(data.route), data.id);
+            this.notify('Please wait...');
+            this.updateCollectionWithTree(data.id);
+            this.collection.fetch().then(() => this.notify(false));
+        },
+
+        updateCollectionWithTree(id) {
+            let data = {bool: {}, boolData: {}};
+
+            const filterName = "linkedWith" + this.getStorage().get('treeScope', this.scope);
+
+            data['bool'][filterName] = true;
+            data['boolData'][filterName] = id;
+
+            const defaultFilters = Espo.Utils.cloneDeep(this.searchManager.get());
+            const extendedFilters = Espo.Utils.cloneDeep(defaultFilters);
+
+            $.each(data, (key, value) => {
+                extendedFilters[key] = _.extend({}, extendedFilters[key], value);
+            });
+
+            this.searchManager.set(extendedFilters);
+            this.collection.where = this.searchManager.getWhere();
+            this.searchManager.set(defaultFilters);
+        },
+
+        parseRoute(routeStr) {
+            let route = [];
+            (routeStr || '').split('|').forEach(item => {
+                if (item) {
+                    route.push(item);
+                }
+            });
+
+            return route;
         },
 
         onTreeResize(width) {
