@@ -4067,6 +4067,20 @@ tbody.collapse.in {
     margin-left: 0
 }
 
+.btn-group > .btn.sort-direction-button,
+.sort ~ span {
+    font-size: 18px;
+    line-height: 14px;
+}
+
+.btn-group > .btn.sort-direction-button {
+    margin: -4px 0 0 -2px;
+}
+
+.sort ~ span {
+    margin: -4px 0 0 0 !important;
+}
+
 .btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) {
     border-bottom-right-radius: 0;
     border-top-right-radius: 0
