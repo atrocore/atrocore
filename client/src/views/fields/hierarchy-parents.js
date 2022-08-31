@@ -92,15 +92,5 @@ Espo.define('views/fields/hierarchy-parents', 'views/fields/link-multiple',
             }
         },
 
-        afterRender() {
-            Dep.prototype.afterRender.call(this);
-
-            if (this.mode === 'edit') {
-                if (!this.model.isNew()) {
-                    this.hide();
-                }
-            }
-        },
-
     })
 );
