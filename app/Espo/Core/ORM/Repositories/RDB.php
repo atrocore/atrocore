@@ -490,7 +490,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                         foreach ($matches[1] as $id) {
                             $attachment = $this->getEntityManager()->getEntity('Attachment', $id);
                             if ($attachment) {
-                                if (!$attachment->get('relatedId') && !$attachment->get('sourceId')) {
+                                if (!$attachment->get('relatedId')) {
                                     $attachment->set([
                                         'relatedId' => $entity->id,
                                         'relatedType' => $entity->getEntityType()

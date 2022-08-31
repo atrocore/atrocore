@@ -14,7 +14,7 @@
                 {"name": "size"}, false
             ],
             [
-                {"name": "storage"}, {"name": "sourceId"}
+                {"name": "storage"}, false
             ]
         ]
     }

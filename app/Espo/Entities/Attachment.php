@@ -43,19 +43,6 @@ use Espo\Core\ORM\Entity as Base;
 class Attachment extends Base
 {
     /**
-     * @return mixed|null
-     */
-    public function getSourceId()
-    {
-        $sourceId = $this->get('sourceId');
-        if (!$sourceId) {
-            $sourceId = $this->id;
-        }
-
-        return $sourceId;
-    }
-
-    /**
      * @return string
      */
     public function _getStorage()

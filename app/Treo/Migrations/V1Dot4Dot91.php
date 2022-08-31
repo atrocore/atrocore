@@ -33,8 +33,31 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-namespace Espo\SelectManagers;
+declare(strict_types=1);
 
-class Attachment extends \Espo\Core\SelectManagers\Base
+namespace Treo\Migrations;
+
+use Treo\Core\Migration\Base;
+
+class V1Dot4Dot91 extends Base
 {
+    public function up(): void
+    {
+        $this->execute("DROP INDEX IDX_SOURCE_ID ON attachment");
+        $this->execute("ALTER TABLE attachment DROP source_id");
+    }
+
+    public function down(): void
+    {
+        $this->execute("ALTER TABLE attachment ADD source_id VARCHAR(255) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
+        $this->execute("CREATE INDEX IDX_SOURCE_ID ON attachment (source_id)");
+    }
+
+    protected function execute(string $query): void
+    {
+        try {
+            $this->getPDO()->exec($query);
+        } catch (\Throwable $e) {
+        }
+    }
 }
