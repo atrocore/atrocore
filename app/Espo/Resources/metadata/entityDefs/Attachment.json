@@ -35,12 +35,6 @@
       "min": 0,
       "importDisabled": true
     },
-    "parent": {
-      "type": "linkParent",
-      "view": "views/attachment/fields/parent",
-      "importDisabled": true,
-      "exportDisabled": true
-    },
     "related": {
       "type": "linkParent",
       "noLoad": true,
@@ -122,10 +116,6 @@
       "type": "belongsTo",
       "entity": "User"
     },
-    "parent": {
-      "type": "belongsToParent",
-      "foreign": "attachments"
-    },
     "related": {
       "type": "belongsToParent"
     }
@@ -133,14 +123,6 @@
   "collection": {
     "sortBy": "createdAt",
     "asc": false
-  },
-  "indexes": {
-    "parent": {
-      "columns": [
-        "parentType",
-        "parentId"
-      ]
-    }
   },
   "sourceList": [
     "Document"
