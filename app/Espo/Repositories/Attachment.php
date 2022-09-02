@@ -61,10 +61,6 @@ class Attachment extends RDB
         if (empty($entity->get('storage'))) {
             $entity->set('storage', $this->getConfig()->get('defaultFileStorage', 'UploadDir'));
         }
-
-        if (!$entity->isNew() && $entity->get('sourceId')) {
-            $this->copyFile($entity);
-        }
     }
 
     public function isPrivate(Entity $entity): bool
@@ -84,7 +80,6 @@ class Attachment extends RDB
 
         $attachment->set(
             [
-                'sourceId'         => $entity->getSourceId(),
                 'name'             => $entity->get('name'),
                 'type'             => $entity->get('type'),
                 'size'             => $entity->get('size'),
@@ -104,26 +99,6 @@ class Attachment extends RDB
         $this->save($attachment);
 
         return $attachment;
-    }
-
-    /**
-     * @param Entity $entity
-     *
-     * @return string
-     */
-    public function copy(Entity $entity): string
-    {
-        $source = $this->where(["id" => $entity->get('sourceId')])->findOne();
-
-        $sourcePath = $this->getFilePath($source);
-        $destPath = $this->getDestPath(FilePathBuilder::UPLOAD);
-        $fullDestPath = $this->getConfig()->get('filesPath', 'upload/files/') . $destPath;
-
-        if ($this->getFileManager()->copy($sourcePath, $fullDestPath, false, null, true)) {
-            return $destPath;
-        }
-
-        return '';
     }
 
     /**
@@ -180,14 +155,11 @@ class Attachment extends RDB
     {
         $result = parent::remove($entity, $options);
 
-        $duplicateCount = $this->where(['OR' => [['sourceId' => $entity->getSourceId()], ['id' => $entity->getSourceId()]]])->count();
-        if ($duplicateCount === 0) {
-            // unlink file
-            $this->getFileStorageManager()->unlink($entity);
+        // unlink file
+        $this->getFileStorageManager()->unlink($entity);
 
-            // remove record from DB table
-            $this->deleteFromDb($entity->get('id'));
-        }
+        // remove record from DB table
+        $this->deleteFromDb($entity->get('id'));
 
         return $result;
     }
@@ -287,25 +259,5 @@ class Attachment extends RDB
     protected function getFileManager()
     {
         return $this->getInjection('fileManager');
-    }
-
-    /**
-     * @param Entity $entity
-     *
-     * @throws InternalServerError
-     */
-    protected function copyFile(Entity $entity): void
-    {
-        $path = $this->copy($entity);
-        if (!$path) {
-            throw new InternalServerError($this->translate("Can't copy file", 'exceptions', 'Global'));
-        }
-
-        $entity->set(
-            [
-                'sourceId'        => null,
-                'storageFilePath' => $path,
-            ]
-        );
     }
 }

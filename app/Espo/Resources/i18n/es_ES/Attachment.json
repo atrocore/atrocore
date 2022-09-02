@@ -9,7 +9,6 @@
     "file": "File",
     "type": "Type",
     "field": "Field",
-    "sourceId": "Source ID",
     "storage": "Storage",
     "url": "URL",
     "size": "Size (bytes)"

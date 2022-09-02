@@ -62,7 +62,28 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
             observer.observe($('#content').get(0));
         },
 
+        isTreeAllowed() {
+            let result = false;
+
+            let treeScopes = this.getMetadata().get(`clientDefs.${this.scope}.treeScopes`) || [this.scope];
+
+            treeScopes.forEach(scope => {
+                if (this.getAcl().check(scope, 'read')) {
+                    result = true;
+                    if (!this.getStorage().get('treeScope', this.scope)) {
+                        this.getStorage().set('treeScope', this.scope, scope);
+                    }
+                }
+            })
+
+            return result;
+        },
+
         setupTreePanel() {
+            if (!this.isTreeAllowed()) {
+                return;
+            }
+
             this.createView('treePanel', 'views/record/panels/tree-panel', {
                 el: `${this.options.el} .catalog-tree-panel`,
                 scope: this.scope,
@@ -100,11 +121,13 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
         },
 
         selectNode(data) {
-            window.location.href = `/#${this.scope}/view/${data.id}`;
-        },
-
-        getCurrentTime() {
-            return Math.floor(new Date().getTime() / 1000);
+            if (this.getStorage().get('treeScope', this.scope) === this.scope) {
+                window.location.href = `/#${this.scope}/view/${data.id}`;
+            } else {
+                this.getStorage().set('selectedNodeId', this.scope, data.id);
+                this.getStorage().set('selectedNodeRoute', this.scope, data.route);
+                window.location.href = `/#${this.scope}`;
+            }
         },
 
         treeInit(view) {
@@ -116,6 +139,8 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
         },
 
         treeReset(view) {
+            this.getStorage().clear('selectedNodeId', this.scope);
+            this.getStorage().clear('selectedNodeRoute', this.scope);
             window.location.href = `/#${this.scope}`;
         },
 

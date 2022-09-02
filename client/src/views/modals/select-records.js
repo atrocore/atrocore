@@ -394,8 +394,9 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
 
                 const modalBody = this.$el.find('.modal-body');
                 if (modalBody.length) {
+                    modalBody.off('scroll');
                     modalBody.on('scroll', function () {
-                        if (this.getSelectedViewType() === 'tree' && modalBody.outerHeight() + modalBody.scrollTop() === modalBody.get(0).scrollHeight) {
+                        if (this.getSelectedViewType() === 'tree' && modalBody.outerHeight() + modalBody.scrollTop() >= modalBody.get(0).scrollHeight - 50) {
                             const btnMore = modalBody.find('.jqtree-tree > .show-more span');
 
                             if (btnMore.length) {

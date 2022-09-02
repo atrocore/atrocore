@@ -35,25 +35,10 @@
       "min": 0,
       "importDisabled": true
     },
-    "parent": {
-      "type": "linkParent",
-      "view": "views/attachment/fields/parent",
-      "importDisabled": true,
-      "exportDisabled": true
-    },
     "related": {
       "type": "linkParent",
       "noLoad": true,
       "view": "views/attachment/fields/parent",
-      "importDisabled": true,
-      "exportDisabled": true
-    },
-    "sourceId": {
-      "type": "varchar",
-      "maxLength": 36,
-      "readOnly": true,
-      "disabled": true,
-      "index": true,
       "importDisabled": true,
       "exportDisabled": true
     },
@@ -131,10 +116,6 @@
       "type": "belongsTo",
       "entity": "User"
     },
-    "parent": {
-      "type": "belongsToParent",
-      "foreign": "attachments"
-    },
     "related": {
       "type": "belongsToParent"
     }
@@ -142,14 +123,6 @@
   "collection": {
     "sortBy": "createdAt",
     "asc": false
-  },
-  "indexes": {
-    "parent": {
-      "columns": [
-        "parentType",
-        "parentId"
-      ]
-    }
   },
   "sourceList": [
     "Document"

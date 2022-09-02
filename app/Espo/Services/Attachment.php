@@ -149,16 +149,12 @@ class Attachment extends Record
             $attachment->contents = $this->parseInputFileContent($attachment->file);
 
             $relatedEntityType = null;
-            if (isset($attachment->parentType)) {
-                $relatedEntityType = $attachment->parentType;
-            } else {
-                if (isset($attachment->relatedType)) {
-                    $relatedEntityType = $attachment->relatedType;
-                }
+            if (isset($attachment->relatedType)) {
+                $relatedEntityType = $attachment->relatedType;
             }
 
             if (!$relatedEntityType) {
-                throw new BadRequest("Params 'relatedType' or 'parentType' not passed along with 'file'.");
+                throw new BadRequest("Params 'relatedType' not passed along with 'file'.");
             }
 
             if (!$this->getAcl()->checkScope($relatedEntityType, 'create') && !$this->getAcl()->checkScope($relatedEntityType, 'edit')) {

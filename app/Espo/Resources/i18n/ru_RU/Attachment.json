@@ -10,7 +10,6 @@
     "file": "Файл",
     "type": "Тип",
     "field": "Поле",
-    "sourceId": "ID Источника",
     "storage": "Хранилище",
     "size": "Размер (bytes)"
   },

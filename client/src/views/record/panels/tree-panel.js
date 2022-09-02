@@ -64,8 +64,9 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             this.scope = this.options.scope || this.scope;
             this.treeScope = this.scope;
 
-            if (this.scope === 'Product') {
-                this.treeScope = localStorage.getItem('treeScope') || 'Category';
+            let treeScopes = this.getMetadata().get(`clientDefs.${this.scope}.treeScopes`);
+            if (treeScopes) {
+                this.treeScope = this.getStorage().get('treeScope', this.scope) || treeScopes[0];
             }
 
             this.wait(true);
@@ -100,8 +101,9 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                 this.treePanelResize()
             });
 
+            this.$el.off('scroll');
             this.$el.on('scroll', function () {
-                if (this.$el.outerHeight() + this.$el.scrollTop() === this.$el.get(0).scrollHeight) {
+                if (this.$el.outerHeight() + this.$el.scrollTop() >= this.$el.get(0).scrollHeight - 50) {
                     const btnMore = this.$el.find('.jqtree-tree > .show-more span[data-id="show-more"]');
 
                     if (btnMore.length) {
@@ -454,7 +456,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             const treeScopes = this.getMetadata().get(`clientDefs.${this.scope}.treeScopes`);
             if (treeScopes) {
                 this.getModelFactory().create(this.scope, model => {
-                    model.set('scopesEnum', localStorage.getItem('treeScope') || 'Category');
+                    model.set('scopesEnum', this.getStorage().get('treeScope', this.scope) || treeScopes[0]);
 
                     let options = [];
 
@@ -486,9 +488,10 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                         this.listenTo(model, 'change:scopesEnum', () => {
                             this.treeScope = model.get('scopesEnum');
 
-                            localStorage.setItem('treeScope', this.treeScope);
-                            localStorage.removeItem('selectedNodeId');
-                            localStorage.removeItem('selectedNodeRoute');
+                            this.getStorage().set('treeScope', this.scope, this.treeScope);
+
+                            this.getStorage().clear('selectedNodeId', this.scope);
+                            this.getStorage().clear('selectedNodeRoute', this.scope);
 
                             const searchPanel = this.getView('categorySearch');
                             searchPanel.scope = this.treeScope;
