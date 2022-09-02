@@ -101,8 +101,9 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                 this.treePanelResize()
             });
 
+            this.$el.off('scroll');
             this.$el.on('scroll', function () {
-                if (this.$el.outerHeight() + this.$el.scrollTop() === this.$el.get(0).scrollHeight) {
+                if (this.$el.outerHeight() + this.$el.scrollTop() >= this.$el.get(0).scrollHeight - 50) {
                     const btnMore = this.$el.find('.jqtree-tree > .show-more span[data-id="show-more"]');
 
                     if (btnMore.length) {
