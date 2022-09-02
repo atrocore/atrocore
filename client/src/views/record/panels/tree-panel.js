@@ -107,7 +107,6 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                     const btnMore = this.$el.find('.jqtree-tree > .show-more span[data-id="show-more"]');
 
                     if (btnMore.length) {
-                        debugger
                         btnMore.click();
                     }
                 }

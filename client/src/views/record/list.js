@@ -1004,7 +1004,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     parent.off('scroll');
                     parent.on('scroll', parent, function () {
                         if (this.collection.total > this.collection.length + this.collection.lengthCorrection && parent.scrollTop() + parent.outerHeight() >= parent.get(0).scrollHeight - 50) {
-                            debugger
                             this.loadMore();
                         }
                     }.bind(this));
@@ -1012,7 +1011,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     $(window).off('scroll', this.$el);
                     $(window).on('scroll', this.$el, function () {
                         if (this.collection.total > this.collection.length + this.collection.lengthCorrection && $(window).scrollTop() + $(window).height() >= $(document).height() - 50) {
-                            debugger
                             this.loadMore();
                         }
                     }.bind(this));
