@@ -1002,15 +1002,17 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     let parent = this.$el.parent();
 
                     parent.off('scroll');
-                    parent.on('scroll', function () {
-                        if (this.collection.total > this.collection.length && parent.scrollTop() + parent.outerHeight() >= parent.get(0).scrollHeight - 50) {
+                    parent.on('scroll', parent, function () {
+                        if (this.collection.total > this.collection.length + this.collection.lengthCorrection && parent.scrollTop() + parent.outerHeight() >= parent.get(0).scrollHeight - 50) {
+                            debugger
                             this.loadMore();
                         }
                     }.bind(this));
                 } else if (this.$el.parent().prop('id') === 'main') {
                     $(window).off('scroll', this.$el);
                     $(window).on('scroll', this.$el, function () {
-                        if (this.collection.total > this.collection.length && $(window).scrollTop() + $(window).height() >= $(document).height() - 50) {
+                        if (this.collection.total > this.collection.length + this.collection.lengthCorrection && $(window).scrollTop() + $(window).height() >= $(document).height() - 50) {
+                            debugger
                             this.loadMore();
                         }
                     }.bind(this));
