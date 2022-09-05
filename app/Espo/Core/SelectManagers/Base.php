@@ -826,6 +826,10 @@ class Base
 
         $this->applyAdditional($result, $params);
 
+        if (!empty($params['withDeleted'])) {
+            $result['withDeleted'] = true;
+        }
+
         return $this
             ->dispatch('Entity', 'afterGetSelectParams', new Event(['result' => $result, 'params' => $params, 'entityType' => $this->entityType]))
             ->getArgument('result');

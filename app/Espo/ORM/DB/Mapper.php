@@ -90,7 +90,7 @@ abstract class Mapper implements IMapper
 
     public function count(IEntity $entity, $params = array())
     {
-        return $this->aggregate($entity, $params, 'COUNT', 'id');
+        return $this->aggregate($entity, $params, 'COUNT', 'id', !empty($params['withDeleted']));
     }
 
     public function max(IEntity $entity, $params = array(), $field, $deleted = false)

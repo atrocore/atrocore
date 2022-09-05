@@ -52,6 +52,48 @@ class Util
      */
     protected static $reservedWords = ['Case'];
 
+    public static function replaceDiacriticalCharacters(string $value): string
+    {
+        $diacriticalSymbolsReplaceMap = [
+            'a' => 'ÀÁÂÃÄÅÆĀĂĄàáâãäåæāăą',
+            'c' => 'ÇĆĈĊČçćĉċč',
+            'd' => 'ĎĐďđ',
+            'e' => 'ÈÉÊËÐĒĔĖĘĚèéêëðēĕėęě',
+            'g' => 'ĜĞĠĢĝğġģ',
+            'h' => 'ĤĦĥħ',
+            'i' => 'ÌÍÎÏĨĪĬĮİĲìíîïĩīĭįıĳ',
+            'j' => 'Ĵĵ',
+            'k' => 'Ķķĸ',
+            'l' => 'ĹĻĽĿŁĺļľŀł',
+            'n' => 'ÑŃŅŇŊñńņňŉŋ',
+            'o' => 'ÒÓÔÕÖØŌŎŐŒòóôõöøōŏőœ',
+            'p' => 'Þþ',
+            'r' => 'ŔŖŘŕŗř',
+            's' => 'ßŚŜŞŠśŝşšſ',
+            't' => 'ŢŤŦţťŧ',
+            'u' => 'ÙÚÛÜŨŪŬŮŰŲùúûüũūŭůűų',
+            'w' => 'Ŵŵ',
+            'y' => 'ÝŶŸýÿŷ',
+            'z' => 'ŹŻŽźżž'
+        ];
+
+        $replaceMap = [];
+        foreach ($diacriticalSymbolsReplaceMap as $to => $replaces) {
+            $i = 0;
+            while ($i < mb_strlen($replaces)) {
+                $char = mb_substr($replaces, $i, 1);
+                $replaceMap[$char] = $to;
+                $i++;
+            }
+        }
+
+        foreach ($replaceMap as $from => $to) {
+            $value = str_replace($from, $to, $value);
+        }
+
+        return $value;
+    }
+
     /**
      * @param string $dir
      *
@@ -195,7 +237,7 @@ class Util
             $value = array_column($value->toArray(), 'id');
         }
 
-        if (empty($value)){
+        if (empty($value)) {
             $value = '';
         }
 
@@ -224,9 +266,9 @@ class Util
     /**
      * Convert name to Camel Case format, ex. camel_case to camelCase
      *
-     * @param  string  $name
-     * @param  string | array  $symbol
-     * @param  boolean $capitaliseFirstChar
+     * @param string         $name
+     * @param string | array $symbol
+     * @param boolean        $capitaliseFirstChar
      *
      * @return string
      */
@@ -245,7 +287,7 @@ class Util
             $name = ucfirst($name);
         }
 
-        return preg_replace_callback('/'.$symbol.'([a-zA-Z])/', 'static::toCamelCaseConversion', $name);
+        return preg_replace_callback('/' . $symbol . '([a-zA-Z])/', 'static::toCamelCaseConversion', $name);
     }
 
     protected static function toCamelCaseConversion($matches)
@@ -273,8 +315,8 @@ class Util
 
         $name[0] = strtolower($name[0]);
         return preg_replace_callback('/([A-Z])/', function ($matches) use ($symbol) {
-                     return $symbol . strtolower($matches[1]);
-                }, $name);
+            return $symbol . strtolower($matches[1]);
+        }, $name);
     }
 
     /**
@@ -309,10 +351,14 @@ class Util
 
         if (is_array($currentArray) && !is_array($newArray)) {
             return $currentArray;
-        } else if (!is_array($currentArray) && is_array($newArray)) {
-            return $newArray;
-        } else if ((!is_array($currentArray) || empty($currentArray)) && (!is_array($newArray) || empty($newArray))) {
-            return array();
+        } else {
+            if (!is_array($currentArray) && is_array($newArray)) {
+                return $newArray;
+            } else {
+                if ((!is_array($currentArray) || empty($currentArray)) && (!is_array($newArray) || empty($newArray))) {
+                    return array();
+                }
+            }
         }
 
         foreach ($newArray as $newName => $newValue) {
@@ -324,8 +370,10 @@ class Util
                 if ($appendKey !== false) {
                     unset($newValue[$appendKey]);
                     $newValue = array_merge($currentArray[$newName], $newValue);
-                } else if (!static::isSingleArray($newValue) || !static::isSingleArray($currentArray[$newName])) {
-                    $newValue = static::merge($currentArray[$newName], $newValue);
+                } else {
+                    if (!static::isSingleArray($newValue) || !static::isSingleArray($currentArray[$newName])) {
+                        $newValue = static::merge($currentArray[$newName], $newValue);
+                    }
                 }
 
             }
@@ -344,24 +392,27 @@ class Util
     /**
      * Unset a value in array recursively
      *
-     * @param  string $needle
-     * @param  array  $haystack
-     * @param  bool   $reIndex
+     * @param string $needle
+     * @param array  $haystack
+     * @param bool   $reIndex
+     *
      * @return array
      */
     public static function unsetInArrayByValue($needle, array $haystack, $reIndex = true)
     {
         $doReindex = false;
 
-        foreach($haystack as $key => $value) {
+        foreach ($haystack as $key => $value) {
             if (is_array($value)) {
                 $haystack[$key] = static::unsetInArrayByValue($needle, $value);
-            } else if ($needle === $value) {
+            } else {
+                if ($needle === $value) {
 
-                unset($haystack[$key]);
+                    unset($haystack[$key]);
 
-                if ($reIndex) {
-                    $doReindex = true;
+                    if ($reIndex) {
+                        $doReindex = true;
+                    }
                 }
             }
         }
@@ -377,7 +428,7 @@ class Util
      * Get a full path of the file
      *
      * @param string | array $folderPath - Folder path, Ex. myfolder
-     * @param string $filePath - File path, Ex. file.json
+     * @param string         $filePath   - File path, Ex. file.json
      *
      * @return string
      */
@@ -407,7 +458,8 @@ class Util
     /**
      * Fix path separator
      *
-     * @param  string $path
+     * @param string $path
+     *
      * @return string
      */
     public static function fixPath($path)
@@ -419,12 +471,13 @@ class Util
      * Convert array to object format recursively
      *
      * @param array $array
+     *
      * @return object
      */
     public static function arrayToObject($array)
     {
         if (is_array($array)) {
-            return (object) array_map("static::arrayToObject", $array);
+            return (object)array_map("static::arrayToObject", $array);
         } else {
             return $array; // Return an object
         }
@@ -434,12 +487,13 @@ class Util
      * Convert object to array format recursively
      *
      * @param object $object
+     *
      * @return array
      */
     public static function objectToArray($object)
     {
         if (is_object($object)) {
-            $object = (array) $object;
+            $object = (array)$object;
         }
 
         return is_array($object) ? array_map("static::objectToArray", $object) : $object;
@@ -449,6 +503,7 @@ class Util
      * Appends 'Obj' if name is reserved PHP word.
      *
      * @param string $name
+     *
      * @return string
      */
     public static function normilizeClassName($name)
@@ -463,12 +518,13 @@ class Util
      * Remove 'Obj' if name is reserved PHP word.
      *
      * @param string $name
+     *
      * @return string
      */
     public static function normilizeScopeName($name)
     {
         foreach (self::$reservedWords as $reservedWord) {
-            if ($reservedWord.'Obj' == $name) {
+            if ($reservedWord . 'Obj' == $name) {
                 return $reservedWord;
             }
         }
@@ -477,20 +533,22 @@ class Util
     }
 
     /**
-    * Get Naming according to prefix or postfix type
-    *
-    * @param string $name
-    * @param string $prePostFix
-    * @param string $type
-    *
-    * @return string
-    */
+     * Get Naming according to prefix or postfix type
+     *
+     * @param string $name
+     * @param string $prePostFix
+     * @param string $type
+     *
+     * @return string
+     */
     public static function getNaming($name, $prePostFix, $type = 'prefix', $symbol = '_')
     {
         if ($type == 'prefix') {
-            return static::toCamelCase($prePostFix.$symbol.$name, $symbol);
-        } else if ($type == 'postfix') {
-            return static::toCamelCase($name.$symbol.$prePostFix, $symbol);
+            return static::toCamelCase($prePostFix . $symbol . $name, $symbol);
+        } else {
+            if ($type == 'postfix') {
+                return static::toCamelCase($name . $symbol . $prePostFix, $symbol);
+            }
         }
 
         return null;
@@ -529,17 +587,17 @@ class Util
     /**
      * Unset content items defined in the unset.json
      *
-     * @param array $content
-     * @param string | array $unsets in format
-     *   array(
-     *      'EntityName1' => array( 'unset1', 'unset2' ),
-     *      'EntityName2' => array( 'unset1', 'unset2' ),
-     *  )
-     *  OR
-     *  array('EntityName1.unset1', 'EntityName1.unset2', .....)
-     *  OR
-     *  'EntityName1.unset1'
-     * @param bool $unsetParentEmptyArray - If unset empty parent array after unsets
+     * @param array          $content
+     * @param string | array $unsets                in format
+     *                                              array(
+     *                                              'EntityName1' => array( 'unset1', 'unset2' ),
+     *                                              'EntityName2' => array( 'unset1', 'unset2' ),
+     *                                              )
+     *                                              OR
+     *                                              array('EntityName1.unset1', 'EntityName1.unset2', .....)
+     *                                              OR
+     *                                              'EntityName1.unset1'
+     * @param bool           $unsetParentEmptyArray - If unset empty parent array after unsets
      *
      * @return array
      */
@@ -550,11 +608,11 @@ class Util
         }
 
         if (is_string($unsets)) {
-            $unsets = (array) $unsets;
+            $unsets = (array)$unsets;
         }
 
         foreach ($unsets as $rootKey => $unsetItem) {
-            $unsetItem = is_array($unsetItem) ? $unsetItem : (array) $unsetItem;
+            $unsetItem = is_array($unsetItem) ? $unsetItem : (array)$unsetItem;
 
             foreach ($unsetItem as $unsetString) {
                 if (is_string($rootKey)) {
@@ -584,9 +642,11 @@ class Util
                                 }
                             }
 
-                        } else if (is_array($elem[$keyArr[$i]])) {
-                            $elem = &$elem[$keyArr[$i]];
-                            $elementArr[] = &$elem;
+                        } else {
+                            if (is_array($elem[$keyArr[$i]])) {
+                                $elem = &$elem[$keyArr[$i]];
+                                $elementArr[] = &$elem;
+                            }
                         }
 
                     }
@@ -601,7 +661,7 @@ class Util
     /**
      * Get class name from the file path
      *
-     * @param  string $filePath
+     * @param string $filePath
      *
      * @return string
      */
@@ -612,7 +672,7 @@ class Util
 
         $className = preg_replace('/\.php$/i', '', $filePath);
         $className = preg_replace('/^(application|custom)(\/|\\\)/i', '', $className);
-        $className = '\\'.static::toFormat($className, '\\');
+        $className = '\\' . static::toFormat($className, '\\');
 
         return $className;
     }
@@ -620,9 +680,10 @@ class Util
     /**
      * Return values of defined $key.
      *
-     * @param  mixed $data
-     * @param  mixed array|string $key     Ex. of key is "entityDefs", "entityDefs.User"
-     * @param  mixed $default
+     * @param mixed $data
+     * @param mixed array|string $key     Ex. of key is "entityDefs", "entityDefs.User"
+     * @param mixed $default
+     *
      * @return mixed
      */
     public static function getValueByKey($data, $key = null, $default = null)
@@ -645,11 +706,13 @@ class Util
                 } else {
                     return $default;
                 }
-            } else if (is_object($item)) {
-                if (isset($item->$keyName)) {
-                    $item = $item->$keyName;
-                } else {
-                    return $default;
+            } else {
+                if (is_object($item)) {
+                    if (isset($item->$keyName)) {
+                        $item = $item->$keyName;
+                    } else {
+                        return $default;
+                    }
                 }
             }
 
@@ -661,8 +724,9 @@ class Util
     /**
      * Check if two variables are equals
      *
-     * @param  mixed  $var1
-     * @param  mixed  $var2
+     * @param mixed $var1
+     * @param mixed $var2
+     *
      * @return boolean
      */
     public static function isEquals($var1, $var2)
@@ -679,7 +743,9 @@ class Util
 
     /**
      * Sort array recursively
-     * @param  array $array
+     *
+     * @param array $array
+     *
      * @return bool
      */
     public static function ksortRecursive(&$array)
@@ -720,8 +786,8 @@ class Util
     /**
      * Improved computing the difference of arrays
      *
-     * @param  array  $array1
-     * @param  array  $array2
+     * @param array $array1
+     * @param array $array2
      *
      * @return array
      */
@@ -748,8 +814,8 @@ class Util
     /**
      * Fill array with specified keys
      *
-     * @param  array|string $keys
-     * @param  mixed $value
+     * @param array|string $keys
+     * @param mixed        $value
      *
      * @return array
      */
@@ -770,14 +836,14 @@ class Util
     /**
      * Array keys exists
      *
-     * @param  array  $keys
-     * @param  array  $array
+     * @param array $keys
+     * @param array $array
      *
      * @return boolean
      */
     static public function arrayKeysExists(array $keys, array $array)
     {
-       return !array_diff_key(array_flip($keys), $array);
+        return !array_diff_key(array_flip($keys), $array);
     }
 }
 

@@ -812,7 +812,9 @@ class RDB extends \Espo\ORM\Repository
             }
         }
 
+        $withDeleted = !empty($params['withDeleted']);
         $params = array_replace_recursive($this->listParams, $params);
+        $params['withDeleted'] = $withDeleted;
 
         return $params;
     }
