@@ -74,6 +74,22 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
             return false;
         },
 
+        modelHasChildren: function () {
+
+            if (
+                this.getParentView()
+                && this.getParentView().getParentView()
+                && this.getParentView().getParentView().getParentView()
+                && this.getParentView().getParentView().getParentView().getParentView()
+                && this.getParentView().getParentView().getParentView().getParentView().getView("children")
+                && this.getParentView().getParentView().getParentView().getParentView().getView("children").collection
+            ) {
+                return  this.getParentView().getParentView().getParentView().getParentView().getView("children").collection.length > 0;
+            }
+
+            return false;
+        },
+
         getActionList: function () {
             var list = [{
                 action: 'quickView',

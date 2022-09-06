@@ -45,6 +45,7 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
                 },
                 link: '#' + this.model.name + '/view/' + this.model.id
             }];
+
             if (this.options.acl.edit) {
                 list = list.concat([
                     {
@@ -64,7 +65,9 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
                     }
                 ]);
 
-                if (this.isInheritingRelation()) {
+
+                if (this.isInheritingRelation() && this.modelHasChildren()) {
+
                     list.push({
                         action: 'unlinkRelatedHierarchically',
                         label: 'unlinkHierarchically',
