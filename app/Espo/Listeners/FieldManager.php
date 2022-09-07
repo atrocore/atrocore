@@ -60,7 +60,7 @@ class FieldManager extends AbstractListener
         // get old field defs
         $oldDefs = $event->getArgument('oldFieldDefs');
 
-        if (in_array($oldDefs['type'], ['enum', 'multiEnum'])) {
+        if (!empty($oldDefs['type']) && in_array($oldDefs['type'], ['enum', 'multiEnum'])) {
             // get current field defs
             $defs = $this->getMetadata()->get(['entityDefs', $scope, 'fields', $field]);
 
