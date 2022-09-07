@@ -262,6 +262,18 @@ class Hierarchy extends RDB
         return empty($record);
     }
 
+    public function hasChildren(string $id): bool
+    {
+        $id = $this->getPDO()->quote($id);
+
+        $query = "SELECT r.entity_id 
+                  FROM `$this->hierarchyTableName` r 
+                  LEFT JOIN `$this->tableName` m ON r.entity_id=m.id 
+                  WHERE r.deleted=0 AND r.parent_id=$id AND m.deleted=0";
+
+        return !empty($res = $this->getPDO()->query($query)->fetchAll(\PDO::FETCH_COLUMN));
+    }
+
     public function getHierarchyRoute(string $id): array
     {
         $route = [];
