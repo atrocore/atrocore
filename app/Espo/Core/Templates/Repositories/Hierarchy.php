@@ -262,6 +262,7 @@ class Hierarchy extends RDB
         return empty($record);
     }
 
+
     public function getHierarchyRoute(string $id): array
     {
         $route = [];
