@@ -563,7 +563,7 @@ class Hierarchy extends Record
 
         $entity->set('isRoot', $this->getRepository()->isRoot($entity->get('id')));
 
-        $entity->set('hasChildren', $this->getRepository()->hasChildren($entity->get('id')));
+        $entity->set('hasChildren',  !empty($entity->get('children')) && count($entity->get('children')) );
 
         if ($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']) !== true) {
             $entity->set('hierarchyRoute', $this->getRepository()->getHierarchyRoute($entity->get('id')));
