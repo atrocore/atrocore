@@ -265,7 +265,9 @@
     "manyToOne": "Many-to-One",
     "manyToMany": "Many-to-Many",
     "Record cannot be saved": "Datensatz kann nicht gespeichert werden",
-    "click to add...": "zum Hinzufügen klicken..."
+    "click to add...": "zum Hinzufügen klicken...",
+    "textFilterPlaceholder": "Tippe und drücke die Eingabetaste oder klicke auf das Suchsymbol, um zu suchen...",
+    "mobileTextFilterPlaceholder": "Tippe und drücke die Eingabetaste..."
   },
   "messages": {
     "massDeleting": "Entferne: {{deleted}} vom {{total}}",

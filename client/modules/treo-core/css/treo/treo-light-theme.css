@@ -19847,6 +19847,7 @@ button.category:focus {
     padding: 0;
     position: relative;
     float: left;
+    background-color: #fafafa;
   }
 
   #main > .record > .detail > .row > .overview,
@@ -19866,7 +19867,7 @@ button.category:focus {
   #main > .record > .detail > .row > .catalog-tree-panel ~ .side.fixed-top,
   #main > .record > .edit > .row > .catalog-tree-panel ~ .side.fixed-bottom,
   #main > .record > .detail > .row > .catalog-tree-panel ~ .side.fixed-bottom {
-    right: 0;
+    right: 2px;
   }
 
   #main > .record > .edit > .row > .side.fixed-top,
@@ -19887,7 +19888,7 @@ button.category:focus {
 
   #main > .record > .edit > .row > .catalog-tree-panel ~ .side.scrolled,
   #main > .record > .detail > .row > .catalog-tree-panel ~ .side.scrolled {
-    right: 0;
+    right: 2px;
   }
   .nav > li > a {
     padding: 6px 15px;

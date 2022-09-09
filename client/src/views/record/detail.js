@@ -690,13 +690,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             let overview = $('.record .overview');
             let side = $('#main > .record .row > .side');
             if (overview.length && side.length) {
-                setTimeout(function () {
-                    if (overview.outerHeight() > side.outerHeight()) {
-                        overview.addClass('bordered');
-                    } else {
-                        side.addClass('bordered');
-                    }
-                }, 100);
+                overview.addClass('bordered');
+                side.addClass('bordered');
 
                 $window.resize(function () {
                     let row = $('.record > .detail > .row');
