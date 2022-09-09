@@ -95,6 +95,20 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             this.setupTranslation();
 
             if (this.translatedOptions === null) {
+                let translatedOptions = {};
+                let hasOptionTranslate = false;
+                (this.params.options || []).map(item => {
+                    translatedOptions[item] = this.getLanguage().translateOption(item, this.name, this.model.name);
+                    if (translatedOptions[item] !== item) {
+                        hasOptionTranslate = true;
+                    }
+                });
+                if (hasOptionTranslate) {
+                    this.translatedOptions = translatedOptions;
+                }
+            }
+
+            if (this.translatedOptions === null) {
                 this.translatedOptions = {};
                 (this.params.options || []).map(function (item) {
                     this.translatedOptions[item] = this.getLanguage().translate(item, 'labels', this.model.name) || item;

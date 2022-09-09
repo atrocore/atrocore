@@ -44,14 +44,14 @@ Espo.define('views/admin/outbound-emails', 'views/settings/record/edit', functio
                     true: [
                         {
                             action: 'show',
-                            fields: ['smtpUsername', 'smtpPassword']
+                            fields: ['smtpUsername', 'smtpPassword', 'smtpAuthMechanism']
                         }
                     ]
                 },
                 default: [
                     {
                         action: 'hide',
-                        fields: ['smtpUsername', 'smtpPassword']
+                        fields: ['smtpUsername', 'smtpPassword', 'smtpAuthMechanism']
                     }
                 ]
             }
