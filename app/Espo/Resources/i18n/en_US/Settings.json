@@ -17,6 +17,7 @@
     "smtpServer": "Server",
     "smtpPort": "Port",
     "smtpAuth": "Auth",
+    "smtpAuthMechanism": "Authentication method",
     "smtpSecurity": "Security",
     "smtpUsername": "Username",
     "emailAddress": "Email",
@@ -66,6 +67,11 @@
     "currencyFormat": {
       "1": "10 USD",
       "2": "$10"
+    },
+    "smtpAuthMechanism": {
+      "login": "Login",
+      "plain": "Plain",
+      "crammd5": "CRAM-MD5"
     }
   },
   "tooltips": {
