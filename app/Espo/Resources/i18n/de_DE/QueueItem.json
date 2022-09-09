@@ -40,6 +40,7 @@
     }
   },
   "exceptions": {
+    "jobExist": "Dieser Job wurde bereits zur Warteschlange hinzugefügt.",
     "queueItemCannotBeChanged": "Warteschlangenelement kann nicht geändert werden.",
     "jobIsRunning": "Ein laufendes Warteschlangenelement kann nicht entfernt werden."
   },

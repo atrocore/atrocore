@@ -39,6 +39,7 @@
     }
   },
   "exceptions": {
+    "jobExist": "Such job is already added to queue.",
     "queueItemCannotBeChanged": "Queue item cannot be changed.",
     "jobIsRunning": "A running queue item cannot be removed."
   },
