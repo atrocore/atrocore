@@ -37,7 +37,7 @@ declare(strict_types=1);
 
 namespace Espo\Core;
 
-use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Duplicate;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\System;
 use Espo\Entities\User;
@@ -132,7 +132,7 @@ class QueueManager extends Injectable
             $item->set('md5Hash', $md5Hash);
             $duplicate = $repository->select(['id'])->where(['md5Hash' => $md5Hash, 'status' => ['Pending', 'Running']])->findOne();
             if (!empty($duplicate)) {
-                throw new BadRequest($this->getContainer()->get('language')->translate('jobExist', 'exceptions', 'QueueItem'));
+                throw new Duplicate($this->getContainer()->get('language')->translate('jobExist', 'exceptions', 'QueueItem'));
             }
         }
 
