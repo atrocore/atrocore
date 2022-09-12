@@ -284,7 +284,9 @@
     "manyToOne": "Многие-к-одному",
     "manyToMany": "Многие-ко-многим",
     "Record cannot be saved": "Запись не может быть сохранена",
-    "click to add...": "нажмите, чтобы добавить..."
+    "click to add...": "нажмите, чтобы добавить...",
+    "textFilterPlaceholder": "Введите и нажмите клавишу ввода или щелкните значок поиска, чтобы выполнить поиск...",
+    "mobileTextFilterPlaceholder": "Введите и нажмите клавишу Enter..."
   },
   "messages": {
     "massDeleting": "Удаляется: {{deleted}} с {{total}}",

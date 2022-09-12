@@ -566,6 +566,28 @@ Espo.define('views/record/search', 'view', function (Dep) {
             this.setupOperatorLabels();
             this.setupAdvancedFiltersPosition();
             this.toggleResetVisibility();
+
+            const textFilter = this.$el.find('input[name="textFilter"]');
+
+            if (textFilter.length > 0) {
+                textFilter.attr('placeholder', this.getTextFilterPlaceholder())
+
+                $(window).on('resize', () => {
+                    textFilter.attr('placeholder', this.getTextFilterPlaceholder())
+                })
+            }
+        },
+
+        getTextFilterPlaceholder() {
+            let label = '';
+
+            if ($(window).width() >= 768) {
+                label = this.getLanguage().translate('textFilterPlaceholder', 'labels');
+            } else {
+                label = this.getLanguage().translate('mobileTextFilterPlaceholder', 'labels');
+            }
+
+            return label;
         },
 
         toggleSearchFilters(selectedViewType) {
