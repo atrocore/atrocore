@@ -267,7 +267,7 @@
     "Record cannot be saved": "Datensatz kann nicht gespeichert werden",
     "click to add...": "zum Hinzufügen klicken...",
     "textFilterPlaceholder": "Tippe und drücke die Eingabetaste oder klicke auf das Suchsymbol, um zu suchen...",
-    "mobileTextFilterPlaceholder": "Tippe und drücke die Eingabetaste..."
+    "mobileTextFilterPlaceholder": "Tippe und absende..."
   },
   "messages": {
     "massDeleting": "Entferne: {{deleted}} vom {{total}}",
