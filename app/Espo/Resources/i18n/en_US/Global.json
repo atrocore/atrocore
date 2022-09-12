@@ -281,7 +281,9 @@
     "manyToOne": "Many-to-One",
     "manyToMany": "Many-to-Many",
     "Record cannot be saved": "Record cannot be saved",
-    "click to add...": "click to add..."
+    "click to add...": "click to add...",
+    "textFilterPlaceholder": "Type and press the enter key or click on the search icon to search...",
+    "mobileTextFilterPlaceholder": "Type and press Enter..."
   },
   "messages": {
     "massDeleting": "Deleting: {{deleted}} from {{total}}",

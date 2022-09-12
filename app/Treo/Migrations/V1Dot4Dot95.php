@@ -1,3 +1,4 @@
+<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -32,52 +33,29 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('views/admin/outbound-emails', 'views/settings/record/edit', function (Dep) {
+declare(strict_types=1);
 
-    return Dep.extend({
+namespace Treo\Migrations;
 
-        layoutName: 'outboundEmails',
+use Treo\Core\Migration\Base;
 
-        dependencyDefs: {
-            'smtpAuth': {
-                map: {
-                    true: [
-                        {
-                            action: 'show',
-                            fields: ['smtpUsername', 'smtpPassword', 'smtpAuthMechanism']
-                        }
-                    ]
-                },
-                default: [
-                    {
-                        action: 'hide',
-                        fields: ['smtpUsername', 'smtpPassword', 'smtpAuthMechanism']
-                    }
-                ]
-            }
-        },
+class V1Dot4Dot95 extends Base
+{
+    public function up(): void
+    {
+        $this->execute("ALTER TABLE queue_item ADD md5_hash VARCHAR(255) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
+    }
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
-        },
+    public function down(): void
+    {
+        $this->execute("ALTER TABLE queue_item DROP md5_hash");
+    }
 
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-
-            var smtpSecurityField = this.getFieldView('smtpSecurity');
-            this.listenTo(smtpSecurityField, 'change', function () {
-                var smtpSecurity = smtpSecurityField.fetch()['smtpSecurity'];
-                if (smtpSecurity == 'SSL') {
-                    this.model.set('smtpPort', '465');
-                } else if (smtpSecurity == 'TLS') {
-                    this.model.set('smtpPort', '587');
-                } else {
-                    this.model.set('smtpPort', '25');
-                }
-            }.bind(this));
-        },
-
-    });
-
-});
-
+    protected function execute(string $query): void
+    {
+        try {
+            $this->getPDO()->exec($query);
+        } catch (\Throwable $e) {
+        }
+    }
+}

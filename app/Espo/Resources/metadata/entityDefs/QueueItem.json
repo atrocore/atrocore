@@ -39,6 +39,10 @@
       "type": "varchar",
       "readOnly": true
     },
+    "md5Hash": {
+      "type": "varchar",
+      "readOnly": true
+    },
     "status": {
       "type": "enum",
       "readOnly": true,

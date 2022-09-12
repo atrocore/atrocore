@@ -37,6 +37,7 @@ declare(strict_types=1);
 
 namespace Espo\Core;
 
+use Espo\Core\Exceptions\Duplicate;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\System;
 use Espo\Entities\User;
@@ -74,14 +75,14 @@ class QueueManager extends Injectable
         return $result;
     }
 
-    public function push(string $name, string $serviceName, array $data = [], string $priority = 'Normal'): bool
+    public function push(string $name, string $serviceName, array $data = [], string $priority = 'Normal', string $md5Hash = ''): bool
     {
         // validation
         if (!$this->isService($serviceName)) {
             return false;
         }
 
-        return $this->createQueueItem($name, $serviceName, $data, $priority);
+        return $this->createQueueItem($name, $serviceName, $data, $priority, $md5Hash);
     }
 
     public function tryAgain(string $id): bool
@@ -102,7 +103,7 @@ class QueueManager extends Injectable
         return true;
     }
 
-    protected function createQueueItem(string $name, string $serviceName, array $data, string $priority): bool
+    protected function createQueueItem(string $name, string $serviceName, array $data, string $priority, string $md5Hash): bool
     {
         /** @var Repository $repository */
         $repository = $this->getEntityManager()->getRepository('QueueItem');
@@ -126,6 +127,15 @@ class QueueManager extends Injectable
                 'createdAt'      => date("Y-m-d H:i:s")
             ]
         );
+
+        if (!empty($md5Hash)) {
+            $item->set('md5Hash', $md5Hash);
+            $duplicate = $repository->select(['id'])->where(['md5Hash' => $md5Hash, 'status' => ['Pending', 'Running']])->findOne();
+            if (!empty($duplicate)) {
+                throw new Duplicate($this->getContainer()->get('language')->translate('jobExist', 'exceptions', 'QueueItem'));
+            }
+        }
+
         $this->getEntityManager()->saveEntity($item, ['skipAll' => true]);
 
         foreach ($user->get('teams')->toArray() as $row) {

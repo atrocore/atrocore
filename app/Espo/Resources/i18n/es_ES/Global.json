@@ -256,7 +256,9 @@
     "Move Over": "Move Over",
     "oneToMany": "One-to-Many",
     "manyToOne": "Many-to-One",
-    "manyToMany": "Many-to-Many"
+    "manyToMany": "Many-to-Many",
+    "textFilterPlaceholder": "Escriba y presione la tecla Intro o haga clic en el icono de búsqueda para buscar...",
+    "mobileTextFilterPlaceholder": "Escribe y presiona la tecla Enter..."
   },
   "messages": {
     "pleaseWait": "Por favor espere...",

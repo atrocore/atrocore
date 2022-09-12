@@ -1,18 +1,62 @@
 [
-    {
-        "label": "SMTP",
-        "rows": [
-            [{"name": "smtpServer"}, {"name": "smtpPort"}],
-            [{"name": "smtpAuth"}, {"name": "smtpSecurity"}],
-            [{"name": "smtpUsername"}, {"name": "testSend", "customLabel": null, "view": "OutboundEmail.Fields.TestSend"}],
-            [{"name": "smtpPassword"}, false]
-        ]
-    },
-    {
-        "label": "Configuration",
-        "rows": [
-            [{"name": "outboundEmailFromAddress"}, false],
-            [{"name": "outboundEmailFromName"}, false]
-        ]
-    }
+  {
+    "label": "SMTP",
+    "rows": [
+      [
+        {
+          "name": "smtpServer"
+        },
+        {
+          "name": "smtpPort"
+        }
+      ],
+      [
+        {
+          "name": "smtpAuth"
+        },
+        {
+          "name": "smtpSecurity"
+        }
+      ],
+      [
+        {
+          "name": "smtpAuthMechanism"
+        },
+        false
+      ],
+      [
+        {
+          "name": "smtpUsername"
+        },
+        {
+          "name": "testSend",
+          "customLabel": null,
+          "view": "OutboundEmail.Fields.TestSend"
+        }
+      ],
+      [
+        {
+          "name": "smtpPassword"
+        },
+        false
+      ]
+    ]
+  },
+  {
+    "label": "Configuration",
+    "rows": [
+      [
+        {
+          "name": "outboundEmailFromAddress"
+        },
+        false
+      ],
+      [
+        {
+          "name": "outboundEmailFromName"
+        },
+        false
+      ]
+    ]
+  }
 ]
