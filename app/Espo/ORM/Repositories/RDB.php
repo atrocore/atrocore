@@ -365,7 +365,9 @@ class RDB extends \Espo\ORM\Repository
             return [];
         }
 
-        if ($entity->getRelationType($relationName) === Entity::BELONGS_TO_PARENT) {
+        $relationType = $entity->getRelationType($relationName);
+
+        if ($relationType === Entity::BELONGS_TO_PARENT) {
             $entityType = $entity->get($relationName . 'Type');
         } else {
             $entityType = $entity->getRelationParam($relationName, 'entity');
@@ -407,21 +409,23 @@ class RDB extends \Espo\ORM\Repository
             $collection = new EntityCollection($result, $entityType, $this->entityFactory);
             $collection->setAsFetched();
             return $collection;
-        } else if ($result instanceof EntityCollection) {
-            $collection = $result;
-            return $collection;
-        } else if ($result instanceof Entity) {
+        } elseif ($result instanceof EntityCollection) {
+            return $result;
+        } elseif ($result instanceof Entity) {
             if (!empty($params['collectionOnly'])) {
                 $collection = new EntityCollection([$result], $entityType, $this->entityFactory);
                 $collection->setAsFetched();
                 return $collection;
             } else {
-                $entity = $result;
-                return $entity;
+                return $result;
             }
-        } else {
-            return $result;
         }
+
+        if ($relationType === Entity::HAS_MANY && $entityType) {
+            return new EntityCollection([], $entityType, $this->entityFactory);
+        }
+
+        return $result;
     }
 
     public function countRelated(Entity $entity, $relationName, array $params = [])
