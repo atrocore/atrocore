@@ -71,6 +71,8 @@ abstract class Entity implements IEntity
      */
     protected $fetchedValuesContainer = array();
 
+    protected array $relationsContainer = [];
+
     /**
      * @var EntityManager Entity Manager.
      */
@@ -158,7 +160,10 @@ abstract class Entity implements IEntity
         }
 
         if ($this->hasRelation($name) && $this->id) {
-            return $this->getEntityManager()->getRepository($this->getEntityType())->findRelated($this, $name, $params);
+            if (!array_key_exists($name, $this->relationsContainer)) {
+                $this->relationsContainer[$name] = $this->getEntityManager()->getRepository($this->getEntityType())->findRelated($this, $name, $params);
+            }
+            return $this->relationsContainer[$name];
         }
 
         return null;
