@@ -48,5 +48,10 @@
     "path": "client/lib/jquery.md5.min.js",
     "exportsTo": "$",
     "exportsAs": "MD5"
+  },
+  "JsTree": {
+    "path": "client/lib/tree.jquery.js",
+    "exportsTo": "$",
+    "exportsAs": "jsTree"
   }
 }
