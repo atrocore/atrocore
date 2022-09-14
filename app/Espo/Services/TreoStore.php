@@ -89,7 +89,7 @@ class TreoStore extends Base
     /**
      * @return array
      */
-    protected function getRemotePackages(): array
+    public function getRemotePackages(): array
     {
         // get packagist url
         $url = "https://packagist.atrocore.com/packages.json?id=" . $this->getConfig()->get('appId');

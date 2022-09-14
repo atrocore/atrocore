@@ -3,6 +3,7 @@
     "status": "Status",
     "settingVersion": "Setting Version",
     "currentVersion": "Current Version",
+    "latestVersion": "Latest Version",
     "availableVersions": "Available Versions"
   },
   "options": {

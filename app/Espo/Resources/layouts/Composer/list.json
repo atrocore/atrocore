@@ -11,6 +11,11 @@
   {
     "name": "currentVersion",
     "notSortable": true,
-    "width": 15
+    "width": 13
+  },
+  {
+    "name": "latestVersion",
+    "notSortable": true,
+    "width": 13
   }
 ]

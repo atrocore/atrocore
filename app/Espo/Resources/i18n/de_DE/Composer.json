@@ -4,6 +4,7 @@
     "settingVersion": "Version einstellen",
     "availableVersions": "Verfügbare Versionen",
     "currentVersion": "Aktuelle Version",
+    "latestVersion": "Letzte Version",
     "isActive": "Aktiv",
     "required": "Erforderlich"
   },
