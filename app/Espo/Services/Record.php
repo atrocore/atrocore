@@ -2540,6 +2540,30 @@ class Record extends \Espo\Core\Services\Base
                     continue 1;
                 }
 
+                /**
+                 * Duplicate Relationship entity
+                 */
+                $foreignEntity = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $link, 'entity']);
+                if (!empty($foreignEntity)) {
+                    $foreignEntityType = $this->getMetadata()->get(['scopes', $foreignEntity, 'type']);
+                    $foreign = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $link, 'foreign']);
+                    if ($foreignEntityType === 'Relationship' && !empty($foreign)) {
+                        foreach ($duplicatingEntity->get($link) as $item) {
+                            $record = $this->getEntityManager()->getEntity($foreignEntity);
+                            $record->set($item->toArray());
+                            $record->id = null;
+                            $record->clear('createdAt');
+                            $record->clear('modifiedAt');
+                            $record->clear('createdById');
+                            $record->clear('modifiedById');
+                            $record->set($foreign . 'Id', $entity->get('id'));
+                            $record->set($foreign . 'Name', $entity->get('name'));
+                            $this->getEntityManager()->saveEntity($record);
+                        }
+                        continue 1;
+                    }
+                }
+
                 if (!empty($allLinks[$link]['relationName'])) {
                     $data = $duplicatingEntity->get($link);
                     if (count($data) > 0) {
