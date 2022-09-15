@@ -63,6 +63,8 @@ class Composer extends \Espo\Core\Templates\Services\HasContainer
      */
     public static $stableComposer = 'data/stable-composer.json';
 
+    private array $packages = [];
+
     /**
      * Get composer.json
      *
@@ -248,6 +250,7 @@ class Composer extends \Espo\Core\Templates\Services\HasContainer
                     'name'           => $this->translate('Core'),
                     'description'    => $this->translate('Core', 'descriptions'),
                     'currentVersion' => self::getCoreVersion(),
+                    'latestVersion'  => $this->getLatestVersion('Treo'),
                     'isSystem'       => true,
                     'isComposer'     => true,
                     'status'         => '',
@@ -268,6 +271,7 @@ class Composer extends \Espo\Core\Templates\Services\HasContainer
                 'name'           => (empty($module->getName())) ? $id : $module->getName(),
                 'description'    => $module->getDescription(),
                 'currentVersion' => $module->getVersion(),
+                'latestVersion'  => $this->getLatestVersion($id),
                 'isSystem'       => $module->isSystem(),
                 'isComposer'     => !empty($module->getVersion()),
                 'status'         => $this->getModuleStatus($composerDiff, $id),
@@ -287,6 +291,7 @@ class Composer extends \Espo\Core\Templates\Services\HasContainer
                 'name'           => $row['id'],
                 'description'    => '',
                 'currentVersion' => '',
+                'latestVersion'  => '',
                 'isSystem'       => false,
                 'isComposer'     => true,
                 'status'         => 'install'
@@ -446,6 +451,22 @@ class Composer extends \Espo\Core\Templates\Services\HasContainer
         }
 
         return $result;
+    }
+
+    public function getLatestVersion(string $moduleId): string
+    {
+        if (empty($this->packages)) {
+            $this->packages = $this->getContainer()->get('serviceFactory')->create('TreoStore')->getRemotePackages();
+        }
+
+        foreach ($this->packages as $row) {
+            if ($row['treoId'] === $moduleId && !empty($row['versions'])) {
+                $latest = array_shift($row['versions']);
+                return $latest['version'];
+            }
+        }
+
+        return '';
     }
 
     /**

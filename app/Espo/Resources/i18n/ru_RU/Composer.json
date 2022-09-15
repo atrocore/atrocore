@@ -3,6 +3,7 @@
     "status": "Статус",
     "settingVersion": "Установка версии",
     "currentVersion": "Текущая версия",
+    "latestVersion": "Последняя версия",
     "availableVersions": "Доступные версии"
   },
   "options": {
