@@ -57,6 +57,9 @@ Espo.define('views/admin/field-manager/fields/foreign-name', 'views/fields/enum'
                     if (data.type === 'varchar') {
                         this.params.options.push(name);
                         this.translatedOptions[name] = this.translate(name, 'fields', foreign);
+                    } else if (data.type === 'link') {
+                        this.params.options.push(name + 'Name');
+                        this.translatedOptions[name + 'Name'] = this.translate('name', 'fields', 'Global') + ': ' + this.translate(name, 'fields', foreign);
                     }
                 });
             },

@@ -1484,6 +1484,12 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 if (!fieldType) return;
                 this.getFieldManager().getAttributeList(fieldType, field).forEach(function (attribute) {
                     list.push(attribute);
+                    if (fieldType === 'linkMultiple' && attribute === field + 'Ids') {
+                        let foreignName = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'foreignName']);
+                        if (foreignName && foreignName !== 'name') {
+                            list.push(field);
+                        }
+                    }
                 }, this);
             }, this);
 
