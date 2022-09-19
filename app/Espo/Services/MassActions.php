@@ -39,6 +39,7 @@ namespace Espo\Services;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Services\HasContainer;
+use Espo\Core\Utils\Metadata;
 
 class MassActions extends HasContainer
 {
@@ -71,6 +72,11 @@ class MassActions extends HasContainer
 
         /** @var string $foreignEntityType */
         $foreignEntityType = $this->getForeignEntityType($entityType, $link);
+
+        if ($this->getMetadata()->get(['scopes', $foreignEntityType, 'type']) === 'Relationship') {
+            $result = $this->getService($foreignEntityType)->createRelationshipEntitiesViaAddRelation($entityType, $entities, $foreignIds);
+            return ['message' => $this->createRelationMessage($result['related'], $result['notRelated'], $entityType, $foreignEntityType)];
+        }
 
         // find foreign entities
         $foreignEntities = $this
@@ -132,6 +138,11 @@ class MassActions extends HasContainer
 
         /** @var string $foreignEntityType */
         $foreignEntityType = $this->getForeignEntityType($entityType, $link);
+
+        if ($this->getMetadata()->get(['scopes', $foreignEntityType, 'type']) === 'Relationship') {
+            $result = $this->getService($foreignEntityType)->deleteRelationshipEntitiesViaRemoveRelation($entityType, $entities, $foreignIds);
+            return ['message' => $this->createRelationMessage($result['unRelated'], $result['notUnRelated'], $entityType, $foreignEntityType, false)];
+        }
 
         // find foreign entities
         $foreignEntities = $this
@@ -249,5 +260,10 @@ class MassActions extends HasContainer
             ->getContainer()
             ->get('queueManager')
             ->push($name, $serviceName, $data);
+    }
+
+    private function getMetadata(): Metadata
+    {
+        return $this->getContainer()->get('metadata');
     }
 }
