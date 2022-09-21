@@ -75,11 +75,13 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             let foreignName = this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.name, 'foreignName']);
             if (foreignName && foreignName !== 'name') {
                 let collection = this.model.get(this.name);
-                this.nameHash = {};
-                collection.forEach(e => {
-                    this.nameHash[e.id] = e[foreignName];
-                });
-                nameHash = this.nameHash;
+                if (collection) {
+                    this.nameHash = {};
+                    collection.forEach(e => {
+                        this.nameHash[e.id] = e[foreignName];
+                    });
+                    nameHash = this.nameHash;
+                }
             }
 
             return _.extend({
