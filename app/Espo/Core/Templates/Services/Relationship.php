@@ -38,13 +38,103 @@ declare(strict_types=1);
 namespace Espo\Core\Templates\Services;
 
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Utils\Language;
-use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 use Espo\Services\Record;
 
 class Relationship extends Record
 {
+    public function createRelationshipEntitiesViaAddRelation(string $entityType, EntityCollection $entities, array $foreignIds): array
+    {
+        $relationshipEntities = $this->getMetadata()->get(['scopes', $this->getEntityType(), 'relationshipEntities'], []);
+        if (count($relationshipEntities) !== 2) {
+            throw new BadRequest('Action blocked.');
+        }
+
+        $foreignCollection = new EntityCollection();
+        foreach ($relationshipEntities as $relationshipEntity) {
+            if ($relationshipEntity !== $entityType) {
+                $foreignCollection = $this->getEntityManager()->getRepository($relationshipEntity)->where(['id' => $foreignIds])->find();
+            }
+        }
+
+        $related = 0;
+        $notRelated = [];
+
+        foreach ($foreignCollection as $foreignEntity) {
+            foreach ($entities as $entity) {
+                $input[lcfirst($entity->getEntityType()) . 'Id'] = $entity->get('id');
+                $input[lcfirst($foreignEntity->getEntityType()) . 'Id'] = $foreignEntity->get('id');
+                try {
+                    $this->createEntity(json_decode(json_encode($input)));
+                    $related++;
+                } catch (\Throwable $e) {
+                    $notRelated[] = [
+                        'id'          => $entity->get('id'),
+                        'name'        => $entity->get('name'),
+                        'foreignId'   => $foreignEntity->get('id'),
+                        'foreignName' => $foreignEntity->get('name'),
+                        'message'     => utf8_encode($e->getMessage())
+                    ];
+                }
+            }
+        }
+
+        return [
+            'related'    => $related,
+            'notRelated' => $notRelated
+        ];
+    }
+
+    public function deleteRelationshipEntitiesViaRemoveRelation(string $entityType, EntityCollection $entities, array $foreignIds): array
+    {
+        $relationshipEntities = $this->getMetadata()->get(['scopes', $this->getEntityType(), 'relationshipEntities'], []);
+        if (count($relationshipEntities) !== 2) {
+            throw new BadRequest('Action blocked.');
+        }
+
+        $foreignCollection = new EntityCollection();
+        foreach ($relationshipEntities as $relationshipEntity) {
+            if ($relationshipEntity !== $entityType) {
+                $foreignCollection = $this->getEntityManager()->getRepository($relationshipEntity)->where(['id' => $foreignIds])->find();
+            }
+        }
+
+        $unRelated = 0;
+        $notUnRelated = [];
+
+        foreach ($entities as $entity) {
+            foreach ($foreignCollection as $foreignEntity) {
+                try {
+                    $record = $this
+                        ->getRepository()
+                        ->where([
+                            lcfirst($entity->getEntityType()) . 'Id'        => $entity->get('id'),
+                            lcfirst($foreignEntity->getEntityType()) . 'Id' => $foreignEntity->get('id'),
+                        ])
+                        ->findOne();
+                    if (!empty($record)) {
+                        $this->getEntityManager()->removeEntity($record);
+                    }
+                    $unRelated++;
+                } catch (\Throwable $e) {
+                    $notUnRelated[] = [
+                        'id'          => $entity->get('id'),
+                        'name'        => $entity->get('name'),
+                        'foreignId'   => $foreignEntity->get('id'),
+                        'foreignName' => $foreignEntity->get('name'),
+                        'message'     => utf8_encode($e->getMessage())
+                    ];
+                }
+            }
+        }
+
+        return [
+            'unRelated'    => $unRelated,
+            'notUnRelated' => $notUnRelated
+        ];
+    }
+
     public function createRelationshipEntitiesViaIds(string $entityTypeFrom, string $entityIdFrom, string $entityTypeTo, array $entityIdsTo): bool
     {
         foreach ([$entityTypeFrom, $entityTypeTo] as $v) {

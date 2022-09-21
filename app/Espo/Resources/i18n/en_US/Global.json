@@ -393,7 +393,7 @@
   "fields": {
     "sortOrder": "Sort Order",
     "parents": "Parents",
-    "prohibitedEmptyValue": "Disable empty value",
+    "prohibitedEmptyValue": "Disable Empty Value",
     "addressCity": "City",
     "addressStreet": "Street",
     "addressCountry": "Country",

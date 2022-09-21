@@ -236,6 +236,11 @@ class Application
             $this->logoutAll();
         }
 
+        if (!empty($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === "OPTIONS") {
+            header("HTTP/1.1 200 OK");
+            exit;
+        }
+
         // prepare base route
         $baseRoute = '/api/v1';
 

@@ -69,12 +69,23 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
         searchTypeList: ['anyOf', 'isEmpty', 'isNotEmpty', 'noneOf'],
 
         data: function () {
-            var ids = this.model.get(this.idsName);
+            let ids = this.model.get(this.idsName);
+            let nameHash = this.model.get(this.nameHashName);
+
+            let foreignName = this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.name, 'foreignName']);
+            if (foreignName && foreignName !== 'name') {
+                let collection = this.model.get(this.name);
+                this.nameHash = {};
+                collection.forEach(e => {
+                    this.nameHash[e.id] = e[foreignName];
+                });
+                nameHash = this.nameHash;
+            }
 
             return _.extend({
                 idValues: this.model.get(this.idsName),
                 idValuesString: ids ? ids.join(',') : '',
-                nameHash: this.model.get(this.nameHashName),
+                nameHash: nameHash,
                 foreignScope: this.foreignScope,
                 valueIsSet: this.model.has(this.idsName)
             }, Dep.prototype.data.call(this));
