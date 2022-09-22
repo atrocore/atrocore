@@ -282,11 +282,29 @@ class RDB extends \Espo\ORM\Repository
     {
     }
 
+    protected function deleteLinkedRelationshipEntities(Entity $entity): void
+    {
+        foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links'], []) as $link => $linkDefs) {
+            if (!empty($linkDefs['entity']) && !empty($linkDefs['foreign'])) {
+                if (!empty($this->getMetadata()->get(['entityDefs', $linkDefs['entity'], 'fields', $linkDefs['foreign'], 'relationshipField']))) {
+                    $this
+                        ->getEntityManager()
+                        ->getRepository($linkDefs['entity'])
+                        ->where([
+                            $linkDefs['foreign'] . 'Id' => $entity->get('id')
+                        ])
+                        ->removeCollection();
+                }
+            }
+        }
+    }
+
     public function remove(Entity $entity, array $options = [])
     {
         $this->beforeRemove($entity, $options);
         $result = $this->getMapper()->delete($entity);
         if ($result) {
+            $this->deleteLinkedRelationshipEntities($entity);
             $this->afterRemove($entity, $options);
         }
         return $result;
