@@ -355,7 +355,23 @@ class Record extends \Espo\Core\Services\Base
             }
 
             if ($entity->getAttributeParam($attribute, 'isLinkMultipleCollection') && !$entity->has($attribute)) {
-                $linkedEntities = $this->findLinkedEntities($entity->get('id'), $attribute, []);
+                $linkDefs = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $attribute]);
+                if (!empty($linkDefs['entity']) && $this->getMetadata()->get(['scopes', $linkDefs['entity'], 'type']) === 'Relationship') {
+                    $linkedEntities = $this
+                        ->getServiceFactory()
+                        ->create($linkDefs['entity'])
+                        ->findEntities([
+                            'where' => [
+                                [
+                                    'type'      => 'equals',
+                                    'attribute' => $linkDefs['foreign'] . 'Id',
+                                    'value'     => $entity->get('id'),
+                                ]
+                            ]
+                        ]);
+                } else {
+                    $linkedEntities = $this->findLinkedEntities($entity->get('id'), $attribute, []);
+                }
                 $entity->set($attribute, []);
                 if ($linkedEntities['total'] > 0) {
                     $linkedEntitiesList = array_key_exists('collection', $linkedEntities) ? $linkedEntities['collection']->toArray() : $linkedEntities['list'];
