@@ -254,9 +254,17 @@ class Record extends Base
 
         $result = $this->getRecordService()->findLinkedEntities($id, $link, $params);
 
+        if (isset($result['collection'])) {
+            $list = $result['collection']->getValueMapList();
+        } elseif (isset($result['list'])) {
+            $list = $result['list'];
+        } else {
+            $list = [];
+        }
+
         return array(
             'total' => $result['total'],
-            'list' => isset($result['collection']) ? $result['collection']->getValueMapList() : $result['list']
+            'list'  => $list
         );
     }
 
