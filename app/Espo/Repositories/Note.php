@@ -65,6 +65,14 @@ class Note extends RDB
             $this->addMentionData($entity);
         }
 
+        if ($entity->has('attachmentsIds')) {
+            $data = $entity->get('data');
+            $data->attachmentsIds = $entity->get('attachmentsIds');
+            $entity->clear('attachmentsIds');
+            $entity->clear('attachmentsNames');
+            $entity->clear('attachmentsTypes');
+        }
+
         parent::beforeSave($entity, $options);
     }
 

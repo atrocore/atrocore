@@ -217,4 +217,15 @@ class Note extends Record
 
         return parent::unlinkEntity($id, $link, $foreignId);
     }
+
+    protected function getFieldsThatConflict(Entity $entity, \stdClass $data): array
+    {
+        $result = parent::getFieldsThatConflict($entity, $data);
+
+        if (isset($result['attachmentsIds'])) {
+            unset($result['attachmentsIds']);
+        }
+
+        return $result;
+    }
 }
