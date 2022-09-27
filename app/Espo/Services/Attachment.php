@@ -149,8 +149,10 @@ class Attachment extends Record
             $attachment->contents = $this->parseInputFileContent($attachment->file);
 
             $relatedEntityType = null;
-            if (isset($attachment->relatedType)) {
+            if (property_exists($attachment, 'relatedType')) {
                 $relatedEntityType = $attachment->relatedType;
+            } elseif (property_exists($attachment, 'parentType')) {
+                $relatedEntityType = $attachment->parentType;
             }
 
             if (!$relatedEntityType) {
