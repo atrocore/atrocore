@@ -42,7 +42,12 @@ Espo.define('views/record/panels/for-relationship-type', 'views/record/panels/re
             Dep.prototype.setup.call(this);
 
             const relationshipScope = this.defs.relationshipScope;
-            const relationshipEntities = Espo.Utils.clone(this.defs.relationshipEntities);
+            let relationshipEntities = [];
+            $.each(this.getMetadata().get(['entityDefs', relationshipScope, 'fields']), (field, fieldDefs) => {
+                if (fieldDefs.relationshipField === true) {
+                    relationshipEntities.push(this.getMetadata().get(['entityDefs', relationshipScope, 'links', field, 'entity']));
+                }
+            });
 
             if (relationshipEntities.length === 2) {
                 this.actionList.unshift({
@@ -71,16 +76,36 @@ Espo.define('views/record/panels/for-relationship-type', 'views/record/panels/re
 
         createRelationshipEntitiesViaIds(selectObj) {
             const relationshipScope = this.defs.relationshipScope;
-            const relationshipEntities = Espo.Utils.clone(this.defs.relationshipEntities);
 
-            let data = {
-                entityTypeFrom: this.model.name,
-                entityIdFrom: this.model.id,
-                entityTypeTo: relationshipEntities.filter(entity => entity !== this.model.urlRoot).shift(),
-                entityIdsTo: selectObj.map(item => item.id)
-            };
+            let from = null;
+            let to = null;
+            $.each(this.getMetadata().get(['entityDefs', relationshipScope, 'fields']), (field, fieldDefs) => {
+                if (fieldDefs.relationshipField === true) {
+                    if (this.getMetadata().get(['entityDefs', relationshipScope, 'links', field, 'entity']) === this.model.name) {
+                        from = field;
+                    } else {
+                        to = field;
+                    }
+                }
+            });
 
-            this.ajaxPostRequest(`${relationshipScope}/action/createRelationshipEntitiesViaIds`, data).then(() => {
+            if (!from || !to) {
+                return;
+            }
+
+            let promises = [];
+            selectObj.forEach(model => {
+                let data = {};
+                data[from + 'Id'] = this.model.id;
+                data[to + 'Id'] = model.id;
+                promises.push(new Promise(resolve => {
+                    this.ajaxPostRequest(relationshipScope, data).then(response => {
+                        resolve();
+                    });
+                }));
+            });
+
+            Promise.all(promises).then(() => {
                 this.notify('Created', 'success');
                 this.actionRefresh();
                 this.model.trigger('after:relate', this.panelName);
