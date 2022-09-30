@@ -392,7 +392,7 @@
   },
   "fields": {
     "sortOrder": "Sort Order",
-    "parents": "Parent Records",
+    "parents": "Parent Record(s)",
     "prohibitedEmptyValue": "Disable Empty Value",
     "addressCity": "City",
     "addressStreet": "Street",
@@ -436,7 +436,7 @@
     "description": "Description",
     "order": "Order",
     "parent": "Parent",
-    "children": "Child Records",
+    "children": "Child Record(s)",
     "id": "ID",
     "ids": "IDs",
     "type": "Type",
@@ -454,8 +454,8 @@
     "assignedAccounts": "Accounts",
     "users": "Users",
     "parent": "Parent",
-    "parents": "Parent Records",
-    "children": "Child Records"
+    "parents": "Parent Record(s)",
+    "children": "Child Record(s)"
   },
   "dashlets": {
     "Stream": "Stream",
