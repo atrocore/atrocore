@@ -395,7 +395,7 @@
   },
   "fields": {
     "sortOrder": "Порядок сортировки",
-    "parents": "Родители",
+    "parents": "Родительские записи",
     "assignedAccounts": "Контрагенты",
     "prohibitedEmptyValue": "Запретить пустые значения",
     "name": "Название",
@@ -413,7 +413,7 @@
     "description": "Описание",
     "order": "Порядок",
     "parent": "Источник",
-    "children": "Потомок",
+    "children": "Дочерние записи",
     "names": "Названия",
     "emailAddressIsOptedOut": "Эл. адрес не участвует в рассылке массовых сообщений",
     "targetListIsOptedOut": "Отписалось (Списки целей)",
@@ -454,8 +454,8 @@
     "teams": "Группы",
     "users": "Пользователи",
     "parent": "Источник",
-    "parents": "Родители",
-    "children": "Потомок",
+    "parents": "Родительские записи",
+    "children": "Дочерние записи",
     "ownerUser": "Owner"
   },
   "dashlets": {

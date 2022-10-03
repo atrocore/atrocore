@@ -416,7 +416,7 @@
   },
   "fields": {
     "sortOrder": "Sortierreihenfolge",
-    "parents": "Eltern",
+    "parents": "Übergeordnete Datensätze",
     "assignedAccounts": "Accounts",
     "prohibitedEmptyValue": "Leeren Wert deaktivieren",
     "amount": "Anzahl",
@@ -462,7 +462,7 @@
     "modifiedBy": "Geändert von",
     "description": "Beschreibung",
     "order": "Reihenfolge",
-    "children": "Kinder",
+    "children": "Untergeordnete Datensätze",
     "names": "Namen",
     "emailAddressIsOptedOut": "E-Mail-Adresse ist Opt-Out gesetzt",
     "targetListIsOptedOut": "Ist Opt-Out gesetzt (Kontaktliste)",
@@ -477,8 +477,8 @@
     "modifiedBy": "Geändert von",
     "roles": "Rollen",
     "users": "Benutzer",
-    "parents": "Eltern",
-    "children": "Kinder"
+    "parents": "Übergeordnete Datensätze",
+    "children": "Untergeordnete Datensätze"
   },
   "dashlets": {
     "Stream": "Aktivitäten",
