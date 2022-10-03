@@ -95,7 +95,7 @@ Espo.define('views/record/panels/for-relationship-type', 'views/record/panels/re
 
             let promises = [];
             selectObj.forEach(model => {
-                let data = {};
+                let data = {"_silentMode": true};
                 data[from + 'Id'] = this.model.id;
                 data[to + 'Id'] = model.id;
                 promises.push(new Promise(resolve => {
