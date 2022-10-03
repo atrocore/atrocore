@@ -22197,8 +22197,23 @@ select {
     line-height: 1;
 }
 
-.filter-actions .btn-link {
-    color: #000;
+.filter-actions .pipeline {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.total-count .pipeline {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.filter-actions {
+    margin-left: -2px;
+}
+
+.filter-actions .btn {
+    padding-left: 0;
+    padding-right: 0;
 }
 
 ::-webkit-scrollbar {
