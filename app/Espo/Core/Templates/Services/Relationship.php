@@ -46,7 +46,7 @@ class Relationship extends Record
 {
     public function createRelationshipEntitiesViaAddRelation(string $entityType, EntityCollection $entities, array $foreignIds): array
     {
-        $relationshipEntities = $this->getMetadata()->get(['scopes', $this->getEntityType(), 'relationshipEntities'], []);
+        $relationshipEntities = $this->getRelationshipEntities();
         if (count($relationshipEntities) !== 2) {
             throw new BadRequest('Action blocked.');
         }
@@ -88,7 +88,7 @@ class Relationship extends Record
 
     public function deleteRelationshipEntitiesViaRemoveRelation(string $entityType, EntityCollection $entities, array $foreignIds): array
     {
-        $relationshipEntities = $this->getMetadata()->get(['scopes', $this->getEntityType(), 'relationshipEntities'], []);
+        $relationshipEntities = $this->getRelationshipEntities();
         if (count($relationshipEntities) !== 2) {
             throw new BadRequest('Action blocked.');
         }
@@ -133,6 +133,18 @@ class Relationship extends Record
             'unRelated'    => $unRelated,
             'notUnRelated' => $notUnRelated
         ];
+    }
+
+    protected function getRelationshipEntities(): array
+    {
+        $relationshipEntities = [];
+        foreach ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields']) as $field => $fieldDefs) {
+            if (!empty($fieldDefs['relationshipField'])) {
+                $relationshipEntities[] = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'links', $field, 'entity']);
+            }
+        }
+
+        return $relationshipEntities;
     }
 
     protected function storeEntity(Entity $entity)

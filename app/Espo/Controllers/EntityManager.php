@@ -102,9 +102,6 @@ class EntityManager extends \Espo\Core\Controllers\Base
         if (!empty($data['color'])) {
             $params['color'] = $data['color'];
         }
-        if (!empty($data['relationshipEntities'])) {
-            $params['relationshipEntities'] = $data['relationshipEntities'];
-        }
         if (!empty($data['iconClass'])) {
             $params['iconClass'] = $data['iconClass'];
         }

@@ -324,10 +324,6 @@ class EntityManager
             $scopesData['kanbanStatusIgnoreList'] = $params['kanbanStatusIgnoreList'];
         }
 
-        if (!empty($params['relationshipEntities'])) {
-            $scopesData['relationshipEntities'] = $params['relationshipEntities'];
-        }
-
         $additionalFields = array_keys($this->getMetadata()->get(['app', 'additionalEntityParams', 'fields'], []));
         foreach ($params as $key => $value) {
             if (in_array($key, $additionalFields)) {
@@ -409,10 +405,6 @@ class EntityManager
         if (array_key_exists('statusField', $data)) {
             $scopeData['statusField'] = $data['statusField'];
             $this->getMetadata()->set('scopes', $name, $scopeData);
-        }
-
-        if (!empty($data['relationshipEntities'])) {
-            $this->getMetadata()->set('scopes', $name, ['relationshipEntities' => $data['relationshipEntities']]);
         }
 
         $additionalFields = array_keys($this->getMetadata()->get(['app', 'additionalEntityParams', 'fields'], []));
