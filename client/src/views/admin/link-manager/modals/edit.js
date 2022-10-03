@@ -107,6 +107,14 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 }
                 this.model.set('linkMultipleField', linkMultipleField);
 
+                let relationshipField = false;
+                if (this.getMetadata().get('scopes.' + scope + '.type') === 'Relationship') {
+                    if (this.getMetadata().get('entityDefs.' + scope + '.fields.' + link + '.relationshipField')) {
+                        relationshipField = true;
+                    }
+                }
+                this.model.set('relationshipField', relationshipField);
+
                 var linkMultipleFieldForeign = false;
                 if (this.getMetadata().get('entityDefs.' + entityForeign + '.fields.' + linkForeign + '.type') == 'linkMultiple') {
                     if (!this.getMetadata().get('entityDefs.' + entityForeign + '.fields.' + linkForeign + '.noLoad')) {
@@ -114,6 +122,14 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                     }
                 }
                 this.model.set('linkMultipleFieldForeign', linkMultipleFieldForeign);
+
+                let relationshipFieldForeign = false;
+                if (this.getMetadata().get('scopes.' + entityForeign + '.type') === 'Relationship') {
+                    if (this.getMetadata().get('entityDefs.' + entityForeign + '.fields.' + linkForeign + '.relationshipField')) {
+                        relationshipFieldForeign = true;
+                    }
+                }
+                this.model.set('relationshipFieldForeign', relationshipFieldForeign);
 
                 if (linkType == 'manyToMany') {
                     var relationName = this.getMetadata().get('entityDefs.' + entity + '.links.' + link + '.relationName');
@@ -256,6 +272,18 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 tooltipText: this.translate('linkMultipleField', 'tooltips', 'EntityManager')
             });
 
+            this.createView('relationshipField', 'views/fields/bool', {
+                model: model,
+                mode: 'edit',
+                el: this.options.el + ' .field[data-name="relationshipField"]',
+                defs: {
+                    name: 'relationshipField'
+                },
+                readOnly: !isNew,
+                tooltip: true,
+                tooltipText: this.translate('relationshipField', 'tooltips', 'EntityManager')
+            });
+
             this.createView('linkMultipleFieldForeign', 'views/fields/bool', {
                 model: model,
                 mode: 'edit',
@@ -266,6 +294,18 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 readOnly: !isCustom,
                 tooltip: true,
                 tooltipText: this.translate('linkMultipleField', 'tooltips', 'EntityManager')
+            });
+
+            this.createView('relationshipFieldForeign', 'views/fields/bool', {
+                model: model,
+                mode: 'edit',
+                el: this.options.el + ' .field[data-name="relationshipFieldForeign"]',
+                defs: {
+                    name: 'relationshipFieldForeign'
+                },
+                readOnly: !isNew,
+                tooltip: true,
+                tooltipText: this.translate('relationshipField', 'tooltips', 'EntityManager')
             });
 
             this.createView('audited', 'views/fields/bool', {
@@ -405,6 +445,18 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
             this.$el.find('.cell[data-name=' + name+']').css('visibility', 'visible');
         },
 
+        checkRelationshipFieldVisibility: function () {
+            this.hideField('relationshipField');
+            this.hideField('relationshipFieldForeign');
+
+            if (this.getMetadata().get(['scopes', this.model.get('entityForeign'), 'type']) === 'Relationship' && this.model.get('linkType') === 'oneToMany') {
+                this.showField('relationshipFieldForeign');
+            }
+            if (this.getMetadata().get(['scopes', this.model.get('entity'), 'type']) === 'Relationship' && this.model.get('linkType') === 'manyToOne') {
+                this.showField('relationshipField');
+            }
+        },
+
         handleLinkTypeChange: function () {
             var linkType = this.model.get('linkType');
             if (linkType === 'manyToMany') {
@@ -453,21 +505,40 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
             }
         },
 
+        hideFieldIfAsset: function () {
+            if (this.model.get('linkType') === 'manyToMany' && this.model.get('entityForeign') === 'Asset') {
+                this.model.set('link', 'assets');
+                this.hideField('link');
+            }
+
+            if (this.model.get('linkType') === 'manyToMany' && this.model.get('entity') === 'Asset') {
+                this.model.set('linkForeign', 'assets');
+                this.hideField('linkForeign');
+            }
+        },
+
         afterRender: function () {
+            this.checkRelationshipFieldVisibility();
             this.handleLinkTypeChange();
 
             this.getView('linkType').on('change', function (m) {
+                this.checkRelationshipFieldVisibility();
                 this.handleLinkTypeChange();
                 this.populateFields();
+                this.hideFieldIfAsset();
             }, this);
             this.getView('entityForeign').on('change', function (m) {
+                this.checkRelationshipFieldVisibility();
                 this.populateFields();
+                this.hideFieldIfAsset();
             }, this);
 
             this.getView('link').on('change', function (m) {
+                this.checkRelationshipFieldVisibility();
                 this.handleLinkChange('link');
             }, this);
             this.getView('linkForeign').on('change', function (m) {
+                this.checkRelationshipFieldVisibility();
                 this.handleLinkChange('linkForeign');
             }, this);
         },
@@ -483,6 +554,8 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 'relationName',
                 'linkMultipleField',
                 'linkMultipleFieldForeign',
+                'relationshipField',
+                'relationshipFieldForeign',
                 'audited',
                 'auditedForeign'
             ];
@@ -540,6 +613,8 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 relationName: relationName,
                 linkMultipleField: linkMultipleField,
                 linkMultipleFieldForeign: linkMultipleFieldForeign,
+                relationshipField: this.model.get('relationshipField'),
+                relationshipFieldForeign: this.model.get('relationshipFieldForeign'),
                 audited: audited,
                 auditedForeign: auditedForeign
             };

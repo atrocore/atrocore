@@ -727,6 +727,9 @@ class EntityManager
                         )
                     )
                 );
+                if (!empty($params['relationshipFieldForeign'])) {
+                    $dataRight['fields'][$linkForeign]['relationshipField'] = true;
+                }
                 break;
             case 'manyToOne':
                 if ($this->getMetadata()->get('entityDefs.' . $entity . '.fields.' . $link)) {
@@ -754,6 +757,9 @@ class EntityManager
                         )
                     )
                 );
+                if (!empty($params['relationshipField'])) {
+                    $dataLeft['fields'][$link]['relationshipField'] = true;
+                }
                 $dataRight = array(
                     'fields' => array(
                         $linkForeign => array(
