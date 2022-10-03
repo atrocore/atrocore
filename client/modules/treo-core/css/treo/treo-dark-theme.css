@@ -22197,6 +22197,10 @@ select {
     line-height: 1;
 }
 
+.filter-actions .btn-link {
+    color: #000;
+}
+
 ::-webkit-scrollbar {
     width: 10px;
     height: 10px;

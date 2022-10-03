@@ -286,7 +286,9 @@
     "Record cannot be saved": "Запись не может быть сохранена",
     "click to add...": "нажмите, чтобы добавить...",
     "textFilterPlaceholder": "Введите и нажмите клавишу ввода или щелкните значок поиска, чтобы выполнить поиск...",
-    "mobileTextFilterPlaceholder": "Введите и нажмите Enter..."
+    "mobileTextFilterPlaceholder": "Введите и нажмите Enter...",
+    "Apply filter": "Применить фильтры",
+    "Reset filter": "Сбросить фильтры"
   },
   "messages": {
     "massDeleting": "Удаляется: {{deleted}} с {{total}}",

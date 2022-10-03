@@ -71,3 +71,10 @@
     </div>
     {{/each}}
 </div>
+<div class="row">
+    <div class="btn-group actions filter-actions">
+        <button class="btn-link btn" data-action="search"><div>{{translate 'Apply filter'}}</div></button>
+        <span class="pipeline">|</span>
+        <button class="btn-link btn" data-action="reset-filter"><div>{{translate 'Reset filter'}}</div></button>
+    </div>
+</div>
