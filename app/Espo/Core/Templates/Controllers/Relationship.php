@@ -42,12 +42,4 @@ use Espo\Core\Exceptions\BadRequest;
 
 class Relationship extends Record
 {
-    public function actionDeleteAll($params, $data, $request)
-    {
-        if (!$request->isPost() || !property_exists($data, 'entityType') || !property_exists($data, 'entityId')) {
-            throw new BadRequest();
-        }
-
-        return $this->getRecordService()->deleteAll((string)$data->entityType, (string)$data->entityId);
-    }
 }

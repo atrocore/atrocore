@@ -39,9 +39,12 @@ Espo.define('views/record/panels/for-relationship-type', 'views/record/panels/re
         rowActionsView: 'views/record/row-actions/relationship-no-unlink',
 
         setup() {
+            this.defs.select = false;
+
             Dep.prototype.setup.call(this);
 
-            const relationshipScope = this.defs.relationshipScope;
+            const relationshipScope = this.getMetadata().get(['entityDefs', this.model.name, 'links', this.panelName, 'entity']);
+
             let relationshipEntities = [];
             $.each(this.getMetadata().get(['entityDefs', relationshipScope, 'fields']), (field, fieldDefs) => {
                 if (fieldDefs.relationshipField === true) {
@@ -75,7 +78,7 @@ Espo.define('views/record/panels/for-relationship-type', 'views/record/panels/re
         },
 
         createRelationshipEntitiesViaIds(selectObj) {
-            const relationshipScope = this.defs.relationshipScope;
+            const relationshipScope = this.getMetadata().get(['entityDefs', this.model.name, 'links', this.panelName, 'entity']);
 
             let from = null;
             let to = null;
@@ -115,18 +118,30 @@ Espo.define('views/record/panels/for-relationship-type', 'views/record/panels/re
         actionDeleteAllRelationshipEntities(data) {
             this.confirm(this.translate('deleteAllConfirmation', 'messages'), () => {
                 this.notify('Please wait...');
-                $.ajax({
-                    url: data.relationshipScope + '/action/deleteAll',
-                    type: 'POST',
-                    data: JSON.stringify({
-                        entityType: this.model.name,
-                        entityId: this.model.id
-                    }),
-                }).done(() => {
-                    this.notify(false);
-                    this.notify('Removed', 'success');
-                    this.collection.fetch();
-                    this.model.trigger('after:unrelate');
+                this.ajaxGetRequest(`${this.model.name}/${this.model.id}/${this.panelName}?select=id&maxSize=9999&offset=0`).then(response => {
+                    if (response.total > 0) {
+                        let promises = [];
+                        response.list.forEach(item => {
+                            promises.push(new Promise(resolve => {
+                                $.ajax({
+                                    url: `${data.relationshipScope}/${item.id}`,
+                                    type: 'DELETE',
+                                }).done(response => {
+                                    resolve();
+                                });
+                            }));
+                        });
+                        Promise.all(promises).then(() => {
+                            this.notify(false);
+                            this.notify('Removed', 'success');
+                            this.collection.fetch();
+                            this.model.trigger('after:unrelate');
+                        });
+                    } else {
+                        this.notify(false);
+                        this.notify('Removed', 'success');
+                        this.collection.fetch();
+                    }
                 });
             });
         },

@@ -135,19 +135,6 @@ class Relationship extends Record
         ];
     }
 
-    public function deleteAll(string $entityType, string $entityId): bool
-    {
-        if (!in_array($entityType, $this->getMetadata()->get(['scopes', $this->entityType, 'relationshipEntities'], []))) {
-            throw new BadRequest('Relationship entity is required.');
-        }
-
-        foreach ($this->getRepository()->where([lcfirst($entityType) . 'Id' => $entityId])->find() as $entity) {
-            $this->getRepository()->remove($entity);
-        }
-
-        return true;
-    }
-
     protected function storeEntity(Entity $entity)
     {
         try {
