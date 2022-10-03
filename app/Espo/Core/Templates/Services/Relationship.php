@@ -63,8 +63,14 @@ class Relationship extends Record
 
         foreach ($foreignCollection as $foreignEntity) {
             foreach ($entities as $entity) {
-                $input[lcfirst($entity->getEntityType()) . 'Id'] = $entity->get('id');
-                $input[lcfirst($foreignEntity->getEntityType()) . 'Id'] = $foreignEntity->get('id');
+                $input = [];
+                foreach ($relationshipEntities as $field => $entityType) {
+                    if ($entityType === $entity->getEntityType()) {
+                        $input[$field . 'Id'] = $entity->get('id');
+                    } elseif ($entityType === $foreignEntity->getEntityType()) {
+                        $input[$field . 'Id'] = $foreignEntity->get('id');
+                    }
+                }
                 try {
                     $this->createEntity(json_decode(json_encode($input)));
                     $related++;
@@ -105,14 +111,16 @@ class Relationship extends Record
 
         foreach ($entities as $entity) {
             foreach ($foreignCollection as $foreignEntity) {
+                $where = [];
+                foreach ($relationshipEntities as $field => $entityType) {
+                    if ($entityType === $entity->getEntityType()) {
+                        $where[$field . 'Id'] = $entity->get('id');
+                    } elseif ($entityType === $foreignEntity->getEntityType()) {
+                        $where[$field . 'Id'] = $foreignEntity->get('id');
+                    }
+                }
                 try {
-                    $record = $this
-                        ->getRepository()
-                        ->where([
-                            lcfirst($entity->getEntityType()) . 'Id'        => $entity->get('id'),
-                            lcfirst($foreignEntity->getEntityType()) . 'Id' => $foreignEntity->get('id'),
-                        ])
-                        ->findOne();
+                    $record = $this->getRepository()->where($where)->findOne();
                     if (!empty($record)) {
                         $this->getEntityManager()->removeEntity($record);
                     }
@@ -140,7 +148,7 @@ class Relationship extends Record
         $relationshipEntities = [];
         foreach ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields']) as $field => $fieldDefs) {
             if (!empty($fieldDefs['relationshipField'])) {
-                $relationshipEntities[] = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'links', $field, 'entity']);
+                $relationshipEntities[$field] = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'links', $field, 'entity']);
             }
         }
 
