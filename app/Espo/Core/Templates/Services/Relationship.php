@@ -46,7 +46,7 @@ class Relationship extends Record
 {
     public function createRelationshipEntitiesViaAddRelation(string $entityType, EntityCollection $entities, array $foreignIds): array
     {
-        $relationshipEntities = $this->getMetadata()->get(['scopes', $this->getEntityType(), 'relationshipEntities'], []);
+        $relationshipEntities = $this->getRelationshipEntities();
         if (count($relationshipEntities) !== 2) {
             throw new BadRequest('Action blocked.');
         }
@@ -63,8 +63,14 @@ class Relationship extends Record
 
         foreach ($foreignCollection as $foreignEntity) {
             foreach ($entities as $entity) {
-                $input[lcfirst($entity->getEntityType()) . 'Id'] = $entity->get('id');
-                $input[lcfirst($foreignEntity->getEntityType()) . 'Id'] = $foreignEntity->get('id');
+                $input = [];
+                foreach ($relationshipEntities as $field => $entityType) {
+                    if ($entityType === $entity->getEntityType()) {
+                        $input[$field . 'Id'] = $entity->get('id');
+                    } elseif ($entityType === $foreignEntity->getEntityType()) {
+                        $input[$field . 'Id'] = $foreignEntity->get('id');
+                    }
+                }
                 try {
                     $this->createEntity(json_decode(json_encode($input)));
                     $related++;
@@ -88,7 +94,7 @@ class Relationship extends Record
 
     public function deleteRelationshipEntitiesViaRemoveRelation(string $entityType, EntityCollection $entities, array $foreignIds): array
     {
-        $relationshipEntities = $this->getMetadata()->get(['scopes', $this->getEntityType(), 'relationshipEntities'], []);
+        $relationshipEntities = $this->getRelationshipEntities();
         if (count($relationshipEntities) !== 2) {
             throw new BadRequest('Action blocked.');
         }
@@ -105,14 +111,16 @@ class Relationship extends Record
 
         foreach ($entities as $entity) {
             foreach ($foreignCollection as $foreignEntity) {
+                $where = [];
+                foreach ($relationshipEntities as $field => $entityType) {
+                    if ($entityType === $entity->getEntityType()) {
+                        $where[$field . 'Id'] = $entity->get('id');
+                    } elseif ($entityType === $foreignEntity->getEntityType()) {
+                        $where[$field . 'Id'] = $foreignEntity->get('id');
+                    }
+                }
                 try {
-                    $record = $this
-                        ->getRepository()
-                        ->where([
-                            lcfirst($entity->getEntityType()) . 'Id'        => $entity->get('id'),
-                            lcfirst($foreignEntity->getEntityType()) . 'Id' => $foreignEntity->get('id'),
-                        ])
-                        ->findOne();
+                    $record = $this->getRepository()->where($where)->findOne();
                     if (!empty($record)) {
                         $this->getEntityManager()->removeEntity($record);
                     }
@@ -135,17 +143,16 @@ class Relationship extends Record
         ];
     }
 
-    public function deleteAll(string $entityType, string $entityId): bool
+    protected function getRelationshipEntities(): array
     {
-        if (!in_array($entityType, $this->getMetadata()->get(['scopes', $this->entityType, 'relationshipEntities'], []))) {
-            throw new BadRequest('Relationship entity is required.');
+        $relationshipEntities = [];
+        foreach ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields']) as $field => $fieldDefs) {
+            if (!empty($fieldDefs['relationshipField'])) {
+                $relationshipEntities[$field] = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'links', $field, 'entity']);
+            }
         }
 
-        foreach ($this->getRepository()->where([lcfirst($entityType) . 'Id' => $entityId])->find() as $entity) {
-            $this->getRepository()->remove($entity);
-        }
-
-        return true;
+        return $relationshipEntities;
     }
 
     protected function storeEntity(Entity $entity)
