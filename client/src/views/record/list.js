@@ -161,7 +161,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }
             },
             'click tr': function (e) {
-                if (e.target.tagName === 'TD') {
+                if (e.target.tagName === 'TD' && !this.allResultIsChecked ) {
                     const row = $(e.currentTarget);
                     const id = row.data('id');
                     const $target = row.find('.record-checkbox');
@@ -175,9 +175,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         }
                     }
                 }
-            },
-            'click .checkbox-dropdown [data-action="selectAllResult"]': function (e) {
-                this.selectAllResult();
             },
             'click .actions a.mass-action': function (e) {
                 $el = $(e.currentTarget);
