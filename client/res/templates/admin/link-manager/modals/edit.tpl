@@ -75,7 +75,7 @@
     </div>
 	<div class="cell form-group col-md-4"></div>
     <div class="cell form-group col-md-4" data-name="relationshipFieldForeign">
-        <label class="control-label" data-name="relationshipFieldForeign">{{translate 'relationshipFieldForeign' category='fields' scope='EntityManager'}}</label>
+        <label class="control-label" data-name="relationshipFieldForeign">{{translate 'relationshipField' category='fields' scope='EntityManager'}}</label>
         <div class="field" data-name="relationshipFieldForeign">
             {{{relationshipFieldForeign}}}
         </div>
