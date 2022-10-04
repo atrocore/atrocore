@@ -46,15 +46,6 @@
     "fullTextSearch": "Полнотекстовый поиск"
   },
   "options": {
-    "type": {
-      "CategoryTree": "Дерево категорий",
-      "BasePlus": "Base Plus",
-      "": "Нет",
-      "Base": "База",
-      "Person": "Личность",
-      "Event": "Событие",
-      "Company": "Компания"
-    },
     "linkType": {
       "parentToChildren": "Родительская-к-дочернему",
       "manyToMany": "Многие-ко-многим",

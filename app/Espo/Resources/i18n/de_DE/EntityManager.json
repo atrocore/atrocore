@@ -42,14 +42,6 @@
     "fullTextSearch": "Volltextsuche"
   },
   "options": {
-    "type": {
-      "": "Kein(e)",
-      "Base": "Basis",
-      "CategoryTree": "Kategoriebaum",
-      "Event": "Ereignis",
-      "BasePlus": "Basis Plus",
-      "Company": "Firma"
-    },
     "linkType": {
       "manyToMany": "n:n",
       "oneToMany": "1:n",

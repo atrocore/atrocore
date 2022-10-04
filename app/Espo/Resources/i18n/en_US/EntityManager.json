@@ -46,15 +46,6 @@
     "fullTextSearch": "Full-Text Search"
   },
   "options": {
-    "type": {
-      "": "None",
-      "Base": "Base",
-      "Person": "Person",
-      "CategoryTree": "Category Tree",
-      "Event": "Event",
-      "BasePlus": "Base Plus",
-      "Company": "Company"
-    },
     "linkType": {
       "manyToMany": "Many-to-Many",
       "oneToMany": "One-to-Many",
