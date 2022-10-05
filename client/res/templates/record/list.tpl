@@ -42,16 +42,6 @@
                 {{#if checkboxes}}
                 <th width="40" data-name="r-checkbox">
                     <span class="select-all-container"><input type="checkbox" class="select-all fixed"></span>
-                    {{#unless checkAllResultDisabled}}
-                    <div class="btn-group checkbox-dropdown">
-                        <a class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown">
-                            <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a href="javascript:" data-action="selectAllResult">{{translate 'Select All Results'}}</a></li>
-                        </ul>
-                    </div>
-                    {{/unless}}
                 </th>
                 {{/if}}
                 {{#each headerDefs}}
@@ -93,17 +83,6 @@
                 {{#if checkboxes}}
                 <th width="40" data-name="r-checkbox">
                     <span class="select-all-container"><input type="checkbox" class="select-all"></span>
-                    {{#unless checkAllResultDisabled}}
-                    <div class="btn-group checkbox-dropdown">
-                        <a class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown">
-                            <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a href="javascript:" data-action="selectAllResult">{{translate 'Select All Results'}}</a></li>
-                        </ul>
-                    </div>
-                    {{/unless}}
-
                 </th>
                 {{/if}}
                 {{#each headerDefs}}
