@@ -55,7 +55,7 @@ Espo.define('views/fields/bool', 'views/fields/base', function (Dep) {
         },
 
         fetch: function () {
-            var value = this.$element.get(0).checked;
+            var value = this.$el.find('input[name=' + this.name + ']').is(":checked");
             var data = {};
             data[this.name] = value;
             return data;
