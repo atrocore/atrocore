@@ -7,6 +7,7 @@
     "Formula": "Formula"
   },
   "fields": {
+    "relationshipField": "Relationship Entity",
     "multiParents": "Multiple Parents",
     "fieldValueInheritance": "Field Value Inheritance",
     "unInheritedFields": "Uninherited Fields",
@@ -45,15 +46,6 @@
     "fullTextSearch": "Full-Text Search"
   },
   "options": {
-    "type": {
-      "": "None",
-      "Base": "Base",
-      "Person": "Person",
-      "CategoryTree": "Category Tree",
-      "Event": "Event",
-      "BasePlus": "Base Plus",
-      "Company": "Company"
-    },
     "linkType": {
       "manyToMany": "Many-to-Many",
       "oneToMany": "One-to-Many",
@@ -72,6 +64,7 @@
     "linkConflict": "Name conflict: link or field with the same name already exists."
   },
   "tooltips": {
+    "relationshipField": "Check this option to mark the foreign entity as the target entity for a relationship. All target entities together build up a unique index.",
     "unInheritedFields": "Values for these fields will not be inherited from parent item.",
     "unInheritedRelations": "Relations with these entities will not be inherited from parent item.",
     "hasAssignedUser": "Show Assigned User in Access Management",

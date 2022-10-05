@@ -283,7 +283,9 @@
     "Record cannot be saved": "Record cannot be saved",
     "click to add...": "click to add...",
     "textFilterPlaceholder": "Type and press the enter key or click on the search icon to search...",
-    "mobileTextFilterPlaceholder": "Type and press Enter..."
+    "mobileTextFilterPlaceholder": "Type and press Enter...",
+    "Apply filter": "Apply filter",
+    "Reset filter": "Reset filter"
   },
   "messages": {
     "massDeleting": "Deleting: {{deleted}} from {{total}}",

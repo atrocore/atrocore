@@ -6,16 +6,6 @@
 		</div>
 	</div>
 </div>
-{{#if relationshipEntities}}
-<div class="row">
-	<div class="cell form-group col-md-6" data-name="relationshipEntities">
-		<label class="control-label" data-name="relationshipEntities">{{translate 'relationshipEntities' category='fields' scope='EntityManager'}}</label>
-		<div class="field" data-name="relationshipEntities">
-			{{{relationshipEntities}}}
-		</div>
-	</div>
-</div>
-{{/if}}
 <div class="row">
 	<div class="cell form-group col-md-6" data-name="name">
 		<label class="control-label" data-name="name">{{translate 'name' category='fields' scope='EntityManager'}}</label>

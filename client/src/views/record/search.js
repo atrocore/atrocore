@@ -280,6 +280,9 @@ Espo.define('views/record/search', 'view', function (Dep) {
             'click button[data-action="reset"]': function (e) {
                 this.resetFilters();
             },
+            'click button[data-action="reset-filter"]': function (e) {
+                this.resetFilters();
+            },
             'click button[data-action="refresh"]': function (e) {
                 this.refresh();
             },
@@ -356,6 +359,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
 
                 this.manageLabels();
                 this.toggleResetVisibility();
+                this.toggleFilterActionsVisibility();
             },
             'click .advanced-filters a.remove-filter': function (e) {
                 var $target = $(e.currentTarget);
@@ -377,6 +381,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 this.handleLeftDropdownVisibility();
                 this.setupOperatorLabels();
                 this.toggleResetVisibility();
+                this.toggleFilterActionsVisibility();
             },
             'keypress .field input[type="text"]': function (e) {
                 if (e.keyCode === 13) {
@@ -410,6 +415,20 @@ Espo.define('views/record/search', 'view', function (Dep) {
             }
 
             $reset.hide();
+        },
+
+        toggleFilterActionsVisibility() {
+            let $filterActions = this.$el.find(`.filter-actions`);
+
+            if(!$filterActions.length) {
+                return;
+            }
+
+            if (Object.keys(this.advanced).length > 0) {
+                $filterActions.show();
+                return;
+            }
+            $filterActions.hide();
         },
 
         sortAdvanced: function (advanced) {
@@ -468,6 +487,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
             this.textFilter = '';
             this.selectPreset(this.presetName, true);
             this.toggleResetVisibility();
+            this.toggleFilterActionsVisibility()
         },
 
         savePreset(name) {
@@ -566,6 +586,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
             this.setupOperatorLabels();
             this.setupAdvancedFiltersPosition();
             this.toggleResetVisibility();
+            this.toggleFilterActionsVisibility();
 
             const textFilter = this.$el.find('input[name="textFilter"]');
 

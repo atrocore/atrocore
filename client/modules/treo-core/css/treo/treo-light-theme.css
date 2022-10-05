@@ -22703,6 +22703,25 @@ body.minimized #header > #navbar .navbar-inverse .navbar-nav .more .dropdown-men
   line-height: 1;
 }
 
+.filter-actions .pipeline {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.total-count .pipeline {
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+.filter-actions {
+  margin-left: -2px;
+}
+
+.filter-actions .btn {
+  padding-left: 0;
+  padding-right: 0;
+}
+
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;

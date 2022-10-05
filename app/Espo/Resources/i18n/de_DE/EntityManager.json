@@ -6,6 +6,7 @@
     "Formula": "Formel"
   },
   "fields": {
+    "relationshipField": "Beziehungsentität",
     "multiParents": "Mehrere Elterndatensätze",
     "fieldValueInheritance": "Feldwertvererbung",
     "unInheritedFields": "Nicht Vererbte Felder",
@@ -41,14 +42,6 @@
     "fullTextSearch": "Volltextsuche"
   },
   "options": {
-    "type": {
-      "": "Kein(e)",
-      "Base": "Basis",
-      "CategoryTree": "Kategoriebaum",
-      "Event": "Ereignis",
-      "BasePlus": "Basis Plus",
-      "Company": "Firma"
-    },
     "linkType": {
       "manyToMany": "n:n",
       "oneToMany": "1:n",
@@ -67,6 +60,7 @@
     "linkConflict": "Eine Relation mit diesem Namen existiert bereits"
   },
   "tooltips": {
+    "relationshipField": "Aktivieren Sie diese Option, um die fremde Entität als die Zielentität für eine Beziehung zu markieren. Alle Zielentitäten bilden zusammen einen eindeutigen Index.",
     "unInheritedFields": "Werte für diese Felder werden nicht vom übergeordneten Element geerbt.",
     "unInheritedRelations": "Relationen zu diesen Entitäten werden nicht vom übergeordneten Element geerbt.",
     "disabled": "Überprüfen Sie, ob Sie diese Entität in Ihrem System nicht benötigen.",
