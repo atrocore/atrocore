@@ -143,12 +143,28 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }
             },
             'click .select-all': function (e) {
-                if (this.allResultIsChecked ) {
-                    this.unselectAllResult();
-                } else {
-                    this.selectAllResult();
+                if (!this.checkAllResultDisabled) {
+                    if (this.allResultIsChecked ) {
+                        this.unselectAllResult();
+                    } else {
+                        this.selectAllResult();
+                    }
+                    return;
                 }
+
+                let checkbox = this.$el.find('.full-table').find('.select-all');
+                let checkboxFixed = this.$el.find('.fixed-header-table').find('.select-all');
+
+                if (!this.checkedAll) {
+                    checkbox.prop('checked', true);
+                    checkboxFixed.prop('checked', true);
+                } else {
+                    checkbox.prop('checked', false);
+                    checkboxFixed.prop('checked', false);
+                }
+
                 this.selectAllHandler(e.currentTarget.checked);
+                this.checkedAll = e.currentTarget.checked;
             },
             'click .action': function (e) {
                 var $el = $(e.currentTarget);
@@ -161,7 +177,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }
             },
             'click tr': function (e) {
-                if (e.target.tagName === 'TD') {
+                if (e.target.tagName === 'TD' && !this.allResultIsChecked ) {
                     const row = $(e.currentTarget);
                     const id = row.data('id');
                     const $target = row.find('.record-checkbox');
@@ -175,9 +191,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         }
                     }
                 }
-            },
-            'click .checkbox-dropdown [data-action="selectAllResult"]': function (e) {
-                this.selectAllResult();
             },
             'click .actions a.mass-action': function (e) {
                 $el = $(e.currentTarget);
@@ -264,13 +277,20 @@ Espo.define('views/record/list', 'view', function (Dep) {
             if (isChecked) {
                 this.$el.find('input.record-checkbox').prop('checked', true);
                 $actionsButton.removeAttr('disabled');
+                this.collection.models.forEach(function (model) {
+                    this.checkedList.push(model.id);
+                }, this);
                 this.$el.find('.list > table tbody tr').addClass('active');
             } else {
+                if (this.allResultIsChecked) {
+                    this.unselectAllResult();
+                }
                 this.$el.find('input.record-checkbox').prop('checked', false);
                 $actionsButton.attr('disabled', true);
                 this.$el.find('.list > table tbody tr').removeClass('active');
-                this.trigger('check');
             }
+
+            this.trigger('check');
         },/**
          * @param {string} or {bool} ['both', 'top', 'bottom', false, true] Where to display paginations.
          */
