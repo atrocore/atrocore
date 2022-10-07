@@ -129,8 +129,13 @@ class Sender
         $sender = new \Laminas\Mail\Header\Sender();
         $sender->setAddress($fromEmail);
 
+        $fromName = $this->config->get('outboundEmailFromName', $fromEmail);
+        if (array_key_exists('fromName', $emailData)) {
+            $fromName = $emailData['fromName'];
+        }
+
         $message = new Message();
-        $message->addFrom(trim($fromEmail), $this->config->get('outboundEmailFromName', $fromEmail));
+        $message->addFrom(trim($fromEmail), $fromName);
         $message->getHeaders()->addHeader($sender);
 
         if (!empty($params['replyToAddress'])) {
