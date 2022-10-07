@@ -485,6 +485,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
             this.trigger('reset');
 
             this.textFilter = '';
+            this.presetName = '';
             this.selectPreset(this.presetName, true);
             this.toggleResetVisibility();
             this.toggleFilterActionsVisibility()
