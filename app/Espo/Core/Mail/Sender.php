@@ -40,11 +40,13 @@ namespace Espo\Core\Mail;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\QueueManager;
 use Espo\Core\Utils\Config;
+use Espo\ORM\EntityManager;
 use Laminas\Mime\Message as MimeMessage;
 use Laminas\Mime\Part as MimePart;
 use Laminas\Mail\Message;
 use Laminas\Mail\Transport\Smtp as SmtpTransport;
 use Laminas\Mail\Transport\SmtpOptions;
+use Laminas\Mime\Mime;
 
 class Sender
 {
@@ -64,15 +66,18 @@ class Sender
     private $transport;
 
     /**
-     * Sender constructor.
-     *
-     * @param Config       $config
-     * @param QueueManager $queueManager
+     * @var EntityManager
      */
-    public function __construct(Config $config, QueueManager $queueManager)
+    private $entityManager;
+
+    /**
+     * Sender constructor.
+     */
+    public function __construct(Config $config, QueueManager $queueManager, EntityManager $entityManager)
     {
         $this->config = $config;
         $this->queueManager = $queueManager;
+        $this->entityManager = $entityManager;
         $this->transport = new SmtpTransport();
 
         $opts = [
@@ -113,8 +118,12 @@ class Sender
         }
 
         $fromEmail = $this->config->get('outboundEmailFromAddress');
-        if (empty($this->config->get('outboundEmailFromAddress'))) {
-            throw new Error('outboundEmailFromAddress is not specified in config.');
+        if (!empty($emailData['from'])) {
+            $fromEmail = $emailData['from'];
+        }
+
+        if (empty($fromEmail)) {
+            throw new Error('From Email is not specified.');
         }
 
         $sender = new \Laminas\Mail\Header\Sender();
@@ -162,12 +171,32 @@ class Sender
 
         if (!empty($emailData['isHtml'])) {
             $html = new MimePart($bodyPlain);
-            $html->type = 'text/html; charset=utf-8';
+            $html->type = Mime::TYPE_HTML; // $html->type = 'text/html; charset=utf-8';
+            $html->charset = 'utf-8';
 
             $body = new MimeMessage();
             $body->setParts([$html]);
         } else {
-            $body = $this->prepareBodyPlain($bodyPlain);
+            $text = new MimePart($this->prepareBodyPlain($bodyPlain));
+            $text->type = Mime::TYPE_TEXT;
+            $text->charset = 'utf-8';
+
+            $body = new MimeMessage();
+            $body->setParts([$text]);
+        }
+
+        $emailAttachments = [];
+        if (!empty($emailData['attachments'])) {
+            $attachments = $this->entityManager->getRepository('Attachment')->where(['id' => $emailData['attachments']])->find();
+            foreach ($attachments as $attachment) {
+                $emailAttachment = new MimePart(fopen($attachment->getFilePath(), 'r'));
+                $emailAttachment->type = $attachment->get('type');
+                $emailAttachment->filename = $attachment->get('name');
+                $emailAttachment->disposition = Mime::DISPOSITION_ATTACHMENT;
+                $emailAttachment->encoding = Mime::ENCODING_BASE64;
+
+                $body->addPart($emailAttachment);
+            }
         }
 
         $message->setBody($body);
