@@ -44,6 +44,6 @@ class MailSender implements Factory
 {
     public function create(Container $container)
     {
-        return new \Espo\Core\Mail\Sender($container->get('config'), $container->get('queueManager'));
+        return new \Espo\Core\Mail\Sender($container->get('config'), $container->get('queueManager'), $container->get('entityManager'));
     }
 }
