@@ -285,7 +285,8 @@
     "textFilterPlaceholder": "Type and press the enter key or click on the search icon to search...",
     "mobileTextFilterPlaceholder": "Type and press Enter...",
     "Apply filter": "Apply filter",
-    "Reset filter": "Reset filter"
+    "Reset filter": "Reset filter",
+    "Dashboard": "Dashboard"
   },
   "messages": {
     "massDeleting": "Deleting: {{deleted}} from {{total}}",

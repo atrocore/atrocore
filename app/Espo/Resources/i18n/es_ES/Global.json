@@ -258,7 +258,8 @@
     "manyToOne": "Many-to-One",
     "manyToMany": "Many-to-Many",
     "textFilterPlaceholder": "Escriba y presione la tecla Intro o haga clic en el icono de búsqueda para buscar...",
-    "mobileTextFilterPlaceholder": "Escribe y presiona la tecla Enter..."
+    "mobileTextFilterPlaceholder": "Escribe y presiona la tecla Enter...",
+    "Dashboard": "Escritorio"
   },
   "messages": {
     "pleaseWait": "Por favor espere...",

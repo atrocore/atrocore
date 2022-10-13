@@ -288,7 +288,8 @@
     "textFilterPlaceholder": "Введите и нажмите клавишу ввода или щелкните значок поиска, чтобы выполнить поиск...",
     "mobileTextFilterPlaceholder": "Введите и нажмите Enter...",
     "Apply filter": "Применить фильтры",
-    "Reset filter": "Сбросить фильтры"
+    "Reset filter": "Сбросить фильтры",
+    "Dashboard": "Панели виджетов"
   },
   "messages": {
     "massDeleting": "Удаляется: {{deleted}} с {{total}}",

@@ -269,7 +269,8 @@
     "textFilterPlaceholder": "Tippe und drücke die Eingabetaste oder klicke auf das Suchsymbol, um zu suchen...",
     "mobileTextFilterPlaceholder": "Tippe und absende...",
     "Apply filter": "Filter anwenden",
-    "Reset filter": "Filter zurücksetzen"
+    "Reset filter": "Filter zurücksetzen",
+    "Dashboard": "Dashboard"
   },
   "messages": {
     "massDeleting": "Entferne: {{deleted}} vom {{total}}",

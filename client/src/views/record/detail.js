@@ -1669,7 +1669,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             for (var p in simplifiedLayout) {
                 var panel = {};
-                panel.label = simplifiedLayout[p].label || null;
+                panel.label = this.getLanguage().translate(simplifiedLayout[p].label, 'labels', this.scope) || null;
                 if ('customLabel' in simplifiedLayout[p]) {
                     panel.customLabel = simplifiedLayout[p].customLabel;
                 }
