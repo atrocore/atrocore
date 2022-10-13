@@ -20151,7 +20151,7 @@ button.category:focus {
   position: absolute;
   overflow-y: auto;
   height: 500px;
-  width: 220px;
+  min-width: 250px;
 }
 
 .filter-menu .dropdown-submenu .attribute-filter-list > li > a {

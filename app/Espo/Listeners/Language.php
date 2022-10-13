@@ -45,11 +45,39 @@ use Espo\Core\Utils\Util;
  */
 class Language extends AbstractListener
 {
-    /**
-     * @param Event $event
-     */
-    public function modify(Event $event)
+    public function modify(Event $event): void
     {
+        $data = $event->getArgument('data');
+
+        foreach ($data as $locale => $rows) {
+            foreach ($this->getMetadata()->get('entityDefs', []) as $entity => $entityDefs) {
+                if (empty($entityDefs['fields'])) {
+                    continue 1;
+                }
+                foreach ($entityDefs['fields'] as $field => $fieldDefs) {
+                    if (!empty($fieldDefs['relationshipFilterField'])) {
+                        if (!empty($data[$locale][$entity]['fields'][$fieldDefs['relationshipFilterField']])) {
+                            $filterField = $data[$locale][$entity]['fields'][$fieldDefs['relationshipFilterField']];
+                        } elseif (!empty($data['en_US'][$entity]['fields'][$fieldDefs['relationshipFilterField']])) {
+                            $filterField = $data['en_US'][$entity]['fields'][$fieldDefs['relationshipFilterField']];
+                        } else {
+                            $filterField = $fieldDefs['relationshipFilterField'];
+                        }
+
+                        if (!empty($data[$locale]['Global']['scopeNamesPlural'][$fieldDefs['entity']])) {
+                            $filterEntity = $data[$locale]['Global']['scopeNamesPlural'][$fieldDefs['entity']];
+                        } elseif (!empty($data['en_US']['Global']['scopeNamesPlural'][$fieldDefs['entity']])) {
+                            $filterEntity = $data['en_US']['Global']['scopeNamesPlural'][$fieldDefs['entity']];
+                        } else {
+                            $filterEntity = $fieldDefs['entity'];
+                        }
+
+                        $data[$locale][$entity]['fields'][$field] = $filterField . ': ' . $filterEntity;
+                    }
+                }
+            }
+        }
+
         if (empty($this->getConfig()->get('isMultilangActive'))) {
             return;
         }
@@ -58,9 +86,6 @@ class Language extends AbstractListener
         if (empty($languages = $this->getConfig()->get('inputLanguageList', []))) {
             return;
         }
-
-        // get data
-        $data = $event->getArgument('data');
 
         foreach ($data as $locale => $rows) {
             foreach ($rows as $scope => $items) {
