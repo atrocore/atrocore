@@ -155,12 +155,13 @@
     "noEmptyString": "Keine leere Zeichenkette",
     "maxFileSize": "Max. Dateigröße (Mb)",
     "isPersonalData": "Gehört zu persönlichen Daten",
-    "useIframe": "Iframe verwenden",
+    "useIframe": "Iframe im Ansichtsmodus verwenden",
     "useNumericFormat": "Verwenden Sie das numerische Format",
     "dataUrl": "Daten-URL",
     "pattern": "Regex-Muster",
     "unique": "Einheitlich",
-    "foreignName": "Fremdfeld"
+    "foreignName": "Fremdfeld",
+    "useDisabledTextareaInViewMode": "Deaktiviertes Textfeld im Ansichtsmodus verwenden"
   },
   "messages": {
     "selectEntityType": "Entitätstyp im linken Menü auswählen.",

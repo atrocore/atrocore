@@ -38,6 +38,11 @@
       {
          "name":"audited",
          "type":"bool"
+      },
+      {
+         "name":"useDisabledTextareaInViewMode",
+         "type": "bool",
+         "default":false
       }
    ],
    "filter": true,

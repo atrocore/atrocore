@@ -154,7 +154,8 @@
     "strip": "Стрип",
     "pattern": "Регулярное выражение",
     "unique": "Unique",
-    "foreignName": "Поле связанной сущности"
+    "foreignName": "Поле связанной сущности",
+    "useDisabledTextareaInViewMode": "Использовать нередактируемую текстовую область в режиме просмотра"
   },
   "messages": {
     "selectEntityType": "Выберите тип сущности в левом меню.",
