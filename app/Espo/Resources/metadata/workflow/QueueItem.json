@@ -19,7 +19,6 @@
         "Running"
       ],
       "Pending": [
-        "Running",
         "Success",
         "Canceled",
         "Failed"
