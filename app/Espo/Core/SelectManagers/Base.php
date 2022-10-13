@@ -302,6 +302,7 @@ class Base
     protected function where($where, &$result)
     {
         $this->prepareResult($result);
+        $this->prepareRelationshipFilterField($where);
 
         foreach ($where as $item) {
             if (!isset($item['type'])) continue;
@@ -326,6 +327,45 @@ class Base
         $whereClause = $this->convertWhere($where, false, $result);
 
         $result['whereClause'] = array_merge($result['whereClause'], $whereClause);
+    }
+
+    protected function prepareRelationshipFilterField(array &$where): void
+    {
+        foreach ($where as $k => $item) {
+            if (empty($item['attribute'])) {
+                continue 1;
+            }
+
+            $defs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $item['attribute']]);
+
+            if (empty($defs['relationshipFilterField']) || empty($defs['relationshipFilterForeignField'])) {
+                continue 1;
+            }
+
+            switch ($item['type']) {
+                case 'linkedWith':
+                case 'notLinkedWith':
+                    $where[$k] = [
+                        'type'      => $item['type'],
+                        'attribute' => $defs['relationshipFilterField'],
+                        'subQuery'  => [
+                            [
+                                'type'      => 'in',
+                                'attribute' => $defs['relationshipFilterForeignField'] . 'Id',
+                                'value'     => $item['value']
+                            ]
+                        ]
+                    ];
+                    break;
+                case 'isNotLinked':
+                case 'isLinked':
+                    $where[$k] = [
+                        'type'      => $item['type'],
+                        'attribute' => 'productChannels'
+                    ];
+                    break;
+            }
+        }
     }
 
     public function convertWhere(array $where, $ignoreAdditionaFilterTypes = false, &$result = null)
