@@ -168,12 +168,13 @@
     "readOnly": "Read-only",
     "maxFileSize": "Max file size (Mb)",
     "isPersonalData": "Is personal data",
-    "useIframe": "Use iframe",
+    "useIframe": "Use iframe in view mode",
     "useNumericFormat": "Use numeric format",
     "strip": "Strip",
     "pattern": "Regex pattern",
     "foreignName": "Foreign field",
-    "unique": "Unique"
+    "unique": "Unique",
+    "useDisabledTextareaInViewMode": "Use disabled textarea in view mode"
   },
   "messages": {
     "thousandSeparatorEqualsDecimalMark": "The thousands separator character can not be the same as the decimal point character.",
