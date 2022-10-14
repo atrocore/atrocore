@@ -40,18 +40,26 @@ namespace Espo\Services;
 use Espo\Core\Container;
 use Espo\Core\Services\Base;
 use Espo\ORM\Entity;
+use Espo\Entities\QueueItem;
 
 /**
  * Class QueueManagerBase
  */
 abstract class QueueManagerBase extends Base implements QueueManagerServiceInterface
 {
+    protected QueueItem $qmItem;
+
     /**
      * @inheritDoc
      */
     public function getNotificationMessage(Entity $queueItem): string
     {
         return sprintf($this->translate('queueItemDone', 'notificationMessages', 'QueueItem'), $queueItem->get('name'), $queueItem->get('status'));
+    }
+
+    public function setQueueItem(QueueItem $qmItem): void
+    {
+        $this->qmItem = $qmItem;
     }
 
     /**

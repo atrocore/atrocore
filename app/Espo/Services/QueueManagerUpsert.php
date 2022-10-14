@@ -37,14 +37,30 @@ declare(strict_types=1);
 
 namespace Espo\Services;
 
+use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
-use Espo\Entities\QueueItem as QueueItemEntity;
 
-interface QueueManagerServiceInterface
+class QueueManagerUpsert extends QueueManagerBase
 {
-    public function run(array $data = []): bool;
+    public function run(array $data = []): bool
+    {
+        try {
+            $result = $this->getContainer()->get('serviceFactory')->create('MassActions')->upsert((array)Json::decode(Json::encode($data)));
+            $message = Json::encode($result);
+            $result = true;
+        } catch (\Throwable $e) {
+            $message = $e->getMessage();
+            $result = false;
+        }
 
-    public function setQueueItem(QueueItemEntity $qmItem): void;
+        $this->qmItem->set('message', $message);
+        $this->getEntityManager()->saveEntity($this->qmItem, ['skipAll' => true]);
 
-    public function getNotificationMessage(Entity $queueItem): string;
+        return $result;
+    }
+
+    public function getNotificationMessage(Entity $queueItem): string
+    {
+        return '';
+    }
 }

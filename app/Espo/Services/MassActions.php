@@ -43,6 +43,91 @@ use Espo\Core\Utils\Metadata;
 
 class MassActions extends HasContainer
 {
+    public function upsertViaQm(array $data): array
+    {
+        $jobId = $this
+            ->getContainer()
+            ->get('queueManager')
+            ->createQueueItem('Action Upsert', 'QueueManagerUpsert', $data);
+
+        return [
+            "queueItemId" => $jobId
+        ];
+    }
+
+    public function upsert(array $data): array
+    {
+        $result = [];
+        foreach ($data as $k => $node) {
+            if (!property_exists($node, 'entity')) {
+                $result[$k] = [
+                    'status'  => 'Failed',
+                    'stored'  => false,
+                    'message' => "'entity' parameter is required."
+                ];
+                continue 1;
+            }
+
+            if (!property_exists($node, 'payload')) {
+                $result[$k] = [
+                    'status'  => 'Failed',
+                    'stored'  => false,
+                    'message' => "'payload' parameter is required."
+                ];
+                continue 1;
+            }
+
+            try {
+                $service = $this->getContainer()->get('serviceFactory')->create($node->entity);
+            } catch (\Throwable $e) {
+                $result[$k] = [
+                    'status'  => 'Failed',
+                    'stored'  => false,
+                    'message' => $e->getMessage()
+                ];
+                continue 1;
+            }
+
+            if (property_exists($node->payload, 'id')) {
+                $existed = $this->getEntityManager()->getEntity($node->entity, $node->payload->id);
+                if (!empty($existed)) {
+                    try {
+                        $updated = $service->updateEntity($existed->get('id'), $node->payload);
+                        $result[$k] = [
+                            'status' => 'Updated',
+                            'stored' => true,
+                            'entity' => $updated->toArray()
+                        ];
+                    } catch (\Throwable $e) {
+                        $result[$k] = [
+                            'status'  => 'Failed',
+                            'stored'  => false,
+                            'message' => 'Code: ' . $e->getCode() . '. Message: ' . $e->getMessage()
+                        ];
+                    }
+                    continue 1;
+                }
+            }
+
+            try {
+                $created = $service->createEntity($node->payload);
+                $result[$k] = [
+                    'status' => 'Created',
+                    'stored' => true,
+                    'entity' => $created->toArray()
+                ];
+            } catch (\Throwable $e) {
+                $result[$k] = [
+                    'status'  => 'Failed',
+                    'stored'  => false,
+                    'message' => 'Code: ' . $e->getCode() . '. Message: ' . $e->getMessage()
+                ];
+            }
+        }
+
+        return $result;
+    }
+
     /**
      * Add relation to entities
      *

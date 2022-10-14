@@ -86,7 +86,7 @@ class QueueItem extends AbstractConsole
         // get data
         $data = json_decode(json_encode($item->get('data')), true);
 
-        // run
+        $service->setQueueItem($item);
         $service->run($data);
 
         self::show('Queue Manager item ran!', self::SUCCESS, true);
