@@ -175,18 +175,19 @@ class OpenApiGenerator
                                         ],
                                         'example' => [
                                             [
-                                                'entity'  => 'Category',
+                                                'entity'  => 'Brand',
                                                 'payload' => [
-                                                    'id'   => 'some-category-id-1',
-                                                    'name' => 'Some category name 1'
+                                                    'id'   => '1111122222',
+                                                    'name' => 'Some Brand name',
+                                                    'nameDeDe' => 'Irgendein Markenname',
+                                                    'code' => 'b_1111122222'
                                                 ]
                                             ],
                                             [
                                                 'entity'  => 'Product',
                                                 'payload' => [
-                                                    'id'            => 'some-product-id-1',
-                                                    'name'          => 'Some product name 1',
-                                                    'categoriesIds' => ['some-category-id-1']
+                                                    'name'    => 'Some product name',
+                                                    'brandId' => '1111122222'
                                                 ]
                                             ]
                                         ]
