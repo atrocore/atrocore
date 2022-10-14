@@ -51,7 +51,7 @@ class MassActions extends HasContainer
             ->createQueueItem('Action Upsert', 'QueueManagerUpsert', $data);
 
         return [
-            "jobId" => $jobId
+            "queueItemId" => $jobId
         ];
     }
 
