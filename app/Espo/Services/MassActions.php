@@ -94,9 +94,9 @@ class MassActions extends HasContainer
                     try {
                         $updated = $service->updateEntity($existed->get('id'), $node->payload);
                         $result[$k] = [
-                            'status'  => 'Updated',
-                            'stored'  => true,
-                            'message' => $updated->toArray()
+                            'status' => 'Updated',
+                            'stored' => true,
+                            'entity' => $updated->toArray()
                         ];
                     } catch (\Throwable $e) {
                         $result[$k] = [
@@ -112,9 +112,9 @@ class MassActions extends HasContainer
             try {
                 $created = $service->createEntity($node->payload);
                 $result[$k] = [
-                    'status'  => 'Created',
-                    'stored'  => true,
-                    'message' => $created->toArray()
+                    'status' => 'Created',
+                    'stored' => true,
+                    'entity' => $created->toArray()
                 ];
             } catch (\Throwable $e) {
                 $result[$k] = [

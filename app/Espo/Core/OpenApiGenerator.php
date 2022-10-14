@@ -56,22 +56,22 @@ class OpenApiGenerator
     public function getData(): array
     {
         $result = [
-            'openapi' => '3.0.0',
-            'info'    => [
+            'openapi'    => '3.0.0',
+            'info'       => [
                 'version'     => Composer::getCoreVersion(),
                 'title'       => 'AtroCore REST API documentation',
                 'description' => "This is a REST API documentation for AtroCore data platform and its modules (AtroPIM, AtroDAM and others), which is based on [OpenAPI (Swagger) Specification](https://swagger.io/specification/). You can generate your client [here](https://openapi-generator.tech/docs/generators).<br><br><h3>Video tutorials:</h3><ul><li>[How to authorize?](https://youtu.be/GWfNRvCswXg)</li><li>[How to select specific fields?](https://youtu.be/i7o0aENuyuY)</li><li>[How to filter data records?](https://youtu.be/irgWkN4wlkM)</li></ul>"
             ],
-            'servers'      => [
+            'servers'    => [
                 [
                     'url' => '/api/v1'
                 ]
             ],
-            'tags'         => [
+            'tags'       => [
                 ['name' => 'App']
             ],
-            'paths'        => [
-                '/App/user' => [
+            'paths'      => [
+                '/App/user'                  => [
                     'get' => [
                         'tags'        => ['App'],
                         "summary"     => "Generate authorization token and return authorized user data.",
@@ -89,21 +89,21 @@ class OpenApiGenerator
                                 ]
                             ],
                             [
-                                "name"     => "Authorization-Token-Lifetime",
-                                "in"       => "header",
-                                "required" => false,
+                                "name"        => "Authorization-Token-Lifetime",
+                                "in"          => "header",
+                                "required"    => false,
                                 "description" => "Lifetime should be set in hours. 0 means no expiration. If this parameter is not passed, the globally configured parameter is used.",
-                                "schema"   => [
+                                "schema"      => [
                                     "type"    => "integer",
                                     "example" => "0"
                                 ]
                             ],
                             [
-                                "name"     => "Authorization-Token-Idletime",
-                                "in"       => "header",
-                                "required" => false,
+                                "name"        => "Authorization-Token-Idletime",
+                                "in"          => "header",
+                                "required"    => false,
                                 "description" => "Idletime should be set in hours. 0 means no expiration. If this parameter is not passed, the globally configured parameter is used.",
-                                "schema"   => [
+                                "schema"      => [
                                     "type"    => "integer",
                                     "example" => "0"
                                 ]
@@ -145,9 +145,107 @@ class OpenApiGenerator
                             ],
                         ]
                     ]
+                ],
+                '/MassActions/action/upsert' => [
+                    'post' => [
+                        'tags'        => ['MassActions'],
+                        "summary"     => "Bulk create and bulk update.",
+                        "description" => "Bulk create and bulk update.",
+                        "operationId" => "upsert",
+                        'security'    => [['Authorization-Token' => []]],
+                        'parameters'  => [
+                            [
+                                "name"     => "Use-Queue",
+                                "in"       => "header",
+                                "required" => false,
+                                "schema"   => [
+                                    "type"    => "boolean",
+                                    "example" => "false"
+                                ]
+                            ],
+                        ],
+                        'requestBody' => [
+                            'required' => true,
+                            'content'  => [
+                                'application/json' => [
+                                    'schema' => [
+                                        "type"    => "array",
+                                        "items"   => [
+                                            "type" => "object",
+                                        ],
+                                        'example' => [
+                                            [
+                                                'entity'  => 'Category',
+                                                'payload' => [
+                                                    'id'   => 'some-category-id-1',
+                                                    'name' => 'Some category name 1'
+                                                ]
+                                            ],
+                                            [
+                                                'entity'  => 'Product',
+                                                'payload' => [
+                                                    'id'            => 'some-product-id-1',
+                                                    'name'          => 'Some product name 1',
+                                                    'categoriesIds' => ['some-category-id-1']
+                                                ]
+                                            ]
+                                        ]
+                                    ],
+                                ]
+                            ],
+                        ],
+                        "responses"   => [
+                            "200" => [
+                                "description" => "OK",
+                                "content"     => [
+                                    "application/json" => [
+                                        "schema" => [
+                                            "type"    => "array",
+                                            "items"   => [
+                                                "type" => "object"
+                                            ],
+                                            'example' => [
+                                                [
+                                                    'status'  => 'Failed',
+                                                    'stored'  => false,
+                                                    'message' => "'entity' parameter is required."
+                                                ],
+                                                [
+                                                    'status' => 'Created',
+                                                    'stored' => true,
+                                                    'entity' => [
+                                                        'id'   => 'some-product-id-1',
+                                                        'name' => 'Some product name 1'
+                                                    ]
+                                                ]
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ],
+                            "304" => [
+                                "description" => "Not Modified"
+                            ],
+                            "400" => [
+                                "description" => "Bad Request"
+                            ],
+                            "401" => [
+                                "description" => "Unauthorized"
+                            ],
+                            "403" => [
+                                "description" => "Forbidden"
+                            ],
+                            "404" => [
+                                "description" => "Not Found"
+                            ],
+                            "500" => [
+                                "description" => "Internal Server Error"
+                            ],
+                        ]
+                    ]
                 ]
             ],
-            'components'   => [
+            'components' => [
                 'securitySchemes' => [
                     'basicAuth'           => [
                         'type'   => 'http',
