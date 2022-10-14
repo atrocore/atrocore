@@ -113,6 +113,9 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
                     data.rows = this.rowsMin;
                 }
             }
+            if (this.mode === 'detail' && this.params.useDisabledTextareaInViewMode) {
+                data.rows = this.params.rows;
+            }
             data.valueIsSet = this.model.has(this.name);
             return data;
         },
