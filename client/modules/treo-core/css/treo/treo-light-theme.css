@@ -19520,7 +19520,7 @@ table.table > thead th > div > a {
   #main .catalog-tree-panel {
     position: fixed;
     top: 56px;
-    height: calc(100% - 47px);
+    height: calc(100% - 56px);
     overflow-y: auto;
     z-index: 2;
   }
