@@ -82,7 +82,9 @@ class QueueManager extends Injectable
             return false;
         }
 
-        return $this->createQueueItem($name, $serviceName, $data, $priority, $md5Hash);
+        $id = $this->createQueueItem($name, $serviceName, $data, $priority, $md5Hash);
+
+        return !empty($id);
     }
 
     public function tryAgain(string $id): bool
@@ -103,7 +105,7 @@ class QueueManager extends Injectable
         return true;
     }
 
-    protected function createQueueItem(string $name, string $serviceName, array $data, string $priority, string $md5Hash): bool
+    public function createQueueItem(string $name, string $serviceName, array $data = [], string $priority = 'Normal', string $md5Hash = ''): string
     {
         /** @var Repository $repository */
         $repository = $this->getEntityManager()->getRepository('QueueItem');
@@ -144,7 +146,7 @@ class QueueManager extends Injectable
 
         file_put_contents(self::FILE_PATH, '1');
 
-        return true;
+        return $item->get('id');
     }
 
     /**
@@ -227,7 +229,9 @@ class QueueManager extends Injectable
         }
 
         try {
-            $this->getServiceFactory()->create($item->get('serviceName'))->run($data);
+            $service = $this->getServiceFactory()->create($item->get('serviceName'));
+            $service->setQueueItem($item);
+            $service->run($data);
         } catch (\Throwable $e) {
             $this->setStatus($item, 'Failed', $e->getMessage());
             $GLOBALS['log']->error('QM failed: ' . $e->getMessage() . ' ' . $e->getTraceAsString());

@@ -5,6 +5,7 @@
   "Portal": "\\Espo\\Services\\Portal",
   "QueueManagerMassDelete": "\\Espo\\Services\\QueueManagerMassDelete",
   "QueueManagerCreateThumbnails": "\\Espo\\Services\\QueueManagerCreateThumbnails",
+  "QueueManagerUpsert": "\\Espo\\Services\\QueueManagerUpsert",
   "MassActions": "\\Espo\\Services\\MassActions",
   "MassDelete": "\\Espo\\Services\\MassDelete",
   "ScheduledJob": "\\Espo\\Services\\ScheduledJob",

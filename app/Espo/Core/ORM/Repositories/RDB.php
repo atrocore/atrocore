@@ -379,6 +379,8 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         if ($entity->isNew()) {
             if (!$entity->has('id')) {
                 $entity->set('id', Util::generateId());
+            } else {
+                $this->deleteFromDb($entity->id);
             }
         }
 

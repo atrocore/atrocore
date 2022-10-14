@@ -42,6 +42,24 @@ use Espo\Core\Exceptions\Forbidden;
 
 class MassActions extends \Espo\Core\Controllers\Base
 {
+    public function actionUpsert($params, $data, $request)
+    {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+
+        $useQueue = $request->headers('use-queue');
+        $viaQm = $useQueue === '1' || strtolower($useQueue) === 'true';
+
+        $data = (array)$data;
+
+        if ($viaQm) {
+            return $this->getService('MassActions')->upsertViaQm($data);
+        }
+
+        return $this->getService('MassActions')->upsert($data);
+    }
+
     public function actionAddRelation($params, $data, $request): array
     {
         if (!$request->isPost()) {
