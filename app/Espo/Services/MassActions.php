@@ -37,12 +37,19 @@ declare(strict_types=1);
 
 namespace Espo\Services;
 
+use Dam\Entities\ValidationRule;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Services\HasContainer;
 use Espo\Core\Utils\Metadata;
 
 class MassActions extends HasContainer
 {
+    protected function init()
+    {
+        $this->addDependency('selectManagerFactory');
+        parent::init();
+    }
+
     public function upsertViaQm(array $data): array
     {
         $jobId = $this
@@ -61,8 +68,8 @@ class MassActions extends HasContainer
         foreach ($data as $k => $node) {
             if (!property_exists($node, 'entity')) {
                 $result[$k] = [
-                    'status'  => 'Failed',
-                    'stored'  => false,
+                    'status' => 'Failed',
+                    'stored' => false,
                     'message' => "'entity' parameter is required."
                 ];
                 continue 1;
@@ -70,8 +77,8 @@ class MassActions extends HasContainer
 
             if (!property_exists($node, 'payload')) {
                 $result[$k] = [
-                    'status'  => 'Failed',
-                    'stored'  => false,
+                    'status' => 'Failed',
+                    'stored' => false,
                     'message' => "'payload' parameter is required."
                 ];
                 continue 1;
@@ -81,8 +88,8 @@ class MassActions extends HasContainer
                 $service = $this->getContainer()->get('serviceFactory')->create($node->entity);
             } catch (\Throwable $e) {
                 $result[$k] = [
-                    'status'  => 'Failed',
-                    'stored'  => false,
+                    'status' => 'Failed',
+                    'stored' => false,
                     'message' => $e->getMessage()
                 ];
                 continue 1;
@@ -100,8 +107,8 @@ class MassActions extends HasContainer
                         ];
                     } catch (\Throwable $e) {
                         $result[$k] = [
-                            'status'  => 'Failed',
-                            'stored'  => false,
+                            'status' => 'Failed',
+                            'stored' => false,
                             'message' => 'Code: ' . $e->getCode() . '. Message: ' . $e->getMessage()
                         ];
                     }
@@ -118,8 +125,8 @@ class MassActions extends HasContainer
                 ];
             } catch (\Throwable $e) {
                 $result[$k] = [
-                    'status'  => 'Failed',
-                    'stored'  => false,
+                    'status' => 'Failed',
+                    'stored' => false,
                     'message' => 'Code: ' . $e->getCode() . '. Message: ' . $e->getMessage()
                 ];
             }
@@ -131,8 +138,8 @@ class MassActions extends HasContainer
     /**
      * Add relation to entities
      *
-     * @param array  $ids
-     * @param array  $foreignIds
+     * @param array $ids
+     * @param array $foreignIds
      * @param string $entityType
      * @param string $link
      *
@@ -180,11 +187,11 @@ class MassActions extends HasContainer
                     } catch (BadRequest $e) {
                         $related--;
                         $notRelated[] = [
-                            'id'          => $entity->get('id'),
-                            'name'        => $entity->get('name'),
-                            'foreignId'   => $foreignEntity->get('id'),
+                            'id' => $entity->get('id'),
+                            'name' => $entity->get('name'),
+                            'foreignId' => $foreignEntity->get('id'),
                             'foreignName' => $foreignEntity->get('name'),
-                            'message'     => utf8_encode($e->getMessage())
+                            'message' => utf8_encode($e->getMessage())
                         ];
                     }
                 }
@@ -197,8 +204,8 @@ class MassActions extends HasContainer
     /**
      * Remove relation from entities
      *
-     * @param array  $ids
-     * @param array  $foreignIds
+     * @param array $ids
+     * @param array $foreignIds
      * @param string $entityType
      * @param string $link
      *
@@ -246,11 +253,11 @@ class MassActions extends HasContainer
                     } catch (BadRequest $e) {
                         $unRelated--;
                         $notUnRelated[] = [
-                            'id'          => $entity->get('id'),
-                            'name'        => $entity->get('name'),
-                            'foreignId'   => $foreignEntity->get('id'),
+                            'id' => $entity->get('id'),
+                            'name' => $entity->get('name'),
+                            'foreignId' => $foreignEntity->get('id'),
                             'foreignName' => $foreignEntity->get('name'),
-                            'message'     => utf8_encode($e->getMessage())
+                            'message' => utf8_encode($e->getMessage())
                         ];
                     }
                 }
@@ -260,12 +267,56 @@ class MassActions extends HasContainer
         return ['message' => $this->createRelationMessage($unRelated, $notUnRelated, $entityType, $foreignEntityType, false)];
     }
 
+
+    public function addRelationByWhere(array $where, array $foreignIds, string $entityType, string $link): array
+    {
+        $selectParams =   $this->getSelectManagerFactory()->create($entityType)->getSelectParams(['where' => $where]);
+        $this->getEntityManager()->getRepository($entityType)->handleSelectParams($selectParams);
+        $query = $this
+            ->getEntityManager()
+            ->getQuery()
+            ->createSelectQuery($entityType, array_merge($selectParams, ['select' => ['id']]));
+
+        $ids = $this
+            ->getEntityManager()
+            ->getPDO()
+            ->query($query)
+            ->fetchAll(\PDO::FETCH_COLUMN);
+
+        return $this->addRelation($ids, $foreignIds, $entityType, $link);
+    }
+
+    public function removeRelationByWhere(array $where, array $foreignIds, string $entityType, string $link): array
+    {
+        $selectParams =   $this->getSelectManagerFactory()->create($entityType)->getSelectParams(['where' => $where]);
+        $this->getEntityManager()->getRepository($entityType)->handleSelectParams($selectParams);
+        $query = $this
+            ->getEntityManager()
+            ->getQuery()
+            ->createSelectQuery($entityType, array_merge($selectParams, ['select' => ['id']]));
+
+        $ids = $this
+            ->getEntityManager()
+            ->getPDO()
+            ->query($query)
+            ->fetchAll(\PDO::FETCH_COLUMN);
+
+        return $this->removeRelation($ids, $foreignIds, $entityType, $link);
+    }
+
+
+    protected function getSelectManagerFactory()
+    {
+        return $this->getContainer()->get('selectManagerFactory');
+    }
+
+
     /**
-     * @param int    $success
-     * @param array  $errors
+     * @param int $success
+     * @param array $errors
      * @param string $entityType
      * @param string $foreignEntityType
-     * @param bool   $relate
+     * @param bool $relate
      *
      * @return string
      */
@@ -335,7 +386,7 @@ class MassActions extends HasContainer
     /**
      * @param string $name
      * @param string $serviceName
-     * @param array  $data
+     * @param array $data
      *
      * @return bool
      */

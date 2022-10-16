@@ -82,12 +82,18 @@ class MassActions extends \Espo\Core\Controllers\Base
             $foreignIds = explode(',', $request->get('foreignIds'));
         }
 
-        if (empty($ids) || empty($foreignIds) || !isset($params['scope']) || !isset($params['link'])) {
+        if ((empty($ids) && empty($data->byWhere)) || empty($foreignIds) || !isset($params['scope']) || !isset($params['link'])) {
             throw new BadRequest();
         }
 
         if (!$this->getAcl()->check($params['scope'], 'edit')) {
             throw new Forbidden();
+        }
+
+        if (!empty($data->byWhere)) {
+            $where = json_decode(json_encode($data->where), true);
+            return $this->getService('MassActions')
+                ->addRelationByWhere($where, $foreignIds, $params['scope'], $params['link']);
         }
 
         return $this
@@ -117,12 +123,18 @@ class MassActions extends \Espo\Core\Controllers\Base
             $foreignIds = explode(',', $request->get('foreignIds'));
         }
 
-        if (empty($ids) || empty($foreignIds) || !isset($params['scope']) || !isset($params['link'])) {
+        if ((empty($ids) && empty($data->byWhere)) || empty($foreignIds) || !isset($params['scope']) || !isset($params['link'])) {
             throw new BadRequest();
         }
 
         if (!$this->getAcl()->check($params['scope'], 'edit')) {
             throw new Forbidden();
+        }
+
+        if (!empty($data->byWhere)) {
+            $where = json_decode(json_encode($data->where), true);
+            return $this->getService('MassActions')
+                ->removeRelationByWhere($where, $foreignIds, $params['scope'], $params['link']);
         }
 
         return $this
