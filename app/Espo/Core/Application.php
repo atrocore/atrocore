@@ -666,12 +666,17 @@ class Application
      */
     private function logoutAll(): void
     {
-        $this->getPDO()->exec("DELETE FROM auth_token WHERE lifetime IS NULL AND idle_time IS NULL");
-    }
+        /** @var \Doctrine\DBAL\Connection $connection */
+        $connection = $this->getContainer()->get('connection');
 
-    private function getPDO(): \PDO
-    {
-        return $this->getContainer()->get('pdo');
+        $sql = $connection
+            ->createQueryBuilder()
+            ->delete('auth_token')
+            ->andwhere('lifetime IS NULL')
+            ->andWhere('idle_time IS NULL')
+            ->getSQL();
+
+        $connection->executeQuery($sql);
     }
 
     private function getEntityManager(): EntityManager
