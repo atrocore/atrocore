@@ -171,7 +171,9 @@ Espo.define('views/modals/select-entity-and-records', 'views/modals/select-recor
         getDataForUpdateRelation(foreignIds, viewModel) {
             return {
                 ids: this.options.checkedList,
-                foreignIds: foreignIds
+                foreignIds: foreignIds,
+                byWhere:  this.options.byWhere,
+                where: this.options.where
             }
         },
 

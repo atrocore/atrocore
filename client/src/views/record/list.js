@@ -36,17 +36,17 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
     return Dep.extend({
 
-        template: 'record/list',/**
+        template: 'record/list', /**
          * @param {String} Type of the list. Can be 'list', 'listSmall'.
          */
         type: 'list',
 
         name: 'list',
 
-        presentationType: 'table',/**
+        presentationType: 'table', /**
          * @param {Bool} If true checkboxes will be shown.
          */
-        checkboxes: true,/**
+        checkboxes: true, /**
          * @param {Bool} If true clicking on the record link will trigger 'select' event with model passed.
          */
         selectable: false,
@@ -144,7 +144,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             },
             'click .select-all': function (e) {
                 if (!this.checkAllResultDisabled) {
-                    if (this.allResultIsChecked ) {
+                    if (this.allResultIsChecked) {
                         this.unselectAllResult();
                     } else {
                         this.selectAllResult();
@@ -177,7 +177,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }
             },
             'click tr': function (e) {
-                if (e.target.tagName === 'TD' && !this.allResultIsChecked ) {
+                if (e.target.tagName === 'TD' && !this.allResultIsChecked) {
                     const row = $(e.currentTarget);
                     const id = row.data('id');
                     const $target = row.find('.record-checkbox');
@@ -291,10 +291,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             this.trigger('check');
-        },/**
+        }, /**
          * @param {string} or {bool} ['both', 'top', 'bottom', false, true] Where to display paginations.
          */
-        pagination: false,/**
+        pagination: false, /**
          * @param {bool} To dispaly table header with column names.
          */
         header: true,
@@ -307,7 +307,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         quickDetailDisabled: false,
 
-        quickEditDisabled: false,/**
+        quickEditDisabled: false, /**
          * @param {array} Columns layout. Will be convered in 'Bull' typed layout for a fields rendering.
          *
          */
@@ -413,9 +413,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.$el.find('input.record-checkbox').prop('checked', true).attr('disabled', 'disabled');
             this.$el.find('input.select-all').prop('checked', true);
 
-            this.massActionList.forEach(function(item) {
+            this.massActionList.forEach(function (item) {
                 if (!~this.checkAllResultMassActionList.indexOf(item)) {
-                    this.$el.find('div.list-buttons-container .actions li a.mass-action[data-action="'+item+'"]').parent().addClass('hidden');
+                    this.$el.find('div.list-buttons-container .actions li a.mass-action[data-action="' + item + '"]').parent().addClass('hidden');
                 }
             }, this);
 
@@ -435,9 +435,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.$el.find('input.select-all').prop('checked', false);
 
 
-            this.massActionList.forEach(function(item) {
+            this.massActionList.forEach(function (item) {
                 if (!~this.checkAllResultMassActionList.indexOf(item)) {
-                    this.$el.find('div.list-buttons-container .actions li a.mass-action[data-action="'+item+'"]').parent().removeClass('hidden');
+                    this.$el.find('div.list-buttons-container .actions li a.mass-action[data-action="' + item + '"]').parent().removeClass('hidden');
                 }
             }, this);
         },
@@ -573,9 +573,18 @@ Espo.define('views/record/list', 'view', function (Dep) {
         massActionFollow: function () {
             var count = this.checkedList.length;
 
-            var idList = [];
+            var ids = [];
+            var data = {};
+            if (this.allResultIsChecked) {
+                data.where = this.collection.getWhere();
+                data.selectData = this.collection.data || {};
+                data.byWhere = true;
+            } else {
+                data.ids = ids;
+            }
+
             for (var i in this.checkedList) {
-                idList.push(this.checkedList[i]);
+                ids.push(this.checkedList[i]);
             }
 
             var confirmMsg = this.translate('confirmMassFollow', 'messages').replace('{count}', count.toString());
@@ -584,9 +593,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 confirmText: this.translate('Follow')
             }, function () {
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
-                this.ajaxPostRequest(this.entityType + '/action/massFollow', {
-                    ids: idList
-                }).then(function (result) {
+                this.ajaxPostRequest(this.entityType + '/action/massFollow', data).then(function (result) {
                     var resultCount = result.count || 0;
                     var msg = 'massFollowResult';
                     if (resultCount) {
@@ -604,9 +611,18 @@ Espo.define('views/record/list', 'view', function (Dep) {
         massActionUnfollow: function () {
             var count = this.checkedList.length;
 
-            var idList = [];
+            var ids = [];
+            var data = {};
+            if (this.allResultIsChecked) {
+                data.where = this.collection.getWhere();
+                data.selectData = this.collection.data || {};
+                data.byWhere = true;
+            } else {
+                data.ids = ids;
+            }
+
             for (var i in this.checkedList) {
-                idList.push(this.checkedList[i]);
+                ids.push(this.checkedList[i]);
             }
 
             var confirmMsg = this.translate('confirmMassUnfollow', 'messages').replace('{count}', count.toString());
@@ -615,9 +631,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 confirmText: this.translate('Unfollow')
             }, function () {
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
-                this.ajaxPostRequest(this.entityType + '/action/massUnfollow', {
-                    ids: idList
-                }).then(function (result) {
+                this.ajaxPostRequest(this.entityType + '/action/massUnfollow', data).then(function (result) {
                     var resultCount = result.count || 0;
                     var msg = 'massUnfollowResult';
                     if (resultCount) {
@@ -796,8 +810,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.getMetadata().get(['scopes', this.entityType, 'stream']) &&
                 this.getAcl().check(this.entityType, 'stream')
             ) {
-                this.addMassAction('follow');
-                this.addMassAction('unfollow');
+                this.addMassAction('follow', true);
+                this.addMassAction('unfollow', true);
             }
 
             this.setupMassActionItems();
@@ -1309,8 +1323,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 let foreignEntities = this.getForeignEntities();
                 if (foreignEntities.length) {
                     this.massActionList = Espo.Utils.clone(this.massActionList);
+                    this.checkAllResultMassActionList = Espo.Utils.clone(this.checkAllResultMassActionList);
                     this.massActionList.push('addRelation');
                     this.massActionList.push('removeRelation');
+                    this.checkAllResultMassActionList.push('addRelation');
+                    this.checkAllResultMassActionList.push('removeRelation');
                 }
             }
         },
@@ -1376,7 +1393,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     createButton: false,
                     scope: (foreignEntities[0].addRelationCustomDefs || {}).entity || foreignEntities[0].entity,
                     type: type,
-                    checkedList: this.checkedList
+                    checkedList: this.checkedList,
+                    byWhere: this.allResultIsChecked,
+                    where : this.collection.getWhere()
                 }, view => {
                     view.render(() => {
                         this.notify(false);
@@ -1541,7 +1560,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     }
                 }
                 defs.push(item);
-            };
+            }
+            ;
             if (this.rowActionsView && !this.rowActionsDisabled) {
                 defs.push({
                     width: this.rowActionsColumnWidth
@@ -1674,12 +1694,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 view: this.rowActionsView,
                 options: {
                     defs: {
-                        params: {
-                        }
+                        params: {}
                     }
                 }
             };
-        },/**
+        }, /**
          * Returns checked models.
          * @return {Array} Array of models
          */
@@ -1749,7 +1768,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 internalLayout = Espo.Utils.cloneDeep(internalLayout);
                 this.prepareInternalLayout(internalLayout, model);
 
-                var acl =  {
+                var acl = {
                     edit: this.getAcl().checkModel(model, 'edit'),
                     delete: this.getAcl().checkModel(model, 'delete')
                 };
@@ -1757,7 +1776,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.createView(key, 'views/base', {
                     model: model,
                     acl: acl,
-                    el: this.options.el + ' .list-row[data-id="'+key+'"]',
+                    el: this.options.el + ' .list-row[data-id="' + key + '"]',
                     optionsToPass: ['acl'],
                     noCache: true,
                     _layout: {
@@ -1819,7 +1838,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
         showMoreRecords: function (collection, $list, $showMore, callback) {
             collection = collection || this.collection;
 
-            $showMore =  $showMore || this.$el.find('.show-more');
+            $showMore = $showMore || this.$el.find('.show-more');
             $list = $list || this.$el.find(this.listContainerEl);
 
             $showMore.children('a').addClass('disabled');
@@ -1894,7 +1913,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         getRowContainerHtml: function (id) {
-            return '<tr data-id="'+id+'" class="list-row"></tr>';
+            return '<tr data-id="' + id + '" class="list-row"></tr>';
         },
 
         actionQuickView: function (data) {

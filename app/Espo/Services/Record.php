@@ -541,7 +541,7 @@ class Record extends \Espo\Core\Services\Base
         if (!$entityType) {
             $entityType = $this->getEntityType();
         }
-        return $this->getSelectManagerFactory()->create($entityType);
+        return $this->getSelectManagerFactory()->create($entityType);;
     }
 
     protected function storeEntity(Entity $entity)
@@ -2070,17 +2070,37 @@ class Record extends \Espo\Core\Services\Base
 
         $streamService = $this->getStreamService();
 
-        if (array_key_exists('ids', $params)) {
-            $idList = $params['ids'];
-            foreach ($idList as $id) {
-                $entity = $this->getEntity($id);
-                if ($entity && $this->getAcl()->check($entity, 'stream')) {
-                    if ($streamService->followEntity($entity, $userId)) {
-                        $resultIdList[] = $entity->id;
-                    }
+        $ids = [];
+        if (array_key_exists('ids', $params) && is_array($params['ids'])) {
+            $ids = $params['ids'];
+        }
+
+        if (array_key_exists('where', $params)) {
+            $selectParams = $this->getSelectParams(['where' => $params['where']]);
+            $this->getEntityManager()->getRepository($this->getEntityType())->handleSelectParams($selectParams);
+
+            $query = $this
+                ->getEntityManager()
+                ->getQuery()
+                ->createSelectQuery($this->getEntityType(), array_merge($selectParams, ['select' => ['id']]));
+
+            $ids = $this
+                ->getEntityManager()
+                ->getPDO()
+                ->query($query)
+                ->fetchAll(\PDO::FETCH_COLUMN);
+
+        }
+
+        foreach ($ids as $id) {
+            $entity = $this->getEntity($id);
+            if ($entity && $this->getAcl()->check($entity, 'stream')) {
+                if ($streamService->followEntity($entity, $userId)) {
+                    $resultIdList[] = $entity->id;
                 }
             }
         }
+
 
         return $this
             ->dispatchEvent('afterMassFollow', new Event(['params' => $params, 'userId' => $userId, 'result' => ['ids' => $resultIdList, 'count' => count($resultIdList)]]))
@@ -2100,19 +2120,38 @@ class Record extends \Espo\Core\Services\Base
             $userId = $this->getUser()->id;
         }
 
+        $ids = [];
+        if (array_key_exists('ids', $params) && is_array($params['ids'])) {
+            $ids = $params['ids'];
+        }
+
+        if (array_key_exists('where', $params)) {
+            $selectParams = $this->getSelectParams(['where' => $params['where']]);
+            $this->getEntityManager()->getRepository($this->getEntityType())->handleSelectParams($selectParams);
+
+            $query = $this
+                ->getEntityManager()
+                ->getQuery()
+                ->createSelectQuery($this->getEntityType(), array_merge($selectParams, ['select' => ['id']]));
+
+            $ids = $this
+                ->getEntityManager()
+                ->getPDO()
+                ->query($query)
+                ->fetchAll(\PDO::FETCH_COLUMN);
+        }
+
         $streamService = $this->getStreamService();
 
-        if (array_key_exists('ids', $params)) {
-            $idList = $params['ids'];
-            foreach ($idList as $id) {
-                $entity = $this->getEntity($id);
-                if ($entity && $this->getAcl()->check($entity, 'stream')) {
-                    if ($streamService->unfollowEntity($entity, $userId)) {
-                        $resultIdList[] = $entity->id;
-                    }
+        foreach ($ids as $id) {
+            $entity = $this->getEntity($id);
+            if ($entity && $this->getAcl()->check($entity, 'stream')) {
+                if ($streamService->unfollowEntity($entity, $userId)) {
+                    $resultIdList[] = $entity->id;
                 }
             }
         }
+
 
         return $this
             ->dispatchEvent('afterMassUnfollow', new Event(['params' => $params, 'userId' => $userId, 'result' => ['ids' => $resultIdList, 'count' => count($resultIdList)]]))

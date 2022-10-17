@@ -511,7 +511,12 @@ class Record extends Base
             throw new Forbidden();
         }
 
-        if (property_exists($data, 'ids')) {
+        if (property_exists($data, 'where') && !empty($data->byWhere)) {
+            $params['where'] = json_decode(json_encode($data->where), true);
+            if (property_exists($data, 'selectData')) {
+                $params['selectData'] = json_decode(json_encode($data->selectData), true);
+            }
+        } else if (property_exists($data, 'ids')) {
             $params['ids'] = $data->ids;
         }
 
@@ -524,7 +529,12 @@ class Record extends Base
             throw new Forbidden();
         }
 
-        if (property_exists($data, 'ids')) {
+        if (property_exists($data, 'where') && !empty($data->byWhere)) {
+            $params['where'] = json_decode(json_encode($data->where), true);
+            if (property_exists($data, 'selectData')) {
+                $params['selectData'] = json_decode(json_encode($data->selectData), true);
+            }
+        } else if (property_exists($data, 'ids')) {
             $params['ids'] = $data->ids;
         }
 
