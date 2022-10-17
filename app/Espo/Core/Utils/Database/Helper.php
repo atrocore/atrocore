@@ -35,19 +35,11 @@
 
 namespace Espo\Core\Utils\Database;
 
-use Espo\Core\Utils\Util;
-use Espo\ORM\Entity;
-
 class Helper
 {
     private $config;
 
     private $connection;
-
-    protected $drivers = array(
-        'mysqli' => '\Espo\Core\Utils\Database\DBAL\Driver\Mysqli\Driver',
-        'pdo_mysql' => '\Espo\Core\Utils\Database\DBAL\Driver\PDOMySql\Driver',
-    );
 
     public function __construct(\Espo\Core\Utils\Config $config = null)
     {
@@ -67,16 +59,11 @@ class Helper
             }
 
             $connectionParams = $this->getConfig()->get('database');
-
             if (empty($connectionParams['dbname']) || empty($connectionParams['user'])) {
                 return null;
             }
 
-            $connectionParams['driverClass'] = $this->drivers[ $connectionParams['driver'] ];
-            unset($connectionParams['driver']);
-
-            $dbalConfig = new \Doctrine\DBAL\Configuration();
-            $this->connection = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $dbalConfig);
+            $this->connection = \Espo\Core\Factories\Connection::createConnection($connectionParams);
         }
 
         return $this->connection;

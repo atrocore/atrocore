@@ -84,6 +84,7 @@ class Container
             'themeManager'             => \Espo\Core\Factories\ThemeManager::class,
             'queueManager'             => \Espo\Core\QueueManager::class,
             'pseudoTransactionManager' => \Espo\Core\PseudoTransactionManager::class,
+            'connection'               => \Espo\Core\Factories\Connection::class,
             'pdo'                      => \Espo\Core\Factories\Pdo::class,
             'eventManager'             => \Espo\Core\Factories\EventManager::class,
             'fileManager'              => \Espo\Core\Factories\FileManager::class,
