@@ -19585,6 +19585,7 @@ table.table > thead th > div > a {
   body.minimized #main > .record > .detail > .detail-button-container.stick-sub.collapsed {
     margin-left: 265px;
     width: calc(100% - 318px);
+    left: 48px;
   }
 
   #main .detail .row > .overview.collapsed {
