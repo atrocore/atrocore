@@ -103,6 +103,7 @@ class GlobalSearch extends \Espo\Core\Services\Base
             if ($fullTextSearchData) {
                 $hasFullTextSearch = true;
                 $params['select'][] = [$fullTextSearchData['where'], '_relevance'];
+                $relevanceSelectPosition = count($params['select']);
             } else {
                 $params['select'][] = ['VALUE:1.1', '_relevance'];
                 $relevanceSelectPosition = count($params['select']);
