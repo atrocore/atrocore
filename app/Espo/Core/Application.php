@@ -669,14 +669,12 @@ class Application
         /** @var \Doctrine\DBAL\Connection $connection */
         $connection = $this->getContainer()->get('connection');
 
-        $sql = $connection
+        $connection
             ->createQueryBuilder()
             ->delete('auth_token')
             ->andwhere('lifetime IS NULL')
             ->andWhere('idle_time IS NULL')
-            ->getSQL();
-
-        $connection->executeQuery($sql);
+            ->executeQuery();
     }
 
     private function getEntityManager(): EntityManager
