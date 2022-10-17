@@ -40,15 +40,13 @@ namespace Espo\Core\Migration;
 use Espo\Core\Injectable;
 use Treo\Core\Migration\Base;
 
-/**
- * Migration
- */
 class Migration extends Injectable
 {
     public function __construct()
     {
-        $this->addDependency('pdo');
+        $this->addDependency('connection');
         $this->addDependency('config');
+        $this->addDependency('pdo');
     }
 
     /**
@@ -192,7 +190,7 @@ class Migration extends Injectable
             return null;
         }
 
-        return new $className($this->getInjection('pdo'), $this->getInjection('config'));
+        return new $className($this->getInjection('connection'), $this->getInjection('config'), $this->getInjection('pdo'));
     }
 
     /**

@@ -33,61 +33,34 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-namespace Treo\Core\Migration;
+declare(strict_types=1);
 
-use Doctrine\DBAL\Connection;
-use PDO;
-use Espo\Core\Utils\Config;
+namespace Espo\Core\Factories;
 
-class Base
+use Espo\Core\Container;
+use Espo\Core\Interfaces\Factory;
+
+class Connection implements Factory
 {
-    private Connection $connection;
+    protected static array $drivers
+        = [
+            'mysqli'    => '\Espo\Core\Utils\Database\DBAL\Driver\Mysqli\Driver',
+            'pdo_mysql' => '\Espo\Core\Utils\Database\DBAL\Driver\PDOMySql\Driver',
+        ];
 
-    private Config $config;
 
-    private PDO $pdo;
-
-    public function __construct(Connection $connection, Config $config, PDO $pdo)
+    public function create(Container $container)
     {
-        $this->connection = $connection;
-        $this->config = $config;
-        $this->pdo = $pdo;
+        return self::createConnection($container->get('config')->get('database'));
     }
 
-    public function up(): void
+    public static function createConnection(array $params): \Doctrine\DBAL\Connection
     {
-    }
-
-    public function down(): void
-    {
-    }
-
-    protected function renderLine(string $message, bool $break = true)
-    {
-        $result = date('d.m.Y H:i:s') . ' | ' . $message;
-        if ($break) {
-            $result .= PHP_EOL;
+        if (!empty(self::$drivers[$params['driver']])) {
+            $params['driverClass'] = self::$drivers[$params['driver']];
+            unset($params['driver']);
         }
 
-        echo $result;
-    }
-
-    protected function getConnection(): Connection
-    {
-        return $this->connection;
-    }
-
-    protected function getConfig(): Config
-    {
-        return $this->config;
-    }
-
-    /**
-     * @return PDO
-     * @deprecated Method is deprecated, please use getConnection instead.
-     */
-    protected function getPDO(): PDO
-    {
-        return $this->pdo;
+        return \Doctrine\DBAL\DriverManager::getConnection($params, new \Doctrine\DBAL\Configuration());
     }
 }
