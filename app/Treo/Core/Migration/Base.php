@@ -82,6 +82,10 @@ class Base
         return $this->config;
     }
 
+    /**
+     * @return PDO
+     * @deprecated Method is deprecated, please use getConnection instead.
+     */
     protected function getPDO(): PDO
     {
         return $this->pdo;
