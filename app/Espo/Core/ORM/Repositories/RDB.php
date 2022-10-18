@@ -48,6 +48,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 {
     protected $dependencies = array(
         'container',
+        'connection',
         'metadata',
         'config',
         'fieldManagerUtil',
@@ -771,5 +772,10 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
         // dispatch an event
         $this->getInjection('eventManager')->dispatch('Entity', $action, $event);
+    }
+
+    public function getConnection(): \Doctrine\DBAL\Connection
+    {
+        return $this->getInjection('connection');
     }
 }
