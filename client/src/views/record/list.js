@@ -1018,7 +1018,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             if (this.showMore) {
-                if (this.$el.is(':visible') && this.$el.parent().hasClass('modal-body')) {
+                if (this.$el.parent().hasClass('modal-body')) {
                     let parent = this.$el.parent();
 
                     parent.off('scroll');
