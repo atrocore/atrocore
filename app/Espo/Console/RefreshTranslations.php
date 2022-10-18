@@ -37,7 +37,6 @@ declare(strict_types=1);
 
 namespace Espo\Console;
 
-use Espo\Core\DataManager;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Util;
@@ -100,11 +99,22 @@ class RefreshTranslations extends AbstractConsole
      */
     public function run(array $data): void
     {
-        /** @var EntityManager $em */
-        $em = $this->getContainer()->get('entityManager');
+        $this->refresh();
+        $this->getContainer()->get('dataManager')->clearCache();
+
+        self::show('Translations refreshed successfully.', self::SUCCESS);
+    }
+
+    public function refresh(): void
+    {
+        /** @var \Doctrine\DBAL\Connection $connection */
+        $connection = $this->getContainer()->get('connection');
 
         // delete old
-        $em->nativeQuery("DELETE FROM translation WHERE is_customized=0");
+        $connection->createQueryBuilder()->delete('translation')->where('is_customized=:customized')->setParameter('customized', 0)->executeQuery();
+
+        /** @var EntityManager $em */
+        $em = $this->getContainer()->get('entityManager');
 
         $records = self::getSimplifiedTranslates((new Language($this->getContainer()))->getModulesData());
 
@@ -118,10 +128,5 @@ class RefreshTranslations extends AbstractConsole
                 // ignore validation errors
             }
         }
-
-        $this->getContainer()->get('dataManager')->clearCache();
-
-        // render
-        self::show('Translations refreshed successfully.', self::SUCCESS);
     }
 }
