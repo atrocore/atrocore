@@ -35,21 +35,21 @@
 
 namespace Treo\Core\Migration;
 
-use Doctrine\DBAL\Connection;
+use Espo\Core\Utils\Database\Schema\Schema;
 use PDO;
 use Espo\Core\Utils\Config;
 
 class Base
 {
-    private Connection $connection;
+    private Schema $schema;
 
     private Config $config;
 
     private PDO $pdo;
 
-    public function __construct(Connection $connection, Config $config, PDO $pdo)
+    public function __construct(Schema $schema, Config $config, PDO $pdo)
     {
-        $this->connection = $connection;
+        $this->schema = $schema;
         $this->config = $config;
         $this->pdo = $pdo;
     }
@@ -62,19 +62,9 @@ class Base
     {
     }
 
-    protected function renderLine(string $message, bool $break = true)
+    protected function getSchema(): Schema
     {
-        $result = date('d.m.Y H:i:s') . ' | ' . $message;
-        if ($break) {
-            $result .= PHP_EOL;
-        }
-
-        echo $result;
-    }
-
-    protected function getConnection(): Connection
-    {
-        return $this->connection;
+        return $this->schema;
     }
 
     protected function getConfig(): Config
@@ -84,7 +74,7 @@ class Base
 
     /**
      * @return PDO
-     * @deprecated Method is deprecated, please use getConnection instead.
+     * @deprecated Method is deprecated, please use getSchema instead.
      */
     protected function getPDO(): PDO
     {

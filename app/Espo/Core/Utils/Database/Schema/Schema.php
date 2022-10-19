@@ -35,6 +35,7 @@
 
 namespace Espo\Core\Utils\Database\Schema;
 
+use \Doctrine\DBAL\Schema\Schema as DoctrineSchema;
 use Doctrine\DBAL\Types\Type,
     Espo\Core\Utils\Util;
 
@@ -176,6 +177,15 @@ class Schema
         }
     }
 
+    public function getMigrateToSql(DoctrineSchema $fromSchema, DoctrineSchema $toSchema): array
+    {
+        $this->getPlatform()->strictType = true;
+        $result = $this->getComparator()->compareSchemas($fromSchema, $toSchema)->toSql($this->getPlatform());
+        $this->getPlatform()->strictType = false;
+
+        return $result;
+    }
+
     /*
      * Rebuild database schema
      */
@@ -216,9 +226,9 @@ class Schema
     *
     * @return \Doctrine\DBAL\Schema\Schema
     */
-    protected function getCurrentSchema()
+    public function getCurrentSchema()
     {
-        return $this->getConnection()->getSchemaManager()->createSchema();
+        return $this->getConnection()->createSchemaManager()->createSchema();
     }
 
     /*
@@ -241,7 +251,7 @@ class Schema
     */
     public function getDiffSql(\Doctrine\DBAL\Schema\Schema $fromSchema, \Doctrine\DBAL\Schema\Schema $toSchema)
     {
-        $schemaDiff = $this->getComparator()->compare($fromSchema, $toSchema);
+        $schemaDiff = $this->getComparator()->compareSchemas($fromSchema, $toSchema);
 
         return $this->toSql($schemaDiff); //$schemaDiff->toSql($this->getPlatform());
     }

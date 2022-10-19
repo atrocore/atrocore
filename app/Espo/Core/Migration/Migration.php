@@ -190,7 +190,7 @@ class Migration extends Injectable
             return null;
         }
 
-        return new $className($this->getInjection('connection'), $this->getInjection('config'), $this->getInjection('pdo'));
+        return new $className($this->getInjection('schema'), $this->getInjection('config'), $this->getInjection('pdo'));
     }
 
     /**
