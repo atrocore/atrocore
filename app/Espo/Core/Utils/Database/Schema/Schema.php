@@ -100,6 +100,11 @@ class Schema
         $this->ormMetadata = $ormMetadata;
     }
 
+    public function getSchemaConverter(): Converter
+    {
+        return $this->schemaConverter;
+    }
+
     protected function getConfig()
     {
         return $this->config;

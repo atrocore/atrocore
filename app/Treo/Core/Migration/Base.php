@@ -35,6 +35,7 @@
 
 namespace Treo\Core\Migration;
 
+use Doctrine\DBAL\Schema\Schema as DoctrineSchema;
 use Espo\Core\Utils\Database\Schema\Schema;
 use PDO;
 use Espo\Core\Utils\Config;
@@ -70,6 +71,18 @@ class Base
     protected function getConfig(): Config
     {
         return $this->config;
+    }
+
+    protected function migrateSchema(DoctrineSchema $fromSchema, DoctrineSchema $toSchema): void
+    {
+        foreach ($this->getSchema()->getMigrateToSql($fromSchema, $toSchema) as $sql) {
+            $this->getSchema()->getConnection()->executeQuery($sql);
+        }
+    }
+
+    protected function getDbFieldParams(array $params): array
+    {
+        return $this->getSchema()->getSchemaConverter()->getDbFieldParams($params);
     }
 
     /**

@@ -50,12 +50,10 @@ class Converter
 
     private $metadata;
 
-    private $ormMeta = null;
-
     protected $typeList;
 
     //pair ORM => doctrine
-    protected $allowedDbFieldParams = array(
+    protected static $allowedDbFieldParams = array(
         'len' => 'length',
         'default' => 'default',
         'notNull' => 'notnull',
@@ -374,11 +372,11 @@ class Converter
         return $table;
     }
 
-    protected function getDbFieldParams($fieldParams)
+    public function getDbFieldParams(array $fieldParams): array
     {
-        $dbFieldParams = array();
+        $dbFieldParams = [];
 
-        foreach($this->allowedDbFieldParams as $espoName => $dbalName) {
+        foreach (self::$allowedDbFieldParams as $espoName => $dbalName) {
             if (isset($fieldParams[$espoName])) {
                 $dbFieldParams[$dbalName] = $fieldParams[$espoName];
             }
@@ -386,9 +384,9 @@ class Converter
 
         $databaseParams = $this->getConfig()->get('database');
         if (!isset($databaseParams['charset']) || $databaseParams['charset'] == 'utf8mb4') {
-            $dbFieldParams['platformOptions'] = array(
-                'collation' => 'utf8mb4_unicode_ci',
-            );
+            $dbFieldParams['platformOptions'] = [
+                'collation' => 'utf8mb4_unicode_ci'
+            ];
         }
 
         switch ($fieldParams['type']) {
@@ -404,6 +402,9 @@ class Converter
             case 'jsonArray':
             case 'text':
             case 'longtext':
+                if (!empty($dbFieldParams['default'])) {
+                    $dbFieldParams['comment'] = "default={" . $dbFieldParams['default'] . "}";
+                }
                 unset($dbFieldParams['default']); //for db type TEXT can't be defined a default value
                 break;
 
@@ -422,9 +423,7 @@ class Converter
         }
 
         if (isset($fieldParams['utf8mb3']) && $fieldParams['utf8mb3']) {
-            $dbFieldParams['platformOptions'] = array(
-                'collation' => 'utf8_unicode_ci',
-            );
+            $dbFieldParams['platformOptions'] = ['collation' => 'utf8_unicode_ci'];
         }
 
         return $dbFieldParams;
