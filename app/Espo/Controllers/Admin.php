@@ -57,7 +57,7 @@ class Admin extends \Espo\Core\Controllers\Base
     public function postActionClearCache(): bool
     {
         // refresh translations
-        (new \Espo\Console\RefreshTranslations($this->getContainer()))->refresh();
+//        (new \Espo\Console\RefreshTranslations($this->getContainer()))->refresh();
 
         return $this->getContainer()->get('dataManager')->clearCache();
     }
