@@ -1018,31 +1018,31 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             if (this.showMore) {
-                if (this.$el.parent().hasClass('modal-body')) {
-                    let parent = this.$el.parent();
+                setTimeout(function () {
+                    if (this.$el.parent().hasClass('modal-body')) {
+                        let parent = this.$el.parent();
 
-                    parent.off('scroll');
-                    parent.on('scroll', parent, function () {
-                        if (this.collection.total > this.collection.length + this.collection.lengthCorrection && parent.scrollTop() + parent.outerHeight() >= parent.get(0).scrollHeight - 50) {
-                            this.loadMore();
-                        }
-                    }.bind(this));
-                } else if (this.$el.parent().prop('id') === 'main') {
-                    $(window).off('scroll', this.$el);
-                    $(window).on('scroll', this.$el, function () {
-                        if (this.collection.total > this.collection.length + this.collection.lengthCorrection && $(window).scrollTop() + $(window).height() >= $(document).height() - 50) {
-                            this.loadMore();
-                        }
-                    }.bind(this));
-                }
+                        parent.off('scroll');
+                        parent.on('scroll', parent, function () {
+                            if (this.collection.total > this.collection.length + this.collection.lengthCorrection && parent.scrollTop() + parent.outerHeight() >= parent.get(0).scrollHeight - 50) {
+                                this.loadMore(this.$el.find('a[data-action="showMore"]'));
+                            }
+                        }.bind(this));
+                    } else if (this.$el.parent().prop('id') === 'main') {
+                        $(window).off('scroll', this.$el);
+                        $(window).on('scroll', this.$el, function () {
+                            if (this.collection.total > this.collection.length + this.collection.lengthCorrection && $(window).scrollTop() + $(window).height() >= $(document).height() - 50) {
+                                this.loadMore(this.$el.find('li.show-more > div.btn'));
+                            }
+                        }.bind(this));
+                    }
+                }.bind(this), 50)
             }
         },
 
-        loadMore() {
-            const btnMore = this.$el.find('a[data-action="showMore"]');
-
-            if (btnMore.length && !btnMore.hasClass('disabled')) {
-                btnMore.click();
+        loadMore(btn) {
+            if (btn.length && !btn.hasClass('disabled')) {
+                btn.click();
             }
         },
 
