@@ -1025,7 +1025,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         parent.off('scroll');
                         parent.on('scroll', parent, function () {
                             if (this.collection.total > this.collection.length + this.collection.lengthCorrection && parent.scrollTop() + parent.outerHeight() >= parent.get(0).scrollHeight - 50) {
-                                const type = this.getStorage().get('list-small-view-type', this.scope) || 'tree'
+                                let type = 'list';
+                                if (this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy') {
+                                    type = this.getStorage().get('list-small-view-type', this.scope) || 'tree'
+                                }
 
                                 let btn = parent.find('a[data-action="showMore"]');
                                 if (type === 'tree') {
