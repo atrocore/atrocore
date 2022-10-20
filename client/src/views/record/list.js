@@ -1025,14 +1025,21 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         parent.off('scroll');
                         parent.on('scroll', parent, function () {
                             if (this.collection.total > this.collection.length + this.collection.lengthCorrection && parent.scrollTop() + parent.outerHeight() >= parent.get(0).scrollHeight - 50) {
-                                this.loadMore(this.$el.find('a[data-action="showMore"]'));
+                                const type = this.getStorage().get('list-small-view-type', this.scope) || 'tree'
+
+                                let btn = parent.find('a[data-action="showMore"]');
+                                if (type === 'tree') {
+                                    btn = parent.find('li.show-more > div.btn');
+                                }
+
+                                this.loadMore(btn);
                             }
                         }.bind(this));
                     } else if (this.$el.parent().prop('id') === 'main') {
                         $(window).off('scroll', this.$el);
                         $(window).on('scroll', this.$el, function () {
                             if (this.collection.total > this.collection.length + this.collection.lengthCorrection && $(window).scrollTop() + $(window).height() >= $(document).height() - 50) {
-                                this.loadMore(this.$el.find('li.show-more > div.btn'));
+                                this.loadMore(this.$el.find('a[data-action="showMore"]'));
                             }
                         }.bind(this));
                     }
