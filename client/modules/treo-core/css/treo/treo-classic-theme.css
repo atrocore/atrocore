@@ -21435,6 +21435,16 @@ tr.list-row.main-image.global-main-image > .cell:first-child {
     margin-bottom: -2px;
 }
 
+.search-row .filters-button {
+    padding-right: 14px;
+}
+
+.search-row .filters-button .caret {
+    position: absolute;
+    right: 2px;
+    top: 14px;
+}
+
 .search-row .btn-default {
     border: 0;
     margin-bottom: -1px;
