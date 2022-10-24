@@ -29,13 +29,11 @@
     "children": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
-      "massUpdateDisabled": true,
       "noLoad": true
     },
     "parents": {
       "type": "linkMultiple",
       "view": "views/fields/hierarchy-parents",
-      "massUpdateDisabled": true,
       "noLoad": true
     },
     "sortOrder": {
