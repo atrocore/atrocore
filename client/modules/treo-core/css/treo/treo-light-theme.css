@@ -6544,8 +6544,7 @@ button.close {
     width: 300px;
   }
 
-  .modal-body .row > .overview .cell:not(.hidden-cell) + .cell,
-  .modal-body .row > .overview .row > div:nth-last-of-type(1):not(.col-sm-12) {
+  .modal-body .row > .overview .cell:not(.hidden-cell) + .cell {
     padding-left: 16px;
   }
 }
@@ -15434,10 +15433,6 @@ ul.dropdown-menu > li.checkbox:last-child {
 .cell > .field > span.pre-label,
 .cell > .field > span.complex-text p {
   white-space: pre-wrap;
-}
-
-.list table td a:not(.btn) {
-  white-space: pre;
 }
 
 .list table td a:not(.btn) > img {
