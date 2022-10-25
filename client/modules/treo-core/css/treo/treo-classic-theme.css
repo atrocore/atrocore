@@ -6639,8 +6639,12 @@ button.close {
         width: 300px
     }
 
+    .modal-body .row > .overview .cell:not(.hidden-cell):not(.col-sm-12) {
+        padding-right: 16px;
+    }
+
     .modal-body .row > .overview .cell:not(.hidden-cell) + .cell {
-        padding-left: 16px;
+        padding-right: 0;
     }
 }
 
