@@ -4253,7 +4253,7 @@ tbody.collapse.in {
 
 .input-group .form-control {
     position: relative;
-    z-index: 2;
+    z-index: 3;
     float: left;
     width: 100%;
     margin-bottom: 0
@@ -19317,9 +19317,11 @@ input#sn-checkbox-open-in-new-window {
     z-index: 1040;
     white-space: nowrap;
     overflow: hidden;
-    line-height: 47px;
+    height: 47px;
     text-overflow: ellipsis;
     font-size: 14px;
+    display: flex;
+    align-items: center;
 }
 
 .header-title {
@@ -19328,6 +19330,12 @@ input#sn-checkbox-open-in-new-window {
 
 .fixed-header-breadcrumbs > span {
     display: inline-block;
+}
+
+.fixed-header-breadcrumbs > span:last-of-type {
+    display: inline-block;
+    white-space: normal;
+    word-break: break-word;
 }
 
 @media screen and (min-width: 768px) {
@@ -22080,7 +22088,7 @@ select {
 
 .header-breadcrumbs {
     padding-left: 2px;
-    white-space: pre-wrap;
+    white-space: nowrap;
 }
 
 .header-breadcrumbs .header-with-dropdown {

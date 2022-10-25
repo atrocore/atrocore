@@ -4097,7 +4097,7 @@ tbody.collapse.in {
 
 .input-group .form-control {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   float: left;
   width: 100%;
   margin-bottom: 0;
@@ -21264,11 +21264,11 @@ body,
   z-index: 1040;
   white-space: nowrap;
   overflow: hidden;
-  line-height: 56px;
-  -o-text-overflow: ellipsis;
-     text-overflow: ellipsis;
+  height: 56px;
   color: #737373;
   font-size: 14px;
+  display: flex;
+  align-items: center;
 }
 
 .header-title {
@@ -21291,9 +21291,15 @@ body,
   display: inline-block;
 }
 
+.fixed-header-breadcrumbs > span:last-of-type {
+  display: inline-block;
+  white-space: normal;
+  word-break: break-word;
+}
+
 .header-breadcrumbs {
   padding-left: 2px;
-  white-space: pre-wrap;
+  white-space: nowrap;
 }
 
 @media screen and (max-width: 767px) {
