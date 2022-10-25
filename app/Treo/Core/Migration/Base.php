@@ -46,9 +46,9 @@ class Base
 
     private Config $config;
 
-    private PDO $pdo;
+    private ?PDO $pdo;
 
-    public function __construct(Schema $schema, Config $config, PDO $pdo)
+    public function __construct(?PDO $pdo, Config $config, Schema $schema)
     {
         $this->schema = $schema;
         $this->config = $config;
@@ -89,7 +89,7 @@ class Base
      * @return PDO
      * @deprecated Method is deprecated, please use getSchema instead.
      */
-    protected function getPDO(): PDO
+    protected function getPDO(): ?PDO
     {
         return $this->pdo;
     }
