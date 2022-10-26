@@ -165,7 +165,8 @@ class PseudoTransactionManager extends Injectable
             );
         } catch (\PDOException $e) {
             if (!empty($e->errorInfo[1]) && $e->errorInfo[1] == 1062) {
-                return $this->getPDO()->query("SELECT id FROM `pseudo_transaction_job` WHERE md5='$md5'")->fetch(PDO::FETCH_COLUMN);
+                $id = $this->getPDO()->query("SELECT id FROM `pseudo_transaction_job` WHERE md5='$md5'")->fetch(PDO::FETCH_COLUMN);
+                return is_string($id) ? $id : '';
             }
             throw $e;
         }
