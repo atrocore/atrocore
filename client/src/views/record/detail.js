@@ -88,6 +88,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 edit: true
             },
             {
+                name: 'saveAndCreate',
+                label: 'Save and Create',
+                edit: true
+            },
+            {
                 name: 'cancelEdit',
                 label: 'Cancel',
                 edit: true
@@ -206,6 +211,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         actionSaveAndNext: function () {
             this.save(function () {
                 this.getParentView().actionNext();
+            }.bind(this), true);
+        },
+
+        actionSaveAndCreate: function () {
+            this.save(function () {
+                this.getRouter().navigate('#' + this.scope + '/create', {trigger: false});
+                this.getRouter().dispatch(this.scope, 'create');
             }.bind(this), true);
         },
 
@@ -1211,6 +1223,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             this.inlineEditDisabled = this.options.inlineEditDisabled || this.inlineEditDisabled;
             this.portalLayoutDisabled = this.options.portalLayoutDisabled || this.portalLayoutDisabled;
+
+            if (!this.getAcl().check(this.entityType, 'create') || !this.getAcl().check(this.entityType, 'edit')) {
+                this.buttonEditList.splice(this.buttonEditList.findKey(item => item.name === 'saveAndCreate'), 1)
+            }
 
             this.setupActionItems();
             this.setupBeforeFinal();

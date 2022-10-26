@@ -57,6 +57,10 @@ Espo.define('views/record/edit', 'views/record/detail', function (Dep) {
                 label: 'Save and edit next',
             },
             {
+                name: 'saveAndCreate',
+                label: 'Save and Create'
+            },
+            {
                 name: 'cancel',
                 label: 'Cancel',
             }
