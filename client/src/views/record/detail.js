@@ -1225,7 +1225,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.portalLayoutDisabled = this.options.portalLayoutDisabled || this.portalLayoutDisabled;
 
             if (!this.getAcl().check(this.entityType, 'create') || !this.getAcl().check(this.entityType, 'edit')) {
-                this.buttonEditList.splice(this.buttonEditList.findKey(item => item.name === 'saveAndCreate'), 1)
+                this.buttonEditList = (this.buttonEditList || []).filter(item => {
+                    return item.name !== 'saveAndCreate'
+                })
             }
 
             this.setupActionItems();

@@ -74,6 +74,16 @@ Espo.define('views/record/edit', 'views/record/detail', function (Dep) {
 
         duplicateAction: false,
 
+        setup() {
+            if (!this.getAcl().check(this.entityType, 'create')) {
+                this.buttonList = (this.buttonList || []).filter(item => {
+                    return item.name !== 'saveAndCreate'
+                })
+            }
+
+            Dep.prototype.setup.call(this);
+        },
+
         actionSave: function () {
             this.save();
         },
