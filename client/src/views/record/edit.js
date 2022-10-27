@@ -57,6 +57,10 @@ Espo.define('views/record/edit', 'views/record/detail', function (Dep) {
                 label: 'Save and edit next',
             },
             {
+                name: 'saveAndCreate',
+                label: 'Save and Create'
+            },
+            {
                 name: 'cancel',
                 label: 'Cancel',
             }
@@ -69,6 +73,16 @@ Espo.define('views/record/edit', 'views/record/detail', function (Dep) {
         bottomView: 'views/record/edit-bottom',
 
         duplicateAction: false,
+
+        setup() {
+            if (!this.getAcl().check(this.entityType, 'create')) {
+                this.buttonList = (this.buttonList || []).filter(item => {
+                    return item.name !== 'saveAndCreate'
+                })
+            }
+
+            Dep.prototype.setup.call(this);
+        },
 
         actionSave: function () {
             this.save();
