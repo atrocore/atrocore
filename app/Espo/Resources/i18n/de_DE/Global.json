@@ -729,7 +729,9 @@
     "fieldFilter": {
       "allValues": "Alle Werte",
       "filled": "Ausgefüllte Werte",
-      "empty": "Leere Werte"
+      "empty": "Leere Werte",
+      "optional": "Optional",
+      "required": "Erforderlich"
     },
     "languageFilter": {
       "allLanguages": "Alle Sprachen",

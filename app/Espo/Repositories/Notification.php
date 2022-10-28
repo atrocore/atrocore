@@ -123,7 +123,7 @@ class Notification extends RDB
         }
 
         if (!$this->getConfig()->get('mentionEmailNotifications', false)) {
-            return;
+//            return;
         }
 
         if (empty($userId = $notification->get('userId'))) {
@@ -437,12 +437,12 @@ class Notification extends RDB
             if (!array_key_exists($user->id, $this->userIdPortalCacheMap)) {
                 $this->userIdPortalCacheMap[$user->id] = null;
 
-                $portalIdList = $user->getLinkMultipleIdList('portals');
+                $portalIdList = $user->get('portal')->id;
                 $defaultPortalId = $this->getConfig()->get('defaultPortalId');
 
                 $portalId = null;
 
-                if (in_array($defaultPortalId, $portalIdList)) {
+                if (in_array($defaultPortalId, [$portalIdList])) {
                     $portalId = $defaultPortalId;
                 } else {
                     if (count($portalIdList)) {
