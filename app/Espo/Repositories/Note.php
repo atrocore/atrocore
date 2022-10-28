@@ -413,10 +413,13 @@ class Note extends RDB
         }
 
         $result = false;
-        if (!empty($portal = $user->get('portal'))) {
-            $result = (AclManagerFactory::createPortalAclManager($this->getInjection('container'), $portal))->check($user, $parent, $action);
-            if ($result) {
-                return $result;
+        $portals = $user->get('portals');
+        if (count($portals) > 0) {
+            foreach ($portals as $portal) {
+                $result = (AclManagerFactory::createPortalAclManager($this->getInjection('container'), $portal))->check($user, $parent, $action);
+                if ($result) {
+                    return $result;
+                }
             }
         }
 
