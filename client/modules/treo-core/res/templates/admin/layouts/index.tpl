@@ -1,7 +1,9 @@
 <div class="page-header">
     <h3>
         <div class="header-breadcrumbs fixed-header-breadcrumbs">
-            <a href="#Admin">{{translate 'Administration'}}</a>{{translate 'Layout Manager' scope='Admin'}}
+            <div class="breadcrumbs-wrapper">
+                <a href="#Admin">{{translate 'Administration'}}</a>{{translate 'Layout Manager' scope='Admin'}}
+            </div>
         </div>
         <div class="header-title">{{translate 'Layout Manager' scope='Admin'}}</div>
     </h3>

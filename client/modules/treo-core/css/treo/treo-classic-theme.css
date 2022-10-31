@@ -17753,6 +17753,15 @@ table.table {
     margin-bottom: 5px;
 }
 
+.record .button-container > .btn-group {
+    margin-right: 20px;
+}
+
+.record .button-container .nav-pills > li {
+    margin-left: 0;
+    margin-right: 4px;
+}
+
 .list-nested-categories {
     background-color: #fff
 }
@@ -19279,7 +19288,7 @@ input#sn-checkbox-open-in-new-window {
 }
 
 .header-breadcrumbs a, .cell label, .filter label, .page-header .breadcrumb-separator {
-    color: #8e8e8e
+    color: #000000
 }
 
 .fixed-header-breadcrumbs {
