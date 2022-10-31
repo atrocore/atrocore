@@ -1024,7 +1024,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             let result = [
                 {
                     name: "fieldFilter",
-                    options: ["allValues", "filled", "empty"]
+                    options: ["allValues", "filled", "empty", "optional", "required"],
+                    selfExcludedFieldsMap: {
+                        filled: 'empty',
+                        empty: 'filled',
+                        optional: 'required',
+                        required: 'optional'
+                    }
                 }
             ];
 
@@ -1060,7 +1066,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             let selected = [options[0]];
             if (this.getStorage().get(filter.name, 'OverviewFilter')) {
                 selected = [];
-                this.getStorage().get(filter.name, 'OverviewFilter').forEach(option => {
+                (this.getStorage().get(filter.name, 'OverviewFilter') || []).forEach(option => {
                     if (options.includes(option)) {
                         selected.push(option);
                     }
@@ -1100,12 +1106,21 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         if (values.includes(all) && values.length > 1) {
                             values.shift();
                         }
+
+                        if (filter.selfExcludedFieldsMap) {
+                            const excludedValue = filter.selfExcludedFieldsMap[last];
+                            const key = values.findIndex(item => item === excludedValue)
+
+                            if (key !== -1) {
+                                values.splice(key, 1);
+                            }
+                        }
                     }
 
                     this.getStorage().set(filter.name, 'OverviewFilter', values);
                     this.model.trigger('overview-filters-changed');
 
-                    model.set(filter.name, values);
+                    model.set(filter.name, values, { trigger: false });
                     view.reRender();
                 });
                 view.render();
@@ -1373,13 +1388,23 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                 if (!fieldFilter.includes('allValues')) {
                     // hide filled
-                    if (!hide && !fieldFilter.includes('filled')) {
-                        hide = !fieldValues.every(value => this.isEmptyValue(value));
+                    if (!hide && fieldFilter.includes('filled')) {
+                        hide = fieldValues.every(value => this.isEmptyValue(value));
                     }
 
                     // hide empty
-                    if (!hide && !fieldFilter.includes('empty')) {
-                        hide = fieldValues.every(value => this.isEmptyValue(value));
+                    if (!hide && fieldFilter.includes('empty')) {
+                        hide = !fieldValues.every(value => this.isEmptyValue(value));
+                    }
+
+                    // hide optional
+                    if (!hide && fieldFilter.includes('optional')) {
+                        hide = this.isRequiredValue(name);
+                    }
+
+                    // hide required
+                    if (!hide && fieldFilter.includes('required')) {
+                        hide = !this.isRequiredValue(name);
                     }
                 }
 
@@ -1399,6 +1424,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         isEmptyValue(value) {
             return value === null || value === '' || (Array.isArray(value) && !value.length);
+        },
+
+        isRequiredValue(field) {
+            return this.getMetadata().get(['entityDefs', this.scope, 'fields',  field, 'required']) || false
         },
 
         controlFieldVisibility(field, hide) {

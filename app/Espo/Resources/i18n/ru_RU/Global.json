@@ -614,7 +614,9 @@
     "fieldFilter": {
       "allValues": "Все значения",
       "filled": "Заполненые значения",
-      "empty": "Пустые значения"
+      "empty": "Пустые значения",
+      "optional": "Необязательный",
+      "required": "Обязательный"
     },
     "languageFilter": {
       "allLanguages": "Все языки",

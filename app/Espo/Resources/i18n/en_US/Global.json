@@ -612,8 +612,10 @@
     },
     "fieldFilter": {
       "allValues": "All Values",
-      "filled": "Filled values",
-      "empty": "Empty values"
+      "filled": "Filled",
+      "empty": "Empty",
+      "optional": "Optional",
+      "required": "Required"
     },
     "languageFilter": {
       "allLanguages": "All Languages",
