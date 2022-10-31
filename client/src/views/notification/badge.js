@@ -38,24 +38,13 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
 
         template: 'notification/badge',
 
-        notificationsCheckInterval: 1,
-
-        timeout: null,
-
-        intervalConditions: [],
-
         events: {
             'click a[data-action="showNotifications"]': function (e) {
-
                 if (!this.hasView('panel')) {
                     this.showNotifications();
                 } else {
                     this.closeNotifications();
                 }
-
-                setTimeout(function () {
-                    this.checkUpdates();
-                }.bind(this), 100);
             },
             'click a[data-action="close"]': function () {
                 this.closeNotifications();
@@ -63,24 +52,36 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
         },
 
         setup: function () {
-            this.intervalConditions = this.options.intervalConditions || this.intervalConditions;
 
-            this.unreadCount = localStorage.getItem('unreadCount') || 0;
+            let savedCount = null;
 
-            this.once('remove', function () {
-                if (this.timeout) {
-                    clearTimeout(this.timeout);
+            this.listenTo(Backbone.Events, 'publicData', data => {
+                this.hideNotRead();
+                if (data.notReadCount) {
+                    let unreadCount = JSON.parse(data.notReadCount);
+                    if (unreadCount && unreadCount[this.getUser().id]) {
+                        let count = unreadCount[this.getUser().id];
+                        if (count) {
+                            this.showNotRead(count);
+                            if (savedCount && count > savedCount && $('#nofitication.alert-danger').length === 0) {
+                                if ((count - savedCount) > 1) {
+                                    Espo.Ui.notify(this.translate('youHaveNewNotifications'), 'info', 5000);
+                                } else {
+                                    Espo.Ui.notify(this.translate('youHaveNewNotification'), 'info', 5000);
+                                }
+                            }
+                            savedCount = count;
+                        }
+                    }
                 }
-            }, this);
 
-            this.notificationsCheckInterval = this.getConfig().get('notificationsCheckInterval') || this.notificationsCheckInterval;
+                this.refreshList();
+            });
         },
 
         afterRender: function () {
             this.$badge = this.$el.find('.notifications-button');
             this.$number = this.$el.find('.number-badge');
-
-            this.runCheckUpdates(true);
 
             $('body').attr({'style': ''});
         },
@@ -115,47 +116,6 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
             }
         },
 
-        checkUpdates: function (isFirstCheck) {
-            if (!this.checkIntervalConditions()) {
-                return;
-            }
-
-            const usersCount = JSON.parse(localStorage.getItem('pd_notReadCount') || "{}");
-
-            // prepare count
-            let count = 0;
-            if (usersCount && usersCount[this.getUser().id]) {
-                count = usersCount[this.getUser().id];
-            }
-
-            if (!isFirstCheck && count > this.unreadCount && $('#nofitication.alert-danger').length === 0) {
-                if ((count - this.unreadCount) > 1) {
-                    Espo.Ui.notify(this.translate('youHaveNewNotifications'), 'info', 5000);
-                } else {
-                    Espo.Ui.notify(this.translate('youHaveNewNotification'), 'info', 5000);
-                }
-            }
-
-            this.unreadCount = count;
-            localStorage.setItem('unreadCount', this.unreadCount);
-
-            if (count) {
-                this.showNotRead(count);
-            } else {
-                this.hideNotRead();
-            }
-
-            this.refreshList();
-        },
-
-        runCheckUpdates: function (isFirstCheck) {
-            this.checkUpdates(isFirstCheck);
-
-            this.timeout = setTimeout(function () {
-                this.runCheckUpdates();
-            }.bind(this), this.notificationsCheckInterval * 1000);
-        },
-
         showNotifications: function () {
             this.closeNotifications();
 
@@ -170,7 +130,6 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
             }, function (view) {
                 view.render();
                 this.listenTo(view, 'all-read', function () {
-                    this.hideNotRead();
                     this.$el.find('.badge-circle-warning').remove();
                 }, this);
             }.bind(this));
@@ -199,18 +158,6 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
             $document.off('mouseup.notification');
             $container.remove();
         },
-
-        checkIntervalConditions() {
-            let check = true;
-
-            (this.intervalConditions || []).forEach(condition => {
-                if (typeof condition === 'function') {
-                    check = check && condition.call(this);
-                }
-            });
-
-            return check;
-        }
 
     });
 

@@ -66,7 +66,6 @@ return [
     'assignmentNotifications'               => true,
     'assignmentEmailNotifications'          => false,
     "portalStreamEmailNotifications"        => true,
-    'notificationsCheckInterval'            => 1,
     'disabledCountQueryEntityList'          => ['Email'],
     'followCreatedEntities'                 => false,
     'b2cMode'                               => false,
