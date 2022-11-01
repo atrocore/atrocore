@@ -157,7 +157,7 @@ Espo.define('views/main', 'view', function (Dep) {
                 }
             }, this);
 
-            return '<div class="header-breadcrumbs fixed-header-breadcrumbs">' + a.join('') + '</div><div class="header-title">' + arr.pop() + '</div>';
+            return '<div class="header-breadcrumbs fixed-header-breadcrumbs"><div class="breadcrumbs-wrapper">' + a.join('') + '</div></div><div class="header-title">' + arr.pop() + '</div>';
         },
 
         getHeaderIconHtml: function () {

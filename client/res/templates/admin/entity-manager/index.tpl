@@ -1,4 +1,13 @@
-<div class="page-header"><h3><div class="header-breadcrumbs fixed-header-breadcrumbs"><a href="#Admin">{{translate 'Administration'}}</a>{{translate 'Entity Manager' scope='Admin'}}</div><div class="header-title">{{translate 'Entity Manager' scope='Admin'}}</div></h3></div>
+<div class="page-header">
+    <h3>
+        <div class="header-breadcrumbs fixed-header-breadcrumbs">
+            <div class="breadcrumbs-wrapper">
+                <a href="#Admin">{{translate 'Administration'}}</a>{{translate 'Entity Manager' scope='Admin'}}
+            </div>
+        </div>
+        <div class="header-title">{{translate 'Entity Manager' scope='Admin'}}</div>
+    </h3>
+</div>
 
 <div class="button-container">
     <button class="btn btn-primary" data-action="createEntity">{{translate 'Create Entity' scope='Admin'}}</button>

@@ -17753,6 +17753,15 @@ table.table {
     margin-bottom: 5px;
 }
 
+.record .button-container > .btn-group {
+    margin-right: 20px;
+}
+
+.record .button-container .nav-pills > li {
+    margin-left: 0;
+    margin-right: 4px;
+}
+
 .list-nested-categories {
     background-color: #fff
 }
@@ -17837,12 +17846,6 @@ table.table {
 
 .pull-left {
     float: left !important
-}
-
-@media (min-width: 768px) {
-    .panel-navigation.pull-left {
-        padding-left: 20px;
-    }
 }
 
 .stream-head-container .pull-left {
@@ -19279,7 +19282,7 @@ input#sn-checkbox-open-in-new-window {
 }
 
 .header-breadcrumbs a, .cell label, .filter label, .page-header .breadcrumb-separator {
-    color: #8e8e8e
+    color: #000000
 }
 
 .fixed-header-breadcrumbs {
@@ -19287,13 +19290,20 @@ input#sn-checkbox-open-in-new-window {
     position: fixed;
     top: 0;
     z-index: 1040;
-    white-space: nowrap;
-    overflow: hidden;
     height: 47px;
     text-overflow: ellipsis;
     font-size: 14px;
     display: flex;
     align-items: center;
+}
+
+.fixed-header-breadcrumbs .breadcrumbs-wrapper {
+    line-height: 28px;
+    max-height: 56px;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
 }
 
 .header-title {
@@ -19304,22 +19314,12 @@ input#sn-checkbox-open-in-new-window {
     #main > .page-header .fixed-header-breadcrumbs {
         left: 232px;
         right: 470px;
-        white-space: nowrap;
+        white-space: normal;
     }
 
     .minimized #main > .page-header .fixed-header-breadcrumbs {
         left: 50px;
     }
-}
-
-.fixed-header-breadcrumbs > span {
-    display: inline-block;
-}
-
-.fixed-header-breadcrumbs > span:last-of-type {
-    display: inline-block;
-    white-space: normal;
-    word-break: break-word;
 }
 
 .panel-default > .panel-heading {
@@ -19662,11 +19662,10 @@ ul.dropdown-menu > li.checkbox {
     position: relative;
 }
 
-#main .page-header h3 .header-breadcrumbs > a::after, #main .page-header h3 .header-breadcrumbs> span.subsection::after {
+#main .page-header h3 .header-breadcrumbs div > a::after, #main .page-header h3 .header-breadcrumbs div > span.subsection::after {
     content: '/';
     display: inline-block;
-    color: #8e8e8e;
-    height: 100%;
+    color: #0081d1;
     width: 21px;
     text-align: center;
 }
@@ -22119,7 +22118,6 @@ select {
 
 .header-breadcrumbs {
     padding-left: 2px;
-    white-space: nowrap;
 }
 
 .header-breadcrumbs .header-with-dropdown {
