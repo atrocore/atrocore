@@ -21758,6 +21758,15 @@ td[data-name="draggableIcon"] {
 
 .field .attribute-type-value .option-group {
     width: calc(100% - 18px);
+    white-space: nowrap;
+}
+
+#options .form-control:first-of-type {
+    width: calc(100% - 140px) !important;
+}
+
+#options .form-control.color-input {
+    width: 80px !important;
 }
 
 .field .attribute-type-value .option-group .option-item > span {
