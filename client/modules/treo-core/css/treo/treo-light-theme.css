@@ -20706,7 +20706,7 @@ td[data-name="draggableIcon"] {
   white-space: nowrap;
 }
 
-#options .form-control:first-of-type {
+#options .form-control:first-of-type:not(:last-of-type) {
   width: calc(100% - 140px) !important;
 }
 
