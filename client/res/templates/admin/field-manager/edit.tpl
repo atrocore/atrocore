@@ -7,7 +7,7 @@
 </div>
 
 <div class="row middle">
-    <div class="col-sm-6">
+    <div class="col-sm-12">
         <div class="panel panel-default">
             <div class="panel-body panel-body-form">
                 <div class="cell form-group" data-name="type">
