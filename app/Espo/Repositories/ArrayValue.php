@@ -94,6 +94,10 @@ class ArrayValue extends \Espo\Core\ORM\Repositories\RDB
             if (in_array($value, $toSkipValueList)) continue;
             if (!is_string($value)) continue;
 
+            if (strlen($value) > 255) {
+                throw new Error(sprintf("ArrayValue: Too long option value '%s' to save in field '%s' of entity '%s'", $value, $this->translate($attribute, 'fields', $entity->getEntityType()), $entity->getEntityType()));
+            }
+
             $arrayValue = $this->get();
             $arrayValue->set([
                 'entityType' => $entity->getEntityType(),
@@ -119,5 +123,26 @@ class ArrayValue extends \Espo\Core\ORM\Repositories\RDB
         foreach ($list as $arrayValue) {
             $this->deleteFromDb($arrayValue->id);
         }
+    }
+    /**
+     * @inheritdoc
+     */
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('language');
+    }
+
+    /**
+     * @param string $key
+     * @param string $label
+     * @param string $scope
+     *
+     * @return string
+     */
+    protected function translate(string $key, string $label, $scope = 'Global'): string
+    {
+        return $this->getInjection('language')->translate($key, $label, $scope);
     }
 }
