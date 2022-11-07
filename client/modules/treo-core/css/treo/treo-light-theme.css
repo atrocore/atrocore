@@ -21286,7 +21286,7 @@ body,
 }
 
 .fixed-header-breadcrumbs .breadcrumbs-wrapper {
-  line-height: 28px;
+  line-height: 1.5;
   max-height: 56px;
   overflow: hidden;
   -webkit-line-clamp: 2;
@@ -21296,6 +21296,7 @@ body,
 
 .header-title {
   font-size: 20px;
+  line-height: 1.5;
 }
 
 @media screen and (min-width: 768px) {
