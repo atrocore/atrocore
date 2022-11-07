@@ -3,13 +3,17 @@
     "multiParents": {
       "type": "bool",
       "view": "views/admin/entity-manager/fields/bool-for-type",
-      "types": ["Hierarchy"],
+      "types": [
+        "Hierarchy"
+      ],
       "default": true
     },
     "fieldValueInheritance": {
       "type": "bool",
       "view": "views/admin/entity-manager/fields/bool-for-type",
-      "types": ["Hierarchy"],
+      "types": [
+        "Hierarchy"
+      ],
       "default": false
     },
     "unInheritedFields": {
@@ -20,7 +24,9 @@
     "relationInheritance": {
       "type": "bool",
       "view": "views/admin/entity-manager/fields/bool-for-type",
-      "types": ["Hierarchy"],
+      "types": [
+        "Hierarchy"
+      ],
       "default": false
     },
     "unInheritedRelations": {
@@ -31,51 +37,85 @@
     "hasAssignedUser": {
       "type": "bool",
       "view": "views/admin/entity-manager/fields/bool-for-type",
-      "types": ["Base","Hierarchy"],
+      "types": [
+        "Base",
+        "Hierarchy"
+      ],
       "default": false,
       "tooltip": true
     },
     "hasTeam": {
       "type": "bool",
       "view": "views/admin/entity-manager/fields/bool-for-type",
-      "types": ["Base","Hierarchy"],
+      "types": [
+        "Base",
+        "Hierarchy"
+      ],
       "default": false,
       "tooltip": true
     },
     "hasAccount": {
       "type": "bool",
       "view": "views/admin/entity-manager/fields/bool-for-type",
-      "types": ["Base","Hierarchy"],
+      "types": [
+        "Base",
+        "Hierarchy"
+      ],
       "default": false,
       "tooltip": true
     },
     "hasOwner": {
       "type": "bool",
       "view": "views/admin/entity-manager/fields/bool-for-type",
-      "types": ["Base","Hierarchy"],
+      "types": [
+        "Base",
+        "Hierarchy"
+      ],
       "default": false,
       "tooltip": true
     }
   },
-  "layout": [
-    [
-      "multiParents"
-    ],
-    [
-      "fieldValueInheritance",
-      "unInheritedFields"
-    ],
-    [
-      "relationInheritance",
-      "unInheritedRelations"
-    ],
-    [
-      "hasOwner",
-      "hasAssignedUser"
-    ],
-    [
-      "hasTeam",
-      "hasAccount"
-    ]
-  ]
+  "layout": {
+    "accessManagement": {
+      "title": "accessManagement",
+      "types": [
+        "Base",
+        "Hierarchy"
+      ],
+      "fields": [
+        [
+          "hasOwner",
+          "hasAssignedUser"
+        ],
+        [
+          "hasTeam",
+          "hasAccount"
+        ]
+      ]
+    },
+    "hierarchyManagement": {
+      "types": [
+        "Hierarchy"
+      ],
+      "title": "hierarchyManagement",
+      "fields": [
+        [
+          "multiParents"
+        ],
+        [
+          "fieldValueInheritance",
+          "unInheritedFields"
+        ],
+        [
+          "relationInheritance",
+          "unInheritedRelations"
+        ]
+      ]
+    },
+    "other": {
+      "types": [],
+      "title": "other",
+      "fields": []
+    }
+  }
 }

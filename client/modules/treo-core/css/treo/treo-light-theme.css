@@ -6445,7 +6445,7 @@ button.close {
   padding-top: 30px;
 }
 
-.modal-body > div:not(.record-container):not(.edit-container) {
+.modal-body > div:not(.record-container):not(.edit-container):not(.entity-manager-container) {
   padding: 0 14px;
 }
 
@@ -22764,6 +22764,14 @@ body.minimized #header > #navbar .navbar-inverse .navbar-nav .more .dropdown-men
   margin-top:-4px;
   border-width:0 5px 5px 5px;
   border-color:transparent transparent gray transparent
+}
+
+.modal-content .entity-manager-container > .panel-body-form {
+  padding: 0 14px;
+}
+
+.entity-manager-container > .panel-heading {
+  padding-left: 27px;
 }
 
 ::-webkit-scrollbar {

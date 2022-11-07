@@ -3,7 +3,10 @@
     "Fields": "Felder",
     "Relationships": "Beziehungen",
     "Schedule": "Geplant",
-    "Formula": "Formel"
+    "Formula": "Formel",
+    "accessManagement": "Hierarchieverwaltung",
+    "hierarchyManagement": "Zugriffsverwaltung",
+    "other": "Sonstiges"
   },
   "fields": {
     "relationshipField": "Beziehungsentität",

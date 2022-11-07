@@ -4,7 +4,10 @@
     "Relationships": "Связи",
     "Schedule": "График",
     "Log": "Лог",
-    "Formula": "Формула"
+    "Formula": "Формула",
+    "accessManagement": "Управление доступом",
+    "hierarchyManagement": "управление иерархией",
+    "other": "Другое"
   },
   "fields": {
     "relationshipField": "Сущность отношений",
