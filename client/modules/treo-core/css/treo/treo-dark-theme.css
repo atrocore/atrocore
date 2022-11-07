@@ -1343,7 +1343,7 @@ html {
 }
 
 body {
-    font-family: 'Open Sans', sans-serif;
+    font-family: sans-serif;
     font-size: 14px;
     line-height: 1.36;
     color: #333;
@@ -15449,21 +15449,8 @@ table.table > thead th > div > a {
         min-height: 300px;
     }
 
-    #main > .list-container > .list > .table:not(.fixed-header-table) {
-        min-width: 100%;
-        width: auto;
-    }
-
     #main > .list-container > .list > .table thead th {
         vertical-align: middle;
-    }
-
-    #main > .list-container > .list > .table thead th:not([data-name="r-checkbox"]) > div {
-        min-width: 100px;
-        width: inherit;
-        display: flex;
-        flex-flow: row nowrap;
-        align-items: center;
     }
 
     #main > .list-container > .list > .table thead th:not([data-name="r-checkbox"]) > div > span {
@@ -15502,6 +15489,19 @@ table.table > thead th > div > a {
         overflow-x: scroll;
         bottom: 0;
     }
+}
+
+.list-container > .list > .table thead th:not([data-name="r-checkbox"]):not([width]) > div:not(:empty) {
+    min-width: 100px;
+    width: inherit;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+}
+
+.list-container > .list > .table:not(.fixed-header-table) {
+    min-width: 100%;
+    width: auto;
 }
 
 table.table > thead th {
@@ -16658,7 +16658,7 @@ h4.panel-title span.color-icon {
     .list {
         width: auto;
         overflow-y: hidden;
-        overflow-x: scroll
+        overflow-x: auto;
     }
 
     .list.list-expanded {

@@ -1,6 +1,7 @@
 {
   "fields": {
     "width": "Breite (%)",
+    "widthPx": "Breite (px)",
     "notSortable": "Nicht sortierbar",
     "align": "Ausrichten",
     "sticked": "Gepinnt",
