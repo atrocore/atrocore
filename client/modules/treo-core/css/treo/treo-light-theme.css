@@ -1336,7 +1336,7 @@ html {
 }
 
 body {
-  font-family: 'Open Sans', sans-serif;
+  font-family: sans-serif;
   font-size: 14px;
   line-height: 1.36;
   color: #333;
@@ -1439,7 +1439,6 @@ hr {
 }
 
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-  font-family: 'Open Sans', sans-serif;
   font-weight: 500;
   line-height: 1;
   color: inherit;
@@ -6563,7 +6562,6 @@ button.close {
   position: absolute;
   z-index: 1600;
   display: block;
-  font-family: 'Open Sans', sans-serif;
   font-style: normal;
   font-weight: normal;
   letter-spacing: normal;
@@ -6706,7 +6704,6 @@ button.close {
   display: none;
   max-width: 276px;
   padding: 1px;
-  font-family: 'Open Sans', sans-serif;
   font-style: normal;
   font-weight: normal;
   letter-spacing: normal;
