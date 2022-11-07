@@ -4,7 +4,10 @@
     "Relationships": "Relationships",
     "Schedule": "Schedule",
     "Log": "Log",
-    "Formula": "Formula"
+    "Formula": "Formula",
+    "accessManagement": "Access management",
+    "hierarchyManagement": "Hierarchy Management",
+    "other": "Other"
   },
   "fields": {
     "relationshipField": "Relationship Entity",

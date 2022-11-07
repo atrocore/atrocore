@@ -486,6 +486,10 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
             if (this.isNew) {
                 this.hideField('disabled');
             }
+
+            this.getView('type').on('change', () => this.managePanelsViewMode());
+
+            this.managePanelsViewMode();
         },
 
         manageKanbanFields: function (o) {
@@ -527,6 +531,18 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
             fieldView.setupTranslation();
 
             fieldView.setOptionList(optionList);
+        },
+
+        managePanelsViewMode: function () {
+            let additionalEntityParams = this.getMetadata().get('app.additionalEntityParams.layout') || [];
+
+            Object.keys(additionalEntityParams).forEach( (key) => {
+                if((additionalEntityParams[key].types || []).includes(this.model.get('type'))) {
+                    this.$el.find('.panel.entity-manager-'+key).removeClass('hidden');
+                } else {
+                    this.$el.find('.panel.entity-manager-'+key).addClass('hidden');
+                }
+            });
         },
 
         actionSave: function () {
