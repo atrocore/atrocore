@@ -19322,7 +19322,7 @@ input#sn-checkbox-open-in-new-window {
 }
 
 .fixed-header-breadcrumbs .breadcrumbs-wrapper {
-    line-height: 28px;
+    line-height: 1.5;
     max-height: 56px;
     overflow: hidden;
     -webkit-line-clamp: 2;
@@ -19332,6 +19332,7 @@ input#sn-checkbox-open-in-new-window {
 
 .header-title {
     font-size: 20px;
+    line-height: 1.5;
 }
 
 @media screen and (min-width: 768px) {
