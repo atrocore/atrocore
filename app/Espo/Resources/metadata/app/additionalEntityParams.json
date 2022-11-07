@@ -111,6 +111,11 @@
           "unInheritedRelations"
         ]
       ]
+    },
+    "other": {
+      "types": [],
+      "title": "other",
+      "fields": []
     }
   }
 }
