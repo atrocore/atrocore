@@ -1,6 +1,7 @@
 {
   "fields": {
     "width": "Width (%)",
+    "widthPx": "Width (px)",
     "link": "Link",
     "notSortable": "Not Sortable",
     "align": "Align",

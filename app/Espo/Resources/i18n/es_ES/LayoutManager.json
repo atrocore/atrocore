@@ -1,6 +1,7 @@
 {
   "fields": {
     "width": "Ancho (%)",
+    "widthPx": "Ancho (px)",
     "link": "Enlace",
     "notSortable": "No ordenable",
     "align": "Alinear",

@@ -36,7 +36,7 @@ Espo.define('views/admin/layouts/list', 'views/admin/layouts/rows', function (De
 
     return Dep.extend({
 
-        dataAttributeList: ['name', 'width', 'link', 'notSortable', 'align', 'view', 'customLabel', 'widthPx'],
+        dataAttributeList: ['name', 'width', 'widthPx', 'link', 'notSortable', 'align', 'view', 'customLabel'],
 
         dataAttributesDefs: {
             link: {type: 'bool'},
@@ -55,8 +55,7 @@ Espo.define('views/admin/layouts/list', 'views/admin/layouts/rows', function (De
                 readOnly: true
             },
             widthPx: {
-                type: 'int',
-                readOnly: true
+                type: 'float'
             },
             name: {
                 type: 'varchar',
