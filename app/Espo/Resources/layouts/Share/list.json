@@ -1,0 +1,24 @@
+[
+  {
+    "name": "name",
+    "link": true
+  },
+  {
+    "name": "active"
+  },
+  {
+    "name": "entityType"
+  },
+  {
+    "name": "entityId"
+  },
+  {
+    "name": "type"
+  },
+  {
+    "name": "validTill"
+  },
+  {
+    "name": "allowedUsage"
+  }
+]

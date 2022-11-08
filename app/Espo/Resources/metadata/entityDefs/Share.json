@@ -1,0 +1,86 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar"
+    },
+    "active": {
+      "type": "bool"
+    },
+    "entityType": {
+      "type": "enum",
+      "required": true,
+      "default": "Asset",
+      "options": [
+        "Asset"
+      ],
+      "optionsIds": [
+        "asset"
+      ]
+    },
+    "entityId": {
+      "type": "varchar",
+      "required": true
+    },
+    "type": {
+      "type": "enum",
+      "required": true,
+      "default": "download",
+      "options": [
+        "download"
+      ],
+      "optionsIds": [
+        "download"
+      ]
+    },
+    "validTill": {
+      "type": "datetime"
+    },
+    "allowedUsage": {
+      "type": "int"
+    },
+    "data": {
+      "type": "jsonObject",
+      "readOnly": true
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    }
+  },
+  "links": {
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    }
+  },
+  "collection": {
+    "sortBy": "createdAt",
+    "asc": false
+  },
+  "indexes": {
+    "name": {
+      "columns": [
+        "name",
+        "deleted"
+      ]
+    }
+  }
+}

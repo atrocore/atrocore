@@ -1,0 +1,12 @@
+{
+  "entity": true,
+  "layouts": true,
+  "tab": true,
+  "acl": true,
+  "aclPortal": true,
+  "type": "Base",
+  "object": true,
+  "hasOwner": false,
+  "hasAssignedUser": false,
+  "hasTeam": false
+}

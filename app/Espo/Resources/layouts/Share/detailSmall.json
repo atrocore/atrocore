@@ -1,0 +1,38 @@
+[
+  {
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "active"
+        }
+      ],
+      [
+        {
+          "name": "entityType"
+        },
+        {
+          "name": "entityId"
+        }
+      ],
+      [
+        {
+          "name": "type"
+        },
+        false
+      ],
+      [
+        {
+          "name": "validTill"
+        },
+        {
+          "name": "allowedUsage"
+        }
+      ]
+    ],
+    "style": "default",
+    "label": ""
+  }
+]

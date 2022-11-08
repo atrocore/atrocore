@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "active": "Active",
+    "entityType": "Entity Type",
+    "entityId": "Entity ID",
+    "type": "Type",
+    "validTill": "Valid Till",
+    "allowedUsage": "Allowed Usage"
+  },
+  "options": {
+    "type": {
+      "download": "Download"
+    }
+  }
+}
