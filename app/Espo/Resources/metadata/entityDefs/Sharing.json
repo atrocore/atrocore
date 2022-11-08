@@ -41,9 +41,20 @@
     "allowedUsage": {
       "type": "int"
     },
+    "link": {
+      "type": "url",
+      "notStorable": true,
+      "readOnly": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true
+    },
     "data": {
       "type": "jsonObject",
-      "readOnly": true
+      "readOnly": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true
     },
     "createdAt": {
       "type": "datetime",

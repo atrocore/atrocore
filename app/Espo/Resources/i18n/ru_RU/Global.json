@@ -1,6 +1,6 @@
 {
   "scopeNames": {
-    "Share": "Поделиться",
+    "Sharing": "Шеринг",
     "Translation": "Надпись",
     "Locale": "Локаль",
     "Connection": "Соединение",
@@ -52,7 +52,7 @@
     "TreoStore": "Магазин"
   },
   "scopeNamesPlural": {
-    "Share": "Поделиться",
+    "Sharing": "Шеринги",
     "Translation": "Надписи",
     "Locale": "Локали",
     "Connection": "Соединения",

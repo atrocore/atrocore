@@ -35,10 +35,9 @@
 
 declare(strict_types=1);
 
-namespace Espo\Services;
+namespace Espo\Entities;
 
-use Espo\Core\Templates\Services\Base;
-
-class Share extends Base
+class Sharing extends \Espo\Core\Templates\Entities\Base
 {
+    protected $entityType = "Sharing";
 }

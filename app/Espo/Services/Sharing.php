@@ -35,10 +35,17 @@
 
 declare(strict_types=1);
 
-namespace Espo\Repositories;
+namespace Espo\Services;
 
-use Espo\Core\Templates\Repositories\Base;
+use Espo\Core\Templates\Services\Base;
+use Espo\ORM\Entity;
 
-class Share extends Base
+class Sharing extends Base
 {
+    public function prepareEntityForOutput(Entity $entity)
+    {
+        parent::prepareEntityForOutput($entity);
+
+        $entity->set('link', $this->getConfig()->get('siteUrl') . '/?entryPoint=download&id=' . $entity->get('entityId'));
+    }
 }

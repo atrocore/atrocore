@@ -1,6 +1,6 @@
 {
   "scopeNames": {
-    "Share": "Aktie",
+    "Sharing": "Freigabe",
     "Translation": "Label",
     "Locale": "Gebietsschema",
     "Connection": "Verbindung",
@@ -39,7 +39,7 @@
     "ArrayValue": "Array-Wert"
   },
   "scopeNamesPlural": {
-    "Share": "Aktien",
+    "Sharing": "Freigaben",
     "Translation": "Labels",
     "Locale": "Gebietsschemas",
     "Connection": "Verbindungen",

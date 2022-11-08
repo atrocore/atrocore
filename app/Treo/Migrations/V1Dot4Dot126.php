@@ -43,13 +43,13 @@ class V1Dot4Dot126 extends Base
 {
     public function up(): void
     {
-        $this->execute("CREATE TABLE `share` (id VARCHAR(24) NOT NULL COLLATE `utf8mb4_unicode_ci`, name VARCHAR(255) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, deleted TINYINT(1) DEFAULT '0' COLLATE `utf8mb4_unicode_ci`, active TINYINT(1) DEFAULT '0' NOT NULL COLLATE `utf8mb4_unicode_ci`, entity_type VARCHAR(255) DEFAULT 'Asset' COLLATE `utf8mb4_unicode_ci`, entity_id VARCHAR(255) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, type VARCHAR(255) DEFAULT 'download' COLLATE `utf8mb4_unicode_ci`, valid_till DATETIME DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, allowed_usage INT DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, data LONGTEXT DEFAULT NULL COLLATE `utf8mb4_unicode_ci` COMMENT '(DC2Type:jsonObject)', created_at DATETIME DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, modified_at DATETIME DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, created_by_id VARCHAR(24) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, modified_by_id VARCHAR(24) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, INDEX IDX_CREATED_BY_ID (created_by_id), INDEX IDX_MODIFIED_BY_ID (modified_by_id), INDEX IDX_NAME (name, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
-        $this->execute("ALTER TABLE `share` ADD description LONGTEXT DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
+        $this->execute("CREATE TABLE `sharing` (id VARCHAR(24) NOT NULL COLLATE `utf8mb4_unicode_ci`, name VARCHAR(255) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, deleted TINYINT(1) DEFAULT '0' COLLATE `utf8mb4_unicode_ci`, active TINYINT(1) DEFAULT '0' NOT NULL COLLATE `utf8mb4_unicode_ci`, entity_type VARCHAR(255) DEFAULT 'Asset' COLLATE `utf8mb4_unicode_ci`, entity_id VARCHAR(255) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, type VARCHAR(255) DEFAULT 'download' COLLATE `utf8mb4_unicode_ci`, valid_till DATETIME DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, allowed_usage INT DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, data LONGTEXT DEFAULT NULL COLLATE `utf8mb4_unicode_ci` COMMENT '(DC2Type:jsonObject)', created_at DATETIME DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, modified_at DATETIME DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, created_by_id VARCHAR(24) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, modified_by_id VARCHAR(24) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, INDEX IDX_CREATED_BY_ID (created_by_id), INDEX IDX_MODIFIED_BY_ID (modified_by_id), INDEX IDX_NAME (name, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
+        $this->execute("ALTER TABLE `sharing` ADD description LONGTEXT DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
     }
 
     public function down(): void
     {
-        $this->execute("DROP TABLE `share`");
+        $this->execute("DROP TABLE `sharing`");
     }
 
     protected function execute(string $query): void

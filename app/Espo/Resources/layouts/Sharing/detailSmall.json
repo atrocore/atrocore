@@ -11,6 +11,12 @@
       ],
       [
         {
+          "name": "description",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
           "name": "entityType"
         },
         {
@@ -21,7 +27,9 @@
         {
           "name": "type"
         },
-        false
+        {
+          "name": "link"
+        }
       ],
       [
         {
@@ -33,6 +41,6 @@
       ]
     ],
     "style": "default",
-    "label": "Overview"
+    "label": ""
   }
 ]

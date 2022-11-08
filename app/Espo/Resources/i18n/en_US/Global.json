@@ -1,6 +1,6 @@
 {
   "scopeNames": {
-    "Share": "Share",
+    "Sharing": "Sharing",
     "Locale": "Locale",
     "Connection": "Connection",
     "Translation": "Label",
@@ -51,7 +51,7 @@
     "ArrayValue": "Array Value"
   },
   "scopeNamesPlural": {
-    "Share": "Shares",
+    "Sharing": "Sharings",
     "Locale": "Locales",
     "Connection": "Connections",
     "Measure": "Measures",

@@ -35,8 +35,19 @@
 
 declare(strict_types=1);
 
-namespace Espo\Controllers;
+namespace Espo\Repositories;
 
-class Share extends \Espo\Core\Templates\Controllers\Base
+use Espo\Core\Templates\Repositories\Base;
+use Espo\ORM\Entity;
+
+class Sharing extends Base
 {
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        parent::beforeSave($entity, $options);
+
+        if ($entity->isNew() && empty($entity->get('name'))) {
+            $entity->set('name', date('Y-m-d H:i:s'));
+        }
+    }
 }

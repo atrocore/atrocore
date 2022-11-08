@@ -5,7 +5,8 @@
     "entityId": "Entity ID",
     "type": "Type",
     "validTill": "Valid Till",
-    "allowedUsage": "Allowed Usage"
+    "allowedUsage": "Allowed Usage",
+    "link": "Link"
   },
   "options": {
     "type": {
