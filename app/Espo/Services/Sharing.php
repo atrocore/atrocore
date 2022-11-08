@@ -46,6 +46,6 @@ class Sharing extends Base
     {
         parent::prepareEntityForOutput($entity);
 
-        $entity->set('link', $this->getConfig()->get('siteUrl') . '/?entryPoint=download&id=' . $entity->get('entityId'));
+        $entity->set('link', $this->getConfig()->get('siteUrl') . '/?entryPoint=sharing&id=' . $entity->get('id'));
     }
 }
