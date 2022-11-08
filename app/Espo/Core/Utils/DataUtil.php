@@ -156,6 +156,10 @@ class DataUtil
         } else if (is_array($overrideData)) {
             if (empty($data)) {
                 $data = [];
+            } else {
+                if (!is_array($data)) {
+                    $data = json_decode(json_encode($data), true);
+                }
             }
             if (in_array($appendIdentifier, $overrideData)) {
                 foreach ($overrideData as $key => $item) {

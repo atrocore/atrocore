@@ -3,6 +3,9 @@
     "name": {
       "type": "varchar"
     },
+    "description": {
+      "type": "text"
+    },
     "active": {
       "type": "bool"
     },
