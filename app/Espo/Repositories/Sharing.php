@@ -47,7 +47,7 @@ class Sharing extends Base
         parent::beforeSave($entity, $options);
 
         if ($entity->isNew() && empty($entity->get('name'))) {
-            $entity->set('name', date('Y-m-d H:i:s'));
+            $entity->set('name', date('Y-m-d H:i:s') . ' // ' . $this->getEntityManager()->getUser()->get('name'));
         }
     }
 }

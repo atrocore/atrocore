@@ -9,6 +9,9 @@
     "allowedUsage": "Allowed Usage",
     "link": "Link"
   },
+  "labels": {
+    "copiedToClipboard": "Copied to clipboard"
+  },
   "options": {
     "type": {
       "download": "Download"

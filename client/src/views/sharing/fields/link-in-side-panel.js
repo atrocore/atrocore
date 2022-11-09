@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -33,26 +32,16 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-declare(strict_types=1);
+Espo.define('views/sharing/fields/link-in-side-panel', 'views/fields/varchar', function (Dep) {
 
-namespace Espo\Services;
+    return Dep.extend({
 
-use Espo\Core\Templates\Services\Base;
-use Espo\ORM\Entity;
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);
 
-class Sharing extends Base
-{
-    protected $mandatorySelectAttributeList = ['active'];
+            this.$el.html(`<a href="javascript:" style="color: #000" title="${this.model.get(this.name)}" class="copy-link" data-link="${this.model.get(this.name)}"><i class="far fa-copy"></i></a>`);
+        }
 
-    public function prepareEntityForOutput(Entity $entity)
-    {
-        parent::prepareEntityForOutput($entity);
+    });
 
-        $entity->set('link', $this->getConfig()->get('siteUrl') . '/?entryPoint=sharing&id=' . $entity->get('id'));
-
-        $availableViaValidTill = empty($entity->get('validTill')) || $entity->get('validTill') >= (new \DateTime())->format('Y-m-d H:i:s');
-        $availableViaAllowedUsage = empty($entity->get('allowedUsage')) || (int)$entity->get('used') < $entity->get('allowedUsage');
-
-        $entity->set('available', !empty($entity->get('active')) && $availableViaValidTill && $availableViaAllowedUsage);
-    }
-}
+});

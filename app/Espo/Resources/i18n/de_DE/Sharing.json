@@ -9,6 +9,9 @@
     "allowedUsage": "Zulässige Nutzung",
     "link": "Link"
   },
+  "labels": {
+    "copiedToClipboard": "In die Zwischenablage kopiert"
+  },
   "options": {
     "type": {
       "download": "Herunterladen"

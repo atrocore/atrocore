@@ -9,6 +9,9 @@
     "allowedUsage": "Разрешено использовать",
     "link": "Ссылка"
   },
+  "labels": {
+    "copiedToClipboard": "Скопировано в буфер обмена"
+  },
   "options": {
     "type": {
       "download": "Скачать"

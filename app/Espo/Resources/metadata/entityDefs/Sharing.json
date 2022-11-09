@@ -7,7 +7,16 @@
       "type": "text"
     },
     "active": {
-      "type": "bool"
+      "type": "bool",
+      "default": true
+    },
+    "available": {
+      "type": "bool",
+      "notStorable": true,
+      "readOnly": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true
     },
     "entityType": {
       "type": "enum",
@@ -41,16 +50,12 @@
     "allowedUsage": {
       "type": "int"
     },
+    "used": {
+      "type": "int"
+    },
     "link": {
       "type": "url",
       "notStorable": true,
-      "readOnly": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "importDisabled": true
-    },
-    "data": {
-      "type": "jsonObject",
       "readOnly": true,
       "massUpdateDisabled": true,
       "filterDisabled": true,
