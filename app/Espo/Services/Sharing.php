@@ -42,7 +42,7 @@ use Espo\ORM\Entity;
 
 class Sharing extends Base
 {
-    protected $mandatorySelectAttributeList = ['active'];
+    protected $mandatorySelectAttributeList = ['active', 'validTill', 'allowedUsage', 'used'];
 
     public function prepareEntityForOutput(Entity $entity)
     {

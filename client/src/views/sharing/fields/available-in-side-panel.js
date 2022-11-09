@@ -38,21 +38,12 @@ Espo.define('views/sharing/fields/available-in-side-panel', 'views/fields/bool',
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
-            //
-            // // let html = `<a target="_blank" href="${this.model.get(this.name)}" title="${this.model.get(this.name)}">link</a>`;
-            //
-            // let html = '';
-            // // html += `<div style="width: 100%;float: left"><input type="checkbox" style="margin-right: 7px" checked disabled />`;
-            // html += `<div style="width: 100%;float: left"><i style="margin-right: 7px; color: #0081d1" class="fas fa-check-circle"></i>`;
-            // // html += `<div style="width: 100%;float: left"><i style="margin-right: 7px; color: #999" class="fas fa-minus-circle"></i>`;
-            //
-            // // <i className="fas fa-minus-circle"></i>
-            // html += `<a target="_blank" href="${this.model.get(this.name)}" title="${this.model.get(this.name)}">${this.model.get('name')}</a>`;
-            // // html += `<input type="url" style="width: 90%" disabled value="${this.model.get(this.name)}" />`;
-            // html += `<i style="margin-left: 7px" class="far fa-copy"></i></div>`;
-            // // html += `<div style="width: 100%;float: left;margin-top: 5px"><i class="far fa-user" style="color: #999"></i><a style="margin-left: 7px" href="33">Admin</a></div>`;
-            //
-            // this.$el.html(html)
+
+            if (this.model.get('available') === true) {
+                this.$el.html(`<i style="color: #0081d1" class="fas fa-check-circle"></i>`);
+            } else {
+                this.$el.html(`<i style="color: #999" class="fas fa-minus-circle"></i>`);
+            }
         }
 
     });
