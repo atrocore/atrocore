@@ -1,6 +1,7 @@
 {
   "fields": {
     "active": "Active",
+    "available": "Available",
     "entityType": "Entity Type",
     "entityId": "Entity ID",
     "type": "Type",
