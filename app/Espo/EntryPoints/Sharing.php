@@ -60,20 +60,12 @@ class Sharing extends AbstractEntryPoint
             throw new NotFound();
         }
 
-        $data = empty($sharing->get('data')) ? new \stdClass() : $sharing->get('data');
-
         if (!empty($sharing->get('allowedUsage'))) {
-            if (empty($data) || !property_exists($data, 'usage')) {
-                $data->usage = 0;
-            }
-
-            if ($data->usage >= $sharing->get('allowedUsage')) {
+            $used = (int)$sharing->get('used');
+            if ($used >= $sharing->get('allowedUsage')) {
                 throw new NotFound();
             }
-
-            $data->usage++;
-
-            $sharing->set('data', $data);
+            $sharing->set('used', $used + 1);
             $this->getEntityManager()->saveEntity($sharing);
         }
 
