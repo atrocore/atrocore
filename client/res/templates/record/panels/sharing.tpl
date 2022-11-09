@@ -28,4 +28,8 @@
     .modal-body .panel-body[data-name="sharing"] {
         padding: 0 0 0 14px;
     }
+
+    .sharing-panel .cell[data-name="name"] {
+        max-width: 95px;
+    }
 </style>
