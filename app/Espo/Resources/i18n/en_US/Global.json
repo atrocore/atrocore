@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "Sharing": "Sharing",
     "Locale": "Locale",
     "Connection": "Connection",
     "Translation": "Label",
@@ -50,6 +51,7 @@
     "ArrayValue": "Array Value"
   },
   "scopeNamesPlural": {
+    "Sharing": "Sharing",
     "Locale": "Locales",
     "Connection": "Connections",
     "Measure": "Measures",
@@ -88,6 +90,7 @@
     "Core": "AtroCore is a software ecosystem, designed for rapid development of web-based responsive business applications."
   },
   "labels": {
+    "Sharing": "Sharing",
     "useDragAndDrop": "Use Drag & Drop to reorder",
     "Shown": "Shown",
     "typeAndPressEnter": "Type and press enter to search...",

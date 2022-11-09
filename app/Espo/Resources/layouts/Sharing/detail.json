@@ -1,0 +1,50 @@
+[
+  {
+    "rows": [
+      [
+        {
+          "name": "active"
+        },
+        false
+      ],
+      [
+        {
+          "name": "entityType"
+        },
+        {
+          "name": "entityId"
+        }
+      ],
+      [
+        {
+          "name": "type"
+        },
+        {
+          "name": "link"
+        }
+      ],
+      [
+        {
+          "name": "validTill"
+        },
+        {
+          "name": "allowedUsage"
+        }
+      ],
+      [
+        {
+          "name": "name"
+        },
+        false
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
+        }
+      ]
+    ],
+    "style": "default",
+    "label": "Overview"
+  }
+]

@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "Sharing": "Freigabe",
     "Translation": "Label",
     "Locale": "Gebietsschema",
     "Connection": "Verbindung",
@@ -38,6 +39,7 @@
     "ArrayValue": "Array-Wert"
   },
   "scopeNamesPlural": {
+    "Sharing": "Freigaben",
     "Translation": "Labels",
     "Locale": "Gebietsschemas",
     "Connection": "Verbindungen",
@@ -75,6 +77,7 @@
     "Core": "AtroCore ist ein Software-Ökosystem, das für die schnelle Entwicklung webbasierter responsiver Geschäftsanwendungen entwickelt wurde."
   },
   "labels": {
+    "Sharing": "Freigaben",
     "Example": "Beispiel",
     "useDragAndDrop": "Per Drag & Drop neu anordnen",
     "Shown": "Gezeigt",

@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "Sharing": "Шеринг",
     "Translation": "Надпись",
     "Locale": "Локаль",
     "Connection": "Соединение",
@@ -51,6 +52,7 @@
     "TreoStore": "Магазин"
   },
   "scopeNamesPlural": {
+    "Sharing": "Шеринги",
     "Translation": "Надписи",
     "Locale": "Локали",
     "Connection": "Соединения",
@@ -90,6 +92,7 @@
     "Core": "AtroCore - это программная экосистема, предназначенная для быстрой разработки веб-приложений для бизнеса."
   },
   "labels": {
+    "Sharing": "Шеринги",
     "Example": "Пример",
     "useDragAndDrop": "Перетаскивайте для изменения порядка",
     "Shown": "Показано",
