@@ -119,12 +119,19 @@ Espo.define('views/record/panels/sharing', 'views/record/panels/relationship', f
                         listRowsOrderSaveUrl: this.listRowsOrderSaveUrl,
                         panelView: this,
                     }, function (view) {
-                        view.getSelectAttributeList(function (selectAttributeList) {
+                        view.getSelectAttributeList(selectAttributeList => {
                             if (selectAttributeList) {
                                 collection.data.select = selectAttributeList.join(',');
                             }
                             collection.fetch();
-                        }.bind(this));
+                        });
+
+                        view.listenTo(view, 'after:render', view => {
+                            view.$el.removeClass('no-data');
+                            if (view.$el.find('table').length === 0) {
+                                view.$el.addClass('no-data');
+                            }
+                        });
                     });
                 }, this);
 

@@ -32,4 +32,8 @@
     .sharing-panel .cell[data-name="name"] {
         max-width: 95px;
     }
+
+    .sharing-panel.no-data {
+        padding: 8px 0;
+    }
 </style>
