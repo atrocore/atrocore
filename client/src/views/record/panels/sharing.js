@@ -125,10 +125,6 @@ Espo.define('views/record/panels/sharing', 'views/record/panels/relationship', f
                             }
                             collection.fetch();
                         }.bind(this));
-
-                        view.listenTo(view, 'after:render', () => {
-                            this.$el.find('.table thead').hide();
-                        });
                     });
                 }, this);
 
