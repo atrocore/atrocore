@@ -3,17 +3,9 @@
     "rows": [
       [
         {
-          "name": "name"
-        },
-        {
           "name": "active"
-        }
-      ],
-      [
-        {
-          "name": "description",
-          "fullWidth": true
-        }
+        },
+        false
       ],
       [
         {
@@ -37,6 +29,18 @@
         },
         {
           "name": "allowedUsage"
+        }
+      ],
+      [
+        {
+          "name": "name"
+        },
+        false
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
         }
       ]
     ],
