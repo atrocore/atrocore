@@ -19742,16 +19742,16 @@ ul.dropdown-menu > li.checkbox {
 
 .overview-filters-container {
     background-color: #FFFFFF;
+    border-top: 1px solid #eee;
+    padding: 10px 0px 5px 10px;
+}
+
+.overview-filters-container .selectize-input {
+    border: 0;
 }
 
 .overview-filters-container .selectize-control.multi .selectize-input > div:not(.active) {
     background-color: #f4f4f4;
-}
-
-@media screen and (min-width: 768px) {
-    .overview-filters-container {
-        padding: 0 15px 10px 15px;
-    }
 }
 
 .page-header .header-buttons .filter-cell .field,
