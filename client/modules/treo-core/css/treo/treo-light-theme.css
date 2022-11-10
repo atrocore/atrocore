@@ -3146,13 +3146,15 @@ textarea.input-lg, select[multiple].input-lg {
   color: #a94442;
 }
 
-.has-error .form-control {
+.has-error .form-control,
+.has-error .input-group-btn > button.btn {
   border-color: #a94442;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 }
 
-.has-error .form-control:focus {
+.has-error .form-control:focus,
+.has-error .input-group-btn > button.btn:focus {
   border-color: #843534;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #ce8483;
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #ce8483;
