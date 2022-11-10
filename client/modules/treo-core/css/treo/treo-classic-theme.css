@@ -4502,7 +4502,7 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
 }
 
 .nav-pills > li > a {
-    border-radius: 0;
+    border-radius: 2px;
     border: 1px solid #eee;
     background-color: #fafafa;
 }
@@ -17423,7 +17423,11 @@ a.field-info > span.fa-info-circle {
 }
 
 .fas.fa-sm, .far.fa-sm, .btn-sm .fas, .btn-sm .far, .small .far, .small .fas, .fas.small, .far.small {
-    font-size: 12px
+    font-size: 12px;
+    font-size: 12px;
+    border: 1px solid #ddd;
+    padding: 2px;
+    border-radius: 2px;
 }
 
 .btn-icon {
