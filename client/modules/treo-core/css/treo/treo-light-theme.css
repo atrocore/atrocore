@@ -7734,7 +7734,8 @@ button.close {
 
 .selectize-control.multi .selectize-input.has-items {
   padding-left: 7px;
-  padding-right: 7px;
+  padding-right: 14px;
+  border-radius: 2px;
 }
 
 .selectize-control.multi .selectize-input > div {
@@ -22754,7 +22755,7 @@ body.minimized #header > #navbar .navbar-inverse .navbar-nav .more .dropdown-men
   display: block;
   position: absolute;
   top: 50%;
-  right: 2px;
+  right: 5px;
   margin-top: -3px;
   width: 0;
   height: 0;
