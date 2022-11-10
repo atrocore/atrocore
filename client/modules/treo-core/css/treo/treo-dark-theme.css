@@ -19752,6 +19752,7 @@ ul.dropdown-menu > li.checkbox {
 
 .overview-filters-container .selectize-control.multi .selectize-input > div:not(.active) {
     background-color: #f4f4f4;
+    border: 1px solid #eee;
 }
 
 .page-header .header-buttons .filter-cell .field,
