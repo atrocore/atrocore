@@ -171,6 +171,11 @@ class User extends \Espo\Core\ORM\Repositories\RDB
                 ->getAclManager()
                 ->clearAclCache();
         }
+
+        if ($entity->isAttributeChanged('avatarId')) {
+            $this->getConfig()->set('cacheTimestamp', time());
+            $this->getConfig()->save();
+        }
     }
 
     /**
