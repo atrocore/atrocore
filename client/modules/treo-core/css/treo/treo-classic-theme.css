@@ -4088,8 +4088,8 @@ tbody.collapse.in {
 }
 
 .btn-group > .btn:last-child:not(:first-child), .btn-group > .dropdown-toggle:not(:first-child) {
-    border-bottom-left-radius: 0;
-    border-top-left-radius: 0
+    border-bottom-right-radius: 3px;
+    border-top-right-radius: 3px
 }
 
 .btn-group > .btn-group {
