@@ -17730,11 +17730,11 @@ table.table {
     -moz-box-shadow: none
 }
 
-@media screen and (min-width: 768px) {
     #navbar .nav.navbar-nav.navbar-right {
-        background-color: #ececec
+        background-color: #ececec;
+        border-top: 1px solid #dcdcdc;
+        border-bottom: 1px solid #dcdcdc;
     }
-}
 
 .list-container > .list, .panel, .dashlet-container, .list-nested-categories, #main > .calendar-container .calendar, #main > .calendar-container .timeline, .well, .admin-content .table.table-bordered, .admin-content iframe, .list-kanban > .kanban-head-container, .list-group-panel {
     -webkit-box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.13);
@@ -20260,7 +20260,6 @@ button.category:focus {
 
     #navbar .nav.navbar-nav.navbar-right {
         background-color: #fff;
-        border-bottom: 1px solid #dcdcdc
     }
 
     #navbar .nav.navbar-nav.navbar-right > li {
@@ -20376,7 +20375,7 @@ button.category:focus {
     }
 
     #global-search-input {
-        height: 47px !important;
+        height: 46px !important;
         border: 0 !important
     }
 
