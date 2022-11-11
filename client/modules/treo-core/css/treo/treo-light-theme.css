@@ -1349,22 +1349,6 @@ input, button, select, textarea {
   line-height: inherit;
 }
 
-a {
-  color: #537898;
-  text-decoration: none;
-}
-
-a:hover, a:focus {
-  color: #385167;
-  text-decoration: underline;
-}
-
-a:focus {
-  outline: 5px auto -webkit-focus-ring-color;
-  outline: 0;
-  outline-offset: -2px;
-}
-
 figure {
   margin: 0;
 }
@@ -3373,6 +3357,7 @@ a.btn.disabled, fieldset[disabled] a.btn {
   background-color: #333;
 }
 
+/*
 .btn-primary {
   color: #fff;
   background-color: #537898;
@@ -3416,6 +3401,7 @@ a.btn.disabled, fieldset[disabled] a.btn {
   color: #537898;
   background-color: #fff;
 }
+*/
 
 .btn-success {
   color: #fff;
@@ -17507,7 +17493,6 @@ table.table {
 
   #navbar .nav.navbar-nav.navbar-right {
     background-color: #ececec;
-    border-top: 1px solid #dcdcdc;
     border-bottom: 1px solid #dcdcdc;
 
   #navbar footer {
@@ -18943,6 +18928,7 @@ a {
 
 a:hover, a:focus {
   color: #015db4;
+  text-decoration: underline;
 }
 
 #header a.minimizer {
@@ -21376,7 +21362,7 @@ body,
   }
   #header #global-search-input {
     margin-top: 0;
-    height: 39px !important;
+    height: 40px !important;
     background: inherit;
     border: 1px solid #e0e0e0;
     border-right: 0;
@@ -21720,7 +21706,7 @@ body,
     color: #737373;
   }
   #header .navbar-right #global-search-input {
-    height: 39px !important;
+    height: 40px !important;
     background: inherit;
     border: 1px solid #e0e0e0;
     border-right: 0;
