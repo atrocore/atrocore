@@ -17505,10 +17505,10 @@ table.table {
   }
 }
 
-@media screen and (min-width: 768px) {
   #navbar .nav.navbar-nav.navbar-right {
     background-color: #ececec;
-  }
+    border-top: 1px solid #dcdcdc;
+    border-bottom: 1px solid #dcdcdc;
 
   #navbar footer {
     width: 220px;
@@ -21376,7 +21376,7 @@ body,
   }
   #header #global-search-input {
     margin-top: 0;
-    height: 40px !important;
+    height: 39px !important;
     background: inherit;
     border: 1px solid #e0e0e0;
     border-right: 0;
@@ -21720,7 +21720,7 @@ body,
     color: #737373;
   }
   #header .navbar-right #global-search-input {
-    height: 40px !important;
+    height: 39px !important;
     background: inherit;
     border: 1px solid #e0e0e0;
     border-right: 0;
