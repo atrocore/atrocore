@@ -1356,22 +1356,6 @@ input, button, select, textarea {
     line-height: inherit
 }
 
-a {
-    color: #537898;
-    text-decoration: none
-}
-
-a:hover, a:focus {
-    color: #385167;
-    text-decoration: underline
-}
-
-a:focus {
-    outline: 5px auto -webkit-focus-ring-color;
-    outline: 0;
-    outline-offset: -2px
-}
-
 figure {
     margin: 0
 }
@@ -3544,7 +3528,7 @@ a.btn.disabled, fieldset[disabled] a.btn {
     color: #f7f7f7;
     background-color: #333
 }
-
+/*
 .btn-primary {
     color: #fff;
     background-color: #537898;
@@ -3588,6 +3572,7 @@ a.btn.disabled, fieldset[disabled] a.btn {
     color: #537898;
     background-color: #fff
 }
+*/
 
 .btn-success {
     color: #fff;
@@ -17694,7 +17679,6 @@ table.table {
 
     #navbar .nav.navbar-nav.navbar-right {
         background-color: #ececec;
-        border-top: 1px solid #dcdcdc;
         border-bottom: 1px solid #dcdcdc;
     }
 
@@ -19099,11 +19083,13 @@ body {
 }
 
 a {
-    color: #0081d1
+    color: #06c;
+    text-decoration: none;
 }
 
 a:hover, a:focus {
-    color: #015db4
+    color: #1a75d1;
+    text-decoration: underline;
 }
 
 #header a.minimizer {
@@ -19127,14 +19113,14 @@ a:hover, a:focus {
 }
 
 .btn-primary, .show-more > .btn-block, .btn-group > .btn[data-action="edit"] + .dropdown-toggle, .search-row .open > .dropdown-toggle.btn-default:hover, .search-row .open > .dropdown-toggle.filters-button:focus, .search-row .open > .dropdown-toggle.filters-button.focus, .search-row .open > .dropdown-toggle.filters-button {
-    background-color: #2895ea;
-    border-color: #2895ea;
+    background-color: #06c;
+    border-color: #06c;
     color: #fff
 }
 
 .btn-primary:hover, .btn-primary:focus, .btn-primary.focus, .show-more > .btn-block:hover, .btn-group > .btn[data-action="edit"] + .dropdown-toggle:hover {
-    background-color: #005cb3;
-    border-color: #005cb3;
+    background-color: #1a75d1;
+    border-color: #1a75d1;
     color: #fff
 }
 
@@ -20361,7 +20347,7 @@ button.category:focus {
     }
 
     #global-search-input {
-        height: 46px !important;
+        height: 47px !important;
         border: 0 !important
     }
 
