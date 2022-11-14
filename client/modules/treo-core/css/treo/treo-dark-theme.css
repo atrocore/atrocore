@@ -3561,6 +3561,7 @@ a.btn.disabled, fieldset[disabled] a.btn {
     background-color: #333
 }
 
+/*
 .btn-primary {
     color: #fff;
     background-color: #537898;
@@ -3604,6 +3605,7 @@ a.btn.disabled, fieldset[disabled] a.btn {
     color: #537898;
     background-color: #fff
 }
+*/
 
 .btn-success {
     color: #fff;
@@ -4099,13 +4101,13 @@ tbody.collapse.in {
 }
 
 .btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) {
-    border-bottom-right-radius: 0;
-    border-top-right-radius: 0
+    border-bottom-left-radius: 3px;
+    border-top-left-radius: 3px;
 }
 
 .btn-group > .btn:last-child:not(:first-child), .btn-group > .dropdown-toggle:not(:first-child) {
-    border-bottom-left-radius: 0;
-    border-top-left-radius: 0
+    border-bottom-right-radius: 3px;
+    border-top-right-radius: 3px;
 }
 
 .btn-group > .btn-group {
@@ -4518,7 +4520,7 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
 }
 
 .nav-pills > li > a {
-    border-radius: 0;
+    border-radius: 2px;
     border: 1px solid #eee;
     background-color: #fafafa;
 }
@@ -7880,7 +7882,8 @@ button.close {
 
 .selectize-control.multi .selectize-input.has-items {
     padding-left: 7px;
-    padding-right: 7px
+    padding-right: 14px;
+    border-radius: 2px;
 }
 
 .selectize-control.multi .selectize-input > div {
@@ -17462,7 +17465,10 @@ a.field-info > span.fa-info-circle {
 }
 
 .fas.fa-sm, .far.fa-sm, .btn-sm .fas, .btn-sm .far, .small .far, .small .fas, .fas.small, .far.small {
-    font-size: 12px
+    font-size: 12px;
+    border: 1px solid #ddd;
+    padding: 2px;
+    border-radius: 2px;
 }
 
 .btn-icon {
@@ -17726,11 +17732,10 @@ table.table {
     -moz-box-shadow: none
 }
 
-@media screen and (min-width: 768px) {
     #navbar .nav.navbar-nav.navbar-right {
-        background-color: #ececec
+        background-color: #ececec;
+        border-bottom: 1px solid #dcdcdc;
     }
-}
 
 .list-container > .list, .panel, .dashlet-container, .list-nested-categories, #main > .calendar-container .calendar, #main > .calendar-container .timeline, .well, .admin-content .table.table-bordered, .admin-content iframe, .list-kanban > .kanban-head-container, .list-group-panel {
     -webkit-box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.13);
@@ -19124,11 +19129,13 @@ body {
 }
 
 a {
-    color: #0081d1
+    color: #06c;
+    text-decoration: none;
 }
 
 a:hover, a:focus {
-    color: #015db4
+    color: #1a75d1;
+    text-decoration: underline;
 }
 
 #header a.minimizer {
@@ -19151,14 +19158,14 @@ a:hover, a:focus {
 }
 
 .btn-primary, .show-more > .btn-block, .btn-group > .btn[data-action="edit"] + .dropdown-toggle, .search-row .open > .dropdown-toggle.btn-default:hover, .search-row .open > .dropdown-toggle.filters-button:focus, .search-row .open > .dropdown-toggle.filters-button.focus, .search-row .open > .dropdown-toggle.filters-button {
-    background-color: #2895ea;
-    border-color: #2895ea;
+    background-color: #06c;
+    border-color: #06c;
     color: #fff
 }
 
 .btn-primary:hover, .btn-primary:focus, .btn-primary.focus, .show-more > .btn-block:hover, .btn-group > .btn[data-action="edit"] + .dropdown-toggle:hover {
-    background-color: #005cb3;
-    border-color: #005cb3;
+    background-color: #1a75d1;
+    border-color: #1a75d1;
     color: #fff
 }
 
@@ -19738,16 +19745,17 @@ ul.dropdown-menu > li.checkbox {
 
 .overview-filters-container {
     background-color: #FFFFFF;
+    border-top: 1px solid #eee;
+    padding: 10px 0px 5px 10px;
+}
+
+.overview-filters-container .selectize-input {
+    border: 0;
 }
 
 .overview-filters-container .selectize-control.multi .selectize-input > div:not(.active) {
     background-color: #f4f4f4;
-}
-
-@media screen and (min-width: 768px) {
-    .overview-filters-container {
-        padding: 0 15px 10px 15px;
-    }
+    border: 1px solid #eee;
 }
 
 .page-header .header-buttons .filter-cell .field,
@@ -20255,7 +20263,6 @@ button.category:focus {
 
     #navbar .nav.navbar-nav.navbar-right {
         background-color: #fff;
-        border-bottom: 1px solid #dcdcdc
     }
 
     #navbar .nav.navbar-nav.navbar-right > li {
@@ -22247,7 +22254,7 @@ select {
     display: block;
     position: absolute;
     top: 50%;
-    right: 2px;
+    right: 5px;
     margin-top: -3px;
     width: 0;
     height: 0;

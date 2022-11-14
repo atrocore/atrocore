@@ -1349,22 +1349,6 @@ input, button, select, textarea {
   line-height: inherit;
 }
 
-a {
-  color: #537898;
-  text-decoration: none;
-}
-
-a:hover, a:focus {
-  color: #385167;
-  text-decoration: underline;
-}
-
-a:focus {
-  outline: 5px auto -webkit-focus-ring-color;
-  outline: 0;
-  outline-offset: -2px;
-}
-
 figure {
   margin: 0;
 }
@@ -3373,6 +3357,7 @@ a.btn.disabled, fieldset[disabled] a.btn {
   background-color: #333;
 }
 
+/*
 .btn-primary {
   color: #fff;
   background-color: #537898;
@@ -3416,6 +3401,7 @@ a.btn.disabled, fieldset[disabled] a.btn {
   color: #537898;
   background-color: #fff;
 }
+*/
 
 .btn-success {
   color: #fff;
@@ -7734,7 +7720,8 @@ button.close {
 
 .selectize-control.multi .selectize-input.has-items {
   padding-left: 7px;
-  padding-right: 7px;
+  padding-right: 14px;
+  border-radius: 2px;
 }
 
 .selectize-control.multi .selectize-input > div {
@@ -17219,7 +17206,11 @@ a.field-info > span.fa-info-circle {
 }
 
 .fas.fa-sm, .far.fa-sm, .btn-sm .fas, .btn-sm .far, .small .far, .small .fas, .fas.small, .far.small {
-  font-size: 12px;
+    font-size: 12px;
+    font-size: 12px;
+    border: 1px solid #ddd;
+    padding: 2px;
+    border-radius: 2px;
 }
 
 .btn-icon {
@@ -17500,10 +17491,9 @@ table.table {
   }
 }
 
-@media screen and (min-width: 768px) {
   #navbar .nav.navbar-nav.navbar-right {
     background-color: #ececec;
-  }
+    border-bottom: 1px solid #dcdcdc;
 
   #navbar footer {
     width: 220px;
@@ -18938,6 +18928,7 @@ a {
 
 a:hover, a:focus {
   color: #015db4;
+  text-decoration: underline;
 }
 
 #header a.minimizer {
@@ -19263,15 +19254,17 @@ table.table > thead th > div > a {
 
 .overview-filters-container {
   background-color: #FFFFFF;
+  border-top: 1px solid #eee;
+  padding: 10px 0px 5px 10px;
+}
+
+.overview-filters-container .selectize-input {
+    border: 0;
 }
 
 .overview-filters-container .selectize-control.multi .selectize-input > div:not(.active) {
   background-color: #f4f4f4;
-}
-@media screen and (min-width: 768px) {
-  .overview-filters-container {
-    padding: 0 15px 10px 15px;
-  }
+  border: 1px solid #eee;
 }
 
 .page-header .header-buttons .filter-cell > .field,
@@ -22750,7 +22743,7 @@ body.minimized #header > #navbar .navbar-inverse .navbar-nav .more .dropdown-men
   display: block;
   position: absolute;
   top: 50%;
-  right: 2px;
+  right: 5px;
   margin-top: -3px;
   width: 0;
   height: 0;
