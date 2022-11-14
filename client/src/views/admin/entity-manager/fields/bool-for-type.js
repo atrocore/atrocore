@@ -45,7 +45,7 @@ Espo.define('views/admin/entity-manager/fields/bool-for-type', 'views/fields/boo
         },
 
         fetch: function () {
-            let value = $(`input[type="checkbox"][name="${this.name}"]`).get(0).checked;
+            let value = this.$el.find('input[name=' + this.name + ']').is(":checked");
             let data = {};
             data[this.name] = value;
             return data;
