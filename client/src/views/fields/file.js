@@ -316,7 +316,7 @@ Espo.define('views/fields/file', ['views/fields/link', 'lib!MD5'], function (Dep
                     return false;
                 }
 
-                if (this.hasPreview(name)) {
+                if (this.hasPreview(name) && this.getImageUrl(id)) {
                     return '<div class="attachment-preview"><a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="' + this.getImageUrl(id, this.previewSize) + '" class="image-preview"></a></div>';
                 }
 
