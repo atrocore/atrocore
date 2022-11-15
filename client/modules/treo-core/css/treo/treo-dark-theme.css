@@ -17466,9 +17466,6 @@ a.field-info > span.fa-info-circle {
 
 .fas.fa-sm, .far.fa-sm, .btn-sm .fas, .btn-sm .far, .small .far, .small .fas, .fas.small, .far.small {
     font-size: 12px;
-    border: 1px solid #ddd;
-    padding: 2px;
-    border-radius: 2px;
 }
 
 .btn-icon {
