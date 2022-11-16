@@ -17,5 +17,14 @@
         "rows": [
             [{"name": "isStreamSide"}, {"name": "isStreamPanelFirst"}]
         ]
+    },
+    {
+        "label": "Theme Configuration",
+        "rows": [
+            [{"name": "navigationManuBackgroundColor"}, {"name": "navigationMenuFontColor"}],
+            [{"name": "linkFontColor"}, {"name": "buttonFontColor"}],
+            [{"name": "customStylesheet", "fullWidth": true}],
+            [{"name": "customStylesheetPath", "fullWidth": true}]
+        ]
     }
 ]

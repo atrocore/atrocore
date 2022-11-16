@@ -137,3 +137,24 @@
         </ul>
     </div>
 </div>
+
+<style>
+    {{#if backgroundColor}}
+        .navbar {
+            background-color: #{{backgroundColor}} !important;
+        }
+
+        @media screen and (max-width: 767px) {
+            .navbar .navbar-header,
+            .navbar .menu {
+                background-color: #{{backgroundColor}} !important;
+            }
+        }
+    {{/if}}
+
+    {{#if fontColor}}
+        .navbar .menu span, .navbar .menu a {
+            color: #{{fontColor}} !important;
+        }
+    {{/if}}
+</style>

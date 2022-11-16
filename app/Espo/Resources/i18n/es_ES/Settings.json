@@ -58,7 +58,13 @@
     "tabColorsDisabled": "Disable tab icons colors",
     "tabIconsDisabled": "Disable tab icons",
     "emailAddressIsOptedOutByDefault": "Mark new email addresses as opted-out",
-    "cleanupDeletedRecords": "Clean up deleted records"
+    "cleanupDeletedRecords": "Clean up deleted records",
+    "navigationManuBackgroundColor": "Fondo del menú de navegación",
+    "navigationMenuFontColor": "Color del menú de navegación",
+    "linkFontColor": "Color de enlace",
+    "buttonFontColor": "Color del boton",
+    "customStylesheetPath": "Ruta del archivo СSS",
+    "customStylesheet": "CSS"
   },
   "options": {
     "currencyFormat": {
@@ -81,7 +87,8 @@
     "textFilterUseContainsForVarchar": "If not checked then 'starts with' operator is used. You can use the wildcard '%'.",
     "authTokenPreventConcurrent": "Users won't be able to be logged in on multiple devices simultaneously.",
     "emailAddressIsOptedOutByDefault": "When creating new record email addess will be marked as opted-out.",
-    "cleanupDeletedRecords": "Removed records will be deleted from database after a while."
+    "cleanupDeletedRecords": "Removed records will be deleted from database after a while.",
+    "customStylesheetPath": "Sus estilos CSS personalizados se escribirán en este archivo. También puede realizar cambios en él directamente."
   },
   "labels": {
     "System": "Sistema",
@@ -102,7 +109,8 @@
     "notAllowByContent": "Not allow, check by file content",
     "notAllowByContentAndName": "Not allow, check by file name + file content",
     "allow": "Allow",
-    "SMTP": "SMTP"
+    "SMTP": "SMTP",
+    "Theme Configuration": "Configuración del tema"
   },
   "messages": {
     "languageMustBeSelected": "At least one language should be selected."

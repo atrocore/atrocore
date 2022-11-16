@@ -67,6 +67,10 @@ class Config
 
     protected $configPath = 'data/config.php';
 
+    protected $customStylesheetDir = 'css/treo/';
+
+    protected $customStyleFields = ['navigationManuBackgroundColor', 'navigationMenuFontColor', 'linkFontColor', 'buttonFontColor'];
+
     /**
      * Array of admin items
      *
@@ -389,6 +393,8 @@ class Config
         $data = array_merge($this->loadConfig(), $this->loadLocales());
         $data['unitsOfMeasure'] = $this->getUnitsOfMeasure();
 
+        $data = $this->prepareStylesheetConfigForOutput($data);
+
         $restrictedConfig  = $data;
         foreach($this->getRestrictItems($isAdmin) as $name) {
             if (isset($restrictedConfig[$name])) {
@@ -420,6 +426,8 @@ class Config
                 $values[$key] = $item;
             }
         }
+
+        $values = $this->prepareStylesheetConfigForSave($values);
 
         return $this->set($values);
     }
@@ -477,5 +485,89 @@ class Config
         }
 
         return $this->container->get('serviceFactory')->create('Measure')->getUnitsOfMeasure();
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return array
+     */
+    protected function prepareStylesheetConfigForOutput(array $data): array
+    {
+        $theme = $this->get('theme');
+        $customStylesheetsList = $this->get('customStylesheetsList', []);
+
+        if (isset($customStylesheetsList[$theme]) && !empty($themeData = $customStylesheetsList[$theme])) {
+            if (!empty($themeData['customStylesheetPath']) && file_exists($themeData['customStylesheetPath'])) {
+                $data['customStylesheetPath'] = $themeData['customStylesheetPath'];
+                $data['customStylesheet'] = file_get_contents($themeData['customStylesheetPath']);
+            }
+        } else {
+            $themeData = [];
+        }
+
+        $metadataTheme = $this->getMetadata()->get(['themes', $theme, 'defaults'], []);
+
+        foreach ($this->customStyleFields as $item) {
+            $data[$item] = $themeData[$item] ?? $metadataTheme[$item];
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return array
+     */
+    protected function prepareStylesheetConfigForSave(array $data): array
+    {
+        $currTheme = $this->get('theme');
+        $currData = $this->get('customStylesheetsList', []);
+
+        // create custom css theme file
+        if (!empty($data['customStylesheet'])) {
+            Util::createDir($this->customStylesheetDir);
+            file_put_contents($this->getCustomStylesheetPath(), $data['customStylesheet']);
+
+            $currData[$currTheme]['customStylesheetPath'] = $this->getCustomStylesheetPath();
+        }
+        unset($data['customStylesheet']);
+
+        // prepare theme custom data
+        foreach ($this->customStyleFields as $field) {
+            if (!empty($data[$field])) {
+                $currData[$currTheme][$field] = $data[$field];
+                unset($data[$field]);
+            }
+        }
+
+        $data['customStylesheetsList'] = $currData;
+
+        return $data;
+    }
+
+    /**
+     * @return string|null
+     */
+    protected function getCustomStylesheetFilename(): ?string
+    {
+        return $this->getMetadata()->get(['themes', $this->get('theme'), 'customStylesheetName']);
+    }
+
+    /**
+     * @return string
+     */
+    protected function getCustomStylesheetPath(): string
+    {
+        return $this->customStylesheetDir . $this->getCustomStylesheetFilename();
+    }
+
+    /**
+     * @return Metadata
+     */
+    protected function getMetadata(): Metadata
+    {
+        return $this->container->get('metadata');
     }
 }

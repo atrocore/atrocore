@@ -405,6 +405,29 @@
     "cleanupDeletedRecords": {
       "type": "bool",
       "tooltip": true
+    },
+    "customStylesheetPath": {
+      "type": "varchar",
+      "readOnly": true,
+      "tooltip": true
+    },
+    "customStylesheet": {
+      "type": "text"
+    },
+    "customStylesheetsList": {
+      "type": "jsonObject"
+    },
+    "navigationManuBackgroundColor": {
+      "type": "color"
+    },
+    "navigationMenuFontColor": {
+      "type": "color"
+    },
+    "linkFontColor": {
+      "type": "color"
+    },
+    "buttonFontColor": {
+      "type": "color"
     }
   }
 }

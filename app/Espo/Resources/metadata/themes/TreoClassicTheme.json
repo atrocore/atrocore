@@ -1,5 +1,6 @@
 {
   "stylesheet": "client/modules/treo-core/css/treo/treo-classic-theme.css",
+  "customStylesheetName": "treo-classic-theme-custom.css",
   "logo": "client/modules/treo-core/img/core_logo_dark.svg",
   "navbarIsVertical": true,
   "navbarStaticItemsHeight": 75,
@@ -8,5 +9,11 @@
   "dashboardCellHeight": 155,
   "dashboardCellMargin": 19,
   "modalFooterAtTheTop": true,
-  "modalFullHeight": true
+  "modalFullHeight": true,
+  "defaults": {
+    "linkFontColor": "06c",
+    "buttonFontColor": "06c",
+    "navigationManuBackgroundColor": "f5f5f5",
+    "navigationMenuFontColor": "000000"
+  }
 }
