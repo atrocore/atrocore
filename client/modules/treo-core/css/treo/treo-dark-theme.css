@@ -14986,7 +14986,6 @@ body > #header .navbar-brand span.home-icon {
 
     #header ul.tabs li.tab > a {
         padding-left: 10px;
-        border-bottom: 1px solid #555 !important;
     }
 
     #header .navbar-form {
@@ -20162,7 +20161,6 @@ button.category:focus {
 
 #navbar footer > .copyright {
     display: flex;
-    background-color: #424242;
     justify-content: space-between;
     align-items: center;
     width: 100%;
@@ -20217,8 +20215,6 @@ button.category:focus {
     }
 
     #header .navbar-header {
-        background: #424242;
-        border-right: 1px solid #424242;
         border-bottom: 1px solid #545454;
         height: 48px
     }
@@ -20237,6 +20233,7 @@ button.category:focus {
         height: 20px;
         border-radius: 50%;
         padding: 1px 5px;
+        opacity: 0.5;
     }
 
     body:not(.minimized) #header a.minimizer.bottom-minimizer {
@@ -20283,7 +20280,6 @@ button.category:focus {
 
     #navbar footer > ul {
         width: 220px;
-        background-color: #424242;
         padding: 10px 0 10px 10px;
         margin: 0;
         position: absolute;

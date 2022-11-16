@@ -61,7 +61,12 @@
     "tabColorsDisabled": "Disable tab icons colors",
     "tabIconsDisabled": "Disable tab icons",
     "emailAddressIsOptedOutByDefault": "Mark new email addresses as opted-out",
-    "cleanupDeletedRecords": "Clean up deleted records"
+    "navigationManuBackgroundColor": "Navigation Menu Background",
+    "navigationMenuFontColor": "Navigation Menu Color",
+    "linkFontColor": "Link Color",
+    "buttonFontColor": "Button Color",
+    "customStylesheetPath": "СSS File Path",
+    "customStylesheet": "CSS"
   },
   "options": {
     "currencyFormat": {
@@ -89,7 +94,8 @@
     "textFilterUseContainsForVarchar": "If not checked then 'starts with' operator is used. You can use the wildcard '%'.",
     "authTokenPreventConcurrent": "Users won't be able to be logged in on multiple devices simultaneously.",
     "emailAddressIsOptedOutByDefault": "When creating new record email addess will be marked as opted-out.",
-    "cleanupDeletedRecords": "Removed records will be deleted from database after a while."
+    "cleanupDeletedRecords": "Removed records will be deleted from database after a while.",
+    "customStylesheetPath": "Your custom CSS styles will be written to this file. You can make changes in it directly too."
   },
   "labels": {
     "inputLanguage": "Input Language",
@@ -111,7 +117,8 @@
     "Test Connection": "Test Connection",
     "Connecting": "Connecting...",
     "Activities": "Activities",
-    "Admin Notifications": "Admin Notifications"
+    "Admin Notifications": "Admin Notifications",
+    "Theme Configuration": "Theme Configuration"
   },
   "messages": {
     "languageMustBeSelected": "At least one language should be selected."

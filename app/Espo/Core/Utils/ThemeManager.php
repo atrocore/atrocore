@@ -73,6 +73,21 @@ class ThemeManager
     }
 
     /**
+     * @return string|null
+     */
+    public function getCustomStylesheet(): ?string
+    {
+        $theme = $this->getName();
+        $themesData = $this->config->get('customStylesheetsList', []);
+
+        if (isset($themesData[$theme]) && isset($themesData[$theme]['customStylesheetPath'])) {
+            return $themesData[$theme]['customStylesheetPath'];
+        }
+
+        return null;
+    }
+
+    /**
      * Get stylesheet
      *
      * @return string

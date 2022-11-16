@@ -111,6 +111,13 @@ class ClientManager
         $html = str_replace('{{stylesheet}}', $this->getThemeManager()->getStylesheet(), $html);
         $html = str_replace('{{runScript}}', $runScript , $html);
         $html = str_replace('{{basePath}}', $this->basePath , $html);
+
+        if (!empty($customStylesheet = $this->getThemeManager()->getCustomStylesheet())) {
+            $link = '<link href="' . $this->basePath . $customStylesheet . '?r=' . $this->getCacheTimestamp() . '" rel="stylesheet" id="custom-stylesheet">';
+            $html = str_replace('{{customStylesheet}}', $link, $html);
+        } else {
+            $html = str_replace('{{customStylesheet}}', '', $html);
+        }
         if ($isDeveloperMode) {
             $html = str_replace('{{useCacheInDeveloperMode}}', $this->getConfig()->get('useCacheInDeveloperMode') ? 'true' : 'false', $html);
         }

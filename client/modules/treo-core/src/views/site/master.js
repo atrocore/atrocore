@@ -35,6 +35,20 @@
 Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/master',
     Dep => Dep.extend({
 
+        data() {
+            let result = {};
+
+            if (this.getConfig().get('linkFontColor')) {
+                result.linkFontColor = this.getConfig().get('linkFontColor');
+            }
+
+            if (this.getConfig().get('buttonFontColor')) {
+                result.buttonFontColor = this.getConfig().get('buttonFontColor');
+            }
+
+            return result;
+        },
+
         afterRender() {
 
         }

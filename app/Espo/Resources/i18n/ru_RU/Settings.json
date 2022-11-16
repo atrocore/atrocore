@@ -60,7 +60,13 @@
     "isStreamPanelFirst": "Is stream panel first",
     "attachmentDuplicates": "Дубликаты ресурсов",
     "assignmentNotifications": "Уведомления при назначении",
-    "aclStrictMode": "ACL строгий режим"
+    "aclStrictMode": "ACL строгий режим",
+    "navigationManuBackgroundColor": "Фон меню навигации",
+    "navigationMenuFontColor": "Цвет меню навигации",
+    "linkFontColor": "Цвет ссылкок",
+    "buttonFontColor": "Цвет кнопок",
+    "customStylesheetPath": "Путь к файлу СSS",
+    "customStylesheet": "CSS"
   },
   "options": {
     "currencyFormat": {
@@ -83,7 +89,8 @@
     "emailAddressIsOptedOutByDefault": "При создании новой записи, эл. адрес будет отмечено как тот, который не участвует в эл. рассылке.",
     "cleanupDeletedRecords": "Удаленные записи будут стерты из базы данных через некоторое время.",
     "isStreamSide": "Если включено: панель потока будет отображаться сбоку.",
-    "isStreamPanelFirst": "Если включено: панель потока будет отображаться сразу после обзора."
+    "isStreamPanelFirst": "Если включено: панель потока будет отображаться сразу после обзора.",
+    "customStylesheetPath": "Ваши пользовательские стили CSS будут записаны в этот файл. Вы также можете вносить изменения в него напрямую."
   },
   "labels": {
     "System": "Система",
@@ -105,7 +112,8 @@
     "notAllowByName": "Не разрешено, проверка по имени файла",
     "notAllowByContentAndName": "Не разрешено, проверка по имени файла + содержимому файла",
     "allow": "Разрешено",
-    "SMTP": "SMTP"
+    "SMTP": "SMTP",
+    "Theme Configuration": "Конфигурация темы"
   },
   "messages": {
     "languageMustBeSelected": "Минимум один язык должен быть выбран."

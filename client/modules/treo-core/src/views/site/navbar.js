@@ -67,10 +67,20 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
         },
 
         data() {
-            return _.extend({
+            let result = _.extend({
                 isMoreFields: this.isMoreFields,
                 lastViewed: !this.getConfig().get('actionHistoryDisabled')
             }, Dep.prototype.data.call(this));
+
+            if (this.getConfig().get('navigationManuBackgroundColor')) {
+                result.backgroundColor = this.getConfig().get('navigationManuBackgroundColor');
+            }
+
+            if (this.getConfig().get('navigationMenuFontColor')) {
+                result.fontColor = this.getConfig().get('navigationMenuFontColor');
+            }
+
+            return result;
         },
 
         setup() {
