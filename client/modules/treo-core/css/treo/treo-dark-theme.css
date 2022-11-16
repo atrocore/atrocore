@@ -22264,7 +22264,7 @@ select {
 
 
 .modal-content .entity-manager-container > .panel-body-form {
-    padding: 0 14px;
+    padding: 14px 14px 0 14px;
 }
 
 .entity-manager-container > .panel-heading {
