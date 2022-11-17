@@ -879,7 +879,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.baseWidth = [];
 
             this.listenTo(this, 'after:save', () => {
-                this.collection.fetch();
+                this.afterSave();
             });
 
             this.listenTo(this.collection, 'sync', () => {
@@ -900,6 +900,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 $(window).off(this.dragndropEventName);
                 $(window).off(`keydown.${this.cid} keyup.${this.cid}`);
             });
+        },
+
+        afterSave: function () {
+            this.collection.fetch();
         },
 
         afterRender: function () {
