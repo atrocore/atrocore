@@ -32,12 +32,26 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('views/admin/authentication', 'views/settings/record/edit', function (Dep) {
+Espo.define('views/admin/authentication/record/edit-bottom', 'views/record/edit-bottom', Dep => {
+
     return Dep.extend({
 
-        layoutName: 'authentication',
+        setup() {
+            this.relationshipPanels = this.getRelationshipPanels().length > 0
 
-        bottomView: 'views/admin/authentication/record/edit-bottom',
+            Dep.prototype.setup.call(this);
+        },
+
+        setupRelationshipPanels() {
+            this.relationshipsLayout = this.getRelationshipPanels();
+
+            Dep.prototype.setupRelationshipPanels.call(this);
+        },
+
+        getRelationshipPanels() {
+            return this.getMetadata().get('app.authentication.relationshipPanels') || [];
+        },
 
     });
+
 });

@@ -1,3 +1,6 @@
-[
-  "\\Espo\\Core\\Utils\\Authentication\\Token"
-]
+{
+  "types": [
+    "\\Espo\\Core\\Utils\\Authentication\\Token"
+  ],
+  "relationshipPanels": []
+}

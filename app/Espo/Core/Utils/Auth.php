@@ -160,7 +160,7 @@ class Auth
         }
 
         if (empty($user)) {
-            $authentications = array_reverse($this->container->get('metadata')->get('app.authentication', []));
+            $authentications = array_reverse($this->container->get('metadata')->get('app.authentication.types', []));
             foreach ($authentications as $authenticationClass) {
                 if (is_a($authenticationClass, AbstractAuthentication::class, true)) {
                     $user = (new $authenticationClass($this, $this->container))->login($username, $password);
