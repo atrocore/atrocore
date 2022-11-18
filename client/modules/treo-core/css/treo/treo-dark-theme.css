@@ -29,11 +29,13 @@ audio:not([controls]) {
 }
 
 a {
-    background-color: transparent
+    background-color: transparent;
+    text-decoration: none;
 }
 
 a:active, a:hover {
-    outline: 0
+    outline: 0;
+    text-decoration: underline;
 }
 
 abbr[title] {
@@ -16198,7 +16200,6 @@ table.no-margin {
 }
 
 .list > table td, table.list th {
-    white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden
 }
