@@ -1628,7 +1628,7 @@ class Record extends \Espo\Core\Services\Base
         $collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
 
         if (!empty($collection) && count($collection) > 0) {
-            $this->prepareCollectionForOutput($collection, $selectParams);
+            $recordService->prepareCollectionForOutput($collection, $selectParams);
             foreach ($collection as $e) {
                 $recordService->loadAdditionalFieldsForList($e);
                 if (!empty($params['loadAdditionalFields'])) {
