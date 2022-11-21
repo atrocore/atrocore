@@ -1152,11 +1152,24 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     const sortFieldValue = this.getSortFieldValue(itemId);
                     url = `${this.scope}/${itemId}`;
 
+                    let ids = this.getIdsFromDom();
+
+                    let previousItemId = null;
+                    let tmp = null;
+                    ids.forEach(id => {
+                        if (id === itemId) {
+                            previousItemId = tmp;
+                        }
+                        tmp = id;
+                    });
+
                     data = {
                         _scope: parentModel.urlRoot,
                         _id: parentModel.id,
                         _link: link,
-                        _sortedIds: this.getIdsFromDom(),
+                        _sortedIds: ids,
+                        _itemId: itemId,
+                        _previousItemId: previousItemId,
                         [this.dragableSortField]: sortFieldValue
                     };
                 }
@@ -1409,7 +1422,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     type: type,
                     checkedList: this.checkedList,
                     byWhere: this.allResultIsChecked,
-                    where : this.collection.getWhere()
+                    where: this.collection.getWhere()
                 }, view => {
                     view.render(() => {
                         this.notify(false);
