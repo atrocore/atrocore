@@ -9,11 +9,5 @@
     "dashboardCellHeight": 155,
     "dashboardCellMargin": 19,
     "modalFooterAtTheTop": true,
-    "modalFullHeight": true,
-    "defaults": {
-        "linkFontColor": "06c",
-        "buttonFontColor": "06c",
-        "navigationManuBackgroundColor": "FFFFFF",
-        "navigationMenuFontColor": "111111"
-    }
+    "modalFullHeight": true
 }

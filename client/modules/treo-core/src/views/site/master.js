@@ -35,22 +35,40 @@
 Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/master',
     Dep => Dep.extend({
 
-        data() {
-            let result = {};
-
-            if (this.getConfig().get('linkFontColor')) {
-                result.linkFontColor = this.getConfig().get('linkFontColor');
-            }
-
-            if (this.getConfig().get('buttonFontColor')) {
-                result.buttonFontColor = this.getConfig().get('buttonFontColor');
-            }
-
-            return result;
+        styleVariableMap: {
+            navigationManuBackgroundColor: '--nav-menu-background',
+            navigationMenuFontColor: '--nav-font-color',
+            linkFontColor: '--link-color',
+            primaryColor: '--primary-color',
+            secondaryColor: '--secondary-color',
+            primaryFontColor: '--primary-font-color',
+            secondaryFontColor: '--secondary-font-color',
+            labelColor: '--label-color',
+            anchorNavigationBackground: '--anchor-nav-background',
+            iconColor: '--icon-farbe',
+            primaryBorderColor: '--primary-border-color',
+            secondaryBorderColor: '--secondary-border-color',
+            panelTitleColor: '--panel-title-color',
+            headerTitleColor: '--header-title-color',
+            success: '--success',
+            notice: '--notice',
+            information: '--information',
+            error: '--error'
         },
 
         afterRender() {
+            if ($(":root").length > 0) {
+                const config = this.getConfig().get('customStylesheetsList') || [],
+                      theme = this.getPreferences().get('theme') || this.getConfig().get('theme');
 
+                if (config[theme]) {
+                    (Object.keys(this.styleVariableMap) || []).forEach(param => {
+                        if (config[theme][param]) {
+                            $(":root")[0].style.setProperty(this.styleVariableMap[param], config[theme][param]);
+                        }
+                    });
+                }
+            }
         }
 
     })
