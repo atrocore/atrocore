@@ -545,7 +545,7 @@ class Config
         $currData = $this->get('customStylesheetsList', []);
 
         // create custom css theme file
-        if (!empty($data['customStylesheet'])) {
+        if (isset($data['customStylesheet'])) {
             Util::createDir($this->customStylesheetDir);
             file_put_contents($this->getCustomStylesheetPath(), $data['customStylesheet']);
 

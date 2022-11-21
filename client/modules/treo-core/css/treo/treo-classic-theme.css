@@ -20284,6 +20284,7 @@ button.category:focus {
         margin: 0;
         position: absolute;
         bottom: 27px;
+        background-color: var(--nav-menu-background);
     }
 
     #navbar footer > ul > li {
