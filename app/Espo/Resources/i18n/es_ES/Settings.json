@@ -60,11 +60,25 @@
     "emailAddressIsOptedOutByDefault": "Mark new email addresses as opted-out",
     "cleanupDeletedRecords": "Clean up deleted records",
     "navigationManuBackgroundColor": "Fondo del menú de navegación",
-    "navigationMenuFontColor": "Color del menú de navegación",
+    "navigationMenuFontColor": "Color de fuente de navegación",
     "linkFontColor": "Color de enlace",
-    "buttonFontColor": "Color del boton",
     "customStylesheetPath": "Ruta del archivo СSS",
-    "customStylesheet": "CSS"
+    "customStylesheet": "CSS",
+    "primaryColor": "Color primario",
+    "secondaryColor": "Color secundario",
+    "primaryFontColor": "Color de fuente principal",
+    "secondaryFontColor": "Color de fuente secundario",
+    "labelColor": "color de la etiqueta",
+    "anchorNavigationBackground": "Fondo de navegación ancla",
+    "iconColor": "Color del icono",
+    "primaryBorderColor": "color de borde primario",
+    "secondaryBorderColor": "color de borde secundario",
+    "panelTitleColor": "Color del título del panel",
+    "headerTitleColor": "Color del título del encabezado",
+    "success": "Éxito",
+    "notice": "Aviso",
+    "information": "Información",
+    "error": "Error"
   },
   "options": {
     "currencyFormat": {

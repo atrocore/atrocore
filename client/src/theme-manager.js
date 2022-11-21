@@ -77,6 +77,26 @@ Espo.define('theme-manager', [], function () {
             return link
         },
 
+        getCustomStylesheet: function () {
+            let currTheme = this.getName(),
+                customThemeList = this.config.get('customStylesheetsList') || [];
+
+            if (customThemeList.length > 0) {
+                let customThemeData = customThemeList[currTheme] || [];
+
+                if (customThemeData && customThemeData['customStylesheetPath']) {
+                    let link = customThemeData['customStylesheetPath'];
+
+                    if (this.config.get('cacheTimestamp')) {
+                        link += '?r=' + this.config.get('cacheTimestamp').toString();
+                    }
+                    return link;
+                }
+            }
+
+            return null;
+        },
+
         getIframeStylesheet: function () {
             var link = this.metadata.get(['themes', this.getName(), 'stylesheetIframe']) || 'client/css/espo/espo-iframe.css';
             if (this.config.get('cacheTimestamp')) {
