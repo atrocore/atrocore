@@ -45,7 +45,7 @@ Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/m
             secondaryFontColor: '--secondary-font-color',
             labelColor: '--label-color',
             anchorNavigationBackground: '--anchor-nav-background',
-            iconColor: '--icon-farbe',
+            iconColor: '--icon-color',
             primaryBorderColor: '--primary-border-color',
             secondaryBorderColor: '--secondary-border-color',
             panelTitleColor: '--panel-title-color',
