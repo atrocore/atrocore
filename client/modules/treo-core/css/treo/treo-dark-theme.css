@@ -4128,7 +4128,7 @@ tbody.collapse.in {
     border-top-left-radius: 3px;
 }
 
-.btn-group > .btn:last-child:not(:first-child), .btn-group > .dropdown-toggle:not(:first-child) {
+.btn-group > .btn:last-child:not(:first-child), .btn-group > .dropdown-toggle:not(:first-child), .btn-group > .btn.last {
     border-bottom-right-radius: 3px;
     border-top-right-radius: 3px;
 }

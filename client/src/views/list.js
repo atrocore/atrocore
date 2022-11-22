@@ -125,7 +125,7 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
                     name: 'kanban',
                     title: 'Kanban',
                     acl: 'read',
-                    iconHtml: '<span class="fas fa-grip-horizontal"></span>'
+                    iconHtml: '<span class="fa fa-grip-horizontal"></span>'
                 };
 
                 let listIndex = this.menu.buttons.findIndex(button => button.name === 'list');
