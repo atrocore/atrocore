@@ -20,7 +20,7 @@ body {
     --secondary-font-color: #000;
     --label-color: #000;
     --anchor-nav-background: #fafafa;
-    --icon-farbe: #06c;
+    --icon-color: #06c;
     --primary-border-color: #dcdcdc;
     --secondary-border-color: #f5f5f5;
     --panel-title-color: #000;
@@ -17490,7 +17490,7 @@ a.field-info > span.fa-info-circle {
 }
 
 a > .fas, a > .far {
-    color: var(--icon-farbe);
+    color: var(--icon-color);
 }
 
 .btn-icon {

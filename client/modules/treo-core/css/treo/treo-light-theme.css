@@ -27,7 +27,7 @@ body {
   --secondary-font-color: #000;
   --label-color: #000;
   --anchor-nav-background: #fafafa;
-  --icon-farbe: #777777;
+  --icon-color: #777777;
   --primary-border-color: #e0e0e0;
   --secondary-border-color: #eeeeee;
   --panel-title-color: #000;
@@ -17232,7 +17232,7 @@ a.field-info > span.fa-info-circle {
 }
 
 a > .fas, a > .far {
-  color: var(--icon-farbe);
+  color: var(--icon-color);
 }
 
 .btn-icon {
