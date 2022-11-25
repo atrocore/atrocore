@@ -16434,9 +16434,8 @@ label.attach-file-label > input.file {
 }
 
 .attachment-preview {
-    display: inline-block;
     vertical-align: top;
-    margin: 3px 6px 3px 0
+    height: 100%;
 }
 
 .attachment-preview > a > img {
