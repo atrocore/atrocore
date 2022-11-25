@@ -229,7 +229,12 @@ class Preferences extends \Espo\Core\ORM\Repository
             }
         }
 
-        $data['locale'] = empty($entity->get('localeId')) ? null : $entity->get('localeId');
+        $data['locale'] = null;
+        if (!empty($entity->get('localeId'))) {
+            $data['locale'] = $entity->get('localeId');
+        } elseif (!empty($entity->get('locale'))) {
+            $data['locale'] = $entity->get('locale');
+        }
 
         $dataString = Json::encode($data, \JSON_PRETTY_PRINT);
 
