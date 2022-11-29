@@ -19758,11 +19758,6 @@ ul.dropdown-menu > li.checkbox {
     padding-right: 8px;
 }
 
-.panel-body > div > .list > table td:last-child,
-.panel-body > div > .list > table th:last-child {
-    padding-right: 8px;
-}
-
 .page-header.detail-page-header {
     margin: 14px 0 10px 0
 }
