@@ -1,4 +1,3 @@
-
 @charset "UTF-8";
 /*Login form*/
 @font-face {
@@ -3976,6 +3975,13 @@ tbody.collapse.in {
   padding-right: 8px;
 }
 
+
+.btn-group > .additional-button:first-child {
+  margin-left: 20px;
+  border-bottom-left-radius: 3px;
+  border-top-left-radius: 3px; 
+}
+
 .btn-group > .btn-lg + .dropdown-toggle {
   padding-left: 12px;
   padding-right: 12px;
@@ -4249,7 +4255,7 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
 }
 
 .nav {
-  margin-bottom: 0;
+  margin-bottom: 2px;
   padding-left: 0;
   list-style: none;
 }
@@ -15345,10 +15351,6 @@ table.table > thead th {
   margin: 0;
 }
 
-.button-container {
-  padding: 0 0 10px;
-}
-
 .margin {
   margin: 8px 0;
 }
@@ -17512,37 +17514,36 @@ table.table {
   }
 }
 
-  #navbar .nav.navbar-nav.navbar-right {
-    background-color: #ececec;
-    border-bottom: 1px solid #dcdcdc;
-  }
+#navbar .nav.navbar-nav.navbar-right {
+  background-color: #ececec;
+  border-bottom: 1px solid #dcdcdc;
+}
 
-  #navbar footer {
-    width: 220px;
-    margin-left: -9px;
-    font-size: 12px;
-  }
+#navbar footer {
+  width: 220px;
+  margin-left: -9px;
+  font-size: 12px;
+}
 
-  .minimized #navbar footer {
-    display: none;
-  }
+.minimized #navbar footer {
+  display: none;
+}
 
-  #navbar footer > ul {
-    width: 220px;
-    padding: 10px 0 10px 10px;
-    margin: 0;
-    position: absolute;
-    bottom: 27px;
-    background-color: var(--nav-menu-background);
-  }
+#navbar footer > ul {
+  width: 220px;
+  padding: 10px 0 10px 10px;
+  margin: 0;
+  position: absolute;
+  bottom: 27px;
+  background-color: var(--nav-menu-background);
+}
 
-  #navbar footer > ul > li {
-    padding: 3px 0;
-  }
+#navbar footer > ul > li {
+  padding: 3px 0;
+}
 
-  #navbar footer > .copyright {
-    height: 28px;
-  }
+#navbar footer > .copyright {
+  height: 28px;
 }
 
 .list-container > .list, .panel, .dashlet-container, .list-nested-categories, #main > .calendar-container .calendar, #main > .calendar-container .timeline, .well, .admin-content .table.table-bordered, .admin-content iframe, .list-kanban > .kanban-head-container, .list-group-panel {
@@ -17604,6 +17605,7 @@ table.table {
 
 .record .button-container > .btn-group {
   margin-right: 20px;
+  margin-bottom: 8px;
 }
 
 .record .button-container .nav-pills > li {
@@ -19021,7 +19023,6 @@ input#sn-checkbox-open-in-new-window {
 
 .record .stick-sub.button-container {
   background-color: #fff !important;
-  box-shadow: 0 2px 4px #efefef;
 }
 
 .stick-sub.button-container {
@@ -22858,4 +22859,8 @@ body.minimized #header > #navbar .navbar-inverse .navbar-nav .more .dropdown-men
 ::-webkit-scrollbar-button:vertical:single-button:increment:hover {
   border-color: #aaa transparent transparent transparent;
   background-color: #efefef;
+}
+
+.button-container {
+  padding: 0 0 10px;
 }
