@@ -1340,6 +1340,36 @@ Espo.define('views/record/list', 'view', function (Dep) {
                             }
                             prevScrollLeft = list.scrollLeft();
                         });
+
+                        // custom scroll for relationship panels
+                        let scroll = this.getParentView().$el.siblings('.panel-scroll');
+                        if (scroll.length) {
+                            scroll.css({width: list.width(), display: 'block'});
+                            scroll.find('div').css('width', fullTable.width());
+                            rowsButtons.css('left', scroll.scrollLeft() + rowsButtonsPosition);
+
+                            scroll.on('scroll', () => {
+                                fullTable.css('left', -1 * scroll.scrollLeft());
+                                rowsButtons.css('left', scroll.scrollLeft() + rowsButtonsPosition);
+                            });
+
+                            if ($(window).width() < 768) {
+                                let touchStartPosition = 0,
+                                    touchFinalPosition = 0,
+                                    currentScroll = 0;
+
+                                list.on('touchstart', function (e) {
+                                    touchStartPosition = e.originalEvent.targetTouches[0].pageX;
+                                    currentScroll = scroll.scrollLeft();
+                                }.bind(this));
+
+                                list.on('touchmove', function (e) {
+                                    touchFinalPosition = e.originalEvent.targetTouches[0].pageX;
+
+                                    scroll.scrollLeft(currentScroll - (touchFinalPosition - touchStartPosition));
+                                }.bind(this));
+                            }
+                        }
                     }
                 }
             }
