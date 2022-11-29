@@ -22864,3 +22864,12 @@ body.minimized #header > #navbar .navbar-inverse .navbar-nav .more .dropdown-men
 .button-container {
   padding: 0 0 10px;
 }
+
+
+td.cell[data-name="tag"] {
+  line-height: 2 !important;
+}
+
+td.cell[data-name="tag"]:first-line {
+  line-height: 1.36 !important;
+}
