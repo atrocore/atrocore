@@ -87,7 +87,8 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
             this.createView('treePanel', 'views/record/panels/tree-panel', {
                 el: `${this.options.el} .catalog-tree-panel`,
                 scope: scope ? scope : this.scope,
-                model: this.model
+                model: this.model,
+                collection: this.collection
             }, view => {
                 view.listenTo(view, 'select-node', data => {
                     this.selectNode(data);
