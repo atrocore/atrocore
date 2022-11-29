@@ -227,6 +227,20 @@ Espo.define(
                 if (this.themeManager.isUserTheme()) {
                     var stylesheetPath = this.basePath + this.themeManager.getStylesheet();
                     $('#main-stylesheet').attr('href', stylesheetPath);
+
+                    if (this.themeManager.getCustomStylesheet()) {
+                        let customStylesheetPath = this.basePath + this.themeManager.getCustomStylesheet();
+
+                        let customLink = $('#custom-stylesheet');
+
+                        if (customLink.length > 0) {
+                            customLink.attr('href', customStylesheetPath);
+                        } else {
+                            $('head').append('<link href="' + customStylesheetPath + '" rel="stylesheet" id="custom-stylesheet">');
+                        }
+                    } else {
+                        $('#custom-stylesheet').remove();
+                    }
                 }
 
                 var promiseList = [];

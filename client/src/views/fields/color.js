@@ -44,8 +44,19 @@ Espo.define('views/fields/color', ['views/fields/varchar', 'lib!jscolor'],
             let input = this.$el.find('input').get(0);
 
             if (input) {
-                let picker = new jscolor(input, {zIndex: 2000});
+                let options = {zIndex: 2000, required: false};
 
+                if (this.model && this.model.name) {
+                    const defs = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name]);
+
+                    if (defs['prohibitedEmptyValue']) {
+                        options.required = true;
+                    }
+                }
+
+                let picker = new jscolor(input, options);
+
+                jscolor.init();
                 if (this.mode !== 'edit') {
                     input.readOnly = true;
                     picker.showOnClick = false;

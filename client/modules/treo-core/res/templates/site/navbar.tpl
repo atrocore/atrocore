@@ -5,7 +5,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand nav-link" href="#"><img src="{{logoSrc}}" class="logo"><span class="home-icon fas fa-th-large" title="{{translate 'Home'}}"></span></a>
+        <a class="navbar-brand nav-link" href="#"><img src="{{logoSrc}}" class="logo"><span class="home-icon fas fa-home" title="{{translate 'homepage'}}"></span></a>
         <div class="navbar-header-inner pull-right">
             {{#if globalSearch}}
                 <button type="button" class="search-toggle pull-left visible-xs">
@@ -137,24 +137,3 @@
         </ul>
     </div>
 </div>
-
-<style>
-    {{#if backgroundColor}}
-        .navbar {
-            background-color: #{{backgroundColor}} !important;
-        }
-
-        @media screen and (max-width: 767px) {
-            .navbar .navbar-header,
-            .navbar .menu {
-                background-color: #{{backgroundColor}} !important;
-            }
-        }
-    {{/if}}
-
-    {{#if fontColor}}
-        .navbar .menu span, .navbar .menu a {
-            color: #{{fontColor}} !important;
-        }
-    {{/if}}
-</style>

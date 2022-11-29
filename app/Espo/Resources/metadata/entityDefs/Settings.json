@@ -426,7 +426,49 @@
     "linkFontColor": {
       "type": "color"
     },
-    "buttonFontColor": {
+    "primaryColor": {
+      "type": "color"
+    },
+    "secondaryColor": {
+      "type": "color"
+    },
+    "primaryFontColor": {
+      "type": "color"
+    },
+    "secondaryFontColor": {
+      "type": "color"
+    },
+    "labelColor": {
+      "type": "color"
+    },
+    "anchorNavigationBackground": {
+      "type": "color"
+    },
+    "iconColor": {
+      "type": "color"
+    },
+    "primaryBorderColor": {
+      "type": "color"
+    },
+    "secondaryBorderColor": {
+      "type": "color"
+    },
+    "panelTitleColor": {
+      "type": "color"
+    },
+    "headerTitleColor": {
+      "type": "color"
+    },
+    "success": {
+      "type": "color"
+    },
+    "notice": {
+      "type": "color"
+    },
+    "information": {
+      "type": "color"
+    },
+    "error": {
       "type": "color"
     }
   }

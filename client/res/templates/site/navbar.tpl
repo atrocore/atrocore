@@ -1,6 +1,6 @@
 <div class="navbar navbar-inverse" role="navigation">
     <div class="navbar-header">
-        <a class="navbar-brand nav-link" href="#"><img src="{{logoSrc}}" class="logo"><span class="home-icon fas fa-th-large" title="{{translate 'Home'}}"></span></a>
+        <a class="navbar-brand nav-link" href="#"><img src="{{logoSrc}}" class="logo"><span class="home-icon fas fa-home" title="{{translate 'homepage'}}"></span></a>
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-body">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>

@@ -209,6 +209,9 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
                 if (this.defs.dragDrop) {
                     collection.maxSize = 9999;
+                    if (this.defs.dragDrop.maxSize) {
+                        collection.maxSize = this.defs.dragDrop.maxSize;
+                    }
                 }
 
                 if (this.defs.filters) {

@@ -69,7 +69,26 @@ class Config
 
     protected $customStylesheetDir = 'css/treo/';
 
-    protected $customStyleFields = ['navigationManuBackgroundColor', 'navigationMenuFontColor', 'linkFontColor', 'buttonFontColor'];
+    protected $customStyleFields = [
+        'navigationManuBackgroundColor',
+        'navigationMenuFontColor',
+        'linkFontColor',
+        'primaryColor',
+        'secondaryColor',
+        'primaryFontColor',
+        'secondaryFontColor',
+        'labelColor',
+        'anchorNavigationBackground',
+        'iconColor',
+        'primaryBorderColor',
+        'secondaryBorderColor',
+        'panelTitleColor',
+        'headerTitleColor',
+        'success',
+        'notice',
+        'information',
+        'error'
+    ];
 
     /**
      * Array of admin items
@@ -506,10 +525,10 @@ class Config
             $themeData = [];
         }
 
-        $metadataTheme = $this->getMetadata()->get(['themes', $theme, 'defaults'], []);
-
         foreach ($this->customStyleFields as $item) {
-            $data[$item] = $themeData[$item] ?? $metadataTheme[$item];
+            if (isset($themeData[$item])) {
+                $data[$item] = $themeData[$item];
+            }
         }
 
         return $data;
@@ -526,7 +545,7 @@ class Config
         $currData = $this->get('customStylesheetsList', []);
 
         // create custom css theme file
-        if (!empty($data['customStylesheet'])) {
+        if (isset($data['customStylesheet'])) {
             Util::createDir($this->customStylesheetDir);
             file_put_contents($this->getCustomStylesheetPath(), $data['customStylesheet']);
 
@@ -538,8 +557,11 @@ class Config
         foreach ($this->customStyleFields as $field) {
             if (!empty($data[$field])) {
                 $currData[$currTheme][$field] = $data[$field];
-                unset($data[$field]);
+            } elseif (isset($data[$field]) && isset($currData[$currTheme]) && isset($currData[$currTheme][$field])) {
+                unset($currData[$currTheme][$field]);
             }
+
+            unset($data[$field]);
         }
 
         $data['customStylesheetsList'] = $currData;
