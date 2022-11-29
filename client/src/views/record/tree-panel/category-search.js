@@ -57,15 +57,6 @@ Espo.define('views/record/tree-panel/category-search', 'view',
         setup() {
             this.scope = this.options.scope || this.scope;
 
-            this.listenTo(this, 'find-in-tree-panel', value => {
-                const $reset = this.$el.find('.reset-search-in-tree-button');
-                if (value && value !== '') {
-                    $reset.show();
-                } else {
-                    $reset.hide();
-                }
-            });
-
             this.listenTo(this.options.treePanel, 'tree-reset', () => {
                 this.resetSearchInTree();
             });

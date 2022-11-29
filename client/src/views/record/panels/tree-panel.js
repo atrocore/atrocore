@@ -111,6 +111,17 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                     }
                 }
             }.bind(this))
+
+            this.toggleVisibilityForResetButton();
+        },
+
+        toggleVisibilityForResetButton() {
+            let $reset = this.$el.find('.reset-search-in-tree-button');
+            if (this.getStorage().get('treeSearchValue', this.treeScope)) {
+                $reset.show();
+            } else {
+                $reset.hide();
+            }
         },
 
         treePanelResize() {
@@ -270,7 +281,32 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             return !node.parent.getLevel();
         },
 
-        buildTree(data) {
+        buildTree() {
+            let data = null;
+
+            let searchValue = this.getStorage().get('treeSearchValue', this.treeScope) || null;
+            if (searchValue) {
+                $('.search-in-tree-input').val(searchValue);
+                this.ajaxGetRequest(this.treeScope, {
+                    "select": "id,name",
+                    "offset": 0,
+                    "maxSize": 200,
+                    "sortBy": "id",
+                    "asc": true,
+                    "where": [{"type": "textFilter", "value": searchValue}]
+                }, {async: false}).then(response => {
+                    let ids = [];
+                    if (response.list) {
+                        response.list.forEach(record => {
+                            ids.push(record.id);
+                        });
+                    }
+                    this.ajaxGetRequest(`${this.treeScope}/action/TreeData`, {"ids": ids}, {async: false}).then(response => {
+                        data = response.tree;
+                    });
+                });
+            }
+
             let treeData = {
                 dataUrl: function (node) {
                     this.currentNode = node;
@@ -297,9 +333,8 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                     /**
                      * Mark search str
                      */
-                    let search = $('.search-in-tree-input').val();
-                    if (search.length > 0) {
-                        search = search.replace(/\*/g, '');
+                    if (searchValue) {
+                        let search = searchValue.replace(/\*/g, '');
                         if (search.length > 0) {
                             let name = $title.html();
                             let matches = name.match(new RegExp(search, 'ig'));
@@ -312,6 +347,11 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                                     }
                                 });
                             }
+                        }
+
+                        if (this.getStorage().get('treeScope', this.scope) === this.scope && this.model && this.model.get('id') === node.id) {
+                            $tree.tree('addToSelection', node);
+                            $li.addClass('jqtree-selected');
                         }
                     }
 
@@ -429,27 +469,12 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                 view.render();
                 this.listenTo(view, 'find-in-tree-panel', value => {
                     if (value && value !== '') {
-                        this.ajaxGetRequest(this.treeScope, {
-                            "select": "id,name",
-                            "offset": 0,
-                            "maxSize": 200,
-                            "sortBy": "id",
-                            "asc": true,
-                            "where": [{"type": "textFilter", "value": value}]
-                        }).then(response => {
-                            let ids = [];
-                            if (response.list) {
-                                response.list.forEach(record => {
-                                    ids.push(record.id);
-                                });
-                            }
-                            this.ajaxGetRequest(`${this.treeScope}/action/TreeData`, {"ids": ids}).then(response => {
-                                this.buildTree(response.tree);
-                            });
-                        });
+                        this.getStorage().set('treeSearchValue', this.treeScope, value);
                     } else {
-                        this.buildTree();
+                        this.getStorage().clear('treeSearchValue', this.treeScope);
                     }
+                    this.buildTree();
+                    this.toggleVisibilityForResetButton();
                 });
             });
 
