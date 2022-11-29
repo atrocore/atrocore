@@ -1,5 +1,3 @@
-
-
 html {
     font-family: sans-serif;
     -ms-text-size-adjust: 100%;
@@ -7,7 +5,8 @@ html {
 }
 
 body {
-    margin: 0
+    margin: 0;
+    overflow-y: scroll;
 }
 
 :root {
@@ -4102,7 +4101,7 @@ tbody.collapse.in {
 }
 
 .btn-group > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {
-    border-radius: 0
+    border-radius: 0;
 }
 
 .btn-group > .btn:first-child {
@@ -4157,7 +4156,14 @@ tbody.collapse.in {
 
 .btn-group > .btn + .dropdown-toggle {
     padding-left: 8px;
-    padding-right: 8px
+    padding-right: 8px;
+}
+
+
+.additional-button:first-child {
+    margin-left: 20px;
+    border-bottom-left-radius: 3px;
+    border-top-left-radius: 3px; 
 }
 
 .btn-group > .btn-lg + .dropdown-toggle {
@@ -4411,7 +4417,7 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
 }
 
 .nav {
-    margin-bottom: 0;
+    margin-bottom: 2px;
     padding-left: 0;
     list-style: none
 }
@@ -15606,10 +15612,6 @@ table.table > thead th {
     margin: 0
 }
 
-.button-container {
-    padding: 0 0 10px
-}
-
 .margin {
     margin: 8px 0
 }
@@ -19324,7 +19326,6 @@ input#sn-checkbox-open-in-new-window {
 
 .record .stick-sub.button-container {
     background-color: #fff !important;
-    box-shadow: 0 2px 4px #efefef;
 }
 
 .stick-sub.button-container {
@@ -21196,6 +21197,7 @@ button.category:focus {
 
 .record .button-container > .btn-group {
     margin-right: 20px;
+    margin-bottom: 8px;
 }
 
 .record .button-container .nav-pills > li {
@@ -22370,3 +22372,7 @@ select {
     border-color: transparent transparent transparent #aaa;
     background-color: #efefef;
 }
+
+.button-container {
+    padding: 0 0 10px;
+  }
