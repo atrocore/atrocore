@@ -69,6 +69,15 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                 this.treeScope = this.getStorage().get('treeScope', this.scope) || treeScopes[0];
             }
 
+            if (this.options.collection) {
+                this.listenTo(this.options.collection, 'sync', () => {
+                    if (this.options.collection.name === this.treeScope) {
+                        this.getStorage().set('treeWhereData', this.treeScope, this.options.collection.where);
+                        this.buildTree();
+                    }
+                });
+            }
+
             this.wait(true);
             this.buildSearch();
             this.wait(false);
@@ -284,26 +293,17 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
         buildTree() {
             let data = null;
 
+            let whereData = this.getStorage().get('treeWhereData', this.treeScope) || [];
+
             let searchValue = this.getStorage().get('treeSearchValue', this.treeScope) || null;
             if (searchValue) {
                 $('.search-in-tree-input').val(searchValue);
-                this.ajaxGetRequest(this.treeScope, {
-                    "select": "id,name",
-                    "offset": 0,
-                    "maxSize": 200,
-                    "sortBy": "id",
-                    "asc": true,
-                    "where": [{"type": "textFilter", "value": searchValue}]
-                }, {async: false}).then(response => {
-                    let ids = [];
-                    if (response.list) {
-                        response.list.forEach(record => {
-                            ids.push(record.id);
-                        });
-                    }
-                    this.ajaxGetRequest(`${this.treeScope}/action/TreeData`, {"ids": ids}, {async: false}).then(response => {
-                        data = response.tree;
-                    });
+                whereData = [{"type": "textFilter", "value": searchValue}];
+            }
+
+            if (whereData.length > 0) {
+                this.ajaxGetRequest(`${this.treeScope}/action/TreeData`, {"where": whereData}, {async: false}).then(response => {
+                    data = response.tree;
                 });
             }
 
@@ -348,11 +348,11 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                                 });
                             }
                         }
+                    }
 
-                        if (this.getStorage().get('treeScope', this.scope) === this.scope && this.model && this.model.get('id') === node.id) {
-                            $tree.tree('addToSelection', node);
-                            $li.addClass('jqtree-selected');
-                        }
+                    if (whereData.length > 0 && this.getStorage().get('treeScope', this.scope) === this.scope && this.model && this.model.get('id') === node.id) {
+                        $tree.tree('addToSelection', node);
+                        $li.addClass('jqtree-selected');
                     }
 
                     $title.attr('data-id', node.id);
