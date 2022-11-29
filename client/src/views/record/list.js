@@ -1287,12 +1287,12 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         fullTableScroll() {
-            let list = $('#main > .list-container > .list');
-            if (list) {
-                let fixedTableHeader = $('#main > .list-container > .list > .fixed-header-table');
-                let fullTable = $('#main > .list-container > .list > .full-table');
+            let list = this.$el.find('.list');
+            if (list.length) {
+                let fixedTableHeader = list.find('.fixed-header-table');
+                let fullTable = list.find('.full-table');
 
-                if (fixedTableHeader && fullTable) {
+                if (fixedTableHeader.length && fullTable.length) {
                     fullTable.find('thead').find('th').each(function (i, elem) {
                         let width = elem.width;
 
@@ -1318,7 +1318,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         fixedTableHeader.addClass('table-scrolled');
                         fullTable.addClass('table-scrolled');
 
-                        let rowsButtons = $('td[data-name="buttons"]');
+                        let rowsButtons = this.$el.find('td[data-name="buttons"]');
                         let rowsButtonsPosition = list.width() - 35;
                         if ($(window).outerWidth() > 768 && rowsButtons.length) {
                             rowsButtons.addClass('fixed-button');
@@ -1340,6 +1340,19 @@ Espo.define('views/record/list', 'view', function (Dep) {
                             }
                             prevScrollLeft = list.scrollLeft();
                         });
+
+                        // custom scroll for relationship panels
+                        let scroll = this.getParentView().$el.siblings('.panel-scroll');
+                        if (scroll.length) {
+                            scroll.css({width: list.width(), display: 'block'});
+                            scroll.find('div').css('width', fullTable.width());
+                            rowsButtons.css('left', scroll.scrollLeft() + rowsButtonsPosition);
+
+                            scroll.on('scroll', () => {
+                                fullTable.css('left', -1 * scroll.scrollLeft());
+                                rowsButtons.css('left', scroll.scrollLeft() + rowsButtonsPosition);
+                            });
+                        }
                     }
                 }
             }
