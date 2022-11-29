@@ -302,23 +302,8 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             }
 
             if (whereData.length > 0) {
-                this.ajaxGetRequest(this.treeScope, {
-                    "select": "id,name",
-                    "offset": 0,
-                    "maxSize": 2000,
-                    "sortBy": "id",
-                    "asc": true,
-                    "where": whereData
-                }, {async: false}).then(response => {
-                    let ids = [];
-                    if (response.list) {
-                        response.list.forEach(record => {
-                            ids.push(record.id);
-                        });
-                    }
-                    this.ajaxGetRequest(`${this.treeScope}/action/TreeData`, {"ids": ids}, {async: false}).then(response => {
-                        data = response.tree;
-                    });
+                this.ajaxGetRequest(`${this.treeScope}/action/TreeData`, {"where": whereData}, {async: false}).then(response => {
+                    data = response.tree;
                 });
             }
 

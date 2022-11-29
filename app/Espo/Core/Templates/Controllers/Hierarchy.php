@@ -75,7 +75,29 @@ class Hierarchy extends Record
             throw new Forbidden();
         }
 
-        return $this->getRecordService()->getTreeData((array)$request->get('ids'));
+        if (!empty($request->get('ids'))) {
+            $ids = (array)$request->get('ids');
+        } elseif (!empty($request->get('where'))) {
+            $params = [
+                'select'  => ['id'],
+                'where'   => $this->prepareWhereQuery($request->get('where')),
+                'offset'  => 0,
+                'maxSize' => 5000,
+                'asc'     => true,
+                'sortBy'  => 'id'
+            ];
+
+            $result = $this->getRecordService()->findEntities($params);
+            if (!empty($result['total'])) {
+                $ids = array_column($result['collection']->toArray(), 'id');
+            }
+        }
+
+        if (empty($ids)) {
+            return [];
+        }
+
+        return $this->getRecordService()->getTreeData($ids);
     }
 
     public function actionRoute($params, $data, $request): array
