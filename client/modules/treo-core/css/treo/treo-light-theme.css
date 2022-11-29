@@ -1,5 +1,4 @@
 
-
 @charset "UTF-8";
 /*Login form*/
 @font-face {
@@ -15,6 +14,7 @@ html {
 
 body {
   margin: 0;
+  overflow-y: scroll;
 }
 
 article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
