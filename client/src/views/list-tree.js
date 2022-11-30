@@ -45,18 +45,21 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
         },
 
         afterRender() {
+            let treePanelView = this.getView('treePanel');
+
             this.collection.isFetched = false;
             this.clearView('list');
+
+            if (this.getStorage().get('reSetupSearchManager', treePanelView.treeScope)) {
+                this.getStorage().clear('reSetupSearchManager', treePanelView.treeScope);
+                this.setupSearchManager();
+            }
 
             Dep.prototype.afterRender.call(this);
 
             let observer = new ResizeObserver(() => {
-                let view = this.getView('treePanel');
-
-                if (view) {
-                    let width = view.$el.outerWidth();
-
-                    this.onTreeResize(width);
+                if (treePanelView) {
+                    this.onTreeResize(treePanelView.$el.outerWidth());
                 }
             });
             observer.observe($('#content').get(0));

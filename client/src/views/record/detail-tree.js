@@ -53,10 +53,13 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
+            const treePanel = this.getView('treePanel');
+
+            treePanel.buildTree();
+
             let observer = new ResizeObserver(() => {
-                let view = this.getView('treePanel');
-                if (view && view.$el){
-                    this.onTreeResize(view.$el.innerWidth());
+                if (treePanel && treePanel.$el) {
+                    this.onTreeResize(treePanel.$el.innerWidth());
                 }
             });
             observer.observe($('#content').get(0));
@@ -99,7 +102,7 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
                     this.treeInit(view);
                 });
                 view.listenTo(view, 'tree-reset', () => {
-                    // this.treeReset(view);
+                    this.treeReset(view);
                 });
                 this.listenTo(this.model, 'after:relate after:unrelate after:dragDrop', link => {
                     if (['parents', 'children'].includes(link)) {
@@ -139,10 +142,17 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
         },
 
         treeReset(view) {
-            console.log('treeReset details');
-            // this.getStorage().clear('selectedNodeId', this.scope);
-            // this.getStorage().clear('selectedNodeRoute', this.scope);
-            // window.location.href = `/#${this.scope}`;
+            this.getStorage().clear('selectedNodeId', this.scope);
+            this.getStorage().clear('selectedNodeRoute', this.scope);
+
+            this.getStorage().clear('treeSearchValue', view.treeScope);
+            this.getStorage().clear('treeWhereData', view.treeScope);
+
+            this.getStorage().clear('listSearch', view.treeScope);
+            this.getStorage().set('reSetupSearchManager', view.treeScope, true);
+
+            view.toggleVisibilityForResetButton();
+            view.buildTree();
         },
 
         onTreeResize(width) {
