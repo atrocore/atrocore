@@ -99,7 +99,7 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
                     this.treeInit(view);
                 });
                 view.listenTo(view, 'tree-reset', () => {
-                    this.treeReset(view);
+                    // this.treeReset(view);
                 });
                 this.listenTo(this.model, 'after:relate after:unrelate after:dragDrop', link => {
                     if (['parents', 'children'].includes(link)) {
@@ -139,9 +139,10 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
         },
 
         treeReset(view) {
-            this.getStorage().clear('selectedNodeId', this.scope);
-            this.getStorage().clear('selectedNodeRoute', this.scope);
-            window.location.href = `/#${this.scope}`;
+            console.log('treeReset details');
+            // this.getStorage().clear('selectedNodeId', this.scope);
+            // this.getStorage().clear('selectedNodeRoute', this.scope);
+            // window.location.href = `/#${this.scope}`;
         },
 
         onTreeResize(width) {

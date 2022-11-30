@@ -56,10 +56,6 @@ Espo.define('views/record/tree-panel/category-search', 'view',
 
         setup() {
             this.scope = this.options.scope || this.scope;
-
-            this.listenTo(this.options.treePanel, 'tree-reset', () => {
-                this.resetSearchInTree();
-            });
         },
 
         searchInTree() {

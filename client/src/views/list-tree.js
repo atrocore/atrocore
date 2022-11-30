@@ -141,9 +141,10 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
             this.getStorage().clear('selectedNodeId', this.scope);
             this.getStorage().clear('selectedNodeRoute', this.scope);
 
-            view.buildTree();
-            this.updateCollectionWithTree(null);
-            this.collection.fetch().then(() => this.notify(false));
+            this.getStorage().clear('treeSearchValue', view.treeScope);
+            view.toggleVisibilityForResetButton();
+
+            this.getView('search').resetFilters(true);
         },
 
         selectNode(data) {

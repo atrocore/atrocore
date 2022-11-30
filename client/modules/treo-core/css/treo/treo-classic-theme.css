@@ -15439,7 +15439,7 @@ table.table > thead th > div > a {
         position: relative;
     }
 
-    #main > .list-container > .list > table td.fixed-button:last-child {
+    .list > table td.fixed-button:last-child {
         display: flex;
         position: absolute;
         top: 3px;
@@ -15464,6 +15464,15 @@ table.table > thead th > div > a {
 .list-container > .list > .table:not(.fixed-header-table) {
     min-width: 100%;
     width: auto;
+}
+
+.panel .table.full-table {
+    position: relative;
+}
+
+.panel-scroll {
+    height: 11px;
+    overflow: auto;
 }
 
 .list-container > .list > .table thead th:not([data-name="r-checkbox"]):not([width]) > div:not(:empty) {
@@ -15817,6 +15826,10 @@ ul.dropdown-menu > li > a > .check-icon + div {
 @media screen and (min-width: 768px) {
     .modal-dialog {
         width: 740px
+    }
+
+    .bottom {
+        overflow-x: hidden;
     }
 }
 
@@ -16618,11 +16631,14 @@ h4.panel-title span.color-icon {
     top: -2px
 }
 
+.list {
+    width: auto;
+    min-width: 100%;
+}
+
 @media screen and (max-width: 767px) {
-    .list {
-        width: auto;
-        overflow-y: hidden;
-        overflow-x: auto;
+    body {
+        overflow-x: hidden;
     }
 
     .list.list-expanded {
@@ -16632,6 +16648,15 @@ h4.panel-title span.color-icon {
 
     .list > table {
         min-width: 768px
+    }
+
+    .panel-scroll {
+        margin-top: 14px;
+        margin-left: -14px;
+    }
+
+    .panel .list > .table .dropdown-menu {
+        position: absolute !important;
     }
 }
 
@@ -19685,11 +19710,6 @@ ul.dropdown-menu > li.checkbox {
 
 .menu {
     padding-left: 8px;
-    padding-right: 8px;
-}
-
-.panel-body > div > .list > table td:last-child,
-.panel-body > div > .list > table th:last-child {
     padding-right: 8px;
 }
 
