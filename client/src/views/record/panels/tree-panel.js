@@ -69,15 +69,6 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                 this.treeScope = this.getStorage().get('treeScope', this.scope) || treeScopes[0];
             }
 
-            if (this.options.collection) {
-                this.listenTo(this.options.collection, 'sync', () => {
-                    if (this.options.collection.name === this.treeScope) {
-                        this.getStorage().set('treeWhereData', this.treeScope, this.options.collection.where);
-                        this.buildTree();
-                    }
-                });
-            }
-
             this.wait(true);
             this.buildSearch();
             this.wait(false);
@@ -85,6 +76,15 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             this.currentWidth = this.getStorage().get('panelWidth', this.scope) || this.minWidth;
 
             this.maxSize = this.getConfig().get('recordsPerPage', 200);
+
+            if (this.options.collection) {
+                this.listenTo(this.options.collection, 'sync', () => {
+                    if (this.options.collection.name === this.treeScope) {
+                        this.getStorage().set('treeWhereData', this.treeScope, this.options.collection.where);
+                    }
+                    this.buildTree();
+                });
+            }
         },
 
         data() {
@@ -523,7 +523,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
 
                             this.buildTree();
 
-                            $('button[data-action="search"]').click();
+                            // this.$el.find('.reset-tree-filter').click();
                         });
                     });
                 });

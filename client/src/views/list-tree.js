@@ -147,7 +147,7 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
             this.getStorage().clear('treeSearchValue', view.treeScope);
             view.toggleVisibilityForResetButton();
 
-            this.getView('search').resetFilters(true);
+            this.getView('search').silentResetFilters();
         },
 
         selectNode(data) {

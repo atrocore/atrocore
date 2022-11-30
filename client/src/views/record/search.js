@@ -481,16 +481,17 @@ Espo.define('views/record/search', 'view', function (Dep) {
             }
         },
 
-        resetFilters: function (silent) {
-            if (!silent) {
-                this.trigger('reset');
-            }
-
+        silentResetFilters: function () {
             this.textFilter = '';
             this.presetName = '';
             this.selectPreset(this.presetName, true);
             this.toggleResetVisibility();
             this.toggleFilterActionsVisibility()
+        },
+
+        resetFilters: function () {
+            this.trigger('reset');
+            this.silentResetFilters();
         },
 
         savePreset(name) {
