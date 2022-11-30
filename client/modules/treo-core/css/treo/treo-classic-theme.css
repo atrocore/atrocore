@@ -4066,10 +4066,6 @@ tbody.collapse.in {
     margin-left: 5px
 }
 
-.btn-group > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {
-    border-radius: 0;
-}
-
 .btn-group > .btn:first-child {
     margin-left: 0
 }
@@ -16376,7 +16372,8 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
 
 .show-more > .btn-block {
     text-align: left;
-    padding-left: 14px
+    padding-left: 14px;
+    border-radius: 3px;
 }
 
 .autocomplete-suggestions {
@@ -21128,7 +21125,7 @@ button.category:focus {
     }
 }
 
-.header-buttons > .header-items > .btn {
+.header-buttons > .header-items > .btn:not([data-view]) {
     border-radius: 3px;
 }
 
