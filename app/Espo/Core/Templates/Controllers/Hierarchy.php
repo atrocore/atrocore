@@ -94,7 +94,10 @@ class Hierarchy extends Record
         }
 
         if (empty($ids)) {
-            return [];
+            return [
+                'total' => 0,
+                'tree'  => []
+            ];
         }
 
         return $this->getRecordService()->getTreeData($ids);
