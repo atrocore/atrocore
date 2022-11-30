@@ -3910,7 +3910,7 @@ tbody.collapse.in {
 
 .btn-group > .btn.sort-direction-button,
 .sort ~ span {
-  font-size: 18px;
+  font-size: 16px;
   line-height: 14px;
 }
 
@@ -3919,7 +3919,7 @@ tbody.collapse.in {
 }
 
 .sort ~ span {
-  margin: -4px 0 0 0 !important;
+  margin: -5px 0 0 4px !important;
 }
 
 .btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) {
@@ -3976,7 +3976,7 @@ tbody.collapse.in {
 }
 
 
-.btn-group > .additional-button:first-child {
+.additional-button:not(.additional-button ~ .additional-button) {
   margin-left: 20px;
   border-bottom-left-radius: 3px;
   border-top-left-radius: 3px; 
@@ -17540,7 +17540,7 @@ table.table {
 }
 
 #navbar .nav.navbar-nav.navbar-right {
-  background-color: #ececec;
+  background-color: #fff;
   border-bottom: 1px solid #dcdcdc;
 }
 
@@ -19070,7 +19070,6 @@ input#sn-checkbox-open-in-new-window {
 .list > table thead {
   border-top: 1px solid #e8eced;
   background-color: #fafafa;
-  box-shadow: 0 2px 4px #efefef;
 }
 
 .list > table tr:hover {
@@ -21712,9 +21711,8 @@ body,
     height: 56px;
   }
   #header .nav.navbar-nav.navbar-right {
-    background: #f5f5f5;
-    background-color: #f5f5f5;
     border-bottom: 1px solid var(--primary-border-color);
+    padding-right: 10px;
   }
   #header .nav.navbar-nav.navbar-right > li {
     float: right;
@@ -21746,7 +21744,7 @@ body,
   #header .navbar-right .global-search-container a.global-searcy-button {
     padding: 0 10px;
     height: 40px;
-    line-height: 38px;
+    line-height: 42px;
     border: 1px solid var(--primary-border-color);
     border-left: 0;
     -webkit-border-top-right-radius: 3px;
@@ -22883,4 +22881,13 @@ body.minimized #header > #navbar .navbar-inverse .navbar-nav .more .dropdown-men
 
 .button-container {
   padding: 0 0 10px;
+}
+
+
+td.cell[data-name="tag"] {
+  line-height: 2 !important;
+}
+
+td.cell[data-name="tag"]:first-line {
+  line-height: 1.36 !important;
 }
