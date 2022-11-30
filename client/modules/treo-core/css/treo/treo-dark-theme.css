@@ -4110,7 +4110,7 @@ tbody.collapse.in {
 
 .btn-group > .btn.sort-direction-button,
 .sort ~ span {
-    font-size: 18px;
+    font-size: 16px;
     line-height: 14px;
 }
 
@@ -4119,7 +4119,7 @@ tbody.collapse.in {
 }
 
 .sort ~ span {
-    margin: -4px 0 0 0 !important;
+    margin: -5px 0 0 4px !important;
 }
 
 .btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) {
@@ -4160,7 +4160,7 @@ tbody.collapse.in {
 }
 
 
-.additional-button:first-child {
+.additional-button:not(.additional-button ~ .additional-button) {
     margin-left: 20px;
     border-bottom-left-radius: 3px;
     border-top-left-radius: 3px; 
@@ -14978,7 +14978,8 @@ body > #header .navbar-brand span.home-icon {
 
     #header .navbar-right .global-search-container a.global-searcy-button {
         padding: 5px 10px;
-        color: #999
+        color: #999;
+        margin-top: 4px;
     }
 
     #header .navbar-right .quick-create-container {
@@ -15044,10 +15045,6 @@ body .stick-sub.button-container {
 
 body.minimized .stick-sub.button-container {
     width: calc(100% - 38px)
-}
-
-.btn {
-    border-radius: 0
 }
 
 .panel-body {
@@ -15228,6 +15225,15 @@ label {
     display: flex;
     flex-direction: row-reverse;
 }
+
+.header-buttons > .header-items > .btn {
+    border-radius: 3px;
+}
+
+.header-buttons > .header-items > .btn[data-action="List"] {
+    border-radius: 0px;
+}
+
 
 @media (max-width: 767px) {
     .page-header .row .col-lg-3,
@@ -19439,7 +19445,6 @@ input#sn-checkbox-open-in-new-window {
 .list > table thead {
     background-color: #fafafa;
     border-top: 1px solid #f5f5f5;
-    box-shadow: 0 2px 4px #efefef;
 }
 
 .list > table thead tr:hover {
@@ -20288,6 +20293,7 @@ button.category:focus {
 
     #navbar .nav.navbar-nav.navbar-right {
         background-color: #fff;
+        padding-right: 8px;
     }
 
     #navbar .nav.navbar-nav.navbar-right > li {
