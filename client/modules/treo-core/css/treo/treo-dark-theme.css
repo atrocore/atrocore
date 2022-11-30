@@ -15230,10 +15230,9 @@ label {
     border-radius: 3px;
 }
 
-.header-buttons > .header-items > .btn[data-action="List"] {
-    border-radius: 0px;
+.btn[data-name="kanban"],.btn[data-name="list"],.btn[data-name="plate"] {
+    border-radius: 0px !important;
 }
-
 
 @media (max-width: 767px) {
     .page-header .row .col-lg-3,

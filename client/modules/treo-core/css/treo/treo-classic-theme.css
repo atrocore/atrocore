@@ -21112,6 +21112,11 @@ button.category:focus {
     border-radius: 3px;
 }
 
+.btn[data-name="kanban"],.btn[data-name="list"],.btn[data-name="plate"] {
+    border-radius: 0px !important;
+}
+
+
 @media screen and (max-width: 399px) {
     .navbar-brand {
         max-width: 100px;
