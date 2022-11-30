@@ -1878,7 +1878,7 @@ class Record extends \Espo\Core\Services\Base
         $query = $this
             ->getEntityManager()
             ->getQuery()
-            ->createSelectQuery($this->getEntityType(), array_merge($selectParams, ['select' => ['id']]));
+            ->createSelectQuery($foreignEntityType, array_merge($selectParams, ['select' => ['id']]));
 
         $foreignIds = $this
             ->getEntityManager()
