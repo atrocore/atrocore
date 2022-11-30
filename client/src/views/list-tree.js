@@ -128,14 +128,20 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
         },
 
         treeInit(view) {
-
             if (this.getStorage().get('selectedNodeId', this.scope)) {
-                view.selectTreeNode(this.parseRoute(this.getStorage().get('selectedNodeRoute', this.scope)), this.getStorage().get('selectedNodeId', this.scope));
-
-                this.notify('Please wait...');
-                this.updateCollectionWithTree(this.getStorage().get('selectedNodeId', this.scope));
-                this.collection.fetch().then(() => this.notify(false));
+                this.selectTreeNode();
             }
+        },
+
+        selectTreeNode() {
+            const id = this.getStorage().get('selectedNodeId', this.scope);
+            const route = this.parseRoute(this.getStorage().get('selectedNodeRoute', this.scope));
+
+            this.getView('treePanel').selectTreeNode(route, id);
+
+            this.notify('Please wait...');
+            this.updateCollectionWithTree(id);
+            this.collection.fetch({selectingTreeNode: true}).then(() => this.notify(false));
         },
 
         treeReset(view) {
@@ -159,11 +165,7 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
             this.getStorage().set('selectedNodeId', this.scope, data.id);
             this.getStorage().set('selectedNodeRoute', this.scope, data.route);
 
-            const $treeView = this.getView('treePanel');
-            $treeView.selectTreeNode(this.parseRoute(data.route), data.id);
-            this.notify('Please wait...');
-            this.updateCollectionWithTree(data.id);
-            this.collection.fetch().then(() => this.notify(false));
+            this.selectTreeNode();
         },
 
         updateCollectionWithTree(id) {

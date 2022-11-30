@@ -78,11 +78,13 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             this.maxSize = this.getConfig().get('recordsPerPage', 200);
 
             if (this.options.collection) {
-                this.listenTo(this.options.collection, 'sync', () => {
-                    if (this.options.collection.name === this.treeScope) {
-                        this.getStorage().set('treeWhereData', this.treeScope, this.options.collection.where);
+                this.listenTo(this.options.collection, 'sync', (collection, response, data) => {
+                    if (!data.selectingTreeNode) {
+                        if (this.options.collection.name === this.treeScope) {
+                            this.getStorage().set('treeWhereData', this.treeScope, this.options.collection.where);
+                        }
+                        this.buildTree();
                     }
-                    this.buildTree();
                 });
             }
         },
