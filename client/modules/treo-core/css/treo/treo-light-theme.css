@@ -1,5 +1,3 @@
-
-
 @charset "UTF-8";
 /*Login form*/
 @font-face {
@@ -15,6 +13,7 @@ html {
 
 body {
   margin: 0;
+  overflow-y: scroll;
 }
 
 :root {
@@ -3976,6 +3975,13 @@ tbody.collapse.in {
   padding-right: 8px;
 }
 
+
+.btn-group > .additional-button:first-child {
+  margin-left: 20px;
+  border-bottom-left-radius: 3px;
+  border-top-left-radius: 3px; 
+}
+
 .btn-group > .btn-lg + .dropdown-toggle {
   padding-left: 12px;
   padding-right: 12px;
@@ -4249,7 +4255,7 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
 }
 
 .nav {
-  margin-bottom: 0;
+  margin-bottom: 2px;
   padding-left: 0;
   list-style: none;
 }
@@ -15236,7 +15242,7 @@ table.table > thead th {
     position: relative;
   }
 
-  #main > .list-container > .list > table td.fixed-button:last-child {
+  .list > table td.fixed-button:last-child {
     display: flex;
     position: absolute;
     top: 3px;
@@ -15257,6 +15263,16 @@ table.table > thead th {
     bottom: 0;
   }
 }
+
+.panel .table.full-table {
+  position: relative;
+}
+
+.panel-scroll {
+  height: 11px;
+  overflow: auto;
+}
+
 .list-container > .list > .table thead th:not([data-name="r-checkbox"]):not([width]) > div:not(:empty) {
   min-width: 100px;
   width: inherit;
@@ -15343,10 +15359,6 @@ table.table > thead th {
 
 .edit form {
   margin: 0;
-}
-
-.button-container {
-  padding: 0 0 10px;
 }
 
 .margin {
@@ -15612,6 +15624,10 @@ ul.dropdown-menu > li > a > .check-icon + div {
 @media screen and (min-width: 768px) {
   .modal-dialog {
     width: 740px;
+  }
+
+  .bottom {
+    overflow-x: hidden;
   }
 
   #main > .record > .detail > .row > .overview.bordered,
@@ -16441,11 +16457,14 @@ h4.panel-title span.color-icon {
   top: -2px;
 }
 
+.list {
+  width: auto;
+  min-width: 100%;
+}
+
 @media screen and (max-width: 767px) {
-  .list {
-    width: auto;
-    overflow-y: hidden;
-    overflow-x: auto;
+  body {
+    overflow-x: hidden;
   }
   .list.list-expanded {
     width: auto;
@@ -16453,6 +16472,14 @@ h4.panel-title span.color-icon {
   }
   .list > table {
     min-width: 768px;
+  }
+  .panel-scroll {
+    margin-top: 14px;
+    margin-left: -14px;
+  }
+
+  .panel .list > .table .dropdown-menu {
+    position: absolute !important;
   }
 }
 
@@ -17512,37 +17539,36 @@ table.table {
   }
 }
 
-  #navbar .nav.navbar-nav.navbar-right {
-    background-color: #ececec;
-    border-bottom: 1px solid #dcdcdc;
-  }
+#navbar .nav.navbar-nav.navbar-right {
+  background-color: #ececec;
+  border-bottom: 1px solid #dcdcdc;
+}
 
-  #navbar footer {
-    width: 220px;
-    margin-left: -9px;
-    font-size: 12px;
-  }
+#navbar footer {
+  width: 220px;
+  margin-left: -9px;
+  font-size: 12px;
+}
 
-  .minimized #navbar footer {
-    display: none;
-  }
+.minimized #navbar footer {
+  display: none;
+}
 
-  #navbar footer > ul {
-    width: 220px;
-    padding: 10px 0 10px 10px;
-    margin: 0;
-    position: absolute;
-    bottom: 27px;
-    background-color: var(--nav-menu-background);
-  }
+#navbar footer > ul {
+  width: 220px;
+  padding: 10px 0 10px 10px;
+  margin: 0;
+  position: absolute;
+  bottom: 27px;
+  background-color: var(--nav-menu-background);
+}
 
-  #navbar footer > ul > li {
-    padding: 3px 0;
-  }
+#navbar footer > ul > li {
+  padding: 3px 0;
+}
 
-  #navbar footer > .copyright {
-    height: 28px;
-  }
+#navbar footer > .copyright {
+  height: 28px;
 }
 
 .list-container > .list, .panel, .dashlet-container, .list-nested-categories, #main > .calendar-container .calendar, #main > .calendar-container .timeline, .well, .admin-content .table.table-bordered, .admin-content iframe, .list-kanban > .kanban-head-container, .list-group-panel {
@@ -17604,6 +17630,7 @@ table.table {
 
 .record .button-container > .btn-group {
   margin-right: 20px;
+  margin-bottom: 8px;
 }
 
 .record .button-container .nav-pills > li {
@@ -19021,7 +19048,6 @@ input#sn-checkbox-open-in-new-window {
 
 .record .stick-sub.button-container {
   background-color: #fff !important;
-  box-shadow: 0 2px 4px #efefef;
 }
 
 .stick-sub.button-container {
@@ -22023,11 +22049,6 @@ body,
   background-color: #fafafa;
 }
 
-.panel-body > div > .list > table td:last-child,
-.panel-body > div > .list > table th:last-child {
-  padding-right: 8px;
-}
-
 .panel-body > div:last-child > .list:last-child {
   margin-bottom: 0;
 }
@@ -22858,4 +22879,8 @@ body.minimized #header > #navbar .navbar-inverse .navbar-nav .more .dropdown-men
 ::-webkit-scrollbar-button:vertical:single-button:increment:hover {
   border-color: #aaa transparent transparent transparent;
   background-color: #efefef;
+}
+
+.button-container {
+  padding: 0 0 10px;
 }
