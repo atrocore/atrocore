@@ -97,8 +97,6 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            this.buildTree();
-
             this.actionCollapsePanel('open');
             if ($(window).width() <= 767 || !!this.getStorage().get('catalog-tree-panel', this.scope)) {
                 this.actionCollapsePanel();
@@ -129,6 +127,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             if (this.getStorage().get('treeSearchValue', this.treeScope)) {
                 $reset.show();
             } else {
+                this.$el.find('.search-in-tree-input').val('');
                 $reset.hide();
             }
         },
@@ -297,7 +296,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
 
             let searchValue = this.getStorage().get('treeSearchValue', this.treeScope) || null;
             if (searchValue) {
-                $('.search-in-tree-input').val(searchValue);
+                this.$el.find('.search-in-tree-input').val(searchValue);
                 whereData = [{"type": "textFilter", "value": searchValue}];
             }
 
