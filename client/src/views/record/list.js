@@ -1291,8 +1291,14 @@ Espo.define('views/record/list', 'view', function (Dep) {
             if (list.length) {
                 let fixedTableHeader = list.find('.fixed-header-table');
                 let fullTable = list.find('.full-table');
+                let scroll = this.getParentView().$el.siblings('.panel-scroll');
 
                 if (fixedTableHeader.length && fullTable.length) {
+                    if (scroll.length) {
+                        scroll.scrollLeft(0);
+                        scroll.addClass('hidden');
+                    }
+
                     fullTable.find('thead').find('th').each(function (i, elem) {
                         let width = elem.width;
 
@@ -1342,11 +1348,18 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         });
 
                         // custom scroll for relationship panels
-                        let scroll = this.getParentView().$el.siblings('.panel-scroll');
                         if (scroll.length) {
+                            scroll.removeClass('hidden');
+
                             scroll.css({width: list.width(), display: 'block'});
                             scroll.find('div').css('width', fullTable.width());
                             rowsButtons.css('left', scroll.scrollLeft() + rowsButtonsPosition);
+
+                            this.listenTo(this.collection, 'sync', function () {
+                                if (!this.hasHorizontalScroll()) {
+                                    scroll.addClass('hidden');
+                                }
+                            }.bind(this));
 
                             scroll.on('scroll', () => {
                                 fullTable.css('left', -1 * scroll.scrollLeft());
