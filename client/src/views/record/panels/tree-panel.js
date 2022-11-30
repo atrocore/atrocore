@@ -241,6 +241,15 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             }, 500);
         },
 
+        unSelectTreeNode(id) {
+            const $tree = this.getTreeEl();
+            const node = $tree.tree('getNodeById', id);
+
+            if (node) {
+                $tree.tree('removeFromSelection', node);
+            }
+        },
+
         generateUrl(node) {
             let url = this.treeScope + '/action/Tree?isTreePanel=1';
             let id = 'root';

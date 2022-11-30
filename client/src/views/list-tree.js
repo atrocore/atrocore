@@ -139,8 +139,42 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
 
             this.getView('treePanel').selectTreeNode(route, id);
 
+            const filterName = "linkedWith" + this.getStorage().get('treeScope', this.scope);
+
             this.notify('Please wait...');
-            this.updateCollectionWithTree(id);
+
+            let data = {bool: {}, boolData: {}};
+            data['bool'][filterName] = true;
+            data['boolData'][filterName] = id;
+
+            const defaultFilters = Espo.Utils.cloneDeep(this.searchManager.get());
+            const extendedFilters = Espo.Utils.cloneDeep(defaultFilters);
+
+            $.each(data, (key, value) => {
+                extendedFilters[key] = _.extend({}, extendedFilters[key], value);
+            });
+
+            this.searchManager.set(extendedFilters);
+            this.collection.where = this.searchManager.getWhere();
+            this.searchManager.set(defaultFilters);
+
+            this.collection.fetch({selectingTreeNode: true}).then(() => this.notify(false));
+        },
+
+        unSelectTreeNode(id) {
+            this.getView('treePanel').unSelectTreeNode(id);
+
+            this.notify('Please wait...');
+
+            const defaultFilters = Espo.Utils.cloneDeep(this.searchManager.get());
+            const extendedFilters = Espo.Utils.cloneDeep(defaultFilters);
+            $.each({bool: {}, boolData: {}}, (key, value) => {
+                extendedFilters[key] = _.extend({}, extendedFilters[key], value);
+            });
+            this.searchManager.set(extendedFilters);
+            this.collection.where = this.searchManager.getWhere();
+            this.searchManager.set(defaultFilters);
+
             this.collection.fetch({selectingTreeNode: true}).then(() => this.notify(false));
         },
 
@@ -162,30 +196,18 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
                 return;
             }
 
+            if (data.id === this.getStorage().get('selectedNodeId', this.scope)) {
+                this.getStorage().clear('selectedNodeId', this.scope);
+                this.getStorage().clear('selectedNodeRoute', this.scope);
+                this.unSelectTreeNode(data.id);
+
+                return;
+            }
+
             this.getStorage().set('selectedNodeId', this.scope, data.id);
             this.getStorage().set('selectedNodeRoute', this.scope, data.route);
 
             this.selectTreeNode();
-        },
-
-        updateCollectionWithTree(id) {
-            let data = {bool: {}, boolData: {}};
-
-            const filterName = "linkedWith" + this.getStorage().get('treeScope', this.scope);
-
-            data['bool'][filterName] = true;
-            data['boolData'][filterName] = id;
-
-            const defaultFilters = Espo.Utils.cloneDeep(this.searchManager.get());
-            const extendedFilters = Espo.Utils.cloneDeep(defaultFilters);
-
-            $.each(data, (key, value) => {
-                extendedFilters[key] = _.extend({}, extendedFilters[key], value);
-            });
-
-            this.searchManager.set(extendedFilters);
-            this.collection.where = this.searchManager.getWhere();
-            this.searchManager.set(defaultFilters);
         },
 
         parseRoute(routeStr) {
