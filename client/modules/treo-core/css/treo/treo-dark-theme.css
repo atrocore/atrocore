@@ -7628,6 +7628,11 @@ button.close {
     padding: 5px 10px 2px
 }
 
+.filter-cell .selectize-control.multi .selectize-input.has-items {
+    background: #f9f9f9;
+}
+
+
 .selectize-input.full {
     background-color: #fff
 }
@@ -17517,8 +17522,9 @@ a.field-info > span.fa-info-circle {
     font-size: 12px;
 }
 
-a > .fas, a > .far {
-    color: var(--icon-color);
+
+.fa-angle-left, .fa-angle-right, .fa-angle-down, .fa-angle-up  {
+    color: #bbb;
 }
 
 .btn-icon {
@@ -19792,7 +19798,7 @@ ul.dropdown-menu > li.checkbox {
 }
 
 .overview-filters-container {
-    background-color: #FFFFFF;
+    background-color: #f9f9f9;
     border-top: 1px solid #eee;
     padding: 10px 0px 5px 10px;
 }
@@ -20018,7 +20024,6 @@ select,
     padding: 0;
     top: 1px;
     border: 0;
-    color: #ccc;
     z-index: 10;
     background-color: transparent;
 }
@@ -20280,12 +20285,11 @@ button.category:focus {
         top: 3px;
         right: 5px;
         z-index: 2000;
-        background: #424242;
         width: 20px;
         height: 20px;
         border-radius: 50%;
-        padding: 1px 5px;
-        opacity: 0.5;
+        padding: 2px 6px;
+        background-color:rgba(0, 0, 0, 0.2);
     }
 
     body:not(.minimized) #header a.minimizer.bottom-minimizer {
