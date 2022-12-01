@@ -15219,13 +15219,12 @@ table.table > thead th > div > a {
 table.table > thead th {
   color: #999;
 }
+#main > .list-container > .list {
+  overflow: auto;
+  min-height: 400px;
+}
 
 @media screen and (min-width: 768px) {
-  #main > .list-container > .list {
-    overflow: auto;
-    min-height: 300px;
-  }
-
   #main > .list-container > .list > .table thead th {
     vertical-align: middle;
   }
@@ -17213,7 +17212,7 @@ pre > code {
     margin-top: 0;
   }
   .list > .table .dropdown-menu {
-    position: relative !important;
+    position: absolute !important;
   }
   .list > .table .pull-right.open > .btn {
     float: right;
