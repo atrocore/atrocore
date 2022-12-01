@@ -140,21 +140,11 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
 
             var self = this;
 
-            var attributes = {};
-            this.fieldList.forEach(function (field) {
-                var view = self.getView(field);
-                _.extend(attributes, view.fetch());
-            });
+            var attributes = this.prepareData();
 
             this.model.set(attributes);
 
-            var notValid = false;
-            this.fieldList.forEach(function (field) {
-                var view = self.getView(field);
-                notValid = view.validate() || notValid;
-            });
-
-            if (!notValid) {
+            if (!this.isValid()) {
                 self.notify('Saving...');
                 $.ajax({
                     url: this.scope + '/action/massUpdate',
@@ -196,6 +186,26 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
             this.$el.find('ul.filter-list').find('li').removeClass('hidden');
 
             this.disableButton('update');
+        },
+
+        prepareData() {
+            var attributes = {};
+            this.fieldList.forEach(function (field) {
+                var view = this.getView(field);
+                _.extend(attributes, view.fetch());
+            }.bind(this));
+
+            return attributes;
+        },
+
+        isValid() {
+            var notValid = false;
+            this.fieldList.forEach(function (field) {
+                var view = this.getView(field);
+                notValid = view.validate() || notValid;
+            }.bind(this));
+
+            return notValid;
         }
     });
 });

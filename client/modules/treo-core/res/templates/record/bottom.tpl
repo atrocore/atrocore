@@ -41,7 +41,7 @@
             {{{var name ../this}}}
         </div>
 
-        <div class="panel-scroll" style="display: none">
+        <div class="panel-scroll hidden">
             <div></div>
         </div>
     </div>
