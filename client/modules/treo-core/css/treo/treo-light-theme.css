@@ -7476,6 +7476,10 @@ button.close {
   padding: 6px 10px 3px;
 }
 
+.filter-cell .selectize-control.multi .selectize-input.has-items {
+  background: #f9f9f9;
+}
+
 .selectize-input.full {
   background-color: #fff;
 }
@@ -17257,8 +17261,8 @@ a.field-info > span.fa-info-circle {
     font-size: 12px;
 }
 
-a > .fas, a > .far {
-  color: var(--icon-color);
+.fa-angle-left, .fa-angle-right, .fa-angle-down, .fa-angle-up  {
+  color: #bbb;
 }
 
 .btn-icon {
@@ -19303,7 +19307,7 @@ table.table > thead th > div > a {
 }
 
 .overview-filters-container {
-  background-color: #FFFFFF;
+  background-color: #f9f9f9;
   border-top: 1px solid #eee;
   padding: 10px 0px 5px 10px;
 }
@@ -19498,7 +19502,6 @@ table.table > thead th > div > a {
   padding: 0;
   top: 1px;
   border: 0;
-  color: #ccc;
   z-index: 10;
   background-color: transparent;
 }
@@ -22577,15 +22580,14 @@ ul.dropdown-menu > li.checkbox {
 
   body:not(.minimized) #header a.minimizer {
     position: absolute;
-    top: 3px;
+    top: 1px;
     right: 5px;
     z-index: 2000;
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    padding: 1px 5px;
-    background: #ffffff;
-    opacity: 0.5;
+    padding: 2px 6px;
+    background-color:rgba(255, 255, 255, 0.5);
   }
 
   body:not(.minimized) #header a.minimizer.bottom-minimizer {
