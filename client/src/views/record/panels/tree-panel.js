@@ -327,7 +327,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                     return this.filterResponse(currentNode, response);
                 }.bind(this),
                 selectable: true,
-                dragAndDrop: this.getMetadata().get(`scopes.${this.treeScope}.multiParents`) !== true,
+                dragAndDrop: this.getMetadata().get(`scopes.${this.treeScope}.multiParents`) !== true && this.getMetadata().get(`scopes.${this.treeScope}.dragAndDrop`),
                 useContextMenu: false,
                 closedIcon: $('<i class="fa fa-angle-right"></i>'),
                 openedIcon: $('<i class="fa fa-angle-down"></i>'),

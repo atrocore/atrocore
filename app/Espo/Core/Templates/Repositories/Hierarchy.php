@@ -205,12 +205,26 @@ class Hierarchy extends RDB
         }
 
         if (empty($parentId)) {
+            $sortOrder = 'e.sort_order, e.id';
+            if (empty($this->getMetadata()->get(['scopes', $this->entityType, 'dragAndDrop']))) {
+                $sortOrder = 'e.' . $this->getEntityManager()->getQuery()->toDb($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy'], 'id'));
+                if (empty($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'asc']))) {
+                    $sortOrder .= ' DESC';
+                }
+            }
             $query = "SELECT {$select} 
                       FROM `$this->tableName` e
                       WHERE e.id NOT IN (SELECT entity_id FROM `$this->hierarchyTableName` WHERE deleted=0)
                       AND e.deleted=0
-                      ORDER BY e.sort_order, e.id";
+                      ORDER BY " . $sortOrder;
         } else {
+            $sortOrder = 'h.hierarchy_sort_order, e.id';
+            if (empty($this->getMetadata()->get(['scopes', $this->entityType, 'dragAndDrop']))) {
+                $sortOrder = 'e.' . $this->getEntityManager()->getQuery()->toDb($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy'], 'id'));
+                if (empty($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'asc']))) {
+                    $sortOrder .= ' DESC';
+                }
+            }
             $parentId = $this->getPDO()->quote($parentId);
             $query = "SELECT {$select}
                   FROM `$this->hierarchyTableName` h
@@ -218,7 +232,7 @@ class Hierarchy extends RDB
                   WHERE h.deleted=0
                     AND e.deleted=0
                     AND h.parent_id={$parentId}
-                  ORDER BY h.hierarchy_sort_order, e.id";
+                  ORDER BY " . $sortOrder;
         }
 
         if (!is_null($offset) && !is_null($maxSize)) {
