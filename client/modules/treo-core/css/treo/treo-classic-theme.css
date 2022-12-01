@@ -15413,12 +15413,12 @@ table.table > thead th > div > a {
     color: #999
 }
 
-@media screen and (min-width: 768px) {
-    #main > .list-container > .list {
-        overflow: auto;
-        min-height: 300px;
-    }
+#main > .list-container > .list {
+    overflow: auto;
+    min-height: 400px;
+}
 
+@media screen and (min-width: 768px) {
     #main > .list-container > .list > .table thead th {
         vertical-align: middle;
     }
@@ -17403,7 +17403,7 @@ pre > code {
     }
 
     .list > .table .dropdown-menu {
-        position: relative !important
+        position: absolute !important
     }
 
     .list > .table .pull-right.open > .btn {
