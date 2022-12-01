@@ -7517,9 +7517,8 @@ button.close {
 }
 
 .selectize-control.multi .selectize-input > div.active {
-  background: #537898;
-  color: #fff;
-  border: 0 solid rgba(0, 0, 0, 0);
+  background: #f2f2f2;
+  border: 1px solid #dedede;
 }
 
 .selectize-control.multi .selectize-input.disabled > div, .selectize-control.multi .selectize-input.disabled > div.active {
@@ -19317,8 +19316,8 @@ table.table > thead th > div > a {
 }
 
 .overview-filters-container .selectize-control.multi .selectize-input > div:not(.active) {
-  background-color: #f4f4f4;
-  border: 1px solid #eee;
+  background-color: #f2f2f2;
+  border: 1px solid #dedede;
 }
 
 .page-header .header-buttons .filter-cell > .field,
