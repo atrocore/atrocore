@@ -682,7 +682,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 ids = this.checkedList;
             }
 
-            this.createView('massUpdate', 'views/modals/mass-update', {
+            let massUpdateView = this.getMetadata().get(['clientDefs', this.scope, 'massUpdateView']) || 'views/modals/mass-update';
+
+            this.createView('massUpdate', massUpdateView, {
                 scope: this.entityType,
                 ids: ids,
                 where: this.collection.getWhere(),
