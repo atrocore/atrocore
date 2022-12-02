@@ -14261,8 +14261,8 @@ li.ui-timepicker-selected .ui-timepicker-duration, .ui-timepicker-list li:hover 
     margin: 0;
     position: absolute;
     top: 0;
-    left: 10px;
-    right: 10px;
+    left: 0px;
+    right: 0px;
     bottom: 0;
     width: auto;
     z-index: 0 !important;
@@ -20811,7 +20811,7 @@ button.category:focus {
 
     .detail .panel-default > .panel-heading,
     .edit .panel-default > .panel-heading {
-        margin: 0 -15px;
+        margin: 0 -5px;
     }
 
     .detail .overview,
