@@ -22470,3 +22470,7 @@ td.cell[data-name="tag"]:first-line {
 .btn span {
     vertical-align: middle;
 }
+
+.attachment-upload {
+    min-height: 36px;
+}
