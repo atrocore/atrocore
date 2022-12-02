@@ -19308,7 +19308,7 @@ input#sn-checkbox-open-in-new-window {
     margin-top: 4px;
 }
 
-.detail .record-buttons ~ .edit-buttons.hidden ~ .row .panel-body .form-group div.field {
+.detail .record-buttons ~ .edit-buttons.hidden ~ .row .panel-body div:not(.filter) > .form-group div.field {
     padding-bottom: 6px;
     border-bottom: 1px solid var(--secondary-border-color);
 }
@@ -22466,4 +22466,8 @@ td.cell[data-name="tag"] {
 
 td.cell[data-name="tag"]:first-line {
     line-height: 1.36 !important;
+}
+
+.btn span {
+    vertical-align: middle;
 }

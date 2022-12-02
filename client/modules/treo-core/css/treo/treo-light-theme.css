@@ -22218,7 +22218,7 @@ body,
   border-top-width: 1px;
 }
 
-.detail .record-buttons ~ .edit-buttons.hidden ~ .row .panel-body .form-group div.field {
+.detail .record-buttons ~ .edit-buttons.hidden ~ .row .panel-body div:not(.filter) > .form-group div.field {
   padding-bottom: 8px;
   border-bottom: 1px solid var(--secondary-border-color);
 }
