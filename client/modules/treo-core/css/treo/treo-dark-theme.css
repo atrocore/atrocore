@@ -14979,7 +14979,6 @@ body > #header .navbar-brand span.home-icon {
     #header .navbar-right .global-search-container a.global-searcy-button {
         padding: 5px 10px;
         color: #999;
-        margin-top: 4px;
     }
 
     #header .navbar-right .quick-create-container {
@@ -22490,4 +22489,8 @@ td.cell[data-name="tag"]:first-line {
 
 .btn span {
     vertical-align: middle;
+}
+
+.attachment-upload {
+    min-height: 36px;
 }
