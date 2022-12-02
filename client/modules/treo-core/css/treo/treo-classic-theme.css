@@ -22467,3 +22467,7 @@ td.cell[data-name="tag"] {
 td.cell[data-name="tag"]:first-line {
     line-height: 1.36 !important;
 }
+
+.btn span {
+    vertical-align: middle;
+}
