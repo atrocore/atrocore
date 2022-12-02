@@ -12,6 +12,7 @@
   "fields": {
     "relationshipField": "Relationship Entity",
     "multiParents": "Multiple Parents",
+    "dragAndDrop": "Drag & Drop",
     "fieldValueInheritance": "Field Value Inheritance",
     "unInheritedFields": "Uninherited Fields",
     "relationInheritance": "Relation Inheritance",
@@ -67,6 +68,7 @@
     "linkConflict": "Name conflict: link or field with the same name already exists."
   },
   "tooltips": {
+    "dragAndDrop": "This option activates hierarchy sort order, so no other sorting is possible in hierarchy navigation.",
     "relationshipField": "Check this option to mark the foreign entity as the target entity for a relationship. All target entities together build up a unique index.",
     "unInheritedFields": "Values for these fields will not be inherited from parent item.",
     "unInheritedRelations": "Relations with these entities will not be inherited from parent item.",

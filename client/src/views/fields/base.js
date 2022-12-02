@@ -385,11 +385,11 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         getUnlockLinkEl: function () {
-            return $(`.unlock-link[data-name="${this.name}"]`);
+            return this.getCellElement().find(`.unlock-link[data-name="${this.name}"]`);
         },
 
         getLockLinkEl: function () {
-            return $(`.lock-link[data-name="${this.name}"]`);
+            return this.getCellElement().find(`.lock-link[data-name="${this.name}"]`);
         },
 
         getNonInheritedFields: function () {
@@ -449,7 +449,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             this.getUnlockLinkEl().remove();
             this.getLockLinkEl().remove();
 
-            if (!this.isInheritableField() || this.mode !== 'detail' || this.model.get('isRoot') === true) {
+            if (!this.isInheritableField() || this.mode !== 'detail' || this.model.get('isRoot') === true || this.readOnly === true) {
                 return;
             }
 
