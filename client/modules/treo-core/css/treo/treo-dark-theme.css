@@ -7671,9 +7671,8 @@ button.close {
 }
 
 .selectize-control.multi .selectize-input > div.active {
-    background: #537898;
-    color: #fff;
-    border: 0 solid rgba(0, 0, 0, 0)
+    background: #f2f2f2;
+    border: 1px solid #dedede;
 }
 
 .selectize-control.multi .selectize-input.disabled > div, .selectize-control.multi .selectize-input.disabled > div.active {
@@ -14262,8 +14261,8 @@ li.ui-timepicker-selected .ui-timepicker-duration, .ui-timepicker-list li:hover 
     margin: 0;
     position: absolute;
     top: 0;
-    left: 10px;
-    right: 10px;
+    left: 0px;
+    right: 0px;
     bottom: 0;
     width: auto;
     z-index: 0 !important;
@@ -19365,7 +19364,7 @@ input#sn-checkbox-open-in-new-window {
     margin-top: 4px;
 }
 
-.detail .record-buttons ~ .edit-buttons.hidden ~ .row .panel-body .form-group .field {
+.detail .record-buttons ~ .edit-buttons.hidden ~ .row .panel-body .form-group div.field {
     padding-bottom: 6px;
     border-bottom: 1px solid var(--secondary-border-color);
 }
@@ -19885,8 +19884,8 @@ ul.dropdown-menu > li.checkbox {
 }
 
 .overview-filters-container .selectize-control.multi .selectize-input > div:not(.active) {
-    background-color: #f4f4f4;
-    border: 1px solid #eee;
+    background-color: #f2f2f2;
+    border: 1px solid #dedede;
 }
 
 .page-header .header-buttons .filter-cell .field,
@@ -20812,7 +20811,7 @@ button.category:focus {
 
     .detail .panel-default > .panel-heading,
     .edit .panel-default > .panel-heading {
-        margin: 0 -15px;
+        margin: 0 -5px;
     }
 
     .detail .overview,
