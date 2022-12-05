@@ -65,6 +65,19 @@ class Hierarchy extends Record
         return $this->getRecordService()->getChildren((string)$request->get('node'), $params);
     }
 
+    public function actionTreeDataForSelectedNode($params, $data, $request): array
+    {
+        if (!$request->isGet() || empty($request->get('id'))) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($this->name, 'read')) {
+            throw new Forbidden();
+        }
+
+        return $this->getRecordService()->getTreeDataForSelectedNode((string)$request->get('id'));
+    }
+
     public function actionTreeData($params, $data, $request): array
     {
         if (!$request->isGet()) {

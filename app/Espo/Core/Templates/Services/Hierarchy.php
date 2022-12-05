@@ -51,6 +51,22 @@ use Treo\Core\Exceptions\NotModified;
 
 class Hierarchy extends Record
 {
+    public function getTreeDataForSelectedNode(string $id): array
+    {
+        $treeBranches = [];
+        $this->createTreeBranches($this->getEntity($id), $treeBranches);
+
+        if (empty($entity = $treeBranches[0])) {
+            throw new NotFound();
+        }
+
+        $tree = [];
+        $this->prepareTreeForSelectedNode($entity, $tree);
+        $this->prepareTreeData($tree);
+
+        return $tree;
+    }
+
     public function getTreeData(array $ids): array
     {
         $tree = [];
@@ -103,6 +119,30 @@ class Hierarchy extends Record
                 $tree[$entity->get('id')]['children'] = [];
             }
             $this->prepareTreeNode($entity->child, $tree[$entity->get('id')]['children'], $ids);
+        }
+    }
+
+    protected function prepareTreeForSelectedNode($entity, array &$tree, string $parentId = ''): void
+    {
+        $children = $this->getChildren($parentId, ['offset' => 0, 'maxSize' => \PHP_INT_MAX]);
+
+        $offset = 0;
+        foreach ($children['list'] as $k => $child) {
+            if ($child['id'] === $entity->get('id')) {
+                $offset = $k;
+                break;
+            }
+        }
+
+        $tree[$entity->get('id')]['id'] = $entity->get('id');
+        $tree[$entity->get('id')]['name'] = $entity->get('name');
+        $tree[$entity->get('id')]['offset'] = $offset;
+        $tree[$entity->get('id')]['total'] = $children['total'];
+        if (!empty($entity->child)) {
+            if (empty($tree[$entity->get('id')]['children'])) {
+                $tree[$entity->get('id')]['children'] = [];
+            }
+            $this->prepareTreeForSelectedNode($entity->child, $tree[$entity->get('id')]['children'], $entity->get('id'));
         }
     }
 
@@ -319,7 +359,7 @@ class Hierarchy extends Record
         }
 
         return [
-            'list' => $result,
+            'list'  => $result,
             'total' => $this->getRepository()->getChildrenCount($parentId)
         ];
     }
@@ -563,7 +603,7 @@ class Hierarchy extends Record
 
         $entity->set('isRoot', $this->getRepository()->isRoot($entity->get('id')));
 
-        $entity->set('hasChildren',  !empty($children = $entity->get('children'))  && count($children) > 0);
+        $entity->set('hasChildren', !empty($children = $entity->get('children')) && count($children) > 0);
 
         if ($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']) !== true) {
             $entity->set('hierarchyRoute', $this->getRepository()->getHierarchyRoute($entity->get('id')));
