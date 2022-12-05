@@ -16442,6 +16442,8 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
     text-align: left;
     padding-left: 14px;
     border-radius: 3px;
+    display: inline-block;
+    width: auto;
 }
 
 .autocomplete-suggestions {
@@ -19560,11 +19562,6 @@ input#sn-checkbox-open-in-new-window {
 
 .panel-body > .list-container > .list > div.show-more, .list.no-bottom-margin > div.show-more {
     width: auto;
-}
-
-.show-more > .btn-block {
-    display: inline-block;
-    width: auto
 }
 
 .show-more {
