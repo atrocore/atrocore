@@ -4626,6 +4626,7 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
   border: 1px solid transparent;
   -webkit-border-radius: 0;
           border-radius: 0;
+  color: #737373;
 }
 
 .navbar-toggle:focus {

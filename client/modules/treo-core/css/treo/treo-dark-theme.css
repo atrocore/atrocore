@@ -4776,7 +4776,8 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
     background-color: transparent;
     background-image: none;
     border: 1px solid transparent;
-    border-radius: 0
+    border-radius: 0;
+    color: #fff;
 }
 
 .navbar-toggle:focus {
