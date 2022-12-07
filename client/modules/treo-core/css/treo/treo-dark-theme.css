@@ -21902,11 +21902,11 @@ td[data-name="draggableIcon"] {
 }
 
 #options .form-control:first-of-type:not(:last-of-type) {
-    width: calc(100% - 140px) !important;
+    width: calc(100% - 175px) !important;
 }
 
 #options .form-control.color-input {
-    width: 80px !important;
+    width: 115px !important;
 }
 
 .field .attribute-type-value .option-group .option-item > span {
