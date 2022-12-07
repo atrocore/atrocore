@@ -61,6 +61,8 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
                 if (treePanel && treePanel.$el) {
                     this.onTreeResize(treePanel.$el.innerWidth());
                 }
+
+                observer.unobserve($('#content').get(0));
             });
             observer.observe($('#content').get(0));
         },
