@@ -211,6 +211,8 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             this.getCollectionFactory().create('Note', function (collection) {
                 this.collection = collection;
                 collection.url = this.model.name + '/' + this.model.id + '/stream';
+                collection.sortBy = 'modifiedAt';
+                collection.asc = false;
                 collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
                 this.setFilter(this.filter);
 

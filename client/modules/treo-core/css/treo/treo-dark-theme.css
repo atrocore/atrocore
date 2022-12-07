@@ -22304,6 +22304,18 @@ select {
     padding-left: 27px;
 }
 
+del {
+    color: red;
+    background: #fdd;
+    text-decoration: none;
+}
+
+ins {
+    color: green;
+    background: #dfd;
+    text-decoration: none;
+}
+
 ::-webkit-scrollbar {
     width: 10px;
     height: 10px;

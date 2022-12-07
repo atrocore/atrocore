@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -33,47 +32,39 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-namespace Espo\Controllers;
+Espo.define('views/stream/notes/unrelate', 'views/stream/note', function (Dep) {
 
-use \Espo\Core\Exceptions\Error;
+    return Dep.extend({
 
-class Stream extends \Espo\Core\Controllers\Base
-{
-    const MAX_SIZE_LIMIT = 200;
+        template: 'stream/notes/remove-related',
 
-    public static $defaultAction = 'list';
+        messageName: 'unrelate',
 
-    public function actionList($params, $data, $request)
-    {
-        $scope = $params['scope'];
-        $id = isset($params['id']) ? $params['id'] : null;
+        data: function () {
+            return _.extend({
+                relatedTypeString: this.translateEntityType(this.entityType)
+            }, Dep.prototype.data.call(this));
+        },
 
-        $offset = intval($request->get('offset'));
-        $maxSize = intval($request->get('maxSize'));
-        $after = $request->get('after');
-        $filter = $request->get('filter');
-        $orderBy = $request->get('sortBy') ? $request->get('sortBy') : 'number';
-        $service = $this->getService('Stream');
+        init: function () {
+            if (this.getUser().isAdmin()) {
+                this.isRemovable = true;
+            }
+            Dep.prototype.init.call(this);
+        },
 
-        if (empty($maxSize)) {
-            $maxSize = self::MAX_SIZE_LIMIT;
-        }
-        if (!empty($maxSize) && $maxSize > self::MAX_SIZE_LIMIT) {
-            throw new Forbidden();
-        }
+        setup: function () {
+            var data = this.model.get('data') || {};
 
-        $result = $service->find($scope, $id, array(
-            'offset' => $offset,
-            'maxSize' => $maxSize,
-            'after' => $after,
-            'filter' => $filter,
-            'orderBy' => $orderBy
-        ));
+            this.entityType = this.model.get('relatedType') || data.entityType || null;
+            this.entityId = this.model.get('relatedId') || data.entityId || null;
+            this.entityName = this.model.get('relatedName') ||  data.entityName || null;
 
-        return array(
-            'total' => $result['total'],
-            'list' => $result['collection']->toArray()
-        );
-    }
+            this.messageData['relatedEntityType'] = this.translateEntityType(this.entityType);
+            this.messageData['relatedEntity'] = '<a href="#' + this.entityType + '/view/' + this.entityId + '">' + this.entityName +'</a>';
 
-}
+            this.createMessage();
+        },
+    });
+});
+

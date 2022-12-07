@@ -95,9 +95,25 @@ class FieldManager extends \Espo\Core\Controllers\Base
         }
 
         $fieldManager = $this->getContainer()->get('fieldManager');
-        $fieldManager->update($params['scope'], $params['name'], get_object_vars($data));
+        $arrData = get_object_vars($data);
+        $linkChanged = false;
+        if (isset($arrData['auditedLink'])) {
+            $link = $this->getMetadata()->get("entityDefs.{$params['scope']}.links.{$params['name']}");
+            if ($link['audited'] != $arrData['auditedLink']) {
+                $link_params = [];
+                $link_params['audited'] = $arrData['auditedLink'];
+                $link_params['entity'] = $params['scope'];
+                $link_params['link'] = $params['name'];
+                $link_params['entityForeign'] = $link['entity'];
+                $link_params['linkForeign'] = $link['foreign'] ;
+                $this->getContainer()->get('entityManagerUtil')->updateLink($link_params);
+                $linkChanged = true;
+            }
+            unset($arrData['auditedLink']);
+        }
+        $fieldManager->update($params['scope'], $params['name'], $arrData);
 
-        if ($fieldManager->isChanged()) {
+        if ($fieldManager->isChanged() || $linkChanged) {
             $this->getContainer()->get('dataManager')->rebuild($params['scope']);
         } else {
             $this->getContainer()->get('dataManager')->clearCache();
