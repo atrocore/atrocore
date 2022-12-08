@@ -64,7 +64,7 @@ class Hierarchy extends Record
         $this->prepareTreeForSelectedNode($entity, $tree);
         $this->prepareTreeData($tree);
 
-        return $tree;
+        return ['total' => count($tree), 'list' => $tree];
     }
 
     public function getTreeData(array $ids): array
@@ -126,18 +126,50 @@ class Hierarchy extends Record
     {
         $children = $this->getChildren($parentId, ['offset' => 0, 'maxSize' => \PHP_INT_MAX]);
 
-        $offset = 0;
+        $limit = $this->getConfig()->get('recordsPerPageSmall', 20);
+
+        $part = [];
+
         foreach ($children['list'] as $k => $child) {
             if ($child['id'] === $entity->get('id')) {
-                $offset = $k;
+                $row = $child;
+                $row['offset'] = $k;
+                $row['load_on_demand'] = false;
+                $part[] = $row;
+
+                $i = 1;
+                while (count($part) < $limit) {
+                    $prevOffset = $k - $i;
+                    $nextOffset = $k + $i;
+
+                    if (!isset($children['list'][$prevOffset]) && !isset($children['list'][$nextOffset])) {
+                        break;
+                    }
+
+                    if (isset($children['list'][$prevOffset])) {
+                        $row = $children['list'][$prevOffset];
+                        $row['offset'] = $prevOffset;
+                        $part = array_merge([$row], $part);
+                    }
+                    if (isset($children['list'][$nextOffset])) {
+                        $row = $children['list'][$nextOffset];
+                        $row['offset'] = $nextOffset;
+                        $part[] = $row;
+                    }
+
+                    $i++;
+                }
+
                 break;
             }
         }
 
-        $tree[$entity->get('id')]['id'] = $entity->get('id');
-        $tree[$entity->get('id')]['name'] = $entity->get('name');
-        $tree[$entity->get('id')]['offset'] = $offset;
-        $tree[$entity->get('id')]['total'] = $children['total'];
+        foreach ($part as $v) {
+            $tree[$v['id']] = $v;
+            $tree[$v['id']]['total'] = $children['total'];
+            $tree[$v['id']]['disabled'] = false;
+        }
+
         if (!empty($entity->child)) {
             if (empty($tree[$entity->get('id')]['children'])) {
                 $tree[$entity->get('id')]['children'] = [];
