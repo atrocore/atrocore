@@ -19716,9 +19716,6 @@ table.table > thead th > div > a {
   #main .catalog-tree-panel.catalog-tree-panel-hidden {
     padding: 20px 8px 20px 17px;
   }
-  #main .detail .catalog-tree-panel + .overview {
-    border-left: 1px solid #e8eced;
-  }
 }
 
 @media screen and (min-width: 1200px) {
