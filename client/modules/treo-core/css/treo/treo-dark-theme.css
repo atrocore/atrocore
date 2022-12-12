@@ -4159,7 +4159,7 @@ tbody.collapse.in {
 .additional-button:not(.additional-button ~ .additional-button) {
     margin-left: 20px;
     border-bottom-left-radius: 3px;
-    border-top-left-radius: 3px; 
+    border-top-left-radius: 3px;
 }
 
 .btn-group > .btn-lg + .dropdown-toggle {
@@ -4832,7 +4832,7 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
 .navbar-right .fas,
 .navbar-right .fas .far,
 .navbar-right .text-muted,
-.navbar-right .dropdown-menu > li > a{
+.navbar-right .dropdown-menu > li > a {
     color: #000;
 }
 
@@ -6609,7 +6609,7 @@ button.close {
     padding-left: 0;
 }
 
-#general-container .modal-body{
+#general-container .modal-body {
     padding: 14px;
 }
 
@@ -6630,7 +6630,7 @@ button.close {
     padding: 0 14px;
 }
 
-.modal-body .search-container .search-row .input-group{
+.modal-body .search-container .search-row .input-group {
     margin: 0;
 }
 
@@ -7668,7 +7668,7 @@ button.close {
     background: #efefef;
     color: #333;
     border: 0 solid rgba(0, 0, 0, 0);
-    border-radius:3px
+    border-radius: 3px
 }
 
 .selectize-control.multi .selectize-input > div.active {
@@ -15230,7 +15230,7 @@ label {
     border-radius: 3px;
 }
 
-.btn[data-name="kanban"],.btn[data-name="list"],.btn[data-name="plate"] {
+.btn[data-name="kanban"], .btn[data-name="list"], .btn[data-name="plate"] {
     border-radius: 0px !important;
 }
 
@@ -15384,7 +15384,7 @@ div.list-kanban > div > table .item .panel .form-group .field {
     font-size: 14px
 }
 
-div.list-kanban > div > table .item .panel .form-group .field  span.label {
+div.list-kanban > div > table .item .panel .form-group .field span.label {
     line-height: 24px;
 }
 
@@ -17359,31 +17359,31 @@ pre > code {
 
     @keyframes fadein {
         from {
-            opacity:0;
+            opacity: 0;
         }
         to {
-            opacity:1;
+            opacity: 1;
         }
     }
     @-moz-keyframes fadein {
         from {
-            opacity:0;
+            opacity: 0;
         }
         to {
-            opacity:1;
+            opacity: 1;
         }
     }
     @-webkit-keyframes fadein {
         from {
-            opacity:0;
+            opacity: 0;
         }
         to {
-            opacity:1;
+            opacity: 1;
         }
     }
     @-o-keyframes fadein {
         from {
-            opacity:0;
+            opacity: 0;
         }
         to {
             opacity: 1;
@@ -17527,7 +17527,7 @@ a.field-info > span.fa-info-circle {
 }
 
 
-.fa-angle-left, .fa-angle-right, .fa-angle-down, .fa-angle-up  {
+.fa-angle-left, .fa-angle-right, .fa-angle-down, .fa-angle-up {
     color: #bbb;
 }
 
@@ -17869,10 +17869,10 @@ table.table {
     -moz-box-shadow: none
 }
 
-    #navbar .nav.navbar-nav.navbar-right {
-        background-color: #ececec;
-        border-bottom: 1px solid var(--primary-border-color);
-    }
+#navbar .nav.navbar-nav.navbar-right {
+    background-color: #ececec;
+    border-bottom: 1px solid var(--primary-border-color);
+}
 
 .list-container > .list, .panel, .dashlet-container, .list-nested-categories, #main > .calendar-container .calendar, #main > .calendar-container .timeline, .well, .admin-content .table.table-bordered, .admin-content iframe, .list-kanban > .kanban-head-container, .list-group-panel {
     -webkit-box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.13);
@@ -19257,7 +19257,7 @@ body {
 }
 
 body {
-    --theme-name:TreoDarkTheme;
+    --theme-name: TreoDarkTheme;
 }
 
 body {
@@ -19675,9 +19675,11 @@ ul.dropdown-menu > li.checkbox {
     width: auto;
     padding: 6px 10px;
 }
+
 .search-row .text-filter + .input-group-btn .search .fas {
     font-size: 14px;
 }
+
 .search-row .text-filter + .input-group-btn .reset {
     padding-right: 4px;
 }
@@ -20230,8 +20232,29 @@ select,
 }
 
 .jqtree-tree .show-more {
-    margin: 10px 0 0 0;
+    margin: 0;
     padding: 0;
+    font-style: italic;
+}
+
+.jqtree-tree .show-more .jqtree-element{
+    padding-right: 0 !important;
+}
+
+.jqtree-tree .show-more-up:after {
+    content: '\2934';
+    font-style: normal;
+    font-size: 10px;
+    padding-top: 5px;
+    padding-left: 3px;
+}
+
+.jqtree-tree .show-more-down:after {
+    content: '\2935';
+    font-style: normal;
+    font-size: 10px;
+    padding-top: 10px;
+    padding-left: 3px;
 }
 
 button.category {
@@ -20370,7 +20393,7 @@ button.category:focus {
         height: 20px;
         border-radius: 50%;
         padding: 2px 6px;
-        background-color:rgba(0, 0, 0, 0.2);
+        background-color: rgba(0, 0, 0, 0.2);
     }
 
     body:not(.minimized) #header a.minimizer.bottom-minimizer {
@@ -20591,7 +20614,7 @@ button.category:focus {
     }
 
     .modal-dialog .edit > .row > .overview.col-sm-12,
-    .modal-dialog .detail > .row > .overview.col-sm-12  {
+    .modal-dialog .detail > .row > .overview.col-sm-12 {
         min-height: unset;
         border-right: 0;
     }
@@ -20632,7 +20655,7 @@ button.category:focus {
     }
 
     #main > .record > .edit > .row > .side.fixed-top,
-    #main > .record >  .detail > .row > .side.fixed-top {
+    #main > .record > .detail > .row > .side.fixed-top {
         top: 91px;
     }
 
@@ -20736,8 +20759,7 @@ button.category:focus {
 
     #main > .list-container.collapsed,
     #main > .page-header.collapsed .header-buttons-container,
-    #main > .page-header.collapsed .overview-filters-container
-    {
+    #main > .page-header.collapsed .overview-filters-container {
         width: calc(100% - 279px);
     }
 
@@ -20752,8 +20774,7 @@ button.category:focus {
         left: -15px;
     }
 
-    #main > .page-header.collapsed .overview-filters-container
-    {
+    #main > .page-header.collapsed .overview-filters-container {
         width: auto;
     }
 
@@ -20780,6 +20801,7 @@ button.category:focus {
         border-top: 0;
     }
 }
+
 @media screen and (min-width: 1200px) {
     #main .detail .catalog-tree-panel.catalog-tree-panel-hidden + .overview {
         width: calc(75% - 25px);
@@ -21224,12 +21246,15 @@ button.category:focus {
     .navbar-brand {
         max-width: 100px;
     }
+
     #header .navbar img.logo {
         max-width: 100%;
     }
+
     #footer {
         font-size: 13px;
     }
+
     #footer .year {
         display: none;
     }
@@ -21544,7 +21569,7 @@ span.jqtree-dragging {
     border: 0;
 }
 
-tr.list-row{
+tr.list-row {
     position: relative;
 }
 
@@ -21754,18 +21779,23 @@ td[data-name="draggableIcon"] {
 }
 
 @-webkit-keyframes sk-bouncedelay {
-    0%, 80%, 100% { -webkit-transform: scale(0) }
-    40% { -webkit-transform: scale(1.0) }
+    0%, 80%, 100% {
+        -webkit-transform: scale(0)
+    }
+    40% {
+        -webkit-transform: scale(1.0)
+    }
 }
 
 @keyframes sk-bouncedelay {
     0%, 80%, 100% {
         -webkit-transform: scale(0);
         transform: scale(0);
-    } 40% {
-          -webkit-transform: scale(1.0);
-          transform: scale(1.0);
-      }
+    }
+    40% {
+        -webkit-transform: scale(1.0);
+        transform: scale(1.0);
+    }
 }
 
 .bottom .panel-heading > .panel-title > .collapser {
@@ -22085,6 +22115,7 @@ td.cell[data-name="buttons"] > .btn-group {
 .no-margin {
     margin: 0 !important;
 }
+
 .no-padding {
     padding: 0 !important;
 }
@@ -22130,7 +22161,7 @@ select {
     padding-right: 20px !important;
 }
 
-@media screen and (max-width: 768px)  {
+@media screen and (max-width: 768px) {
     @supports (-webkit-overflow-scrolling: touch) {
         #header .navbar-collapse, #header .menu {
             padding-bottom: 80px;
@@ -22202,11 +22233,11 @@ select {
     padding-left: 5px;
 }
 
-.logo-centr-inner{
+.logo-centr-inner {
     display: inline-block;
 }
 
-.logo-centr-outer{
+.logo-centr-outer {
     text-align: center;
 }
 
@@ -22293,7 +22324,7 @@ select {
     padding: 6px 12px 6px 12px;
 }
 
-.drag-and-drop-files .attach-file-label{
+.drag-and-drop-files .attach-file-label {
     width: 100%;
 }
 
@@ -22326,7 +22357,7 @@ select {
     margin-top: 7px;
 }
 
-.form-group[data-name="files"]>label {
+.form-group[data-name="files"] > label {
     display: none;
 }
 
@@ -22378,7 +22409,7 @@ select {
     padding-right: 0;
 }
 
-.overview-filters-container  .selectize-control.multi .selectize-input::after {
+.overview-filters-container .selectize-control.multi .selectize-input::after {
     content: " ";
     display: block;
     position: absolute;
@@ -22392,10 +22423,10 @@ select {
     border-color: gray transparent transparent transparent;
 }
 
-.overview-filters-container  .selectize-control.multi .selectize-input.dropdown-active:after {
-    margin-top:-4px;
-    border-width:0 5px 5px 5px;
-    border-color:transparent transparent gray transparent
+.overview-filters-container .selectize-control.multi .selectize-input.dropdown-active:after {
+    margin-top: -4px;
+    border-width: 0 5px 5px 5px;
+    border-color: transparent transparent gray transparent
 }
 
 
@@ -22490,7 +22521,7 @@ ins {
 
 .button-container {
     padding: 0 0 10px;
-  }
+}
 
 
 td.cell[data-name="tag"] {

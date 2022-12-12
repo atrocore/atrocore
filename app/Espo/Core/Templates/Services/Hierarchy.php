@@ -51,6 +51,22 @@ use Treo\Core\Exceptions\NotModified;
 
 class Hierarchy extends Record
 {
+    public function getTreeDataForSelectedNode(string $id): array
+    {
+        $treeBranches = [];
+        $this->createTreeBranches($this->getEntity($id), $treeBranches);
+
+        if (empty($entity = $treeBranches[0])) {
+            throw new NotFound();
+        }
+
+        $tree = [];
+        $this->prepareTreeForSelectedNode($entity, $tree);
+        $this->prepareTreeData($tree);
+
+        return ['total' => count($tree), 'list' => $tree];
+    }
+
     public function getTreeData(array $ids): array
     {
         $tree = [];
@@ -103,6 +119,61 @@ class Hierarchy extends Record
                 $tree[$entity->get('id')]['children'] = [];
             }
             $this->prepareTreeNode($entity->child, $tree[$entity->get('id')]['children'], $ids);
+        }
+    }
+
+    protected function prepareTreeForSelectedNode($entity, array &$tree, string $parentId = ''): void
+    {
+        $children = $this->getChildren($parentId, ['offset' => 0, 'maxSize' => \PHP_INT_MAX]);
+
+        $limit = $this->getConfig()->get('recordsPerPageSmall', 20);
+
+        $part = [];
+
+        foreach ($children['list'] as $k => $child) {
+            if ($child['id'] === $entity->get('id')) {
+                $row = $child;
+                $row['offset'] = $k;
+                $part[] = $row;
+
+                $i = 1;
+                while (count($part) < $limit) {
+                    $prevOffset = $k - $i;
+                    $nextOffset = $k + $i;
+
+                    if (!isset($children['list'][$prevOffset]) && !isset($children['list'][$nextOffset])) {
+                        break;
+                    }
+
+                    if (isset($children['list'][$prevOffset])) {
+                        $row = $children['list'][$prevOffset];
+                        $row['offset'] = $prevOffset;
+                        $part = array_merge([$row], $part);
+                    }
+                    if (isset($children['list'][$nextOffset])) {
+                        $row = $children['list'][$nextOffset];
+                        $row['offset'] = $nextOffset;
+                        $part[] = $row;
+                    }
+
+                    $i++;
+                }
+
+                break;
+            }
+        }
+
+        foreach ($part as $v) {
+            $tree[$v['id']] = $v;
+            $tree[$v['id']]['total'] = $children['total'];
+            $tree[$v['id']]['disabled'] = false;
+        }
+
+        if (!empty($entity->child)) {
+            if (empty($tree[$entity->get('id')]['children'])) {
+                $tree[$entity->get('id')]['children'] = [];
+            }
+            $this->prepareTreeForSelectedNode($entity->child, $tree[$entity->get('id')]['children'], $entity->get('id'));
         }
     }
 
@@ -297,6 +368,9 @@ class Hierarchy extends Record
             return $result;
         }
 
+        $offset = $params['offset'];
+        $total = $this->getRepository()->getChildrenCount($parentId);
+
         unset($params['offset']);
         unset($params['maxSize']);
         $selectParams = $this->getSelectParams($params);
@@ -309,18 +383,20 @@ class Hierarchy extends Record
             }
         }
 
-        foreach ($records as $record) {
+        foreach ($records as $k => $record) {
             $result[] = [
                 'id'             => $record['id'],
                 'name'           => $record['name'],
+                'offset'         => $offset + $k,
+                'total'          => $total,
                 'disabled'       => !in_array($record['id'], $ids),
                 'load_on_demand' => !empty($record['childrenCount'])
             ];
         }
 
         return [
-            'list' => $result,
-            'total' => $this->getRepository()->getChildrenCount($parentId)
+            'list'  => $result,
+            'total' => $total
         ];
     }
 
@@ -563,7 +639,7 @@ class Hierarchy extends Record
 
         $entity->set('isRoot', $this->getRepository()->isRoot($entity->get('id')));
 
-        $entity->set('hasChildren',  !empty($children = $entity->get('children'))  && count($children) > 0);
+        $entity->set('hasChildren', !empty($children = $entity->get('children')) && count($children) > 0);
 
         if ($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']) !== true) {
             $entity->set('hierarchyRoute', $this->getRepository()->getHierarchyRoute($entity->get('id')));

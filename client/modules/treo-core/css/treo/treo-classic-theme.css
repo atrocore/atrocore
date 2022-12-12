@@ -20182,8 +20182,29 @@ ul.dropdown-menu > li.checkbox {
 }
 
 .jqtree-tree .show-more {
-    margin: 10px 0 0 0;
+    margin: 0;
     padding: 0;
+    font-style: italic;
+}
+
+.jqtree-tree .show-more .jqtree-element{
+    padding-right: 0 !important;
+}
+
+.jqtree-tree .show-more-up:after {
+    content: '\2934';
+    font-style: normal;
+    font-size: 10px;
+    padding-top: 5px;
+    padding-left: 3px;
+}
+
+.jqtree-tree .show-more-down:after {
+    content: '\2935';
+    font-style: normal;
+    font-size: 10px;
+    padding-top: 10px;
+    padding-left: 3px;
 }
 
 button.category {
