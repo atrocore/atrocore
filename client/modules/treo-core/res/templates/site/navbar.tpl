@@ -1,9 +1,7 @@
 <div class="navbar navbar-inverse" role="navigation">
     <div class="navbar-header">
         <button type="button" class="navbar-toggle" >
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
+            <span class="fas fa-bars"></span>
         </button>
         <a class="navbar-brand nav-link" href="#"><img src="{{logoSrc}}" class="logo"><span class="home-icon fas fa-home" title="{{translate 'homepage'}}"></span></a>
         <div class="navbar-header-inner pull-right">
@@ -23,7 +21,7 @@
                 </li>
             </ul>
             <div class="dropdown menu-container visible-xs pull-left">
-                <a id="nav-menu-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Menu'}}"><span class="fas fa-bars"></span></a>
+                <a id="nav-menu-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Menu'}}"><span class="fas fa-user"></span></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-menu-dropdown">
                     {{#each menuDataList}}
                     {{#unless divider}}
@@ -99,7 +97,7 @@
 
         <ul class="nav navbar-nav navbar-right">
             <li class="dropdown menu-container hidden-xs">
-                <a id="nav-menu-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Menu'}}"><span class="fas fa-bars"></span></a>
+                <a id="nav-menu-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Menu'}}"><span class="fas fa-user"></span></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-menu-dropdown">
                     {{#each menuDataList}}
                     {{#unless divider}}
