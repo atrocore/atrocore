@@ -134,7 +134,6 @@ class Hierarchy extends Record
             if ($child['id'] === $entity->get('id')) {
                 $row = $child;
                 $row['offset'] = $k;
-                $row['load_on_demand'] = false;
                 $part[] = $row;
 
                 $i = 1;
