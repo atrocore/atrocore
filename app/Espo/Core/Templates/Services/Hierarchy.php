@@ -369,6 +369,9 @@ class Hierarchy extends Record
             return $result;
         }
 
+        $offset = $params['offset'];
+        $total = $this->getRepository()->getChildrenCount($parentId);
+
         unset($params['offset']);
         unset($params['maxSize']);
         $selectParams = $this->getSelectParams($params);
@@ -381,10 +384,12 @@ class Hierarchy extends Record
             }
         }
 
-        foreach ($records as $record) {
+        foreach ($records as $k => $record) {
             $result[] = [
                 'id'             => $record['id'],
                 'name'           => $record['name'],
+                'offset'         => $offset + $k,
+                'total'          => $total,
                 'disabled'       => !in_array($record['id'], $ids),
                 'load_on_demand' => !empty($record['childrenCount'])
             ];
@@ -392,7 +397,7 @@ class Hierarchy extends Record
 
         return [
             'list'  => $result,
-            'total' => $this->getRepository()->getChildrenCount($parentId)
+            'total' => $total
         ];
     }
 
