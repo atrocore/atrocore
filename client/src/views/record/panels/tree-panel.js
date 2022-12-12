@@ -400,7 +400,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
 
                     $title.attr('data-id', node.id);
 
-                    if (this.getMetadata().get(`scopes.${this.treeScope}.multiParents`) !== true && treeData.dragAndDrop) {
+                    if (treeData.dragAndDrop && !node.showMoreDirection) {
                         $title.attr('title', this.translate("useDragAndDrop"));
                     }
 
@@ -451,10 +451,6 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
 
                 this.ajaxPatchRequest(`${this.treeScope}/${moveInfo.moved_node.id}`, data).success(response => {
                     moveInfo.do_move();
-                    if (this.model) {
-                        this.model.fetch();
-                        $('.action[data-action=refresh]').click();
-                    }
                 });
             }).on('tree.click', e => {
                 e.preventDefault();
