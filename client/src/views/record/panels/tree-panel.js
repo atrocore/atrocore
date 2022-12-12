@@ -425,6 +425,10 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
 
             $tree.tree('destroy');
             $tree.tree(treeData).on('tree.init', () => {
+                    // delete stored selections
+                    ($tree.tree('getSelectedNodes') || []).forEach(node => {
+                        $tree.tree('removeFromSelection', node);
+                    });
                     this.trigger('tree-init');
                 }
             ).on('tree.move', e => {
