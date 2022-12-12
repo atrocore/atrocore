@@ -22894,6 +22894,26 @@ body.minimized #header > #navbar .navbar-inverse .navbar-nav .more .dropdown-men
   padding-left: 27px;
 }
 
+
+del {
+  color: red;
+  background: #fdd;
+  text-decoration: none;
+}
+
+ins {
+  color: green;
+  background: #dfd;
+  text-decoration: none;
+}
+
+.panel-stream .diff {
+  padding-top: 10px;
+}
+
+.panel-stream .history {
+  padding-top: 10px;
+}
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;

@@ -536,7 +536,12 @@
     "emailReceivedInitial": "Email received: {entityType} {entity} created",
     "emailReceivedInitialFrom": "Email received from {from}, {entityType} {entity} created",
     "emailSent": "{by} sent email related to {entityType} {entity}",
-    "emailSentThis": "{by} sent email"
+    "emailSentThis": "{by} sent email",
+    "unrelateThis": "{user} remove link {relatedEntityType} {relatedEntity} with this {entityType}",
+    "updateOneThis": "{user} in this {entityType} updated",
+    "updateFromToThis": "{user} in this {entityType} updated",
+    "updateOne": "{user} in {entityType} {entity} updated",
+    "updateFromTo": "{user} in {entityType} {entity} updated"
   },
   "streamMessagesMale": {
     "composerUpdateThis": "{user}",

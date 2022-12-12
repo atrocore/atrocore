@@ -41,9 +41,16 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
         messageName: 'update',
 
         data: function () {
+            var diff = this.model.get('diff');
+            var showInline = this.model.get('data').fields.length === 1 && !diff
+
             return _.extend({
                 fieldsArr: this.fieldsArr,
-                parentType: this.model.get('parentType')
+                parentType: this.model.get('parentType'),
+                diff: diff,
+                showDiff: !!diff,
+                showInline: showInline,
+                showCommon: !showInline && !diff
             }, Dep.prototype.data.call(this));
         },
 
@@ -51,10 +58,10 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
             'click a[data-action="expandDetails"]': function (e) {
                 if (this.$el.find('.details').hasClass('hidden')) {
                     this.$el.find('.details').removeClass('hidden');
-                    $(e.currentTarget).find('span').removeClass('fa-chevron-down').addClass('fa-chevron-up');
+                    $(e.currentTarget).find('span').removeClass('fa-angle-down').addClass('fa-angle-up');
                 } else {
                     this.$el.find('.details').addClass('hidden');
-                    $(e.currentTarget).find('span').addClass('fa-chevron-down').removeClass('fa-chevron-up');
+                    $(e.currentTarget).find('span').addClass('fa-angle-down').removeClass('fa-angle-up');
                 }
             }
         },
@@ -63,7 +70,15 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
             if (this.getUser().isAdmin()) {
                 this.isRemovable = true;
             }
+            if (this.model.get('data').fields.length === 1) {
+                this.messageName = "updateFromTo";
+                if (this.model.get('diff')) {
+                    this.messageName = "updateOne";
+                }
+            }
+
             Dep.prototype.init.call(this);
+
         },
 
         setup: function () {
@@ -72,9 +87,11 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
             var fields = data.fields;
 
             this.createMessage();
-
+            this.diff = false;
+            this.showInline = false;
 
             this.wait(true);
+
             this.getModelFactory().create(this.model.get('parentType'), function (model) {
                 var modelWas = model;
                 var modelBecame = model.clone();

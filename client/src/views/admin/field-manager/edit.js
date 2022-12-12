@@ -144,6 +144,8 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                     this.paramList = [];
                     var paramList = Espo.Utils.clone(this.getFieldManager().getParams(this.type) || []);
 
+
+
                     if (!this.isNew) {
                         (this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'fieldManagerAdditionalParamList']) || []).forEach(function (item) {
                             paramList.push(item);
@@ -178,7 +180,15 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                             type: 'bool'
                         });
                     }
-
+                    if(this.type === 'linkMultiple') {
+                        this.paramList.push(
+                            {
+                                name: "auditedLink",
+                                type: "bool"
+                            }
+                        );
+                        this.model.set('auditedLink', this.getMetadata().get(['entityDefs', this.scope, 'links', this.field, 'audited']));
+                    }
                     this.paramList.forEach(function (o) {
                         this.model.defs.fields[o.name] = o;
                     }, this);
@@ -268,7 +278,6 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                     }
 
                     this.model.fetchedAttributes = this.model.getClonedAttributes();
-
                     this.paramList.forEach(function (o) {
                         if (o.hidden) {
                             return;
@@ -319,7 +328,7 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                 var name = this.model.get('name');
                 var label = name;
                 if (label.length) {
-                     label = label.charAt(0).toUpperCase() + label.slice(1);
+                    label = label.charAt(0).toUpperCase() + label.slice(1);
                 }
                 this.model.set('label', label);
                 if (name) {
@@ -327,7 +336,7 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                         return g.toUpperCase();
                     }).replace(' ', '');
                     if (name.length) {
-                         name = name.charAt(0).toLowerCase() + name.slice(1);
+                        name = name.charAt(0).toLowerCase() + name.slice(1);
                     }
                 }
                 this.model.set('name', name);

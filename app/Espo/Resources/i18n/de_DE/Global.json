@@ -559,7 +559,17 @@
     "assignThisVoid": "{user} löst die Zuordnung {entityType}",
     "assignVoid": "{user} löst die Zuordnung {entityType} {entity}",
     "assignThisSelf": "{user} hat sich selbst {entityType} zugewiesen",
-    "assignSelf": "{user} hat sich {entityType} {entity} selbst zugewiesen"
+    "assignSelf": "{user} hat sich {entityType} {entity} selbst zugewiesen",
+    "unrelate": "{user} hat {relatedEntityType} {relatedEntity} mit {entityType} {entity} entfernte Verknüpfung",
+    "unrelateThis": "{user} für {entityType} {entity} entfernte Verknüpfung ",
+    "updateOneThis": "{user}  hat diese(s/n) {entityType} aktualisierte",
+    "updateFromToThis": "{user} hat diese(s/n) {entityType} aktualisierte",
+    "updateOne": "{user} hat {entityType} {entity} aktualisierte",
+    "updateFromTo": "{user} hat {entityType} {entity} aktualisierte",
+    "from": "aus",
+    "to": "zu",
+    "was": "war",
+    "become": "werden"
   },
   "monthNames": {
     "January": "Januar",
