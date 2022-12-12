@@ -253,10 +253,12 @@ class Hierarchy extends RDB
                       WHERE e.id NOT IN (SELECT entity_id FROM `$this->hierarchyTableName` WHERE deleted=0)
                       AND e.deleted=0";
         } else {
-            $query = "SELECT COUNT(id) as count
-                      FROM `$this->hierarchyTableName` h
-                      WHERE h.parent_id = '$parentId'
-                      AND h.deleted=0";
+            $query = "SELECT COUNT(e.id) as count
+                      FROM $this->tableName e
+                      LEFT JOIN $this->hierarchyTableName h on e.id=h.entity_id
+                      WHERE e.deleted=0
+                        AND h.deleted=0
+                        AND h.parent_id='$parentId'";
         }
 
         return (int)$this->getPDO()->query($query)->fetch(\PDO::FETCH_ASSOC)['count'];
