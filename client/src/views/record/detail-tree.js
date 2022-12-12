@@ -59,7 +59,7 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
 
             let observer = new ResizeObserver(() => {
                 if (treePanel && treePanel.$el) {
-                    this.onTreeResize(treePanel.$el.innerWidth());
+                    this.onTreeResize();
                 }
 
                 observer.unobserve($('#content').get(0));
@@ -159,7 +159,7 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
 
         onTreeResize(width) {
             if ($('.catalog-tree-panel').length) {
-                width = parseInt(width);
+                width = parseInt(width || $('.catalog-tree-panel').outerWidth());
 
                 const content = $('#content');
                 const main = content.find('#main');
@@ -181,7 +181,7 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
                 btnContainer.css('marginLeft', width + 1 + 'px');
 
                 overview.outerWidth(Math.floor(content.innerWidth() - side.outerWidth() - width));
-                overview.css('marginLeft', (width - 1) + 'px');
+                overview.css('marginLeft', width + 'px');
             }
         }
     })

@@ -20755,10 +20755,6 @@ button.category:focus {
         padding: 0 8px 0 17px;
     }
 
-    #main .detail .catalog-tree-panel + .overview {
-        border-left: 1px solid #e8eced;
-    }
-
 }
 @media screen and (min-width: 1200px) {
     #main .detail .catalog-tree-panel.catalog-tree-panel-hidden + .overview {
