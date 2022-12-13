@@ -107,19 +107,6 @@ class Hierarchy extends Record
         return $this->getRecordService()->getTreeData($ids);
     }
 
-    public function actionRoute($params, $data, $request): array
-    {
-        if (!$request->isGet()) {
-            throw new BadRequest();
-        }
-
-        if (!$this->getAcl()->check($this->name, 'read')) {
-            throw new Forbidden();
-        }
-
-        return $this->getRecordService()->getRoute((string)$request->get('id'));
-    }
-
     public function actionInheritField($params, $data, $request): bool
     {
         if (!$request->isPost() || !property_exists($data, 'field') || !property_exists($data, 'id')) {

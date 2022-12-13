@@ -137,9 +137,7 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
 
         treeInit(view) {
             if (view.model && view.model.get('id')) {
-                this.ajaxGetRequest(`${this.scope}/action/route?id=${view.model.get('id')}`).then(route => {
-                    view.selectTreeNode(route, view.model.get('id'));
-                });
+                view.selectTreeNode(view.model.get('id'));
             }
         },
 

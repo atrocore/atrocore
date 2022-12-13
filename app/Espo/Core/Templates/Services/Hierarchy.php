@@ -170,6 +170,7 @@ class Hierarchy extends Record
         }
 
         if (!empty($entity->child)) {
+            $tree[$entity->get('id')]['load_on_demand'] = false;
             if (empty($tree[$entity->get('id')]['children'])) {
                 $tree[$entity->get('id')]['children'] = [];
             }
@@ -352,11 +353,6 @@ class Hierarchy extends Record
         }
 
         return $this->dispatchEvent('afterUnlinkAllHierarchically', new Event(['entity' => $entity, 'link' => $link, 'result' => true]))->getArgument('result');
-    }
-
-    public function getRoute(string $id): array
-    {
-        return $this->getRepository()->getRoute($id);
     }
 
     public function getChildren(string $parentId, array $params): array

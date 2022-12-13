@@ -203,9 +203,25 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             return result;
         },
 
-        selectTreeNode(ids, id) {
+        prepareTreeRoute(list, route) {
+            list.forEach(item => {
+                if (item.children) {
+                    route.push(item.id);
+                    this.prepareTreeRoute(item.children, route);
+                }
+            });
+        },
+
+        selectTreeNode(id, ids = null) {
             const locationHash = window.location.hash;
             const $tree = this.getTreeEl();
+
+            // prepare route ids
+            if (ids === null) {
+                ids = [];
+                this.prepareTreeRoute(JSON.parse($tree.tree('toJson')), ids);
+            }
+
             let interval = setInterval(() => {
                 if (!this.openNodes($tree, ids) || locationHash !== window.location.hash) {
                     clearInterval(interval);
@@ -263,7 +279,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                 }
             } else if (node && node.id) {
                 url += '&node=' + node.id + '&offset=0&maxSize=' + this.maxSize;
-            } else if (this.model && this.model.id) {
+            } else if (this.model && this.model.id && this.treeScope === this.model.urlRoot) {
                 url += '&selectedId=' + this.model.id;
             }
 
@@ -359,7 +375,8 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                     return this.filterResponse(response);
                 }.bind(this),
                 selectable: true,
-                saveState: true,
+                saveState: false,
+                autoOpen: false,
                 dragAndDrop: this.getMetadata().get(`scopes.${this.treeScope}.multiParents`) !== true && this.getMetadata().get(`scopes.${this.treeScope}.dragAndDrop`),
                 useContextMenu: false,
                 closedIcon: $('<i class="fa fa-angle-right"></i>'),
@@ -425,10 +442,6 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
 
             $tree.tree('destroy');
             $tree.tree(treeData).on('tree.init', () => {
-                    // delete stored selections
-                    ($tree.tree('getSelectedNodes') || []).forEach(node => {
-                        $tree.tree('removeFromSelection', node);
-                    });
                     this.trigger('tree-init');
                 }
             ).on('tree.move', e => {

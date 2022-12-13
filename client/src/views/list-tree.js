@@ -137,7 +137,7 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
             const id = this.getStorage().get('selectedNodeId', this.scope);
             const route = this.parseRoute(this.getStorage().get('selectedNodeRoute', this.scope));
 
-            this.getView('treePanel').selectTreeNode(route, id);
+            this.getView('treePanel').selectTreeNode(id, route);
 
             const filterName = "linkedWith" + this.getStorage().get('treeScope', this.scope);
 

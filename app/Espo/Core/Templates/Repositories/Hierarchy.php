@@ -306,23 +306,6 @@ class Hierarchy extends RDB
         return empty($record) ? [] : $record;
     }
 
-    public function getRoute(string $id): array
-    {
-        $records = $this
-            ->getPDO()
-            ->query("SELECT entity_id, parent_id FROM `$this->hierarchyTableName` WHERE deleted=0")
-            ->fetchAll(\PDO::FETCH_ASSOC);
-
-        if (empty($records)) {
-            return [];
-        }
-
-        $route = [];
-        $this->createRoute($records, $id, $route);
-
-        return $route;
-    }
-
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if (!empty($entity->get('parentsIds'))) {
