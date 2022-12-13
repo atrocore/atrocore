@@ -95,7 +95,7 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
                 model: this.model
             }, view => {
                 this.listenTo(this.model, 'after:save', () => {
-                    view.reRender();
+                    view.buildTree();
                 });
                 view.listenTo(view, 'select-node', data => {
                     this.selectNode(data);
@@ -108,7 +108,7 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
                 });
                 this.listenTo(this.model, 'after:relate after:unrelate after:dragDrop', link => {
                     if (['parents', 'children'].includes(link)) {
-                        view.reRender();
+                        view.buildTree();
                     }
                 });
                 this.listenTo(view, 'tree-width-changed', function (width) {
