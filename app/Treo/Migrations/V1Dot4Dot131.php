@@ -35,22 +35,28 @@
 
 declare(strict_types=1);
 
-namespace Espo\Core\Utils\Authentication;
+namespace Treo\Migrations;
 
-use Espo\Entities\User;
+use Treo\Core\Migration\Base;
 
-class Token extends AbstractAuthentication
+class V1Dot4Dot131 extends Base
 {
-    public function login(string $username, string $password): ?User
+    public function up(): void
     {
-        return $this
-            ->getEntityManager()
-            ->getRepository('User')
-            ->where([
-                'type'     => 'Token',
-                'userName' => $username,
-                'password' => $this->getPasswordHash()->hash($password),
-            ])
-            ->findOne();
+        $this->execute("ALTER TABLE user ADD type VARCHAR(255) DEFAULT 'Token' COLLATE `utf8mb4_unicode_ci`");
+        $this->execute("UPDATE user SET type='Token' WHERE 1");
+    }
+
+    public function down(): void
+    {
+        $this->execute("ALTER TABLE user DROP type");
+    }
+
+    protected function execute(string $query): void
+    {
+        try {
+            $this->getPDO()->exec($query);
+        } catch (\Throwable $e) {
+        }
     }
 }

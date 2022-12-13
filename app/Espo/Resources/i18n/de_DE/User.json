@@ -24,7 +24,8 @@
     "ipAddress": "IP Adresse",
     "passwordPreview": "Passwortvorschau",
     "isSuperAdmin": "Ist Super-Admin",
-    "lastAccess": "Letzter Zugriff"
+    "lastAccess": "Letzter Zugriff",
+    "type": "Typ"
   },
   "links": {
     "account": "Benutzerkonto",
