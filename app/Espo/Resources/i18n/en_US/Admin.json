@@ -119,7 +119,9 @@
     "number": "Number (auto-increment)",
     "colorpicker": "Color picker",
     "jsonArray": "JSON array",
-    "jsonObject": "JSON object"
+    "jsonObject": "JSON object",
+    "language": "Language",
+    "multiLanguage": "Languages"
   },
   "fields": {
     "isMultilang": "Multilingual",
