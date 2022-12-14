@@ -862,7 +862,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
             }
 
             this.collection.where = where;
-            this.collection.fetch();
+            this.collection.fetch().then(() => Backbone.trigger('after:search', this.collection));
         },
 
 		getPresetFilterList: function () {

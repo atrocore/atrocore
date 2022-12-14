@@ -158,7 +158,7 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
             this.collection.where = this.searchManager.getWhere();
             this.searchManager.set(defaultFilters);
 
-            this.collection.fetch({selectingTreeNode: true}).then(() => this.notify(false));
+            this.collection.fetch().then(() => this.notify(false));
         },
 
         unSelectTreeNode(id) {
@@ -175,7 +175,7 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
             this.collection.where = this.searchManager.getWhere();
             this.searchManager.set(defaultFilters);
 
-            this.collection.fetch({selectingTreeNode: true}).then(() => this.notify(false));
+            this.collection.fetch().then(() => this.notify(false));
         },
 
         treeReset(view) {

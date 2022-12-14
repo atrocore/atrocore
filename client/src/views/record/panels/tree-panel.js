@@ -78,10 +78,10 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             this.maxSize = this.getConfig().get('recordsPerPageSmall', 20);
 
             if (this.options.collection) {
-                this.listenTo(this.options.collection, 'sync', (collection, response, data) => {
-                    if (!data.selectingTreeNode) {
-                        if (this.options.collection.name === this.treeScope) {
-                            this.getStorage().set('treeWhereData', this.treeScope, this.options.collection.where);
+                this.listenTo(Backbone, 'after:search', collection => {
+                    if (this.options.collection.name === collection.name) {
+                        if (collection.name === this.treeScope) {
+                            this.getStorage().set('treeWhereData', this.treeScope, collection.where);
                         }
                         this.buildTree();
                     }
@@ -111,6 +111,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             });
 
             this.toggleVisibilityForResetButton();
+            this.buildTree();
         },
 
         toggleVisibilityForResetButton() {
