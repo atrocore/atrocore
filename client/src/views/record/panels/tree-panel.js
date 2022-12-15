@@ -213,19 +213,11 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             });
         },
 
-        selectTreeNode(id, ids = null) {
+        selectTreeNode(id, ids) {
             const locationHash = window.location.hash;
             const $tree = this.getTreeEl();
 
             let interval = setInterval(() => {
-                // prepare route ids
-                if (ids === null) {
-                    ids = [];
-                    if (this.treeNodes) {
-                        this.prepareTreeRoute(this.treeNodes, ids);
-                    }
-                }
-
                 if (!this.openNodes($tree, ids) || locationHash !== window.location.hash) {
                     clearInterval(interval);
                 }
@@ -356,8 +348,6 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
         },
 
         buildTree() {
-            this.treeNodes = null;
-
             let data = null;
 
             let whereData = this.getStorage().get('treeWhereData', this.treeScope) || [];
@@ -377,7 +367,6 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             let treeData = {
                 dataUrl: this.generateUrl(),
                 dataFilter: function (response) {
-                    this.treeNodes = response.list;
                     return this.filterResponse(response);
                 }.bind(this),
                 selectable: true,
@@ -447,8 +436,8 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             const $tree = this.getTreeEl();
 
             $tree.tree('destroy');
-            $tree.tree(treeData).on('tree.init', () => {
-                    this.trigger('tree-init');
+            $tree.tree(treeData).on('tree.load_data', e => {
+                    this.trigger('tree-load', e.tree_data);
                 }
             ).on('tree.move', e => {
                 e.preventDefault();

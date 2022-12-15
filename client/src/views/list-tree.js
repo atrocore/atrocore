@@ -96,8 +96,8 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
                 view.listenTo(view, 'select-node', data => {
                     this.selectNode(data);
                 });
-                view.listenTo(view, 'tree-init', () => {
-                    this.treeInit(view);
+                view.listenTo(view, 'tree-load', () => {
+                    this.treeLoad(view);
                 });
                 view.listenTo(view, 'tree-reset', () => {
                     this.treeReset(view);
@@ -127,7 +127,7 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
             }
         },
 
-        treeInit(view) {
+        treeLoad(view) {
             if (this.getStorage().get('selectedNodeId', this.scope)) {
                 this.selectTreeNode();
             }

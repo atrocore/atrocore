@@ -100,8 +100,8 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
                 view.listenTo(view, 'select-node', data => {
                     this.selectNode(data);
                 });
-                view.listenTo(view, 'tree-init', () => {
-                    this.treeInit(view);
+                view.listenTo(view, 'tree-load', treeData => {
+                    this.treeLoad(view, treeData);
                 });
                 view.listenTo(view, 'tree-reset', () => {
                     this.treeReset(view);
@@ -135,9 +135,11 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
             }
         },
 
-        treeInit(view) {
+        treeLoad(view, treeData) {
             if (view.model && view.model.get('id')) {
-                view.selectTreeNode(view.model.get('id'));
+                let route = [];
+                view.prepareTreeRoute(treeData, route);
+                view.selectTreeNode(view.model.get('id'), route);
             }
         },
 
