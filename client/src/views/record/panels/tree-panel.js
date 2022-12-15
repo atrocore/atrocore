@@ -221,7 +221,9 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                 // prepare route ids
                 if (ids === null) {
                     ids = [];
-                    this.prepareTreeRoute(JSON.parse($tree.tree('toJson')), ids);
+                    if (this.treeNodes) {
+                        this.prepareTreeRoute(this.treeNodes, ids);
+                    }
                 }
 
                 if (!this.openNodes($tree, ids) || locationHash !== window.location.hash) {
@@ -354,6 +356,8 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
         },
 
         buildTree() {
+            this.treeNodes = null;
+
             let data = null;
 
             let whereData = this.getStorage().get('treeWhereData', this.treeScope) || [];
@@ -373,6 +377,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             let treeData = {
                 dataUrl: this.generateUrl(),
                 dataFilter: function (response) {
+                    this.treeNodes = response.list;
                     return this.filterResponse(response);
                 }.bind(this),
                 selectable: true,
