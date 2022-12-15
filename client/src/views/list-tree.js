@@ -123,7 +123,7 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
 
             let treeView = this.getView('treePanel');
             if (treeView) {
-                treeView.buildTree();
+                treeView.rebuildTree();
             }
         },
 

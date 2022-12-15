@@ -95,7 +95,7 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
                 model: this.model
             }, view => {
                 this.listenTo(this.model, 'after:save', () => {
-                    view.buildTree();
+                    view.rebuildTree();
                 });
                 view.listenTo(view, 'select-node', data => {
                     this.selectNode(data);
@@ -108,7 +108,7 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
                 });
                 this.listenTo(this.model, 'after:relate after:unrelate after:dragDrop', link => {
                     if (['parents', 'children'].includes(link)) {
-                        view.buildTree();
+                        view.rebuildTree();
                     }
                 });
                 this.listenTo(view, 'tree-width-changed', function (width) {
@@ -154,7 +154,7 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
             this.getStorage().set('reSetupSearchManager', view.treeScope, true);
 
             view.toggleVisibilityForResetButton();
-            view.buildTree();
+            view.rebuildTree();
         },
 
         onTreeResize(width) {

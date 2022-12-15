@@ -83,7 +83,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                         if (collection.name === this.treeScope) {
                             this.getStorage().set('treeWhereData', this.treeScope, collection.where);
                         }
-                        this.buildTree();
+                        this.rebuildTree();
                     }
                 });
             }
@@ -347,6 +347,18 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             return !node.parent.getLevel();
         },
 
+        destroyTree() {
+            let tree = this.getTreeEl();
+            if (tree) {
+                tree.tree('destroy');
+            }
+        },
+
+        rebuildTree() {
+            this.destroyTree();
+            this.buildTree();
+        },
+
         buildTree() {
             let data = null;
 
@@ -433,38 +445,34 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                 delete treeData['dataFilter'];
             }
 
-            const $tree = this.getTreeEl();
+            this.getTreeEl().tree(treeData)
+                .on('tree.load_data', e => this.trigger('tree-load', e.tree_data))
+                .on('tree.move', e => {
+                    e.preventDefault();
 
-            $tree.tree('destroy');
-            $tree.tree(treeData).on('tree.load_data', e => {
-                    this.trigger('tree-load', e.tree_data);
-                }
-            ).on('tree.move', e => {
-                e.preventDefault();
+                    const parentName = this.treeScope === 'Category' ? 'categoryParent' : 'parent';
 
-                const parentName = this.treeScope === 'Category' ? 'categoryParent' : 'parent';
+                    let moveInfo = e.move_info;
+                    let data = {
+                        _position: moveInfo.position,
+                        _target: moveInfo.target_node.id
+                    };
 
-                let moveInfo = e.move_info;
-                let data = {
-                    _position: moveInfo.position,
-                    _target: moveInfo.target_node.id
-                };
+                    data[parentName + 'Id'] = null;
+                    data[parentName + 'Name'] = null;
 
-                data[parentName + 'Id'] = null;
-                data[parentName + 'Name'] = null;
+                    if (moveInfo.position === 'inside') {
+                        data[parentName + 'Id'] = moveInfo.target_node.id;
+                        data[parentName + 'Name'] = moveInfo.target_node.name;
+                    } else if (moveInfo.target_node.parent.id) {
+                        data[parentName + 'Id'] = moveInfo.target_node.parent.id
+                        data[parentName + 'Name'] = moveInfo.target_node.parent.name;
+                    }
 
-                if (moveInfo.position === 'inside') {
-                    data[parentName + 'Id'] = moveInfo.target_node.id;
-                    data[parentName + 'Name'] = moveInfo.target_node.name;
-                } else if (moveInfo.target_node.parent.id) {
-                    data[parentName + 'Id'] = moveInfo.target_node.parent.id
-                    data[parentName + 'Name'] = moveInfo.target_node.parent.name;
-                }
-
-                this.ajaxPatchRequest(`${this.treeScope}/${moveInfo.moved_node.id}`, data).success(response => {
-                    moveInfo.do_move();
-                });
-            }).on('tree.click', e => {
+                    this.ajaxPatchRequest(`${this.treeScope}/${moveInfo.moved_node.id}`, data).success(response => {
+                        moveInfo.do_move();
+                    });
+                }).on('tree.click', e => {
                 e.preventDefault();
                 if (e.node.disabled) {
                     return false;
@@ -515,7 +523,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                     } else {
                         this.getStorage().clear('treeSearchValue', this.treeScope);
                     }
-                    this.buildTree();
+                    this.rebuildTree();
                     this.toggleVisibilityForResetButton();
                 });
             });
@@ -564,7 +572,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                             searchPanel.scope = this.treeScope;
                             searchPanel.reRender();
 
-                            this.buildTree();
+                            this.rebuildTree();
                         });
                     });
                 });
