@@ -217,13 +217,13 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             const locationHash = window.location.hash;
             const $tree = this.getTreeEl();
 
-            // prepare route ids
-            if (ids === null) {
-                ids = [];
-                this.prepareTreeRoute(JSON.parse($tree.tree('toJson')), ids);
-            }
-
             let interval = setInterval(() => {
+                // prepare route ids
+                if (ids === null) {
+                    ids = [];
+                    this.prepareTreeRoute(JSON.parse($tree.tree('toJson')), ids);
+                }
+
                 if (!this.openNodes($tree, ids) || locationHash !== window.location.hash) {
                     clearInterval(interval);
                 }
