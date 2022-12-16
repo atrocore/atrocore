@@ -47,7 +47,7 @@ Espo.define('views/fields/color', ['views/fields/varchar', 'lib!jscolor'],
                 let options = {zIndex: 2000, required: false};
 
                 if (this.model && this.model.name) {
-                    const defs = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name]);
+                    const defs = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name]) || [];
 
                     if (defs['prohibitedEmptyValue']) {
                         options.required = true;
