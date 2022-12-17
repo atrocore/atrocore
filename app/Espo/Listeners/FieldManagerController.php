@@ -95,7 +95,7 @@ class FieldManagerController extends AbstractListener
 
             foreach ($records as $valueData) {
                 foreach ($fields as $v) {
-                    if (!preg_match($pattern, $valueData[$v])) {
+                    if (!empty($valueData[$v]) && !preg_match($pattern, $valueData[$v])) {
                         throw new BadRequest($this->getLanguage()->translate('someFieldDontMathToPattern', 'exceptions', 'FieldManager'));
                     }
                 }
