@@ -113,6 +113,14 @@ class FieldManager extends \Espo\Core\Controllers\Base
         }
         $fieldManager->update($params['scope'], $params['name'], $arrData);
 
+        if (!empty($arrData['audited'])) {
+            $hasStream = $this->getMetadata()->get("scopes.{$params['scope']}.stream");
+
+            if (!$hasStream) {
+                $this->getContainer()->get('entityManagerUtil')->update($params['scope'], ['stream' => true]);
+            }
+        }
+
         if ($fieldManager->isChanged() || $linkChanged) {
             $this->getContainer()->get('dataManager')->rebuild($params['scope']);
         } else {
