@@ -32,14 +32,20 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('views/fields/language', 'views/fields/enum', function (Dep) {
+Espo.define('views/fields/language', 'views/fields/enum', Dep => {
 
     return Dep.extend({
+
         setup: function () {
-            if (!this.params.options) {
-                this.params.options =  ['main'].concat(this.getConfig().get('inputLanguageList'))
-            }
+
+            let inputLanguageList = this.getConfig().get('inputLanguageList') || [];
+
+            this.params.options = ['main'].concat(inputLanguageList)
+            this.translatedOptions = {'main': this.translate('mainLanguage', 'labels', 'Global')};
+
             Dep.prototype.setup.call(this);
         },
+
     });
+
 });
