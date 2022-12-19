@@ -1,5 +1,3 @@
-
-
     {{#unless noEdit}}
     <div class="pull-right right-container">
     {{{right}}}
@@ -13,8 +11,7 @@
         <div class="stream-head-text-container">
               {{#if showInline}}
                      {{#each fieldsArr}}
-                <span class="text-muted message">{{{../message}}} <code>{{translate field category='fields' scope=../parentType}}</code> {{translate 'from' category='streamMessages' scope='Global'}} {{{var was ../this}}} {{translate 'to' category='streamMessages' scope='Global'}} {{{var became ../this}}}</span>
-
+                <span class="text-muted message">{{{../message}}} <code>{{translate field category='fields' scope=../parentType}}</code> {{translate 'from' category='streamMessages' scope='Global'}} <code>{{{var was ../this}}}</code> {{translate 'to' category='streamMessages' scope='Global'}} <code>{{{var became ../this}}}</code></span>
                     {{/each}}
               {{/if}}
               {{#if showCommon}}
@@ -23,7 +20,6 @@
               {{#if showDiff }}
                      {{#each fieldsArr}}
                 <span class="text-muted message">{{{../message}}} <code>{{translate field category='fields' scope=../parentType}}</code></span> <a href="javascript:" data-action="expandDetails"><span class="fas fa-angle-down"></span></a>
-
                     {{/each}}
               {{/if}}
         </div>
@@ -43,7 +39,7 @@
             <div class="field">{{{var was ../this}}}</div>
         </div>
         <div class="cell col-md-12 col-lg-6 form-group">
-            <label class="control-label">{{translate field category='fields' scope=../parentType}} {{translate 'became' category='streamMessages' scope='Global'}}</label>
+            <label class="control-label">{{translate field category='fields' scope=../parentType}} {{translate 'become' category='streamMessages' scope='Global'}}</label>
             <div class="field">{{{var became ../this}}}</div>
         </div>
         </div>
@@ -51,7 +47,9 @@
             </div>
         {{/if}}
         {{#if showDiff }}
+                <div class="panel diff">
                {{{diff}}}
+               </div>
          {{/if}}
     </div>
 

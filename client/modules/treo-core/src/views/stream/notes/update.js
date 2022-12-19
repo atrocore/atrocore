@@ -36,8 +36,6 @@ Espo.define('treo-core:views/stream/notes/update', 'views/stream/notes/update', 
 
     return Dep.extend({
 
-        template: 'treo-core:stream/notes/update',
-
         customLabels: {},
 
         setup: function () {
