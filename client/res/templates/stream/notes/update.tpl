@@ -11,7 +11,7 @@
         <div class="stream-head-text-container">
               {{#if showInline}}
                      {{#each fieldsArr}}
-                <span class="text-muted message">{{{../message}}} <code>{{translate field category='fields' scope=../parentType}}</code> {{translate 'from' category='streamMessages' scope='Global'}} <code>{{{var was ../this}}}</code> {{translate 'to' category='streamMessages' scope='Global'}} <code>{{{var became ../this}}}</code></span>
+                <span class="text-muted message">{{{../message}}} <code>{{translate field category='fields' scope=../parentType}}</code> {{translate 'from' category='streamMessages' scope='Global'}} <code class="was">{{{var was ../this}}}</code> {{translate 'to' category='streamMessages' scope='Global'}} <code class="became">{{{var became ../this}}}</code></span>
                     {{/each}}
               {{/if}}
               {{#if showCommon}}

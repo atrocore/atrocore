@@ -64,7 +64,7 @@ Espo.define('treo-core:views/stream/notes/update', 'views/stream/notes/update', 
                     let type = this.model.get('attributeType') || model.getFieldType(field) || 'base';
                     let viewName = model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(type);
                     this.createView(field + 'Was', viewName, {
-                        el: this.options.el + '.was',
+                        el: this.options.el + ' .was',
                         model: modelWas,
                         readOnly: true,
                         defs: {
@@ -74,7 +74,7 @@ Espo.define('treo-core:views/stream/notes/update', 'views/stream/notes/update', 
                         inlineEditDisabled: true
                     });
                     this.createView(field + 'Became', viewName, {
-                        el: this.options.el + '.became',
+                        el: this.options.el + ' .became',
                         model: modelBecame,
                         readOnly: true,
                         defs: {

@@ -361,7 +361,7 @@ Espo.define('views/fields/file', ['views/fields/link', 'lib!MD5'], function (Dep
         getDownloadUrl: function (id) {
             let data = this.getAttachmentPathsData();
             if (!data) {
-                return '';
+                return this.getBasePath() + '?entryPoint=download&id=' + id;
             }
 
             return this.getBasePath() + data['download'];
