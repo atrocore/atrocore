@@ -52,7 +52,9 @@ class FieldManagerController extends AbstractListener
         $params = $event->getArgument('params');
 
         // is default value valid ?
-        $this->isDefaultValueValid($data->type, $event->getArgument('data')->default);
+        if (property_exists($event->getArgument('data'), 'default')) {
+            $this->isDefaultValueValid($data->type, $event->getArgument('data')->default);
+        }
 
         if (property_exists($data, 'unique') && !empty($data->unique)) {
             $this->isUniqueFieldWithoutDuplicates($params['scope'], $data->name);
