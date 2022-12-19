@@ -74,7 +74,7 @@ class MassActions extends \Espo\Core\Controllers\Base
             $foreignIds = explode(',', $request->get('foreignIds'));
         }
 
-        if ((empty($where) && !property_exists($data, 'byWhere')) || empty($foreignIds) || !isset($params['scope']) || !isset($params['link'])) {
+        if (!property_exists($data, 'byWhere') || empty($foreignIds) || !isset($params['scope']) || !isset($params['link'])) {
             throw new BadRequest();
         }
 
@@ -101,7 +101,7 @@ class MassActions extends \Espo\Core\Controllers\Base
             $foreignIds = explode(',', $request->get('foreignIds'));
         }
 
-        if ((empty($ids) && !property_exists($data, 'byWhere')) || empty($foreignIds) || !isset($params['scope']) || !isset($params['link'])) {
+        if (!property_exists($data, 'byWhere') || empty($foreignIds) || !isset($params['scope']) || !isset($params['link'])) {
             throw new BadRequest();
         }
 
