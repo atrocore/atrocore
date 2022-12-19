@@ -1467,7 +1467,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     type: type,
                     checkedList: this.checkedList,
                     byWhere: this.allResultIsChecked,
-                    where: this.collection.getWhere()
+                    where: this.collection.getWhere(),
+                    allResultIsChecked: this.allResultIsChecked
                 }, view => {
                     view.render(() => {
                         this.notify(false);

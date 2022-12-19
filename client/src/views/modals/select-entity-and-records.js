@@ -41,6 +41,8 @@ Espo.define('views/modals/select-entity-and-records', 'views/modals/select-recor
 
         selectBoolFilterData: {},
 
+        selected: [],
+
         getSelectFilters() {
             //leave empty
         },
@@ -77,6 +79,7 @@ Espo.define('views/modals/select-entity-and-records', 'views/modals/select-recor
 
             this.buttonList.find(button => button.name === 'select').label = actionName;
             this.header = actionName;
+            this.selected = !this.options.allResultIsChecked ? this.options.checkedList : [];
 
             this.waitForView('selectedLink');
             this.createSelectedLinkView();
@@ -169,11 +172,19 @@ Espo.define('views/modals/select-entity-and-records', 'views/modals/select-recor
         },
 
         getDataForUpdateRelation(foreignIds, viewModel) {
+            let where = this.options.where;
+            if (this.selected.length) {
+                where.push({
+                    type: 'equals',
+                    attribute: 'id',
+                    value:  this.selected
+                });
+            }
+
             return {
-                ids: this.options.checkedList,
                 foreignIds: foreignIds,
                 byWhere:  this.options.byWhere,
-                where: this.options.where
+                where: where
             }
         },
 
