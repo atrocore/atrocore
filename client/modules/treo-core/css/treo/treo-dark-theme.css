@@ -17253,10 +17253,6 @@ h5 {
     position: relative
 }
 
-code {
-    font-style: italic
-}
-
 pre > code {
     font-style: normal
 }
@@ -22020,15 +22016,9 @@ td[data-name="draggableIcon"] {
     }
 }
 
-code.was,
-code.became {
+code.was, span.was,
+code.became, span.became {
     display: inline;
-}
-
-code.was .jscolor,
-code.became .jscolor {
-    width: 178px;
-    display: inline-block;
 }
 
 .was,

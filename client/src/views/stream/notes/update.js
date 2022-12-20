@@ -129,9 +129,16 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                         inlineEditDisabled: true
                     });
 
+                    let htmlTag = 'code';
+
+                    if (type === 'color' || type === 'enum') {
+                        htmlTag = 'span';
+                    }
+
                     this.fieldsArr.push({
                         field: field,
                         was: field + 'Was',
+                        htmlTag: htmlTag,
                         became: field + 'Became',
                         customLabel: this.customLabels[field] ? this.customLabels[field] : false
                     });

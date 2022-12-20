@@ -32,12 +32,30 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-Espo.define('views/fields/color', ['views/fields/varchar', 'lib!jscolor'],
-    Dep => Dep.extend({
+Espo.define('views/fields/color', ['views/fields/varchar', 'views/fields/colored-enum', 'lib!jscolor'],
+    (Dep, ColoredEnum) => Dep.extend({
 
-        detailTemplate: 'fields/base/edit',
+        listTemplate: 'fields/colored-enum/detail',
 
-        listTemplate: 'fields/base/edit',
+        detailTemplate: 'fields/colored-enum/detail',
+
+        editTemplate: 'fields/base/edit',
+
+        data: function () {
+            let data = Dep.prototype.data.call(this);
+
+            if (this.mode !== 'edit') {
+                const fontSize = this.model.getFieldParam(this.name, 'fontSize');
+
+                data['fontWeight'] = 'normal';
+                data['fontSize'] = fontSize ? fontSize + 'em' : '100%';
+                data['backgroundColor'] = this.model.get(this.name) || '#ececec'
+                data['color'] = ColoredEnum.prototype.getFontColor.call(this, data['backgroundColor']);
+                data['border'] = ColoredEnum.prototype.getBorder.call(this, data['backgroundColor']);
+            }
+
+            return data;
+        },
 
         afterRender() {
             Dep.prototype.afterRender.call(this);
@@ -62,7 +80,7 @@ Espo.define('views/fields/color', ['views/fields/varchar', 'lib!jscolor'],
                     picker.showOnClick = false;
                 }
             }
-        }
+        },
 
     })
 );
