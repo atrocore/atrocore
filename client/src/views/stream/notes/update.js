@@ -40,15 +40,17 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
 
         messageName: 'update',
 
+        customLabels: {},
+
         data: function () {
-            var diff = this.model.get('diff');
-            var showInline = this.model.get('data').fields.length === 1 && !diff
+            const diff = this.model.get('diff');
+            const showInline = this.model.get('data').fields.length === 1 && !diff
 
             return _.extend({
                 fieldsArr: this.fieldsArr,
                 parentType: this.model.get('parentType'),
                 diff: diff,
-                showDiff: !!diff,
+                showDiff: typeof diff !== 'undefined',
                 showInline: showInline,
                 showCommon: !showInline && !diff
             }, Dep.prototype.data.call(this));
@@ -84,14 +86,11 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
         setup: function () {
             var data = this.model.get('data');
 
-            var fields = data.fields;
+            var fields = data.fields || [];
 
             this.createMessage();
-            this.diff = false;
-            this.showInline = false;
 
             this.wait(true);
-
             this.getModelFactory().create(this.model.get('parentType'), function (model) {
                 var modelWas = model;
                 var modelBecame = model.clone();
@@ -104,9 +103,13 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                 this.fieldsArr = [];
 
                 fields.forEach(function (field) {
-                    var type = model.getFieldType(field) || 'base';
-                    var viewName = this.getMetadata().get('entityDefs.' + model.name + '.fields.' + field + '.view') || this.getFieldManager().getViewName(type);
+                    if (model.getFieldParam(field, 'isMultilang') && !modelWas.has(field) && !modelBecame.has(field)) {
+                        return;
+                    }
+                    let type = this.model.get('attributeType') || model.getFieldType(field) || 'base';
+                    let viewName = model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(type);
                     this.createView(field + 'Was', viewName, {
+                        el: this.options.el + ' .was',
                         model: modelWas,
                         readOnly: true,
                         defs: {
@@ -116,6 +119,7 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                         inlineEditDisabled: true
                     });
                     this.createView(field + 'Became', viewName, {
+                        el: this.options.el + ' .became',
                         model: modelBecame,
                         readOnly: true,
                         defs: {
@@ -128,7 +132,8 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                     this.fieldsArr.push({
                         field: field,
                         was: field + 'Was',
-                        became: field + 'Became'
+                        became: field + 'Became',
+                        customLabel: this.customLabels[field] ? this.customLabels[field] : false
                     });
 
                 }, this);
@@ -136,6 +141,18 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                 this.wait(false);
 
             }, this);
+        },
+
+        getInputLangName(lang, field) {
+            return lang.split('_').reduce((prev, curr) => prev + Espo.utils.upperCaseFirst(curr.toLowerCase()), field);
+        },
+
+        getCustomLabel(field, langField) {
+            let label = '';
+            label += this.translate(field, 'fields', this.model.get('parentType')) + ' &#8250; ';
+            label += langField.slice(-4, -2).toLowerCase() + "_" + langField.slice(-2).toUpperCase();
+
+            return label;
         },
 
     });

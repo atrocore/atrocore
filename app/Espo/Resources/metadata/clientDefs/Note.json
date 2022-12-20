@@ -9,7 +9,6 @@
   },
   "itemViews": {
     "Post": "views/stream/notes/post",
-    "Update": "treo-core:views/stream/notes/update",
     "updateModule": "treo-core:views/stream/notes/update-module",
     "installModule": "treo-core:views/stream/notes/install-module",
     "deleteModule": "treo-core:views/stream/notes/delete-module",
