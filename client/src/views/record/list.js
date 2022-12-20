@@ -143,14 +143,14 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }
             },
             'click .select-all': function (e) {
-                if (!this.checkAllResultDisabled) {
+                // if (!this.checkAllResultDisabled) {
                     if (this.allResultIsChecked) {
                         this.unselectAllResult();
                     } else {
                         this.selectAllResult();
                     }
                     return;
-                }
+                // }
 
                 let checkbox = this.$el.find('.full-table').find('.select-all');
                 let checkboxFixed = this.$el.find('.fixed-header-table').find('.select-all');
@@ -1466,7 +1466,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     scope: (foreignEntities[0].addRelationCustomDefs || {}).entity || foreignEntities[0].entity,
                     type: type,
                     checkedList: this.checkedList,
-                    byWhere: this.allResultIsChecked,
                     where: this.collection.getWhere(),
                     allResultIsChecked: this.allResultIsChecked
                 }, view => {

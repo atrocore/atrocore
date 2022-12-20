@@ -304,23 +304,27 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 dialog.render();
                 this.notify(false);
                 dialog.once('select', selectObj => {
-                    if (selectObj && !Array.isArray(selectObj)) {
-                        selectObj = [selectObj];
-                    }
-                    if (selectObj && selectObj.length) {
-                        if (afterSelectCallback && panelView && typeof panelView[afterSelectCallback] === 'function') {
-                            panelView[afterSelectCallback](selectObj);
+                    if (Array.isArray(selectObj) && afterSelectCallback && panelView && typeof panelView[afterSelectCallback] === 'function') {
+                        panelView[afterSelectCallback](selectObj);
+                    } else {
+                        let data = {};
+                        if (Array.isArray(selectObj)) {
+                            data.massRelate = true;
+                            data.where = [{
+                                type: 'in',
+                                field: 'id',
+                                value: selectObj.map(item => item.id)
+                            }]
                         } else {
-                            let data = {
-                                ids: selectObj.map(item => item.id)
-                            };
-                            this.ajaxPostRequest(`${this.scope}/${this.model.id}/${link}`, data)
-                                .then(() => {
-                                    this.notify('Linked', 'success');
-                                    this.updateRelationshipPanel(link);
-                                    this.model.trigger('after:relate', link);
-                                });
+                            data = selectObj;
                         }
+
+                        this.ajaxPostRequest(`${this.scope}/${this.model.id}/${link}`, data)
+                            .then(() => {
+                                this.notify('Linked', 'success');
+                                this.updateRelationshipPanel(link);
+                                this.model.trigger('after:relate', link);
+                            });
                     }
                 }, this);
             }.bind(this));

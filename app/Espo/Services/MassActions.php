@@ -267,41 +267,46 @@ class MassActions extends HasContainer
         return ['message' => $this->createRelationMessage($unRelated, $notUnRelated, $entityType, $foreignEntityType, false)];
     }
 
-
-    public function addRelationByWhere(array $where, array $foreignIds, string $entityType, string $link): array
+    public function addRelationByWhere(array $where, array $foreignWhere, string $entityType, string $link): array
     {
-        $selectParams =   $this->getSelectManagerFactory()->create($entityType)->getSelectParams(['where' => $where]);
-        $this->getEntityManager()->getRepository($entityType)->handleSelectParams($selectParams);
-        $query = $this
-            ->getEntityManager()
-            ->getQuery()
-            ->createSelectQuery($entityType, array_merge($selectParams, ['select' => ['id']]));
+        $ids = $this->handleIdsFromWhereCondition($entityType, $where);
 
-        $ids = $this
-            ->getEntityManager()
-            ->getPDO()
-            ->query($query)
-            ->fetchAll(\PDO::FETCH_COLUMN);
+        $foreignEntityType = $this->getMetadata()->get(['entityDefs', $entityType, 'links', $link, 'entity']);
+        $foreignIds = $this->handleIdsFromWhereCondition($foreignEntityType, $foreignWhere);
 
         return $this->addRelation($ids, $foreignIds, $entityType, $link);
     }
 
-    public function removeRelationByWhere(array $where, array $foreignIds, string $entityType, string $link): array
+    public function removeRelationByWhere(array $where, array $foreignWhere, string $entityType, string $link): array
     {
-        $selectParams =   $this->getSelectManagerFactory()->create($entityType)->getSelectParams(['where' => $where]);
+        $ids = $this->handleIdsFromWhereCondition($entityType, $where);
+
+        $foreignEntityType = $this->getMetadata()->get(['entityDefs', $entityType, 'links', $link, 'entity']);
+        $foreignIds = $this->handleIdsFromWhereCondition($foreignEntityType, $foreignWhere);
+
+        return $this->removeRelation($ids, $foreignIds, $entityType, $link);
+    }
+
+    /**
+     * @param array $entityType
+     * @param array $where
+     *
+     * @return array
+     */
+    protected function handleIdsFromWhereCondition(string $entityType, array $where): array
+    {
+        $selectParams = $this->getSelectManagerFactory()->create($entityType)->getSelectParams(['where' => $where]);
         $this->getEntityManager()->getRepository($entityType)->handleSelectParams($selectParams);
         $query = $this
             ->getEntityManager()
             ->getQuery()
             ->createSelectQuery($entityType, array_merge($selectParams, ['select' => ['id']]));
 
-        $ids = $this
+        return $this
             ->getEntityManager()
             ->getPDO()
             ->query($query)
             ->fetchAll(\PDO::FETCH_COLUMN);
-
-        return $this->removeRelation($ids, $foreignIds, $entityType, $link);
     }
 
 
