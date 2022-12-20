@@ -22020,6 +22020,17 @@ td[data-name="draggableIcon"] {
     }
 }
 
+code.was,
+code.became {
+    display: inline;
+}
+
+code.was .jscolor,
+code.became .jscolor {
+    width: 178px;
+    display: inline-block;
+}
+
 .was,
 .became {
     display: inline-block;
