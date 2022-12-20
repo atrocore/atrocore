@@ -26,7 +26,8 @@
     "ipAddress": "IP Address",
     "passwordPreview": "Password Preview",
     "isSuperAdmin": "Is Super Admin",
-    "lastAccess": "Last Access"
+    "lastAccess": "Last Access",
+    "type": "Type"
   },
   "links": {
     "teams": "Teams",

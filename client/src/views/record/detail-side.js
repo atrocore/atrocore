@@ -242,9 +242,7 @@ Espo.define('views/record/detail-side', ['view'], function (Dep) {
                         this.trigger('side-width-changed', this.currentWidth);
                         $(window).trigger('side-width-changed', this.currentWidth);
 
-                        this.$el.css({
-                            'width': this.currentWidth + 'px'
-                        });
+                        this.$el.outerWidth(this.currentWidth);
 
                         // click on resize bar
                         resizer.mousedown(function (e) {
@@ -265,7 +263,7 @@ Espo.define('views/record/detail-side', ['view'], function (Dep) {
                                         this.trigger('side-width-changed', this.currentWidth);
                                         $(window).trigger('side-width-changed', this.currentWidth);
 
-                                        this.$el.css('width', this.currentWidth + 'px');
+                                        this.$el.outerWidth(this.currentWidth);
                                     }
                                 }
                             }.bind(this));

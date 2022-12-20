@@ -537,7 +537,17 @@
     "ownThisSelf": "{user} назначил себя владельцем для {entityType}",
     "ownSelf": "{user} назначил себя владельцем для{entityType} {entity}",
     "assignThisVoid": "{user} не назначен {entityType}",
-    "assignVoid": "{user} не назначен {entityType} {entity}"
+    "assignVoid": "{user} не назначен {entityType} {entity}",
+    "unrelate": "{user} отвязал {relatedEntityType} {relatedEntity} от {entityType} {entity}",
+    "unrelateThis": "{user} отвязал {relatedEntityType} {relatedEntity} от этого {entityType}",
+    "updateOneThis": "{user} обновил {entityType} {entity}",
+    "updateFromToThis": "{user} обновил {entityType} {entity}",
+    "updateOne": "{user} обновил {entityType} {entity}",
+    "updateFromTo": "{user} обновил {entityType} {entity}",
+    "from": "с",
+    "to": "на",
+    "was": "было",
+    "become": "стало"
   },
   "streamMessagesMale": {
     "composerUpdateThis": "{user}",

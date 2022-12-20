@@ -26,7 +26,8 @@
     "ipAddress": "IP адрес",
     "passwordPreview": "Предпросмотр пароля",
     "isSuperAdmin": "Главный Администратор",
-    "lastAccess": "Последнее подключение"
+    "lastAccess": "Последнее подключение",
+    "type": "Тип"
   },
   "links": {
     "teams": "Группы",

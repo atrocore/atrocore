@@ -253,10 +253,12 @@ class Hierarchy extends RDB
                       WHERE e.id NOT IN (SELECT entity_id FROM `$this->hierarchyTableName` WHERE deleted=0)
                       AND e.deleted=0";
         } else {
-            $query = "SELECT COUNT(id) as count
-                      FROM `$this->hierarchyTableName` h
-                      WHERE h.parent_id = '$parentId'
-                      AND h.deleted=0";
+            $query = "SELECT COUNT(e.id) as count
+                      FROM $this->tableName e
+                      LEFT JOIN $this->hierarchyTableName h on e.id=h.entity_id
+                      WHERE e.deleted=0
+                        AND h.deleted=0
+                        AND h.parent_id='$parentId'";
         }
 
         return (int)$this->getPDO()->query($query)->fetch(\PDO::FETCH_ASSOC)['count'];
@@ -302,23 +304,6 @@ class Hierarchy extends RDB
         $record = $this->getPDO()->query($query)->fetch(\PDO::FETCH_ASSOC);
 
         return empty($record) ? [] : $record;
-    }
-
-    public function getRoute(string $id): array
-    {
-        $records = $this
-            ->getPDO()
-            ->query("SELECT entity_id, parent_id FROM `$this->hierarchyTableName` WHERE deleted=0")
-            ->fetchAll(\PDO::FETCH_ASSOC);
-
-        if (empty($records)) {
-            return [];
-        }
-
-        $route = [];
-        $this->createRoute($records, $id, $route);
-
-        return $route;
     }
 
     protected function beforeSave(Entity $entity, array $options = [])

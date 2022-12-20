@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -33,47 +32,24 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-namespace Espo\Controllers;
+Espo.define('views/fields/multi-language', 'views/fields/multi-enum', Dep => {
 
-use \Espo\Core\Exceptions\Error;
+    return Dep.extend({
 
-class Stream extends \Espo\Core\Controllers\Base
-{
-    const MAX_SIZE_LIMIT = 200;
+        setup: function () {
+            this.params.options = ['main']
+            this.translatedOptions = {'main': this.translate('mainLanguage', 'labels', 'Global')};
 
-    public static $defaultAction = 'list';
+            if (this.getConfig().get('isMultilangActive')) {
+                (this.getConfig().get('inputLanguageList') || []).forEach(language => {
+                    this.params.options.push(language);
+                    this.translatedOptions[language] = language;
+                });
+            }
 
-    public function actionList($params, $data, $request)
-    {
-        $scope = $params['scope'];
-        $id = isset($params['id']) ? $params['id'] : null;
+            Dep.prototype.setup.call(this);
+        },
 
-        $offset = intval($request->get('offset'));
-        $maxSize = intval($request->get('maxSize'));
-        $after = $request->get('after');
-        $filter = $request->get('filter');
-        $orderBy = $request->get('sortBy') ? $request->get('sortBy') : 'number';
-        $service = $this->getService('Stream');
+    });
 
-        if (empty($maxSize)) {
-            $maxSize = self::MAX_SIZE_LIMIT;
-        }
-        if (!empty($maxSize) && $maxSize > self::MAX_SIZE_LIMIT) {
-            throw new Forbidden();
-        }
-
-        $result = $service->find($scope, $id, array(
-            'offset' => $offset,
-            'maxSize' => $maxSize,
-            'after' => $after,
-            'filter' => $filter,
-            'orderBy' => $orderBy
-        ));
-
-        return array(
-            'total' => $result['total'],
-            'list' => $result['collection']->toArray()
-        );
-    }
-
-}
+});

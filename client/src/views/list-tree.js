@@ -96,8 +96,8 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
                 view.listenTo(view, 'select-node', data => {
                     this.selectNode(data);
                 });
-                view.listenTo(view, 'tree-init', () => {
-                    this.treeInit(view);
+                view.listenTo(view, 'tree-load', () => {
+                    this.treeLoad(view);
                 });
                 view.listenTo(view, 'tree-reset', () => {
                     this.treeReset(view);
@@ -123,11 +123,11 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
 
             let treeView = this.getView('treePanel');
             if (treeView) {
-                treeView.buildTree();
+                treeView.rebuildTree();
             }
         },
 
-        treeInit(view) {
+        treeLoad(view) {
             if (this.getStorage().get('selectedNodeId', this.scope)) {
                 this.selectTreeNode();
             }
@@ -137,7 +137,7 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
             const id = this.getStorage().get('selectedNodeId', this.scope);
             const route = this.parseRoute(this.getStorage().get('selectedNodeRoute', this.scope));
 
-            this.getView('treePanel').selectTreeNode(route, id);
+            this.getView('treePanel').selectTreeNode(id, route);
 
             const filterName = "linkedWith" + this.getStorage().get('treeScope', this.scope);
 
@@ -158,7 +158,7 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
             this.collection.where = this.searchManager.getWhere();
             this.searchManager.set(defaultFilters);
 
-            this.collection.fetch({selectingTreeNode: true}).then(() => this.notify(false));
+            this.collection.fetch().then(() => this.notify(false));
         },
 
         unSelectTreeNode(id) {
@@ -175,7 +175,7 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
             this.collection.where = this.searchManager.getWhere();
             this.searchManager.set(defaultFilters);
 
-            this.collection.fetch({selectingTreeNode: true}).then(() => this.notify(false));
+            this.collection.fetch().then(() => this.notify(false));
         },
 
         treeReset(view) {

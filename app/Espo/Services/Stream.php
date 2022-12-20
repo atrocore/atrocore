@@ -35,6 +35,8 @@
 
 namespace Espo\Services;
 
+
+use Caxy\HtmlDiff\HtmlDiff;
 use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\NotFound;
 
@@ -323,7 +325,7 @@ class Stream extends \Espo\Core\Services\Base
 
         $select = [
             'id', 'number', 'type', 'post', 'data', 'parentType', 'parentId', 'relatedType', 'relatedId',
-            'targetType', 'createdAt', 'createdById', 'createdByName', 'isGlobal', 'isInternal', 'createdByGender'
+            'targetType', 'createdAt', 'createdById', 'createdByName', 'isGlobal', 'isInternal', 'createdByGender', 'modifiedAt'
         ];
 
         $notes = $this->getEntityManager()->getRepository('Note')
@@ -357,7 +359,7 @@ class Stream extends \Espo\Core\Services\Base
                     subscription.user_id = ". $pdo->quote($user->id) ."
             ",
             'whereClause' => [],
-            'orderBy' => 'number',
+            'orderBy' => $params['orderBy'],
             'order' => 'DESC'
         ];
         if (!empty($inNotParentType)) {
@@ -531,7 +533,7 @@ class Stream extends \Espo\Core\Services\Base
                 'type' => 'Post',
                 'isGlobal' => false
             ],
-            'orderBy' => 'number',
+            'orderBy' => $params['orderBy'],
             'order' => 'DESC'
         ];
 
@@ -558,7 +560,7 @@ class Stream extends \Espo\Core\Services\Base
                     'type' => 'Post',
                     'isGlobal' => true
                 ],
-                'orderBy' => 'number',
+                'orderBy' => $params['orderBy'],
                 'order' => 'DESC'
             ];
         }
@@ -579,7 +581,7 @@ class Stream extends \Espo\Core\Services\Base
                         'type' => 'Post',
                         'isGlobal' => false
                     ],
-                    'orderBy' => 'number',
+                    'orderBy' => $params['orderBy'],
                     'order' => 'DESC'
                 ];
             }
@@ -595,7 +597,7 @@ class Stream extends \Espo\Core\Services\Base
                     'type' => 'Post',
                     'isGlobal' => false
                 ],
-                'orderBy' => 'number',
+                'orderBy' => $params['orderBy'],
                 'order' => 'DESC'
             ];
         }
@@ -650,7 +652,7 @@ class Stream extends \Espo\Core\Services\Base
         }
 
         $sql = implode("\n UNION \n", $sqlPartList) . "
-            ORDER BY number DESC
+            ORDER BY {$params['orderBy']} DESC
         ";
 
         $sql = $this->getEntityManager()->getQuery()->limit($sql, $offset, $maxSize + 1);
@@ -661,7 +663,22 @@ class Stream extends \Espo\Core\Services\Base
             if ($e->get('type') == 'Post' || $e->get('type') == 'EmailReceived') {
                 $e->loadAttachments();
             }
+            if ($e->get('type') == 'Update') {
+                $data = $e->get('data');
+                if (!empty($data->fields) && count($data->fields) == 1) {
+                    $fieldType = $this->getMetadata()->get(['entityDefs', $e->get('parentType'), 'fields', $data->fields[0], 'type']);
+                    if (in_array($fieldType,['text', 'wysiwyg'])) {
+                        $diff = (new HtmlDiff(html_entity_decode($data->attributes->was->{$data->fields[0]}), html_entity_decode($data->attributes->became->{$data->fields[0]})))->build();
+                        if ($fieldType == 'text') {
+                            $diff = nl2br($diff);
+                        }
+                        $e->set('diff',$diff);
+                    }
+
+                }
+            }
         }
+
 
         foreach ($collection as $e) {
             if ($e->get('parentId') && $e->get('parentType')) {
@@ -683,6 +700,8 @@ class Stream extends \Espo\Core\Services\Base
                     }
                 }
             }
+
+            $this->prepareForOutput($e);
         }
 
         if (count($collection) > $maxSize) {
@@ -722,7 +741,7 @@ class Stream extends \Espo\Core\Services\Base
         $selectParams = [
             'offset' => $params['offset'],
             'limit' => $params['maxSize'],
-            'orderBy' => 'number',
+            'orderBy' => $params['orderBy'],
             'order' => 'DESC'
         ];
 
@@ -829,10 +848,18 @@ class Stream extends \Espo\Core\Services\Base
                 case 'posts':
                     $where['type'] = 'Post';
                     break;
+                case 'discussions':
+                    $where['type'] = 'Discussion';
+                    break;
+                case 'discussionPosts':
+                    $where['type'] = 'DiscussionPost';
+                    break;
                 case 'updates':
                     $where['type'] = ['Update', 'Status'];
                     break;
             }
+        } else {
+            $where['type!='] = 'DiscussionPost';
         }
 
         $ignoreScopeList = $this->getIgnoreScopeList($this->getUser());
@@ -867,7 +894,7 @@ class Stream extends \Espo\Core\Services\Base
         $collection = $this->getEntityManager()->getRepository('Note')->find($selectParams);
 
         foreach ($collection as $e) {
-            if ($e->get('type') == 'Post' || $e->get('type') == 'EmailReceived') {
+            if ($e->get('type') == 'Post' || $e->get('type') == 'DiscussionPost' || $e->get('type') == 'EmailReceived') {
                 $e->loadAttachments();
             }
 
@@ -882,6 +909,7 @@ class Stream extends \Espo\Core\Services\Base
             if ($e->get('relatedId') && $e->get('relatedType')) {
                 $e->loadParentNameField('related');
             }
+            $this->prepareForOutput($e);
         }
 
         unset($where['createdAt>']);
@@ -896,6 +924,27 @@ class Stream extends \Espo\Core\Services\Base
             'total' => $count,
             'collection' => $collection,
         );
+    }
+
+    public function prepareForOutput(Entity $entity)
+    {
+        if ($entity->get('type') == 'Post' || $entity->get('type') == 'EmailReceived') {
+            $entity->loadAttachments();
+        }
+
+        if ($entity->get('type') == 'Update') {
+            $data = $entity->get('data');
+            if (!empty($data->fields) && count($data->fields) == 1) {
+                $fieldType = $this->getMetadata()->get(['entityDefs', $entity->get('parentType'), 'fields', $data->fields[0], 'type']);
+                if (in_array($fieldType,['text', 'wysiwyg'])) {
+                    $diff = (new HtmlDiff(html_entity_decode($data->attributes->was->{$data->fields[0]}), html_entity_decode($data->attributes->became->{$data->fields[0]})))->build();
+                    if ($fieldType == 'text') {
+                        $diff = nl2br($diff);
+                    }
+                    $entity->set('diff',$diff);
+                }
+            }
+        }
     }
 
     protected function loadAssignedUserName(Entity $entity)
@@ -1078,7 +1127,6 @@ class Stream extends \Espo\Core\Services\Base
 
         if (!empty($updatedFieldList)) {
             $note = $this->getEntityManager()->getEntity('Note');
-
             $note->set('type', 'Update');
             $note->set('parentId', $entity->id);
             $note->set('parentType', $entity->getEntityType());

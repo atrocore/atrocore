@@ -33,47 +33,30 @@
  * This software is not allowed to be used in Russia and Belarus.
  */
 
-namespace Espo\Controllers;
+declare(strict_types=1);
 
-use \Espo\Core\Exceptions\Error;
+namespace Treo\Migrations;
 
-class Stream extends \Espo\Core\Controllers\Base
+use Treo\Core\Migration\Base;
+
+class V1Dot4Dot131 extends Base
 {
-    const MAX_SIZE_LIMIT = 200;
-
-    public static $defaultAction = 'list';
-
-    public function actionList($params, $data, $request)
+    public function up(): void
     {
-        $scope = $params['scope'];
-        $id = isset($params['id']) ? $params['id'] : null;
-
-        $offset = intval($request->get('offset'));
-        $maxSize = intval($request->get('maxSize'));
-        $after = $request->get('after');
-        $filter = $request->get('filter');
-        $orderBy = $request->get('sortBy') ? $request->get('sortBy') : 'number';
-        $service = $this->getService('Stream');
-
-        if (empty($maxSize)) {
-            $maxSize = self::MAX_SIZE_LIMIT;
-        }
-        if (!empty($maxSize) && $maxSize > self::MAX_SIZE_LIMIT) {
-            throw new Forbidden();
-        }
-
-        $result = $service->find($scope, $id, array(
-            'offset' => $offset,
-            'maxSize' => $maxSize,
-            'after' => $after,
-            'filter' => $filter,
-            'orderBy' => $orderBy
-        ));
-
-        return array(
-            'total' => $result['total'],
-            'list' => $result['collection']->toArray()
-        );
+        $this->execute("ALTER TABLE user ADD type VARCHAR(255) DEFAULT 'Token' COLLATE `utf8mb4_unicode_ci`");
+        $this->execute("UPDATE user SET type='Token' WHERE 1");
     }
 
+    public function down(): void
+    {
+        $this->execute("ALTER TABLE user DROP type");
+    }
+
+    protected function execute(string $query): void
+    {
+        try {
+            $this->getPDO()->exec($query);
+        } catch (\Throwable $e) {
+        }
+    }
 }

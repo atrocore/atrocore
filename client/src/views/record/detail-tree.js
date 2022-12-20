@@ -59,8 +59,10 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
 
             let observer = new ResizeObserver(() => {
                 if (treePanel && treePanel.$el) {
-                    this.onTreeResize(treePanel.$el.innerWidth());
+                    this.onTreeResize();
                 }
+
+                observer.unobserve($('#content').get(0));
             });
             observer.observe($('#content').get(0));
         },
@@ -93,20 +95,20 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
                 model: this.model
             }, view => {
                 this.listenTo(this.model, 'after:save', () => {
-                    view.reRender();
+                    view.rebuildTree();
                 });
                 view.listenTo(view, 'select-node', data => {
                     this.selectNode(data);
                 });
-                view.listenTo(view, 'tree-init', () => {
-                    this.treeInit(view);
+                view.listenTo(view, 'tree-load', treeData => {
+                    this.treeLoad(view, treeData);
                 });
                 view.listenTo(view, 'tree-reset', () => {
                     this.treeReset(view);
                 });
                 this.listenTo(this.model, 'after:relate after:unrelate after:dragDrop', link => {
                     if (['parents', 'children'].includes(link)) {
-                        view.reRender();
+                        view.rebuildTree();
                     }
                 });
                 this.listenTo(view, 'tree-width-changed', function (width) {
@@ -133,11 +135,11 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
             }
         },
 
-        treeInit(view) {
+        treeLoad(view, treeData) {
             if (view.model && view.model.get('id')) {
-                this.ajaxGetRequest(`${this.scope}/action/route?id=${view.model.get('id')}`).then(route => {
-                    view.selectTreeNode(route, view.model.get('id'));
-                });
+                let route = [];
+                view.prepareTreeRoute(treeData, route);
+                view.selectTreeNode(view.model.get('id'), route);
             }
         },
 
@@ -152,12 +154,12 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
             this.getStorage().set('reSetupSearchManager', view.treeScope, true);
 
             view.toggleVisibilityForResetButton();
-            view.buildTree();
+            view.rebuildTree();
         },
 
         onTreeResize(width) {
             if ($('.catalog-tree-panel').length) {
-                width = parseInt(width);
+                width = parseInt(width || $('.catalog-tree-panel').outerWidth());
 
                 const content = $('#content');
                 const main = content.find('#main');
@@ -179,7 +181,7 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
                 btnContainer.css('marginLeft', width + 1 + 'px');
 
                 overview.outerWidth(Math.floor(content.innerWidth() - side.outerWidth() - width));
-                overview.css('marginLeft', (width - 1) + 'px');
+                overview.css('marginLeft', width + 'px');
             }
         }
     })

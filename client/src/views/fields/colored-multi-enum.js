@@ -120,7 +120,10 @@ Espo.define('views/fields/colored-multi-enum', ['views/fields/multi-enum', 'view
                 }
             });
 
-            return '#' + ((this.model.getFieldParam(this.name, 'optionColors') || {})[key] || this.defaultBackgroundColor);
+            let color = ((this.model.getFieldParam(this.name, 'optionColors') || {})[key] || this.defaultBackgroundColor);
+            color = color.replace(/^(#+)/, '');
+
+            return '#' + color;
         },
 
     });

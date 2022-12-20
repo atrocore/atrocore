@@ -47,6 +47,7 @@ class Token extends AbstractAuthentication
             ->getEntityManager()
             ->getRepository('User')
             ->where([
+                'type'     => 'Token',
                 'userName' => $username,
                 'password' => $this->getPasswordHash()->hash($password),
             ])

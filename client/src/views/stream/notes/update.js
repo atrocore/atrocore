@@ -38,12 +38,22 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
 
         template: 'stream/notes/update',
 
-        messageName: 'update',
+        messageName: 'updateFromTo',
+
+        customLabels: {},
 
         data: function () {
+            const diff = this.model.get('diff');
+            const showInline = this.model.get('data').fields.length === 1 && !diff;
+
             return _.extend({
                 fieldsArr: this.fieldsArr,
-                parentType: this.model.get('parentType')
+                changedFieldsStr: (this.fieldsArr.map(item => '<code>' + this.translate(item.field, 'fields', this.model.get('parentType')) + '</code>')).join(', '),
+                parentType: this.model.get('parentType'),
+                diff: diff,
+                showDiff: typeof diff !== 'undefined',
+                showInline: showInline,
+                showCommon: !showInline && !diff
             }, Dep.prototype.data.call(this));
         },
 
@@ -51,10 +61,10 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
             'click a[data-action="expandDetails"]': function (e) {
                 if (this.$el.find('.details').hasClass('hidden')) {
                     this.$el.find('.details').removeClass('hidden');
-                    $(e.currentTarget).find('span').removeClass('fa-chevron-down').addClass('fa-chevron-up');
+                    $(e.currentTarget).find('span').removeClass('fa-angle-down').addClass('fa-angle-up');
                 } else {
                     this.$el.find('.details').addClass('hidden');
-                    $(e.currentTarget).find('span').addClass('fa-chevron-down').removeClass('fa-chevron-up');
+                    $(e.currentTarget).find('span').addClass('fa-angle-down').removeClass('fa-angle-up');
                 }
             }
         },
@@ -63,16 +73,22 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
             if (this.getUser().isAdmin()) {
                 this.isRemovable = true;
             }
+            if (this.model.get('data').fields.length === 1) {
+                if (this.model.get('diff')) {
+                    this.messageName = "updateOne";
+                }
+            }
+
             Dep.prototype.init.call(this);
+
         },
 
         setup: function () {
             var data = this.model.get('data');
 
-            var fields = data.fields;
+            var fields = data.fields || [];
 
             this.createMessage();
-
 
             this.wait(true);
             this.getModelFactory().create(this.model.get('parentType'), function (model) {
@@ -87,9 +103,27 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                 this.fieldsArr = [];
 
                 fields.forEach(function (field) {
-                    var type = model.getFieldType(field) || 'base';
-                    var viewName = this.getMetadata().get('entityDefs.' + model.name + '.fields.' + field + '.view') || this.getFieldManager().getViewName(type);
+                    let type = this.model.get('attributeType') || model.getFieldType(field) || 'base';
+
+                    let fieldId = field;
+                    if (type === 'asset' || type === 'link') {
+                        fieldId = field + 'Id';
+                    } else if (type === 'linkMultiple') {
+                        fieldId = field + 'Ids';
+                    }
+
+                    if (model.getFieldParam(field, 'isMultilang') && !modelWas.has(fieldId) && !modelBecame.has(fieldId)) {
+                        return;
+                    }
+
+                    // skip if empty on both sides
+                    if ((modelWas.get(fieldId) === null || modelWas.get(fieldId) === '') && (modelBecame.get(fieldId) === null || modelBecame.get(fieldId) === '')) {
+                        return;
+                    }
+
+                    let viewName = model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(type);
                     this.createView(field + 'Was', viewName, {
+                        el: this.options.el + ' .was',
                         model: modelWas,
                         readOnly: true,
                         defs: {
@@ -99,6 +133,7 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                         inlineEditDisabled: true
                     });
                     this.createView(field + 'Became', viewName, {
+                        el: this.options.el + ' .became',
                         model: modelBecame,
                         readOnly: true,
                         defs: {
@@ -108,10 +143,18 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                         inlineEditDisabled: true
                     });
 
+                    let htmlTag = 'code';
+
+                    if (type === 'color' || type === 'enum') {
+                        htmlTag = 'span';
+                    }
+
                     this.fieldsArr.push({
                         field: field,
                         was: field + 'Was',
-                        became: field + 'Became'
+                        htmlTag: htmlTag,
+                        became: field + 'Became',
+                        customLabel: this.customLabels[field] ? this.customLabels[field] : false
                     });
 
                 }, this);
@@ -119,6 +162,18 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                 this.wait(false);
 
             }, this);
+        },
+
+        getInputLangName(lang, field) {
+            return lang.split('_').reduce((prev, curr) => prev + Espo.utils.upperCaseFirst(curr.toLowerCase()), field);
+        },
+
+        getCustomLabel(field, langField) {
+            let label = '';
+            label += this.translate(field, 'fields', this.model.get('parentType')) + ' &#8250; ';
+            label += langField.slice(-4, -2).toLowerCase() + "_" + langField.slice(-2).toUpperCase();
+
+            return label;
         },
 
     });

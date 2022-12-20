@@ -349,48 +349,31 @@ class Stream extends \Espo\Core\Hooks\Base
 
             if (
                 $this->getMetadata()->get(['entityDefs', $entityType, 'links', $link, 'audited'])
-
             ) {
-                $n = $this->getEntityManager()->getRepository('Note')->where(array(
+
+                $note = $this->getEntityManager()->getEntity('Note');
+                $note->set(array(
                     'type' => 'Relate',
                     'parentId' => $entity->id,
                     'parentType' => $entityType,
                     'relatedId' => $foreignEntity->id,
                     'relatedType' => $foreignEntity->getEntityType()
-                ))->findOne();
-                if (!$n) {
-                    $note = $this->getEntityManager()->getEntity('Note');
-                    $note->set(array(
-                        'type' => 'Relate',
-                        'parentId' => $entity->id,
-                        'parentType' => $entityType,
-                        'relatedId' => $foreignEntity->id,
-                        'relatedType' => $foreignEntity->getEntityType()
-                    ));
-                    $this->getEntityManager()->saveEntity($note);
-                }
+                ));
+                $this->getEntityManager()->saveEntity($note);
+
             }
 
             $foreignLink = $entity->getRelationParam($link, 'foreign');
             if ($this->getMetadata()->get(['entityDefs', $foreignEntity->getEntityType(), 'links', $foreignLink, 'audited'])) {
-                $n = $this->getEntityManager()->getRepository('Note')->where(array(
+                $note = $this->getEntityManager()->getEntity('Note');
+                $note->set(array(
                     'type' => 'Relate',
                     'parentId' => $foreignEntity->id,
                     'parentType' => $foreignEntity->getEntityType(),
                     'relatedId' => $entity->id,
                     'relatedType' => $entityType
-                ))->findOne();
-                if (!$n) {
-                    $note = $this->getEntityManager()->getEntity('Note');
-                    $note->set(array(
-                        'type' => 'Relate',
-                        'parentId' => $foreignEntity->id,
-                        'parentType' => $foreignEntity->getEntityType(),
-                        'relatedId' => $entity->id,
-                        'relatedType' => $entityType
-                    ));
-                    $this->getEntityManager()->saveEntity($note);
-                }
+                ));
+                $this->getEntityManager()->saveEntity($note);
             }
         }
     }
@@ -398,42 +381,46 @@ class Stream extends \Espo\Core\Hooks\Base
     public function afterUnrelate(Entity $entity, array $options = array(), array $data = array())
     {
         $entityType = $entity->getEntityType();
+
         if (
             empty($options['noStream']) && empty($options['silent']) &&
             $this->getMetadata()->get(['scopes', $entityType, 'object'])
         ) {
+
             if (empty($data['relationName']) || empty($data['foreignEntity']) || !($data['foreignEntity'] instanceof Entity)) {
                 return;
             }
             $link = $data['relationName'];
             $foreignEntity = $data['foreignEntity'];
 
-            if ($this->getMetadata()->get(['entityDefs', $entityType, 'links', $link, 'audited'])) {
-                $note = $this->getEntityManager()->getRepository('Note')->where(array(
-                    'type' => 'Relate',
+
+            if (
+                $this->getMetadata()->get(['entityDefs', $entityType, 'links', $link, 'audited'])
+            ) {
+
+                $note = $this->getEntityManager()->getEntity('Note');
+                $note->set(array(
+                    'type' => 'Unrelate',
                     'parentId' => $entity->id,
                     'parentType' => $entityType,
                     'relatedId' => $foreignEntity->id,
                     'relatedType' => $foreignEntity->getEntityType()
-                ))->findOne();
-                if ($note) {
-                    $this->getEntityManager()->removeEntity($note);
-                }
+                ));
+                $this->getEntityManager()->saveEntity($note);
+
             }
 
             $foreignLink = $entity->getRelationParam($link, 'foreign');
             if ($this->getMetadata()->get(['entityDefs', $foreignEntity->getEntityType(), 'links', $foreignLink, 'audited'])) {
-                $note = $this->getEntityManager()->getRepository('Note')->where(array(
-                    'type' => 'Relate',
+                $note = $this->getEntityManager()->getEntity('Note');
+                $note->set(array(
+                    'type' => 'Unrelate',
                     'parentId' => $foreignEntity->id,
                     'parentType' => $foreignEntity->getEntityType(),
                     'relatedId' => $entity->id,
                     'relatedType' => $entityType
-                ))->findOne();
-                if (!$note) return;
-                if ($note) {
-                    $this->getEntityManager()->removeEntity($note);
-                }
+                ));
+                $this->getEntityManager()->saveEntity($note);
             }
         }
     }

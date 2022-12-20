@@ -657,7 +657,7 @@ class Record extends \Espo\Core\Services\Base
         $fields = [];
 
         foreach ($entity->getAttributes() as $field => $fieldData) {
-            if (!empty($fieldData['isLinkEntity']) || !empty($fieldData['isLinkMultipleCollection'])) {
+            if (!empty($fieldData['isLinkEntity']) || !empty($fieldData['isLinkEntityName']) || !empty($fieldData['isLinkMultipleCollection'])) {
                 continue 1;
             }
             if (!empty($fieldData['required']) || $this->isRequiredField($field, $entity, 'required')) {

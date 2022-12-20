@@ -1,0 +1,35 @@
+{
+  "params":[
+    {
+      "name":"required",
+      "type":"bool",
+      "default":false
+    },
+    {
+      "name":"prohibitedEmptyValue",
+      "type":"bool",
+      "default":false
+    },
+    {
+      "name":"isSorted",
+      "type":"bool",
+      "tooltip": true
+    },
+    {
+      "name":"audited",
+      "type":"bool"
+    },
+    {
+      "name":"readOnly",
+      "type":"bool"
+    }
+  ],
+  "filter": true,
+  "multilingual": false,
+  "fieldDefs":{
+    "type":"varchar"
+  },
+  "translatedOptions": false,
+  "personalData": true,
+  "view": "views/fields/language"
+}

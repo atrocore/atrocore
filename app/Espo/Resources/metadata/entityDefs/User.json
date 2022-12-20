@@ -1,5 +1,15 @@
 {
     "fields": {
+        "type": {
+            "type": "enum",
+            "default": "Token",
+            "options": [
+                "Token"
+            ],
+            "optionsIds": [
+                "0"
+            ]
+        },
         "account": {
             "type": "link"
         },

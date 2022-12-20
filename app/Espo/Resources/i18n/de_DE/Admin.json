@@ -113,7 +113,9 @@
     "number": "Nummer",
     "jsonObject": "JSON-Objekt",
     "datetime": "Datum-Uhrzeit",
-    "datetimeOptional": "Datum/Datum-Uhrzeit"
+    "datetimeOptional": "Datum/Datum-Uhrzeit",
+    "language": "Sprache",
+    "multiLanguage": "Sprachen"
   },
   "fields": {
     "isMultilang": "Mehrsprachig",

@@ -4741,7 +4741,8 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
     background-color: transparent;
     background-image: none;
     border: 1px solid transparent;
-    border-radius: 0
+    border-radius: 0;
+    color: #000;
 }
 
 .navbar-toggle:focus {
@@ -6806,7 +6807,7 @@ button.close {
     left: 0;
     z-index: 1600;
     display: none;
-    max-width: 276px;
+    max-width: 550px;
     padding: 1px;
     font-style: normal;
     font-weight: normal;
@@ -16687,8 +16688,7 @@ h4.panel-title span.color-icon {
     border-top-width: 0
 }
 
-.panel.sticked, .panel.sticked {
-    margin-top: -19px;
+.panel.sticked {
     border-top-width: 0
 }
 
@@ -16698,6 +16698,12 @@ h4.panel-title span.color-icon {
 
 .panel.sticked > .panel-heading .btn-group .btn, .panel.sticked > .panel-heading .btn-group .btn {
     border-top-width: 0
+}
+
+.dashlet .label {
+    color: #000000;
+    font-size: 100%;
+    font-weight: normal;
 }
 
 .label {
@@ -17181,10 +17187,6 @@ h5 {
 
 .field .array-control-container {
     position: relative
-}
-
-code {
-    font-style: italic
 }
 
 pre > code {
@@ -20173,8 +20175,29 @@ ul.dropdown-menu > li.checkbox {
 }
 
 .jqtree-tree .show-more {
-    margin: 10px 0 0 0;
+    margin: 0;
     padding: 0;
+    font-style: italic;
+}
+
+.jqtree-tree .show-more .jqtree-element{
+    padding-right: 0 !important;
+}
+
+.jqtree-tree .show-more-up:after {
+    content: '\2934';
+    font-style: normal;
+    font-size: 10px;
+    padding-top: 5px;
+    padding-left: 3px;
+}
+
+.jqtree-tree .show-more-down:after {
+    content: '\2935';
+    font-style: normal;
+    font-size: 10px;
+    padding-top: 10px;
+    padding-left: 3px;
 }
 
 button.category {
@@ -20744,10 +20767,6 @@ button.category:focus {
 
     #main .catalog-tree-panel.catalog-tree-panel-hidden {
         padding: 0 8px 0 17px;
-    }
-
-    #main .detail .catalog-tree-panel + .overview {
-        border-left: 1px solid #e8eced;
     }
 
 }
@@ -21892,11 +21911,11 @@ td[data-name="draggableIcon"] {
 }
 
 #options .form-control:first-of-type:not(:last-of-type) {
-    width: calc(100% - 140px) !important;
+    width: calc(100% - 185px) !important;
 }
 
 #options .form-control.color-input {
-    width: 80px !important;
+    width: 125px !important;
 }
 
 .field .attribute-type-value .option-group .option-item > span {
@@ -21982,6 +22001,11 @@ td[data-name="draggableIcon"] {
     .mapping-container .configurator-buttons .conf-button {
         margin-bottom: -1px;
     }
+}
+
+code.was, span.was,
+code.became, span.became {
+    display: inline;
 }
 
 .was,
@@ -22382,6 +22406,19 @@ select {
 .entity-manager-container > .panel-heading {
     padding-left: 27px;
 }
+
+del {
+    color: red;
+    background: #fdd;
+    text-decoration: none;
+}
+
+ins {
+    color: green;
+    background: #dfd;
+    text-decoration: none;
+}
+
 
 ::-webkit-scrollbar {
     width: 10px;
