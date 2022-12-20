@@ -521,7 +521,7 @@
     "postThis": "{user} posted",
     "attachThis": "{user} attached",
     "statusThis": "{user} updated {field}",
-    "updateThis": "{user} updated this {entityType}",
+    "updateThis": "{user} updated",
     "createRelatedThis": "{user} created {relatedEntityType} {relatedEntity} related to this {entityType}",
     "createRelated": "{user} created {relatedEntityType} {relatedEntity} related to {entityType} {entity}",
     "relate": "{user} linked {relatedEntityType} {relatedEntity} with {entityType} {entity}",

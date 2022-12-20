@@ -454,7 +454,7 @@
     "postThis": "{user} ha publicado",
     "attachThis": "{user} ha adjuntado",
     "statusThis": "{user} ha actualizado el campo {field}",
-    "updateThis": "{user} ha actualizado: {entityType}",
+    "updateThis": "{user} ha actualizado",
     "createRelatedThis": "{user} ha creado: {relatedEntityType} {relatedEntity}, enlazado a {entityType}",
     "createRelated": "{user} ha creado: {relatedEntityType} {relatedEntity} enlazado a {entityType} {entity}",
     "relate": "{user} ha enlazado {relatedEntityType} {relatedEntity} a {entityType} {entity}",

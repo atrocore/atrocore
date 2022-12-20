@@ -46,8 +46,11 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
             const diff = this.model.get('diff');
             const showInline = this.model.get('data').fields.length === 1 && !diff
 
+            let changedFields = this.fieldsArr.map(item => this.translate(item.field, 'fields', this.model.get('parentType')));
+
             return _.extend({
                 fieldsArr: this.fieldsArr,
+                changedFieldsStr: changedFields.join(', '),
                 parentType: this.model.get('parentType'),
                 diff: diff,
                 showDiff: typeof diff !== 'undefined',
@@ -106,6 +109,12 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                     if (model.getFieldParam(field, 'isMultilang') && !modelWas.has(field) && !modelBecame.has(field)) {
                         return;
                     }
+
+                    // skip if empty on both sides
+                    if ((modelWas.get(field) === null || modelWas.get(field) === '') && (modelBecame.get(field) === null || modelBecame.get(field) === '')) {
+                        return;
+                    }
+
                     let type = this.model.get('attributeType') || model.getFieldType(field) || 'base';
                     let viewName = model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(type);
                     this.createView(field + 'Was', viewName, {
