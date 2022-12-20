@@ -525,7 +525,7 @@
     "postThis": "{user} hat notiert",
     "attachThis": "{user} hat hinzugefügt",
     "statusThis": "{user} hat {field} aktualisiert",
-    "updateThis": "{user} aktualisiert",
+    "updateThis": "{user} hat diese(s/n) {entityType} aktualisiert",
     "createRelatedThis": "{user} hat {relatedEntityType} {relatedEntity} verbunden mit dieser/m {entityType} erstellt",
     "createRelated": "{user} hat {relatedEntityType} {relatedEntity} verbunden mit {entityType} {entity} erstellt",
     "relate": "{user} hat {relatedEntityType} {relatedEntity} mit {entityType} {entity} verbunden",

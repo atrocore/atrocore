@@ -38,7 +38,7 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
 
         template: 'stream/notes/update',
 
-        messageName: 'update',
+        messageName: 'updateFromTo',
 
         customLabels: {},
 
@@ -46,11 +46,9 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
             const diff = this.model.get('diff');
             const showInline = this.model.get('data').fields.length === 1 && !diff
 
-            let changedFields = this.fieldsArr.map(item => this.translate(item.field, 'fields', this.model.get('parentType')));
-
             return _.extend({
                 fieldsArr: this.fieldsArr,
-                changedFieldsStr: changedFields.join(', '),
+                changedFieldsStr: (this.fieldsArr.map(item => '<code>' + this.translate(item.field, 'fields', this.model.get('parentType')) + '</code>')).join(', '),
                 parentType: this.model.get('parentType'),
                 diff: diff,
                 showDiff: typeof diff !== 'undefined',
@@ -76,7 +74,6 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                 this.isRemovable = true;
             }
             if (this.model.get('data').fields.length === 1) {
-                this.messageName = "updateFromTo";
                 if (this.model.get('diff')) {
                     this.messageName = "updateOne";
                 }

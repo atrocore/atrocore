@@ -15,7 +15,7 @@
                     {{/each}}
               {{/if}}
               {{#if showCommon}}
-                <span class="text-muted message">{{{message}}} <code>{{changedFieldsStr}}</code></span> <a href="javascript:" data-action="expandDetails"><span class="fas fa-angle-down"></span></a>
+                <span class="text-muted message">{{{message}}} {{{changedFieldsStr}}}</span> <a href="javascript:" data-action="expandDetails"><span class="fas fa-angle-down"></span></a>
               {{/if}}
               {{#if showDiff }}
                      {{#each fieldsArr}}

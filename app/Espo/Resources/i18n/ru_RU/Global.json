@@ -504,7 +504,7 @@
     "postThis": "{user} оставил сообщение",
     "attachThis": "{user} прикрепил",
     "statusThis": "{user} обновил {field}",
-    "updateThis": "{user} обновил",
+    "updateThis": "{user} обновил {entityType}",
     "createRelatedThis": "{user} создал {relatedEntityType} {relatedEntity} относящееся к {entityType}",
     "createRelated": "{user} создал {relatedEntityType} {relatedEntity} относящееся к {entityType} {entity}",
     "relate": "{user} связал {relatedEntityType} {relatedEntity} с {entityType} {entity}",
