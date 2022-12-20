@@ -848,10 +848,18 @@ class Stream extends \Espo\Core\Services\Base
                 case 'posts':
                     $where['type'] = 'Post';
                     break;
+                case 'discussions':
+                    $where['type'] = 'Discussion';
+                    break;
+                case 'discussionPosts':
+                    $where['type'] = 'DiscussionPost';
+                    break;
                 case 'updates':
                     $where['type'] = ['Update', 'Status'];
                     break;
             }
+        } else {
+            $where['type!='] = 'DiscussionPost';
         }
 
         $ignoreScopeList = $this->getIgnoreScopeList($this->getUser());
@@ -886,6 +894,10 @@ class Stream extends \Espo\Core\Services\Base
         $collection = $this->getEntityManager()->getRepository('Note')->find($selectParams);
 
         foreach ($collection as $e) {
+            if ($e->get('type') == 'Post' || $e->get('type') == 'DiscussionPost' || $e->get('type') == 'EmailReceived') {
+                $e->loadAttachments();
+            }
+
             if ($e->get('parentId') && $e->get('parentType')) {
                 if (
                     ($e->get('parentId') != $id) ||
