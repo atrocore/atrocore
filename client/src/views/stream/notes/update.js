@@ -44,7 +44,7 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
 
         data: function () {
             const diff = this.model.get('diff');
-            const showInline = this.model.get('data').fields.length === 1 && !diff
+            const showInline = this.model.get('data').fields.length === 1 && !diff;
 
             return _.extend({
                 fieldsArr: this.fieldsArr,
@@ -103,16 +103,24 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                 this.fieldsArr = [];
 
                 fields.forEach(function (field) {
-                    if (model.getFieldParam(field, 'isMultilang') && !modelWas.has(field) && !modelBecame.has(field)) {
+                    let type = this.model.get('attributeType') || model.getFieldType(field) || 'base';
+
+                    let fieldId = field;
+                    if (type === 'asset' || type === 'link') {
+                        fieldId = field + 'Id';
+                    } else if (type === 'linkMultiple') {
+                        fieldId = field + 'Ids';
+                    }
+
+                    if (model.getFieldParam(field, 'isMultilang') && !modelWas.has(fieldId) && !modelBecame.has(fieldId)) {
                         return;
                     }
 
                     // skip if empty on both sides
-                    if ((modelWas.get(field) === null || modelWas.get(field) === '') && (modelBecame.get(field) === null || modelBecame.get(field) === '')) {
+                    if ((modelWas.get(fieldId) === null || modelWas.get(fieldId) === '') && (modelBecame.get(fieldId) === null || modelBecame.get(fieldId) === '')) {
                         return;
                     }
 
-                    let type = this.model.get('attributeType') || model.getFieldType(field) || 'base';
                     let viewName = model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(type);
                     this.createView(field + 'Was', viewName, {
                         el: this.options.el + ' .was',
