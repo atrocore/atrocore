@@ -537,7 +537,7 @@
     "emailReceivedInitialFrom": "Email received from {from}, {entityType} {entity} created",
     "emailSent": "{by} sent email related to {entityType} {entity}",
     "emailSentThis": "{by} sent email",
-    "unrelateThis": "{user} remove link {relatedEntityType} {relatedEntity} with this {entityType}",
+    "unrelateThis": "{user} unlinked {relatedEntityType} {relatedEntity} with this {entityType}",
     "updateOneThis": "{user} in this {entityType} updated",
     "updateFromToThis": "{user} in this {entityType} updated",
     "updateOne": "{user} in {entityType} {entity} updated",
