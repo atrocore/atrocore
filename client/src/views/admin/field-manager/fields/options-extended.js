@@ -53,6 +53,8 @@ Espo.define('views/admin/field-manager/fields/options-extended', ['views/fields/
             if (this.mode === 'edit') {
                 this.$list.find('.color-input').get().forEach(item => {
                     new jscolor(item)
+
+                    jscolor.init();
                 });
             }
         },
