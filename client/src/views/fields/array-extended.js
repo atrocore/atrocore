@@ -562,7 +562,7 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
                         }
                     ];
 
-                    if (this.model.get('isMultilang') || !!(this.model.get('multilangField'))) {
+                    if (this.hasMultilingualOptions()) {
                         (this.langFieldNames || []).forEach(function (name) {
                             let localeItem = (this.selectedComplex[name] || [])[index];
                             options.push(
@@ -582,6 +582,10 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
             }
 
             return data;
+        },
+
+        hasMultilingualOptions() {
+            return this.model.get('isMultilang') || !!(this.model.get('multilangField'));
         },
 
         isEnums() {
