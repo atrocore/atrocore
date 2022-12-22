@@ -2894,7 +2894,7 @@ class Record extends \Espo\Core\Services\Base
                 $this->prepareUnitFieldValue($entity, $field, $fieldMetadata['measure']);
             }
 
-            if ($entity->has($field) && Util::toMd5($entity->get($field)) != Util::toMd5($prev[$field])) {
+            if ($entity->has($field) && array_key_exists($field, $prev) && Util::toMd5($entity->get($field)) != Util::toMd5($prev[$field])) {
                 foreach (['Id', 'Ids', 'Currency', 'Unit'] as $suffix) {
                     $name = $this->removeSuffix($field, $suffix);
                     $type = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $name, 'type'], '');
