@@ -418,7 +418,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                     }
 
                     if (data && this.getStorage().get('treeScope', this.scope) === this.scope && this.model && this.model.get('id') === node.id) {
-                        $tree.tree('addToSelection', node);
+                        this.getTreeEl().tree('addToSelection', node);
                         $li.addClass('jqtree-selected');
                     }
 
