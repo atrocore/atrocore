@@ -116,35 +116,42 @@ Espo.define('views/modals/select-entity-and-records', 'views/modals/select-recor
                     return;
                 }
 
-                let data = {};
-                data.where = this.options.where;
-
-                if (this.options.allResultIsChecked) {
-                    data.where.push({
-                        type: 'isNotNull',
-                        attribute: 'id'
-                    })
-                } else if (this.options.checkedList.length) {
-                    data.where.push({
-                        type: 'equals',
-                        attribute: 'id',
-                        value: this.options.checkedList
-                    });
-                }
-
-                if (Array.isArray(selected)) {
-                    data.foreignWhere = [{
-                        type: 'in',
-                        field: 'id',
-                        value: (selected || []).map(model => model.id)
-                    }];
-                } else if (typeof selected === 'object' && 'where' in selected) {
-                    data.foreignWhere = selected.where;
-                }
+                let data = this.getDataForUpdateRelation(selected, this.model);
 
                 const url = `${this.model.get('mainEntity')}/${this.model.get('selectedLink')}/relation`;
                 this.sendDataForUpdateRelation(url, data);
             });
+        },
+
+        getDataForUpdateRelation(foreign, viewModel) {
+            let data = {};
+
+            data.where = this.options.where;
+
+            if (this.options.allResultIsChecked) {
+                data.where.push({
+                    type: 'isNotNull',
+                    attribute: 'id'
+                })
+            } else if (this.options.checkedList.length) {
+                data.where.push({
+                    type: 'equals',
+                    attribute: 'id',
+                    value: this.options.checkedList
+                });
+            }
+
+            if (Array.isArray(foreign)) {
+                data.foreignWhere = [{
+                    type: 'in',
+                    field: 'id',
+                    value: (foreign || []).map(model => model.id)
+                }];
+            } else if (typeof foreign === 'object' && 'where' in foreign) {
+                data.foreignWhere = foreign.where;
+            }
+
+            return data;
         },
 
         setupPipelines() {
