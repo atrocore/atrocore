@@ -66,23 +66,7 @@ class MassActions extends \Espo\Core\Controllers\Base
             throw new BadRequest();
         }
 
-        if (!empty($data->ids)) {
-            $ids = $data->ids;
-        }
-
-        if (!empty($request->get('ids'))) {
-            $ids = explode(',', $request->get('ids'));
-        }
-
-        if (!empty($data->foreignIds)) {
-            $foreignIds = $data->foreignIds;
-        }
-
-        if (!empty($request->get('foreignIds'))) {
-            $foreignIds = explode(',', $request->get('foreignIds'));
-        }
-
-        if ((empty($ids) && !property_exists($data, 'byWhere')) || empty($foreignIds) || !isset($params['scope']) || !isset($params['link'])) {
+        if (!property_exists($data, 'where') || !property_exists($data ,'foreignWhere') || !isset($params['scope']) || !isset($params['link'])) {
             throw new BadRequest();
         }
 
@@ -90,15 +74,10 @@ class MassActions extends \Espo\Core\Controllers\Base
             throw new Forbidden();
         }
 
-        if (property_exists($data, 'byWhere') && !empty($data->byWhere)) {
-            $where = json_decode(json_encode($data->where), true);
-            return $this->getService('MassActions')
-                ->addRelationByWhere($where, $foreignIds, $params['scope'], $params['link']);
-        }
-
-        return $this
-            ->getService('MassActions')
-            ->addRelation($ids, $foreignIds, $params['scope'], $params['link']);
+        $where = json_decode(json_encode($data->where), true);
+        $foreignWhere = json_decode(json_encode($data->foreignWhere), true);
+        return $this->getService('MassActions')
+            ->addRelationByWhere($where, $foreignWhere, $params['scope'], $params['link']);
     }
 
     public function actionRemoveRelation($params, $data, $request): array
@@ -107,23 +86,7 @@ class MassActions extends \Espo\Core\Controllers\Base
             throw new BadRequest();
         }
 
-        if (!empty($data->ids)) {
-            $ids = $data->ids;
-        }
-
-        if (!empty($request->get('ids'))) {
-            $ids = explode(',', $request->get('ids'));
-        }
-
-        if (!empty($data->foreignIds)) {
-            $foreignIds = $data->foreignIds;
-        }
-
-        if (!empty($request->get('foreignIds'))) {
-            $foreignIds = explode(',', $request->get('foreignIds'));
-        }
-
-        if ((empty($ids) && !property_exists($data, 'byWhere')) || empty($foreignIds) || !isset($params['scope']) || !isset($params['link'])) {
+        if (!property_exists($data, 'where') || !property_exists($data ,'foreignWhere') || !isset($params['scope']) || !isset($params['link'])) {
             throw new BadRequest();
         }
 
@@ -131,14 +94,9 @@ class MassActions extends \Espo\Core\Controllers\Base
             throw new Forbidden();
         }
 
-        if (property_exists($data, 'byWhere') && !empty($data->byWhere)) {
-            $where = json_decode(json_encode($data->where), true);
-            return $this->getService('MassActions')
-                ->removeRelationByWhere($where, $foreignIds, $params['scope'], $params['link']);
-        }
-
-        return $this
-            ->getService('MassActions')
-            ->removeRelation($ids, $foreignIds, $params['scope'], $params['link']);
+        $where = json_decode(json_encode($data->where), true);
+        $foreignWhere = json_decode(json_encode($data->foreignWhere), true);
+        return $this->getService('MassActions')
+            ->removeRelationByWhere($where, $foreignWhere, $params['scope'], $params['link']);
     }
 }

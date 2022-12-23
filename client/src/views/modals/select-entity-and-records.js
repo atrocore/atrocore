@@ -110,14 +110,38 @@ Espo.define('views/modals/select-entity-and-records', 'views/modals/select-recor
                 };
             }
 
-            this.listenTo(this, 'select', models => {
+            this.listenTo(this, 'select', selected => {
                 if (this.validate()) {
                     this.notify('Not valid', 'error');
                     return;
                 }
 
-                const foreignIds = (models || []).map(model => model.id);
-                const data = this.getDataForUpdateRelation(foreignIds, this.model);
+                let data = {};
+                data.where = this.options.where;
+
+                if (this.options.allResultIsChecked) {
+                    data.where.push({
+                        type: 'isNotNull',
+                        attribute: 'id'
+                    })
+                } else if (this.options.checkedList.length) {
+                    data.where.push({
+                        type: 'equals',
+                        attribute: 'id',
+                        value: this.options.checkedList
+                    });
+                }
+
+                if (Array.isArray(selected)) {
+                    data.foreignWhere = [{
+                        type: 'in',
+                        field: 'id',
+                        value: (selected || []).map(model => model.id)
+                    }];
+                } else if (typeof selected === 'object' && 'where' in selected) {
+                    data.foreignWhere = selected.where;
+                }
+
                 const url = `${this.model.get('mainEntity')}/${this.model.get('selectedLink')}/relation`;
                 this.sendDataForUpdateRelation(url, data);
             });
@@ -166,15 +190,6 @@ Espo.define('views/modals/select-entity-and-records', 'views/modals/select-recor
             Dep.prototype.loadList.call(this);
 
             this.listenToOnce(this.collection, 'sync', () => this.notify(false));
-        },
-
-        getDataForUpdateRelation(foreignIds, viewModel) {
-            return {
-                ids: this.options.checkedList,
-                foreignIds: foreignIds,
-                byWhere:  this.options.byWhere,
-                where: this.options.where
-            }
         },
 
         sendDataForUpdateRelation(url, data) {
