@@ -42,7 +42,7 @@
     "linkMultipleFieldForeign": "Поле связать несколько полей",
     "disabled": "Отключено",
     "textFilterFields": "Поля текстовых фильтров",
-    "audited": "Проверено",
+    "audited": "Отслеживать изменения",
     "statusField": "Поле статуса",
     "color": "Цвет",
     "kanbanStatusIgnoreList": "Группы, которые не отражаются в представлении Канбан",

@@ -39,7 +39,7 @@
     "linkMultipleFieldForeign": "Foreign Link Multiple Field",
     "disabled": "Disabled",
     "textFilterFields": "Text Filter Fields",
-    "audited": "Audited",
+    "audited": "Track changes",
     "auditedForeign": "Foreign Audited",
     "statusField": "Status Field",
     "beforeSaveCustomScript": "Before Save Custom Script",
