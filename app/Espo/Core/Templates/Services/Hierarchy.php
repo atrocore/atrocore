@@ -800,6 +800,11 @@ class Hierarchy extends Record
 
     protected function getInheritedFields(Entity $entity): array
     {
+        // exit if children link does not exist
+        if (!$this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', 'children'])) {
+            return [];
+        }
+
         $parents = $this->getRepository()
             ->join('children')
             ->where(['children.id' => $entity->get('id')])
