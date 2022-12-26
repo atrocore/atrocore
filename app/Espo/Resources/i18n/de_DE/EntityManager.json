@@ -37,7 +37,7 @@
     "linkMultipleFieldForeign": "Fremdlink mehrere Felder",
     "disabled": "Inaktiv",
     "textFilterFields": "Textfilter Felder",
-    "audited": "protokolliert",
+    "audited": "Änderungen verfolgen",
     "auditedForeign": "fremd geprüft",
     "beforeSaveCustomScript": "vor dem Speicher benutzerdefiniertes Script",
     "color": "Farbe",
