@@ -50,6 +50,8 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
 
         maxItemLength: null,
 
+        translatedOptions: null,
+
         data: function () {
             var itemHtmlList = [];
             (this.selected || []).forEach(function (value) {
@@ -103,6 +105,11 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
             }, this);
 
             this.selected = Espo.Utils.clone(this.model.get(this.name) || []);
+
+            if (this.model.has(this.name + 'OptionsIds')) {
+                this.selected = Espo.Utils.clone(this.model.get(this.name + 'OptionsIds') || []);
+            }
+
             if (Object.prototype.toString.call(this.selected) !== '[object Array]')    {
                 this.selected = [];
             }
@@ -116,7 +123,11 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                 this.translatedOptions = this.params.translatedOptions;
             }
 
-            if (!this.translatedOptions) {
+            if (this.translatedOptions === null && this.model.defs.fields[this.name] && this.model.defs.fields[this.name].translatedOptions) {
+                this.translatedOptions = Espo.Utils.clone(this.model.defs.fields[this.name].translatedOptions);
+            }
+
+            if (this.translatedOptions === null) {
                 this.setupTranslation();
             }
 

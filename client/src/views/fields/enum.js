@@ -60,6 +60,11 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             var data = Dep.prototype.data.call(this);
             data.translatedOptions = this.translatedOptions;
             var value = this.model.get(this.name);
+
+            if (this.model.has(this.name + 'OptionId')) {
+                data.value = value = this.model.get(this.name + 'OptionId');
+            }
+
             if (
                 value !== null
                 &&
@@ -71,6 +76,7 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             ) {
                 data.isNotEmpty = true;
             }
+
             return data;
         },
 
@@ -90,6 +96,10 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
 
             if ('translatedOptions' in this.params) {
                 this.translatedOptions = this.params.translatedOptions;
+            }
+
+            if (this.translatedOptions === null && this.model.defs.fields[this.name] && this.model.defs.fields[this.name].translatedOptions) {
+                this.translatedOptions = Espo.Utils.clone(this.model.defs.fields[this.name].translatedOptions);
             }
 
             this.setupTranslation();
