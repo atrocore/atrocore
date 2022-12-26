@@ -800,7 +800,11 @@ class Hierarchy extends Record
 
     protected function getInheritedFields(Entity $entity): array
     {
-        $parents = $entity->get('parents');
+        $parents = $this->getRepository()
+            ->join('children')
+            ->where(['children.id' => $entity->get('id')])
+            ->find();
+
         if (empty($parents[0])) {
             return [];
         }
