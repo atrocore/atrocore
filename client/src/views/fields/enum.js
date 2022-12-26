@@ -98,11 +98,11 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                 this.translatedOptions = this.params.translatedOptions;
             }
 
-            this.setupTranslation();
-
             if (this.translatedOptions === null && this.model.defs.fields[this.name] && this.model.defs.fields[this.name].translatedOptions) {
                 this.translatedOptions = Espo.Utils.clone(this.model.defs.fields[this.name].translatedOptions);
             }
+
+            this.setupTranslation();
 
             if (this.translatedOptions === null) {
                 let translatedOptions = {};
