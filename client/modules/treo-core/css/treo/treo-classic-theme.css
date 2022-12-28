@@ -15883,12 +15883,23 @@ table.table > tbody td > .list-row-buttons button {
     border-bottom-color: #999
 }
 
-.filter a.remove-filter {
-    display: none
+.filter a.remove-filter,
+.filter a.pin-filter:not(.pinned) {
+    display: none;
 }
 
-.filter:hover a.remove-filter {
-    display: block
+.filter:hover a.remove-filter,
+.filter:hover a.pin-filter:not(.pinned) {
+    display: block;
+}
+
+.filter a.pin-filter > i {
+    font-size: 14px;
+}
+
+.filter a.pin-filter:not(.pinned) {
+    margin-top: -2px;
+    transform: rotate(45deg);
 }
 
 select[multiple].input-sm {

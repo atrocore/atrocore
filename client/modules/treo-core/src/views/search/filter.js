@@ -47,6 +47,12 @@ Espo.define('treo-core:views/search/filter', 'views/search/filter', function (De
 
                 this.pinned = !this.pinned;
 
+                if (this.pinned) {
+                    this.$el.find('.pin-filter').addClass('pinned');
+                } else {
+                    this.$el.find('.pin-filter').removeClass('pinned');
+                }
+
                 this.trigger('pin-filter', this.pinned);
             },
         },

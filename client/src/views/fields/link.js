@@ -512,8 +512,13 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         },
 
         clearSearch: function () {
-            this.$el.find('[name="' + this.idName + '"]').val('');
-            this.$el.find('[name="' + this.nameName + '"]').val('');
+            this.searchData.idValue = null;
+            this.searchData.nameValue = null;
+            this.searchData.oneOfIdList = [];
+            this.searchData.oneOfNameHash = {};
+            this.searchData.subQuery = [];
+
+            this.reRender();
         },
 
         fetchSearch: function () {
