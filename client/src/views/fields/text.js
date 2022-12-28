@@ -132,6 +132,8 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
             var text = this.model.get(this.name);
 
             if (text && ((this.mode == 'detail' && !this.params.useDisabledTextareaInViewMode) || this.mode == 'list') && !this.seeMoreText && !this.seeMoreDisabled) {
+                text = text.toString();
+
                 var maxLength = this.detailMaxLength;
 
                 var isCut = false;
