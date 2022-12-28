@@ -164,16 +164,14 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
             } else {
                 var value = this.$element.val().toString().trim();
                 value = value.trim();
-                if (value) {
-                    data = {
-                        value: value,
-                        type: type,
-                        data: {
-                            type: type
-                        }
+                data = {
+                    value: value,
+                    type: type,
+                    data: {
+                        type: type
                     }
-                    return data;
                 }
+                return data;
             }
             return false;
         },

@@ -364,6 +364,12 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             return item;
         },
 
+        clearSearch: function () {
+            Dep.prototype.clearSearch.call(this);
+
+            this.$element.get(0).selectize.clear();
+        },
+
         fetchSearch: function () {
             var type = this.$el.find('[name="' + this.name + '-type"]').val();
 

@@ -270,6 +270,13 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
             return data;
         },
 
+        clearSearch: function () {
+            Dep.prototype.clearSearch.call(this);
+
+            this.$el.find('[name="' + this.name + '-additional"]').val('');
+            this.$el.find('[name="' + this.name + '-number"]').val('');
+        },
+
         fetchSearch: function () {
             var value = this.parseDate(this.$element.val());
 
@@ -277,13 +284,8 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
             var data;
 
             if (type == 'between') {
-                if (!value) {
-                    return false;
-                }
                 var valueTo = this.parseDate(this.$el.find('[name="' + this.name + '-additional"]').val());
-                if (!valueTo) {
-                    return false;
-                }
+
                 data = {
                     type: type,
                     value: [value, valueTo],
@@ -298,9 +300,6 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
                     number: number
                 };
             } else if (~['on', 'notOn', 'after', 'before'].indexOf(type)) {
-                if (!value) {
-                    return false;
-                }
                 data = {
                     type: type,
                     value: value,

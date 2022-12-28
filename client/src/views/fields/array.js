@@ -395,6 +395,13 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
             return data;
         },
 
+
+        clearSearch: function () {
+            Dep.prototype.clearSearch.call(this);
+
+            this.$element.get(0).selectize.clear();
+        },
+
         fetchSearch: function () {
             var type = this.$el.find('select.search-type').val() || 'anyOf';
 

@@ -48,6 +48,7 @@ Espo.define('search-manager', [], function () {
             bool: {},
             advanced: {},
             primary: null,
+            pinned: {}
         };
 
         if (defaultData) {
@@ -77,6 +78,9 @@ Espo.define('search-manager', [], function () {
             }
             if (!('textFilter' in this.data)) {
                 this.data.textFilter = '';
+            }
+            if (!('pinned' in this.data)) {
+                this.data.pinned = {};
             }
         },
 
