@@ -143,7 +143,7 @@ class Hierarchy extends Record
             throw new BadRequest();
         }
 
-        return $this->getRecordService()->inheritAll((string)$data->id, (string)$data->link);
+        return $this->getRecordService()->inheritAllForLink((string)$data->id, (string)$data->link);
     }
 
     public function actionUnlinkAllHierarchically($params, $data, $request)
@@ -156,6 +156,6 @@ class Hierarchy extends Record
             throw new BadRequest();
         }
 
-        return $this->getRecordService()->unlinkAllHierarchically((string)$data->id, (string)$data->link);
+        return $this->getRecordService()->unlinkAllHierarchicallyForLink((string)$data->id, (string)$data->link);
     }
 }

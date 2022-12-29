@@ -206,9 +206,9 @@ class Hierarchy extends Record
         }
     }
 
-    public function inheritAll(string $id, string $link): bool
+    public function inheritAllForLink(string $id, string $link): bool
     {
-        $event = $this->dispatchEvent('beforeInheritAll', new Event(['id' => $id, 'link' => $link]));
+        $event = $this->dispatchEvent('beforeInheritAllForLink', new Event(['id' => $id, 'link' => $link]));
 
         $id = $event->getArgument('id');
         $link = $event->getArgument('link');
@@ -261,7 +261,7 @@ class Hierarchy extends Record
             }
         }
 
-        return $this->dispatchEvent('afterUnlinkAll', new Event(['entity' => $entity, 'link' => $link, 'result' => true]))->getArgument('result');
+        return $this->dispatchEvent('afterInheritAllForLink', new Event(['entity' => $entity, 'link' => $link, 'result' => true]))->getArgument('result');
     }
 
     public function inheritField(string $field, string $id): bool
@@ -339,9 +339,9 @@ class Hierarchy extends Record
         return true;
     }
 
-    public function unlinkAllHierarchically(string $id, string $link): bool
+    public function unlinkAllHierarchicallyForLink(string $id, string $link): bool
     {
-        $event = $this->dispatchEvent('beforeUnlinkAllHierarchically', new Event(['id' => $id, 'link' => $link]));
+        $event = $this->dispatchEvent('beforeUnlinkAllHierarchicallyForLink', new Event(['id' => $id, 'link' => $link]));
 
         $id = $event->getArgument('id');
         $link = $event->getArgument('link');
@@ -380,7 +380,7 @@ class Hierarchy extends Record
             }
         }
 
-        return $this->dispatchEvent('afterUnlinkAllHierarchically', new Event(['entity' => $entity, 'link' => $link, 'result' => true]))->getArgument('result');
+        return $this->dispatchEvent('afterUnlinkAllHierarchicallyForLink', new Event(['entity' => $entity, 'link' => $link, 'result' => true]))->getArgument('result');
     }
 
     public function getChildren(string $parentId, array $params): array
