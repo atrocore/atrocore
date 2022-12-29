@@ -198,6 +198,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
         },
 
+        actionInheritAllForChildren: function () {
+            this.notify(this.translate('pleaseWait', 'messages'));
+            this.ajaxPostRequest(this.scope + '/action/InheritAllForChildren', {id: this.model.id}).then(() => {
+                this.notify('Done', 'success');
+            });
+        },
+
         actionDelete: function () {
             this.delete();
         },
@@ -260,6 +267,15 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     this.dropdownItemList.push({
                         'label': 'Duplicate',
                         'name': 'duplicate'
+                    });
+                }
+            }
+
+            if (this.getMetadata().get(`scopes.${this.entityType}.type`) === 'Hierarchy') {
+                if (this.getAcl().check(this.entityType, 'edit')) {
+                    this.dropdownItemList.push({
+                        'label': 'inheritAllForChildren',
+                        'name': 'inheritAllForChildren'
                     });
                 }
             }

@@ -56,18 +56,39 @@ class Hierarchy extends RDB
         $this->hierarchyTableName = $this->tableName . '_hierarchy';
     }
 
-    public function getUnInheritedFields(): array
+    public function getInheritableFields(): array
     {
-        $result = array_merge($this->getMetadata()->get('app.nonInheritedFields', []), $this->getMetadata()->get(['scopes', $this->entityType, 'mandatoryUnInheritedFields'], []));
-        $result = array_merge($result, $this->getMetadata()->get(['scopes', $this->entityType, 'unInheritedFields'], []));
+        $unInheritableFields = $this->getUnInheritableFields();
 
-        // add relations
-        $result = array_merge($result, $this->getUnInheritedRelations());
+        $fields = [];
 
-        return $result;
+        foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []) as $field => $fieldData) {
+            if (in_array($field, $fields) || in_array($field, $unInheritableFields)) {
+                continue 1;
+            }
+
+            if (!empty($fieldData['notStorable'])) {
+                continue 1;
+            }
+
+            $fields[] = $field;
+        }
+
+        return $fields;
     }
 
-    public function getUnInheritedRelations(): array
+    public function getUnInheritableFields(): array
+    {
+        $fields = array_merge($this->getMetadata()->get('app.nonInheritedFields', []), $this->getMetadata()->get(['scopes', $this->entityType, 'mandatoryUnInheritedFields'], []));
+        $fields = array_merge($fields, $this->getMetadata()->get(['scopes', $this->entityType, 'unInheritedFields'], []));
+
+        // add relations
+        $fields = array_merge($fields, $this->getUnInheritedRelations());
+
+        return $fields;
+    }
+
+    public function getUnInheritableRelations(): array
     {
         $result = array_merge([], $this->getMetadata()->get('app.nonInheritedRelations', []));
         $result = array_merge($result, $this->getMetadata()->get(['scopes', $this->entityType, 'mandatoryUnInheritedRelations'], []));
@@ -82,6 +103,22 @@ class Hierarchy extends RDB
         }
 
         return $result;
+    }
+
+    /**
+     * @deprecated use getUnInheritableFields instead
+     */
+    public function getUnInheritedFields(): array
+    {
+        return $this->getUnInheritableFields();
+    }
+
+    /**
+     * @deprecated use getUnInheritableRelations instead
+     */
+    public function getUnInheritedRelations(): array
+    {
+        return $this->getUnInheritableRelations();
     }
 
     public function fetchById(string $id): array

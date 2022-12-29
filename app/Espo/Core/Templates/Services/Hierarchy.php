@@ -51,6 +51,36 @@ use Treo\Core\Exceptions\NotModified;
 
 class Hierarchy extends Record
 {
+    public function inheritAllForChildren(string $id): bool
+    {
+        $parent = parent::getEntity($id);
+        if (empty($parent)) {
+            throw new NotFound();
+        }
+
+        $children = $parent->get('children');
+        if (empty($children) || count($children) === 0) {
+            return false;
+        }
+
+        // what if parent value is null????
+
+        foreach ($children as $child) {
+            $unInheritedFields = array_diff($this->getRepository()->getInheritableFields(), $this->getInheritedFromParentFields($parent, $child));
+            foreach ($unInheritedFields as $unInheritedField) {
+                if ($child->get($unInheritedField) === null) {
+                    try {
+                        $this->inheritField($unInheritedField, $child->get('id'));
+                    } catch (\Throwable $e) {
+                        // ignore all errors
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
     public function getTreeDataForSelectedNode(string $id): array
     {
         $treeBranches = [];
@@ -798,6 +828,56 @@ class Hierarchy extends Record
         return $collection;
     }
 
+    protected function getInheritedFromParentFields(Entity $parent, Entity $child): array
+    {
+        $inheritedFields = [];
+        foreach ($this->getRepository()->getInheritableFields() as $field) {
+            switch ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type'])) {
+                case 'asset':
+                case 'image':
+                case 'link':
+                    if ($this->areValuesEqual($this->getRepository()->get(), $field . 'Id', $parent->get($field . 'Id'), $child->get($field . 'Id'))) {
+                        $inheritedFields[] = $field;
+                    }
+                    break;
+                case 'currency':
+                    if (
+                        $this->areValuesEqual($this->getRepository()->get(), $field, $parent->get($field), $child->get($field))
+                        && $this->areValuesEqual($this->getRepository()->get(), $field . 'Currency', $parent->get($field . 'Currency'), $child->get($field . 'Currency'))
+                    ) {
+                        $inheritedFields[] = $field;
+                    }
+                    break;
+                case 'unit':
+                    if (
+                        $this->areValuesEqual($this->getRepository()->get(), $field, $parent->get($field), $child->get($field))
+                        && $this->areValuesEqual($this->getRepository()->get(), $field . 'Unit', $parent->get($field . 'Unit'), $child->get($field . 'Unit'))
+                    ) {
+                        $inheritedFields[] = $field;
+                    }
+                    break;
+                case 'linkMultiple':
+                    if (!in_array($field, $this->getRepository()->getUnInheritedFields())) {
+                        $parentIds = $parent->getLinkMultipleIdList($field);
+                        sort($parentIds);
+                        $entityIds = $child->getLinkMultipleIdList($field);
+                        sort($entityIds);
+                        if ($this->areValuesEqual($this->getRepository()->get(), $field . 'Ids', $parentIds, $entityIds)) {
+                            $inheritedFields[] = $field;
+                        }
+                    }
+                    break;
+                default:
+                    if ($this->areValuesEqual($this->getRepository()->get(), $field, $parent->get($field), $child->get($field))) {
+                        $inheritedFields[] = $field;
+                    }
+                    break;
+            }
+        }
+
+        return $inheritedFields;
+    }
+
     protected function getInheritedFields(Entity $entity): array
     {
         // exit if children link does not exist
@@ -814,61 +894,10 @@ class Hierarchy extends Record
             return [];
         }
 
-        $unInheritedFields = $this->getRepository()->getUnInheritedFields();
 
         $inheritedFields = [];
         foreach ($parents as $parent) {
-            foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []) as $field => $fieldData) {
-                if (in_array($field, $inheritedFields) || in_array($field, $unInheritedFields)) {
-                    continue 1;
-                }
-
-                if (!empty($fieldData['notStorable'])) {
-                    continue 1;
-                }
-
-                switch ($fieldData['type']) {
-                    case 'asset':
-                    case 'image':
-                    case 'link':
-                        if ($this->areValuesEqual($this->getRepository()->get(), $field . 'Id', $parent->get($field . 'Id'), $entity->get($field . 'Id'))) {
-                            $inheritedFields[] = $field;
-                        }
-                        break;
-                    case 'currency':
-                        if (
-                            $this->areValuesEqual($this->getRepository()->get(), $field, $parent->get($field), $entity->get($field))
-                            && $this->areValuesEqual($this->getRepository()->get(), $field . 'Currency', $parent->get($field . 'Currency'), $entity->get($field . 'Currency'))
-                        ) {
-                            $inheritedFields[] = $field;
-                        }
-                        break;
-                    case 'unit':
-                        if (
-                            $this->areValuesEqual($this->getRepository()->get(), $field, $parent->get($field), $entity->get($field))
-                            && $this->areValuesEqual($this->getRepository()->get(), $field . 'Unit', $parent->get($field . 'Unit'), $entity->get($field . 'Unit'))
-                        ) {
-                            $inheritedFields[] = $field;
-                        }
-                        break;
-                    case 'linkMultiple':
-                        if (!in_array($field, $this->getRepository()->getUnInheritedFields())) {
-                            $parentIds = $parent->getLinkMultipleIdList($field);
-                            sort($parentIds);
-                            $entityIds = $entity->getLinkMultipleIdList($field);
-                            sort($entityIds);
-                            if ($this->areValuesEqual($this->getRepository()->get(), $field . 'Ids', $parentIds, $entityIds)) {
-                                $inheritedFields[] = $field;
-                            }
-                        }
-                        break;
-                    default:
-                        if ($this->areValuesEqual($this->getRepository()->get(), $field, $parent->get($field), $entity->get($field))) {
-                            $inheritedFields[] = $field;
-                        }
-                        break;
-                }
-            }
+            $inheritedFields = array_merge($inheritedFields, $this->getInheritedFromParentFields($parent, $entity));
         }
 
         return $inheritedFields;
