@@ -63,12 +63,10 @@ class Hierarchy extends Record
             return false;
         }
 
-        // what if parent value is null????
-
         foreach ($children as $child) {
             $unInheritedFields = array_diff($this->getRepository()->getInheritableFields(), $this->getInheritedFromParentFields($parent, $child));
             foreach ($unInheritedFields as $unInheritedField) {
-                if ($child->get($unInheritedField) === null) {
+                if ($child->get($unInheritedField) === null || $parent->get($unInheritedField) === null) {
                     try {
                         $this->inheritField($unInheritedField, $child->get('id'));
                     } catch (\Throwable $e) {
