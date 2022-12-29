@@ -280,6 +280,9 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
         },
 
         getLangFieldNames() {
+            if (!this.getConfig().get('isMultilangActive')) {
+                return [];
+            }
             return (this.getConfig().get('inputLanguageList') || []).map(item => {
                 return item.split('_').reduce((prev, curr) => {
                     prev = prev + Espo.Utils.upperCaseFirst(curr.toLowerCase());
