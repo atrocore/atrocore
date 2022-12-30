@@ -199,9 +199,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         actionInheritAllForChildren: function () {
-            this.notify(this.translate('pleaseWait', 'messages'));
-            this.ajaxPostRequest(this.scope + '/action/InheritAllForChildren', {id: this.model.id}).then(() => {
-                this.notify('Done', 'success');
+            this.confirm({message: this.translate('confirmInheritAllForChildren', 'messages'), confirmText: this.translate('Apply')}, () => {
+                this.notify(this.translate('pleaseWait', 'messages'));
+                this.ajaxPostRequest(this.scope + '/action/InheritAllForChildren', {id: this.model.id}).then(() => {
+                    this.notify('Done', 'success');
+                });
             });
         },
 

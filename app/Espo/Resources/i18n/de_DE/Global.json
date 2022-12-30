@@ -279,6 +279,7 @@
     "Dashboard": "Dashboard"
   },
   "messages": {
+    "confirmInheritAllForChildren": "Sind Sie sicher, dass alle untergeordneten Elemente Feld- (und Attribut-) Werte sowie auch Beziehungen von diesem übergeordneten Element erben sollen? Vorhandene Werte werden nicht ersetzt.",
     "massDeleting": "Entferne: {{deleted}} vom {{total}}",
     "optionValueCannotBeEmpty": "Option darf nicht leer sein",
     "minimumOneOptionsRequired": "Mindestens ein Optionswert ist erforderlich.",

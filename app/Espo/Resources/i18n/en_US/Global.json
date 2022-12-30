@@ -295,6 +295,7 @@
     "Dashboard": "Dashboard"
   },
   "messages": {
+    "confirmInheritAllForChildren": "Are you sure you want all child items to inherit field (and attribute) values as well as relations from this parent item? Existing values will not be replaced.",
     "massDeleting": "Deleting: {{deleted}} from {{total}}",
     "optionValueCannotBeEmpty": "Option value cannot be empty",
     "minimumOneOptionsRequired": "Minimum one option value is required.",
