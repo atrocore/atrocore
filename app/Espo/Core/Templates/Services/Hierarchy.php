@@ -63,8 +63,18 @@ class Hierarchy extends Record
             return false;
         }
 
+        $inheritableFields = [];
+        $inheritableLinks = [];
+        foreach ($this->getRepository()->getInheritableFields() as $field) {
+            if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type']) === 'linkMultiple') {
+                $inheritableLinks[] = $field;
+            } else {
+                $inheritableFields[] = $field;
+            }
+        }
+
         foreach ($children as $child) {
-            $unInheritedFields = array_diff($this->getRepository()->getInheritableFields(), $this->getInheritedFromParentFields($parent, $child));
+            $unInheritedFields = array_diff($inheritableFields, $this->getInheritedFromParentFields($parent, $child));
             foreach ($unInheritedFields as $unInheritedField) {
                 if ($child->get($unInheritedField) === null || $parent->get($unInheritedField) === null) {
                     try {
@@ -72,6 +82,14 @@ class Hierarchy extends Record
                     } catch (\Throwable $e) {
                         // ignore all errors
                     }
+                }
+            }
+
+            foreach ($inheritableLinks as $link) {
+                try {
+                    $this->inheritAllForLink($child->get('id'), $link);
+                } catch (\Throwable $e) {
+                    // ignore all errors
                 }
             }
         }
@@ -219,6 +237,18 @@ class Hierarchy extends Record
 
         if (empty($entity = $this->getRepository()->get($id))) {
             throw new NotFound();
+        }
+
+        if ($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'type']) !== 'Hierarchy') {
+            throw new BadRequest("Inheriting available only for entities type Hierarchy.");
+        }
+
+        if (!$this->getMetadata()->get(['scopes', $entity->getEntityType(), 'relationInheritance'])) {
+            throw new BadRequest("Relations inheriting is disabled.");
+        }
+
+        if (empty($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $link, 'relationName']))) {
+            return false;
         }
 
         if (in_array($link, $this->getRepository()->getUnInheritedRelations())) {
