@@ -80,7 +80,7 @@ class Hierarchy extends Record
                     try {
                         $this->inheritField($unInheritedField, $child->get('id'));
                     } catch (\Throwable $e) {
-                        // ignore all errors
+                        $GLOBALS['log']->error('Inherit field failed: ' . $e->getMessage());
                     }
                 }
             }
@@ -89,7 +89,7 @@ class Hierarchy extends Record
                 try {
                     $this->inheritAllForLink($child->get('id'), $link);
                 } catch (\Throwable $e) {
-                    // ignore all errors
+                    $GLOBALS['log']->error('Inherit all for link failed: ' . $e->getMessage());
                 }
             }
 
