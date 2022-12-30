@@ -43,6 +43,19 @@ use Espo\Core\Exceptions\Forbidden;
 
 class Hierarchy extends Record
 {
+    public function actionInheritAllForChildren($params, $data, $request): bool
+    {
+        if (!$request->isPost() || !property_exists($data, 'id')) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($this->name, 'edit')) {
+            throw new Forbidden();
+        }
+
+        return $this->getRecordService()->inheritAllForChildren((string)$data->id);
+    }
+
     public function actionTree($params, $data, $request): array
     {
         if (!$request->isGet()) {
@@ -130,7 +143,7 @@ class Hierarchy extends Record
             throw new BadRequest();
         }
 
-        return $this->getRecordService()->inheritAll((string)$data->id, (string)$data->link);
+        return $this->getRecordService()->inheritAllForLink((string)$data->id, (string)$data->link);
     }
 
     public function actionUnlinkAllHierarchically($params, $data, $request)
@@ -143,6 +156,6 @@ class Hierarchy extends Record
             throw new BadRequest();
         }
 
-        return $this->getRecordService()->unlinkAllHierarchically((string)$data->id, (string)$data->link);
+        return $this->getRecordService()->unlinkAllHierarchicallyForLink((string)$data->id, (string)$data->link);
     }
 }
