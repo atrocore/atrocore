@@ -305,7 +305,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 dialog.render();
                 this.notify(false);
                 dialog.once('select', selectObj => {
-                    if (massRelateDisabled) {
+                    if (massRelateDisabled && !Array.isArray(selectObj)) {
                         const list = dialog.getView('list');
 
                         if (list) {
