@@ -92,6 +92,8 @@ class Hierarchy extends Record
                     // ignore all errors
                 }
             }
+
+            $this->dispatchEvent('inheritAllForChild', new Event(['parent' => $parent, 'child' => $child]));
         }
 
         return true;
