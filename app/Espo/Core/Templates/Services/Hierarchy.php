@@ -76,7 +76,7 @@ class Hierarchy extends Record
         foreach ($children as $child) {
             $unInheritedFields = array_diff($inheritableFields, $this->getInheritedFromParentFields($parent, $child));
             foreach ($unInheritedFields as $unInheritedField) {
-                if ($child->get($unInheritedField) === null || $parent->get($unInheritedField) === null) {
+                if ($child->get($unInheritedField) === null) {
                     try {
                         $this->inheritField($unInheritedField, $child->get('id'));
                     } catch (\Throwable $e) {
