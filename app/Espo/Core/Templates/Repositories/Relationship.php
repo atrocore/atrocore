@@ -56,11 +56,35 @@ class Relationship extends RDB
 
     public function remove(Entity $entity, array $options = [])
     {
-        $this->beforeRemove($entity, $options);
-        $result = $this->deleteFromDb($entity->get('id'));
-        if ($result) {
-            $this->afterRemove($entity, $options);
+        try {
+            $result = parent::remove($entity, $options);
+        } catch (\Throwable $e) {
+            // delete duplicate
+            if ($e instanceof \PDOException && strpos($e->getMessage(), '1062') !== false) {
+                if (!empty($toDelete = $this->getDuplicateEntity($entity, true))) {
+                    $this->deleteFromDb($toDelete->get('id'), true);
+                }
+                return parent::remove($entity, $options);
+            }
+            throw $e;
         }
+
         return $result;
+    }
+
+    public function getDuplicateEntity(Entity $entity, bool $deleted = false): ?Entity
+    {
+        $where = [
+            'id!='    => $entity->get('id'),
+            'deleted' => $deleted,
+        ];
+
+        foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields']) as $field => $fieldDefs) {
+            if (!empty($fieldDefs['relationshipField'])) {
+                $where[$field . 'Id'] = $entity->get($field . 'Id');
+            }
+        }
+
+        return $this->where($where)->findOne(['withDeleted' => $deleted]);
     }
 }
