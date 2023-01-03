@@ -121,6 +121,15 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                         return;
                     }
 
+                    let params = {};
+                    if (('typeValue' in data) && ('typeValueIds' in data)) {
+                        params.options = data.typeValueIds[field];
+                        params.translatedOptions = {};
+                        params.options.forEach((option, k) => {
+                           params.translatedOptions[option] = data.typeValue[field][k];
+                        });
+                    }
+
                     let viewName = model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(type);
                     this.createView(field + 'Was', viewName, {
                         el: this.options.el + ' .was',
@@ -130,8 +139,10 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                             name: field
                         },
                         mode: 'detail',
-                        inlineEditDisabled: true
+                        inlineEditDisabled: true,
+                        params: params
                     });
+
                     this.createView(field + 'Became', viewName, {
                         el: this.options.el + ' .became',
                         model: modelBecame,
@@ -140,7 +151,8 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                             name: field
                         },
                         mode: 'detail',
-                        inlineEditDisabled: true
+                        inlineEditDisabled: true,
+                        params: params
                     });
 
                     let htmlTag = 'code';
