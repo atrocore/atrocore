@@ -59,7 +59,8 @@ Espo.define('views/record/panels/for-relationship-type', 'views/record/panels/re
                     data: {
                         link: this.panelName,
                         scope: relationshipEntities.filter(entity => entity !== this.model.urlRoot).shift(),
-                        afterSelectCallback: "createRelationshipEntitiesViaIds"
+                        afterSelectCallback: "createRelationshipEntitiesViaIds",
+                        massRelateDisabled: true
                     },
                     acl: 'create',
                     aclScope: relationshipScope

@@ -247,6 +247,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
 
         actionSelectRelatedEntity(data) {
             let link = data.link;
+            let massRelateDisabled = data.massRelateDisabled || false;
             let scope = data.scope || this.model.defs['links'][link].entity;
             let afterSelectCallback = data.afterSelectCallback;
             let boolFilterListCallback = data.boolFilterListCallback;
@@ -304,6 +305,14 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 dialog.render();
                 this.notify(false);
                 dialog.once('select', selectObj => {
+                    if (massRelateDisabled && !Array.isArray(selectObj)) {
+                        const list = dialog.getView('list');
+
+                        if (list) {
+                            selectObj = list.getSelected();
+                        }
+                    }
+
                     if (Array.isArray(selectObj) && afterSelectCallback && panelView && typeof panelView[afterSelectCallback] === 'function') {
                         panelView[afterSelectCallback](selectObj);
                     } else {
