@@ -251,6 +251,12 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
             return data;
         },
 
+        clearSearch: function () {
+            Dep.prototype.clearSearch.call(this);
+
+            this.$el.find('[name="' + this.name + '-additional"]').val('');
+        },
+
         fetchSearch: function () {
             var value = this.parse(this.$element.val());
             var type = this.$el.find('[name="' + this.name + '-type"]').val();

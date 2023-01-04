@@ -38,12 +38,43 @@ Espo.define('treo-core:views/search/filter', 'views/search/filter', function (De
 
         template: 'treo-core:search/filter',
 
+        pinned: false,
+
+        events: {
+            'click a[data-action="pinFilter"]': function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+
+                this.pinned = !this.pinned;
+
+                if (this.pinned) {
+                    this.$el.find('.pin-filter').addClass('pinned');
+                } else {
+                    this.$el.find('.pin-filter').removeClass('pinned');
+                }
+
+                this.trigger('pin-filter', this.pinned);
+            },
+        },
+
         data: function () {
+            let isPinEnabled = true;
+
+            if (this.getParentView() && this.getParentView().getParentView() && this.getParentView().getParentView()) {
+                const parent =  this.getParentView().getParentView();
+
+                if (('layoutName' in parent) && parent.layoutName === 'listSmall') {
+                    isPinEnabled = false;
+                }
+            }
+
             return {
                 generalName: this.generalName,
                 name: this.name,
                 scope: this.model.name,
-                notRemovable: this.options.notRemovable
+                notRemovable: this.options.notRemovable,
+                isPinEnabled: isPinEnabled,
+                pinned: this.pinned
             };
         },
 
@@ -51,6 +82,8 @@ Espo.define('treo-core:views/search/filter', 'views/search/filter', function (De
             var newName = this.name = this.options.name;
             this.generalName = newName.split('-')[0];
             var type = this.model.getFieldType(this.generalName);
+
+            this.pinned = this.options.pinned;
 
             if (type) {
                 var viewName = this.model.getFieldParam(this.generalName, 'view') || this.getFieldManager().getViewName(type);

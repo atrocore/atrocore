@@ -511,6 +511,16 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             return data;
         },
 
+        clearSearch: function () {
+            this.searchData.idValue = null;
+            this.searchData.nameValue = null;
+            this.searchData.oneOfIdList = [];
+            this.searchData.oneOfNameHash = {};
+            this.searchData.subQuery = [];
+
+            this.reRender();
+        },
+
         fetchSearch: function () {
             var type = this.$el.find('select.search-type').val();
             var value = this.$el.find('[name="' + this.idName + '"]').val();
@@ -583,9 +593,6 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 };
                 return data;
             }  else if (type == 'isNot') {
-                if (!value) {
-                    return false;
-                }
                 var nameValue = this.$el.find('[name="' + this.nameName + '"]').val();
                 var data = {
                     type: 'or',
@@ -609,9 +616,6 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 };
                 return data;
             } else if (type == 'isNotAndIsNotEmpty') {
-                if (!value) {
-                    return false;
-                }
                 var nameValue = this.$el.find('[name="' + this.nameName + '"]').val();
                 var data = {
                     type: 'notEquals',
@@ -625,9 +629,6 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 };
                 return data;
             } else {
-                if (!value) {
-                    return false;
-                }
                 var nameValue = this.$el.find('[name="' + this.nameName + '"]').val();
                 var data = {
                     type: 'equals',

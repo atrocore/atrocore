@@ -425,6 +425,12 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             }.bind(this));
         },
 
+        clearSearch: function () {
+            this.ids = [];
+
+            this.reRender();
+        },
+
         fetchSearch: function () {
             var type = this.$el.find('select.search-type').val();
 

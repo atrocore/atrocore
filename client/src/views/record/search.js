@@ -52,6 +52,8 @@ Espo.define('views/record/search', 'view', function (Dep) {
 
         advanced: null,
 
+        pinned: null,
+
         bool: null,
 
         disableSavePreset: false,
@@ -362,15 +364,23 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 this.toggleFilterActionsVisibility();
             },
             'click .advanced-filters a.remove-filter': function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+
                 var $target = $(e.currentTarget);
                 var name = $target.data('name');
 
                 this.$el.find('ul.filter-list li[data-name="' + name.split('-')[0] + '"]').removeClass('hide');
                 var container = this.getView('filter-' + name).$el.closest('div.filter');
-                this.clearView('filter-' + name);
-                container.remove();
-                delete this.advanced[name];
-                this.presetName = this.primary;
+
+                if (!(name in this.pinned) || this.pinned[name] === false) {
+                    this.clearView('filter-' + name);
+                    container.remove();
+                    delete this.advanced[name];
+                    this.presetName = this.primary;
+                } else {
+                    this.getView('filter-' + name).getView('field').clearSearch();
+                }
 
                 this.updateAddFilterButton();
 
@@ -461,8 +471,10 @@ Espo.define('views/record/search', 'view', function (Dep) {
             var isPreset = !(this.primary === this.presetName);
 
             if (forceClearAdvancedFilters || wasPreset || isPreset || Object.keys(advanced).length) {
-                this.removeFilters();
-                this.advanced = advanced;
+                if (Object.keys(this.pinned).length === 0) {
+                    this.removeFilters();
+                    this.advanced = advanced;
+                }
             }
 
             this.updateSearch();
@@ -484,6 +496,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
         silentResetFilters: function () {
             this.textFilter = '';
             this.presetName = '';
+
             this.selectPreset(this.presetName, true);
             this.toggleResetVisibility();
             this.toggleFilterActionsVisibility()
@@ -939,6 +952,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 this.advanced = Espo.Utils.clone(searchData.advanced);
             }
             this.bool = searchData.bool;
+            this.pinned = searchData.pinned;
         },
 
         createFilter: function (name, params, callback, noRender) {
@@ -973,7 +987,8 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 name: name,
                 model: this.model,
                 params: params,
-                el: this.options.el + ' .filter[data-name="' + name + '"]'
+                el: this.options.el + ' .filter[data-name="' + name + '"]',
+                pinned: this.pinned[name] || false
             }, function (view) {
                 if (typeof callback === 'function') {
                     view.once('after:render', function () {
@@ -983,6 +998,16 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 if (rendered && !noRender) {
                     view.render();
                 }
+
+                this.listenTo(view, 'pin-filter', function (pinned) {
+                    if (pinned) {
+                        this.pinned[view.name] = pinned;
+                    } else {
+                        delete this.pinned[view.name];
+                    }
+
+                    this.updateSearch();
+                });
             }.bind(this));
         },
 
@@ -1010,7 +1035,8 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 advanced: this.advanced,
                 bool: this.bool,
                 presetName: this.presetName,
-                primary: this.primary
+                primary: this.primary,
+                pinned: this.pinned
             });
         },
 

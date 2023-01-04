@@ -61,6 +61,10 @@ Espo.define('views/fields/bool', 'views/fields/base', function (Dep) {
             return data;
         },
 
+        clearSearch: function () {
+            this.$el.find('input[name=' + this.name + ']').prop('checked', true);
+        },
+
         fetchSearch: function () {
             var data = {
                 type: this.$element.get(0).checked ? 'isTrue' : 'isFalse',
