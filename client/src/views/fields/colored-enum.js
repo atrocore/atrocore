@@ -139,7 +139,12 @@ Espo.define('views/fields/colored-enum', 'views/fields/enum', function (Dep) {
                 }
             });
 
-            return '#' + (optionColors[key] || this.defaultBackgroundColor);
+            let result = (optionColors[key] || this.defaultBackgroundColor);
+            if (result.indexOf('#') < 0) {
+                result = '#' + result;
+            }
+
+            return result;
         },
 
         getFontColor(backgroundColor) {
