@@ -32,6 +32,14 @@
                         </ul>
                     </li>
                     {{/if}}
+                    {{#if additionalFilters}}
+                    {{#each additionalFilters}}
+                    <li class="divider"></li>
+                    <li class="dropdown-submenu">
+                        <a href="javascript:" data-filter-name="{{name}}" tabindex="-1">{{label}}</a>
+                    </li>
+                    {{/each}}
+                    {{/if}}
                     {{#if boolFilterListLength}}
                     <li class="divider"></li>
                     {{/if}}

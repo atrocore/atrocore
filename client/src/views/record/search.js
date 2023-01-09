@@ -84,7 +84,8 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 textFilterDisabled: this.textFilterDisabled,
                 viewMode: this.viewMode,
                 viewModeDataList: this.viewModeDataList || [],
-                hasViewModeSwitcher: this.viewModeList && this.viewModeList.length > 1
+                hasViewModeSwitcher: this.viewModeList && this.viewModeList.length > 1,
+                additionalFilters: this.additionalFilters
             };
 
             data.boolFilterListLength = 0;
@@ -100,6 +101,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
         },
 
         setup: function () {
+            this.additionalFilters = [];
             this.hiddenBoolFilterList = this.options.hiddenBoolFilterList || this.hiddenBoolFilterList;
             this.boolFilterData = this.options.boolFilterData || this.boolFilterData;
 
