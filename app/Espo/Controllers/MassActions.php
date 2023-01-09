@@ -47,7 +47,7 @@ class MassActions extends \Espo\Core\Controllers\Base
         }
 
         $useQueue = $request->headers('use-queue');
-        $viaQm = $useQueue === '1' || strtolower($useQueue) === 'true';
+        $viaQm = $useQueue === '1' || strtolower((string)$useQueue) === 'true';
 
         $data = (array)$data;
 
