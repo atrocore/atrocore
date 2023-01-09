@@ -2315,7 +2315,7 @@ class Record extends \Espo\Core\Services\Base
         // modify entity if header language exist
         if (!empty($language = $this->getHeaderLanguage())) {
             foreach ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields'], []) as $fieldName => $fieldData) {
-                if (!empty($fieldData['isMultilang'])) {
+                if (!empty($fieldData['isMultilang']) && $language !== 'main') {
                     $langField = $fieldName . ucfirst(Util::toCamelCase(strtolower($language)));
                     $entity->set($fieldName, $entity->get($langField));
                 }
@@ -2709,7 +2709,7 @@ class Record extends \Espo\Core\Services\Base
                 }
             }
 
-            if (!empty($language = $this->getHeaderLanguage())) {
+            if (!empty($language = $this->getHeaderLanguage()) && $language !== 'main') {
                 $newAttributeList = [];
                 foreach ($attributeList as $field) {
                     $newAttributeList[] = $field;

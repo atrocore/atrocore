@@ -101,8 +101,12 @@ abstract class Base implements Injectable
     {
         $language = self::getHeader('language');
         if (!empty($language)) {
-            $config = $this->getConfig();
-            if ($config->get('isMultilangActive') && in_array($language, $config->get('inputLanguageList', []))) {
+            $languages = ['main'];
+            if ($this->getConfig()->get('isMultilangActive')) {
+                $languages = array_merge($languages, $this->getConfig()->get('inputLanguageList', []));
+            }
+
+            if (in_array($language, $languages)) {
                 return $language;
             }
 
