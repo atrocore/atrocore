@@ -42,7 +42,6 @@ class Connection implements Factory
 {
     protected static array $drivers
         = [
-            'mysqli'    => '\Espo\Core\Utils\Database\DBAL\Driver\Mysqli\Driver',
             'pdo_mysql' => '\Espo\Core\Utils\Database\DBAL\Driver\PDOMySql\Driver',
         ];
 
