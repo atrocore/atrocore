@@ -28,8 +28,6 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word
  * and "AtroCore" word.
- *
- * This software is not allowed to be used in Russia and Belarus.
  */
 
 Espo.define('views/admin/auth-token/record/detail', 'views/record/detail', function (Dep) {
