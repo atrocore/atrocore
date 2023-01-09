@@ -269,7 +269,11 @@ class MassActions extends HasContainer
     {
         $ids = $this->handleIdsFromWhereCondition($entityType, $where);
 
-        $foreignEntityType = $this->getMetadata()->get(['entityDefs', $entityType, 'links', $link, 'entity']);
+        $foreignEntityType = $this->getMetadata()->get(['entityDefs', $entityType, 'links', $link, 'addRelationCustomDefs', 'entity']);
+        if (empty($foreignEntityType)) {
+            $foreignEntityType = $this->getMetadata()->get(['entityDefs', $entityType, 'links', $link, 'entity']);
+        }
+
         $foreignIds = $this->handleIdsFromWhereCondition($foreignEntityType, $foreignWhere);
 
         return $this->addRelation($ids, $foreignIds, $entityType, $link);
@@ -279,7 +283,11 @@ class MassActions extends HasContainer
     {
         $ids = $this->handleIdsFromWhereCondition($entityType, $where);
 
-        $foreignEntityType = $this->getMetadata()->get(['entityDefs', $entityType, 'links', $link, 'entity']);
+        $foreignEntityType = $this->getMetadata()->get(['entityDefs', $entityType, 'links', $link, 'addRelationCustomDefs', 'entity']);
+        if (empty($foreignEntityType)) {
+            $foreignEntityType = $this->getMetadata()->get(['entityDefs', $entityType, 'links', $link, 'entity']);
+        }
+
         $foreignIds = $this->handleIdsFromWhereCondition($foreignEntityType, $foreignWhere);
 
         return $this->removeRelation($ids, $foreignIds, $entityType, $link);
