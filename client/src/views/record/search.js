@@ -837,6 +837,10 @@ Espo.define('views/record/search', 'view', function (Dep) {
                     delete this.advanced[field];
                 }
             }
+
+            // set to searchManager
+            this.searchManager.set(_.extend(this.searchManager.get(), {advanced: this.advanced}));
+
             return arr;
         },
 
