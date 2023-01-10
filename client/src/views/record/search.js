@@ -988,10 +988,12 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 }
             }
 
-            this.createView('filter-' + name, params.filterView || 'treo-core:views/search/filter', {
+            let fieldParams = params.fieldParams || params;
+
+            this.createView('filter-' + name, fieldParams.filterView || 'treo-core:views/search/filter', {
                 name: name,
                 model: this.model,
-                params: params.fieldParams || params,
+                params: fieldParams,
                 searchParams: params,
                 el: this.options.el + ' .filter[data-name="' + name + '"]',
                 pinned: this.pinned[name] || false
