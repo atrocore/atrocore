@@ -329,39 +329,15 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 this.setViewMode(mode, false, true);
             },
             'click a[data-action="addFilter"]': function (e) {
-                var $target = $(e.currentTarget);
-                var name = $target.data('name');
-                var nameCount = 1;
-                var getLastIndexName = function () {
-                    if (this.advanced.hasOwnProperty(name + '-' + nameCount)) {
-                        nameCount++;
-                        getLastIndexName.call(this);
-                    }
-                };
-                getLastIndexName.call(this);
-                name = name + '-' + nameCount;
-                this.advanced[name] = {};
-                this.advanced = this.sortAdvanced(this.advanced);
+                const $target = $(e.currentTarget);
+                const name = $target.data('name');
 
-                var nameType = this.model.getFieldType(name.split('-')[0]);
+                const nameType = this.model.getFieldType(name.split('-')[0]);
                 if (this.typesWithOneFilter.includes(nameType)) {
                     $target.closest('li').addClass('hide');
                 }
 
-                this.presetName = this.primary;
-
-                this.createFilter(name, {}, function (view) {
-                    view.populateDefaults();
-                    this.fetch();
-                    this.updateSearch();
-                    this.setupOperatorLabels();
-                }.bind(this));
-                this.updateAddFilterButton();
-                this.handleLeftDropdownVisibility();
-
-                this.manageLabels();
-                this.toggleResetVisibility();
-                this.toggleFilterActionsVisibility();
+                this.addFilter(name, {});
             },
             'click .advanced-filters a.remove-filter': function (e) {
                 e.stopPropagation();
@@ -405,6 +381,35 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 e.stopPropagation();
                 e.preventDefault();
             }
+        },
+
+        addFilter(name, params) {
+            var nameCount = 1;
+            var getLastIndexName = function () {
+                if (this.advanced.hasOwnProperty(name + '-' + nameCount)) {
+                    nameCount++;
+                    getLastIndexName.call(this);
+                }
+            };
+            getLastIndexName.call(this);
+            name = name + '-' + nameCount;
+            this.advanced[name] = {};
+            this.advanced = this.sortAdvanced(this.advanced);
+
+            this.presetName = this.primary;
+
+            this.createFilter(name, params, function (view) {
+                view.populateDefaults();
+                this.fetch();
+                this.updateSearch();
+                this.setupOperatorLabels();
+            }.bind(this));
+            this.updateAddFilterButton();
+            this.handleLeftDropdownVisibility();
+
+            this.manageLabels();
+            this.toggleResetVisibility();
+            this.toggleFilterActionsVisibility();
         },
 
         toggleResetVisibility() {
@@ -983,10 +988,11 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 }
             }
 
-            this.createView('filter-' + name, 'treo-core:views/search/filter', {
+            this.createView('filter-' + name, params.filterView || 'treo-core:views/search/filter', {
                 name: name,
                 model: this.model,
-                params: params,
+                params: params.fieldParams || params,
+                searchParams: params,
                 el: this.options.el + ' .filter[data-name="' + name + '"]',
                 pinned: this.pinned[name] || false
             }, function (view) {
@@ -1021,8 +1027,6 @@ Espo.define('views/record/search', 'view', function (Dep) {
             }, this);
 
             for (var field in this.advanced) {
-                var data = {};
-                var method = 'fetch';
                 var view = this.getView('filter-' + field).getView('field');
                 this.advanced[field] = view.fetchSearch();
                 view.searchParams = this.advanced[field];
