@@ -23,38 +23,6 @@
         </div>
         <div class="col-md-5 admin-right-column">
             <div class="notifications-panel-container">{{{notificationsPanel}}}</div>
-            <div class="twitter-tape">
-                <a class="twitter-timeline" data-lang="en" data-dnt="true" data-width="500" href="https://twitter.com/atrocore_news?ref_src=twsrc%5Etfw">Tweets by atrocore_global</a>
-                <script>
-                    $('#twitter-wjs').remove();
-                    window.twttr = (function(d, s, id) {
-                        var js, fjs = d.getElementsByTagName(s)[0],
-                            t = window.twttr || {};
-                        if (d.getElementById(id)) return t;
-                        js = d.createElement(s);
-                        js.id = id;
-                        js.src = "https://platform.twitter.com/widgets.js";
-                        fjs.parentNode.insertBefore(js, fjs);
-                        t._e = [];
-                        t.ready = function(f) {
-                            t._e.push(f);
-                        };
-                        return t;
-                    }(document, "script", "twitter-wjs"));
-
-                    twttr.ready(function (twttr) {
-                        twttr.events.bind(
-                            'rendered',
-                            function (event) {
-                                $('.admin-right-column').css({
-                                    animation: 'fadein 1s',
-                                    opacity: 1
-                                });
-                            }
-                        );
-                    });
-                </script>
-            </div>
         </div>
     </div>
 </div>
