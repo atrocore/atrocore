@@ -1007,6 +1007,7 @@
     "emailIsInvalid": "Email for the field '%s' is not valid.",
     "noSuchUnit": "Unit '%s' for the field '%s' is not valid.",
     "noSuchOptions": "Value '%s' for the field '%s' is not valid.",
+    "noOptionsDefined": "Options for the field '%s' are not defined.",
     "fieldIsRequired": "Validation failed. '%s' is required.",
     "urlIsInvalid": "URL is invalid",
     "suchUrlExists": "Such URL is already exists",
