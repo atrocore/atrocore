@@ -2358,7 +2358,7 @@ class Record extends \Espo\Core\Services\Base
                     }
                     break;
                 case 'multiEnum':
-                    if (empty($defs['multilangField']) && !empty($defs['optionsIds'])) {
+                    if (empty($defs['multilangField']) && !empty($defs['optionsIds']) && !empty($entity->get($name))) {
                         $fieldsValues[$name] = [];
                         foreach ($entity->get($name) as $optionId) {
                             $key = array_search($optionId, $defs['optionsIds']);
