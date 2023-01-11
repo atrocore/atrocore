@@ -36,6 +36,7 @@ declare(strict_types=1);
 namespace Treo\Migrations;
 
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\ORM\Entity;
 use Espo\Core\Utils\Util;
 use Treo\Core\Migration\Base;
 
@@ -46,7 +47,6 @@ class V1Dot5Dot0 extends Base
         /** @var \Espo\Core\Utils\Metadata $metadata */
         $metadata = (new \Espo\Core\Application())->getContainer()->get('metadata');
 
-        $queries = [];
         foreach ($metadata->get('entityDefs') as $entityType => $entityDefs) {
             if (empty($entityDefs['fields'])) {
                 continue;
@@ -60,25 +60,55 @@ class V1Dot5Dot0 extends Base
                         continue;
                     }
 
+                    $tableName = Util::toUnderScore(lcfirst($entityType));
+                    $columnName = Util::toUnderScore(lcfirst($field));
+
                     if ($fieldDefs['type'] === 'enum') {
                         foreach ($fieldDefs['options'] as $k => $option) {
                             if ($option !== $fieldDefs['optionsIds'][$k]) {
-                                $tableName = Util::toUnderScore(lcfirst($entityType));
-                                $columnName = Util::toUnderScore(lcfirst($field));
-                                $queries[] = "UPDATE `$tableName` SET $columnName='{$fieldDefs['optionsIds'][$k]}' WHERE deleted=0 AND $columnName='{$option}'";
+                                $this->exec(
+                                    "UPDATE `$tableName` SET $tableName.$columnName='{$fieldDefs['optionsIds'][$k]}' WHERE deleted=0 AND $tableName.$columnName='{$option}'"
+                                );
                             }
                         }
+                    }
+
+                    if ($fieldDefs['type'] === 'multiEnum') {
+                        if (!Entity::areValuesEqual('arrayObject', $fieldDefs['options'], $fieldDefs['optionsIds'])) {
+                            $records = $this
+                                ->getPDO()
+                                ->query(
+                                    "SELECT id, $tableName.$columnName FROM `$tableName` WHERE deleted=0 AND $tableName.$columnName IS NOT NULL AND $tableName.$columnName!='[]'"
+                                )
+                                ->fetchAll(\PDO::FETCH_ASSOC);
+
+                            if (!empty($records)) {
+                                while (!empty($records)) {
+                                    $record = array_shift($records);
+                                    $values = [];
+                                    if (!empty($fieldData = @json_decode($record[$columnName]))) {
+                                        foreach ($fieldData as $v) {
+                                            $key = array_search($v, $fieldDefs['options']);
+                                            if ($key !== false) {
+                                                $values[] = $fieldDefs['optionsIds'][$key];
+                                            }
+                                        }
+                                    }
+                                    $values = json_encode($values);
+                                    $this->exec("UPDATE `$tableName` SET $tableName.$columnName='{$values}' WHERE deleted=0 AND id='{$record['id']}'");
+                                }
+                            }
+                        };
                     }
                 }
             }
         }
+    }
 
-        if (!empty($queries)) {
-            foreach ($queries as $query) {
-                echo $query . PHP_EOL;
-                $this->getPDO()->exec($query);
-            }
-        }
+    public function exec(string $query): void
+    {
+//        echo $query . PHP_EOL;
+        $this->getPDO()->exec($query);
     }
 
     public function down(): void
