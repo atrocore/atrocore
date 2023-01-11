@@ -948,6 +948,7 @@
     "emailIsInvalid": "Email для поля '%s' не допустим.",
     "noSuchUnit": "Единица измерения '%s' для поля '%s' не допустима.",
     "noSuchOptions": "Значение '%s' для поля '%s' не допустимо.",
+    "noOptionsDefined": "Опции для поля '%s' не заданы.",
     "fieldIsRequired": "Проверка не удалась. '%s' необходим.",
     "urlIsInvalid": "URL неправильный",
     "suchUrlExists": "Такой URL уже существует",
