@@ -13,6 +13,7 @@
             "type": "enum",
             "required": true,
             "prohibitedEmptyValue": true,
+            "optionsIds": ["Active", "Inactive"],
             "options": ["Active", "Inactive"]
         },
         "scheduling": {

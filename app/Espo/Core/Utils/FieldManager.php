@@ -174,20 +174,6 @@ class FieldManager extends Injectable
 
         $this->processHook('beforeSave', $type, $scope, $name, $fieldDefs, array('isNew' => $isNew));
 
-        if ($this->getMetadata()->get(['fields', $type, 'translatedOptions'])) {
-            if (isset($fieldDefs['translatedOptions'])) {
-                $translatedOptions = $fieldDefs['translatedOptions'];
-                $translatedOptions = json_decode(json_encode($fieldDefs['translatedOptions']), true);
-                if (isset($translatedOptions['_empty_'])) {
-                    $translatedOptions[''] = $translatedOptions['_empty_'];
-                    unset($translatedOptions['_empty_']);
-                }
-
-                $this->setTranslatedOptions($scope, $name, $translatedOptions, $isNew, $isCustom);
-                $isLabelChanged = true;
-            }
-        }
-
         if ($isNew) {
             $subFieldsDefs = $this->getMetadata()->get(['fields', $type, 'fields']);
             if ($subFieldsDefs) {
@@ -412,19 +398,9 @@ class FieldManager extends Injectable
         $this->getMetadata()->save();
 
         $this->getLanguage()->delete($scope, 'fields', $name);
-        $this->getLanguage()->delete($scope, 'options', $name);
         $this->getLanguage()->delete($scope, 'tooltips', $name);
 
         $this->getLanguage()->save();
-    }
-
-    protected function setTranslatedOptions($scope, $name, $value, $isNew, $isCustom)
-    {
-        if ($isNew || $isCustom) {
-            $this->getBaseLanguage()->set($scope, 'options', $name, $value);
-        }
-
-        $this->getLanguage()->set($scope, 'options', $name, $value);
     }
 
     protected function setLabel($scope, $name, $value, $isNew, $isCustom)
@@ -451,11 +427,9 @@ class FieldManager extends Injectable
     {
         $this->getLanguage()->delete($scope, 'fields', $name);
         $this->getLanguage()->delete($scope, 'tooltips', $name);
-        $this->getLanguage()->delete($scope, 'options', $name);
 
         $this->getBaseLanguage()->delete($scope, 'fields', $name);
         $this->getBaseLanguage()->delete($scope, 'tooltips', $name);
-        $this->getBaseLanguage()->delete($scope, 'options', $name);
     }
 
     protected function getFieldDefs($scope, $name)

@@ -986,9 +986,71 @@ class Record extends \Espo\Core\Services\Base
         }
     }
 
-    protected function handleInput($data)
+    public function modifyEnumValue(string $value, string $field): string
     {
+        $fieldLabel = $this->getInjection('language')->translate($field, 'fields', $this->entityType);
+        $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field]);
 
+        if (isset($fieldDefs['options']) && !isset($fieldDefs['optionsIds'])) {
+            throw new BadRequest(sprintf($this->getInjection('language')->translate('noSuchOptions', 'exceptions', 'Global'), $value, $fieldLabel));
+        }
+
+        $key = array_search($value, $fieldDefs['options']);
+        if ($key === false) {
+            throw new BadRequest(sprintf($this->getInjection('language')->translate('noSuchOptions', 'exceptions', 'Global'), $value, $fieldLabel));
+        }
+
+        return $fieldDefs['optionsIds'][$key];
+    }
+
+    public function modifyMultiEnumValue(array $values, string $field): array
+    {
+        $fieldLabel = $this->getInjection('language')->translate($field, 'fields', $this->entityType);
+        $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field]);
+
+        if (isset($fieldDefs['options']) && !isset($fieldDefs['optionsIds'])) {
+            throw new BadRequest(sprintf($this->getInjection('language')->translate('noOptionsDefined', 'exceptions', 'Global'), $fieldLabel));
+        }
+
+        $preparedValues = [];
+        foreach ($values as $v) {
+            $key = array_search($v, $fieldDefs['options']);
+            if ($key === false) {
+                throw new BadRequest(sprintf($this->getInjection('language')->translate('noSuchOptions', 'exceptions', 'Global'), $v, $fieldLabel));
+            }
+            $preparedValues[] = $fieldDefs['optionsIds'][$key];
+        }
+
+        return $preparedValues;
+    }
+
+    protected function handleInput(\stdClass $data): void
+    {
+        if (empty($data)) {
+            return;
+        }
+
+        foreach ($data as $field => $value) {
+            $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field]);
+            if (empty($fieldDefs['type'])) {
+                continue;
+            }
+
+            switch ($fieldDefs['type']) {
+                case 'enum':
+                    $data->{$field} = $this->modifyEnumValue($value, $field);
+                    if (property_exists($data, '_prev') && !empty($data->_prev) && property_exists($data->_prev, $field)) {
+                        $data->_prev->{$field} = $this->modifyEnumValue($data->_prev->{$field}, $field);
+                    }
+                    break;
+                case 'multiEnum':
+                    $data->{$field} = $this->modifyMultiEnumValue($value, $field);
+                    if (property_exists($data, '_prev') && !empty($data->_prev) && property_exists($data->_prev, $field)) {
+                        $data->_prev->{$field} = $this->modifyMultiEnumValue($data->_prev->{$field}, $field);
+                    }
+                    break;
+            }
+        }
     }
 
     protected function processDuplicateCheck(Entity $entity, $data)
@@ -2282,29 +2344,37 @@ class Record extends \Espo\Core\Services\Base
                     }
                     break;
                 case 'enum':
-                    if (!empty($defs['multilangField'])) {
-                        $value = $entity->get($defs['multilangField']);
-                        $key = array_search($value, $defs['optionsOriginal']);
+                    if (empty($defs['multilangField']) && !empty($defs['optionsIds'])) {
+                        $key = array_search($entity->get($name), $defs['optionsIds']);
                         if ($key !== false) {
-                            $value = $defs['options'][$key];
+                            $entity->set($name, $defs['options'][$key]);
+                            if (!empty($defs['isMultilang'])) {
+                                foreach ($defs['lingualFields'] as $lingualField) {
+                                    $lingualOptions = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $lingualField, 'options'], []);
+                                    $entity->set($lingualField, $lingualOptions[$key]);
+                                }
+                            }
                         }
-                        $entity->set($name, $value);
                     }
                     break;
                 case 'multiEnum':
-                    if (!empty($defs['multilangField'])) {
-                        $value = $entity->get($defs['multilangField']);
-                        if (!empty($value)) {
-                            $newValue = [];
-                            foreach ($value as $v) {
-                                $key = array_search($v, $defs['optionsOriginal']);
-                                if ($key !== false) {
-                                    $newValue[] = $defs['options'][$key];
+                    if (empty($defs['multilangField']) && !empty($defs['optionsIds'])) {
+                        $fieldsValues[$name] = [];
+                        foreach ($entity->get($name) as $optionId) {
+                            $key = array_search($optionId, $defs['optionsIds']);
+                            if ($key !== false) {
+                                $fieldsValues[$name][] = $defs['options'][$key];
+                                if (!empty($defs['isMultilang'])) {
+                                    foreach ($defs['lingualFields'] as $lingualField) {
+                                        $lingualOptions = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $lingualField, 'options'], []);
+                                        $fieldsValues[$lingualField][] = $lingualOptions[$key];
+                                    }
                                 }
                             }
-                            $value = $newValue;
                         }
-                        $entity->set($name, $value);
+                        foreach ($fieldsValues as $f => $v) {
+                            $entity->set($f, $v);
+                        }
                     }
                     break;
             }

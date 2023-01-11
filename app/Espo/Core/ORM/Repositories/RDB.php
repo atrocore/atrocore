@@ -263,7 +263,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     protected function validateEnum(Entity $entity, string $fieldName, array $fieldData): void
     {
         if (!isset($fieldData['view']) && $entity->isAttributeChanged($fieldName) && !empty($entity->get($fieldName))) {
-            $fieldOptions = empty($fieldData['options']) ? [] : $fieldData['options'];
+            $fieldOptions = empty($fieldData['optionsIds']) ? [] : $fieldData['optionsIds'];
             if (empty($fieldOptions) && $fieldData['type'] === 'multiEnum') {
                 return;
             }

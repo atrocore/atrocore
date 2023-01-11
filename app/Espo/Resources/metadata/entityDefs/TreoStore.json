@@ -21,6 +21,10 @@
     "status": {
       "type": "enum",
       "fontSize": 1,
+      "optionsIds": [
+        "buyable",
+        "available"
+      ],
       "options": [
         "buyable",
         "available"
@@ -40,6 +44,7 @@
       "type": "multiEnum",
       "storeArrayValues": true,
       "fontSize": 1,
+      "optionsIds": [],
       "options": []
     }
   },

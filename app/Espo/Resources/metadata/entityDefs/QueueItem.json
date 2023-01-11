@@ -29,6 +29,11 @@
       "type": "enum",
       "readOnly": true,
       "default": "Normal",
+      "optionsIds": [
+        "Low",
+        "Normal",
+        "High"
+      ],
       "options": [
         "Low",
         "Normal",
@@ -47,6 +52,13 @@
       "type": "enum",
       "readOnly": true,
       "default": "Pending",
+      "optionsIds": [
+        "Pending",
+        "Running",
+        "Success",
+        "Failed",
+        "Canceled"
+      ],
       "options": [
         "Pending",
         "Running",

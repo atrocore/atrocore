@@ -254,6 +254,8 @@ class Metadata extends AbstractListener
                         // prepare multi-lang field
                         $mField = $field . $preparedLocale;
 
+                        $newFields[$field]['lingualFields'][] = $mField;
+
                         // prepare params
                         $mParams = $params;
                         $mParams['isMultilang'] = false;
@@ -271,16 +273,13 @@ class Metadata extends AbstractListener
                                 $mParams['options'] = $mParams['options' . $preparedLocale];
                             }
                             if ($mParams['type'] == 'enum' && !empty($params['options'])) {
-                                $index = array_search($params['default'], $params['options']);
+                                $index = array_key_exists('default', $params) ? array_search($params['default'], $params['options']) : false;
                                 $mParams['default'] = $index !== false ? $mParams['options'][$index] : null;
                             } else {
                                 $mParams['default'] = null;
                             }
                             $mParams['required'] = false;
-                            $mParams['hideParams'] = array_merge(
-                                $mParams['hideParams'], ['options', 'default', 'required', 'isSorted', 'audited', 'readOnly', 'prohibitedEmptyValue']
-                            );
-                            $mParams['massUpdateDisabled'] = true;
+                            $mParams['emHidden'] = true;
                         }
 
                         if (isset($data['entityDefs'][$scope]['fields'][$mField])) {

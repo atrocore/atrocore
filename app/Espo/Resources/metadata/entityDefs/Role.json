@@ -8,6 +8,7 @@
         },
         "assignmentPermission": {
             "type": "enum",
+            "optionsIds": ["not-set", "all", "team", "no"],
             "options": ["not-set", "all", "team", "no"],
             "default": "not-set",
             "tooltip": true,
@@ -15,6 +16,7 @@
         },
         "portalPermission": {
             "type": "enum",
+            "optionsIds": ["not-set", "yes", "no"],
             "options": ["not-set", "yes", "no"],
             "default": "not-set",
             "tooltip": true,
@@ -22,6 +24,7 @@
         },
         "dataPrivacyPermission": {
             "type": "enum",
+            "optionsIds": ["not-set", "yes", "no"],
             "options": ["not-set", "yes", "no"],
             "default": "not-set",
             "tooltip": true,
