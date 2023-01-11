@@ -1014,7 +1014,6 @@
     "siteUrlEmpty": "Site URL is empty",
     "codeInvalid": "Code is invalid. Code should be unique. Only letters, numbers and char \"_\" expected.",
     "notDashletService": "Service %s must implement Dashlet Interface",
-    "fieldValueShouldBeUnique": "Field value should be unique.",
     "editedByAnotherUser": "The data set [%s] has been changed in the meantime. You can <a href=\"javascript:\" onclick=\"location.reload();\">reload the page</a> to see the new values, return to editing by pressing \"Cancel\" or overwrite the data by pressing \"Apply\". Do you want to overwrite the data?",
     "dontMatchToPattern": "The value of the field \"{field}\" does not correspond to the pattern \"{pattern}\".",
     "fieldShouldMustBeUnique": "Field '%s' should have unique value."

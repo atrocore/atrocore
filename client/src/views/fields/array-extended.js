@@ -73,12 +73,7 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
             this.langFieldNames = this.getLangFieldNames();
 
             if (this.model.get(this.name) && !this.model.get(this.name + 'Ids')) {
-                let optionsIds = [];
-                (this.model.get(this.name) || []).forEach((v, k) => {
-                    optionsIds.push(`${k}`);
-                });
-                this.model.set(this.name + 'Ids', optionsIds);
-
+                this.model.set(this.name + 'Ids', this.model.get(this.name));
                 if (!this.isAttribute) {
                     this.model.save().then(() => {
                         location.reload();
