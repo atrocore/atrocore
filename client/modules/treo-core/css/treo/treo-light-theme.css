@@ -5252,6 +5252,7 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
   vertical-align: baseline;
   -webkit-border-radius: .25em;
           border-radius: .25em;
+  margin: 0 3px 3px 0;
 }
 
 a.label:hover, a.label:focus {
