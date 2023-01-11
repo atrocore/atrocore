@@ -273,7 +273,7 @@ class Metadata extends AbstractListener
                                 $mParams['options'] = $mParams['options' . $preparedLocale];
                             }
                             if ($mParams['type'] == 'enum' && !empty($params['options'])) {
-                                $index = array_search($params['default'], $params['options']);
+                                $index = array_key_exists('default', $params) ? array_search($params['default'], $params['options']) : false;
                                 $mParams['default'] = $index !== false ? $mParams['options'][$index] : null;
                             } else {
                                 $mParams['default'] = null;

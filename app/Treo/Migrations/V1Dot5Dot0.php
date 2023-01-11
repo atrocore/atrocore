@@ -35,53 +35,54 @@ declare(strict_types=1);
 
 namespace Treo\Migrations;
 
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Utils\Util;
 use Treo\Core\Migration\Base;
 
 class V1Dot5Dot0 extends Base
 {
     public function up(): void
     {
-//        /** @var \Espo\Core\Utils\Metadata $metadata */
-//        $metadata = (new \Espo\Core\Application())->getContainer()->get('metadata');
-//
-//        foreach ($metadata->get('entityDefs') as $entityType => $entityDefs) {
-//            if (empty($entityDefs['fields'])) {
-//                continue;
-//            }
-//            foreach ($entityDefs['fields'] as $field => $fieldDefs) {
-//                if (empty($fieldDefs['type'])) {
-//                    continue;
-//                }
-//                if (in_array($fieldDefs['type'], ['enum', 'multiEnum'])) {
-//                    if (isset($fieldDefs['view']) || !isset($fieldDefs['options'])) {
-//                        continue;
-//                    }
-//
-//                    if (!isset($fieldDefs['optionsIds']) || count($fieldDefs['options']) !== count($fieldDefs['optionsIds'])) {
-//                        echo '<pre>';
-//                        print_r($entityType);
-//                        print_r($field);
-//                        print_r($fieldDefs);
-//                        die();
-//                    }
-//                }
-//            }
-//        }
+        /** @var \Espo\Core\Utils\Metadata $metadata */
+        $metadata = (new \Espo\Core\Application())->getContainer()->get('metadata');
 
-//        $this->execute("ALTER TABLE user ADD type VARCHAR(255) DEFAULT 'Token' COLLATE `utf8mb4_unicode_ci`");
-//        $this->execute("UPDATE user SET type='Token' WHERE 1");
+        $queries = [];
+        foreach ($metadata->get('entityDefs') as $entityType => $entityDefs) {
+            if (empty($entityDefs['fields'])) {
+                continue;
+            }
+            foreach ($entityDefs['fields'] as $field => $fieldDefs) {
+                if (empty($fieldDefs['type']) || !empty($fieldDefs['notStorable'])) {
+                    continue;
+                }
+                if (in_array($fieldDefs['type'], ['enum', 'multiEnum'])) {
+                    if (!isset($fieldDefs['optionsIds']) || !isset($fieldDefs['options'])) {
+                        continue;
+                    }
+
+                    if ($fieldDefs['type'] === 'enum') {
+                        foreach ($fieldDefs['options'] as $k => $option) {
+                            if ($option !== $fieldDefs['optionsIds'][$k]) {
+                                $tableName = Util::toUnderScore(lcfirst($entityType));
+                                $columnName = Util::toUnderScore(lcfirst($field));
+                                $queries[] = "UPDATE `$tableName` SET $columnName='{$fieldDefs['optionsIds'][$k]}' WHERE deleted=0 AND $columnName='{$option}'";
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!empty($queries)) {
+            foreach ($queries as $query) {
+                echo $query . PHP_EOL;
+                $this->getPDO()->exec($query);
+            }
+        }
     }
 
     public function down(): void
     {
-//        $this->execute("ALTER TABLE user DROP type");
-    }
-
-    protected function execute(string $query): void
-    {
-        try {
-            $this->getPDO()->exec($query);
-        } catch (\Throwable $e) {
-        }
+        throw new BadRequest('Downgrade is prohibited.');
     }
 }
