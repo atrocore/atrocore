@@ -21,6 +21,10 @@
     "status": {
       "type": "enum",
       "fontSize": 1,
+      "optionsIds": [
+        "buyable",
+        "available"
+      ],
       "options": [
         "buyable",
         "available"

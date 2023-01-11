@@ -17,6 +17,7 @@
         },
         "action": {
             "type": "enum",
+            "optionsIds": ["read", "update", "create", "delete"],
             "options": ["read", "update", "create", "delete"]
         },
         "createdAt": {

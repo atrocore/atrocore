@@ -4,6 +4,14 @@
       "type": "enum",
       "required": true,
       "prohibitedEmptyValue": true,
+      "optionsIds": [
+        "mysql",
+        "psql",
+        "msql",
+        "ftp",
+        "sftp",
+        "oauth2"
+      ],
       "options": [
         "mysql",
         "psql",
@@ -61,6 +69,9 @@
       "dataField": true,
       "required": false,
       "prohibitedEmptyValue": true,
+      "optionsIds": [
+        "client_credentials"
+      ],
       "options": [
         "client_credentials"
       ],
