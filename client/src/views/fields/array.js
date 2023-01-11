@@ -125,10 +125,6 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                 this.translatedOptions = Espo.Utils.clone(this.model.defs.fields[this.name].translatedOptions);
             }
 
-            if (this.translatedOptions === null) {
-                this.setupTranslation();
-            }
-
             if (this.options.customOptionList) {
                 this.setOptionList(this.options.customOptionList, true);
             }
@@ -149,35 +145,6 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                 $inputContainer.removeClass('hidden');
             } else {
                 $inputContainer.addClass('hidden');
-            }
-        },
-
-        setupTranslation: function () {
-            var t = {};
-            if (this.params.translation) {
-                var data = this.getLanguage().data;
-                var arr = this.params.translation.split('.');
-                var pointer = this.getLanguage().data;
-                arr.forEach(function (key) {
-                    if (key in pointer) {
-                        pointer = pointer[key];
-                        t = pointer;
-                    }
-                }, this);
-            } else {
-                t = this.translate(this.name, 'options', this.model.name);
-            }
-            this.translatedOptions = null;
-            var translatedOptions = {};
-            if (this.params.options) {
-                this.params.options.forEach(function (o) {
-                    if (typeof t === 'object' && o in t) {
-                        translatedOptions[o] = t[o];
-                    } else {
-                        translatedOptions[o] = o;
-                    }
-                }.bind(this));
-                this.translatedOptions = translatedOptions;
             }
         },
 
@@ -268,7 +235,7 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
 
             var data = [];
             (this.params.options || []).forEach(function (value) {
-                var label = this.getLanguage().translateOption(value, this.name, this.scope);
+                var label = value;
                 if (this.translatedOptions) {
                     if (value in this.translatedOptions) {
                         label = this.translatedOptions[value];
