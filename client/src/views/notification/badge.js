@@ -91,8 +91,12 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
         },
 
         hideNotRead: function () {
-            this.$badge.attr('title', this.translate('Notifications'));
-            this.$number.addClass('hidden').html('');
+            if (this.$badge) {
+                this.$badge.attr('title', this.translate('Notifications'));
+            }
+            if (this.$number) {
+                this.$number.addClass('hidden').html('');
+            }
         },
 
         refreshList: function () {
