@@ -747,6 +747,10 @@
       "isNotOneOf": "Ни один из",
       "noneOf": "Ни один из"
     },
+    "assetSearchRanges": {
+      "isEmpty": "Является NULL",
+      "isNotEmpty": "Не является NULL"
+    },
     "varcharSearchRanges": {
       "equals": "Равняется",
       "like": "Как (%)",
