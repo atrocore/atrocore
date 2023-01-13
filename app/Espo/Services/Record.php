@@ -996,7 +996,7 @@ class Record extends \Espo\Core\Services\Base
         }
 
         if (isset($fieldDefs['options']) && !isset($fieldDefs['optionsIds'])) {
-            throw new BadRequest(sprintf($this->getInjection('language')->translate('noSuchOptions', 'exceptions', 'Global'), $value, $fieldLabel));
+            return $value;
         }
 
         $key = array_search($value, $fieldDefs['options']);
