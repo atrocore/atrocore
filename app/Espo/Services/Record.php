@@ -995,7 +995,7 @@ class Record extends \Espo\Core\Services\Base
             return '';
         }
 
-        if (isset($fieldDefs['options']) && !isset($fieldDefs['optionsIds'])) {
+        if (!isset($fieldDefs['options']) || !isset($fieldDefs['optionsIds'])) {
             return $value;
         }
 
@@ -1012,8 +1012,8 @@ class Record extends \Espo\Core\Services\Base
         $fieldLabel = $this->getInjection('language')->translate($field, 'fields', $this->entityType);
         $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field]);
 
-        if (isset($fieldDefs['options']) && !isset($fieldDefs['optionsIds'])) {
-            throw new BadRequest(sprintf($this->getInjection('language')->translate('noOptionsDefined', 'exceptions', 'Global'), $fieldLabel));
+        if (!isset($fieldDefs['options']) || !isset($fieldDefs['optionsIds'])) {
+            return $values;
         }
 
         $preparedValues = [];
