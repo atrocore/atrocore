@@ -991,6 +991,10 @@ class Record extends \Espo\Core\Services\Base
         $fieldLabel = $this->getInjection('language')->translate($field, 'fields', $this->entityType);
         $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field]);
 
+        if (empty($fieldDefs['prohibitedEmptyValue']) && $value === '') {
+            return '';
+        }
+
         if (isset($fieldDefs['options']) && !isset($fieldDefs['optionsIds'])) {
             throw new BadRequest(sprintf($this->getInjection('language')->translate('noSuchOptions', 'exceptions', 'Global'), $value, $fieldLabel));
         }
