@@ -99,7 +99,7 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                 this.$element.val(valueList.join(':,:'));
 
                 (this.params.options || []).forEach(function (value) {
-                    var label = value;
+                    var label = this.getLanguage().translateOption(value, this.name, this.scope);
                     if (this.translatedOptions) {
                         if (value in this.translatedOptions) {
                             label = this.translatedOptions[value];

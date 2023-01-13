@@ -100,6 +100,29 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                 this.translatedOptions = Espo.Utils.clone(this.model.defs.fields[this.name].translatedOptions);
             }
 
+            this.setupTranslation();
+
+            if (this.translatedOptions === null) {
+                let translatedOptions = {};
+                let hasOptionTranslate = false;
+                (this.params.options || []).map(item => {
+                    translatedOptions[item] = this.getLanguage().translateOption(item, this.name, this.model.name);
+                    if (translatedOptions[item] !== item) {
+                        hasOptionTranslate = true;
+                    }
+                });
+                if (hasOptionTranslate) {
+                    this.translatedOptions = translatedOptions;
+                }
+            }
+
+            if (this.translatedOptions === null) {
+                this.translatedOptions = {};
+                (this.params.options || []).map(function (item) {
+                    this.translatedOptions[item] = this.getLanguage().translate(item, 'labels', this.model.name) || item;
+                }.bind(this));
+            }
+
             if (this.params.isSorted && this.translatedOptions) {
                 this.params.options = Espo.Utils.clone(this.params.options);
                 this.params.options = this.params.options.sort(function (v1, v2) {
@@ -127,6 +150,40 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                     if (this.model.isNew() && this.mode === 'edit' && !this.model.get('_duplicatingEntityId') && !this.params.default) {
                         this.model.set({[this.name]: ''});
                     }
+                }
+            }
+        },
+
+        setupTranslation: function () {
+            if (this.params.translation) {
+                var translationObj;
+                var data = this.getLanguage().data;
+                var arr = this.params.translation.split('.');
+                var pointer = this.getLanguage().data;
+                arr.forEach(function (key) {
+                    if (key in pointer) {
+                        pointer = pointer[key];
+                        translationObj = pointer;
+                    }
+                }, this);
+
+                this.translatedOptions = null;
+                var translatedOptions = {};
+                if (this.params.options) {
+                    this.params.options.forEach(function (item) {
+                        if (typeof translationObj === 'object' && item in translationObj) {
+                            translatedOptions[item] = translationObj[item];
+                        } else {
+                            translatedOptions[item] = item;
+                        }
+                    }, this);
+                    var value = this.model.get(this.name);
+                    if ((value || value === '') && !(value in translatedOptions)) {
+                        if (typeof translationObj === 'object' && value in translationObj) {
+                            translatedOptions[value] = translationObj[value];
+                        }
+                    }
+                    this.translatedOptions = translatedOptions;
                 }
             }
         },
@@ -255,7 +312,7 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
 
                 var data = [];
                 (this.params.options || []).forEach(function (value) {
-                    var label = value;
+                    var label = this.getLanguage().translateOption(value, this.name, this.scope);
                     if (this.translatedOptions) {
                         if (value in this.translatedOptions) {
                             label = this.translatedOptions[value];
