@@ -7,7 +7,7 @@
                 "Token"
             ],
             "optionsIds": [
-                "0"
+                "Token"
             ]
         },
         "account": {
@@ -45,6 +45,7 @@
         },
         "salutationName": {
             "type": "enum",
+            "optionsIds": ["", "Mr.", "Ms.", "Mrs.", "Dr."],
             "options": ["", "Mr.", "Ms.", "Mrs.", "Dr."]
         },
         "firstName": {
@@ -188,6 +189,7 @@
         },
         "gender": {
             "type": "enum",
+            "optionsIds": ["", "Male", "Female", "Neutral"],
             "options": ["", "Male", "Female", "Neutral"],
             "default": ""
         },

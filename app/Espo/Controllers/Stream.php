@@ -33,7 +33,7 @@
 
 namespace Espo\Controllers;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
 
 class Stream extends \Espo\Core\Controllers\Base
 {

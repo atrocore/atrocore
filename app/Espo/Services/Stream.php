@@ -932,14 +932,78 @@ class Stream extends \Espo\Core\Services\Base
 
         if ($entity->get('type') == 'Update') {
             $data = $entity->get('data');
-            if (!empty($data->fields) && count($data->fields) == 1) {
-                $fieldType = $this->getMetadata()->get(['entityDefs', $entity->get('parentType'), 'fields', $data->fields[0], 'type']);
-                if (in_array($fieldType,['text', 'wysiwyg'])) {
-                    $diff = (new HtmlDiff(html_entity_decode($data->attributes->was->{$data->fields[0]}), html_entity_decode($data->attributes->became->{$data->fields[0]})))->build();
-                    if ($fieldType == 'text') {
-                        $diff = nl2br($diff);
+
+            if (!empty($data->fields)) {
+                if (count($data->fields) == 1) {
+                    $fieldType = $this->getMetadata()->get(['entityDefs', $entity->get('parentType'), 'fields', $data->fields[0], 'type']);
+                    if (in_array($fieldType, ['text', 'wysiwyg'])) {
+                        $diff = (new HtmlDiff(html_entity_decode($data->attributes->was->{$data->fields[0]}), html_entity_decode($data->attributes->became->{$data->fields[0]})))->build();
+                        if ($fieldType == 'text') {
+                            $diff = nl2br($diff);
+                        }
+                        $entity->set('diff', $diff);
                     }
-                    $entity->set('diff',$diff);
+                }
+
+                foreach ($data->fields as $field) {
+                    $fieldDefs = $this->getMetadata()->get(['entityDefs', $entity->get('parentType'), 'fields', $field]);
+                    if (empty($fieldDefs['type'])) {
+                        continue;
+                    }
+
+                    switch ($fieldDefs['type']) {
+                        case 'enum':
+                            if (!isset($fieldDefs['optionsIds']) || !isset($fieldDefs['options'])) {
+                                break;
+                            }
+                            if (!empty($data->attributes->was->{$field})) {
+                                $key = array_search($data->attributes->was->{$field}, $fieldDefs['optionsIds']);
+                                if ($key !== false) {
+                                    $data->attributes->was->{$field} = $fieldDefs['options'][$key];
+                                }
+                            }
+
+                            if (!empty($data->attributes->became->{$field})) {
+                                $key = array_search($data->attributes->became->{$field}, $fieldDefs['optionsIds']);
+                                if ($key !== false) {
+                                    $data->attributes->became->{$field} = $fieldDefs['options'][$key];
+                                }
+                            }
+                            break;
+                        case 'multiEnum':
+                            if (!isset($fieldDefs['optionsIds']) || !isset($fieldDefs['options'])) {
+                                break;
+                            }
+
+                            if (!empty($data->attributes->was->{$field})) {
+                                $values = [];
+                                foreach ($data->attributes->was->{$field} as $v) {
+                                    $key = array_search($v, $fieldDefs['optionsIds']);
+                                    if ($key !== false) {
+                                        $values[] = $fieldDefs['options'][$key];
+                                    } else {
+                                        $values[] = $v;
+                                    }
+                                }
+
+                                $data->attributes->was->{$field} = $values;
+                            }
+
+                            if (!empty($data->attributes->became->{$field})) {
+                                $values = [];
+                                foreach ($data->attributes->became->{$field} as $v) {
+                                    $key = array_search($v, $fieldDefs['optionsIds']);
+                                    if ($key !== false) {
+                                        $values[] = $fieldDefs['options'][$key];
+                                    } else {
+                                        $values[] = $v;
+                                    }
+                                }
+
+                                $data->attributes->became->{$field} = $values;
+                            }
+                            break;
+                    }
                 }
             }
         }

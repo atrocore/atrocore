@@ -271,7 +271,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             }
 
-            if (this.getMetadata().get(`scopes.${this.entityType}.type`) === 'Hierarchy') {
+            if (this.getMetadata().get(`scopes.${this.entityType}.type`) === 'Hierarchy' && !this.model.isNew()) {
                 if (this.getAcl().check(this.entityType, 'edit')) {
                     this.dropdownItemList.push({
                         'label': 'inheritAllForChildren',

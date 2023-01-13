@@ -10,6 +10,7 @@
         },
         "status": {
             "type": "enum",
+            "optionsIds": ["Pending", "Running", "Success", "Failed"],
             "options": ["Pending", "Running", "Success", "Failed"],
             "default": "Pending"
         },
