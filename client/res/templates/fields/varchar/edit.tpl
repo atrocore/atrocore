@@ -1,0 +1,1 @@
+<input type="text" class="main-element form-control {{#if params.maxLength}}with-text-length{{/if}}" name="{{name}}" value="{{value}}" autocomplete="off">{{#if params.maxLength}}<span class="text-length-counter"><span class="current-length">0</span> / <span class="max-length">{{params.maxLength}}</span></span>{{/if}}
