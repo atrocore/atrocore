@@ -247,6 +247,7 @@ class Metadata extends AbstractListener
 
                 $newFields[$field] = $params;
                 if (!empty($data['fields'][$params['type']]['multilingual']) && !empty($params['isMultilang'])) {
+                    $newFields[$field]['lingualFields'] = [];
                     foreach ($locales as $locale) {
                         // prepare locale
                         $preparedLocale = ucfirst(Util::toCamelCase(strtolower($locale)));
@@ -254,7 +255,7 @@ class Metadata extends AbstractListener
                         // prepare multi-lang field
                         $mField = $field . $preparedLocale;
 
-                        $newFields[$field]['lingualFields'][] = $mField;
+                        $newFields[$field]['lingualFields'][$mField] = $mField;
 
                         // prepare params
                         $mParams = $params;
@@ -289,6 +290,7 @@ class Metadata extends AbstractListener
 
                         $newFields[$mField] = $mParams;
                     }
+                    $newFields[$field]['lingualFields'] = array_values($newFields[$field]['lingualFields']);
                 }
             }
             $data['entityDefs'][$scope]['fields'] = $newFields;
