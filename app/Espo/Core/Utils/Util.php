@@ -307,6 +307,10 @@ class Util
      */
     public static function fromCamelCase($name, $symbol = '_')
     {
+        if (empty($name)) {
+            return $name;
+        }
+
         if (is_array($name)) {
             foreach ($name as &$value) {
                 $value = static::fromCamelCase($value, $symbol);
