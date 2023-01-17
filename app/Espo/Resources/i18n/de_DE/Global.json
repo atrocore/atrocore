@@ -742,6 +742,10 @@
       "isNotOneOf": "Keiner von",
       "noneOf": "Keiner von"
     },
+    "assetSearchRanges": {
+      "isEmpty": "Ist NULL",
+      "isNotEmpty": "Ist nicht NULL"
+    },
     "fieldFilter": {
       "allValues": "Alle Werte",
       "filled": "Ausgefüllte Werte",

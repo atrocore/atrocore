@@ -683,6 +683,10 @@
       "isNotOneOf": "Ninguno de",
       "noneOf": "Ninguno de"
     },
+    "assetSearchRanges": {
+      "isEmpty": "Es NULL",
+      "isNotEmpty": "No es NULL"
+    },
     "varcharSearchRanges": {
       "equals": "Equivale",
       "like": "Es como (%)",

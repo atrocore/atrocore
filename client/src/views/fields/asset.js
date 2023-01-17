@@ -36,6 +36,8 @@ Espo.define('views/fields/asset', 'views/fields/image', function (Dep) {
 
         accept: false,
 
+        searchTemplate: 'fields/asset/search',
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
