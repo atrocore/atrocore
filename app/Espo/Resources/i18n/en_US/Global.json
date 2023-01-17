@@ -806,6 +806,10 @@
       "anyOf": "Any Of",
       "noneOf": "None Of"
     },
+    "assetSearchRanges": {
+      "isEmpty": "Is NULL",
+      "isNotEmpty": "Is not NULL"
+    },
     "varcharSearchRanges": {
       "equals": "Equals",
       "like": "Is Like (%)",
