@@ -20619,6 +20619,13 @@ button.category:focus {
     #main > .record > .detail > .row > .overview,
     #main > .record > .edit > .row > .overview {
         float: left;
+        display: flex;
+        flex-direction: column;
+    }
+
+    #main > .record > .detail > .row > .overview > .bottom,
+    #main > .record > .edit > .row > .overview > .bottom {
+        flex: 1;
     }
 
     #main > .record > .edit > .row > .side.fixed-top,
