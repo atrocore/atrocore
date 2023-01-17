@@ -18,12 +18,12 @@
          "type": "int"
       },
       {
-         "name":"showMoreDisabled",
+         "name":"seeMoreDisabled",
          "type":"bool",
          "tooltip": true
       },
       {
-         "name": "displayedHeight",
+         "name": "lengthOfCut",
          "type": "int",
          "default": 400,
          "min": 1,

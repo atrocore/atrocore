@@ -41,7 +41,7 @@ Espo.define('treo-core:views/fields/wysiwyg', 'class-replace!treo-core:views/fie
 
         showMoreText: false,
 
-        showMoreDisabled: false,
+        seeMoreDisabled: false,
 
         events: {
             'click a[data-action="seeMoreText"]': function (e) {
@@ -62,8 +62,8 @@ Espo.define('treo-core:views/fields/wysiwyg', 'class-replace!treo-core:views/fie
 
             Dep.prototype.setup.call(this);
 
-            this.detailMaxHeight = this.params.displayedHeight || this.detailMaxHeight;
-            this.showMoreDisabled = this.showMoreDisabled || this.params.showMoreDisabled;
+            this.detailMaxHeight = this.params.lengthOfCut || this.detailMaxHeight;
+            this.seeMoreDisabled = this.seeMoreDisabled || this.params.seeMoreDisabled;
             this.showMoreText = false;
         },
 
@@ -95,7 +95,7 @@ Espo.define('treo-core:views/fields/wysiwyg', 'class-replace!treo-core:views/fie
             });
 
             if (this.mode === 'detail' || this.mode === 'list') {
-                if ((!this.model.has('isHtml') || this.model.get('isHtml')) && !this.showMoreText && !this.showMoreDisabled) {
+                if ((!this.model.has('isHtml') || this.model.get('isHtml')) && !this.showMoreText && !this.seeMoreDisabled) {
                     this.applyFieldPartHiding(this.name);
                 }
             }
@@ -125,7 +125,7 @@ Espo.define('treo-core:views/fields/wysiwyg', 'class-replace!treo-core:views/fie
             }
 
             if (this.mode === 'list' || (this.mode === 'detail' && (this.model.has('isHtml') && !this.model.get('isHtml')))) {
-                if (text && !this.showMoreText && !this.showMoreDisabled) {
+                if (text && !this.showMoreText && !this.seeMoreDisabled) {
                     let isCut = false;
 
                     if (text.length > this.detailMaxLength) {
