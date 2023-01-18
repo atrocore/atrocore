@@ -332,7 +332,8 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $maxLength = (int)$fieldData['maxLength'];
 
         if ($length > $maxLength) {
-            throw new BadRequest(sprintf($this->getLanguage()->translate('maxLengthIsExceeded', 'exceptions', 'Global'), $fieldName, $maxLength, $length));
+            $fieldLabel = $this->getLanguage()->translate($fieldName, 'fields', $entity->getEntityType());
+            throw new BadRequest(sprintf($this->getLanguage()->translate('maxLengthIsExceeded', 'exceptions', 'Global'), $fieldLabel, $maxLength, $length));
         }
     }
 
