@@ -41,17 +41,6 @@ use Espo\ORM\Entity;
 
 class Relationship extends RDB
 {
-    protected function beforeSave(Entity $entity, array $options = [])
-    {
-        foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []) as $field => $fieldDefs) {
-            if (!empty($fieldDefs['relationshipField']) && empty($entity->get($field))) {
-                throw new BadRequest("Field '$field' for entity '{$entity->getEntityType()}' is required.");
-            }
-        }
-
-        parent::beforeSave($entity, $options);
-    }
-
     public function remove(Entity $entity, array $options = [])
     {
         try {
