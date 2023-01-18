@@ -1,3 +1,1 @@
-
-<textarea class="main-element form-control hidden auto-height" name="{{name}}" {{#if params.maxLength}} maxlength="{{params.maxLength}}"{{/if}} rows="{{rows}}"></textarea>
-<div class="summernote hidden"></div>
+<textarea class="main-element form-control hidden auto-height {{#if params.maxLength}}with-text-length{{/if}}" name="{{name}}" rows="{{rows}}"></textarea>{{#if params.maxLength}}<span class="text-length-counter"><span class="current-length">0</span> / <span class="max-length">{{params.maxLength}}</span></span>{{/if}}<div class="summernote hidden"></div>

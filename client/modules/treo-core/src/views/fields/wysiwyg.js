@@ -47,7 +47,13 @@ Espo.define('treo-core:views/fields/wysiwyg', 'class-replace!treo-core:views/fie
             'click a[data-action="seeMoreText"]': function (e) {
                 this.showMoreText = true;
                 this.reRender();
-            }
+            },
+            'keyup div.note-editable': function (e) {
+                this.updateTextCounter(this.$el.find('.note-editable').html());
+            },
+            'keyup textarea.note-codable': function (e) {
+                this.updateTextCounter(this.$el.find('.note-codable').val());
+            },
         },
 
         setup() {
@@ -77,6 +83,23 @@ Espo.define('treo-core:views/fields/wysiwyg', 'class-replace!treo-core:views/fie
             return $('<textarea />').html((html || '').replace(/<(?:.|\n)*?>/gm, ' ').replace(/\s\s+/g, ' ').trim()).text();
         },
 
+        updateTextCounter(text) {
+            let maxLength = this.params.maxLength;
+            if (!maxLength) {
+                return;
+            }
+
+            let textLength = text ? text.toString().length : 0;
+
+            let $el = this.$el.find('.text-length-counter .current-length');
+
+            $el.html(textLength);
+            $el.css('color', '');
+            if (maxLength < textLength) {
+                $el.css('color', 'red');
+            }
+        },
+
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
@@ -98,6 +121,10 @@ Espo.define('treo-core:views/fields/wysiwyg', 'class-replace!treo-core:views/fie
                 if ((!this.model.has('isHtml') || this.model.get('isHtml')) && !this.showMoreText && !this.seeMoreDisabled) {
                     this.applyFieldPartHiding(this.name);
                 }
+            }
+
+            if (this.mode === 'edit') {
+                this.updateTextCounter(this.$el.find('.note-editable').html());
             }
         },
 

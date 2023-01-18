@@ -18,6 +18,10 @@
          "type": "int"
       },
       {
+         "name":"maxLength",
+         "type":"int"
+      },
+      {
          "name":"seeMoreDisabled",
          "type":"bool",
          "tooltip": true
