@@ -2352,7 +2352,7 @@ class Record extends \Espo\Core\Services\Base
                         $key = array_search($entity->get($name), $defs['optionsIds']);
                         if ($key !== false) {
                             $entity->set($name, $defs['options'][$key]);
-                            if (!empty($defs['isMultilang'])) {
+                            if (!empty($defs['isMultilang']) && !empty($defs['lingualFields'])) {
                                 foreach ($defs['lingualFields'] as $lingualField) {
                                     $lingualOptions = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $lingualField, 'options'], []);
                                     $entity->set($lingualField, $lingualOptions[$key]);
@@ -2368,7 +2368,7 @@ class Record extends \Espo\Core\Services\Base
                             $key = array_search($optionId, $defs['optionsIds']);
                             if ($key !== false) {
                                 $fieldsValues[$name][] = $defs['options'][$key];
-                                if (!empty($defs['isMultilang'])) {
+                                if (!empty($defs['isMultilang']) && !empty($defs['lingualFields'])) {
                                     foreach ($defs['lingualFields'] as $lingualField) {
                                         $lingualOptions = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $lingualField, 'options'], []);
                                         $fieldsValues[$lingualField][] = $lingualOptions[$key];
