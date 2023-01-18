@@ -37,6 +37,7 @@ use Espo\Core\EventManager\Event;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Interfaces\Injectable;
 use Espo\Core\Utils\Json;
+use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityFactory;
@@ -254,8 +255,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     {
         if ($entity->isAttributeChanged($fieldName) && !empty($entity->get($fieldName))) {
             if (!filter_var($entity->get($fieldName), FILTER_VALIDATE_EMAIL)) {
-                $language = $this->getInjection('container')->get('language');
-                throw new BadRequest(sprintf($language->translate('emailIsInvalid', 'exceptions', 'Global'), $language->translate($fieldName, 'fields', $entity->getEntityType())));
+                throw new BadRequest(sprintf($this->getLanguage()->translate('emailIsInvalid', 'exceptions', 'Global'), $language->translate($fieldName, 'fields', $entity->getEntityType())));
             }
         }
     }
@@ -280,8 +280,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
             foreach ($value as $v) {
                 if (!in_array($v, $fieldOptions)) {
-                    $language = $this->getInjection('container')->get('language');
-                    throw new BadRequest(sprintf($language->translate('noSuchOptions', 'exceptions', 'Global'), $v, $language->translate($fieldName, 'fields', $entity->getEntityType())));
+                    throw new BadRequest(sprintf($this->getLanguage()->translate('noSuchOptions', 'exceptions', 'Global'), $v, $language->translate($fieldName, 'fields', $entity->getEntityType())));
                 }
             }
         }
@@ -294,7 +293,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     protected function validateUnit(Entity $entity, string $fieldName, array $fieldData): void
     {
-        $language = $this->getInjection('container')->get('language');
+        $language = $this->getLanguage();
 
         $unitsOfMeasure = $this->getConfig()->get('unitsOfMeasure');
         $unitsOfMeasure = empty($unitsOfMeasure) ? [] : Json::decode(Json::encode($unitsOfMeasure), true);
@@ -316,6 +315,35 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         if (!empty($unit) && !in_array($unit, $unitsOfMeasure[$measure]['unitList'])) {
             throw new BadRequest(sprintf($language->translate('noSuchUnit', 'exceptions', 'Global'), $unit, $fieldLabel));
         }
+    }
+
+    protected function validateVarchar(Entity $entity, string $fieldName, array $fieldData): void
+    {
+        $this->validateText($entity, $fieldName, $fieldData);
+    }
+
+    protected function validateText(Entity $entity, string $fieldName, array $fieldData): void
+    {
+        if (!isset($fieldData['maxLength'])) {
+            return;
+        }
+
+        $length = mb_strlen((string)$entity->get($fieldName));
+        $maxLength = (int)$fieldData['maxLength'];
+
+        if ($length > $maxLength) {
+            throw new BadRequest(sprintf($this->getLanguage()->translate('maxLengthIsExceeded', 'exceptions', 'Global'), $fieldName, $maxLength, $length));
+        }
+    }
+
+    protected function validateWysiwyg(Entity $entity, string $fieldName, array $fieldData): void
+    {
+        $this->validateText($entity, $fieldName, $fieldData);
+    }
+
+    protected function getLanguage(): Language
+    {
+        return $this->getInjection('container')->get('language');
     }
 
     protected function getUnitFieldMeasure(string $fieldName, Entity $entity): string

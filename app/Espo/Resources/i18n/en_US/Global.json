@@ -1004,6 +1004,7 @@
     "cd": "cd"
   },
   "exceptions": {
+    "maxLengthIsExceeded": "The allowed maximum length for \"%s\" is %s symbols, you current length is \"%s\" symbols.",
     "parentRecordsHaveDifferentValues": "Parent records have different values, value to inherit cannot be determined.",
     "nothingToInherit": "There is nothing to inherit.",
     "hasMultipleParents": "There is one or more records with multiple parents.",

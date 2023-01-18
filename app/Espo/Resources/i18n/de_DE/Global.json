@@ -919,6 +919,7 @@
     "list": "Liste"
   },
   "exceptions": {
+    "maxLengthIsExceeded": "Die zulässige maximale Länge für \"%s\" beträgt \"%s\" Symbole, Ihre aktuelle Länge beträgt \"%s\" Symbole.",
     "parentRecordsHaveDifferentValues": "Eltern-Datensätze haben unterschiedliche Werte, der zu vererbende Wert kann nicht bestimmt werden.",
     "nothingToInherit": "Es gibt nichts zu vererben.",
     "hasMultipleParents": "Es gibt einen oder mehr Datensätze mit mehreren Elterndatensätzen.",
