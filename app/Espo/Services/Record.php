@@ -1007,8 +1007,12 @@ class Record extends \Espo\Core\Services\Base
         return $fieldDefs['optionsIds'][$key];
     }
 
-    public function modifyMultiEnumValue(array $values, string $field): array
+    public function modifyMultiEnumValue(?array $values, string $field): array
     {
+        if ($values === null) {
+            return [];
+        }
+
         $fieldLabel = $this->getInjection('language')->translate($field, 'fields', $this->entityType);
         $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field]);
 
