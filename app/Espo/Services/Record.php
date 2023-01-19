@@ -1531,9 +1531,11 @@ class Record extends \Espo\Core\Services\Base
             throw new Error("No status field for entity type '{$this->entityType}'.");
         }
 
-        $statusList = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $statusField, 'options']);
-        if (empty($statusList)) {
+        if (empty($options = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $statusField, 'options']))) {
             throw new Error("No options for status field for entity type '{$this->entityType}'.");
+        }
+        if (empty($optionsIds = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $statusField, 'optionsIds']))) {
+            $optionsIds = $options;
         }
 
         $statusIgnoreList = $this->getMetadata()->get(['scopes', $this->entityType, 'kanbanStatusIgnoreList'], []);
@@ -1542,7 +1544,7 @@ class Record extends \Espo\Core\Services\Base
             'groupList' => []
         ];
 
-        foreach ($statusList as $status) {
+        foreach ($optionsIds as $k => $status) {
             if (in_array($status, $statusIgnoreList)) continue;
             if (!$status) continue;
 
@@ -1551,9 +1553,7 @@ class Record extends \Espo\Core\Services\Base
                 $statusField => $status
             ];
 
-            $o = (object) [
-                'name' => $status
-            ];
+            $o = (object)['name' => !array_key_exists($k, $options) ? $status : $options[$k]];
 
             $collectionSub = $this->getRepository()->find($selectParamsSub);
 
