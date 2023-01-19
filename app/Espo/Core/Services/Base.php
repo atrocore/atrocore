@@ -88,6 +88,16 @@ abstract class Base implements Injectable
         return null;
     }
 
+    public static function getLanguagePrism(): ?string
+    {
+        $language = self::getHeader('language');
+        if (!empty($GLOBALS['languagePrism'])) {
+            $language = $GLOBALS['languagePrism'];
+        }
+
+        return $language;
+    }
+
     /**
      * Init
      */
@@ -97,7 +107,7 @@ abstract class Base implements Injectable
 
     protected function getHeaderLanguage(): ?string
     {
-        $language = self::getHeader('language');
+        $language = self::getLanguagePrism();
         if (!empty($language)) {
             $languages = ['main'];
             if ($this->getConfig()->get('isMultilangActive')) {
