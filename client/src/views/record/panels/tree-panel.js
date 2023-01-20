@@ -357,9 +357,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             this.buildTree();
         },
 
-        buildTree() {
-            let data = null;
-
+        buildTree(data = null) {
             let whereData = this.getStorage().get('treeWhereData', this.treeScope) || [];
 
             let searchValue = this.getStorage().get('treeSearchValue', this.treeScope) || null;
@@ -368,10 +366,12 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                 whereData = [{"type": "textFilter", "value": searchValue}];
             }
 
-            if (whereData.length > 0) {
-                this.ajaxGetRequest(`${this.treeScope}/action/TreeData`, {"where": whereData}, {async: false}).then(response => {
-                    data = response.tree;
+            if (data === null && whereData.length > 0) {
+                this.getTreeEl().html(this.translate('Loading...'));
+                this.ajaxGetRequest(`${this.treeScope}/action/TreeData`, {"where": whereData}).then(response => {
+                    this.buildTree(response.tree);
                 });
+                return;
             }
 
             let treeData = {
