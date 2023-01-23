@@ -568,7 +568,7 @@ abstract class Entity implements IEntity
                             }
                             break;
                         case 'multiEnum':
-                            if (!empty($default)) {
+                            if (!empty($default) && (is_array($default) || is_object($default))) {
                                 foreach ($default as $v) {
                                     $key = array_search($v, $fieldData['options']);
                                     if ($key !== false) {
