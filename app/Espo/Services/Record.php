@@ -986,8 +986,12 @@ class Record extends \Espo\Core\Services\Base
         }
     }
 
-    public function modifyEnumValue(string $value, string $field): string
+    public function modifyEnumValue(?string $value, string $field): string
     {
+        if ($value === null) {
+            return '';
+        }
+
         $fieldLabel = $this->getInjection('language')->translate($field, 'fields', $this->entityType);
         $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field]);
 
