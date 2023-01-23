@@ -3096,8 +3096,9 @@ class Record extends \Espo\Core\Services\Base
     private function isNullField(Entity $entity, $field): bool
     {
         $isNull = is_null($entity->get($field)) || $entity->get($field) === '';
-        if ($isNull && !empty($relation = $entity->getFields()[$field]['relation'])) {
-            $relationValue = $entity->get($relation);
+        $fields = $entity->getFields();
+        if ($isNull && !empty($fields[$field]['relation'])) {
+            $relationValue = $entity->get($fields[$field]['relation']);
             if ($relationValue instanceof \Espo\ORM\EntityCollection) {
                 $isNull = $relationValue->count() === 0;
             } else {
