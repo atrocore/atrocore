@@ -53,8 +53,6 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
 
             const treePanel = this.getView('treePanel');
 
-            treePanel.buildTree();
-
             let observer = new ResizeObserver(() => {
                 if (treePanel && treePanel.$el) {
                     this.onTreeResize();
