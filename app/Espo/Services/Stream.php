@@ -666,10 +666,11 @@ class Stream extends \Espo\Core\Services\Base
                 if (!empty($data->fields) && count($data->fields) == 1) {
                     $fieldType = $this->getMetadata()->get(['entityDefs', $e->get('parentType'), 'fields', $data->fields[0], 'type']);
                     if (in_array($fieldType,['text', 'wysiwyg'])) {
-                        $diff = (new HtmlDiff(html_entity_decode($data->attributes->was->{$data->fields[0]}), html_entity_decode($data->attributes->became->{$data->fields[0]})))->build();
+                        $became = $data->attributes->became->{$data->fields[0]};
                         if ($fieldType == 'text') {
-                            $diff = nl2br($diff);
+                            $became = nl2br($became);
                         }
+                        $diff = (new HtmlDiff(html_entity_decode($data->attributes->was->{$data->fields[0]}), html_entity_decode($became)))->build();
                         $e->set('diff',$diff);
                     }
 
@@ -937,10 +938,12 @@ class Stream extends \Espo\Core\Services\Base
                 if (count($data->fields) == 1) {
                     $fieldType = $this->getMetadata()->get(['entityDefs', $entity->get('parentType'), 'fields', $data->fields[0], 'type']);
                     if (in_array($fieldType, ['text', 'wysiwyg'])) {
-                        $diff = (new HtmlDiff(html_entity_decode($data->attributes->was->{$data->fields[0]}), html_entity_decode($data->attributes->became->{$data->fields[0]})))->build();
+                        $became = $data->attributes->became->{$data->fields[0]};
                         if ($fieldType == 'text') {
-                            $diff = nl2br($diff);
+                            $became = nl2br($became);
                         }
+
+                        $diff = (new HtmlDiff(html_entity_decode($data->attributes->was->{$data->fields[0]}), html_entity_decode($became)))->build();
                         $entity->set('diff', $diff);
                     }
                 }
