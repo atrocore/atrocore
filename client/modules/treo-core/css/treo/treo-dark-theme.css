@@ -15960,12 +15960,15 @@ table.table > tbody td > .list-row-buttons button {
     display: block;
 }
 
+.filter a.pin-filter {
+    margin-right: 5px;
+}
+
 .filter a.pin-filter > i {
     font-size: 14px;
 }
 
 .filter a.pin-filter:not(.pinned) {
-    margin-top: -2px;
     transform: rotate(45deg);
 }
 
