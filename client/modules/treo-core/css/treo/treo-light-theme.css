@@ -19654,12 +19654,12 @@ table.table > thead th > div > a {
     z-index: 2;
   }
 
-  #main .catalog-tree-panel > .category-panel-resizer {
+  #main .catalog-tree-panel .category-panel-resizer {
     width: 2px;
     height: 100%;
     position: absolute;
     top: 0;
-    right: 0;
+    right: -10px;
     cursor: col-resize;
   }
 
@@ -19676,7 +19676,7 @@ table.table > thead th > div > a {
     cursor: col-resize;
   }
 
-  #main .catalog-tree-panel.catalog-tree-panel-hidden > .category-panel-resizer {
+  #main .catalog-tree-panel.catalog-tree-panel-hidden .category-panel-resizer {
     cursor: default;
   }
 
