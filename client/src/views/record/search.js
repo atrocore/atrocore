@@ -349,13 +349,13 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 this.$el.find('ul.filter-list li[data-name="' + name.split('-')[0] + '"]').removeClass('hide');
                 var container = this.getView('filter-' + name).$el.closest('div.filter');
 
-                if (!(name in this.pinned) || this.pinned[name] === false) {
-                    this.clearView('filter-' + name);
-                    container.remove();
-                    delete this.advanced[name];
-                    this.presetName = this.primary;
-                } else {
-                    this.getView('filter-' + name).getView('field').clearSearch();
+                this.clearView('filter-' + name);
+                container.remove();
+                delete this.advanced[name];
+                this.presetName = this.primary;
+
+                if (name in this.pinned) {
+                    delete this.pinned[name];
                 }
 
                 this.updateAddFilterButton();
@@ -368,6 +368,8 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 this.setupOperatorLabels();
                 this.toggleResetVisibility();
                 this.toggleFilterActionsVisibility();
+
+                this.search();
             },
             'keypress .field input[type="text"]': function (e) {
                 if (e.keyCode === 13) {
@@ -509,6 +511,12 @@ Espo.define('views/record/search', 'view', function (Dep) {
 
         resetFilters: function () {
             this.trigger('reset');
+
+            for (let field in this.advanced) {
+                this.getView('filter-' + field).getView('field').clearSearch();
+            }
+
+            this.fetch();
             this.silentResetFilters();
         },
 
@@ -851,6 +859,14 @@ Espo.define('views/record/search', 'view', function (Dep) {
         },
 
         updateCollection() {
+            let advanced = {};
+            for (let field in this.advanced) {
+                if (!('value' in this.advanced[field]) || ![null, ''].includes(this.advanced[field].value)) {
+                    advanced[field] = this.advanced[field];
+                }
+            }
+            this.searchManager.set(_.extend(this.searchManager.get(), {advanced: advanced}));
+
             this.collection.reset();
             this.notify('Please wait...');
             this.listenTo(this.collection, 'sync', function () {
