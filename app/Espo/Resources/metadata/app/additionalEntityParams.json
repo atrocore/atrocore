@@ -82,6 +82,15 @@
       ],
       "default": false,
       "tooltip": true
+    },
+    "childBehavior": {
+      "type": "enum",
+      "types": [
+        "Hierarchy"
+      ],
+      "view": "views/admin/entity-manager/fields/child-behavior",
+      "default": false,
+      "tooltip": true
     }
   },
   "layout": {
@@ -119,6 +128,9 @@
         [
           "relationInheritance",
           "unInheritedRelations"
+        ],
+        [
+          "childBehavior"
         ]
       ]
     },

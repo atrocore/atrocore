@@ -17,7 +17,8 @@
     "unInheritedFields": "Uninherited Fields",
     "relationInheritance": "Relation Inheritance",
     "unInheritedRelations": "Uninherited Relations",
-    "hasAssignedUser": "Assigned User",
+    "childBehavior":"Behavior on parent item change/removal",
+    "hasAssignedUser": "Assigned User", 
     "hasTeam": "Teams",
     "hasAccount": "Accounts",
     "hasOwner": "Owner",
@@ -60,6 +61,11 @@
     "sortDirection": {
       "asc": "Ascending",
       "desc": "Descending"
+    },
+    "childBehavior": {
+         "Nothing": "Do nothing",
+         "Retain": "Retain all previously inherited and inherit new values",
+         "Remove": "Remove all previously inherited and inherit new values"
     }
   },
   "messages": {
@@ -72,6 +78,7 @@
     "relationshipField": "Check this option to mark the foreign entity as the target entity for a relationship. All target entities together build up a unique index.",
     "unInheritedFields": "Values for these fields will not be inherited from parent item.",
     "unInheritedRelations": "Relations with these entities will not be inherited from parent item.",
+    "childBehavior":"Behavior on parent item change/removal",
     "hasAssignedUser": "Show Assigned User in Access Management",
     "hasTeam": "Show Teams in Access Management",
     "hasAccount": "Show Accounts in Access Management",
