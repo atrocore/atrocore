@@ -52,6 +52,8 @@ class Util
 
     public static function replaceDiacriticalCharacters(string $value): string
     {
+        $value = strtolower($value);
+
         $diacriticalSymbolsReplaceMap = [
             'a' => 'ÀÁÂÃÅÆĀĂĄàáâãåæāăą',
             'ae' => 'Ää',
