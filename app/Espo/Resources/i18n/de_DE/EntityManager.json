@@ -16,7 +16,6 @@
     "unInheritedFields": "Nicht Vererbte Felder",
     "relationInheritance": "Relationsvererbung",
     "unInheritedRelations": "Nicht Vererbte Relationen",
-    "childBehavior":"Verhalten beim Ändern/Entfernen des übergeordneten",
     "statusField": "Statusfeld",
     "hasAssignedUser": "Zugewiesener Benutzer",
     "hasTeam": "Teams",
@@ -57,11 +56,6 @@
     "sortDirection": {
       "asc": "Aufsteigend",
       "desc": "Absteigend"
-    },
-    "childBehavior": {
-         "Nothing": "Nichts tun",
-         "Retain": "Alle zuvor vererbten Werte behalten und neue Werte vererben",
-         "Remove": "Alle zuvor vererbten Werte entfernen und neue Werte vererben"
     }
   },
   "messages": {
