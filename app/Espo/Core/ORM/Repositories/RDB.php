@@ -331,10 +331,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     {
         parent::beforeSave($entity, $options);
 
-        if ($entity->hasField('code') && empty($entity->get('code')) && $entity->hasField('name')) {
-            $entity->set('code', Util::replaceDiacriticalCharacters(str_replace(' ', '_', strtolower((string)$entity->get('name')))));
-        }
-
         if (empty($options['skipAll'])) {
             $this->validateFieldsByType($entity);
         }
