@@ -1585,9 +1585,9 @@ class Base
         }
     }
 
-    protected function prepareValueOptions($value, string $field)
+    protected function prepareValueOptions($value, $field)
     {
-        if (!is_array($value)) {
+        if (!is_array($value) || !is_string($field)) {
             return $value;
         }
 
