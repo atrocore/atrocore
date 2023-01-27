@@ -1210,11 +1210,11 @@ class Base
                     break;
 
                 case 'in':
-                    $part[$attribute . '='] = $value;
+                    $part[$attribute . '='] = $this->prepareValueOptions($value, $item['attribute']);
                     break;
 
                 case 'notIn':
-                    $part[$attribute . '!='] = $value;
+                    $part[$attribute . '!='] = $this->prepareValueOptions($value, $item['attribute']);
                     break;
 
                 case 'isNull':
@@ -1509,6 +1509,7 @@ class Base
 
                     if ($type === 'arrayAnyOf') {
                         if (is_null($value) || !$value && !is_array($value)) break;
+                        $value = $this->prepareValueOptions($value, $attribute);
                         $this->addLeftJoin(['ArrayValue', $arrayValueAlias, [
                             $arrayValueAlias . '.entityId:' => $idPart,
                             $arrayValueAlias . '.entityType' => $arrayEntityType,
@@ -1517,6 +1518,7 @@ class Base
                         $part[$arrayValueAlias . '.value'] = $value;
                     } else if ($type === 'arrayNoneOf') {
                         if (is_null($value) || !$value && !is_array($value)) break;
+                        $value = $this->prepareValueOptions($value, $attribute);
                         $this->addLeftJoin(['ArrayValue', $arrayValueAlias, [
                             $arrayValueAlias . '.entityId:' => $idPart,
                             $arrayValueAlias . '.entityType' => $arrayEntityType,
@@ -1581,6 +1583,27 @@ class Base
                 $impl->applyFilter($this->entityType, $filterName, $result, $this);
             }
         }
+    }
+
+    protected function prepareValueOptions($value, string $field)
+    {
+        if (!is_array($value)) {
+            return $value;
+        }
+
+        $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field]);
+        if (!empty($fieldDefs['optionsIds']) && !empty($fieldDefs['options'])) {
+            $preparedValue = [];
+            foreach ($value as $v) {
+                $key = array_search($v, $fieldDefs['options']);
+                if ($key !== false) {
+                    $preparedValue[] = $fieldDefs['optionsIds'][$key];
+                }
+            }
+            $value = $preparedValue;
+        }
+
+        return $value;
     }
 
     public function applyFilter($filterName, &$result)
