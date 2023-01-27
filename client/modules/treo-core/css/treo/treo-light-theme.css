@@ -15718,12 +15718,15 @@ table.table > tbody td > .list-row-buttons button {
   display: block;
 }
 
+.filter a.pin-filter {
+  margin-right: 5px;
+}
+
 .filter a.pin-filter > i {
   font-size: 14px;
 }
 
 .filter a.pin-filter:not(.pinned) {
-  margin-top: -2px;
   transform: rotate(45deg);
 }
 
@@ -19573,6 +19576,12 @@ table.table > thead th > div > a {
   margin: 0;
 }
 
+@media screen and (min-width: 768px) {
+  #main .catalog-tree-panel > .category-panel {
+    min-height: 100%;
+  }
+}
+
 #main .catalog-tree-panel > .category-panel > .no-data {
   padding: 7px 5px 5px 5px;
 }
@@ -19654,12 +19663,12 @@ table.table > thead th > div > a {
     z-index: 2;
   }
 
-  #main .catalog-tree-panel > .category-panel-resizer {
+  #main .catalog-tree-panel .category-panel-resizer {
     width: 2px;
     height: 100%;
     position: absolute;
     top: 0;
-    right: 0;
+    right: -10px;
     cursor: col-resize;
   }
 
@@ -19676,7 +19685,7 @@ table.table > thead th > div > a {
     cursor: col-resize;
   }
 
-  #main .catalog-tree-panel.catalog-tree-panel-hidden > .category-panel-resizer {
+  #main .catalog-tree-panel.catalog-tree-panel-hidden .category-panel-resizer {
     cursor: default;
   }
 

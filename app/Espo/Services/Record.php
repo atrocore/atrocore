@@ -986,8 +986,12 @@ class Record extends \Espo\Core\Services\Base
         }
     }
 
-    public function modifyEnumValue(string $value, string $field): string
+    public function modifyEnumValue(?string $value, string $field): string
     {
+        if ($value === null) {
+            return '';
+        }
+
         $fieldLabel = $this->getInjection('language')->translate($field, 'fields', $this->entityType);
         $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field]);
 
@@ -1007,8 +1011,12 @@ class Record extends \Espo\Core\Services\Base
         return $fieldDefs['optionsIds'][$key];
     }
 
-    public function modifyMultiEnumValue(array $values, string $field): array
+    public function modifyMultiEnumValue(?array $values, string $field): array
     {
+        if ($values === null) {
+            return [];
+        }
+
         $fieldLabel = $this->getInjection('language')->translate($field, 'fields', $this->entityType);
         $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field]);
 
@@ -1531,9 +1539,11 @@ class Record extends \Espo\Core\Services\Base
             throw new Error("No status field for entity type '{$this->entityType}'.");
         }
 
-        $statusList = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $statusField, 'options']);
-        if (empty($statusList)) {
+        if (empty($options = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $statusField, 'options']))) {
             throw new Error("No options for status field for entity type '{$this->entityType}'.");
+        }
+        if (empty($optionsIds = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $statusField, 'optionsIds']))) {
+            $optionsIds = $options;
         }
 
         $statusIgnoreList = $this->getMetadata()->get(['scopes', $this->entityType, 'kanbanStatusIgnoreList'], []);
@@ -1542,7 +1552,7 @@ class Record extends \Espo\Core\Services\Base
             'groupList' => []
         ];
 
-        foreach ($statusList as $status) {
+        foreach ($optionsIds as $k => $status) {
             if (in_array($status, $statusIgnoreList)) continue;
             if (!$status) continue;
 
@@ -1551,9 +1561,7 @@ class Record extends \Espo\Core\Services\Base
                 $statusField => $status
             ];
 
-            $o = (object) [
-                'name' => $status
-            ];
+            $o = (object)['name' => !array_key_exists($k, $options) ? $status : $options[$k]];
 
             $collectionSub = $this->getRepository()->find($selectParamsSub);
 
@@ -2362,7 +2370,7 @@ class Record extends \Espo\Core\Services\Base
                     }
                     break;
                 case 'multiEnum':
-                    if (empty($defs['multilangField']) && !empty($defs['optionsIds']) && !empty($entity->get($name))) {
+                    if (empty($defs['multilangField']) && !empty($defs['optionsIds']) && !empty($entity->get($name)) && (is_array($entity->get($name)) || is_object($entity->get($name)))) {
                         $fieldsValues[$name] = [];
                         foreach ($entity->get($name) as $optionId) {
                             $key = array_search($optionId, $defs['optionsIds']);
@@ -3088,8 +3096,9 @@ class Record extends \Espo\Core\Services\Base
     private function isNullField(Entity $entity, $field): bool
     {
         $isNull = is_null($entity->get($field)) || $entity->get($field) === '';
-        if ($isNull && !empty($relation = $entity->getFields()[$field]['relation'])) {
-            $relationValue = $entity->get($relation);
+        $fields = $entity->getFields();
+        if ($isNull && !empty($fields[$field]['relation'])) {
+            $relationValue = $entity->get($fields[$field]['relation']);
             if ($relationValue instanceof \Espo\ORM\EntityCollection) {
                 $isNull = $relationValue->count() === 0;
             } else {

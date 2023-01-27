@@ -554,13 +554,39 @@ abstract class Entity implements IEntity
     public function populateDefaults()
     {
         foreach ($this->fields as $field => $defs) {
+            $fieldData = $this->getEntityManager()->getEspoMetadata()->get(['entityDefs', $this->entityType, 'fields', $field], []);
             if (array_key_exists('default', $defs)) {
-                $this->setFieldValue($field, $defs['default']);
+                $default = $defs['default'];
+
+                // default for enum and multiEnum
+                if (!empty($fieldData['type']) && !empty($fieldData['options']) && !empty($fieldData['optionsIds'])) {
+                    switch ($fieldData['type']) {
+                        case 'enum':
+                            $key = array_search($default, $fieldData['options']);
+                            if ($key !== false) {
+                                $default = $fieldData['optionsIds'][$key];
+                            }
+                            break;
+                        case 'multiEnum':
+                            if (!empty($default) && (is_array($default) || is_object($default))) {
+                                foreach ($default as $v) {
+                                    $key = array_search($v, $fieldData['options']);
+                                    if ($key !== false) {
+                                        $ids[] = $fieldData['optionsIds'][$key];
+                                    }
+                                }
+                                if (!empty($ids)) {
+                                    $default = $ids;
+                                }
+                            }
+                            break;
+                    }
+                }
+                $this->setFieldValue($field, $default);
             }
 
             // default for unit
             if (isset($this->fields[$field . 'Unit'])) {
-                $fieldData = $this->getEntityManager()->getEspoMetadata()->get(['entityDefs', $this->entityType, 'fields', $field], []);
                 if (!empty($fieldData['type']) && $fieldData['type'] === 'unit' && !empty($fieldData['defaultUnit'])) {
                     $this->setFieldValue($field . 'Unit', $fieldData['defaultUnit']);
                 }

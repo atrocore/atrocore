@@ -53,6 +53,10 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
         mode: null,
 
         getConfirmMessage: function (_prev, attrs, model) {
+            if (model._confirmMessage) {
+                return model._confirmMessage;
+            }
+
             let confirmMessage = null;
             if (this.model.get('id')) {
                 let confirmations = this.getMetadata().get(`clientDefs.${model.urlRoot}.confirm`) || {};
@@ -524,9 +528,9 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
             this.trigger('before:save', attrs);
             model.trigger('before:save', attrs);
 
-            let confirmMessage = this.getConfirmMessage(_prev, attrs, model);
-
             this.notify(false);
+
+            let confirmMessage = this.getConfirmMessage(_prev, attrs, model);
             if (confirmMessage) {
                 Espo.Ui.confirm(confirmMessage, {
                     confirmText: self.translate('Apply'),
