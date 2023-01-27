@@ -188,14 +188,19 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
                 return;
             }
 
+            let $textarea = this.$el.find('textarea');
+
             let text = this.$el.find('textarea').val();
             let textLength = text ? text.toString().length : 0;
 
             let $el = this.$el.find('.text-length-counter .current-length');
 
             $el.html(textLength);
+
+            $textarea.css('border-color', '');
             $el.css('color', '');
             if (maxLength < textLength) {
+                $textarea.css('border-color', 'red');
                 $el.css('color', 'red');
             }
         },
@@ -224,7 +229,7 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
 
         fetchSearch: function () {
 
-            var type = this.$el.find('[name="'+this.name+'-type"]').val() || 'startsWith';
+            var type = this.$el.find('[name="' + this.name + '-type"]').val() || 'startsWith';
 
             var data;
 
