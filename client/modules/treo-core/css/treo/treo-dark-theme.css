@@ -20103,6 +20103,12 @@ select,
     margin: 0;
 }
 
+@media screen and (min-width: 768px) {
+    #main .catalog-tree-panel > .category-panel {
+        min-height: 100%;
+    }
+}
+
 #main .catalog-tree-panel > .category-panel > .no-data {
     padding: 7px 5px 5px 5px;
 }
