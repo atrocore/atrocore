@@ -36,6 +36,8 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
 
         type: 'varchar',
 
+        editTemplate: 'fields/varchar/edit',
+
         detailTemplate: 'fields/varchar/detail',
 
         searchTemplate: 'fields/varchar/search',
@@ -43,6 +45,12 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
         searchTypeList: ['startsWith', 'contains', 'equals', 'endsWith', 'like', 'notContains', 'notEquals', 'notLike', 'isEmpty', 'isNotEmpty'],
 
         validationPattern: null,
+
+        events: {
+            'keyup input.with-text-length': function (e) {
+                this.updateTextCounter();
+            },
+        },
 
         setup() {
             Dep.prototype.setup.call(this);
@@ -93,11 +101,37 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
             }
         },
 
+        updateTextCounter() {
+            let maxLength = this.params.maxLength;
+            if (!maxLength) {
+                return;
+            }
+
+            let $input = this.$el.find('input');
+
+            let text = $input.val();
+            let textLength = text ? text.toString().length : 0;
+
+            let $el = this.$el.find('.text-length-counter .current-length');
+
+            $el.html(textLength);
+
+            $input.css('border-color', '');
+            $el.css('color', '');
+            if (maxLength < textLength) {
+                $input.css('border-color', 'red');
+                $el.css('color', 'red');
+            }
+        },
+
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
             if (this.mode == 'search') {
                 var type = this.$el.find('select.search-type').val();
                 this.handleSearchType(type);
+            }
+            if (this.mode == 'edit') {
+                this.updateTextCounter();
             }
         },
 
@@ -115,7 +149,7 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
         },
 
         fetchSearch: function () {
-            var type = this.$el.find('[name="'+this.name+'-type"]').val() || 'startsWith';
+            var type = this.$el.find('[name="' + this.name + '-type"]').val() || 'startsWith';
 
             var data;
 

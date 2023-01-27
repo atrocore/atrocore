@@ -41,13 +41,19 @@ Espo.define('treo-core:views/fields/wysiwyg', 'class-replace!treo-core:views/fie
 
         showMoreText: false,
 
-        showMoreDisabled: false,
+        seeMoreDisabled: false,
 
         events: {
             'click a[data-action="seeMoreText"]': function (e) {
                 this.showMoreText = true;
                 this.reRender();
-            }
+            },
+            'keyup div.note-editable': function (e) {
+                this.updateTextCounter(this.$el.find('.note-editable').html());
+            },
+            'keyup textarea.note-codable': function (e) {
+                this.updateTextCounter(this.$el.find('.note-codable').val());
+            },
         },
 
         setup() {
@@ -62,8 +68,8 @@ Espo.define('treo-core:views/fields/wysiwyg', 'class-replace!treo-core:views/fie
 
             Dep.prototype.setup.call(this);
 
-            this.detailMaxHeight = this.params.displayedHeight || this.detailMaxHeight;
-            this.showMoreDisabled = this.showMoreDisabled || this.params.showMoreDisabled;
+            this.detailMaxHeight = this.params.lengthOfCut || this.detailMaxHeight;
+            this.seeMoreDisabled = this.seeMoreDisabled || this.params.seeMoreDisabled;
             this.showMoreText = false;
         },
 
@@ -75,6 +81,23 @@ Espo.define('treo-core:views/fields/wysiwyg', 'class-replace!treo-core:views/fie
 
         removeTags(html) {
             return $('<textarea />').html((html || '').replace(/<(?:.|\n)*?>/gm, ' ').replace(/\s\s+/g, ' ').trim()).text();
+        },
+
+        updateTextCounter(text) {
+            let maxLength = this.params.maxLength;
+            if (!maxLength) {
+                return;
+            }
+
+            let textLength = text ? text.toString().length : 0;
+
+            let $el = this.$el.find('.text-length-counter .current-length');
+
+            $el.html(textLength);
+            $el.css('color', '');
+            if (maxLength < textLength) {
+                $el.css('color', 'red');
+            }
         },
 
         afterRender() {
@@ -95,9 +118,13 @@ Espo.define('treo-core:views/fields/wysiwyg', 'class-replace!treo-core:views/fie
             });
 
             if (this.mode === 'detail' || this.mode === 'list') {
-                if ((!this.model.has('isHtml') || this.model.get('isHtml')) && !this.showMoreText && !this.showMoreDisabled) {
+                if ((!this.model.has('isHtml') || this.model.get('isHtml')) && !this.showMoreText && !this.seeMoreDisabled) {
                     this.applyFieldPartHiding(this.name);
                 }
+            }
+
+            if (this.mode === 'edit') {
+                this.updateTextCounter(this.$el.find('.note-editable').html());
             }
         },
 
@@ -125,7 +152,7 @@ Espo.define('treo-core:views/fields/wysiwyg', 'class-replace!treo-core:views/fie
             }
 
             if (this.mode === 'list' || (this.mode === 'detail' && (this.model.has('isHtml') && !this.model.get('isHtml')))) {
-                if (text && !this.showMoreText && !this.showMoreDisabled) {
+                if (text && !this.showMoreText && !this.seeMoreDisabled) {
                     let isCut = false;
 
                     if (text.length > this.detailMaxLength) {

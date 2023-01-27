@@ -62,7 +62,10 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
             'click a[data-action="seeMoreText"]': function (e) {
                 this.seeMoreText = true;
                 this.reRender();
-            }
+            },
+            'keyup textarea.with-text-length': function (e) {
+                this.updateTextCounter();
+            },
         },
 
         setup: function () {
@@ -179,6 +182,29 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
             }
         },
 
+        updateTextCounter() {
+            let maxLength = this.params.maxLength;
+            if (!maxLength) {
+                return;
+            }
+
+            let $textarea = this.$el.find('textarea');
+
+            let text = this.$el.find('textarea').val();
+            let textLength = text ? text.toString().length : 0;
+
+            let $el = this.$el.find('.text-length-counter .current-length');
+
+            $el.html(textLength);
+
+            $textarea.css('border-color', '');
+            $el.css('color', '');
+            if (maxLength < textLength) {
+                $textarea.css('border-color', 'red');
+                $el.css('color', 'red');
+            }
+        },
+
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
             if (this.mode == 'edit') {
@@ -186,6 +212,7 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
                 if (text) {
                     this.$element.val(text);
                 }
+                this.updateTextCounter();
             }
             if (this.mode == 'search') {
                 var type = this.$el.find('select.search-type').val();
@@ -202,7 +229,7 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
 
         fetchSearch: function () {
 
-            var type = this.$el.find('[name="'+this.name+'-type"]').val() || 'startsWith';
+            var type = this.$el.find('[name="' + this.name + '-type"]').val() || 'startsWith';
 
             var data;
 
