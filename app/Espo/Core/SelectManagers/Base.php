@@ -1210,11 +1210,17 @@ class Base
                     break;
 
                 case 'in':
-                    $part[$attribute . '='] = $this->prepareValueOptions($value, $item['attribute']);
+                    if (!empty($item['attribute'])) {
+                        $value = $this->prepareValueOptions($value, $item['attribute']);
+                    }
+                    $part[$attribute . '='] = $value;
                     break;
 
                 case 'notIn':
-                    $part[$attribute . '!='] = $this->prepareValueOptions($value, $item['attribute']);
+                    if (!empty($item['attribute'])) {
+                        $value = $this->prepareValueOptions($value, $item['attribute']);
+                    }
+                    $part[$attribute . '!='] = $value;
                     break;
 
                 case 'isNull':
