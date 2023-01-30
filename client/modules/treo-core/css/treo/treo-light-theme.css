@@ -22937,8 +22937,23 @@ body.minimized #header > #navbar .navbar-inverse .navbar-nav .more .dropdown-men
   padding: 0 14px;
 }
 
+.modal-content .entity-manager-container .cell {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+@media screen and (min-width: 768px) {
+  .modal-content .entity-manager-container .cell {
+    padding-right: 16px;
+  }
+}
+
+.modal-content .entity-manager-container .cell:not(.hidden) + .cell {
+  padding-right: 0;
+}
+
 .entity-manager-container > .panel-heading {
-  padding-left: 27px;
+  padding-left: 14px;
 }
 
 
