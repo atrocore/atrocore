@@ -97,7 +97,7 @@ class Avatar extends Image
             $size = $_GET['size'];
         }
 
-        if (!empty($id)) {
+        if (!empty($id) && !empty($this->getEntityManager()->getEntity("Attachment", $id))) {
             $this->show($id, $size, true);
         } else {
             $identicon = new \Identicon\Identicon();
