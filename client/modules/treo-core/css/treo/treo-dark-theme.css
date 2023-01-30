@@ -22462,7 +22462,13 @@ select {
 
 .modal-content .entity-manager-container .cell {
     padding-left: 0;
-    padding-right: 16px;
+    padding-right: 0;
+}
+
+@media screen and (min-width: 768px) {
+    .modal-content .entity-manager-container .cell {
+        padding-right: 16px;
+    }
 }
 
 .modal-content .entity-manager-container .cell:not(.hidden) + .cell {
