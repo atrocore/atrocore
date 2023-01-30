@@ -280,7 +280,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
             foreach ($value as $v) {
                 if (!in_array($v, $fieldOptions)) {
-                    throw new BadRequest(sprintf($this->getLanguage()->translate('noSuchOptions', 'exceptions', 'Global'), $v, $language->translate($fieldName, 'fields', $entity->getEntityType())));
+                    throw new BadRequest(sprintf($this->getLanguage()->translate('noSuchOptions', 'exceptions', 'Global'), $v, $this->getLanguage()->translate($fieldName, 'fields', $entity->getEntityType())));
                 }
             }
         }
