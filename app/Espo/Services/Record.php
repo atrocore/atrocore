@@ -2899,8 +2899,11 @@ class Record extends \Espo\Core\Services\Base
                 $value = $entity->get($field);
             }
 
-            if ($params['type'] === 'bool' && !empty($data->$field) !== !empty($value)) {
-                return true;
+            if ($params['type'] === 'bool') {
+                if (!empty($data->$field) !== !empty($value)) {
+                    return true;
+                }
+                continue 1;
             }
 
             // strict type for NULL
