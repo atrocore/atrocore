@@ -642,10 +642,8 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                             }
                         }
 
-                        if (empty($entity->get("{$name}AddOnlyMode"))) {
-                            foreach ($toRemoveIds as $id) {
-                                $this->unrelate($entity, $name, $id);
-                            }
+                        foreach ($toRemoveIds as $id) {
+                            $this->unrelate($entity, $name, $id);
                         }
                         if (!empty($columns)) {
                             foreach ($toUpdateIds as $id) {

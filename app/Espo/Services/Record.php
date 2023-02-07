@@ -1036,10 +1036,55 @@ class Record extends \Espo\Core\Services\Base
         return $preparedValues;
     }
 
-    protected function handleInput(\stdClass $data): void
+    protected function prepareInputForAddOnlyMode(string $id, \stdClass $data): void
+    {
+        foreach ($data as $field => $value) {
+            if (mb_strlen($field) < 12 || mb_substr($field, -11) !== 'AddOnlyMode' || empty($value)) {
+                continue;
+            }
+
+            $fieldName = mb_substr($field, 0, -11);
+
+            $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $fieldName]);
+            if (empty($fieldDefs['type'])) {
+                continue;
+            }
+
+            if ($fieldDefs['type'] === 'linkMultiple') {
+                $fieldName .= 'Ids';
+            }
+
+            if (!property_exists($data, $fieldName) || empty($data->$fieldName)) {
+                continue;
+            }
+
+            if (empty($entity = $this->getEntity($id))) {
+                continue;
+            }
+
+            switch ($fieldDefs['type']) {
+                case 'array':
+                case 'multiEnum':
+                    $data->$fieldName = array_merge(empty($entity->get($fieldName)) ? [] : $entity->get($fieldName), $data->$fieldName);
+                    break;
+                case 'linkMultiple':
+                    $collection = $entity->get($fieldName);
+                    if ($collection !== null) {
+                        $data->$fieldName = array_merge(array_column($collection->toArray(), 'id'), $data->$fieldName);
+                    }
+                    break;
+            }
+        }
+    }
+
+    protected function handleInput(\stdClass $data, ?string $id = null): void
     {
         if (empty($data)) {
             return;
+        }
+
+        if (!empty($id)) {
+            $this->prepareInputForAddOnlyMode($id, $data);
         }
 
         foreach ($data as $field => $value) {
@@ -1191,7 +1236,7 @@ class Record extends \Espo\Core\Services\Base
         }
 
         $this->filterInput($data);
-        $this->handleInput($data);
+        $this->handleInput($data, $id);
 
         unset($data->modifiedById);
         unset($data->modifiedByName);
