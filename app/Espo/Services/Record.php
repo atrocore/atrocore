@@ -1043,6 +1043,9 @@ class Record extends \Espo\Core\Services\Base
                 continue;
             }
 
+            // clearing input
+            unset($data->$field);
+
             $fieldName = mb_substr($field, 0, -11);
 
             $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $fieldName]);
@@ -2882,7 +2885,6 @@ class Record extends \Espo\Core\Services\Base
         $linkNames = [];
         $linkMultipleIds = [];
         $linkMultipleNames = [];
-        $linkMultipleAddOnlyMode = [];
         foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields']) as $name => $fieldData) {
             if (isset($fieldData['type'])) {
                 if ($fieldData['type'] === 'link' || $fieldData['type'] === 'asset') {
@@ -2891,7 +2893,6 @@ class Record extends \Espo\Core\Services\Base
                 if ($fieldData['type'] === 'linkMultiple') {
                     $linkMultipleIds[] = $name . 'Ids';
                     $linkMultipleNames[] = $name . 'Names';
-                    $linkMultipleAddOnlyMode[$name . 'Ids'] = $name . 'AddOnlyMode';
                 }
             }
         }
@@ -2913,10 +2914,6 @@ class Record extends \Espo\Core\Services\Base
                 continue 1;
             }
 
-            if (in_array($field, $linkMultipleAddOnlyMode)) {
-                continue 1;
-            }
-
             if (!isset($params['type'])) {
                 continue 1;
             }
@@ -2929,16 +2926,6 @@ class Record extends \Espo\Core\Services\Base
                 if (is_array($data->$field)) {
                     $data->$field = array_unique($data->$field);
                     sort($data->$field);
-
-                    if (property_exists($data, $linkMultipleAddOnlyMode[$field]) && !empty($data->{$linkMultipleAddOnlyMode[$field]})) {
-                        $preparedValue = [];
-                        foreach ($data->$field as $v) {
-                            if (in_array($v, $value)) {
-                                $preparedValue[] = $v;
-                            }
-                        }
-                        $value = $preparedValue;
-                    }
                 }
             } else {
                 $value = $entity->get($field);
