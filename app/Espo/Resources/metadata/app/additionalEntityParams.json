@@ -85,23 +85,6 @@
     }
   },
   "layout": {
-    "accessManagement": {
-      "title": "accessManagement",
-      "types": [
-        "Base",
-        "Hierarchy"
-      ],
-      "fields": [
-        [
-          "hasOwner",
-          "hasAssignedUser"
-        ],
-        [
-          "hasTeam",
-          "hasAccount"
-        ]
-      ]
-    },
     "hierarchyManagement": {
       "types": [
         "Hierarchy"
@@ -119,6 +102,23 @@
         [
           "relationInheritance",
           "unInheritedRelations"
+        ]
+      ]
+    },
+    "accessManagement": {
+      "title": "accessManagement",
+      "types": [
+        "Base",
+        "Hierarchy"
+      ],
+      "fields": [
+        [
+          "hasOwner",
+          "hasAssignedUser"
+        ],
+        [
+          "hasTeam",
+          "hasAccount"
         ]
       ]
     },
