@@ -237,7 +237,10 @@ class Layout extends Injectable
     {
         // from custom data
         if ($this->isCustom($scope, $name)) {
-            return Json::decode($this->getFileManager()->getContents($this->concatPath($this->getCustomPath($scope), $name . '.json')), true);
+            $customLayout = Json::decode($this->getFileManager()->getContents($this->concatPath($this->getCustomPath($scope), $name . '.json')), true);
+            if (!empty($customLayout) && is_array($customLayout)) {
+                return $customLayout;
+            }
         }
 
         // prepare data
