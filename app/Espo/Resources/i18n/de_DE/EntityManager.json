@@ -4,8 +4,8 @@
     "Relationships": "Beziehungen",
     "Schedule": "Geplant",
     "Formula": "Formel",
-    "accessManagement": "Hierarchieverwaltung",
-    "hierarchyManagement": "Zugriffsverwaltung",
+    "accessManagement": "Zugriffsverwaltung",
+    "hierarchyManagement": "Hierarchieverwaltung",
     "other": "Sonstiges"
   },
   "fields": {
