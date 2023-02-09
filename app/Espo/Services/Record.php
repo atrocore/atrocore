@@ -1047,6 +1047,7 @@ class Record extends \Espo\Core\Services\Base
             unset($data->$field);
 
             $fieldName = mb_substr($field, 0, -11);
+            $inputFieldName = $fieldName;
 
             $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $fieldName]);
             if (empty($fieldDefs['type'])) {
@@ -1054,10 +1055,10 @@ class Record extends \Espo\Core\Services\Base
             }
 
             if ($fieldDefs['type'] === 'linkMultiple') {
-                $fieldName .= 'Ids';
+                $inputFieldName .= 'Ids';
             }
 
-            if (!property_exists($data, $fieldName) || empty($data->$fieldName)) {
+            if (!property_exists($data, $inputFieldName) || empty($data->$inputFieldName)) {
                 continue;
             }
 
@@ -1068,12 +1069,12 @@ class Record extends \Espo\Core\Services\Base
             switch ($fieldDefs['type']) {
                 case 'array':
                 case 'multiEnum':
-                    $data->$fieldName = array_merge(empty($entity->get($fieldName)) ? [] : $entity->get($fieldName), $data->$fieldName);
+                    $data->$inputFieldName = array_merge(empty($entity->get($fieldName)) ? [] : $entity->get($fieldName), $data->$inputFieldName);
                     break;
                 case 'linkMultiple':
                     $collection = $entity->get($fieldName);
                     if ($collection !== null) {
-                        $data->$fieldName = array_merge(array_column($collection->toArray(), 'id'), $data->$fieldName);
+                        $data->$inputFieldName = array_merge(array_column($collection->toArray(), 'id'), $data->$inputFieldName);
                     }
                     break;
             }
