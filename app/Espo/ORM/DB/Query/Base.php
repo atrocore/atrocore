@@ -689,7 +689,7 @@ abstract class Base
             return $this->fieldsMapCache[$field];
 
         } else {
-            $field[0] = strtolower($field[0]);
+            $field = lcfirst($field);
             $dbField = preg_replace_callback('/([A-Z])/', array($this, 'toDbConversion'), $field);
 
             $this->fieldsMapCache[$field] = $dbField;
