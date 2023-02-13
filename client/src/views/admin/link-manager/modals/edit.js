@@ -503,18 +503,6 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
             }
         },
 
-        hideFieldIfAsset: function () {
-            if (this.model.get('linkType') === 'manyToMany' && this.model.get('entityForeign') === 'Asset') {
-                this.model.set('link', 'assets');
-                this.hideField('link');
-            }
-
-            if (this.model.get('linkType') === 'manyToMany' && this.model.get('entity') === 'Asset') {
-                this.model.set('linkForeign', 'assets');
-                this.hideField('linkForeign');
-            }
-        },
-
         afterRender: function () {
             this.checkRelationshipFieldVisibility();
             this.handleLinkTypeChange();
@@ -523,12 +511,10 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 this.checkRelationshipFieldVisibility();
                 this.handleLinkTypeChange();
                 this.populateFields();
-                this.hideFieldIfAsset();
             }, this);
             this.getView('entityForeign').on('change', function (m) {
                 this.checkRelationshipFieldVisibility();
                 this.populateFields();
-                this.hideFieldIfAsset();
             }, this);
 
             this.getView('link').on('change', function (m) {
