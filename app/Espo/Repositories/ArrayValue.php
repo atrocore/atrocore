@@ -68,7 +68,7 @@ class ArrayValue extends \Espo\Core\ORM\Repositories\RDB
 
         if (!is_array($valueList)) throw new Error("ArrayValue: Bad value passed to JSON_ARRAY attribute {$attribute}.");
 
-        $valueList = array_unique($valueList);
+        $valueList = @array_unique($valueList);
 
         $toSkipValueList = [];
 
