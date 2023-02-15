@@ -94,7 +94,7 @@ class Image extends Injectable
         }
 
         $fileName = $this->getImageFilePath($attachment);
-        if (empty($filename) || !is_file($filename)) {
+        if (empty($filename) || !file_exists($filename)) {
             return false;
         }
 
