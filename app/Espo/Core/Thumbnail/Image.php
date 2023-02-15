@@ -93,7 +93,12 @@ class Image extends Injectable
             return false;
         }
 
-        $image = new ImageResize($this->getImageFilePath($attachment));
+        $fileName = $this->getImageFilePath($attachment);
+        if (empty($filename) || !is_file($filename)) {
+            return false;
+        }
+
+        $image = new ImageResize($fileName);
 
         $imageSizes = $this->getMetadata()->get(['app', 'imageSizes'], []);
 
