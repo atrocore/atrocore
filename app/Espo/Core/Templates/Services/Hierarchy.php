@@ -175,13 +175,14 @@ class Hierarchy extends Record
         $limit = $this->getConfig()->get('recordsPerPageSmall', 20);
 
         $position = $this->getRepository()->getEntityPosition($entity, $parentId);
+        $index = $position - 1;
 
-        $offset = $position - $limit;
+        $offset = $index - $limit;
         if ($offset < 0) {
             $offset = 0;
         }
 
-        $children = $this->getChildren($parentId, ['offset' => $offset, 'maxSize' => $position + $limit]);
+        $children = $this->getChildren($parentId, ['offset' => $offset, 'maxSize' => $index + $limit]);
         if (!empty($children['list'])) {
             foreach ($children['list'] as $v) {
                 $tree[$v['id']] = $v;
