@@ -30,6 +30,9 @@
     "phpseclib/phpseclib": "^3.0",
     "caxy/php-htmldiff": "^0.1.14"
   },
+  "conflict": {
+    "atrocore/pim": "<1.7.0"
+  },
   "autoload": {
     "psr-0": {
       "": [
