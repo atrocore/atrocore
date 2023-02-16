@@ -67,14 +67,9 @@ class Hierarchy extends RDB
 
         if (empty($parentId)) {
             while (true) {
-                $additionalWhere = '';
-                if (!empty($entity->get('sortOrder'))) {
-                    $additionalWhere = ' AND sort_order<=' . (int)$entity->get('sortOrder') . ' ';
-                }
-
                 $query = "SELECT id 
                           FROM `$this->tableName` 
-                          WHERE deleted=0 $additionalWhere 
+                          WHERE deleted=0
                           ORDER BY sort_order ASC, $sortBy {$sortOrder}, id ASC 
                           LIMIT $offset, $limit";
 
