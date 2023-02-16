@@ -182,11 +182,12 @@ class Hierarchy extends Record
         }
 
         $children = $this->getChildren($parentId, ['offset' => $offset, 'maxSize' => $position + $limit]);
-
-        foreach ($children['list'] as $v) {
-            $tree[$v['id']] = $v;
-            $tree[$v['id']]['total'] = $children['total'];
-            $tree[$v['id']]['disabled'] = false;
+        if (!empty($children['list'])) {
+            foreach ($children['list'] as $v) {
+                $tree[$v['id']] = $v;
+                $tree[$v['id']]['total'] = $children['total'];
+                $tree[$v['id']]['disabled'] = false;
+            }
         }
 
         if (!empty($entity->child)) {
