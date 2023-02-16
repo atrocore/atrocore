@@ -110,7 +110,9 @@ class Hierarchy extends Record
         $this->prepareTreeForSelectedNode($entity, $tree);
         $this->prepareTreeData($tree);
 
-        return ['total' => count($tree), 'list' => $tree];
+        $total = empty($tree[0]['total']) ? 0 : $tree[0]['total'];
+
+        return ['total' => $total, 'list' => $tree];
     }
 
     public function getTreeData(array $ids): array
@@ -170,46 +172,18 @@ class Hierarchy extends Record
 
     protected function prepareTreeForSelectedNode($entity, array &$tree, string $parentId = ''): void
     {
-        $children = $this->getChildren($parentId, ['offset' => 0, 'maxSize' => \PHP_INT_MAX]);
-
         $limit = $this->getConfig()->get('recordsPerPageSmall', 20);
 
-        $part = [];
+        $position = $this->getRepository()->getEntityPosition($entity, $parentId);
 
-        foreach ($children['list'] as $k => $child) {
-            if ($child['id'] === $entity->get('id')) {
-                $row = $child;
-                $row['offset'] = $k;
-                $part[] = $row;
-
-                $i = 1;
-                while (count($part) < $limit) {
-                    $prevOffset = $k - $i;
-                    $nextOffset = $k + $i;
-
-                    if (!isset($children['list'][$prevOffset]) && !isset($children['list'][$nextOffset])) {
-                        break;
-                    }
-
-                    if (isset($children['list'][$prevOffset])) {
-                        $row = $children['list'][$prevOffset];
-                        $row['offset'] = $prevOffset;
-                        $part = array_merge([$row], $part);
-                    }
-                    if (isset($children['list'][$nextOffset])) {
-                        $row = $children['list'][$nextOffset];
-                        $row['offset'] = $nextOffset;
-                        $part[] = $row;
-                    }
-
-                    $i++;
-                }
-
-                break;
-            }
+        $offset = $position - $limit;
+        if ($offset < 0) {
+            $offset = 0;
         }
 
-        foreach ($part as $v) {
+        $children = $this->getChildren($parentId, ['offset' => $offset, 'maxSize' => $position + $limit]);
+
+        foreach ($children['list'] as $v) {
             $tree[$v['id']] = $v;
             $tree[$v['id']]['total'] = $children['total'];
             $tree[$v['id']]['disabled'] = false;
