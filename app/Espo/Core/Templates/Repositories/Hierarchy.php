@@ -67,7 +67,9 @@ class Hierarchy extends RDB
                       FROM (SELECT t.id, @rownum:=@rownum + 1 AS position 
                             FROM `$this->tableName` t 
                                 JOIN (SELECT @rownum:=0) r 
-                            WHERE t.deleted=0 
+                                LEFT JOIN `$this->hierarchyTableName` h ON t.id=h.entity_id AND h.deleted=0
+                            WHERE t.deleted=0
+                              AND h.entity_id IS NULL
                             ORDER BY t.sort_order ASC, t.$sortBy $sortOrder, t.id ASC) x
                       WHERE x.id=$id";
         } else {
