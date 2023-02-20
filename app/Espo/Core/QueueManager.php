@@ -49,6 +49,7 @@ use Espo\Services\QueueManagerServiceInterface;
  */
 class QueueManager extends Injectable
 {
+    const QUEUE_DIR_PATH = 'data/queue';
     const FILE_PATH = 'data/queue-exist.log';
 
     public function __construct()
@@ -56,21 +57,9 @@ class QueueManager extends Injectable
         $this->addDependency('container');
     }
 
-    /**
-     * @param int $stream
-     *
-     * @return bool
-     * @throws Error
-     */
     public function run(int $stream): bool
     {
-        $result = $this->runJob($stream);
-
-        if ($this->getRepository()->isQueueEmpty() && file_exists(self::FILE_PATH)) {
-            unlink(self::FILE_PATH);
-        }
-
-        return $result;
+        return $this->runJob($stream);
     }
 
     public function push(string $name, string $serviceName, array $data = [], string $priority = 'Normal', string $md5Hash = ''): bool
@@ -97,8 +86,6 @@ class QueueManager extends Injectable
         $item->set('message', null);
         $item->set('stream', null);
         $this->getEntityManager()->saveEntity($item);
-
-        file_put_contents(self::FILE_PATH, '1');
 
         return true;
     }
@@ -136,24 +123,11 @@ class QueueManager extends Injectable
             }
         }
 
-        $this->getEntityManager()->saveEntity($item, ['skipAll' => true]);
+        $this->getEntityManager()->saveEntity($item);
 
         foreach ($user->get('teams')->toArray() as $row) {
             $repository->relate($item, 'teams', $row['id']);
         }
-
-        $sortOrder = $repository->get($item->get('id'))->get('sortOrder');
-
-        $dirPath = 'data/queue/' . (int)($sortOrder / 7000);
-        if (!file_exists($dirPath)) {
-            mkdir($dirPath, 0777, true);
-            sleep(1);
-        }
-
-        $fileName = $dirPath . '/' . str_pad((string)($sortOrder % 7000), 4, '0', STR_PAD_LEFT) . '.txt';
-
-        file_put_contents($fileName, $item->get('id'));
-        file_put_contents(self::FILE_PATH, '1');
 
         return $item->get('id');
     }
@@ -177,33 +151,56 @@ class QueueManager extends Injectable
         return true;
     }
 
-    /**
-     * @param int $stream
-     *
-     * @return bool
-     * @throws Error
-     */
-    protected function runJob(int $stream): bool
+    protected function getItemId(): ?string
     {
-        $queueDir = 'data/queue';
+        $queueDir = self::QUEUE_DIR_PATH;
         if (!file_exists($queueDir)) {
-            return false;
-        }
-
-        foreach (scandir($queueDir) as $dirName) {
-            if (in_array($dirName, ['.', '..'])) {
-                continue;
-            }
-
+            return null;
         }
 
         $dirs = scandir($queueDir);
 
-        echo '<pre>';
-        print_r($dirs);
-        die();
+        // exit if there are no dirs in queue dir
+        if (!array_key_exists(2, $dirs)) {
+            return null;
+        }
 
-        if ($this->getRepository()->isQueueEmpty()) {
+        foreach ($dirs as $dirName) {
+            if (in_array($dirName, ['.', '..'])) {
+                continue;
+            }
+
+            if (!is_dir("$queueDir/$dirName")) {
+                unlink("$queueDir/$dirName");
+                continue;
+            }
+
+            $files = scandir("$queueDir/$dirName");
+
+            // exit if there are no files in dir
+            if (!array_key_exists(2, $files)) {
+                continue;
+            }
+
+            foreach ($files as $file) {
+                if (in_array($file, ['.', '..'])) {
+                    continue;
+                }
+
+                $itemId = file_get_contents("$queueDir/$dirName/$file");
+                unlink("$queueDir/$dirName/$file");
+
+                return $itemId;
+            }
+        }
+
+        return null;
+    }
+
+    protected function runJob(int $stream): bool
+    {
+        $itemId = $this->getItemId();
+        if (empty($itemId)) {
             return false;
         }
 
@@ -213,8 +210,7 @@ class QueueManager extends Injectable
             return false;
         }
 
-        $item = $this->getRepository()->getPendingItemForStream($stream);
-
+        $item = $this->getRepository()->get($itemId);
         if (empty($item)) {
             return false;
         }

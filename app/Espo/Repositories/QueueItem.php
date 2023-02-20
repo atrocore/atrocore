@@ -39,7 +39,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 use Espo\Core\Templates\Repositories\Base;
 use Espo\Services\QueueManagerServiceInterface;
-
+use Espo\Core\QueueManager;
 
 /**
  * Class QueueItem
@@ -52,49 +52,65 @@ class QueueItem extends Base
         $this->getPDO()->exec("DELETE FROM `queue_item` WHERE modified_at<'$date'");
     }
 
-    /**
-     * @return bool
-     */
-    public function isQueueEmpty(): bool
-    {
-        $count = $this->select(['id'])->where(['status' => ['Pending', 'Running']])->count();
-
-        return empty($count);
-    }
-
-    /**
-     * @param int $stream
-     *
-     * @return \Espo\Entities\QueueItem|null
-     */
     public function getRunningItemForStream(int $stream): ?Entity
     {
-        return $this->where(['stream' => $stream, 'status' => 'Running'])->order('sortOrder', 'ASC')->findOne();
+        return $this->where(['stream' => $stream, 'status' => 'Running'])->findOne();
     }
 
-    public function getPendingItemForStream(int $stream): ?Entity
-    {
-        foreach (['High', 'Normal', 'Low'] as $priority) {
-            $job = $this
-                ->where(['stream' => null, 'status' => 'Pending', 'priority' => $priority])
-                ->order('sortOrder')
-                ->findOne();
-
-            if (!empty($job)) {
-                return $job;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * @inheritdoc
-     */
     protected function afterSave(Entity $entity, array $options = [])
     {
-        // call parent
         parent::afterSave($entity, $options);
+
+        /**
+         * Create file
+         */
+        if ($entity->get('status') === 'Pending') {
+            $filesInDir = 7000;
+            $sortOrder = $this->get($entity->get('id'))->get('sortOrder');
+            $dirName = (int)($sortOrder / $filesInDir);
+
+            // delete old empty dirs
+            if (file_exists(QueueManager::QUEUE_DIR_PATH)) {
+                foreach (scandir(QueueManager::QUEUE_DIR_PATH) as $v) {
+                    if (in_array($v, ['.', '..'])) {
+                        continue;
+                    }
+
+                    if ((int)$v >= $dirName) {
+                        break;
+                    }
+
+                    $files = scandir(QueueManager::QUEUE_DIR_PATH . '/' . $v);
+                    if (!array_key_exists(2, $files)) {
+                        rmdir(QueueManager::QUEUE_DIR_PATH . '/' . $v);
+                    }
+                }
+            }
+
+            $dirPath = QueueManager::QUEUE_DIR_PATH . '/' . $dirName;
+
+            // create new dir if not exist
+            while (!file_exists($dirPath)) {
+                mkdir($dirPath, 0777, true);
+                sleep(1);
+            }
+
+            $fileName = str_pad((string)($sortOrder % $filesInDir), 4, '0', STR_PAD_LEFT);
+            switch ($entity->get('priority')) {
+                case 'High':
+                    $fileName = '0.' . $fileName;
+                    break;
+                case 'Normal':
+                    $fileName = str_pad((string)$fileName, 8, '0', STR_PAD_LEFT);
+                    break;
+                case 'Low':
+                    $fileName = (int)$fileName + $filesInDir;
+                    break;
+            }
+
+            file_put_contents($dirPath . '/' . $fileName . '.txt', $entity->get('id'));
+            file_put_contents(QueueManager::FILE_PATH, '1');
+        }
 
         if (!in_array($entity->get('status'), ['Pending', 'Running'])) {
             $this->notify($entity);
@@ -105,6 +121,13 @@ class QueueItem extends Base
         }
 
         $this->preparePublicDataForMassDelete($entity);
+
+        if (in_array($entity->get('status'), ['Success', 'Failed', 'Canceled'])) {
+            $item = $this->where(['status' => ['Pending', 'Running']])->findOne();
+            if (empty($item)) {
+                unlink(QueueManager::FILE_PATH);
+            }
+        }
     }
 
     protected function preparePublicDataForMassDelete(Entity $entity): void
