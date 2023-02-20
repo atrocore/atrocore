@@ -41,8 +41,8 @@ class V1Dot5Dot28 extends Base
 {
     public function up(): void
     {
-        $this->getPDO()->exec("CREATE INDEX IDX_STATUS ON queue_item (name, deleted)");
-        $this->getPDO()->exec("CREATE INDEX IDX_SORT_ORDER ON queue_item (name, deleted)");
+        $this->getPDO()->exec("CREATE INDEX IDX_STATUS ON queue_item (status, deleted)");
+        $this->getPDO()->exec("CREATE INDEX IDX_SORT_ORDER ON queue_item (sort_order, deleted)");
     }
 
     public function down(): void
