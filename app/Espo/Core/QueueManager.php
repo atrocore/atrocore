@@ -142,6 +142,17 @@ class QueueManager extends Injectable
             $repository->relate($item, 'teams', $row['id']);
         }
 
+        $sortOrder = $repository->get($item->get('id'))->get('sortOrder');
+
+        $dirPath = 'data/queue/' . (int)($sortOrder / 7000);
+        if (!file_exists($dirPath)) {
+            mkdir($dirPath, 0777, true);
+            sleep(1);
+        }
+
+        $fileName = $dirPath . '/' . str_pad((string)($sortOrder % 7000), 4, '0', STR_PAD_LEFT) . '.txt';
+
+        file_put_contents($fileName, $item->get('id'));
         file_put_contents(self::FILE_PATH, '1');
 
         return $item->get('id');
@@ -174,6 +185,24 @@ class QueueManager extends Injectable
      */
     protected function runJob(int $stream): bool
     {
+        $queueDir = 'data/queue';
+        if (!file_exists($queueDir)) {
+            return false;
+        }
+
+        foreach (scandir($queueDir) as $dirName) {
+            if (in_array($dirName, ['.', '..'])) {
+                continue;
+            }
+
+        }
+
+        $dirs = scandir($queueDir);
+
+        echo '<pre>';
+        print_r($dirs);
+        die();
+
         if ($this->getRepository()->isQueueEmpty()) {
             return false;
         }
