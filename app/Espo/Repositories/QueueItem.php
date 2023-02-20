@@ -87,6 +87,8 @@ class QueueItem extends Base
                 }
             }
 
+            $dirName = str_pad((string)$dirName, 6, '0', STR_PAD_LEFT);
+
             $dirPath = QueueManager::QUEUE_DIR_PATH . '/' . $dirName;
 
             // create new dir if not exist
