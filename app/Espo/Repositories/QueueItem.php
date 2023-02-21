@@ -130,7 +130,6 @@ class QueueItem extends Base
         // create new dir if not exist
         while (!file_exists($dirPath)) {
             mkdir($dirPath, 0777, true);
-            sleep(1);
         }
 
         return $dirPath . '/' . $fileName . '.txt';
