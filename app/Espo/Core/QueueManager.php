@@ -210,9 +210,14 @@ class QueueManager extends Injectable
             return false;
         }
 
-        $item = $this->getRepository()->get($itemId);
-        if (empty($item)) {
-            return false;
+        $count = 0;
+        while (empty($item = $this->getRepository()->get($itemId))) {
+            $count++;
+            if ($count === 10) {
+                $GLOBALS['log']->error("QM failed: No such QM item '$itemId' in DB.");
+                return false;
+            }
+            sleep(1);
         }
 
         // auth
