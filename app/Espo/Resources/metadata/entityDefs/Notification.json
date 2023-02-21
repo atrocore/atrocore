@@ -1,65 +1,82 @@
 {
-    "fields": {
-        "number": {
-            "type": "autoincrement",
-            "index": true
-        },
-        "data": {
-            "type": "jsonObject"
-        },
-        "noteData": {
-            "type": "jsonObject",
-            "notStorable": true
-        },
-        "type": {
-            "type": "varchar"
-        },
-        "read": {
-            "type": "bool"
-        },
-        "user": {
-            "type": "link"
-        },
-        "createdAt": {
-            "type": "datetime",
-            "readOnly": true
-        },
-        "message": {
-            "type": "text"
-        },
-        "related": {
-            "type": "linkParent",
-            "readOnly": true
-        },
-        "relatedParent": {
-            "type": "linkParent",
-            "readOnly": true
-        }
+  "fields": {
+    "number": {
+      "type": "autoincrement",
+      "index": true
     },
-    "links": {
-        "user": {
-            "type": "belongsTo",
-            "entity": "User"
-        },
-        "related": {
-            "type": "belongsToParent"
-        },
-        "relatedParent": {
-            "type": "belongsToParent"
-        }
+    "data": {
+      "type": "jsonObject"
     },
-    "collection": {
-        "sortBy": "number",
-        "asc": false
+    "noteData": {
+      "type": "jsonObject",
+      "notStorable": true
     },
-    "indexes": {
-        "createdAt": {
-            "type": "index",
-            "columns": ["createdAt"]
-        },
-        "user": {
-            "type": "index",
-            "columns": ["userId", "createdAt"]
-        }
+    "type": {
+      "type": "varchar"
+    },
+    "read": {
+      "type": "bool"
+    },
+    "user": {
+      "type": "link"
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "message": {
+      "type": "text"
+    },
+    "related": {
+      "type": "linkParent",
+      "readOnly": true
+    },
+    "relatedParent": {
+      "type": "linkParent",
+      "readOnly": true
     }
+  },
+  "links": {
+    "user": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "related": {
+      "type": "belongsToParent"
+    },
+    "relatedParent": {
+      "type": "belongsToParent"
+    }
+  },
+  "collection": {
+    "sortBy": "number",
+    "asc": false
+  },
+  "indexes": {
+    "createdAt": {
+      "type": "index",
+      "columns": [
+        "createdAt"
+      ]
+    },
+    "user": {
+      "type": "index",
+      "columns": [
+        "userId",
+        "createdAt"
+      ]
+    },
+    "number": {
+      "columns": [
+        "number",
+        "deleted"
+      ]
+    },
+    "read": {
+      "columns": [
+        "read",
+        "deleted"
+      ]
+    }
+  }
 }
