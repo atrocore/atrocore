@@ -37,17 +37,10 @@ namespace Treo\Migrations;
 
 use Treo\Core\Migration\Base;
 
-class V1Dot5Dot28 extends Base
+class V1Dot5Dot29 extends Base
 {
     public function up(): void
     {
-        $this->getPDO()->exec("CREATE INDEX IDX_STATUS ON queue_item (status, deleted)");
-        $this->getPDO()->exec("CREATE INDEX IDX_SORT_ORDER ON queue_item (sort_order, deleted)");
-
-        $this->getPDO()->exec("DROP INDEX IDX_NUMBER ON notification");
-        $this->getPDO()->exec("CREATE INDEX IDX_READ ON notification (`read`, deleted)");
-        $this->getPDO()->exec("CREATE INDEX IDX_NUMBER ON notification (number, deleted)");
-
         /** @var \Espo\Core\Utils\Metadata $metadata */
         $metadata = (new \Espo\Core\Application())->getContainer()->get('metadata');
 
@@ -78,12 +71,6 @@ class V1Dot5Dot28 extends Base
 
     public function down(): void
     {
-        $this->getPDO()->exec("DROP INDEX IDX_STATUS ON queue_item");
-        $this->getPDO()->exec("DROP INDEX IDX_SORT_ORDER ON queue_item");
-
-        $this->getPDO()->exec("DROP INDEX IDX_READ ON notification");
-        $this->getPDO()->exec("DROP INDEX IDX_NUMBER ON notification");
-        $this->getPDO()->exec("CREATE INDEX IDX_NUMBER ON notification (number)");
     }
 
     public function exec(string $query): void
