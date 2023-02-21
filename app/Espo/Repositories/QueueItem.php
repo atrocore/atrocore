@@ -65,52 +65,10 @@ class QueueItem extends Base
          * Create file
          */
         if ($entity->get('status') === 'Pending') {
-            $filesInDir = 7000;
             $sortOrder = $this->get($entity->get('id'))->get('sortOrder');
-            $dirName = (int)($sortOrder / $filesInDir);
+            $priority = $entity->get('priority');
 
-            // delete old empty dirs
-            if (file_exists(QueueManager::QUEUE_DIR_PATH)) {
-                foreach (scandir(QueueManager::QUEUE_DIR_PATH) as $v) {
-                    if (in_array($v, ['.', '..'])) {
-                        continue;
-                    }
-
-                    if ((int)$v >= $dirName) {
-                        break;
-                    }
-
-                    $files = scandir(QueueManager::QUEUE_DIR_PATH . '/' . $v);
-                    if (!array_key_exists(2, $files)) {
-                        rmdir(QueueManager::QUEUE_DIR_PATH . '/' . $v);
-                    }
-                }
-            }
-
-            $dirName = str_pad((string)$dirName, 6, '0', STR_PAD_LEFT);
-
-            $dirPath = QueueManager::QUEUE_DIR_PATH . '/' . $dirName;
-
-            // create new dir if not exist
-            while (!file_exists($dirPath)) {
-                mkdir($dirPath, 0777, true);
-                sleep(1);
-            }
-
-            $fileName = str_pad((string)($sortOrder % $filesInDir), 4, '0', STR_PAD_LEFT);
-            switch ($entity->get('priority')) {
-                case 'High':
-                    $fileName = '0.' . $fileName;
-                    break;
-                case 'Normal':
-                    $fileName = str_pad((string)$fileName, 8, '0', STR_PAD_LEFT);
-                    break;
-                case 'Low':
-                    $fileName = (int)$fileName + $filesInDir;
-                    break;
-            }
-
-            file_put_contents($dirPath . '/' . $fileName . '.txt', $entity->get('id'));
+            file_put_contents($this->getFilePath($sortOrder, $priority), $entity->get('id'));
             file_put_contents(QueueManager::FILE_PATH, '1');
         }
 
@@ -130,6 +88,52 @@ class QueueItem extends Base
                 unlink(QueueManager::FILE_PATH);
             }
         }
+    }
+
+    protected function getFilePath(int $sortOrder, string $priority): string
+    {
+        $filesInDir = 7000;
+        $dirName = (int)($sortOrder / $filesInDir);
+
+        // delete old empty dirs
+        if (file_exists(QueueManager::QUEUE_DIR_PATH)) {
+            foreach (scandir(QueueManager::QUEUE_DIR_PATH) as $v) {
+                if (in_array($v, ['.', '..'])) {
+                    continue;
+                }
+
+                if ((int)$v >= $dirName) {
+                    break;
+                }
+
+                $files = scandir(QueueManager::QUEUE_DIR_PATH . '/' . $v);
+                if (!array_key_exists(2, $files)) {
+                    rmdir(QueueManager::QUEUE_DIR_PATH . '/' . $v);
+                }
+            }
+        }
+
+        $fileName = str_pad((string)($sortOrder % $filesInDir), 4, '0', STR_PAD_LEFT);
+
+        switch ($priority) {
+            case 'High':
+                $dirPath = QueueManager::QUEUE_DIR_PATH . '/0';
+                break;
+            case 'Low':
+                $dirPath = QueueManager::QUEUE_DIR_PATH . '/99999999999999';
+                break;
+            default:
+                $dirName = str_pad((string)$dirName, 6, '0', STR_PAD_LEFT);
+                $dirPath = QueueManager::QUEUE_DIR_PATH . '/' . $dirName;
+        }
+
+        // create new dir if not exist
+        while (!file_exists($dirPath)) {
+            mkdir($dirPath, 0777, true);
+            sleep(1);
+        }
+
+        return $dirPath . '/' . $fileName . '.txt';
     }
 
     protected function preparePublicDataForMassDelete(Entity $entity): void
@@ -166,6 +170,11 @@ class QueueItem extends Base
     protected function afterRemove(Entity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);
+
+        $fileName = $this->getFilePath($entity->get('sortOrder'), $entity->get('priority'));
+        if (file_exists($fileName)) {
+            unlink($fileName);
+        }
 
         // delete forever
         $this->deleteFromDb($entity->get('id'));
