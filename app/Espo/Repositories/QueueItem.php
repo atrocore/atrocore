@@ -84,7 +84,7 @@ class QueueItem extends Base
 
         if (in_array($entity->get('status'), ['Success', 'Failed', 'Canceled'])) {
             $item = $this->where(['status' => ['Pending', 'Running']])->findOne();
-            if (empty($item)) {
+            if (empty($item) && file_exists(QueueManager::FILE_PATH)) {
                 unlink(QueueManager::FILE_PATH);
             }
         }
