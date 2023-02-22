@@ -2091,14 +2091,16 @@ class Record extends \Espo\Core\Services\Base
         }
 
         foreach ($ids as $k => $id) {
+            $cloned = clone $data;
+
             if ($k < $this->maxMassUpdateCount) {
                 try {
-                    $this->updateEntity($id, $data);
+                    $this->updateEntity($id, $cloned);
                 } catch (\Throwable $e) {
                     $GLOBALS['log']->error("Update $this->entityType '$id' failed: {$e->getMessage()}");
                 }
             } else {
-                $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->entityType, $id, $data);
+                $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->entityType, $id, $cloned);
             }
         }
 
