@@ -90,7 +90,7 @@ class QueueItem extends Base
         }
     }
 
-    protected function getFilePath(int $sortOrder, string $priority): string
+    public function getFilePath(int $sortOrder, string $priority): string
     {
         $filesInDir = 7000;
         $dirName = (int)($sortOrder / $filesInDir);

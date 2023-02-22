@@ -117,6 +117,9 @@ class Cron extends AbstractConsole
         // check auth tokens
         $this->authTokenControl();
 
+        // find pending jobs without queue files and create them
+        $this->createQueueFiles();
+
         // run cron jobs
         $this->runCronManager();
     }
@@ -179,6 +182,32 @@ class Cron extends AbstractConsole
                 $token->set('isActive', false);
                 $em->saveEntity($token);
             }
+        }
+    }
+
+    private function createQueueFiles(): void
+    {
+        /** @var \Espo\Repositories\QueueItem $repository */
+        $repository = $this->getContainer()->get('entityManager')->getRepository('QueueItem');
+
+        $items = $repository
+            ->select(['id', 'sortOrder', 'priority'])
+            ->where(['status' => 'Pending'])
+            ->order('sortOrder')
+            ->limit(0, 20)
+            ->find();
+
+        $created = false;
+        foreach ($items as $item) {
+            $filePath = $repository->getFilePath($item->get('sortOrder'), $item->get('priority'));
+            if (!file_exists($filePath)) {
+                file_put_contents($filePath, $item->get('id'));
+                $created = true;
+            }
+        }
+
+        if ($created) {
+            file_put_contents(\Espo\Core\QueueManager::FILE_PATH, '1');
         }
     }
 }
