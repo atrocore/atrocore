@@ -210,6 +210,9 @@ class QueueManager extends Injectable
             return false;
         }
 
+        /**
+         * Trying to find needed job in 10 sec, because DB could create job too long
+         */
         $count = 0;
         while (empty($item = $this->getRepository()->get($itemId))) {
             $count++;
