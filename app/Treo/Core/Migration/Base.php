@@ -83,10 +83,6 @@ class Base
         return $this->getSchema()->getSchemaConverter()->getDbFieldParams($params);
     }
 
-    /**
-     * @return PDO
-     * @deprecated Method is deprecated, please use getSchema instead.
-     */
     protected function getPDO(): PDO
     {
         return $this->pdo;
