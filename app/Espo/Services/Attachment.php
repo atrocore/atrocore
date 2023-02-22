@@ -141,6 +141,12 @@ class Attachment extends Record
      */
     public function createEntity($attachment)
     {
+        $ext = pathinfo($attachment->name, PATHINFO_EXTENSION);
+
+        if (!in_array($ext, $this->getConfig()->get('whitelistedExtensions'))) {
+            throw new BadRequest(sprintf($this->getInjection('language')->translate('invalidFileExtension', 'exceptions', 'Attachment'), $ext));
+        }
+
         $this->clearTrash();
 
         if (!empty($attachment->file)) {

@@ -28,6 +28,7 @@
   },
   "exceptions": {
     "fileUploadingFailed": "File uploading failed.",
-    "chunkUploadFailed": "Error occurred, please re-upload."
+    "chunkUploadFailed": "Error occurred, please re-upload.",
+    "invalidFileExtension": "Upload of files with the extension '.%s' is prohibited. Please contact your admin to enable it."
   }
 }
