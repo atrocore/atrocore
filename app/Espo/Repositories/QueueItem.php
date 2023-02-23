@@ -95,24 +95,6 @@ class QueueItem extends Base
         $filesInDir = 7000;
         $dirName = (int)($sortOrder / $filesInDir);
 
-        // delete old empty dirs
-        if (file_exists(QueueManager::QUEUE_DIR_PATH)) {
-            foreach (scandir(QueueManager::QUEUE_DIR_PATH) as $v) {
-                if (in_array($v, ['.', '..'])) {
-                    continue;
-                }
-
-                if ((int)$v >= $dirName) {
-                    break;
-                }
-
-                $files = scandir(QueueManager::QUEUE_DIR_PATH . '/' . $v);
-                if (!array_key_exists(2, $files)) {
-                    rmdir(QueueManager::QUEUE_DIR_PATH . '/' . $v);
-                }
-            }
-        }
-
         $fileName = str_pad((string)($sortOrder % $filesInDir), 4, '0', STR_PAD_LEFT);
 
         switch ($priority) {
