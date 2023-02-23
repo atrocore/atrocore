@@ -707,6 +707,10 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             return;
         }
 
+        if (!empty($GLOBALS['importJobId'])) {
+            return;
+        }
+
         if ($entity->isAttributeChanged('ownerUserId')) {
             $this->createOwnNotification($entity, $entity->get('ownerUserId'));
         }
