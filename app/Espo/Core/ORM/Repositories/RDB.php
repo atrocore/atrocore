@@ -707,7 +707,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             return;
         }
 
-        if (!empty($GLOBALS['importJobId'])) {
+        if (!empty($GLOBALS['skipAssignmentNotifications'])) {
             return;
         }
 
