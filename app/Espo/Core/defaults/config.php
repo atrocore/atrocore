@@ -216,7 +216,8 @@ return [
         'rtf',
         'tex',
         'txt',
-        'wpd'
+        'wpd',
+        'json'
     ],
 ];
 
