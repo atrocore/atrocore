@@ -166,7 +166,9 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             $entity->set('modifiedAt', $nowString);
         }
         if ($entity->hasAttribute('modifiedById')) {
-            $entity->set('modifiedById', $this->getEntityManager()->getUser()->id);
+            $user = $this->getEntityManager()->getUser();
+            $modifiedById = empty($user) ? 'system' : $user->id;
+            $entity->set('modifiedById', $modifiedById);
         }
     }
 
