@@ -3,7 +3,7 @@
         "value": {
             "type": "varchar",
             "required": true,
-            "maxLength": 100
+            "maxLength": 200
         },
         "entity": {
             "type": "linkParent"
