@@ -143,7 +143,7 @@ class Attachment extends Record
     {
         $ext = pathinfo($attachment->name, PATHINFO_EXTENSION);
 
-        if (!in_array($ext, $this->getConfig()->get('whitelistedExtensions'))) {
+        if (!in_array(strtolower($ext), $this->getConfig()->get('whitelistedExtensions'))) {
             throw new BadRequest(sprintf($this->getInjection('language')->translate('invalidFileExtension', 'exceptions', 'Attachment'), $ext));
         }
 
