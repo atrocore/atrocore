@@ -295,11 +295,13 @@ class Attachment extends Record
         return base64_decode($contents);
     }
 
-    /**
-     * @param Entity $entity
-     */
     protected function createThumbnails(Entity $entity): void
     {
+        // do not create thumbnails when import
+        if (!empty($GLOBALS['importJobId'])) {
+            return;
+        }
+
         if (!in_array($entity->get('type'), $this->getMetadata()->get(['app', 'typesWithThumbnails'], []))) {
             return;
         }
