@@ -701,7 +701,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     protected function assignmentNotifications(Entity $entity): void
     {
-        if ($entity->getEntityType() === 'Notification') {
+        if ($entity->getEntityType() === 'Notification' || $entity->getEntityType() === 'QueueItem') {
             return;
         }
 
