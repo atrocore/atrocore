@@ -1,0 +1,65 @@
+{
+  "fields": {
+    "status": "Статус",
+    "settingVersion": "Установка версии",
+    "currentVersion": "Текущая версия",
+    "latestVersion": "Последняя версия",
+    "availableVersions": "Доступные версии"
+  },
+  "options": {
+    "status": {
+      "install": "Установить",
+      "update": "Обновить",
+      "delete": "Удалить"
+    }
+  },
+  "exceptions": {
+    "hasRequireds": "Модуль не отвечает требованиям",
+    "hasRequiredsDelete": "Вы не можете удалить требуемый модуль",
+    "isSystem": "Вы не можете удалить системный модуль.",
+    "noSuchModule": "Такого модуля нет",
+    "suchModuleIsAlreadyInstalled": "Данный модуль уже установлен",
+    "moduleWasNotInstalled": "Модуль не был установлен",
+    "suchModuleVersionAlreadyInstalled": "Данная версия модуля уже установлена",
+    "noSuchModuleVersion": "Такой версии модуля нет",
+    "versionIsInvalid": "Версия неправильная"
+  },
+  "labels": {
+    "available": "Доступен",
+    "Installed": "Установлен",
+    "Store": "Магазин",
+    "updateModule": "Обновление",
+    "removeModule": "Удаление",
+    "cancelModule": "Отмена",
+    "username": "Имя пользователя",
+    "password": "Пароль",
+    "anotherActionInProgress": "Другое действие в процессе работы. Дождитесь его завершения",
+    "updating": "Обновление...",
+    "updateStarted": "Обновление началось",
+    "canceling": "Отмена...",
+    "canceled": "Отменен",
+    "dependencies": "Зависимости",
+    "version": "Версия",
+    "Run Update": "Обновить",
+    "updateFailed": "Не удалось обносить. Не возможно установить соединение с сервером модулей. Пожалуйста, повторите операцию.",
+    "settingModuleForRemoving": "Выбор модуль для удаления...",
+    "setModuleForRemoving": "Модуль выбран для удаления. Нажмите на кнопку \"Обновить\" чтобы применить инсталляцию или удаление модулей.",
+    "settingModuleForInstalling": "Выбор модуля для установки...",
+    "setModuleForInstalling": "Модуль выбран для установки. Нажмите на кнопку \"Обновить\" чтобы применить инсталляцию или удаление модулей.",
+    "cancelingModuleInstall": "Отмена установки модуля...",
+    "canceledModuleInstall": "Установка модуля отменена",
+    "Log": "Лог",
+    "confirmRun": "После действия обновления все пользователи будут вылогинены из системы. Вы уверены, что хотите обновить систему?",
+    "daemonDisabled": "<b>Демон программы-компоновщика не запущен! </b> <br> Вероятно, демон сейчас перезагружается, и Вам следует подождать минуту, или crontab не настроен. Инструкции по настройке crontab вы можете найти <a href=\"https://github.com/atrocore/atrocore-docs/blob/master/en/administration/installation.md#4-configure-the-crontab\" class=\"alert-link\" target=\"_blank\">здесь</a>.",
+    "queueManagerRunning": "<b>Менеджер очередей запущен!</b><br>Возможность обновления модулей заблокирована. Пожалуйста, повторите попытку позже."
+  },
+  "notifications": {
+    "Module update": "Модуль {module} был обновлен. С версии {from} до {to}",
+    "System update": "Система была обновлена. С версии {from} до {to}",
+    "Module install": "Модуль {module} v.{version} установлен",
+    "Module delete": "Модуль {module} был удален",
+    "Module downgrade": "Модуль {module} переведен на более ранюю версию. С версии {from} до {to}",
+    "System downgrade": "Система переведена на более ранюю версию. С версии {from} до {to}",
+    "Composer updated!": "Менеджер модуля зависимостей был обновлен! <a href=\"/#Composer/list\">See details</a>"
+  }
+}

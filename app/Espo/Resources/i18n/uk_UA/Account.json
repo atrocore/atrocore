@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "name": "Имя",
+    "emailAddress": "Адрес эл. почты",
+    "phoneNumber": "Телефон",
+    "description": "Описание"
+  },
+  "links": {
+    "portalUsers": "Пользователи портала"
+  },
+  "labels": {
+    "Create Account": "Создать контрагента"
+  }
+}

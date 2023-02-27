@@ -1,0 +1,28 @@
+{
+  "labels": {
+    "Field": "Поле"
+  },
+  "options": {
+    "operators": {
+      "equals": "Равняется",
+      "notEquals": "Не равняется",
+      "greaterThan": "Больше чем",
+      "lessThan": "Меньше чем",
+      "greaterThanOrEquals": "Больше чем или равняется",
+      "lessThanOrEquals": "Меньше чем или равняется",
+      "in": "В",
+      "notIn": "Не в",
+      "inPast": "В Прошлом",
+      "inFuture": "В Будущем",
+      "isToday": "Сегодня",
+      "isTrue": "Правда",
+      "isFalse": "Неверно",
+      "isEmpty": "Пусто",
+      "isNotEmpty": "Не пусто",
+      "contains": "Содержит",
+      "has": "Содержит",
+      "notContains": "Не включает в себя",
+      "notHas": "Не включает в себя"
+    }
+  }
+}
