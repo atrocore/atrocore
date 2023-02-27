@@ -1,35 +1,35 @@
 {
   "fields": {
-    "username": "Имя пользователя",
-    "ipAddress": "IP адрес",
-    "requestTime": "Время запроса",
-    "createdAt": "Запрос осуществлен с",
-    "isDenied": "Отказано",
-    "denialReason": "Причина отказа",
+    "username": "Ім'я користувача",
+    "ipAddress": "IP адреса",
+    "requestTime": "Час запиту",
+    "createdAt": "Запит здійснено з",
+    "isDenied": "Відмовлено",
+    "denialReason": "Причина відмови",
     "portal": "Портал",
-    "user": "Пользователь",
-    "authToken": "Токен аутентификации создан",
-    "requestUrl": "URL запроса",
-    "requestMethod": "Метод запроса",
-    "authTokenIsActive": "Токен аутентификации активен"
+    "user": "Користувач",
+    "authToken": "Токен аутентифікації створено",
+    "requestUrl": "URL запиту",
+    "requestMethod": "Метод запиту",
+    "authTokenIsActive": "Токен аутентифікації активний"
   },
   "links": {
-    "authToken": "Токен аутентификации создан",
-    "user": "Пользователь",
+    "authToken": "Токен аутентифікації створено",
+    "user": "Користувач",
     "portal": "Портал",
-    "actionHistoryRecords": "История действий"
+    "actionHistoryRecords": "Історія дій"
   },
   "presetFilters": {
-    "denied": "Отказано",
-    "accepted": "Согласен"
+    "denied": "Відмовлено",
+    "accepted": "Згоден"
   },
   "options": {
     "denialReason": {
-      "CREDENTIALS": "Недопустимые учетные данные",
-      "INACTIVE_USER": "Неактивный пользователь",
-      "IS_PORTAL_USER": "Пользователь портала",
-      "IS_NOT_PORTAL_USER": "Не пользователь портала",
-      "USER_IS_NOT_IN_PORTAL": "Пользователь не связан с порталом"
+      "CREDENTIALS": "Недопустимі облікові дані",
+      "INACTIVE_USER": "Неактивний користувач",
+      "IS_PORTAL_USER": "Користувач порталу",
+      "IS_NOT_PORTAL_USER": "Не користувач порталу",
+      "USER_IS_NOT_IN_PORTAL": "Користувач не пов'язаний із порталом"
     }
   }
 }
