@@ -1,29 +1,29 @@
 {
   "fields": {
-    "user": "Пользователь",
-    "action": "Действие",
+    "user": "Користувач",
+    "action": "Дія",
     "createdAt": "Дата",
-    "target": "Цель",
-    "targetType": "Тип цели",
-    "authToken": "Токен аутентификации",
-    "ipAddress": "IP адрес",
-    "authLogRecord": "Запись Лога Аутентификации"
+    "target": "Ціль",
+    "targetType": "Тип цілі",
+    "authToken": "Токен аутентифікації",
+    "ipAddress": "IP адреса",
+    "authLogRecord": "Запис Логу Аутентифікації"
   },
   "links": {
-    "authToken": "Токен аутентификации",
-    "user": "Пользователь",
-    "target": "Цель",
-    "authLogRecord": "Запись Лога Аутентификации"
+    "authToken": "Токен аутентифікації",
+    "user": "Користувач",
+    "target": "Ціль",
+    "authLogRecord": "Запис Лога Аутентифікації"
   },
   "presetFilters": {
-    "onlyMy": "Только мои"
+    "onlyMy": "Тільки мої"
   },
   "options": {
     "action": {
       "read": "Прочитано",
-      "update": "Обновить",
-      "delete": "Удалить",
-      "create": "Создать"
+      "update": "Оновити",
+      "delete": "Видалити",
+      "create": "Створити"
     }
   }
 }
