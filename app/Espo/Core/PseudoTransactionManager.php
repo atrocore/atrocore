@@ -195,7 +195,25 @@ class PseudoTransactionManager extends Injectable
                     $service->createEntity(Json::decode($job['input_data']));
                     break;
                 case 'updateEntity':
-                    $service->updateEntity($job['entity_id'], Json::decode($job['input_data']));
+                    $input = Json::decode($job['input_data']);
+
+                    if (property_exists($input, 'massUpdateData')) {
+                        $massUpdateData = $input->massUpdateData;
+                        unset($input->massUpdateData);
+                    }
+
+                    $service->updateEntity($job['entity_id'], $input);
+
+                    if (isset($massUpdateData)) {
+                        if (property_exists($massUpdateData, 'updated') && property_exists($massUpdateData, 'total')) {
+                            $data = ['updated' => $massUpdateData->updated, 'total' => $massUpdateData->total];
+                            if ($massUpdateData->updated == $massUpdateData->total - 1) {
+                                $data['done'] = Util::generateId();
+                            }
+
+                            Record::updatePublicData($job['entity_type'], $data);
+                        }
+                    }
                     break;
                 case 'deleteEntity':
                     $service->deleteEntity($job['entity_id']);

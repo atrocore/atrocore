@@ -33,6 +33,7 @@
 
 namespace Espo\Services;
 
+use Espo\Core\DataManager;
 use Espo\Core\EventManager\Event;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Conflict;
@@ -2090,18 +2091,35 @@ class Record extends \Espo\Core\Services\Base
                 ->fetchAll(\PDO::FETCH_COLUMN);
         }
 
+        $updated = 0;
+        $total = count($ids);
+
+        self::updatePublicData($this->getEntityType(), ['updated' => $updated, 'total' => $total]);
+
         foreach ($ids as $k => $id) {
             $cloned = clone $data;
 
             if ($k < $this->maxMassUpdateCount) {
                 try {
                     $this->updateEntity($id, $cloned);
+                    $updated++;
+                    self::updatePublicData($this->getEntityType(), ['updated' => $updated, 'total' => $total]);
                 } catch (\Throwable $e) {
                     $GLOBALS['log']->error("Update $this->entityType '$id' failed: {$e->getMessage()}");
                 }
             } else {
+                $cloned->massUpdateData = [
+                    'updated' => $updated,
+                    'total' => $total
+                ];
+
                 $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->entityType, $id, $cloned);
+                $updated++;
             }
+        }
+
+        if (count($ids) < $this->maxMassUpdateCount) {
+            self::updatePublicData($this->getEntityType(), ['updated' => $updated, 'total' => $total, 'done' => Util::generateId()]);
         }
 
         return $this
@@ -2858,6 +2876,16 @@ class Record extends \Espo\Core\Services\Base
         }
 
         return null;
+    }
+
+    public static function updatePublicData(string $entityType, ?array $data): void
+    {
+        $publicData = DataManager::getPublicData('massUpdate');
+        if (empty($publicData)) {
+            $publicData = [];
+        }
+        $publicData[$entityType] = $data;
+        DataManager::pushPublicData('massUpdate', $publicData);
     }
 
     /**
