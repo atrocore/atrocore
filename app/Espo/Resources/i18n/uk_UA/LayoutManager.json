@@ -2,32 +2,32 @@
   "fields": {
     "width": "Ширина (%)",
     "widthPx": "Ширина (px)",
-    "link": "Ссылка",
-    "notSortable": "Не сортируемый",
-    "align": "Выровнять",
-    "panelName": "Название панели",
+    "link": "Посилання",
+    "notSortable": "Не сортується",
+    "align": "Вирівняти",
+    "panelName": "Назва панелі",
     "style": "Стиль",
-    "isLarge": "Большой размер шрифта",
-    "dynamicLogicVisible": "Условия, которые делают панель видимой",
-    "sticked": "Прилеплен",
+    "isLarge": "Великий розмір шрифту",
+    "dynamicLogicVisible": "Умови, які роблять панель видимою",
+    "sticked": "Приліплений",
     "cssStyle": "CSS Styles"
   },
   "options": {
     "align": {
-      "left": "по левому краю",
+      "left": "по лівому краю",
       "right": "по правому краю"
     },
     "style": {
-      "default": "По умолчанию",
-      "success": "Успех",
-      "danger": "Опасность",
-      "info": "Информация",
-      "warning": "Предупреждение",
-      "primary": "Основной"
+      "default": "За замовчуванням",
+      "success": "Успіх",
+      "danger": "Небезпека",
+      "info": "Інформація",
+      "warning": "Попередження",
+      "primary": "Основний"
     }
   },
   "labels": {
-    "New panel": "Новая панель",
+    "New panel": "Нова панель",
     "Layout": "Макет"
   }
 }
