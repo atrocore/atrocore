@@ -103,7 +103,8 @@ return [
     'smtpPort'                              => 25,
     'languageList'                          => [
         'en_US',
-        'de_DE'
+        'de_DE',
+        'uk_UA'
     ],
     'currencyList'                          => [
         0 => 'EUR'
