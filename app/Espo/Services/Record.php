@@ -1229,30 +1229,10 @@ class Record extends \Espo\Core\Services\Base
     public function updateEntity($id, $data)
     {
         $event = $this
-            ->dispatchEvent('beforeUpdateEntity', new Event(['id' => $id, 'data' => $data]));
+            ->dispatchEvent('beforeUpdateEntity', new Event(['id' => $id, 'data' => $data, 'entityType' => $this->getEntityType()]));
 
         $id = $event->getArgument('id');
         $data = $event->getArgument('data');
-
-        if (property_exists($data, 'massUpdateData')) {
-            $massUpdateData = json_decode(json_encode($data->massUpdateData), true);
-            unset($data->massUpdateData);
-
-            $publicData = DataManager::getPublicData('massUpdate');
-            $publicData = $publicData[$this->getEntityType()] ?? [];
-
-            if (isset($publicData['updated']) && !isset($publicData['done'])) {
-                $massUpdateData['updated'] =  $publicData['updated'];
-            } else {
-                $massUpdateData['updated'] = 0;
-            }
-
-            if ($massUpdateData['position'] == $massUpdateData['total'] - 1) {
-                $massUpdateData['done'] = Util::generateId();
-            }
-
-            $this->updateMassUpdatePublicData($this->getEntityType(), $massUpdateData);
-        }
 
         unset($data->deleted);
 
@@ -1323,14 +1303,8 @@ class Record extends \Espo\Core\Services\Base
 
             $this->processActionHistoryRecord('update', $entity);
 
-            if (isset($massUpdateData)) {
-                $massUpdateData['updated']++;
-
-                $this->updateMassUpdatePublicData($this->getEntityType(), $massUpdateData);
-            }
-
             return $this
-                ->dispatchEvent('afterUpdateEntity', new Event(['id' => $id, 'data' => $data, 'entity' => $entity]))
+                ->dispatchEvent('afterUpdateEntity', new Event(['id' => $id, 'data' => $data, 'entity' => $entity, 'beforeUpdateEvent' => $event]))
                 ->getArgument('entity');
         }
 
