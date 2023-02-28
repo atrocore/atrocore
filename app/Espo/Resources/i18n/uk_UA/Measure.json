@@ -1,17 +1,17 @@
 {
   "fields": {
-    "name": "Название",
-    "description": "Описание",
-    "units": "Единицы измерения",
-    "locales": "Локали",
-    "localeUnits": "Единицы измерения",
-    "localeDefault": "По умолчанию"
+    "name": "Назва",
+    "description": "Опис",
+    "units": "Одиниці виміру",
+    "locales": "Локалі",
+    "localeUnits": "Одиниці виміру",
+    "localeDefault": "За замовчуванням"
   },
   "links": {
-    "units": "Единицы измерения",
-    "locales": "Локали"
+    "units": "Одиниці виміру",
+    "locales": "Локалі"
   },
   "labels": {
-    "Create Measure": "Создать меру"
+    "Create Measure": "Створити міру"
   }
 }
