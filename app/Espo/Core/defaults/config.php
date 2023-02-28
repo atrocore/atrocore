@@ -104,8 +104,7 @@ return [
     'languageList'                          => [
         'en_US',
         'de_DE',
-        'ru_RU',
-        'es_ES'
+        'uk_UA'
     ],
     'currencyList'                          => [
         0 => 'EUR'

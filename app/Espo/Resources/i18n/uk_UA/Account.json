@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "name": "Ім'я",
+    "emailAddress": "Адреса ел. пошти",
+    "phoneNumber": "Телефон",
+    "description": "Опис"
+  },
+  "links": {
+    "portalUsers": "Користувачі порталу"
+  },
+  "labels": {
+    "Create Account": "Створити контрагента"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "fields": {
+    "locale": "Локаль",
+    "name": "Назва",
+    "logo": "Логотип",
+    "companyLogo": "Логотип",
+    "portalRoles": "Ролі",
+    "isActive": "Активний",
+    "isDefault": "Портал за замовчуванням",
+    "tabList": "Меню навігації",
+    "quickCreateList": "Список для швидкого створення",
+    "theme": "Тема",
+    "dashboardLayout": "Планування панелі віджетів",
+    "defaultCurrency": "Валюта за замовчуванням",
+    "customUrl": "Користувацький URL",
+    "customId": "Користувацький ID",
+    "url": "URL"
+  },
+  "links": {
+    "locale": "Локаль",
+    "users": "Користувачі",
+    "portalRoles": "Ролі",
+    "notes": "Нотатки"
+  },
+  "tooltips": {
+    "portalRoles": "Зазначені ролі порталу будуть застосовані до всіх користувачів порталу."
+  },
+  "labels": {
+    "Create Portal": "Створити портал",
+    "User Interface": "Інтерфейс користувача",
+    "General": "Основне",
+    "Settings": "Налаштування"
+  }
+}
