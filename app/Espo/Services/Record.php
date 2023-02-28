@@ -118,6 +118,8 @@ class Record extends \Espo\Core\Services\Base
     protected int $maxMassLinkCount = 20;
     protected int $maxMassUnlinkCount = 20;
 
+    protected array $massUpdateData = ['updated' => 0];
+
     /**
      * @var bool|array
      */
@@ -1234,6 +1236,26 @@ class Record extends \Espo\Core\Services\Base
         $id = $event->getArgument('id');
         $data = $event->getArgument('data');
 
+        if (property_exists($data, 'massUpdateData')) {
+            $massUpdateData = json_decode(json_encode($data->massUpdateData), true);
+            unset($data->massUpdateData);
+
+            $publicData = DataManager::getPublicData('massUpdate');
+            $publicData = $publicData[$this->getEntityType()] ?? [];
+
+            if (isset($publicData['updated']) && !isset($publicData['done'])) {
+                $massUpdateData['updated'] =  $publicData['updated'];
+            } else {
+                $massUpdateData['updated'] = 0;
+            }
+
+            if ($massUpdateData['position'] == $massUpdateData['total'] - 1) {
+                $massUpdateData['done'] = Util::generateId();
+            }
+
+            $this->updateMassUpdatePublicData($this->getEntityType(), $massUpdateData);
+        }
+
         unset($data->deleted);
 
         if (empty($id)) {
@@ -1302,6 +1324,12 @@ class Record extends \Espo\Core\Services\Base
             $this->loadPreview($entity);
 
             $this->processActionHistoryRecord('update', $entity);
+
+            if (isset($massUpdateData)) {
+                $massUpdateData['updated']++;
+
+                $this->updateMassUpdatePublicData($this->getEntityType(), $massUpdateData);
+            }
 
             return $this
                 ->dispatchEvent('afterUpdateEntity', new Event(['id' => $id, 'data' => $data, 'entity' => $entity]))
@@ -2091,35 +2119,27 @@ class Record extends \Espo\Core\Services\Base
                 ->fetchAll(\PDO::FETCH_COLUMN);
         }
 
-        $updated = 0;
+        $position = 0;
         $total = count($ids);
-
-        self::updatePublicData($this->getEntityType(), ['updated' => $updated, 'total' => $total]);
 
         foreach ($ids as $k => $id) {
             $cloned = clone $data;
+            $cloned->massUpdateData = [
+                'position' => $position,
+                'total' => $total
+            ];
 
             if ($k < $this->maxMassUpdateCount) {
                 try {
                     $this->updateEntity($id, $cloned);
-                    $updated++;
-                    self::updatePublicData($this->getEntityType(), ['updated' => $updated, 'total' => $total]);
                 } catch (\Throwable $e) {
                     $GLOBALS['log']->error("Update $this->entityType '$id' failed: {$e->getMessage()}");
                 }
             } else {
-                $cloned->massUpdateData = [
-                    'updated' => $updated,
-                    'total' => $total
-                ];
-
                 $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->entityType, $id, $cloned);
-                $updated++;
             }
-        }
 
-        if (count($ids) < $this->maxMassUpdateCount) {
-            self::updatePublicData($this->getEntityType(), ['updated' => $updated, 'total' => $total, 'done' => Util::generateId()]);
+            $position++;
         }
 
         return $this
@@ -2878,7 +2898,7 @@ class Record extends \Espo\Core\Services\Base
         return null;
     }
 
-    public static function updatePublicData(string $entityType, ?array $data): void
+    public function updateMassUpdatePublicData(string $entityType, ?array $data): void
     {
         $publicData = DataManager::getPublicData('massUpdate');
         if (empty($publicData)) {
