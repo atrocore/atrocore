@@ -1,11 +1,11 @@
 {
   "links": {
-    "users": "Пользователи"
+    "users": "Користувачі"
   },
   "labels": {
     "Access": "Доступ",
-    "Create PortalRole": "Создать роль портала",
-    "Scope Level": "Уровень области действия",
-    "Field Level": "Уровень поля"
+    "Create PortalRole": "Створити роль порталу",
+    "Scope Level": "Рівень області дії",
+    "Field Level": "Рівень поля"
   }
 }
