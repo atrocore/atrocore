@@ -118,8 +118,6 @@ class Record extends \Espo\Core\Services\Base
     protected int $maxMassLinkCount = 20;
     protected int $maxMassUnlinkCount = 20;
 
-    protected array $massUpdateData = ['updated' => 0];
-
     /**
      * @var bool|array
      */
