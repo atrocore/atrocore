@@ -33,7 +33,6 @@
 
 namespace Espo\Services;
 
-use Espo\Core\DataManager;
 use Espo\Core\EventManager\Event;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Conflict;
