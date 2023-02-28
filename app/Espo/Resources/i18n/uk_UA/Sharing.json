@@ -2,19 +2,19 @@
   "fields": {
     "active": "Активно",
     "available": "Доступно",
-    "entityType": "Тип сущности",
-    "entityId": "ID сущности",
+    "entityType": "Тип сутності",
+    "entityId": "ID сутності",
     "type": "Тип",
     "validTill": "Доступно до",
-    "allowedUsage": "Разрешено использовать",
-    "link": "Ссылка"
+    "allowedUsage": "Дозволено використовувати",
+    "link": "Посилання"
   },
   "labels": {
-    "copiedToClipboard": "Скопировано в буфер обмена"
+    "copiedToClipboard": "Скопійовано в буфер обміну"
   },
   "options": {
     "type": {
-      "download": "Скачать"
+      "download": "Завантажити"
     }
   }
 }
