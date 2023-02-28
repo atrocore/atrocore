@@ -1,37 +1,37 @@
 {
   "fields": {
     "locale": "Локаль",
-    "defaultCurrency": "Валюта по умолчанию",
+    "defaultCurrency": "Валюта за замовчуванням",
     "currencyList": "Список валют",
-    "emailAddress": "Адрес эл. почты",
+    "emailAddress": "Адреса ел. пошти",
     "dashboardTabList": "Список вкладок",
-    "tabList": "Меню навигации",
+    "tabList": "Меню навігації",
     "theme": "Тема",
-    "useCustomTabList": "Настраиваемый список вкладок",
-    "receiveAssignmentEmailNotifications": "Получать оповещения по эл. почте при назначении",
-    "receiveMentionEmailNotifications": "Уведомления по эл. почте об упоминаниях в сообщениях",
-    "receiveStreamEmailNotifications": "Уведомления по электронной почте о сообщениях и обновлениях статуса",
-    "dashboardLayout": "Планировка панели виджетов",
-    "autoFollowEntityTypeList": "Автоподписка",
-    "followEntityOnStreamPost": "Автоматически подписаться поле публикации в ленте",
-    "followCreatedEntities": "Автоматически подписаться на созданные записи",
-    "followCreatedEntityTypeList": "Автоматически подписаться на созданные записи конкретных типов объектов",
-    "scopeColorsDisabled": "Отключить цвета границ",
-    "tabColorsDisabled": "Отключить цвета вкладок",
+    "useCustomTabList": "Настроюваний список вкладок",
+    "receiveAssignmentEmailNotifications": "Отримувати сповіщення по ел. пошті при призначенні",
+    "receiveMentionEmailNotifications": "Сповіщення електронною поштою про згадки в повідомленнях",
+    "receiveStreamEmailNotifications": "Повідомлення електронною поштою про повідомлення та оновлення статусу",
+    "dashboardLayout": "Планування панелі віджетів",
+    "autoFollowEntityTypeList": "Автопідписка",
+    "followEntityOnStreamPost": "Автоматично підписатися поле публікації в стрічці",
+    "followCreatedEntities": "Автоматично підписатися на створені записи",
+    "followCreatedEntityTypeList": "Автоматично підписатися на створені записи конкретних типів об'єктів",
+    "scopeColorsDisabled": "Відключити кольори меж",
+    "tabColorsDisabled": "Вимкнути кольори вкладок",
     "assignmentNotifications": "Notifications upon assignment"
   },
   "links": {
   },
   "labels": {
-    "Notifications": "Оповещения",
-    "User Interface": "Интерфейс пльзователя",
-    "Locale": "Язык",
-    "Reset Dashboard to Default": "Сбросить настройки панели виджетов по умолчанию",
-    "General": "Общие"
+    "Notifications": "Сповіщення",
+    "User Interface": "Інтерфейс користувача",
+    "Locale": "Мова",
+    "Reset Dashboard to Default": "Скинути налаштування панелі віджетів за замовчуванням",
+    "General": "Загальні"
   },
   "tooltips": {
-    "autoFollowEntityTypeList": "Пользователь будет автоматически подписан на все новые записи о выбранных типах объектов, будет видеть эту информацию в ленте и получать оповещения.",
-    "followCreatedEntities": "При создании новых записей они будут автоматически отслеживаться, даже если они назначены другому пользователю.",
-    "followCreatedEntityTypeList": "При создании новых записей выбранных типов объектов они будут отслеживаться автоматически, даже если они назначены другому пользователю."
+    "autoFollowEntityTypeList": "Користувач буде автоматично підписаний на всі нові записи про обрані типи об'єктів, буде бачити цю інформацію в стрічці та отримувати сповіщення.",
+    "followCreatedEntities": "При створенні нових записів вони будуть автоматично відстежуватися, навіть якщо вони призначені іншому користувачеві.",
+    "followCreatedEntityTypeList": "При створенні нових записів обраних типів об'єктів вони будуть відстежуватися автоматично, навіть якщо вони призначені іншому користувачеві."
   }
 }
