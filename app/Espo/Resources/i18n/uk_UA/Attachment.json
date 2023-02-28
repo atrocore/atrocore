@@ -1,34 +1,34 @@
 {
   "fields": {
-    "global": "Глобальные",
+    "global": "Глобальні",
     "md5": "md5 хеш",
-    "storageFilePath": "Путь к файлу хранилища",
-    "contents": "Содержание",
+    "storageFilePath": "Шлях до файлу сховища",
+    "contents": "Зміст",
     "url": "URL",
     "role": "Роль",
-    "related": "Связанный",
+    "related": "Пов'язаний",
     "file": "Файл",
     "type": "Тип",
     "field": "Поле",
-    "storage": "Хранилище",
-    "size": "Размер (bytes)"
+    "storage": "Сховище",
+    "size": "Розмір (байти)"
   },
   "labels": {
-    "Create Attachment": "Создать вложение",
-    "createThumbnailsNotification": "Создать миниатюру для %"
+    "Create Attachment": "Створити вкладення",
+    "createThumbnailsNotification": "Створити мініатюру для %"
   },
   "links": {
-    "related": "Связанный"
+    "related": "Пов'язаний"
   },
   "insertFromSourceLabels": {
-    "Document": "Вставить документ"
+    "Document": "Вставити документ"
   },
   "presetFilters": {
-    "orphan": "Изолированая строка"
+    "orphan": "Ізольований рядок"
   },
   "exceptions": {
-    "fileUploadingFailed": "Загрузка файла не выполнена.",
-    "chunkUploadFailed": "Возникла ошибка, пожалуйста, повторите загрузку.",
-    "invalidFileExtension": "Загрузка файлов с расширением '.%s' запрещена. Пожалуйста, свяжитесь с вашим администратором, чтобы включить его."
+    "fileUploadingFailed": "Завантаження файлу не виконано.",
+    "chunkUploadFailed": "Виникла помилка, будь ласка, повторіть завантаження.",
+    "invalidFileExtension": "Завантаження файлів із розширенням '.%s' заборонено. Будь ласка, зв'яжіться з вашим адміністратором, щоб увімкнути його."
   }
 }
