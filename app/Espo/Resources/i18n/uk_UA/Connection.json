@@ -1,20 +1,20 @@
 {
   "fields": {
     "type": "Тип",
-    "dbName": "Имя БД",
+    "dbName": "Ім'я БД",
     "host": "Хост",
     "port": "Порт",
-    "user": "Пользователь",
+    "user": "Користувач",
     "password": "Пароль"
   },
   "labels": {
-    "connectionSuccess": "Соединение успешно установлено",
-    "testConnection": "Проверить соединение",
-    "Create Connection": "Создать соединение"
+    "connectionSuccess": "З'єднання успішно встановлено",
+    "testConnection": "Перевірити з'єднання",
+    "Create Connection": "Створити з'єднання"
   },
   "exceptions": {
-    "sqlsrvMissing": "PHP MSSQL extension не установлен.",
-    "connectionFailed": "Соединение не установлено: %s",
-    "noSuchType": "Тип соединения не поддерживается."
+    "sqlsrvMissing": "PHP MSSQL extension не встановлено.",
+    "connectionFailed": "З'єднання не встановлено: %s",
+    "noSuchType": "Тип з'єднання не підтримується.".
   }
 }
