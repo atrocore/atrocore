@@ -1228,7 +1228,7 @@ class Record extends \Espo\Core\Services\Base
     public function updateEntity($id, $data)
     {
         $event = $this
-            ->dispatchEvent('beforeUpdateEntity', new Event(['id' => $id, 'data' => $data]));
+            ->dispatchEvent('beforeUpdateEntity', new Event(['id' => $id, 'data' => $data, 'entityType' => $this->getEntityType()]));
 
         $id = $event->getArgument('id');
         $data = $event->getArgument('data');
@@ -1303,7 +1303,7 @@ class Record extends \Espo\Core\Services\Base
             $this->processActionHistoryRecord('update', $entity);
 
             return $this
-                ->dispatchEvent('afterUpdateEntity', new Event(['id' => $id, 'data' => $data, 'entity' => $entity]))
+                ->dispatchEvent('afterUpdateEntity', new Event(['id' => $id, 'data' => $data, 'entity' => $entity, 'beforeUpdateEvent' => $event]))
                 ->getArgument('entity');
         }
 
@@ -2090,8 +2090,15 @@ class Record extends \Espo\Core\Services\Base
                 ->fetchAll(\PDO::FETCH_COLUMN);
         }
 
+        $position = 0;
+        $total = count($ids);
+
         foreach ($ids as $k => $id) {
             $cloned = clone $data;
+            $cloned->massUpdateData = [
+                'position' => $position,
+                'total' => $total
+            ];
 
             if ($k < $this->maxMassUpdateCount) {
                 try {
@@ -2102,6 +2109,8 @@ class Record extends \Espo\Core\Services\Base
             } else {
                 $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->entityType, $id, $cloned);
             }
+
+            $position++;
         }
 
         return $this
