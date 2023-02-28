@@ -1,33 +1,33 @@
 {
   "fields": {
-    "title": "Название",
-    "dateFrom": "Дата от",
+    "title": "Назва",
+    "dateFrom": "Дата від",
     "dateTo": "Дата по",
-    "autorefreshInterval": "Интервал автообновления",
-    "displayRecords": "Отображать записей",
-    "isDoubleHeight": "Высота 2x",
+    "autorefreshInterval": "Інтервал автооновлення",
+    "displayRecords": "Відображати записи",
+    "isDoubleHeight": "Висота 2x",
     "mode": "Режим",
-    "enabledScopeList": "Что отображать",
-    "users": "Пользователи",
-    "entityType": "Тип объекта",
-    "primaryFilter": "Первичный фильтр",
-    "boolFilterList": "Дополнительные фильтры",
-    "sortBy": "Сортировка (поле)",
-    "sortDirection": "Сортировка (направление)",
+    "enabledScopeList": "Що відображати",
+    "users": "Користувачі",
+    "entityType": "Тип об'єкта",
+    "primaryFilter": "Первинний фільтр",
+    "boolFilterList": "Додаткові фільтри",
+    "sortBy": "Сортування (поле)",
+    "sortDirection": "Сортування (напрямок)",
     "expandedLayout": "Макет",
-    "dateFilter": "Фильтр даты"
+    "dateFilter": "Фільтр дати"
   },
   "options": {
     "mode": {
-      "agendaWeek": "Неделя (расписание)",
-      "basicWeek": "Неделя",
-      "month": "Месяц",
+      "agendaWeek": "Тиждень (розклад)",
+      "basicWeek": "Тиждень",
+      "month": "Місяць",
       "basicDay": "День",
-      "agendaDay": "День (повестка дня)",
-      "timeline": "Расписание"
+      "agendaDay": "День (порядок денний)",
+      "timeline": "Розклад"
     }
   },
   "messages": {
-    "selectEntityType": "Выберите тип объекта в параметрах панели."
+    "selectEntityType": "Виберіть тип об'єкта в параметрах панелі."
   }
 }
