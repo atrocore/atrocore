@@ -2870,16 +2870,6 @@ class Record extends \Espo\Core\Services\Base
         return null;
     }
 
-    public function updateMassUpdatePublicData(string $entityType, ?array $data): void
-    {
-        $publicData = DataManager::getPublicData('massUpdate');
-        if (empty($publicData)) {
-            $publicData = [];
-        }
-        $publicData[$entityType] = $data;
-        DataManager::pushPublicData('massUpdate', $publicData);
-    }
-
     /**
      * @param Entity $entity
      *
