@@ -3,26 +3,26 @@
     "Field": "Поле"
   },
   "options": {
-    "operators": {
-      "equals": "Равняется",
-      "notEquals": "Не равняется",
-      "greaterThan": "Больше чем",
-      "lessThan": "Меньше чем",
-      "greaterThanOrEquals": "Больше чем или равняется",
-      "lessThanOrEquals": "Меньше чем или равняется",
-      "in": "В",
+    "оператори": {
+      "equals": "Дорівнює",
+      "notEquals": "Не дорівнює",
+      "greaterThan": "Більше ніж",
+      "lessThan": "Менше ніж",
+      "greaterThanOrEquals": "Більше ніж або дорівнює",
+      "lessThanOrEquals": "Менше ніж або дорівнює",
+      "in": "У",
       "notIn": "Не в",
-      "inPast": "В Прошлом",
-      "inFuture": "В Будущем",
-      "isToday": "Сегодня",
+      "inPast": "У Минулому",
+      "inFuture": "У Майбутньому",
+      "isToday": "Сьогодні",
       "isTrue": "Правда",
-      "isFalse": "Неверно",
+      "isFalse": "Невірно",
       "isEmpty": "Пусто",
-      "isNotEmpty": "Не пусто",
-      "contains": "Содержит",
-      "has": "Содержит",
-      "notContains": "Не включает в себя",
-      "notHas": "Не включает в себя"
+      "isNotEmpty": "Не порожньо",
+      "contains": "Містить",
+      "has": "Містить",
+      "notContains": "Не містить",
+      "notHas": "Не містить у собі"
     }
   }
 }
