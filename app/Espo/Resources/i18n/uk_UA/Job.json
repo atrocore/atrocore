@@ -1,28 +1,28 @@
 {
   "fields": {
     "status": "Статус",
-    "executeTime": "Выполнено в",
-    "attempts": "Осталось попыток",
-    "failedAttempts": "Неудачных попыток",
-    "serviceName": "Сервис",
+    "executeTime": "Виконано в",
+    "attempts": "Залишилося спроб",
+    "failedAttempts": "Невдалих спроб",
+    "serviceName": "Сервіс",
     "methodName": "Метод",
-    "scheduledJob": "Задание планировщика",
-    "data": "Данные",
+    "scheduledJob": "Завдання планувальника",
+    "data": "Дані",
     "method": "Метод",
-    "scheduledJobJob": "Название задания"
+    "scheduledJobJob": "Назва завдання"
   },
   "labels": {
-    "Pending": "В ожидании",
-    "Success": "Успех",
-    "Running": "Выполняется",
-    "Failed": "Сбой"
+    "Pending": "В очікуванні",
+    "Success": "Успіх",
+    "Running": "Виконується",
+    "Failed": "Збій"
   },
   "options": {
     "status": {
-      "Pending": "В ожидании",
-      "Success": "Успех",
-      "Running": "Выполняется",
-      "Failed": "Сбой"
+      "Pending": "В очікуванні",
+      "Success": "Успіх",
+      "Running": "Виконується",
+      "Failed": "Збій"
     }
   }
 }
