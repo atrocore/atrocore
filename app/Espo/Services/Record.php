@@ -227,6 +227,11 @@ class Record extends \Espo\Core\Services\Base
         if ($this->actionHistoryDisabled) return;
         if ($this->getConfig()->get('actionHistoryDisabled')) return;
 
+        // skip if import
+        if (!empty($GLOBALS['importJobId'])) {
+            return;
+        }
+
         $historyRecord = $this->getEntityManager()->getEntity('ActionHistoryRecord');
 
         $historyRecord->set('action', $action);
