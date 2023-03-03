@@ -682,12 +682,7 @@ class Hierarchy extends Record
             return $result;
         }
 
-        if ($link === 'children') {
-            $result['collection'] = $this->sortCollection($result['collection']);
-            return $result;
-        }
-
-        if ($link === 'parents') {
+        if (in_array($link, ['parents', 'children'])) {
             return $result;
         }
 
@@ -804,27 +799,6 @@ class Hierarchy extends Record
         }
 
         return $inputData;
-    }
-
-    protected function sortCollection(EntityCollection $inputCollection): EntityCollection
-    {
-        $ids = [];
-        foreach ($inputCollection as $entity) {
-            $ids[$entity->get('id')] = $entity->get('sortOrder');
-        }
-        asort($ids);
-
-        $collection = new EntityCollection();
-        foreach ($ids as $id => $sortOrder) {
-            foreach ($inputCollection as $entity) {
-                if ($entity->get('id') === $id) {
-                    $collection->append($entity);
-                    break;
-                }
-            }
-        }
-
-        return $collection;
     }
 
     protected function getInheritedFromParentFields(Entity $parent, Entity $child): array

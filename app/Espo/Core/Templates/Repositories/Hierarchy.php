@@ -55,6 +55,15 @@ class Hierarchy extends RDB
         $this->hierarchyTableName = $this->tableName . '_hierarchy';
     }
 
+    public function findRelated(Entity $entity, $relationName, array $params = [])
+    {
+        if ($relationName === 'children') {
+            $params['orderBy'] = $this->hierarchyTableName . '.hierarchy_sort_order';
+        }
+
+        return parent::findRelated($entity, $relationName, $params);
+    }
+
     public function getEntityPosition(Entity $entity, string $parentId): ?int
     {
         $sortBy = Util::toUnderScore($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy'], 'name'));
