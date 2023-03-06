@@ -32,11 +32,13 @@
       "optionsIds": [
         "Low",
         "Normal",
+        "Crucial",
         "High"
       ],
       "options": [
         "Low",
         "Normal",
+        "Crucial",
         "High"
       ]
     },

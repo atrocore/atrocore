@@ -37,6 +37,12 @@
       "Failed": "Fehlgeschlagen",
       "Canceled": "Abgebrochen",
       "Closed": "Geschlossen"
+    },
+    "priority": {
+      "Low": "Niedrig",
+      "Normal": "Normal",
+      "Crucial": "Wesentlich",
+      "High": "Hoch"
     }
   },
   "exceptions": {
