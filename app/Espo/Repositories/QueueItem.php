@@ -41,9 +41,6 @@ use Espo\Core\Templates\Repositories\Base;
 use Espo\Services\QueueManagerServiceInterface;
 use Espo\Core\QueueManager;
 
-/**
- * Class QueueItem
- */
 class QueueItem extends Base
 {
     public function deleteOldRecords(): void
@@ -101,11 +98,17 @@ class QueueItem extends Base
             case 'High':
                 $dirPath = QueueManager::QUEUE_DIR_PATH . '/0';
                 break;
+            case 'Crucial':
+                $dirPath = QueueManager::QUEUE_DIR_PATH . '/000001';
+                break;
             case 'Low':
                 $dirPath = QueueManager::QUEUE_DIR_PATH . '/99999999999999';
                 break;
             default:
                 $dirName = str_pad((string)$dirName, 6, '0', STR_PAD_LEFT);
+                if (in_array($dirName, ['000000', '000001'])) {
+                    $dirName = '000002';
+                }
                 $dirPath = QueueManager::QUEUE_DIR_PATH . '/' . $dirName;
         }
 
@@ -129,12 +132,6 @@ class QueueItem extends Base
         }
     }
 
-    /**
-     * @param Entity $entity
-     * @param array  $options
-     *
-     * @throws BadRequest
-     */
     protected function beforeRemove(Entity $entity, array $options = [])
     {
         if ($entity->get('status') == 'Running') {
@@ -144,10 +141,6 @@ class QueueItem extends Base
         parent::beforeRemove($entity, $options);
     }
 
-    /**
-     * @param Entity $entity
-     * @param array  $options
-     */
     protected function afterRemove(Entity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);
@@ -157,16 +150,11 @@ class QueueItem extends Base
             unlink($fileName);
         }
 
-        // delete forever
         $this->deleteFromDb($entity->get('id'));
     }
 
-    /**
-     * @inheritdoc
-     */
     protected function init()
     {
-        // call parent
         parent::init();
 
         $this->addDependency('queueManager');
@@ -174,9 +162,6 @@ class QueueItem extends Base
         $this->addDependency('serviceFactory');
     }
 
-    /**
-     * @param Entity $entity
-     */
     protected function notify(Entity $entity): void
     {
         try {

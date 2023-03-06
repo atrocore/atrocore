@@ -44,9 +44,6 @@ use Espo\Orm\EntityManager;
 use Espo\Repositories\QueueItem as Repository;
 use Espo\Services\QueueManagerServiceInterface;
 
-/**
- * Class QueueManager
- */
 class QueueManager extends Injectable
 {
     const QUEUE_DIR_PATH = 'data/queue';
@@ -132,12 +129,6 @@ class QueueManager extends Injectable
         return $item->get('id');
     }
 
-    /**
-     * @param string $serviceName
-     *
-     * @return bool
-     * @throws Error
-     */
     protected function isService(string $serviceName): bool
     {
         if (!$this->getServiceFactory()->checkExists($serviceName)) {
@@ -288,25 +279,16 @@ class QueueManager extends Injectable
         $this->getEntityManager()->saveEntity($item);
     }
 
-    /**
-     * @return EntityManager
-     */
     protected function getEntityManager(): EntityManager
     {
         return $this->getContainer()->get('entityManager');
     }
 
-    /**
-     * @return ServiceFactory
-     */
     protected function getServiceFactory(): ServiceFactory
     {
         return $this->getContainer()->get('serviceFactory');
     }
 
-    /**
-     * @return Container
-     */
     protected function getContainer(): Container
     {
         return $this->getInjection('container');
