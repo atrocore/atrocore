@@ -264,7 +264,7 @@
      "Personal Data": "Особисті дані",
      "Erase": "Стерти",
      "Move Over": "Посунути",
-     "pleaseReloadPage": "Будь ласка <a href=\"javascript:\" onClick=\"window.location.reload();\">refresh</a> сторінку, щоб оновити мета-дані.",
+     "pleaseReloadPage": "Будь ласка <a href=\"javascript:\" onClick=\"window.location.reload();\">оновіть</a> сторінку, щоб оновити мета-дані.",
      "youHaveNewNotification": "У Вас нове повідомлення!",
      "youHaveNewNotifications": "У Вас нові повідомлення!",
      "status": "Статус",
