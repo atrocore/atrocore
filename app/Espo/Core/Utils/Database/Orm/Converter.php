@@ -92,8 +92,7 @@ class Converter
         ),
         'select' => 'select',
         'orderBy' => 'orderBy',
-        'where' => 'where',
-        'storeArrayValues' => 'storeArrayValues'
+        'where' => 'where'
     );
 
     protected $idParams = array(
