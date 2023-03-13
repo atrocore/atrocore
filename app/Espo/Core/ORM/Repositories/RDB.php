@@ -179,10 +179,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     {
         parent::afterRemove($entity, $options);
 
-        if (!$this->processFieldsAfterRemoveDisabled) {
-            $this->processArrayFieldsRemove($entity);
-        }
-
         // dispatch an event
         $this->dispatch('afterRemove', $entity, $options);
     }
@@ -393,7 +389,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             if (empty($entity->skipProcessFileFieldsSave)) {
                 $this->processFileFieldsSave($entity);
             }
-            $this->processArrayFieldsSave($entity);
             $this->processWysiwygFieldsSave($entity);
         }
 
@@ -496,18 +491,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
     }
 
-    protected function processArrayFieldsSave(Entity $entity)
-    {
-        foreach ($entity->getAttributes() as $attribute => $defs) {
-            if (!isset($defs['type']) || $defs['type'] !== Entity::JSON_ARRAY) continue;
-            if (!$entity->has($attribute)) continue;
-            if (!$entity->isAttributeChanged($attribute)) continue;
-            if (!$entity->getAttributeParam($attribute, 'storeArrayValues')) continue;
-            if ($entity->getAttributeParam($attribute, 'notStorable')) continue;
-            $this->getEntityManager()->getRepository('ArrayValue')->storeEntityAttribute($entity, $attribute);
-        }
-    }
-
     protected function processWysiwygFieldsSave(Entity $entity)
     {
         if (!$entity->isNew()) return;
@@ -534,16 +517,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                     }
                 }
             }
-        }
-    }
-
-    protected function processArrayFieldsRemove(Entity $entity)
-    {
-        foreach ($entity->getAttributes() as $attribute => $defs) {
-            if (!isset($defs['type']) || $defs['type'] !== Entity::JSON_ARRAY) continue;
-            if (!$entity->getAttributeParam($attribute, 'storeArrayValues')) continue;
-            if ($entity->getAttributeParam($attribute, 'notStorable')) continue;
-            $this->getEntityManager()->getRepository('ArrayValue')->deleteEntityAttribute($entity, $attribute);
         }
     }
 

@@ -1498,57 +1498,37 @@ class Base
                     break;
 
                 case 'arrayAnyOf':
+                    if (is_null($value) || !$value && !is_array($value)) {
+                        break;
+                    }
+                    $value = $this->prepareValueOptions($value, $attribute);
+                    foreach ($value as $v) {
+                        $part['OR'][] = [$attribute . '*' => '%"' . $v . '"%'];
+                    }
+                    break;
                 case 'arrayNoneOf':
+                    if (is_null($value) || !$value && !is_array($value)) {
+                        break;
+                    }
+                    $value = $this->prepareValueOptions($value, $attribute);
+                    foreach ($value as $v) {
+                        $part['AND'][] = [$attribute . '!*' => '%"' . $v . '"%'];
+                    }
+                    break;
                 case 'arrayIsEmpty':
+                    $part['OR'] = [
+                        [$attribute => null],
+                        [$attribute => '[]'],
+                        [$attribute => '']
+                    ];
+                    break;
                 case 'arrayIsNotEmpty':
-                    $arrayValueAlias = 'arrayFilter' . strval(rand(10000, 99999));
-                    $arrayAttribute = $attribute;
-                    $arrayEntityType = $this->getEntityType();
-                    $idPart = 'id';
-
-                    if (strpos($attribute, '.') > 0) {
-                        list($arrayAttributeLink, $arrayAttribute) = explode('.', $attribute);
-                        $seed = $this->getSeed();
-                        $arrayEntityType = $seed->getRelationParam($arrayAttributeLink, 'entity');
-                        $idPart = $arrayAttributeLink . '.id';
-                    }
-
-                    if ($type === 'arrayAnyOf') {
-                        if (is_null($value) || !$value && !is_array($value)) break;
-                        $value = $this->prepareValueOptions($value, $attribute);
-                        $this->addLeftJoin(['ArrayValue', $arrayValueAlias, [
-                            $arrayValueAlias . '.entityId:' => $idPart,
-                            $arrayValueAlias . '.entityType' => $arrayEntityType,
-                            $arrayValueAlias . '.attribute' => $arrayAttribute
-                        ]], $result);
-                        $part[$arrayValueAlias . '.value'] = $value;
-                    } else if ($type === 'arrayNoneOf') {
-                        if (is_null($value) || !$value && !is_array($value)) break;
-                        $value = $this->prepareValueOptions($value, $attribute);
-                        $this->addLeftJoin(['ArrayValue', $arrayValueAlias, [
-                            $arrayValueAlias . '.entityId:' => $idPart,
-                            $arrayValueAlias . '.entityType' => $arrayEntityType,
-                            $arrayValueAlias . '.attribute' => $arrayAttribute,
-                            $arrayValueAlias . '.value=' => $value
-                        ]], $result);
-                        $part[$arrayValueAlias . '.id'] = null;
-                    } else if ($type === 'arrayIsEmpty') {
-                        $this->addLeftJoin(['ArrayValue', $arrayValueAlias, [
-                            $arrayValueAlias . '.entityId:' => $idPart,
-                            $arrayValueAlias . '.entityType' => $arrayEntityType,
-                            $arrayValueAlias . '.attribute' => $arrayAttribute
-                        ]], $result);
-                        $part[$arrayValueAlias . '.id'] = null;
-                    } else if ($type === 'arrayIsNotEmpty') {
-                        $this->addLeftJoin(['ArrayValue', $arrayValueAlias, [
-                            $arrayValueAlias . '.entityId:' => $idPart,
-                            $arrayValueAlias . '.entityType' => $arrayEntityType,
-                            $arrayValueAlias . '.attribute' => $arrayAttribute
-                        ]], $result);
-                        $part[$arrayValueAlias . '.id!='] = null;
-                    }
-
-                    $this->setDistinct(true, $result);
+                    $part['AND'] = [
+                        [$attribute . '!=' => null],
+                        [$attribute . '!=' => '[]'],
+                        [$attribute . '!=' => '']
+                    ];
+                    break;
             }
         }
 
