@@ -1454,7 +1454,7 @@ class Base
                         $this->addLeftJoin([$link, $alias], $result);
                         $part[$alias . '.id'] = $value;
                     } else {
-                        break;;
+                        break;
                     }
                     $this->setDistinct(true, $result);
                     break;
@@ -1498,7 +1498,7 @@ class Base
                     break;
 
                 case 'arrayAnyOf':
-                    if (is_null($value) || !$value && !is_array($value)) {
+                    if (empty($value) || !is_array($value)) {
                         break;
                     }
                     $value = $this->prepareValueOptions($value, $attribute);
@@ -1507,13 +1507,23 @@ class Base
                     }
                     break;
                 case 'arrayNoneOf':
-                    if (is_null($value) || !$value && !is_array($value)) {
+                    if (empty($value) || !is_array($value)) {
                         break;
                     }
                     $value = $this->prepareValueOptions($value, $attribute);
+
+                    $andRows['AND'] = [];
                     foreach ($value as $v) {
-                        $part['AND'][] = [$attribute . '!*' => '%"' . $v . '"%'];
+                        $andRows['AND'][] = [$attribute . '!*' => '%"' . $v . '"%'];
                     }
+
+                    $part['OR'] = [
+                        [$attribute => null],
+                        [$attribute => '[]'],
+                        [$attribute => ''],
+                        $andRows
+                    ];
+
                     break;
                 case 'arrayIsEmpty':
                     $part['OR'] = [
