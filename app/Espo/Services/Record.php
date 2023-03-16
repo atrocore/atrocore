@@ -253,7 +253,7 @@ class Record extends \Espo\Core\Services\Base
     public function readEntity($id)
     {
         $id = $this
-            ->dispatchEvent('beforeReadEntity', new Event(['id' => $id]))
+            ->dispatchEvent('beforeReadEntity', new Event(['id' => $id, 'service' => $this]))
             ->getArgument('id');
 
         if (empty($id)) {
@@ -266,14 +266,14 @@ class Record extends \Espo\Core\Services\Base
         }
 
         return $this
-            ->dispatchEvent('afterReadEntity', new Event(['id' => $id, 'entity' => $entity]))
+            ->dispatchEvent('afterReadEntity', new Event(['id' => $id, 'entity' => $entity, 'service' => $this]))
             ->getArgument('entity');
     }
 
     public function getEntity($id = null)
     {
         $id = $this
-            ->dispatchEvent('beforeGetEntity', new Event(['id' => $id]))
+            ->dispatchEvent('beforeGetEntity', new Event(['id' => $id, 'service' => $this]))
             ->getArgument('id');
 
         $this->getPseudoTransactionManager()->runForEntity($this->getEntityType(), $id);
@@ -291,7 +291,7 @@ class Record extends \Espo\Core\Services\Base
         }
 
         return $this
-            ->dispatchEvent('afterGetEntity', new Event(['id' => $id, 'entity' => $entity]))
+            ->dispatchEvent('afterGetEntity', new Event(['id' => $id, 'entity' => $entity, 'service' => $this]))
             ->getArgument('entity');
     }
 
@@ -448,12 +448,12 @@ class Record extends \Espo\Core\Services\Base
     {
         $this->loadPreviewForCollection($collection);
 
-        $this->dispatchEvent('prepareCollectionForOutput', new Event(['collection' => $collection, 'selectParams' => $selectParams]));
+        $this->dispatchEvent('prepareCollectionForOutput', new Event(['collection' => $collection, 'selectParams' => $selectParams, 'service' => $this]));
     }
 
     public function loadPreviewForCollection(EntityCollection $collection): void
     {
-        $this->dispatchEvent('loadPreviewForCollection', new Event(['collection' => $collection]));
+        $this->dispatchEvent('loadPreviewForCollection', new Event(['collection' => $collection, 'service' => $this]));
 
         $fields = [];
         foreach ($this->getMetadata()->get(['entityDefs', $collection->getEntityName(), 'fields'], []) as $field => $data) {
@@ -1168,7 +1168,7 @@ class Record extends \Espo\Core\Services\Base
     public function createEntity($attachment)
     {
         $attachment = $this
-            ->dispatchEvent('beforeCreateEntity', new Event(['attachment' => $attachment]))
+            ->dispatchEvent('beforeCreateEntity', new Event(['attachment' => $attachment, 'service' => $this]))
             ->getArgument('attachment');
 
         if (!$this->getAcl()->check($this->getEntityType(), 'create')) {
@@ -1223,7 +1223,7 @@ class Record extends \Espo\Core\Services\Base
             $this->processActionHistoryRecord('create', $entity);
 
             return $this
-                ->dispatchEvent('afterCreateEntity', new Event(['attachment' => $attachment, 'entity' => $entity]))
+                ->dispatchEvent('afterCreateEntity', new Event(['attachment' => $attachment, 'entity' => $entity, 'service' => $this]))
                 ->getArgument('entity');
         }
 
@@ -1233,7 +1233,7 @@ class Record extends \Espo\Core\Services\Base
     public function updateEntity($id, $data)
     {
         $event = $this
-            ->dispatchEvent('beforeUpdateEntity', new Event(['id' => $id, 'data' => $data, 'entityType' => $this->getEntityType()]));
+            ->dispatchEvent('beforeUpdateEntity', new Event(['id' => $id, 'data' => $data, 'entityType' => $this->getEntityType(), 'service' => $this]));
 
         $id = $event->getArgument('id');
         $data = $event->getArgument('data');
@@ -1308,7 +1308,7 @@ class Record extends \Espo\Core\Services\Base
             $this->processActionHistoryRecord('update', $entity);
 
             return $this
-                ->dispatchEvent('afterUpdateEntity', new Event(['id' => $id, 'data' => $data, 'entity' => $entity, 'beforeUpdateEvent' => $event]))
+                ->dispatchEvent('afterUpdateEntity', new Event(['id' => $id, 'data' => $data, 'entity' => $entity, 'beforeUpdateEvent' => $event, 'service' => $this]))
                 ->getArgument('entity');
         }
 
@@ -1449,7 +1449,7 @@ class Record extends \Espo\Core\Services\Base
     public function deleteEntity($id)
     {
         $id = $this
-            ->dispatchEvent('beforeDeleteEntity', new Event(['id' => $id]))
+            ->dispatchEvent('beforeDeleteEntity', new Event(['id' => $id, 'service' => $this]))
             ->getArgument('id');
 
         if (empty($id)) {
@@ -1472,7 +1472,7 @@ class Record extends \Espo\Core\Services\Base
         if ($result) {
             $this->afterDeleteEntity($entity);
             $this->processActionHistoryRecord('delete', $entity);
-            $result = $this->dispatchEvent('afterDeleteEntity', new Event(['id' => $id, 'result' => $result]))->getArgument('result');
+            $result = $this->dispatchEvent('afterDeleteEntity', new Event(['id' => $id, 'result' => $result, 'service' => $this]))->getArgument('result');
         }
 
         return $result;
@@ -1488,7 +1488,7 @@ class Record extends \Espo\Core\Services\Base
     public function findEntities($params)
     {
         $params = $this
-            ->dispatchEvent('beforeFindEntities', new Event(['params' => $params]))
+            ->dispatchEvent('beforeFindEntities', new Event(['params' => $params, 'service' => $this]))
             ->getArgument('params');
 
         $disableCount = false;
@@ -1548,14 +1548,14 @@ class Record extends \Espo\Core\Services\Base
         }
 
         return $this
-            ->dispatchEvent('afterFindEntities', new Event(['params' => $params, 'result' => ['total' => $total, 'collection' => $collection]]))
+            ->dispatchEvent('afterFindEntities', new Event(['params' => $params, 'service' => $this, 'result' => ['total' => $total, 'collection' => $collection]]))
             ->getArgument('result');
     }
 
     public function getListKanban($params)
     {
         $params = $this
-            ->dispatchEvent('beforeGetListKanban', new Event(['params' => $params]))
+            ->dispatchEvent('beforeGetListKanban', new Event(['params' => $params, 'service' => $this]))
             ->getArgument('params');
 
         $disableCount = false;
@@ -1663,7 +1663,7 @@ class Record extends \Espo\Core\Services\Base
         }
 
         return $this
-            ->dispatchEvent('afterGetListKanban', new Event(['params' => $params, 'result' => (object) ['total' => $total,'collection' => $collection,'additionalData' => $additionalData]]))
+            ->dispatchEvent('afterGetListKanban', new Event(['params' => $params, 'service' => $this, 'result' => (object) ['total' => $total,'collection' => $collection,'additionalData' => $additionalData]]))
             ->getArgument('result');
     }
 
@@ -1687,7 +1687,7 @@ class Record extends \Espo\Core\Services\Base
     public function findLinkedEntities($id, $link, $params)
     {
         $event = $this
-            ->dispatchEvent('beforeFindLinkedEntities', new Event(['id' => $id, 'link' => $link, 'params' => $params]));
+            ->dispatchEvent('beforeFindLinkedEntities', new Event(['id' => $id, 'service' => $this, 'link' => $link, 'params' => $params]));
 
         $id = $event->getArgument('id');
         $link = $event->getArgument('link');
@@ -1779,7 +1779,7 @@ class Record extends \Espo\Core\Services\Base
         }
 
         return $this
-            ->dispatchEvent('afterFindLinkedEntities', new Event(['id' => $id, 'link' => $link, 'params' => $params, 'result' => ['total' => $total,'collection' => $collection]]))
+            ->dispatchEvent('afterFindLinkedEntities', new Event(['id' => $id, 'service' => $this, 'link' => $link, 'params' => $params, 'result' => ['total' => $total,'collection' => $collection]]))
             ->getArgument('result');
     }
 
@@ -1816,7 +1816,7 @@ class Record extends \Espo\Core\Services\Base
         }
 
         $event = $this
-            ->dispatchEvent('beforeLinkEntity', new Event(['id' => $id, 'link' => $link, 'foreignId' => $foreignId]));
+            ->dispatchEvent('beforeLinkEntity', new Event(['id' => $id, 'service' => $this, 'link' => $link, 'foreignId' => $foreignId]));
 
         $id = $event->getArgument('id');
         $link = $event->getArgument('link');
@@ -1859,7 +1859,7 @@ class Record extends \Espo\Core\Services\Base
         $this->getRepository()->relate($entity, $link, $foreignEntity, null, $this->getDefaultRepositoryOptions());
 
         return $this
-            ->dispatchEvent('afterLinkEntity', new Event(['id' => $id, 'entity' => $entity, 'link' => $link, 'foreignEntity' => $foreignEntity, 'result' => true]))
+            ->dispatchEvent('afterLinkEntity', new Event(['id' => $id, 'service' => $this, 'entity' => $entity, 'link' => $link, 'foreignEntity' => $foreignEntity, 'result' => true]))
             ->getArgument('result');
     }
 
@@ -1896,7 +1896,7 @@ class Record extends \Espo\Core\Services\Base
         }
 
         $event = $this
-            ->dispatchEvent('beforeUnlinkEntity', new Event(['id' => $id, 'link' => $link, 'foreignId' => $foreignId]));
+            ->dispatchEvent('beforeUnlinkEntity', new Event(['id' => $id, 'service' => $this, 'link' => $link, 'foreignId' => $foreignId]));
 
         $id = $event->getArgument('id');
         $link = $event->getArgument('link');
@@ -1939,7 +1939,7 @@ class Record extends \Espo\Core\Services\Base
         $this->getRepository()->unrelate($entity, $link, $foreignEntity, $this->getDefaultRepositoryOptions());
 
         return $this
-            ->dispatchEvent('afterUnlinkEntity', new Event(['id' => $id, 'link' => $link, 'foreignEntity' => $foreignEntity, 'result' => true]))
+            ->dispatchEvent('afterUnlinkEntity', new Event(['id' => $id, 'service' => $this, 'link' => $link, 'foreignEntity' => $foreignEntity, 'result' => true]))
             ->getArgument('result');
     }
 
@@ -1961,7 +1961,7 @@ class Record extends \Espo\Core\Services\Base
 
     public function linkEntityMass($id, $link, $where, $selectData = null)
     {
-        $event = $this->dispatchEvent('beforeLinkEntityMass', new Event(['id' => $id, 'link' => $link, 'where' => $where]));
+        $event = $this->dispatchEvent('beforeLinkEntityMass', new Event(['id' => $id, 'service' => $this, 'link' => $link, 'where' => $where]));
 
         $id = $event->getArgument('id');
         $link = $event->getArgument('link');
@@ -2020,12 +2020,12 @@ class Record extends \Espo\Core\Services\Base
             }
         }
 
-        return $this->dispatchEvent('afterLinkEntityMass', new Event(['entity' => $entity, 'link' => $link, 'result' => true]))->getArgument('result');
+        return $this->dispatchEvent('afterLinkEntityMass', new Event(['entity' => $entity, 'service' => $this, 'link' => $link, 'result' => true]))->getArgument('result');
     }
 
     public function unlinkAll(string $id, string $link): bool
     {
-        $event = $this->dispatchEvent('beforeUnlinkAll', new Event(['id' => $id, 'link' => $link]));
+        $event = $this->dispatchEvent('beforeUnlinkAll', new Event(['id' => $id, 'service' => $this, 'link' => $link]));
 
         $id = $event->getArgument('id');
         $link = $event->getArgument('link');
@@ -2062,12 +2062,12 @@ class Record extends \Espo\Core\Services\Base
             }
         }
 
-        return $this->dispatchEvent('afterUnlinkAll', new Event(['entity' => $entity, 'link' => $link, 'result' => true]))->getArgument('result');
+        return $this->dispatchEvent('afterUnlinkAll', new Event(['entity' => $entity, 'service' => $this, 'link' => $link, 'result' => true]))->getArgument('result');
     }
 
     public function massUpdate($data, array $params)
     {
-        $event = $this->dispatchEvent('beforeMassUpdate', new Event(['data' => $data, 'params' => $params]));
+        $event = $this->dispatchEvent('beforeMassUpdate', new Event(['data' => $data, 'service' => $this, 'params' => $params]));
 
         $data = $event->getArgument('data');
         $params = $event->getArgument('params');
@@ -2119,14 +2119,14 @@ class Record extends \Espo\Core\Services\Base
         }
 
         return $this
-            ->dispatchEvent('afterMassUpdate', new Event(['data' => $data, 'result' => ['count' => count($ids), 'ids' => $ids]]))
+            ->dispatchEvent('afterMassUpdate', new Event(['data' => $data, 'service' => $this, 'result' => ['count' => count($ids), 'ids' => $ids]]))
             ->getArgument('result');
     }
 
     public function massRemove(array $params)
     {
         $params = $this
-            ->dispatchEvent('beforeMassRemove', new Event(['params' => $params]))
+            ->dispatchEvent('beforeMassRemove', new Event(['params' => $params, 'service' => $this]))
             ->getArgument('params');
 
         $name = $this->getInjection('language')->translate('remove', 'massActions', 'Global') . ': ' . $this->entityType;
@@ -2150,7 +2150,7 @@ class Record extends \Espo\Core\Services\Base
 
     public function follow($id, $userId = null)
     {
-        $event = $this->dispatchEvent('beforeFollow', new Event(['id' => $id, 'userId' => $userId]));
+        $event = $this->dispatchEvent('beforeFollow', new Event(['id' => $id, 'service' => $this, 'userId' => $userId]));
 
         $id = $event->getArgument('id');
         $userId = $event->getArgument('userId');
@@ -2166,13 +2166,13 @@ class Record extends \Espo\Core\Services\Base
         }
 
         return $this
-            ->dispatchEvent('afterFollow', new Event(['entity' => $entity, 'userId' => $userId, 'result' => $this->getStreamService()->followEntity($entity, $userId)]))
+            ->dispatchEvent('afterFollow', new Event(['entity' => $entity, 'service' => $this, 'userId' => $userId, 'result' => $this->getStreamService()->followEntity($entity, $userId)]))
             ->getArgument('result');
     }
 
     public function unfollow($id, $userId = null)
     {
-        $event = $this->dispatchEvent('beforeUnfollow', new Event(['id' => $id, 'userId' => $userId]));
+        $event = $this->dispatchEvent('beforeUnfollow', new Event(['id' => $id, 'service' => $this, 'userId' => $userId]));
 
         $id = $event->getArgument('id');
         $userId = $event->getArgument('userId');
@@ -2188,13 +2188,13 @@ class Record extends \Espo\Core\Services\Base
         }
 
         return $this
-            ->dispatchEvent('afterUnfollow', new Event(['entity' => $entity, 'userId' => $userId, 'result' => $this->getStreamService()->unfollowEntity($entity, $userId)]))
+            ->dispatchEvent('afterUnfollow', new Event(['entity' => $entity, 'service' => $this, 'userId' => $userId, 'result' => $this->getStreamService()->unfollowEntity($entity, $userId)]))
             ->getArgument('result');
     }
 
     public function massFollow(array $params, $userId = null)
     {
-        $event = $this->dispatchEvent('beforeMassFollow', new Event(['params' => $params, 'userId' => $userId]));
+        $event = $this->dispatchEvent('beforeMassFollow', new Event(['params' => $params, 'service' => $this, 'userId' => $userId]));
 
         $params = $event->getArgument('params');
         $userId = $event->getArgument('userId');
@@ -2240,13 +2240,13 @@ class Record extends \Espo\Core\Services\Base
 
 
         return $this
-            ->dispatchEvent('afterMassFollow', new Event(['params' => $params, 'userId' => $userId, 'result' => ['ids' => $resultIdList, 'count' => count($resultIdList)]]))
+            ->dispatchEvent('afterMassFollow', new Event(['params' => $params, 'service' => $this, 'userId' => $userId, 'result' => ['ids' => $resultIdList, 'count' => count($resultIdList)]]))
             ->getArgument('result');
     }
 
     public function massUnfollow(array $params, $userId = null)
     {
-        $event = $this->dispatchEvent('beforeMassUnfollow', new Event(['params' => $params, 'userId' => $userId]));
+        $event = $this->dispatchEvent('beforeMassUnfollow', new Event(['params' => $params, 'service' => $this, 'userId' => $userId]));
 
         $params = $event->getArgument('params');
         $userId = $event->getArgument('userId');
@@ -2291,7 +2291,7 @@ class Record extends \Espo\Core\Services\Base
 
 
         return $this
-            ->dispatchEvent('afterMassUnfollow', new Event(['params' => $params, 'userId' => $userId, 'result' => ['ids' => $resultIdList, 'count' => count($resultIdList)]]))
+            ->dispatchEvent('afterMassUnfollow', new Event(['params' => $params, 'service' => $this, 'userId' => $userId, 'result' => ['ids' => $resultIdList, 'count' => count($resultIdList)]]))
             ->getArgument('result');
     }
 
@@ -2473,7 +2473,7 @@ class Record extends \Espo\Core\Services\Base
             }
         }
 
-        $this->dispatchEvent('prepareEntityForOutput', new Event(['entity' => $entity]));
+        $this->dispatchEvent('prepareEntityForOutput', new Event(['entity' => $entity, 'service' => $this]));
     }
 
     public function merge($id, array $sourceIdList = array(), $attributes)
@@ -2886,7 +2886,7 @@ class Record extends \Espo\Core\Services\Base
 
     protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
     {
-        $event = $this->dispatchEvent('beforeCheckingIsEntityUpdated', new Event(['entity' => $entity, 'data' => $data]));
+        $event = $this->dispatchEvent('beforeCheckingIsEntityUpdated', new Event(['entity' => $entity, 'service' => $this, 'data' => $data]));
 
         $entity = $event->getArgument('entity');
         $data = $event->getArgument('data');
