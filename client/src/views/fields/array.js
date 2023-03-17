@@ -100,6 +100,9 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
 
             this.listenTo(this.model, 'change:' + this.name, function () {
                 this.selected = Espo.Utils.clone(this.model.get(this.name)) || [];
+                if (typeof this.selected === 'string') {
+                    this.selected = JSON.parse(this.selected);
+                }
             }, this);
 
             this.selected = Espo.Utils.clone(this.model.get(this.name) || []);
@@ -110,6 +113,10 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
 
             if (Object.prototype.toString.call(this.selected) !== '[object Array]')    {
                 this.selected = [];
+            }
+
+            if (typeof this.selected === 'string') {
+                this.selected = JSON.parse(this.selected);
             }
 
             this.setupOptions();
