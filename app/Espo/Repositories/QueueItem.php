@@ -49,11 +49,6 @@ class QueueItem extends Base
         $this->getPDO()->exec("DELETE FROM `queue_item` WHERE modified_at<'$date'");
     }
 
-    public function getRunningItemForStream(int $stream): ?Entity
-    {
-        return $this->where(['stream' => $stream, 'status' => 'Running'])->findOne();
-    }
-
     protected function afterSave(Entity $entity, array $options = [])
     {
         parent::afterSave($entity, $options);

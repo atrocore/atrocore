@@ -120,6 +120,9 @@ class Cron extends AbstractConsole
         // find pending jobs without queue files and create them
         $this->createQueueFiles();
 
+        // find and close queue item that doe not running
+        $this->closeFailedQueueItems();
+
         // run cron jobs
         $this->runCronManager();
     }
@@ -208,6 +211,29 @@ class Cron extends AbstractConsole
 
         if ($created) {
             file_put_contents(\Espo\Core\QueueManager::FILE_PATH, '1');
+        }
+    }
+
+    private function closeFailedQueueItems(): void
+    {
+        /** @var \Espo\Repositories\QueueItem $repository */
+        $repository = $this->getContainer()->get('entityManager')->getRepository('QueueItem');
+
+        $items = $repository
+            ->where(['status' => 'Running'])
+            ->order('sortOrder')
+            ->limit(0, 20)
+            ->find();
+
+        foreach ($items as $item) {
+            $pid = $item->get('pid');
+            if (!file_exists("/proc/$pid")) {
+                $item->set('status', 'Failed');
+                $item->set('message', "The item '{$item->get('id')}' was not completed in the previous run.");
+                $repository->save($item);
+
+                $GLOBALS['log']->error("QM failed: " . $item->get('message'));
+            }
         }
     }
 }

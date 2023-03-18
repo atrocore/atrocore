@@ -195,12 +195,6 @@ class QueueManager extends Injectable
             return false;
         }
 
-        if (!empty($item = $this->getRepository()->getRunningItemForStream($stream))) {
-            $this->setStatus($item, 'Failed');
-            $GLOBALS['log']->error("QM failed: The item '{$item->get('id')}' was not completed in the previous run.");
-            return false;
-        }
-
         /**
          * Trying to find needed job in 10 sec, because DB could create job too long
          */
