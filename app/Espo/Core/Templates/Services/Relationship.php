@@ -69,9 +69,11 @@ class Relationship extends Record
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
     {
         if ($this->getMetadata()->get(['scopes', $collection->getEntityName(), 'relationsVirtualFields']) !== false && empty($collection->preparedRelationVirtualFields)) {
-            if (!empty($relEntities = $this->getRelationEntities($collection))) {
+            $select = empty($selectParams['select']) ? null : $selectParams['select'];
+            $virtualFields = $this->getRelationsVirtualFields($collection->getEntityName(), $select);
+            if (!empty($relEntities = $this->getRelationEntities($collection, $virtualFields))) {
                 foreach ($collection as $entity) {
-                    $this->prepareRelationVirtualFields($entity, $relEntities);
+                    $this->prepareRelationVirtualFields($entity, $relEntities, $virtualFields);
                 }
             }
         }
@@ -82,31 +84,54 @@ class Relationship extends Record
     public function prepareEntityForOutput(Entity $entity)
     {
         if ($this->getMetadata()->get(['scopes', $entity->getEntityName(), 'relationsVirtualFields']) !== false && empty($entity->preparedRelationVirtualFields)) {
-            if (!empty($relEntities = $this->getRelationEntities(new EntityCollection([$entity], $entity->getEntityName())))) {
-                $this->prepareRelationVirtualFields($entity, $relEntities);
+            $collection = new EntityCollection([$entity], $entity->getEntityName());
+            $virtualFields = $this->getRelationsVirtualFields($entity->getEntityName());
+            if (!empty($relEntities = $this->getRelationEntities($collection, $virtualFields))) {
+                $this->prepareRelationVirtualFields($entity, $relEntities, $virtualFields);
             }
         }
 
         parent::prepareEntityForOutput($entity);
     }
 
-    public function getRelationEntities(EntityCollection $collection): array
+    public function getRelationsVirtualFields(string $entityName, ?array $select = null): array
+    {
+        $result = [];
+
+        foreach ($this->getMetadata()->get(['entityDefs', $entityName, 'fields'], []) as $field => $fieldDefs) {
+            if ($select !== null && !in_array($field, $select)) {
+                continue;
+            }
+
+            $parts = explode(self::VIRTUAL_FIELD_DELIMITER, $field);
+            if (count($parts) === 2) {
+                $result[$field] = $fieldDefs;
+                $result[$field]['relationName'] = $parts[0];
+                $result[$field]['relationFieldName'] = $parts[1];
+            }
+        }
+
+        return $result;
+    }
+
+    public function getRelationEntities(EntityCollection $collection, array $virtualFields): array
     {
         $relEntities = [];
 
-        foreach ($this->getMetadata()->get(['entityDefs', $collection->getEntityName(), 'fields'], []) as $field => $fieldDefs) {
-            $parts = explode(self::VIRTUAL_FIELD_DELIMITER, $field);
-            if (count($parts) === 2) {
-                $relEntityName = $this->getMetadata()->get(['entityDefs', $collection->getEntityName(), 'links', $parts[0], 'entity']);
-                if (!isset($relEntities[$parts[0]])) {
-                    $res = $this
-                        ->getServiceFactory()
-                        ->create($relEntityName)
-                        ->findEntities(['where' => [['type' => 'in', 'attribute' => 'id', 'value' => array_column($collection->toArray(), $parts[0] . 'Id')]]]);
-                    if (isset($res['collection'])) {
-                        foreach ($res['collection'] as $relEntity) {
-                            $relEntities[$parts[0]][$relEntity->get('id')] = $relEntity;
-                        }
+        foreach ($virtualFields as $field => $fieldDefs) {
+            $relEntityName = $this->getMetadata()->get(['entityDefs', $collection->getEntityName(), 'links', $fieldDefs['relationName'], 'entity']);
+            if (!isset($relEntities[$fieldDefs['relationName']])) {
+                $where = [
+                    [
+                        'type'      => 'in',
+                        'attribute' => 'id',
+                        'value'     => array_column($collection->toArray(), $fieldDefs['relationName'] . 'Id')
+                    ]
+                ];
+                $res = $this->getServiceFactory()->create($relEntityName)->findEntities(['where' => $where]);
+                if (isset($res['collection'])) {
+                    foreach ($res['collection'] as $relEntity) {
+                        $relEntities[$fieldDefs['relationName']][$relEntity->get('id')] = $relEntity;
                     }
                 }
             }
@@ -115,33 +140,28 @@ class Relationship extends Record
         return $relEntities;
     }
 
-    public function prepareRelationVirtualFields(Entity $entity, array $relEntities): void
+    public function prepareRelationVirtualFields(Entity $entity, array $relEntities, array $virtualFields): void
     {
-        foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityName(), 'fields'], []) as $field => $fieldDefs) {
-            $parts = explode(self::VIRTUAL_FIELD_DELIMITER, $field);
-            if (count($parts) === 2) {
-                $relEntity = $relEntities[$parts[0]][$entity->get($parts[0] . 'Id')];
+        foreach ($virtualFields as $field => $fieldDefs) {
+            $relEntity = $relEntities[$fieldDefs['relationName']][$entity->get($fieldDefs['relationName'] . 'Id')];
 
-                $fieldType = $this->getMetadata()->get(['entityDefs', $relEntity->getEntityType(), 'fields', $parts[1], 'type']);
-
-                switch ($fieldType) {
-                    case 'currency':
-                        $entity->set($field, $relEntity->get($parts[1]));
-                        $entity->set($field . 'Currency', $relEntity->get($parts[1] . 'Currency'));
-                        break;
-                    case 'unit':
-                        $entity->set($field, $relEntity->get($parts[1]));
-                        $entity->set($field . 'Unit', $relEntity->get($parts[1] . 'Unit'));
-                        break;
-                    case 'link':
-                    case 'file':
-                    case 'asset':
-                        $entity->set($field . 'Id', $relEntity->get($parts[1] . 'Id'));
-                        $entity->set($field . 'Name', $relEntity->get($parts[1] . 'Name'));
-                        break;
-                    default:
-                        $entity->set($field, $relEntity->get($parts[1]));
-                }
+            switch ($this->getMetadata()->get(['entityDefs', $relEntity->getEntityType(), 'fields', $fieldDefs['relationFieldName'], 'type'])) {
+                case 'currency':
+                    $entity->set($field, $relEntity->get($fieldDefs['relationFieldName']));
+                    $entity->set($field . 'Currency', $relEntity->get($fieldDefs['relationFieldName'] . 'Currency'));
+                    break;
+                case 'unit':
+                    $entity->set($field, $relEntity->get($fieldDefs['relationFieldName']));
+                    $entity->set($field . 'Unit', $relEntity->get($fieldDefs['relationFieldName'] . 'Unit'));
+                    break;
+                case 'link':
+                case 'file':
+                case 'asset':
+                    $entity->set($field . 'Id', $relEntity->get($fieldDefs['relationFieldName'] . 'Id'));
+                    $entity->set($field . 'Name', $relEntity->get($fieldDefs['relationFieldName'] . 'Name'));
+                    break;
+                default:
+                    $entity->set($field, $relEntity->get($fieldDefs['relationFieldName']));
             }
         }
 
