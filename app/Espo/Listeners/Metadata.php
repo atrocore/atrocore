@@ -40,6 +40,8 @@ use Espo\Core\Utils\Util;
 
 class Metadata extends AbstractListener
 {
+    public const VIRTUAL_FIELD_DELIMITER = \Espo\Core\Templates\Services\Relationship::VIRTUAL_FIELD_DELIMITER;
+
     public function modify(Event $event): void
     {
         $data = $event->getArgument('data');
@@ -62,7 +64,67 @@ class Metadata extends AbstractListener
 
         $data = $this->prepareHierarchyEntities($data);
 
+        $this->prepareRelationshipsEntities($data);
+
         $event->setArgument('data', $data);
+    }
+
+    protected function prepareRelationshipsEntities(array &$data): void
+    {
+        foreach ($data['entityDefs'] as $scope => $scopeData) {
+            if (empty($scopeData['fields'])) {
+                continue;
+            }
+
+            if (isset($scopeData['relationsVirtualFields']) && $scopeData['relationsVirtualFields'] === false) {
+                continue;
+            }
+
+            if (!isset($data['scopes'][$scope]['type']) || $data['scopes'][$scope]['type'] !== 'Relationship') {
+                continue;
+            }
+
+            foreach ($scopeData['fields'] as $field => $fieldDefs) {
+                if (!empty($fieldDefs['notStorable']) || empty($fieldDefs['type']) || $fieldDefs['type'] !== 'link' || empty($fieldDefs['relationshipField'])) {
+                    continue;
+                }
+
+                if (empty($data['entityDefs'][$scope]['links'][$field]['entity'])) {
+                    continue;
+                }
+
+                $foreignEntity = $data['entityDefs'][$scope]['links'][$field]['entity'];
+
+                if (empty($data['entityDefs'][$foreignEntity]['fields'])) {
+                    continue;
+                }
+
+                foreach ($data['entityDefs'][$foreignEntity]['fields'] as $foreignField => $foreignFieldDefs) {
+                    if (empty($foreignFieldDefs['type'])) {
+                        continue;
+                    }
+
+                    if (!in_array($foreignFieldDefs['type'], ['attachmentMultiple', 'linkMultiple'])) {
+                        $data['entityDefs'][$scope]['fields'][$field . self::VIRTUAL_FIELD_DELIMITER . $foreignField] = array_merge($foreignFieldDefs, [
+                            "notStorable"          => true,
+                            "relationVirtualField" => true,
+                            "readOnly"             => true,
+                            "massUpdateDisabled"   => true,
+                            "filterDisabled"       => true,
+                            "importDisabled"       => true,
+                            "emHidden"             => true
+                        ]);
+
+                        if ($foreignFieldDefs['type'] === 'link') {
+                            if (!empty($data['entityDefs'][$foreignEntity]['links'][$foreignField]['entity'])) {
+                                $linkEntity = $data['entityDefs'][$foreignEntity]['links'][$foreignField]['entity'];
+                                $data['entityDefs'][$scope]['fields'][$field . self::VIRTUAL_FIELD_DELIMITER . $foreignField]['entity'] = $linkEntity;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     protected function prepareHierarchyEntities(array $data): array

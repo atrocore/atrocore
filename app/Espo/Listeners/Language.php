@@ -43,6 +43,8 @@ use Espo\Core\Utils\Util;
  */
 class Language extends AbstractListener
 {
+    public const VIRTUAL_FIELD_DELIMITER = \Espo\Core\Templates\Services\Relationship::VIRTUAL_FIELD_DELIMITER;
+
     public function modify(Event $event): void
     {
         $data = $event->getArgument('data');
@@ -54,13 +56,7 @@ class Language extends AbstractListener
                 }
                 foreach ($entityDefs['fields'] as $field => $fieldDefs) {
                     if (!empty($fieldDefs['relationshipFilterField'])) {
-                        if (!empty($data[$locale][$entity]['fields'][$fieldDefs['relationshipFilterField']])) {
-                            $filterField = $data[$locale][$entity]['fields'][$fieldDefs['relationshipFilterField']];
-                        } elseif (!empty($data['en_US'][$entity]['fields'][$fieldDefs['relationshipFilterField']])) {
-                            $filterField = $data['en_US'][$entity]['fields'][$fieldDefs['relationshipFilterField']];
-                        } else {
-                            $filterField = $fieldDefs['relationshipFilterField'];
-                        }
+                        $filterField = $this->getFieldLabel($data, $locale, $entity, $fieldDefs['relationshipFilterField']);
 
                         if (!empty($data[$locale]['Global']['scopeNamesPlural'][$fieldDefs['entity']])) {
                             $filterEntity = $data[$locale]['Global']['scopeNamesPlural'][$fieldDefs['entity']];
@@ -71,6 +67,16 @@ class Language extends AbstractListener
                         }
 
                         $data[$locale][$entity]['fields'][$field] = $filterField . ': ' . $filterEntity;
+                    }
+
+                    if ($this->getMetadata()->get(['entityDefs', $entity, 'fields', $field, 'relationVirtualField'])) {
+                        $parts = explode(self::VIRTUAL_FIELD_DELIMITER, (string)$field);
+                        if (count($parts) === 2) {
+                            $fieldLabel = $this->getFieldLabel($data, $locale, $entity, $parts[0]);
+                            $relatedFieldEntity = $this->getMetadata()->get(['entityDefs', $entity, 'links', $parts[0], 'entity']);
+                            $relatedFieldLabel = $this->getFieldLabel($data, $locale, (string)$relatedFieldEntity, $parts[1]);
+                            $data[$locale][$entity]['fields'][$field] = $fieldLabel . ': ' . $relatedFieldLabel;
+                        }
                     }
                 }
             }
@@ -110,5 +116,22 @@ class Language extends AbstractListener
 
         // set data
         $event->setArgument('data', $data);
+    }
+
+    protected function getFieldLabel(array $data, string $locale, string $entityType, string $key): string
+    {
+        if (isset($data[$locale][$entityType]['fields'][$key])) {
+            $fieldLabel = $data[$locale][$entityType]['fields'][$key];
+        } elseif (isset($data[$locale]['Global']['fields'][$key])) {
+            $fieldLabel = $data[$locale]['Global']['fields'][$key];
+        } elseif (isset($data['en_US'][$entityType]['fields'][$key])) {
+            $fieldLabel = $data['en_US'][$entityType]['fields'][$key];
+        } elseif (isset($data['en_US']['Global']['fields'][$key])) {
+            $fieldLabel = $data['en_US']['Global']['fields'][$key];
+        } else {
+            $fieldLabel = $key;
+        }
+
+        return $fieldLabel;
     }
 }
