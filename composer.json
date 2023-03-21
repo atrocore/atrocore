@@ -31,7 +31,7 @@
     "caxy/php-htmldiff": "^0.1.14"
   },
   "conflict": {
-    "atrocore/pim": "<1.7.0"
+    "atrocore/pim": "<1.7.25"
   },
   "autoload": {
     "psr-0": {

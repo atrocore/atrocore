@@ -42,6 +42,112 @@ use Espo\Services\Record;
 
 class Relationship extends Record
 {
+    public const VIRTUAL_FIELD_DELIMITER = "_";
+
+    public function getSelectAttributeList($params)
+    {
+        $list = parent::getSelectAttributeList($params);
+
+        if (!empty($list) && is_array($list)) {
+            foreach ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields'], []) as $field => $fieldDefs) {
+                if (empty($fieldDefs['type']) || $fieldDefs['type'] !== 'link') {
+                    continue;
+                }
+
+                if (!empty($fieldDefs['relationshipField']) && !in_array($field . 'Id', $list)) {
+                    $list[] = $field . 'Id';
+                }
+                if (!empty($fieldDefs['relationshipField']) && !in_array($field . 'Name', $list)) {
+                    $list[] = $field . 'Name';
+                }
+            }
+        }
+
+        return $list;
+    }
+
+    public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
+    {
+        if ($this->getMetadata()->get(['scopes', $collection->getEntityName(), 'relationsVirtualFields']) !== false && empty($collection->preparedRelationVirtualFields)) {
+            if (!empty($relEntities = $this->getRelationEntities($collection))) {
+                foreach ($collection as $entity) {
+                    $this->prepareRelationVirtualFields($entity, $relEntities);
+                }
+            }
+        }
+
+        parent::prepareCollectionForOutput($collection, $selectParams);
+    }
+
+    public function prepareEntityForOutput(Entity $entity)
+    {
+        if ($this->getMetadata()->get(['scopes', $entity->getEntityName(), 'relationsVirtualFields']) !== false && empty($entity->preparedRelationVirtualFields)) {
+            if (!empty($relEntities = $this->getRelationEntities(new EntityCollection([$entity], $entity->getEntityName())))) {
+                $this->prepareRelationVirtualFields($entity, $relEntities);
+            }
+        }
+
+        parent::prepareEntityForOutput($entity);
+    }
+
+    public function getRelationEntities(EntityCollection $collection): array
+    {
+        $relEntities = [];
+
+        foreach ($this->getMetadata()->get(['entityDefs', $collection->getEntityName(), 'fields'], []) as $field => $fieldDefs) {
+            $parts = explode(self::VIRTUAL_FIELD_DELIMITER, $field);
+            if (count($parts) === 2) {
+                $relEntityName = $this->getMetadata()->get(['entityDefs', $collection->getEntityName(), 'links', $parts[0], 'entity']);
+                if (!isset($relEntities[$parts[0]])) {
+                    $res = $this
+                        ->getServiceFactory()
+                        ->create($relEntityName)
+                        ->findEntities(['where' => [['type' => 'in', 'attribute' => 'id', 'value' => array_column($collection->toArray(), $parts[0] . 'Id')]]]);
+                    if (isset($res['collection'])) {
+                        foreach ($res['collection'] as $relEntity) {
+                            $relEntities[$parts[0]][$relEntity->get('id')] = $relEntity;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $relEntities;
+    }
+
+    public function prepareRelationVirtualFields(Entity $entity, array $relEntities): void
+    {
+        foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityName(), 'fields'], []) as $field => $fieldDefs) {
+            $parts = explode(self::VIRTUAL_FIELD_DELIMITER, $field);
+            if (count($parts) === 2) {
+                $relEntity = $relEntities[$parts[0]][$entity->get($parts[0] . 'Id')];
+
+                $fieldType = $this->getMetadata()->get(['entityDefs', $relEntity->getEntityType(), 'fields', $parts[1], 'type']);
+
+                switch ($fieldType) {
+                    case 'currency':
+                        $entity->set($field, $relEntity->get($parts[1]));
+                        $entity->set($field . 'Currency', $relEntity->get($parts[1] . 'Currency'));
+                        break;
+                    case 'unit':
+                        $entity->set($field, $relEntity->get($parts[1]));
+                        $entity->set($field . 'Unit', $relEntity->get($parts[1] . 'Unit'));
+                        break;
+                    case 'link':
+                    case 'file':
+                    case 'asset':
+                        $entity->set($field . 'Id', $relEntity->get($parts[1] . 'Id'));
+                        $entity->set($field . 'Name', $relEntity->get($parts[1] . 'Name'));
+                        break;
+                    default:
+                        $entity->set($field, $relEntity->get($parts[1]));
+                }
+            }
+        }
+
+        $entity->preparedRelationVirtualFields = true;
+    }
+
     public function createRelationshipEntitiesViaAddRelation(string $entityType, EntityCollection $entities, array $foreignIds): array
     {
         $relationshipEntities = $this->getRelationshipEntities();
