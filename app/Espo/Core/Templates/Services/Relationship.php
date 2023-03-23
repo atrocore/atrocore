@@ -143,6 +143,10 @@ class Relationship extends Record
     public function prepareRelationVirtualFields(Entity $entity, array $relEntities, array $virtualFields): void
     {
         foreach ($virtualFields as $field => $fieldDefs) {
+            if (empty($relEntities[$fieldDefs['relationName']][$entity->get($fieldDefs['relationName'] . 'Id')])) {
+                continue;
+            }
+
             $relEntity = $relEntities[$fieldDefs['relationName']][$entity->get($fieldDefs['relationName'] . 'Id')];
 
             switch ($this->getMetadata()->get(['entityDefs', $relEntity->getEntityType(), 'fields', $fieldDefs['relationFieldName'], 'type'])) {
