@@ -174,7 +174,7 @@ class DataManager
             return null;
         }
 
-        return Json::decode(file_get_contents(self::CACHE_DIR_PATH . "/{$name}.json"), $isArray);
+        return @json_decode(file_get_contents(self::CACHE_DIR_PATH . "/{$name}.json"), $isArray);
     }
 
     /**
