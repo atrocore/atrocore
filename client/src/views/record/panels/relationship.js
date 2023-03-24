@@ -149,7 +149,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 });
             }
 
-            if (this.defs.select) {
+            if (this.defs.select === true && this.defs.unlinkAll !== false) {
                 this.actionList.push({
                     label: 'unlinkAll',
                     action: 'unlinkAllRelated',
