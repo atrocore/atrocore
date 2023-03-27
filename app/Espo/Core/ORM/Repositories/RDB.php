@@ -384,11 +384,11 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     {
         parent::beforeSave($entity, $options);
 
+        $this->prepareFieldsByType($entity);
+
         if (empty($options['skipAll'])) {
             $this->validateFieldsByType($entity);
         }
-
-        $this->prepareFieldsByType($entity);
 
         // dispatch an event
         $this->dispatch('beforeSave', $entity, $options);
