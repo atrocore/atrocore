@@ -249,6 +249,18 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
     }
 
+    protected function prepareFieldsByType(Entity $entity): void
+    {
+        foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []) as $fieldName => $fieldData) {
+            if (isset($fieldData['type'])) {
+                $method = "prepareFieldType" . ucfirst($fieldData['type']);
+                if (method_exists($this, $method)) {
+                    $this->$method($entity, $fieldName, $fieldData);
+                }
+            }
+        }
+    }
+
     protected function validateEmail(Entity $entity, string $fieldName, array $fieldData): void
     {
         if ($entity->isAttributeChanged($fieldName) && !empty($entity->get($fieldName))) {
@@ -287,6 +299,20 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     protected function validateMultiEnum(Entity $entity, string $fieldName, array $fieldData): void
     {
         $this->validateEnum($entity, $fieldName, $fieldData);
+    }
+
+    protected function prepareFieldTypeMultiEnum(Entity $entity, string $fieldName, array $fieldData): void
+    {
+        $this->prepareFieldTypeArray($entity, $fieldName, $fieldData);
+    }
+
+    protected function prepareFieldTypeArray(Entity $entity, string $fieldName, array $fieldData): void
+    {
+        $value = $entity->get($fieldName);
+        if (is_array($value)) {
+            $value = array_values(array_unique($value));
+            $entity->set($fieldName, $value);
+        }
     }
 
     protected function validateUnit(Entity $entity, string $fieldName, array $fieldData): void
@@ -361,6 +387,8 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         if (empty($options['skipAll'])) {
             $this->validateFieldsByType($entity);
         }
+
+        $this->prepareFieldsByType($entity);
 
         // dispatch an event
         $this->dispatch('beforeSave', $entity, $options);
