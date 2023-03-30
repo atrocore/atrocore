@@ -1687,7 +1687,12 @@ class Record extends \Espo\Core\Services\Base
     public function findLinkedEntities($id, $link, $params)
     {
         $event = $this
-            ->dispatchEvent('beforeFindLinkedEntities', new Event(['id' => $id, 'service' => $this, 'link' => $link, 'params' => $params]));
+            ->dispatchEvent('beforeFindLinkedEntities', new Event(['id' => $id, 'service' => $this, 'link' => $link, 'params' => $params, 'result' => null]));
+
+        $result = $event->getArgument('result');
+        if (is_array($result) && array_key_exists('total', $result) && array_key_exists('collection', $result)) {
+            return $result;
+        }
 
         $id = $event->getArgument('id');
         $link = $event->getArgument('link');
