@@ -110,6 +110,7 @@ class Metadata extends AbstractListener
                             "relationVirtualField" => true,
                             "readOnly"             => true,
                             "required"             => false,
+                            "unique"               => false,
                             "massUpdateDisabled"   => true,
                             "filterDisabled"       => true,
                             "importDisabled"       => true,
