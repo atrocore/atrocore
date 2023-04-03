@@ -39,6 +39,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\Services\Record;
+use Treo\Core\Exceptions\NotModified;
 
 class Relationship extends Record
 {
@@ -283,17 +284,101 @@ class Relationship extends Record
         return $relationshipEntities;
     }
 
+    public function prepareRelationFieldDataToUpdate(Entity $entity): array
+    {
+        $relationsData = [];
+        foreach ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields'], []) as $field => $fieldDefs) {
+            if (!empty($fieldDefs['relationVirtualField'])) {
+                $parts = explode(self::VIRTUAL_FIELD_DELIMITER, $field);
+                switch ($fieldDefs['type']) {
+                    case 'currency':
+                        if ($entity->has($field)) {
+                            $relationsData[$parts[0]]['input'][$parts[1]] = $entity->get($field);
+                        }
+                        if ($entity->has($field . 'Currency')) {
+                            $relationsData[$parts[0]]['input'][$parts[1] . 'Currency'] = $entity->get($field . 'Currency');
+                        }
+                        break;
+                    case 'unit':
+                        if ($entity->has($field)) {
+                            $relationsData[$parts[0]]['input'][$parts[1]] = $entity->get($field);
+                        }
+                        if ($entity->has($field . 'Unit')) {
+                            $relationsData[$parts[0]]['input'][$parts[1] . 'Unit'] = $entity->get($field . 'Unit');
+                        }
+                        break;
+                    case 'link':
+                    case 'file':
+                    case 'asset':
+                        if ($entity->has($field . 'Id')) {
+                            $relationsData[$parts[0]]['input'][$parts[1] . 'Id'] = $entity->get($field . 'Id');
+                            if ($entity->has($field . 'Name')) {
+                                $relationsData[$parts[0]]['input'][$parts[1] . 'Name'] = $entity->get($field . 'Name');
+                            }
+                        }
+                        break;
+                    default:
+                        if ($entity->has($field)) {
+                            $relationsData[$parts[0]]['input'][$parts[1]] = $entity->get($field);
+                        }
+                }
+                if (!empty($relationsData[$parts[0]]['input'])) {
+                    $relationsData[$parts[0]]['id'] = $entity->get($parts[0] . 'Id');
+                    $relationsData[$parts[0]]['entity'] = $fieldDefs['entity'];
+                }
+            }
+        }
+
+        foreach ($relationsData as $k => $preparedData) {
+            $relationsData[$k]['input'] = json_decode(json_encode($preparedData['input']));
+        }
+
+        return $relationsData;
+    }
+
     protected function storeEntity(Entity $entity)
     {
+        $inTransaction = false;
+        if (!$this->getEntityManager()->getPDO()->inTransaction()) {
+            $this->getEntityManager()->getPDO()->beginTransaction();
+            $inTransaction = true;
+        }
+
         try {
-            $result = $this->getRepository()->save($entity, $this->getDefaultRepositoryOptions());
-        } catch (\PDOException $e) {
-            if (!empty($e->errorInfo[1]) && $e->errorInfo[1] == 1062) {
-                return true;
+            try {
+                $result = $this->getRepository()->save($entity, $this->getDefaultRepositoryOptions());
+            } catch (\PDOException $e) {
+                if (!empty($e->errorInfo[1]) && $e->errorInfo[1] == 1062) {
+                    return true;
+                }
+                throw $e;
+            }
+
+            foreach ($this->prepareRelationFieldDataToUpdate($entity) as $preparedData) {
+                try {
+                    $this->getServiceFactory()->create($preparedData['entity'])->updateEntity($preparedData['id'], $preparedData['input']);
+                } catch (NotModified $e) {
+                    // ignore this error
+                }
+            }
+
+            if ($inTransaction) {
+                $this->getEntityManager()->getPDO()->commit();
+            }
+        } catch (\Throwable $e) {
+            if ($inTransaction) {
+                $this->getEntityManager()->getPDO()->rollBack();
             }
             throw $e;
         }
 
         return $result;
+    }
+
+    protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
+    {
+        $this->prepareEntityForOutput($entity);
+
+        return parent::isEntityUpdated($entity, $data);
     }
 }

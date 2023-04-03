@@ -108,12 +108,10 @@ class Metadata extends AbstractListener
                         $data['entityDefs'][$scope]['fields'][$field . self::VIRTUAL_FIELD_DELIMITER . $foreignField] = array_merge($foreignFieldDefs, [
                             "notStorable"          => true,
                             "relationVirtualField" => true,
-                            "readOnly"             => true,
+                            "entity"               => $foreignEntity,
                             "required"             => false,
                             "unique"               => false,
-                            "massUpdateDisabled"   => true,
                             "filterDisabled"       => true,
-                            "importDisabled"       => true,
                             "emHidden"             => true
                         ]);
 
