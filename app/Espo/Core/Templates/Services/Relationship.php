@@ -286,39 +286,46 @@ class Relationship extends Record
 
     public function prepareRelationFieldDataToUpdate(Entity $entity): array
     {
+        if (!property_exists($entity, '_input')) {
+            return [];
+        }
+
+        /** @var \stdClass $input */
+        $input = $entity->_input;
+
         $relationsData = [];
         foreach ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields'], []) as $field => $fieldDefs) {
             if (!empty($fieldDefs['relationVirtualField'])) {
                 $parts = explode(self::VIRTUAL_FIELD_DELIMITER, $field);
                 switch ($fieldDefs['type']) {
                     case 'currency':
-                        if ($entity->has($field)) {
+                        if (property_exists($input, $field)) {
                             $relationsData[$parts[0]]['input'][$parts[1]] = $entity->get($field);
                         }
-                        if ($entity->has($field . 'Currency')) {
+                        if (property_exists($input, $field . 'Currency')) {
                             $relationsData[$parts[0]]['input'][$parts[1] . 'Currency'] = $entity->get($field . 'Currency');
                         }
                         break;
                     case 'unit':
-                        if ($entity->has($field)) {
+                        if (property_exists($input, $field)) {
                             $relationsData[$parts[0]]['input'][$parts[1]] = $entity->get($field);
                         }
-                        if ($entity->has($field . 'Unit')) {
+                        if (property_exists($input, $field . 'Unit')) {
                             $relationsData[$parts[0]]['input'][$parts[1] . 'Unit'] = $entity->get($field . 'Unit');
                         }
                         break;
                     case 'link':
                     case 'file':
                     case 'asset':
-                        if ($entity->has($field . 'Id')) {
+                        if (property_exists($input, $field . 'Id')) {
                             $relationsData[$parts[0]]['input'][$parts[1] . 'Id'] = $entity->get($field . 'Id');
-                            if ($entity->has($field . 'Name')) {
+                            if (property_exists($input, $field . 'Name')) {
                                 $relationsData[$parts[0]]['input'][$parts[1] . 'Name'] = $entity->get($field . 'Name');
                             }
                         }
                         break;
                     default:
-                        if ($entity->has($field)) {
+                        if (property_exists($input, $field)) {
                             $relationsData[$parts[0]]['input'][$parts[1]] = $entity->get($field);
                         }
                 }
@@ -377,7 +384,10 @@ class Relationship extends Record
 
     protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
     {
-        $this->prepareEntityForOutput($entity);
+        $preparedRelationFieldData = $this->prepareRelationFieldDataToUpdate($entity);
+        if (!empty($preparedRelationFieldData)) {
+            return true;
+        }
 
         return parent::isEntityUpdated($entity, $data);
     }

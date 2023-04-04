@@ -1177,6 +1177,9 @@ class Record extends \Espo\Core\Services\Base
 
         $entity = $this->getRepository()->get();
 
+        // set input data to entity property
+        $entity->_input = $attachment;
+
         $this->filterInput($attachment);
         $this->handleInput($attachment);
 
@@ -1262,6 +1265,9 @@ class Record extends \Espo\Core\Services\Base
         if (!$entity) {
             throw new NotFound();
         }
+
+        // set input data to entity property
+        $entity->_input = $data;
 
         if (!$this->getAcl()->check($entity, 'edit')) {
             throw new Forbidden();
