@@ -434,7 +434,6 @@
     "parent": "Parent",
     "price": "Preis",
     "priceCurrency": "Währung",
-    "productFamily": "Produktfamilie",
     "productSerie": "Produktserie",
     "billingAddressCity": "Ort (Rechnungsadresse)",
     "billingAddressCountry": "Land (Rechnungsadresse)",

@@ -438,6 +438,10 @@ class Hierarchy extends Record
 
     public function createEntity($attachment)
     {
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy') {
+            return parent::createEntity($attachment);
+        }
+
         $this->prepareChildInputData($attachment);
 
         return parent::createEntity($attachment);
@@ -460,6 +464,10 @@ class Hierarchy extends Record
 
     public function updateEntity($id, $data)
     {
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy') {
+            return parent::updateEntity($id, $data);
+        }
+
         if (property_exists($data, '_sortedIds') && property_exists($data, '_id')) {
             $this->getRepository()->updateHierarchySortOrder($data->_id, $data->_sortedIds);
             return $this->getEntity($id);
@@ -509,6 +517,10 @@ class Hierarchy extends Record
 
     public function linkEntity($id, $link, $foreignId)
     {
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy') {
+            return parent::linkEntity($id, $link, $foreignId);
+        }
+
         /**
          * Delegate to Update if ManyToOne or OneToOne relation
          */
@@ -570,6 +582,10 @@ class Hierarchy extends Record
 
     public function unlinkEntity($id, $link, $foreignId)
     {
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy') {
+            return parent::unlinkEntity($id, $link, $foreignId);
+        }
+
         /**
          * Delegate to Update if ManyToOne or OneToOne relation
          */
@@ -635,6 +651,10 @@ class Hierarchy extends Record
 
     public function deleteEntity($id)
     {
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy') {
+            return parent::deleteEntity($id);
+        }
+
         $inTransaction = false;
         if (!$this->getEntityManager()->getPDO()->inTransaction()) {
             $this->getEntityManager()->getPDO()->beginTransaction();
@@ -662,14 +682,15 @@ class Hierarchy extends Record
     {
         parent::prepareEntityForOutput($entity);
 
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy') {
+            return;
+        }
+
         $entity->set('isRoot', $this->getRepository()->isRoot($entity->get('id')));
-
         $entity->set('hasChildren', !empty($children = $entity->get('children')) && count($children) > 0);
-
         if ($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']) !== true) {
             $entity->set('hierarchyRoute', $this->getRepository()->getHierarchyRoute($entity->get('id')));
         }
-
         if ($entity->has('hierarchySortOrder')) {
             $entity->set('sortOrder', $entity->get('hierarchySortOrder'));
         }
@@ -678,7 +699,8 @@ class Hierarchy extends Record
     public function findLinkedEntities($id, $link, $params)
     {
         $result = parent::findLinkedEntities($id, $link, $params);
-        if (empty($result['total'])) {
+
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy') {
             return $result;
         }
 
@@ -686,11 +708,16 @@ class Hierarchy extends Record
             return $result;
         }
 
+        $entity = $this->getRepository()->get($id);
+        if (empty($entity)) {
+            return $result;
+        }
+
         /**
          * Mark records as inherited
          */
         if (!in_array($link, $this->getRepository()->getUnInheritedRelations())) {
-            $parents = $this->getRepository()->get($id)->get('parents');
+            $parents = $entity->get('parents');
             if (!empty($parents[0])) {
                 $parentsRelatedIds = [];
                 foreach ($parents as $parent) {
@@ -699,8 +726,8 @@ class Hierarchy extends Record
                         $parentsRelatedIds = array_merge($parentsRelatedIds, $ids);
                     }
                 }
-                foreach ($result['collection'] as $entity) {
-                    $entity->isInherited = in_array($entity->get('id'), $parentsRelatedIds);
+                foreach ($result['collection'] as $item) {
+                    $item->isInherited = in_array($item->get('id'), $parentsRelatedIds);
                 }
             }
         }
