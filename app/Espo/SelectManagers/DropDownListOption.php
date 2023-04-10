@@ -40,11 +40,11 @@ use Espo\Core\SelectManagers\Base;
 
 class DropDownListOption extends Base
 {
-    protected function boolFilterOnlyForAdvancedList(array &$result): void
+    protected function boolFilterDefaultOption(array &$result): void
     {
-        $data = $this->getBoolFilterParameter('onlyForDropDownList');
+        $data = $this->getBoolFilterParameter('defaultOption');
         if (empty($data['dropDownListId'])) {
-            throw new BadRequest('For choosing Drop-down List Option, you need to set Drop-down List.');
+            throw new BadRequest('For choosing default option, you need to select Drop-down List.');
         }
 
         $result['whereClause'][] = [

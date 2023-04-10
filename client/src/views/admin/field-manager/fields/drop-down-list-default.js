@@ -30,14 +30,16 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/admin/link-manager/fields/drop-down-list-default', 'views/admin/field-manager/fields/link/default', Dep => {
+Espo.define('views/admin/field-manager/fields/drop-down-list-default', 'views/admin/field-manager/fields/link/default', Dep => {
 
     return Dep.extend({
 
-        selectBoolFilterList: ['onlyForDropDownList'],
+        selectBoolFilterList: ['defaultOption'],
+
+        createDisabled: true,
 
         boolFilterData: {
-            onlyForDropDownList() {
+            defaultOption() {
                 return {
                     dropDownListId: this.getParentView().getView('dropDownList').fetch().dropDownListId
                 };

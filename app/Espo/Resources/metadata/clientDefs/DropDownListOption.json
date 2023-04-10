@@ -2,9 +2,9 @@
   "controller": "controllers/record",
   "iconClass": "fas fa-list",
   "boolFilterList": [
-    "onlyForDropDownList"
+    "defaultOption"
   ],
   "hiddenBoolFilterList": [
-    "onlyForDropDownList"
+    "defaultOption"
   ]
 }
