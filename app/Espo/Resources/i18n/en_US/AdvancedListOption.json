@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "name": "Option Value",
+    "sortOrder": "Sort Order",
+    "advancedList": "Advanced List"
+  },
+  "links": {
+    "advancedList": "Advanced List"
+  },
+  "labels": {
+    "Create AdvancedListOption": "Create Advanced List Option"
+  }
+}
