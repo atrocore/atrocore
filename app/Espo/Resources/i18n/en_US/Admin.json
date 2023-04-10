@@ -79,6 +79,7 @@
     "listForAccount": "List (for account)"
   },
   "fieldTypes": {
+    "dropDownList": "Drop-down List",
     "color": "Color",
     "unit": "Unit",
     "array": "Array",
