@@ -464,10 +464,23 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
             this.notify('Not valid', 'error');
         },
 
+        getDataForSave: function () {
+            let data = this.fetch();
+            let model = this.model;
+
+            $.each(model.getClonedAttributes(), (name, value) => {
+                if (!data[name] && !this.getMetadata().get(['entityDefs', model.urlRoot, 'fields', name, 'relationVirtualField'])) {
+                    data[name] = value;
+                }
+            });
+
+            return data;
+        },
+
         save: function (callback, skipExit) {
             this.beforeBeforeSave();
 
-            var data = this.fetch();
+            var data = this.getDataForSave();
 
             var self = this;
             var model = this.model;
@@ -475,8 +488,6 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
             var initialAttributes = this.attributes;
 
             var beforeSaveAttributes = this.model.getClonedAttributes();
-
-            data = _.extend(Espo.Utils.cloneDeep(beforeSaveAttributes), data);
 
             var attrs = false;
             if (model.isNew()) {
@@ -552,69 +563,55 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
         saveModel(model, callback, skipExit, attrs) {
             this.notify('Saving...');
             let self = this;
-            model.save(attrs, {
-                success: function () {
-                    self.afterSave();
-                    let isNew = self.isNew;
-                    if (self.isNew) {
-                        self.isNew = false;
-                    }
-                    self.trigger('after:save');
-                    model.trigger('after:save');
 
-                    if (!callback) {
-                        if (!skipExit) {
-                            if (isNew) {
-                                self.exit('create');
-                            } else {
-                                self.exit('save');
-                            }
-                        }
-                    } else {
-                        callback(self);
-                    }
-                },
-                error: function (e, xhr) {
-                    let statusReason = xhr.responseText || '';
-                    if (xhr.status === 409) {
-                        self.notify(false);
-                        self.enableButtons();
-                        self.trigger('cancel:save');
-                        Espo.Ui.confirm(statusReason, {
-                            confirmText: self.translate('Apply'),
-                            cancelText: self.translate('Cancel')
-                        }, function () {
-                            attrs['_prev'] = null;
-                            attrs['_silentMode'] = false;
-                            model.save(attrs, {
-                                success: function () {
-                                    self.afterSave();
-                                    self.isNew = false;
-                                    self.trigger('after:save');
-                                    model.trigger('after:save');
-                                    if (!callback) {
-                                        if (!skipExit) {
-                                            self.exit('save');
-                                        }
-                                    } else {
-                                        callback(self);
-                                    }
-                                },
-                                patch: true
-                            });
-                        })
-                    } else {
-                        self.enableButtons();
-                        self.trigger('cancel:save');
+            let isNew = this.isNew;
+            let method = 'ajaxPostRequest';
+            let url = model.urlRoot;
 
-                        if (xhr.status === 304) {
-                            Espo.Ui.notify(self.translate('notModified', 'messages'), 'warning', 1000 * 60 * 60 * 2, true);
+            if (!isNew) {
+                method = 'ajaxPatchRequest';
+                url += '/' + model.get('id');
+            }
+
+            this[method](url, attrs).success(function () {
+                self.afterSave();
+                self.trigger('after:save');
+                model.trigger('after:save');
+                if (!callback) {
+                    if (!skipExit) {
+                        if (isNew) {
+                            self.exit('create');
                         } else {
-                            Espo.Ui.notify(`${self.translate("Error")} ${xhr.status}: ${statusReason}`, "error", 1000 * 60 * 60 * 2, true);
+                            self.exit('save');
                         }
                     }
-                },
-                patch: !model.isNew()
+                } else {
+                    callback(self);
+                }
+            }).error(function (e, xhr) {
+                let statusReason = xhr.responseText || '';
+                if (xhr.status === 409) {
+                    self.notify(false);
+                    self.enableButtons();
+                    self.trigger('cancel:save');
+                    Espo.Ui.confirm(statusReason, {
+                        confirmText: self.translate('Apply'),
+                        cancelText: self.translate('Cancel')
+                    }, function () {
+                        attrs['_prev'] = null;
+                        attrs['_ignoreConflict'] = true;
+                        attrs['_silentMode'] = false;
+                        this.saveModel(model, callback, skipExit, attrs);
+                    })
+                } else {
+                    self.enableButtons();
+                    self.trigger('cancel:save');
+                    if (xhr.status === 304) {
+                        Espo.Ui.notify(self.translate('notModified', 'messages'), 'warning', 1000 * 60 * 60 * 2, true);
+                    } else {
+                        Espo.Ui.notify(`${self.translate("Error")} ${xhr.status}: ${statusReason}`, "error", 1000 * 60 * 60 * 2, true);
+                    }
+                }
             });
         },
 
