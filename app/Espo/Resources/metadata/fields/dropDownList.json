@@ -27,7 +27,7 @@
     {
       "name": "default",
       "type": "link",
-      "view": "views/admin/field-manager/fields/drop-down-list-default"
+      "view": "views/admin/field-manager/fields/link/drop-down-list-default"
     }
   ],
   "actualFields": [
