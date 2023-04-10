@@ -1,0 +1,40 @@
+{
+  "params": [
+    {
+      "name": "required",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "audited",
+      "type": "bool"
+    },
+    {
+      "name": "readOnly",
+      "type": "bool"
+    },
+    {
+      "name": "prohibitedEmptyValue",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "advancedList",
+      "required": true,
+      "entity": "AdvancedList",
+      "type": "link"
+    },
+    {
+      "name": "default",
+      "type": "link",
+      "view": "views/admin/link-manager/fields/drop-down-list-default"
+    }
+  ],
+  "actualFields": [
+    "id"
+  ],
+  "notActualFields": [
+    "name"
+  ],
+  "filter": true
+}
