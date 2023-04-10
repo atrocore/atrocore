@@ -1,0 +1,10 @@
+{
+  "controller": "controllers/record",
+  "iconClass": "fas fa-list",
+  "boolFilterList": [
+    "onlyForDropDownList"
+  ],
+  "hiddenBoolFilterList": [
+    "onlyForDropDownList"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "controller": "controllers/record",
+  "iconClass": "fas fa-list",
+  "relationshipPanels": {
+    "dropDownListOptions": {
+      "select": false,
+      "unlinkAll": false,
+      "rowActionsView": "views/record/row-actions/relationship-no-unlink",
+      "sortBy": "sortOrder",
+      "asc": true,
+      "dragDrop": {
+        "isActive": true,
+        "sortField": "sortOrder"
+      }
+    }
+  }
+}
