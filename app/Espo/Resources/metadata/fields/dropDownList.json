@@ -19,9 +19,9 @@
       "default": false
     },
     {
-      "name": "advancedList",
+      "name": "dropDownList",
       "required": true,
-      "entity": "AdvancedList",
+      "entity": "DropDownList",
       "type": "link"
     },
     {

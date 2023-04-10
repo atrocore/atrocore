@@ -44,7 +44,7 @@ class DropDownListOption extends Base
     {
         if ($entity->isNew() && $entity->get('sortOrder') === null) {
             $last = $this->where(['dropDownListId' => $entity->get('dropDownListId')])->order('sortOrder', 'DESC')->findOne();
-            $entity->set('sortOrder', empty($last) ? 0 : (int)$last->get('sorting') + 10);
+            $entity->set('sortOrder', empty($last) ? 0 : (int)$last->get('sortOrder') + 10);
         }
 
         parent::beforeSave($entity, $options);
