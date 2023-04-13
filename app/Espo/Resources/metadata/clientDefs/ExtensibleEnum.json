@@ -2,7 +2,7 @@
   "controller": "controllers/record",
   "iconClass": "fas fa-list",
   "relationshipPanels": {
-    "dropDownListOptions": {
+    "extensibleEnumOptions": {
       "select": false,
       "unlinkAll": false,
       "rowActionsView": "views/record/row-actions/relationship-no-unlink",

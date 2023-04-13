@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "name": "Option Value",
+    "sortOrder": "Sort Order",
+    "extensibleEnum": "List"
+  },
+  "links": {
+    "extensibleEnum": "List"
+  },
+  "labels": {
+    "Create ExtensibleEnumOption": "Create List Option"
+  }
+}

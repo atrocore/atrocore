@@ -33,10 +33,10 @@
 
 declare(strict_types=1);
 
-namespace Espo\Controllers;
+namespace Espo\Services;
 
-use Espo\Core\Templates\Controllers\Base;
+use Espo\Core\Templates\Services\Base;
 
-class DropDownListOption extends Base
+class ExtensibleEnum extends Base
 {
 }

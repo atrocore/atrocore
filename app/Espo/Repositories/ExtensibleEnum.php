@@ -33,11 +33,17 @@
 
 declare(strict_types=1);
 
-namespace Espo\Entities;
+namespace Espo\Repositories;
 
-use Espo\Core\Templates\Entities\Base;
+use Espo\Core\Templates\Repositories\Base;
+use Espo\ORM\Entity;
 
-class DropDownListOption extends Base
+class ExtensibleEnum extends Base
 {
-    protected $entityType = "DropDownListOption";
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        $this->getEntityManager()->getRepository('ExtensibleEnumOption')->where(['extensibleEnumId' => $entity->get('id')])->removeCollection();
+
+        parent::afterRemove($entity, $options);
+    }
 }

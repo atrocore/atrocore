@@ -33,19 +33,11 @@
 
 declare(strict_types=1);
 
-namespace Espo\Services;
+namespace Espo\Entities;
 
-use Espo\Core\Templates\Services\Base;
+use Espo\Core\Templates\Entities\Base;
 
-class DropDownListOption extends Base
+class ExtensibleEnumOption extends Base
 {
-    public function updateEntity($id, $data)
-    {
-        if (property_exists($data, '_sortedIds') && !empty($data->_sortedIds)) {
-            $this->getRepository()->updateSortOrder($data->_sortedIds);
-            return $this->getEntity($id);
-        }
-
-        return parent::updateEntity($id, $data);
-    }
+    protected $entityType = "ExtensibleEnumOption";
 }

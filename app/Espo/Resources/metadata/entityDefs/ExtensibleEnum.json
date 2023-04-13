@@ -8,7 +8,7 @@
     "description": {
       "type": "text"
     },
-    "dropDownListOptions": {
+    "extensibleEnumOptions": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
@@ -34,10 +34,10 @@
     }
   },
   "links": {
-    "dropDownListOptions": {
+    "extensibleEnumOptions": {
       "type": "hasMany",
-      "foreign": "dropDownList",
-      "entity": "DropDownListOption"
+      "foreign": "extensibleEnum",
+      "entity": "ExtensibleEnumOption"
     },
     "createdBy": {
       "type": "belongsTo",

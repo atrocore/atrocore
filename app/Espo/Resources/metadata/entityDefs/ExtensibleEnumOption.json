@@ -4,7 +4,7 @@
       "type": "text",
       "isMultilang": true
     },
-    "dropDownList": {
+    "extensibleEnum": {
       "type": "link",
       "required": true
     },
@@ -31,10 +31,10 @@
     }
   },
   "links": {
-    "dropDownList": {
+    "extensibleEnum": {
       "type": "belongsTo",
-      "foreign": "dropDownListOptions",
-      "entity": "DropDownList"
+      "foreign": "extensibleEnumOptions",
+      "entity": "ExtensibleEnum"
     },
     "createdBy": {
       "type": "belongsTo",

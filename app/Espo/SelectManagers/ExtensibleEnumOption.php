@@ -38,17 +38,17 @@ namespace Espo\SelectManagers;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\SelectManagers\Base;
 
-class DropDownListOption extends Base
+class ExtensibleEnumOption extends Base
 {
     protected function boolFilterDefaultOption(array &$result): void
     {
         $data = $this->getBoolFilterParameter('defaultOption');
-        if (empty($data['dropDownListId'])) {
-            throw new BadRequest('For choosing default option, you need to select Drop-down List.');
+        if (empty($data['extensibleEnumId'])) {
+            throw new BadRequest('For choosing default option, you need to select List.');
         }
 
         $result['whereClause'][] = [
-            'dropDownListId' => $data['dropDownListId']
+            'extensibleEnumId' => $data['extensibleEnumId']
         ];
     }
 }

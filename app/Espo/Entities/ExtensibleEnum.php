@@ -33,39 +33,11 @@
 
 declare(strict_types=1);
 
-namespace Espo\Repositories;
+namespace Espo\Entities;
 
-use Espo\Core\Templates\Repositories\Base;
-use Espo\ORM\Entity;
+use Espo\Core\Templates\Entities\Base;
 
-class DropDownListOption extends Base
+class ExtensibleEnum extends Base
 {
-    protected function beforeSave(Entity $entity, array $options = [])
-    {
-        if ($entity->isNew() && $entity->get('sortOrder') === null) {
-            $last = $this->where(['dropDownListId' => $entity->get('dropDownListId')])->order('sortOrder', 'DESC')->findOne();
-            $entity->set('sortOrder', empty($last) ? 0 : (int)$last->get('sortOrder') + 10);
-        }
-
-        parent::beforeSave($entity, $options);
-    }
-
-    public function updateSortOrder(array $ids): void
-    {
-        $collection = $this->where(['id' => $ids])->find();
-        if (empty($collection[0])) {
-            return;
-        }
-
-        foreach ($ids as $k => $id) {
-            $sortOrder = (int)$k * 10;
-            foreach ($collection as $entity) {
-                if ($entity->get('id') !== (string)$id) {
-                    continue;
-                }
-                $entity->set('sortOrder', $sortOrder);
-                $this->save($entity);
-            }
-        }
-    }
+    protected $entityType = "ExtensibleEnum";
 }

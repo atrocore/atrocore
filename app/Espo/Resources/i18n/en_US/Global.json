@@ -1,7 +1,7 @@
 {
   "scopeNames": {
-    "DropDownList": "Drop-down List",
-    "DropDownListOption": "Drop-down List Option",
+    "ExtensibleEnum": "List",
+    "ExtensibleEnumOption": "List Option",
     "Sharing": "Sharing",
     "Locale": "Locale",
     "Connection": "Connection",
@@ -52,8 +52,8 @@
     "AuthFailLogRecord": "Auth Fail Log Record"
   },
   "scopeNamesPlural": {
-    "DropDownList": "Drop-down Lists",
-    "DropDownListOption": "Drop-down List Options",
+    "ExtensibleEnum": "Lists",
+    "ExtensibleEnumOption": "List Options",
     "Sharing": "Sharing",
     "Locale": "Locales",
     "Connection": "Connections",

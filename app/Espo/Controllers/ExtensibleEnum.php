@@ -37,6 +37,6 @@ namespace Espo\Controllers;
 
 use Espo\Core\Templates\Controllers\Base;
 
-class DropDownList extends Base
+class ExtensibleEnum extends Base
 {
 }

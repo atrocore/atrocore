@@ -33,11 +33,10 @@
 
 declare(strict_types=1);
 
-namespace Espo\Entities;
+namespace Espo\Controllers;
 
-use Espo\Core\Templates\Entities\Base;
+use Espo\Core\Templates\Controllers\Base;
 
-class DropDownList extends Base
+class ExtensibleEnumOption extends Base
 {
-    protected $entityType = "DropDownList";
 }

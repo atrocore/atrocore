@@ -37,6 +37,15 @@ namespace Espo\Services;
 
 use Espo\Core\Templates\Services\Base;
 
-class DropDownList extends Base
+class ExtensibleEnumOption extends Base
 {
+    public function updateEntity($id, $data)
+    {
+        if (property_exists($data, '_sortedIds') && !empty($data->_sortedIds)) {
+            $this->getRepository()->updateSortOrder($data->_sortedIds);
+            return $this->getEntity($id);
+        }
+
+        return parent::updateEntity($id, $data);
+    }
 }
