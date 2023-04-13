@@ -19,15 +19,15 @@
       "default": false
     },
     {
-      "name": "dropDownList",
+      "name": "extensibleEnum",
       "required": true,
-      "entity": "DropDownList",
+      "entity": "ExtensibleEnum",
       "type": "link"
     },
     {
       "name": "default",
       "type": "link",
-      "view": "views/admin/field-manager/fields/link/drop-down-list-default"
+      "view": "views/admin/field-manager/fields/link/extensible-enum-default"
     }
   ],
   "actualFields": [

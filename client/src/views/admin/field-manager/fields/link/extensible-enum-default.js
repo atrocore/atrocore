@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/admin/field-manager/fields/link/drop-down-list-default', 'views/admin/field-manager/fields/link/default', Dep => {
+Espo.define('views/admin/field-manager/fields/link/extensible-enum-default', 'views/admin/field-manager/fields/link/default', Dep => {
 
     return Dep.extend({
 
@@ -41,7 +41,7 @@ Espo.define('views/admin/field-manager/fields/link/drop-down-list-default', 'vie
         boolFilterData: {
             defaultOption() {
                 return {
-                    dropDownListId: this.getParentView().getView('dropDownList').fetch().dropDownListId
+                    extensibleEnumId: this.getParentView().getView('extensibleEnum').fetch().extensibleEnumId
                 };
             }
         },
@@ -49,9 +49,9 @@ Espo.define('views/admin/field-manager/fields/link/drop-down-list-default', 'vie
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.foreignScope = 'DropDownListOption';
+            this.foreignScope = 'ExtensibleEnumOption';
 
-            this.listenTo(this.model, 'change:dropDownListId', () => {
+            this.listenTo(this.model, 'change:extensibleEnumId', () => {
                 this.model.set('default', null);
                 this.model.set('defaultId', null);
                 this.model.set('defaultName', null);

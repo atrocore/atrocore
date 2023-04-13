@@ -50,12 +50,6 @@
     "asc": false
   },
   "indexes": {
-    "name": {
-      "columns": [
-        "name",
-        "deleted"
-      ]
-    },
     "createdAt": {
       "columns": [
         "createdAt",
