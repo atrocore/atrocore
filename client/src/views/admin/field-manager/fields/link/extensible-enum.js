@@ -30,41 +30,17 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/admin/field-manager/fields/link/extensible-enum-default', 'views/fields/link', Dep => {
+Espo.define('views/admin/field-manager/fields/link/extensible-enum', 'views/fields/link', Dep => {
 
     return Dep.extend({
-
-        selectBoolFilterList: ['defaultOption'],
-
-        createDisabled: true,
-
-        boolFilterData: {
-            defaultOption() {
-                return {
-                    extensibleEnumId: this.getParentView().getView('extensibleEnum').fetch().extensibleEnumId
-                };
-            }
-        },
-
-        setup: function () {
-            Dep.prototype.setup.call(this);
-
-            this.foreignScope = 'ExtensibleEnumOption';
-
-            this.listenTo(this.model, 'change:extensibleEnumId', () => {
-                this.model.set('defaultId', null);
-                this.model.set('defaultName', null);
-                this.reRender();
-            });
-        },
 
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            if (this.model.get('defaultId')) {
-                this.ajaxGetRequest(`${this.foreignScope}/${this.model.get('defaultId')}`).success(record => {
-                    if (this.model.get('defaultName') !== record.name) {
-                        this.model.set('defaultName', record.name);
+            if (this.model.get('extensibleEnumId')) {
+                this.ajaxGetRequest(`${this.foreignScope}/${this.model.get('extensibleEnumId')}`).success(record => {
+                    if (this.model.get('extensibleEnumName') !== record.name) {
+                        this.model.set('extensibleEnumName', record.name);
                     }
                 });
             }

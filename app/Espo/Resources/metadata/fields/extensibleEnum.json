@@ -22,7 +22,8 @@
       "name": "extensibleEnum",
       "required": true,
       "entity": "ExtensibleEnum",
-      "type": "link"
+      "type": "link",
+      "view": "views/admin/field-manager/fields/link/extensible-enum"
     },
     {
       "name": "default",
