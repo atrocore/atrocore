@@ -404,7 +404,7 @@
     "convertCurrency": "Convert Currency"
   },
   "fields": {
-    "dropDownList": "Drop-down List",
+    "extensibleEnum": "List",
     "sortOrder": "Sort Order",
     "parents": "Parent Record(s)",
     "prohibitedEmptyValue": "Disable Empty Value",

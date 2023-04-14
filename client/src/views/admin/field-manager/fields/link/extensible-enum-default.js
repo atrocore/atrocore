@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/admin/field-manager/fields/link/extensible-enum-default', 'views/admin/field-manager/fields/link/default', Dep => {
+Espo.define('views/admin/field-manager/fields/link/extensible-enum-default', 'views/fields/link', Dep => {
 
     return Dep.extend({
 
@@ -52,10 +52,8 @@ Espo.define('views/admin/field-manager/fields/link/extensible-enum-default', 'vi
             this.foreignScope = 'ExtensibleEnumOption';
 
             this.listenTo(this.model, 'change:extensibleEnumId', () => {
-                this.model.set('default', null);
                 this.model.set('defaultId', null);
                 this.model.set('defaultName', null);
-                this.model.clear('defaultAttributes');
                 this.reRender();
             });
         },

@@ -79,7 +79,6 @@
     "listForAccount": "List (for account)"
   },
   "fieldTypes": {
-    "dropDownList": "Drop-down List",
     "color": "Color",
     "unit": "Unit",
     "array": "Array",
@@ -95,7 +94,8 @@
     "datetime": "Date-time",
     "datetimeOptional": "Date/date-time",
     "email": "Email",
-    "enum": "List",
+    "extensibleEnum": "List",
+    "enum": "Static List",
     "enumInt": "Interger list",
     "enumFloat": "Float list",
     "float": "Float",
