@@ -1496,9 +1496,16 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 });
             }
 
-            let hashParts = window.location.hash.split('/');
-            let entityType = hashParts.shift().replace('#', '');
-            let entityId = hashParts.pop();
+            let parentView = this.getParentView();
+
+            let entityType = null;
+            let entityId = null;
+
+            if (parentView && parentView.options && parentView.options.model) {
+                entityType = parentView.options.model.urlRoot;
+                entityId = parentView.options.model.get('id');
+            }
+
             let filteredListLayout = [];
 
             listLayout.forEach(item => {
