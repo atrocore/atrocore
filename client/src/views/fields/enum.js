@@ -86,6 +86,10 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                 }
             }
 
+            if (!this.params.options && this.mode !== 'list') {
+                this.prepareOptionsForExtensibleEnum();
+            }
+
             this.setupOptions();
 
             if ('translatedOptions' in this.options) {
@@ -152,6 +156,33 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                     }
                 }
             }
+        },
+
+        prepareOptionsForExtensibleEnum() {
+            // let extensibleEnumId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'extensibleEnumId']);
+            // if (extensibleEnumId) {
+            //     this.params.options = [];
+            //     this.translatedOptions = {};
+            //
+            //     this.ajaxGetRequest(`ExtensibleEnum/${extensibleEnumId}/extensibleEnumOptions`, {
+            //         sortBy: "sortOrder",
+            //         asc: true
+            //     }, {async: false}).success(res => {
+            //         if (res.list) {
+            //             res.list.forEach(item => {
+            //                 this.params.options.push(item.id);
+            //                 this.translatedOptions[item.id] = item.name;
+            //             });
+            //         }
+            //     });
+            //
+            //     if (this.model.isNew()) {
+            //         let defaultValue = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'defaultId']);
+            //         if (defaultValue && this.translatedOptions[defaultValue]) {
+            //             this.model.set(this.name, defaultValue);
+            //         }
+            //     }
+            // }
         },
 
         setupTranslation: function () {
@@ -360,7 +391,7 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
 
         fetch: function () {
             var value = this.$el.find('[name="' + this.name + '"]').val();
-            if (value){
+            if (value) {
                 value = value.replace(/~dbq~/g, '"');
             }
             var data = {};
