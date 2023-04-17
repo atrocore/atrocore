@@ -498,6 +498,39 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             }.bind(this));
         },
 
+        actionCreateRelated: function (data) {
+            data = data || {};
+
+            let link = data.link;
+            let scope = this.model.defs['links'][link].entity;
+            let foreignLink = this.model.defs['links'][link].foreign;
+
+            this.model.defs['_relationName'] = link;
+
+            let attributes = {};
+            this.model.trigger('prepareAttributesForCreateRelated', attributes, link);
+
+            let viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
+
+            this.notify('Loading...');
+            this.createView('quickCreate', viewName, {
+                scope: scope,
+                relate: {
+                    model: this.model,
+                    link: foreignLink,
+                },
+                attributes: attributes,
+            }, view => {
+                view.render();
+                view.notify(false);
+                this.listenToOnce(view, 'after:save', () => {
+                    this.model.trigger('updateRelationshipPanel', link);
+                    this.collection.fetch();
+                    this.model.trigger('after:relate', link);
+                });
+            });
+        },
+
         actionEditRelated: function (data) {
             var id = data.id;
             var scope = this.collection.get(id).name;
