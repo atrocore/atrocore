@@ -8,6 +8,9 @@
       "type": "link",
       "required": true
     },
+    "color": {
+      "type": "color"
+    },
     "sortOrder": {
       "type": "int"
     },

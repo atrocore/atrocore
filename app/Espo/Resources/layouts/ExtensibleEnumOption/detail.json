@@ -8,14 +8,16 @@
           "name": "name"
         },
         {
-          "name": "extensibleEnum"
+          "name": "color"
         }
       ],
       [
         {
           "name": "sortOrder"
         },
-        false
+        {
+          "name": "extensibleEnum"
+        }
       ]
     ]
   }

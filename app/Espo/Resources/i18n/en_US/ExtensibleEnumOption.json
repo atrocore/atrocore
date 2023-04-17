@@ -1,6 +1,7 @@
 {
   "fields": {
     "name": "Option Value",
+    "color": "Color",
     "sortOrder": "Sort Order",
     "extensibleEnum": "List"
   },

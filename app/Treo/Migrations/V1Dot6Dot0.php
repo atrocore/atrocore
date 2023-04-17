@@ -47,6 +47,8 @@ class V1Dot6Dot0 extends Base
                 $this->getPDO()->exec("ALTER TABLE extensible_enum_option ADD name_" . strtolower($language) . " LONGTEXT DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
             }
         }
+
+        $this->getPDO()->exec("ALTER TABLE extensible_enum_option ADD color VARCHAR(255) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
     }
 
     public function down(): void
