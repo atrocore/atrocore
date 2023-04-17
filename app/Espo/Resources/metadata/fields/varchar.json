@@ -14,6 +14,10 @@
       "type": "int"
     },
     {
+      "name": "countBytesInsteadOfCharacters",
+      "type": "bool"
+    },
+    {
       "name": "trim",
       "type": "bool",
       "default": true

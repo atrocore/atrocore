@@ -22,6 +22,10 @@
          "type":"int"
       },
       {
+         "name":"countBytesInsteadOfCharacters",
+         "type":"bool"
+      },
+      {
          "name":"seeMoreDisabled",
          "type":"bool",
          "tooltip": true

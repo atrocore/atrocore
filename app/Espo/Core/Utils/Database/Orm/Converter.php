@@ -72,6 +72,7 @@ class Converter
         'type' => 'type',
         'dbType' => 'dbType',
         'maxLength' => 'length',
+        'countBytesInsteadOfCharacters' => 'countBytesInsteadOfCharacters',
         'len' => 'len',
         'notNull' => 'notNull',
         'autoincrement' => 'autoincrement',

@@ -184,6 +184,7 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
 
         updateTextCounter() {
             let maxLength = this.params.maxLength;
+            let countBytesInsteadOfCharacters = this.params.countBytesInsteadOfCharacters;
             if (!maxLength) {
                 return;
             }
@@ -191,7 +192,7 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
             let $textarea = this.$el.find('textarea');
 
             let text = this.$el.find('textarea').val();
-            let textLength = text ? text.toString().length : 0;
+            let textLength = this.getRealLength(text, countBytesInsteadOfCharacters);
 
             let $el = this.$el.find('.text-length-counter .current-length');
 
@@ -202,6 +203,14 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
             if (maxLength < textLength) {
                 $textarea.css('border-color', 'red');
                 $el.css('color', 'red');
+            }
+        },
+
+        getRealLength(text, countBytesInsteadOfCharacters) {
+            if (countBytesInsteadOfCharacters) {
+                return encodeURI(text).split(/%..|./).length - 1;
+            } else {
+                return (text ? text.toString().length : 0);
             }
         },
 
