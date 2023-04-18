@@ -146,7 +146,9 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
 
                 if (isArray && scopeIsAllowed && !this.params.options.includes('') && this.params.options.length > 1) {
                     this.params.options.unshift('');
-                    this.params.optionColors.unshift('');
+                    if (this.params.optionColors && this.params.optionColors.length > 0) {
+                        this.params.optionColors.unshift('');
+                    }
 
                     if (Espo.Utils.isObject(this.translatedOptions)) {
                         this.translatedOptions[''] = '';

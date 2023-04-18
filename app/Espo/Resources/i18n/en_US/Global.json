@@ -405,6 +405,7 @@
   },
   "fields": {
     "extensibleEnum": "List",
+    "extensibleMultiEnum": "Multi-value list",
     "sortOrder": "Sort Order",
     "parents": "Parent Record(s)",
     "prohibitedEmptyValue": "Disable Empty Value",
