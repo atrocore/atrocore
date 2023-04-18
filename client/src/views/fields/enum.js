@@ -86,7 +86,7 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                 }
             }
 
-            if (!this.params.options && this.mode !== 'list') {
+            if (!this.params.options) {
                 this.prepareOptionsForExtensibleEnum();
             }
 
@@ -146,6 +146,7 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
 
                 if (isArray && scopeIsAllowed && !this.params.options.includes('') && this.params.options.length > 1) {
                     this.params.options.unshift('');
+                    this.params.optionColors.unshift('');
 
                     if (Espo.Utils.isObject(this.translatedOptions)) {
                         this.translatedOptions[''] = '';
@@ -159,30 +160,44 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
         },
 
         prepareOptionsForExtensibleEnum() {
-            // let extensibleEnumId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'extensibleEnumId']);
-            // if (extensibleEnumId) {
-            //     this.params.options = [];
-            //     this.translatedOptions = {};
-            //
-            //     this.ajaxGetRequest(`ExtensibleEnum/${extensibleEnumId}/extensibleEnumOptions`, {
-            //         sortBy: "sortOrder",
-            //         asc: true
-            //     }, {async: false}).success(res => {
-            //         if (res.list) {
-            //             res.list.forEach(item => {
-            //                 this.params.options.push(item.id);
-            //                 this.translatedOptions[item.id] = item.name;
-            //             });
-            //         }
-            //     });
-            //
-            //     if (this.model.isNew()) {
-            //         let defaultValue = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'defaultId']);
-            //         if (defaultValue && this.translatedOptions[defaultValue]) {
-            //             this.model.set(this.name, defaultValue);
-            //         }
-            //     }
-            // }
+            let extensibleEnumId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'extensibleEnumId']);
+            if (!extensibleEnumId) {
+                return;
+            }
+
+            let key = 'extensible_enum_' + extensibleEnumId;
+
+            if (!Espo[key]) {
+                Espo[key] = [];
+                this.ajaxGetRequest(`ExtensibleEnum/${extensibleEnumId}/extensibleEnumOptions`, {
+                    sortBy: "sortOrder",
+                    asc: true
+                }, {async: false}).then(res => {
+                    if (res.list) {
+                        Espo[key] = res.list;
+                    }
+                });
+            }
+
+            if (Espo[key].length === 0) {
+                return;
+            }
+
+            this.params.options = [];
+            this.params.optionColors = [];
+            this.translatedOptions = {};
+            Espo[key].forEach(option => {
+                this.params.options.push(option.id);
+                this.params.optionColors.push(option.color);
+                this.translatedOptions[option.id] = option.name;
+            });
+
+            if (this.model.isNew()) {
+                let defaultValue = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'defaultId']);
+                if (defaultValue && this.translatedOptions[defaultValue]) {
+                    this.model.set(this.name, defaultValue);
+                }
+            }
         },
 
         setupTranslation: function () {
