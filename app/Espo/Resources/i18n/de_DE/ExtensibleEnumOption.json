@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "name": "Optionswert",
+    "color": "Farbe",
+    "sortOrder": "Sortierreihenfolge",
+    "extensibleEnum": "Liste"
+  },
+  "links": {
+    "extensibleEnum": "Liste"
+  },
+  "labels": {
+    "Create ExtensibleEnumOption": "Auswahloption erstellen"
+  }
+}

@@ -1,5 +1,7 @@
 {
   "scopeNames": {
+    "ExtensibleEnum": "Список",
+    "ExtensibleEnumOption": "Опція списку",
     "Sharing": "Шеринг",
     "Translation": "Напис",
     "Locale": "Локаль",
@@ -51,6 +53,8 @@
     "TreoStore": "Магазин"
   },
   "scopeNamesPlural": {
+    "ExtensibleEnum": "Списки",
+    "ExtensibleEnumOption": "Опції списку",
     "Sharing": "Шеринги",
     "Translation": "Написи",
     "Locale": "Локалі",
@@ -402,6 +406,7 @@
     "removeRelation": "Видалити зв'язок"
   },
   "fields": {
+    "extensibleEnum": "Список",
     "sortOrder": "Порядок сортування",
     "parents": "Батьківські записи",
     "assignedAccounts": "Контрагенти",

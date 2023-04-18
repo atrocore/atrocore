@@ -100,8 +100,6 @@
     "listPortal": "Список (Портал)",
     "relationshipsPortal": "Зв'язки (Портал)"
   },
-  "fieldTypes": {
-  },
   "fields": {
     "isMultilang": "Багатомовний",
     "fontSize": "Розмір шрифту",
