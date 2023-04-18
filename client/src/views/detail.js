@@ -83,13 +83,14 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             this.setupHeader();
             this.setupRecord();
 
-            this.listenTo(this.model, 'prepareAttributesForCreateRelated', (attributes, link) => {
+            this.listenTo(this.model, 'prepareAttributesForCreateRelated', (attributes, link, callback) => {
                 if (this.relatedAttributeFunctions[link] && typeof this.relatedAttributeFunctions[link] == 'function') {
                     attributes = _.extend(this.relatedAttributeFunctions[link].call(this), attributes);
                 }
                 Object.keys(this.relatedAttributeMap[link] || {}).forEach(function (attr) {
                     attributes[this.relatedAttributeMap[link][attr]] = this.model.get(attr);
                 }, this);
+                callback(attributes);
             });
 
             this.listenTo(this.model, 'updateRelationshipPanel', link => {

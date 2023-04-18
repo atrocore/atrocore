@@ -507,10 +507,12 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
             this.model.defs['_relationName'] = link;
 
-            let attributes = {};
-            this.model.trigger('prepareAttributesForCreateRelated', attributes, link);
-
             let viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
+
+            let attributes = {};
+            this.model.trigger('prepareAttributesForCreateRelated', attributes, link, preparedAttributes => {
+                attributes = preparedAttributes;
+            });
 
             this.notify('Loading...');
             this.createView('quickCreate', viewName, {
