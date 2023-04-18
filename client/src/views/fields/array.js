@@ -119,6 +119,22 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                 this.selected = JSON.parse(this.selected);
             }
 
+            if (!this.params.options) {
+                this.prepareOptionsForExtensibleEnum();
+                if (this.model.isNew()) {
+                    let defaultIds = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'defaultIds']);
+                    if (defaultIds && defaultIds.length > 0) {
+                        let defaultValue = [];
+                        defaultIds.forEach(id => {
+                            if (this.translatedOptions[id]) {
+                                defaultValue.push(id);
+                            }
+                        });
+                        this.model.set(this.name, defaultValue);
+                    }
+                }
+            }
+
             this.setupOptions();
 
             if ('translatedOptions' in this.options) {
