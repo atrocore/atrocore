@@ -85,11 +85,12 @@ Espo.define('treo-core:views/fields/wysiwyg', 'class-replace!treo-core:views/fie
 
         updateTextCounter(text) {
             let maxLength = this.params.maxLength;
+            let countBytesInsteadOfCharacters = this.params.countBytesInsteadOfCharacters;
             if (!maxLength) {
                 return;
             }
 
-            let textLength = text ? text.toString().length : 0;
+            let textLength = this.getRealLength(text, countBytesInsteadOfCharacters);
 
             let $el = this.$el.find('.text-length-counter .current-length');
 
@@ -97,6 +98,14 @@ Espo.define('treo-core:views/fields/wysiwyg', 'class-replace!treo-core:views/fie
             $el.css('color', '');
             if (maxLength < textLength) {
                 $el.css('color', 'red');
+            }
+        },
+
+        getRealLength(text, countBytesInsteadOfCharacters) {
+            if (countBytesInsteadOfCharacters) {
+                return encodeURI(text).split(/%..|./).length - 1;
+            } else {
+                return (text ? text.toString().length : 0);
             }
         },
 

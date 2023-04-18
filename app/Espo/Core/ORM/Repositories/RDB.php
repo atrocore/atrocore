@@ -352,7 +352,10 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             return;
         }
 
-        $length = mb_strlen((string)$entity->get($fieldName));
+        $countBytesInsteadOfCharacters = (bool)$entity->get('countBytesInsteadOfCharacters');
+        $fieldValue = (string)$entity->get($fieldName);
+        $length = $countBytesInsteadOfCharacters ? strlen($fieldValue) : mb_strlen($fieldValue);
+        
         $maxLength = (int)$fieldData['maxLength'];
 
         if ($length > $maxLength) {
