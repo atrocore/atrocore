@@ -40,8 +40,14 @@ Espo.define('views/admin/field-manager/fields/linkMultiple/extensible-multi-enum
 
         boolFilterData: {
             defaultOption() {
+                let extensibleEnumId = null;
+                if (this.model.defs.fields[this.name] && this.model.defs.fields[this.name].extensibleEnumId) {
+                    extensibleEnumId = this.model.defs.fields[this.name].extensibleEnumId;
+                } else if (this.getParentView().getView('extensibleEnum')) {
+                    extensibleEnumId = this.getParentView().getView('extensibleEnum').fetch().extensibleEnumId
+                }
                 return {
-                    extensibleEnumId: this.getParentView().getView('extensibleEnum').fetch().extensibleEnumId
+                    extensibleEnumId: extensibleEnumId
                 };
             }
         },
