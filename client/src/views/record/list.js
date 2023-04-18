@@ -1626,6 +1626,12 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     width: width,
                     align: ('align' in this.listLayout[i]) ? this.listLayout[i].align : false,
                 };
+
+                let fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', item.name, 'type']);
+                if (this.getMetadata().get(['fields', fieldType, 'notSortable'])) {
+                    item.sortable = false;
+                }
+
                 if ('customLabel' in this.listLayout[i]) {
                     item.customLabel = this.listLayout[i].customLabel;
                     item.hasCustomLabel = true;

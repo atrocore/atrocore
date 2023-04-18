@@ -35,6 +35,7 @@
       "view": "views/admin/field-manager/fields/linkMultiple/extensible-enum-options"
     }
   ],
+  "notSortable": true,
   "filter": true,
   "fieldDefs": {
     "type": "varchar"
