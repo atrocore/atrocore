@@ -767,6 +767,41 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }
             return false;
         },
+
+        prepareOptionsForExtensibleEnum() {
+            let extensibleEnumId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'extensibleEnumId']);
+            if (!extensibleEnumId) {
+                return;
+            }
+
+            let key = 'extensible_enum_' + extensibleEnumId;
+
+            if (!Espo[key]) {
+                Espo[key] = [];
+                this.ajaxGetRequest(`ExtensibleEnum/${extensibleEnumId}/extensibleEnumOptions`, {
+                    sortBy: "sortOrder",
+                    asc: true
+                }, {async: false}).then(res => {
+                    if (res.list) {
+                        Espo[key] = res.list;
+                    }
+                });
+            }
+
+            if (Espo[key].length === 0) {
+                return;
+            }
+
+            this.params.options = [];
+            this.params.optionColors = [];
+            this.translatedOptions = {};
+            Espo[key].forEach(option => {
+                this.params.options.push(option.id);
+                this.params.optionColors.push(option.color);
+                this.translatedOptions[option.id] = option.name;
+            });
+        },
+
     });
 });
 

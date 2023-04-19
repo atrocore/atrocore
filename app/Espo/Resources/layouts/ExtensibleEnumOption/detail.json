@@ -1,0 +1,24 @@
+[
+  {
+    "label": "Overview",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "color"
+        }
+      ],
+      [
+        {
+          "name": "sortOrder"
+        },
+        {
+          "name": "extensibleEnum"
+        }
+      ]
+    ]
+  }
+]

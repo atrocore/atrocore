@@ -1,0 +1,63 @@
+{
+  "fields": {
+    "name": {
+      "type": "text",
+      "isMultilang": true
+    },
+    "extensibleEnum": {
+      "type": "link",
+      "required": true
+    },
+    "color": {
+      "type": "color"
+    },
+    "sortOrder": {
+      "type": "int"
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    }
+  },
+  "links": {
+    "extensibleEnum": {
+      "type": "belongsTo",
+      "foreign": "extensibleEnumOptions",
+      "entity": "ExtensibleEnum"
+    },
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    }
+  },
+  "collection": {
+    "sortBy": "createdAt",
+    "asc": false
+  },
+  "indexes": {
+    "createdAt": {
+      "columns": [
+        "createdAt",
+        "deleted"
+      ]
+    }
+  }
+}

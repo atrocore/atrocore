@@ -1,5 +1,7 @@
 {
   "scopeNames": {
+    "ExtensibleEnum": "List",
+    "ExtensibleEnumOption": "List Option",
     "Sharing": "Sharing",
     "Locale": "Locale",
     "Connection": "Connection",
@@ -50,6 +52,8 @@
     "AuthFailLogRecord": "Auth Fail Log Record"
   },
   "scopeNamesPlural": {
+    "ExtensibleEnum": "Lists",
+    "ExtensibleEnumOption": "List Options",
     "Sharing": "Sharing",
     "Locale": "Locales",
     "Connection": "Connections",
@@ -400,6 +404,7 @@
     "convertCurrency": "Convert Currency"
   },
   "fields": {
+    "extensibleEnum": "List",
     "sortOrder": "Sort Order",
     "parents": "Parent Record(s)",
     "prohibitedEmptyValue": "Disable Empty Value",

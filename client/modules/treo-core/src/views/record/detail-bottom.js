@@ -206,6 +206,12 @@ Espo.define('treo-core:views/record/detail-bottom', 'class-replace!treo-core:vie
         },
 
         setupPanelViews() {
+            if (this.options.staticAllowedPanelNames) {
+                this.panelList = this.panelList.filter(p => {
+                    return this.options.staticAllowedPanelNames.includes(p.name);
+                });
+            }
+
             this.setupOptionalPanels();
             this.sortPanelList();
 

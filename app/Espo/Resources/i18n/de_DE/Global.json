@@ -1,5 +1,7 @@
 {
   "scopeNames": {
+    "ExtensibleEnum": "Liste",
+    "ExtensibleEnumOption": "Auswahloption",
     "Sharing": "Freigabe",
     "Translation": "Label",
     "Locale": "Gebietsschema",
@@ -38,6 +40,8 @@
     "AuthFailLogRecord": "Auth-Fehlerprotokoll Datensatz"
   },
   "scopeNamesPlural": {
+    "ExtensibleEnum": "Listen",
+    "ExtensibleEnumOption": "Auswahloptionen",
     "Sharing": "Freigaben",
     "Translation": "Labels",
     "Locale": "Gebietsschemas",
@@ -424,6 +428,7 @@
     "convertCurrency": "Währung umrechnen"
   },
   "fields": {
+    "extensibleEnum": "Liste",
     "sortOrder": "Sortierreihenfolge",
     "parents": "Übergeordnete Datensätze",
     "assignedAccounts": "Accounts",
