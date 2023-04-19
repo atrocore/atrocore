@@ -76,13 +76,19 @@ Espo.define('views/fields/colored-multi-enum', ['views/fields/multi-enum', 'view
         },
 
         setColors() {
-            let value = this.$element.val();
-            let values = value.split(':,:');
-            if (values.length) {
-                values.forEach(item => {
-                    let internalValue = item.replace(/-quote-/g, '"').replace(/-backslash-/g, '\\');
-                    this.$el.find(`[data-value='${item}']`).css(this.getFieldStyles(internalValue));
-                });
+            let value = '';
+            if (this.$element) {
+                value = this.$element.val();
+            }
+
+            if (value) {
+                let values = value.split(':,:');
+                if (values.length) {
+                    values.forEach(item => {
+                        let internalValue = item.replace(/-quote-/g, '"').replace(/-backslash-/g, '\\');
+                        this.$el.find(`[data-value='${item}']`).css(this.getFieldStyles(internalValue));
+                    });
+                }
             }
         },
 

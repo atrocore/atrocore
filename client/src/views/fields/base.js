@@ -748,7 +748,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         fetch: function () {
             var data = {};
-            data[this.name] = this.$element.val();
+            data[this.name] = this.$element ? this.$element.val() : null;
             return data;
         },
 

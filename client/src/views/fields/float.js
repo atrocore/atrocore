@@ -68,7 +68,7 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
 
         validateFloat: function () {
             const value = this.$el.find('[name="' + this.name + '"]').val();
-            if (value.length === 0) {
+            if (!value || value.length === 0) {
                 return false;
             }
 

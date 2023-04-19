@@ -434,7 +434,7 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
             if (!this.model.has('isHtml') || this.model.get('isHtml')) {
                 data[this.name] = this.$summernote.summernote('code');
             } else {
-                data[this.name] = this.$element.val();
+                data[this.name] = this.$element ? this.$element.val() : null;
             }
 
             if (this.model.has('isHtml')) {
