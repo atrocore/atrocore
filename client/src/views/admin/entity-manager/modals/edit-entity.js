@@ -154,7 +154,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                         types: ["Base", "Hierarchy"]
                     },
                     tooltip: true,
-                    tooltipText: this.translate('stream', 'tooltips', 'EntityManager')
+                    tooltipText: this.translate('stream', 'tooltips', 'EntityManager'),
+                    tooltipLink: this.translate('stream', 'tooltipsLink', 'EntityManager')
                 });
             }
 
@@ -166,7 +167,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                     name: 'disabled'
                 },
                 tooltip: true,
-                tooltipText: this.translate('disabled', 'tooltips', 'EntityManager')
+                tooltipText: this.translate('disabled', 'tooltips', 'EntityManager'),
+                tooltipLink: this.translate('disabled', 'tooltipsLink', 'EntityManager')
             });
 
             this.createView('name', 'views/fields/varchar', {
@@ -327,6 +329,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                     },
                     tooltip: true,
                     tooltipText: this.translate('textFilterFields', 'tooltips', 'EntityManager'),
+                    tooltipLink: this.translate('textFilterFields', 'tooltipsLink', 'EntityManager'),
                     translatedOptions: textFilterFieldsTranslation
                 });
 
@@ -361,6 +364,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                     },
                     tooltip: true,
                     tooltipText: this.translate('statusField', 'tooltips', 'EntityManager'),
+                    tooltipLink: this.translate('statusField', 'tooltipsLink', 'EntityManager'),
                     translatedOptions: translatedStatusFields
                 });
 
@@ -395,7 +399,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                         name: param
                     },
                     tooltip: this.additionalParams[param].tooltip,
-                    tooltipText: this.translate(param, 'tooltips', 'EntityManager')
+                    tooltipText: this.translate(param, 'tooltips', 'EntityManager'),
+                    tooltipLink: this.translate(param, 'tooltipsLink', 'EntityManager')
                 });
             }
 

@@ -203,7 +203,6 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             } else {
                 this.events = {};
             }
-
             this.defs = this.options.defs || {};
             this.name = this.options.name || this.defs.name;
             this.params = this.options.params || this.defs.params || {};
@@ -266,7 +265,9 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }, this);
 
             if ((this.mode == 'detail' || this.mode == 'edit') && this.tooltip) {
-                var $a;
+                tooltipLinkValue = this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.name, 'tooltipLink']);
+                var tooltipLinkElement = '<div class="popover-footer" style="border-top: 1px solid #dcdcdc; display:block;margip-top:10px!important;padding-top:2px;"><a href=' + tooltipLinkValue + ' target="blank"> <u>Read More ></u> </a></div>';
+
                 this.once('after:render', function () {
                     $a = $('<a href="javascript:" class="text-muted field-info"><span class="fas fa-info-circle"></span></a>');
                     var $label = this.getLabelElement();
@@ -276,7 +277,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                         placement: 'bottom',
                         container: 'body',
                         html: true,
-                        content: (this.options.tooltipText || this.translate(this.name, 'tooltips', this.model.name)).replace(/\n/g, "<br />"),
+                        content: (this.options.tooltipText || this.translate(this.name, 'tooltips', this.model.name)).replace(/\n/g, "<br />") + tooltipLinkElement,
                         trigger: 'click',
                     }).on('shown.bs.popover', function () {
                         $('body').one('click', function () {
