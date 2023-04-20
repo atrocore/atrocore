@@ -39,6 +39,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\QueueManager;
 use Espo\Core\Utils\Config;
 use Espo\ORM\EntityManager;
+use Laminas\Mail\Storage\Imap;
 use Laminas\Mime\Message as MimeMessage;
 use Laminas\Mime\Part as MimePart;
 use Laminas\Mail\Message;
@@ -209,6 +210,19 @@ class Sender
             $this->transport->send($message);
         } catch (\Exception $e) {
             throw new Error($e->getMessage(), 500);
+        }
+
+        // add sent email to "Sent" folder
+        if (!empty($emailData['addToSentFolder'])) {
+            $storage = new Imap([
+                'host'     => $this->config->get('imapHostName', $this->config->get('smtpServer')),
+                'user'     => $this->config->get('imapUsername', $this->config->get('smtpUsername')),
+                'password' => $this->config->get('imapPassword', $this->config->get('smtpPassword')),
+                'port'     => $this->config->get('imapPort', 993),
+                'ssl'      => $this->config->get('imapSecurity', 'ssl'),
+            ]);
+            $storage->selectFolder($this->config->get('imapSentFolder', 'Sent'));
+            $storage->appendMessage($message->toString());
         }
     }
 
