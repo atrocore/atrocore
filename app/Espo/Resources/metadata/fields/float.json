@@ -18,6 +18,10 @@
          "type":"float"
       },
       {
+         "name": "amountOfDigitsAfterComma",
+         "type": "int"
+      },
+      {
          "name":"audited",
          "type":"bool"
       },

@@ -270,6 +270,21 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
     }
 
+    protected function validateFloat(Entity $entity, string $fieldName, array $fieldData): void
+    {
+        if ($entity->isAttributeChanged($fieldName) && !empty($entity->get($fieldName))) {
+            if(!empty($fieldData) && !empty($fieldData['amountOfDigitsAfterComma'])){
+                $floatParts = explode('.', $entity->get($fieldName));
+                if(count($floatParts) === 2){
+                    $decimalPlaces = (int)strlen($floatParts[1]);
+                    if((int)$fieldData['amountOfDigitsAfterComma'] <  $decimalPlaces){
+                        throw new BadRequest(sprintf($this->getLanguage()->translate('floatIsInvalid', 'exceptions', 'Global'), $language->translate($fieldName, 'fields', $entity->getEntityType())));
+                    }
+                }
+            }
+        }
+    }
+
     protected function validateEnum(Entity $entity, string $fieldName, array $fieldData): void
     {
         if (!isset($fieldData['view']) && $entity->isAttributeChanged($fieldName) && !empty($entity->get($fieldName))) {
