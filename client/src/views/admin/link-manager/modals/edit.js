@@ -267,7 +267,8 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 },
                 readOnly: !isCustom,
                 tooltip: true,
-                tooltipText: this.translate('linkMultipleField', 'tooltips', 'EntityManager')
+                tooltipText: this.translate('linkMultipleField', 'tooltips', 'EntityManager'),
+                tooltipLink: this.translate('linkMultipleField', 'tooltipsLink', 'EntityManager')
             });
 
             this.createView('relationshipField', 'views/fields/bool', {
@@ -279,7 +280,8 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 },
                 readOnly: !isNew,
                 tooltip: true,
-                tooltipText: this.translate('relationshipField', 'tooltips', 'EntityManager')
+                tooltipText: this.translate('relationshipField', 'tooltips', 'EntityManager'),
+                tooltipLink: this.translate('relationshipField', 'tooltipsLink', 'EntityManager')
             });
 
             this.createView('linkMultipleFieldForeign', 'views/fields/bool', {
@@ -291,7 +293,8 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 },
                 readOnly: !isCustom,
                 tooltip: true,
-                tooltipText: this.translate('linkMultipleField', 'tooltips', 'EntityManager')
+                tooltipText: this.translate('linkMultipleField', 'tooltips', 'EntityManager'),
+                tooltipLink: this.translate('linkMultipleField', 'tooltipsLink', 'EntityManager')
             });
 
             this.createView('relationshipFieldForeign', 'views/fields/bool', {
@@ -303,7 +306,8 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 },
                 readOnly: !isNew,
                 tooltip: true,
-                tooltipText: this.translate('relationshipField', 'tooltips', 'EntityManager')
+                tooltipText: this.translate('relationshipField', 'tooltips', 'EntityManager'),
+                tooltipLink: this.translate('relationshipField', 'tooltipsLink', 'EntityManager')
             });
 
             this.createView('audited', 'views/fields/bool', {
@@ -314,7 +318,8 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                     name: 'audited'
                 },
                 tooltip: true,
-                tooltipText: this.translate('linkAudited', 'tooltips', 'EntityManager')
+                tooltipText: this.translate('linkAudited', 'tooltips', 'EntityManager'),
+                tooltipLink: this.translate('linkAudited', 'tooltipsLink', 'EntityManager')
             });
 
             this.createView('auditedForeign', 'views/fields/bool', {
@@ -325,7 +330,8 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                     name: 'auditedForeign'
                 },
                 tooltip: true,
-                tooltipText: this.translate('linkAudited', 'tooltips', 'EntityManager')
+                tooltipText: this.translate('linkAudited', 'tooltips', 'EntityManager'),
+                tooltipLink: this.translate('linkAudited', 'tooltipsLink', 'EntityManager')
             });
 
 

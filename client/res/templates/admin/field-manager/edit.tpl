@@ -34,6 +34,10 @@
                     <label class="control-label" data-name="tooltipText">{{translate 'tooltipText' scope='Admin' category='fields'}}</label>
                     <div class="field" data-name="tooltipText">{{{tooltipText}}}</div>
                 </div>
+                <div class="cell form-group" data-name="tooltipLink">
+                    <label class="control-label" data-name="tooltipLink">{{translate 'tooltipLink' scope='Admin' category='fields'}}</label>
+                    <div class="field" data-name="tooltipLink">{{{tooltipLink}}}</div>
+                </div>
         </div>
     </div>
 
