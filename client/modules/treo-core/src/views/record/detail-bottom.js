@@ -214,16 +214,19 @@ Espo.define('treo-core:views/record/detail-bottom', 'class-replace!treo-core:vie
 
             this.setupOptionalPanels();
             this.sortPanelList();
+            this.createPanelViews();
+        },
 
-            this.panelList.forEach(function (p) {
+        createPanelViews() {
+            this.panelList.forEach(p => {
                 this.createPanelView(p);
-            }, this);
+            });
         },
 
         createPanelView(p, callback) {
             let name = p.name;
             this.createView(name, p.view, {
-                model: this.model,
+                model: p.model ? p.model : this.model,
                 panelName: name,
                 el: this.options.el + ' .panel[data-name="' + name + '"] > .panel-body',
                 defs: p,
