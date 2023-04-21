@@ -133,6 +133,7 @@
     "name": "Name",
     "label": "Label",
     "tooltipText": "Tooltip text",
+    "tooltipLink": "Tooltip link",
     "required": "Required",
     "default": "Default",
     "maxLength": "Max length",
