@@ -22270,11 +22270,6 @@ select {
     margin: 10px auto 7px;
 }
 
-.list .ui-sortable-helper td.cell {
-    display: inline-block;
-    float: left;
-}
-
 .panel-body .list table tbody.ui-sortable td:not(:last-child) {
     vertical-align: middle;
 }
