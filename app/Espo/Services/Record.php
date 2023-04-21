@@ -1708,7 +1708,10 @@ class Record extends \Espo\Core\Services\Base
 
         $entity = $this->getRepository()->get($id);
         if (!$entity) {
-            throw new NotFound();
+            return [
+                'collection' => new EntityCollection([], $this->entityType),
+                'total'      => 0
+            ];
         }
         if (!$this->getAcl()->check($entity, 'read')) {
             throw new Forbidden();
