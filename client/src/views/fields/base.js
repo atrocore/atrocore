@@ -771,6 +771,10 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         prepareOptionsForExtensibleEnum() {
             let extensibleEnumId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'extensibleEnumId']);
+            if (this.params.extensibleEnumId){
+                extensibleEnumId = this.params.extensibleEnumId;
+            }
+
             if (!extensibleEnumId) {
                 return;
             }
