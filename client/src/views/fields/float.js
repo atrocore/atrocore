@@ -92,7 +92,7 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
                 }
             }
 
-            if (this.params.amountOfDigitsAfterComma && this.params.amountOfDigitsAfterComma !== 'undefined') {
+            if (typeof this.params.amountOfDigitsAfterComma !== undefined && this.params.amountOfDigitsAfterComma) {
                 const decimalPlaces = (value.toString().split(',')[1] || '').length;
                 invalid = !(decimalPlaces <= this.params.amountOfDigitsAfterComma);
             }
