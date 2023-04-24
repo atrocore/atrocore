@@ -50,10 +50,10 @@ Espo.define('views/login', 'view', function (Dep) {
         setup() {
             Dep.prototype.setup.call(this);
 
-            let localeId = localStorage.getItem('localeId');
+            let localeId = 'default';
             if (localeId && (this.getConfig().get('locales')[localeId] || localeId === 'default')) {
                 this.localeId = localeId;
-                this.ajaxGetRequest('I18n', {locale: localStorage.getItem('language')}, {async: false}).then(data => {
+                this.ajaxGetRequest('I18n', {locale: localStorage.getItem('language') || 'default'}, {async: false}).then(data => {
                     this.getLanguage().data = data;
                 });
             } else {
@@ -94,7 +94,7 @@ Espo.define('views/login', 'view', function (Dep) {
                 this.localeId = $(event.currentTarget).val();
                 if (this.localeId) {
                     let language = $("#locale option:selected").data('language');
-                    this.ajaxGetRequest('I18n', {locale: language}).then(data => {
+                    this.ajaxGetRequest('I18n', { locale: language }).then(data => {
                         this.getLanguage().data = data;
                         this.reRender();
                         localStorage.setItem('localeId', this.localeId);
