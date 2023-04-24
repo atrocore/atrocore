@@ -223,7 +223,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             this.inlineEditDisabled = this.options.inlineEditDisabled || this.params.inlineEditDisabled || this.inlineEditDisabled;
             this.readOnly = this.readOnlyLocked || this.options.readOnly || false;
 
-            this.tooltip = this.options.tooltip || this.params.tooltip || this.model.getFieldParam(this.name, 'tooltip');
+            this.tooltip = this.options.tooltip || this.params.tooltip || this.model.getFieldParam(this.name, 'tooltip') || (this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.name, 'tooltipLink']));
 
             if (this.options.readOnlyDisabled) {
                 this.readOnly = false;
@@ -265,25 +265,37 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }, this);
 
             if ((this.mode == 'detail' || this.mode == 'edit') && this.tooltip) {
-                tooltipLinkValue = this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.name, 'tooltipLink']);
-                var tooltipLinkElement = '<div class="popover-footer" style="border-top: 1px solid #dcdcdc; display:block;margip-top:10px!important;padding-top:2px;"><a href=' + tooltipLinkValue + ' target="blank"> <u>Read More ></u> </a></div>';
+                const tooltipLinkValue = this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.name, 'tooltipLink']);
+                let tooltipTextTranslate = null;
+                if (this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.name])) {
+                    tooltipTextTranslate = this.translate((this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.name]))['tooltipText'], 'tooltips', this.model.name);
+                }
+                const tooltipTextValue = this.options.tooltipText || tooltipTextTranslate;
+                const tooltipLinkElement = tooltipLinkValue ? '<div class="popover-footer" style="border-top: 1px solid #dcdcdc52; display:block;margin-top:3px!important;padding-top:2px;"><a href=' + tooltipLinkValue + ' target="_blank"> <u>' + this.translate('Read more') + '</u> </a></div>':'';
 
                 this.once('after:render', function () {
                     $a = $('<a href="javascript:" class="text-muted field-info"><span class="fas fa-info-circle"></span></a>');
+
+                    if (!tooltipTextValue) {
+                        $a = $('<a href=' + tooltipLinkValue + ' target="_blank" class="text-muted field-info"><span class="fas fa-info-circle"></span></a>');
+                    }
+
                     var $label = this.getLabelElement();
                     $label.append(' ');
                     this.getLabelElement().append($a);
-                    $a.popover({
-                        placement: 'bottom',
-                        container: 'body',
-                        html: true,
-                        content: (this.options.tooltipText || this.translate(this.name, 'tooltips', this.model.name)).replace(/\n/g, "<br />") + tooltipLinkElement,
-                        trigger: 'click',
-                    }).on('shown.bs.popover', function () {
-                        $('body').one('click', function () {
-                            $a.popover('hide');
-                        });
-                    });
+                    if (tooltipTextValue) {
+                        $a.popover({
+                            placement: 'bottom',
+                            container: 'body',
+                            html: true,
+                            content: (tooltipTextValue).replace(/\n/g, "<br />") + tooltipLinkElement,
+                            trigger: 'click',
+                        }).on('shown.bs.popover', function () {
+                            $('body').one('click', function () {
+                                $a.popover('hide');
+                            });
+                        });                        
+                    }
                 }, this);
                 this.on('remove', function () {
                     if ($a) {
