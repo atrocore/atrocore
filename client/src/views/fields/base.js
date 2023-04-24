@@ -291,9 +291,13 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                             content: (tooltipTextValue).replace(/\n/g, "<br />") + tooltipLinkElement,
                             trigger: 'click',
                         }).on('shown.bs.popover', function () {
-                            $('body').one('click', function () {
-                                $a.popover('hide');
+                            $('body').one('click', function (e) {
+                                if ($(e.target).data('toggle') !== 'popover'
+                                    && $(e.target).parents('.popover.in').length === 0) {
+                                    $('.popover').popover('hide');
+                                }
                             });
+
                         });                        
                     }
                 }, this);
