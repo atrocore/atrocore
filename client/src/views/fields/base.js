@@ -815,7 +815,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             Espo[key].forEach(option => {
                 this.params.options.push(option.id);
                 this.params.optionColors.push(option.color);
-                this.translatedOptions[option.id] = option.name;
+                this.translatedOptions[option.id] = option.name ? option.name : ' ';
             });
         },
 
