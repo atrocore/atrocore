@@ -265,9 +265,26 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     {
         if ($entity->isAttributeChanged($fieldName) && !empty($entity->get($fieldName))) {
             if (!filter_var($entity->get($fieldName), FILTER_VALIDATE_EMAIL)) {
-                throw new BadRequest(sprintf($this->getLanguage()->translate('emailIsInvalid', 'exceptions', 'Global'), $language->translate($fieldName, 'fields', $entity->getEntityType())));
+                $language = $this->getLanguage();
+                throw new BadRequest(sprintf($language->translate('emailIsInvalid', 'exceptions', 'Global'), $language->translate($fieldName, 'fields', $entity->getEntityType())));
             }
         }
+    }
+
+    protected function validateFloat(Entity $entity, string $fieldName, array $fieldData): void
+    {
+        if (!$entity->isAttributeChanged($fieldName)) {
+            return;
+        }
+
+        if(!empty($fieldData['amountOfDigitsAfterComma'])){
+            $this->checkAmountOfDigitsAfterComma($entity->get($fieldName), (int)$fieldData['amountOfDigitsAfterComma'], $fieldName, $entity);
+        }
+    }
+
+    protected function validateCurrency(Entity $entity, string $fieldName, array $fieldData): void
+    {
+        $this->validateFloat($entity, $fieldName, $fieldData);
     }
 
     protected function validateEnum(Entity $entity, string $fieldName, array $fieldData): void
@@ -338,6 +355,23 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
         if (!empty($unit) && !in_array($unit, $unitsOfMeasure[$measure]['unitList'])) {
             throw new BadRequest(sprintf($language->translate('noSuchUnit', 'exceptions', 'Global'), $unit, $fieldLabel));
+        }
+
+        $this->checkAmountOfDigitsAfterComma($value, (int)$fieldData['amountOfDigitsAfterComma'], $fieldName, $entity);
+    }
+
+    protected function checkAmountOfDigitsAfterComma(float $value,int $amountOfDigitsAfterComma, string $fieldName, Entity $entity): void
+    {
+        $floatParts = explode('.', $value);
+        if(count($floatParts) === 2){
+            $decimalPart = (int)strlen($floatParts[1]);
+            if($amountOfDigitsAfterComma <  $decimalPart){
+                $language = $this->getLanguage();
+                throw new BadRequest(sprintf(
+                    $language->translate('floatIsInvalid', 'exceptions', 'Global'), 
+                    $language->translate($fieldName, 'fields', $entity->getEntityType())
+                ));
+            }
         }
     }
 

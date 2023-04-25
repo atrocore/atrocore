@@ -58,6 +58,7 @@ Espo.define('views/fields/unit', 'views/fields/float',
         },
 
         setup() {
+            console.log('in unit type');
             Dep.prototype.setup.call(this);
 
             this.unitFieldName = this.name + 'Unit';
@@ -133,6 +134,14 @@ Espo.define('views/fields/unit', 'views/fields/float',
         validateFloat: function () {
             if (Dep.prototype.validateFloat.call(this)) {
                 return true;
+            }
+            if (typeof this.params.amountOfDigitsAfterComma !== undefined && this.params.amountOfDigitsAfterComma) {
+                var value = isNaN(this.model.get(this.name)) ? null : this.model.get(this.name);
+                const decimalPlaces = (value?.toString().split('.')[1] || '').length;
+
+                if (value && !(decimalPlaces <= this.params.amountOfDigitsAfterComma)) {
+                    return true;
+                }
             }
 
             return this.model.get(this.name) && this.$unit && !this.$unit.val();

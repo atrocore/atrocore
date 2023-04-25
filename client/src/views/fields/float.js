@@ -92,6 +92,11 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
                 }
             }
 
+            if (typeof this.params.amountOfDigitsAfterComma !== undefined && this.params.amountOfDigitsAfterComma) {
+                const decimalPlaces = (value.toString().split(',')[1] || '').length;
+                invalid = !(decimalPlaces <= this.params.amountOfDigitsAfterComma);
+            }
+
             if (invalid) {
                 this.showValidationMessage(this.translate('fieldShouldBeFloat', 'messages').replace('{field}', this.getLabelText()));
                 return true;
