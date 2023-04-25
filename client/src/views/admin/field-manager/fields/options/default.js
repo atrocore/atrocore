@@ -47,9 +47,8 @@ Espo.define('views/admin/field-manager/fields/options/default', 'views/fields/en
             this.params.options = [''];
             this.translatedOptions = {'': ''};
 
-            let options = this.model.get('options') || [];
             let ids = this.model.get('optionsIds') || [];
-
+            let options = this.model.get('options') || [];
             ids.forEach((id, k) => {
                 this.params.options.push(id);
                 this.translatedOptions[id] = options[k] ? options[k] : id;

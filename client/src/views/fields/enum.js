@@ -96,6 +96,18 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                 }
             }
 
+            // prepare default
+            if (this.model.isNew() && this.params.default) {
+                let optionsIds = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'optionsIds']);
+                if (optionsIds) {
+                    let index = optionsIds.indexOf(this.params.default);
+                    if (this.params.options[index]) {
+                        this.params.default = this.params.options[index];
+                        this.model.set(this.name, this.params.options[index]);
+                    }
+                }
+            }
+
             this.setupOptions();
 
             if ('translatedOptions' in this.options) {
