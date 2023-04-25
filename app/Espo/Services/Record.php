@@ -943,10 +943,14 @@ class Record extends \Espo\Core\Services\Base
         return $value;
     }
 
-    protected function filterInput($data)
+    protected function filterInput($data, string $id = null)
     {
         if (!is_object($data)) {
             return;
+        }
+
+        if ($id === null && property_exists($data, '_prev')) {
+            unset($data->_prev);
         }
 
         foreach ($this->readOnlyAttributeList as $attribute) {
@@ -970,21 +974,27 @@ class Record extends \Espo\Core\Services\Base
 
                 switch ($fieldDefs['type']) {
                     case 'enum':
-                        $key = array_search($value, $fieldDefs['options']);
-                        $data->{$fieldDefs['multilangField']} = $key === false ? null : $fieldDefs['optionsOriginal'][$key];
+                        if (!property_exists($data, $fieldDefs['multilangField'])) {
+                            $key = array_search($value, $fieldDefs['options']);
+                            $data->{$fieldDefs['multilangField']} = $key === false ? null : $fieldDefs['optionsOriginal'][$key];
+                        }
+                        unset($data->$field);
                         break;
                     case 'multiEnum':
-                        $keys = [];
-                        if (!empty($value)) {
-                            foreach ($value as $item) {
-                                $keys[] = array_search($item, $fieldDefs['options']);
+                        if (!property_exists($data, $fieldDefs['multilangField'])) {
+                            $keys = [];
+                            if (!empty($value)) {
+                                foreach ($value as $item) {
+                                    $keys[] = array_search($item, $fieldDefs['options']);
+                                }
                             }
+                            $values = [];
+                            foreach ($keys as $key) {
+                                $values[] = $fieldDefs['optionsOriginal'][$key];
+                            }
+                            $data->{$fieldDefs['multilangField']} = $values;
                         }
-                        $values = [];
-                        foreach ($keys as $key) {
-                            $values[] = $fieldDefs['optionsOriginal'][$key];
-                        }
-                        $data->{$fieldDefs['multilangField']} = $values;
+                        unset($data->$field);
                         break;
                 }
             }
@@ -1247,7 +1257,7 @@ class Record extends \Espo\Core\Services\Base
             throw new BadRequest();
         }
 
-        $this->filterInput($data);
+        $this->filterInput($data, $id);
         $this->handleInput($data, $id);
 
         unset($data->modifiedById);

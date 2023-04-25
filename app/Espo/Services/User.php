@@ -248,7 +248,7 @@ class User extends Record
         return $passwordHash->hash($password);
     }
 
-    protected function filterInput($data)
+    protected function filterInput($data, string $id = null)
     {
         parent::filterInput($data);
 
