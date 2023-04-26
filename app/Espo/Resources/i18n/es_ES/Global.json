@@ -304,6 +304,7 @@
     "massUnfollowZeroResult": "Nada se dejó de seguir",
     "fieldShouldBeEmail": "{field} debe ser un correo electrónico válido",
     "fieldShouldBeFloat": "{field} debe ser un decimal válido",
+    "fieldShouldBeFloatWithValidDigitAfterComma": "El máximo de dígitos después de la coma es {amountOfDigitsAfterComma}",
     "fieldShouldBeInt": "{field} debe ser un entero válido",
     "fieldShouldBeDate": "{field} debe ser una fecha válida",
     "fieldShouldBeDatetime": "{field} debe ser una fecha válida fecha/hora",
@@ -878,6 +879,7 @@
   "exceptions": {
     "fieldIsRequired": "Validation failed. '%s' is required.",
     "urlIsInvalid": "URL is invalid",
+    "maximumOfDigitsAfterCommaInvalid": "El máximo de dígitos después de la coma es %s",
     "suchUrlExists": "Such URL is already exists",
     "siteUrlEmpty": "Site URL is empty",
     "codeInvalid": "Code is invalid. Code should be unique. Only letters, numbers and char \"_\" expected.",

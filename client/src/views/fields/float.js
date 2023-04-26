@@ -94,7 +94,10 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
 
             if (typeof this.params.amountOfDigitsAfterComma !== undefined && this.params.amountOfDigitsAfterComma) {
                 const decimalPlaces = (value.toString().split(',')[1] || '').length;
-                invalid = !(decimalPlaces <= this.params.amountOfDigitsAfterComma);
+                if (!(decimalPlaces <= this.params.amountOfDigitsAfterComma)) {
+                    this.showValidationMessage(this.translate('fieldShouldBeFloatWithValidDigitAfterComma', 'messages').replace('{amountOfDigitsAfterComma}', this.params.amountOfDigitsAfterComma));
+                    return true;
+                }
             }
 
             if (invalid) {
