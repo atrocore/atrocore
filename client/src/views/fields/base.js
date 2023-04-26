@@ -813,6 +813,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 return;
             }
 
+            this.params.extensibleEnumOptions = Espo[key];
+
             this.params.options = [];
             this.params.optionColors = [];
             this.translatedOptions = {};
