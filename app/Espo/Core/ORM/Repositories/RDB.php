@@ -57,8 +57,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     protected $injections = [];
 
-    private $restoreData = null;
-
     protected $hooksDisabled = false;
 
     protected $processFieldsAfterSaveDisabled = false;
@@ -447,10 +445,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
      */
     protected function afterSave(Entity $entity, array $options = [])
     {
-        if (!empty($this->restoreData)) {
-            $entity->set($this->restoreData);
-            $this->restoreData = null;
-        }
         parent::afterSave($entity, $options);
 
         $this->assignmentNotifications($entity);
@@ -470,7 +464,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     public function save(Entity $entity, array $options = [])
     {
         $nowString = date('Y-m-d H:i:s', time());
-        $restoreData = [];
+        $user = $this->getEntityManager()->getUser();
 
         if ($entity->isNew()) {
             if (!$entity->has('id')) {
@@ -480,43 +474,24 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             }
         }
 
-        if (empty($options['skipAll'])) {
-            if ($entity->isNew()) {
-                if ($entity->hasAttribute('createdAt')) {
-                    if (empty($options['import']) || !$entity->has('createdAt')) {
-                        $entity->set('createdAt', $nowString);
-                    }
-                }
-                if ($entity->hasAttribute('modifiedAt')) {
-                    $entity->set('modifiedAt', $nowString);
-                }
-                if ($entity->hasAttribute('createdById')) {
-                    if (empty($options['skipCreatedBy']) && (empty($options['import']) || !$entity->has('createdById'))) {
-                        if ($this->getEntityManager()->getUser()) {
-                            $entity->set('createdById', $this->getEntityManager()->getUser()->id);
-                        }
-                    }
-                }
-            } else {
-                if (empty($options['silent']) && empty($options['skipModifiedBy'])) {
-                    if ($entity->hasAttribute('modifiedAt')) {
-                        $entity->set('modifiedAt', $nowString);
-                    }
-                    if ($entity->hasAttribute('modifiedById')) {
-                        if ($this->getEntityManager()->getUser()) {
-                            $entity->set('modifiedById', $this->getEntityManager()->getUser()->id);
-                            $entity->set('modifiedByName', $this->getEntityManager()->getUser()->get('name'));
-                        }
-                    }
-                }
+        if ($entity->isNew()) {
+            if ($entity->hasAttribute('createdAt')) {
+                $entity->set('createdAt', $nowString);
+            }
+            if ($entity->hasAttribute('createdById') && $user) {
+                $entity->set('createdById', $user->get('id'));
+            }
+        } else {
+            if ($entity->hasAttribute('modifiedAt')) {
+                $entity->set('modifiedAt', $nowString);
+            }
+            if ($entity->hasAttribute('modifiedById') && $user) {
+                $entity->set('modifiedById', $user->get('id'));
+                $entity->set('modifiedByName', $user->get('name'));
             }
         }
 
-        $this->restoreData = $restoreData;
-
-        $result = parent::save($entity, $options);
-
-        return $result;
+        return parent::save($entity, $options);
     }
 
     protected function getFieldByTypeList($type)
