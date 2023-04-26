@@ -360,17 +360,23 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $this->checkAmountOfDigitsAfterComma($value, (int)$fieldData['amountOfDigitsAfterComma'], $fieldName, $entity);
     }
 
-    protected function checkAmountOfDigitsAfterComma(float $value,int $amountOfDigitsAfterComma, string $fieldName, Entity $entity): void
+    protected function checkAmountOfDigitsAfterComma($value, int $amountOfDigitsAfterComma, string $fieldName, Entity $entity): void
     {
-        $floatParts = explode('.', $value);
-        if(count($floatParts) === 2){
+        if (empty($value)) {
+            return;
+        }
+
+        $floatParts = explode('.', (string)$value);
+        if (count($floatParts) === 2) {
             $decimalPart = (int)strlen($floatParts[1]);
-            if($amountOfDigitsAfterComma <  $decimalPart){
+            if ($amountOfDigitsAfterComma < $decimalPart) {
                 $language = $this->getLanguage();
-                throw new BadRequest(sprintf(
-                    $language->translate('floatIsInvalid', 'exceptions', 'Global'), 
-                    $language->translate($fieldName, 'fields', $entity->getEntityType())
-                ));
+                throw new BadRequest(
+                    sprintf(
+                        $language->translate('floatIsInvalid', 'exceptions', 'Global'),
+                        $language->translate($fieldName, 'fields', $entity->getEntityType())
+                    )
+                );
             }
         }
     }
