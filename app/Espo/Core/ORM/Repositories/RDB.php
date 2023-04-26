@@ -277,8 +277,8 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             return;
         }
 
-        if(!empty($fieldData['amountOfDigitsAfterComma'])){
-            $this->checkAmountOfDigitsAfterComma($entity->get($fieldName), (int)$fieldData['amountOfDigitsAfterComma'], $fieldName, $entity);
+        if(!empty($amountOfDigitsAfterComma = (int)$fieldData['amountOfDigitsAfterComma'])){
+            $this->checkAmountOfDigitsAfterComma($entity->get($fieldName), $amountOfDigitsAfterComma, $fieldName, $entity);
         }
     }
 
@@ -360,23 +360,19 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $this->checkAmountOfDigitsAfterComma($value, (int)$fieldData['amountOfDigitsAfterComma'], $fieldName, $entity);
     }
 
-    protected function checkAmountOfDigitsAfterComma($value, int $amountOfDigitsAfterComma, string $fieldName, Entity $entity): void
+    protected function checkAmountOfDigitsAfterComma($value,?int $amountOfDigitsAfterComma, string $fieldName, Entity $entity): void
     {
-        if (empty($value)) {
+        if(empty($value)){
             return;
         }
-
         $floatParts = explode('.', (string)$value);
-        if (count($floatParts) === 2) {
+        if(count($floatParts) === 2){
             $decimalPart = (int)strlen($floatParts[1]);
-            if ($amountOfDigitsAfterComma < $decimalPart) {
-                $language = $this->getLanguage();
-                throw new BadRequest(
-                    sprintf(
-                        $language->translate('floatIsInvalid', 'exceptions', 'Global'),
-                        $language->translate($fieldName, 'fields', $entity->getEntityType())
-                    )
-                );
+            if($amountOfDigitsAfterComma <  $decimalPart){
+                throw new BadRequest(sprintf(
+                    $this->getLanguage()->translate('maximumOfDigitsAfterCommaInvalid', 'exceptions', 'Global'), 
+                    $amountOfDigitsAfterComma
+                ));
             }
         }
     }
