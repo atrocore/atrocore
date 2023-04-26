@@ -224,7 +224,7 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
         validatePattern() {
             if (this.validationPattern) {
                 let value = this.model.get(this.name);
-                if (value !== '' && !this.validationPattern.test(value)) {
+                if (value !== '' && value !== null && !this.validationPattern.test(value)) {
                     let msg = this.getPatternValidationMessage();
                     if (msg) {
                         this.showValidationMessage(msg);
