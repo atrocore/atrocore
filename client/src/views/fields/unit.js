@@ -58,7 +58,6 @@ Espo.define('views/fields/unit', 'views/fields/float',
         },
 
         setup() {
-            console.log('in unit type');
             Dep.prototype.setup.call(this);
 
             this.unitFieldName = this.name + 'Unit';
