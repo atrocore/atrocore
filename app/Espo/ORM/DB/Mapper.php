@@ -943,7 +943,7 @@ abstract class Mapper implements IMapper
 
     protected function updateModifiedAt(IEntity $entity)
     {
-        $nowString = date('Y-m-d H:i:s', time());
+        $nowString = date('Y-m-d H:i:s');
         $tableName = $this->query->toDb($entity->getEntityType());
 
         try {

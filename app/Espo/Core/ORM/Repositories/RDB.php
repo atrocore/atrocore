@@ -159,7 +159,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         // dispatch an event
         $this->dispatch('beforeRemove', $entity, $options);
 
-        $nowString = date('Y-m-d H:i:s', time());
+        $nowString = date('Y-m-d H:i:s');
         if ($entity->hasAttribute('modifiedAt')) {
             $entity->set('modifiedAt', $nowString);
         }
@@ -459,7 +459,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     public function save(Entity $entity, array $options = [])
     {
-        $nowString = date('Y-m-d H:i:s', time());
+        $nowString = date('Y-m-d H:i:s');
         $user = $this->getEntityManager()->getUser();
 
         if ($entity->isNew()) {
@@ -468,23 +468,22 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             } else {
                 $this->deleteFromDb($entity->id);
             }
-        }
 
-        if ($entity->isNew()) {
             if ($entity->hasAttribute('createdAt')) {
                 $entity->set('createdAt', $nowString);
             }
             if ($entity->hasAttribute('createdById') && $user) {
                 $entity->set('createdById', $user->get('id'));
             }
-        } else {
-            if ($entity->hasAttribute('modifiedAt')) {
-                $entity->set('modifiedAt', $nowString);
-            }
-            if ($entity->hasAttribute('modifiedById') && $user) {
-                $entity->set('modifiedById', $user->get('id'));
-                $entity->set('modifiedByName', $user->get('name'));
-            }
+        }
+
+        if ($entity->hasAttribute('modifiedAt')) {
+            $entity->set('modifiedAt', $nowString);
+        }
+
+        if ($entity->hasAttribute('modifiedById') && $user) {
+            $entity->set('modifiedById', $user->get('id'));
+            $entity->set('modifiedByName', $user->get('name'));
         }
 
         return parent::save($entity, $options);
