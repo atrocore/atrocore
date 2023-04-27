@@ -275,9 +275,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             return;
         }
 
-        if(!empty($amountOfDigitsAfterComma = (int)$fieldData['amountOfDigitsAfterComma'])){
-            $this->checkAmountOfDigitsAfterComma($entity->get($fieldName), $amountOfDigitsAfterComma, $fieldName, $entity);
-        }
+        $this->checkAmountOfDigitsAfterComma($entity->get($fieldName), $fieldData['amountOfDigitsAfterComma']);
     }
 
     protected function validateCurrency(Entity $entity, string $fieldName, array $fieldData): void
@@ -355,23 +353,21 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             throw new BadRequest(sprintf($language->translate('noSuchUnit', 'exceptions', 'Global'), $unit, $fieldLabel));
         }
 
-        $this->checkAmountOfDigitsAfterComma($value, (int)$fieldData['amountOfDigitsAfterComma'], $fieldName, $entity);
+        $this->checkAmountOfDigitsAfterComma($value, $fieldData['amountOfDigitsAfterComma']);
     }
 
-    protected function checkAmountOfDigitsAfterComma($value,?int $amountOfDigitsAfterComma, string $fieldName, Entity $entity): void
+    protected function checkAmountOfDigitsAfterComma($value, $amountOfDigitsAfterComma): void
     {
-        if(empty($value)){
+        if(empty($value) || empty($amountOfDigitsAfterComma)){
             return;
         }
+
         $floatParts = explode('.', (string)$value);
-        if(count($floatParts) === 2){
-            $decimalPart = (int)strlen($floatParts[1]);
-            if($amountOfDigitsAfterComma <  $decimalPart){
-                throw new BadRequest(sprintf(
-                    $this->getLanguage()->translate('maximumOfDigitsAfterCommaInvalid', 'exceptions', 'Global'), 
-                    $amountOfDigitsAfterComma
-                ));
-            }
+        if(count($floatParts) === 2 && (strlen($floatParts[1]) > (int)$amountOfDigitsAfterComma)){
+            throw new BadRequest(sprintf(
+                $this->getLanguage()->translate('maximumOfDigitsAfterCommaInvalid', 'exceptions', 'Global'), 
+                $amountOfDigitsAfterComma
+            ));
         }
     }
 
