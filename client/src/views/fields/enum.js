@@ -162,7 +162,7 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                 const scopeIsAllowed = !this.prohibitedScopes.includes(this.model.name);
                 const isArray = Array.isArray((this.params || {}).options);
 
-                if (isArray && scopeIsAllowed && !this.params.options.includes('') && this.params.options.length > 1) {
+                if (isArray && scopeIsAllowed && !this.params.options.includes('')) {
                     this.params.options.unshift('');
                     if (this.params.optionColors && this.params.optionColors.length > 0) {
                         this.params.optionColors.unshift('');
