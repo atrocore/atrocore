@@ -269,9 +269,12 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 let tooltipTextTranslate = null;
                 if (this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.name])) {
                     tooltipTextTranslate = this.translate((this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.name]))['tooltipText'], 'tooltips', this.model.name);
+                    if (typeof tooltipTextTranslate === 'undefined') {
+                        tooltipTextTranslate = this.translate(this.name, 'tooltips', this.model.urlRoot);
+                    }
                 }
                 const tooltipTextValue = this.options.tooltipText || tooltipTextTranslate;
-                const tooltipLinkElement = tooltipLinkValue ? '<div class="popover-footer" style="border-top: 1px solid #dcdcdc52; display:block;margin-top:3px!important;padding-top:2px;"><a href=' + tooltipLinkValue + ' target="_blank"> <u>' + this.translate('Read more') + '</u> </a></div>':'';
+                const tooltipLinkElement = tooltipLinkValue ? '<div class="popover-footer" style="border-top: 1px solid #dcdcdc52; display:block;margin-top:3px!important;padding-top:2px;"><a href=' + tooltipLinkValue + ' target="_blank"> <u>' + this.translate('Read more') + '</u> </a></div>' : '';
 
                 this.once('after:render', function () {
                     $a = $('<a href="javascript:" class="text-muted field-info"><span class="fas fa-info-circle"></span></a>');
@@ -291,9 +294,13 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                             content: (tooltipTextValue).replace(/\n/g, "<br />") + tooltipLinkElement,
                             trigger: 'click',
                         }).on('shown.bs.popover', function () {
-                            $('body').one('click', function () {
-                                $a.popover('hide');
+                            $('body').one('click', function (e) {
+                                if ($(e.target).data('toggle') !== 'popover'
+                                    && $(e.target).parents('.popover.in').length === 0) {
+                                    $('.popover').popover('hide');
+                                }
                             });
+
                         });                        
                     }
                 }, this);
