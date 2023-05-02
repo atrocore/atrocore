@@ -39,15 +39,22 @@ class V1Dot5Dot62 extends Base
 {
     public function up(): void
     {
-        $this->exec("ALTER TABLE extensible_enum_option DROP code;ALTER TABLE extensible_enum_option ADD code VARCHAR(255) DEFAULT NULL UNIQUE COLLATE `utf8mb4_unicode_ci`");
+        $this->getPDO()->exec("ALTER TABLE extensible_enum_option DROP code;ALTER TABLE extensible_enum_option ADD code VARCHAR(255) DEFAULT NULL UNIQUE COLLATE `utf8mb4_unicode_ci`");
         $this->exec("CREATE UNIQUE INDEX UNIQ_6598AC4577153098EB3B4E33 ON extensible_enum_option (code, deleted)");
         $this->exec("DROP INDEX code ON extensible_enum_option");
+
+        $this->getPDO()->exec("ALTER TABLE extensible_enum DROP code;ALTER TABLE extensible_enum ADD code VARCHAR(255) DEFAULT NULL UNIQUE COLLATE `utf8mb4_unicode_ci`");
+        $this->exec("CREATE UNIQUE INDEX UNIQ_49A4DA4577153098EB3B4E33 ON extensible_enum (code, deleted)");
+        $this->exec("DROP INDEX code ON extensible_enum");
     }
 
     public function down(): void
     {
-        $this->getPDO()->exec("DROP INDEX UNIQ_6598AC4577153098EB3B4E33 ON extensible_enum_option");
-        $this->getPDO()->exec("ALTER TABLE extensible_enum_option DROP code");
+        $this->exec("DROP INDEX UNIQ_6598AC4577153098EB3B4E33 ON extensible_enum_option");
+        $this->exec("ALTER TABLE extensible_enum_option DROP code");
+
+        $this->exec("DROP INDEX UNIQ_49A4DA4577153098EB3B4E33 ON extensible_enum");
+        $this->exec("ALTER TABLE extensible_enum DROP code");
     }
 
     protected function exec(string $query): void
