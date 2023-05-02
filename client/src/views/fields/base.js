@@ -265,14 +265,10 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }, this);
 
             if ((this.mode == 'detail' || this.mode == 'edit') && this.tooltip) {
-                const tooltipLinkValue = this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.name, 'tooltipLink']);
-                let tooltipTextTranslate = null;
-                if (this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.name])) {
-                    tooltipTextTranslate = this.translate((this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.name]))['tooltipText'], 'tooltips', this.model.name);
-                    if (typeof tooltipTextTranslate === 'undefined') {
-                        tooltipTextTranslate = this.translate(this.name, 'tooltips', this.model.urlRoot);
-                    }
-                }
+                const tooltipLinkValue = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'tooltipLink']);
+                let tooltipText = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'tooltipText']);
+                let tooltipTextTranslate = this.translate(tooltipText || this.name, 'tooltips', this.model.name);
+
                 const tooltipTextValue = this.options.tooltipText || tooltipTextTranslate;
                 const tooltipLinkElement = tooltipLinkValue ? '<div class="popover-footer" style="border-top: 1px solid #dcdcdc52; display:block;margin-top:3px!important;padding-top:2px;"><a href=' + tooltipLinkValue + ' target="_blank"> <u>' + this.translate('Read more') + '</u> </a></div>' : '';
 
