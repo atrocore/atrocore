@@ -33,18 +33,26 @@
 
 namespace Espo\Core\Jobs;
 
-use \Espo\Core\Container;
+use Espo\Core\Container;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
+use Espo\ORM\EntityManager;
 
 abstract class Base
 {
-    private $container;
+    private Container $container;
+
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
 
     protected function getContainer()
     {
         return $this->container;
     }
 
-    protected function getEntityManager()
+    protected function getEntityManager(): EntityManager
     {
         return $this->getContainer()->get('entityManager');
     }
@@ -54,12 +62,12 @@ abstract class Base
         return $this->getContainer()->get('serviceFactory');
     }
 
-    protected function getConfig()
+    protected function getConfig(): Config
     {
         return $this->getContainer()->get('config');
     }
 
-    protected function getMetadata()
+    protected function getMetadata(): Metadata
     {
         return $this->getContainer()->get('metadata');
     }
@@ -68,11 +76,4 @@ abstract class Base
     {
         return $this->getContainer()->get('user');
     }
-
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
-    }
-
 }
-
