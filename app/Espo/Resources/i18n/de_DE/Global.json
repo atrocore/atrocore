@@ -430,6 +430,7 @@
     "convertCurrency": "Währung umrechnen"
   },
   "fields": {
+    "code": "Code",
     "extensibleEnum": "Liste",
     "sortOrder": "Sortierreihenfolge",
     "parents": "Übergeordnete Datensätze",

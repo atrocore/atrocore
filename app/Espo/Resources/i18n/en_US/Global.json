@@ -406,6 +406,7 @@
     "convertCurrency": "Convert Currency"
   },
   "fields": {
+    "code": "Code",
     "extensibleEnum": "List",
     "sortOrder": "Sort Order",
     "parents": "Parent Record(s)",

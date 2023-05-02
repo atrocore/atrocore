@@ -31,45 +31,30 @@
  * and "AtroCore" word.
  */
 
-declare(strict_types=1);
+namespace Treo\Migrations;
 
-namespace Espo\Repositories;
+use Treo\Core\Migration\Base;
 
-use Espo\Core\Templates\Repositories\Base;
-use Espo\ORM\Entity;
-
-class ExtensibleEnumOption extends Base
+class V1Dot5Dot62 extends Base
 {
-    protected function beforeSave(Entity $entity, array $options = [])
+    public function up(): void
     {
-        if ($entity->get('code') === '') {
-            $entity->set('code', null);
-        }
-
-        if ($entity->isNew() && $entity->get('sortOrder') === null) {
-            $last = $this->where(['extensibleEnumId' => $entity->get('extensibleEnumId')])->order('sortOrder', 'DESC')->findOne();
-            $entity->set('sortOrder', empty($last) ? 0 : (int)$last->get('sortOrder') + 10);
-        }
-
-        parent::beforeSave($entity, $options);
+        $this->exec("ALTER TABLE extensible_enum_option DROP code;ALTER TABLE extensible_enum_option ADD code VARCHAR(255) DEFAULT NULL UNIQUE COLLATE `utf8mb4_unicode_ci`");
+        $this->exec("CREATE UNIQUE INDEX UNIQ_6598AC4577153098EB3B4E33 ON extensible_enum_option (code, deleted)");
+        $this->exec("DROP INDEX code ON extensible_enum_option");
     }
 
-    public function updateSortOrder(array $ids): void
+    public function down(): void
     {
-        $collection = $this->where(['id' => $ids])->find();
-        if (empty($collection[0])) {
-            return;
-        }
+        $this->getPDO()->exec("DROP INDEX UNIQ_6598AC4577153098EB3B4E33 ON extensible_enum_option");
+        $this->getPDO()->exec("ALTER TABLE extensible_enum_option DROP code");
+    }
 
-        foreach ($ids as $k => $id) {
-            $sortOrder = (int)$k * 10;
-            foreach ($collection as $entity) {
-                if ($entity->get('id') !== (string)$id) {
-                    continue;
-                }
-                $entity->set('sortOrder', $sortOrder);
-                $this->save($entity);
-            }
+    protected function exec(string $query): void
+    {
+        try {
+            $this->getPDO()->exec($query);
+        } catch (\Throwable $e) {
         }
     }
 }

@@ -408,6 +408,7 @@
     "removeRelation": "Видалити зв'язок"
   },
   "fields": {
+    "code": "Код",
     "extensibleEnum": "Список",
     "sortOrder": "Порядок сортування",
     "parents": "Батьківські записи",
