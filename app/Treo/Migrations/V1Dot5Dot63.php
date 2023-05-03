@@ -35,26 +35,31 @@ namespace Treo\Migrations;
 
 use Treo\Core\Migration\Base;
 
-class V1Dot5Dot62 extends Base
+class V1Dot5Dot63 extends Base
 {
     public function up(): void
     {
-        $this->getPDO()->exec("ALTER TABLE extensible_enum_option DROP code;ALTER TABLE extensible_enum_option ADD code VARCHAR(255) DEFAULT NULL UNIQUE COLLATE `utf8mb4_unicode_ci`");
+        $this->getPDO()->exec(
+            "ALTER TABLE extensible_enum_option DROP code;ALTER TABLE extensible_enum_option ADD code VARCHAR(255) DEFAULT NULL UNIQUE COLLATE `utf8mb4_unicode_ci`"
+        );
         $this->exec("CREATE UNIQUE INDEX UNIQ_6598AC4577153098EB3B4E33 ON extensible_enum_option (code, deleted)");
         $this->exec("DROP INDEX code ON extensible_enum_option");
 
         $this->getPDO()->exec("ALTER TABLE extensible_enum DROP code;ALTER TABLE extensible_enum ADD code VARCHAR(255) DEFAULT NULL UNIQUE COLLATE `utf8mb4_unicode_ci`");
         $this->exec("CREATE UNIQUE INDEX UNIQ_49A4DA4577153098EB3B4E33 ON extensible_enum (code, deleted)");
         $this->exec("DROP INDEX code ON extensible_enum");
+
+        $this->exec("DROP INDEX UNIQ_8007192533E7211DEB3B4E33 ON measure");
+        $this->exec("DROP INDEX UNIQ_800719255E237E06EB3B4E33 ON measure");
+        $this->getPDO()->exec("ALTER TABLE measure ADD code VARCHAR(255) DEFAULT NULL UNIQUE COLLATE `utf8mb4_unicode_ci`");
+        $this->exec("CREATE UNIQUE INDEX UNIQ_8007192577153098EB3B4E33 ON measure (code, deleted)");
+        $this->getPDO()->exec("UPDATE measure SET code=name WHERE 1");
+        $this->exec("DROP INDEX code ON measure");
     }
 
     public function down(): void
     {
-        $this->exec("DROP INDEX UNIQ_6598AC4577153098EB3B4E33 ON extensible_enum_option");
-        $this->exec("ALTER TABLE extensible_enum_option DROP code");
-
-        $this->exec("DROP INDEX UNIQ_49A4DA4577153098EB3B4E33 ON extensible_enum");
-        $this->exec("ALTER TABLE extensible_enum DROP code");
+        throw new \Error('Downgrade is prohibited!');
     }
 
     protected function exec(string $query): void
