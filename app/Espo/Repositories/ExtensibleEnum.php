@@ -40,6 +40,15 @@ use Espo\ORM\Entity;
 
 class ExtensibleEnum extends Base
 {
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        if ($entity->get('code') === '') {
+            $entity->set('code', null);
+        }
+
+        parent::beforeSave($entity, $options);
+    }
+
     protected function afterRemove(Entity $entity, array $options = [])
     {
         $this->getEntityManager()->getRepository('ExtensibleEnumOption')->where(['extensibleEnumId' => $entity->get('id')])->removeCollection();
