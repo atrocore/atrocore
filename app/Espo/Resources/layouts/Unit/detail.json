@@ -12,6 +12,12 @@
       ],
       [
         {
+          "name": "code"
+        },
+        false
+      ],
+      [
+        {
           "name": "description"
         },
         false

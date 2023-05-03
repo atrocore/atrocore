@@ -55,6 +55,10 @@ class V1Dot5Dot63 extends Base
         $this->exec("CREATE UNIQUE INDEX UNIQ_8007192577153098EB3B4E33 ON measure (code, deleted)");
         $this->getPDO()->exec("UPDATE measure SET code=name WHERE 1");
         $this->exec("DROP INDEX code ON measure");
+
+        $this->getPDO()->exec("ALTER TABLE unit ADD code VARCHAR(255) DEFAULT NULL UNIQUE COLLATE `utf8mb4_unicode_ci`");
+        $this->getPDO()->exec("CREATE UNIQUE INDEX UNIQ_DCBB0C5377153098EB3B4E33 ON unit (code, deleted)");
+        $this->exec("DROP INDEX code ON unit");
     }
 
     public function down(): void
