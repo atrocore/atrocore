@@ -14,7 +14,9 @@
         {
           "name": "code"
         },
-        false
+        {
+          "name": "abbreviation"
+        }
       ],
       [
         {

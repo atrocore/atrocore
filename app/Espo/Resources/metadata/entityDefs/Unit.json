@@ -11,6 +11,10 @@
       "type": "varchar",
       "unique": true
     },
+    "abbreviation": {
+      "type": "wysiwyg",
+      "view": "views/fields/varchar"
+    },
     "description": {
       "type": "text",
       "isMultilang": true
