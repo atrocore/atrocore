@@ -5,7 +5,8 @@
     "measure": "Measure",
     "isDefault": "Default",
     "multiplier": "Multiplier",
-    "convertTo": "Convert to"
+    "convertTo": "Convert to",
+    "abbreviation": "Abbreviation"
   },
   "links": {
     "measure": "Measure",
