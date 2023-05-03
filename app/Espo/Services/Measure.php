@@ -56,17 +56,17 @@ class Measure extends Base
         $data = $this->findEntities(['maxSize' => \PHP_INT_MAX]);
 
         $result = [];
-        if (!empty($data['total'])) {
+        if (isset($data['collection'])) {
             $inputLanguageList = $this->getConfig()->get('inputLanguageList', []);
             foreach ($data['collection'] as $measure) {
                 if (empty($units = $measure->get('units')) || count($units) == 0) {
                     continue 1;
                 }
 
-                $result[$measure->get('name')]['unitListData'] = [];
+                $result[$measure->get('code')]['unitListData'] = [];
                 foreach ($units as $unit) {
-                    $result[$measure->get('name')]['unitList'][] = $unit->get('name');
-                    $result[$measure->get('name')]['unitListData'][$unit->get('id')] = [
+                    $result[$measure->get('code')]['unitList'][] = $unit->get('name');
+                    $result[$measure->get('code')]['unitListData'][$unit->get('id')] = [
                         'id'          => $unit->get('id'),
                         'name'        => $unit->get('name'),
                         'isDefault'   => $unit->get('isDefault'),
@@ -76,7 +76,7 @@ class Measure extends Base
                 }
 
                 foreach ($inputLanguageList as $locale) {
-                    $result[$measure->get('name')]['unitListTranslates'][$locale] = array_column($units->toArray(), 'name' . ucfirst(Util::toCamelCase(strtolower($locale))));
+                    $result[$measure->get('code')]['unitListTranslates'][$locale] = array_column($units->toArray(), 'name' . ucfirst(Util::toCamelCase(strtolower($locale))));
                 }
             }
 
