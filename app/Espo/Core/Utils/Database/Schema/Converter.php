@@ -256,6 +256,20 @@ class Converter
                 $uniqueColumns[SchemaUtils::generateIndexName($indexName)] = $indexColumns;
             }
 
+            // add unique index for multiple columns fields
+            foreach ($this->getMetadata()->get(['entityDefs', $entityName, 'fields'], []) as $field => $fieldDefs) {
+                if (empty($fieldDefs['type']) || empty($fieldDefs['unique'])) {
+                    continue;
+                }
+                if (in_array($fieldDefs['type'], ['rangeInt', 'rangeFloat'])) {
+                    $uniqueColumns[SchemaUtils::generateIndexName('unique_' . $field)] = [
+                        'deleted',
+                        'from_' . Util::toUnderScore($field),
+                        'to_' . Util::toUnderScore($field),
+                    ];
+                }
+            }
+
             if (!empty($uniqueColumns)) {
                 foreach($uniqueColumns as $uniqueItem) {
                     $tables[$entityName]->addUniqueIndex($uniqueItem);
