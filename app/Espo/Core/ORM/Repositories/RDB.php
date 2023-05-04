@@ -275,7 +275,9 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             return;
         }
 
-        $this->checkAmountOfDigitsAfterComma($entity->get($fieldName), $fieldData['amountOfDigitsAfterComma']);
+        if (isset($fieldData['amountOfDigitsAfterComma'])) {
+            $this->checkAmountOfDigitsAfterComma($entity->get($fieldName), $fieldData['amountOfDigitsAfterComma']);
+        }
     }
 
     protected function validateCurrency(Entity $entity, string $fieldName, array $fieldData): void
@@ -353,7 +355,9 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             throw new BadRequest(sprintf($language->translate('noSuchUnit', 'exceptions', 'Global'), $unit, $fieldLabel));
         }
 
-        $this->checkAmountOfDigitsAfterComma($value, $fieldData['amountOfDigitsAfterComma']);
+        if (isset($fieldData['amountOfDigitsAfterComma'])) {
+            $this->checkAmountOfDigitsAfterComma($value, $fieldData['amountOfDigitsAfterComma']);
+        }
     }
 
     protected function checkAmountOfDigitsAfterComma($value, $amountOfDigitsAfterComma): void
