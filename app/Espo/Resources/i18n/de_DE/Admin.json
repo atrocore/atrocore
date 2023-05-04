@@ -128,6 +128,7 @@
     "required": "Erforderlich",
     "default": "Standardwert",
     "maxLength": "Maximallänge",
+    "amountOfDigitsAfterComma": "Anzahl der Ziffern nach dem Komma",
     "options": "Optionen",
     "after": "Nach (Feld)",
     "before": "Vor (Feld)",
