@@ -15,7 +15,8 @@
       },
       {
          "name": "amountOfDigitsAfterComma",
-         "type": "int"
+         "type": "int",
+         "min": 0
       },
       {
          "name":"audited",
