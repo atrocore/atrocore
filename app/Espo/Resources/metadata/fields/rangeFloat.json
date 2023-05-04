@@ -1,19 +1,52 @@
 {
-   "actualFields": [
-      "from",
-      "to"
-   ],
-   "fields": {
-      "from": {
-         "type": "float"
-      },
-      "to": {
-         "type": "float"
-      }
-   },
-   "naming": "prefix",
-   "notMergeable": true,
-   "notCreatable": true,
-   "filter": false,
-   "skipOrmDefs": true
+  "params": [
+    {
+      "name": "required",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "default",
+      "type": "rangeFloat"
+    },
+    {
+      "name": "min",
+      "type": "float"
+    },
+    {
+      "name": "max",
+      "type": "float"
+    },
+    {
+      "name": "amountOfDigitsAfterComma",
+      "type": "int"
+    },
+    {
+      "name": "audited",
+      "type": "bool"
+    },
+    {
+      "name": "readOnly",
+      "type": "bool"
+    },
+    {
+      "name": "unique",
+      "type": "bool"
+    }
+  ],
+  "actualFields": [
+    "from",
+    "to"
+  ],
+  "fields": {
+    "from": {
+      "type": "float"
+    },
+    "to": {
+      "type": "float"
+    }
+  },
+  "naming": "prefix",
+  "filter": true,
+  "skipOrmDefs": true
 }
