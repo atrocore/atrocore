@@ -48,19 +48,6 @@ class V1Dot5Dot63 extends Base
         $this->getPDO()->exec("ALTER TABLE extensible_enum DROP code;ALTER TABLE extensible_enum ADD code VARCHAR(255) DEFAULT NULL UNIQUE COLLATE `utf8mb4_unicode_ci`");
         $this->exec("CREATE UNIQUE INDEX UNIQ_49A4DA4577153098EB3B4E33 ON extensible_enum (code, deleted)");
         $this->exec("DROP INDEX code ON extensible_enum");
-
-        $this->exec("DROP INDEX UNIQ_8007192533E7211DEB3B4E33 ON measure");
-        $this->exec("DROP INDEX UNIQ_800719255E237E06EB3B4E33 ON measure");
-        $this->getPDO()->exec("ALTER TABLE measure ADD code VARCHAR(255) DEFAULT NULL UNIQUE COLLATE `utf8mb4_unicode_ci`");
-        $this->exec("CREATE UNIQUE INDEX UNIQ_8007192577153098EB3B4E33 ON measure (code, deleted)");
-        $this->getPDO()->exec("UPDATE measure SET code=name WHERE 1");
-        $this->exec("DROP INDEX code ON measure");
-
-        $this->getPDO()->exec("ALTER TABLE unit ADD code VARCHAR(255) DEFAULT NULL UNIQUE COLLATE `utf8mb4_unicode_ci`");
-        $this->getPDO()->exec("CREATE UNIQUE INDEX UNIQ_DCBB0C5377153098EB3B4E33 ON unit (code, deleted)");
-        $this->exec("DROP INDEX code ON unit");
-
-        $this->getPDO()->exec("ALTER TABLE unit ADD abbreviation LONGTEXT DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
     }
 
     public function down(): void

@@ -50,10 +50,6 @@ class Unit extends Base
      */
     protected function beforeSave(Entity $entity, array $options = [])
     {
-        if ($entity->get('code') === '') {
-            $entity->set('code', null);
-        }
-
         if (!$entity->isNew() && $entity->isAttributeChanged('measure')) {
             throw new Forbidden();
         }
