@@ -90,7 +90,7 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
 
                 if (this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'tooltip'])) {
                     this.model.set('tooltipText', this.getLanguage().translate(this.field, 'tooltips', this.scope));
-                    this.model.set('tooltipLink', this.getLanguage().translate(this.field, 'tooltipsLink', this.scope));
+                    this.model.set('tooltipLink', this.getLanguage().translate(this.field, 'tooltipLink', this.scope));
                 }
             } else {
                 this.model.set('type', this.type);
@@ -296,7 +296,7 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                         if (o.tooltip || ~this.paramWithTooltipList.indexOf(o.name)) {
                             options.tooltip = true;
                             options.tooltipText = this.translate(o.name, 'tooltips', 'FieldManager');
-                            options.tooltipLink = this.translate(o.name, 'tooltipsLink', 'FieldManager');
+                            options.tooltipLink = this.translate(o.name, 'tooltipLink', 'FieldManager');
                         }
                         this.createFieldView(o.type, o.name, null, o, options);
                     }, this);
@@ -546,7 +546,7 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                     langData[this.scope]['tooltips'] = {};
                 }
                 langData[this.scope]['tooltips'][this.model.get('name')] = this.model.get('tooltipText');
-                langData[this.scope]['tooltipsLink'][this.model.get('name')] = this.model.get('tooltipLink');
+                langData[this.scope]['tooltipLink'][this.model.get('name')] = this.model.get('tooltipLink');
 
                 if (this.getMetadata().get(['fields', this.model.get('type'), 'translatedOptions']) && this.model.get('translatedOptions')) {
                     langData[this.scope].options = langData[this.scope].options || {};
