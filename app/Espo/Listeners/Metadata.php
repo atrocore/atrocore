@@ -82,6 +82,9 @@ class Metadata extends AbstractListener
                     continue;
                 }
 
+                $data['entityDefs'][$entity]['fields'][$field]['exportDisabled'] = true;
+                $data['entityDefs'][$entity]['fields'][$field]['importDisabled'] = true;
+
                 $fieldFrom = $field . 'From';
                 $fieldTo = $field . 'To';
 
