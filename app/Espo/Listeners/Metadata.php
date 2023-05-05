@@ -90,6 +90,7 @@ class Metadata extends AbstractListener
                     ];
                 }
 
+                $data['entityDefs'][$entity]['fields'][$field]['filterDisabled'] = true;
                 $data['entityDefs'][$entity]['fields'][$field]['exportDisabled'] = true;
                 $data['entityDefs'][$entity]['fields'][$field]['importDisabled'] = true;
 
@@ -118,6 +119,12 @@ class Metadata extends AbstractListener
                 if (isset($fieldDefs['maxTo'])) {
                     $data['entityDefs'][$entity]['fields'][$fieldTo]['max'] = $fieldDefs['maxTo'];
                 }
+
+                if (!empty($fieldDefs['audited'])) {
+                    $data['entityDefs'][$entity]['fields'][$fieldFrom]['audited'] = true;
+                    $data['entityDefs'][$entity]['fields'][$fieldTo]['audited'] = true;
+                }
+
                 if ($fieldDefs['type'] === 'rangeFloat' && isset($fieldDefs['amountOfDigitsAfterComma'])) {
                     $data['entityDefs'][$entity]['fields'][$fieldFrom]['amountOfDigitsAfterComma'] = $fieldDefs['amountOfDigitsAfterComma'];
                     $data['entityDefs'][$entity]['fields'][$fieldTo]['amountOfDigitsAfterComma'] = $fieldDefs['amountOfDigitsAfterComma'];
