@@ -453,40 +453,8 @@ class Language
             $this->data[$i18nName] = $i18nData;
         }
 
-        $this->prepareTranslationsByFieldType();
-
         if ($installed) {
             $this->data = $this->container->get('eventManager')->dispatch('Language', 'modify', new Event(['data' => $this->data]))->getArgument('data');
-        }
-    }
-
-    protected function prepareTranslationsByFieldType(): void
-    {
-        /** @var \Espo\Core\Utils\Metadata $metadata */
-        $metadata = $this->container->get('metadata');
-
-        foreach ($this->data as $i18nName => $i18nData) {
-            foreach ($metadata->get('entityDefs', []) as $entityType => $entityDefs) {
-                if (empty($entityDefs['fields'])) {
-                    continue;
-                }
-                foreach ($entityDefs['fields'] as $field => $fieldDefs) {
-                    if (empty($fieldDefs['type'])) {
-                        continue;
-                    }
-
-                    switch ($fieldDefs['type']) {
-                        case 'rangeInt':
-                        case 'rangeFloat':
-                            $fieldLabel = !empty($i18nData[$entityType]['fields'][$field]) ? $i18nData[$entityType]['fields'][$field] : $field;
-                            $fromLabel = !empty($i18nData['Global']['labels']['From']) ? $i18nData['Global']['labels']['From'] : 'From';
-                            $toLabel = !empty($i18nData['Global']['labels']['To']) ? $i18nData['Global']['labels']['To'] : 'To';
-                            $this->data[$i18nName][$entityType]['fields'][$field . 'From'] = $fieldLabel . ' ' . $fromLabel;
-                            $this->data[$i18nName][$entityType]['fields'][$field . 'To'] = $fieldLabel . ' ' . $toLabel;
-                            break;
-                    }
-                }
-            }
         }
     }
 

@@ -66,7 +66,41 @@ class Metadata extends AbstractListener
 
         $this->prepareRelationshipsEntities($data);
 
+        $this->prepareRanges($data);
+
         $event->setArgument('data', $data);
+    }
+
+    protected function prepareRanges(array &$data): void
+    {
+        foreach ($data['entityDefs'] as $entity => $entityDefs) {
+            if (empty($entityDefs['fields'])) {
+                continue 1;
+            }
+            foreach ($entityDefs['fields'] as $field => $fieldDefs) {
+                if (empty($fieldDefs['type'])) {
+                    continue;
+                }
+
+                if (in_array($fieldDefs['type'], ['rangeInt', 'rangeFloat'])) {
+                    $fieldFrom = $field . 'From';
+                    $data['entityDefs'][$entity]['fields'][$fieldFrom]['required'] = $fieldDefs['required'];
+                    $data['entityDefs'][$entity]['fields'][$fieldFrom]['amountOfDigitsAfterComma'] = $fieldDefs['amountOfDigitsAfterComma'];
+                    $data['entityDefs'][$entity]['fields'][$fieldFrom]['readOnly'] = $fieldDefs['readOnly'];
+                    $data['entityDefs'][$entity]['fields'][$fieldFrom]['default'] = $fieldDefs['defaultFrom'];
+                    $data['entityDefs'][$entity]['fields'][$fieldFrom]['min'] = $fieldDefs['minFrom'];
+                    $data['entityDefs'][$entity]['fields'][$fieldFrom]['max'] = $fieldDefs['maxFrom'];
+
+                    $fieldTo = $field . 'To';
+                    $data['entityDefs'][$entity]['fields'][$fieldTo]['required'] = $fieldDefs['required'];
+                    $data['entityDefs'][$entity]['fields'][$fieldTo]['amountOfDigitsAfterComma'] = $fieldDefs['amountOfDigitsAfterComma'];
+                    $data['entityDefs'][$entity]['fields'][$fieldTo]['readOnly'] = $fieldDefs['readOnly'];
+                    $data['entityDefs'][$entity]['fields'][$fieldTo]['default'] = $fieldDefs['defaultTo'];
+                    $data['entityDefs'][$entity]['fields'][$fieldTo]['min'] = $fieldDefs['minTo'];
+                    $data['entityDefs'][$entity]['fields'][$fieldTo]['max'] = $fieldDefs['maxTo'];
+                }
+            }
+        }
     }
 
     protected function prepareRelationshipsEntities(array &$data): void
