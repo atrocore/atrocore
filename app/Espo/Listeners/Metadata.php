@@ -82,6 +82,14 @@ class Metadata extends AbstractListener
                     continue;
                 }
 
+                if (!empty($fieldDefs['unique'])) {
+                    $data['entityDefs'][$entity]['uniqueIndexes']['unique_' . $field] = [
+                        'deleted',
+                        Util::toUnderScore($field) . '_from',
+                        Util::toUnderScore($field) . '_to'
+                    ];
+                }
+
                 $data['entityDefs'][$entity]['fields'][$field]['exportDisabled'] = true;
                 $data['entityDefs'][$entity]['fields'][$field]['importDisabled'] = true;
 
