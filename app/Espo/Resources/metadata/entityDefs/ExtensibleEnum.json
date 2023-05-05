@@ -8,6 +8,10 @@
     "description": {
       "type": "text"
     },
+    "code": {
+      "type": "varchar",
+      "unique": true
+    },
     "extensibleEnumOptions": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,

@@ -31,28 +31,35 @@
  * and "AtroCore" word.
  */
 
-declare(strict_types=1);
+namespace Treo\Migrations;
 
-namespace Espo\Repositories;
+use Treo\Core\Migration\Base;
 
-use Espo\Core\Templates\Repositories\Base;
-use Espo\ORM\Entity;
-
-class ExtensibleEnum extends Base
+class V1Dot5Dot64 extends Base
 {
-    protected function beforeSave(Entity $entity, array $options = [])
+    public function up(): void
     {
-        if ($entity->get('code') === '') {
-            $entity->set('code', null);
-        }
+        $this->getPDO()->exec(
+            "ALTER TABLE extensible_enum_option DROP code;ALTER TABLE extensible_enum_option ADD code VARCHAR(255) DEFAULT NULL UNIQUE COLLATE `utf8mb4_unicode_ci`"
+        );
+        $this->exec("CREATE UNIQUE INDEX UNIQ_6598AC4577153098EB3B4E33 ON extensible_enum_option (code, deleted)");
+        $this->exec("DROP INDEX code ON extensible_enum_option");
 
-        parent::beforeSave($entity, $options);
+        $this->getPDO()->exec("ALTER TABLE extensible_enum DROP code;ALTER TABLE extensible_enum ADD code VARCHAR(255) DEFAULT NULL UNIQUE COLLATE `utf8mb4_unicode_ci`");
+        $this->exec("CREATE UNIQUE INDEX UNIQ_49A4DA4577153098EB3B4E33 ON extensible_enum (code, deleted)");
+        $this->exec("DROP INDEX code ON extensible_enum");
     }
 
-    protected function afterRemove(Entity $entity, array $options = [])
+    public function down(): void
     {
-        $this->getEntityManager()->getRepository('ExtensibleEnumOption')->where(['extensibleEnumId' => $entity->get('id')])->removeCollection();
+        throw new \Error('Downgrade is prohibited!');
+    }
 
-        parent::afterRemove($entity, $options);
+    protected function exec(string $query): void
+    {
+        try {
+            $this->getPDO()->exec($query);
+        } catch (\Throwable $e) {
+        }
     }
 }

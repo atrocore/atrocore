@@ -4,6 +4,10 @@
       "type": "text",
       "isMultilang": true
     },
+    "code": {
+      "type": "varchar",
+      "unique": true
+    },
     "extensibleEnum": {
       "type": "link",
       "required": true

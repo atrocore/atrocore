@@ -42,6 +42,10 @@ class ExtensibleEnumOption extends Base
 {
     protected function beforeSave(Entity $entity, array $options = [])
     {
+        if ($entity->get('code') === '') {
+            $entity->set('code', null);
+        }
+
         if ($entity->isNew() && $entity->get('sortOrder') === null) {
             $last = $this->where(['extensibleEnumId' => $entity->get('extensibleEnumId')])->order('sortOrder', 'DESC')->findOne();
             $entity->set('sortOrder', empty($last) ? 0 : (int)$last->get('sortOrder') + 10);

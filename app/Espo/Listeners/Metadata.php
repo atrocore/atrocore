@@ -66,7 +66,76 @@ class Metadata extends AbstractListener
 
         $this->prepareRelationshipsEntities($data);
 
+        $this->prepareRanges($data);
+
         $event->setArgument('data', $data);
+    }
+
+    protected function prepareRanges(array &$data): void
+    {
+        foreach ($data['entityDefs'] as $entity => $entityDefs) {
+            if (empty($entityDefs['fields'])) {
+                continue 1;
+            }
+            foreach ($entityDefs['fields'] as $field => $fieldDefs) {
+                if (empty($fieldDefs['type']) || !in_array($fieldDefs['type'], ['rangeInt', 'rangeFloat'])) {
+                    continue;
+                }
+
+                if (!empty($fieldDefs['unique'])) {
+                    $data['entityDefs'][$entity]['uniqueIndexes']['unique_' . $field] = [
+                        'deleted',
+                        Util::toUnderScore($field) . '_from',
+                        Util::toUnderScore($field) . '_to'
+                    ];
+                }
+
+                $data['entityDefs'][$entity]['fields'][$field]['filterDisabled'] = true;
+                $data['entityDefs'][$entity]['fields'][$field]['exportDisabled'] = true;
+                $data['entityDefs'][$entity]['fields'][$field]['importDisabled'] = true;
+
+                $fieldFrom = $field . 'From';
+                $fieldTo = $field . 'To';
+
+                $data['entityDefs'][$entity]['fields'][$fieldFrom]['required'] = !empty($fieldDefs['required']);
+                $data['entityDefs'][$entity]['fields'][$fieldTo]['required'] = !empty($fieldDefs['required']);
+                $data['entityDefs'][$entity]['fields'][$fieldFrom]['readOnly'] = !empty($fieldDefs['readOnly']);
+                $data['entityDefs'][$entity]['fields'][$fieldTo]['readOnly'] = !empty($fieldDefs['readOnly']);
+                if (isset($fieldDefs['defaultFrom'])) {
+                    $data['entityDefs'][$entity]['fields'][$fieldFrom]['default'] = $fieldDefs['defaultFrom'];
+                }
+                if ($fieldDefs['defaultTo']) {
+                    $data['entityDefs'][$entity]['fields'][$fieldTo]['default'] = $fieldDefs['defaultTo'];
+                }
+                if (isset($fieldDefs['minFrom'])) {
+                    $data['entityDefs'][$entity]['fields'][$fieldFrom]['min'] = $fieldDefs['minFrom'];
+                }
+                if (isset($fieldDefs['minTo'])) {
+                    $data['entityDefs'][$entity]['fields'][$fieldTo]['min'] = $fieldDefs['minTo'];
+                }
+                if (isset($fieldDefs['maxFrom'])) {
+                    $data['entityDefs'][$entity]['fields'][$fieldFrom]['max'] = $fieldDefs['maxFrom'];
+                }
+                if (isset($fieldDefs['maxTo'])) {
+                    $data['entityDefs'][$entity]['fields'][$fieldTo]['max'] = $fieldDefs['maxTo'];
+                }
+
+                if (!empty($fieldDefs['audited'])) {
+                    $data['entityDefs'][$entity]['fields'][$fieldFrom]['audited'] = true;
+                    $data['entityDefs'][$entity]['fields'][$fieldTo]['audited'] = true;
+                }
+
+                if ($fieldDefs['type'] === 'rangeFloat' && isset($fieldDefs['amountOfDigitsAfterComma'])) {
+                    $data['entityDefs'][$entity]['fields'][$fieldFrom]['amountOfDigitsAfterComma'] = $fieldDefs['amountOfDigitsAfterComma'];
+                    $data['entityDefs'][$entity]['fields'][$fieldTo]['amountOfDigitsAfterComma'] = $fieldDefs['amountOfDigitsAfterComma'];
+                }
+
+                if (!empty($data['clientDefs'][$entity]['dynamicLogic']['fields'][$field])) {
+                    $data['clientDefs'][$entity]['dynamicLogic']['fields'][$fieldFrom] = $data['clientDefs'][$entity]['dynamicLogic']['fields'][$field];
+                    $data['clientDefs'][$entity]['dynamicLogic']['fields'][$fieldTo] = $data['clientDefs'][$entity]['dynamicLogic']['fields'][$field];
+                }
+            }
+        }
     }
 
     protected function prepareRelationshipsEntities(array &$data): void

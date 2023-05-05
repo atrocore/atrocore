@@ -1,19 +1,69 @@
 {
-   "actualFields": [
-      "from",
-      "to"
-   ],
-   "fields": {
-      "from": {
-         "type": "int"
-      },
-      "to": {
-         "type": "int"
-      }
-   },
-   "naming": "prefix",
-   "notMergeable": true,
-   "notCreatable": true,
-   "filter": false,
-   "skipOrmDefs": true
+  "params": [
+    {
+      "name": "required",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "default",
+      "type": "rangeInt"
+    },
+    {
+      "name": "minFrom",
+      "type": "int"
+    },
+    {
+      "name": "maxFrom",
+      "type": "int"
+    },
+    {
+      "name": "minTo",
+      "type": "int"
+    },
+    {
+      "name": "maxTo",
+      "type": "int"
+    },
+    {
+      "name": "amountOfDigitsAfterComma",
+      "type": "int"
+    },
+    {
+      "name": "audited",
+      "type": "bool"
+    },
+    {
+      "name": "readOnly",
+      "type": "bool"
+    },
+    {
+      "name": "unique",
+      "type": "bool"
+    }
+  ],
+  "actualFields": [
+    "from",
+    "to"
+  ],
+  "fields": {
+    "from": {
+      "type": "int",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "emHidden": true
+    },
+    "to": {
+      "type": "int",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "emHidden": true
+    }
+  },
+  "filter": false,
+  "skipOrmDefs": true
 }

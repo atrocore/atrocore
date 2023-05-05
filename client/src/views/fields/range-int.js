@@ -46,6 +46,7 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
 
         data: function () {
             var data = Dep.prototype.data.call(this);
+            data.name = this.name;
             data.ucName = Espo.Utils.upperCaseFirst(this.name);
             data.fromValue = this.model.get(this.fromField);
             data.toValue = this.model.get(this.toField);
@@ -53,9 +54,11 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
         },
 
         init: function () {
-            var ucName = Espo.Utils.upperCaseFirst(this.options.defs.name);
-            this.fromField = 'from' + ucName;
-            this.toField = 'to' + ucName;
+            let fieldName = this.options.name || this.options.defs.name;
+
+            this.fromField = fieldName + 'From';
+            this.toField = fieldName + 'To';
+
             Dep.prototype.init.call(this);
         },
 

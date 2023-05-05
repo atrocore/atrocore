@@ -56,7 +56,7 @@ class Measure extends Base
         $data = $this->findEntities(['maxSize' => \PHP_INT_MAX]);
 
         $result = [];
-        if (!empty($data['total'])) {
+        if (isset($data['collection'])) {
             $inputLanguageList = $this->getConfig()->get('inputLanguageList', []);
             foreach ($data['collection'] as $measure) {
                 if (empty($units = $measure->get('units')) || count($units) == 0) {

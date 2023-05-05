@@ -55,6 +55,20 @@ class Language extends AbstractListener
                     continue 1;
                 }
                 foreach ($entityDefs['fields'] as $field => $fieldDefs) {
+                    if (empty($fieldDefs['type'])) {
+                        continue;
+                    }
+                    switch ($fieldDefs['type']) {
+                        case 'rangeInt':
+                        case 'rangeFloat':
+                            $fieldLabel = !empty($rows[$entity]['fields'][$field]) ? $rows[$entity]['fields'][$field] : $field;
+                            $fromLabel = !empty($rows['Global']['labels']['From']) ? $rows['Global']['labels']['From'] : 'From';
+                            $toLabel = !empty($rows['Global']['labels']['To']) ? $rows['Global']['labels']['To'] : 'To';
+                            $data[$locale][$entity]['fields'][$field . 'From'] = $fieldLabel . ' ' . $fromLabel;
+                            $data[$locale][$entity]['fields'][$field . 'To'] = $fieldLabel . ' ' . $toLabel;
+                            break;
+                    }
+
                     if (!empty($fieldDefs['relationshipFilterField'])) {
                         $filterField = $this->getFieldLabel($data, $locale, $entity, $fieldDefs['relationshipFilterField']);
 
@@ -69,7 +83,7 @@ class Language extends AbstractListener
                         $data[$locale][$entity]['fields'][$field] = $filterField . ': ' . $filterEntity;
                     }
 
-                    if ($this->getMetadata()->get(['entityDefs', $entity, 'fields', $field, 'relationVirtualField'])) {
+                    if (!empty($fieldDefs['relationVirtualField'])) {
                         $parts = explode(self::VIRTUAL_FIELD_DELIMITER, (string)$field);
                         if (count($parts) === 2) {
                             $fieldLabel = $this->getFieldLabel($data, $locale, $entity, $parts[0]);

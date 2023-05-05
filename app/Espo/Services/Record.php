@@ -40,6 +40,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\PseudoTransactionManager;
+use Espo\Core\Utils\Database\Schema\Utils as SchemaUtils;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Metadata;
@@ -561,6 +562,16 @@ class Record extends \Espo\Core\Services\Base
                 if (preg_match("/SQLSTATE\[23000\]: Integrity constraint violation: 1062 Duplicate entry '(.*)' for key '(.*)'/", $message, $matches) && !empty($matches[2])) {
                     $keyNameParts = explode('.', $matches[2]);
                     $keyName = array_pop($keyNameParts);
+
+                    /**
+                     * Check in metadata indexes
+                     */
+                    foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'uniqueIndexes'], []) as $indexName => $columns) {
+                        if (SchemaUtils::generateIndexName($indexName) === $keyName) {
+                            throw new BadRequest($this->prepareUniqueMessage($columns));
+                        }
+                    }
+
                     $data = $this
                         ->getEntityManager()
                         ->getPDO()
@@ -568,15 +579,7 @@ class Record extends \Espo\Core\Services\Base
                         ->fetch(\PDO::FETCH_ASSOC);
 
                     if (!empty($data['Column_name'])) {
-                        $column = $data['Column_name'];
-
-                        /** @var Language $language */
-                        $language = $this->getInjection('language');
-
-                        $column = $language->translate(Util::toCamelCase($column), 'fields', $entity->getEntityType());
-                        $errorMessage = sprintf($language->translate('fieldShouldMustBeUnique', 'exceptions'), $column);
-
-                        throw new BadRequest($errorMessage);
+                        throw new BadRequest($this->prepareUniqueMessage([$data['Column_name']]));
                     }
                 }
             }
@@ -585,6 +588,26 @@ class Record extends \Espo\Core\Services\Base
         }
 
         return $result;
+    }
+
+    protected function prepareUniqueMessage(array $columns): string
+    {
+        /** @var Language $language */
+        $language = $this->getInjection('language');
+
+        $fields = [];
+        foreach ($columns as $column) {
+            if ($column === 'deleted') {
+                continue;
+            }
+            $fields[] = $language->translate(Util::toCamelCase($column), 'fields', $this->getEntityType());
+        }
+
+        if (count($fields) > 1) {
+            return sprintf($language->translate('notUniqueValues', 'exceptions'), implode(', ', $fields));
+        }
+
+        return sprintf($language->translate('notUniqueValue', 'exceptions'), implode(', ', $fields));
     }
 
     protected function checkRequiredFields(Entity $entity, \stdClass $data): bool
