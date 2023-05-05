@@ -546,6 +546,9 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                     langData[this.scope]['tooltips'] = {};
                 }
                 langData[this.scope]['tooltips'][this.model.get('name')] = this.model.get('tooltipText');
+                if (!langData[this.scope]['tooltipLink']) {
+                    langData[this.scope]['tooltipLink'] = {};
+                }
                 langData[this.scope]['tooltipLink'][this.model.get('name')] = this.model.get('tooltipLink');
 
                 if (this.getMetadata().get(['fields', this.model.get('type'), 'translatedOptions']) && this.model.get('translatedOptions')) {

@@ -264,8 +264,8 @@ class Converter
                 if (in_array($fieldDefs['type'], ['rangeInt', 'rangeFloat'])) {
                     $uniqueColumns[SchemaUtils::generateIndexName('unique_' . $field)] = [
                         'deleted',
-                        'from_' . Util::toUnderScore($field),
-                        'to_' . Util::toUnderScore($field),
+                        Util::toUnderScore($field) . '_from',
+                        Util::toUnderScore($field) . '_to',
                     ];
                 }
             }
