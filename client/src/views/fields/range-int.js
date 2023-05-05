@@ -54,8 +54,11 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
         },
 
         init: function () {
-            this.fromField = this.options.defs.name + 'From';
-            this.toField = this.options.defs.name + 'To';
+            let fieldName = this.options.name || this.options.defs.name;
+
+            this.fromField = fieldName + 'From';
+            this.toField = fieldName + 'To';
+
             Dep.prototype.init.call(this);
         },
 
