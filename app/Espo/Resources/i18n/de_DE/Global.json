@@ -943,6 +943,7 @@
     "codeInvalid": "Code ist ungültig. Code sollte eindeutig sein. Nur Buchstaben, Zahlen und Char \"_\" erwartet.",
     "editedByAnotherUser": "Der Datensatz [%s] wurde inzwischen geändert. Sie können die Seite <a href=\"javascript:\" onclick=\"location.reload();\">neu laden</a>, um die neuen Werte zu sehen, mit \"Abbrechen\" zur Bearbeitung zurückkehren oder mit \"Anwenden\" die Daten überschreiben. Möchten Sie die Daten überschreiben?",
     "dontMatchToPattern": "ert des Feldes \"{field}\" entspricht nicht dem Pattern \"{pattern}\".",
-    "fieldShouldMustBeUnique": "Das Feld '%s' sollte einen eindeutigen Wert haben."
+    "notUniqueValue": "Der Wert für das Feld '%s' sollte eindeutig sein.",
+    "notUniqueValues": "Die Wertekombination für die Felder '%s' sollte eindeutig sein."
   }
 }

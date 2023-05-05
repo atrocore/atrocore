@@ -969,7 +969,8 @@
      "notDashletService": "Сервіс %s повинен реалізувати інтерфейс Dashlet",
      "editedByAnotherUser": "The data set [%s] був змінений. Ви можете <a href=\"javascript:\" onclick=\"location.reload();\">перевантажити сторінку</a> щоб побачити нові значення, поверніться до редагування, натиснувши \"Cancel\" або перезапишіть дані натиснувши \"Apply\". Ви хочете перезаписати дані?",
      "dontMatchToPattern": "Значення поля \"{field}\" не відповідає патерну \"{pattern}\".",
-     "fieldShouldMustBeUnique": "Поле '%s' повинно мати унікальне значення."
+     "notUniqueValue": "Значення поля '%s' повинно бути унікальним.",
+     "notUniqueValues": "Значення комбінації полів '%s' повинно бути унікальним."
    },
    "themes": {
      "TreoDarkTheme": "Atro Dark Theme",
