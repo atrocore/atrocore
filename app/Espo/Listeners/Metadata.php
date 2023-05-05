@@ -78,26 +78,38 @@ class Metadata extends AbstractListener
                 continue 1;
             }
             foreach ($entityDefs['fields'] as $field => $fieldDefs) {
-                if (empty($fieldDefs['type'])) {
+                if (empty($fieldDefs['type']) || !in_array($fieldDefs['type'], ['rangeInt', 'rangeFloat'])) {
                     continue;
                 }
 
-                if (in_array($fieldDefs['type'], ['rangeInt', 'rangeFloat'])) {
-                    $fieldFrom = $field . 'From';
-                    $data['entityDefs'][$entity]['fields'][$fieldFrom]['required'] = $fieldDefs['required'];
-                    $data['entityDefs'][$entity]['fields'][$fieldFrom]['amountOfDigitsAfterComma'] = $fieldDefs['amountOfDigitsAfterComma'];
-                    $data['entityDefs'][$entity]['fields'][$fieldFrom]['readOnly'] = $fieldDefs['readOnly'];
-                    $data['entityDefs'][$entity]['fields'][$fieldFrom]['default'] = $fieldDefs['defaultFrom'];
-                    $data['entityDefs'][$entity]['fields'][$fieldFrom]['min'] = $fieldDefs['minFrom'];
-                    $data['entityDefs'][$entity]['fields'][$fieldFrom]['max'] = $fieldDefs['maxFrom'];
+                $fieldFrom = $field . 'From';
+                $fieldTo = $field . 'To';
 
-                    $fieldTo = $field . 'To';
-                    $data['entityDefs'][$entity]['fields'][$fieldTo]['required'] = $fieldDefs['required'];
-                    $data['entityDefs'][$entity]['fields'][$fieldTo]['amountOfDigitsAfterComma'] = $fieldDefs['amountOfDigitsAfterComma'];
-                    $data['entityDefs'][$entity]['fields'][$fieldTo]['readOnly'] = $fieldDefs['readOnly'];
+                $data['entityDefs'][$entity]['fields'][$fieldFrom]['required'] = !empty($fieldDefs['required']);
+                $data['entityDefs'][$entity]['fields'][$fieldTo]['required'] = !empty($fieldDefs['required']);
+                $data['entityDefs'][$entity]['fields'][$fieldFrom]['readOnly'] = !empty($fieldDefs['readOnly']);
+                $data['entityDefs'][$entity]['fields'][$fieldTo]['readOnly'] = !empty($fieldDefs['readOnly']);
+                if (isset($fieldDefs['defaultFrom'])) {
+                    $data['entityDefs'][$entity]['fields'][$fieldFrom]['default'] = $fieldDefs['defaultFrom'];
+                }
+                if ($fieldDefs['defaultTo']) {
                     $data['entityDefs'][$entity]['fields'][$fieldTo]['default'] = $fieldDefs['defaultTo'];
+                }
+                if (isset($fieldDefs['minFrom'])) {
+                    $data['entityDefs'][$entity]['fields'][$fieldFrom]['min'] = $fieldDefs['minFrom'];
+                }
+                if (isset($fieldDefs['minTo'])) {
                     $data['entityDefs'][$entity]['fields'][$fieldTo]['min'] = $fieldDefs['minTo'];
+                }
+                if (isset($fieldDefs['maxFrom'])) {
+                    $data['entityDefs'][$entity]['fields'][$fieldFrom]['max'] = $fieldDefs['maxFrom'];
+                }
+                if (isset($fieldDefs['maxTo'])) {
                     $data['entityDefs'][$entity]['fields'][$fieldTo]['max'] = $fieldDefs['maxTo'];
+                }
+                if ($fieldDefs['type'] === 'rangeFloat' && isset($fieldDefs['amountOfDigitsAfterComma'])) {
+                    $data['entityDefs'][$entity]['fields'][$fieldFrom]['amountOfDigitsAfterComma'] = $fieldDefs['amountOfDigitsAfterComma'];
+                    $data['entityDefs'][$entity]['fields'][$fieldTo]['amountOfDigitsAfterComma'] = $fieldDefs['amountOfDigitsAfterComma'];
                 }
             }
         }
