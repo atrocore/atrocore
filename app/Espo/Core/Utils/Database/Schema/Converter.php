@@ -252,28 +252,14 @@ class Converter
                 }
             }
 
-            foreach ($this->getMetadata()->get(['entityDefs', $entityName, 'uniqueIndexes'], []) as $indexName => $indexColumns) {
-                $uniqueColumns[SchemaUtils::generateIndexName($indexName)] = $indexColumns;
-            }
-
-            // add unique index for multiple columns fields
-            foreach ($this->getMetadata()->get(['entityDefs', $entityName, 'fields'], []) as $field => $fieldDefs) {
-                if (empty($fieldDefs['type']) || empty($fieldDefs['unique'])) {
-                    continue;
-                }
-                if (in_array($fieldDefs['type'], ['rangeInt', 'rangeFloat'])) {
-                    $uniqueColumns[SchemaUtils::generateIndexName('unique_' . $field)] = [
-                        'deleted',
-                        Util::toUnderScore($field) . '_from',
-                        Util::toUnderScore($field) . '_to',
-                    ];
-                }
-            }
-
             if (!empty($uniqueColumns)) {
                 foreach($uniqueColumns as $uniqueItem) {
                     $tables[$entityName]->addUniqueIndex($uniqueItem);
                 }
+            }
+
+            foreach ($this->getMetadata()->get(['entityDefs', $entityName, 'uniqueIndexes'], []) as $indexName => $indexColumns) {
+                $tables[$entityName]->addUniqueIndex($indexColumns, SchemaUtils::generateIndexName($indexName));
             }
         }
 
