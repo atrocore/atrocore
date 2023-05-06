@@ -296,7 +296,12 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                                     $('.popover').popover('hide');
                                 }
                             });
+                            $('.fas.fa-info-circle').one('click', function (e) {
+                                $('body').click();
+                            });
 
+                        }).on('hidden.bs.popover', function (e) {
+                            $(e.target).data('bs.popover').inState.click = false;
                         });                        
                     }
                 }, this);

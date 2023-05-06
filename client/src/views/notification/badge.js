@@ -85,9 +85,9 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
         },
 
         showNotRead: function (count) {
-            if (this.$badge.length > 0) {
+            if (this.$badge && this.$badge.length > 0) {
                 this.$badge.attr('title', this.translate('New notifications') + ': ' + count);
-                this.$number.removeClass('hidden').html(count.toString());
+                this.$number?.removeClass('hidden').html(count.toString());
             }
         },
 
