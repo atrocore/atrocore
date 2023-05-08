@@ -42,8 +42,6 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
 
         editTemplate: 'fields/range-int/edit',
 
-        validations: ['required', 'int', 'range', 'order'],
-
         data: function () {
             var data = Dep.prototype.data.call(this);
             data.name = this.name;
@@ -56,6 +54,7 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
         init: function () {
             let fieldName = this.options.name || this.options.defs.name;
 
+            this.rangeField = fieldName;
             this.fromField = fieldName + 'From';
             this.toField = fieldName + 'To';
 
@@ -95,6 +94,8 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
                     this.thousandSeparator = this.getConfig().get('thousandSeparator');
                 }
             }
+
+            this.validations = ['required', 'int', 'range', 'order'];
         },
 
         afterRender: function () {
@@ -114,7 +115,7 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
 
         validateRequired: function () {
             var validate = function (name) {
-                if (this.model.isRequired(name)) {
+                if (this.isRequired()) {
                     if (this.model.get(name) === null) {
                         var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
                         this.showValidationMessage(msg, '[name="'+name+'"]');
@@ -203,17 +204,11 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
             }
         },
 
-        isRequired: function () {
-            return this.model.getFieldParam(this.fromField, 'required') ||
-                   this.model.getFieldParam(this.toField, 'required');
-        },
-
         parse: function (value) {
             return Int.prototype.parse.call(this, value);
         },
 
         formatNumber: function (value) {
-            return value;
             return Int.prototype.formatNumber.call(this, value);
         },
 
