@@ -26,10 +26,6 @@
       "type": "int"
     },
     {
-      "name": "amountOfDigitsAfterComma",
-      "type": "int"
-    },
-    {
       "name": "audited",
       "type": "bool"
     },
