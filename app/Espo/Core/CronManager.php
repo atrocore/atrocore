@@ -35,6 +35,7 @@ namespace Espo\Core;
 
 use Espo\Core\Utils\Json;
 use Espo\Core\Exceptions\NotFound;
+use Espo\ORM\Entity;
 
 class CronManager extends Injectable
 {
@@ -223,7 +224,7 @@ class CronManager extends Injectable
     /**
      * Run Service
      *
-     * @param  array  $job
+     * @param Entity $job
      *
      * @return void
      */
