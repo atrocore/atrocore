@@ -91,7 +91,6 @@ class Metadata extends AbstractListener
                 }
 
                 $data['entityDefs'][$entity]['fields'][$field]['filterDisabled'] = true;
-                $data['entityDefs'][$entity]['fields'][$field]['exportDisabled'] = true;
                 $data['entityDefs'][$entity]['fields'][$field]['importDisabled'] = true;
 
                 $fieldFrom = $field . 'From';
