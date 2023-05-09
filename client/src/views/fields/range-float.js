@@ -65,6 +65,15 @@ Espo.define('views/fields/range-float', ['views/fields/range-int', 'views/fields
             return Float.prototype.formatNumber.call(this, value);
         },
 
+        data: function () {
+            let data = Dep.prototype.data.call(this);
+
+            data.fromValue = isNaN(this.model.get(this.fromField)) ? null : this.formatNumber(this.model.get(this.fromField));
+            data.toValue = isNaN(this.model.get(this.toField)) ? null : this.formatNumber(this.model.get(this.toField));
+
+            return data;
+        },
+
     });
 });
 
