@@ -478,9 +478,25 @@ Espo.define('views/record/search', 'view', function (Dep) {
             var isPreset = !(this.primary === this.presetName);
 
             if (forceClearAdvancedFilters || wasPreset || isPreset || Object.keys(advanced).length) {
-                if (Object.keys(this.pinned).length === 0) {
-                    this.removeFilters();
-                    this.advanced = advanced;
+                // pinned and unpinned objects
+                const unpinned = {}
+                const pinned = {}
+                Object.keys(this.advanced).forEach((key) => {
+                    if (this.pinned[key]) pinned[key] = this.advanced[key]
+                    else unpinned[key] = this.advanced[key]
+                })
+
+                Object.keys(unpinned).forEach((name) => {
+                    // remove filters from interface
+                    var container = this.getView('filter-' + name).$el.closest('div.filter');
+                    this.clearView('filter-' + name);
+                    container.remove();
+                })
+
+                this.advanced = pinned
+                if (isPreset) {
+                    // complete the list of filter
+                    this.advanced = _.extend(Espo.Utils.clone(advanced), pinned);
                 }
             }
 
