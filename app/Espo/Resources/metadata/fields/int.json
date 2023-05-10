@@ -1,40 +1,45 @@
 {
-   "params":[
-      {
-         "name":"required",
-         "type":"bool",
-         "default":false
-      },
-      {
-         "name":"default",
-         "type":"int"
-      },
-      {
-         "name":"min",
-         "type":"int"
-      },
-      {
-         "name":"max",
-         "type":"int"
-      },
-      {
-         "name":"disableFormatting",
-         "type":"bool"
-      },
-      {
-         "name":"audited",
-         "type":"bool"
-      },
-      {
-         "name":"readOnly",
-         "type":"bool"
-      },
-      {
-         "name": "unique",
-         "type": "bool"
-      }
-   ],
-   "filter": true,
-   "textFilter": true,
-   "personalData": true
+  "params": [
+    {
+      "name": "required",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "default",
+      "type": "int"
+    },
+    {
+      "name": "measure",
+      "type": "link",
+      "entity": "Measure"
+    },
+    {
+      "name": "min",
+      "type": "int"
+    },
+    {
+      "name": "max",
+      "type": "int"
+    },
+    {
+      "name": "disableFormatting",
+      "type": "bool"
+    },
+    {
+      "name": "audited",
+      "type": "bool"
+    },
+    {
+      "name": "readOnly",
+      "type": "bool"
+    },
+    {
+      "name": "unique",
+      "type": "bool"
+    }
+  ],
+  "filter": true,
+  "textFilter": true,
+  "personalData": true
 }
