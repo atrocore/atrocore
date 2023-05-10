@@ -159,10 +159,6 @@ class Config
             return $this->container->get('moduleManager')->isLoaded();
         }
 
-        if ($name == 'unitsOfMeasure') {
-            return $this->getUnitsOfMeasure();
-        }
-
         if (in_array($name, array_merge(['locales'], array_keys(self::DEFAULT_LOCALE)))) {
             return $this->loadLocales()[$name];
         }
@@ -408,7 +404,6 @@ class Config
     public function getData($isAdmin = null)
     {
         $data = array_merge($this->loadConfig(), $this->loadLocales());
-        $data['unitsOfMeasure'] = $this->getUnitsOfMeasure();
 
         $data = $this->prepareStylesheetConfigForOutput($data);
 
@@ -473,42 +468,11 @@ class Config
         return array_merge($this->adminItems, $data['userItems']);
     }
 
-
-    /**
-     * Check if an item is allowed to get and save
-     *
-     * @param $name
-     * @param $isAdmin
-     * @return bool
-     */
-    protected function isAllowed($name, $isAdmin = false)
-    {
-        if (in_array($name, $this->getRestrictItems($isAdmin))) {
-            return false;
-        }
-
-        return true;
-    }
-
     public function getSiteUrl()
     {
         return rtrim($this->get('siteUrl'), '/');
     }
 
-    protected function getUnitsOfMeasure()
-    {
-        if (!$this->get('isInstalled', false) || !$this->container->get('user') || !$this->container->get('user')->isFetched()) {
-            return new \stdClass();
-        }
-
-        return $this->container->get('serviceFactory')->create('Measure')->getUnitsOfMeasure();
-    }
-
-    /**
-     * @param array $data
-     *
-     * @return array
-     */
     protected function prepareStylesheetConfigForOutput(array $data): array
     {
         $theme = $this->get('theme');
@@ -532,11 +496,6 @@ class Config
         return $data;
     }
 
-    /**
-     * @param array $data
-     *
-     * @return array
-     */
     protected function prepareStylesheetConfigForSave(array $data): array
     {
         $currTheme = $this->get('theme');
@@ -567,25 +526,16 @@ class Config
         return $data;
     }
 
-    /**
-     * @return string|null
-     */
     protected function getCustomStylesheetFilename(): ?string
     {
         return $this->getMetadata()->get(['themes', $this->get('theme'), 'customStylesheetName']);
     }
 
-    /**
-     * @return string
-     */
     protected function getCustomStylesheetPath(): string
     {
         return $this->customStylesheetDir . $this->getCustomStylesheetFilename();
     }
 
-    /**
-     * @return Metadata
-     */
     protected function getMetadata(): Metadata
     {
         return $this->container->get('metadata');

@@ -36,53 +36,7 @@ declare(strict_types=1);
 namespace Espo\Services;
 
 use Espo\Core\Templates\Services\Base;
-use Espo\Core\Utils\Json;
-use Espo\Core\Utils\Util;
 
-/**
- * Class Measure
- */
 class Measure extends Base
 {
-    public function getUnitsOfMeasure()
-    {
-        $cacheName = 'measures_' . $this->getUser()->get('id');
-
-        $result = $this->getMetadata()->getDataManager()->getCacheData($cacheName, false);
-        if (!empty($result)) {
-            return $result;
-        }
-
-        $data = $this->findEntities(['maxSize' => \PHP_INT_MAX]);
-
-        $result = [];
-        if (isset($data['collection'])) {
-            $inputLanguageList = $this->getConfig()->get('inputLanguageList', []);
-            foreach ($data['collection'] as $measure) {
-                if (empty($units = $measure->get('units')) || count($units) == 0) {
-                    continue 1;
-                }
-
-                $result[$measure->get('name')]['unitListData'] = [];
-                foreach ($units as $unit) {
-                    $result[$measure->get('name')]['unitList'][] = $unit->get('name');
-                    $result[$measure->get('name')]['unitListData'][$unit->get('id')] = [
-                        'id'          => $unit->get('id'),
-                        'name'        => $unit->get('name'),
-                        'isDefault'   => $unit->get('isDefault'),
-                        'multiplier'  => $unit->get('multiplier'),
-                        'convertToId' => $unit->get('convertToId'),
-                    ];
-                }
-
-                foreach ($inputLanguageList as $locale) {
-                    $result[$measure->get('name')]['unitListTranslates'][$locale] = array_column($units->toArray(), 'name' . ucfirst(Util::toCamelCase(strtolower($locale))));
-                }
-            }
-
-            $this->getMetadata()->getDataManager()->setCacheData($cacheName, $result);
-        }
-
-        return Json::decode(Json::encode($result));
-    }
 }
