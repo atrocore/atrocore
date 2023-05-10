@@ -555,6 +555,9 @@ abstract class Entity implements IEntity
     {
         foreach ($this->fields as $field => $defs) {
             $fieldData = $this->getEntityManager()->getEspoMetadata()->get(['entityDefs', $this->entityType, 'fields', $field], []);
+            if (!empty($fieldData['relationVirtualField'])) {
+                continue;
+            }
             if (array_key_exists('default', $defs)) {
                 $default = $defs['default'];
 
