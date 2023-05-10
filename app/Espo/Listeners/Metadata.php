@@ -68,7 +68,23 @@ class Metadata extends AbstractListener
 
         $this->prepareRanges($data);
 
+        $this->prepareUnit($data);
+
         $event->setArgument('data', $data);
+    }
+
+    protected function prepareUnit(array &$data): void
+    {
+        foreach ($data['entityDefs'] as $entity => $entityDefs) {
+            if (empty($entityDefs['fields'])) {
+                continue 1;
+            }
+            foreach ($entityDefs['fields'] as $field => $fieldDefs) {
+                if (empty($fieldDefs['type']) || !in_array($fieldDefs['type'], ['int', 'float', 'rangeInt', 'rangeFloat'])) {
+                    continue;
+                }
+            }
+        }
     }
 
     protected function prepareRanges(array &$data): void
