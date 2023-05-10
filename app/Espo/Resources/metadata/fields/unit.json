@@ -68,6 +68,7 @@
     }
   },
   "filter": true,
+  "notCreatable": true,
   "view": "views/fields/unit",
   "fieldDefs": {
     "type": "float"
