@@ -403,6 +403,7 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
         },
 
         htmlToPlain: function (text) {
+            if(text==null) return null;
         	text = text || '';
             var value = text.replace(/<br\s*\/?>/mg, '\n');
 
@@ -433,9 +434,15 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
             var data = {};
             if (!this.model.has('isHtml') || this.model.get('isHtml')) {
                 data[this.name] = this.$summernote.summernote('code');
+                //check if empty
+                if(!$(data[this.name]).text()) data[this.name] = null;
             } else {
                 data[this.name] = this.$element ? this.$element.val() : null;
+                //check if empty
+                if(data[this.name]==='') data[this.name] = null;
             }
+
+            
 
             if (this.model.has('isHtml')) {
             	if (this.model.get('isHtml')) {
