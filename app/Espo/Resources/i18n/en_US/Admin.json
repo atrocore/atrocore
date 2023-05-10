@@ -126,6 +126,7 @@
     "multiLanguage": "Languages"
   },
   "fields": {
+    "defaultUnit": "Default Unit",
     "isMultilang": "Multilingual",
     "fontSize": "Font size",
     "assetType": "Asset type",

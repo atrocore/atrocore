@@ -101,6 +101,7 @@
     "relationshipsPortal": "Зв'язки (Портал)"
   },
   "fields": {
+    "defaultUnit": "Одиниця виміру за замовченням",
     "isMultilang": "Багатомовний",
     "fontSize": "Розмір шрифту",
     "assetType": "Тип ресурсу",
