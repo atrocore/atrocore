@@ -442,8 +442,6 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                 if(data[this.name]==='') data[this.name] = null;
             }
 
-            
-
             if (this.model.has('isHtml')) {
             	if (this.model.get('isHtml')) {
             		data[this.name + 'Plain'] = this.htmlToPlain(data[this.name]);
