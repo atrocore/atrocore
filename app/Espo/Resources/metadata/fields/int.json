@@ -6,13 +6,18 @@
       "default": false
     },
     {
+      "name": "measure",
+      "type": "link",
+      "entity": "Measure"
+    },
+    {
       "name": "default",
       "type": "int"
     },
     {
-      "name": "measure",
-      "type": "link",
-      "entity": "Measure"
+      "name": "defaultUnit",
+      "type": "varchar",
+      "view": "views/admin/field-manager/fields/default-unit"
     },
     {
       "name": "min",
