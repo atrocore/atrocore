@@ -51,6 +51,15 @@ class Measure extends Base
         $this->getInjection('dataManager')->clearCache();
     }
 
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        if ($entity->get('code') === '') {
+            $entity->set('code', null);
+        }
+
+        parent::beforeSave($entity, $options);
+    }
+
     /**
      * @inheritDoc
      */
