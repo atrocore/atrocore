@@ -3,6 +3,7 @@
     "name": {
       "type": "varchar",
       "required": true,
+      "requiredForMultilang": false,
       "trim": true,
       "isMultilang": true,
       "maxLength": 255
