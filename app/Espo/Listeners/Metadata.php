@@ -75,14 +75,36 @@ class Metadata extends AbstractListener
 
     protected function prepareUnit(array &$data): void
     {
-        foreach ($data['entityDefs'] as $entity => $entityDefs) {
+        foreach ($data['entityDefs'] as $entityType => $entityDefs) {
             if (empty($entityDefs['fields'])) {
                 continue 1;
             }
             foreach ($entityDefs['fields'] as $field => $fieldDefs) {
+                if (empty($fieldDefs['measureId'])) {
+                    continue;
+                }
+                if (!empty($fieldDefs['notStorable']) || !empty($fieldDefs['relationVirtualField'])) {
+                    continue;
+                }
                 if (empty($fieldDefs['type']) || !in_array($fieldDefs['type'], ['int', 'float', 'rangeInt', 'rangeFloat'])) {
                     continue;
                 }
+
+                $data['entityDefs'][$entityType]['fields'][$field . 'Unit'] = [
+                    "type"           => "varchar",
+                    "notStorable"    => true,
+                    "required"       => !empty($fieldDefs['required']),
+                    "filterDisabled" => true,
+                    "emHidden"       => true
+                ];
+
+                $data['entityDefs'][$entityType]['fields'][$field . 'UnitId'] = [
+                    "type"      => "varchar",
+                    "view"      => "views/fields/enum-unit",
+                    "measureId" => $fieldDefs['measureId'],
+                    "required"  => !empty($fieldDefs['required']),
+                    "emHidden"  => true
+                ];
             }
         }
     }

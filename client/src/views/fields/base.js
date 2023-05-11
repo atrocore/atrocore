@@ -74,7 +74,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         isRequired: function () {
             return this.params.required;
-        },/**
+        }, /**
          * Get cell element. Works only after rendered.
          * {jQuery}
          */
@@ -138,7 +138,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         setNotReadOnly: function () {
             if (this.readOnlyLocked) return;
             this.readOnly = false;
-        },/**
+        }, /**
          * Get label element. Works only after rendered.
          * {jQuery}
          */
@@ -147,7 +147,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 this.$label = this.$el.parent().children('label');
             }
             return this.$label;
-        },/**
+        }, /**
          * Hide field and label. Works only after rendered.
          */
         hide: function () {
@@ -155,7 +155,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             var $cell = this.getCellElement();
             $cell.children('label').addClass('hidden');
             $cell.addClass('hidden-cell');
-        },/**
+        }, /**
          * Show field and label. Works only after rendered.
          */
         show: function () {
@@ -302,7 +302,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
                         }).on('hidden.bs.popover', function (e) {
                             $(e.target).data('bs.popover').inState.click = false;
-                        });                        
+                        });
                     }
                 }, this);
                 this.on('remove', function () {
@@ -566,9 +566,11 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }
         },
 
-        setup: function () {},
+        setup: function () {
+        },
 
-        setupSearch: function () {},
+        setupSearch: function () {
+        },
 
         getAttributeList: function () {
             return this.getFieldManager().getAttributes(this.fieldType, this.name);
@@ -589,7 +591,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 if (_.isEqual(prev[attr], data[attr])) {
                     continue;
                 }
-                (attrs || (attrs = {}))[attr] =    data[attr];
+                (attrs || (attrs = {}))[attr] = data[attr];
             }
 
             if (!attrs) {
@@ -791,7 +793,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         prepareOptionsForExtensibleEnum() {
             let extensibleEnumId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'extensibleEnumId']);
-            if (this.params.extensibleEnumId){
+            if (this.params.extensibleEnumId) {
                 extensibleEnumId = this.params.extensibleEnumId;
             }
 
@@ -827,6 +829,28 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 this.params.optionColors.push(option.color);
                 this.translatedOptions[option.id] = option.name ? option.name : ' ';
             });
+        },
+
+        getMeasureUnits(measureId) {
+            if (!measureId) {
+                return [];
+            }
+
+            let key = 'measure_' + measureId;
+
+            if (!Espo[key]) {
+                Espo[key] = [];
+                this.ajaxGetRequest(`Measure/${measureId}/units`, {
+                    sortBy: "createdAt",
+                    asc: true
+                }, {async: false}).then(res => {
+                    if (res.list) {
+                        Espo[key] = res.list;
+                    }
+                });
+            }
+
+            return Espo[key];
         },
 
     });
