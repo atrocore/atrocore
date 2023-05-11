@@ -90,20 +90,27 @@ class Metadata extends AbstractListener
                     continue;
                 }
 
-                $data['entityDefs'][$entityType]['fields'][$field . 'Unit'] = [
-                    "type"           => "varchar",
-                    "notStorable"    => true,
-                    "required"       => !empty($fieldDefs['required']),
-                    "filterDisabled" => true,
-                    "emHidden"       => true
-                ];
-
                 $data['entityDefs'][$entityType]['fields'][$field . 'UnitId'] = [
                     "type"      => "varchar",
-                    "view"      => "views/fields/enum-unit",
+                    "view"      => "views/fields/enum-unit-id",
                     "measureId" => $fieldDefs['measureId'],
                     "required"  => !empty($fieldDefs['required']),
                     "emHidden"  => true
+                ];
+
+                $data['entityDefs'][$entityType]['fields'][$field . 'Unit'] = [
+                    "type"                      => "varchar",
+                    "notStorable"               => true,
+                    "view"                      => "views/fields/enum-unit",
+                    "measureId"                 => $fieldDefs['measureId'],
+                    "required"                  => !empty($fieldDefs['required']),
+                    "layoutListDisabled"        => true,
+                    "layoutListSmallDisabled"   => true,
+                    "layoutDetailDisabled"      => true,
+                    "layoutDetailSmallDisabled" => true,
+                    "massUpdateDisabled"        => true,
+                    "filterDisabled"            => true,
+                    "emHidden"                  => true
                 ];
             }
         }

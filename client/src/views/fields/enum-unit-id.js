@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/fields/enum-unit', 'views/fields/enum', Dep => {
+Espo.define('views/fields/enum-unit-id', 'views/fields/enum', Dep => {
 
     return Dep.extend({
 
@@ -47,8 +47,8 @@ Espo.define('views/fields/enum-unit', 'views/fields/enum', Dep => {
 
             if (measureId) {
                 this.getMeasureUnits(measureId).forEach(option => {
-                    this.params.options.push(option.name);
-                    this.translatedOptions[option.name] = option.name ? option.name : ' ';
+                    this.params.options.push(option.id);
+                    this.translatedOptions[option.id] = option.name ? option.name : ' ';
                 });
             }
         },
