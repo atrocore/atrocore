@@ -50,6 +50,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         name: null,
 
+        measureId: null,
+
         defs: null,
 
         params: null,
@@ -567,6 +569,10 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         setup: function () {
+            this.measureId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'measureId']);
+            if (this.params.measureId) {
+                this.measureId = this.params.measureId;
+            }
         },
 
         setupSearch: function () {
@@ -851,6 +857,18 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }
 
             return Espo[key];
+        },
+
+        loadUnitOptions() {
+            this.unitList = [''];
+            this.unitListTranslates = {'': ''};
+
+            if (this.measureId) {
+                this.getMeasureUnits(this.measureId).forEach(unit => {
+                    this.unitList.push(unit.id);
+                    this.unitListTranslates[unit.id] = unit.name;
+                });
+            }
         },
 
     });

@@ -54,6 +54,12 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
+            if (this.measureId) {
+                this.unitFieldName = this.name + 'UnitId';
+                this.loadUnitOptions();
+            }
+
             this.setupMaxLength();
 
             if (this.getPreferences().has('thousandSeparator')) {
@@ -93,6 +99,15 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
                 data.isNotEmpty = true;
             }
             data.valueIsSet = this.model.has(this.name);
+
+            if (this.measureId) {
+                data.unitFieldName = this.unitFieldName;
+                data.unitList = this.unitList;
+                data.unitListTranslates = this.unitListTranslates;
+                data.unitValue = this.model.get(this.unitFieldName);
+                data.unitValueTranslate = this.unitListTranslates[data.unitValue] || data.unitValue;
+            }
+
             return data;
         },
 
@@ -242,10 +257,17 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
         },
 
         fetch: function () {
-            var value = this.$el.find('[name="' + this.name + '"]').val();
+            let value = this.$el.find('[name="' + this.name + '"]').val();
             value = this.parse(value);
-            var data = {};
+
+            let data = {};
             data[this.name] = value;
+
+            if (this.measureId) {
+                let $unit = this.$el.find(`[name="${this.unitFieldName}"]`);
+                data[this.unitFieldName] = $unit ? $unit.val() : null;
+            }
+
             return data;
         },
 
