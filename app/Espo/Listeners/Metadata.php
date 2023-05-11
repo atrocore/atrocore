@@ -103,6 +103,8 @@ class Metadata extends AbstractListener
                     "notStorable"               => true,
                     "view"                      => "views/fields/enum-unit",
                     "measureId"                 => $fieldDefs['measureId'],
+                    "virtualUnit"               => true,
+                    "mainField"                 => $field,
                     "required"                  => !empty($fieldDefs['required']),
                     "layoutListDisabled"        => true,
                     "layoutListSmallDisabled"   => true,

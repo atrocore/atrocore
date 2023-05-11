@@ -112,6 +112,8 @@ class Record extends \Espo\Core\Services\Base
 
     protected $forceSelectAllAttributes = false;
 
+    protected array $measures = [];
+
     protected string $pseudoTransactionId = '';
 
     protected int $maxMassUpdateCount = 20;
@@ -1135,6 +1137,19 @@ class Record extends \Espo\Core\Services\Base
                 continue;
             }
 
+            /**
+             * Convert unit to unitId for backward compatibility
+             */
+            if (!empty($fieldDefs['virtualUnit']) && !property_exists($data, $fieldDefs['mainField'] . 'UnitId')) {
+                $units = $this->getUnitsByMeasureId($fieldDefs['measureId']);
+                foreach ($units as $unit) {
+                    if ($unit->get('name') === $value) {
+                        $data->{$fieldDefs['mainField'] . 'UnitId'} = $unit->get('id');
+                        break;
+                    }
+                }
+            }
+
             switch ($fieldDefs['type']) {
                 case 'enum':
                     $data->{$field} = $this->modifyEnumValue($value, $field);
@@ -1150,6 +1165,18 @@ class Record extends \Espo\Core\Services\Base
                     break;
             }
         }
+
+//        foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []) as $field => $fieldDefs) {
+//            if (!empty($fieldDefs['virtualUnit']) && !$entity->has($field)) {
+//                $unitId = $entity->get($fieldDefs['mainField'] . 'UnitId');
+//                if (!empty($unitId)) {
+//                    $units = $this->getUnitsByMeasureId($fieldDefs['measureId']);
+//                    if (isset($units[$unitId])) {
+//                        $entity->set($field, $units[$unitId]->get('name'));
+//                    }
+//                }
+//            }
+//        }
     }
 
     protected function processDuplicateCheck(Entity $entity, $data)
@@ -2461,6 +2488,19 @@ class Record extends \Espo\Core\Services\Base
                 continue 1;
             }
 
+            /**
+             * Set unit name to virtual field for backward compatibility
+             */
+            if (!empty($defs['virtualUnit']) && !$entity->has($name)) {
+                $unitId = $entity->get($defs['mainField'] . 'UnitId');
+                if (!empty($unitId)) {
+                    $units = $this->getUnitsByMeasureId($defs['measureId']);
+                    if (isset($units[$unitId])) {
+                        $entity->set($name, $units[$unitId]->get('name'));
+                    }
+                }
+            }
+
             switch ($defs['type']) {
                 case 'unit':
                     if ($entity->has($name) && !empty($defs['measure'])) {
@@ -3237,6 +3277,21 @@ class Record extends \Espo\Core\Services\Base
             'pseudoTransactionId'      => $this->getPseudoTransactionId(),
             'pseudoTransactionManager' => $this->getPseudoTransactionManager()
         ];
+    }
+
+    protected function getUnitsByMeasureId(string $measureId): array
+    {
+        if (!isset($this->measures[$measureId])) {
+            $units = $this->getEntityManager()->getRepository('Unit')
+                ->where(['measureId' => $measureId])
+                ->find();
+            $this->measures[$measureId] = [];
+            foreach ($units as $unit) {
+                $this->measures[$measureId][$unit->get('id')] = $unit;
+            }
+        }
+
+        return $this->measures[$measureId];
     }
 
     protected function init()
