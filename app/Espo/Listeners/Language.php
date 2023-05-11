@@ -70,7 +70,7 @@ class Language extends AbstractListener
                     }
 
                     if (!empty($fieldDefs['relationshipFilterField'])) {
-                        $filterField = $this->getFieldLabel($data, $locale, $entity, $fieldDefs['relationshipFilterField']);
+                        $filterField = $this->getLabel($data, $locale, $entity, $fieldDefs['relationshipFilterField']);
 
                         if (!empty($data[$locale]['Global']['scopeNamesPlural'][$fieldDefs['entity']])) {
                             $filterEntity = $data[$locale]['Global']['scopeNamesPlural'][$fieldDefs['entity']];
@@ -86,11 +86,17 @@ class Language extends AbstractListener
                     if (!empty($fieldDefs['relationVirtualField'])) {
                         $parts = explode(self::VIRTUAL_FIELD_DELIMITER, (string)$field);
                         if (count($parts) === 2) {
-                            $fieldLabel = $this->getFieldLabel($data, $locale, $entity, $parts[0]);
+                            $fieldLabel = $this->getLabel($data, $locale, $entity, $parts[0]);
                             $relatedFieldEntity = $this->getMetadata()->get(['entityDefs', $entity, 'links', $parts[0], 'entity']);
-                            $relatedFieldLabel = $this->getFieldLabel($data, $locale, (string)$relatedFieldEntity, $parts[1]);
+                            $relatedFieldLabel = $this->getLabel($data, $locale, (string)$relatedFieldEntity, $parts[1]);
                             $data[$locale][$entity]['fields'][$field] = $fieldLabel . ': ' . $relatedFieldLabel;
                         }
+                    }
+
+                    if (!empty($fieldDefs['unitMainField'])) {
+                        $fieldLabel = $this->getLabel($data, $locale, $entity, $fieldDefs['unitMainField']);
+                        $unitLabel = $this->getLabel($data, $locale, $entity, 'unitPart', 'labels');
+                        $data[$locale][$entity]['fields'][$field] = $fieldLabel . ' ' . $unitLabel;
                     }
                 }
             }
@@ -132,16 +138,16 @@ class Language extends AbstractListener
         $event->setArgument('data', $data);
     }
 
-    protected function getFieldLabel(array $data, string $locale, string $entityType, string $key): string
+    protected function getLabel(array $data, string $locale, string $entityType, string $key, string $category = 'fields'): string
     {
-        if (isset($data[$locale][$entityType]['fields'][$key])) {
-            $fieldLabel = $data[$locale][$entityType]['fields'][$key];
-        } elseif (isset($data[$locale]['Global']['fields'][$key])) {
-            $fieldLabel = $data[$locale]['Global']['fields'][$key];
-        } elseif (isset($data['en_US'][$entityType]['fields'][$key])) {
-            $fieldLabel = $data['en_US'][$entityType]['fields'][$key];
-        } elseif (isset($data['en_US']['Global']['fields'][$key])) {
-            $fieldLabel = $data['en_US']['Global']['fields'][$key];
+        if (isset($data[$locale][$entityType][$category][$key])) {
+            $fieldLabel = $data[$locale][$entityType][$category][$key];
+        } elseif (isset($data[$locale]['Global'][$category][$key])) {
+            $fieldLabel = $data[$locale]['Global'][$category][$key];
+        } elseif (isset($data['en_US'][$entityType][$category][$key])) {
+            $fieldLabel = $data['en_US'][$entityType][$category][$key];
+        } elseif (isset($data['en_US']['Global'][$category][$key])) {
+            $fieldLabel = $data['en_US']['Global'][$category][$key];
         } else {
             $fieldLabel = $key;
         }

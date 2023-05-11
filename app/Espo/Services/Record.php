@@ -1140,11 +1140,11 @@ class Record extends \Espo\Core\Services\Base
             /**
              * Convert unit to unitId for backward compatibility
              */
-            if (!empty($fieldDefs['virtualUnit']) && !property_exists($data, $fieldDefs['mainField'] . 'UnitId')) {
+            if (!empty($fieldDefs['virtualUnit']) && !property_exists($data, $fieldDefs['unitMainField'] . 'UnitId')) {
                 $units = $this->getUnitsByMeasureId($fieldDefs['measureId']);
                 foreach ($units as $unit) {
                     if ($unit->get('name') === $value) {
-                        $data->{$fieldDefs['mainField'] . 'UnitId'} = $unit->get('id');
+                        $data->{$fieldDefs['unitMainField'] . 'UnitId'} = $unit->get('id');
                         break;
                     }
                 }
@@ -1165,18 +1165,6 @@ class Record extends \Espo\Core\Services\Base
                     break;
             }
         }
-
-//        foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []) as $field => $fieldDefs) {
-//            if (!empty($fieldDefs['virtualUnit']) && !$entity->has($field)) {
-//                $unitId = $entity->get($fieldDefs['mainField'] . 'UnitId');
-//                if (!empty($unitId)) {
-//                    $units = $this->getUnitsByMeasureId($fieldDefs['measureId']);
-//                    if (isset($units[$unitId])) {
-//                        $entity->set($field, $units[$unitId]->get('name'));
-//                    }
-//                }
-//            }
-//        }
     }
 
     protected function processDuplicateCheck(Entity $entity, $data)
@@ -2492,7 +2480,7 @@ class Record extends \Espo\Core\Services\Base
              * Set unit name to virtual field for backward compatibility
              */
             if (!empty($defs['virtualUnit']) && !$entity->has($name)) {
-                $unitId = $entity->get($defs['mainField'] . 'UnitId');
+                $unitId = $entity->get($defs['unitMainField'] . 'UnitId');
                 if (!empty($unitId)) {
                     $units = $this->getUnitsByMeasureId($defs['measureId']);
                     if (isset($units[$unitId])) {

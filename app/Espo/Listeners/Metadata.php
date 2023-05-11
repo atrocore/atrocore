@@ -91,11 +91,12 @@ class Metadata extends AbstractListener
                 }
 
                 $data['entityDefs'][$entityType]['fields'][$field . 'UnitId'] = [
-                    "type"      => "varchar",
-                    "view"      => "views/fields/enum-unit-id",
-                    "measureId" => $fieldDefs['measureId'],
-                    "required"  => !empty($fieldDefs['required']),
-                    "emHidden"  => true
+                    "type"          => "varchar",
+                    "view"          => "views/fields/enum-unit-id",
+                    "measureId"     => $fieldDefs['measureId'],
+                    "unitMainField" => $field,
+                    "required"      => !empty($fieldDefs['required']),
+                    "emHidden"      => true
                 ];
 
                 $data['entityDefs'][$entityType]['fields'][$field . 'Unit'] = [
@@ -104,7 +105,7 @@ class Metadata extends AbstractListener
                     "view"                      => "views/fields/enum-unit",
                     "measureId"                 => $fieldDefs['measureId'],
                     "virtualUnit"               => true,
-                    "mainField"                 => $field,
+                    "unitMainField"             => $field,
                     "required"                  => !empty($fieldDefs['required']),
                     "layoutListDisabled"        => true,
                     "layoutListSmallDisabled"   => true,
