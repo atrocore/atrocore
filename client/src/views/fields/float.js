@@ -138,14 +138,6 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
             return value;
         },
 
-        fetch: function () {
-            var value = this.$el.find('[name="' + this.name + '"]').val();
-            value = this.parse(value);
-
-            var data = {};
-            data[this.name] = value;
-            return data;
-        },
     });
 });
 
