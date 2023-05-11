@@ -52,6 +52,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         measureId: null,
 
+        defaultUnit: null,
+
         defs: null,
 
         params: null,
@@ -572,6 +574,11 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             this.measureId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'measureId']);
             if (this.params.measureId) {
                 this.measureId = this.params.measureId;
+            }
+
+            this.defaultUnit = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'defaultUnit']);
+            if (this.params.defaultUnit) {
+                this.defaultUnit = this.params.defaultUnit;
             }
         },
 

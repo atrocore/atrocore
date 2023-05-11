@@ -58,6 +58,9 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
             if (this.measureId) {
                 this.unitFieldName = this.name + 'UnitId';
                 this.loadUnitOptions();
+                if (this.model.isNew() && this.defaultUnit) {
+                    this.model.set(this.unitFieldName, this.defaultUnit);
+                }
             }
 
             this.setupMaxLength();
