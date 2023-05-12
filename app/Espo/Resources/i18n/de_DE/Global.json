@@ -410,7 +410,8 @@
     "assignedToMe": "Mir zugewiesen",
     "ownedByMe": "Gehört mir",
     "followed": "abonniert",
-    "onlyActive": "Aktiv"
+    "onlyActive": "Aktiv",
+    "withArchived": "Inkl. archivierte"
   },
   "presetFilters": {
     "followed": "abonniert",
@@ -430,6 +431,7 @@
     "convertCurrency": "Währung umrechnen"
   },
   "fields": {
+    "isArchived": "Archiviert",
     "code": "Code",
     "extensibleEnum": "Liste",
     "sortOrder": "Sortierreihenfolge",

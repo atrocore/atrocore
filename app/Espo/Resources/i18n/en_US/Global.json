@@ -386,7 +386,8 @@
     "onlyMy": "My",
     "assignedToMe": "Assigned to me",
     "ownedByMe": "Owned by me",
-    "followed": "Followed"
+    "followed": "Followed",
+    "withArchived": "Incl. archived"
   },
   "presetFilters": {
     "followed": "Followed",
@@ -406,6 +407,7 @@
     "convertCurrency": "Convert Currency"
   },
   "fields": {
+    "isArchived": "Archived",
     "code": "Code",
     "extensibleEnum": "List",
     "sortOrder": "Sort Order",

@@ -48,15 +48,15 @@ Espo.define('treo-core:views/site/header', 'class-replace!treo-core:views/site/h
 
         getPublicData() {
             setInterval(() => {
-                $.ajax('data/publicData.json?silent=true&time=' + $.now(), {local: true}).done(response => {
-                    Backbone.Events.trigger('publicData', response);
-                    if (response.dataTimestamp) {
-                        $.each(response, (k, v) => {
-                            localStorage.setItem('pd_' + k, v);
-                        });
-                        this.isNeedToReloadPage();
-                    }
-                });
+                // $.ajax('data/publicData.json?silent=true&time=' + $.now(), {local: true}).done(response => {
+                //     Backbone.Events.trigger('publicData', response);
+                //     if (response.dataTimestamp) {
+                //         $.each(response, (k, v) => {
+                //             localStorage.setItem('pd_' + k, v);
+                //         });
+                //         this.isNeedToReloadPage();
+                //     }
+                // });
             }, 1000);
         },
 

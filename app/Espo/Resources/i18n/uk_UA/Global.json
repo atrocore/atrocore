@@ -388,7 +388,8 @@
     "assignedToMe": "Призначений мені",
     "ownedByMe": "Належить мені",
     "onlyMy": "Тільки мої",
-    "followed": "Ви підписані"
+    "followed": "Ви підписані",
+    "withArchived": "Вкл. заархівовані"
   },
   "presetFilters": {
     "followed": "Ви підписані",
@@ -408,6 +409,7 @@
     "removeRelation": "Видалити зв'язок"
   },
   "fields": {
+    "isArchived": "Заархівованo",
     "code": "Код",
     "extensibleEnum": "Список",
     "sortOrder": "Порядок сортування",
