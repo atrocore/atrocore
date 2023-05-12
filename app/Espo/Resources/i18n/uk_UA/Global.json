@@ -388,10 +388,10 @@
     "assignedToMe": "Призначений мені",
     "ownedByMe": "Належить мені",
     "onlyMy": "Тільки мої",
-    "followed": "Ви підписані",
-    "withArchived": "Вкл. заархівовані"
+    "followed": "Ви підписані"
   },
   "presetFilters": {
+    "withArchived": "Всі + Заархівовані",
     "followed": "Ви підписані",
     "all": "Усі"
   },

@@ -410,10 +410,10 @@
     "assignedToMe": "Mir zugewiesen",
     "ownedByMe": "Gehört mir",
     "followed": "abonniert",
-    "onlyActive": "Aktiv",
-    "withArchived": "Inkl. archivierte"
+    "onlyActive": "Aktiv"
   },
   "presetFilters": {
+    "withArchived": "Alle + Archivierte",
     "followed": "abonniert",
     "all": "Alle"
   },

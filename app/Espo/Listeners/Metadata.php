@@ -49,12 +49,11 @@ class Metadata extends AbstractListener
         // add owner
         $data = $this->addOwner($data);
 
-        // add archive
-        $data = $this->addArchive($data);
-
         // add onlyActive bool filter
         $data = $this->addOnlyActiveFilter($data);
 
+        // add archive
+        $data = $this->addArchive($data);
         // set thumbs sizes to options of asset field type
         $data = $this->setAssetThumbSize($data);
 
@@ -456,11 +455,6 @@ class Metadata extends AbstractListener
                     $data['entityDefs'][$scope]['fields']['isArchived']['type'] = 'bool';
                 }
 
-
-                // if (!isset($data['entityDefs'][$scope]['fields']['archived']['default'])) {
-                //     $data['entityDefs'][$scope]['fields']['archived']['default'] = false;
-                // }
-
                 if (!isset($data['entityDefs'][$scope]['fields']['isArchived']['notNull'])) {
                     $data['entityDefs'][$scope]['fields']['isArchived']['notNull'] = true;
                 }
@@ -469,8 +463,7 @@ class Metadata extends AbstractListener
 
         foreach ($data['entityDefs'] as $entity => $row) {
             if (isset($row['fields']['isArchived']['type']) && $row['fields']['isArchived']['type'] == 'bool') {
-                // push
-                $data['clientDefs'][$entity]['boolFilterList'][] = 'withArchived';
+                $data['clientDefs'][$entity]['filterList'][] = 'withArchived';
             }
         }
 

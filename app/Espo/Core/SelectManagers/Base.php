@@ -774,7 +774,7 @@ class Base
         ];
     }
 
-    protected function boolFilterWithArchived(array &$result): void
+    protected function filterWithArchived(array &$result): void
     {
         $result['withArchived'] = true;
     }
