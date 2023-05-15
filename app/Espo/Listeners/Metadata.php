@@ -90,15 +90,20 @@ class Metadata extends AbstractListener
                     continue;
                 }
 
+                if (in_array($fieldDefs['type'], ['rangeInt', 'rangeFloat'])) {
+                    $data['entityDefs'][$entityType]['fields'][$field . 'From']['measureId'] = $fieldDefs['measureId'];
+                    $data['entityDefs'][$entityType]['fields'][$field . 'To']['measureId'] = $fieldDefs['measureId'];
+                }
+
                 $data['entityDefs'][$entityType]['fields'][$field . 'UnitId'] = [
-                    "type"          => "varchar",
-                    "len"           => 24,
-                    "view"          => "views/fields/enum-unit-id",
-                    "measureId"     => $fieldDefs['measureId'],
-                    "unitMainField" => $field,
-                    "required"      => !empty($fieldDefs['required']),
-                    "audited"       => !empty($fieldDefs['audited']),
-                    "emHidden"      => true
+                    "type"      => "varchar",
+                    "len"       => 24,
+                    "view"      => "views/fields/enum-unit-id",
+                    "measureId" => $fieldDefs['measureId'],
+                    "mainField" => $field,
+                    "required"  => !empty($fieldDefs['required']),
+                    "audited"   => !empty($fieldDefs['audited']),
+                    "emHidden"  => true
                 ];
 
                 $data['entityDefs'][$entityType]['fields'][$field . 'Unit'] = [
@@ -107,8 +112,8 @@ class Metadata extends AbstractListener
                     "view"                      => "views/fields/enum-unit",
                     "measureId"                 => $fieldDefs['measureId'],
                     "virtualUnit"               => true,
-                    "unitMainField"             => $field,
-                    "required"                  => !empty($fieldDefs['required']),
+                    "mainField"                 => $field,
+                    "required"                  => false,
                     "layoutListDisabled"        => true,
                     "layoutListSmallDisabled"   => true,
                     "layoutDetailDisabled"      => true,
@@ -145,6 +150,8 @@ class Metadata extends AbstractListener
                 $fieldFrom = $field . 'From';
                 $fieldTo = $field . 'To';
 
+                $data['entityDefs'][$entity]['fields'][$fieldFrom]['mainField'] = $field;
+                $data['entityDefs'][$entity]['fields'][$fieldTo]['mainField'] = $field;
                 $data['entityDefs'][$entity]['fields'][$fieldFrom]['required'] = !empty($fieldDefs['required']);
                 $data['entityDefs'][$entity]['fields'][$fieldTo]['required'] = !empty($fieldDefs['required']);
                 $data['entityDefs'][$entity]['fields'][$fieldFrom]['readOnly'] = !empty($fieldDefs['readOnly']);
