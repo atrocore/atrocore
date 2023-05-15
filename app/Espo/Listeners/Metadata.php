@@ -451,18 +451,8 @@ class Metadata extends AbstractListener
     public function addArchive(array $data){
         foreach ($data['scopes'] as $scope => $row) {
             if (!empty($row['hasArchive'])) {
-                if (!isset($data['entityDefs'][$scope]['fields']['isArchived']['type'])) {
-                    $data['entityDefs'][$scope]['fields']['isArchived']['type'] = 'bool';
-                }
-
-                if (!isset($data['entityDefs'][$scope]['fields']['isArchived']['notNull'])) {
-                    $data['entityDefs'][$scope]['fields']['isArchived']['notNull'] = true;
-                }
-            }
-        }
-
-        foreach ($data['entityDefs'] as $entity => $row) {
-            if (isset($row['fields']['isArchived']['type']) && $row['fields']['isArchived']['type'] == 'bool') {
+                $data['entityDefs'][$scope]['fields']['isArchived']['type'] = 'bool';
+                $data['entityDefs'][$scope]['fields']['isArchived']['notNull'] = true;
                 $data['clientDefs'][$entity]['filterList'][] = 'withArchived';
             }
         }
