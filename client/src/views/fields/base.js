@@ -820,7 +820,9 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 Espo[key] = [];
                 this.ajaxGetRequest(`ExtensibleEnum/${extensibleEnumId}/extensibleEnumOptions`, {
                     sortBy: "sortOrder",
-                    asc: true
+                    asc: true,
+                    offset: 0,
+                    maxSize: 5000
                 }, {async: false}).then(res => {
                     if (res.list) {
                         Espo[key] = res.list;

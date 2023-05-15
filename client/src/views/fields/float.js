@@ -94,11 +94,13 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
                 }
             }
 
-            if (typeof this.params.amountOfDigitsAfterComma !== undefined && this.params.amountOfDigitsAfterComma) {
+            let amountOfDigitsAfterComma = this.params.amountOfDigitsAfterComma || this.model.get('amountOfDigitsAfterComma');
+
+            if (typeof amountOfDigitsAfterComma !== undefined && amountOfDigitsAfterComma) {
                 const decimalPlaces = (value.toString().split(this.decimalMark)[1] || '').length;
-                if (!(decimalPlaces <= this.params.amountOfDigitsAfterComma)) {
+                if (!(decimalPlaces <= amountOfDigitsAfterComma)) {
                     return {
-                        message: this.translate('fieldShouldBeFloatWithValidDigitAfterComma', 'messages').replace('{amountOfDigitsAfterComma}', this.params.amountOfDigitsAfterComma),
+                        message: this.translate('fieldShouldBeFloatWithValidDigitAfterComma', 'messages').replace('{amountOfDigitsAfterComma}', amountOfDigitsAfterComma),
                         invalid: true
                     };
                 }
