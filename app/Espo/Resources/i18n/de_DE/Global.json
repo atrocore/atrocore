@@ -413,6 +413,7 @@
     "onlyActive": "Aktiv"
   },
   "presetFilters": {
+    "withArchived": "Alle + Archivierte",
     "followed": "abonniert",
     "all": "Alle"
   },
@@ -430,6 +431,7 @@
     "convertCurrency": "Währung umrechnen"
   },
   "fields": {
+    "isArchived": "Archiviert",
     "code": "Code",
     "extensibleEnum": "Liste",
     "sortOrder": "Sortierreihenfolge",

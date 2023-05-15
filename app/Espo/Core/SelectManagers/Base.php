@@ -303,7 +303,8 @@ class Base
         $this->prepareRelationshipFilterField($where);
 
         foreach ($where as $item) {
-            if (!isset($item['type'])) continue;
+            if (!isset($item['type']))
+                continue;
 
             if ($item['type'] == 'bool' && !empty($item['value']) && is_array($item['value'])) {
                 foreach ($item['value'] as $filter) {
@@ -344,13 +345,13 @@ class Base
                 case 'linkedWith':
                 case 'notLinkedWith':
                     $where[$k] = [
-                        'type'      => $item['type'],
+                        'type' => $item['type'],
                         'attribute' => $defs['relationshipFilterField'],
-                        'subQuery'  => [
+                        'subQuery' => [
                             [
-                                'type'      => 'in',
+                                'type' => 'in',
                                 'attribute' => $defs['relationshipFilterForeignField'] . 'Id',
-                                'value'     => $item['value']
+                                'value' => $item['value']
                             ]
                         ]
                     ];
@@ -358,7 +359,7 @@ class Base
                 case 'isNotLinked':
                 case 'isLinked':
                     $where[$k] = [
-                        'type'      => $item['type'],
+                        'type' => $item['type'],
                         'attribute' => 'productChannels'
                     ];
                     break;
@@ -373,7 +374,8 @@ class Base
         $ignoreTypeList = array_merge(['bool', 'primary'], $this->additionalFilterTypeList);
 
         foreach ($where as $item) {
-            if (!isset($item['type'])) continue;
+            if (!isset($item['type']))
+                continue;
 
             $type = $item['type'];
             if (!in_array($type, $ignoreTypeList)) {
@@ -416,7 +418,8 @@ class Base
 
         $seed = $this->getSeed();
 
-        if (!$seed->hasRelation($link)) return;
+        if (!$seed->hasRelation($link))
+            return;
 
         $relDefs = $this->getSeed()->getRelations();
 
@@ -467,7 +470,8 @@ class Base
 
         $relDefs = $seed->getRelations();
 
-        if (!$seed->hasRelation($link)) return;
+        if (!$seed->hasRelation($link))
+            return;
 
         $relationType = $seed->getRelationType($link);
 
@@ -477,7 +481,7 @@ class Base
             $aliasName = 'usersTeams' . ucfirst($link);
 
             $result['customJoin'] .= "
-                JOIN team_user AS {$aliasName}Middle ON {$aliasName}Middle.user_id = ".$query->toDb($seed->getEntityType()).".".$query->toDb($key)." AND {$aliasName}Middle.deleted = 0
+                JOIN team_user AS {$aliasName}Middle ON {$aliasName}Middle.user_id = " . $query->toDb($seed->getEntityType()) . "." . $query->toDb($key) . " AND {$aliasName}Middle.deleted = 0
                 JOIN team AS {$aliasName} ON {$aliasName}.deleted = 0 AND {$aliasName}Middle.team_id = {$aliasName}.id
             ";
 
@@ -518,7 +522,7 @@ class Base
                     $middleName = $link . 'Middle';
 
                     $result['customJoin'] .= "
-                        JOIN " . $query->toDb($pathName) . " AS `{$pathName}` ON {$pathName}.descendor_id = ".$query->sanitize($middleName) . "." . $query->toDb($key) . "
+                        JOIN " . $query->toDb($pathName) . " AS `{$pathName}` ON {$pathName}.descendor_id = " . $query->sanitize($middleName) . "." . $query->toDb($key) . "
                     ";
                     $result['whereClause'][$pathName . '.ascendorId'] = $value;
                 }
@@ -666,7 +670,7 @@ class Base
             $this->addLeftJoin(['assignedUsers', 'assignedUsersAccess'], $result);
             $result['whereClause'][] = [
                 'OR' => [
-                    'teamsAccess.id'         => $this->getUser()->getLinkMultipleIdList('teams'),
+                    'teamsAccess.id' => $this->getUser()->getLinkMultipleIdList('teams'),
                     'assignedUsersAccess.id' => $this->getUser()->id
                 ]
             ];
@@ -770,6 +774,11 @@ class Base
         ];
     }
 
+    protected function filterWithArchived(array &$result): void
+    {
+        $result['withArchived'] = true;
+    }
+
     /**
      * @return bool
      */
@@ -858,6 +867,17 @@ class Base
 
         $this->q($params, $result);
 
+        // check if entity has hasArchive activated
+        if ($this->metadata->get(['scopes', $this->entityType, 'hasArchive'])) {
+            //filter only if boolean filter not activated
+            if (!isset($result['withArchived'])) {
+                $result['whereClause'][] = [
+                    'isArchived' => false
+                ];
+
+            }
+        }
+
         if ($withAcl) {
             $this->access($result);
         }
@@ -867,6 +887,7 @@ class Base
         if (!empty($params['withDeleted'])) {
             $result['withDeleted'] = true;
         }
+
 
         return $this
             ->dispatch('Entity', 'afterGetSelectParams', new Event(['result' => $result, 'params' => $params, 'entityType' => $this->entityType]))
@@ -1000,7 +1021,7 @@ class Base
                 $to = $dt->format($format);
 
                 $number = strval(intval($item['value']));
-                $dtFrom->modify('-'.$number.' day');
+                $dtFrom->modify('-' . $number . ' day');
                 $dtFrom->setTime(0, 0, 0);
                 $dtFrom->setTimezone(new \DateTimeZone('UTC'));
 
@@ -1018,7 +1039,7 @@ class Base
                 $from = $dt->format($format);
 
                 $number = strval(intval($item['value']));
-                $dtTo->modify('+'.$number.' day');
+                $dtTo->modify('+' . $number . ' day');
                 $dtTo->setTime(24, 59, 59);
                 $dtTo->setTimezone(new \DateTimeZone('UTC'));
 
@@ -1030,7 +1051,7 @@ class Base
             case 'olderThanXDays':
                 $where['type'] = 'before';
                 $number = strval(intval($item['value']));
-                $dt->modify('-'.$number.' day');
+                $dt->modify('-' . $number . ' day');
                 $dt->setTime(0, 0, 0);
                 $dt->setTimezone(new \DateTimeZone('UTC'));
                 $where['value'] = $dt->format($format);
@@ -1038,7 +1059,7 @@ class Base
             case 'afterXDays':
                 $where['type'] = 'after';
                 $number = strval(intval($item['value']));
-                $dt->modify('+'.$number.' day');
+                $dt->modify('+' . $number . ' day');
                 $dt->setTime(0, 0, 0);
                 $dt->setTimezone(new \DateTimeZone('UTC'));
                 $where['value'] = $dt->format($format);
@@ -1079,7 +1100,7 @@ class Base
 
                     $where['value'] = [$from, $to];
                 }
-               break;
+                break;
             default:
                 $where['type'] = $type;
         }
@@ -1267,7 +1288,7 @@ class Base
                     $dt2 = clone $dt1;
                     $number = strval(intval($value));
 
-                    $dt2->modify('-'.$number.' days');
+                    $dt2->modify('-' . $number . ' days');
                     $part['AND'] = [
                         $attribute . '>=' => $dt2->format('Y-m-d'),
                         $attribute . '<=' => $dt1->format('Y-m-d'),
@@ -1278,7 +1299,7 @@ class Base
                     $dt1 = new \DateTime();
                     $dt2 = clone $dt1;
                     $number = strval(intval($value));
-                    $dt2->modify('+'.$number.' days');
+                    $dt2->modify('+' . $number . ' days');
                     $part['AND'] = [
                         $attribute . '>=' => $dt1->format('Y-m-d'),
                         $attribute . '<=' => $dt2->format('Y-m-d'),
@@ -1288,14 +1309,14 @@ class Base
                 case 'olderThanXDays':
                     $dt1 = new \DateTime();
                     $number = strval(intval($value));
-                    $dt1->modify('-'.$number.' days');
+                    $dt1->modify('-' . $number . ' days');
                     $part[$attribute . '<'] = $dt1->format('Y-m-d');
                     break;
 
                 case 'afterXDays':
                     $dt1 = new \DateTime();
                     $number = strval(intval($value));
-                    $dt1->modify('+'.$number.' days');
+                    $dt1->modify('+' . $number . ' days');
                     $part[$attribute . '>'] = $dt1->format('Y-m-d');
                     break;
 
@@ -1328,7 +1349,7 @@ class Base
                     $quarter = ceil($dt->format('m') / 3);
                     $dt->modify('first day of January this year');
                     $part['AND'] = [
-                        $attribute . '>=' => $dt->add(new \DateInterval('P'.(($quarter - 1) * 3).'M'))->format('Y-m-d'),
+                        $attribute . '>=' => $dt->add(new \DateInterval('P' . (($quarter - 1) * 3) . 'M'))->format('Y-m-d'),
                         $attribute . '<' => $dt->add(new \DateInterval('P3M'))->format('Y-m-d'),
                     ];
                     break;
@@ -1343,7 +1364,7 @@ class Base
                         $dt->modify('-1 year');
                     }
                     $part['AND'] = [
-                        $attribute . '>=' => $dt->add(new \DateInterval('P'.(($quarter - 1) * 3).'M'))->format('Y-m-d'),
+                        $attribute . '>=' => $dt->add(new \DateInterval('P' . (($quarter - 1) * 3) . 'M'))->format('Y-m-d'),
                         $attribute . '<' => $dt->add(new \DateInterval('P3M'))->format('Y-m-d'),
                     ];
                     break;
@@ -1379,7 +1400,7 @@ class Base
                 case 'columnNotIn':
                     $link = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $attribute, 'link']);
                     $column = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $attribute, 'column']);
-                    $alias =  $link . 'Filter' . strval(rand(10000, 99999));
+                    $alias = $link . 'Filter' . strval(rand(10000, 99999));
                     $this->setDistinct(true, $result);
                     $this->addLeftJoin([$link, $alias], $result);
                     $columnKey = $alias . 'Middle.' . $column;
@@ -1407,7 +1428,8 @@ class Base
                     break;
 
                 case 'isNotLinked':
-                    if (!$result) break;
+                    if (!$result)
+                        break;
                     $alias = $attribute . 'IsNotLinkedFilter' . strval(rand(10000, 99999));
                     $part[$alias . '.id'] = null;
                     $this->setDistinct(true, $result);
@@ -1415,7 +1437,8 @@ class Base
                     break;
 
                 case 'isLinked':
-                    if (!$result) break;
+                    if (!$result)
+                        break;
                     $alias = $attribute . 'IsLinkedFilter' . strval(rand(10000, 99999));
                     $part[$alias . '.id!='] = null;
                     $this->setDistinct(true, $result);
@@ -1425,11 +1448,13 @@ class Base
                 case 'linkedWith':
                     $seed = $this->getSeed();
                     $link = $attribute;
-                    if (!$seed->hasRelation($link)) break;
+                    if (!$seed->hasRelation($link))
+                        break;
 
-                    $alias =  $link . 'Filter' . strval(rand(10000, 99999));
+                    $alias = $link . 'Filter' . strval(rand(10000, 99999));
 
-                    if (is_null($value) || !$value && !is_array($value)) break;
+                    if (is_null($value) || !$value && !is_array($value))
+                        break;
 
                     $relationType = $seed->getRelationType($link);
 
@@ -1462,9 +1487,11 @@ class Base
                 case 'notLinkedWith':
                     $seed = $this->getSeed();
                     $link = $attribute;
-                    if (!$seed->hasRelation($link)) break;
+                    if (!$seed->hasRelation($link))
+                        break;
 
-                    if (is_null($value)) break;
+                    if (is_null($value))
+                        break;
 
                     $relationType = $seed->getRelationType($link);
 
@@ -1791,10 +1818,13 @@ class Base
         if ($useFullTextSearch) {
             foreach ($fieldList as $field) {
                 $defs = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $field], []);
-                if (empty($defs['type'])) continue;
+                if (empty($defs['type']))
+                    continue;
                 $fieldType = $defs['type'];
-                if (!empty($defs['notStorable'])) continue;
-                if (!$this->getMetadata()->get(['fields', $fieldType, 'fullTextSearch'])) continue;
+                if (!empty($defs['notStorable']))
+                    continue;
+                if (!$this->getMetadata()->get(['fields', $fieldType, 'fullTextSearch']))
+                    continue;
                 $fullTextSearchFieldList[] = $field;
             }
             if (!count($fullTextSearchFieldList)) {
@@ -1839,7 +1869,7 @@ class Base
                 $textFilter = trim($textFilter);
             }
 
-            while (mb_substr($textFilter, -2)  === ' *') {
+            while (mb_substr($textFilter, -2) === ' *') {
                 $textFilter = mb_substr($textFilter, 0, mb_strlen($textFilter) - 2);
                 $textFilter = trim($textFilter);
             }
@@ -1923,9 +1953,11 @@ class Base
 
         foreach ($fieldList as $field) {
             if ($useFullTextSearch) {
-                if (in_array($field, $fullTextSearchFieldList)) continue;
+                if (in_array($field, $fullTextSearchFieldList))
+                    continue;
             }
-            if ($forceFullTextSearch) continue;
+            if ($forceFullTextSearch)
+                continue;
 
             $attributeType = null;
             if (!empty($fieldDefs[$field]['type'])) {
@@ -2141,9 +2173,9 @@ class Base
         $query = $this->getEntityManager()->getQuery();
         $result['customJoin'] .= "
             JOIN subscription ON
-                subscription.entity_type = ".$query->quote($this->getEntityType())." AND
-                subscription.entity_id = ".$query->toDb($this->getEntityType()).".id AND
-                subscription.user_id = ".$query->quote($this->getUser()->id)."
+                subscription.entity_type = " . $query->quote($this->getEntityType()) . " AND
+                subscription.entity_id = " . $query->toDb($this->getEntityType()) . ".id AND
+                subscription.user_id = " . $query->quote($this->getUser()->id) . "
         ";
     }
 

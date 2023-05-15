@@ -391,6 +391,7 @@
     "followed": "Ви підписані"
   },
   "presetFilters": {
+    "withArchived": "Всі + Заархівовані",
     "followed": "Ви підписані",
     "all": "Усі"
   },
@@ -408,6 +409,7 @@
     "removeRelation": "Видалити зв'язок"
   },
   "fields": {
+    "isArchived": "Заархівованo",
     "code": "Код",
     "extensibleEnum": "Список",
     "sortOrder": "Порядок сортування",
