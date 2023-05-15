@@ -122,6 +122,23 @@ class Metadata extends AbstractListener
                     "filterDisabled"            => true,
                     "emHidden"                  => true
                 ];
+
+                foreach (in_array($fieldDefs['type'], ['int', 'float']) ? [$field] : [$field . 'From', $field . 'To'] as $v) {
+                    $data['entityDefs'][$entityType]['fields'][$v . 'AllUnits'] = [
+                        "type"                      => "jsonObject",
+                        "notStorable"               => true,
+                        "virtualUnit"               => true,
+                        "mainField"                 => $field,
+                        "required"                  => false,
+                        "layoutListDisabled"        => true,
+                        "layoutListSmallDisabled"   => true,
+                        "layoutDetailDisabled"      => true,
+                        "layoutDetailSmallDisabled" => true,
+                        "massUpdateDisabled"        => true,
+                        "filterDisabled"            => true,
+                        "emHidden"                  => true
+                    ];
+                }
             }
         }
     }
@@ -159,7 +176,7 @@ class Metadata extends AbstractListener
                 if (isset($fieldDefs['defaultFrom'])) {
                     $data['entityDefs'][$entity]['fields'][$fieldFrom]['default'] = $fieldDefs['defaultFrom'];
                 }
-                if ($fieldDefs['defaultTo']) {
+                if (isset($fieldDefs['defaultTo'])) {
                     $data['entityDefs'][$entity]['fields'][$fieldTo]['default'] = $fieldDefs['defaultTo'];
                 }
                 if (isset($fieldDefs['minFrom'])) {

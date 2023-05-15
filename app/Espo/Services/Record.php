@@ -112,8 +112,6 @@ class Record extends \Espo\Core\Services\Base
 
     protected $forceSelectAllAttributes = false;
 
-    protected array $measures = [];
-
     protected string $pseudoTransactionId = '';
 
     protected int $maxMassUpdateCount = 20;
@@ -1141,7 +1139,7 @@ class Record extends \Espo\Core\Services\Base
              * Convert unit to unitId for backward compatibility
              */
             if (!empty($fieldDefs['virtualUnit']) && !property_exists($data, $fieldDefs['mainField'] . 'UnitId')) {
-                $units = $this->getUnitsByMeasureId($fieldDefs['measureId']);
+                $units = $this->getMeasureUnits($fieldDefs['measureId']);
                 foreach ($units as $unit) {
                     if ($unit->get('name') === $value) {
                         $data->{$fieldDefs['mainField'] . 'UnitId'} = $unit->get('id');
@@ -2396,40 +2394,32 @@ class Record extends \Espo\Core\Services\Base
         return $localeId;
     }
 
-    protected function prepareUnitFieldValue(Entity $entity, string $fieldName, string $measure): void
+    protected function localizeUnitValue()
     {
-        if (empty($value = $entity->get($fieldName)) || empty($unitName = (string)$entity->get($fieldName . 'Unit'))) {
+
+    }
+
+    protected function prepareUnitFieldValue(Entity $entity, string $fieldName, string $measureId, ?string $unitId): void
+    {
+        if ($unitId === null) {
             return;
         }
 
-        $unitsOfMeasure = Json::decode(Json::encode($this->getConfig()->get('unitsOfMeasure', [])), true);
-
-        if (!isset($unitsOfMeasure[$measure]['unitListData'])) {
+        $value = $entity->get($fieldName);
+        if ($value === null) {
             return;
         }
 
-        $unitListData = $unitsOfMeasure[$measure]['unitListData'];
-
-        foreach ($unitListData as $row) {
-            if ($row['name'] === $unitName) {
-                $unitData = $row;
-                break;
-            }
-        }
-
-        if (empty($unitData)) {
+        $units = $this->getMeasureUnits($measureId);
+        if (empty($units)) {
             return;
         }
 
-        $allUnits = [];
-        foreach ($unitListData as $row) {
-            $allUnits[$row['name']] = round($value / $unitData['multiplier'] * $row['multiplier'], 4);
-        }
+        $allUnits = $this->getEntityManager()->getRepository('Measure')->convertMeasureUnit($value, $measureId, $unitId);
 
         $entity->set($fieldName . 'AllUnits', $allUnits);
 
         $locales = $this->getConfig()->get('locales', []);
-
         $localeId = $this->getLocaleId();
 
         $localedUnitsIds = [];
@@ -2437,7 +2427,7 @@ class Record extends \Espo\Core\Services\Base
 
         if (isset($locales[$localeId]['measures'])) {
             foreach ($locales[$localeId]['measures'] as $row) {
-                if ($row['name'] === $measure) {
+                if ($row['id'] === $measureId) {
                     $localedUnitsIds = $row['units'];
                     $localedUnitDefaultId = $row['defaultUnit'];
                 }
@@ -2448,18 +2438,19 @@ class Record extends \Espo\Core\Services\Base
             return;
         }
 
-        if (in_array($unitData['id'], $localedUnitsIds)) {
+        if (in_array($unitId, $localedUnitsIds)) {
             return;
         }
 
         if (!empty($unitData['convertToId']) && in_array($unitData['convertToId'], $localedUnitsIds)) {
-            $convertTo = $unitListData[$unitData['convertToId']];
+            $convertTo = $units[$unitData['convertToId']];
         } else {
-            $convertTo = $unitListData[$localedUnitDefaultId];
+            $convertTo = $units[$localedUnitDefaultId];
         }
 
-        $entity->set($fieldName, $allUnits[$convertTo['name']]);
-        $entity->set($fieldName . 'Unit', $convertTo['name']);
+        $entity->set($fieldName . 'UnitId', $convertTo->get('id'));
+        $entity->set($fieldName . 'Unit', $convertTo->get('name'));
+        $entity->set($fieldName, $allUnits[$convertTo->get('name')]);
     }
 
     public function prepareEntityForOutput(Entity $entity)
@@ -2476,13 +2467,16 @@ class Record extends \Espo\Core\Services\Base
                 continue 1;
             }
 
+            // prepare main field
+            $mainField = $defs['mainField'] ?? $name;
+
             /**
              * Set unit name to virtual field for backward compatibility
              */
             if (!empty($defs['virtualUnit']) && !$entity->has($name)) {
-                $unitId = $entity->get($defs['mainField'] . 'UnitId');
+                $unitId = $entity->get($mainField . 'UnitId');
                 if (!empty($unitId)) {
-                    $units = $this->getUnitsByMeasureId($defs['measureId']);
+                    $units = $this->getMeasureUnits($defs['measureId']);
                     if (isset($units[$unitId])) {
                         $entity->set($name, $units[$unitId]->get('name'));
                     }
@@ -2490,9 +2484,10 @@ class Record extends \Espo\Core\Services\Base
             }
 
             switch ($defs['type']) {
-                case 'unit':
-                    if ($entity->has($name) && !empty($defs['measure'])) {
-                        $this->prepareUnitFieldValue($entity, $name, $defs['measure']);
+                case 'int':
+                case 'float':
+                    if (!empty($defs['measureId'])) {
+                        $this->prepareUnitFieldValue($entity, $name, $defs['measureId'], $entity->get($mainField . 'UnitId'));
                     }
                     break;
                 case 'enum':
@@ -2510,7 +2505,12 @@ class Record extends \Espo\Core\Services\Base
                     }
                     break;
                 case 'multiEnum':
-                    if (empty($defs['multilangField']) && !empty($defs['optionsIds']) && !empty($entity->get($name)) && (is_array($entity->get($name)) || is_object($entity->get($name)))) {
+                    if (
+                        empty($defs['multilangField'])
+                        && !empty($defs['optionsIds'])
+                        && !empty($entity->get($name))
+                        && (is_array($entity->get($name)) || is_object($entity->get($name)))
+                    ) {
                         $fieldsValues[$name] = [];
                         foreach ($entity->get($name) as $optionId) {
                             $key = array_search($optionId, $defs['optionsIds']);
@@ -3100,11 +3100,16 @@ class Record extends \Espo\Core\Services\Base
                 $entity->set($field, array_column($collection->toArray(), 'id'));
             }
 
-            $fieldMetadata = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $field], []);
+            $fieldDefs = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $field], []);
 
-            // prepare unit field
-            if (!empty($fieldMetadata['type']) && $fieldMetadata['type'] === 'unit' && !empty($fieldMetadata['measure'])) {
-                $this->prepareUnitFieldValue($entity, $field, $fieldMetadata['measure']);
+            switch ($fieldDefs['type']) {
+                case 'int':
+                case 'float':
+                    if (!empty($fieldDefs['measureId'])) {
+                        $mainField = $fieldDefs['mainField'] ?? $field;
+                        $this->prepareUnitFieldValue($entity, $field, $fieldDefs['measureId'], $entity->get($mainField . 'UnitId'));
+                    }
+                    break;
             }
 
             if ($entity->has($field) && array_key_exists($field, $prev) && Util::toMd5($entity->get($field)) != Util::toMd5($prev[$field])) {
@@ -3273,19 +3278,9 @@ class Record extends \Espo\Core\Services\Base
         ];
     }
 
-    protected function getUnitsByMeasureId(string $measureId): array
+    protected function getMeasureUnits(string $measureId): array
     {
-        if (!isset($this->measures[$measureId])) {
-            $units = $this->getEntityManager()->getRepository('Unit')
-                ->where(['measureId' => $measureId])
-                ->find();
-            $this->measures[$measureId] = [];
-            foreach ($units as $unit) {
-                $this->measures[$measureId][$unit->get('id')] = $unit;
-            }
-        }
-
-        return $this->measures[$measureId];
+        return $this->getEntityManager()->getRepository('Measure')->getMeasureUnits($measureId);
     }
 
     protected function init()
