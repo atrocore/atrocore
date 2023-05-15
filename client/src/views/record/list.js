@@ -2157,7 +2157,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             let parts = message.split('.');
 
             this.confirm({
-                message: this.translate(parts.pop(), parts.pop(), parts.pop()),
+                message: (this.translate(parts.pop(), parts.pop(), parts.pop())).replace('{{name}}', model.get('name')),
                 confirmText: this.translate('Remove')
             }, function () {
                 this.collection.trigger('model-removing', id);

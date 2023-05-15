@@ -636,7 +636,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             let parts = message.split('.');
 
             this.confirm({
-                message: this.translate(parts.pop(), parts.pop(), parts.pop()),
+                message: (this.translate(parts.pop(), parts.pop(), parts.pop())).replace('{{name}}', model.get('name')),
                 confirmText: this.translate('Remove')
             }, () => {
                 let model = this.collection.get(id);
