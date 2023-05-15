@@ -126,7 +126,7 @@ class RelationManager
         $currentType = $linkParams['type'];
 
         $relType = $currentType;
-        if ($foreignLink !== false) {
+        if ($foreignLink !== false && isset($foreignLink['params']['type'])) {
             $relType .= '_' . $foreignLink['params']['type'];
         }
         $relType = Util::toCamelCase($relType);
