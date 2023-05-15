@@ -48,6 +48,15 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
             data.ucName = Espo.Utils.upperCaseFirst(this.name);
             data.fromValue = this.model.get(this.fromField);
             data.toValue = this.model.get(this.toField);
+
+            if (this.measureId) {
+                data.unitFieldName = this.unitFieldName;
+                data.unitList = this.unitList;
+                data.unitListTranslates = this.unitListTranslates;
+                data.unitValue = this.model.get(this.unitFieldName);
+                data.unitValueTranslate = this.unitListTranslates[data.unitValue] || data.unitValue;
+            }
+
             return data;
         },
 
@@ -80,6 +89,8 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
         },
 
         setup: function () {
+            Dep.prototype.setup.call(this);
+
             if (this.getPreferences().has('decimalMark')) {
                 this.decimalMark = this.getPreferences().get('decimalMark');
             } else {
@@ -96,6 +107,14 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
             }
 
             this.validations = ['required', 'int', 'range', 'order'];
+
+            if (this.measureId) {
+                this.unitFieldName = this.name + 'UnitId';
+                this.loadUnitOptions();
+                if (this.model.isNew() && this.defaultUnit) {
+                    this.model.set(this.unitFieldName, this.defaultUnit);
+                }
+            }
         },
 
         afterRender: function () {
@@ -216,6 +235,12 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
             var data = {};
             data[this.fromField] = this.parse(this.$from.val().trim());
             data[this.toField] = this.parse(this.$to.val().trim());
+
+            if (this.measureId) {
+                let $unit = this.$el.find(`[name="${this.unitFieldName}"]`);
+                data[this.unitFieldName] = $unit ? $unit.val() : null;
+            }
+
             return data;
         }
 
