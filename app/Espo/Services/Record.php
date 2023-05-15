@@ -2473,7 +2473,7 @@ class Record extends \Espo\Core\Services\Base
             /**
              * Set unit name to virtual field for backward compatibility
              */
-            if (!empty($defs['virtualUnit']) && !$entity->has($name)) {
+            if (!empty($defs['virtualUnit']) && !empty($defs['measureId']) && !$entity->has($name)) {
                 $unitId = $entity->get($mainField . 'UnitId');
                 if (!empty($unitId)) {
                     $units = $this->getMeasureUnits($defs['measureId']);
@@ -2484,7 +2484,6 @@ class Record extends \Espo\Core\Services\Base
             }
 
             switch ($defs['type']) {
-                case 'int':
                 case 'float':
                     if (!empty($defs['measureId'])) {
                         $this->prepareUnitFieldValue($entity, $name, $defs['measureId'], $entity->get($mainField . 'UnitId'));
@@ -3103,7 +3102,6 @@ class Record extends \Espo\Core\Services\Base
             $fieldDefs = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $field], []);
 
             switch ($fieldDefs['type']) {
-                case 'int':
                 case 'float':
                     if (!empty($fieldDefs['measureId'])) {
                         $mainField = $fieldDefs['mainField'] ?? $field;
