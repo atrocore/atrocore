@@ -868,7 +868,7 @@ class Base
         $this->q($params, $result);
 
         // check if entity has hasArchive activated
-        if ($this->metadata->get("scopes")[$this->entityType]['hasArchive']) {
+        if ($this->metadata->get(['scopes', $this->entityType, 'hasArchive'])) {
             //filter only if boolean filter not activated
             if (!isset($result['withArchived'])) {
                 $result['whereClause'][] = [
