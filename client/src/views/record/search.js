@@ -385,22 +385,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
             }
         },
 
-        filterAdded(name) {
-            return !!Object.keys(this.advanced).find(k => k.startsWith(name + '-'))
-        },
-
         addFilter(name, params, callback) {
-            if (['rangeFloat', 'rangeInt'].indexOf(this.model.defs.fields[name].type) >= 0) {
-                // check if filter exist before adding them
-                const from = name + 'From'
-                const to = name + 'To'
-                if (!this.filterAdded(from)) {
-                    this.addFilter(from, params, function () {
-                        if (!this.filterAdded(to)) this.addFilter(to)
-                    }.bind(this))
-                } else if (!this.filterAdded(to)) this.addFilter(to)
-                return
-            }
             var nameCount = 1;
             var getLastIndexName = function () {
                 if (this.advanced.hasOwnProperty(name + '-' + nameCount)) {
