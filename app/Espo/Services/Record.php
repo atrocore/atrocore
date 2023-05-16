@@ -2399,8 +2399,17 @@ class Record extends \Espo\Core\Services\Base
 
     }
 
-    protected function prepareUnitFieldValue(Entity $entity, string $fieldName, string $measureId, ?string $unitId): void
+    protected function prepareUnitFieldValue(Entity $entity, string $fieldName, array $fieldDefs): void
     {
+        $mainField = $fieldDefs['mainField'] ?? $fieldName;
+        $measureId = $fieldDefs['measureId'];
+
+        // for ranges, because for range we have two fields with save unit ID
+        if (!isset($this->originalFieldUnitId[$mainField])) {
+            $this->originalFieldUnitId[$mainField] = $entity->get($mainField . 'UnitId');
+        }
+
+        $unitId = $this->originalFieldUnitId[$mainField];
         if ($unitId === null) {
             return;
         }
@@ -2442,15 +2451,29 @@ class Record extends \Espo\Core\Services\Base
             return;
         }
 
-        if (!empty($unitData['convertToId']) && in_array($unitData['convertToId'], $localedUnitsIds)) {
-            $convertTo = $units[$unitData['convertToId']];
+        $unit = $units[$unitId];
+        if (!empty($unit->get('convertToId')) && in_array($unit->get('convertToId'), $localedUnitsIds)) {
+            $convertTo = $units[$unit->get('convertToId')];
         } else {
             $convertTo = $units[$localedUnitDefaultId];
         }
 
-        $entity->set($fieldName . 'UnitId', $convertTo->get('id'));
-        $entity->set($fieldName . 'Unit', $convertTo->get('name'));
-        $entity->set($fieldName, $allUnits[$convertTo->get('name')]);
+        $convertedValue = $allUnits[$convertTo->get('name')];
+        switch ($fieldDefs['type']) {
+            case 'int':
+                $convertedValue = (int)number_format($convertedValue, 0);
+                break;
+            case 'float':
+                if (isset($fieldDefs['amountOfDigitsAfterComma'])) {
+                    $convertedValue = number_format($convertedValue, $fieldDefs['amountOfDigitsAfterComma']);
+                }
+                $convertedValue = (float)$convertedValue;
+                break;
+        }
+
+        $entity->set($mainField . 'UnitId', $convertTo->get('id'));
+        $entity->set($mainField . 'Unit', $convertTo->get('name'));
+        $entity->set($fieldName, $convertedValue);
     }
 
     public function prepareEntityForOutput(Entity $entity)
@@ -2486,7 +2509,7 @@ class Record extends \Espo\Core\Services\Base
             switch ($defs['type']) {
                 case 'float':
                     if (!empty($defs['measureId'])) {
-                        $this->prepareUnitFieldValue($entity, $name, $defs['measureId'], $entity->get($mainField . 'UnitId'));
+                        $this->prepareUnitFieldValue($entity, $name, $defs);
                     }
                     break;
                 case 'enum':
@@ -3104,8 +3127,7 @@ class Record extends \Espo\Core\Services\Base
             switch ($fieldDefs['type']) {
                 case 'float':
                     if (!empty($fieldDefs['measureId'])) {
-                        $mainField = $fieldDefs['mainField'] ?? $field;
-                        $this->prepareUnitFieldValue($entity, $field, $fieldDefs['measureId'], $entity->get($mainField . 'UnitId'));
+                        $this->prepareUnitFieldValue($entity, $field, $fieldDefs);
                     }
                     break;
             }
