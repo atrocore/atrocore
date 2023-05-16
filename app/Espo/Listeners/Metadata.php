@@ -83,7 +83,7 @@ class Metadata extends AbstractListener
                 if (empty($fieldDefs['measureId'])) {
                     continue;
                 }
-                if (!empty($fieldDefs['notStorable']) || !empty($fieldDefs['relationVirtualField'])) {
+                if (!empty($fieldDefs['relationVirtualField'])) {
                     continue;
                 }
                 if (empty($fieldDefs['type']) || !in_array($fieldDefs['type'], ['int', 'float', 'rangeInt', 'rangeFloat'])) {
