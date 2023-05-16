@@ -325,7 +325,7 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
 
         setLocaleLabel: function (locale, field) {
             let name = 'label' + locale.charAt(0).toUpperCase() + locale.charAt(1) + locale.charAt(3) + locale.charAt(4).toLowerCase();
-            this.ajaxGetRequest(`I18n?locale=${locale}`).then(responseData => {
+            this.ajaxGetRequest(`I18n?locale=${locale}&skipModifications=1`).then(responseData => {
                 if (responseData && responseData[this.scope] && responseData[this.scope]['fields'] && responseData[this.scope]['fields'][field]) {
                     this.model.set(name, responseData[this.scope]['fields'][field]);
                 } else {
