@@ -2928,6 +2928,7 @@ class Record extends \Espo\Core\Services\Base
 
                     if (!empty($fieldDefs['measureId'])) {
                         $attributeName = $fieldDefs['mainField'] ?? $attribute;
+                        $attributeList[] = $attributeName;
                         $attributeList[] = $attributeName . 'UnitId';
                     }
                 }

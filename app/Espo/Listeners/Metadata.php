@@ -109,7 +109,7 @@ class Metadata extends AbstractListener
                 $data['entityDefs'][$entityType]['fields']['unit' . ucfirst($field)] = [
                     "type"               => "varchar",
                     "notStorable"        => true,
-                    "view"               => "views/fields/unit-int",
+                    "view"               => "views/fields/unit-{$fieldDefs['type']}",
                     "measureId"          => $fieldDefs['measureId'],
                     "mainField"          => $field,
                     "unitField"          => true,
