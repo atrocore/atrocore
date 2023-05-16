@@ -2509,6 +2509,7 @@ class Record extends \Espo\Core\Services\Base
             }
 
             switch ($defs['type']) {
+                case 'int':
                 case 'float':
                     if (!empty($defs['measureId'])) {
                         $this->prepareUnitFieldValue($entity, $name, $defs);
@@ -3128,6 +3129,7 @@ class Record extends \Espo\Core\Services\Base
             $fieldDefs = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $field], []);
 
             switch ($fieldDefs['type']) {
+                case 'int':
                 case 'float':
                     if (!empty($fieldDefs['measureId'])) {
                         $this->prepareUnitFieldValue($entity, $field, $fieldDefs);
