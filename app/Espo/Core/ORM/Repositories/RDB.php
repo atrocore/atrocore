@@ -269,11 +269,43 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
     }
 
+    protected function validateRangeValue(Entity $entity, string $fieldName, array $fieldData): void
+    {
+        if (empty($fieldData['mainField'])) {
+            return;
+        }
+
+        $type = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $fieldData['mainField'], 'type']);
+        if (!in_array($type, ['rangeInt', 'rangeFloat'])) {
+            return;
+        }
+
+        $fromName = $fieldData['mainField'] . 'From';
+        $toName = $fieldData['mainField'] . 'To';
+
+        if ($entity->get($fromName) !== null && $entity->get($fromName) > $entity->get($toName)) {
+            $fieldLabel = $this->getLanguage()->translate($toName, 'fields', $entity->getEntityType());
+            $message = str_replace(['{field}', '{value}'], [$fieldLabel, $entity->get($fromName)], $this->getLanguage()->translate('fieldShouldBeGreater', 'messages', 'Global'));
+            throw new BadRequest($message);
+        }
+    }
+
+    protected function validateInt(Entity $entity, string $fieldName, array $fieldData): void
+    {
+        if (!$entity->isAttributeChanged($fieldName)) {
+            return;
+        }
+
+        $this->validateRangeValue($entity, $fieldName, $fieldData);
+    }
+
     protected function validateFloat(Entity $entity, string $fieldName, array $fieldData): void
     {
         if (!$entity->isAttributeChanged($fieldName)) {
             return;
         }
+
+        $this->validateRangeValue($entity, $fieldName, $fieldData);
 
         if (isset($fieldData['amountOfDigitsAfterComma'])) {
             $this->checkAmountOfDigitsAfterComma($entity->get($fieldName), $fieldData['amountOfDigitsAfterComma']);
@@ -330,36 +362,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
     }
 
-    protected function validateUnit(Entity $entity, string $fieldName, array $fieldData): void
-    {
-        $language = $this->getLanguage();
-
-        $unitsOfMeasure = $this->getConfig()->get('unitsOfMeasure');
-        $unitsOfMeasure = empty($unitsOfMeasure) ? [] : Json::decode(Json::encode($unitsOfMeasure), true);
-        $measure = $this->getUnitFieldMeasure($fieldName, $entity);
-
-        if (!isset($unitsOfMeasure[$measure]['unitList'])) {
-            return;
-        }
-
-        $value = $entity->get($fieldName);
-        $unit = $entity->get($fieldName . 'Unit');
-
-        $fieldLabel = $language->translate($fieldName, 'fields', $entity->getEntityType());
-
-        if ($value !== null && $value !== '' && empty($unit)) {
-            throw new BadRequest(sprintf($language->translate('unitValueIsRequired', 'exceptions', 'Global'), $fieldLabel));
-        }
-
-        if (!empty($unit) && !in_array($unit, $unitsOfMeasure[$measure]['unitList'])) {
-            throw new BadRequest(sprintf($language->translate('noSuchUnit', 'exceptions', 'Global'), $unit, $fieldLabel));
-        }
-
-        if (isset($fieldData['amountOfDigitsAfterComma'])) {
-            $this->checkAmountOfDigitsAfterComma($value, $fieldData['amountOfDigitsAfterComma']);
-        }
-    }
-
     protected function checkAmountOfDigitsAfterComma($value, $amountOfDigitsAfterComma): void
     {
         if(empty($value) || empty($amountOfDigitsAfterComma)){
@@ -369,7 +371,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $floatParts = explode('.', (string)$value);
         if(count($floatParts) === 2 && (strlen($floatParts[1]) > (int)$amountOfDigitsAfterComma)){
             throw new BadRequest(sprintf(
-                $this->getLanguage()->translate('maximumOfDigitsAfterCommaInvalid', 'exceptions', 'Global'), 
+                $this->getLanguage()->translate('maximumOfDigitsAfterCommaInvalid', 'exceptions', 'Global'),
                 $amountOfDigitsAfterComma
             ));
         }
@@ -389,7 +391,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $countBytesInsteadOfCharacters = (bool)$entity->get('countBytesInsteadOfCharacters');
         $fieldValue = (string)$entity->get($fieldName);
         $length = $countBytesInsteadOfCharacters ? strlen($fieldValue) : mb_strlen($fieldValue);
-        
+
         $maxLength = (int)$fieldData['maxLength'];
 
         if ($length > $maxLength) {
