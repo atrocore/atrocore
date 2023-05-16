@@ -92,12 +92,6 @@ class Language extends AbstractListener
                             $data[$locale][$entity]['fields'][$field] = $fieldLabel . ': ' . $relatedFieldLabel;
                         }
                     }
-
-                    if (!empty($fieldDefs['measureId']) && !empty($fieldDefs['mainField'])) {
-                        $fieldLabel = $this->getLabel($data, $locale, $entity, $fieldDefs['mainField']);
-                        $unitLabel = $this->getLabel($data, $locale, $entity, 'unitPart', 'labels');
-                        $data[$locale][$entity]['fields'][$field] = $fieldLabel . ' ' . $unitLabel;
-                    }
                 }
             }
         }

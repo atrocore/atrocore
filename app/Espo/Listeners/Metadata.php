@@ -106,6 +106,20 @@ class Metadata extends AbstractListener
                     "emHidden"  => true
                 ];
 
+                $data['entityDefs'][$entityType]['fields']['unit' . ucfirst($field)] = [
+                    "type"               => "varchar",
+                    "notStorable"        => true,
+                    "view"               => "views/fields/unit-int",
+                    "measureId"          => $fieldDefs['measureId'],
+                    "mainField"          => $field,
+                    "unitField"          => true,
+                    "required"           => !empty($fieldDefs['required']),
+                    "audited"            => false,
+                    "filterDisabled"     => true,
+                    "massUpdateDisabled" => true,
+                    "emHidden"           => true
+                ];
+
                 $data['entityDefs'][$entityType]['fields'][$field . 'Unit'] = [
                     "type"                      => "varchar",
                     "notStorable"               => true,
@@ -114,6 +128,7 @@ class Metadata extends AbstractListener
                     "virtualUnit"               => true,
                     "mainField"                 => $field,
                     "required"                  => false,
+                    "audited"                   => false,
                     "layoutListDisabled"        => true,
                     "layoutListSmallDisabled"   => true,
                     "layoutDetailDisabled"      => true,
@@ -127,9 +142,9 @@ class Metadata extends AbstractListener
                     $data['entityDefs'][$entityType]['fields'][$v . 'AllUnits'] = [
                         "type"                      => "jsonObject",
                         "notStorable"               => true,
-                        "virtualUnit"               => true,
                         "mainField"                 => $field,
                         "required"                  => false,
+                        "audited"                   => false,
                         "layoutListDisabled"        => true,
                         "layoutListSmallDisabled"   => true,
                         "layoutDetailDisabled"      => true,
