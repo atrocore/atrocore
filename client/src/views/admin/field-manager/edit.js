@@ -135,9 +135,10 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                     }
 
                     if (!this.isNew) {
-                        this.model.set('label', this.getLanguage().translate(field, 'fields', this.scope));
+                        let labelField = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'labelField']) ?? field;
+                        this.model.set('label', this.getLanguage().translate(labelField, 'fields', this.scope));
                         (this.getConfig().get('inputLanguageList') || []).forEach(locale => {
-                            this.setLocaleLabel(locale, field);
+                            this.setLocaleLabel(locale, labelField);
                         });
                     }
 
@@ -325,7 +326,7 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
 
         setLocaleLabel: function (locale, field) {
             let name = 'label' + locale.charAt(0).toUpperCase() + locale.charAt(1) + locale.charAt(3) + locale.charAt(4).toLowerCase();
-            this.ajaxGetRequest(`I18n?locale=${locale}&skipModifications=1`).then(responseData => {
+            this.ajaxGetRequest(`I18n?locale=${locale}`).then(responseData => {
                 if (responseData && responseData[this.scope] && responseData[this.scope]['fields'] && responseData[this.scope]['fields'][field]) {
                     this.model.set(name, responseData[this.scope]['fields'][field]);
                 } else {

@@ -58,6 +58,23 @@ class Language extends AbstractListener
                     if (empty($fieldDefs['type'])) {
                         continue;
                     }
+                    switch ($fieldDefs['type']) {
+                        case 'rangeInt':
+                        case 'rangeFloat':
+                            $fieldLabel = !empty($rows[$entity]['fields'][$field]) ? $rows[$entity]['fields'][$field] : $field;
+                            $fromLabel = !empty($rows['Global']['labels']['From']) ? $rows['Global']['labels']['From'] : 'From';
+                            $toLabel = !empty($rows['Global']['labels']['To']) ? $rows['Global']['labels']['To'] : 'To';
+                            $data[$locale][$entity]['fields'][$field . 'From'] = $fieldLabel . ' ' . $fromLabel;
+                            $data[$locale][$entity]['fields'][$field . 'To'] = $fieldLabel . ' ' . $toLabel;
+
+                            if (!empty($fieldDefs['unitField'])) {
+                                $fieldType = $fieldDefs['type'] === 'rangeInt' ? 'int' : 'float';
+                                $typeLabel = !empty($rows['Global']['labels'][$fieldType . 'Part']) ? $rows['Global']['labels'][$fieldType . 'Part'] : "({$fieldType})";
+                                $data[$locale][$entity]['fields'][$field . 'From'] .= ' ' . $typeLabel;
+                                $data[$locale][$entity]['fields'][$field . 'To'] .= ' ' . $typeLabel;
+                            }
+                            break;
+                    }
 
                     if (!empty($fieldDefs['relationshipFilterField'])) {
                         $filterField = $this->getLabel($data, $locale, $entity, $fieldDefs['relationshipFilterField']);
@@ -81,6 +98,19 @@ class Language extends AbstractListener
                             $relatedFieldLabel = $this->getLabel($data, $locale, (string)$relatedFieldEntity, $parts[1]);
                             $data[$locale][$entity]['fields'][$field] = $fieldLabel . ': ' . $relatedFieldLabel;
                         }
+                    }
+
+                    if (!empty($fieldDefs['unitField'])) {
+                        $mainField = $fieldDefs['mainField'] ?? $field;
+                        $fieldLabel = $this->getLabel($data, $locale, $entity, $mainField);
+                        $mainFieldType = $this->getMetadata()->get(['entityDefs', $entity, 'fields', $mainField, 'type']);
+
+                        if (!in_array($fieldDefs['type'], ['rangeInt', 'rangeFloat'])) {
+                            $data[$locale][$entity]['fields'][$mainField] = $fieldLabel . ' ' . $this->getLabel($data, $locale, $entity, $mainFieldType . 'Part', 'labels');
+                            $data[$locale][$entity]['fields']['unit' . ucfirst($mainField)] = $fieldLabel;
+                        }
+
+                        $data[$locale][$entity]['fields'][$mainField . 'UnitId'] = $fieldLabel . ' ' . $this->getLabel($data, $locale, $entity, 'unitPart', 'labels');
                     }
                 }
             }

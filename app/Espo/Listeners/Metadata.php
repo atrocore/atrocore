@@ -107,6 +107,7 @@ class Metadata extends AbstractListener
                 ];
 
                 if (in_array($fieldDefs['type'], ['int', 'float'])) {
+                    $data['entityDefs'][$entityType]['fields'][$field]['labelField'] = 'unit' . ucfirst($field);
                     $data['entityDefs'][$entityType]['fields']['unit' . ucfirst($field)] = [
                         "type"               => "varchar",
                         "notStorable"        => true,
