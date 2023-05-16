@@ -498,12 +498,6 @@ abstract class Base
             $arr[] = $fieldPath . ' AS `' . $attribute . '`';
         }
 
-//        if ($entity->getEntityType() === 'Foo') {
-//            echo '<pre>';
-//            print_r($arr);
-//            die();
-//        }
-
         $select = implode(', ', $arr);
 
         return $select;
