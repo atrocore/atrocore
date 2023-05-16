@@ -56,14 +56,34 @@ class I18nController extends AbstractListener
                     continue;
                 }
 
-                if (!empty($fieldDefs['unitField'])) {
-                    $mainField = $fieldDefs['mainField'];
-                    $fieldLabel = $this->getLanguage()->translate($mainField, 'fields', $entityType);
-                    $mainFieldType = $this->getMetadata()->get(['entityDefs', $entityType, 'fields', $mainField, 'type']);
+                /**
+                 * Prepare range labels for From and To
+                 */
+                if (in_array($fieldDefs['type'], ['rangeInt', 'rangeFloat'])) {
+                    $fieldLabel = $this->getLanguage()->translate($field, 'fields', $entityType);
+                    $fromLabel = $this->getLanguage()->translate('From');
+                    $toLabel = $this->getLanguage()->translate('To');
 
-                    $result[$entityType]['fields'][$mainField] = $fieldLabel . ' ' . $this->getLanguage()->translate($mainFieldType . 'Part');
-                    $result[$entityType]['fields']['unit' . ucfirst($mainField)] = $fieldLabel;
+                    $result[$entityType]['fields'][$field . 'From'] = $fieldLabel . ' ' . $fromLabel;
+                    $result[$entityType]['fields'][$field . 'To'] = $fieldLabel . ' ' . $toLabel;
+
+                    if (!empty($fieldDefs['unitField'])) {
+                        $fieldType = $fieldDefs['type'] === 'rangeInt' ? 'int' : 'float';
+                        $result[$entityType]['fields'][$field . 'From'] .= ' ' . $this->getLanguage()->translate($fieldType . 'Part');
+                        $result[$entityType]['fields'][$field . 'To'] .= ' ' . $this->getLanguage()->translate($fieldType . 'Part');
+                    }
+                }
+
+                if (!empty($fieldDefs['unitField'])) {
+                    $mainField = $fieldDefs['mainField'] ?? $field;
+                    $fieldLabel = $this->getLanguage()->translate($mainField, 'fields', $entityType);
+                    $fieldType = $this->getMetadata()->get(['entityDefs', $entityType, 'fields', $mainField, 'type']);
+
                     $result[$entityType]['fields'][$mainField . 'UnitId'] = $fieldLabel . ' ' . $this->getLanguage()->translate('unitPart');
+                    if (!in_array($fieldDefs['type'], ['rangeInt', 'rangeFloat'])) {
+                        $result[$entityType]['fields'][$mainField] = $fieldLabel . ' ' . $this->getLanguage()->translate($fieldType . 'Part');
+                        $result[$entityType]['fields']['unit' . ucfirst($mainField)] = $fieldLabel;
+                    }
                 }
             }
         }

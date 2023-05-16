@@ -58,16 +58,6 @@ class Language extends AbstractListener
                     if (empty($fieldDefs['type'])) {
                         continue;
                     }
-                    switch ($fieldDefs['type']) {
-                        case 'rangeInt':
-                        case 'rangeFloat':
-                            $fieldLabel = !empty($rows[$entity]['fields'][$field]) ? $rows[$entity]['fields'][$field] : $field;
-                            $fromLabel = !empty($rows['Global']['labels']['From']) ? $rows['Global']['labels']['From'] : 'From';
-                            $toLabel = !empty($rows['Global']['labels']['To']) ? $rows['Global']['labels']['To'] : 'To';
-                            $data[$locale][$entity]['fields'][$field . 'From'] = $fieldLabel . ' ' . $fromLabel;
-                            $data[$locale][$entity]['fields'][$field . 'To'] = $fieldLabel . ' ' . $toLabel;
-                            break;
-                    }
 
                     if (!empty($fieldDefs['relationshipFilterField'])) {
                         $filterField = $this->getLabel($data, $locale, $entity, $fieldDefs['relationshipFilterField']);

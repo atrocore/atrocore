@@ -2401,6 +2401,8 @@ class Record extends \Espo\Core\Services\Base
 
     protected function prepareUnitFieldValue(Entity $entity, string $fieldName, array $fieldDefs): void
     {
+        // @todo develop it
+        return;
         $mainField = $fieldDefs['mainField'] ?? $fieldName;
         $measureId = $fieldDefs['measureId'];
 

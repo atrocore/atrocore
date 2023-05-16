@@ -106,19 +106,23 @@ class Metadata extends AbstractListener
                     "emHidden"  => true
                 ];
 
-                $data['entityDefs'][$entityType]['fields']['unit' . ucfirst($field)] = [
-                    "type"               => "varchar",
-                    "notStorable"        => true,
-                    "view"               => "views/fields/unit-{$fieldDefs['type']}",
-                    "measureId"          => $fieldDefs['measureId'],
-                    "mainField"          => $field,
-                    "unitField"          => true,
-                    "required"           => !empty($fieldDefs['required']),
-                    "audited"            => false,
-                    "filterDisabled"     => true,
-                    "massUpdateDisabled" => true,
-                    "emHidden"           => true
-                ];
+                if (in_array($fieldDefs['type'], ['int', 'float'])) {
+                    $data['entityDefs'][$entityType]['fields']['unit' . ucfirst($field)] = [
+                        "type"               => "varchar",
+                        "notStorable"        => true,
+                        "view"               => "views/fields/unit-{$fieldDefs['type']}",
+                        "measureId"          => $fieldDefs['measureId'],
+                        "mainField"          => $field,
+                        "unitField"          => true,
+                        "required"           => !empty($fieldDefs['required']),
+                        "audited"            => false,
+                        "filterDisabled"     => true,
+                        "massUpdateDisabled" => true,
+                        "emHidden"           => true
+                    ];
+                } else {
+                    $data['entityDefs'][$entityType]['fields'][$field]['unitField'] = true;
+                }
 
                 $data['entityDefs'][$entityType]['fields'][$field . 'Unit'] = [
                     "type"                      => "varchar",
@@ -178,6 +182,7 @@ class Metadata extends AbstractListener
                 }
 
                 $data['entityDefs'][$entity]['fields'][$field]['filterDisabled'] = true;
+                $data['entityDefs'][$entity]['fields'][$field]['notStorable'] = true;
 
                 $fieldFrom = $field . 'From';
                 $fieldTo = $field . 'To';

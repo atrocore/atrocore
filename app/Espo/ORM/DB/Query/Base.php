@@ -483,6 +483,9 @@ abstract class Base
                 if (!empty($fieldDefs['notStorable'])) {
                     continue;
                 }
+                if (in_array($attributeType, ['rangeInt', 'rangeFloat'])) {
+                    continue;
+                }
                 if ($attributeType === null) {
                     continue;
                 }
@@ -494,6 +497,12 @@ abstract class Base
 
             $arr[] = $fieldPath . ' AS `' . $attribute . '`';
         }
+
+//        if ($entity->getEntityType() === 'Foo') {
+//            echo '<pre>';
+//            print_r($arr);
+//            die();
+//        }
 
         $select = implode(', ', $arr);
 
