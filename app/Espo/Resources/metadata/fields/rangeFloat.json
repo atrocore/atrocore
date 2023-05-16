@@ -66,6 +66,8 @@
       "emHidden": true
     }
   },
-  "filter": false,
-  "skipOrmDefs": true
+  "fieldDefs": {
+    "notStorable": true
+  },
+  "filter": false
 }

@@ -483,9 +483,6 @@ abstract class Base
                 if (!empty($fieldDefs['notStorable'])) {
                     continue;
                 }
-                if (in_array($attributeType, ['rangeInt', 'rangeFloat'])) {
-                    continue;
-                }
                 if ($attributeType === null) {
                     continue;
                 }
