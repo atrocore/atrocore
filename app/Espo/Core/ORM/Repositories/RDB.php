@@ -413,6 +413,59 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                 $fieldLabel = $this->getLanguage()->translate($fieldName, 'fields', $entity->getEntityType());
                 throw new BadRequest(sprintf($this->getLanguage()->translate('noSuchUnit', 'exceptions', 'Global'), $entity->get($fieldName), $fieldLabel));
             }
+
+            /**
+             * Convert unit values
+             */
+            if (!empty($convertTo = $unit->get('convertTo'))) {
+                /** @var \Espo\Repositories\Measure $measureRepository */
+                $measureRepository = $this->getEntityManager()->getRepository('Measure');
+
+                $mainField = $fieldData['mainField'];
+
+                $mainFieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $mainField]);
+                switch ($mainFieldDefs['type']) {
+                    case 'rangeInt':
+                        $allUnits = $measureRepository->convertMeasureUnit($entity->get($mainField . 'From'), $unit->get('measureId'), $unit->get('id'));
+                        $val = number_format((float)$allUnits[$convertTo->get('name')], 0);
+                        $entity->set($mainField . 'From', (int)$val);
+
+                        $allUnits = $measureRepository->convertMeasureUnit($entity->get($mainField . 'To'), $unit->get('measureId'), $unit->get('id'));
+                        $val = number_format((float)$allUnits[$convertTo->get('name')], 0);
+                        $entity->set($mainField . 'To', (int)$val);
+                        break;
+                    case 'rangeFloat':
+                        $allUnits = $measureRepository->convertMeasureUnit($entity->get($mainField . 'From'), $unit->get('measureId'), $unit->get('id'));
+                        $val = $allUnits[$convertTo->get('name')];
+                        if (isset($mainFieldDefs['amountOfDigitsAfterComma'])) {
+                            $val = number_format((float)$val, $mainFieldDefs['amountOfDigitsAfterComma']);
+                        }
+                        $entity->set($mainField . 'From', (float)$val);
+
+                        $allUnits = $measureRepository->convertMeasureUnit($entity->get($mainField . 'To'), $unit->get('measureId'), $unit->get('id'));
+                        $val = $allUnits[$convertTo->get('name')];
+                        if (isset($mainFieldDefs['amountOfDigitsAfterComma'])) {
+                            $val = number_format((float)$val, $mainFieldDefs['amountOfDigitsAfterComma']);
+                        }
+                        $entity->set($mainField . 'To', (float)$val);
+                        break;
+                    case 'int':
+                        $allUnits = $measureRepository->convertMeasureUnit($entity->get($mainField), $unit->get('measureId'), $unit->get('id'));
+                        $val = number_format((float)$allUnits[$convertTo->get('name')], 0);
+                        $entity->set($mainField, (int)$val);
+                        break;
+                    case 'float':
+                        $allUnits = $measureRepository->convertMeasureUnit($entity->get($mainField), $unit->get('measureId'), $unit->get('id'));
+                        $val = $allUnits[$convertTo->get('name')];
+                        if (isset($mainFieldDefs['amountOfDigitsAfterComma'])) {
+                            $val = number_format($val, $mainFieldDefs['amountOfDigitsAfterComma']);
+                        }
+                        $entity->set($mainField, (float)$val);
+                        break;
+                }
+
+                $entity->set($mainField . 'UnitId', $convertTo->get('id'));
+            }
         }
     }
 
