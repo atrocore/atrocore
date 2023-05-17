@@ -283,6 +283,10 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $fromName = $fieldData['mainField'] . 'From';
         $toName = $fieldData['mainField'] . 'To';
 
+        if (!$entity->isAttributeChanged($fromName) && $entity->isAttributeChanged($toName)) {
+            return;
+        }
+
         if ($entity->get($fromName) !== null && $entity->get($fromName) > $entity->get($toName)) {
             $fieldLabel = $this->getLanguage()->translate($toName, 'fields', $entity->getEntityType());
             $message = str_replace(['{field}', '{value}'], [$fieldLabel, $entity->get($fromName)], $this->getLanguage()->translate('fieldShouldBeGreater', 'messages', 'Global'));
@@ -314,11 +318,19 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     protected function validateCurrency(Entity $entity, string $fieldName, array $fieldData): void
     {
+        if (!$entity->isAttributeChanged($fieldName)) {
+            return;
+        }
+
         $this->validateFloat($entity, $fieldName, $fieldData);
     }
 
     protected function validateEnum(Entity $entity, string $fieldName, array $fieldData): void
     {
+        if (!$entity->isAttributeChanged($fieldName)) {
+            return;
+        }
+
         if (!isset($fieldData['view']) && $entity->isAttributeChanged($fieldName) && !empty($entity->get($fieldName))) {
             $fieldOptions = empty($fieldData['optionsIds']) ? [] : $fieldData['optionsIds'];
             if (empty($fieldOptions) && $fieldData['type'] === 'multiEnum' || !empty($fieldData['relationVirtualField'])) {
@@ -345,6 +357,10 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     protected function validateMultiEnum(Entity $entity, string $fieldName, array $fieldData): void
     {
+        if (!$entity->isAttributeChanged($fieldName)) {
+            return;
+        }
+
         $this->validateEnum($entity, $fieldName, $fieldData);
     }
 
@@ -379,11 +395,33 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     protected function validateVarchar(Entity $entity, string $fieldName, array $fieldData): void
     {
+        if (!$entity->isAttributeChanged($fieldName)) {
+            return;
+        }
+
         $this->validateText($entity, $fieldName, $fieldData);
+
+        if (!empty($fieldData['measureId'])) {
+            $unit = $this->getEntityManager()->getRepository('Unit')
+                ->where([
+                    'id'        => $entity->get($fieldName),
+                    'measureId' => $fieldData['measureId']
+                ])
+                ->findOne();
+
+            if (empty($unit)) {
+                $fieldLabel = $this->getLanguage()->translate($fieldName, 'fields', $entity->getEntityType());
+                throw new BadRequest(sprintf($this->getLanguage()->translate('noSuchUnit', 'exceptions', 'Global'), $entity->get($fieldName), $fieldLabel));
+            }
+        }
     }
 
     protected function validateText(Entity $entity, string $fieldName, array $fieldData): void
     {
+        if (!$entity->isAttributeChanged($fieldName)) {
+            return;
+        }
+
         if (!isset($fieldData['maxLength'])) {
             return;
         }
@@ -402,6 +440,10 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     protected function validateWysiwyg(Entity $entity, string $fieldName, array $fieldData): void
     {
+        if (!$entity->isAttributeChanged($fieldName)) {
+            return;
+        }
+
         $this->validateText($entity, $fieldName, $fieldData);
     }
 
