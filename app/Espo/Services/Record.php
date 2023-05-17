@@ -1135,10 +1135,6 @@ class Record extends \Espo\Core\Services\Base
                 continue;
             }
 
-//            if (!empty($fieldDefs['measureId'])) {
-//                $this->prepareUnitFieldValue($entity, $field, $fieldDefs);
-//            }
-
             /**
              * Convert unit to unitId for backward compatibility
              */
@@ -2400,16 +2396,9 @@ class Record extends \Espo\Core\Services\Base
 
     protected function prepareUnitFieldValue(Entity $entity, string $fieldName, array $fieldDefs): void
     {
-        return;
         $mainField = $fieldDefs['mainField'] ?? $fieldName;
-        $measureId = $fieldDefs['measureId'];
 
-        // for ranges, because for range we have two fields with save unit ID
-        if (!isset($this->originalFieldUnitId[$mainField])) {
-            $this->originalFieldUnitId[$mainField] = $entity->get($mainField . 'UnitId');
-        }
-
-        $unitId = $this->originalFieldUnitId[$mainField];
+        $unitId = $entity->get($mainField . 'UnitId');
         if ($unitId === null) {
             return;
         }
@@ -2419,61 +2408,14 @@ class Record extends \Espo\Core\Services\Base
             return;
         }
 
-        $units = $this->getMeasureUnits($measureId);
+        $units = $this->getMeasureUnits($fieldDefs['measureId']);
         if (empty($units)) {
             return;
         }
 
-        $allUnits = $this->getEntityManager()->getRepository('Measure')->convertMeasureUnit($value, $measureId, $unitId);
+        $allUnits = $this->getEntityManager()->getRepository('Measure')->convertMeasureUnit($value, $fieldDefs['measureId'], $unitId);
 
         $entity->set($fieldName . 'AllUnits', $allUnits);
-
-        $locales = $this->getConfig()->get('locales', []);
-        $localeId = $this->getLocaleId();
-
-        $localedUnitsIds = [];
-        $localedUnitDefaultId = null;
-
-        if (isset($locales[$localeId]['measures'])) {
-            foreach ($locales[$localeId]['measures'] as $row) {
-                if ($row['id'] === $measureId) {
-                    $localedUnitsIds = $row['units'];
-                    $localedUnitDefaultId = $row['defaultUnit'];
-                }
-            }
-        }
-
-        if (empty($localedUnitsIds)) {
-            return;
-        }
-
-        if (in_array($unitId, $localedUnitsIds)) {
-            return;
-        }
-
-        $unit = $units[$unitId];
-        if (!empty($unit->get('convertToId')) && in_array($unit->get('convertToId'), $localedUnitsIds)) {
-            $convertTo = $units[$unit->get('convertToId')];
-        } else {
-            $convertTo = $units[$localedUnitDefaultId];
-        }
-
-        $convertedValue = $allUnits[$convertTo->get('name')];
-        switch ($fieldDefs['type']) {
-            case 'int':
-                $convertedValue = (int)number_format($convertedValue, 0);
-                break;
-            case 'float':
-                if (isset($fieldDefs['amountOfDigitsAfterComma'])) {
-                    $convertedValue = number_format($convertedValue, $fieldDefs['amountOfDigitsAfterComma']);
-                }
-                $convertedValue = (float)$convertedValue;
-                break;
-        }
-
-        $entity->set($mainField . 'UnitId', $convertTo->get('id'));
-        $entity->set($mainField . 'Unit', $convertTo->get('name'));
-        $entity->set($fieldName, $convertedValue);
     }
 
     public function prepareEntityForOutput(Entity $entity)
