@@ -19,29 +19,6 @@
       "type": "linkMultiple",
       "noLoad": true
     },
-    "localeUnits": {
-      "type": "array",
-      "notStorable": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "view": "views/measure/fields/locale-units"
-    },
-    "localeDefault": {
-      "type": "varchar",
-      "prohibitedEmptyValue": true,
-      "notStorable": true,
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "view": "views/measure/fields/locale-default"
-    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
@@ -60,22 +37,6 @@
       "readOnly": true,
       "view": "views/fields/user"
     },
-    "locales": {
-      "type": "linkMultiple"
-    },
-    "localeId": {
-      "type": "varchar",
-      "notStorable": true,
-      "noAsset": true,
-      "layoutDetailDisabled": true,
-      "layoutListDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "textFilterDisabled": true,
-      "emHidden": true
-    },
     "data": {
       "type": "jsonObject",
       "layoutDetailDisabled": true,
@@ -89,11 +50,6 @@
     }
   },
   "links": {
-    "locales": {
-      "type": "hasMany",
-      "entity": "Locale",
-      "foreign": "measures"
-    },
     "units": {
       "type": "hasMany",
       "entity": "Unit",

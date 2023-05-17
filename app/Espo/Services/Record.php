@@ -1135,6 +1135,10 @@ class Record extends \Espo\Core\Services\Base
                 continue;
             }
 
+//            if (!empty($fieldDefs['measureId'])) {
+//                $this->prepareUnitFieldValue($entity, $field, $fieldDefs);
+//            }
+
             /**
              * Convert unit to unitId for backward compatibility
              */
@@ -2394,14 +2398,8 @@ class Record extends \Espo\Core\Services\Base
         return $localeId;
     }
 
-    protected function localizeUnitValue()
-    {
-
-    }
-
     protected function prepareUnitFieldValue(Entity $entity, string $fieldName, array $fieldDefs): void
     {
-        // @todo develop it
         return;
         $mainField = $fieldDefs['mainField'] ?? $fieldName;
         $measureId = $fieldDefs['measureId'];
@@ -3128,13 +3126,9 @@ class Record extends \Espo\Core\Services\Base
 
             $fieldDefs = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $field], []);
 
-            switch ($fieldDefs['type']) {
-                case 'int':
-                case 'float':
-                    if (!empty($fieldDefs['measureId'])) {
-                        $this->prepareUnitFieldValue($entity, $field, $fieldDefs);
-                    }
-                    break;
+            // skip if field is part of field
+            if (!empty($fieldDefs['mainField'])) {
+                continue 1;
             }
 
             if ($entity->has($field) && array_key_exists($field, $prev) && Util::toMd5($entity->get($field)) != Util::toMd5($prev[$field])) {

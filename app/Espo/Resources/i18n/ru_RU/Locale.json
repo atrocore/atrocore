@@ -6,11 +6,7 @@
     "weekStart": "Первый день недели",
     "timeFormat": "Формат времени",
     "thousandSeparator": "Тысячный разделитель",
-    "decimalMark": "Десятичный разделитель",
-    "measures": "Меры"
-  },
-  "links": {
-    "measures": "Меры"
+    "decimalMark": "Десятичный разделитель"
   },
   "labels": {
     "sunday": "Воскресенье",

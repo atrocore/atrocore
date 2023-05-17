@@ -355,12 +355,8 @@ class Config
             return $data;
         }
 
-        $data = $this
-            ->container
-            ->get('pdo')
-            ->query(
-                "SELECT l.*, m.id as measure_id, m.name as measure_name, m.data as measure_data FROM `locale` l LEFT JOIN `locale_measure` lm ON lm.locale_id=l.id AND lm.deleted=0 LEFT JOIN measure m ON m.id=lm.measure_id AND m.deleted=0 WHERE l.deleted=0"
-            )
+        $data = $this->container->get('pdo')
+            ->query("SELECT * FROM `locale` WHERE deleted=0")
             ->fetchAll(\PDO::FETCH_ASSOC);
 
         $result = [];
@@ -371,19 +367,6 @@ class Config
             }
             $result[$row['id']]['name'] = $row['name'];
             $result[$row['id']]['weekStart'] = $result[$row['id']]['weekStart'] === 'monday' ? 1 : 0;
-            if (!empty($row['measure_id'])) {
-                $measureData = empty($row['measure_data']) ? [] : Json::decode($row['measure_data'], true);
-                $result[$row['id']]['measures'][$row['measure_id']] = [
-                    'id'          => $row['measure_id'],
-                    'name'        => $row['measure_name'],
-                    'units'       => isset($measureData["locale_{$row['id']}"]) ? $measureData["locale_{$row['id']}"] : [],
-                    'defaultUnit' => isset($measureData["locale_{$row['id']}_default"]) ? $measureData["locale_{$row['id']}_default"] : ''
-                ];
-            }
-        }
-
-        foreach ($result as $id => $row) {
-            $result[$id]['measures'] = empty($row['measures']) ? [] : array_values($row['measures']);
         }
 
         if (!empty($result)) {

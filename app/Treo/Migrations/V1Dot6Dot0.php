@@ -35,7 +35,7 @@ namespace Treo\Migrations;
 
 use Treo\Core\Migration\Base;
 
-class V1Dot5Dot65 extends Base
+class V1Dot6Dot0 extends Base
 {
     public function up(): void
     {
@@ -48,6 +48,8 @@ class V1Dot5Dot65 extends Base
         $this->getPDO()->exec("ALTER TABLE unit ADD code VARCHAR(255) DEFAULT NULL UNIQUE COLLATE `utf8mb4_unicode_ci`");
         $this->exec("CREATE UNIQUE INDEX UNIQ_DCBB0C5377153098EB3B4E33 ON unit (code, deleted)");
         $this->exec("DROP INDEX code ON unit");
+
+        $this->exec("DROP TABLE locale_measure");
     }
 
     public function down(): void
