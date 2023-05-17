@@ -392,15 +392,14 @@ class Hierarchy extends Record
     public function getChildren(string $parentId, array $params): array
     {
         $result = [];
-
-        $records = $this->getRepository()->getChildrenArray($parentId, true, $params['offset'], $params['maxSize']);
+        $selectParams = $this->getSelectParams($params);
+        $records = $this->getRepository()->getChildrenArray($parentId, true, $params['offset'], $params['maxSize'], $selectParams);
         if (empty($records)) {
             return $result;
         }
 
         $offset = $params['offset'];
-        $total = $this->getRepository()->getChildrenCount($parentId);
-
+        $total = $this->getRepository()->getChildrenCount($parentId,$selectParams);
         $ids = [];
         foreach ($this->getRepository()->where(['id' => array_column($records, 'id')])->find() as $entity) {
             if ($this->getAcl()->check($entity, 'read')) {

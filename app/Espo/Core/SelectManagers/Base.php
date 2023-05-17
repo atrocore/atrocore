@@ -870,7 +870,11 @@ class Base
         // check if entity has hasArchive activated
         if ($this->metadata->get(['scopes', $this->entityType, 'hasArchive'])) {
             //filter only if boolean filter not activated
-            if (!isset($result['withArchived'])) {
+            $hasArchivedFilterInWhere = count(array_filter($result['whereClause'], function ($row) {
+                return isset($row['isArchived=']);
+            })) > 0;
+
+            if (!isset($result['withArchived']) && !$hasArchivedFilterInWhere) {
                 $result['whereClause'][] = [
                     'isArchived' => false
                 ];
