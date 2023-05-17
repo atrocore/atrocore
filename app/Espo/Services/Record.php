@@ -2413,9 +2413,10 @@ class Record extends \Espo\Core\Services\Base
             return;
         }
 
-        $allUnits = $this->getEntityManager()->getRepository('Measure')->convertMeasureUnit($value, $fieldDefs['measureId'], $unitId);
+        /** @var \Espo\Repositories\Measure $measureRepository */
+        $measureRepository = $this->getEntityManager()->getRepository('Measure');
 
-        $entity->set($fieldName . 'AllUnits', $allUnits);
+        $entity->set($fieldName . 'AllUnits', $measureRepository->convertMeasureUnit($value, $fieldDefs['measureId'], $unitId));
     }
 
     public function prepareEntityForOutput(Entity $entity)
@@ -2432,13 +2433,11 @@ class Record extends \Espo\Core\Services\Base
                 continue 1;
             }
 
-            // prepare main field
-            $mainField = $defs['mainField'] ?? $name;
-
             /**
              * Set unit name to virtual field for backward compatibility
              */
             if (!empty($defs['virtualUnit']) && !empty($defs['measureId']) && !$entity->has($name)) {
+                $mainField = $defs['mainField'] ?? $name;
                 $unitId = $entity->get($mainField . 'UnitId');
                 if (!empty($unitId)) {
                     $units = $this->getMeasureUnits($defs['measureId']);
