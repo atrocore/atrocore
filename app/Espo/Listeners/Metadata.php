@@ -140,6 +140,8 @@ class Metadata extends AbstractListener
                     "layoutDetailSmallDisabled" => true,
                     "massUpdateDisabled"        => true,
                     "filterDisabled"            => true,
+                    "exportDisabled"            => true,
+                    "importDisabled"            => true,
                     "emHidden"                  => true
                 ];
 
@@ -156,6 +158,8 @@ class Metadata extends AbstractListener
                         "layoutDetailSmallDisabled" => true,
                         "massUpdateDisabled"        => true,
                         "filterDisabled"            => true,
+                        "exportDisabled"            => true,
+                        "importDisabled"            => true,
                         "emHidden"                  => true
                     ];
                 }
