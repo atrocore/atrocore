@@ -99,7 +99,7 @@ class Hierarchy extends RDB
 
         $position = $this->getPDO()->query($query)->fetch(\PDO::FETCH_COLUMN);
 
-        return (int)$position;
+        return (int) $position;
     }
 
     public function getInheritableFields(): array
@@ -280,11 +280,19 @@ class Hierarchy extends RDB
         return $ids;
     }
 
-    public function getChildrenArray(string $parentId, bool $withChildrenCount = true, int $offset = null, $maxSize = null): array
+    public function getChildrenArray(string $parentId, bool $withChildrenCount = true, int $offset = null, $maxSize = null, $selectParams = null): array
     {
         $select = 'e.*';
         if ($withChildrenCount) {
             $select .= ", (SELECT COUNT(r1.id) FROM `$this->hierarchyTableName` r1 JOIN `$this->tableName` e1 ON e1.id=r1.entity_id WHERE r1.parent_id=e.id AND e1.deleted=0) as childrenCount";
+        }
+
+        $where = "";
+        if ($selectParams) {
+            $where = $this->getMapper()->getWhereQuery($this->entityType, $selectParams['whereClause']);
+            if (!empty($where)) {
+                $where = "AND " . str_replace($this->tableName . '.', 'e.', $where);
+            }
         }
 
         $sortBy = Util::toUnderScore($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy'], 'name'));
@@ -295,6 +303,7 @@ class Hierarchy extends RDB
                       FROM `$this->tableName` e
                       WHERE e.id NOT IN (SELECT entity_id FROM `$this->hierarchyTableName` WHERE deleted=0)
                       AND e.deleted=0
+                      {$where}
                       ORDER BY e.sort_order ASC, e.$sortBy {$sortOrder}, e.id";
         } else {
             $parentId = $this->getPDO()->quote($parentId);
@@ -303,6 +312,7 @@ class Hierarchy extends RDB
                   LEFT JOIN `$this->tableName` e ON e.id=h.entity_id
                   WHERE h.deleted=0
                     AND e.deleted=0
+                    {$where}
                     AND h.parent_id={$parentId}
                   ORDER BY h.hierarchy_sort_order ASC, e.$sortBy {$sortOrder}, e.id";
         }
@@ -317,23 +327,33 @@ class Hierarchy extends RDB
     /**
      * @return int
      */
-    public function getChildrenCount(string $parentId): int
+    public function getChildrenCount(string $parentId, $selectParams = null): int
     {
+        $where = "";
+        if ($selectParams) {
+            $where = $this->getMapper()->getWhereQuery($this->entityType, $selectParams['whereClause']);
+            if (!empty($where)) {
+                $where = "AND " . str_replace($this->tableName . '.', 'e.', $where);
+            }
+        }
+
         if (empty($parentId)) {
             $query = "SELECT COUNT(e.id) as count
                       FROM `$this->tableName` e
                       WHERE e.id NOT IN (SELECT entity_id FROM `$this->hierarchyTableName` WHERE deleted=0)
-                      AND e.deleted=0";
+                      AND e.deleted=0
+                      {$where}";
         } else {
             $query = "SELECT COUNT(e.id) as count
                       FROM $this->tableName e
                       LEFT JOIN $this->hierarchyTableName h on e.id=h.entity_id
                       WHERE e.deleted=0
                         AND h.deleted=0
+                        {$where}
                         AND h.parent_id='$parentId'";
         }
 
-        return (int)$this->getPDO()->query($query)->fetch(\PDO::FETCH_ASSOC)['count'];
+        return (int) $this->getPDO()->query($query)->fetch(\PDO::FETCH_ASSOC)['count'];
     }
 
     public function isRoot(string $id): bool
