@@ -79,6 +79,8 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
         },
 
         setup: function () {
+            Dep.prototype.setup.call(this);
+
             if (!this.params.options) {
                 var methodName = 'get' + Espo.Utils.upperCaseFirst(this.name) + 'Options';
                 if (typeof this.model[methodName] == 'function') {

@@ -42,11 +42,10 @@ Espo.define('views/fields/asset', 'views/fields/image', function (Dep) {
             Dep.prototype.setup.call(this);
 
             this.switchPreview();
+        },
 
-            this.listenTo(this.model, 'after:save', function () {
-                this.switchPreview();
-                this.reRender();
-            }, this);
+        afterModelSave() {
+            this.switchPreview();
         },
 
         hasPreview: function () {

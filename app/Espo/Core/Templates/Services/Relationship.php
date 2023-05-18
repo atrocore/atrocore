@@ -152,15 +152,6 @@ class Relationship extends Record
 
             $fieldDefs = $this->getMetadata()->get(['entityDefs', $relEntity->getEntityType(), 'fields', $fieldDefs['relationFieldName']]);
 
-            /**
-             * For integer and float with unit
-             */
-            if (!empty($fieldDefs['unitField'])) {
-                $entity->set($fieldDefs['mainField'], $relEntity->get($fieldDefs['relationFieldName']));
-                $entity->set($fieldDefs['mainField'] . 'UnitId', $relEntity->get($fieldDefs['relationFieldName'] . 'UnitId'));
-                continue;
-            }
-
             switch ($fieldDefs['type']) {
                 case 'rangeInt':
                 case 'rangeFloat':
@@ -168,6 +159,14 @@ class Relationship extends Record
                     $entity->set($field . 'To', $relEntity->get($fieldDefs['relationFieldName'] . 'To'));
                     if (!empty($fieldDefs['measureId'])) {
                         $entity->set($field . 'UnitId', $relEntity->get($fieldDefs['relationFieldName'] . 'UnitId'));
+                    }
+                    break;
+                case 'varchar':
+                    if (empty($fieldDefs['unitField'])) {
+                        $entity->set($field, $relEntity->get($fieldDefs['relationFieldName']));
+                    } else {
+                        $entity->set($fieldDefs['mainField'], $relEntity->get($fieldDefs['relationFieldName']));
+                        $entity->set($fieldDefs['mainField'] . 'UnitId', $relEntity->get($fieldDefs['relationFieldName'] . 'UnitId'));
                     }
                     break;
                 case 'currency':

@@ -328,19 +328,18 @@ class Hierarchy extends Record
                 case 'linkMultiple':
                     $input->{$field . 'Ids'} = array_column($parent->get($field)->toArray(), 'id');
                     break;
+                case 'varchar':
+                    if (empty($fieldDefs['unitField'])) {
+                        $input->$field = $parent->get($field);
+                    } else {
+                        $mainField = $fieldDefs['mainField'];
+                        $input->$mainField = $parent->get($mainField);
+                        $input->{$mainField . 'UnitId'} = $parent->get($mainField . 'UnitId');
+                    }
+                    break;
                 default:
                     $input->$field = $parent->get($field);
                     break;
-            }
-
-            /**
-             * For integer and float with unit
-             */
-            if (!empty($fieldDefs['unitField'])) {
-                $mainField = $fieldDefs['mainField'];
-                $input = new \stdClass();
-                $input->$mainField = $parent->get($mainField);
-                $input->{$mainField . 'UnitId'} = $parent->get($mainField . 'UnitId');
             }
 
             foreach ($input as $k => $v) {

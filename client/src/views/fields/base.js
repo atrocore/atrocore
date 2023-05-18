@@ -580,6 +580,15 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             if (this.params.defaultUnit) {
                 this.defaultUnit = this.params.defaultUnit;
             }
+
+            this.listenTo(this.model, 'after:save', () => {
+                this.afterModelSave();
+                this.reRender();
+            });
+        },
+
+        afterModelSave() {
+
         },
 
         setupSearch: function () {
