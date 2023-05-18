@@ -398,6 +398,35 @@ class Hierarchy extends RDB
         return empty($record) ? [] : $record;
     }
 
+    protected function hasArchive(Entity $entity): bool
+    {
+        return !empty($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'hasArchive']));
+    }
+
+
+    protected function validateIsArchive(Entity $entity): void
+    {
+        $fieldName = 'isArchived';
+        if ($entity->isAttributeChanged($fieldName) && $entity->get($fieldName)==true) {
+            // search all childs
+            if (!empty($entity->get('childrenIds'))) {
+                foreach ($entity->get('childrenIds') as $childId) {
+                    $ids = array_merge($this->getChildrenRecursivelyArray($childId), [$childId]);
+                    if (in_array($entity->get('id'), $ids)) {
+                        throw new BadRequest("Parent record cannot be chosen as a child.");
+                    }
+                }
+            }
+            $nonArchived = array_filter($this->getChildrenArray($entity->get('id'), false), function ($child) {
+                return $child['is_archived'] == false;
+            });
+            if (count($nonArchived) > 0) {
+                $language = $this->getLanguage();
+                throw new BadRequest(sprintf($language->translate('childsMustBeArchived', 'exceptions', 'Global'), $language->translate($fieldName, 'fields', $entity->getEntityType())));
+            }
+        }
+    }
+
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if (!empty($entity->get('parentsIds'))) {
@@ -416,6 +445,10 @@ class Hierarchy extends RDB
                     throw new BadRequest("Parent record cannot be chosen as a child.");
                 }
             }
+        }
+
+        if ($this->hasArchive($entity)) {
+            $this->validateIsArchive($entity);
         }
 
         parent::beforeSave($entity, $options);
