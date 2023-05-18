@@ -50,13 +50,9 @@ Espo.define('views/admin/field-manager/fields/default-unit', 'views/fields/enum'
             this.translatedOptions = {'': ''};
 
             if (this.model.get('measureId')) {
-                this.ajaxGetRequest(`Measure/${this.model.get('measureId')}/units`, null, {async: false}).then(res => {
-                    if (res.list) {
-                        res.list.forEach(item => {
-                            this.params.options.push(item.id);
-                            this.translatedOptions[item.id] = item.name;
-                        });
-                    }
+                this.getMeasureUnits(this.model.get('measureId')).forEach(option => {
+                    this.params.options.push(option.id);
+                    this.translatedOptions[option.id] = option.name ? option.name : ' ';
                 });
             }
         },
