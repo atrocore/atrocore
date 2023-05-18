@@ -407,20 +407,17 @@ class Hierarchy extends RDB
     protected function validateIsArchived(Entity $entity): void
     {
         $fieldName = 'isArchived';
-        if ($entity->isAttributeChanged($fieldName) && $entity->get($fieldName)==true) {
+        if ($entity->isAttributeChanged($fieldName) && $entity->get($fieldName) == true) {
             // search all childs
-            if (!empty($entity->get('childrenIds'))) {
-                foreach ($entity->get('childrenIds') as $childId) {
-                    $ids = array_merge($this->getChildrenRecursivelyArray($childId), [$childId]);
-                    if (in_array($entity->get('id'), $ids)) {
-                        throw new BadRequest("Parent record cannot be chosen as a child.");
-                    }
+            $hasNonArchivedChildren = false;
+            foreach ($entity->get('children') as $child) {
+                if ($child->get('is_archived') == false) {
+                    $hasNonArchivedChildren = true;
+                    break;
                 }
             }
-            $nonArchived = array_filter($this->getChildrenArray($entity->get('id'), false), function ($child) {
-                return $child['is_archived'] == false;
-            });
-            if (count($nonArchived) > 0) {
+
+            if ($hasNonArchivedChildren) {
                 $language = $this->getLanguage();
                 throw new BadRequest(sprintf($language->translate('childsMustBeArchived', 'exceptions', 'Global'), $language->translate($fieldName, 'fields', $entity->getEntityType())));
             }
