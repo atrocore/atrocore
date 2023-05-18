@@ -96,14 +96,15 @@ class Metadata extends AbstractListener
                 }
 
                 $data['entityDefs'][$entityType]['fields'][$field . 'UnitId'] = [
-                    "type"      => "varchar",
-                    "len"       => 24,
-                    "view"      => "views/fields/enum-unit-id",
-                    "measureId" => $fieldDefs['measureId'],
-                    "mainField" => $field,
-                    "required"  => !empty($fieldDefs['required']),
-                    "audited"   => !empty($fieldDefs['audited']),
-                    "emHidden"  => true
+                    "type"        => "varchar",
+                    "len"         => 24,
+                    "view"        => "views/fields/enum-unit-id",
+                    "measureId"   => $fieldDefs['measureId'],
+                    "unitIdField" => true,
+                    "mainField"   => $field,
+                    "required"    => !empty($fieldDefs['required']),
+                    "audited"     => !empty($fieldDefs['audited']),
+                    "emHidden"    => true
                 ];
 
                 if (in_array($fieldDefs['type'], ['int', 'float'])) {
