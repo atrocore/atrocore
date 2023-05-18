@@ -317,12 +317,30 @@ class Hierarchy extends Record
                     $input->$field = $parent->get($field);
                     $input->{$field . 'Currency'} = $parent->get($field . 'Currency');
                     break;
+                case 'rangeInt':
+                case 'rangeFloat':
+                    $input->{$field . 'From'} = $parent->get($field. 'From');
+                    $input->{$field . 'To'} = $parent->get($field . 'To');
+                    if (!empty($fieldDefs['measureId'])){
+                        $input->{$field . 'UnitId'} = $parent->get($field . 'UnitId');
+                    }
+                    break;
                 case 'linkMultiple':
                     $input->{$field . 'Ids'} = array_column($parent->get($field)->toArray(), 'id');
                     break;
                 default:
                     $input->$field = $parent->get($field);
                     break;
+            }
+
+            /**
+             * For integer and float with unit
+             */
+            if (!empty($fieldDefs['unitField'])) {
+                $mainField = $fieldDefs['mainField'];
+                $input = new \stdClass();
+                $input->$mainField = $parent->get($mainField);
+                $input->{$mainField . 'UnitId'} = $parent->get($mainField . 'UnitId');
             }
 
             foreach ($input as $k => $v) {

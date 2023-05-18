@@ -30,51 +30,30 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/fields/unit-float', 'views/fields/float', Dep => {
+Espo.define('views/fields/unit-float', ['views/fields/float', 'views/fields/unit-int'], (Dep, Int) => {
 
     return Dep.extend({
 
         setup() {
             Dep.prototype.setup.call(this);
-
-            if (this.measureId) {
-                this.unitFieldName = this.name + 'UnitId';
-                this.loadUnitOptions();
-                if (this.model.isNew() && this.defaultUnit) {
-                    this.model.set(this.unitFieldName, this.defaultUnit);
-                }
-            }
+            Int.prototype.afterSetup.call(this);
         },
 
         init() {
-            let fieldName = this.options.name || this.options.defs.name;
-            this.options.name = this.getMetadata().get(['entityDefs', this.model.name, 'fields', fieldName, 'mainField']);
-
+            Int.prototype.prepareOptionName.call(this);
             Dep.prototype.init.call(this);
         },
 
+        isInheritedField: function () {
+            return Int.prototype.isInheritedField.call(this);
+        },
+
         data() {
-            let data = Dep.prototype.data.call(this);
-
-            if (this.measureId) {
-                data.unitFieldName = this.unitFieldName;
-                data.unitList = this.unitList;
-                data.unitListTranslates = this.unitListTranslates;
-                data.unitValue = this.model.get(this.unitFieldName);
-                data.unitValueTranslate = this.unitListTranslates[data.unitValue] || data.unitValue;
-            }
-
-            return data;
+            return Int.prepareMeasureData(Dep.prototype.data.call(this));
         },
 
         fetch() {
-            let data = Dep.prototype.fetch.call(this);
-            if (this.measureId) {
-                let $unit = this.$el.find(`[name="${this.unitFieldName}"]`);
-                data[this.unitFieldName] = $unit ? $unit.val() : null;
-            }
-
-            return data;
+            return Int.prototype.fetch.call(this);
         },
 
     });

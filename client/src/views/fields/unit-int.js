@@ -36,7 +36,10 @@ Espo.define('views/fields/unit-int', 'views/fields/int', Dep => {
 
         setup() {
             Dep.prototype.setup.call(this);
+            this.afterSetup();
+        },
 
+        afterSetup() {
             if (this.measureId) {
                 this.unitFieldName = this.name + 'UnitId';
                 this.loadUnitOptions();
@@ -44,18 +47,37 @@ Espo.define('views/fields/unit-int', 'views/fields/int', Dep => {
                     this.model.set(this.unitFieldName, this.defaultUnit);
                 }
             }
+
+            this.listenTo(this.model, 'after:save', () => {
+                this.reRender();
+            });
         },
 
         init() {
-            let fieldName = this.options.name || this.options.defs.name;
-            this.options.name = this.getMetadata().get(['entityDefs', this.model.name, 'fields', fieldName, 'mainField']);
-
+            this.prepareOptionName();
             Dep.prototype.init.call(this);
         },
 
-        data() {
-            let data = Dep.prototype.data.call(this);
+        prepareOptionName() {
+            let fieldName = this.options.name || this.options.defs.name;
+            this.options.name = this.getMetadata().get(['entityDefs', this.model.name, 'fields', fieldName, 'mainField']);
+        },
 
+        isInheritedField: function () {
+            if (!['detail', 'edit'].includes(this.mode) || !this.model || !this.model.urlRoot || !this.isInheritableField()) {
+                return false;
+            }
+
+            const inheritedFields = this.model.get('inheritedFields');
+
+            return inheritedFields && Array.isArray(inheritedFields) && inheritedFields.includes(this.name) && inheritedFields.includes(this.name + 'UnitId');
+        },
+
+        data() {
+            return this.prepareMeasureData(Dep.prototype.data.call(this));
+        },
+
+        prepareMeasureData(data) {
             if (this.measureId) {
                 data.unitFieldName = this.unitFieldName;
                 data.unitList = this.unitList;
