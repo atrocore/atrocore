@@ -51,6 +51,10 @@ Espo.define('views/fields/enum-unit-id', 'views/fields/enum', Dep => {
                     this.translatedOptions[option.id] = option.name ? option.name : ' ';
                 });
             }
+
+            this.listenTo(this.model, 'after:save', () => {
+                this.reRender();
+            });
         },
 
     });

@@ -319,9 +319,9 @@ class Hierarchy extends Record
                     break;
                 case 'rangeInt':
                 case 'rangeFloat':
-                    $input->{$field . 'From'} = $parent->get($field. 'From');
+                    $input->{$field . 'From'} = $parent->get($field . 'From');
                     $input->{$field . 'To'} = $parent->get($field . 'To');
-                    if (!empty($fieldDefs['measureId'])){
+                    if (!empty($fieldDefs['measureId'])) {
                         $input->{$field . 'UnitId'} = $parent->get($field . 'UnitId');
                     }
                     break;
