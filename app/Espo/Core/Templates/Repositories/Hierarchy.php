@@ -398,13 +398,13 @@ class Hierarchy extends RDB
         return empty($record) ? [] : $record;
     }
 
-    protected function hasArchive(Entity $entity): bool
+    protected function entityHasArchive(Entity $entity): bool
     {
         return !empty($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'hasArchive']));
     }
 
 
-    protected function validateIsArchive(Entity $entity): void
+    protected function validateIsArchived(Entity $entity): void
     {
         $fieldName = 'isArchived';
         if ($entity->isAttributeChanged($fieldName) && $entity->get($fieldName)==true) {
@@ -447,8 +447,8 @@ class Hierarchy extends RDB
             }
         }
 
-        if ($this->hasArchive($entity)) {
-            $this->validateIsArchive($entity);
+        if ($this->entityHasArchive($entity)) {
+            $this->validateIsArchived($entity);
         }
 
         parent::beforeSave($entity, $options);
