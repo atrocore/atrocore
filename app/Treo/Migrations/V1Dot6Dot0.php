@@ -33,10 +33,13 @@
 
 namespace Treo\Migrations;
 
+use Espo\Core\Utils\Util;
 use Treo\Core\Migration\Base;
 
 class V1Dot6Dot0 extends Base
 {
+    protected array $measureUnits = [];
+
     public function up(): void
     {
         $this->exec("ALTER TABLE measure DROP code");
@@ -52,8 +55,38 @@ class V1Dot6Dot0 extends Base
         $this->exec("DROP TABLE locale_measure");
         $this->exec("ALTER TABLE measure DROP data");
 
-        // migrate unit to float with measure
+        $path = 'custom/Espo/Custom/Resources/metadata/entityDefs';
+        if (file_exists($path)) {
+            foreach (scandir($path) as $file) {
+                $filePath = "$path/$file";
+                if (!is_file($filePath)) {
+                    continue;
+                }
 
+                $contents = file_get_contents($filePath);
+
+                if (strpos($contents, '"unit"') !== false) {
+                    $data = json_decode($contents, true);
+                    foreach ($data['fields'] as $field => $fieldDefs) {
+                        if ($fieldDefs['type'] !== 'unit') {
+                            continue;
+                        }
+
+                        $entityType = str_replace('.json', '', $file);
+                        $tableName = Util::toUnderScore($entityType);
+                        $columnName = Util::toUnderScore($field);
+
+                        $this->exec("ALTER TABLE `$tableName` ADD {$columnName}_unit_id VARCHAR(24) DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");
+                        foreach ($this->getMeasureUnits((string)$fieldDefs['measure']) as $unit) {
+                            $name = $this->getPDO()->quote($unit['name']);
+                            $this->exec("UPDATE `$tableName` SET {$columnName}_unit_id='{$unit['id']}' WHERE {$columnName}_unit={$name}");
+                        }
+                    }
+                    $contents = str_replace(['"unit"', '"measure"'], ['"float"', '"measureId"'], $contents);
+                    file_put_contents($filePath, $contents);
+                }
+            }
+        }
     }
 
     public function down(): void
@@ -67,5 +100,16 @@ class V1Dot6Dot0 extends Base
             $this->getPDO()->exec($query);
         } catch (\Throwable $e) {
         }
+    }
+
+    protected function getMeasureUnits(string $measureId): array
+    {
+        if (!isset($this->measureUnits[$measureId])) {
+            $this->measureUnits[$measureId] = $this->getPDO()
+                ->query("SELECT * FROM unit WHERE deleted=0 AND measure_id='$measureId'")
+                ->fetchAll(\PDO::FETCH_ASSOC);
+        }
+
+        return $this->measureUnits[$measureId];
     }
 }
