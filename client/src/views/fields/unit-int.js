@@ -47,10 +47,6 @@ Espo.define('views/fields/unit-int', 'views/fields/int', Dep => {
                     this.model.set(this.unitFieldName, this.defaultUnit);
                 }
             }
-
-            this.listenTo(this.model, 'after:save', () => {
-                this.reRender();
-            });
         },
 
         init() {

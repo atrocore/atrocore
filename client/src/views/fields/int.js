@@ -76,6 +76,10 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
             if (this.params.disableFormatting) {
                 this.disableFormatting = true;
             }
+
+            this.listenTo(this.model, 'after:save', () => {
+                this.reRender();
+            });
         },
 
         afterRender: function () {
