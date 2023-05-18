@@ -142,4 +142,3 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
 
     });
 });
-

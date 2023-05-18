@@ -309,4 +309,3 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
 
     });
 });
-

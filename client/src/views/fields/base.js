@@ -895,4 +895,3 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
     });
 });
-

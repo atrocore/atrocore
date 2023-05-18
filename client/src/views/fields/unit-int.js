@@ -97,4 +97,3 @@ Espo.define('views/fields/unit-int', 'views/fields/int', Dep => {
 
     });
 });
-

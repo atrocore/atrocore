@@ -58,4 +58,3 @@ Espo.define('views/fields/unit-float', ['views/fields/float', 'views/fields/unit
 
     });
 });
-
