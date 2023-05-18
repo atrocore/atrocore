@@ -855,11 +855,22 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
             if (!Espo[key]) {
                 Espo[key] = [];
-                this.ajaxGetRequest(`Measure/${measureId}/units`, {
+                this.ajaxGetRequest(`Unit`, {
                     sortBy: "createdAt",
                     asc: true,
                     offset: 0,
-                    maxSize: 5000
+                    maxSize: 5000,
+                    where: [
+                        {
+                            type: "equals",
+                            attribute: "measureId",
+                            value: measureId
+                        },
+                        {
+                            type: "isNull",
+                            attribute: "convertToId"
+                        }
+                    ]
                 }, {async: false}).then(res => {
                     if (res.list) {
                         Espo[key] = res.list;
