@@ -50,7 +50,7 @@ class V1Dot6Dot0 extends Base
         $this->exec("DROP INDEX code ON unit");
 
         $this->exec("DROP TABLE locale_measure");
-
+        $this->exec("ALTER TABLE measure DROP data");
 
         // migrate unit to float with measure
 

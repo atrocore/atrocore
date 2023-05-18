@@ -36,17 +36,6 @@
       "type": "link",
       "readOnly": true,
       "view": "views/fields/user"
-    },
-    "data": {
-      "type": "jsonObject",
-      "layoutDetailDisabled": true,
-      "layoutListDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "textFilterDisabled": true,
-      "emHidden": true
     }
   },
   "links": {
