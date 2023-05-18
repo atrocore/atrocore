@@ -67,6 +67,9 @@ class V1Dot6Dot0 extends Base
 
                 if (strpos($contents, '"unit"') !== false) {
                     $data = json_decode($contents, true);
+                    if (empty($data['fields'])) {
+                        continue;
+                    }
                     foreach ($data['fields'] as $field => $fieldDefs) {
                         if ($fieldDefs['type'] !== 'unit') {
                             continue;
