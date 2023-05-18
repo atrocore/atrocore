@@ -59,10 +59,12 @@
   "fields": {
     "from": {
       "type": "float",
+      "notStorable": false,
       "emHidden": true
     },
     "to": {
       "type": "float",
+      "notStorable": false,
       "emHidden": true
     }
   },

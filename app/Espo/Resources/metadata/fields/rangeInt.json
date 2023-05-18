@@ -55,10 +55,12 @@
   "fields": {
     "from": {
       "type": "int",
+      "notStorable": false,
       "emHidden": true
     },
     "to": {
       "type": "int",
+      "notStorable": false,
       "emHidden": true
     }
   },

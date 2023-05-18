@@ -299,7 +299,9 @@ class Hierarchy extends Record
         $resultInput = new \stdClass();
         foreach ($parents as $parent) {
             $input = new \stdClass();
-            switch ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type'], 'varchar')) {
+
+            $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field]);
+            switch ($fieldDefs['type']) {
                 case 'asset':
                 case 'image':
                 case 'link':
@@ -314,10 +316,6 @@ class Hierarchy extends Record
                 case 'currency':
                     $input->$field = $parent->get($field);
                     $input->{$field . 'Currency'} = $parent->get($field . 'Currency');
-                    break;
-                case 'unit':
-                    $input->$field = $parent->get($field);
-                    $input->{$field . 'Unit'} = $parent->get($field . 'Unit');
                     break;
                 case 'linkMultiple':
                     $input->{$field . 'Ids'} = array_column($parent->get($field)->toArray(), 'id');
@@ -832,7 +830,8 @@ class Hierarchy extends Record
     {
         $inheritedFields = [];
         foreach ($this->getRepository()->getInheritableFields() as $field) {
-            switch ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type'])) {
+            $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field]);
+            switch ($fieldDefs['type']) {
                 case 'asset':
                 case 'image':
                 case 'link':
@@ -844,14 +843,6 @@ class Hierarchy extends Record
                     if (
                         $this->areValuesEqual($this->getRepository()->get(), $field, $parent->get($field), $child->get($field))
                         && $this->areValuesEqual($this->getRepository()->get(), $field . 'Currency', $parent->get($field . 'Currency'), $child->get($field . 'Currency'))
-                    ) {
-                        $inheritedFields[] = $field;
-                    }
-                    break;
-                case 'unit':
-                    if (
-                        $this->areValuesEqual($this->getRepository()->get(), $field, $parent->get($field), $child->get($field))
-                        && $this->areValuesEqual($this->getRepository()->get(), $field . 'Unit', $parent->get($field . 'Unit'), $child->get($field . 'Unit'))
                     ) {
                         $inheritedFields[] = $field;
                     }
