@@ -123,6 +123,10 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
                 'change select.search-type': function (e) {
                     this.handleSearchType($(e.currentTarget).val());
                 },
+                'keyup input[type="text"]': function (e) {
+                    const target = $(e.currentTarget)
+                    target.val(target.val().replaceAll(/[^\d.,-]/g, ""))
+                },
             }, this.events || {});
         },
 
