@@ -287,7 +287,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             return;
         }
 
-        if ($entity->get($fromName) !== null && $entity->get($fromName) > $entity->get($toName)) {
+        if ($entity->get($toName) !== null && $entity->get($fromName) !== null && $entity->get($fromName) > $entity->get($toName)) {
             $fieldLabel = $this->getLanguage()->translate($toName, 'fields', $entity->getEntityType());
             $message = str_replace(['{field}', '{value}'], [$fieldLabel, $entity->get($fromName)], $this->getLanguage()->translate('fieldShouldBeGreater', 'messages', 'Global'));
             throw new BadRequest($message);
