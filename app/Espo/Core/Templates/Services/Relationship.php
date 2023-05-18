@@ -155,10 +155,6 @@ class Relationship extends Record
                     $entity->set($field, $relEntity->get($fieldDefs['relationFieldName']));
                     $entity->set($field . 'Currency', $relEntity->get($fieldDefs['relationFieldName'] . 'Currency'));
                     break;
-                case 'unit':
-                    $entity->set($field, $relEntity->get($fieldDefs['relationFieldName']));
-                    $entity->set($field . 'Unit', $relEntity->get($fieldDefs['relationFieldName'] . 'Unit'));
-                    break;
                 case 'link':
                 case 'file':
                 case 'asset':
