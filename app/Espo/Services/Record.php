@@ -2417,6 +2417,15 @@ class Record extends \Espo\Core\Services\Base
         $measureRepository = $this->getEntityManager()->getRepository('Measure');
 
         $entity->set($fieldName . 'AllUnits', $measureRepository->convertMeasureUnit($value, $fieldDefs['measureId'], $unitId));
+
+        /**
+         * Set unit name to virtual field for backward compatibility
+         */
+        foreach ($measureRepository->getMeasureUnits($fieldDefs['measureId']) as $unit) {
+            if ($unit->get('id') === $unitId) {
+                $entity->set($fieldName . 'Unit', $unit->get('name'));
+            }
+        }
     }
 
     public function prepareEntityForOutput(Entity $entity)
@@ -2431,19 +2440,6 @@ class Record extends \Espo\Core\Services\Base
         foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []) as $name => $defs) {
             if (empty($defs['type'])) {
                 continue 1;
-            }
-
-            /**
-             * Set unit name to virtual field for backward compatibility
-             */
-            if (!empty($defs['unitIdField']) && !empty($defs['measureId']) && !$entity->has($name)) {
-                $unitId = $entity->get($name . 'Id');
-                if (!empty($unitId)) {
-                    $units = $this->getMeasureUnits($defs['measureId']);
-                    if (isset($units[$unitId])) {
-                        $entity->set($name, $units[$unitId]->get('name'));
-                    }
-                }
             }
 
             switch ($defs['type']) {
