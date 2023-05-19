@@ -56,7 +56,7 @@ Espo.define('views/fields/unit-int', 'views/fields/int', Dep => {
 
         prepareOptionName() {
             let fieldName = this.options.name || this.options.defs.name;
-            this.options.name = this.getMetadata().get(['entityDefs', this.model.name, 'fields', fieldName, 'mainField']);
+            this.options.name = this.getMetadata().get(['entityDefs', this.model.name, 'fields', fieldName, 'mainField']) || fieldName;
         },
 
         isInheritedField: function () {
