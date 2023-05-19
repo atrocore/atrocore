@@ -97,7 +97,7 @@ class Metadata extends AbstractListener
 
                 $data['entityDefs'][$entityType]['fields'][$field . 'Unit'] = [
                     "type"        => "link",
-                    "view"        => "views/fields/enum-unit-id",
+                    "view"        => "views/fields/unit-link",
                     "measureId"   => $fieldDefs['measureId'],
                     "unitIdField" => true,
                     "mainField"   => $field,

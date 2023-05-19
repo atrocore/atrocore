@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -31,36 +30,23 @@
  * and "AtroCore" word.
  */
 
-declare(strict_types=1);
+Espo.define('views/fields/unit-link', 'views/fields/link', Dep => {
 
-namespace Espo\SelectManagers;
+    return Dep.extend({
 
-use Espo\Core\SelectManagers\Base;
+        selectBoolFilterList: ['fromMeasure', 'notConverted'],
 
-class Unit extends Base
-{
-    protected function boolFilterNotEntity(array &$result)
-    {
-        if (!empty($id = $this->getBoolFilterParameter('notEntity'))) {
-            $result['whereClause'][] = [
-                'id!=' => $id
-            ];
-        }
-    }
+        boolFilterData: {
+            fromMeasure() {
+                let measureId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'measureId']);
+                if (this.params.measureId) {
+                    measureId = this.params.measureId;
+                }
+                return {
+                    measureId: measureId
+                };
+            }
+        },
 
-    protected function boolFilterFromMeasure(array &$result)
-    {
-        if (!empty($measureId = $this->getBoolFilterParameter('fromMeasure'))) {
-            $result['whereClause'][] = [
-                'measureId' => $measureId
-            ];
-        }
-    }
-
-    protected function boolFilterNotConverted(array &$result)
-    {
-        $result['whereClause'][] = [
-            'convertToId' => null
-        ];
-    }
-}
+    });
+});
