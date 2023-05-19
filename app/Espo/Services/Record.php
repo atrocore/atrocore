@@ -1138,11 +1138,11 @@ class Record extends \Espo\Core\Services\Base
             /**
              * Convert unit to unitId for backward compatibility
              */
-            if (!empty($fieldDefs['virtualUnit']) && !property_exists($data, $fieldDefs['mainField'] . 'UnitId')) {
+            if (!empty($fieldDefs['unitIdField']) && !property_exists($data, $field . 'Id')) {
                 $units = $this->getMeasureUnits($fieldDefs['measureId']);
                 foreach ($units as $unit) {
                     if ($unit->get('name') === $value) {
-                        $data->{$fieldDefs['mainField'] . 'UnitId'} = $unit->get('id');
+                        $data->{$field . 'Id'} = $unit->get('id');
                         break;
                     }
                 }
@@ -2436,9 +2436,8 @@ class Record extends \Espo\Core\Services\Base
             /**
              * Set unit name to virtual field for backward compatibility
              */
-            if (!empty($defs['virtualUnit']) && !empty($defs['measureId']) && !$entity->has($name)) {
-                $mainField = $defs['mainField'] ?? $name;
-                $unitId = $entity->get($mainField . 'UnitId');
+            if (!empty($defs['unitIdField']) && !empty($defs['measureId']) && !$entity->has($name)) {
+                $unitId = $entity->get($name . 'Id');
                 if (!empty($unitId)) {
                     $units = $this->getMeasureUnits($defs['measureId']);
                     if (isset($units[$unitId])) {
