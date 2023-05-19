@@ -110,7 +110,7 @@ class Language extends AbstractListener
                             $data[$locale][$entity]['fields']['unit' . ucfirst($mainField)] = $fieldLabel;
                         }
 
-                        $data[$locale][$entity]['fields'][$mainField . 'UnitId'] = $fieldLabel . ' ' . $this->getLabel($data, $locale, $entity, 'unitPart', 'labels');
+                        $data[$locale][$entity]['fields'][$mainField . 'Unit'] = $fieldLabel . ' ' . $this->getLabel($data, $locale, $entity, 'unitPart', 'labels');
                     }
                 }
             }

@@ -37,7 +37,7 @@ Espo.define('views/fields/enum-unit-id', 'views/fields/enum', Dep => {
         setup() {
             Dep.prototype.setup.call(this);
 
-            let measureId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'measureId']);
+            let measureId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.options.fieldName, 'measureId']);
             if (this.params.measureId) {
                 measureId = this.params.measureId;
             }
@@ -51,6 +51,17 @@ Espo.define('views/fields/enum-unit-id', 'views/fields/enum', Dep => {
                     this.translatedOptions[option.id] = option.name ? option.name : ' ';
                 });
             }
+        },
+
+        init() {
+            let fieldName = this.options.name || this.options.defs.name;
+            this.options.fieldName = fieldName;
+            this.options.name = fieldName + 'Id';
+            Dep.prototype.init.call(this);
+        },
+
+        getFieldName() {
+            return this.options.name || this.options.defs.name;
         },
 
     });

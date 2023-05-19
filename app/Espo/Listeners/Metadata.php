@@ -95,9 +95,8 @@ class Metadata extends AbstractListener
                     $data['entityDefs'][$entityType]['fields'][$field . 'To']['measureId'] = $fieldDefs['measureId'];
                 }
 
-                $data['entityDefs'][$entityType]['fields'][$field . 'UnitId'] = [
-                    "type"        => "varchar",
-                    "len"         => 24,
+                $data['entityDefs'][$entityType]['fields'][$field . 'Unit'] = [
+                    "type"        => "link",
                     "view"        => "views/fields/enum-unit-id",
                     "measureId"   => $fieldDefs['measureId'],
                     "unitIdField" => true,
@@ -105,6 +104,11 @@ class Metadata extends AbstractListener
                     "required"    => !empty($fieldDefs['required']),
                     "audited"     => !empty($fieldDefs['audited']),
                     "emHidden"    => true
+                ];
+
+                $data['entityDefs'][$entityType]['links'][$field . 'Unit'] = [
+                    "type"   => "belongsTo",
+                    "entity" => "Unit"
                 ];
 
                 if (in_array($fieldDefs['type'], ['int', 'float'])) {
@@ -125,26 +129,6 @@ class Metadata extends AbstractListener
                 } else {
                     $data['entityDefs'][$entityType]['fields'][$field]['unitField'] = true;
                 }
-
-                $data['entityDefs'][$entityType]['fields'][$field . 'Unit'] = [
-                    "type"                      => "varchar",
-                    "notStorable"               => true,
-                    "view"                      => "views/fields/enum-unit",
-                    "measureId"                 => $fieldDefs['measureId'],
-                    "virtualUnit"               => true,
-                    "mainField"                 => $field,
-                    "required"                  => false,
-                    "audited"                   => false,
-                    "layoutListDisabled"        => true,
-                    "layoutListSmallDisabled"   => true,
-                    "layoutDetailDisabled"      => true,
-                    "layoutDetailSmallDisabled" => true,
-                    "massUpdateDisabled"        => true,
-                    "filterDisabled"            => true,
-                    "exportDisabled"            => true,
-                    "importDisabled"            => true,
-                    "emHidden"                  => true
-                ];
 
                 foreach (in_array($fieldDefs['type'], ['int', 'float']) ? [$field] : [$field . 'From', $field . 'To'] as $v) {
                     $data['entityDefs'][$entityType]['fields'][$v . 'AllUnits'] = [
