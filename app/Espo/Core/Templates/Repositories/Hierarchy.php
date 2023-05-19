@@ -411,7 +411,7 @@ class Hierarchy extends RDB
             // search all childs
             $hasNonArchivedChildren = false;
             foreach ($entity->get('children') as $child) {
-                if ($child->get('is_archived') == false) {
+                if ($child->get('isArchived') == false) {
                     $hasNonArchivedChildren = true;
                     break;
                 }
