@@ -243,7 +243,7 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
 
             let res = inheritedFields.includes(this.name + 'From') && inheritedFields.includes(this.name + 'To');
             if (this.measureId) {
-                res = res && inheritedFields.includes(this.name + 'UnitId');
+                res = res && inheritedFields.includes(this.name + 'Unit');
             }
 
             return res;

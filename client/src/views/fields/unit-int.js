@@ -66,7 +66,7 @@ Espo.define('views/fields/unit-int', 'views/fields/int', Dep => {
 
             const inheritedFields = this.model.get('inheritedFields');
 
-            return inheritedFields && Array.isArray(inheritedFields) && inheritedFields.includes(this.name) && inheritedFields.includes(this.name + 'UnitId');
+            return inheritedFields && Array.isArray(inheritedFields) && inheritedFields.includes(this.name) && inheritedFields.includes(this.name + 'Unit');
         },
 
         data() {

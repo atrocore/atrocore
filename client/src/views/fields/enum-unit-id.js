@@ -53,6 +53,17 @@ Espo.define('views/fields/enum-unit-id', 'views/fields/enum', Dep => {
             }
         },
 
+        isInheritedField: function () {
+            if (!['detail', 'edit'].includes(this.mode) || !this.model || !this.model.urlRoot || !this.isInheritableField()) {
+                return false;
+            }
+
+            const inheritedFields = this.model.get('inheritedFields');
+
+            return inheritedFields && Array.isArray(inheritedFields) && inheritedFields.includes(this.options.fieldName);
+        },
+
+
         init() {
             let fieldName = this.options.name || this.options.defs.name;
             this.options.fieldName = fieldName;
