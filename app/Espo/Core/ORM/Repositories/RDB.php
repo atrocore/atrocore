@@ -505,11 +505,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         return $this->getInjection('container')->get('language');
     }
 
-    protected function getUnitFieldMeasure(string $fieldName, Entity $entity): string
-    {
-        return $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $fieldName, 'measure'], '');
-    }
-
     /**
      * @param Entity $entity
      * @param array  $options
