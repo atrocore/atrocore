@@ -927,6 +927,7 @@
     "list": "Liste"
   },
   "exceptions": {
+    "childsMustBeArchived": "Der (übergeordnete) Datensatz kann nur archiviert werden, wenn auch alle untergeordneten Datensätzte archiviert sind.",
     "maxLengthIsExceeded": "Die zulässige maximale Länge für \"%s\" beträgt \"%s\" Symbole, Ihre aktuelle Länge beträgt \"%s\" Symbole.",
     "parentRecordsHaveDifferentValues": "Eltern-Datensätze haben unterschiedliche Werte, der zu vererbende Wert kann nicht bestimmt werden.",
     "nothingToInherit": "Es gibt nichts zu vererben.",
