@@ -878,7 +878,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
         updateCollection() {
             let advanced = {};
             for (let field in this.advanced) {
-                if (!('value' in this.advanced[field]) || ![null, ''].includes(this.advanced[field].value) || 'subQuery' in this.advanced[field]) {
+                if (!('value' in this.advanced[field]) || ![null, ''].includes(this.advanced[field].value) || 'subQuery' in this.advanced[field] || this.pinned[field]) {
                     advanced[field] = this.advanced[field];
                 }
             }
