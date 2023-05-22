@@ -314,10 +314,6 @@ class OpenApiGenerator
                         $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'string'];
                         $result['components']['schemas'][$entityName]['properties']["{$fieldName}Currency"] = ['type' => 'string'];
                         break;
-                    case "unit":
-                        $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'string'];
-                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Unit"] = ['type' => 'string'];
-                        break;
                     case "array":
                     case "multiEnum":
                         $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'array', 'items' => ['type' => 'string']];

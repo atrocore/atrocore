@@ -46,7 +46,7 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
 
             return _.extend({
                 fieldsArr: this.fieldsArr,
-                changedFieldsStr: (this.fieldsArr.map(item => '<code>' + this.translate(item.field, 'fields', this.model.get('parentType')) + '</code>')).join(', '),
+                changedFieldsStr: (this.fieldsArr.map(item => '<code>' + item.label + '</code>')).join(', '),
                 parentType: this.model.get('parentType'),
                 diff: diff,
                 showDiff: typeof diff !== 'undefined',
@@ -101,7 +101,12 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                 this.fieldsArr = [];
 
                 fields.forEach(function (field) {
-                    let type = this.model.get('attributeType') || model.getFieldType(field) || 'base';
+                    let fieldDefs = this.model.get('fieldDefs');
+                    if (!fieldDefs[field] || !fieldDefs[field]['type']) {
+                        return;
+                    }
+
+                    let type = fieldDefs[field]['type'];
 
                     let fieldId = field;
                     if (type === 'asset' || type === 'link') {
@@ -134,7 +139,8 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                         model: modelWas,
                         readOnly: true,
                         defs: {
-                            name: field
+                            name: field,
+                            label: field + ' 11'
                         },
                         mode: 'detail',
                         inlineEditDisabled: true,
@@ -161,6 +167,7 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
 
                     this.fieldsArr.push({
                         field: field,
+                        label: fieldDefs[field]['label'] ?? field,
                         was: field + 'Was',
                         htmlTag: htmlTag,
                         became: field + 'Became',

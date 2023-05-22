@@ -102,8 +102,6 @@ class FieldManager extends Injectable
     {
         $fieldDefs = $this->getFieldDefs($scope, $name);
 
-        $fieldDefs['label'] = $this->getLanguage()->translate($name, 'fields', $scope);
-
         $type = $this->getMetadata()->get(['entityDefs', $scope, 'fields', $name, 'type']);
 
         $this->processHook('onRead', $type, $scope, $name, $fieldDefs);

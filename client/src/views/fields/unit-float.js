@@ -30,19 +30,31 @@
  * and "AtroCore" word.
  */
 
-Espo.define('treo-core:views/admin/field-manager/fields/measure-options', 'views/fields/enum',
-    Dep => Dep.extend({
+Espo.define('views/fields/unit-float', ['views/fields/float', 'views/fields/unit-int'], (Dep, Int) => {
+
+    return Dep.extend({
 
         setup() {
             Dep.prototype.setup.call(this);
-
-            if (!this.model.isNew()) {
-                this.setReadOnly();
-            }
+            Int.prototype.afterSetup.call(this);
         },
 
-        setupOptions() {
-            this.params.options = Object.keys(Espo.Utils.cloneDeep(this.getConfig().get('unitsOfMeasure') || {}));
+        init() {
+            Int.prototype.prepareOptionName.call(this);
+            Dep.prototype.init.call(this);
         },
-    })
-);
+
+        isInheritedField: function () {
+            return Int.prototype.isInheritedField.call(this);
+        },
+
+        data() {
+            return Int.prototype.prepareMeasureData.call(this, Dep.prototype.data.call(this));
+        },
+
+        fetch() {
+            return Int.prototype.fetch.call(this);
+        },
+
+    });
+});

@@ -7,7 +7,15 @@
           "name": "name"
         },
         {
+          "name": "code"
+        }
+      ],
+      [
+        {
           "name": "isDefault"
+        },
+        {
+          "name": "measure"
         }
       ],
       [

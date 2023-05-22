@@ -74,12 +74,6 @@ Espo.define('views/fields/map', 'views/fields/base', function (Dep) {
                     this.reRender();
                 }
             }, this);
-
-            this.listenTo(this.model, 'after:save', function () {
-                if (this.isRendered()) {
-                    this.reRender();
-                }
-            }, this);
         },
 
         hasAddress: function () {

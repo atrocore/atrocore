@@ -30,13 +30,23 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/unit/list', 'views/list',
-    (Dep) => Dep.extend({
+Espo.define('views/fields/unit-link', 'views/fields/link', Dep => {
 
-        getHeader() {
-            return  `<a href="#Measure">${this.translate('Measure', 'scopeNamesPlural', 'Global')}</a>` + this.translate('Unit', 'scopeNamesPlural', 'Global');
+    return Dep.extend({
+
+        selectBoolFilterList: ['fromMeasure', 'notConverted'],
+
+        boolFilterData: {
+            fromMeasure() {
+                let measureId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'measureId']);
+                if (this.params.measureId) {
+                    measureId = this.params.measureId;
+                }
+                return {
+                    measureId: measureId
+                };
+            }
         },
 
-    })
-);
-
+    });
+});

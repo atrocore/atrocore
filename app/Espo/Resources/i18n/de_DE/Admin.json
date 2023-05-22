@@ -120,6 +120,7 @@
     "multiLanguage": "Sprachen"
   },
   "fields": {
+    "defaultUnit": "Standard Maßeinheit",
     "isMultilang": "Mehrsprachig",
     "fontSize": "Schriftgröße",
     "assetType": "Asset-Typ",

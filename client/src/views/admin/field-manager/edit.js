@@ -135,9 +135,10 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                     }
 
                     if (!this.isNew) {
-                        this.model.set('label', this.getLanguage().translate(field, 'fields', this.scope));
+                        let labelField = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'labelField']) ?? field;
+                        this.model.set('label', this.getLanguage().translate(labelField, 'fields', this.scope));
                         (this.getConfig().get('inputLanguageList') || []).forEach(locale => {
-                            this.setLocaleLabel(locale, field);
+                            this.setLocaleLabel(locale, labelField);
                         });
                     }
 

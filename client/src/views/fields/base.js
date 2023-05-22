@@ -50,6 +50,10 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         name: null,
 
+        measureId: null,
+
+        defaultUnit: null,
+
         defs: null,
 
         params: null,
@@ -74,7 +78,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         isRequired: function () {
             return this.params.required;
-        },/**
+        }, /**
          * Get cell element. Works only after rendered.
          * {jQuery}
          */
@@ -138,7 +142,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         setNotReadOnly: function () {
             if (this.readOnlyLocked) return;
             this.readOnly = false;
-        },/**
+        }, /**
          * Get label element. Works only after rendered.
          * {jQuery}
          */
@@ -147,7 +151,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 this.$label = this.$el.parent().children('label');
             }
             return this.$label;
-        },/**
+        }, /**
          * Hide field and label. Works only after rendered.
          */
         hide: function () {
@@ -155,7 +159,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             var $cell = this.getCellElement();
             $cell.children('label').addClass('hidden');
             $cell.addClass('hidden-cell');
-        },/**
+        }, /**
          * Show field and label. Works only after rendered.
          */
         show: function () {
@@ -302,7 +306,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
                         }).on('hidden.bs.popover', function (e) {
                             $(e.target).data('bs.popover').inState.click = false;
-                        });                        
+                        });
                     }
                 }, this);
                 this.on('remove', function () {
@@ -566,9 +570,29 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }
         },
 
-        setup: function () {},
+        setup: function () {
+            this.measureId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'measureId']);
+            if (this.params.measureId) {
+                this.measureId = this.params.measureId;
+            }
 
-        setupSearch: function () {},
+            this.defaultUnit = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'defaultUnit']);
+            if (this.params.defaultUnit) {
+                this.defaultUnit = this.params.defaultUnit;
+            }
+
+            this.listenTo(this.model, 'after:save', () => {
+                this.afterModelSave();
+                this.reRender();
+            });
+        },
+
+        afterModelSave() {
+
+        },
+
+        setupSearch: function () {
+        },
 
         getAttributeList: function () {
             return this.getFieldManager().getAttributes(this.fieldType, this.name);
@@ -589,7 +613,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 if (_.isEqual(prev[attr], data[attr])) {
                     continue;
                 }
-                (attrs || (attrs = {}))[attr] =    data[attr];
+                (attrs || (attrs = {}))[attr] = data[attr];
             }
 
             if (!attrs) {
@@ -791,7 +815,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         prepareOptionsForExtensibleEnum() {
             let extensibleEnumId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'extensibleEnumId']);
-            if (this.params.extensibleEnumId){
+            if (this.params.extensibleEnumId) {
                 extensibleEnumId = this.params.extensibleEnumId;
             }
 
@@ -831,6 +855,52 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             });
         },
 
+        getMeasureUnits(measureId) {
+            if (!measureId) {
+                return [];
+            }
+
+            let key = 'measure_' + measureId;
+
+            if (!Espo[key]) {
+                Espo[key] = [];
+                this.ajaxGetRequest(`Unit`, {
+                    sortBy: "createdAt",
+                    asc: true,
+                    offset: 0,
+                    maxSize: 5000,
+                    where: [
+                        {
+                            type: "equals",
+                            attribute: "measureId",
+                            value: measureId
+                        },
+                        {
+                            type: "isNull",
+                            attribute: "convertToId"
+                        }
+                    ]
+                }, {async: false}).then(res => {
+                    if (res.list) {
+                        Espo[key] = res.list;
+                    }
+                });
+            }
+
+            return Espo[key];
+        },
+
+        loadUnitOptions() {
+            this.unitList = [''];
+            this.unitListTranslates = {'': ''};
+
+            if (this.measureId) {
+                this.getMeasureUnits(this.measureId).forEach(unit => {
+                    this.unitList.push(unit.id);
+                    this.unitListTranslates[unit.id] = unit.name;
+                });
+            }
+        },
+
     });
 });
-

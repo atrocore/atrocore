@@ -159,10 +159,6 @@ class Config
             return $this->container->get('moduleManager')->isLoaded();
         }
 
-        if ($name == 'unitsOfMeasure') {
-            return $this->getUnitsOfMeasure();
-        }
-
         if (in_array($name, array_merge(['locales'], array_keys(self::DEFAULT_LOCALE)))) {
             return $this->loadLocales()[$name];
         }
@@ -359,12 +355,8 @@ class Config
             return $data;
         }
 
-        $data = $this
-            ->container
-            ->get('pdo')
-            ->query(
-                "SELECT l.*, m.id as measure_id, m.name as measure_name, m.data as measure_data FROM `locale` l LEFT JOIN `locale_measure` lm ON lm.locale_id=l.id AND lm.deleted=0 LEFT JOIN measure m ON m.id=lm.measure_id AND m.deleted=0 WHERE l.deleted=0"
-            )
+        $data = $this->container->get('pdo')
+            ->query("SELECT * FROM `locale` WHERE deleted=0")
             ->fetchAll(\PDO::FETCH_ASSOC);
 
         $result = [];
@@ -375,19 +367,6 @@ class Config
             }
             $result[$row['id']]['name'] = $row['name'];
             $result[$row['id']]['weekStart'] = $result[$row['id']]['weekStart'] === 'monday' ? 1 : 0;
-            if (!empty($row['measure_id'])) {
-                $measureData = empty($row['measure_data']) ? [] : Json::decode($row['measure_data'], true);
-                $result[$row['id']]['measures'][$row['measure_id']] = [
-                    'id'          => $row['measure_id'],
-                    'name'        => $row['measure_name'],
-                    'units'       => isset($measureData["locale_{$row['id']}"]) ? $measureData["locale_{$row['id']}"] : [],
-                    'defaultUnit' => isset($measureData["locale_{$row['id']}_default"]) ? $measureData["locale_{$row['id']}_default"] : ''
-                ];
-            }
-        }
-
-        foreach ($result as $id => $row) {
-            $result[$id]['measures'] = empty($row['measures']) ? [] : array_values($row['measures']);
         }
 
         if (!empty($result)) {
@@ -408,7 +387,6 @@ class Config
     public function getData($isAdmin = null)
     {
         $data = array_merge($this->loadConfig(), $this->loadLocales());
-        $data['unitsOfMeasure'] = $this->getUnitsOfMeasure();
 
         $data = $this->prepareStylesheetConfigForOutput($data);
 
@@ -473,42 +451,11 @@ class Config
         return array_merge($this->adminItems, $data['userItems']);
     }
 
-
-    /**
-     * Check if an item is allowed to get and save
-     *
-     * @param $name
-     * @param $isAdmin
-     * @return bool
-     */
-    protected function isAllowed($name, $isAdmin = false)
-    {
-        if (in_array($name, $this->getRestrictItems($isAdmin))) {
-            return false;
-        }
-
-        return true;
-    }
-
     public function getSiteUrl()
     {
         return rtrim($this->get('siteUrl'), '/');
     }
 
-    protected function getUnitsOfMeasure()
-    {
-        if (!$this->get('isInstalled', false) || !$this->container->get('user') || !$this->container->get('user')->isFetched()) {
-            return new \stdClass();
-        }
-
-        return $this->container->get('serviceFactory')->create('Measure')->getUnitsOfMeasure();
-    }
-
-    /**
-     * @param array $data
-     *
-     * @return array
-     */
     protected function prepareStylesheetConfigForOutput(array $data): array
     {
         $theme = $this->get('theme');
@@ -532,11 +479,6 @@ class Config
         return $data;
     }
 
-    /**
-     * @param array $data
-     *
-     * @return array
-     */
     protected function prepareStylesheetConfigForSave(array $data): array
     {
         $currTheme = $this->get('theme');
@@ -567,25 +509,16 @@ class Config
         return $data;
     }
 
-    /**
-     * @return string|null
-     */
     protected function getCustomStylesheetFilename(): ?string
     {
         return $this->getMetadata()->get(['themes', $this->get('theme'), 'customStylesheetName']);
     }
 
-    /**
-     * @return string
-     */
     protected function getCustomStylesheetPath(): string
     {
         return $this->customStylesheetDir . $this->getCustomStylesheetFilename();
     }
 
-    /**
-     * @return Metadata
-     */
     protected function getMetadata(): Metadata
     {
         return $this->container->get('metadata');

@@ -30,33 +30,40 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/admin/field-manager/fields/unit/default', 'views/fields/unit', function (Dep) {
+Espo.define('views/admin/field-manager/fields/default-unit', 'views/fields/enum', Dep => {
 
     return Dep.extend({
 
-        localedOptions: false,
-
-        setup: function () {
-            const measures = Object.keys(Espo.Utils.cloneDeep(this.getConfig().get('unitsOfMeasure') || {})) || [];
-
-            this.params.measure = this.model.get('measure') || measures.shift();
-
+        setup() {
             Dep.prototype.setup.call(this);
 
-            this.listenTo(this.model, 'change:measure', () => {
-                this.params.measure = this.model.get('measure');
-                this.loadUnitList();
+            this.prepareOptionsList();
+            this.listenTo(this.model, 'change:measureId', () => {
+                this.model.set('defaultUnit', null);
+                this.prepareOptionsList();
                 this.reRender();
             });
         },
 
-        validate() {
-            if (this.model.get('prohibitedEmptyValue') && this.model.get('defaultUnit') === '') {
-                this.showValidationMessage(this.translate('defaultUnitCannotBeEmpty', 'messages'));
-                return true;
-            }
+        prepareOptionsList() {
+            this.params.options = [''];
+            this.translatedOptions = {'': ''};
 
-            return Dep.prototype.validate.call(this);
+            if (this.model.get('measureId')) {
+                this.getMeasureUnits(this.model.get('measureId')).forEach(option => {
+                    this.params.options.push(option.id);
+                    this.translatedOptions[option.id] = option.name ? option.name : ' ';
+                });
+            }
+        },
+
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            this.$el.parent().hide();
+            if (this.model.get('measureId')) {
+                this.$el.parent().show();
+            }
         },
 
     });

@@ -54,6 +54,7 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
             this.setupMaxLength();
 
             if (this.getPreferences().has('thousandSeparator')) {
@@ -93,6 +94,7 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
                 data.isNotEmpty = true;
             }
             data.valueIsSet = this.model.has(this.name);
+
             return data;
         },
 
@@ -246,10 +248,12 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
         },
 
         fetch: function () {
-            var value = this.$el.find('[name="' + this.name + '"]').val();
+            let value = this.$el.find('[name="' + this.name + '"]').val();
             value = this.parse(value);
-            var data = {};
+
+            let data = {};
             data[this.name] = value;
+
             return data;
         },
 
@@ -305,4 +309,3 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
 
     });
 });
-

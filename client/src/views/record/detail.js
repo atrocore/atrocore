@@ -149,9 +149,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             },
             'click a[data-action="setAsInherited"]': function (e) {
-                const field = $(e.currentTarget).data('name');
+                const $el = $(e.currentTarget);
                 this.ajaxPostRequest(`${this.scope}/action/inheritField`, {
-                    field: field,
+                    field: $el.parent().data('name'),
                     id: this.model.get('id')
                 }).then(response => {
                     this.model.fetch().then(() => {

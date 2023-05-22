@@ -6,8 +6,18 @@
       "default": false
     },
     {
+      "name": "measure",
+      "type": "link",
+      "entity": "Measure"
+    },
+    {
       "name": "default",
       "type": "rangeInt"
+    },
+    {
+      "name": "defaultUnit",
+      "type": "varchar",
+      "view": "views/admin/field-manager/fields/default-unit"
     },
     {
       "name": "minFrom",
@@ -45,21 +55,17 @@
   "fields": {
     "from": {
       "type": "int",
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
+      "notStorable": false,
       "emHidden": true
     },
     "to": {
       "type": "int",
-      "layoutListDisabled": true,
-      "layoutListSmallDisabled": true,
-      "layoutDetailDisabled": true,
-      "layoutDetailSmallDisabled": true,
+      "notStorable": false,
       "emHidden": true
     }
   },
-  "filter": false,
-  "skipOrmDefs": true
+  "fieldDefs": {
+    "notStorable": true
+  },
+  "filter": false
 }

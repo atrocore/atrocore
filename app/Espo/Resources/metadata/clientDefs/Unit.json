@@ -1,19 +1,17 @@
 {
   "controller": "controllers/record",
-  "views": {
-    "list": "views/unit/list",
-    "detail": "views/unit/detail"
-  },
   "boolFilterList": [
     "onlyMy",
     "assignedToMe",
     "ownedByMe",
     "notEntity",
-    "fromMeasure"
+    "fromMeasure",
+    "notConverted"
   ],
   "hiddenBoolFilterList": [
     "notEntity",
-    "fromMeasure"
+    "fromMeasure",
+    "notConverted"
   ],
   "iconClass": "fas fa-ruler",
   "dynamicLogic": {

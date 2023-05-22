@@ -46,9 +46,52 @@ use Espo\ORM\Entity;
  */
 class Measure extends Base
 {
+    protected array $measureUnits = [];
+
+    public function getMeasureUnits(string $measureId): array
+    {
+        if (!isset($this->measureUnits[$measureId])) {
+            $units = $this->getEntityManager()->getRepository('Unit')
+                ->where(['measureId' => $measureId])
+                ->order('createdAt', 'ASC')
+                ->find();
+
+            $this->measureUnits[$measureId] = [];
+            foreach ($units as $unit) {
+                $this->measureUnits[$measureId][$unit->get('id')] = $unit;
+            }
+        }
+
+        return $this->measureUnits[$measureId];
+    }
+
+    public function convertMeasureUnit($value, string $measureId, string $unitId): array
+    {
+        $units = $this->getMeasureUnits($measureId);
+        if (!isset($units[$unitId])) {
+            return [];
+        }
+
+        $result = [];
+        foreach ($units as $unit) {
+            $result[$unit->get('name')] = round($value / $units[$unitId]->get('multiplier') * $unit->get('multiplier'), 4);
+        }
+
+        return $result;
+    }
+
     public function refreshCache(): void
     {
         $this->getInjection('dataManager')->clearCache();
+    }
+
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        if ($entity->get('code') === '') {
+            $entity->set('code', null);
+        }
+
+        parent::beforeSave($entity, $options);
     }
 
     /**

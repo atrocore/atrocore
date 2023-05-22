@@ -70,7 +70,88 @@ class Metadata extends AbstractListener
 
         $this->prepareRanges($data);
 
+        $this->prepareUnit($data);
+
         $event->setArgument('data', $data);
+    }
+
+    protected function prepareUnit(array &$data): void
+    {
+        foreach ($data['entityDefs'] as $entityType => $entityDefs) {
+            if (empty($entityDefs['fields'])) {
+                continue 1;
+            }
+            foreach ($entityDefs['fields'] as $field => $fieldDefs) {
+                if (empty($fieldDefs['measureId'])) {
+                    continue;
+                }
+                if (!empty($fieldDefs['relationVirtualField'])) {
+                    continue;
+                }
+                if (empty($fieldDefs['type']) || !in_array($fieldDefs['type'], ['int', 'float', 'rangeInt', 'rangeFloat'])) {
+                    continue;
+                }
+
+                if (in_array($fieldDefs['type'], ['rangeInt', 'rangeFloat'])) {
+                    $data['entityDefs'][$entityType]['fields'][$field . 'From']['measureId'] = $fieldDefs['measureId'];
+                    $data['entityDefs'][$entityType]['fields'][$field . 'To']['measureId'] = $fieldDefs['measureId'];
+                }
+
+                $data['entityDefs'][$entityType]['fields'][$field . 'Unit'] = [
+                    "type"        => "link",
+                    "view"        => "views/fields/unit-link",
+                    "measureId"   => $fieldDefs['measureId'],
+                    "unitIdField" => true,
+                    "mainField"   => $field,
+                    "required"    => !empty($fieldDefs['required']),
+                    "audited"     => !empty($fieldDefs['audited']),
+                    "emHidden"    => true
+                ];
+
+                $data['entityDefs'][$entityType]['links'][$field . 'Unit'] = [
+                    "type"   => "belongsTo",
+                    "entity" => "Unit"
+                ];
+
+                if (in_array($fieldDefs['type'], ['int', 'float'])) {
+                    $data['entityDefs'][$entityType]['fields'][$field]['labelField'] = 'unit' . ucfirst($field);
+                    $data['entityDefs'][$entityType]['fields']['unit' . ucfirst($field)] = [
+                        "type"               => "varchar",
+                        "notStorable"        => true,
+                        "view"               => "views/fields/unit-{$fieldDefs['type']}",
+                        "measureId"          => $fieldDefs['measureId'],
+                        "mainField"          => $field,
+                        "unitField"          => true,
+                        "required"           => !empty($fieldDefs['required']),
+                        "audited"            => false,
+                        "filterDisabled"     => true,
+                        "massUpdateDisabled" => true,
+                        "emHidden"           => true
+                    ];
+                } else {
+                    $data['entityDefs'][$entityType]['fields'][$field]['unitField'] = true;
+                }
+
+                foreach (in_array($fieldDefs['type'], ['int', 'float']) ? [$field] : [$field . 'From', $field . 'To'] as $v) {
+                    $data['entityDefs'][$entityType]['fields'][$v . 'AllUnits'] = [
+                        "type"                      => "jsonObject",
+                        "notStorable"               => true,
+                        "mainField"                 => $field,
+                        "required"                  => false,
+                        "audited"                   => false,
+                        "layoutListDisabled"        => true,
+                        "layoutListSmallDisabled"   => true,
+                        "layoutDetailDisabled"      => true,
+                        "layoutDetailSmallDisabled" => true,
+                        "massUpdateDisabled"        => true,
+                        "filterDisabled"            => true,
+                        "exportDisabled"            => true,
+                        "importDisabled"            => true,
+                        "emHidden"                  => true
+                    ];
+                }
+            }
+        }
     }
 
     protected function prepareRanges(array &$data): void
@@ -93,10 +174,13 @@ class Metadata extends AbstractListener
                 }
 
                 $data['entityDefs'][$entity]['fields'][$field]['filterDisabled'] = true;
+                $data['entityDefs'][$entity]['fields'][$field]['notStorable'] = true;
 
                 $fieldFrom = $field . 'From';
                 $fieldTo = $field . 'To';
 
+                $data['entityDefs'][$entity]['fields'][$fieldFrom]['mainField'] = $field;
+                $data['entityDefs'][$entity]['fields'][$fieldTo]['mainField'] = $field;
                 $data['entityDefs'][$entity]['fields'][$fieldFrom]['required'] = !empty($fieldDefs['required']);
                 $data['entityDefs'][$entity]['fields'][$fieldTo]['required'] = !empty($fieldDefs['required']);
                 $data['entityDefs'][$entity]['fields'][$fieldFrom]['readOnly'] = !empty($fieldDefs['readOnly']);
@@ -104,7 +188,7 @@ class Metadata extends AbstractListener
                 if (isset($fieldDefs['defaultFrom'])) {
                     $data['entityDefs'][$entity]['fields'][$fieldFrom]['default'] = $fieldDefs['defaultFrom'];
                 }
-                if ($fieldDefs['defaultTo']) {
+                if (isset($fieldDefs['defaultTo'])) {
                     $data['entityDefs'][$entity]['fields'][$fieldTo]['default'] = $fieldDefs['defaultTo'];
                 }
                 if (isset($fieldDefs['minFrom'])) {

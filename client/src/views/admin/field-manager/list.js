@@ -43,10 +43,14 @@ Espo.define('views/admin/field-manager/list', 'view', function (Dep) {
             // prepare fieldDefsArray
             let fieldDefsArray = [];
             $.each(this.fieldDefsArray, function (k, v) {
+                v.label = this.getLanguage().translate(v.name, 'fields', this.scope);
+                if (scopeFields[v.name].labelField) {
+                    v.label = this.getLanguage().translate(scopeFields[v.name].labelField, 'fields', this.scope);
+                }
                 if (!scopeFields[v.name].emHidden) {
                     fieldDefsArray.push(v);
                 }
-            });
+            }.bind(this));
 
             if (this.scope === 'Asset') {
                 this.typeList = this.typeList.filter(function (type) {
