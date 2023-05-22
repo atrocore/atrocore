@@ -955,6 +955,19 @@ class Stream extends \Espo\Core\Services\Base
                     }
 
                     switch ($fieldDefs['type']) {
+                        case 'link':
+                            foreach (['was', 'became'] as $k) {
+                                if (!property_exists($data->attributes->{$k}, $field . 'Name') && property_exists($data->attributes->{$k}, $field . 'Id')) {
+                                    $foreignEntity = $this->getMetadata()->get(['entityDefs', $entity->get('parentType'), 'links', $field, 'entity']);
+                                    if (!empty($foreignEntity)) {
+                                        $foreign = $this->getEntityManager()->getRepository($foreignEntity)->get($data->attributes->{$k}->{$field . 'Id'});
+                                        if (!empty($foreign)) {
+                                            $data->attributes->{$k}->{$field . 'Name'} = $foreign->get('name');
+                                        }
+                                    }
+                                }
+                            }
+                            break;
                         case 'enum':
                             if (!isset($fieldDefs['optionsIds']) || !isset($fieldDefs['options'])) {
                                 break;
