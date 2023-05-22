@@ -102,6 +102,10 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
 
                 fields.forEach(function (field) {
                     let fieldDefs = this.model.get('fieldDefs');
+                    if (!fieldDefs[field]) {
+                        return;
+                    }
+
                     let type = fieldDefs[field]['type'] || 'base';
 
                     let fieldId = field;
