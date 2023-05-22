@@ -95,23 +95,44 @@ class MassActions extends HasContainer
 
             if (property_exists($node->payload, 'id')) {
                 $existed = $this->getEntityManager()->getEntity($node->entity, $node->payload->id);
-                if (!empty($existed)) {
-                    try {
-                        $updated = $service->updateEntity($existed->get('id'), $node->payload);
-                        $result[$k] = [
-                            'status' => 'Updated',
-                            'stored' => true,
-                            'entity' => $updated->toArray()
-                        ];
-                    } catch (\Throwable $e) {
-                        $result[$k] = [
-                            'status' => 'Failed',
-                            'stored' => false,
-                            'message' => 'Code: ' . $e->getCode() . '. Message: ' . $e->getMessage()
-                        ];
-                    }
-                    continue 1;
+            }
+
+            // Check if entity exists
+            $fields = $this->getMetadata()->get('scopes', $node->entity, 'fields');
+            $uniqueFields = array_filter($fields, function ($field) {
+                return $field['unique'] == true;
+            });
+
+            if (count($uniqueFields) > 0) {
+                $whereClause = array_map(function ($field) use ($node) {
+                    return [$field['name'], $node->payload[$field['name']]];
+                }, $uniqueFields);
+
+                $records = $this->getEntityManager()->getRepository($node->entity)->find([
+                    'whereClause' => $whereClause
+                ]);
+
+                if(count($records)>0){
+                    $existed = $records[0];
                 }
+            }
+
+            if (!empty($existed)) {
+                try {
+                    $updated = $service->updateEntity($existed->get('id'), $node->payload);
+                    $result[$k] = [
+                        'status' => 'Updated',
+                        'stored' => true,
+                        'entity' => $updated->toArray()
+                    ];
+                } catch (\Throwable $e) {
+                    $result[$k] = [
+                        'status' => 'Failed',
+                        'stored' => false,
+                        'message' => 'Code: ' . $e->getCode() . '. Message: ' . $e->getMessage()
+                    ];
+                }
+                continue 1;
             }
 
             try {
