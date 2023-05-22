@@ -126,6 +126,8 @@ class Metadata extends AbstractListener
                         "audited"            => false,
                         "filterDisabled"     => true,
                         "massUpdateDisabled" => true,
+                        "exportDisabled"            => true,
+                        "importDisabled"            => true,
                         "emHidden"           => true
                     ];
                 } else {
@@ -175,6 +177,8 @@ class Metadata extends AbstractListener
 
                 $data['entityDefs'][$entity]['fields'][$field]['filterDisabled'] = true;
                 $data['entityDefs'][$entity]['fields'][$field]['notStorable'] = true;
+                $data['entityDefs'][$entity]['fields'][$field]['exportDisabled'] = true;
+                $data['entityDefs'][$entity]['fields'][$field]['importDisabled'] = true;
 
                 $fieldFrom = $field . 'From';
                 $fieldTo = $field . 'To';
