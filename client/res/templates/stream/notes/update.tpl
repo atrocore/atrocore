@@ -39,7 +39,7 @@
             <div class="field">{{{var was ../this}}}</div>
         </div>
         <div class="cell col-md-12 col-lg-6 form-group">
-            <label class="control-label">{{translate field category='fields' scope=../parentType}} {{translate 'become' category='streamMessages' scope='Global'}}</label>
+            <label class="control-label">{{label}} {{translate 'become' category='streamMessages' scope='Global'}}</label>
             <div class="field">{{{var became ../this}}}</div>
         </div>
         </div>
