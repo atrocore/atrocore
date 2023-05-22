@@ -388,10 +388,10 @@
     "onlyActive": "Active",
     "onlyMy": "My",
     "assignedToMe": "Assigned to me",
-    "ownedByMe": "Owned by me",
-    "followed": "Followed"
+    "ownedByMe": "Owned by me"
   },
   "presetFilters": {
+    "withArchived": "All + Archived",
     "followed": "Followed",
     "all": "All"
   },
@@ -409,6 +409,7 @@
     "convertCurrency": "Convert Currency"
   },
   "fields": {
+    "isArchived": "Archived",
     "code": "Code",
     "extensibleEnum": "List",
     "sortOrder": "Sort Order",
@@ -1014,6 +1015,7 @@
     "cd": "cd"
   },
   "exceptions": {
+    "childsMustBeArchived": "The (parent) item can be archived only if all child items are archived too.", 
     "maxLengthIsExceeded": "The allowed maximum length for \"%s\" is %s symbols, you current length is \"%s\" symbols.",
     "parentRecordsHaveDifferentValues": "Parent records have different values, value to inherit cannot be determined.",
     "nothingToInherit": "There is nothing to inherit.",

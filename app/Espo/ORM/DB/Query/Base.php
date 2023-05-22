@@ -135,13 +135,14 @@ abstract class Base
         $this->pdo = $pdo;
     }
 
-    protected function getSeed($entityType)
+    public function getSeed($entityType)
     {
         if (empty($this->seedCache[$entityType])) {
             $this->seedCache[$entityType] = $this->entityFactory->create($entityType);
         }
         return $this->seedCache[$entityType];
     }
+
 
     public function createSelectQuery($entityType, array $params = array(), $deleted = false)
     {

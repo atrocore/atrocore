@@ -933,7 +933,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             let parts = message.split('.');
 
             this.confirm({
-                message: this.translate(parts.pop(), parts.pop(), parts.pop()),
+                message: (this.translate(parts.pop(), parts.pop(), parts.pop())).replace('{{name}}', this.model.get('name')),
                 confirmText: this.translate('Remove')
             }, function () {
                 this.trigger('before:delete');

@@ -218,7 +218,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
 
             if (this.isRendered()) {
                 this.$el.find('[data-action="switchViewMode"]').removeClass('active');
-                this.$el.find('[data-action="switchViewMode"][data-name="'+mode+'"]').addClass('active');
+                this.$el.find('[data-action="switchViewMode"][data-name="' + mode + '"]').addClass('active');
             } else {
                 if (this.isBeingRendered() && !preventLoop) {
                     this.once('after:render', function () {
@@ -385,7 +385,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
             }
         },
 
-        addFilter(name, params) {
+        addFilter(name, params, callback) {
             var nameCount = 1;
             var getLastIndexName = function () {
                 if (this.advanced.hasOwnProperty(name + '-' + nameCount)) {
@@ -405,6 +405,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 this.fetch();
                 this.updateSearch();
                 this.setupOperatorLabels();
+                if (typeof callback === 'function') callback()
             }.bind(this));
             this.updateAddFilterButton();
             this.handleLeftDropdownVisibility();
@@ -437,7 +438,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
         toggleFilterActionsVisibility() {
             let $filterActions = this.$el.find(`.filter-actions`);
 
-            if(!$filterActions.length) {
+            if (!$filterActions.length) {
                 return;
             }
 
@@ -755,9 +756,9 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 cursor = 'default';
             }
 
-            var barContentHtml = '<'+tag+' href="javascript:" style="cursor: '+cursor+';" class="label label-'+style+'" data-action="'+action+'">' + label + '</'+tag+'>';
+            var barContentHtml = '<' + tag + ' href="javascript:" style="cursor: ' + cursor + ';" class="label label-' + style + '" data-action="' + action + '">' + label + '</' + tag + '>';
             if (id) {
-                barContentHtml += ' <a href="javascript:" title="'+this.translate('Remove')+'" class="small" data-action="removePreset" data-id="'+id+'"><span class="fas fa-times"></span></a>';
+                barContentHtml += ' <a href="javascript:" title="' + this.translate('Remove') + '" class="small" data-action="removePreset" data-id="' + id + '"><span class="fas fa-times"></span></a>';
             }
             barContentHtml = '<span style="margin-right: 10px;">' + barContentHtml + '</span>'
 
@@ -832,7 +833,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
 
             presetName = presetName || '';
 
-            this.$el.find('ul.filter-menu a.preset[data-name="'+presetName+'"]').prepend('<span class="fas fa-check pull-right"></span>');
+            this.$el.find('ul.filter-menu a.preset[data-name="' + presetName + '"]').prepend('<span class="fas fa-check pull-right"></span>');
         },
 
         manageBoolFilters() {
@@ -877,7 +878,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
         updateCollection() {
             let advanced = {};
             for (let field in this.advanced) {
-                if (!('value' in this.advanced[field]) || ![null, ''].includes(this.advanced[field].value) || 'subQuery' in this.advanced[field]) {
+                if (!('value' in this.advanced[field]) || ![null, ''].includes(this.advanced[field].value) || 'subQuery' in this.advanced[field] || this.pinned[field]) {
                     advanced[field] = this.advanced[field];
                 }
             }
@@ -919,16 +920,16 @@ Espo.define('views/record/search', 'view', function (Dep) {
             this.collection.fetch().then(() => Backbone.trigger('after:search', this.collection));
         },
 
-		getPresetFilterList: function () {
-			var arr = [];
+        getPresetFilterList: function () {
+            var arr = [];
             this.presetFilterList.forEach(function (item) {
-            	if (typeof item == 'string') {
-            		item = {name: item};
-            	}
-            	arr.push(item);
+                if (typeof item == 'string') {
+                    item = {name: item};
+                }
+                arr.push(item);
             }, this);
             return arr;
-		},
+        },
 
         getPresetData: function () {
             var data = {};

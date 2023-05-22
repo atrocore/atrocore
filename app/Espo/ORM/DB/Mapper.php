@@ -132,6 +132,10 @@ abstract class Mapper implements IMapper
         }
     }
 
+    public function getWhereQuery($entityType, $whereClause){
+        return $this->query->getWhere($this->query->getSeed($entityType), $whereClause);
+    }
+
     public function aggregate(IEntity $entity, $params = array(), $aggregation, $aggregationBy, $deleted = false)
     {
         if (empty($aggregation) || !isset($entity->fields[$aggregationBy])) {

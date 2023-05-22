@@ -539,7 +539,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             this.confirm({
-                message: this.translate('removeSelectedRecordsConfirmation', 'messages'),
+                message: this.prepareRemoveSelectedRecordsConfirmationMessage(),
                 confirmText: this.translate('Remove')
             }, function () {
                 this.notify(this.translate('removing', 'labels', 'Global'));
@@ -566,6 +566,27 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     this.collection.fetch();
                 }.bind(this));
             }, this);
+        },
+
+        prepareRemoveSelectedRecordsConfirmationMessage: function () {
+            let scopeMessage = this.getMetadata()
+                .get(`clientDefs.${this.scope}.removeSelectedRecordsConfirmation`)
+                ?.split('.');
+            let message = this.translate('removeSelectedRecordsConfirmation', 'messages');
+            if (scopeMessage?.length > 0) {
+                message = this.translate(scopeMessage.pop(), scopeMessage.pop(), scopeMessage.pop());
+                var selectedIds = this.checkedList;
+                var selectedNames = this.collection.models
+                    .filter(function (model) {
+                        return selectedIds.includes(model.id);
+                    })
+                    .map(function (model) {
+                        return "'"+model.attributes['name']+"'";
+                    })
+                    .join(", ");
+                message = message.replace('{{selectedNames}}', selectedNames);
+            }
+            return message;
         },
 
         massActionFollow: function () {
@@ -2157,7 +2178,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             let parts = message.split('.');
 
             this.confirm({
-                message: this.translate(parts.pop(), parts.pop(), parts.pop()),
+                message: (this.translate(parts.pop(), parts.pop(), parts.pop())).replace('{{name}}', model.get('name')),
                 confirmText: this.translate('Remove')
             }, function () {
                 this.collection.trigger('model-removing', id);

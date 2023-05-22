@@ -1,5 +1,14 @@
 {
   "fields": {
+    "hasArchive": {
+      "type": "bool",
+      "view": "views/admin/entity-manager/fields/bool-for-type",
+      "types": [
+        "Base",
+        "Hierarchy"
+      ],
+      "default": false
+    },
     "multiParents": {
       "type": "bool",
       "view": "views/admin/entity-manager/fields/bool-for-type",

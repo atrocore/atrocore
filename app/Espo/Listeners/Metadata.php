@@ -52,6 +52,8 @@ class Metadata extends AbstractListener
         // add onlyActive bool filter
         $data = $this->addOnlyActiveFilter($data);
 
+        // add archive
+        $data = $this->addArchive($data);
         // set thumbs sizes to options of asset field type
         $data = $this->setAssetThumbSize($data);
 
@@ -523,6 +525,19 @@ class Metadata extends AbstractListener
             if ($row['name'] === 'previewSize') {
                 $data['fields']['asset']['params'][$k]['options'] = empty($data['app']['imageSizes']) ? [] : array_keys($data['app']['imageSizes']);
                 break;
+            }
+        }
+
+        return $data;
+    }
+
+
+    public function addArchive(array $data){
+        foreach ($data['scopes'] as $scope => $row) {
+            if (!empty($row['hasArchive'])) {
+                $data['entityDefs'][$scope]['fields']['isArchived']['type'] = 'bool';
+                $data['entityDefs'][$scope]['fields']['isArchived']['notNull'] = true;
+                $data['clientDefs'][$entity]['filterList'][] = 'withArchived';
             }
         }
 
