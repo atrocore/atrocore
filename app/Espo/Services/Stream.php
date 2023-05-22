@@ -927,16 +927,13 @@ class Stream extends \Espo\Core\Services\Base
 
     public function prepareForOutput(Entity $entity)
     {
-//        /** @var \Espo\Core\EventManager\Manager $eventManager */
-//        $eventManager = $this->getInjection('container')->get('eventManager');
-//
-//        $done = $eventManager
-//            ->dispatch('StreamService', 'prepareForOutput', new Event(['entity' => $entity, 'service' => $this, 'done' => false]))
-//            ->getArgument('done');
-//
-//        var_dump($done);
-//        print_r('123');
-//        die();
+        $done = $this->getInjection('container')->get('eventManager')
+            ->dispatch('StreamService', 'prepareForOutput', new Event(['entity' => $entity, 'service' => $this, 'done' => false]))
+            ->getArgument('done');
+
+        if ($done === true) {
+            return;
+        }
 
         if ($entity->get('type') == 'Post' || $entity->get('type') == 'EmailReceived') {
             $entity->loadAttachments();
