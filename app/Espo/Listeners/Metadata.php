@@ -126,8 +126,6 @@ class Metadata extends AbstractListener
                         "audited"            => false,
                         "filterDisabled"     => true,
                         "massUpdateDisabled" => true,
-                        "exportDisabled"            => true,
-                        "importDisabled"            => true,
                         "emHidden"           => true
                     ];
                 } else {
