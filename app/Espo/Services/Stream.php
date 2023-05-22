@@ -33,8 +33,8 @@
 
 namespace Espo\Services;
 
-
 use Caxy\HtmlDiff\HtmlDiff;
+use Espo\Core\EventManager\Event;
 use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\NotFound;
 
@@ -927,6 +927,17 @@ class Stream extends \Espo\Core\Services\Base
 
     public function prepareForOutput(Entity $entity)
     {
+//        /** @var \Espo\Core\EventManager\Manager $eventManager */
+//        $eventManager = $this->getInjection('container')->get('eventManager');
+//
+//        $done = $eventManager
+//            ->dispatch('StreamService', 'prepareForOutput', new Event(['entity' => $entity, 'service' => $this, 'done' => false]))
+//            ->getArgument('done');
+//
+//        var_dump($done);
+//        print_r('123');
+//        die();
+
         if ($entity->get('type') == 'Post' || $entity->get('type') == 'EmailReceived') {
             $entity->loadAttachments();
         }
