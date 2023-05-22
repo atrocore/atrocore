@@ -4,6 +4,20 @@
             "type": "text",
             "rows": 30
         },
+        "fieldDefs": {
+            "type": "jsonObject",
+            "notStorable": true,
+            "readOnly": true,
+            "layoutListDisabled": true,
+            "layoutListSmallDisabled": true,
+            "layoutDetailDisabled": true,
+            "layoutDetailSmallDisabled": true,
+            "massUpdateDisabled": true,
+            "filterDisabled": true,
+            "exportDisabled": true,
+            "importDisabled": true,
+            "emHidden": true
+        },
         "data": {
             "type": "jsonObject",
             "readOnly": true

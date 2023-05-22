@@ -34,6 +34,7 @@
 namespace Espo\Services;
 
 use Caxy\HtmlDiff\HtmlDiff;
+use Espo\Core\EventManager\Event;
 use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\NotFound;
 
@@ -933,31 +934,38 @@ class Stream extends \Espo\Core\Services\Base
         if ($entity->get('type') == 'Update') {
             $data = $entity->get('data');
 
+            $noteFieldDefs = [];
+
             if (!empty($data->fields)) {
-                if (count($data->fields) == 1) {
-                    $fieldType = $this->getMetadata()->get(['entityDefs', $entity->get('parentType'), 'fields', $data->fields[0], 'type']);
-                    if (in_array($fieldType, ['text', 'wysiwyg'])) {
-                        $became = $data->attributes->became->{$data->fields[0]};
-                        if ($fieldType == 'text') {
-                            $became = nl2br($became);
-                        }
-
-                        $diff = (new HtmlDiff(html_entity_decode($data->attributes->was->{$data->fields[0]}), html_entity_decode($became)))->build();
-                        $entity->set('diff', $diff);
-                    }
-                }
-
                 foreach ($data->fields as $field) {
                     $fieldDefs = $this->getMetadata()->get(['entityDefs', $entity->get('parentType'), 'fields', $field]);
+                    $fieldDefs['label'] = $this->getInjection('container')->get('language')->translate($field, 'fields', $entity->get('parentType'));
+
+                    $fieldDefs = $this->getInjection('container')->get('eventManager')
+                        ->dispatch('StreamService', 'prepareNoteFieldDefs', new Event(['entity' => $entity, 'field' => $field, 'fieldDefs' => $fieldDefs]))
+                        ->getArgument('fieldDefs');
+
                     if (empty($fieldDefs['type'])) {
                         continue;
                     }
 
+                    $noteFieldDefs[$field] = $fieldDefs;
+
                     switch ($fieldDefs['type']) {
+                        case 'text':
+                            $became = nl2br($data->attributes->became->{$field});
+                            $diff = (new HtmlDiff(html_entity_decode($data->attributes->was->{$field}), html_entity_decode($became)))->build();
+                            $entity->set('diff', $diff);
+                            break;
+                        case 'wysiwyg':
+                            $became = $data->attributes->became->{$field};
+                            $diff = (new HtmlDiff(html_entity_decode($data->attributes->was->{$field}), html_entity_decode($became)))->build();
+                            $entity->set('diff', $diff);
+                            break;
                         case 'link':
                             foreach (['was', 'became'] as $k) {
                                 if (!property_exists($data->attributes->{$k}, $field . 'Name') && property_exists($data->attributes->{$k}, $field . 'Id')) {
-                                    $foreignEntity = $this->getMetadata()->get(['entityDefs', $entity->get('parentType'), 'links', $field, 'entity']);
+                                    $foreignEntity = $fieldDefs['entity'] ?? $this->getMetadata()->get(['entityDefs', $entity->get('parentType'), 'links', $field, 'entity']);
                                     if (!empty($foreignEntity)) {
                                         $foreign = $this->getEntityManager()->getRepository($foreignEntity)->get($data->attributes->{$k}->{$field . 'Id'});
                                         if (!empty($foreign)) {
@@ -1021,6 +1029,8 @@ class Stream extends \Espo\Core\Services\Base
                     }
                 }
             }
+
+            $entity->set('fieldDefs', $noteFieldDefs);
         }
     }
 
