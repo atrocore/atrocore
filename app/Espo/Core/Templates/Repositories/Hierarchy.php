@@ -448,13 +448,22 @@ class Hierarchy extends RDB
             $this->validateIsArchived($entity);
         }
 
+        $this->prepareSortOrder($entity);
+
+        parent::beforeSave($entity, $options);
+    }
+
+    protected function prepareSortOrder(Entity $entity): void
+    {
+        if ($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'type']) !== 'Hierarchy') {
+            return;
+        }
+
         if ($entity->get('sortOrder') === null) {
             $last = $this->where(['sortOrder!=' => null])->order('sortOrder', 'DESC')->findOne();
             $sortOrder = empty($last) ? 0 : $last->get('sortOrder') + 10;
             $entity->set('sortOrder', $sortOrder);
         }
-
-        parent::beforeSave($entity, $options);
     }
 
     protected function beforeRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
