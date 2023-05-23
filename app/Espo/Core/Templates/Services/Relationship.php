@@ -151,6 +151,9 @@ class Relationship extends Record
             $relEntity = $relEntities[$fieldDefs['relationName']][$entity->get($fieldDefs['relationName'] . 'Id')];
 
             $fieldDefs = $this->getMetadata()->get(['entityDefs', $relEntity->getEntityType(), 'fields', $fieldDefs['relationFieldName']]);
+            if (empty($fieldDefs['relationFieldName'])) {
+                continue;
+            }
 
             switch ($fieldDefs['type']) {
                 case 'rangeInt':
