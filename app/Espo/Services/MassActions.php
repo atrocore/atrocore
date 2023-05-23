@@ -97,25 +97,33 @@ class MassActions extends HasContainer
                 $existed = $this->getEntityManager()->getEntity($node->entity, $node->payload->id);
             }
 
-            // Check if entity exists
-            $fields = $this->getMetadata()->get('scopes', $node->entity, 'fields');
-            $uniqueFields = array_filter($fields, function ($field) {
-                return $field['unique'] == true;
-            });
+            if (empty($existed)) {
+                // Check if entity exists
+                $fields = $this->getMetadata()->get(['entityDefs', $node->entity, 'fields']);
+                $uniqueFields = array_filter($fields, function ($field) {
+                    return $field['unique'] == true;
+                });
 
-            if (count($uniqueFields) > 0) {
-                $whereClause = array_map(function ($field) use ($node) {
-                    return [$field['name'], $node->payload[$field['name']]];
-                }, $uniqueFields);
+                if (count($uniqueFields) > 0) {
+                    $whereClause = [];
+                    foreach ($uniqueFields as $key => $field) {
+                        $value = $node->payload->{$key};
+                        if (!empty($value)) {
+                            $whereClause[] = [$key => $value];
+                        }
+                    }
+                    if (count($whereClause) > 0) {
+                        $records = $this->getEntityManager()->getRepository($node->entity)->find([
+                            'whereClause' => $whereClause
+                        ]);
 
-                $records = $this->getEntityManager()->getRepository($node->entity)->find([
-                    'whereClause' => $whereClause
-                ]);
-
-                if(count($records)>0){
-                    $existed = $records[0];
+                        if (count($records) > 0) {
+                            $existed = $records[0];
+                        }
+                    }
                 }
             }
+
 
             if (!empty($existed)) {
                 try {
