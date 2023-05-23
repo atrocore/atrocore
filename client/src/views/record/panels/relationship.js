@@ -633,13 +633,14 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 message = scopeMessage;
             }
 
+            let model = this.collection.get(id);
+
             let parts = message.split('.');
 
             this.confirm({
                 message: (this.translate(parts.pop(), parts.pop(), parts.pop())).replace('{{name}}', model.get('name')),
                 confirmText: this.translate('Remove')
             }, () => {
-                let model = this.collection.get(id);
                 this.notify('removing');
                 model.destroy({
                     success: () => {
