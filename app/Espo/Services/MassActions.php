@@ -95,23 +95,52 @@ class MassActions extends HasContainer
 
             if (property_exists($node->payload, 'id')) {
                 $existed = $this->getEntityManager()->getEntity($node->entity, $node->payload->id);
-                if (!empty($existed)) {
-                    try {
-                        $updated = $service->updateEntity($existed->get('id'), $node->payload);
-                        $result[$k] = [
-                            'status' => 'Updated',
-                            'stored' => true,
-                            'entity' => $updated->toArray()
-                        ];
-                    } catch (\Throwable $e) {
-                        $result[$k] = [
-                            'status' => 'Failed',
-                            'stored' => false,
-                            'message' => 'Code: ' . $e->getCode() . '. Message: ' . $e->getMessage()
-                        ];
+            }
+
+            if (empty($existed)) {
+                // Check if entity exists
+                $fields = $this->getMetadata()->get(['entityDefs', $node->entity, 'fields']);
+                $uniqueFields = array_filter($fields, function ($field) {
+                    return isset($field['unique']) && $field['unique'] == true;
+                });
+
+                if (count($uniqueFields) > 0) {
+                    $whereClause = [];
+                    foreach ($uniqueFields as $key => $field) {
+                        $value = $node->payload->{$key};
+                        if (!empty($value)) {
+                            $whereClause[] = [$key => $value];
+                        }
                     }
-                    continue 1;
+                    if (count($whereClause) > 0) {
+                        $records = $this->getEntityManager()->getRepository($node->entity)->find([
+                            'whereClause' => $whereClause
+                        ]);
+
+                        if (count($records) > 0) {
+                            $existed = $records[0];
+                        }
+                    }
                 }
+            }
+
+
+            if (!empty($existed)) {
+                try {
+                    $updated = $service->updateEntity($existed->get('id'), $node->payload);
+                    $result[$k] = [
+                        'status' => 'Updated',
+                        'stored' => true,
+                        'entity' => $updated->toArray()
+                    ];
+                } catch (\Throwable $e) {
+                    $result[$k] = [
+                        'status' => 'Failed',
+                        'stored' => false,
+                        'message' => 'Code: ' . $e->getCode() . '. Message: ' . $e->getMessage()
+                    ];
+                }
+                continue 1;
             }
 
             try {
