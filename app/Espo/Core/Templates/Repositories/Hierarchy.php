@@ -448,6 +448,12 @@ class Hierarchy extends RDB
             $this->validateIsArchived($entity);
         }
 
+        if ($entity->get('sortOrder') === null) {
+            $last = $this->where(['sortOrder!=' => null])->order('sortOrder', 'DESC')->findOne();
+            $sortOrder = empty($last) ? 0 : $last->get('sortOrder') + 10;
+            $entity->set('sortOrder', $sortOrder);
+        }
+
         parent::beforeSave($entity, $options);
     }
 
