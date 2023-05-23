@@ -101,7 +101,7 @@ class MassActions extends HasContainer
                 // Check if entity exists
                 $fields = $this->getMetadata()->get(['entityDefs', $node->entity, 'fields']);
                 $uniqueFields = array_filter($fields, function ($field) {
-                    return $field['unique'] == true;
+                    return isset($field['unique']) && $field['unique'] == true;
                 });
 
                 if (count($uniqueFields) > 0) {
