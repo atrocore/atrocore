@@ -145,15 +145,19 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
         },
 
         fetch: function () {
-            var data = {};
-            var value = this.$element.val();
-            if (this.params.trim || this.forceTrim) {
-                if (typeof value.trim === 'function') {
-                    value = value.trim();
+            let data = {};
+
+            let $el = this.$element;
+            if ($el) {
+                let value = $el.val();
+                if (this.params.trim || this.forceTrim) {
+                    if (typeof value.trim === 'function') {
+                        value = value.trim();
+                    }
                 }
+                data[this.name] = value ? value : null;
             }
 
-            data[this.name] = value ? value : null;
             return data;
         },
 
