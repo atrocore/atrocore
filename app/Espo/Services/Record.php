@@ -1024,7 +1024,7 @@ class Record extends \Espo\Core\Services\Base
         }
     }
 
-    public function modifyEnumValue(?string $value, string $field): string
+    public function modifyEnumValue(?string $value, string $field, bool $validate = true): string
     {
         if ($value === null) {
             return '';
@@ -1043,13 +1043,16 @@ class Record extends \Espo\Core\Services\Base
 
         $key = array_search($value, $fieldDefs['options']);
         if ($key === false) {
+            if (!$validate) {
+                return '';
+            }
             throw new BadRequest(sprintf($this->getInjection('language')->translate('noSuchOptions', 'exceptions', 'Global'), $value, $fieldLabel));
         }
 
         return $fieldDefs['optionsIds'][$key];
     }
 
-    public function modifyMultiEnumValue(?array $values, string $field): array
+    public function modifyMultiEnumValue(?array $values, string $field, bool $validate = true): array
     {
         if ($values === null) {
             return [];
@@ -1066,6 +1069,9 @@ class Record extends \Espo\Core\Services\Base
         foreach ($values as $v) {
             $key = array_search($v, $fieldDefs['options']);
             if ($key === false) {
+                if (!$validate) {
+                    continue;
+                }
                 throw new BadRequest(sprintf($this->getInjection('language')->translate('noSuchOptions', 'exceptions', 'Global'), $v, $fieldLabel));
             }
             $preparedValues[] = $fieldDefs['optionsIds'][$key];
@@ -1139,13 +1145,13 @@ class Record extends \Espo\Core\Services\Base
                 case 'enum':
                     $data->{$field} = $this->modifyEnumValue($value, $field);
                     if (property_exists($data, '_prev') && !empty($data->_prev) && property_exists($data->_prev, $field)) {
-                        $data->_prev->{$field} = $this->modifyEnumValue($data->_prev->{$field}, $field);
+                        $data->_prev->{$field} = $this->modifyEnumValue($data->_prev->{$field}, $field, false);
                     }
                     break;
                 case 'multiEnum':
                     $data->{$field} = $this->modifyMultiEnumValue($value, $field);
                     if (property_exists($data, '_prev') && !empty($data->_prev) && property_exists($data->_prev, $field)) {
-                        $data->_prev->{$field} = $this->modifyMultiEnumValue($data->_prev->{$field}, $field);
+                        $data->_prev->{$field} = $this->modifyMultiEnumValue($data->_prev->{$field}, $field, false);
                     }
                     break;
             }
