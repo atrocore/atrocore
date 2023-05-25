@@ -35,8 +35,6 @@ declare(strict_types=1);
 
 namespace Espo\Console;
 
-use const Treo\Console\PHP_EOL;
-
 /**
  * Class SqlDiffRun
  */

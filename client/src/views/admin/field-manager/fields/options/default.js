@@ -37,20 +37,22 @@ Espo.define('views/admin/field-manager/fields/options/default', 'views/fields/en
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.setOptionList(this.getOptionListItems());
+            this.prepareOptionsList();
             this.listenTo(this.model, 'change:options', function () {
-                this.setOptionList(this.getOptionListItems());
+                this.prepareOptionsList();
             }, this);
         },
 
-        getOptionListItems() {
-            let options = [];
-            if (this.model.get('options')) {
-                options = Espo.Utils.clone(this.model.get('options'));
-            }
-            options.unshift('');
+        prepareOptionsList() {
+            this.params.options = [''];
+            this.translatedOptions = {'': ''};
 
-            return options;
+            let ids = this.model.get('optionsIds') || [];
+            let options = this.model.get('options') || [];
+            ids.forEach((id, k) => {
+                this.params.options.push(id);
+                this.translatedOptions[id] = options[k] ? options[k] : id;
+            });
         },
 
         validate() {

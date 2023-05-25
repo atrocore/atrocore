@@ -252,14 +252,14 @@ class Converter
                 }
             }
 
-            foreach ($this->getMetadata()->get(['entityDefs', $entityName, 'uniqueIndexes'], []) as $indexName => $indexColumns) {
-                $uniqueColumns[SchemaUtils::generateIndexName($indexName)] = $indexColumns;
-            }
-
             if (!empty($uniqueColumns)) {
                 foreach($uniqueColumns as $uniqueItem) {
                     $tables[$entityName]->addUniqueIndex($uniqueItem);
                 }
+            }
+
+            foreach ($this->getMetadata()->get(['entityDefs', $entityName, 'uniqueIndexes'], []) as $indexName => $indexColumns) {
+                $tables[$entityName]->addUniqueIndex($indexColumns, SchemaUtils::generateIndexName($indexName));
             }
         }
 

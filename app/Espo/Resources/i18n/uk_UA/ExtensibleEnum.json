@@ -1,0 +1,11 @@
+{
+  "fields": {
+    "extensibleEnumOptions": "Опції списку"
+  },
+  "links": {
+    "extensibleEnumOptions": "Опції списку"
+  },
+  "labels": {
+    "Create ExtensibleEnum": "Створити список"
+  }
+}

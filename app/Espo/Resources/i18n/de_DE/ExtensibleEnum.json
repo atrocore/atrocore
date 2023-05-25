@@ -1,0 +1,11 @@
+{
+  "fields": {
+    "extensibleEnumOptions": "Auswahloptionen"
+  },
+  "links": {
+    "extensibleEnumOptions": "Auswahloptionen"
+  },
+  "labels": {
+    "Create ExtensibleEnum": "Liste erstellen"
+  }
+}

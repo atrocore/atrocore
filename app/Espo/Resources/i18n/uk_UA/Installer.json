@@ -1,0 +1,51 @@
+{
+  "fields": {
+    "host": "Назва хоста",
+    "dbname": "Назва бази даних",
+    "user": "База даних ім'я користувача",
+    "username": "Ім'я користувача",
+    "password": "Пароль",
+    "confirmPassword": "Підтвердіть пароль"
+  },
+  "labels": {
+    "licenseAgreement": "Ліцензійна угода",
+    "databaseConfiguration": "Конфігурація бази даних",
+    "administratorSetup": "Налаштування адміністратора",
+    "requiredSettings": "Обов'язкові налаштування",
+    "chooseYourLanguage": "Виберіть Вашу мову",
+    "acceptTheAgreement": "Я приймаю умови угоди",
+    "hostName": "Назва хоста",
+    "databaseName": "Назва бази даних",
+    "databaseUserName": "База даних ім'я користувача",
+    "databaseUserPassword": "База даних пароль користувача",
+    "port": "Порт",
+    "testConnection": "Перевірка з'єднання",
+    "reCheck": "Повторна перевірка",
+    "userName": "Ім'я користувача",
+    "password": "Пароль",
+    "confirmYourPassword": "Підтвердіть пароль",
+    "back": "Назад",
+    "next": "Наступна",
+    "finish": "Завершити",
+    "required": "Обов'язково",
+    "currentVersion": "Поточна версія",
+    "status": "Статус"
+  },
+  "errors": {
+    "alreadyInstalled": "AtroCore вже встановлено",
+    "languageNotCorrect": "Неправильна мова введення",
+    "differentPass": "Пароль не збігається",
+    "notCorrectDatabaseConfig": "Неправильні налаштування бази даних",
+    "filePermissionsError": "У вас недостатньо прав для файлів. Будь ласка, налаштуйте дозволи згідно з інструкцією."
+  },
+  "messages": {
+    "youMustAgreeToTheLicenseAgreement": "Ви повинні погодитися з ліцензійною угодою",
+    "fieldIsRequired": "{поле} обов'язкове",
+    "connectionSuccessful": "З'єднання успішно!",
+    "pleaseConfigureYourSystemToStart": "Будь ласка, налаштуйте вашу систему для запуску"
+  },
+  "requirements": {
+    "phpVersion": "PHP version",
+    "mysqlVersion": "версія MySQL"
+  }
+}

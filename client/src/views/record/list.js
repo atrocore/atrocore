@@ -539,7 +539,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             this.confirm({
-                message: this.translate('removeSelectedRecordsConfirmation', 'messages'),
+                message: this.prepareRemoveSelectedRecordsConfirmationMessage(),
                 confirmText: this.translate('Remove')
             }, function () {
                 this.notify(this.translate('removing', 'labels', 'Global'));
@@ -566,6 +566,27 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     this.collection.fetch();
                 }.bind(this));
             }, this);
+        },
+
+        prepareRemoveSelectedRecordsConfirmationMessage: function () {
+            let scopeMessage = this.getMetadata()
+                .get(`clientDefs.${this.scope}.removeSelectedRecordsConfirmation`)
+                ?.split('.');
+            let message = this.translate('removeSelectedRecordsConfirmation', 'messages');
+            if (scopeMessage?.length > 0) {
+                message = this.translate(scopeMessage.pop(), scopeMessage.pop(), scopeMessage.pop());
+                var selectedIds = this.checkedList;
+                var selectedNames = this.collection.models
+                    .filter(function (model) {
+                        return selectedIds.includes(model.id);
+                    })
+                    .map(function (model) {
+                        return "'"+model.attributes['name']+"'";
+                    })
+                    .join(", ");
+                message = message.replace('{{selectedNames}}', selectedNames);
+            }
+            return message;
         },
 
         massActionFollow: function () {
@@ -1496,9 +1517,16 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 });
             }
 
-            let hashParts = window.location.hash.split('/');
-            let entityType = hashParts.shift().replace('#', '');
-            let entityId = hashParts.pop();
+            let parentView = this.getParentView();
+
+            let entityType = null;
+            let entityId = null;
+
+            if (parentView && parentView.options && parentView.options.model) {
+                entityType = parentView.options.model.urlRoot;
+                entityId = parentView.options.model.get('id');
+            }
+
             let filteredListLayout = [];
 
             listLayout.forEach(item => {
@@ -1619,6 +1647,12 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     width: width,
                     align: ('align' in this.listLayout[i]) ? this.listLayout[i].align : false,
                 };
+
+                let fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', item.name, 'type']);
+                if (this.getMetadata().get(['fields', fieldType, 'notSortable'])) {
+                    item.sortable = false;
+                }
+
                 if ('customLabel' in this.listLayout[i]) {
                     item.customLabel = this.listLayout[i].customLabel;
                     item.hasCustomLabel = true;
@@ -2144,7 +2178,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             let parts = message.split('.');
 
             this.confirm({
-                message: this.translate(parts.pop(), parts.pop(), parts.pop()),
+                message: (this.translate(parts.pop(), parts.pop(), parts.pop())).replace('{{name}}', model.get('name')),
                 confirmText: this.translate('Remove')
             }, function () {
                 this.collection.trigger('model-removing', id);

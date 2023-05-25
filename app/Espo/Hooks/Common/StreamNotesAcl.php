@@ -37,8 +37,6 @@ use Espo\ORM\Entity;
 
 class StreamNotesAcl extends \Espo\Core\Hooks\Base
 {
-    protected $streamService = null;
-
     public static $order = 10;
 
     protected function init()

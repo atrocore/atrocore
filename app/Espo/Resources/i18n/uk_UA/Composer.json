@@ -1,0 +1,65 @@
+{
+  "fields": {
+    "status": "Статус",
+    "settingVersion": "Встановлення версії",
+    "currentVersion": "Поточна версія",
+    "latestVersion": "Остання версія",
+    "availableVersions": "Доступні версії"
+  },
+  "options": {
+    "status": {
+      "install": "Встановити",
+      "update": "Оновити",
+      "delete": "Видалити"
+    }
+  },
+  "exceptions": {
+    "hasRequireds": "Модуль не відповідає вимогам",
+    "hasRequiredsDelete": "Ви не можете видалити необхідний модуль",
+    "isSystem": "Ви не можете видалити системний модуль.",
+    "noSuchModule": "Такого модуля немає",
+    "suchModuleIsAlreadyInstalled": "Даний модуль вже встановлений",
+    "moduleWasNotInstalled": "Модуль не був встановлений",
+    "suchModuleVersionAlreadyInstalled": "Ця версія модуля вже встановлена",
+    "noSuchModuleVersion": "Такої версії модуля немає",
+    "versionIsInvalid": "Версія неправильна"
+  },
+  "labels": {
+    "available": "Доступний",
+    "Installed": "Встановлено",
+    "Store": "Магазин",
+    "updateModule": "Оновлення",
+    "removeModule": "Видалення",
+    "cancelModule": "Скасування",
+    "username": "Ім'я користувача",
+    "password": "Пароль",
+    "anotherActionInProgress": "Інша дія в процесі роботи. Дочекайтеся її завершення",
+    "updating": "Оновлення...",
+    "updateStarted": "Оновлення почалося",
+    "canceling": "Скасування...",
+    "canceled": "Скасовано",
+    "dependencies": "Залежності",
+    "version": "Версія",
+    "Run Update": "Оновити",
+    "updateFailed": "Не вдалося оновити. Неможливо встановити з'єднання з сервером модулів. Будь ласка, повторіть операцію.",
+     "settingModuleForRemoving": "Вибір модуль для видалення...",
+     "setModuleForRemoving": "Модуль вибрано для видалення. Натисніть на кнопку \"Оновити\", щоб застосувати інсталяцію або видалення модулів.",
+     "settingModuleForInstalling": "Вибір модуля для встановлення...",
+     "setModuleForInstalling": "Модуль вибраний для встановлення. Натисніть на кнопку \"Оновити\", щоб застосувати інсталяцію або видалення модулів.",
+     "cancelingModuleInstall": "Скасування установки модуля...",
+     "canceledModuleInstall": "Встановлення модуля скасовано",
+     "Log": "Лог",
+     "confirmRun": "Після дії оновлення всі користувачі будуть вилоговані з системи. Ви впевнені, що хочете оновити систему?",
+     "daemonDisabled": "<b>Демон програми-компонувальника не запущений!</b> <br> Ймовірно, демон зараз перезавантажується, і Вам слід почекати хвилину, або crontab не налаштований. Інструкції з налаштування crontab ви можете знайти <a href= \"https://github.com/atrocore/atrocore-docs/blob/master/en/administration/installation.md#4-configure-the-crontab\" class=\"alert-link\" target=\" _blank\">тут</a>.",
+     "queueManagerRunning": "<b>Менеджер черг запущено!</b><br>Можливість оновлення модулів заблокована. Будь ласка, повторіть спробу пізніше."
+   },
+   "notifications": {
+     "Module update": "Модуль {module} був оновлений. З версії {from} до {to}",
+     "System update": "Систему було оновлено. З версії {from} до {to}",
+     "Module install": "Модуль {module} v.{version} встановлений",
+     "Module delete": "Модуль {module} був видалений",
+     "Module downgrade": "Модуль {module} переведений на більш ранню версію. З версії {from} до {to}",
+     "System downgrade": "Систему переведено на більш ранню версію. З версії {from} до {to}",
+     "Composer updated!": "Менеджер модуля залежностей був оновлений! <a href=\"/#Composer/list\">See details</a>"
+  }
+}

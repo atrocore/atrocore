@@ -52,7 +52,7 @@ Espo.define('treo-core:views/fields/currency', 'class-replace!treo-core:views/fi
         },
 
         validateFloat: function () {
-            if (!this.$currency.val()) {
+            if (this.$currency && !this.$currency.val()) {
                 return true;
             }
 
@@ -60,13 +60,20 @@ Espo.define('treo-core:views/fields/currency', 'class-replace!treo-core:views/fi
         },
 
         fetch: function () {
-            let value = this.$element.val();
-            value = this.parse(value);
+            let value = null;
+            if (this.$element) {
+                value = this.parse(this.$element.val());
+            }
+
+            let currency = null;
+            if (this.$currency) {
+                currency = this.$currency.val();
+            }
 
             let data = {};
-
             data[this.name] = value;
-            data[this.currencyFieldName] = this.$currency.val();
+            data[this.currencyFieldName] = currency;
+
             return data;
         },
 

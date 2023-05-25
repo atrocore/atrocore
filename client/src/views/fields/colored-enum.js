@@ -119,8 +119,9 @@ Espo.define('views/fields/colored-enum', 'views/fields/enum', function (Dep) {
         },
 
         getBackgroundColor(fieldValue) {
-            let options = this.model.getFieldParam(this.name, 'options') || [];
-            let optionColors = this.model.getFieldParam(this.name, 'optionColors') || [];
+            let options = this.model.getFieldParam(this.name, 'options') || this.params.options || [];
+            let optionColors = this.model.getFieldParam(this.name, 'optionColors') || this.params.optionColors || [];
+
             if (!Array.isArray(optionColors)) {
                 optionColors = [];
             }

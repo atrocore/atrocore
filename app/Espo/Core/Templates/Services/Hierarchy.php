@@ -110,7 +110,9 @@ class Hierarchy extends Record
         $this->prepareTreeForSelectedNode($entity, $tree);
         $this->prepareTreeData($tree);
 
-        return ['total' => count($tree), 'list' => $tree];
+        $total = empty($tree[0]['total']) ? 0 : $tree[0]['total'];
+
+        return ['total' => $total, 'list' => $tree];
     }
 
     public function getTreeData(array $ids): array
@@ -170,49 +172,23 @@ class Hierarchy extends Record
 
     protected function prepareTreeForSelectedNode($entity, array &$tree, string $parentId = ''): void
     {
-        $children = $this->getChildren($parentId, ['offset' => 0, 'maxSize' => \PHP_INT_MAX]);
-
         $limit = $this->getConfig()->get('recordsPerPageSmall', 20);
 
-        $part = [];
+        $position = $this->getRepository()->getEntityPosition($entity, $parentId);
+        $index = $position - 1;
 
-        foreach ($children['list'] as $k => $child) {
-            if ($child['id'] === $entity->get('id')) {
-                $row = $child;
-                $row['offset'] = $k;
-                $part[] = $row;
-
-                $i = 1;
-                while (count($part) < $limit) {
-                    $prevOffset = $k - $i;
-                    $nextOffset = $k + $i;
-
-                    if (!isset($children['list'][$prevOffset]) && !isset($children['list'][$nextOffset])) {
-                        break;
-                    }
-
-                    if (isset($children['list'][$prevOffset])) {
-                        $row = $children['list'][$prevOffset];
-                        $row['offset'] = $prevOffset;
-                        $part = array_merge([$row], $part);
-                    }
-                    if (isset($children['list'][$nextOffset])) {
-                        $row = $children['list'][$nextOffset];
-                        $row['offset'] = $nextOffset;
-                        $part[] = $row;
-                    }
-
-                    $i++;
-                }
-
-                break;
-            }
+        $offset = $index - $limit;
+        if ($offset < 0) {
+            $offset = 0;
         }
 
-        foreach ($part as $v) {
-            $tree[$v['id']] = $v;
-            $tree[$v['id']]['total'] = $children['total'];
-            $tree[$v['id']]['disabled'] = false;
+        $children = $this->getChildren($parentId, ['offset' => $offset, 'maxSize' => $index + $limit]);
+        if (!empty($children['list'])) {
+            foreach ($children['list'] as $v) {
+                $tree[$v['id']] = $v;
+                $tree[$v['id']]['total'] = $children['total'];
+                $tree[$v['id']]['disabled'] = false;
+            }
         }
 
         if (!empty($entity->child)) {
@@ -416,22 +392,16 @@ class Hierarchy extends Record
     public function getChildren(string $parentId, array $params): array
     {
         $result = [];
-
-        $records = $this->getRepository()->getChildrenArray($parentId, true, $params['offset'], $params['maxSize']);
+        $selectParams = $this->getSelectParams($params);
+        $records = $this->getRepository()->getChildrenArray($parentId, true, $params['offset'], $params['maxSize'], $selectParams);
         if (empty($records)) {
             return $result;
         }
 
         $offset = $params['offset'];
-        $total = $this->getRepository()->getChildrenCount($parentId);
-
-        unset($params['offset']);
-        unset($params['maxSize']);
-        $selectParams = $this->getSelectParams($params);
-        $selectParams['select'] = ['id'];
-
+        $total = $this->getRepository()->getChildrenCount($parentId,$selectParams);
         $ids = [];
-        foreach ($this->getRepository()->find($selectParams) as $entity) {
+        foreach ($this->getRepository()->where(['id' => array_column($records, 'id')])->find() as $entity) {
             if ($this->getAcl()->check($entity, 'read')) {
                 $ids[] = $entity->get('id');
             }
@@ -467,6 +437,10 @@ class Hierarchy extends Record
 
     public function createEntity($attachment)
     {
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy') {
+            return parent::createEntity($attachment);
+        }
+
         $this->prepareChildInputData($attachment);
 
         return parent::createEntity($attachment);
@@ -489,6 +463,10 @@ class Hierarchy extends Record
 
     public function updateEntity($id, $data)
     {
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy') {
+            return parent::updateEntity($id, $data);
+        }
+
         if (property_exists($data, '_sortedIds') && property_exists($data, '_id')) {
             $this->getRepository()->updateHierarchySortOrder($data->_id, $data->_sortedIds);
             return $this->getEntity($id);
@@ -538,6 +516,10 @@ class Hierarchy extends Record
 
     public function linkEntity($id, $link, $foreignId)
     {
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy') {
+            return parent::linkEntity($id, $link, $foreignId);
+        }
+
         /**
          * Delegate to Update if ManyToOne or OneToOne relation
          */
@@ -599,6 +581,10 @@ class Hierarchy extends Record
 
     public function unlinkEntity($id, $link, $foreignId)
     {
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy') {
+            return parent::unlinkEntity($id, $link, $foreignId);
+        }
+
         /**
          * Delegate to Update if ManyToOne or OneToOne relation
          */
@@ -664,6 +650,10 @@ class Hierarchy extends Record
 
     public function deleteEntity($id)
     {
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy') {
+            return parent::deleteEntity($id);
+        }
+
         $inTransaction = false;
         if (!$this->getEntityManager()->getPDO()->inTransaction()) {
             $this->getEntityManager()->getPDO()->beginTransaction();
@@ -691,14 +681,15 @@ class Hierarchy extends Record
     {
         parent::prepareEntityForOutput($entity);
 
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy') {
+            return;
+        }
+
         $entity->set('isRoot', $this->getRepository()->isRoot($entity->get('id')));
-
         $entity->set('hasChildren', !empty($children = $entity->get('children')) && count($children) > 0);
-
         if ($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']) !== true) {
             $entity->set('hierarchyRoute', $this->getRepository()->getHierarchyRoute($entity->get('id')));
         }
-
         if ($entity->has('hierarchySortOrder')) {
             $entity->set('sortOrder', $entity->get('hierarchySortOrder'));
         }
@@ -707,16 +698,17 @@ class Hierarchy extends Record
     public function findLinkedEntities($id, $link, $params)
     {
         $result = parent::findLinkedEntities($id, $link, $params);
-        if (empty($result['total'])) {
+
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy') {
             return $result;
         }
 
-        if ($link === 'children') {
-            $result['collection'] = $this->sortCollection($result['collection']);
+        if (in_array($link, ['parents', 'children'])) {
             return $result;
         }
 
-        if ($link === 'parents') {
+        $entity = $this->getRepository()->get($id);
+        if (empty($entity)) {
             return $result;
         }
 
@@ -724,7 +716,7 @@ class Hierarchy extends Record
          * Mark records as inherited
          */
         if (!in_array($link, $this->getRepository()->getUnInheritedRelations())) {
-            $parents = $this->getRepository()->get($id)->get('parents');
+            $parents = $entity->get('parents');
             if (!empty($parents[0])) {
                 $parentsRelatedIds = [];
                 foreach ($parents as $parent) {
@@ -733,8 +725,8 @@ class Hierarchy extends Record
                         $parentsRelatedIds = array_merge($parentsRelatedIds, $ids);
                     }
                 }
-                foreach ($result['collection'] as $entity) {
-                    $entity->isInherited = in_array($entity->get('id'), $parentsRelatedIds);
+                foreach ($result['collection'] as $item) {
+                    $item->isInherited = in_array($item->get('id'), $parentsRelatedIds);
                 }
             }
         }
@@ -833,27 +825,6 @@ class Hierarchy extends Record
         }
 
         return $inputData;
-    }
-
-    protected function sortCollection(EntityCollection $inputCollection): EntityCollection
-    {
-        $ids = [];
-        foreach ($inputCollection as $entity) {
-            $ids[$entity->get('id')] = $entity->get('sortOrder');
-        }
-        asort($ids);
-
-        $collection = new EntityCollection();
-        foreach ($ids as $id => $sortOrder) {
-            foreach ($inputCollection as $entity) {
-                if ($entity->get('id') === $id) {
-                    $collection->append($entity);
-                    break;
-                }
-            }
-        }
-
-        return $collection;
     }
 
     protected function getInheritedFromParentFields(Entity $parent, Entity $child): array

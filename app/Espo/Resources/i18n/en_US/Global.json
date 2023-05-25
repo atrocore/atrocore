@@ -1,5 +1,7 @@
 {
   "scopeNames": {
+    "ExtensibleEnum": "List",
+    "ExtensibleEnumOption": "List Option",
     "Sharing": "Sharing",
     "Locale": "Locale",
     "Connection": "Connection",
@@ -47,10 +49,11 @@
     "Global": "Global",
     "Preferences": "Preferences",
     "AuthLogRecord": "Auth Log Record",
-    "AuthFailLogRecord": "Auth Fail Log Record",
-    "ArrayValue": "Array Value"
+    "AuthFailLogRecord": "Auth Fail Log Record"
   },
   "scopeNamesPlural": {
+    "ExtensibleEnum": "Lists",
+    "ExtensibleEnumOption": "List Options",
     "Sharing": "Sharing",
     "Locale": "Locales",
     "Connection": "Connections",
@@ -83,8 +86,7 @@
     "PasswordChangeRequest": "Password Change Requests",
     "ActionHistoryRecord": "Action History",
     "AuthToken": "Auth Tokens",
-    "LastViewed": "Last Viewed",
-    "ArrayValue": "Array Values"
+    "LastViewed": "Last Viewed"
   },
   "descriptions": {
     "Core": "AtroCore is a software ecosystem, designed for rapid development of web-based responsive business applications."
@@ -225,6 +227,7 @@
     "Post": "Post",
     "Stream": "Stream",
     "Show more": "Show more",
+    "Read more": "Read more ...",
     "Show %s more": "Show %s more",
     "Dashlet Options": "Dashlet Options",
     "Full Form": "Full Form",
@@ -297,6 +300,7 @@
   "messages": {
     "confirmInheritAllForChildren": "Are you sure you want all child items to inherit field (and attribute) values as well as relations from this parent item? Existing values will not be replaced.",
     "massDeleting": "Deleting: {{deleted}} from {{total}}",
+    "massUpdating": "Updating: {{deleted}} from {{total}}",
     "optionValueCannotBeEmpty": "Option value cannot be empty",
     "minimumOneOptionsRequired": "Minimum one option value is required.",
     "defaultEnumValueCannotBeEmpty": "Default value should be selected if empty value is disabled.",
@@ -325,6 +329,7 @@
     "fieldIsRequired": "{field} is required",
     "fieldShouldBeEmail": "{field} should be a valid email",
     "fieldShouldBeFloat": "{field} should be a valid float",
+    "fieldShouldBeFloatWithValidDigitAfterComma": "The maximum of digits after comma is {amountOfDigitsAfterComma}",
     "fieldShouldBeInt": "{field} should be a valid integer",
     "fieldShouldBeDate": "{field} should be a valid date",
     "fieldShouldBeDatetime": "{field} should be a valid date/time",
@@ -380,10 +385,10 @@
     "onlyActive": "Active",
     "onlyMy": "My",
     "assignedToMe": "Assigned to me",
-    "ownedByMe": "Owned by me",
-    "followed": "Followed"
+    "ownedByMe": "Owned by me"
   },
   "presetFilters": {
+    "withArchived": "All + Archived",
     "followed": "Followed",
     "all": "All"
   },
@@ -401,6 +406,9 @@
     "convertCurrency": "Convert Currency"
   },
   "fields": {
+    "isArchived": "Archived",
+    "code": "Code",
+    "extensibleEnum": "List",
     "sortOrder": "Sort Order",
     "parents": "Parent Record(s)",
     "prohibitedEmptyValue": "Disable Empty Value",
@@ -806,6 +814,10 @@
       "anyOf": "Any Of",
       "noneOf": "None Of"
     },
+    "assetSearchRanges": {
+      "isEmpty": "Is NULL",
+      "isNotEmpty": "Is not NULL"
+    },
     "varcharSearchRanges": {
       "equals": "Equals",
       "like": "Is Like (%)",
@@ -1000,6 +1012,8 @@
     "cd": "cd"
   },
   "exceptions": {
+    "childsMustBeArchived": "The (parent) item can be archived only if all child items are archived too.", 
+    "maxLengthIsExceeded": "The allowed maximum length for \"%s\" is %s symbols, you current length is \"%s\" symbols.",
     "parentRecordsHaveDifferentValues": "Parent records have different values, value to inherit cannot be determined.",
     "nothingToInherit": "There is nothing to inherit.",
     "hasMultipleParents": "There is one or more records with multiple parents.",
@@ -1010,13 +1024,15 @@
     "noOptionsDefined": "Options for the field '%s' are not defined.",
     "fieldIsRequired": "Validation failed. '%s' is required.",
     "urlIsInvalid": "URL is invalid",
+    "maximumOfDigitsAfterCommaInvalid": "The maximum of digits after comma is %s",
     "suchUrlExists": "Such URL is already exists",
     "siteUrlEmpty": "Site URL is empty",
     "codeInvalid": "Code is invalid. Code should be unique. Only letters, numbers and char \"_\" expected.",
     "notDashletService": "Service %s must implement Dashlet Interface",
     "editedByAnotherUser": "The data set [%s] has been changed in the meantime. You can <a href=\"javascript:\" onclick=\"location.reload();\">reload the page</a> to see the new values, return to editing by pressing \"Cancel\" or overwrite the data by pressing \"Apply\". Do you want to overwrite the data?",
     "dontMatchToPattern": "The value of the field \"{field}\" does not correspond to the pattern \"{pattern}\".",
-    "fieldShouldMustBeUnique": "Field '%s' should have unique value."
+    "notUniqueValue": "Value for the field '%s' should be unique.",
+    "notUniqueValues": "Value combination for the fields '%s' should be unique."
   },
   "themes": {
     "TreoDarkTheme": "Atro Dark Theme",

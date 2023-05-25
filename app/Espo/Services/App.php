@@ -40,6 +40,11 @@ use Espo\Core\Utils\Language;
 
 class App extends Base
 {
+    public function rebuild($data = null, $targetId = null, $targetType = null): void
+    {
+        $this->getInjection('dataManager')->rebuild();
+    }
+
     public function getUserData(): array
     {
         $preferencesData = $this->getInjection('preferences')->getValueMap();
@@ -76,13 +81,13 @@ class App extends Base
         unset($userData->password);
 
         return [
-            'user' => $userData,
-            'acl' => $this->getInjection('acl')->getMap(),
+            'user'        => $userData,
+            'acl'         => $this->getInjection('acl')->getMap(),
             'preferences' => $preferencesData,
-            'token' => $this->getUser()->get('token'),
-            'settings' => $settings,
-            'language' => Language::detectLanguage($this->getConfig(), $this->getInjection('preferences')),
-            'appParams' => [
+            'token'       => $this->getUser()->get('token'),
+            'settings'    => $settings,
+            'language'    => Language::detectLanguage($this->getConfig(), $this->getInjection('preferences')),
+            'appParams'   => [
                 'maxUploadSize' => $this->getMaxUploadSize() / 1024.0 / 1024.0
             ]
         ];
@@ -161,5 +166,6 @@ class App extends Base
         $this->addDependency('acl');
         $this->addDependency('metadata');
         $this->addDependency('mailSender');
+        $this->addDependency('dataManager');
     }
 }

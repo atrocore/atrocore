@@ -1,0 +1,33 @@
+{
+  "fields": {
+    "width": "Ширина (%)",
+    "widthPx": "Ширина (px)",
+    "link": "Посилання",
+    "notSortable": "Не сортується",
+    "align": "Вирівняти",
+    "panelName": "Назва панелі",
+    "style": "Стиль",
+    "isLarge": "Великий розмір шрифту",
+    "dynamicLogicVisible": "Умови, які роблять панель видимою",
+    "sticked": "Приліплений",
+    "cssStyle": "CSS Styles"
+  },
+  "options": {
+    "align": {
+      "left": "по лівому краю",
+      "right": "по правому краю"
+    },
+    "style": {
+      "default": "За замовчуванням",
+      "success": "Успіх",
+      "danger": "Небезпека",
+      "info": "Інформація",
+      "warning": "Попередження",
+      "primary": "Основний"
+    }
+  },
+  "labels": {
+    "New panel": "Нова панель",
+    "Layout": "Макет"
+  }
+}

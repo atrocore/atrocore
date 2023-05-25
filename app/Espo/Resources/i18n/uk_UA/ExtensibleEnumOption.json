@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "name": "Значення опції",
+    "color": "Колір",
+    "sortOrder": "Порядок сортування",
+    "extensibleEnum": "Список"
+  },
+  "links": {
+    "extensibleEnum": "Список"
+  },
+  "labels": {
+    "Create ExtensibleEnumOption": "Створити опцію списку"
+  }
+}

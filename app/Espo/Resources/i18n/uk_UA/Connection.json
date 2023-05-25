@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "type": "Тип",
+    "dbName": "Ім'я БД",
+    "host": "Хост",
+    "port": "Порт",
+    "user": "Користувач",
+    "password": "Пароль"
+  },
+  "labels": {
+    "connectionSuccess": "З'єднання успішно встановлено",
+    "testConnection": "Перевірити з'єднання",
+    "Create Connection": "Створити з'єднання"
+  },
+  "exceptions": {
+    "sqlsrvMissing": "PHP MSSQL extension не встановлено.",
+    "connectionFailed": "З'єднання не встановлено: %s",
+    "noSuchType": "Тип з'єднання не підтримується."
+  }
+}

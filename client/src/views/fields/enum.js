@@ -86,6 +86,28 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                 }
             }
 
+            if (!this.params.options) {
+                this.prepareOptionsForExtensibleEnum();
+                if (this.model.isNew()) {
+                    let defaultValue = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'defaultId']);
+                    if (defaultValue && this.translatedOptions[defaultValue]) {
+                        this.model.set(this.name, defaultValue);
+                    }
+                }
+            }
+
+            // prepare default
+            if (this.mode === 'edit' && this.model.isNew() && this.params.default) {
+                let optionsIds = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'optionsIds']);
+                if (optionsIds) {
+                    let index = optionsIds.indexOf(this.params.default);
+                    if (this.params.options[index]) {
+                        this.params.default = this.params.options[index];
+                        this.model.set(this.name, this.params.options[index]);
+                    }
+                }
+            }
+
             this.setupOptions();
 
             if ('translatedOptions' in this.options) {
@@ -140,8 +162,11 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                 const scopeIsAllowed = !this.prohibitedScopes.includes(this.model.name);
                 const isArray = Array.isArray((this.params || {}).options);
 
-                if (isArray && scopeIsAllowed && !this.params.options.includes('') && this.params.options.length > 1) {
+                if (isArray && scopeIsAllowed && !this.params.options.includes('')) {
                     this.params.options.unshift('');
+                    if (this.params.optionColors && this.params.optionColors.length > 0) {
+                        this.params.optionColors.unshift('');
+                    }
 
                     if (Espo.Utils.isObject(this.translatedOptions)) {
                         this.translatedOptions[''] = '';
@@ -360,7 +385,7 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
 
         fetch: function () {
             var value = this.$el.find('[name="' + this.name + '"]').val();
-            if (value){
+            if (value) {
                 value = value.replace(/~dbq~/g, '"');
             }
             var data = {};

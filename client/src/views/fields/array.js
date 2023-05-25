@@ -100,6 +100,9 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
 
             this.listenTo(this.model, 'change:' + this.name, function () {
                 this.selected = Espo.Utils.clone(this.model.get(this.name)) || [];
+                if (typeof this.selected === 'string') {
+                    this.selected = JSON.parse(this.selected);
+                }
             }, this);
 
             this.selected = Espo.Utils.clone(this.model.get(this.name) || []);
@@ -110,6 +113,26 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
 
             if (Object.prototype.toString.call(this.selected) !== '[object Array]')    {
                 this.selected = [];
+            }
+
+            if (typeof this.selected === 'string') {
+                this.selected = JSON.parse(this.selected);
+            }
+
+            if (!this.params.options) {
+                this.prepareOptionsForExtensibleEnum();
+                if (this.model.isNew()) {
+                    let defaultIds = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'defaultIds']);
+                    if (defaultIds && defaultIds.length > 0) {
+                        let defaultValue = [];
+                        defaultIds.forEach(id => {
+                            if (this.translatedOptions[id]) {
+                                defaultValue.push(id);
+                            }
+                        });
+                        this.model.set(this.name, defaultValue);
+                    }
+                }
             }
 
             this.setupOptions();

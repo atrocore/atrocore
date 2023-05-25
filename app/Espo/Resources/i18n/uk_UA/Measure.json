@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "name": "Назва",
+    "description": "Опис",
+    "units": "Одиниці виміру",
+    "locales": "Локалі",
+    "localeUnits": "Одиниці виміру",
+    "localeDefault": "За замовчуванням"
+  },
+  "links": {
+    "units": "Одиниці виміру",
+    "locales": "Локалі"
+  },
+  "labels": {
+    "Create Measure": "Створити міру"
+  }
+}

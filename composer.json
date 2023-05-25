@@ -22,13 +22,16 @@
     "atrocore/slim": "~2.6.2",
     "dragonmantank/cron-expression": "~1.0.3",
     "laminas/laminas-mail": "~2.16.0",
-    "monolog/monolog": "~2.7.0",
+    "monolog/monolog": "~2.8.0",
     "yzalis/identicon": "~2.0.0",
     "zordius/lightncandy": "~0.21",
     "symfony/event-dispatcher": "<=6.1.0",
     "symfony/workflow": "<=6.0.10",
     "phpseclib/phpseclib": "^3.0",
     "caxy/php-htmldiff": "^0.1.14"
+  },
+  "conflict": {
+    "atrocore/pim": "<1.7.25"
   },
   "autoload": {
     "psr-0": {

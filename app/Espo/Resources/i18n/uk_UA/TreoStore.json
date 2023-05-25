@@ -1,0 +1,16 @@
+{
+  "fields": {
+    "status": "Статус",
+    "versions": "Версії",
+    "tags": "Теги"
+  },
+  "options": {
+    "status": {
+      "buyable": "доступний до покупки",
+      "available": "доступний"
+    }
+  },
+  "labels": {
+    "installModule": "Встановити"
+  }
+}

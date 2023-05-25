@@ -18,12 +18,20 @@
          "type": "int"
       },
       {
-         "name":"showMoreDisabled",
+         "name":"maxLength",
+         "type":"int"
+      },
+      {
+         "name":"countBytesInsteadOfCharacters",
+         "type":"bool"
+      },
+      {
+         "name":"seeMoreDisabled",
          "type":"bool",
          "tooltip": true
       },
       {
-         "name": "displayedHeight",
+         "name": "lengthOfCut",
          "type": "int",
          "default": 400,
          "min": 1,

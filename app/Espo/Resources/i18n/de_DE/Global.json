@@ -1,5 +1,7 @@
 {
   "scopeNames": {
+    "ExtensibleEnum": "Liste",
+    "ExtensibleEnumOption": "Auswahloption",
     "Sharing": "Freigabe",
     "Translation": "Label",
     "Locale": "Gebietsschema",
@@ -35,10 +37,11 @@
     "DashletOptions": "Dashlet Optionen",
     "Preferences": "Benutzereinstellungen",
     "AuthLogRecord": "Auth Log-Datensatz",
-    "AuthFailLogRecord": "Auth-Fehlerprotokoll Datensatz",
-    "ArrayValue": "Array-Wert"
+    "AuthFailLogRecord": "Auth-Fehlerprotokoll Datensatz"
   },
   "scopeNamesPlural": {
+    "ExtensibleEnum": "Listen",
+    "ExtensibleEnumOption": "Auswahloptionen",
     "Sharing": "Freigaben",
     "Translation": "Labels",
     "Locale": "Gebietsschemas",
@@ -70,8 +73,7 @@
     "PasswordChangeRequest": "Anforderungen zur Passwortänderung",
     "LastViewed": "Zuletzt angezeigt",
     "AuthLogRecord": "Auth-Protokoll",
-    "AuthFailLogRecord": "Auth-Fehlerprotokoll",
-    "ArrayValue": "Array-Werte"
+    "AuthFailLogRecord": "Auth-Fehlerprotokoll"
   },
   "descriptions": {
     "Core": "AtroCore ist ein Software-Ökosystem, das für die schnelle Entwicklung webbasierter responsiver Geschäftsanwendungen entwickelt wurde."
@@ -221,6 +223,7 @@
     "Post": "Senden",
     "Stream": "Aktivitäten",
     "Show more": "Mehr anzeigen",
+    "Read more": "Mehr lesen ...",
     "Show %s more": "%s mehr anzeigen",
     "Dashlet Options": "Dashlet Optionen",
     "Full Form": "Komplettes Formular",
@@ -281,6 +284,7 @@
   "messages": {
     "confirmInheritAllForChildren": "Sind Sie sicher, dass alle untergeordneten Elemente Feld- (und Attribut-) Werte sowie auch Beziehungen von diesem übergeordneten Element erben sollen? Vorhandene Werte werden nicht ersetzt.",
     "massDeleting": "Entferne: {{deleted}} vom {{total}}",
+    "massUpdating": "Aktualisieren: {{deleted}} vom {{total}}",
     "optionValueCannotBeEmpty": "Option darf nicht leer sein",
     "minimumOneOptionsRequired": "Mindestens ein Optionswert ist erforderlich.",
     "defaultEnumValueCannotBeEmpty": "Der Standardwert sollte ausgewählt werden, wenn der leere Wert deaktiviert ist.",
@@ -297,6 +301,7 @@
     "confirmMassUnfollow": "Sind Sie sicher, dass Sie die ausgewählten Datensätze nicht mehr abonnieren wollen?",
     "fieldBadPasswordConfirm": "{field} nicht bestätigt",
     "fieldShouldBeFloat": "{field} muss eine gültige Fließkommazahl sein",
+    "fieldShouldBeFloatWithValidDigitAfterComma": "Die maximale Anzahl der Ziffern nach dem Komma ist {amountOfDigitsAfterComma}",
     "internalPost": "Die Post kann nur von internen Benutzern gesehen werden",
     "massFollowResult": "{count} Datensätze wurden abonniert",
     "massFollowResultSingle": "{count} Datensatz wurde abonniert",
@@ -408,6 +413,7 @@
     "onlyActive": "Aktiv"
   },
   "presetFilters": {
+    "withArchived": "Alle + Archivierte",
     "followed": "abonniert",
     "all": "Alle"
   },
@@ -425,6 +431,9 @@
     "convertCurrency": "Währung umrechnen"
   },
   "fields": {
+    "isArchived": "Archiviert",
+    "code": "Code",
+    "extensibleEnum": "Liste",
     "sortOrder": "Sortierreihenfolge",
     "parents": "Übergeordnete Datensätze",
     "assignedAccounts": "Accounts",
@@ -435,7 +444,6 @@
     "parent": "Parent",
     "price": "Preis",
     "priceCurrency": "Währung",
-    "productFamily": "Produktfamilie",
     "productSerie": "Produktserie",
     "billingAddressCity": "Ort (Rechnungsadresse)",
     "billingAddressCountry": "Land (Rechnungsadresse)",
@@ -742,6 +750,10 @@
       "isNotOneOf": "Keiner von",
       "noneOf": "Keiner von"
     },
+    "assetSearchRanges": {
+      "isEmpty": "Ist NULL",
+      "isNotEmpty": "Ist nicht NULL"
+    },
     "fieldFilter": {
       "allValues": "Alle Werte",
       "filled": "Ausgefüllte Werte",
@@ -915,6 +927,8 @@
     "list": "Liste"
   },
   "exceptions": {
+    "childsMustBeArchived": "Der (übergeordnete) Datensatz kann nur archiviert werden, wenn auch alle untergeordneten Datensätzte archiviert sind.",
+    "maxLengthIsExceeded": "Die zulässige maximale Länge für \"%s\" beträgt \"%s\" Symbole, Ihre aktuelle Länge beträgt \"%s\" Symbole.",
     "parentRecordsHaveDifferentValues": "Eltern-Datensätze haben unterschiedliche Werte, der zu vererbende Wert kann nicht bestimmt werden.",
     "nothingToInherit": "Es gibt nichts zu vererben.",
     "hasMultipleParents": "Es gibt einen oder mehr Datensätze mit mehreren Elterndatensätzen.",
@@ -926,11 +940,13 @@
     "fieldIsRequired": "Validierung fehlgeschlagen. '%s' ist erforderlich.",
     "notDashletService": "Service %s muss Dashlet-Interface implementieren",
     "urlIsInvalid": "Die URL ist ungültig",
+    "maximumOfDigitsAfterCommaInvalid": "Die maximale Anzahl der Ziffern nach dem Komma ist %s",
     "suchUrlExists": "Eine solche URL ist bereits vorhanden",
     "siteUrlEmpty": "Die Website-URL ist leer",
     "codeInvalid": "Code ist ungültig. Code sollte eindeutig sein. Nur Buchstaben, Zahlen und Char \"_\" erwartet.",
     "editedByAnotherUser": "Der Datensatz [%s] wurde inzwischen geändert. Sie können die Seite <a href=\"javascript:\" onclick=\"location.reload();\">neu laden</a>, um die neuen Werte zu sehen, mit \"Abbrechen\" zur Bearbeitung zurückkehren oder mit \"Anwenden\" die Daten überschreiben. Möchten Sie die Daten überschreiben?",
     "dontMatchToPattern": "ert des Feldes \"{field}\" entspricht nicht dem Pattern \"{pattern}\".",
-    "fieldShouldMustBeUnique": "Das Feld '%s' sollte einen eindeutigen Wert haben."
+    "notUniqueValue": "Der Wert für das Feld '%s' sollte eindeutig sein.",
+    "notUniqueValues": "Die Wertekombination für die Felder '%s' sollte eindeutig sein."
   }
 }

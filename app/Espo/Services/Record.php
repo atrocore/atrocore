@@ -40,6 +40,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\PseudoTransactionManager;
+use Espo\Core\Utils\Database\Schema\Utils as SchemaUtils;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Metadata;
@@ -227,6 +228,11 @@ class Record extends \Espo\Core\Services\Base
         if ($this->actionHistoryDisabled) return;
         if ($this->getConfig()->get('actionHistoryDisabled')) return;
 
+        // skip if import
+        if (!empty($GLOBALS['importJobId'])) {
+            return;
+        }
+
         $historyRecord = $this->getEntityManager()->getEntity('ActionHistoryRecord');
 
         $historyRecord->set('action', $action);
@@ -248,7 +254,7 @@ class Record extends \Espo\Core\Services\Base
     public function readEntity($id)
     {
         $id = $this
-            ->dispatchEvent('beforeReadEntity', new Event(['id' => $id]))
+            ->dispatchEvent('beforeReadEntity', new Event(['id' => $id, 'service' => $this]))
             ->getArgument('id');
 
         if (empty($id)) {
@@ -261,14 +267,14 @@ class Record extends \Espo\Core\Services\Base
         }
 
         return $this
-            ->dispatchEvent('afterReadEntity', new Event(['id' => $id, 'entity' => $entity]))
+            ->dispatchEvent('afterReadEntity', new Event(['id' => $id, 'entity' => $entity, 'service' => $this]))
             ->getArgument('entity');
     }
 
     public function getEntity($id = null)
     {
         $id = $this
-            ->dispatchEvent('beforeGetEntity', new Event(['id' => $id]))
+            ->dispatchEvent('beforeGetEntity', new Event(['id' => $id, 'service' => $this]))
             ->getArgument('id');
 
         $this->getPseudoTransactionManager()->runForEntity($this->getEntityType(), $id);
@@ -286,7 +292,7 @@ class Record extends \Espo\Core\Services\Base
         }
 
         return $this
-            ->dispatchEvent('afterGetEntity', new Event(['id' => $id, 'entity' => $entity]))
+            ->dispatchEvent('afterGetEntity', new Event(['id' => $id, 'entity' => $entity, 'service' => $this]))
             ->getArgument('entity');
     }
 
@@ -443,12 +449,12 @@ class Record extends \Espo\Core\Services\Base
     {
         $this->loadPreviewForCollection($collection);
 
-        $this->dispatchEvent('prepareCollectionForOutput', new Event(['collection' => $collection, 'selectParams' => $selectParams]));
+        $this->dispatchEvent('prepareCollectionForOutput', new Event(['collection' => $collection, 'selectParams' => $selectParams, 'service' => $this]));
     }
 
     public function loadPreviewForCollection(EntityCollection $collection): void
     {
-        $this->dispatchEvent('loadPreviewForCollection', new Event(['collection' => $collection]));
+        $this->dispatchEvent('loadPreviewForCollection', new Event(['collection' => $collection, 'service' => $this]));
 
         $fields = [];
         foreach ($this->getMetadata()->get(['entityDefs', $collection->getEntityName(), 'fields'], []) as $field => $data) {
@@ -556,6 +562,16 @@ class Record extends \Espo\Core\Services\Base
                 if (preg_match("/SQLSTATE\[23000\]: Integrity constraint violation: 1062 Duplicate entry '(.*)' for key '(.*)'/", $message, $matches) && !empty($matches[2])) {
                     $keyNameParts = explode('.', $matches[2]);
                     $keyName = array_pop($keyNameParts);
+
+                    /**
+                     * Check in metadata indexes
+                     */
+                    foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'uniqueIndexes'], []) as $indexName => $columns) {
+                        if (SchemaUtils::generateIndexName($indexName) === $keyName) {
+                            throw new BadRequest($this->prepareUniqueMessage($columns));
+                        }
+                    }
+
                     $data = $this
                         ->getEntityManager()
                         ->getPDO()
@@ -563,15 +579,7 @@ class Record extends \Espo\Core\Services\Base
                         ->fetch(\PDO::FETCH_ASSOC);
 
                     if (!empty($data['Column_name'])) {
-                        $column = $data['Column_name'];
-
-                        /** @var Language $language */
-                        $language = $this->getInjection('language');
-
-                        $column = $language->translate(Util::toCamelCase($column), 'fields', $entity->getEntityType());
-                        $errorMessage = sprintf($language->translate('fieldShouldMustBeUnique', 'exceptions'), $column);
-
-                        throw new BadRequest($errorMessage);
+                        throw new BadRequest($this->prepareUniqueMessage([$data['Column_name']]));
                     }
                 }
             }
@@ -580,6 +588,26 @@ class Record extends \Espo\Core\Services\Base
         }
 
         return $result;
+    }
+
+    protected function prepareUniqueMessage(array $columns): string
+    {
+        /** @var Language $language */
+        $language = $this->getInjection('language');
+
+        $fields = [];
+        foreach ($columns as $column) {
+            if ($column === 'deleted') {
+                continue;
+            }
+            $fields[] = $language->translate(Util::toCamelCase($column), 'fields', $this->getEntityType());
+        }
+
+        if (count($fields) > 1) {
+            return sprintf($language->translate('notUniqueValues', 'exceptions'), implode(', ', $fields));
+        }
+
+        return sprintf($language->translate('notUniqueValue', 'exceptions'), implode(', ', $fields));
     }
 
     protected function checkRequiredFields(Entity $entity, \stdClass $data): bool
@@ -938,10 +966,14 @@ class Record extends \Espo\Core\Services\Base
         return $value;
     }
 
-    protected function filterInput($data)
+    protected function filterInput($data, string $id = null)
     {
         if (!is_object($data)) {
             return;
+        }
+
+        if ($id === null && property_exists($data, '_prev')) {
+            unset($data->_prev);
         }
 
         foreach ($this->readOnlyAttributeList as $attribute) {
@@ -965,29 +997,39 @@ class Record extends \Espo\Core\Services\Base
 
                 switch ($fieldDefs['type']) {
                     case 'enum':
-                        $key = array_search($value, $fieldDefs['options']);
-                        $data->{$fieldDefs['multilangField']} = $key === false ? null : $fieldDefs['optionsOriginal'][$key];
+                        if (!property_exists($data, $fieldDefs['multilangField'])) {
+                            $key = array_search($value, $fieldDefs['options']);
+                            $data->{$fieldDefs['multilangField']} = $key === false ? null : $fieldDefs['optionsOriginal'][$key];
+                        }
+                        unset($data->$field);
                         break;
                     case 'multiEnum':
-                        $keys = [];
-                        if (!empty($value)) {
-                            foreach ($value as $item) {
-                                $keys[] = array_search($item, $fieldDefs['options']);
+                        if (!property_exists($data, $fieldDefs['multilangField'])) {
+                            $keys = [];
+                            if (!empty($value)) {
+                                foreach ($value as $item) {
+                                    $keys[] = array_search($item, $fieldDefs['options']);
+                                }
                             }
+                            $values = [];
+                            foreach ($keys as $key) {
+                                $values[] = $fieldDefs['optionsOriginal'][$key];
+                            }
+                            $data->{$fieldDefs['multilangField']} = $values;
                         }
-                        $values = [];
-                        foreach ($keys as $key) {
-                            $values[] = $fieldDefs['optionsOriginal'][$key];
-                        }
-                        $data->{$fieldDefs['multilangField']} = $values;
+                        unset($data->$field);
                         break;
                 }
             }
         }
     }
 
-    public function modifyEnumValue(string $value, string $field): string
+    public function modifyEnumValue(?string $value, string $field, bool $validate = true): string
     {
+        if ($value === null) {
+            return '';
+        }
+
         $fieldLabel = $this->getInjection('language')->translate($field, 'fields', $this->entityType);
         $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field]);
 
@@ -995,24 +1037,31 @@ class Record extends \Espo\Core\Services\Base
             return '';
         }
 
-        if (!isset($fieldDefs['options']) || !isset($fieldDefs['optionsIds'])) {
+        if (!isset($fieldDefs['options']) || !isset($fieldDefs['optionsIds']) || !empty($fieldDefs['relationVirtualField'])) {
             return $value;
         }
 
         $key = array_search($value, $fieldDefs['options']);
         if ($key === false) {
+            if (!$validate) {
+                return '';
+            }
             throw new BadRequest(sprintf($this->getInjection('language')->translate('noSuchOptions', 'exceptions', 'Global'), $value, $fieldLabel));
         }
 
         return $fieldDefs['optionsIds'][$key];
     }
 
-    public function modifyMultiEnumValue(array $values, string $field): array
+    public function modifyMultiEnumValue(?array $values, string $field, bool $validate = true): array
     {
+        if ($values === null) {
+            return [];
+        }
+
         $fieldLabel = $this->getInjection('language')->translate($field, 'fields', $this->entityType);
         $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field]);
 
-        if (!isset($fieldDefs['options']) || !isset($fieldDefs['optionsIds'])) {
+        if (!isset($fieldDefs['options']) || !isset($fieldDefs['optionsIds']) || !empty($fieldDefs['relationVirtualField'])) {
             return $values;
         }
 
@@ -1020,6 +1069,9 @@ class Record extends \Espo\Core\Services\Base
         foreach ($values as $v) {
             $key = array_search($v, $fieldDefs['options']);
             if ($key === false) {
+                if (!$validate) {
+                    continue;
+                }
                 throw new BadRequest(sprintf($this->getInjection('language')->translate('noSuchOptions', 'exceptions', 'Global'), $v, $fieldLabel));
             }
             $preparedValues[] = $fieldDefs['optionsIds'][$key];
@@ -1028,10 +1080,59 @@ class Record extends \Espo\Core\Services\Base
         return $preparedValues;
     }
 
-    protected function handleInput(\stdClass $data): void
+    protected function prepareInputForAddOnlyMode(string $id, \stdClass $data): void
+    {
+        foreach ($data as $field => $value) {
+            if (mb_strlen($field) < 12 || mb_substr($field, -11) !== 'AddOnlyMode' || empty($value)) {
+                continue;
+            }
+
+            // clearing input
+            unset($data->$field);
+
+            $fieldName = mb_substr($field, 0, -11);
+            $inputFieldName = $fieldName;
+
+            $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $fieldName]);
+            if (empty($fieldDefs['type'])) {
+                continue;
+            }
+
+            if ($fieldDefs['type'] === 'linkMultiple') {
+                $inputFieldName .= 'Ids';
+            }
+
+            if (!property_exists($data, $inputFieldName) || empty($data->$inputFieldName)) {
+                continue;
+            }
+
+            if (empty($entity = $this->getEntity($id))) {
+                continue;
+            }
+
+            switch ($fieldDefs['type']) {
+                case 'array':
+                case 'multiEnum':
+                    $data->$inputFieldName = array_merge(empty($entity->get($fieldName)) ? [] : $entity->get($fieldName), $data->$inputFieldName);
+                    break;
+                case 'linkMultiple':
+                    $collection = $entity->get($fieldName);
+                    if ($collection !== null) {
+                        $data->$inputFieldName = array_merge(array_column($collection->toArray(), 'id'), $data->$inputFieldName);
+                    }
+                    break;
+            }
+        }
+    }
+
+    protected function handleInput(\stdClass $data, ?string $id = null): void
     {
         if (empty($data)) {
             return;
+        }
+
+        if (!empty($id)) {
+            $this->prepareInputForAddOnlyMode($id, $data);
         }
 
         foreach ($data as $field => $value) {
@@ -1044,13 +1145,13 @@ class Record extends \Espo\Core\Services\Base
                 case 'enum':
                     $data->{$field} = $this->modifyEnumValue($value, $field);
                     if (property_exists($data, '_prev') && !empty($data->_prev) && property_exists($data->_prev, $field)) {
-                        $data->_prev->{$field} = $this->modifyEnumValue($data->_prev->{$field}, $field);
+                        $data->_prev->{$field} = $this->modifyEnumValue($data->_prev->{$field}, $field, false);
                     }
                     break;
                 case 'multiEnum':
                     $data->{$field} = $this->modifyMultiEnumValue($value, $field);
                     if (property_exists($data, '_prev') && !empty($data->_prev) && property_exists($data->_prev, $field)) {
-                        $data->_prev->{$field} = $this->modifyMultiEnumValue($data->_prev->{$field}, $field);
+                        $data->_prev->{$field} = $this->modifyMultiEnumValue($data->_prev->{$field}, $field, false);
                     }
                     break;
             }
@@ -1106,7 +1207,7 @@ class Record extends \Espo\Core\Services\Base
     public function createEntity($attachment)
     {
         $attachment = $this
-            ->dispatchEvent('beforeCreateEntity', new Event(['attachment' => $attachment]))
+            ->dispatchEvent('beforeCreateEntity', new Event(['attachment' => $attachment, 'service' => $this]))
             ->getArgument('attachment');
 
         if (!$this->getAcl()->check($this->getEntityType(), 'create')) {
@@ -1114,6 +1215,9 @@ class Record extends \Espo\Core\Services\Base
         }
 
         $entity = $this->getRepository()->get();
+
+        // set input data to entity property
+        $entity->_input = $attachment;
 
         $this->filterInput($attachment);
         $this->handleInput($attachment);
@@ -1161,7 +1265,7 @@ class Record extends \Espo\Core\Services\Base
             $this->processActionHistoryRecord('create', $entity);
 
             return $this
-                ->dispatchEvent('afterCreateEntity', new Event(['attachment' => $attachment, 'entity' => $entity]))
+                ->dispatchEvent('afterCreateEntity', new Event(['attachment' => $attachment, 'entity' => $entity, 'service' => $this]))
                 ->getArgument('entity');
         }
 
@@ -1171,7 +1275,7 @@ class Record extends \Espo\Core\Services\Base
     public function updateEntity($id, $data)
     {
         $event = $this
-            ->dispatchEvent('beforeUpdateEntity', new Event(['id' => $id, 'data' => $data]));
+            ->dispatchEvent('beforeUpdateEntity', new Event(['id' => $id, 'data' => $data, 'entityType' => $this->getEntityType(), 'service' => $this]));
 
         $id = $event->getArgument('id');
         $data = $event->getArgument('data');
@@ -1182,8 +1286,8 @@ class Record extends \Espo\Core\Services\Base
             throw new BadRequest();
         }
 
-        $this->filterInput($data);
-        $this->handleInput($data);
+        $this->filterInput($data, $id);
+        $this->handleInput($data, $id);
 
         unset($data->modifiedById);
         unset($data->modifiedByName);
@@ -1200,6 +1304,9 @@ class Record extends \Espo\Core\Services\Base
         if (!$entity) {
             throw new NotFound();
         }
+
+        // set input data to entity property
+        $entity->_input = $data;
 
         if (!$this->getAcl()->check($entity, 'edit')) {
             throw new Forbidden();
@@ -1246,7 +1353,7 @@ class Record extends \Espo\Core\Services\Base
             $this->processActionHistoryRecord('update', $entity);
 
             return $this
-                ->dispatchEvent('afterUpdateEntity', new Event(['id' => $id, 'data' => $data, 'entity' => $entity]))
+                ->dispatchEvent('afterUpdateEntity', new Event(['id' => $id, 'data' => $data, 'entity' => $entity, 'beforeUpdateEvent' => $event, 'service' => $this]))
                 ->getArgument('entity');
         }
 
@@ -1387,7 +1494,7 @@ class Record extends \Espo\Core\Services\Base
     public function deleteEntity($id)
     {
         $id = $this
-            ->dispatchEvent('beforeDeleteEntity', new Event(['id' => $id]))
+            ->dispatchEvent('beforeDeleteEntity', new Event(['id' => $id, 'service' => $this]))
             ->getArgument('id');
 
         if (empty($id)) {
@@ -1410,7 +1517,7 @@ class Record extends \Espo\Core\Services\Base
         if ($result) {
             $this->afterDeleteEntity($entity);
             $this->processActionHistoryRecord('delete', $entity);
-            $result = $this->dispatchEvent('afterDeleteEntity', new Event(['id' => $id, 'result' => $result]))->getArgument('result');
+            $result = $this->dispatchEvent('afterDeleteEntity', new Event(['id' => $id, 'result' => $result, 'service' => $this]))->getArgument('result');
         }
 
         return $result;
@@ -1426,7 +1533,7 @@ class Record extends \Espo\Core\Services\Base
     public function findEntities($params)
     {
         $params = $this
-            ->dispatchEvent('beforeFindEntities', new Event(['params' => $params]))
+            ->dispatchEvent('beforeFindEntities', new Event(['params' => $params, 'service' => $this]))
             ->getArgument('params');
 
         $disableCount = false;
@@ -1486,14 +1593,14 @@ class Record extends \Espo\Core\Services\Base
         }
 
         return $this
-            ->dispatchEvent('afterFindEntities', new Event(['params' => $params, 'result' => ['total' => $total, 'collection' => $collection]]))
+            ->dispatchEvent('afterFindEntities', new Event(['params' => $params, 'service' => $this, 'result' => ['total' => $total, 'collection' => $collection]]))
             ->getArgument('result');
     }
 
     public function getListKanban($params)
     {
         $params = $this
-            ->dispatchEvent('beforeGetListKanban', new Event(['params' => $params]))
+            ->dispatchEvent('beforeGetListKanban', new Event(['params' => $params, 'service' => $this]))
             ->getArgument('params');
 
         $disableCount = false;
@@ -1531,9 +1638,11 @@ class Record extends \Espo\Core\Services\Base
             throw new Error("No status field for entity type '{$this->entityType}'.");
         }
 
-        $statusList = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $statusField, 'options']);
-        if (empty($statusList)) {
+        if (empty($options = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $statusField, 'options']))) {
             throw new Error("No options for status field for entity type '{$this->entityType}'.");
+        }
+        if (empty($optionsIds = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $statusField, 'optionsIds']))) {
+            $optionsIds = $options;
         }
 
         $statusIgnoreList = $this->getMetadata()->get(['scopes', $this->entityType, 'kanbanStatusIgnoreList'], []);
@@ -1542,7 +1651,7 @@ class Record extends \Espo\Core\Services\Base
             'groupList' => []
         ];
 
-        foreach ($statusList as $status) {
+        foreach ($optionsIds as $k => $status) {
             if (in_array($status, $statusIgnoreList)) continue;
             if (!$status) continue;
 
@@ -1551,9 +1660,7 @@ class Record extends \Espo\Core\Services\Base
                 $statusField => $status
             ];
 
-            $o = (object) [
-                'name' => $status
-            ];
+            $o = (object)['name' => !array_key_exists($k, $options) ? $status : $options[$k]];
 
             $collectionSub = $this->getRepository()->find($selectParamsSub);
 
@@ -1601,7 +1708,7 @@ class Record extends \Espo\Core\Services\Base
         }
 
         return $this
-            ->dispatchEvent('afterGetListKanban', new Event(['params' => $params, 'result' => (object) ['total' => $total,'collection' => $collection,'additionalData' => $additionalData]]))
+            ->dispatchEvent('afterGetListKanban', new Event(['params' => $params, 'service' => $this, 'result' => (object) ['total' => $total,'collection' => $collection,'additionalData' => $additionalData]]))
             ->getArgument('result');
     }
 
@@ -1625,7 +1732,12 @@ class Record extends \Espo\Core\Services\Base
     public function findLinkedEntities($id, $link, $params)
     {
         $event = $this
-            ->dispatchEvent('beforeFindLinkedEntities', new Event(['id' => $id, 'link' => $link, 'params' => $params]));
+            ->dispatchEvent('beforeFindLinkedEntities', new Event(['id' => $id, 'service' => $this, 'link' => $link, 'params' => $params, 'result' => null]));
+
+        $result = $event->getArgument('result');
+        if (is_array($result) && array_key_exists('total', $result) && array_key_exists('collection', $result)) {
+            return $result;
+        }
 
         $id = $event->getArgument('id');
         $link = $event->getArgument('link');
@@ -1635,7 +1747,10 @@ class Record extends \Espo\Core\Services\Base
 
         $entity = $this->getRepository()->get($id);
         if (!$entity) {
-            throw new NotFound();
+            return [
+                'collection' => new EntityCollection([], $this->entityType),
+                'total'      => 0
+            ];
         }
         if (!$this->getAcl()->check($entity, 'read')) {
             throw new Forbidden();
@@ -1717,7 +1832,7 @@ class Record extends \Espo\Core\Services\Base
         }
 
         return $this
-            ->dispatchEvent('afterFindLinkedEntities', new Event(['id' => $id, 'link' => $link, 'params' => $params, 'result' => ['total' => $total,'collection' => $collection]]))
+            ->dispatchEvent('afterFindLinkedEntities', new Event(['id' => $id, 'service' => $this, 'link' => $link, 'params' => $params, 'result' => ['total' => $total,'collection' => $collection]]))
             ->getArgument('result');
     }
 
@@ -1754,7 +1869,7 @@ class Record extends \Espo\Core\Services\Base
         }
 
         $event = $this
-            ->dispatchEvent('beforeLinkEntity', new Event(['id' => $id, 'link' => $link, 'foreignId' => $foreignId]));
+            ->dispatchEvent('beforeLinkEntity', new Event(['id' => $id, 'service' => $this, 'link' => $link, 'foreignId' => $foreignId]));
 
         $id = $event->getArgument('id');
         $link = $event->getArgument('link');
@@ -1797,7 +1912,7 @@ class Record extends \Espo\Core\Services\Base
         $this->getRepository()->relate($entity, $link, $foreignEntity, null, $this->getDefaultRepositoryOptions());
 
         return $this
-            ->dispatchEvent('afterLinkEntity', new Event(['id' => $id, 'entity' => $entity, 'link' => $link, 'foreignEntity' => $foreignEntity, 'result' => true]))
+            ->dispatchEvent('afterLinkEntity', new Event(['id' => $id, 'service' => $this, 'entity' => $entity, 'link' => $link, 'foreignEntity' => $foreignEntity, 'result' => true]))
             ->getArgument('result');
     }
 
@@ -1834,7 +1949,7 @@ class Record extends \Espo\Core\Services\Base
         }
 
         $event = $this
-            ->dispatchEvent('beforeUnlinkEntity', new Event(['id' => $id, 'link' => $link, 'foreignId' => $foreignId]));
+            ->dispatchEvent('beforeUnlinkEntity', new Event(['id' => $id, 'service' => $this, 'link' => $link, 'foreignId' => $foreignId]));
 
         $id = $event->getArgument('id');
         $link = $event->getArgument('link');
@@ -1877,7 +1992,7 @@ class Record extends \Espo\Core\Services\Base
         $this->getRepository()->unrelate($entity, $link, $foreignEntity, $this->getDefaultRepositoryOptions());
 
         return $this
-            ->dispatchEvent('afterUnlinkEntity', new Event(['id' => $id, 'link' => $link, 'foreignEntity' => $foreignEntity, 'result' => true]))
+            ->dispatchEvent('afterUnlinkEntity', new Event(['id' => $id, 'service' => $this, 'link' => $link, 'foreignEntity' => $foreignEntity, 'result' => true]))
             ->getArgument('result');
     }
 
@@ -1899,7 +2014,7 @@ class Record extends \Espo\Core\Services\Base
 
     public function linkEntityMass($id, $link, $where, $selectData = null)
     {
-        $event = $this->dispatchEvent('beforeLinkEntityMass', new Event(['id' => $id, 'link' => $link, 'where' => $where]));
+        $event = $this->dispatchEvent('beforeLinkEntityMass', new Event(['id' => $id, 'service' => $this, 'link' => $link, 'where' => $where]));
 
         $id = $event->getArgument('id');
         $link = $event->getArgument('link');
@@ -1958,12 +2073,12 @@ class Record extends \Espo\Core\Services\Base
             }
         }
 
-        return $this->dispatchEvent('afterLinkEntityMass', new Event(['entity' => $entity, 'link' => $link, 'result' => true]))->getArgument('result');
+        return $this->dispatchEvent('afterLinkEntityMass', new Event(['entity' => $entity, 'service' => $this, 'link' => $link, 'result' => true]))->getArgument('result');
     }
 
     public function unlinkAll(string $id, string $link): bool
     {
-        $event = $this->dispatchEvent('beforeUnlinkAll', new Event(['id' => $id, 'link' => $link]));
+        $event = $this->dispatchEvent('beforeUnlinkAll', new Event(['id' => $id, 'service' => $this, 'link' => $link]));
 
         $id = $event->getArgument('id');
         $link = $event->getArgument('link');
@@ -2000,12 +2115,12 @@ class Record extends \Espo\Core\Services\Base
             }
         }
 
-        return $this->dispatchEvent('afterUnlinkAll', new Event(['entity' => $entity, 'link' => $link, 'result' => true]))->getArgument('result');
+        return $this->dispatchEvent('afterUnlinkAll', new Event(['entity' => $entity, 'service' => $this, 'link' => $link, 'result' => true]))->getArgument('result');
     }
 
     public function massUpdate($data, array $params)
     {
-        $event = $this->dispatchEvent('beforeMassUpdate', new Event(['data' => $data, 'params' => $params]));
+        $event = $this->dispatchEvent('beforeMassUpdate', new Event(['data' => $data, 'service' => $this, 'params' => $params]));
 
         $data = $event->getArgument('data');
         $params = $event->getArgument('params');
@@ -2033,27 +2148,38 @@ class Record extends \Espo\Core\Services\Base
                 ->fetchAll(\PDO::FETCH_COLUMN);
         }
 
+        $position = 0;
+        $total = count($ids);
+
         foreach ($ids as $k => $id) {
+            $cloned = clone $data;
+            $cloned->massUpdateData = [
+                'position' => $position,
+                'total' => $total
+            ];
+
             if ($k < $this->maxMassUpdateCount) {
                 try {
-                    $this->updateEntity($id, $data);
+                    $this->updateEntity($id, $cloned);
                 } catch (\Throwable $e) {
                     $GLOBALS['log']->error("Update $this->entityType '$id' failed: {$e->getMessage()}");
                 }
             } else {
-                $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->entityType, $id, $data);
+                $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->entityType, $id, $cloned);
             }
+
+            $position++;
         }
 
         return $this
-            ->dispatchEvent('afterMassUpdate', new Event(['data' => $data, 'result' => ['count' => count($ids), 'ids' => $ids]]))
+            ->dispatchEvent('afterMassUpdate', new Event(['data' => $data, 'service' => $this, 'result' => ['count' => count($ids), 'ids' => $ids]]))
             ->getArgument('result');
     }
 
     public function massRemove(array $params)
     {
         $params = $this
-            ->dispatchEvent('beforeMassRemove', new Event(['params' => $params]))
+            ->dispatchEvent('beforeMassRemove', new Event(['params' => $params, 'service' => $this]))
             ->getArgument('params');
 
         $name = $this->getInjection('language')->translate('remove', 'massActions', 'Global') . ': ' . $this->entityType;
@@ -2077,7 +2203,7 @@ class Record extends \Espo\Core\Services\Base
 
     public function follow($id, $userId = null)
     {
-        $event = $this->dispatchEvent('beforeFollow', new Event(['id' => $id, 'userId' => $userId]));
+        $event = $this->dispatchEvent('beforeFollow', new Event(['id' => $id, 'service' => $this, 'userId' => $userId]));
 
         $id = $event->getArgument('id');
         $userId = $event->getArgument('userId');
@@ -2093,13 +2219,13 @@ class Record extends \Espo\Core\Services\Base
         }
 
         return $this
-            ->dispatchEvent('afterFollow', new Event(['entity' => $entity, 'userId' => $userId, 'result' => $this->getStreamService()->followEntity($entity, $userId)]))
+            ->dispatchEvent('afterFollow', new Event(['entity' => $entity, 'service' => $this, 'userId' => $userId, 'result' => $this->getStreamService()->followEntity($entity, $userId)]))
             ->getArgument('result');
     }
 
     public function unfollow($id, $userId = null)
     {
-        $event = $this->dispatchEvent('beforeUnfollow', new Event(['id' => $id, 'userId' => $userId]));
+        $event = $this->dispatchEvent('beforeUnfollow', new Event(['id' => $id, 'service' => $this, 'userId' => $userId]));
 
         $id = $event->getArgument('id');
         $userId = $event->getArgument('userId');
@@ -2115,13 +2241,13 @@ class Record extends \Espo\Core\Services\Base
         }
 
         return $this
-            ->dispatchEvent('afterUnfollow', new Event(['entity' => $entity, 'userId' => $userId, 'result' => $this->getStreamService()->unfollowEntity($entity, $userId)]))
+            ->dispatchEvent('afterUnfollow', new Event(['entity' => $entity, 'service' => $this, 'userId' => $userId, 'result' => $this->getStreamService()->unfollowEntity($entity, $userId)]))
             ->getArgument('result');
     }
 
     public function massFollow(array $params, $userId = null)
     {
-        $event = $this->dispatchEvent('beforeMassFollow', new Event(['params' => $params, 'userId' => $userId]));
+        $event = $this->dispatchEvent('beforeMassFollow', new Event(['params' => $params, 'service' => $this, 'userId' => $userId]));
 
         $params = $event->getArgument('params');
         $userId = $event->getArgument('userId');
@@ -2167,13 +2293,13 @@ class Record extends \Espo\Core\Services\Base
 
 
         return $this
-            ->dispatchEvent('afterMassFollow', new Event(['params' => $params, 'userId' => $userId, 'result' => ['ids' => $resultIdList, 'count' => count($resultIdList)]]))
+            ->dispatchEvent('afterMassFollow', new Event(['params' => $params, 'service' => $this, 'userId' => $userId, 'result' => ['ids' => $resultIdList, 'count' => count($resultIdList)]]))
             ->getArgument('result');
     }
 
     public function massUnfollow(array $params, $userId = null)
     {
-        $event = $this->dispatchEvent('beforeMassUnfollow', new Event(['params' => $params, 'userId' => $userId]));
+        $event = $this->dispatchEvent('beforeMassUnfollow', new Event(['params' => $params, 'service' => $this, 'userId' => $userId]));
 
         $params = $event->getArgument('params');
         $userId = $event->getArgument('userId');
@@ -2218,7 +2344,7 @@ class Record extends \Espo\Core\Services\Base
 
 
         return $this
-            ->dispatchEvent('afterMassUnfollow', new Event(['params' => $params, 'userId' => $userId, 'result' => ['ids' => $resultIdList, 'count' => count($resultIdList)]]))
+            ->dispatchEvent('afterMassUnfollow', new Event(['params' => $params, 'service' => $this, 'userId' => $userId, 'result' => ['ids' => $resultIdList, 'count' => count($resultIdList)]]))
             ->getArgument('result');
     }
 
@@ -2352,7 +2478,7 @@ class Record extends \Espo\Core\Services\Base
                         $key = array_search($entity->get($name), $defs['optionsIds']);
                         if ($key !== false) {
                             $entity->set($name, $defs['options'][$key]);
-                            if (!empty($defs['isMultilang'])) {
+                            if (!empty($defs['isMultilang']) && !empty($defs['lingualFields'])) {
                                 foreach ($defs['lingualFields'] as $lingualField) {
                                     $lingualOptions = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $lingualField, 'options'], []);
                                     $entity->set($lingualField, $lingualOptions[$key]);
@@ -2362,13 +2488,13 @@ class Record extends \Espo\Core\Services\Base
                     }
                     break;
                 case 'multiEnum':
-                    if (empty($defs['multilangField']) && !empty($defs['optionsIds']) && !empty($entity->get($name))) {
+                    if (empty($defs['multilangField']) && !empty($defs['optionsIds']) && !empty($entity->get($name)) && (is_array($entity->get($name)) || is_object($entity->get($name)))) {
                         $fieldsValues[$name] = [];
                         foreach ($entity->get($name) as $optionId) {
                             $key = array_search($optionId, $defs['optionsIds']);
                             if ($key !== false) {
                                 $fieldsValues[$name][] = $defs['options'][$key];
-                                if (!empty($defs['isMultilang'])) {
+                                if (!empty($defs['isMultilang']) && !empty($defs['lingualFields'])) {
                                     foreach ($defs['lingualFields'] as $lingualField) {
                                         $lingualOptions = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $lingualField, 'options'], []);
                                         $fieldsValues[$lingualField][] = $lingualOptions[$key];
@@ -2400,7 +2526,7 @@ class Record extends \Espo\Core\Services\Base
             }
         }
 
-        $this->dispatchEvent('prepareEntityForOutput', new Event(['entity' => $entity]));
+        $this->dispatchEvent('prepareEntityForOutput', new Event(['entity' => $entity, 'service' => $this]));
     }
 
     public function merge($id, array $sourceIdList = array(), $attributes)
@@ -2813,7 +2939,7 @@ class Record extends \Espo\Core\Services\Base
 
     protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
     {
-        $event = $this->dispatchEvent('beforeCheckingIsEntityUpdated', new Event(['entity' => $entity, 'data' => $data]));
+        $event = $this->dispatchEvent('beforeCheckingIsEntityUpdated', new Event(['entity' => $entity, 'service' => $this, 'data' => $data]));
 
         $entity = $event->getArgument('entity');
         $data = $event->getArgument('data');
@@ -2829,7 +2955,6 @@ class Record extends \Espo\Core\Services\Base
         $linkNames = [];
         $linkMultipleIds = [];
         $linkMultipleNames = [];
-        $linkMultipleAddOnlyMode = [];
         foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields']) as $name => $fieldData) {
             if (isset($fieldData['type'])) {
                 if ($fieldData['type'] === 'link' || $fieldData['type'] === 'asset') {
@@ -2838,7 +2963,6 @@ class Record extends \Espo\Core\Services\Base
                 if ($fieldData['type'] === 'linkMultiple') {
                     $linkMultipleIds[] = $name . 'Ids';
                     $linkMultipleNames[] = $name . 'Names';
-                    $linkMultipleAddOnlyMode[$name . 'Ids'] = $name . 'AddOnlyMode';
                 }
             }
         }
@@ -2860,10 +2984,6 @@ class Record extends \Espo\Core\Services\Base
                 continue 1;
             }
 
-            if (in_array($field, $linkMultipleAddOnlyMode)) {
-                continue 1;
-            }
-
             if (!isset($params['type'])) {
                 continue 1;
             }
@@ -2876,23 +2996,16 @@ class Record extends \Espo\Core\Services\Base
                 if (is_array($data->$field)) {
                     $data->$field = array_unique($data->$field);
                     sort($data->$field);
-
-                    if (property_exists($data, $linkMultipleAddOnlyMode[$field]) && !empty($data->{$linkMultipleAddOnlyMode[$field]})) {
-                        $preparedValue = [];
-                        foreach ($data->$field as $v) {
-                            if (in_array($v, $value)) {
-                                $preparedValue[] = $v;
-                            }
-                        }
-                        $value = $preparedValue;
-                    }
                 }
             } else {
                 $value = $entity->get($field);
             }
 
-            if ($params['type'] === 'bool' && !empty($data->$field) !== !empty($value)) {
-                return true;
+            if ($params['type'] === 'bool') {
+                if (!empty($data->$field) !== !empty($value)) {
+                    return true;
+                }
+                continue 1;
             }
 
             // strict type for NULL
@@ -3088,8 +3201,9 @@ class Record extends \Espo\Core\Services\Base
     private function isNullField(Entity $entity, $field): bool
     {
         $isNull = is_null($entity->get($field)) || $entity->get($field) === '';
-        if ($isNull && !empty($relation = $entity->getFields()[$field]['relation'])) {
-            $relationValue = $entity->get($relation);
+        $fields = $entity->getFields();
+        if ($isNull && !empty($fields[$field]['relation'])) {
+            $relationValue = $entity->get($fields[$field]['relation']);
             if ($relationValue instanceof \Espo\ORM\EntityCollection) {
                 $isNull = $relationValue->count() === 0;
             } else {

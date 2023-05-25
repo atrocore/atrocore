@@ -141,6 +141,12 @@ class Attachment extends Record
      */
     public function createEntity($attachment)
     {
+        $ext = pathinfo($attachment->name, PATHINFO_EXTENSION);
+
+        if (!in_array(strtolower($ext), $this->getConfig()->get('whitelistedExtensions'))) {
+            throw new BadRequest(sprintf($this->getInjection('language')->translate('invalidFileExtension', 'exceptions', 'Attachment'), $ext));
+        }
+
         $this->clearTrash();
 
         if (!empty($attachment->file)) {
@@ -289,11 +295,13 @@ class Attachment extends Record
         return base64_decode($contents);
     }
 
-    /**
-     * @param Entity $entity
-     */
     protected function createThumbnails(Entity $entity): void
     {
+        // do not create thumbnails when import
+        if (!empty($GLOBALS['importJobId'])) {
+            return;
+        }
+
         if (!in_array($entity->get('type'), $this->getMetadata()->get(['app', 'typesWithThumbnails'], []))) {
             return;
         }

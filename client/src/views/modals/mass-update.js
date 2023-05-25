@@ -124,6 +124,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
                 el: this.getSelector() + ' .field[data-name="' + name + '"]',
                 defs: {
                     name: name,
+                    isMassUpdate: true
                 },
                 mode: 'edit'
             }, function (view) {

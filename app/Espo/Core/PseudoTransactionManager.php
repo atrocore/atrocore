@@ -60,12 +60,12 @@ class PseudoTransactionManager extends Injectable
 
     public function pushCreateEntityJob(string $entityType, $data, string $parentId = null): string
     {
-        return $this->push($entityType, '', 'createEntity', Json::encode($data, JSON_UNESCAPED_UNICODE), $parentId);
+        return $this->push($entityType, '', 'createEntity', $this->prepareInputData($data), $parentId);
     }
 
     public function pushUpdateEntityJob(string $entityType, string $entityId, $data, string $parentId = null): string
     {
-        return $this->push($entityType, $entityId, 'updateEntity', Json::encode($data, JSON_UNESCAPED_UNICODE), $parentId);
+        return $this->push($entityType, $entityId, 'updateEntity', $this->prepareInputData($data), $parentId);
     }
 
     public function pushDeleteEntityJob(string $entityType, string $entityId, string $parentId = null): string
@@ -83,9 +83,9 @@ class PseudoTransactionManager extends Injectable
         return $this->push($entityType, $entityId, 'unlinkEntity', Json::encode(['link' => $link, 'foreignId' => $foreignId], JSON_UNESCAPED_UNICODE), $parentId);
     }
 
-    public function pushCustomJob(string $entityType, string $action, array $data, string $parentId = null): string
+    public function pushCustomJob(string $entityType, string $action, $data, string $parentId = null): string
     {
-        return $this->push($entityType, '', $action, Json::encode($data, JSON_UNESCAPED_UNICODE), $parentId);
+        return $this->push($entityType, '', $action, $this->prepareInputData($data), $parentId);
     }
 
     public function run(): void
@@ -111,6 +111,28 @@ class PseudoTransactionManager extends Injectable
         }
     }
 
+    /**
+     * @param mixed $data
+     *
+     * @return string
+     */
+    protected function prepareInputData($data): string
+    {
+        if ($data === null) {
+            return '';
+        }
+
+        if (is_array($data) || is_object($data)) {
+            return Json::encode($data, JSON_UNESCAPED_UNICODE);
+        }
+
+        if (is_string($data)) {
+            return $data;
+        }
+
+        return (string)$data;
+    }
+
     protected function fetchJobs(): array
     {
         return $this
@@ -123,11 +145,11 @@ class PseudoTransactionManager extends Injectable
     {
         $query = "SELECT * FROM `pseudo_transaction_job` WHERE deleted=0";
 
-        if (!empty($entityType)) {
+        if (!empty($entityType) && empty($parentId)) {
             $query .= " AND entity_type=" . $this->getPDO()->quote($entityType);
         }
 
-        if (!empty($entityId)) {
+        if (!empty($entityId) && empty($parentId)) {
             $query .= " AND entity_id=" . $this->getPDO()->quote($entityId);
         }
 
@@ -176,6 +198,8 @@ class PseudoTransactionManager extends Injectable
 
     protected function runJob(array $job): void
     {
+        $inputIsEmpty = $job['input_data'] === '';
+
         try {
             $user = $this->getEntityManager()->getEntity('User', $job['created_by_id']);
 
@@ -192,24 +216,36 @@ class PseudoTransactionManager extends Injectable
 
             switch ($job['action']) {
                 case 'createEntity':
-                    $service->createEntity(Json::decode($job['input_data']));
+                    if (!$inputIsEmpty) {
+                        $service->createEntity(Json::decode($job['input_data']));
+                    }
                     break;
                 case 'updateEntity':
-                    $service->updateEntity($job['entity_id'], Json::decode($job['input_data']));
+                    if (!$inputIsEmpty) {
+                        $service->updateEntity($job['entity_id'], Json::decode($job['input_data']));
+                    }
                     break;
                 case 'deleteEntity':
                     $service->deleteEntity($job['entity_id']);
                     break;
                 case 'linkEntity':
-                    $inputData = Json::decode($job['input_data']);
-                    $service->linkEntity($job['entity_id'], $inputData->link, $inputData->foreignId);
+                    if (!$inputIsEmpty) {
+                        $inputData = Json::decode($job['input_data']);
+                        $service->linkEntity($job['entity_id'], $inputData->link, $inputData->foreignId);
+                    }
                     break;
                 case 'unlinkEntity':
-                    $inputData = Json::decode($job['input_data']);
-                    $service->unlinkEntity($job['entity_id'], $inputData->link, $inputData->foreignId);
+                    if (!$inputIsEmpty) {
+                        $inputData = Json::decode($job['input_data']);
+                        $service->unlinkEntity($job['entity_id'], $inputData->link, $inputData->foreignId);
+                    }
                     break;
                 default:
-                    $service->{$job['action']}(Json::decode($job['input_data'], true));
+                    if ($inputIsEmpty) {
+                        $service->{$job['action']}();
+                    } else {
+                        $service->{$job['action']}(Json::decode($job['input_data'], true));
+                    }
                     break;
             }
         } catch (\Throwable $e) {

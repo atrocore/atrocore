@@ -114,6 +114,9 @@ Espo.define('acl-manager', ['acl'], function (Acl) {
         },
 
         checkModel: function (model, action, precise) {
+            if (!model) {
+                return false;
+            }
             var scope = model.name;
 
             // todo move this to custom acl

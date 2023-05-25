@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "user": "Користувач",
+    "ipAddress": "IP адреса",
+    "lastAccess": "Дата останнього підключення",
+    "createdAt": "Дата входу",
+    "isActive": "Активний",
+    "portal": "Портал"
+  },
+  "links": {
+    "actionHistoryRecords": "Історія дій"
+  },
+  "presetFilters": {
+    "active": "Активний",
+    "inactive": "Неактивний"
+  },
+  "labels": {
+    "Set Inactive": "Зробити неактивним"
+  },
+  "massActions": {
+    "setInactive": "Зробити неактивним"
+  }
+}

@@ -36,6 +36,12 @@
       "Failed": "Failed",
       "Canceled": "Canceled",
       "Closed": "Closed"
+    },
+    "priority": {
+      "Low": "Low",
+      "Normal": "Normal",
+      "Crucial": "Crucial",
+      "High": "High"
     }
   },
   "exceptions": {

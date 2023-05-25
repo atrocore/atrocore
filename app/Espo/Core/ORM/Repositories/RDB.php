@@ -37,6 +37,7 @@ use Espo\Core\EventManager\Event;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Interfaces\Injectable;
 use Espo\Core\Utils\Json;
+use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityFactory;
@@ -55,8 +56,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     );
 
     protected $injections = [];
-
-    private $restoreData = null;
 
     protected $hooksDisabled = false;
 
@@ -160,12 +159,14 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         // dispatch an event
         $this->dispatch('beforeRemove', $entity, $options);
 
-        $nowString = date('Y-m-d H:i:s', time());
+        $nowString = date('Y-m-d H:i:s');
         if ($entity->hasAttribute('modifiedAt')) {
             $entity->set('modifiedAt', $nowString);
         }
         if ($entity->hasAttribute('modifiedById')) {
-            $entity->set('modifiedById', $this->getEntityManager()->getUser()->id);
+            $user = $this->getEntityManager()->getUser();
+            $modifiedById = empty($user) ? 'system' : $user->id;
+            $entity->set('modifiedById', $modifiedById);
         }
     }
 
@@ -175,10 +176,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     protected function afterRemove(Entity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);
-
-        if (!$this->processFieldsAfterRemoveDisabled) {
-            $this->processArrayFieldsRemove($entity);
-        }
 
         // dispatch an event
         $this->dispatch('afterRemove', $entity, $options);
@@ -250,21 +247,49 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
     }
 
+    protected function prepareFieldsByType(Entity $entity): void
+    {
+        foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []) as $fieldName => $fieldData) {
+            if (isset($fieldData['type'])) {
+                $method = "prepareFieldType" . ucfirst($fieldData['type']);
+                if (method_exists($this, $method)) {
+                    $this->$method($entity, $fieldName, $fieldData);
+                }
+            }
+        }
+    }
+
     protected function validateEmail(Entity $entity, string $fieldName, array $fieldData): void
     {
         if ($entity->isAttributeChanged($fieldName) && !empty($entity->get($fieldName))) {
             if (!filter_var($entity->get($fieldName), FILTER_VALIDATE_EMAIL)) {
-                $language = $this->getInjection('container')->get('language');
+                $language = $this->getLanguage();
                 throw new BadRequest(sprintf($language->translate('emailIsInvalid', 'exceptions', 'Global'), $language->translate($fieldName, 'fields', $entity->getEntityType())));
             }
         }
+    }
+
+    protected function validateFloat(Entity $entity, string $fieldName, array $fieldData): void
+    {
+        if (!$entity->isAttributeChanged($fieldName)) {
+            return;
+        }
+
+        if (isset($fieldData['amountOfDigitsAfterComma'])) {
+            $this->checkAmountOfDigitsAfterComma($entity->get($fieldName), $fieldData['amountOfDigitsAfterComma']);
+        }
+    }
+
+    protected function validateCurrency(Entity $entity, string $fieldName, array $fieldData): void
+    {
+        $this->validateFloat($entity, $fieldName, $fieldData);
     }
 
     protected function validateEnum(Entity $entity, string $fieldName, array $fieldData): void
     {
         if (!isset($fieldData['view']) && $entity->isAttributeChanged($fieldName) && !empty($entity->get($fieldName))) {
             $fieldOptions = empty($fieldData['optionsIds']) ? [] : $fieldData['optionsIds'];
-            if (empty($fieldOptions) && $fieldData['type'] === 'multiEnum') {
+            if (empty($fieldOptions) && $fieldData['type'] === 'multiEnum' || !empty($fieldData['relationVirtualField'])) {
                 return;
             }
 
@@ -280,8 +305,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
             foreach ($value as $v) {
                 if (!in_array($v, $fieldOptions)) {
-                    $language = $this->getInjection('container')->get('language');
-                    throw new BadRequest(sprintf($language->translate('noSuchOptions', 'exceptions', 'Global'), $v, $language->translate($fieldName, 'fields', $entity->getEntityType())));
+                    throw new BadRequest(sprintf($this->getLanguage()->translate('noSuchOptions', 'exceptions', 'Global'), $v, $this->getLanguage()->translate($fieldName, 'fields', $entity->getEntityType())));
                 }
             }
         }
@@ -292,9 +316,23 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $this->validateEnum($entity, $fieldName, $fieldData);
     }
 
+    protected function prepareFieldTypeMultiEnum(Entity $entity, string $fieldName, array $fieldData): void
+    {
+        $this->prepareFieldTypeArray($entity, $fieldName, $fieldData);
+    }
+
+    protected function prepareFieldTypeArray(Entity $entity, string $fieldName, array $fieldData): void
+    {
+        $value = $entity->get($fieldName);
+        if (is_array($value)) {
+            $value = array_values(array_unique($value));
+            $entity->set($fieldName, $value);
+        }
+    }
+
     protected function validateUnit(Entity $entity, string $fieldName, array $fieldData): void
     {
-        $language = $this->getInjection('container')->get('language');
+        $language = $this->getLanguage();
 
         $unitsOfMeasure = $this->getConfig()->get('unitsOfMeasure');
         $unitsOfMeasure = empty($unitsOfMeasure) ? [] : Json::decode(Json::encode($unitsOfMeasure), true);
@@ -316,6 +354,58 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         if (!empty($unit) && !in_array($unit, $unitsOfMeasure[$measure]['unitList'])) {
             throw new BadRequest(sprintf($language->translate('noSuchUnit', 'exceptions', 'Global'), $unit, $fieldLabel));
         }
+
+        if (isset($fieldData['amountOfDigitsAfterComma'])) {
+            $this->checkAmountOfDigitsAfterComma($value, $fieldData['amountOfDigitsAfterComma']);
+        }
+    }
+
+    protected function checkAmountOfDigitsAfterComma($value, $amountOfDigitsAfterComma): void
+    {
+        if(empty($value) || empty($amountOfDigitsAfterComma)){
+            return;
+        }
+
+        $floatParts = explode('.', (string)$value);
+        if(count($floatParts) === 2 && (strlen($floatParts[1]) > (int)$amountOfDigitsAfterComma)){
+            throw new BadRequest(sprintf(
+                $this->getLanguage()->translate('maximumOfDigitsAfterCommaInvalid', 'exceptions', 'Global'), 
+                $amountOfDigitsAfterComma
+            ));
+        }
+    }
+
+    protected function validateVarchar(Entity $entity, string $fieldName, array $fieldData): void
+    {
+        $this->validateText($entity, $fieldName, $fieldData);
+    }
+
+    protected function validateText(Entity $entity, string $fieldName, array $fieldData): void
+    {
+        if (!isset($fieldData['maxLength'])) {
+            return;
+        }
+
+        $countBytesInsteadOfCharacters = (bool)$entity->get('countBytesInsteadOfCharacters');
+        $fieldValue = (string)$entity->get($fieldName);
+        $length = $countBytesInsteadOfCharacters ? strlen($fieldValue) : mb_strlen($fieldValue);
+        
+        $maxLength = (int)$fieldData['maxLength'];
+
+        if ($length > $maxLength) {
+            $fieldLabel = $this->getLanguage()->translate($fieldName, 'fields', $entity->getEntityType());
+            throw new BadRequest(sprintf($this->getLanguage()->translate('maxLengthIsExceeded', 'exceptions', 'Global'), $fieldLabel, $maxLength, $length));
+        }
+    }
+
+    protected function validateWysiwyg(Entity $entity, string $fieldName, array $fieldData): void
+    {
+        $this->validateText($entity, $fieldName, $fieldData);
+    }
+
+    protected function getLanguage(): Language
+    {
+        return $this->getInjection('container')->get('language');
     }
 
     protected function getUnitFieldMeasure(string $fieldName, Entity $entity): string
@@ -331,9 +421,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     {
         parent::beforeSave($entity, $options);
 
-        if ($entity->hasField('code') && empty($entity->get('code')) && $entity->hasField('name')) {
-            $entity->set('code', Util::replaceDiacriticalCharacters($entity->get('name')));
-        }
+        $this->prepareFieldsByType($entity);
 
         if (empty($options['skipAll'])) {
             $this->validateFieldsByType($entity);
@@ -353,10 +441,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
      */
     protected function afterSave(Entity $entity, array $options = [])
     {
-        if (!empty($this->restoreData)) {
-            $entity->set($this->restoreData);
-            $this->restoreData = null;
-        }
         parent::afterSave($entity, $options);
 
         $this->assignmentNotifications($entity);
@@ -366,7 +450,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             if (empty($entity->skipProcessFileFieldsSave)) {
                 $this->processFileFieldsSave($entity);
             }
-            $this->processArrayFieldsSave($entity);
             $this->processWysiwygFieldsSave($entity);
         }
 
@@ -376,8 +459,8 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     public function save(Entity $entity, array $options = [])
     {
-        $nowString = date('Y-m-d H:i:s', time());
-        $restoreData = [];
+        $nowString = date('Y-m-d H:i:s');
+        $user = $this->getEntityManager()->getUser();
 
         if ($entity->isNew()) {
             if (!$entity->has('id')) {
@@ -385,45 +468,25 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             } else {
                 $this->deleteFromDb($entity->id);
             }
-        }
 
-        if (empty($options['skipAll'])) {
-            if ($entity->isNew()) {
-                if ($entity->hasAttribute('createdAt')) {
-                    if (empty($options['import']) || !$entity->has('createdAt')) {
-                        $entity->set('createdAt', $nowString);
-                    }
-                }
-                if ($entity->hasAttribute('modifiedAt')) {
-                    $entity->set('modifiedAt', $nowString);
-                }
-                if ($entity->hasAttribute('createdById')) {
-                    if (empty($options['skipCreatedBy']) && (empty($options['import']) || !$entity->has('createdById'))) {
-                        if ($this->getEntityManager()->getUser()) {
-                            $entity->set('createdById', $this->getEntityManager()->getUser()->id);
-                        }
-                    }
-                }
-            } else {
-                if (empty($options['silent']) && empty($options['skipModifiedBy'])) {
-                    if ($entity->hasAttribute('modifiedAt')) {
-                        $entity->set('modifiedAt', $nowString);
-                    }
-                    if ($entity->hasAttribute('modifiedById')) {
-                        if ($this->getEntityManager()->getUser()) {
-                            $entity->set('modifiedById', $this->getEntityManager()->getUser()->id);
-                            $entity->set('modifiedByName', $this->getEntityManager()->getUser()->get('name'));
-                        }
-                    }
-                }
+            if ($entity->hasAttribute('createdAt')) {
+                $entity->set('createdAt', $nowString);
+            }
+            if ($entity->hasAttribute('createdById') && $user) {
+                $entity->set('createdById', $user->get('id'));
             }
         }
 
-        $this->restoreData = $restoreData;
+        if ($entity->hasAttribute('modifiedAt')) {
+            $entity->set('modifiedAt', $nowString);
+        }
 
-        $result = parent::save($entity, $options);
+        if ($entity->hasAttribute('modifiedById') && $user) {
+            $entity->set('modifiedById', $user->get('id'));
+            $entity->set('modifiedByName', $user->get('name'));
+        }
 
-        return $result;
+        return parent::save($entity, $options);
     }
 
     protected function getFieldByTypeList($type)
@@ -469,18 +532,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
     }
 
-    protected function processArrayFieldsSave(Entity $entity)
-    {
-        foreach ($entity->getAttributes() as $attribute => $defs) {
-            if (!isset($defs['type']) || $defs['type'] !== Entity::JSON_ARRAY) continue;
-            if (!$entity->has($attribute)) continue;
-            if (!$entity->isAttributeChanged($attribute)) continue;
-            if (!$entity->getAttributeParam($attribute, 'storeArrayValues')) continue;
-            if ($entity->getAttributeParam($attribute, 'notStorable')) continue;
-            $this->getEntityManager()->getRepository('ArrayValue')->storeEntityAttribute($entity, $attribute);
-        }
-    }
-
     protected function processWysiwygFieldsSave(Entity $entity)
     {
         if (!$entity->isNew()) return;
@@ -507,16 +558,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                     }
                 }
             }
-        }
-    }
-
-    protected function processArrayFieldsRemove(Entity $entity)
-    {
-        foreach ($entity->getAttributes() as $attribute => $defs) {
-            if (!isset($defs['type']) || $defs['type'] !== Entity::JSON_ARRAY) continue;
-            if (!$entity->getAttributeParam($attribute, 'storeArrayValues')) continue;
-            if ($entity->getAttributeParam($attribute, 'notStorable')) continue;
-            $this->getEntityManager()->getRepository('ArrayValue')->deleteEntityAttribute($entity, $attribute);
         }
     }
 
@@ -617,10 +658,8 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                             }
                         }
 
-                        if (empty($entity->get("{$name}AddOnlyMode"))) {
-                            foreach ($toRemoveIds as $id) {
-                                $this->unrelate($entity, $name, $id);
-                            }
+                        foreach ($toRemoveIds as $id) {
+                            $this->unrelate($entity, $name, $id);
                         }
                         if (!empty($columns)) {
                             foreach ($toUpdateIds as $id) {
@@ -676,11 +715,15 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     protected function assignmentNotifications(Entity $entity): void
     {
-        if ($entity->getEntityType() === 'Notification') {
+        if ($entity->getEntityType() === 'Notification' || $entity->getEntityType() === 'QueueItem') {
             return;
         }
 
         if (!$this->getConfig()->get('assignmentNotifications', true)) {
+            return;
+        }
+
+        if (!empty($GLOBALS['skipAssignmentNotifications'])) {
             return;
         }
 

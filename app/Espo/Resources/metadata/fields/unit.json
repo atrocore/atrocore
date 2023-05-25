@@ -31,6 +31,11 @@
       "type": "float"
     },
     {
+      "name": "amountOfDigitsAfterComma",
+      "type": "int",
+      "min": 0
+    },
+    {
       "name": "audited",
       "type": "bool"
     },

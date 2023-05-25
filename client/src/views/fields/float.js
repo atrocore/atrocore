@@ -66,10 +66,12 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
         setupMaxLength: function () {
         },
 
-        validateFloat: function () {
-            const value = this.$el.find('[name="' + this.name + '"]').val();
-            if (value.length === 0) {
-                return false;
+        validateFloatByValue: function (value) {
+            if (!value || value.length === 0) {
+                return {
+                    message: null,
+                    invalid: false
+                };
             }
 
             let invalid = false;
@@ -92,12 +94,40 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
                 }
             }
 
-            if (invalid) {
-                this.showValidationMessage(this.translate('fieldShouldBeFloat', 'messages').replace('{field}', this.getLabelText()));
-                return true;
+            let amountOfDigitsAfterComma = this.params.amountOfDigitsAfterComma || this.model.get('amountOfDigitsAfterComma');
+
+            if (typeof amountOfDigitsAfterComma !== undefined && amountOfDigitsAfterComma) {
+                const decimalPlaces = (value.toString().split(this.decimalMark)[1] || '').length;
+                if (!(decimalPlaces <= amountOfDigitsAfterComma)) {
+                    return {
+                        message: this.translate('fieldShouldBeFloatWithValidDigitAfterComma', 'messages').replace('{amountOfDigitsAfterComma}', amountOfDigitsAfterComma),
+                        invalid: true
+                    };
+                }
             }
 
-            return false;
+            if (invalid) {
+                return {
+                    message: this.translate('fieldShouldBeFloat', 'messages').replace('{field}', this.getLabelText()),
+                    invalid: true
+                };
+            }
+
+            return {
+                message: null,
+                invalid: false
+            };
+        },
+
+        validateFloat: function () {
+            let value = this.$el.find('[name="' + this.name + '"]').val();
+            let res = this.validateFloatByValue(value);
+
+            if (res.invalid) {
+                this.showValidationMessage(res.message);
+            }
+
+            return res.invalid;
         },
 
         parse: function (value) {

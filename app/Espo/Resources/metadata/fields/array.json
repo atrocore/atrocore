@@ -34,8 +34,7 @@
    "notCreatable": false,
    "notSortable": true,
    "fieldDefs":{
-      "type":"jsonArray",
-      "storeArrayValues": true
+      "type":"jsonArray"
    },
    "translatedOptions": false,
    "personalData": true

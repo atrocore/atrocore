@@ -83,6 +83,20 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             this.setupHeader();
             this.setupRecord();
 
+            this.listenTo(this.model, 'prepareAttributesForCreateRelated', (attributes, link, callback) => {
+                if (this.relatedAttributeFunctions[link] && typeof this.relatedAttributeFunctions[link] == 'function') {
+                    attributes = _.extend(this.relatedAttributeFunctions[link].call(this), attributes);
+                }
+                Object.keys(this.relatedAttributeMap[link] || {}).forEach(function (attr) {
+                    attributes[this.relatedAttributeMap[link][attr]] = this.model.get(attr);
+                }, this);
+                callback(attributes);
+            });
+
+            this.listenTo(this.model, 'updateRelationshipPanel', link => {
+                this.updateRelationshipPanel(link);
+            });
+
             if (this.getMetadata().get('scopes.' + this.scope + '.stream')) {
                 if (this.model.has('isFollowed')) {
                     this.handleFollowButton();
@@ -474,45 +488,6 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                     rel.collection.fetch();
                 }
             }
-        },
-
-        actionCreateRelated: function (data) {
-            data = data || {};
-
-            var link = data.link;
-            var scope = this.model.defs['links'][link].entity;
-            var foreignLink = this.model.defs['links'][link].foreign;
-
-            this.model.defs['_relationName'] = link;
-
-            var attributes = {};
-
-            if (this.relatedAttributeFunctions[link] && typeof this.relatedAttributeFunctions[link] == 'function') {
-                attributes = _.extend(this.relatedAttributeFunctions[link].call(this), attributes);
-            }
-
-            Object.keys(this.relatedAttributeMap[link] || {}).forEach(function (attr) {
-                attributes[this.relatedAttributeMap[link][attr]] = this.model.get(attr);
-            }, this);
-
-            this.notify('Loading...');
-
-            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
-            this.createView('quickCreate', viewName, {
-                scope: scope,
-                relate: {
-                    model: this.model,
-                    link: foreignLink,
-                },
-                attributes: attributes,
-            }, function (view) {
-                view.render();
-                view.notify(false);
-                this.listenToOnce(view, 'after:save', function () {
-                    this.updateRelationshipPanel(link);
-                    this.model.trigger('after:relate', link);
-                }, this);
-            }.bind(this));
         },
 
         actionSelectRelated: function (data) {

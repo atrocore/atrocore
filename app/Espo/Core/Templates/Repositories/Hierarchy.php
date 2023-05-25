@@ -37,6 +37,7 @@ namespace Espo\Core\Templates\Repositories;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\ORM\Repositories\RDB;
+use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\EntityManager;
@@ -52,6 +53,53 @@ class Hierarchy extends RDB
 
         $this->tableName = $entityManager->getQuery()->toDb($this->entityType);
         $this->hierarchyTableName = $this->tableName . '_hierarchy';
+    }
+
+    public function findRelated(Entity $entity, $relationName, array $params = [])
+    {
+        if ($relationName === 'children') {
+            $params['orderBy'] = $this->hierarchyTableName . '.hierarchy_sort_order';
+        }
+
+        return parent::findRelated($entity, $relationName, $params);
+    }
+
+    public function getEntityPosition(Entity $entity, string $parentId): ?int
+    {
+        $sortBy = Util::toUnderScore($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy'], 'name'));
+        $sortOrder = !empty($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'asc'])) ? 'ASC' : 'DESC';
+
+        $id = $this->getPDO()->quote($entity->get('id'));
+
+        if (empty($parentId)) {
+            $query = "SELECT x.position
+                      FROM (SELECT t.id, @rownum:=@rownum + 1 AS position 
+                            FROM `$this->tableName` t 
+                                JOIN (SELECT @rownum:=0) r 
+                                LEFT JOIN `$this->hierarchyTableName` h ON t.id=h.entity_id AND h.deleted=0
+                            WHERE t.deleted=0
+                              AND h.entity_id IS NULL
+                            ORDER BY t.sort_order ASC, t.$sortBy $sortOrder, t.id ASC) x
+                      WHERE x.id=$id";
+        } else {
+            $parentId = $this->getPDO()->quote($parentId);
+            $query = "SELECT x.position
+                      FROM (SELECT t.id, @rownum:=@rownum + 1 AS position
+                            FROM `$this->hierarchyTableName` h
+                                JOIN (SELECT @rownum:=0) r
+                                LEFT JOIN `$this->tableName` t ON t.id=h.entity_id
+                                LEFT JOIN `$this->tableName` t1 ON t1.id=h.parent_id
+                            WHERE h.parent_id=$parentId
+                              AND h.deleted=0
+                              AND t.deleted=0
+                              AND t1.deleted=0
+                            ORDER BY h.hierarchy_sort_order ASC, t.$sortBy $sortOrder, t.id ASC) x
+                      WHERE x.id=$id";
+        }
+
+        $position = $this->getPDO()->query($query)->fetch(\PDO::FETCH_COLUMN);
+
+        return (int) $position;
     }
 
     public function getInheritableFields(): array
@@ -232,42 +280,41 @@ class Hierarchy extends RDB
         return $ids;
     }
 
-    public function getChildrenArray(string $parentId, bool $withChildrenCount = true, int $offset = null, $maxSize = null): array
+    public function getChildrenArray(string $parentId, bool $withChildrenCount = true, int $offset = null, $maxSize = null, $selectParams = null): array
     {
         $select = 'e.*';
         if ($withChildrenCount) {
             $select .= ", (SELECT COUNT(r1.id) FROM `$this->hierarchyTableName` r1 JOIN `$this->tableName` e1 ON e1.id=r1.entity_id WHERE r1.parent_id=e.id AND e1.deleted=0) as childrenCount";
         }
 
-        if (empty($parentId)) {
-            $sortOrder = 'e.sort_order, e.id';
-            if (empty($this->getMetadata()->get(['scopes', $this->entityType, 'dragAndDrop']))) {
-                $sortOrder = 'e.' . $this->getEntityManager()->getQuery()->toDb($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy'], 'id'));
-                if (empty($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'asc']))) {
-                    $sortOrder .= ' DESC';
-                }
+        $where = "";
+        if ($selectParams) {
+            $where = $this->getMapper()->getWhereQuery($this->entityType, $selectParams['whereClause']);
+            if (!empty($where)) {
+                $where = "AND " . str_replace($this->tableName . '.', 'e.', $where);
             }
+        }
+
+        $sortBy = Util::toUnderScore($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy'], 'name'));
+        $sortOrder = !empty($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'asc'])) ? 'ASC' : 'DESC';
+
+        if (empty($parentId)) {
             $query = "SELECT {$select} 
                       FROM `$this->tableName` e
                       WHERE e.id NOT IN (SELECT entity_id FROM `$this->hierarchyTableName` WHERE deleted=0)
                       AND e.deleted=0
-                      ORDER BY " . $sortOrder;
+                      {$where}
+                      ORDER BY e.sort_order ASC, e.$sortBy {$sortOrder}, e.id";
         } else {
-            $sortOrder = 'h.hierarchy_sort_order, e.id';
-            if (empty($this->getMetadata()->get(['scopes', $this->entityType, 'dragAndDrop']))) {
-                $sortOrder = 'e.' . $this->getEntityManager()->getQuery()->toDb($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy'], 'id'));
-                if (empty($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'asc']))) {
-                    $sortOrder .= ' DESC';
-                }
-            }
             $parentId = $this->getPDO()->quote($parentId);
             $query = "SELECT {$select}
                   FROM `$this->hierarchyTableName` h
                   LEFT JOIN `$this->tableName` e ON e.id=h.entity_id
                   WHERE h.deleted=0
                     AND e.deleted=0
+                    {$where}
                     AND h.parent_id={$parentId}
-                  ORDER BY " . $sortOrder;
+                  ORDER BY h.hierarchy_sort_order ASC, e.$sortBy {$sortOrder}, e.id";
         }
 
         if (!is_null($offset) && !is_null($maxSize)) {
@@ -280,23 +327,33 @@ class Hierarchy extends RDB
     /**
      * @return int
      */
-    public function getChildrenCount(string $parentId): int
+    public function getChildrenCount(string $parentId, $selectParams = null): int
     {
+        $where = "";
+        if ($selectParams) {
+            $where = $this->getMapper()->getWhereQuery($this->entityType, $selectParams['whereClause']);
+            if (!empty($where)) {
+                $where = "AND " . str_replace($this->tableName . '.', 'e.', $where);
+            }
+        }
+
         if (empty($parentId)) {
             $query = "SELECT COUNT(e.id) as count
                       FROM `$this->tableName` e
                       WHERE e.id NOT IN (SELECT entity_id FROM `$this->hierarchyTableName` WHERE deleted=0)
-                      AND e.deleted=0";
+                      AND e.deleted=0
+                      {$where}";
         } else {
             $query = "SELECT COUNT(e.id) as count
                       FROM $this->tableName e
                       LEFT JOIN $this->hierarchyTableName h on e.id=h.entity_id
                       WHERE e.deleted=0
                         AND h.deleted=0
+                        {$where}
                         AND h.parent_id='$parentId'";
         }
 
-        return (int)$this->getPDO()->query($query)->fetch(\PDO::FETCH_ASSOC)['count'];
+        return (int) $this->getPDO()->query($query)->fetch(\PDO::FETCH_ASSOC)['count'];
     }
 
     public function isRoot(string $id): bool
@@ -341,6 +398,32 @@ class Hierarchy extends RDB
         return empty($record) ? [] : $record;
     }
 
+    protected function entityHasArchive(Entity $entity): bool
+    {
+        return !empty($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'hasArchive']));
+    }
+
+
+    protected function validateIsArchived(Entity $entity): void
+    {
+        $fieldName = 'isArchived';
+        if ($entity->isAttributeChanged($fieldName) && $entity->get($fieldName) == true) {
+            // search all childs
+            $hasNonArchivedChildren = false;
+            foreach ($entity->get('children') as $child) {
+                if ($child->get('isArchived') == false) {
+                    $hasNonArchivedChildren = true;
+                    break;
+                }
+            }
+
+            if ($hasNonArchivedChildren) {
+                $language = $this->getLanguage();
+                throw new BadRequest(sprintf($language->translate('childsMustBeArchived', 'exceptions', 'Global'), $language->translate($fieldName, 'fields', $entity->getEntityType())));
+            }
+        }
+    }
+
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if (!empty($entity->get('parentsIds'))) {
@@ -361,7 +444,26 @@ class Hierarchy extends RDB
             }
         }
 
+        if ($this->entityHasArchive($entity)) {
+            $this->validateIsArchived($entity);
+        }
+
+        $this->prepareSortOrder($entity);
+
         parent::beforeSave($entity, $options);
+    }
+
+    protected function prepareSortOrder(Entity $entity): void
+    {
+        if ($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'type']) !== 'Hierarchy') {
+            return;
+        }
+
+        if ($entity->get('sortOrder') === null) {
+            $last = $this->where(['sortOrder!=' => null])->order('sortOrder', 'DESC')->findOne();
+            $sortOrder = empty($last) ? 0 : $last->get('sortOrder') + 10;
+            $entity->set('sortOrder', $sortOrder);
+        }
     }
 
     protected function beforeRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])

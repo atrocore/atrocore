@@ -73,6 +73,7 @@ Espo.define('views/main', 'view', function (Dep) {
 
             this.updateLastUrl();
             this.setupMassDeletingNotification();
+            this.setupMassUpdatingNotification();
         },
 
         setupMassDeletingNotification: function () {
@@ -99,6 +100,36 @@ Espo.define('views/main', 'view', function (Dep) {
                             }
                         } else {
                             Espo.Ui.notify(this.translate('massDeleting', 'messages', 'Global').replace('{{deleted}}', scopeData.deleted).replace('{{total}}', scopeData.total), null, 2000);
+                        }
+                    }
+                }
+            });
+        },
+
+        setupMassUpdatingNotification: function () {
+            this.listenTo(Backbone.Events, 'publicData', data => {
+                let locationHash = window.location.hash;
+
+                let hashScope = null;
+                if (locationHash === '#Admin/jobs') {
+                    hashScope = 'Job';
+                } else {
+                    hashScope = locationHash.split('/').shift().replace('#', '');
+                }
+
+                if (data.massUpdate && hashScope === this.scope) {
+                    if (data.massUpdate[this.scope]) {
+                        let scopeData = data.massUpdate[this.scope];
+                        if (scopeData.done) {
+                            if (this.getStorage().get('massUpdateDoneHash', this.scope) !== scopeData.done) {
+                                this.getStorage().set('massUpdateDoneHash', this.scope, scopeData.done);
+                                Espo.Ui.notify(this.translate('Done'), 'success', 2000);
+                                if (this.collection) {
+                                    this.collection.fetch();
+                                }
+                            }
+                        } else {
+                            Espo.Ui.notify(this.translate('massUpdating', 'messages', 'Global').replace('{{deleted}}', scopeData.updated).replace('{{total}}', scopeData.total), null, 2000);
                         }
                     }
                 }

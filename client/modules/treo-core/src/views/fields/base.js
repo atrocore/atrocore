@@ -34,6 +34,24 @@ Espo.define('treo-core:views/fields/base', 'class-replace!treo-core:views/fields
 
     return Dep.extend({
 
+        getConfirmMessage: function (_prev, attrs, model) {
+            if (model._confirmMessage) {
+                return model._confirmMessage;
+            }
+
+            let confirmMessage = null;
+
+            let confirmations = this.getMetadata().get(`clientDefs.${model.urlRoot}.confirm`) || {};
+            $.each(confirmations, (field, key) => {
+                if (typeof _prev[field] !== 'undefined') {
+                    let parts = key.split('.');
+                    confirmMessage = this.translate(parts[2], parts[1], parts[0]);
+                }
+            });
+
+            return confirmMessage;
+        },
+
         inlineEditSave: function () {
             var data = this.fetch();
 
@@ -73,15 +91,7 @@ Espo.define('treo-core:views/fields/base', 'class-replace!treo-core:views/fields
 
             model.trigger('before:save', attrs);
 
-            let confirmMessage = null;
-            let confirmations = this.getMetadata().get(`clientDefs.${model.urlRoot}.confirm`) || {};
-            $.each(confirmations, (field, key) => {
-                if (typeof _prev[field] !== 'undefined') {
-                    let parts = key.split('.');
-                    confirmMessage = this.translate(parts[2], parts[1], parts[0]);
-                }
-            });
-
+            let confirmMessage = this.getConfirmMessage(_prev, attrs, model);
             if (confirmMessage) {
                 Espo.Ui.confirm(confirmMessage, {
                     confirmText: self.translate('Apply'),

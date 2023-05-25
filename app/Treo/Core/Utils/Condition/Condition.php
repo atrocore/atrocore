@@ -37,7 +37,7 @@ namespace Treo\Core\Utils\Condition;
 
 use DateInterval;
 use Espo\Core\Exceptions\Error;
-use Espo\Core\ORM\Entity;
+use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use DateTime;
 use Exception;
