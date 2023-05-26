@@ -141,7 +141,7 @@
     "required": "Required",
     "default": "Default",
     "maxLength": "Max length",
-    "countBytesInsteadOfCharacters": "Count Bytes Instead Of Characters",
+    "countBytesInsteadOfCharacters": "Count bytes instead of characters",
     "amountOfDigitsAfterComma": "Amount of digits after coma",
     "options": "Options",
     "after": "After (field)",
