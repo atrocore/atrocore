@@ -90,6 +90,9 @@ class V1Dot6Dot0 extends Base
                 }
             }
         }
+
+        $this->getConfig()->set('mainLanguage', 'en_US');
+        $this->getConfig()->save();
     }
 
     public function down(): void
