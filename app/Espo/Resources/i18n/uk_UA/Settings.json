@@ -53,7 +53,7 @@
     "emailAddressIsOptedOutByDefault": "Відзначити нові адреси ел. пошти як ті, які не беруть участі в ел. розсилці",
     "adminNotificationsNewExtensionVersion": "Показувати повідомлення, коли доступні нові версії розширень",
     "cleanupDeletedRecords": "Очистити видалені записи",
-    "isMultilangActive": "Активний",
+    "isMultilangActive": "Мультимовність",
     "mainLanguage": "Основна мова",
     "inputLanguageList": "Задати мову",
     "appId": "ID",

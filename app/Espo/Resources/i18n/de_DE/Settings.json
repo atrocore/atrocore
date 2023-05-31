@@ -1,7 +1,7 @@
 {
   "fields": {
     "locale": "Gebietsschema",
-    "isMultilangActive": "Aktiv",
+    "isMultilangActive": "Mehrsprachig",
     "mainLanguage": "Hauptsprache",
     "inputLanguageList": "Eingabesprachen",
     "appId": "ID",

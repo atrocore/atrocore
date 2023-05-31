@@ -45,8 +45,6 @@
     "aclStrictMode": "ACL en modo estricto",
     "followCreatedEntities": "Seguir los registros creados",
     "adminNotifications": "Notificaciones del sistema en el panel de administración",
-    "isMultilangActive": "Active",
-    "inputLanguageList": "Input Languages",
     "appId": "ID",
     "isStreamSide": "Is stream in side",
     "isStreamPanelFirst": "Is stream panel first",

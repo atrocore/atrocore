@@ -1,7 +1,7 @@
 {
   "fields": {
     "locale": "Locale",
-    "isMultilangActive": "Active",
+    "isMultilangActive": "Multilingual",
     "languageList": "Interface Languages",
     "mainLanguage": "Main Language",
     "inputLanguageList": "Input Languages",

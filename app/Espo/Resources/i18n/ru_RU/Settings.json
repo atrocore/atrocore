@@ -53,8 +53,6 @@
     "emailAddressIsOptedOutByDefault": "Отметить новые адреса эл. почты как те, которые не принимают участия в эл. рассылке",
     "adminNotificationsNewExtensionVersion": "Показывать уведомления, когда доступны новые версии расширений",
     "cleanupDeletedRecords": "Очистить удаленные записи",
-    "isMultilangActive": "Активный",
-    "inputLanguageList": "Задать язык",
     "appId": "ID",
     "isStreamSide": "Поток внутри",
     "isStreamPanelFirst": "Is stream panel first",
