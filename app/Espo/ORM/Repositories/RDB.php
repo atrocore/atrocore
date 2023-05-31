@@ -252,7 +252,7 @@ class RDB extends \Espo\ORM\Repository
         $metadata = $this->getEntityManager()->getEspoMetadata();
 
         foreach ($metadata->get(['entityDefs', $entity->getEntityType(), 'fields'], []) as $field => $defs) {
-            if (!empty($defs['unique'])) {
+            if (!empty($defs['unique']) && empty($defs['relationVirtualField'])) {
                 $actualFields = $metadata->get(['fields', $defs['type'], 'actualFields'], []);
 
                 if (!empty($actualFields)) {

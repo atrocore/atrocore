@@ -1,0 +1,33 @@
+{
+  "fields": {
+    "title": "Назва",
+    "dateFrom": "Дата від",
+    "dateTo": "Дата по",
+    "autorefreshInterval": "Інтервал автооновлення",
+    "displayRecords": "Відображати записи",
+    "isDoubleHeight": "Висота 2x",
+    "mode": "Режим",
+    "enabledScopeList": "Що відображати",
+    "users": "Користувачі",
+    "entityType": "Тип об'єкта",
+    "primaryFilter": "Первинний фільтр",
+    "boolFilterList": "Додаткові фільтри",
+    "sortBy": "Сортування (поле)",
+    "sortDirection": "Сортування (напрямок)",
+    "expandedLayout": "Макет",
+    "dateFilter": "Фільтр дати"
+  },
+  "options": {
+    "mode": {
+      "agendaWeek": "Тиждень (розклад)",
+      "basicWeek": "Тиждень",
+      "month": "Місяць",
+      "basicDay": "День",
+      "agendaDay": "День (порядок денний)",
+      "timeline": "Розклад"
+    }
+  },
+  "messages": {
+    "selectEntityType": "Виберіть тип об'єкта в параметрах панелі."
+  }
+}

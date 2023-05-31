@@ -39,11 +39,8 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 use Espo\Core\Templates\Repositories\Base;
 use Espo\Services\QueueManagerServiceInterface;
+use Espo\Core\QueueManager;
 
-
-/**
- * Class QueueItem
- */
 class QueueItem extends Base
 {
     public function deleteOldRecords(): void
@@ -52,49 +49,20 @@ class QueueItem extends Base
         $this->getPDO()->exec("DELETE FROM `queue_item` WHERE modified_at<'$date'");
     }
 
-    /**
-     * @return bool
-     */
-    public function isQueueEmpty(): bool
-    {
-        $count = $this->select(['id'])->where(['status' => ['Pending', 'Running']])->count();
-
-        return empty($count);
-    }
-
-    /**
-     * @param int $stream
-     *
-     * @return \Espo\Entities\QueueItem|null
-     */
-    public function getRunningItemForStream(int $stream): ?Entity
-    {
-        return $this->where(['stream' => $stream, 'status' => 'Running'])->order('sortOrder', 'ASC')->findOne();
-    }
-
-    public function getPendingItemForStream(int $stream): ?Entity
-    {
-        foreach (['High', 'Normal', 'Low'] as $priority) {
-            $job = $this
-                ->where(['stream' => null, 'status' => 'Pending', 'priority' => $priority])
-                ->order('sortOrder')
-                ->findOne();
-
-            if (!empty($job)) {
-                return $job;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * @inheritdoc
-     */
     protected function afterSave(Entity $entity, array $options = [])
     {
-        // call parent
         parent::afterSave($entity, $options);
+
+        /**
+         * Create file
+         */
+        if ($entity->get('status') === 'Pending') {
+            $sortOrder = $this->get($entity->get('id'))->get('sortOrder');
+            $priority = $entity->get('priority');
+
+            file_put_contents($this->getFilePath($sortOrder, $priority), $entity->get('id'));
+            file_put_contents(QueueManager::FILE_PATH, '1');
+        }
 
         if (!in_array($entity->get('status'), ['Pending', 'Running'])) {
             $this->notify($entity);
@@ -105,6 +73,46 @@ class QueueItem extends Base
         }
 
         $this->preparePublicDataForMassDelete($entity);
+
+        if (in_array($entity->get('status'), ['Success', 'Failed', 'Canceled'])) {
+            $item = $this->where(['status' => ['Pending', 'Running']])->findOne();
+            if (empty($item) && file_exists(QueueManager::FILE_PATH)) {
+                unlink(QueueManager::FILE_PATH);
+            }
+        }
+    }
+
+    public function getFilePath(int $sortOrder, string $priority): string
+    {
+        $filesInDir = 7000;
+        $dirName = (int)($sortOrder / $filesInDir);
+
+        $fileName = str_pad((string)($sortOrder % $filesInDir), 4, '0', STR_PAD_LEFT);
+
+        switch ($priority) {
+            case 'High':
+                $dirPath = QueueManager::QUEUE_DIR_PATH . '/0';
+                break;
+            case 'Crucial':
+                $dirPath = QueueManager::QUEUE_DIR_PATH . '/000001';
+                break;
+            case 'Low':
+                $dirPath = QueueManager::QUEUE_DIR_PATH . '/99999999999999';
+                break;
+            default:
+                $dirName = str_pad((string)$dirName, 6, '0', STR_PAD_LEFT);
+                if (in_array($dirName, ['000000', '000001'])) {
+                    $dirName = '000002';
+                }
+                $dirPath = QueueManager::QUEUE_DIR_PATH . '/' . $dirName;
+        }
+
+        // create new dir if not exist
+        while (!file_exists($dirPath)) {
+            mkdir($dirPath, 0777, true);
+        }
+
+        return $dirPath . '/' . $fileName . '.txt';
     }
 
     protected function preparePublicDataForMassDelete(Entity $entity): void
@@ -119,12 +127,6 @@ class QueueItem extends Base
         }
     }
 
-    /**
-     * @param Entity $entity
-     * @param array  $options
-     *
-     * @throws BadRequest
-     */
     protected function beforeRemove(Entity $entity, array $options = [])
     {
         if ($entity->get('status') == 'Running') {
@@ -134,24 +136,20 @@ class QueueItem extends Base
         parent::beforeRemove($entity, $options);
     }
 
-    /**
-     * @param Entity $entity
-     * @param array  $options
-     */
     protected function afterRemove(Entity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);
 
-        // delete forever
+        $fileName = $this->getFilePath($entity->get('sortOrder'), $entity->get('priority'));
+        if (file_exists($fileName)) {
+            unlink($fileName);
+        }
+
         $this->deleteFromDb($entity->get('id'));
     }
 
-    /**
-     * @inheritdoc
-     */
     protected function init()
     {
-        // call parent
         parent::init();
 
         $this->addDependency('queueManager');
@@ -159,9 +157,6 @@ class QueueItem extends Base
         $this->addDependency('serviceFactory');
     }
 
-    /**
-     * @param Entity $entity
-     */
     protected function notify(Entity $entity): void
     {
         try {

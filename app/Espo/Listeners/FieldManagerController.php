@@ -234,6 +234,13 @@ class FieldManagerController extends AbstractListener
                     $sql = "SELECT COUNT(*) FROM $table WHERE $table.$field IS NOT NULL AND {$field}_unit IS NOT NULL AND deleted = 0 GROUP BY $table.$field, {$field}_unit HAVING COUNT($table.$field) > 1 AND COUNT({$field}_unit) > 1";
                     $result = $this->fetch($sql);
                     break;
+                case 'rangeInt':
+                case 'rangeFloat':
+                    $this->removeDeletedDuplicate($table, [$field . '_from', $field . '_to']);
+
+                    $sql = "SELECT COUNT(*) FROM $table WHERE {$field}_from IS NOT NULL AND {$field}_to IS NOT NULL AND deleted=0 GROUP BY {$field}_from, {$field}_to HAVING COUNT({$field}_from) > 1 AND COUNT({$field}_to) > 1";
+                    $result = $this->fetch($sql);
+                    break;
                 default:
                     $this->removeDeletedDuplicate($table, [$field]);
 

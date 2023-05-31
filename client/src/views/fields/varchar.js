@@ -36,6 +36,8 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
 
         type: 'varchar',
 
+        editTemplate: 'fields/varchar/edit',
+
         detailTemplate: 'fields/varchar/detail',
 
         searchTemplate: 'fields/varchar/search',
@@ -43,6 +45,12 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
         searchTypeList: ['startsWith', 'contains', 'equals', 'endsWith', 'like', 'notContains', 'notEquals', 'notLike', 'isEmpty', 'isNotEmpty'],
 
         validationPattern: null,
+
+        events: {
+            'keyup input.with-text-length': function (e) {
+                this.updateTextCounter();
+            },
+        },
 
         setup() {
             Dep.prototype.setup.call(this);
@@ -93,29 +101,68 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
             }
         },
 
+        updateTextCounter() {
+            let maxLength = this.params.maxLength;
+            let countBytesInsteadOfCharacters = this.params.countBytesInsteadOfCharacters;
+            if (!maxLength) {
+                return;
+            }
+
+            let $input = this.$el.find('input');
+
+            let text = $input.val();
+            let textLength = this.getRealLength(text, countBytesInsteadOfCharacters);
+
+            let $el = this.$el.find('.text-length-counter .current-length');
+
+            $el.html(textLength);
+
+            $input.css('border-color', '');
+            $el.css('color', '');
+            if (maxLength < textLength) {
+                $input.css('border-color', 'red');
+                $el.css('color', 'red');
+            }
+        },
+
+        getRealLength(text, countBytesInsteadOfCharacters) {
+            if (countBytesInsteadOfCharacters) {
+                return encodeURI(text).split(/%..|./).length - 1;
+            } else {
+                return (text ? text.toString().length : 0);
+            }
+        },
+
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
             if (this.mode == 'search') {
                 var type = this.$el.find('select.search-type').val();
                 this.handleSearchType(type);
             }
+            if (this.mode == 'edit') {
+                this.updateTextCounter();
+            }
         },
 
         fetch: function () {
-            var data = {};
-            var value = this.$element.val();
-            if (this.params.trim || this.forceTrim) {
-                if (typeof value.trim === 'function') {
-                    value = value.trim();
+            let data = {};
+
+            let $el = this.$element;
+            if ($el) {
+                let value = $el.val();
+                if (this.params.trim || this.forceTrim) {
+                    if (typeof value.trim === 'function') {
+                        value = value.trim();
+                    }
                 }
+                data[this.name] = value ? value : null;
             }
 
-            data[this.name] = value;
             return data;
         },
 
         fetchSearch: function () {
-            var type = this.$el.find('[name="'+this.name+'-type"]').val() || 'startsWith';
+            var type = this.$el.find('[name="' + this.name + '-type"]').val() || 'startsWith';
 
             var data;
 
@@ -181,7 +228,7 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
         validatePattern() {
             if (this.validationPattern) {
                 let value = this.model.get(this.name);
-                if (value !== '' && !this.validationPattern.test(value)) {
+                if (value !== '' && value !== null && !this.validationPattern.test(value)) {
                     let msg = this.getPatternValidationMessage();
                     if (msg) {
                         this.showValidationMessage(msg);

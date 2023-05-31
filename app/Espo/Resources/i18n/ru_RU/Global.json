@@ -33,7 +33,6 @@
     "Preferences": "Персональные Настройки",
     "AuthLogRecord": "Запись Лога Аутентификации",
     "AuthFailLogRecord": "Запись Сбоя Лога Аутентификации",
-    "ArrayValue": "Значение массива",
     "Account": "Контрагент",
     "DocumentFolder": "Папка с документами",
     "KnowledgeBaseCategory": "Категория базы знаний",
@@ -77,7 +76,6 @@
     "LastViewed": "Последние просмотренные",
     "AuthLogRecord": "Лог Аутентификации",
     "AuthFailLogRecord": "Сбой Лога Аутентификации",
-    "ArrayValue": "Значения массива",
     "Account": "Контрагенты",
     "DocumentFolder": "Папки с документами",
     "KnowledgeBaseCategory": "Категории базы знаний",
@@ -747,6 +745,10 @@
       "isNotOneOf": "Ни один из",
       "noneOf": "Ни один из"
     },
+    "assetSearchRanges": {
+      "isEmpty": "Является NULL",
+      "isNotEmpty": "Не является NULL"
+    },
     "varcharSearchRanges": {
       "equals": "Равняется",
       "like": "Как (%)",
@@ -941,6 +943,7 @@
     "cd": "Кд"
   },
   "exceptions": {
+    "maxLengthIsExceeded": "Разрешенная длина строки для \"%s\" \"%s\" символа, вы передаете \"%s\" символа.",
     "parentRecordsHaveDifferentValues": "Родительские элементы имеют различные значения, значение для наследования не может быть определено.",
     "nothingToInherit": "Ничего не унаследовано.",
     "hasMultipleParents": "Есть одна или больше записей с несколькими родительскими элементами.",
@@ -956,8 +959,7 @@
     "codeInvalid": "Код недействителен. Код должен быть уникальным. Ожидаются только буквы, цифры и символы \"_\" .",
     "notDashletService": "Сервис %s должен реализовать интерфейс Dashlet",
     "editedByAnotherUser": "The data set [%s] был тем временем изменен. Вы можете <a href=\"javascript:\" onclick=\"location.reload();\">перегрузить страницу</a> чтобы увидеть новые значения, возвратитесь к редактированию, нажав \"Cancel\" или перезапишите данные нажав \"Apply\". Вы хотите перезаписать данные?",
-    "dontMatchToPattern": "Значение поля \"{field}\" не соответствует паттерну \"{pattern}\".",
-    "fieldShouldMustBeUnique": "Поле '%s' должно иметь уникальное значение."
+    "dontMatchToPattern": "Значение поля \"{field}\" не соответствует паттерну \"{pattern}\"."
   },
   "themes": {
     "TreoDarkTheme": "Atro Dark Theme",

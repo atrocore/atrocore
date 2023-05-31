@@ -73,6 +73,7 @@ Espo.define('views/fields/file', ['views/fields/link', 'lib!MD5'], function (Dep
                 var $div = $(e.currentTarget).parent();
                 this.deleteAttachment();
                 $div.parent().remove();
+                this.$el.find('.attachment-button').removeClass('hidden');
             },
             'change input.file': function (e) {
                 var $file = $(e.currentTarget);
@@ -389,6 +390,7 @@ Espo.define('views/fields/file', ['views/fields/link', 'lib!MD5'], function (Dep
             var o = {};
             o[this.idName] = attachment.id;
             o[this.nameName] = attachment.get('name');
+            o[this.namePathsData] = attachment.pathsData;
             this.model.set(o);
         },
 

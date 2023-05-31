@@ -132,6 +132,10 @@ abstract class Mapper implements IMapper
         }
     }
 
+    public function getWhereQuery($entityType, $whereClause){
+        return $this->query->getWhere($this->query->getSeed($entityType), $whereClause);
+    }
+
     public function aggregate(IEntity $entity, $params = array(), $aggregation, $aggregationBy, $deleted = false)
     {
         if (empty($aggregation) || !isset($entity->fields[$aggregationBy])) {
@@ -569,6 +573,7 @@ abstract class Mapper implements IMapper
                         $sql = $this->composeInsertQuery($relTable, $fieldsPart, $valuesPart);
 
                         if ($this->pdo->query($sql)) {
+                            $this->updateModifiedAtForManyToMany($entity, $relEntity);
                             return true;
                         }
                     } else {
@@ -595,6 +600,7 @@ abstract class Mapper implements IMapper
 
                         $sql = $this->composeUpdateQuery($relTable, $setPart, $wherePart);
                         if ($this->pdo->query($sql)) {
+                            $this->updateModifiedAtForManyToMany($entity, $relEntity);
                             return true;
                         }
                     }
@@ -702,6 +708,7 @@ abstract class Mapper implements IMapper
                     $sql = $this->composeUpdateQuery($relTable, $setPart, $wherePart);
                 }
                 if ($this->pdo->query($sql)) {
+                    $this->updateModifiedAtForManyToMany($entity, $relEntity);
                     return true;
                 }
                 break;
@@ -927,6 +934,37 @@ abstract class Mapper implements IMapper
     protected function composeDeleteQuery(string $table, string $where): string
     {
         return "DELETE FROM `{$table}` WHERE {$where}";
+    }
+
+    protected function updateModifiedAtForManyToMany(IEntity $entity, IEntity $relEntity): void
+    {
+        $this->updateModifiedAt($entity);
+        $this->updateModifiedBy($entity);
+
+        $this->updateModifiedAt($relEntity);
+        $this->updateModifiedBy($relEntity);
+    }
+
+    protected function updateModifiedAt(IEntity $entity)
+    {
+        $nowString = date('Y-m-d H:i:s');
+        $tableName = $this->query->toDb($entity->getEntityType());
+
+        try {
+            $this->pdo->exec("UPDATE `$tableName` SET modified_at='$nowString' WHERE id='{$entity->get('id')}'");
+        } catch (\Throwable $e) {
+        }
+    }
+
+    protected function updateModifiedBy(IEntity $entity)
+    {
+        $tableName = $this->query->toDb($entity->getEntityType());
+        $userId = $this->entityFactory->getEntityManager()->getUser()->get('id');
+
+        try {
+            $this->pdo->exec("UPDATE `$tableName` SET modified_by_id='$userId' WHERE id='{$entity->get('id')}'");
+        } catch (\Throwable $e) {
+        }
     }
 
     abstract protected function toDb($field);

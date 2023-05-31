@@ -137,6 +137,15 @@
             </div>
             {{/if}}
         </div>
+        <div class="row">
+            <div class="cell form-group col-md-6" data-name="hasArchive">
+                <label class="control-label"
+                       data-name="hasArchive">{{translate 'hasArchive' category='fields' scope='EntityManager'}}</label>
+                <div class="field" data-name="hasArchive">
+                    {{{hasArchive}}}
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {{#each additionalParamsLayout}}

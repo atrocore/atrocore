@@ -72,6 +72,7 @@ class Converter
         'type' => 'type',
         'dbType' => 'dbType',
         'maxLength' => 'length',
+        'countBytesInsteadOfCharacters' => 'countBytesInsteadOfCharacters',
         'len' => 'len',
         'notNull' => 'notNull',
         'autoincrement' => 'autoincrement',
@@ -92,8 +93,7 @@ class Converter
         ),
         'select' => 'select',
         'orderBy' => 'orderBy',
-        'where' => 'where',
-        'storeArrayValues' => 'storeArrayValues'
+        'where' => 'where'
     );
 
     protected $idParams = array(

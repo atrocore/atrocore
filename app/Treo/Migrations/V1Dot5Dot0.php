@@ -47,7 +47,14 @@ class V1Dot5Dot0 extends Base
         /** @var \Espo\Core\Utils\Metadata $metadata */
         $metadata = (new \Espo\Core\Application())->getContainer()->get('metadata');
 
-        foreach ($metadata->get('entityDefs') as $entityType => $entityDefs) {
+        foreach ($metadata->get('scopes') as $scope => $scopeDefs) {
+            if (!empty($scopeDefs['notStorable'])) {
+                continue;
+            }
+
+            $entityType = $scope;
+            $entityDefs = $metadata->get(['entityDefs', $entityType]);
+
             if (empty($entityDefs['fields'])) {
                 continue;
             }

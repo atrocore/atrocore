@@ -403,6 +403,7 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
         },
 
         htmlToPlain: function (text) {
+            if(text==null) return null;
         	text = text || '';
             var value = text.replace(/<br\s*\/?>/mg, '\n');
 

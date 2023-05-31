@@ -182,6 +182,11 @@ class Stream extends \Espo\Core\Hooks\Base
 
     public function afterSave(Entity $entity, array $options = [])
     {
+        // exit if importing
+        if (!empty($GLOBALS['importJobId'])) {
+            return;
+        }
+
         $entityType = $entity->getEntityType();
 
         if ($this->checkHasStream($entity)) {

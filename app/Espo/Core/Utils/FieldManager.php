@@ -46,6 +46,18 @@ use Espo\Core\Utils\Metadata\Helper;
  */
 class FieldManager extends Injectable
 {
+    public const UNNECESSARY_FIELDS
+        = [
+            'name',
+            'label',
+            'translatedOptions',
+            'dynamicLogicVisible',
+            'dynamicLogicReadOnly',
+            'dynamicLogicRequired',
+            'dynamicLogicOptions',
+            'lingualFields'
+        ];
+
     protected $isChanged = null;
 
     protected $forbiddenFieldNameList = ['id', 'deleted'];
@@ -453,17 +465,7 @@ class FieldManager extends Injectable
      */
     protected function prepareFieldDefs($scope, $name, $fieldDefs)
     {
-        $unnecessaryFields = array(
-            'name',
-            'label',
-            'translatedOptions',
-            'dynamicLogicVisible',
-            'dynamicLogicReadOnly',
-            'dynamicLogicRequired',
-            'dynamicLogicOptions',
-        );
-
-        foreach ($unnecessaryFields as $fieldName) {
+        foreach (self::UNNECESSARY_FIELDS as $fieldName) {
             if (isset($fieldDefs[$fieldName])) {
                 unset($fieldDefs[$fieldName]);
             }

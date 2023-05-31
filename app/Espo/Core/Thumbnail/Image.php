@@ -93,7 +93,11 @@ class Image extends Injectable
             return false;
         }
 
-        $image = new ImageResize($this->getImageFilePath($attachment));
+        try {
+            $image = new ImageResize($this->getImageFilePath($attachment));
+        } catch (\Gumlet\ImageResizeException $e) {
+            return false;
+        }
 
         $imageSizes = $this->getMetadata()->get(['app', 'imageSizes'], []);
 

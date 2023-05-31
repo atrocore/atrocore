@@ -42,7 +42,6 @@
     },
     "tags": {
       "type": "multiEnum",
-      "storeArrayValues": true,
       "fontSize": 1,
       "optionsIds": [],
       "options": []

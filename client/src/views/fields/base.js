@@ -203,7 +203,6 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             } else {
                 this.events = {};
             }
-
             this.defs = this.options.defs || {};
             this.name = this.options.name || this.defs.name;
             this.params = this.options.params || this.defs.params || {};
@@ -224,7 +223,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             this.inlineEditDisabled = this.options.inlineEditDisabled || this.params.inlineEditDisabled || this.inlineEditDisabled;
             this.readOnly = this.readOnlyLocked || this.options.readOnly || false;
 
-            this.tooltip = this.options.tooltip || this.params.tooltip || this.model.getFieldParam(this.name, 'tooltip');
+            this.tooltip = this.options.tooltip || this.params.tooltip || this.model.getFieldParam(this.name, 'tooltip') || (this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.name, 'tooltipLink']));
 
             if (this.options.readOnlyDisabled) {
                 this.readOnly = false;
@@ -266,23 +265,45 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }, this);
 
             if ((this.mode == 'detail' || this.mode == 'edit') && this.tooltip) {
-                var $a;
+                const tooltipLinkValue = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'tooltipLink']);
+                let tooltipText = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'tooltipText']);
+                let tooltipTextTranslate = this.translate(tooltipText || this.name, 'tooltips', this.model.name);
+
+                const tooltipTextValue = this.options.tooltipText || tooltipTextTranslate;
+                const tooltipLinkElement = tooltipLinkValue ? '<div class="popover-footer" style="border-top: 1px solid #dcdcdc52; display:block;margin-top:3px!important;padding-top:2px;"><a href=' + tooltipLinkValue + ' target="_blank"> <u>' + this.translate('Read more') + '</u> </a></div>' : '';
+
                 this.once('after:render', function () {
                     $a = $('<a href="javascript:" class="text-muted field-info"><span class="fas fa-info-circle"></span></a>');
+
+                    if (!tooltipTextValue) {
+                        $a = $('<a href=' + tooltipLinkValue + ' target="_blank" class="text-muted field-info"><span class="fas fa-info-circle"></span></a>');
+                    }
+
                     var $label = this.getLabelElement();
                     $label.append(' ');
                     this.getLabelElement().append($a);
-                    $a.popover({
-                        placement: 'bottom',
-                        container: 'body',
-                        html: true,
-                        content: (this.options.tooltipText || this.translate(this.name, 'tooltips', this.model.name)).replace(/\n/g, "<br />"),
-                        trigger: 'click',
-                    }).on('shown.bs.popover', function () {
-                        $('body').one('click', function () {
-                            $a.popover('hide');
-                        });
-                    });
+                    if (tooltipTextValue) {
+                        $a.popover({
+                            placement: 'bottom',
+                            container: 'body',
+                            html: true,
+                            content: (tooltipTextValue).replace(/\n/g, "<br />") + tooltipLinkElement,
+                            trigger: 'click',
+                        }).on('shown.bs.popover', function () {
+                            $('body').one('click', function (e) {
+                                if ($(e.target).data('toggle') !== 'popover'
+                                    && $(e.target).parents('.popover.in').length === 0) {
+                                    $('.popover').popover('hide');
+                                }
+                            });
+                            $('.fas.fa-info-circle').one('click', function (e) {
+                                $('body').click();
+                            });
+
+                        }).on('hidden.bs.popover', function (e) {
+                            $(e.target).data('bs.popover').inState.click = false;
+                        });                        
+                    }
                 }, this);
                 this.on('remove', function () {
                     if ($a) {
@@ -748,7 +769,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         fetch: function () {
             var data = {};
-            data[this.name] = this.$element.val();
+            data[this.name] = this.$element ? this.$element.val() : null;
             return data;
         },
 
@@ -767,6 +788,49 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }
             return false;
         },
+
+        prepareOptionsForExtensibleEnum() {
+            let extensibleEnumId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'extensibleEnumId']);
+            if (this.params.extensibleEnumId){
+                extensibleEnumId = this.params.extensibleEnumId;
+            }
+
+            if (!extensibleEnumId) {
+                return;
+            }
+
+            let key = 'extensible_enum_' + extensibleEnumId;
+
+            if (!Espo[key]) {
+                Espo[key] = [];
+                this.ajaxGetRequest(`ExtensibleEnum/${extensibleEnumId}/extensibleEnumOptions`, {
+                    sortBy: "sortOrder",
+                    asc: true,
+                    offset: 0,
+                    maxSize: 5000
+                }, {async: false}).then(res => {
+                    if (res.list) {
+                        Espo[key] = res.list;
+                    }
+                });
+            }
+
+            if (Espo[key].length === 0) {
+                return;
+            }
+
+            this.params.extensibleEnumOptions = Espo[key];
+
+            this.params.options = [];
+            this.params.optionColors = [];
+            this.translatedOptions = {};
+            Espo[key].forEach(option => {
+                this.params.options.push(option.id);
+                this.params.optionColors.push(option.color);
+                this.translatedOptions[option.id] = option.name ? option.name : ' ';
+            });
+        },
+
     });
 });
 

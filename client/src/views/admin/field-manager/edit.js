@@ -78,7 +78,8 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                 fields: {
                     name: {required: true, maxLength: 100},
                     label: {required: true},
-                    tooltipText: {}
+                    tooltipText: {},
+                    tooltipLink: {}
                 }
             };
 
@@ -89,6 +90,7 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
 
                 if (this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'tooltip'])) {
                     this.model.set('tooltipText', this.getLanguage().translate(this.field, 'tooltips', this.scope));
+                    this.model.set('tooltipLink', this.getLanguage().translate(this.field, 'tooltipLink', this.scope));
                 }
             } else {
                 this.model.set('type', this.type);
@@ -209,11 +211,21 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                         rows: 1
                     });
 
+                    this.createFieldView('url', 'tooltipLink', null, {
+                        trim: true,
+                        rows: 1
+                    });
+
                     if (this.hasPersonalData) {
                         this.createFieldView('bool', 'isPersonalData', null, {});
                     }
 
                     this.createFieldView('text', 'tooltipText', null, {
+                        trim: true,
+                        rows: 1
+                    });
+
+                    this.createFieldView('url', 'tooltipLink', null, {
                         trim: true,
                         rows: 1
                     });
@@ -281,9 +293,10 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                             return;
                         }
                         var options = {};
-                        if (o.tooltip ||  ~this.paramWithTooltipList.indexOf(o.name)) {
+                        if (o.tooltip || ~this.paramWithTooltipList.indexOf(o.name)) {
                             options.tooltip = true;
                             options.tooltipText = this.translate(o.name, 'tooltips', 'FieldManager');
+                            options.tooltipLink = this.translate(o.name, 'tooltipLink', 'FieldManager');
                         }
                         this.createFieldView(o.type, o.name, null, o, options);
                     }, this);
@@ -505,6 +518,10 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                     delete attributes.tooltipText;
                 }
 
+                if (this.model.fetchedAttributes.tooltipLink === attributes.tooltipLink || !this.model.fetchedAttributes.tooltipLink && !attributes.tooltipLink) {
+                    delete attributes.tooltipLink;
+                }
+
                 if ('translatedOptions' in attributes) {
                     if (_.isEqual(this.model.fetchedAttributes.translatedOptions, attributes.translatedOptions)) {
                         delete attributes.translatedOptions;
@@ -529,6 +546,10 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                     langData[this.scope]['tooltips'] = {};
                 }
                 langData[this.scope]['tooltips'][this.model.get('name')] = this.model.get('tooltipText');
+                if (!langData[this.scope]['tooltipLink']) {
+                    langData[this.scope]['tooltipLink'] = {};
+                }
+                langData[this.scope]['tooltipLink'][this.model.get('name')] = this.model.get('tooltipLink');
 
                 if (this.getMetadata().get(['fields', this.model.get('type'), 'translatedOptions']) && this.model.get('translatedOptions')) {
                     langData[this.scope].options = langData[this.scope].options || {};

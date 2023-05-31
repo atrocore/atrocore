@@ -40,6 +40,8 @@ use Espo\Core\Utils\Util;
 
 class Metadata extends AbstractListener
 {
+    public const VIRTUAL_FIELD_DELIMITER = \Espo\Core\Templates\Services\Relationship::VIRTUAL_FIELD_DELIMITER;
+
     public function modify(Event $event): void
     {
         $data = $event->getArgument('data');
@@ -50,6 +52,8 @@ class Metadata extends AbstractListener
         // add onlyActive bool filter
         $data = $this->addOnlyActiveFilter($data);
 
+        // add archive
+        $data = $this->addArchive($data);
         // set thumbs sizes to options of asset field type
         $data = $this->setAssetThumbSize($data);
 
@@ -62,7 +66,134 @@ class Metadata extends AbstractListener
 
         $data = $this->prepareHierarchyEntities($data);
 
+        $this->prepareRelationshipsEntities($data);
+
+        $this->prepareRanges($data);
+
         $event->setArgument('data', $data);
+    }
+
+    protected function prepareRanges(array &$data): void
+    {
+        foreach ($data['entityDefs'] as $entity => $entityDefs) {
+            if (empty($entityDefs['fields'])) {
+                continue 1;
+            }
+            foreach ($entityDefs['fields'] as $field => $fieldDefs) {
+                if (empty($fieldDefs['type']) || !in_array($fieldDefs['type'], ['rangeInt', 'rangeFloat'])) {
+                    continue;
+                }
+
+                if (!empty($fieldDefs['unique'])) {
+                    $data['entityDefs'][$entity]['uniqueIndexes']['unique_' . $field] = [
+                        'deleted',
+                        Util::toUnderScore($field) . '_from',
+                        Util::toUnderScore($field) . '_to'
+                    ];
+                }
+
+                $data['entityDefs'][$entity]['fields'][$field]['filterDisabled'] = true;
+
+                $fieldFrom = $field . 'From';
+                $fieldTo = $field . 'To';
+
+                $data['entityDefs'][$entity]['fields'][$fieldFrom]['required'] = !empty($fieldDefs['required']);
+                $data['entityDefs'][$entity]['fields'][$fieldTo]['required'] = !empty($fieldDefs['required']);
+                $data['entityDefs'][$entity]['fields'][$fieldFrom]['readOnly'] = !empty($fieldDefs['readOnly']);
+                $data['entityDefs'][$entity]['fields'][$fieldTo]['readOnly'] = !empty($fieldDefs['readOnly']);
+                if (isset($fieldDefs['defaultFrom'])) {
+                    $data['entityDefs'][$entity]['fields'][$fieldFrom]['default'] = $fieldDefs['defaultFrom'];
+                }
+                if ($fieldDefs['defaultTo']) {
+                    $data['entityDefs'][$entity]['fields'][$fieldTo]['default'] = $fieldDefs['defaultTo'];
+                }
+                if (isset($fieldDefs['minFrom'])) {
+                    $data['entityDefs'][$entity]['fields'][$fieldFrom]['min'] = $fieldDefs['minFrom'];
+                }
+                if (isset($fieldDefs['minTo'])) {
+                    $data['entityDefs'][$entity]['fields'][$fieldTo]['min'] = $fieldDefs['minTo'];
+                }
+                if (isset($fieldDefs['maxFrom'])) {
+                    $data['entityDefs'][$entity]['fields'][$fieldFrom]['max'] = $fieldDefs['maxFrom'];
+                }
+                if (isset($fieldDefs['maxTo'])) {
+                    $data['entityDefs'][$entity]['fields'][$fieldTo]['max'] = $fieldDefs['maxTo'];
+                }
+
+                if (!empty($fieldDefs['audited'])) {
+                    $data['entityDefs'][$entity]['fields'][$fieldFrom]['audited'] = true;
+                    $data['entityDefs'][$entity]['fields'][$fieldTo]['audited'] = true;
+                }
+
+                if ($fieldDefs['type'] === 'rangeFloat' && isset($fieldDefs['amountOfDigitsAfterComma'])) {
+                    $data['entityDefs'][$entity]['fields'][$fieldFrom]['amountOfDigitsAfterComma'] = $fieldDefs['amountOfDigitsAfterComma'];
+                    $data['entityDefs'][$entity]['fields'][$fieldTo]['amountOfDigitsAfterComma'] = $fieldDefs['amountOfDigitsAfterComma'];
+                }
+
+                if (!empty($data['clientDefs'][$entity]['dynamicLogic']['fields'][$field])) {
+                    $data['clientDefs'][$entity]['dynamicLogic']['fields'][$fieldFrom] = $data['clientDefs'][$entity]['dynamicLogic']['fields'][$field];
+                    $data['clientDefs'][$entity]['dynamicLogic']['fields'][$fieldTo] = $data['clientDefs'][$entity]['dynamicLogic']['fields'][$field];
+                }
+            }
+        }
+    }
+
+    protected function prepareRelationshipsEntities(array &$data): void
+    {
+        foreach ($data['entityDefs'] as $scope => $scopeData) {
+            if (empty($scopeData['fields'])) {
+                continue;
+            }
+
+            if (isset($scopeData['relationsVirtualFields']) && $scopeData['relationsVirtualFields'] === false) {
+                continue;
+            }
+
+            if (!isset($data['scopes'][$scope]['type']) || $data['scopes'][$scope]['type'] !== 'Relationship') {
+                continue;
+            }
+
+            foreach ($scopeData['fields'] as $field => $fieldDefs) {
+                if (!empty($fieldDefs['notStorable']) || empty($fieldDefs['type']) || $fieldDefs['type'] !== 'link' || empty($fieldDefs['relationshipField'])) {
+                    continue;
+                }
+
+                if (empty($data['entityDefs'][$scope]['links'][$field]['entity'])) {
+                    continue;
+                }
+
+                $foreignEntity = $data['entityDefs'][$scope]['links'][$field]['entity'];
+
+                if (empty($data['entityDefs'][$foreignEntity]['fields'])) {
+                    continue;
+                }
+
+                foreach ($data['entityDefs'][$foreignEntity]['fields'] as $foreignField => $foreignFieldDefs) {
+                    if (empty($foreignFieldDefs['type'])) {
+                        continue;
+                    }
+
+                    if (!in_array($foreignFieldDefs['type'], ['attachmentMultiple', 'linkMultiple'])) {
+                        $data['entityDefs'][$scope]['fields'][$field . self::VIRTUAL_FIELD_DELIMITER . $foreignField] = array_merge($foreignFieldDefs, [
+                            "notStorable"          => true,
+                            "relationVirtualField" => true,
+                            "entity"               => $foreignEntity,
+                            "required"             => false,
+                            "unique"               => false,
+                            "filterDisabled"       => true,
+                            "emHidden"             => true
+                        ]);
+
+                        if ($foreignFieldDefs['type'] === 'link') {
+                            if (!empty($data['entityDefs'][$foreignEntity]['links'][$foreignField]['entity'])) {
+                                $linkEntity = $data['entityDefs'][$foreignEntity]['links'][$foreignField]['entity'];
+                                $data['entityDefs'][$scope]['fields'][$field . self::VIRTUAL_FIELD_DELIMITER . $foreignField]['entity'] = $linkEntity;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     protected function prepareHierarchyEntities(array $data): array
@@ -247,6 +378,7 @@ class Metadata extends AbstractListener
 
                 $newFields[$field] = $params;
                 if (!empty($data['fields'][$params['type']]['multilingual']) && !empty($params['isMultilang'])) {
+                    $newFields[$field]['lingualFields'] = [];
                     foreach ($locales as $locale) {
                         // prepare locale
                         $preparedLocale = ucfirst(Util::toCamelCase(strtolower($locale)));
@@ -254,7 +386,7 @@ class Metadata extends AbstractListener
                         // prepare multi-lang field
                         $mField = $field . $preparedLocale;
 
-                        $newFields[$field]['lingualFields'][] = $mField;
+                        $newFields[$field]['lingualFields'][$mField] = $mField;
 
                         // prepare params
                         $mParams = $params;
@@ -289,6 +421,7 @@ class Metadata extends AbstractListener
 
                         $newFields[$mField] = $mParams;
                     }
+                    $newFields[$field]['lingualFields'] = array_values($newFields[$field]['lingualFields']);
                 }
             }
             $data['entityDefs'][$scope]['fields'] = $newFields;
@@ -308,6 +441,19 @@ class Metadata extends AbstractListener
             if ($row['name'] === 'previewSize') {
                 $data['fields']['asset']['params'][$k]['options'] = empty($data['app']['imageSizes']) ? [] : array_keys($data['app']['imageSizes']);
                 break;
+            }
+        }
+
+        return $data;
+    }
+
+
+    public function addArchive(array $data){
+        foreach ($data['scopes'] as $scope => $row) {
+            if (!empty($row['hasArchive'])) {
+                $data['entityDefs'][$scope]['fields']['isArchived']['type'] = 'bool';
+                $data['entityDefs'][$scope]['fields']['isArchived']['notNull'] = true;
+                $data['clientDefs'][$entity]['filterList'][] = 'withArchived';
             }
         }
 

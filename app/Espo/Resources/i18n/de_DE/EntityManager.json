@@ -4,8 +4,8 @@
     "Relationships": "Beziehungen",
     "Schedule": "Geplant",
     "Formula": "Formel",
-    "accessManagement": "Hierarchieverwaltung",
-    "hierarchyManagement": "Zugriffsverwaltung",
+    "accessManagement": "Zugriffsverwaltung",
+    "hierarchyManagement": "Hierarchieverwaltung",
     "other": "Sonstiges"
   },
   "fields": {
@@ -21,10 +21,11 @@
     "hasTeam": "Teams",
     "hasAccount": "Firmen",
     "hasOwner": "Besitzer",
+    "hasArchive": "Hat Archi",
     "type": "Typ",
     "labelSingular": "Label Singular",
     "labelPlural": "Bezeichnung Plural",
-    "stream": "Aktivitäten",
+    "stream": "Hat Aktivitäten",
     "label": "Label",
     "linkType": "Relationstyp",
     "entityForeign": "Fremdentität",
@@ -75,7 +76,7 @@
     "hasOwner": "Besitzer in der Zugangsverwaltung anzeigen",
     "statusField": "Updates dieses Feldes werden im Stream protokolliert.",
     "textFilterFields": "Von der Textsuche verwendete Felder.",
-    "stream": "Ob die Entity einen Stream hat.",
+    "stream": "Aktivitätenpanel wird verwendet, um den Änderungsverlauf anzuzeigen und Beiträge mit Anhängen hinzuzufügen.",
     "linkAudited": "Das Erstellen eines verknüpften Datensatzes und das Verknüpfen mit dem vorhandenen Datensatz wird in Stream protokolliert.",
     "linkMultipleField": "verlinken mehrere Felder bietet eine praktische Möglichkeit Beziehungen zu bearbeiten. Nicht benutzen wenn Sie eine große Anzahl von Verknüpfungen haben.",
     "fullTextSearch": "Bietet die Möglichkeit an, eine viel schnellere und umfassendere Textsuche durchzuführen."

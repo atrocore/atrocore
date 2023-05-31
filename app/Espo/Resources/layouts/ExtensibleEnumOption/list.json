@@ -1,0 +1,13 @@
+[
+  {
+    "name": "color",
+    "width": "8"
+  },
+  {
+    "name": "name",
+    "link": true
+  },
+  {
+    "name": "extensibleEnum"
+  }
+]

@@ -56,13 +56,13 @@ Espo.define('treo-core:views/search/filter', 'views/search/filter', function (De
         },
 
         data: function () {
-            let isPinEnabled = true;
+            let isPinEnabled = false;
 
-            if (this.getParentView() && this.getParentView().getParentView() && this.getParentView().getParentView()) {
+            if (this.getParentView() && this.getParentView().getParentView()) {
                 const parent =  this.getParentView().getParentView();
 
-                if (('layoutName' in parent) && parent.layoutName === 'listSmall') {
-                    isPinEnabled = false;
+                if (('$el' in parent) && parent.$el.is('div#main')) {
+                    isPinEnabled = true;
                 }
             }
 

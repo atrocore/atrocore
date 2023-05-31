@@ -183,12 +183,4 @@ class User extends \Espo\Core\ORM\Repositories\RDB
     {
         return $this->getInjection('container')->get('aclManager');
     }
-
-    /**
-     * @return Language
-     */
-    protected function getLanguage(): Language
-    {
-        return $this->getInjection('container')->get('language');
-    }
 }

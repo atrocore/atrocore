@@ -75,6 +75,9 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
         afterRender: function () {
             if (this.mode === 'edit') {
                 this.listenTo(this.model, 'change:' + this.name, (model, value) => {
+                    if (typeof value === 'string') {
+                        value = JSON.parse(value);
+                    }
                     this.updateLanguagesFields(model, value);
                 });
 

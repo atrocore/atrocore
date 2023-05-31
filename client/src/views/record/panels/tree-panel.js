@@ -357,9 +357,8 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             this.buildTree();
         },
 
-        buildTree() {
-            let data = null;
-
+        buildTree(data = null) {
+            let $tree = this.getTreeEl();
             let whereData = this.getStorage().get('treeWhereData', this.treeScope) || [];
 
             let searchValue = this.getStorage().get('treeSearchValue', this.treeScope) || null;
@@ -368,10 +367,12 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                 whereData = [{"type": "textFilter", "value": searchValue}];
             }
 
-            if (whereData.length > 0) {
-                this.ajaxGetRequest(`${this.treeScope}/action/TreeData`, {"where": whereData}, {async: false}).then(response => {
-                    data = response.tree;
+            if (data === null && whereData.length > 0) {
+                $tree.html(this.translate('Loading...'));
+                this.ajaxGetRequest(`${this.treeScope}/action/TreeData`, {"where": whereData}).then(response => {
+                    this.buildTree(response.tree);
                 });
+                return;
             }
 
             let treeData = {
@@ -416,7 +417,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                     }
 
                     if (data && this.getStorage().get('treeScope', this.scope) === this.scope && this.model && this.model.get('id') === node.id) {
-                        this.getTreeEl().tree('addToSelection', node);
+                        $tree.tree('addToSelection', node);
                         $li.addClass('jqtree-selected');
                     }
 
@@ -443,7 +444,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                 delete treeData['dataFilter'];
             }
 
-            this.getTreeEl().tree(treeData)
+            $tree.tree(treeData)
                 .on('tree.load_data', e => this.trigger('tree-load', e.tree_data))
                 .on('tree.move', e => {
                     e.preventDefault();

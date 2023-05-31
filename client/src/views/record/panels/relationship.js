@@ -149,7 +149,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 });
             }
 
-            if (this.defs.select) {
+            if (this.defs.select === true && this.defs.unlinkAll !== false) {
                 this.actionList.push({
                     label: 'unlinkAll',
                     action: 'unlinkAllRelated',
@@ -498,6 +498,41 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             }.bind(this));
         },
 
+        actionCreateRelated: function (data) {
+            data = data || {};
+
+            let link = data.link;
+            let scope = this.model.defs['links'][link].entity;
+            let foreignLink = this.model.defs['links'][link].foreign;
+
+            this.model.defs['_relationName'] = link;
+
+            let viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
+
+            let attributes = {};
+            this.model.trigger('prepareAttributesForCreateRelated', attributes, link, preparedAttributes => {
+                attributes = preparedAttributes;
+            });
+
+            this.notify('Loading...');
+            this.createView('quickCreate', viewName, {
+                scope: scope,
+                relate: {
+                    model: this.model,
+                    link: foreignLink,
+                },
+                attributes: attributes,
+            }, view => {
+                view.render();
+                view.notify(false);
+                this.listenToOnce(view, 'after:save', () => {
+                    this.model.trigger('updateRelationshipPanel', link);
+                    this.collection.fetch();
+                    this.model.trigger('after:relate', link);
+                });
+            });
+        },
+
         actionEditRelated: function (data) {
             var id = data.id;
             var scope = this.collection.get(id).name;
@@ -598,13 +633,14 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 message = scopeMessage;
             }
 
+            let model = this.collection.get(id);
+
             let parts = message.split('.');
 
             this.confirm({
-                message: this.translate(parts.pop(), parts.pop(), parts.pop()),
+                message: (this.translate(parts.pop(), parts.pop(), parts.pop())).replace('{{name}}', model.get('name')),
                 confirmText: this.translate('Remove')
             }, () => {
-                let model = this.collection.get(id);
                 this.notify('removing');
                 model.destroy({
                     success: () => {

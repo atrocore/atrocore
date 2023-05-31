@@ -76,13 +76,19 @@ Espo.define('views/fields/colored-multi-enum', ['views/fields/multi-enum', 'view
         },
 
         setColors() {
-            let value = this.$element.val();
-            let values = value.split(':,:');
-            if (values.length) {
-                values.forEach(item => {
-                    let internalValue = item.replace(/-quote-/g, '"').replace(/-backslash-/g, '\\');
-                    this.$el.find(`[data-value='${item}']`).css(this.getFieldStyles(internalValue));
-                });
+            let value = '';
+            if (this.$element) {
+                value = this.$element.val();
+            }
+
+            if (value) {
+                let values = value.split(':,:');
+                if (values.length) {
+                    values.forEach(item => {
+                        let internalValue = item.replace(/-quote-/g, '"').replace(/-backslash-/g, '\\');
+                        this.$el.find(`[data-value='${item}']`).css(this.getFieldStyles(internalValue));
+                    });
+                }
             }
         },
 
@@ -106,7 +112,8 @@ Espo.define('views/fields/colored-multi-enum', ['views/fields/multi-enum', 'view
         },
 
         getBackgroundColor(fieldValue) {
-            let options = this.model.getFieldParam(this.name, 'options') || [];
+            let options = this.model.getFieldParam(this.name, 'options') || this.params.options || [];
+            let optionColors = this.model.getFieldParam(this.name, 'optionColors') || this.params.optionColors || [];
 
             let key = 0;
             options.forEach(function (item, k) {
@@ -118,10 +125,12 @@ Espo.define('views/fields/colored-multi-enum', ['views/fields/multi-enum', 'view
                 }
             });
 
-            let color = ((this.model.getFieldParam(this.name, 'optionColors') || {})[key] || this.defaultBackgroundColor);
-            color = color.replace(/^(#+)/, '');
+            let color = (optionColors[key] || this.defaultBackgroundColor);
+            if (color.indexOf('#') < 0) {
+                color = '#' + color;
+            }
 
-            return '#' + color;
+            return color;
         },
 
     });

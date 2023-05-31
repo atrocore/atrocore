@@ -218,7 +218,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
 
             if (this.isRendered()) {
                 this.$el.find('[data-action="switchViewMode"]').removeClass('active');
-                this.$el.find('[data-action="switchViewMode"][data-name="'+mode+'"]').addClass('active');
+                this.$el.find('[data-action="switchViewMode"][data-name="' + mode + '"]').addClass('active');
             } else {
                 if (this.isBeingRendered() && !preventLoop) {
                     this.once('after:render', function () {
@@ -349,13 +349,13 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 this.$el.find('ul.filter-list li[data-name="' + name.split('-')[0] + '"]').removeClass('hide');
                 var container = this.getView('filter-' + name).$el.closest('div.filter');
 
-                if (!(name in this.pinned) || this.pinned[name] === false) {
-                    this.clearView('filter-' + name);
-                    container.remove();
-                    delete this.advanced[name];
-                    this.presetName = this.primary;
-                } else {
-                    this.getView('filter-' + name).getView('field').clearSearch();
+                this.clearView('filter-' + name);
+                container.remove();
+                delete this.advanced[name];
+                this.presetName = this.primary;
+
+                if (name in this.pinned) {
+                    delete this.pinned[name];
                 }
 
                 this.updateAddFilterButton();
@@ -368,6 +368,8 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 this.setupOperatorLabels();
                 this.toggleResetVisibility();
                 this.toggleFilterActionsVisibility();
+
+                this.search();
             },
             'keypress .field input[type="text"]': function (e) {
                 if (e.keyCode === 13) {
@@ -383,7 +385,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
             }
         },
 
-        addFilter(name, params) {
+        addFilter(name, params, callback) {
             var nameCount = 1;
             var getLastIndexName = function () {
                 if (this.advanced.hasOwnProperty(name + '-' + nameCount)) {
@@ -403,6 +405,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 this.fetch();
                 this.updateSearch();
                 this.setupOperatorLabels();
+                if (typeof callback === 'function') callback()
             }.bind(this));
             this.updateAddFilterButton();
             this.handleLeftDropdownVisibility();
@@ -435,7 +438,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
         toggleFilterActionsVisibility() {
             let $filterActions = this.$el.find(`.filter-actions`);
 
-            if(!$filterActions.length) {
+            if (!$filterActions.length) {
                 return;
             }
 
@@ -476,9 +479,25 @@ Espo.define('views/record/search', 'view', function (Dep) {
             var isPreset = !(this.primary === this.presetName);
 
             if (forceClearAdvancedFilters || wasPreset || isPreset || Object.keys(advanced).length) {
-                if (Object.keys(this.pinned).length === 0) {
-                    this.removeFilters();
-                    this.advanced = advanced;
+                // pinned and unpinned objects
+                const unpinned = {}
+                const pinned = {}
+                Object.keys(this.advanced).forEach((key) => {
+                    if (this.pinned[key]) pinned[key] = this.advanced[key]
+                    else unpinned[key] = this.advanced[key]
+                })
+
+                Object.keys(unpinned).forEach((name) => {
+                    // remove filters from interface
+                    var container = this.getView('filter-' + name).$el.closest('div.filter');
+                    this.clearView('filter-' + name);
+                    container.remove();
+                })
+
+                this.advanced = pinned
+                if (isPreset) {
+                    // complete the list of filter
+                    this.advanced = _.extend(Espo.Utils.clone(advanced), pinned);
                 }
             }
 
@@ -509,6 +528,12 @@ Espo.define('views/record/search', 'view', function (Dep) {
 
         resetFilters: function () {
             this.trigger('reset');
+
+            for (let field in this.advanced) {
+                this.getView('filter-' + field).getView('field').clearSearch();
+            }
+
+            this.fetch();
             this.silentResetFilters();
         },
 
@@ -731,9 +756,9 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 cursor = 'default';
             }
 
-            var barContentHtml = '<'+tag+' href="javascript:" style="cursor: '+cursor+';" class="label label-'+style+'" data-action="'+action+'">' + label + '</'+tag+'>';
+            var barContentHtml = '<' + tag + ' href="javascript:" style="cursor: ' + cursor + ';" class="label label-' + style + '" data-action="' + action + '">' + label + '</' + tag + '>';
             if (id) {
-                barContentHtml += ' <a href="javascript:" title="'+this.translate('Remove')+'" class="small" data-action="removePreset" data-id="'+id+'"><span class="fas fa-times"></span></a>';
+                barContentHtml += ' <a href="javascript:" title="' + this.translate('Remove') + '" class="small" data-action="removePreset" data-id="' + id + '"><span class="fas fa-times"></span></a>';
             }
             barContentHtml = '<span style="margin-right: 10px;">' + barContentHtml + '</span>'
 
@@ -808,7 +833,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
 
             presetName = presetName || '';
 
-            this.$el.find('ul.filter-menu a.preset[data-name="'+presetName+'"]').prepend('<span class="fas fa-check pull-right"></span>');
+            this.$el.find('ul.filter-menu a.preset[data-name="' + presetName + '"]').prepend('<span class="fas fa-check pull-right"></span>');
         },
 
         manageBoolFilters() {
@@ -851,6 +876,14 @@ Espo.define('views/record/search', 'view', function (Dep) {
         },
 
         updateCollection() {
+            let advanced = {};
+            for (let field in this.advanced) {
+                if (!('value' in this.advanced[field]) || ![null, ''].includes(this.advanced[field].value) || 'subQuery' in this.advanced[field] || this.pinned[field]) {
+                    advanced[field] = this.advanced[field];
+                }
+            }
+            this.searchManager.set(_.extend(this.searchManager.get(), {advanced: advanced}));
+
             this.collection.reset();
             this.notify('Please wait...');
             this.listenTo(this.collection, 'sync', function () {
@@ -887,16 +920,16 @@ Espo.define('views/record/search', 'view', function (Dep) {
             this.collection.fetch().then(() => Backbone.trigger('after:search', this.collection));
         },
 
-		getPresetFilterList: function () {
-			var arr = [];
+        getPresetFilterList: function () {
+            var arr = [];
             this.presetFilterList.forEach(function (item) {
-            	if (typeof item == 'string') {
-            		item = {name: item};
-            	}
-            	arr.push(item);
+                if (typeof item == 'string') {
+                    item = {name: item};
+                }
+                arr.push(item);
             }, this);
             return arr;
-		},
+        },
 
         getPresetData: function () {
             var data = {};

@@ -94,8 +94,6 @@ Espo.define('views/admin/dynamic-logic/conditions/not', 'views/admin/dynamic-log
 
             var value = view.fetch();
 
-            console.log(value);
-
             return {
                 type: this.operator,
                 value: value

@@ -168,12 +168,14 @@ class EntityCollection implements \Iterator, \Countable, \ArrayAccess, \Seekable
     {
         $entity = $this->entityFactory->create($this->entityName);
         if ($entity) {
+            $entity->rowData = $dataArray;
             $entity->set($dataArray);
             if ($this->isFetched) {
                 $entity->setAsFetched();
             }
-            return $entity;
         }
+
+        return $entity;
     }
 
     public function getEntityName()

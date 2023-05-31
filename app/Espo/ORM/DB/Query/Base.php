@@ -135,13 +135,14 @@ abstract class Base
         $this->pdo = $pdo;
     }
 
-    protected function getSeed($entityType)
+    public function getSeed($entityType)
     {
         if (empty($this->seedCache[$entityType])) {
             $this->seedCache[$entityType] = $this->entityFactory->create($entityType);
         }
         return $this->seedCache[$entityType];
     }
+
 
     public function createSelectQuery($entityType, array $params = array(), $deleted = false)
     {
@@ -689,7 +690,7 @@ abstract class Base
             return $this->fieldsMapCache[$field];
 
         } else {
-            $field[0] = strtolower($field[0]);
+            $field = lcfirst($field);
             $dbField = preg_replace_callback('/([A-Z])/', array($this, 'toDbConversion'), $field);
 
             $this->fieldsMapCache[$field] = $dbField;

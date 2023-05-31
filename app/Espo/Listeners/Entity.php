@@ -37,26 +37,14 @@ namespace Espo\Listeners;
 
 use Espo\Core\EventManager\Event;
 use Espo\Hooks\Common;
-use Espo\ORM\Entity as OrmEntity;
 
-/**
- * Class Entity
- */
 class Entity extends AbstractListener
 {
-    /**
-     * @param Event $event
-     */
-    public function beforeSave(Event $event)
+    public function beforeSave(Event $event): void
     {
-        // delegate an event
         $this->dispatch($event->getArgument('entityType') . 'Entity', 'beforeSave', $event);
 
-        // call multi-lang event
-        $this->multiLang($event);
-
-        // call hooks
-        if (empty($event->getArgument('hooksDisabled')) && empty($event->getArgument('options')['skipHooks'])) {
+        if (empty($event->getArgument('hooksDisabled')) && empty($event->getArgument('options')['skipHooks']) && empty($GLOBALS['skipHooks'])) {
             $this
                 ->createHook(Common\CurrencyConverted::class)
                 ->beforeSave($event->getArgument('entity'), $event->getArgument('options'));
@@ -69,16 +57,11 @@ class Entity extends AbstractListener
         }
     }
 
-    /**
-     * @param Event $event
-     */
-    public function afterSave(Event $event)
+    public function afterSave(Event $event): void
     {
-        // delegate an event
         $this->dispatch($event->getArgument('entityType') . 'Entity', 'afterSave', $event);
 
-        // call hooks
-        if (empty($event->getArgument('hooksDisabled')) && empty($event->getArgument('options')['skipHooks'])) {
+        if (empty($event->getArgument('hooksDisabled')) && empty($event->getArgument('options')['skipHooks']) && empty($GLOBALS['skipHooks'])) {
             $this
                 ->createHook(Common\Stream::class)
                 ->afterSave($event->getArgument('entity'), $event->getArgument('options'));
@@ -88,70 +71,43 @@ class Entity extends AbstractListener
         }
     }
 
-    /**
-     * @param Event $event
-     */
-    public function beforeRemove(Event $event)
+    public function beforeRemove(Event $event): void
     {
         // delegate an event
         $this->dispatch($event->getArgument('entityType') . 'Entity', 'beforeRemove', $event);
     }
 
-    /**
-     * @param Event $event
-     */
-    public function afterRemove(Event $event)
+    public function afterRemove(Event $event): void
     {
-        // delegate an event
         $this->dispatch($event->getArgument('entityType') . 'Entity', 'afterRemove', $event);
 
-        // call hooks
-        if (empty($event->getArgument('hooksDisabled')) && empty($event->getArgument('options')['skipHooks'])) {
+        if (empty($event->getArgument('hooksDisabled')) && empty($event->getArgument('options')['skipHooks']) && empty($GLOBALS['skipHooks'])) {
             $this
                 ->createHook(Common\Stream::class)
                 ->afterRemove($event->getArgument('entity'), $event->getArgument('options'));
         }
     }
 
-    /**
-     * @param Event $event
-     */
-    public function beforeMassRelate(Event $event)
+    public function beforeMassRelate(Event $event): void
     {
-        // delegate an event
         $this->dispatch($event->getArgument('entityType') . 'Entity', 'beforeMassRelate', $event);
     }
 
-    /**
-     * @param Event $event
-     */
-    public function afterMassRelate(Event $event)
+    public function afterMassRelate(Event $event): void
     {
-        // delegate an event
         $this->dispatch($event->getArgument('entityType') . 'Entity', 'afterMassRelate', $event);
     }
 
-    /**
-     * @param Event $event
-     *
-     * @throws \Espo\Core\Exceptions\Error
-     */
-    public function beforeRelate(Event $event)
+    public function beforeRelate(Event $event): void
     {
-        // delegate an event
         $this->dispatch($event->getArgument('entityType') . 'Entity', 'beforeRelate', $event);
     }
 
-    /**
-     * @param Event $event
-     */
-    public function afterRelate(Event $event)
+    public function afterRelate(Event $event): void
     {
-        // delegate an event
         $this->dispatch($event->getArgument('entityType') . 'Entity', 'afterRelate', $event);
 
-        // call hooks
-        if (empty($event->getArgument('hooksDisabled')) && empty($event->getArgument('options')['skipHooks'])) {
+        if (empty($event->getArgument('hooksDisabled')) && empty($event->getArgument('options')['skipHooks']) && empty($GLOBALS['skipHooks'])) {
             $this
                 ->createHook(Common\Stream::class)
                 ->afterRelate(
@@ -162,25 +118,16 @@ class Entity extends AbstractListener
         }
     }
 
-    /**
-     * @param Event $event
-     */
-    public function beforeUnrelate(Event $event)
+    public function beforeUnrelate(Event $event): void
     {
-        // delegate an event
         $this->dispatch($event->getArgument('entityType') . 'Entity', 'beforeUnrelate', $event);
     }
 
-    /**
-     * @param Event $event
-     */
-    public function afterUnrelate(Event $event)
+    public function afterUnrelate(Event $event): void
     {
-        // delegate an event
         $this->dispatch($event->getArgument('entityType') . 'Entity', 'afterUnrelate', $event);
 
-        // call hooks
-        if (empty($event->getArgument('hooksDisabled')) && empty($event->getArgument('options')['skipHooks'])) {
+        if (empty($event->getArgument('hooksDisabled')) && empty($event->getArgument('options')['skipHooks']) && empty($GLOBALS['skipHooks'])) {
             $this
                 ->createHook(Common\Stream::class)
                 ->afterUnrelate(
@@ -191,64 +138,9 @@ class Entity extends AbstractListener
         }
     }
 
-    /**
-     * @param string $target
-     * @param string $action
-     * @param Event  $event
-     */
-    protected function dispatch(string $target, string $action, Event $event)
+    protected function dispatch(string $target, string $action, Event $event): void
     {
         $this->getContainer()->get('eventManager')->dispatch($target, $action, $event);
-    }
-
-    /**
-     * @param Event $event
-     */
-    protected function multiLang(Event $event)
-    {
-        /** @var OrmEntity $entity */
-        $entity = $event->getArgument('entity');
-
-        // get fields
-        $fields = $this->getContainer()->get('metadata')->get(['entityDefs', $entity->getEntityType(), 'fields'], []);
-
-        foreach ($fields as $field => $data) {
-            if ($data['type'] == 'enum' && !empty($data['isMultilang']) && $entity->isAttributeChanged($field)) {
-                // find key
-                $key = array_search($entity->get($field), $data['options']);
-                foreach ($fields as $mField => $mData) {
-                    if (isset($mData['multilangField']) && $mData['multilangField'] == $field) {
-                        if ($entity->get($field) == '') {
-                            $value = $entity->get($field);
-                        } elseif (isset($mData['options'][$key])) {
-                            $value = $mData['options'][$key];
-                        }
-
-                        if (isset($value)) {
-                            $entity->set($mField, $value);
-                        }
-                    }
-                }
-            }
-
-            if ($data['type'] == 'multiEnum' && !empty($data['isMultilang']) && $entity->isAttributeChanged($field)) {
-                $keys = [];
-                if (!empty($data['options'])) {
-                    foreach ($entity->get($field) as $value) {
-                        $keys[] = array_search($value, $data['options']);
-                    }
-                }
-                foreach ($fields as $mField => $mData) {
-                    if (isset($mData['multilangField']) && $mData['multilangField'] == $field) {
-                        $values = [];
-                        foreach ($keys as $key) {
-                            $values[] = $mData['options'][$key];
-                        }
-                        $entity->set($mField, $values);
-                    }
-                }
-            }
-        }
     }
 
     /**
@@ -275,19 +167,11 @@ class Entity extends AbstractListener
      */
     private function findForeignEntity(string $entity, string $relationName, string $id)
     {
-        $foreignEntityName = $this
-            ->getContainer()
-            ->get('metadata')
-            ->get(['entityDefs', $entity, 'links', $relationName, 'entity']);
+        $foreignEntityName = $this->getMetadata()->get(['entityDefs', $entity, 'links', $relationName, 'entity']);
 
         return (!empty($foreignEntityName)) ? $this->getEntityManager()->getEntity($foreignEntityName, $id) : null;
     }
 
-    /**
-     * @param Event $event
-     *
-     * @return array
-     */
     private function getHookRelationData(Event $event): array
     {
         // prepare foreign

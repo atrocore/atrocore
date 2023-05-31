@@ -135,7 +135,7 @@ Espo.define('views/fields/unit', 'views/fields/float',
                 return true;
             }
 
-            return this.model.get(this.name) && !this.$unit.val();
+            return this.model.get(this.name) && this.$unit && !this.$unit.val();
         },
 
         afterRender: function () {
@@ -219,13 +219,19 @@ Espo.define('views/fields/unit', 'views/fields/float',
         },
 
         fetch: function () {
+            let value = null;
+            if (this.$element) {
+                value = this.parse(this.$element.val());
+            }
+
+            let unit = null;
+            if (this.$unit) {
+                unit = this.$unit.val();
+            }
+
             let data = {};
-
-            let value = this.$element.val();
-            value = this.parse(value);
-
             data[this.name] = value;
-            data[this.unitFieldName] = this.$unit.val();
+            data[this.unitFieldName] = unit;
 
             return data;
         },

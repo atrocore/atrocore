@@ -35,15 +35,15 @@ namespace Espo\ORM;
 
 class EntityFactory
 {
-    protected $metadata;
-
-    protected $entityManager;
+    protected EntityManager $entityManager;
+    protected Metadata $metadata;
 
     public function __construct(EntityManager $entityManager, Metadata $metadata)
     {
         $this->entityManager = $entityManager;
         $this->metadata = $metadata;
     }
+
     public function create($name)
     {
         $className = $this->entityManager->normalizeEntityName($name);
@@ -54,9 +54,17 @@ class EntityFactory
         if (is_null($defs)) {
             return null;
         }
-        $entity = new $className($defs, $this->entityManager);
-        return $entity;
+
+        return new $className($defs, $this->entityManager);
     }
 
-}
+    public function getEntityManager(): EntityManager
+    {
+        return $this->entityManager;
+    }
 
+    public function getMetadata(): Metadata
+    {
+        return $this->metadata;
+    }
+}

@@ -44,11 +44,9 @@ use Espo\Orm\EntityManager;
 use Espo\Repositories\QueueItem as Repository;
 use Espo\Services\QueueManagerServiceInterface;
 
-/**
- * Class QueueManager
- */
 class QueueManager extends Injectable
 {
+    const QUEUE_DIR_PATH = 'data/queue';
     const FILE_PATH = 'data/queue-exist.log';
 
     public function __construct()
@@ -56,21 +54,9 @@ class QueueManager extends Injectable
         $this->addDependency('container');
     }
 
-    /**
-     * @param int $stream
-     *
-     * @return bool
-     * @throws Error
-     */
     public function run(int $stream): bool
     {
-        $result = $this->runJob($stream);
-
-        if ($this->getRepository()->isQueueEmpty() && file_exists(self::FILE_PATH)) {
-            unlink(self::FILE_PATH);
-        }
-
-        return $result;
+        return $this->runJob($stream);
     }
 
     public function push(string $name, string $serviceName, array $data = [], string $priority = 'Normal', string $md5Hash = ''): bool
@@ -97,8 +83,6 @@ class QueueManager extends Injectable
         $item->set('message', null);
         $item->set('stream', null);
         $this->getEntityManager()->saveEntity($item);
-
-        file_put_contents(self::FILE_PATH, '1');
 
         return true;
     }
@@ -136,23 +120,15 @@ class QueueManager extends Injectable
             }
         }
 
-        $this->getEntityManager()->saveEntity($item, ['skipAll' => true]);
+        $this->getEntityManager()->saveEntity($item);
 
         foreach ($user->get('teams')->toArray() as $row) {
             $repository->relate($item, 'teams', $row['id']);
         }
 
-        file_put_contents(self::FILE_PATH, '1');
-
         return $item->get('id');
     }
 
-    /**
-     * @param string $serviceName
-     *
-     * @return bool
-     * @throws Error
-     */
     protected function isService(string $serviceName): bool
     {
         if (!$this->getServiceFactory()->checkExists($serviceName)) {
@@ -166,28 +142,70 @@ class QueueManager extends Injectable
         return true;
     }
 
-    /**
-     * @param int $stream
-     *
-     * @return bool
-     * @throws Error
-     */
+    protected function getItemId(): ?string
+    {
+        $queueDir = self::QUEUE_DIR_PATH;
+        if (!file_exists($queueDir)) {
+            return null;
+        }
+
+        $dirs = scandir($queueDir);
+
+        // exit if there are no dirs in queue dir
+        if (!array_key_exists(2, $dirs)) {
+            return null;
+        }
+
+        foreach ($dirs as $dirName) {
+            if (in_array($dirName, ['.', '..'])) {
+                continue;
+            }
+
+            if (!is_dir("$queueDir/$dirName")) {
+                unlink("$queueDir/$dirName");
+                continue;
+            }
+
+            $files = scandir("$queueDir/$dirName");
+
+            // exit if there are no files in dir
+            if (!array_key_exists(2, $files)) {
+                continue;
+            }
+
+            foreach ($files as $file) {
+                if (in_array($file, ['.', '..'])) {
+                    continue;
+                }
+
+                $itemId = file_get_contents("$queueDir/$dirName/$file");
+                unlink("$queueDir/$dirName/$file");
+
+                return $itemId;
+            }
+        }
+
+        return null;
+    }
+
     protected function runJob(int $stream): bool
     {
-        if ($this->getRepository()->isQueueEmpty()) {
+        $itemId = $this->getItemId();
+        if (empty($itemId)) {
             return false;
         }
 
-        if (!empty($item = $this->getRepository()->getRunningItemForStream($stream))) {
-            $this->setStatus($item, 'Failed');
-            $GLOBALS['log']->error("QM failed: The item '{$item->get('id')}' was not completed in the previous run.");
-            return false;
-        }
-
-        $item = $this->getRepository()->getPendingItemForStream($stream);
-
-        if (empty($item)) {
-            return false;
+        /**
+         * Trying to find needed job in 10 sec, because DB could create job too long
+         */
+        $count = 0;
+        while (empty($item = $this->getRepository()->get($itemId))) {
+            $count++;
+            if ($count === 10) {
+                $GLOBALS['log']->error("QM failed: No such QM item '$itemId' in DB.");
+                return false;
+            }
+            sleep(1);
         }
 
         // auth
@@ -255,25 +273,16 @@ class QueueManager extends Injectable
         $this->getEntityManager()->saveEntity($item);
     }
 
-    /**
-     * @return EntityManager
-     */
     protected function getEntityManager(): EntityManager
     {
         return $this->getContainer()->get('entityManager');
     }
 
-    /**
-     * @return ServiceFactory
-     */
     protected function getServiceFactory(): ServiceFactory
     {
         return $this->getContainer()->get('serviceFactory');
     }
 
-    /**
-     * @return Container
-     */
     protected function getContainer(): Container
     {
         return $this->getInjection('container');

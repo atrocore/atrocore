@@ -36,21 +36,25 @@ Espo.define('views/fields/range-float', ['views/fields/range-int', 'views/fields
 
         type: 'rangeFloat',
 
-        validations: ['required', 'float', 'range', 'order'],
+        setup: function () {
+            Dep.prototype.setup.call(this);
+            this.validations = ['required', 'float', 'range', 'order'];
+        },
 
         validateFloat: function () {
-            var validate = function (name) {
-                if (isNaN(this.model.get(name))) {
-                    var msg = this.translate('fieldShouldBeFloat', 'messages').replace('{field}', this.getLabelText());
-                    this.showValidationMessage(msg, '[name="'+name+'"]');
-                    return true;
-                }
-            }.bind(this);
+            let validateFromField = Float.prototype.validateFloatByValue.call(this, this.$el.find('[name="' + this.fromField + '"]').val());
+            if (validateFromField.invalid) {
+                this.showValidationMessage(validateFromField.message, '[name="' + this.fromField + '"]');
+                return true;
+            }
 
-            var result = false;
-            result = validate(this.fromField) || result;
-            result = validate(this.toField) || result;
-            return result;
+            let validateToField = Float.prototype.validateFloatByValue.call(this, this.$el.find('[name="' + this.toField + '"]').val());
+            if (validateToField.invalid) {
+                this.showValidationMessage(validateToField.message, '[name="' + this.toField + '"]');
+                return true;
+            }
+
+            return false;
         },
 
         parse: function (value) {
@@ -59,6 +63,15 @@ Espo.define('views/fields/range-float', ['views/fields/range-int', 'views/fields
 
         formatNumber: function (value) {
             return Float.prototype.formatNumber.call(this, value);
+        },
+
+        data: function () {
+            let data = Dep.prototype.data.call(this);
+
+            data.fromValue = isNaN(this.model.get(this.fromField)) ? null : this.formatNumber(this.model.get(this.fromField));
+            data.toValue = isNaN(this.model.get(this.toField)) ? null : this.formatNumber(this.model.get(this.toField));
+
+            return data;
         },
 
     });
