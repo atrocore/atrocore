@@ -54,6 +54,7 @@
     "adminNotificationsNewExtensionVersion": "Показувати повідомлення, коли доступні нові версії розширень",
     "cleanupDeletedRecords": "Очистити видалені записи",
     "isMultilangActive": "Активний",
+    "mainLanguage": "Основна мова",
     "inputLanguageList": "Задати мову",
     "appId": "ID",
     "isStreamSide": "Потік всередині",
@@ -117,19 +118,18 @@
     "Test Connection": "Перевірка з'єднання",
     "Connecting": "Підключення...",
     "Activities": "Дії",
-    "Admin Notifications": "Уведомления админа",
-    "inputLanguage": "Язык ввода",
-    "confirmLocaleChanges": "Если язык удален, все ваши данные, ранее введенные в многоязычные поля для этого языкового стандарта, автоматически удаляются через <a href=\"/#ScheduledJob\" target=\"_blank\">cron job</a>.",
-    "Representation": "Представление",
-    "System Notifications": "Системные уведомления",
-    "notAllowByContent": "Не разрешено, проверка по содержимому файла",
-    "notAllowByName": "Не разрешено, проверка по имени файла",
-    "notAllowByContentAndName": "Не разрешено, проверка по имени файла + содержимому файла",
-    "allow": "Разрешено",
+    "Admin Notifications": "Повідомлення адміну",
+    "confirmLocaleChanges": "Якщо мова видалена, всі ваші дані, раніше введені в багатомовні поля для цього мовного стандарту, автоматично видаляються через <a href=\"/#ScheduledJob\" target=\"_blank\">cron job</a>.",
+    "Representation": "Представлення",
+    "System Notifications": "Системні повідомлення",
+    "notAllowByContent": "Не дозволено, перевірка вмісту файлу",
+    "notAllowByName": "Не дозволено, перевірка на ім'я файлу",
+    "notAllowByContentAndName": "Не дозволено, перевірка на ім'я файлу + вміст файлу",
+    "allow": "Дозволено",
     "SMTP": "SMTP",
-    "Theme Configuration": "Конфигурация темы"
+    "Theme Configuration": "Конфігурація теми"
   },
   "messages": {
-    "languageMustBeSelected": "Минимум один язык должен быть выбран."
+    "languageMustBeSelected": "Мінімум одна мова має бути обрана."
   }
 }

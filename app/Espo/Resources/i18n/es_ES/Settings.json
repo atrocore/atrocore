@@ -116,7 +116,6 @@
     "Connecting": "Conectando...",
     "Activities": "Actividades planeadas",
     "Admin Notifications": "Notificaciones de administrador",
-    "inputLanguage": "Input Language",
     "confirmLocaleChanges": "If the language is removed, all your data previously entered in the multi-language fields for this locale are automatically removed via the <a href=\"/#ScheduledJob\" target=\"_blank\">cron job</a>.",
     "Representation": "Representation",
     "System Notifications": "System Notifications",

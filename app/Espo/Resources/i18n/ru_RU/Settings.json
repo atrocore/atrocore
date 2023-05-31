@@ -118,7 +118,6 @@
     "Connecting": "Подключение...",
     "Activities": "Действия",
     "Admin Notifications": "Уведомления админа",
-    "inputLanguage": "Язык ввода",
     "confirmLocaleChanges": "Если язык удален, все ваши данные, ранее введенные в многоязычные поля для этого языкового стандарта, автоматически удаляются через <a href=\"/#ScheduledJob\" target=\"_blank\">cron job</a>.",
     "Representation": "Представление",
     "System Notifications": "Системные уведомления",

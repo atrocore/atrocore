@@ -199,7 +199,6 @@
   },
   "descriptions": {
     "locale": "Manage locale settings such as language, date and time format, decimal separator, thousand separator, as well as locale-specific measure units.",
-    "inputLanguage": "Activate multilinguality and choose additional languages to manage your data.",
     "multiLanguagesSettings": "Configure additional languages to be used.",
     "composer": "Update the system and all installed modules, install or remove publicly or privately available modules. Module version dependency is automatically considered.",
     "measure": "Manage your measures and measure units, set default measure units and multipliers for automatic measure unit conversion.",

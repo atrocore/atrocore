@@ -3,6 +3,7 @@
     "locale": "Locale",
     "isMultilangActive": "Active",
     "languageList": "Interface Languages",
+    "mainLanguage": "Main Language",
     "inputLanguageList": "Input Languages",
     "appId": "ID",
     "isStreamSide": "Is stream in side",
@@ -112,7 +113,6 @@
     "customStylesheetPath": "Your custom CSS styles will be written to this file. You can make changes in it directly too."
   },
   "labels": {
-    "inputLanguage": "Input Language",
     "confirmLocaleChanges": "If the language is removed, all your data previously entered in the multi-language fields for this locale are automatically removed via the <a href=\"/#ScheduledJob\" target=\"_blank\">cron job</a>.",
     "Representation": "Representation",
     "System Notifications": "System Notifications",

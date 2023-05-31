@@ -35,6 +35,12 @@
       "required": true,
       "view": "views/admin/fields/language-list"
     },
+    "mainLanguage": {
+      "type": "varchar",
+      "default": "en_US",
+      "required": true,
+      "view": "views/admin/fields/input-language-list"
+    },
     "inputLanguageList": {
       "type": "multiEnum",
       "default": [],

@@ -1,10 +1,20 @@
 [
   {
-    "label": "inputLanguage",
+    "label": "Overview",
     "rows": [
       [
-        {"name": "isMultilangActive"},
-        {"name": "inputLanguageList"}
+        {
+          "name": "mainLanguage"
+        },
+        false
+      ],
+      [
+        {
+          "name": "isMultilangActive"
+        },
+        {
+          "name": "inputLanguageList"
+        }
       ]
     ]
   }

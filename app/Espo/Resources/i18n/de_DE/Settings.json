@@ -2,6 +2,7 @@
   "fields": {
     "locale": "Gebietsschema",
     "isMultilangActive": "Aktiv",
+    "mainLanguage": "Hauptsprache",
     "inputLanguageList": "Eingabesprachen",
     "appId": "ID",
     "isStreamSide": "Ist Aktivitätenpanel seitlich platziert",
@@ -98,7 +99,6 @@
     "customStylesheetPath": "Ihre benutzerdefinierten CSS-Stile werden in diese Datei geschrieben. Dort können Sie die Änderungen auch direkt vornehmen."
   },
   "labels": {
-    "inputLanguage": "Spracheingabe",
     "confirmLocaleChanges": "Wenn die Sprache entfernt wird, werden alle Daten, die Sie zuvor in die mehrsprachigen Felder für dieses Locale eingegeben haben, automatisch über den <a href=\"/#ScheduledJob\" target=\"_blank\">Cron-Job</a> entfernt.",
     "Admin Notifications": "Admin Notifications",
     "System Notifications": "System-Meldungen",
