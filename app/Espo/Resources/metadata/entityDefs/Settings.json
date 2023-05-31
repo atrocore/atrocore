@@ -39,7 +39,7 @@
       "type": "varchar",
       "default": "en_US",
       "required": true,
-      "view": "views/admin/fields/input-language-list"
+      "view": "views/admin/fields/main-language"
     },
     "inputLanguageList": {
       "type": "multiEnum",

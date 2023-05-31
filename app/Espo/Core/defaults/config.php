@@ -124,6 +124,7 @@ return [
     'cronMassUpdateMax'                     => 3000, // count of max massUpdate items for CRON
     'checkForConflicts'                     => true,
     'localeId'                              => '1',
+    'mainLanguage'                          => 'en_US',
     'whitelistedExtensions' => [
         'aif',
         'cda',

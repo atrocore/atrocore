@@ -180,7 +180,7 @@
   },
   "descriptions": {
     "locale": "Verwalten Sie Gebietsschemaeinstellungen wie Sprache, Datums- und Uhrzeitformat, Dezimaltrennzeichen, Tausendertrennzeichen sowie gebietsschemaspezifische Maßeinheiten.",
-    "multiLanguagesSettings": "Konfigurieren Sie zusätzliche zu verwendende Sprachen.",
+    "multiLanguagesSettings": "Konfigurieren Sie die zu verwendenden Sprachen.",
     "composer": "Aktualisieren Sie das System und alle installierten Module, installieren oder entfernen Sie öffentlich oder privat verfügbare Module. Modulversionsabhängigkeit wird automatisch berücksichtigt.",
     "connection": "Verwalten Sie Verbindungen mit anderen Systemen für einen automatischen Datenaustausch.",
     "measure": "Verwalten Sie Ihre Maße und Maßeinheiten, legen Sie standardmäßige Maßeinheiten und Multiplikatoren für die automatische Umrechnung von Maßeinheiten fest.",

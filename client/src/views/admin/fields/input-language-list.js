@@ -41,6 +41,20 @@ Espo.define('views/admin/fields/input-language-list', 'views/fields/multi-enum',
                 this.defineMode();
                 this.reRender();
             });
+
+            this.listenTo(this.model, 'change:mainLanguage', () => {
+                this.setupOptions();
+
+                let inputLanguageList = [];
+                (this.model.get('inputLanguageList') || []).forEach(locale => {
+                    if (locale !== this.model.get('mainLanguage')) {
+                        inputLanguageList.push(locale);
+                    }
+                })
+                this.model.set('inputLanguageList', inputLanguageList);
+
+                this.reRender();
+            });
         },
 
         defineMode: function () {
@@ -58,8 +72,16 @@ Espo.define('views/admin/fields/input-language-list', 'views/fields/multi-enum',
         },
 
         setupOptions() {
-            this.params.options = Espo.Utils.clone(this.getMetadata().get(['multilang', 'languageList']));
-            this.translatedOptions = Espo.Utils.clone(this.getLanguage().translate('language', 'options') || {});
+            this.params.options = [];
+            this.translatedOptions = {};
+
+            let translatedOptions = this.getLanguage().translate('language', 'options');
+            this.getMetadata().get(['multilang', 'languageList']).forEach(locale => {
+                if (locale !== this.model.get('mainLanguage')) {
+                    this.params.options.push(locale);
+                    this.translatedOptions[locale] = translatedOptions[locale] ?? locale;
+                }
+            });
         },
 
         translate(label, category, scope) {
