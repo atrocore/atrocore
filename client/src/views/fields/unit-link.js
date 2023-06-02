@@ -34,6 +34,8 @@ Espo.define('views/fields/unit-link', 'views/fields/link', Dep => {
 
     return Dep.extend({
 
+        foreignScope: 'Unit',
+
         selectBoolFilterList: ['fromMeasure', 'notConverted'],
 
         boolFilterData: {
