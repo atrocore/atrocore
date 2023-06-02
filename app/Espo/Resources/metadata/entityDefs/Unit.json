@@ -73,7 +73,11 @@
   },
   "collection": {
     "sortBy": "createdAt",
-    "asc": false
+    "asc": false,
+    "textFilterFields": [
+      "name",
+      "code"
+    ]
   },
   "uniqueIndexes": {
     "unique_measure_unit": [
