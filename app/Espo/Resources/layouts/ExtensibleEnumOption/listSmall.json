@@ -8,6 +8,9 @@
     "link": true
   },
   {
+    "name": "code"
+  },
+  {
     "name": "extensibleEnum"
   }
 ]
