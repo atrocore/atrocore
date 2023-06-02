@@ -429,7 +429,7 @@ class Hierarchy extends Record
                 'offset'         => $offset + $k,
                 'total'          => $total,
                 'disabled'       => !in_array($record['id'], $ids),
-                'load_on_demand' => !empty($record['childrenCount'])
+                'load_on_demand' => !empty($record['childrenCount']) && $record['childrenCount'] > 0
             ];
         }
 
