@@ -42,6 +42,9 @@ class V1Dot6Dot0 extends Base
 
     public function up(): void
     {
+        $this->exec("DROP INDEX UNIQ_6598AC4577153098EB3B4E33 ON extensible_enum_option");
+        $this->exec("CREATE UNIQUE INDEX IDX_UNIQUE_OPTION ON extensible_enum_option (deleted, extensible_enum_id, code)");
+
         $this->exec("ALTER TABLE measure DROP code");
         $this->getPDO()->exec("ALTER TABLE measure ADD code VARCHAR(255) DEFAULT NULL UNIQUE COLLATE `utf8mb4_unicode_ci`");
         $this->exec("CREATE UNIQUE INDEX UNIQ_8007192577153098EB3B4E33 ON measure (code, deleted)");

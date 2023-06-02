@@ -5,8 +5,7 @@
       "isMultilang": true
     },
     "code": {
-      "type": "varchar",
-      "unique": true
+      "type": "varchar"
     },
     "extensibleEnum": {
       "type": "link",
@@ -55,6 +54,13 @@
   "collection": {
     "sortBy": "createdAt",
     "asc": false
+  },
+  "uniqueIndexes": {
+    "unique_option": [
+      "deleted",
+      "extensible_enum_id",
+      "code"
+    ]
   },
   "indexes": {
     "createdAt": {
