@@ -94,18 +94,6 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
                 }
             }
 
-            let amountOfDigitsAfterComma = this.params.amountOfDigitsAfterComma || this.model.get('amountOfDigitsAfterComma');
-
-            if (typeof amountOfDigitsAfterComma !== undefined && amountOfDigitsAfterComma) {
-                const decimalPlaces = (value.toString().split(this.decimalMark)[1] || '').length;
-                if (!(decimalPlaces <= amountOfDigitsAfterComma)) {
-                    return {
-                        message: this.translate('fieldShouldBeFloatWithValidDigitAfterComma', 'messages').replace('{amountOfDigitsAfterComma}', amountOfDigitsAfterComma),
-                        invalid: true
-                    };
-                }
-            }
-
             if (invalid) {
                 return {
                     message: this.translate('fieldShouldBeFloat', 'messages').replace('{field}', this.getLabelText()),
