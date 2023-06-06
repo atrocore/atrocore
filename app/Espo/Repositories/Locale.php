@@ -71,15 +71,6 @@ class Locale extends Base
         $this->refreshCache();
     }
 
-    protected function afterUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
-    {
-        parent::afterUnrelate($entity, $relationName, $foreign, $options);
-
-        if ($relationName === 'measures') {
-            $this->refreshCache();
-        }
-    }
-
     protected function init()
     {
         parent::init();

@@ -80,11 +80,6 @@ class Measure extends Base
         return $result;
     }
 
-    public function refreshCache(): void
-    {
-        $this->getInjection('dataManager')->clearCache();
-    }
-
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if ($entity->get('code') === '') {
@@ -128,20 +123,6 @@ class Measure extends Base
         }
 
         parent::beforeRemove($entity, $options);
-    }
-
-    protected function afterSave(Entity $entity, array $options = [])
-    {
-        parent::afterSave($entity, $options);
-
-        $this->refreshCache();
-    }
-
-    protected function afterRemove(Entity $entity, array $options = [])
-    {
-        parent::afterRemove($entity, $options);
-
-        $this->refreshCache();
     }
 
     protected function init()

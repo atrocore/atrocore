@@ -95,15 +95,6 @@ class Unit extends Base
         }
     }
 
-    protected function afterSave(Entity $entity, array $options = [])
-    {
-        parent::afterSave($entity, $options);
-
-        if (empty($options['cascadeChange'])) {
-            $this->getEntityManager()->getRepository('Measure')->refreshCache();
-        }
-    }
-
     protected function beforeRemove(Entity $entity, array $options = [])
     {
         if ($entity->get('isDefault') && empty($options['skipIsDefaultValidation'])) {
@@ -132,8 +123,6 @@ class Unit extends Base
             $unit->set('convertToId', null);
             $this->getEntityManager()->saveEntity($unit, ['cascadeChange' => true]);
         }
-
-        $this->getEntityManager()->getRepository('Measure')->refreshCache();
     }
 
     protected function init()
