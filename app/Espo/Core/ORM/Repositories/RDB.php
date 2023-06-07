@@ -312,7 +312,8 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $this->validateRangeValue($entity, $fieldName, $fieldData);
 
         if (isset($fieldData['amountOfDigitsAfterComma'])) {
-            $this->checkAmountOfDigitsAfterComma($entity->get($fieldName), $fieldData['amountOfDigitsAfterComma']);
+            $roundValue = $this->roundValueUsingAmountOfDigitsAfterComma($entity->get($fieldName), $fieldData['amountOfDigitsAfterComma']);
+            $entity->set($fieldName, (string)$roundValue);
         }
     }
 
@@ -378,19 +379,15 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
     }
 
-    protected function checkAmountOfDigitsAfterComma($value, $amountOfDigitsAfterComma): void
+    protected function roundValueUsingAmountOfDigitsAfterComma($value, $amountOfDigitsAfterComma)
     {
         if(empty($value) || empty($amountOfDigitsAfterComma)){
-            return;
+            return $value;
         }
 
-        $floatParts = explode('.', (string)$value);
-        if(count($floatParts) === 2 && (strlen($floatParts[1]) > (int)$amountOfDigitsAfterComma)){
-            throw new BadRequest(sprintf(
-                $this->getLanguage()->translate('maximumOfDigitsAfterCommaInvalid', 'exceptions', 'Global'),
-                $amountOfDigitsAfterComma
-            ));
-        }
+        $roundedValue = number_format((float)$value, $amountOfDigitsAfterComma, '.', '');
+
+        return (float)$roundedValue;
     }
 
     protected function validateVarchar(Entity $entity, string $fieldName, array $fieldData): void
