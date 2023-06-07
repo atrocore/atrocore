@@ -879,7 +879,6 @@
   "exceptions": {
     "fieldIsRequired": "Validation failed. '%s' is required.",
     "urlIsInvalid": "URL is invalid",
-    "maximumOfDigitsAfterCommaInvalid": "El máximo de dígitos después de la coma es %s",
     "suchUrlExists": "Such URL is already exists",
     "siteUrlEmpty": "Site URL is empty",
     "codeInvalid": "Code is invalid. Code should be unique. Only letters, numbers and char \"_\" expected.",

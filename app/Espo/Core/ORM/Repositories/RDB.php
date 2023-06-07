@@ -276,7 +276,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
 
         if (isset($fieldData['amountOfDigitsAfterComma'])) {
-            $roundValue = $this->RoundValueUsingAmountOfDigitsAfterComma($entity->get($fieldName), $fieldData['amountOfDigitsAfterComma']);
+            $roundValue = $this->roundValueUsingAmountOfDigitsAfterComma($entity->get($fieldName), $fieldData['amountOfDigitsAfterComma']);
             $entity->set($fieldName, (string)$roundValue);
         }
     }
@@ -357,11 +357,11 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
 
         if (isset($fieldData['amountOfDigitsAfterComma'])) {
-            $value = $this->RoundValueUsingAmountOfDigitsAfterComma($value, $fieldData['amountOfDigitsAfterComma']);
+            $value = $this->roundValueUsingAmountOfDigitsAfterComma($value, $fieldData['amountOfDigitsAfterComma']);
         }
     }
 
-    protected function RoundValueUsingAmountOfDigitsAfterComma($value, $amountOfDigitsAfterComma)
+    protected function roundValueUsingAmountOfDigitsAfterComma($value, $amountOfDigitsAfterComma)
     {
         if(empty($value) || empty($amountOfDigitsAfterComma)){
             return $value;
