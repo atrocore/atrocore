@@ -311,9 +311,9 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
         $this->validateRangeValue($entity, $fieldName, $fieldData);
 
-        if (isset($fieldData['amountOfDigitsAfterComma'])) {
+        if (isset($fieldData['amountOfDigitsAfterComma']) && !empty($entity->get($fieldName))) {
             $roundValue = $this->roundValueUsingAmountOfDigitsAfterComma($entity->get($fieldName), $fieldData['amountOfDigitsAfterComma']);
-            $entity->set($fieldName, (string)$roundValue);
+            $entity->set($fieldName, (float)$roundValue);
         }
     }
 
