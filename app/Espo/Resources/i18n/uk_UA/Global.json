@@ -965,7 +965,6 @@
     "noOptionsDefined": "Опції для поля '%s' не задані.",
     "fieldIsRequired": "Перевірка не вдалася. '%s' необхідний.",
     "urlIsInvalid": "URL неправильний",
-    "maximumOfDigitsAfterCommaInvalid": "Максимальна кількість цифр після коми %s",
     "suchUrlExists": "Такий URL вже існує",
     "siteUrlEmpty": "URL сайту порожній",
     "codeInvalid": "Код недійсний. Код має бути унікальним. Очікуються лише літери, цифри та символи \"_\" .",
