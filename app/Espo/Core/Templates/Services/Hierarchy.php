@@ -414,7 +414,7 @@ class Hierarchy extends Record
         }
 
         $offset = $params['offset'];
-        $total = $this->getRepository()->getChildrenCount($parentId,$selectParams);
+        $total = $this->getRepository()->getChildrenCount($parentId, $selectParams);
         $ids = [];
         foreach ($this->getRepository()->where(['id' => array_column($records, 'id')])->find() as $entity) {
             if ($this->getAcl()->check($entity, 'read')) {
@@ -424,17 +424,17 @@ class Hierarchy extends Record
 
         foreach ($records as $k => $record) {
             $result[] = [
-                'id'             => $record['id'],
-                'name'           => $record['name'],
-                'offset'         => $offset + $k,
-                'total'          => $total,
-                'disabled'       => !in_array($record['id'], $ids),
+                'id' => $record['id'],
+                'name' => $record['name'],
+                'offset' => $offset + $k,
+                'total' => $total,
+                'disabled' => !in_array($record['id'], $ids),
                 'load_on_demand' => !empty($record['childrenCount']) && $record['childrenCount'] > 0
             ];
         }
 
         return [
-            'list'  => $result,
+            'list' => $result,
             'total' => $total
         ];
     }

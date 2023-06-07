@@ -282,9 +282,17 @@ class Hierarchy extends RDB
 
     public function getChildrenArray(string $parentId, bool $withChildrenCount = true, int $offset = null, $maxSize = null, $selectParams = null): array
     {
+        $childWhere = "";
+        if ($selectParams) {
+            $childWhere = $this->getMapper()->getWhereQuery($this->entityType, $selectParams['whereClause']);
+            if (!empty($childWhere)) {
+                $childWhere = "AND " . str_replace($this->tableName . '.', 'e1.', $childWhere);
+            }
+        }
+
         $select = 'e.*';
         if ($withChildrenCount) {
-            $select .= ", (SELECT COUNT(r1.id) FROM `$this->hierarchyTableName` r1 JOIN `$this->tableName` e1 ON e1.id=r1.entity_id WHERE r1.parent_id=e.id AND e1.deleted=0) as childrenCount";
+            $select .= ", (SELECT COUNT(r1.id) FROM `$this->hierarchyTableName` r1 JOIN `$this->tableName` e1 ON e1.id=r1.entity_id WHERE r1.parent_id=e.id AND e1.deleted=0 {$childWhere}) as childrenCount";
         }
 
         $where = "";
