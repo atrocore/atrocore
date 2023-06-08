@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -31,36 +30,27 @@
  * and "AtroCore" word.
  */
 
-declare(strict_types=1);
+Espo.define('views/extensible-enum-option/fields/name', 'views/fields/varchar', Dep => {
 
-namespace Espo\Services;
+    return Dep.extend({
 
-use Espo\Core\Templates\Services\Base;
-use Espo\ORM\Entity;
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
 
-class ExtensibleEnumOption extends Base
-{
-    protected $mandatorySelectAttributeList = ['extensibleEnumId'];
+            this.checkVisibility();
+        },
 
-    public function updateEntity($id, $data)
-    {
-        if (property_exists($data, '_sortedIds') && !empty($data->_sortedIds)) {
-            $this->getRepository()->updateSortOrder($data->_sortedIds);
-            return $this->getEntity($id);
-        }
-
-        return parent::updateEntity($id, $data);
-    }
-
-    public function prepareEntityForOutput(Entity $entity)
-    {
-        parent::prepareEntityForOutput($entity);
-
-        if (!empty($entity->get('extensibleEnumId'))) {
-            $extensibleEnum = $this->getEntityManager()->getRepository('ExtensibleEnum')->get($entity->get('extensibleEnumId'));
-            if (!empty($extensibleEnum)) {
-                $entity->set('listMultilingual', !empty($extensibleEnum->get('multilingual')));
+        checkVisibility() {
+            if (!['detail', 'edit'].includes(this.mode)) {
+                return;
             }
-        }
-    }
-}
+
+            if (this.getMetadata().get(['entityDefs', 'ExtensibleEnumOption', 'fields', this.name, 'multilangField']) && !this.model.get('listMultilingual')) {
+                this.$el.parent().hide();
+            } else {
+                this.$el.parent().show();
+            }
+        },
+
+    });
+});
