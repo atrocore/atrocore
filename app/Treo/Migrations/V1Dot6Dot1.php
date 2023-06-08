@@ -31,47 +31,19 @@
  * and "AtroCore" word.
  */
 
-declare(strict_types=1);
+namespace Treo\Migrations;
 
-namespace Espo\Repositories;
+use Treo\Core\Migration\Base;
 
-use Espo\Core\Templates\Repositories\Base;
-use Espo\ORM\Entity;
-
-class ExtensibleEnum extends Base
+class V1Dot6Dot1 extends Base
 {
-    protected function beforeSave(Entity $entity, array $options = [])
+    public function up(): void
     {
-        if ($entity->get('code') === '') {
-            $entity->set('code', null);
-        }
-
-        parent::beforeSave($entity, $options);
-
-        if ($entity->isAttributeChanged('multilingual') && empty($entity->get('multilingual'))) {
-            $this->clearLingualOptions($entity);
-        }
+        $this->getPDO()->exec("ALTER TABLE extensible_enum ADD multilingual TINYINT(1) DEFAULT '1' NOT NULL COLLATE `utf8mb4_unicode_ci`");
     }
 
-    protected function afterRemove(Entity $entity, array $options = [])
+    public function down(): void
     {
-        $this->getEntityManager()->getRepository('ExtensibleEnumOption')->where(['extensibleEnumId' => $entity->get('id')])->removeCollection();
-
-        parent::afterRemove($entity, $options);
-    }
-
-    public function clearLingualOptions(Entity $entity): void
-    {
-        $fields = $this->getEntityManager()->getRepository('ExtensibleEnumOption')->getLingualFields();
-        if (empty($fields)) {
-            return;
-        }
-
-        foreach ($entity->get('extensibleEnumOptions') as $option) {
-            foreach ($fields as $field) {
-                $option->set($field, null);
-            }
-            $this->getEntityManager()->saveEntity($option);
-        }
+        $this->getPDO()->exec("ALTER TABLE extensible_enum DROP multilingual");
     }
 }

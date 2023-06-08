@@ -2,7 +2,21 @@
   "fields": {
     "name": {
       "type": "text",
-      "isMultilang": true
+      "isMultilang": true,
+      "view": "views/extensible-enum-option/fields/name"
+    },
+    "listMultilingual": {
+      "type": "bool",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
     },
     "code": {
       "type": "varchar"

@@ -36,9 +36,12 @@ declare(strict_types=1);
 namespace Espo\Services;
 
 use Espo\Core\Templates\Services\Base;
+use Espo\ORM\Entity;
 
 class ExtensibleEnumOption extends Base
 {
+    protected $mandatorySelectAttributeList = ['extensibleEnumId'];
+
     public function updateEntity($id, $data)
     {
         if (property_exists($data, '_sortedIds') && !empty($data->_sortedIds)) {
@@ -47,5 +50,17 @@ class ExtensibleEnumOption extends Base
         }
 
         return parent::updateEntity($id, $data);
+    }
+
+    public function prepareEntityForOutput(Entity $entity)
+    {
+        parent::prepareEntityForOutput($entity);
+
+        if (!empty($entity->get('extensibleEnumId'))) {
+            $extensibleEnum = $this->getEntityManager()->getRepository('ExtensibleEnum')->get($entity->get('extensibleEnumId'));
+            if (!empty($extensibleEnum)) {
+                $entity->set('listMultilingual', !empty($extensibleEnum->get('multilingual')));
+            }
+        }
     }
 }

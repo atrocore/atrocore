@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -31,47 +30,27 @@
  * and "AtroCore" word.
  */
 
-declare(strict_types=1);
+Espo.define('views/extensible-enum-option/fields/name', 'views/fields/varchar', Dep => {
 
-namespace Espo\Repositories;
+    return Dep.extend({
 
-use Espo\Core\Templates\Repositories\Base;
-use Espo\ORM\Entity;
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
 
-class ExtensibleEnum extends Base
-{
-    protected function beforeSave(Entity $entity, array $options = [])
-    {
-        if ($entity->get('code') === '') {
-            $entity->set('code', null);
-        }
+            this.checkVisibility();
+        },
 
-        parent::beforeSave($entity, $options);
-
-        if ($entity->isAttributeChanged('multilingual') && empty($entity->get('multilingual'))) {
-            $this->clearLingualOptions($entity);
-        }
-    }
-
-    protected function afterRemove(Entity $entity, array $options = [])
-    {
-        $this->getEntityManager()->getRepository('ExtensibleEnumOption')->where(['extensibleEnumId' => $entity->get('id')])->removeCollection();
-
-        parent::afterRemove($entity, $options);
-    }
-
-    public function clearLingualOptions(Entity $entity): void
-    {
-        $fields = $this->getEntityManager()->getRepository('ExtensibleEnumOption')->getLingualFields();
-        if (empty($fields)) {
-            return;
-        }
-
-        foreach ($entity->get('extensibleEnumOptions') as $option) {
-            foreach ($fields as $field) {
-                $option->set($field, null);
+        checkVisibility() {
+            if (!['detail', 'edit'].includes(this.mode)) {
+                return;
             }
-            $this->getEntityManager()->saveEntity($option);
-        }
-    }
-}
+
+            if (this.getMetadata().get(['entityDefs', 'ExtensibleEnumOption', 'fields', this.name, 'multilangField']) && !this.model.get('listMultilingual')) {
+                this.$el.parent().hide();
+            } else {
+                this.$el.parent().show();
+            }
+        },
+
+    });
+});
