@@ -38,7 +38,7 @@ namespace Espo\Core\EventManager;
 /**
  * Class Event
  */
-class Event extends \Treo\Core\EventManager\Event  // \Symfony\Contracts\EventDispatcher\Event
+class Event extends \Symfony\Contracts\EventDispatcher\Event
 {
     /**
      * @var array
