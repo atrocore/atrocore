@@ -39,7 +39,7 @@ use Espo\Core\Container;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Interfaces\Injectable;
 
-class ServiceFactory extends \Treo\Core\ServiceFactory
+class ServiceFactory
 {
     /**
      * @var Container
@@ -64,7 +64,7 @@ class ServiceFactory extends \Treo\Core\ServiceFactory
     public function __construct(Container $container)
     {
         $this->container = $container;
-        $this->classNames = $this->container->get('metadata')->get(['app', 'services'], []);
+        $this->classNames = $this->getMetadata()->get(['app', 'services'], []);
     }
 
     /**
@@ -119,7 +119,7 @@ class ServiceFactory extends \Treo\Core\ServiceFactory
     {
         if (!isset($this->classNames[$name])) {
             /** @var string $module */
-            $module = $this->container->get('metadata')->get(['scopes', $name, 'module'], 'Espo');
+            $module = $this->getMetadata()->get(['scopes', $name, 'module'], 'Espo');
 
             switch ($module) {
                 case 'TreoCore':
@@ -138,5 +138,10 @@ class ServiceFactory extends \Treo\Core\ServiceFactory
         }
 
         return $this->classNames[$name];
+    }
+
+    protected function getMetadata(): \Espo\Core\Utils\Metadata
+    {
+        return $this->container->get('metadata');
     }
 }
