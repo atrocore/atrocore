@@ -73,6 +73,15 @@ class Composer extends \Espo\Core\Templates\Services\HasContainer
         return Json::decode(file_get_contents(self::$composer), true);
     }
 
+    public static function getSettingVersion(array $composerData, string $name): string
+    {
+        if (isset($composerData['require'][$name])) {
+            return ModuleManager::prepareVersion($composerData['require'][$name]);
+        }
+
+        return '';
+    }
+
     /**
      * Set composer.json
      *
@@ -239,6 +248,9 @@ class Composer extends \Espo\Core\Templates\Services\HasContainer
      */
     public function getList(): array
     {
+        // prepare composer data
+        $composerData = self::getComposerJson();
+
         // prepare result
         $result = [
             'total' => 1,
@@ -252,12 +264,10 @@ class Composer extends \Espo\Core\Templates\Services\HasContainer
                     'isSystem'       => true,
                     'isComposer'     => true,
                     'status'         => '',
+                    'settingVersion' => self::getSettingVersion($composerData, 'atrocore/core')
                 ]
             ]
         ];
-
-        // prepare composer data
-        $composerData = self::getComposerJson();
 
         // get diff
         $composerDiff = $this->getComposerDiff();
@@ -273,13 +283,8 @@ class Composer extends \Espo\Core\Templates\Services\HasContainer
                 'isSystem'       => $module->isSystem(),
                 'isComposer'     => !empty($module->getVersion()),
                 'status'         => $this->getModuleStatus($composerDiff, $id),
+                'settingVersion' => self::getSettingVersion($composerData, $module->getComposerName())
             ];
-
-            // set settingVersion
-            if (isset($composerData['require'][$module->getComposerName()])) {
-                $settingVersion = $composerData['require'][$module->getComposerName()];
-                $result['list'][$id]['settingVersion'] = ModuleManager::prepareVersion($settingVersion);
-            }
         }
 
         // for not installed modules

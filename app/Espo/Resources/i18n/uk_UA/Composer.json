@@ -42,24 +42,26 @@
     "version": "Версія",
     "Run Update": "Оновити",
     "updateFailed": "Не вдалося оновити. Неможливо встановити з'єднання з сервером модулів. Будь ласка, повторіть операцію.",
-     "settingModuleForRemoving": "Вибір модуль для видалення...",
-     "setModuleForRemoving": "Модуль вибрано для видалення. Натисніть на кнопку \"Оновити\", щоб застосувати інсталяцію або видалення модулів.",
-     "settingModuleForInstalling": "Вибір модуля для встановлення...",
-     "setModuleForInstalling": "Модуль вибраний для встановлення. Натисніть на кнопку \"Оновити\", щоб застосувати інсталяцію або видалення модулів.",
-     "cancelingModuleInstall": "Скасування установки модуля...",
-     "canceledModuleInstall": "Встановлення модуля скасовано",
-     "Log": "Лог",
-     "confirmRun": "Після дії оновлення всі користувачі будуть вилоговані з системи. Ви впевнені, що хочете оновити систему?",
-     "daemonDisabled": "<b>Демон програми-компонувальника не запущений!</b> <br> Ймовірно, демон зараз перезавантажується, і Вам слід почекати хвилину, або crontab не налаштований. Інструкції з налаштування crontab ви можете знайти <a href= \"https://github.com/atrocore/atrocore-docs/blob/master/en/administration/installation.md#4-configure-the-crontab\" class=\"alert-link\" target=\" _blank\">тут</a>.",
-     "queueManagerRunning": "<b>Менеджер черг запущено!</b><br>Можливість оновлення модулів заблокована. Будь ласка, повторіть спробу пізніше."
-   },
-   "notifications": {
-     "Module update": "Модуль {module} був оновлений. З версії {from} до {to}",
-     "System update": "Систему було оновлено. З версії {from} до {to}",
-     "Module install": "Модуль {module} v.{version} встановлений",
-     "Module delete": "Модуль {module} був видалений",
-     "Module downgrade": "Модуль {module} переведений на більш ранню версію. З версії {from} до {to}",
-     "System downgrade": "Систему переведено на більш ранню версію. З версії {from} до {to}",
-     "Composer updated!": "Менеджер модуля залежностей був оновлений! <a href=\"/#Composer/list\">See details</a>"
+    "settingModuleForRemoving": "Вибір модуль для видалення...",
+    "setModuleForRemoving": "Модуль вибрано для видалення. Натисніть на кнопку \"Оновити\", щоб застосувати інсталяцію або видалення модулів.",
+    "settingModuleForInstalling": "Вибір модуля для встановлення...",
+    "settingModuleForUpdating": "Вибір модуля для оновлення...",
+    "setModuleForInstalling": "Модуль обраний для встановлення. Натисніть на кнопку \"Оновити\", щоб застосувати інсталяцію або видалення модулів.",
+    "setModuleForUpdating": "Модуль обраний для оновлення. Натисніть на кнопку \"Оновити\", щоб застосувати інсталяцію або видалення модулів.",
+    "cancelingModuleInstall": "Скасування установки модуля...",
+    "canceledModuleInstall": "Встановлення модуля скасовано",
+    "Log": "Лог",
+    "confirmRun": "Після дії оновлення всі користувачі будуть вилоговані з системи. Ви впевнені, що хочете оновити систему?",
+    "daemonDisabled": "<b>Демон програми-компонувальника не запущений!</b> <br> Ймовірно, демон зараз перезавантажується, і Вам слід почекати хвилину, або crontab не налаштований. Інструкції з налаштування crontab ви можете знайти <a href= \"https://github.com/atrocore/atrocore-docs/blob/master/en/administration/installation.md#4-configure-the-crontab\" class=\"alert-link\" target=\" _blank\">тут</a>.",
+    "queueManagerRunning": "<b>Менеджер черг запущено!</b><br>Можливість оновлення модулів заблокована. Будь ласка, повторіть спробу пізніше."
+  },
+  "notifications": {
+    "Module update": "Модуль {module} був оновлений. З версії {from} до {to}",
+    "System update": "Систему було оновлено. З версії {from} до {to}",
+    "Module install": "Модуль {module} v.{version} встановлений",
+    "Module delete": "Модуль {module} був видалений",
+    "Module downgrade": "Модуль {module} переведений на більш ранню версію. З версії {from} до {to}",
+    "System downgrade": "Систему переведено на більш ранню версію. З версії {from} до {to}",
+    "Composer updated!": "Менеджер модуля залежностей був оновлений! <a href=\"/#Composer/list\">See details</a>"
   }
 }
