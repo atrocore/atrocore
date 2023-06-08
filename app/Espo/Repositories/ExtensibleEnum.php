@@ -47,15 +47,10 @@ class ExtensibleEnum extends Base
         }
 
         parent::beforeSave($entity, $options);
-    }
 
-    protected function afterSave(Entity $entity, array $options = [])
-    {
         if ($entity->isAttributeChanged('multilingual') && empty($entity->get('multilingual'))) {
             $this->clearLingualOptions($entity);
         }
-
-        parent::afterSave($entity, $options);
     }
 
     protected function afterRemove(Entity $entity, array $options = [])
