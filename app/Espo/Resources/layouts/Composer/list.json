@@ -9,13 +9,18 @@
     "notSortable": true
   },
   {
+    "name": "settingVersion",
+    "notSortable": true,
+    "width": 8
+  },
+  {
     "name": "currentVersion",
     "notSortable": true,
-    "width": 13
+    "width": 8
   },
   {
     "name": "latestVersion",
     "notSortable": true,
-    "width": 13
+    "width": 8
   }
 ]

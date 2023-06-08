@@ -30,11 +30,26 @@
  * and "AtroCore" word.
  */
 
-Espo.define('treo-core:views/composer/fields/dependencies', 'views/fields/base',
+Espo.define('treo-core:views/composer/modals/update', 'treo-core:views/composer/modals/install',
     Dep => Dep.extend({
 
-        detailTemplate: 'treo-core:composer/fields/dependencies/detail',
+        setupHeader() {
+            this.header = this.translate('updateModule', 'labels', 'Composer');
+        },
+
+        setupButtonList() {
+            this.buttonList = [
+                {
+                    name: 'save',
+                    label: this.translate('updateModule', 'labels', 'Composer'),
+                    style: 'primary',
+                },
+                {
+                    name: 'cancel',
+                    label: 'Cancel'
+                }
+            ];
+        },
 
     })
 );
-

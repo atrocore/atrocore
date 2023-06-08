@@ -112,6 +112,29 @@ class Composer extends Base
         throw new Exceptions\NotFound();
     }
 
+    public function actionUpdateModule($params, $data, Request $request): bool
+    {
+        if (!$this->getUser()->isAdmin()) {
+            throw new Exceptions\Forbidden();
+        }
+
+        if (!$request->isPut()) {
+            throw new Exceptions\BadRequest();
+        }
+
+        // prepare data
+        $data = Json::decode(Json::encode($data), true);
+
+        if (!empty($data['id'])) {
+            // prepare version
+            $version = (!empty($data['version'])) ? $data['version'] : null;
+
+            return $this->getComposerService()->updateModule($data['id'], $version);
+        }
+
+        throw new Exceptions\NotFound();
+    }
+
     public function actionDeleteModule($params, $data, Request $request): bool
     {
         if (!$this->getUser()->isAdmin()) {

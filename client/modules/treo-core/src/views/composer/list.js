@@ -208,16 +208,47 @@ Espo.define('treo-core:views/composer/list', 'views/list',
                 return;
             }
 
-            this.actionsInProgress++;
-            this.notify(this.translate('settingModuleForInstalling', 'labels', 'Composer'));
-            this.ajaxRequest('Composer/installModule', 'POST', JSON.stringify({id: data.id}), {timeout: 180000}).then(response => {
-                if (response) {
-                    Espo.Ui.notify(this.translate('setModuleForInstalling', 'labels', 'Composer'), 'info', 1000 * 60, true);
-                    this.storeCollection.fetch();
-                    this.installedCollection.fetch();
-                }
-            }).always(() => {
-                this.actionsInProgress--;
+            this.createView('installModal', 'treo-core:views/composer/modals/install', {
+                currentModel: this.storeCollection.get(data.id)
+            }, view => {
+                view.render();
+                this.listenTo(view, 'save', saveData => {
+                    this.actionsInProgress++;
+                    this.notify(this.translate('settingModuleForInstalling', 'labels', 'Composer'));
+                    this.ajaxRequest('Composer/installModule', 'POST', JSON.stringify(saveData), {timeout: 180000}).then(response => {
+                        if (response) {
+                            this.notify(this.translate('setModuleForInstalling', 'labels', 'Composer'), 'success');
+                            this.installedCollection.fetch();
+                            this.storeCollection.fetch();
+                        }
+                    }).always(() => {
+                        this.actionsInProgress--;
+                    });
+                });
+            });
+        },
+
+        actionUpdateModule(data) {
+            if (!data.id) {
+                return;
+            }
+
+            this.createView('installModal', 'treo-core:views/composer/modals/update', {
+                currentModel: this.installedCollection.get(data.id)
+            }, view => {
+                view.render();
+                this.listenTo(view, 'save', saveData => {
+                    this.actionsInProgress++;
+                    this.notify(this.translate('settingModuleForUpdating', 'labels', 'Composer'));
+                    this.ajaxRequest('Composer/updateModule', 'PUT', JSON.stringify(saveData), {timeout: 180000}).then(response => {
+                        if (response) {
+                            this.notify(this.translate('setModuleForUpdating', 'labels', 'Composer'), 'success');
+                            this.installedCollection.fetch();
+                        }
+                    }).always(() => {
+                        this.actionsInProgress--;
+                    });
+                });
             });
         },
 
