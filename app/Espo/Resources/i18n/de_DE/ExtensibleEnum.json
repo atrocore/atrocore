@@ -1,6 +1,7 @@
 {
   "fields": {
-    "extensibleEnumOptions": "Auswahloptionen"
+    "extensibleEnumOptions": "Auswahloptionen",
+    "multilingual": "Mehrsprachig"
   },
   "links": {
     "extensibleEnumOptions": "Auswahloptionen"

@@ -1,6 +1,7 @@
 {
   "fields": {
-    "extensibleEnumOptions": "Опції списку"
+    "extensibleEnumOptions": "Опції списку",
+    "multilingual": "Багатомовний"
   },
   "links": {
     "extensibleEnumOptions": "Опції списку"

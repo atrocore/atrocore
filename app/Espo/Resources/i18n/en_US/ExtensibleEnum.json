@@ -1,6 +1,7 @@
 {
   "fields": {
-    "extensibleEnumOptions": "List Options"
+    "extensibleEnumOptions": "List Options",
+    "multilingual": "Multilingual"
   },
   "links": {
     "extensibleEnumOptions": "List Options"

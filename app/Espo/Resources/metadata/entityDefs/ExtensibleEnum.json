@@ -12,6 +12,9 @@
       "type": "varchar",
       "unique": true
     },
+    "multilingual": {
+      "type": "bool"
+    },
     "extensibleEnumOptions": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
