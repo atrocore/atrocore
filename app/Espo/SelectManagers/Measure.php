@@ -35,7 +35,7 @@ declare(strict_types=1);
 
 namespace Espo\SelectManagers;
 
-use Treo\Core\SelectManagers\Base;
+use Espo\Core\SelectManagers\Base;
 
 class Measure extends Base
 {
