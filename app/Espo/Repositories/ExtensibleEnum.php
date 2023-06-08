@@ -49,10 +49,40 @@ class ExtensibleEnum extends Base
         parent::beforeSave($entity, $options);
     }
 
+    protected function afterSave(Entity $entity, array $options = [])
+    {
+        if ($entity->isAttributeChanged('multilingual') && empty($entity->get('multilingual'))) {
+            $this->clearLingualOptions($entity);
+        }
+
+        parent::afterSave($entity, $options);
+    }
+
     protected function afterRemove(Entity $entity, array $options = [])
     {
         $this->getEntityManager()->getRepository('ExtensibleEnumOption')->where(['extensibleEnumId' => $entity->get('id')])->removeCollection();
 
         parent::afterRemove($entity, $options);
+    }
+
+    public function clearLingualOptions(Entity $entity): void
+    {
+        $names = [];
+        foreach ($this->getMetadata()->get(['entityDefs', 'ExtensibleEnumOption', 'fields']) as $field => $fieldDefs) {
+            if (!empty($fieldDefs['multilangField']) && $fieldDefs['multilangField'] === 'name') {
+                $names[] = $field;
+            }
+        }
+
+        if (empty($names)) {
+            return;
+        }
+
+        foreach ($entity->get('extensibleEnumOptions') as $option) {
+            foreach ($names as $name) {
+                $option->set($name, null);
+            }
+            $this->getEntityManager()->saveEntity($option);
+        }
     }
 }

@@ -13,7 +13,8 @@
       "unique": true
     },
     "multilingual": {
-      "type": "bool"
+      "type": "bool",
+      "default": true
     },
     "extensibleEnumOptions": {
       "type": "linkMultiple",
