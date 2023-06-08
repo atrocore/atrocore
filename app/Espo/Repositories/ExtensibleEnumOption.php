@@ -56,7 +56,7 @@ class ExtensibleEnumOption extends Base
 
         if (!empty($extensibleEnum)) {
             foreach ($this->getLingualFields() as $field) {
-                if ($entity->isAttributeChanged($field) && empty($extensibleEnum->get('multilingual'))) {
+                if ($entity->isAttributeChanged($field) && $entity->get($field) !== null && empty($extensibleEnum->get('multilingual'))) {
                     throw new BadRequest("List '{$extensibleEnum->get('name')}' is not multilingual.");
                 }
             }
