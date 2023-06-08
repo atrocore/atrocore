@@ -67,20 +67,14 @@ class ExtensibleEnum extends Base
 
     public function clearLingualOptions(Entity $entity): void
     {
-        $names = [];
-        foreach ($this->getMetadata()->get(['entityDefs', 'ExtensibleEnumOption', 'fields']) as $field => $fieldDefs) {
-            if (!empty($fieldDefs['multilangField']) && $fieldDefs['multilangField'] === 'name') {
-                $names[] = $field;
-            }
-        }
-
-        if (empty($names)) {
+        $fields = $this->getEntityManager()->getRepository('ExtensibleEnumOption')->getLingualFields();
+        if (empty($fields)) {
             return;
         }
 
         foreach ($entity->get('extensibleEnumOptions') as $option) {
-            foreach ($names as $name) {
-                $option->set($name, null);
+            foreach ($fields as $field) {
+                $option->set($field, null);
             }
             $this->getEntityManager()->saveEntity($option);
         }

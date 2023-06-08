@@ -35,6 +35,7 @@ declare(strict_types=1);
 
 namespace Espo\Repositories;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
 
@@ -49,6 +50,16 @@ class ExtensibleEnumOption extends Base
         if ($entity->isNew() && $entity->get('sortOrder') === null) {
             $last = $this->where(['extensibleEnumId' => $entity->get('extensibleEnumId')])->order('sortOrder', 'DESC')->findOne();
             $entity->set('sortOrder', empty($last) ? 0 : (int)$last->get('sortOrder') + 10);
+        }
+
+        $extensibleEnum = $entity->get('extensibleEnum');
+
+        if (!empty($extensibleEnum)) {
+            foreach ($this->getLingualFields() as $field) {
+                if ($entity->isAttributeChanged($field) && empty($extensibleEnum->get('multilingual'))) {
+                    throw new BadRequest("List '{$extensibleEnum->get('name')}' is not multilingual.");
+                }
+            }
         }
 
         parent::beforeSave($entity, $options);
@@ -71,5 +82,17 @@ class ExtensibleEnumOption extends Base
                 $this->save($entity);
             }
         }
+    }
+
+    public function getLingualFields(): array
+    {
+        $names = [];
+        foreach ($this->getMetadata()->get(['entityDefs', 'ExtensibleEnumOption', 'fields']) as $field => $fieldDefs) {
+            if (!empty($fieldDefs['multilangField']) && $fieldDefs['multilangField'] === 'name') {
+                $names[] = $field;
+            }
+        }
+
+        return $names;
     }
 }
