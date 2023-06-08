@@ -251,6 +251,9 @@ class Composer extends \Espo\Core\Templates\Services\HasContainer
         // prepare composer data
         $composerData = self::getComposerJson();
 
+        // get diff
+        $composerDiff = $this->getComposerDiff();
+
         // prepare result
         $result = [
             'total' => 1,
@@ -263,14 +266,11 @@ class Composer extends \Espo\Core\Templates\Services\HasContainer
                     'latestVersion'  => $this->getLatestVersion('Treo'),
                     'isSystem'       => true,
                     'isComposer'     => true,
-                    'status'         => '',
+                    'status'         => $this->getModuleStatus($composerDiff, 'Treo'),
                     'settingVersion' => self::getSettingVersion($composerData, 'atrocore/core')
                 ]
             ]
         ];
-
-        // get diff
-        $composerDiff = $this->getComposerDiff();
 
         // for installed modules
         foreach ($this->getInstalledModules() as $id => $module) {
@@ -346,6 +346,30 @@ class Composer extends \Espo\Core\Templates\Services\HasContainer
 
         // update composer.json
         $this->update($package->get('packageId'), $version);
+
+        return true;
+    }
+
+    public function updateModule(string $id, string $version): bool
+    {
+        if ($id === 'TreoCore') {
+            $packageId = 'atrocore/core';
+        } else {
+            if (empty($package = $this->getPackage($id))) {
+                throw new Exceptions\Error($this->translateError('noSuchModule'));
+            }
+            if (empty($this->getInstalledModule($id))) {
+                throw new Exceptions\Error($this->translateError('moduleWasNotInstalled'));
+            }
+            $packageId = $package->get('packageId');
+        }
+
+        if (!$this->isVersionValid($version)) {
+            throw new Exceptions\Error($this->translateError('versionIsInvalid'));
+        }
+
+        // update composer.json
+        $this->update($packageId, $version);
 
         return true;
     }
@@ -503,12 +527,20 @@ class Composer extends \Espo\Core\Templates\Services\HasContainer
                 // prepare id
                 $id = $this->getStoredModuleId($package);
 
-                if (!empty($this->getModule($id))) {
+                if ($id === 'Treo') {
                     $result['update'][] = [
                         'id'      => $id,
                         'package' => $package,
-                        'from'    => $this->getModule($id)->getVersion()
+                        'from'    => self::getCoreVersion()
                     ];
+                } else {
+                    if (!empty($module = $this->getModule($id))) {
+                        $result['update'][] = [
+                            'id'      => $id,
+                            'package' => $package,
+                            'from'    => $module->getVersion()
+                        ];
+                    }
                 }
             }
         }
