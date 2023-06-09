@@ -169,31 +169,31 @@ Espo.define('treo-core:views/fields/base', 'class-replace!treo-core:views/fields
                 trigger: 'manual'
             }).popover('show');
 
-            this.isDestroyed = false;
+            $el.data('isDestroyed', false)
 
             $el.closest('.field').one('mousedown click', () => {
-                if (this.isDestroyed) return;
+                if ($el.data('isDestroyed')) return;
                 $el.popover('destroy');
-                this.isDestroyed = true;
+                $el.data('isDestroyed', true)
             });
 
             this.once('render remove', () => {
-                if (this.isDestroyed) return;
                 if ($el) {
+                    if ($el.data('isDestroyed')) return;
                     $el.popover('destroy');
-                    this.isDestroyed = true;
+                    $el.data('isDestroyed', true)
                 }
             });
 
-            if (this._timeout) {
-                clearTimeout(this._timeout);
+            if ($el.data('timeout')) {
+                clearTimeout($el.data('timeout'));
             }
 
-            this._timeout = setTimeout(() => {
-                if (this.isDestroyed) return;
+            $el.data('timeout', setTimeout(() => {
+                if ($el.data('isDestroyed')) return;
                 $el.popover('destroy');
-                this.isDestroyed = true;
-            }, this.VALIDATION_POPOVER_TIMEOUT);
+                $el.data('isDestroyed', true)
+            }, this.VALIDATION_POPOVER_TIMEOUT));
         },
 
 
