@@ -97,7 +97,7 @@ class Base
         $this->getPDO()->exec("INSERT INTO job (id, execute_time, created_at, method_name, service_name) VALUES ('$id', '$executeTime', '$executeTime', 'rebuild', 'App')");
     }
 
-    protected function updateModuleVersion(string $package, string $version): void
+    protected function updateComposer(string $package, string $version): void
     {
         foreach (['composer.json', 'data/stable-composer.json'] as $filename) {
             if (!file_exists($filename)) {

@@ -96,6 +96,8 @@ class V1Dot6Dot0 extends Base
 
         $this->getConfig()->set('mainLanguage', 'en_US');
         $this->getConfig()->save();
+
+        $this->updateComposer('atrocore/core', '^1.6.0');
     }
 
     public function down(): void
