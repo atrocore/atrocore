@@ -79,7 +79,7 @@ class SelectManagerFactory
                 $className = '\\Espo\\SelectManagers\\' . $normalizedName;
             }
             if (!class_exists($className)) {
-                $className = '\\Treo\\Core\\SelectManagers\\Base';
+                $className = '\\Espo\\Core\\SelectManagers\\Base';
             }
         }
 
