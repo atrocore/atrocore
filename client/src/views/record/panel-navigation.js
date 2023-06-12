@@ -56,7 +56,15 @@ Espo.define('views/record/panel-navigation', 'view',
         },
 
         setPanelList() {
-            this.panelList = this.options.panelList.filter(panel => !panel.hidden);
+            this.panelList = this.options.panelList.filter(panel => !panel.hidden)
+                .filter(panel => {
+                    if (panel.name === 'panel-0') {
+                        return true;
+                    }
+
+                    const panelElement = document.querySelector(`.panel-${panel.name}`);
+                    return panelElement && panelElement.style.display !== 'none';
+                });
         },
 
         data() {
