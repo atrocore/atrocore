@@ -304,7 +304,6 @@
     "massUnfollowZeroResult": "Nada se dejó de seguir",
     "fieldShouldBeEmail": "{field} debe ser un correo electrónico válido",
     "fieldShouldBeFloat": "{field} debe ser un decimal válido",
-    "fieldShouldBeFloatWithValidDigitAfterComma": "El máximo de dígitos después de la coma es {amountOfDigitsAfterComma}",
     "fieldShouldBeInt": "{field} debe ser un entero válido",
     "fieldShouldBeDate": "{field} debe ser una fecha válida",
     "fieldShouldBeDatetime": "{field} debe ser una fecha válida fecha/hora",

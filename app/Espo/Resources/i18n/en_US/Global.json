@@ -332,7 +332,6 @@
     "fieldIsRequired": "{field} is required",
     "fieldShouldBeEmail": "{field} should be a valid email",
     "fieldShouldBeFloat": "{field} should be a valid float",
-    "fieldShouldBeFloatWithValidDigitAfterComma": "The maximum of digits after comma is {amountOfDigitsAfterComma}",
     "fieldShouldBeInt": "{field} should be a valid integer",
     "fieldShouldBeDate": "{field} should be a valid date",
     "fieldShouldBeDatetime": "{field} should be a valid date/time",

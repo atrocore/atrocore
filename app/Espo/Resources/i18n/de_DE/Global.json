@@ -301,7 +301,6 @@
     "confirmMassUnfollow": "Sind Sie sicher, dass Sie die ausgewählten Datensätze nicht mehr abonnieren wollen?",
     "fieldBadPasswordConfirm": "{field} nicht bestätigt",
     "fieldShouldBeFloat": "{field} muss eine gültige Fließkommazahl sein",
-    "fieldShouldBeFloatWithValidDigitAfterComma": "Die maximale Anzahl der Ziffern nach dem Komma ist {amountOfDigitsAfterComma}",
     "internalPost": "Die Post kann nur von internen Benutzern gesehen werden",
     "massFollowResult": "{count} Datensätze wurden abonniert",
     "massFollowResultSingle": "{count} Datensatz wurde abonniert",
