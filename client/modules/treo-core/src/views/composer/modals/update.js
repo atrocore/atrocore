@@ -34,14 +34,14 @@ Espo.define('treo-core:views/composer/modals/update', 'treo-core:views/composer/
     Dep => Dep.extend({
 
         setupHeader() {
-            this.header = this.translate('updateModule', 'labels', 'Composer');
+            this.header = this.translate('Edit') + ': ' + this.model.get('name');
         },
 
         setupButtonList() {
             this.buttonList = [
                 {
                     name: 'save',
-                    label: this.translate('updateModule', 'labels', 'Composer'),
+                    label: 'Save',
                     style: 'primary',
                 },
                 {

@@ -16,10 +16,8 @@
   "exceptions": {
     "hasRequireds": "Модуль не відповідає вимогам",
     "hasRequiredsDelete": "Ви не можете видалити необхідний модуль",
-    "isSystem": "Ви не можете видалити системний модуль.",
     "noSuchModule": "Такого модуля немає",
     "suchModuleIsAlreadyInstalled": "Даний модуль вже встановлений",
-    "moduleWasNotInstalled": "Модуль не був встановлений",
     "suchModuleVersionAlreadyInstalled": "Ця версія модуля вже встановлена",
     "noSuchModuleVersion": "Такої версії модуля немає",
     "versionIsInvalid": "Версія неправильна"
@@ -28,7 +26,6 @@
     "available": "Доступний",
     "Installed": "Встановлено",
     "Store": "Магазин",
-    "updateModule": "Оновлення",
     "removeModule": "Видалення",
     "cancelModule": "Скасування",
     "username": "Ім'я користувача",

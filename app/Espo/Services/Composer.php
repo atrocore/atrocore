@@ -297,7 +297,8 @@ class Composer extends \Espo\Core\Templates\Services\HasContainer
                 'latestVersion'  => '',
                 'isSystem'       => false,
                 'isComposer'     => true,
-                'status'         => 'install'
+                'status'         => 'install',
+                'settingVersion' => self::getSettingVersion($composerData, $this->getComposerName($row['id']))
             ];
 
             // get package
@@ -317,127 +318,76 @@ class Composer extends \Espo\Core\Templates\Services\HasContainer
         return $result;
     }
 
-    /**
-     * Install module
-     *
-     * @param string $id
-     * @param string $version
-     *
-     * @return bool
-     * @throws Exceptions\Error
-     */
     public function installModule(string $id, string $version = null): bool
     {
-        // prepare version
         if (empty($version)) {
             $version = '*';
         }
 
-        // validation
-        if (empty($package = $this->getPackage($id))) {
-            throw new Exceptions\Error($this->translateError('noSuchModule'));
-        }
-        if (!empty($this->getInstalledModule($id))) {
-            throw new Exceptions\Error($this->translateError('suchModuleIsAlreadyInstalled'));
-        }
+        $name = $this->getComposerName($id);
+
         if (!$this->isVersionValid($version)) {
             throw new Exceptions\Error($this->translateError('versionIsInvalid'));
         }
 
-        // update composer.json
-        $this->update($package->get('packageId'), $version);
+        $this->update($name, $version);
 
         return true;
     }
 
     public function updateModule(string $id, string $version): bool
     {
-        if ($id === 'TreoCore') {
-            $packageId = 'atrocore/core';
-        } else {
-            if (empty($package = $this->getPackage($id))) {
-                throw new Exceptions\Error($this->translateError('noSuchModule'));
-            }
-            if (empty($this->getInstalledModule($id))) {
-                throw new Exceptions\Error($this->translateError('moduleWasNotInstalled'));
-            }
-            $packageId = $package->get('packageId');
-        }
+        $name = $this->getComposerName($id);
 
         if (!$this->isVersionValid($version)) {
             throw new Exceptions\Error($this->translateError('versionIsInvalid'));
         }
 
-        // update composer.json
-        $this->update($packageId, $version);
+        $this->update($name, $version);
 
         return true;
     }
 
-    /**
-     * Delete module
-     *
-     * @param string $id
-     *
-     * @return bool
-     * @throws Exceptions\Error
-     */
     public function deleteModule(string $id): bool
     {
-        // get module
-        $package = $this->getInstalledModule($id);
+        $name = $this->getComposerName($id);
 
-        // prepare modules
-        if ($package->isSystem($id)) {
-            throw new Exceptions\Error($this->translateError('isSystem'));
+        if ($name !== 'atrocore/core' && !empty($this->getInstalledModule($id))) {
+            $this->delete($name);
         }
 
-        // validation
+        return true;
+    }
+
+    public function cancel(string $id): bool
+    {
+        $name = $this->getComposerName($id);
+
+        $composerData = self::getComposerJson();
+
+        if (!empty($value = self::getStableComposerJson()['require'][$name])) {
+            $composerData['require'][$name] = $value;
+        } elseif (isset($composerData['require'][$name])) {
+            unset($composerData['require'][$name]);
+        }
+
+        self::setComposerJson($composerData);
+
+        return true;
+    }
+
+    protected function getComposerName(string $id): string
+    {
+        if ($id === 'TreoCore') {
+            return 'atrocore/core';
+        }
+
+        $package = $this->getPackage($id);
         if (empty($package)) {
             throw new Exceptions\Error($this->translateError('noSuchModule'));
         }
 
-        // update composer.json
-        $this->delete($package->getComposerName());
-
-        return true;
-    }
-
-    /**
-     * Cancel module changes
-     *
-     * @param string $id
-     *
-     * @return bool
-     * @throws Exceptions\Error
-     */
-    public function cancel(string $id): bool
-    {
-        // prepare result
-        $result = false;
-
-        // get package
-        if (!empty($package = $this->getPackage($id))) {
-            // get name
-            $name = $package->get('packageId');
-
-            // get composer data
-            $composerData = self::getComposerJson();
-
-            if (!empty($value = self::getStableComposerJson()['require'][$name])) {
-                $composerData['require'][$name] = $value;
-            } elseif (isset($composerData['require'][$name])) {
-                unset($composerData['require'][$name]);
-            }
-
-            // save
-            self::setComposerJson($composerData);
-
-            // prepare result
-            $result = true;
-        }
-
-        return $result;
+        return $package->get('packageId');
     }
 
     /**

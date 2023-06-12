@@ -16,10 +16,8 @@
   "exceptions": {
     "hasRequireds": "Module has not satisfied requireds",
     "hasRequiredsDelete": "You cann't delete required module",
-    "isSystem": "You can not modify system module.",
     "noSuchModule": "No such module",
     "suchModuleIsAlreadyInstalled": "Such module is already installed",
-    "moduleWasNotInstalled": "Module was not installed",
     "suchModuleVersionAlreadyInstalled": "Such module version already installed",
     "noSuchModuleVersion": "No such module version",
     "versionIsInvalid": "Version is invalid"
@@ -28,7 +26,6 @@
     "available": "available",
     "Installed": "Installed",
     "Store": "Store",
-    "updateModule": "Update",
     "removeModule": "Remove",
     "cancelModule": "Cancel",
     "username": "Username",

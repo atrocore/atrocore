@@ -10,10 +10,8 @@
   },
   "exceptions": {
     "hasRequiredsDelete": "Sie dürfen das gewünschte Modul nicht löschen, da dieses mit einem anderen verknüpft ist.",
-    "isSystem": "Sie können das System-Modul nicht ändern.",
     "noSuchModule": "Es gibt kein solches Modul",
     "suchModuleIsAlreadyInstalled": "Dieses Modul ist schon installiert",
-    "moduleWasNotInstalled": "Das Modul wurde nicht installiert",
     "suchModuleVersionAlreadyInstalled": "Diese Modul-Version ist schon installiert",
     "noSuchModuleVersion": "Es gibt keine solche Modul-Version",
     "versionIsInvalid": "Version ist ungültig",
@@ -45,7 +43,6 @@
     "settingModuleForRemoving": "Einstellung des Moduls für das Entfernen",
     "settingsText": "Sie müssen registriert sein, um AtroCORE Module installieren oder aktualisieren zu können...",
     "updated": "wurde aktualisiert. Die Seite wird in {value} Sekunden neu geladen",
-    "updateModule": "Modul aktualisieren",
     "updating": "wird aktualisiert...",
     "username": "Benutzername",
     "setModuleForInstalling": "Das Modul wurde für die Installation eingerichtet. Klicken Sie auf die Schaltfläche „Update“, um die Modulinstallation oder -entfernung anzuwenden.",

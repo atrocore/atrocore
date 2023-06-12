@@ -78,17 +78,32 @@ class TreoStore extends Base
             $versions = Json::encode($package['versions']);
             $tags = Json::encode($package['tags']);
 
-            $sql[] = "INSERT INTO `treo_store` (`id`,`package_id`,`url`,`status`,`versions`,`name`,`description`,`tags`) VALUES ('{$package['treoId']}','{$package['packageId']}','{$package['url']}','{$package['status']}','{$versions}','{$name}','{$description}','{$tags}')";
+            $sql[]
+                = "INSERT INTO `treo_store` (`id`,`package_id`,`url`,`status`,`versions`,`name`,`description`,`tags`) VALUES ('{$package['treoId']}','{$package['packageId']}','{$package['url']}','{$package['status']}','{$versions}','{$name}','{$description}','{$tags}')";
         }
 
         $this->getEntityManager()->nativeQuery(implode(';', $sql));
     }
 
-    /**
-     * @return array
-     */
     public function getRemotePackages(): array
     {
+        session_start();
+
+        $now = time();
+        if (empty($_SESSION['packages_cache_time'])) {
+            $_SESSION['packages_cache_time'] = $now;
+        }
+
+        $diff = $now - $_SESSION['packages_cache_time'];
+
+        $cacheFile = 'data/cache/packages.json';
+        if (file_exists($cacheFile) && $diff < 120) {
+            $fileData = @json_decode(file_get_contents($cacheFile), true);
+            if (!empty($fileData)) {
+                return $fileData;
+            }
+        }
+
         // get packagist url
         $url = "https://packagist.atrocore.com/packages.json?id=" . $this->getConfig()->get('appId');
 
@@ -102,7 +117,12 @@ class TreoStore extends Base
             }
         }
 
-        return array_values($packages);
+        $packages = array_values($packages);
+
+        file_put_contents($cacheFile, json_encode($packages));
+        $_SESSION['packages_cache_time'] = $now;
+
+        return $packages;
     }
 
     /**
