@@ -57,7 +57,7 @@ class Layout extends Injectable
      * Get a full path of the file
      *
      * @param string | array $folderPath - Folder path, Ex. myfolder
-     * @param string         $filePath   - File path, Ex. file.json
+     * @param string $filePath - File path, Ex. file.json
      *
      * @return string
      */
@@ -95,8 +95,14 @@ class Layout extends Injectable
             return Json::encode($this->changedData[$scope][$name]);
         }
 
-        // compose
-        $layout = $this->compose($scope, $name);
+
+        if ($name == 'massCreateDetailSmall' && $scope == 'Asset') {
+            $layout = $this->compose($scope, 'detailSmall');
+            $layout = $this->removeFieldsForMassUpload($layout);
+        } else {
+            // compose
+            $layout = $this->compose($scope, $name);
+        }
 
         // remove fields from layout if this fields not exist in metadata
         $layout = $this->disableNotExistingFields($scope, $name, $layout);
@@ -117,8 +123,8 @@ class Layout extends Injectable
      * Ex. $scope = Account, $name = detail then will be created a file layoutFolder/Account/detail.json
      *
      * @param array|string $data
-     * @param string       $scope - ex. Account
-     * @param string       $name  - detail
+     * @param string $scope - ex. Account
+     * @param string $name - detail
      *
      * @return void
      */
@@ -208,7 +214,7 @@ class Layout extends Injectable
     /**
      * @param JSON string $data
      * @param string $scope - ex. Account
-     * @param string $name  - detail
+     * @param string $name - detail
      *
      * @return bool
      */
@@ -430,7 +436,7 @@ class Layout extends Injectable
      *
      * @param string $scope
      * @param string $name
-     * @param array  $data
+     * @param array $data
      *
      * @return array
      */
@@ -483,6 +489,24 @@ class Layout extends Injectable
 
         return $data;
     }
+
+    protected function removeFieldsForMassUpload($data): array
+    {
+        $data[0]['rows'] = array_map(function ($row) {
+            return array_filter($row, function ($item) {
+                return !(isset($item['name']) && in_array($item['name'], ['file', 'name']));
+            });
+        }, $data[0]['rows']);
+
+
+        $data[0]['rows'][] = [[
+            "name"      => "files",
+            "fullWidth" => true
+        ]];
+
+        return $data;
+    }
+
 
     protected function sanitizeInput(string $name): string
     {
