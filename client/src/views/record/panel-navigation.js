@@ -57,13 +57,9 @@ Espo.define('views/record/panel-navigation', 'view',
 
         setPanelList() {
             const typeForListPanelOptions = ["array", "extensibleEnum", "extensibleMultiEnum"];
-            this.panelList = this.options.panelList.filter(panel => !panel.hidden)
-                .filter(panel => {
-                    if (!typeForListPanelOptions.includes(this.model.attributes.type)) {
-                        return panel.name !== 'extensibleEnumOptions';
-                    }
-                    return true;
-                });
+            console.log(this.options.panelList);
+            this.panelList = this.options.panelList.filter(panel => !panel.hidden);
+            //console.log(this.options.panelList);
         },
 
         data() {
