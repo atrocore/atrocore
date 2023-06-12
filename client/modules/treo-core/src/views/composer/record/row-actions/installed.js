@@ -54,18 +54,8 @@ Espo.define('treo-core:views/composer/record/row-actions/installed', 'views/reco
                         id: this.model.id
                     }
                 });
-                if (!this.model.get('status')) {
-                    let checkRequire = this.model.collection.every(model => !(model.get('required') || []).includes(this.model.get('id')));
-                    if (checkRequire && !this.model.get('isSystem')) {
-                        list.push({
-                            action: 'removeModule',
-                            label: 'Delete',
-                            data: {
-                                id: this.model.id
-                            }
-                        });
-                    }
-                } else {
+
+                if (this.model.get('status')) {
                     list.push({
                         action: 'cancelModule',
                         label: 'cancelModule',
@@ -75,7 +65,18 @@ Espo.define('treo-core:views/composer/record/row-actions/installed', 'views/reco
                         }
                     });
                 }
+
+                if (!['install', 'delete'].includes(this.model.get('status')) && !this.model.get('isSystem')) {
+                    list.push({
+                        action: 'removeModule',
+                        label: 'Delete',
+                        data: {
+                            id: this.model.id
+                        }
+                    });
+                }
             }
+
             return list;
         },
 
