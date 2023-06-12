@@ -371,7 +371,6 @@
     "whiteCannotBeChosen": "Білий вибрати не можна.",
     "fieldShouldBeEmail": "{field} повинен бути чинним е-мейлом",
     "fieldShouldBeFloat": "{field} має бути допустиме число з плаваючою комою",
-    "fieldShouldBeFloatWithValidDigitAfterComma": "Максимальна кількість цифр після коми {amountOfDigitsAfterComma}",
     "fieldShouldBeInt": "{field} має бути дійсне ціле число",
     "fieldShouldBeDate": "{field} має бути дійсною датою",
     "fieldShouldBeDatetime": "{field} має бути дійсною датою/часом",
