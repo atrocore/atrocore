@@ -5255,6 +5255,10 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
   margin: 0 3px 3px 0;
 }
 
+.label.colored-multi-enum {
+  line-height: 2;
+}
+
 a.label:hover, a.label:focus {
   color: #fff;
   text-decoration: none;
@@ -15287,7 +15291,6 @@ table.table > thead th {
 
 .list-container > .list > .table:not(.fixed-header-table) {
   min-width: 100%;
-  width: auto;
 }
 
 .cell label, .filter label {
