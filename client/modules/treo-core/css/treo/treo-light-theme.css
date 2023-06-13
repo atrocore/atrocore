@@ -15293,10 +15293,6 @@ table.table > thead th {
   min-width: 100%;
 }
 
-.field > .colored-multi-enum {
-  line-height: 2 !important;
-}
-
 .cell label, .filter label {
   color: #999;
   font-weight: normal;
