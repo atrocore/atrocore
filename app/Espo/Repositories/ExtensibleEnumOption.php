@@ -41,6 +41,41 @@ use Espo\ORM\Entity;
 
 class ExtensibleEnumOption extends Base
 {
+    protected array $cachedOptions = [];
+
+    public function getPreparedOptions(array $ids): ?array
+    {
+        $res = [];
+
+        foreach ($ids as $id) {
+            if ($id === '') {
+                continue;
+            }
+
+            if (!isset($this->cachedOptions[$id])) {
+                $this->cachedOptions[$id] = null;
+
+                $systemFields = ['deleted', 'createdAt', 'createdById', 'createdByName', 'modifiedAt', 'modifiedById', 'modifiedByName', 'sortOrder'];
+
+                $option = $this->get($id);
+                if (!empty($option)) {
+                    $options = $this->where(['extensibleEnumId' => $option->get('extensibleEnumId')])->find();
+                    foreach ($options as $item) {
+                        $this->cachedOptions[$item->get('id')] = $item->toArray();
+                        foreach ($systemFields as $key) {
+                            if (array_key_exists($key, $this->cachedOptions[$item->get('id')])) {
+                                unset($this->cachedOptions[$item->get('id')][$key]);
+                            }
+                        }
+                    }
+                }
+            }
+            $res[] = $this->cachedOptions[$id];
+        }
+
+        return $res;
+    }
+
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if ($entity->get('code') === '') {

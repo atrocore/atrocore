@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -31,31 +30,36 @@
  * and "AtroCore" word.
  */
 
-declare(strict_types=1);
+Espo.define('views/fields/extensible-enum', 'views/fields/link', Dep => {
 
-namespace Espo\SelectManagers;
+    return Dep.extend({
 
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\SelectManagers\Base;
+        // listTemplate: 'fields/link/list',
 
-class ExtensibleEnumOption extends Base
-{
-    protected function boolFilterDefaultOption(array &$result): void
-    {
-        $data = $this->getBoolFilterParameter('defaultOption');
-        if (empty($data['extensibleEnumId'])) {
-            throw new BadRequest('For choosing default option, you need to select List.');
+        // detailTemplate: 'fields/link/detail',
+
+        foreignScope: 'ExtensibleEnumOption',
+
+        selectBoolFilterList: ['onlyForExtensibleEnum'],
+
+        boolFilterData: {
+            onlyForExtensibleEnum() {
+                let extensibleEnumId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'extensibleEnumId']);
+                if (this.params.extensibleEnumId) {
+                    extensibleEnumId = this.params.extensibleEnumId;
+                }
+
+                return extensibleEnumId;
+            }
+        },
+
+        setup: function () {
+            Dep.prototype.setup.call(this);
+
+            console.log(this.model.get(this.name))
+
         }
 
-        $result['whereClause'][] = [
-            'extensibleEnumId' => $data['extensibleEnumId']
-        ];
-    }
+    });
+});
 
-    protected function boolFilterOnlyForExtensibleEnum(array &$result): void
-    {
-        $result['whereClause'][] = [
-            'extensibleEnumId' => $this->getBoolFilterParameter('onlyForExtensibleEnum')
-        ];
-    }
-}

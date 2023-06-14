@@ -40,5 +40,21 @@
   "fieldDefs": {
     "type": "varchar"
   },
-  "view": "views/fields/colored-enum"
+  "fields": {
+    "optionData": {
+      "type": "jsonArray",
+      "notStorable": true,
+      "readOnly": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true,
+      "emHidden": true
+    }
+  },
+  "view": "views/fields/extensible-enum"
 }
