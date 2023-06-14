@@ -30,15 +30,13 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/fields/extensible-enum', 'views/fields/link', Dep => {
+Espo.define('views/fields/extensible-enum', ['views/fields/link', 'views/fields/colored-enum'], (Dep, ColoredEnum) => {
 
     return Dep.extend({
 
-        // listTemplate: 'fields/link/list',
+        listTemplate: 'fields/extensible-enum/detail',
 
-        // detailTemplate: 'fields/link/detail',
-
-        foreignScope: 'ExtensibleEnumOption',
+        detailTemplate: 'fields/extensible-enum/detail',
 
         selectBoolFilterList: ['onlyForExtensibleEnum'],
 
@@ -54,11 +52,30 @@ Espo.define('views/fields/extensible-enum', 'views/fields/link', Dep => {
         },
 
         setup: function () {
+            this.idName = this.name;
+            this.nameName = this.name + 'Name';
+            this.foreignScope = 'ExtensibleEnumOption';
+
             Dep.prototype.setup.call(this);
+        },
 
-            console.log(this.model.get(this.name))
+        data() {
+            let data = Dep.prototype.data.call(this);
 
-        }
+            if (['list', 'detail'].includes(this.mode)) {
+                const optionData = this.model.get(this.name + 'OptionData') || {};
+                const fontSize = this.model.getFieldParam(this.name, 'fontSize');
+
+                data.description = optionData.description || '';
+                data.fontSize = fontSize ? fontSize + 'em' : '100%';
+                data.fontWeight = 'normal';
+                data.backgroundColor = optionData.color || '#ececec';
+                data.color = ColoredEnum.prototype.getFontColor.call(this, data.backgroundColor);
+                data.border = ColoredEnum.prototype.getBorder.call(this, data.backgroundColor);
+            }
+
+            return data;
+        },
 
     });
 });

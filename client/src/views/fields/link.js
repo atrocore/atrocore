@@ -117,8 +117,13 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         getCreateAttributes: function () {},
 
         setup: function () {
-            this.nameName = this.name + 'Name';
-            this.idName = this.name + 'Id';
+            if (this.nameName === null) {
+                this.nameName = this.name + 'Name';
+            }
+
+            if (this.idName === null) {
+                this.idName = this.name + 'Id';
+            }
 
             this.foreignScope = this.options.foreignScope || this.foreignScope;
             this.foreignScope = this.foreignScope || this.model.getFieldParam(this.name, 'entity') || this.model.getLinkParam(this.name, 'entity');
