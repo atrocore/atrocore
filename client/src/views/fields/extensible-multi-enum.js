@@ -86,6 +86,52 @@ Espo.define('views/fields/extensible-multi-enum', ['treo-core:views/fields/filte
             return data;
         },
 
+        fetchSearch: function () {
+            let type = this.$el.find('select.search-type').val();
+            let data = null;
+
+            if (type === 'anyOf') {
+                data = {
+                    type: 'arrayAnyOf',
+                    value: this.ids || [],
+                    nameHash: this.nameHash,
+                    subQuery: this.searchData.subQuery,
+                    data: {
+                        type: type
+                    }
+                };
+                if (!data.value.length) {
+                    data.value = null;
+                }
+            } else if (type === 'noneOf') {
+                data = {
+                    type: 'arrayNoneOf',
+                    value: this.ids || [],
+                    nameHash: this.nameHash,
+                    subQuery: this.searchData.subQuery,
+                    data: {
+                        type: type
+                    }
+                };
+            } else if (type === 'isEmpty') {
+                data = {
+                    type: 'arrayIsEmpty',
+                    data: {
+                        type: type
+                    }
+                };
+            } else if (type === 'isNotEmpty') {
+                data = {
+                    type: 'arrayIsNotEmpty',
+                    data: {
+                        type: type
+                    }
+                };
+            }
+
+            return data;
+        },
+
     });
 });
 
