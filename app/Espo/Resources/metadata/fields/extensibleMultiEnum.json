@@ -35,5 +35,35 @@
   "fieldDefs": {
     "type": "jsonArray"
   },
-  "view": "views/fields/colored-multi-enum"
+  "fields": {
+    "names": {
+      "type": "jsonArray",
+      "notStorable": true,
+      "readOnly": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true,
+      "emHidden": true
+    },
+    "optionsData": {
+      "type": "jsonArray",
+      "notStorable": true,
+      "readOnly": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true,
+      "emHidden": true
+    }
+  },
+  "view": "views/fields/extensible-multi-enum"
 }

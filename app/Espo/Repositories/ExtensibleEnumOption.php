@@ -43,11 +43,27 @@ class ExtensibleEnumOption extends Base
 {
     protected array $cachedOptions = [];
 
-    public function getPreparedOptions(array $ids): ?array
+    public function getPreparedOption(string $extensibleEnumId, ?string $id): ?array
     {
+        if ($id === null || $id === '') {
+            return null;
+        }
+
+        $options = $this->getPreparedOptions($extensibleEnumId, [$id]);
+
+        return $options[0] ?? null;
+    }
+
+    public function getPreparedOptions(string $extensibleEnumId, ?array $ids): ?array
+    {
+        if (!is_array($ids)) {
+            return null;
+        }
+
         $res = [];
 
         foreach ($ids as $id) {
+            $id = (string)$id;
             if ($id === '') {
                 continue;
             }
@@ -55,19 +71,17 @@ class ExtensibleEnumOption extends Base
             if (!isset($this->cachedOptions[$id])) {
                 $this->cachedOptions[$id] = null;
 
-                $systemFields = ['deleted', 'createdAt', 'createdById', 'createdByName', 'modifiedAt', 'modifiedById', 'modifiedByName', 'sortOrder'];
-
-                $option = $this->get($id);
-                if (!empty($option)) {
-                    $options = $this->where(['extensibleEnumId' => $option->get('extensibleEnumId')])->find();
-                    foreach ($options as $item) {
-                        $this->cachedOptions[$item->get('id')] = $item->toArray();
-                        foreach ($systemFields as $key) {
-                            if (array_key_exists($key, $this->cachedOptions[$item->get('id')])) {
-                                unset($this->cachedOptions[$item->get('id')][$key]);
-                            }
-                        }
+                // prepare select
+                $select = ['id', 'code', 'color'];
+                foreach (['name', 'description'] as $field) {
+                    $select[] = $field;
+                    foreach ($this->getLingualFields($field) as $lingualField) {
+                        $select[] = $lingualField;
                     }
+                }
+
+                foreach ($this->select($select)->where(['extensibleEnumId' => $extensibleEnumId])->find() as $item) {
+                    $this->cachedOptions[$item->get('id')] = $item->toArray();
                 }
             }
             $res[] = $this->cachedOptions[$id];
@@ -119,11 +133,11 @@ class ExtensibleEnumOption extends Base
         }
     }
 
-    public function getLingualFields(): array
+    public function getLingualFields(string $fieldName = 'name'): array
     {
         $names = [];
         foreach ($this->getMetadata()->get(['entityDefs', 'ExtensibleEnumOption', 'fields']) as $field => $fieldDefs) {
-            if (!empty($fieldDefs['multilangField']) && $fieldDefs['multilangField'] === 'name') {
+            if (!empty($fieldDefs['multilangField']) && $fieldDefs['multilangField'] === $fieldName) {
                 $names[] = $field;
             }
         }
