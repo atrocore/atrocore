@@ -41,7 +41,7 @@ Espo.define('views/unit/detail', 'views/detail',
 
             const rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
 
-            return `<a href="#Measure">${this.translate('Measure', 'scopeNamesPlural', 'Global')}</a><a href="${rootUrl}" class="action" data-action="navigateToRoot">${this.translate(this.scope, 'scopeNamesPlural')}</a>${name}`;
+            return `<a href="#Measure">${this.translate('Measure', 'scopeNamesPlural', 'Global')}</a> / <a href="${rootUrl}" class="action" data-action="navigateToRoot">${this.translate(this.scope, 'scopeNamesPlural')}</a> / ${name}`;
         },
 
     })

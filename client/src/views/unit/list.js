@@ -34,7 +34,7 @@ Espo.define('views/unit/list', 'views/list',
     (Dep) => Dep.extend({
 
         getHeader() {
-            return  `<a href="#Measure">${this.translate('Measure', 'scopeNamesPlural', 'Global')}</a>` + this.translate('Unit', 'scopeNamesPlural', 'Global');
+            return  `<a href="#Measure">${this.translate('Measure', 'scopeNamesPlural', 'Global')}</a> / ` + this.translate('Unit', 'scopeNamesPlural', 'Global');
         },
 
     })
