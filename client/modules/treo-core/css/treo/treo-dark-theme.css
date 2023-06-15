@@ -17836,15 +17836,11 @@ a.field-info > span.fa-info-circle {
 }
 
 .panel-heading > .btn-group {
-    top: -6px;
-    right: -10px
+    position: absolute;
+    top: 0;
+    right: 0
 }
 
-@media screen and (max-width: 767px) {
-    .panel-heading > .btn-group {
-        top: -6px;
-    }
-}
 
 .middle > .panel-default > .panel-heading > .btn-group > .btn,
 .bottom > .panel-default > .panel-heading > .btn-group > .btn,
@@ -19511,6 +19507,7 @@ input#sn-checkbox-open-in-new-window {
 }
 
 .panel-default > .panel-heading {
+    position: relative;
     padding: 5px 10px 6px 14px;
     color: rgba(0, 0, 0, 0.87);
     background-color: #ececec;
