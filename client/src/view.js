@@ -1,4 +1,3 @@
-
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -38,7 +37,7 @@ Espo.define('view', [], function () {
         addActionHandler: function (action, handler) {
             this.events = this.events || {};
 
-            var fullAction = 'click button[data-action=\"'+action+'\"]';
+            var fullAction = 'click button[data-action=\"' + action + '\"]';
             this.events[fullAction] = handler;
         },
 
@@ -163,12 +162,15 @@ Espo.define('view', [], function () {
         },
 
         updatePageTitle: function () {
-            var title = this.getConfig().get('applicationName') || 'EspoCRM';
-            this.setPageTitle(title);
+            this.setPageTitle('');
         },
 
         setPageTitle: function (title) {
-            $('head title').text(title);
+            var prefix = this.getConfig().get('applicationName') || 'EspoCRM';
+            if (title) {
+                prefix += ' / '
+            }
+            $('head title').text(prefix + title);
         },
 
         translate: function (label, category, scope) {
