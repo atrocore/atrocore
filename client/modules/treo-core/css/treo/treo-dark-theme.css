@@ -17673,9 +17673,11 @@ a.field-info > span.fa-info-circle {
     border: 1px solid #e8eced;
     position: relative;
 }
+
 .plate-item.active {
     background-color: #e8eced
 }
+
 .plate-item .field-type {
     display: inline-block;
     position: absolute;
@@ -17689,6 +17691,7 @@ a.field-info > span.fa-info-circle {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
 .plate-item .field-status {
     display: inline-block;
     position: absolute;
@@ -17699,6 +17702,7 @@ a.field-info > span.fa-info-circle {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
 .plate-item .field-name {
     display: block;
     width: 100%;
@@ -17711,6 +17715,7 @@ a.field-info > span.fa-info-circle {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
 .plate-item .field-preview {
     display: block;
     margin-top: 40px;
@@ -17720,6 +17725,7 @@ a.field-info > span.fa-info-circle {
     vertical-align: middle;
     overflow: hidden;
 }
+
 .plate-item .field-preview img {
     max-height: 100%;
     max-width: 100%;
@@ -17727,6 +17733,7 @@ a.field-info > span.fa-info-circle {
     background-size: 20px 20px;
     background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
 }
+
 .plate-item .actions {
     color: #999999;
     display: inline-block;
@@ -17734,12 +17741,14 @@ a.field-info > span.fa-info-circle {
     top: 6px;
     right: 0;
 }
+
 .plate-item .record-checkbox-container {
     display: inline-block;
     position: absolute;
     left: 10px;
     top: 0;
 }
+
 .plate-item .record-checkbox-container input {
     cursor: pointer;
 }
@@ -17836,8 +17845,9 @@ a.field-info > span.fa-info-circle {
 }
 
 .panel-heading > .btn-group {
-    top: -6px;
-    right: -10px
+    position: absolute;
+    top: 0;
+    right: 0
 }
 
 @media screen and (max-width: 767px) {
@@ -19511,6 +19521,7 @@ input#sn-checkbox-open-in-new-window {
 }
 
 .panel-default > .panel-heading {
+    position: relative;
     padding: 5px 10px 6px 14px;
     color: rgba(0, 0, 0, 0.87);
     background-color: #ececec;
@@ -20254,7 +20265,7 @@ select,
     font-style: italic;
 }
 
-.jqtree-tree .show-more .jqtree-element{
+.jqtree-tree .show-more .jqtree-element {
     padding-right: 0 !important;
 }
 
