@@ -193,18 +193,22 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
         },
 
         fetch: function () {
-            let value = (this.$element.length === 0) ? '' : this.$element.val();
-            var list = value.split(':,:');
-            if (list.length == 1 && list[0] == '') {
-                list = [];
-            }
-            for (var i in list) {
-                if (list[i] === '__emptystring__') {
-                    list[i] = '';
-                }
-            }
+            let value = (this.$element?.length === 0) ? '' : this.$element?.val();
             var data = {};
-            data[this.name] = list.map(item => item.replace(/-quote-/g, '"').replace(/-backslash-/g, '\\'));
+
+            if (typeof value !== 'undefined' && value !== null) {
+                var list = value.split(':,:');
+                if (list.length == 1 && list[0] == '') {
+                    list = [];
+                }
+                for (var i in list) {
+                    if (list[i] === '__emptystring__') {
+                        list[i] = '';
+                    }
+                }
+
+                data[this.name] = list.map(item => item.replace(/-quote-/g, '"').replace(/-backslash-/g, '\\'));
+            }
 
             return data;
         },
