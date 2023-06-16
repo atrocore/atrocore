@@ -17747,6 +17747,11 @@ table.table {
   margin-top: -6px;
 }
 
+
+.panel-extensibleEnumOptions > .panel-heading {
+  border: 0 !important;
+}
+
 .modal-footer {
   margin-top: 0;
 }
