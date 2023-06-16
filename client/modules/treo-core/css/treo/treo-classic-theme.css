@@ -4124,7 +4124,7 @@ tbody.collapse.in {
 .additional-button:not(.additional-button ~ .additional-button) {
     margin-left: 20px;
     border-bottom-left-radius: 3px;
-    border-top-left-radius: 3px; 
+    border-top-left-radius: 3px;
 }
 
 .btn-group > .btn-lg + .dropdown-toggle {
@@ -17903,6 +17903,17 @@ table.table {
 .panel.dashlet > .panel-heading > .btn-group {
     margin-top: -6px
 }
+
+.panel-extensibleEnumOptions > .panel-heading {
+    position: relative;
+}
+
+.panel-extensibleEnumOptions .panel-heading > .btn-group {
+    position: absolute;
+    top: 0;
+    right: 0
+}
+
 
 .modal-footer {
     margin-top: 0
