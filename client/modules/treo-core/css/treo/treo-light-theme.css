@@ -15293,6 +15293,10 @@ table.table > thead th {
   min-width: 100%;
 }
 
+.dashlet .list-container > .list > .table:not(.fixed-header-table) {
+  width: auto;
+}
+
 .cell label, .filter label {
   color: #999;
   font-weight: normal;
