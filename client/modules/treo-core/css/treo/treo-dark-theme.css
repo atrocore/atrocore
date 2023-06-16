@@ -15552,6 +15552,10 @@ table.table > thead th > div > a {
     min-width: 100%;
 }
 
+.dashlet .list-container > .list > .table:not(.fixed-header-table) {
+    width: auto;
+}
+
 table.table > thead th {
     color: #999
 }
