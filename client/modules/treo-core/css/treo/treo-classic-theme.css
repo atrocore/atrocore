@@ -15469,6 +15469,10 @@ table.table > thead th > div > a {
     min-width: 100%;
 }
 
+.dashlet .list-container > .list > .table:not(.fixed-header-table) {
+    width: auto;
+}
+
 .panel .table.full-table {
     position: relative;
 }
