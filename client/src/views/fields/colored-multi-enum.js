@@ -45,9 +45,9 @@ Espo.define('views/fields/colored-multi-enum', ['views/fields/multi-enum', 'view
 
             if (this.mode === 'edit') {
                 this.setColors();
-                this.$element.on('change', this.setColors.bind(this));
-                this.$element[0].selectize.on('dropdown_open', this.setSelectizeColors.bind(this));
-                this.$element[0].selectize.on('change', this.setSelectizeColors.bind(this));
+                this.$element?.on('change', this.setColors.bind(this));
+                this.$element[0]?.selectize?.on('dropdown_open', this.setSelectizeColors.bind(this));
+                this.$element[0]?.selectize?.on('change', this.setSelectizeColors.bind(this));
             }
         },
 
