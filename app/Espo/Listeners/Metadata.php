@@ -267,6 +267,7 @@ class Metadata extends AbstractListener
                             "required"             => false,
                             "unique"               => false,
                             "filterDisabled"       => true,
+                            "massUpdateDisabled"   => true,
                             "exportDisabled"       => true,
                             "importDisabled"       => true,
                             "emHidden"             => true
