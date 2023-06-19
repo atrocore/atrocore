@@ -41,6 +41,55 @@ use Espo\ORM\Entity;
 
 class ExtensibleEnumOption extends Base
 {
+    protected array $cachedOptions = [];
+
+    public function getPreparedOption(string $extensibleEnumId, ?string $id): ?array
+    {
+        if ($id === null || $id === '') {
+            return null;
+        }
+
+        $options = $this->getPreparedOptions($extensibleEnumId, [$id]);
+
+        return $options[0] ?? null;
+    }
+
+    public function getPreparedOptions(string $extensibleEnumId, ?array $ids): ?array
+    {
+        if (!is_array($ids)) {
+            return null;
+        }
+
+        $res = [];
+
+        foreach ($ids as $id) {
+            $id = (string)$id;
+            if ($id === '') {
+                continue;
+            }
+
+            if (!isset($this->cachedOptions[$id])) {
+                $this->cachedOptions[$id] = null;
+
+                // prepare select
+                $select = ['id', 'code', 'color'];
+                foreach (['name', 'description'] as $field) {
+                    $select[] = $field;
+                    foreach ($this->getLingualFields($field) as $lingualField) {
+                        $select[] = $lingualField;
+                    }
+                }
+
+                foreach ($this->select($select)->where(['extensibleEnumId' => $extensibleEnumId])->find() as $item) {
+                    $this->cachedOptions[$item->get('id')] = $item->toArray();
+                }
+            }
+            $res[] = $this->cachedOptions[$id];
+        }
+
+        return $res;
+    }
+
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if ($entity->get('code') === '') {
@@ -84,11 +133,11 @@ class ExtensibleEnumOption extends Base
         }
     }
 
-    public function getLingualFields(): array
+    public function getLingualFields(string $fieldName = 'name'): array
     {
         $names = [];
         foreach ($this->getMetadata()->get(['entityDefs', 'ExtensibleEnumOption', 'fields']) as $field => $fieldDefs) {
-            if (!empty($fieldDefs['multilangField']) && $fieldDefs['multilangField'] === 'name') {
+            if (!empty($fieldDefs['multilangField']) && $fieldDefs['multilangField'] === $fieldName) {
                 $names[] = $field;
             }
         }

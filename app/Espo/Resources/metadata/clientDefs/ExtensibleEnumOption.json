@@ -2,9 +2,11 @@
   "controller": "controllers/record",
   "iconClass": "fas fa-list",
   "boolFilterList": [
-    "defaultOption"
+    "defaultOption",
+    "onlyForExtensibleEnum"
   ],
   "hiddenBoolFilterList": [
-    "defaultOption"
+    "defaultOption",
+    "onlyForExtensibleEnum"
   ]
 }

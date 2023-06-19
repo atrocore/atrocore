@@ -2494,6 +2494,22 @@ class Record extends \Espo\Core\Services\Base
                         }
                     }
                     break;
+                case 'extensibleEnum':
+                    $extensibleEnumId = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $name, 'extensibleEnumId']);
+                    $option = $this->getEntityManager()->getRepository('ExtensibleEnumOption')->getPreparedOption($extensibleEnumId, $entity->get($name));
+                    if (!empty($option)) {
+                        $entity->set($name . 'Name', $option['name']);
+                        $entity->set($name . 'OptionData', $option);
+                    }
+                    break;
+                case 'extensibleMultiEnum':
+                    $extensibleEnumId = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $name, 'extensibleEnumId']);
+                    $options = $this->getEntityManager()->getRepository('ExtensibleEnumOption')->getPreparedOptions($extensibleEnumId, $entity->get($name));
+                    if (isset($options[0])) {
+                        $entity->set($name . 'Names', array_column($options, 'name', 'id'));
+                        $entity->set($name . 'OptionsData', $options);
+                    }
+                    break;
             }
         }
 

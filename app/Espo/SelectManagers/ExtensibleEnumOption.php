@@ -51,4 +51,11 @@ class ExtensibleEnumOption extends Base
             'extensibleEnumId' => $data['extensibleEnumId']
         ];
     }
+
+    protected function boolFilterOnlyForExtensibleEnum(array &$result): void
+    {
+        $result['whereClause'][] = [
+            'extensibleEnumId' => $this->getBoolFilterParameter('onlyForExtensibleEnum')
+        ];
+    }
 }

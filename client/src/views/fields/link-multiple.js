@@ -104,8 +104,12 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
         getCreateAttributes: function () {},
 
         setup: function () {
-            this.nameHashName = this.name + 'Names';
-            this.idsName = this.name + 'Ids';
+            if (this.nameHashName === null) {
+                this.nameHashName = this.name + 'Names';
+            }
+            if (this.idsName === null) {
+                this.idsName = this.name + 'Ids';
+            }
 
             this.foreignScope = this.options.foreignScope || this.foreignScope || this.model.getFieldParam(this.name, 'entity') || this.model.getLinkParam(this.name, 'entity');
 
