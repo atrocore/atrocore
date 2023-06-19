@@ -88,16 +88,6 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                 }
             }
 
-            if (!this.params.options) {
-                this.prepareOptionsForExtensibleEnum();
-                if (this.model.isNew()) {
-                    let defaultValue = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'defaultId']);
-                    if (defaultValue && this.translatedOptions[defaultValue]) {
-                        this.model.set(this.name, defaultValue);
-                    }
-                }
-            }
-
             // prepare default
             if (this.mode === 'edit' && this.model.isNew() && this.params.default) {
                 let optionsIds = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'optionsIds']);
