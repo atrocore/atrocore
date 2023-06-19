@@ -101,7 +101,7 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                 this.fieldsArr = [];
 
                 fields.forEach(function (field) {
-                    let fieldDefs = this.model.get('fieldDefs');
+                    let fieldDefs = this.model.get('fieldDefs') || {};
                     if (!fieldDefs[field] || !fieldDefs[field]['type']) {
                         return;
                     }
