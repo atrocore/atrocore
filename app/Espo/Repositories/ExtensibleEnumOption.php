@@ -72,12 +72,12 @@ class ExtensibleEnumOption extends Base
                 $this->cachedOptions[$id] = null;
 
                 // prepare select
-                $select = ['id', 'code', 'color'];
-                foreach (['name', 'description'] as $field) {
-                    $select[] = $field;
-                    foreach ($this->getLingualFields($field) as $lingualField) {
-                        $select[] = $lingualField;
-                    }
+                $select = ['id', 'code', 'color', 'name'];
+                foreach ($this->getLingualFields('name') as $lingualField) {
+                    $select[] = $lingualField;
+                }
+                if ($this->getMetadata()->get(['entityDefs', 'ExtensibleEnumOption', 'fields', 'description'])) {
+                    $select[] = 'description';
                 }
 
                 foreach ($this->select($select)->where(['extensibleEnumId' => $extensibleEnumId])->find() as $item) {
