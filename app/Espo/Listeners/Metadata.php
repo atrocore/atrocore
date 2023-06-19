@@ -267,6 +267,8 @@ class Metadata extends AbstractListener
                             "required"             => false,
                             "unique"               => false,
                             "filterDisabled"       => true,
+                            "exportDisabled"       => true,
+                            "importDisabled"       => true,
                             "emHidden"             => true
                         ]);
 
@@ -534,7 +536,8 @@ class Metadata extends AbstractListener
     }
 
 
-    public function addArchive(array $data){
+    public function addArchive(array $data)
+    {
         foreach ($data['scopes'] as $scope => $row) {
             if (!empty($row['hasArchive'])) {
                 $data['entityDefs'][$scope]['fields']['isArchived']['type'] = 'bool';
