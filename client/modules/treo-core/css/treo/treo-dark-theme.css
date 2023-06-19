@@ -15552,6 +15552,10 @@ table.table > thead th > div > a {
     min-width: 100%;
 }
 
+.dashlet .list-container > .list > .table:not(.fixed-header-table) {
+    width: auto;
+}
+
 table.table > thead th {
     color: #999
 }
@@ -17959,6 +17963,16 @@ table.table {
 
 .panel.dashlet > .panel-heading > .btn-group {
     margin-top: -6px
+}
+
+.panel-extensibleEnumOptions > .panel-heading {
+    position: relative;
+}
+
+.panel-extensibleEnumOptions .panel-heading > .btn-group {
+    position: absolute;
+    top: 0;
+    right: 0
 }
 
 .modal-footer {
