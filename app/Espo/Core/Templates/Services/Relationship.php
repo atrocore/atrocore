@@ -150,22 +150,27 @@ class Relationship extends Record
 
             $relEntity = $relEntities[$fieldDefs['relationName']][$entity->get($fieldDefs['relationName'] . 'Id')];
 
-            $fieldDefs = $this->getMetadata()->get(['entityDefs', $relEntity->getEntityType(), 'fields', $fieldDefs['relationFieldName']]);
             if (empty($fieldDefs['relationFieldName'])) {
                 continue;
             }
 
-            switch ($fieldDefs['type']) {
+            $relationFieldDefs = $this->getMetadata()->get(['entityDefs', $relEntity->getEntityType(), 'fields', $fieldDefs['relationFieldName']]);
+
+            if (empty($relationFieldDefs['type'])) {
+                continue;
+            }
+
+            switch ($relationFieldDefs['type']) {
                 case 'rangeInt':
                 case 'rangeFloat':
                     $entity->set($field . 'From', $relEntity->get($fieldDefs['relationFieldName'] . 'From'));
                     $entity->set($field . 'To', $relEntity->get($fieldDefs['relationFieldName'] . 'To'));
-                    if (!empty($fieldDefs['measureId'])) {
+                    if (!empty($relationFieldDefs['measureId'])) {
                         $entity->set($field . 'UnitId', $relEntity->get($fieldDefs['relationFieldName'] . 'UnitId'));
                     }
                     break;
                 case 'varchar':
-                    if (empty($fieldDefs['unitField'])) {
+                    if (empty($relationFieldDefs['unitField'])) {
                         $entity->set($field, $relEntity->get($fieldDefs['relationFieldName']));
                     } else {
                         $entity->set($fieldDefs['mainField'], $relEntity->get($fieldDefs['relationFieldName']));
