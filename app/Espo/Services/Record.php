@@ -2814,7 +2814,11 @@ class Record extends \Espo\Core\Services\Base
                             $record->clear('modifiedById');
                             $record->set($foreign . 'Id', $entity->get('id'));
                             $record->set($foreign . 'Name', $entity->get('name'));
-                            $this->getEntityManager()->saveEntity($record);
+                            try {
+                                $this->getEntityManager()->saveEntity($record);
+                            } catch (\PDOException $e) {
+                                $GLOBALS['log']->error("Creating '$foreignEntity' failed: {$e->getMessage()}");
+                            }
                         }
                         continue 1;
                     }
