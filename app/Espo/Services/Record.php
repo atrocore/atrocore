@@ -2881,7 +2881,12 @@ class Record extends \Espo\Core\Services\Base
                     $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $attribute]);
 
                     $attributeList[] = $attribute;
-                    if (!empty($fieldDefs['multilangField']) && !in_array($fieldDefs['multilangField'], $attributeList)) {
+                    if (
+                        empty($fieldDefs['notStorable'])
+                        && empty($fieldDefs['relationVirtualField'])
+                        && !empty($fieldDefs['multilangField'])
+                        && !in_array($fieldDefs['multilangField'], $attributeList)
+                    ) {
                         $attributeList[] = $fieldDefs['multilangField'];
                     }
 
