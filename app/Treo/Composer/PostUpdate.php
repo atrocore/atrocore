@@ -109,11 +109,11 @@ class PostUpdate
             // update client files
             self::updateClientFiles();
 
-            // init events
-            self::initEvents();
-
             // run migrations
             self::runMigrations();
+
+            // init events
+            self::initEvents();
 
             // refresh translations
             self::refreshTranslations();
