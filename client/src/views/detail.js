@@ -325,7 +325,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                         }
                     }
 
-                    if (Array.isArray(selectObj) && afterSelectCallback && panelView && typeof panelView[afterSelectCallback] === 'function') {
+                    if (afterSelectCallback && panelView && typeof panelView[afterSelectCallback] === 'function') {
                         panelView[afterSelectCallback](selectObj);
                     } else {
                         let data = {};
