@@ -38,6 +38,7 @@
    "fields":{
       "currency":{
          "type":"varchar",
+         "currencyPart": true,
          "disabled": true,
          "maxLength": 6,
          "emHidden": true

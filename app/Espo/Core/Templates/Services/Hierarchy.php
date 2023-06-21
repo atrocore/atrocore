@@ -43,7 +43,6 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
-use Espo\ORM\EntityCollection;
 use Espo\Services\Record;
 use Treo\Core\Exceptions\NotModified;
 
@@ -56,10 +55,12 @@ class Hierarchy extends Record
             throw new NotFound();
         }
 
-        $children = $parent->get('children');
-        if (empty($children) || count($children) === 0) {
+        $childrenIds = $this->getRepository()->getChildrenRecursivelyArray($id);
+        if (empty($childrenIds)) {
             return false;
         }
+
+        $children = $this->getRepository()->where(['id' => $childrenIds])->find();
 
         $inheritableFields = [];
         $inheritableLinks = [];
