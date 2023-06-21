@@ -69,7 +69,11 @@ class ExtensibleEnumOption extends Base
             }
 
             if (!isset($this->cachedOptions[$id])) {
-                $this->cachedOptions[$id] = null;
+                $this->cachedOptions[$id] = [
+                    'id'                => $id,
+                    'name'              => $id,
+                    'notExistingOption' => true
+                ];
 
                 // prepare select
                 $select = ['id', 'code', 'color', 'name'];

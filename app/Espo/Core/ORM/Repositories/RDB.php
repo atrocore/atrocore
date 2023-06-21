@@ -365,6 +365,46 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $this->validateEnum($entity, $fieldName, $fieldData);
     }
 
+    protected function validateExtensibleEnum(Entity $entity, string $fieldName, array $fieldData): void
+    {
+        if (!$entity->isAttributeChanged($fieldName)) {
+            return;
+        }
+
+        if ($entity->isAttributeChanged($fieldName) && !empty($id = $entity->get($fieldName))) {
+            $option = $this->getEntityManager()->getRepository('ExtensibleEnumOption')->getPreparedOption($fieldData['extensibleEnumId'], $id);
+            if (!empty($option['notExistingOption'])) {
+                throw new BadRequest(
+                    sprintf(
+                        $this->getLanguage()->translate('noSuchOptions', 'exceptions', 'Global'), $option['id'],
+                        $this->getLanguage()->translate($fieldName, 'fields', $entity->getEntityType())
+                    )
+                );
+            }
+        }
+    }
+
+    protected function validateExtensibleMultiEnum(Entity $entity, string $fieldName, array $fieldData): void
+    {
+        if (!$entity->isAttributeChanged($fieldName)) {
+            return;
+        }
+
+        if ($entity->isAttributeChanged($fieldName) && !empty($ids = $entity->get($fieldName))) {
+            $options = $this->getEntityManager()->getRepository('ExtensibleEnumOption')->getPreparedOptions($fieldData['extensibleEnumId'], $ids);
+            foreach ($options as $option) {
+                if (!empty($option['notExistingOption'])) {
+                    throw new BadRequest(
+                        sprintf(
+                            $this->getLanguage()->translate('noSuchOptions', 'exceptions', 'Global'), $option['id'],
+                            $this->getLanguage()->translate($fieldName, 'fields', $entity->getEntityType())
+                        )
+                    );
+                }
+            }
+        }
+    }
+
     protected function prepareFieldTypeMultiEnum(Entity $entity, string $fieldName, array $fieldData): void
     {
         $this->prepareFieldTypeArray($entity, $fieldName, $fieldData);
