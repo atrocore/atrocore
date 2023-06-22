@@ -91,8 +91,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             }, Dep.prototype.data.call(this));
         },
 
-        getSelectFilters: function () {
-        },
+        getSelectFilters: function () {},
 
         getSelectBoolFilterList: function () {
             return this.selectBoolFilterList;
@@ -102,8 +101,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             return this.selectPrimaryFilterName;
         },
 
-        getCreateAttributes: function () {
-        },
+        getCreateAttributes: function () {},
 
         setup: function () {
             if (this.nameHashName === null) {
@@ -142,7 +140,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 this.addActionHandler('selectLink', function () {
                     self.notify('Loading...');
 
-                    var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') || this.selectRecordsView;
+                    var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select')  || this.selectRecordsView;
 
                     this.createView('dialog', viewName, {
                         scope: this.foreignScope,
@@ -162,7 +160,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                             this.clearView('dialog');
                             if (models.massRelate) {
                                 if (models.where.length === 0) {
-                                    // for subquery if all elements are selected with no filters
+                                    // force subquery if primary filter "all" is used in modal
                                     models.where = [{asc: true}]
                                 }
                                 this.addLinkSubQuery(models);
@@ -245,7 +243,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                         transformResult: function (response) {
                             var response = JSON.parse(response);
                             var list = [];
-                            response.list.forEach(function (item) {
+                            response.list.forEach(function(item) {
                                 list.push({
                                     id: item.id,
                                     name: item.name,
@@ -338,11 +336,9 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             this.trigger('change');
         },
 
-        afterDeleteLink: function (id) {
-        },
+        afterDeleteLink: function (id) {},
 
-        afterAddLink: function (id) {
-        },
+        afterAddLink: function (id) {},
 
         deleteLinkHtml: function (id) {
             this.$el.find('.link-' + id).remove();
@@ -353,7 +349,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
         },
 
         addLinkSubQueryHtml: function (subQuery) {
-            if (!subQuery || subQuery.length === 0) {
+            if (!subQuery || subQuery.length === 0){
                 return;
             }
 
@@ -428,7 +424,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         fetchFromDom: function () {
             this.ids = [];
-            this.$el.find('.link-container').children().each(function (i, li) {
+            this.$el.find('.link-container').children().each(function(i, li) {
                 var id = $(li).attr('data-id');
                 if (!id) return;
                 this.ids.push(id);
