@@ -57,7 +57,7 @@ Espo.define('views/record/panels/for-relationship-type', 'views/record/panels/re
                     data: {
                         link: this.panelName,
                         scope: relationshipEntities.filter(entity => entity !== this.model.urlRoot).shift(),
-                        afterSelectCallback: "createRelationshipEntitiesViaIds",
+                        afterSelectCallback: "createRelationshipEntities",
                         massRelateDisabled: false
                     },
                     acl: 'create',
@@ -76,20 +76,22 @@ Espo.define('views/record/panels/for-relationship-type', 'views/record/panels/re
             });
         },
 
-        createRelationshipEntitiesViaIds(selectObj) {
-            this.notify('Please wait...');
-            let foreignWhere = null
+        createRelationshipEntities(selectObj) {
             if (Array.isArray(selectObj)) {
-                foreignWhere = [
+                this.createRelationshipEntitiesViaWhere([
                     {
                         type: 'equals',
                         attribute: 'id',
                         value: selectObj.map(o => o.id)
                     }
-                ]
+                ])
             } else {
-                foreignWhere = selectObj.where
+                this.createRelationshipEntitiesViaWhere(selectObj.where)
             }
+        },
+
+        createRelationshipEntitiesViaWhere(foreignWhere) {
+            this.notify('Please wait...');
 
             this.ajaxPostRequest(`${this.model.name}/${this.link}/relation`, {
                 where: [
