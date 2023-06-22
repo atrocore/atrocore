@@ -64,10 +64,12 @@ Espo.define('views/fields/extensible-multi-enum', ['treo-core:views/fields/filte
             let data = Dep.prototype.data.call(this);
 
             if (['list', 'detail'].includes(this.mode)) {
+                const ids = this.model.get(this.name);
                 const optionsData = this.model.get(this.name + 'OptionsData');
-                if (optionsData) {
+
+                data.selectedValues = [];
+                if (ids && ids.length > 0 && optionsData) {
                     const fontSize = this.model.getFieldParam(this.name, 'fontSize');
-                    data.selectedValues = [];
                     optionsData.forEach(option => {
                         let backgroundColor = option.color || '#ececec';
                         data.selectedValues.push({

@@ -574,9 +574,9 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
             }
 
             this[method](url, attrs).success(function (res) {
-                if (res.id) {
-                    model.set('id', res.id);
-                }
+                // set to model
+                model.set(res);
+
                 this.attributes = model.getClonedAttributes();
                 self.afterSave();
                 self.trigger('after:save');
