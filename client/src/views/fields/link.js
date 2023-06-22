@@ -195,6 +195,10 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         this.listenToOnce(view, 'select', function (models) {
                             this.clearView('dialog');
                             if (models.massRelate) {
+                                if (models.where.length === 0) {
+                                    // for subquery if all elements are selected with no filters
+                                    models.where = [{asc: true}]
+                                }
                                 this.addLinkSubQuery(models);
                                 return;
                             }
