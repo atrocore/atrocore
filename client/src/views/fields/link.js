@@ -195,6 +195,10 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         this.listenToOnce(view, 'select', function (models) {
                             this.clearView('dialog');
                             if (models.massRelate) {
+                                if (models.where.length === 0) {
+                                    // force subquery if primary filter "all" is used in modal
+                                    models.where = [{asc: true}]
+                                }
                                 this.addLinkSubQuery(models);
                                 return;
                             }
