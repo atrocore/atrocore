@@ -57,8 +57,8 @@ Espo.define('views/record/panels/for-relationship-type', 'views/record/panels/re
                     data: {
                         link: this.panelName,
                         scope: relationshipEntities.filter(entity => entity !== this.model.urlRoot).shift(),
-                        afterSelectCallback: "createRelationshipEntitiesViaIds",
-                        massRelateDisabled: true
+                        afterSelectCallback: "createRelationshipEntities",
+                        massRelateDisabled: false
                     },
                     acl: 'create',
                     aclScope: relationshipScope
@@ -76,38 +76,33 @@ Espo.define('views/record/panels/for-relationship-type', 'views/record/panels/re
             });
         },
 
-        createRelationshipEntitiesViaIds(selectObj) {
-            const relationshipScope = this.getMetadata().get(['entityDefs', this.model.name, 'links', this.panelName, 'entity']);
-
-            let from = null;
-            let to = null;
-            $.each(this.getMetadata().get(['entityDefs', relationshipScope, 'fields']), (field, fieldDefs) => {
-                if (fieldDefs.relationshipField === true) {
-                    if (this.getMetadata().get(['entityDefs', relationshipScope, 'links', field, 'entity']) === this.model.name) {
-                        from = field;
-                    } else {
-                        to = field;
+        createRelationshipEntities(selectObj) {
+            if (Array.isArray(selectObj)) {
+                this.createRelationshipEntitiesViaWhere([
+                    {
+                        type: 'equals',
+                        attribute: 'id',
+                        value: selectObj.map(o => o.id)
                     }
-                }
-            });
-
-            if (!from || !to) {
-                return;
+                ])
+            } else {
+                this.createRelationshipEntitiesViaWhere(selectObj.where)
             }
+        },
 
-            let promises = [];
-            selectObj.forEach(model => {
-                let data = {"_silentMode": true};
-                data[from + 'Id'] = this.model.id;
-                data[to + 'Id'] = model.id;
-                promises.push(new Promise(resolve => {
-                    this.ajaxPostRequest(relationshipScope, data).then(response => {
-                        resolve();
-                    });
-                }));
-            });
+        createRelationshipEntitiesViaWhere(foreignWhere) {
+            this.notify('Please wait...');
 
-            Promise.all(promises).then(() => {
+            this.ajaxPostRequest(`${this.model.name}/${this.link}/relation`, {
+                where: [
+                    {
+                        type: "equals",
+                        attribute: "id",
+                        value: this.model.id
+                    }
+                ],
+                foreignWhere: foreignWhere,
+            }).then(() => {
                 this.notify('Created', 'success');
                 this.actionRefresh();
                 this.model.trigger('after:relate', this.panelName);
@@ -117,30 +112,25 @@ Espo.define('views/record/panels/for-relationship-type', 'views/record/panels/re
         actionDeleteAllRelationshipEntities(data) {
             this.confirm(this.translate('deleteAllConfirmation', 'messages'), () => {
                 this.notify('Please wait...');
-                this.ajaxGetRequest(`${this.model.name}/${this.model.id}/${this.panelName}?select=id&maxSize=9999&offset=0`).then(response => {
-                    if (response.total > 0) {
-                        let promises = [];
-                        response.list.forEach(item => {
-                            promises.push(new Promise(resolve => {
-                                $.ajax({
-                                    url: `${data.relationshipScope}/${item.id}`,
-                                    type: 'DELETE',
-                                }).done(response => {
-                                    resolve();
-                                });
-                            }));
-                        });
-                        Promise.all(promises).then(() => {
-                            this.notify(false);
-                            this.notify('Removed', 'success');
-                            this.collection.fetch();
-                            this.model.trigger('after:unrelate');
-                        });
-                    } else {
-                        this.notify(false);
-                        this.notify('Removed', 'success');
-                        this.collection.fetch();
-                    }
+                $.ajax({
+                    url: `${this.model.name}/${this.link}/relation`,
+                    data: JSON.stringify({
+                        where: [
+                            {
+                                type: "equals",
+                                attribute: "id",
+                                value: this.model.id
+                            }
+                        ],
+                        foreignWhere: [],
+                    }),
+                    type: 'DELETE',
+                    contentType: 'application/json',
+                }).done(response => {
+                    this.notify(false);
+                    this.notify('Removed', 'success');
+                    this.collection.fetch();
+                    this.model.trigger('after:unrelate');
                 });
             });
         },
