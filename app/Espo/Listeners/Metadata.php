@@ -72,7 +72,29 @@ class Metadata extends AbstractListener
 
         $this->prepareUnit($data);
 
+        $this->prepareLanguageField($data);
+
         $event->setArgument('data', $data);
+    }
+
+    protected function prepareLanguageField(array &$data): void
+    {
+        $languages = ['main'];
+        if ($this->getConfig()->get('isMultilangActive')) {
+            $languages = array_merge($languages, $this->getConfig()->get('inputLanguageList', []));
+        }
+
+        foreach ($data['entityDefs'] as $entityType => $entityDefs) {
+            if (empty($entityDefs['fields'])) {
+                continue 1;
+            }
+            foreach ($entityDefs['fields'] as $field => $fieldDefs) {
+                if (!empty($fieldDefs['type']) && $fieldDefs['type'] === 'language') {
+                    $data['entityDefs'][$entityType]['fields'][$field]['optionsIds'] = $languages;
+                    $data['entityDefs'][$entityType]['fields'][$field]['options'] = $languages;
+                }
+            }
+        }
     }
 
     protected function prepareUnit(array &$data): void
