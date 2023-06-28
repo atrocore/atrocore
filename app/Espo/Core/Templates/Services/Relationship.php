@@ -100,7 +100,12 @@ class Relationship extends Record
         $result = [];
 
         foreach ($this->getMetadata()->get(['entityDefs', $entityName, 'fields'], []) as $field => $fieldDefs) {
-            if ($select !== null && !in_array($field, $select)) {
+            $fieldName = $field;
+            if (isset($fieldDefs['type']) && $fieldDefs['type'] === 'link') {
+                $fieldName .= 'Id';
+            }
+
+            if ($select !== null && !in_array($fieldName, $select)) {
                 continue;
             }
 
@@ -186,6 +191,11 @@ class Relationship extends Record
                 case 'asset':
                     $entity->set($field . 'Id', $relEntity->get($fieldDefs['relationFieldName'] . 'Id'));
                     $entity->set($field . 'Name', $relEntity->get($fieldDefs['relationFieldName'] . 'Name'));
+                    break;
+                case 'enum':
+                case 'multiEnum':
+                    $key = "__original_value_{$fieldDefs['relationFieldName']}";
+                    $entity->set($field, $relEntity->$key ?? null);
                     break;
                 default:
                     $entity->set($field, $relEntity->get($fieldDefs['relationFieldName']));

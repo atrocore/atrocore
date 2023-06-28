@@ -2457,7 +2457,9 @@ class Record extends \Espo\Core\Services\Base
                     break;
                 case 'enum':
                     if (empty($defs['multilangField']) && !empty($defs['optionsIds'])) {
-                        $key = array_search($entity->get($name), $defs['optionsIds']);
+                        $originalValue = $entity->get($name);
+                        $entity->{"__original_value_{$name}"} = $originalValue;
+                        $key = array_search($originalValue, $defs['optionsIds']);
                         if ($key !== false) {
                             $entity->set($name, $defs['options'][$key]);
                             if (!empty($defs['isMultilang']) && !empty($defs['lingualFields'])) {
@@ -2477,7 +2479,9 @@ class Record extends \Espo\Core\Services\Base
                         && (is_array($entity->get($name)) || is_object($entity->get($name)))
                     ) {
                         $fieldsValues[$name] = [];
-                        foreach ($entity->get($name) as $optionId) {
+                        $originalValue = $entity->get($name);
+                        $entity->{"__original_value_{$name}"} = $originalValue;
+                        foreach ($originalValue as $optionId) {
                             $key = array_search($optionId, $defs['optionsIds']);
                             if ($key !== false) {
                                 $fieldsValues[$name][] = $defs['options'][$key];
