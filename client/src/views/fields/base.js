@@ -76,6 +76,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         VALIDATION_POPOVER_TIMEOUT: 3000,
 
+        fieldActions: true,
+
         isRequired: function () {
             return this.params.required;
         }, /**
@@ -321,18 +323,20 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 this.initInheritanceActions();
             }
 
-            (this.getMetadata().get('app.fieldActions') || []).forEach(item => {
-                this.createView(item.name, item.view, {
-                    model: this.model,
-                    name: this.name,
-                    el: this.$el,
-                    fieldView: this,
-                }, view => {
-                    this.listenTo(this, 'after:render', () => {
-                        view.initFieldActions();
+            if (this.fieldActions) {
+                (this.getMetadata().get('app.fieldActions') || []).forEach(item => {
+                    this.createView(item.name, item.view, {
+                        model: this.model,
+                        name: this.name,
+                        el: this.$el,
+                        fieldView: this,
+                    }, view => {
+                        this.listenTo(this, 'after:render', () => {
+                            view.initFieldActions();
+                        });
                     });
                 });
-            });
+            }
 
             if (this.mode != 'search') {
                 this.attributeList = this.getAttributeList();
