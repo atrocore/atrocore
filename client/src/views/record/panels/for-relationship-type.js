@@ -102,8 +102,8 @@ Espo.define('views/record/panels/for-relationship-type', 'views/record/panels/re
                     }
                 ],
                 foreignWhere: foreignWhere,
-            }).then(() => {
-                this.notify('Created', 'success');
+            }).then((response) => {
+                this.notify(response.message, 'success');
                 this.actionRefresh();
                 this.model.trigger('after:relate', this.panelName);
             });
