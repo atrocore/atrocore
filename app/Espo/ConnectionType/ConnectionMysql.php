@@ -45,8 +45,15 @@ class ConnectionMysql extends AbstractConnection
         try {
             $port = !empty($connection->get('port')) ? ';port=' . $connection->get('port') : '';
             $dsn = 'mysql:host=' . $connection->get('host') . $port . ';dbname=' . $connection->get('dbName') . ';';
-            $result = new \PDO($dsn, $connection->get('user'), $this->decryptPassword($connection->get('password')));
-            $result->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+            $result = new \PDO(
+                $dsn,
+                $connection->get('user'),
+                $this->decryptPassword($connection->get('password')),
+                [
+                    \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8",
+                    \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION
+                ]
+            );
         } catch (\PDOException $e) {
             throw new BadRequest(sprintf($this->exception('connectionFailed'), $e->getMessage()));
         }
