@@ -1066,7 +1066,7 @@ class Stream extends \Espo\Core\Services\Base
                                 $options = $repository->getPreparedOptions($fieldDefs['extensibleEnumId'], $data->attributes->became->{$field});
                                 if (isset($options[0])) {
                                     $data->attributes->became->{$field . 'Names'} = array_column($options, 'name', 'id');
-                                    $data->attributes->became->{$field . 'OptionData'} = $options;
+                                    $data->attributes->became->{$field . 'OptionsData'} = $options;
                                 }
                             }
                             break;
