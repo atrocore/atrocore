@@ -100,7 +100,7 @@ class Migration extends Injectable
                     && $from != $className
                     && in_array($className, $migrations)
                     && !empty($migration = $this->createMigration($module, $className))) {
-                    self::renderLine("Run migration '" . str_replace(['V', 'Dot'], ['', '.'], $className) . "'");
+                    self::renderLine("Run migration " . str_replace(['V', 'Dot'], ['', '.'], $className));
                     $migration->up();
                 }
             }
@@ -112,7 +112,7 @@ class Migration extends Injectable
                     && $to != $className
                     && in_array($className, $migrations)
                     && !empty($migration = $this->createMigration($module, $className))) {
-                    self::renderLine("Run migration '" . str_replace(['V', 'Dot'], ['', '.'], $className) . "'");
+                    self::renderLine("Run migration " . str_replace(['V', 'Dot'], ['', '.'], $className));
                     $migration->down();
                 }
             }
