@@ -100,6 +100,7 @@ class Migration extends Injectable
                     && $from != $className
                     && in_array($className, $migrations)
                     && !empty($migration = $this->createMigration($module, $className))) {
+                    self::renderLine("Run '$className': UP.");
                     $migration->up();
                 }
             }
@@ -111,6 +112,7 @@ class Migration extends Injectable
                     && $to != $className
                     && in_array($className, $migrations)
                     && !empty($migration = $this->createMigration($module, $className))) {
+                    self::renderLine("Run '$className': DOWN.");
                     $migration->down();
                 }
             }
