@@ -56,6 +56,10 @@ class Attachment extends \Espo\Core\Acl\Base
                 if ($parent->getEntityType() === 'Note') {
                     return true;
                 } else {
+                    // @todo remove it after refactoring
+                    if ($parent->getEntityType() === 'Asset') {
+                        return true;
+                    }
                     if ($this->getAclManager()->checkEntity($user, $parent)) {
                         return true;
                     }
