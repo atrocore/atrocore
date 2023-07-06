@@ -233,8 +233,10 @@ class Relationship extends Record
                     }
                 }
                 try {
-                    $this->createEntity(json_decode(json_encode($input)));
-                    $related++;
+                    if (empty($this->getRepository()->where($input)->findOne())) {
+                        $this->createEntity(json_decode(json_encode($input)));
+                        $related++;
+                    }
                 } catch (\Throwable $e) {
                     $notRelated[] = [
                         'id'          => $entity->get('id'),
