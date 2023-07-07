@@ -781,7 +781,7 @@ class Util
 
     public static function generateId()
     {
-        return uniqid() . substr(md5(rand()), 0, 4);
+        return uniqid(strtolower(chr(rand(65, 90)))) . substr(md5(rand()), 0, 3);
     }
 
     public static function sanitizeFileName($fileName)
