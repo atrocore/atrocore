@@ -190,6 +190,11 @@ class Attachment extends Record
 
         $duplicateParam = $this->getConfig()->get('attachmentDuplicates', 'notAllowByContent');
 
+        // skip duplicates checking for stream attachments
+        if (property_exists($attachment, 'relatedType') && $attachment->relatedType === 'Note') {
+            $duplicateParam = 'allow';
+        }
+
         if ($duplicateParam == 'notAllowByContent') {
             $entity = $this->getRepository()->where(['md5' => $attachment->md5])->findOne();
         } elseif ($duplicateParam == 'notAllowByName') {
