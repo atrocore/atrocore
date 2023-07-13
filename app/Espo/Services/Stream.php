@@ -1055,7 +1055,11 @@ class Stream extends \Espo\Core\Services\Base
                             $repository = $this->getEntityManager()->getRepository('ExtensibleEnumOption');
 
                             if (!empty($data->attributes->was->{$field})) {
-                                $options = $repository->getPreparedOptions($fieldDefs['extensibleEnumId'], $data->attributes->was->{$field});
+                                $wasIds = $data->attributes->was->{$field};
+                                if (is_string($wasIds)) {
+                                    $wasIds = @json_decode($wasIds, true);
+                                }
+                                $options = $repository->getPreparedOptions($fieldDefs['extensibleEnumId'], $wasIds);
                                 if (isset($options[0])) {
                                     $data->attributes->was->{$field . 'Names'} =  array_column($options, 'name', 'id');
                                     $data->attributes->was->{$field . 'OptionsData'} = $options;
@@ -1063,7 +1067,11 @@ class Stream extends \Espo\Core\Services\Base
                             }
 
                             if (!empty($data->attributes->became->{$field})) {
-                                $options = $repository->getPreparedOptions($fieldDefs['extensibleEnumId'], $data->attributes->became->{$field});
+                                $becameIds = $data->attributes->became->{$field};
+                                if (is_string($becameIds)) {
+                                    $becameIds = @json_decode($becameIds, true);
+                                }
+                                $options = $repository->getPreparedOptions($fieldDefs['extensibleEnumId'], $becameIds);
                                 if (isset($options[0])) {
                                     $data->attributes->became->{$field . 'Names'} = array_column($options, 'name', 'id');
                                     $data->attributes->became->{$field . 'OptionsData'} = $options;
