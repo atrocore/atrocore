@@ -94,6 +94,7 @@ return [
     'useCache'                              => true,
     'applicationName'                       => 'AtroCORE',
     'outboundEmailFromName'                 => 'AtroCORE',
+    'attachmentDuplicates'                  => 'notAllowByContentAndName',
     'defaultFileStorage'                    => 'UploadDir',
     'filesPath'                             => 'upload/files/',
     'thumbnailsPath'                        => 'upload/thumbnails/',

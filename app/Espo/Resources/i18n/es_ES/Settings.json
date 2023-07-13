@@ -48,7 +48,6 @@
     "appId": "ID",
     "isStreamSide": "Is stream in side",
     "isStreamPanelFirst": "Is stream panel first",
-    "attachmentDuplicates": "Asset Duplicates",
     "assignmentNotifications": "Notifications upon assignment",
     "textFilterUseContainsForVarchar": "Use 'contains' operator when filtering varchar fields",
     "authTokenPreventConcurrent": "Only one auth token per user",

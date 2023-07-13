@@ -59,7 +59,6 @@
     "appId": "ID",
     "isStreamSide": "Потік всередині",
     "isStreamPanelFirst": "Чи є панель потоку першою",
-    "attachmentDuplicates": "Дублікати ресурсів",
     "assignmentNotifications": "Повідомлення при призначенні",
     "aclStrictMode": "ACL суворий режим",
     "navigationManuBackgroundColor": "Фон меню навігації",
