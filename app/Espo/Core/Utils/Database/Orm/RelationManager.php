@@ -117,7 +117,11 @@ class RelationManager
         $entityDefs = $this->getMetadata()->get('entityDefs');
 
         $foreignEntityName = $this->getLinkEntityName($entityName, $linkParams);
-        $foreignLink = $this->getForeignLink($linkName, $linkParams, $entityDefs[$foreignEntityName]);
+
+        $foreignLink = false;
+        if (isset($entityDefs[$foreignEntityName])) {
+            $foreignLink = $this->getForeignLink($linkName, $linkParams, $entityDefs[$foreignEntityName]);
+        }
 
         if (empty($linkParams['type'])){
             return null;
