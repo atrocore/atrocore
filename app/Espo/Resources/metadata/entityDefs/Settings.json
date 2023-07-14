@@ -12,22 +12,6 @@
       "type": "bool",
       "tooltip": true
     },
-    "attachmentDuplicates": {
-      "type": "enum",
-      "default": "notAllowByContent",
-      "optionsIds": [
-        "notAllowByContent",
-        "notAllowByName",
-        "notAllowByContentAndName",
-        "allow"
-      ],
-      "options": [
-        "notAllowByContent",
-        "notAllowByName",
-        "notAllowByContentAndName",
-        "allow"
-      ]
-    },
     "languageList": {
       "type": "multiEnum",
       "default": [],

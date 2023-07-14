@@ -5,7 +5,7 @@
             [{"name": "appId"}, {"name": "useCache"}],
             [false, {"name": "siteUrl"}],
             [{"name": "followCreatedEntities"}, {"name": "globalSearchEntityList"}],
-            [{"name": "aclStrictMode"}, {"name": "attachmentDuplicates"}],
+            [{"name": "aclStrictMode"}, false],
             [{"name": "textFilterUseContainsForVarchar"}, {"name": "languageList"}],
             [{"name": "locale"}, false]
         ]

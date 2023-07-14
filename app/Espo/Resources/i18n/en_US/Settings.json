@@ -8,7 +8,6 @@
     "appId": "ID",
     "isStreamSide": "Is stream in side",
     "isStreamPanelFirst": "Is stream panel first",
-    "attachmentDuplicates": "Asset Duplicates",
     "useCache": "Use Cache",
     "defaultCurrency": "Default Currency",
     "baseCurrency": "Base Currency",

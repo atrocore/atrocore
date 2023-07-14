@@ -188,22 +188,7 @@ class Attachment extends Record
             $attachment->type = mime_content_type($attachment->fileName);
         }
 
-        $duplicateParam = $this->getConfig()->get('attachmentDuplicates', 'notAllowByContent');
-
-        // skip duplicates checking for stream attachments
-        if (property_exists($attachment, 'relatedType') && $attachment->relatedType === 'Note') {
-            $duplicateParam = 'allow';
-        }
-
-        if ($duplicateParam == 'notAllowByContent') {
-            $entity = $this->getRepository()->where(['md5' => $attachment->md5])->findOne();
-        } elseif ($duplicateParam == 'notAllowByName') {
-            $entity = $this->getRepository()->where(['name' => $attachment->name])->findOne();
-        } elseif ($duplicateParam == 'notAllowByContentAndName') {
-            $entity = $this->getRepository()->where(['md5' => $attachment->md5, 'name' => $attachment->name])->findOne();
-        }
-
-        if (empty($entity)) {
+        if (empty($entity = $this->findAttachmentDuplicate($attachment))) {
             $entity = parent::createEntity(clone $attachment);
 
             if (!empty($attachment->file)) {
@@ -219,6 +204,11 @@ class Attachment extends Record
         $entity->set('pathsData', $this->getRepository()->getAttachmentPathsData($entity));
 
         return $entity;
+    }
+
+    public function findAttachmentDuplicate(\stdClass $attachment): ?Entity
+    {
+        return null;
     }
 
     /**
