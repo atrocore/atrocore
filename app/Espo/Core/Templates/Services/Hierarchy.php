@@ -898,6 +898,14 @@ class Hierarchy extends Record
             ->where(['children.id' => $entity->get('id')])
             ->find();
 
+        /*
+         * $entity might have been prepared using "prepareEntityForOutput".
+         * Without using the raw entity we might end up comparing optionIds with option labels.
+         */
+        $rawEntity = $this->getRepository()
+            ->where(['id' => $entity->get('id')])
+            ->findOne();
+
         if (empty($parents[0])) {
             return [];
         }
@@ -905,7 +913,7 @@ class Hierarchy extends Record
 
         $inheritedFields = [];
         foreach ($parents as $parent) {
-            $inheritedFields = array_merge($inheritedFields, $this->getInheritedFromParentFields($parent, $entity));
+            $inheritedFields = array_merge($inheritedFields, $this->getInheritedFromParentFields($parent, $rawEntity));
         }
 
         return $inheritedFields;
@@ -935,6 +943,5 @@ class Hierarchy extends Record
         }
 
         return $result;
-
     }
 }

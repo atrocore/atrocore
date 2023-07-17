@@ -1041,7 +1041,10 @@ class Record extends \Espo\Core\Services\Base
             return $value;
         }
 
-        $key = array_search($value, $fieldDefs['options']);
+        $key = array_search($value, $fieldDefs['optionsIds']);
+        if ($key === false) {
+            $key = array_search($value, $fieldDefs['options']);
+        }
         if ($key === false) {
             if (!$validate) {
                 return '';
