@@ -36,6 +36,7 @@ declare(strict_types=1);
 namespace Espo\TwigFunction;
 
 use Espo\Core\Twig\AbstractTwigFunction;
+use Espo\ORM\Entity;
 
 class FindEntity extends AbstractTwigFunction
 {
@@ -44,6 +45,12 @@ class FindEntity extends AbstractTwigFunction
         $this->addDependency('entityManager');
     }
 
+    /**
+     * @param string $entityName
+     * @param array  $where
+     *
+     * @return Entity|null
+     */
     public function run(...$input)
     {
         if (empty($input[0]) || empty($input[1])) {
