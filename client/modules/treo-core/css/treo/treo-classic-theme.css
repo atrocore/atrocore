@@ -6197,7 +6197,6 @@ a.list-group-item-danger.active, button.list-group-item-danger.active, a.list-gr
     color: #333;
     background-color: #fff;
     border-color: var(--primary-border-color);
-    box-shadow: 0 2px 2px #ddd;
 }
 
 .panel-default > .panel-heading + .panel-collapse > .panel-body {
