@@ -57,12 +57,12 @@ class FindEntities extends AbstractTwigFunction
      */
     public function run(...$input)
     {
-        if (empty($input[0]) || empty($input[1])) {
+        if (empty($input[0])) {
             return null;
         }
 
         $entityName = $input[0];
-        $where = $input[1];
+        $where = $input[1] ?? [];
         $orderField = $input[2] ?? 'id';
         $orderDirection = $input[3] ?? 'ASC';
         $offset = $input[4] ?? 0;
