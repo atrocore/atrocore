@@ -34,6 +34,8 @@ Espo.define('views/admin/field-manager/fields/script/preview', 'views/fields/tex
 
     return Dep.extend({
 
+        currentEntity: null,
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
@@ -48,9 +50,18 @@ Espo.define('views/admin/field-manager/fields/script/preview', 'views/fields/tex
                 scope: this.options.scope,
                 script: this.model.get('script')
             }).then(res => {
+                this.currentEntity = res.entity;
                 this.model.set('preview', res.preview);
                 this.reRender();
             });
+        },
+
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+
+            if (this.currentEntity) {
+                this.$el.parent().find('label').html(`${this.translate('previewFor')}: <a href="/#${this.options.scope}/view/${this.currentEntity.id}" target="_blank">${this.currentEntity.name}</a>`);
+            }
         },
 
     });
