@@ -38,9 +38,5 @@ Espo.define('views/fields/script', 'views/fields/text', Dep => {
 
         useDisabledTextareaInViewMode: true,
 
-        setup() {
-            Dep.prototype.setup.call(this);
-        },
-
     });
 });
