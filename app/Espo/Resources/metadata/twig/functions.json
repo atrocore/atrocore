@@ -1,1 +1,3 @@
-{}
+{
+  "findEntity": "\\Espo\\TwigFunction\\FindEntity"
+}
