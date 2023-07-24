@@ -56,6 +56,8 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
 
         seeMoreDisabled: false,
 
+        useDisabledTextareaInViewMode: false,
+
         searchTypeList: ['contains', 'startsWith', 'equals', 'endsWith', 'like', 'notContains', 'notLike', 'isEmpty', 'isNotEmpty'],
 
         events: {
@@ -70,11 +72,11 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
             this.params.rows = this.params.rows || this.rowsDefault;
             this.detailMaxLength = this.params.lengthOfCut || this.detailMaxLength;
-
             this.seeMoreDisabled = this.seeMoreDisabled || this.params.seeMoreDisabled;
-
+            this.useDisabledTextareaInViewMode = this.params.useDisabledTextareaInViewMode || this.useDisabledTextareaInViewMode;
             this.autoHeightDisabled = this.options.autoHeightDisabled || this.params.autoHeightDisabled || this.autoHeightDisabled;
 
             if (this.params.rows < this.rowsMin) {
@@ -115,11 +117,13 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
                 }
             }
 
-            if (this.mode === 'detail' && this.params.useDisabledTextareaInViewMode) {
+            if (this.mode === 'detail' && this.useDisabledTextareaInViewMode) {
                 data.rows = this.params.rows;
             }
 
             data.valueIsSet = this.model.has(this.name);
+            data.useDisabledTextareaInViewMode = this.useDisabledTextareaInViewMode;
+
             return data;
         },
 
@@ -134,7 +138,7 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
         getValueForDisplay: function () {
             var text = this.model.get(this.name);
 
-            if (text && ((this.mode == 'detail' && !this.params.useDisabledTextareaInViewMode) || this.mode == 'list') && !this.seeMoreText && !this.seeMoreDisabled) {
+            if (text && ((this.mode == 'detail' && !this.useDisabledTextareaInViewMode) || this.mode == 'list') && !this.seeMoreText && !this.seeMoreDisabled) {
                 text = text.toString();
 
                 var maxLength = this.detailMaxLength;

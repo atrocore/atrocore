@@ -1,0 +1,28 @@
+{
+  "params": [
+    {
+      "name": "required",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "default",
+      "type": "text"
+    },
+    {
+      "name": "rows",
+      "type": "int",
+      "default": 10,
+      "min": 1
+    },
+    {
+      "name": "audited",
+      "type": "bool"
+    }
+  ],
+  "view": "views/fields/script",
+  "notCreatable": true,
+  "fieldDefs": {
+    "type": "text"
+  }
+}
