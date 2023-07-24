@@ -36,9 +36,9 @@ declare(strict_types=1);
 namespace Espo\TwigFunction;
 
 use Espo\Core\Twig\AbstractTwigFunction;
-use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 
-class FindEntity extends AbstractTwigFunction
+class FindEntities extends AbstractTwigFunction
 {
     public function __construct()
     {
@@ -48,8 +48,12 @@ class FindEntity extends AbstractTwigFunction
     /**
      * @param string $entityName
      * @param array  $where
+     * @param string $orderField
+     * @param string $orderDirection
+     * @param int    $offset
+     * @param int    $limit
      *
-     * @return Entity|null
+     * @return EntityCollection
      */
     public function run(...$input)
     {
@@ -59,9 +63,15 @@ class FindEntity extends AbstractTwigFunction
 
         $entityName = $input[0];
         $where = $input[1];
+        $orderField = $input[2] ?? 'id';
+        $orderDirection = $input[3] ?? 'ASC';
+        $offset = $input[4] ?? 0;
+        $limit = $input[5] ?? \PHP_INT_MAX;
 
         return $this->getInjection('entityManager')->getRepository($entityName)
             ->where((array)$where)
-            ->findOne();
+            ->order((string)$orderField, (string)$orderDirection)
+            ->limit((int)$offset, (int)$limit)
+            ->find();
     }
 }
