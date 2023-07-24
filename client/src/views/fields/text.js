@@ -76,7 +76,7 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
             this.params.rows = this.params.rows || this.rowsDefault;
             this.detailMaxLength = this.params.lengthOfCut || this.detailMaxLength;
             this.seeMoreDisabled = this.seeMoreDisabled || this.params.seeMoreDisabled;
-            this.useDisabledTextareaInViewMode = this.params.useDisabledTextareaInViewMode || this.useDisabledTextareaInViewMode;
+            this.useDisabledTextareaInViewMode = this.options.useDisabledTextareaInViewMode || this.params.useDisabledTextareaInViewMode || this.useDisabledTextareaInViewMode;
             this.autoHeightDisabled = this.options.autoHeightDisabled || this.params.autoHeightDisabled || this.autoHeightDisabled;
 
             if (this.params.rows < this.rowsMin) {
