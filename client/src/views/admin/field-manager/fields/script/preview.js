@@ -60,7 +60,8 @@ Espo.define('views/admin/field-manager/fields/script/preview', 'views/fields/tex
             Dep.prototype.afterRender.call(this);
 
             if (this.currentEntity) {
-                this.$el.parent().find('label').html(`${this.translate('previewFor')} <a href="/#${this.options.scope}/view/${this.currentEntity.id}" target="_blank">${this.currentEntity.name}</a>`);
+                let name = this.currentEntity.name || this.currentEntity.id;
+                this.$el.parent().find('label').html(`${this.translate('previewFor')} <a href="/#${this.options.scope}/view/${this.currentEntity.id}" target="_blank">${name}</a>`);
             }
         },
 
