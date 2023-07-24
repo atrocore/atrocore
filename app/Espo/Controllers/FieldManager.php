@@ -153,4 +153,19 @@ class FieldManager extends \Espo\Core\Controllers\Base
 
         return true;
     }
+
+    public function postActionRenderScriptPreview($params, $data)
+    {
+        if (!property_exists($data, 'scope') || !property_exists($data, 'script')) {
+            throw new BadRequest();
+        }
+
+        $entity = $this->getContainer()->get('entityManager')->getRepository($data->scope)->order('id', 'ASC')->findOne();
+        $preview = $this->getContainer()->get('twig')->renderTemplate($data->script, ['entity' => $entity]);
+
+        return [
+            'preview' => $preview,
+            'entity'  => $entity->toArray()
+        ];
+    }
 }

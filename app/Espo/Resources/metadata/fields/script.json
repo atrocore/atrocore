@@ -12,6 +12,7 @@
     {
       "name": "preview",
       "type": "text",
+      "view": "views/admin/field-manager/fields/script/preview",
       "readOnly": true,
       "useDisabledTextareaInViewMode": true
     },
