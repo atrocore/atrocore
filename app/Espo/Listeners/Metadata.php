@@ -109,6 +109,7 @@ class Metadata extends AbstractListener
                 if (!empty($fieldDefs['type']) && $fieldDefs['type'] === 'script') {
                     $data['entityDefs'][$entityType]['fields'][$field]['notStorable'] = true;
                     $data['entityDefs'][$entityType]['fields'][$field]['readOnly'] = true;
+                    $data['entityDefs'][$entityType]['fields'][$field]['useDisabledTextareaInViewMode'] = true;
                     $data['entityDefs'][$entityType]['fields'][$field]['importDisabled'] = true;
                     $data['entityDefs'][$entityType]['fields'][$field]['massUpdateDisabled'] = true;
                     $data['entityDefs'][$entityType]['fields'][$field]['filterDisabled'] = true;
