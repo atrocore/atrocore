@@ -2,7 +2,8 @@
   "params": [
     {
       "name": "script",
-      "type": "text"
+      "type": "text",
+      "view": "views/fields/script"
     },
     {
       "name": "preview",
@@ -18,7 +19,7 @@
       "min": 1
     }
   ],
-  "view": "views/fields/script",
+  "view": "views/fields/text",
   "notCreatable": true,
   "fieldDefs": {
     "type": "text"

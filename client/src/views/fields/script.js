@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/fields/script', ['views/fields/text', 'lib!Highlight', 'lib!Twig'], Dep => {
+Espo.define('views/fields/script', ['views/fields/text', 'lib!Highlight', 'lib!HighlightTwig'], Dep => {
 
     return Dep.extend({
 
