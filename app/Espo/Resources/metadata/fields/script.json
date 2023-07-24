@@ -6,11 +6,22 @@
       "view": "views/fields/script"
     },
     {
+      "name": "outputType",
+      "type": "enum",
+      "default": "text",
+      "prohibitedEmptyValue": true,
+      "options": [
+        "text",
+        "int",
+        "float",
+        "bool",
+        "datetime"
+      ]
+    },
+    {
       "name": "preview",
-      "type": "text",
       "view": "views/admin/field-manager/fields/script/preview",
-      "readOnly": true,
-      "useDisabledTextareaInViewMode": true
+      "readOnly": true
     },
     {
       "name": "rows",

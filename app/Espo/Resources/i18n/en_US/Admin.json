@@ -129,6 +129,7 @@
   "fields": {
     "script": "Script",
     "preview": "Preview",
+    "outputType": "Output Type",
     "defaultUnit": "Default Unit",
     "isMultilang": "Multilingual",
     "fontSize": "Font size",
