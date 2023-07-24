@@ -6197,7 +6197,6 @@ a.list-group-item-danger.active, button.list-group-item-danger.active, a.list-gr
     color: #333;
     background-color: #fff;
     border-color: var(--primary-border-color);
-    box-shadow: 0 2px 2px #ddd;
 }
 
 .panel-default > .panel-heading + .panel-collapse > .panel-body {
@@ -19478,6 +19477,7 @@ input#sn-checkbox-open-in-new-window {
     color: rgba(0, 0, 0, 0.87);
     background-color: #ececec;
     border-top: 1px solid var(--primary-border-color);
+    border-bottom: 1px solid var(--primary-border-color);
 }
 
 .middle > .panel-default > .panel-heading,
