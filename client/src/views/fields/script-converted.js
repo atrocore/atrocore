@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/fields/script', 'views/fields/text', Dep => {
+Espo.define('views/fields/script-converted', 'views/fields/text', Dep => {
 
     return Dep.extend({
 

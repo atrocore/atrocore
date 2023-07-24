@@ -23,22 +23,6 @@
   "view": "views/fields/script",
   "notCreatable": true,
   "fieldDefs": {
-    "type": "text",
-    "useDisabledTextareaInViewMode": true
-  },
-  "actualFields": [
-    ""
-  ],
-  "fields": {
-    "rendered": {
-      "type": "text",
-      "notStorable": true,
-      "useDisabledTextareaInViewMode": true,
-      "readOnly": true,
-      "importDisabled": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "emHidden": true
-    }
+    "type": "text"
   }
 }

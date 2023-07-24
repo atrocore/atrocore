@@ -74,6 +74,8 @@ class Metadata extends AbstractListener
 
         $this->prepareLanguageField($data);
 
+        $this->prepareScriptField($data);
+
         $event->setArgument('data', $data);
     }
 
@@ -92,6 +94,30 @@ class Metadata extends AbstractListener
                 if (!empty($fieldDefs['type']) && $fieldDefs['type'] === 'language') {
                     $data['entityDefs'][$entityType]['fields'][$field]['optionsIds'] = $languages;
                     $data['entityDefs'][$entityType]['fields'][$field]['options'] = $languages;
+                }
+            }
+        }
+    }
+
+    protected function prepareScriptField(array &$data): void
+    {
+        foreach ($data['entityDefs'] as $entityType => $entityDefs) {
+            if (empty($entityDefs['fields'])) {
+                continue 1;
+            }
+            foreach ($entityDefs['fields'] as $field => $fieldDefs) {
+                if (!empty($fieldDefs['type']) && $fieldDefs['type'] === 'script') {
+                    $data['entityDefs'][$entityType]['fields'][$field . 'Converted'] = [
+                        'type'               => 'text',
+                        'notStorable'        => true,
+                        'view'               => 'views/fields/script-converted',
+                        'scriptField'        => $field,
+                        'readOnly'           => true,
+                        'importDisabled'     => true,
+                        'massUpdateDisabled' => true,
+                        'filterDisabled'     => true,
+                        'emHidden'           => true
+                    ];
                 }
             }
         }

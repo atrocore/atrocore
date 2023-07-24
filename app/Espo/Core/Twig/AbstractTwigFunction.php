@@ -1,3 +1,4 @@
+<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -30,11 +31,13 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/fields/script', 'views/fields/text', Dep => {
+declare(strict_types=1);
 
-    return Dep.extend({
+namespace Espo\Core\Twig;
 
-        useDisabledTextareaInViewMode: true,
+use Espo\Core\Injectable;
 
-    });
-});
+abstract class AbstractTwigFunction extends Injectable
+{
+    abstract public function run(...$input);
+}

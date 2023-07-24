@@ -2448,6 +2448,10 @@ class Record extends \Espo\Core\Services\Base
                 continue 1;
             }
 
+            if (!empty($defs['scriptField'])) {
+                $entity->set($name, $this->getInjection('twig')->renderTemplate($entity->get($defs['scriptField']), ['entity' => $entity]));
+            }
+
             switch ($defs['type']) {
                 case 'int':
                 case 'float':
@@ -3278,5 +3282,6 @@ class Record extends \Espo\Core\Services\Base
         parent::init();
 
         $this->addDependency('queueManager');
+        $this->addDependency('twig');
     }
 }
