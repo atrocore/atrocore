@@ -36,8 +36,6 @@ Espo.define('views/fields/script', ['views/fields/text', 'lib!Highlight', 'lib!T
 
         detailTemplate: 'fields/script/detail',
 
-        useDisabledTextareaInViewMode: true,
-
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
