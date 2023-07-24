@@ -100,12 +100,7 @@ Espo.define('views/admin/field-manager/fields/script/preview', 'views/fields/bas
         },
 
         fetch() {
-            let data = {};
-            let view = this.getView('valueField');
-            if (view) {
-                _.extend(data, view.fetch());
-            }
-            return data;
+            return {};
         },
 
     });

@@ -58,10 +58,5 @@
     "path": "client/lib/highlight.min.js",
     "exportsTo": "$",
     "exportsAs": "highlight"
-  },
-  "HighlightTwig": {
-    "path": "client/lib/highlight.twig.min.js",
-    "exportsTo": "$",
-    "exportsAs": "highlightTwig"
   }
 }

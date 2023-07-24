@@ -23,12 +23,6 @@
       "name": "preview",
       "view": "views/admin/field-manager/fields/script/preview",
       "readOnly": true
-    },
-    {
-      "name": "rows",
-      "type": "int",
-      "default": 10,
-      "min": 1
     }
   ],
   "notCreatable": true,
