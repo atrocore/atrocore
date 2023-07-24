@@ -30,11 +30,21 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/fields/script', 'views/fields/text', Dep => {
+Espo.define('views/fields/script', ['views/fields/text', 'lib!Highlight', 'lib!Twig'], Dep => {
 
     return Dep.extend({
 
+        detailTemplate: 'fields/script/detail',
+
         useDisabledTextareaInViewMode: true,
+
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            if (this.mode === 'detail') {
+                hljs.highlightAll();
+            }
+        },
 
     });
 });
