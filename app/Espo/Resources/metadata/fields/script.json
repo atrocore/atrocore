@@ -1,11 +1,6 @@
 {
   "params": [
     {
-      "name": "required",
-      "type": "bool",
-      "default": false
-    },
-    {
       "name": "script",
       "type": "text"
     },
@@ -21,10 +16,6 @@
       "type": "int",
       "default": 10,
       "min": 1
-    },
-    {
-      "name": "audited",
-      "type": "bool"
     }
   ],
   "view": "views/fields/script",
