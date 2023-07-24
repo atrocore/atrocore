@@ -121,6 +121,8 @@
     "multiLanguage": "Sprachen"
   },
   "fields": {
+    "script": "Skript",
+    "preview": "Vorschau",
     "defaultUnit": "Standard Maßeinheit",
     "isMultilang": "Mehrsprachig",
     "fontSize": "Schriftgröße",

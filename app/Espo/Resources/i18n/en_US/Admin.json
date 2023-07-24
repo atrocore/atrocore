@@ -127,6 +127,8 @@
     "multiLanguage": "Languages"
   },
   "fields": {
+    "script": "Script",
+    "preview": "Preview",
     "defaultUnit": "Default Unit",
     "isMultilang": "Multilingual",
     "fontSize": "Font size",

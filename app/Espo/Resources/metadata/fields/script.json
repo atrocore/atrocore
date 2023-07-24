@@ -6,8 +6,14 @@
       "default": false
     },
     {
-      "name": "default",
+      "name": "script",
       "type": "text"
+    },
+    {
+      "name": "preview",
+      "type": "text",
+      "readOnly": true,
+      "useDisabledTextareaInViewMode": true
     },
     {
       "name": "rows",
