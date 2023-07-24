@@ -47,7 +47,7 @@ class Twig extends Injectable
         $this->addDependency('container');
     }
 
-    public function renderTemplate(string $template, array $templateData): string
+    public function renderTemplate(string $template, array $templateData, string $outputType = 'text')
     {
         $twig = new \Twig\Environment(new \Twig\Loader\ArrayLoader(['template' => $template]));
         $templateData['config'] = $this->getConfig()->getData();
@@ -70,6 +70,32 @@ class Twig extends Injectable
             $res = $twig->render('template', $templateData);
         } catch (\Throwable $e) {
             $res = 'Error: ' . $e->getMessage();
+        }
+
+        switch ($outputType) {
+            case 'int':
+                $res = (int)$res;
+                break;
+            case 'float':
+                $res = (float)$res;
+                break;
+            case 'bool':
+                $res = (bool)$res;
+                break;
+            case 'date':
+                try {
+                    $res = (new \DateTime($res))->format('Y-m-d');
+                } catch (\Throwable $e) {
+                    $res = null;
+                }
+                break;
+            case 'datetime':
+                try {
+                    $res = (new \DateTime($res))->format('Y-m-d H:i:s');
+                } catch (\Throwable $e) {
+                    $res = null;
+                }
+                break;
         }
 
         return $res;

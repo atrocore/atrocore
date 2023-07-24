@@ -241,6 +241,7 @@
       "int": "Integer",
       "float": "Float",
       "bool": "Boolean",
+      "date": "Date",
       "datetime": "Date-time"
     }
   },

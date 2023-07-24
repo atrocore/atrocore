@@ -109,10 +109,30 @@ class Metadata extends AbstractListener
                 if (!empty($fieldDefs['type']) && $fieldDefs['type'] === 'script') {
                     $data['entityDefs'][$entityType]['fields'][$field]['notStorable'] = true;
                     $data['entityDefs'][$entityType]['fields'][$field]['readOnly'] = true;
-                    $data['entityDefs'][$entityType]['fields'][$field]['useDisabledTextareaInViewMode'] = true;
                     $data['entityDefs'][$entityType]['fields'][$field]['importDisabled'] = true;
                     $data['entityDefs'][$entityType]['fields'][$field]['massUpdateDisabled'] = true;
                     $data['entityDefs'][$entityType]['fields'][$field]['filterDisabled'] = true;
+
+                    switch ($fieldDefs['outputType']) {
+                        case 'int':
+                            $data['entityDefs'][$entityType]['fields'][$field]['view'] = "views/fields/int";
+                            break;
+                        case 'float':
+                            $data['entityDefs'][$entityType]['fields'][$field]['view'] = "views/fields/float";
+                            break;
+                        case 'bool':
+                            $data['entityDefs'][$entityType]['fields'][$field]['view'] = "views/fields/bool";
+                            break;
+                        case 'date':
+                            $data['entityDefs'][$entityType]['fields'][$field]['view'] = "views/fields/date";
+                            break;
+                        case 'datetime':
+                            $data['entityDefs'][$entityType]['fields'][$field]['view'] = "views/fields/datetime";
+                            break;
+                        default:
+                            $data['entityDefs'][$entityType]['fields'][$field]['view'] = "views/fields/text";
+                            $data['entityDefs'][$entityType]['fields'][$field]['useDisabledTextareaInViewMode'] = true;
+                    }
                 }
             }
         }

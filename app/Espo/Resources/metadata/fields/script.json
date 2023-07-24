@@ -15,6 +15,7 @@
         "int",
         "float",
         "bool",
+        "date",
         "datetime"
       ]
     },
@@ -30,7 +31,6 @@
       "min": 1
     }
   ],
-  "view": "views/fields/text",
   "notCreatable": true,
   "fieldDefs": {
     "type": "text"

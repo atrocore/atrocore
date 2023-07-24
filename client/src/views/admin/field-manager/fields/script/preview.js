@@ -30,17 +30,24 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/admin/field-manager/fields/script/preview', 'views/fields/text', Dep => {
-
+Espo.define('views/admin/field-manager/fields/script/preview', 'views/fields/base', Dep => {
     return Dep.extend({
+
+        listTemplate: 'fields/field-value-container',
+
+        detailTemplate: 'fields/field-value-container',
+
+        editTemplate: 'fields/field-value-container',
 
         currentEntity: null,
 
         setup: function () {
             Dep.prototype.setup.call(this);
 
+            this.name = this.options.name || this.defs.name;
+
             this.preparePreview();
-            this.listenTo(this.model, 'change:script', () => {
+            this.listenTo(this.model, 'change:script change:outputType', () => {
                 this.preparePreview();
             });
         },
@@ -48,7 +55,8 @@ Espo.define('views/admin/field-manager/fields/script/preview', 'views/fields/tex
         preparePreview() {
             this.ajaxPostRequest('FieldManager/action/renderScriptPreview', {
                 scope: this.options.scope,
-                script: this.model.get('script')
+                script: this.model.get('script'),
+                outputType: this.model.get('outputType')
             }).then(res => {
                 this.currentEntity = res.entity;
                 this.model.set('preview', res.preview);
@@ -59,10 +67,45 @@ Espo.define('views/admin/field-manager/fields/script/preview', 'views/fields/tex
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
+            if (this.model.get('outputType')) {
+                let outputType = this.model.get('outputType');
+
+                let fieldView = this.getFieldManager().getViewName(outputType);
+
+                let params = {
+                    required: false,
+                    readOnly: true,
+                    useDisabledTextareaInViewMode: true
+                };
+
+                let options = {
+                    el: `${this.options.el} > .field[data-name="valueField"]`,
+                    name: this.name,
+                    model: this.model,
+                    collection: this.model.collection || null,
+                    params: params,
+                    mode: this.mode,
+                    inlineEditDisabled: true
+                };
+
+                this.createView('valueField', fieldView, options, view => {
+                    view.render();
+                });
+            }
+
             if (this.currentEntity) {
                 let name = this.currentEntity.name || this.currentEntity.id;
                 this.$el.parent().find('label').html(`${this.translate('previewFor')} <a href="/#${this.options.scope}/view/${this.currentEntity.id}" target="_blank">${name}</a>`);
             }
+        },
+
+        fetch() {
+            let data = {};
+            let view = this.getView('valueField');
+            if (view) {
+                _.extend(data, view.fetch());
+            }
+            return data;
         },
 
     });
