@@ -235,6 +235,13 @@
       "small": "Small",
       "medium": "Medium",
       "large": "Large"
+    },
+    "outputType": {
+      "text": "Text",
+      "int": "Integer",
+      "float": "Float",
+      "bool": "Boolean",
+      "datetime": "Date-time"
     }
   },
   "logicalOperators": {
