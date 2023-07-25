@@ -56,6 +56,7 @@ class Twig extends Injectable
             foreach ($this->getMetadata()->get(['twig', 'filters'], []) as $alias => $className) {
                 $filter = $this->getContainer()->get($className);
                 if ($filter instanceof AbstractTwigFilter) {
+                    $filter->setTemplateData($templateData);
                     $twig->addFilter(new \Twig\TwigFilter($alias, [$filter, 'filter']));
                 }
             }
@@ -63,6 +64,7 @@ class Twig extends Injectable
             foreach ($this->getMetadata()->get(['twig', 'functions'], []) as $alias => $className) {
                 $twigFunction = $this->getContainer()->get($className);
                 if ($twigFunction instanceof AbstractTwigFunction) {
+                    $twigFunction->setTemplateData($templateData);
                     $twig->addFunction(new \Twig\TwigFunction($alias, [$twigFunction, 'run']));
                 }
             }

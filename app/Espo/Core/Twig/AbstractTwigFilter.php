@@ -39,5 +39,17 @@ use Espo\Core\Injectable;
 
 abstract class AbstractTwigFilter extends Injectable
 {
+    protected array $templateData = [];
+
+    public function setTemplateData(array $templateData): void
+    {
+        $this->templateData = $templateData;
+    }
+
+    public function getTemplateData(string $name)
+    {
+        return $this->templateData[$name] ?? null;
+    }
+
     abstract public function filter($value);
 }
