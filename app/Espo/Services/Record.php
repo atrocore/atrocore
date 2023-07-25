@@ -2456,7 +2456,8 @@ class Record extends \Espo\Core\Services\Base
                     }
                     break;
                 case 'script':
-                    $entity->set($name, $this->getInjection('twig')->renderTemplate($defs['script'] ?? '', ['entity' => $entity], $defs['outputType']));
+                    $outputType = $defs['outputType'];
+                    $entity->set($name, $this->getInjection('twig')->renderTemplate($defs['script'] ?? '', ['entity' => $entity], $outputType));
                     break;
                 case 'enum':
                     if (empty($defs['multilangField']) && !empty($defs['optionsIds'])) {

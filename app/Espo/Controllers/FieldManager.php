@@ -173,7 +173,8 @@ class FieldManager extends \Espo\Core\Controllers\Base
         return [
             'preview'    => $preview,
             'entityType' => $entity->getEntityType(),
-            'entity'     => $entity->toArray()
+            'entity'     => $entity->toArray(),
+            'outputType' => $outputType
         ];
     }
 }

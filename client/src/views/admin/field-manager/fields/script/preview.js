@@ -39,11 +39,7 @@ Espo.define('views/admin/field-manager/fields/script/preview', 'views/fields/bas
 
         editTemplate: 'fields/field-value-container',
 
-        currentEntity: null,
-
-        currentEntityType: null,
-
-        scope: null,
+        previewData: {},
 
         setup: function () {
             Dep.prototype.setup.call(this);
@@ -65,8 +61,7 @@ Espo.define('views/admin/field-manager/fields/script/preview', 'views/fields/bas
                 outputType: this.model.get('outputType'),
                 id: this.model.get('id')
             }).then(res => {
-                this.currentEntity = res.entity;
-                this.currentEntityType = res.entityType;
+                this.previewData = res;
                 this.model.set('preview', res.preview);
                 this.reRender();
             });
@@ -75,10 +70,8 @@ Espo.define('views/admin/field-manager/fields/script/preview', 'views/fields/bas
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            if (this.model.get('outputType')) {
-                let outputType = this.model.get('outputType');
-
-                let fieldView = this.getFieldManager().getViewName(outputType);
+            if (this.previewData.outputType) {
+                let fieldView = this.getFieldManager().getViewName(this.previewData.outputType);
 
                 let params = {
                     required: false,
@@ -101,9 +94,9 @@ Espo.define('views/admin/field-manager/fields/script/preview', 'views/fields/bas
                 });
             }
 
-            if (this.currentEntity && this.currentEntityType) {
-                let name = this.currentEntity.name || this.currentEntity.id;
-                this.$el.parent().find('label').html(`${this.translate('previewFor')} <a href="/#${this.currentEntityType}/view/${this.currentEntity.id}" target="_blank">${name}</a>`);
+            if (this.previewData.entity && this.previewData.entityType) {
+                let name = this.previewData.entity.name || this.previewData.entity.id;
+                this.$el.parent().find('label').html(`${this.translate('previewFor')} <a href="/#${this.previewData.entityType}/view/${this.previewData.entity.id}" target="_blank">${name}</a>`);
             }
         },
 
