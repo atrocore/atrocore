@@ -100,6 +100,7 @@
     "enumFloat": "Float list",
     "float": "Float",
     "int": "Integer",
+    "script": "Script",
     "link": "Link",
     "linkMultiple": "Multiple link",
     "linkParent": "Parent link",
@@ -126,6 +127,9 @@
     "multiLanguage": "Languages"
   },
   "fields": {
+    "script": "Script",
+    "preview": "Preview",
+    "outputType": "Output Type",
     "defaultUnit": "Default Unit",
     "isMultilang": "Multilingual",
     "fontSize": "Font size",
@@ -231,6 +235,14 @@
       "small": "Small",
       "medium": "Medium",
       "large": "Large"
+    },
+    "outputType": {
+      "text": "Text",
+      "int": "Integer",
+      "float": "Float",
+      "bool": "Boolean",
+      "date": "Date",
+      "datetime": "Date-time"
     }
   },
   "logicalOperators": {

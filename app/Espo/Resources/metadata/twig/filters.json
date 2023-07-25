@@ -1,0 +1,6 @@
+{
+  "prepareEntity": "\\Espo\\TwigFilter\\PrepareEntity",
+  "isImage": "\\Espo\\TwigFilter\\IsImage",
+  "escapeDoubleQuote": "\\Espo\\TwigFilter\\EscapeDoubleQuote",
+  "backslashNToBr": "\\Espo\\TwigFilter\\BackslashNToBr"
+}

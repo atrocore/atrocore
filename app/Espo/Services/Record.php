@@ -2455,6 +2455,10 @@ class Record extends \Espo\Core\Services\Base
                         $this->prepareUnitFieldValue($entity, $name, $defs);
                     }
                     break;
+                case 'script':
+                    $outputType = $defs['outputType'];
+                    $entity->set($name, $this->getInjection('twig')->renderTemplate($defs['script'] ?? '', ['entity' => $entity], $outputType));
+                    break;
                 case 'enum':
                     if (empty($defs['multilangField']) && !empty($defs['optionsIds'])) {
                         $originalValue = $entity->get($name);
@@ -3278,5 +3282,6 @@ class Record extends \Espo\Core\Services\Base
         parent::init();
 
         $this->addDependency('queueManager');
+        $this->addDependency('twig');
     }
 }

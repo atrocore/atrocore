@@ -53,5 +53,10 @@
     "path": "client/lib/tree.jquery.js",
     "exportsTo": "$",
     "exportsAs": "jsTree"
+  },
+  "Highlight": {
+    "path": "client/lib/highlight.min.js",
+    "exportsTo": "$",
+    "exportsAs": "highlight"
   }
 }

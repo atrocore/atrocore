@@ -33,6 +33,7 @@
 
 namespace Espo\Controllers;
 
+use Espo\Core\EventManager\Event;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
@@ -103,7 +104,7 @@ class FieldManager extends \Espo\Core\Controllers\Base
                 $link_params['entity'] = $params['scope'];
                 $link_params['link'] = $params['name'];
                 $link_params['entityForeign'] = $link['entity'];
-                $link_params['linkForeign'] = $link['foreign'] ;
+                $link_params['linkForeign'] = $link['foreign'];
                 $this->getContainer()->get('entityManagerUtil')->updateLink($link_params);
                 $linkChanged = true;
             }
@@ -152,5 +153,28 @@ class FieldManager extends \Espo\Core\Controllers\Base
         $this->getContainer()->get('dataManager')->rebuildMetadata();
 
         return true;
+    }
+
+    public function postActionRenderScriptPreview($params, $data)
+    {
+        if (!property_exists($data, 'scope') || !property_exists($data, 'script') || !property_exists($data, 'field')) {
+            throw new BadRequest();
+        }
+
+        $event = $this->getContainer()->get('eventManager')->dispatch('FieldManagerController', 'renderScriptPreview', new Event(['data' => $data, 'result' => null]));
+        if (!empty($event->getArgument('result'))) {
+            return $event->getArgument('result');
+        }
+
+        $outputType = property_exists($data, 'outputType') ? $data->outputType : 'text';
+        $entity = $this->getContainer()->get('entityManager')->getRepository($data->scope)->order('id', 'ASC')->findOne();
+        $preview = $this->getContainer()->get('twig')->renderTemplate($data->script, ['entity' => $entity], $outputType);
+
+        return [
+            'preview'    => $preview,
+            'entityType' => $entity->getEntityType(),
+            'entity'     => $entity->toArray(),
+            'outputType' => $outputType
+        ];
     }
 }

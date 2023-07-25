@@ -112,6 +112,7 @@
     "currencyConverted": "Währung (konvertiert)",
     "colorpicker": "Farbwähler",
     "int": "Ganzzahl",
+    "script": "Skript",
     "number": "Nummer",
     "jsonObject": "JSON-Objekt",
     "datetime": "Datum-Uhrzeit",
@@ -120,6 +121,9 @@
     "multiLanguage": "Sprachen"
   },
   "fields": {
+    "script": "Skript",
+    "preview": "Vorschau",
+    "outputType": "Ausgabetyp",
     "defaultUnit": "Standard Maßeinheit",
     "isMultilang": "Mehrsprachig",
     "fontSize": "Schriftgröße",

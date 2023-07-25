@@ -94,6 +94,7 @@ class Container
             'metadata'                 => \Espo\Core\Factories\Metadata::class,
             'config'                   => \Espo\Core\Factories\Config::class,
             'internalAclManager'       => \Espo\Core\Factories\InternalAclManager::class,
+            'twig'                     => \Espo\Core\Twig\Twig::class,
         ];
 
     public function __construct()
