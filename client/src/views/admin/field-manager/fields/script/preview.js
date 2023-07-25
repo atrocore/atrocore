@@ -47,8 +47,7 @@ Espo.define('views/admin/field-manager/fields/script/preview', 'views/fields/bas
             Dep.prototype.setup.call(this);
 
             this.name = this.options.name || this.defs.name;
-            this.scope = this.options.scope || this.model.name;
-
+            this.scope = this.options.scope;
             if (this.model.name === 'Attribute') {
                 this.scope = 'Product';
             }
