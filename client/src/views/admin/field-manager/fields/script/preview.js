@@ -41,10 +41,17 @@ Espo.define('views/admin/field-manager/fields/script/preview', 'views/fields/bas
 
         currentEntity: null,
 
+        scope: null,
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
             this.name = this.options.name || this.defs.name;
+            this.scope = this.options.scope || this.model.name;
+
+            if (this.model.name === 'Attribute') {
+                this.scope = 'Product';
+            }
 
             this.preparePreview();
             this.listenTo(this.model, 'change:script change:outputType', () => {
@@ -54,7 +61,7 @@ Espo.define('views/admin/field-manager/fields/script/preview', 'views/fields/bas
 
         preparePreview() {
             this.ajaxPostRequest('FieldManager/action/renderScriptPreview', {
-                scope: this.options.scope,
+                scope: this.scope,
                 script: this.model.get('script') || '',
                 outputType: this.model.get('outputType')
             }).then(res => {
@@ -95,7 +102,7 @@ Espo.define('views/admin/field-manager/fields/script/preview', 'views/fields/bas
 
             if (this.currentEntity) {
                 let name = this.currentEntity.name || this.currentEntity.id;
-                this.$el.parent().find('label').html(`${this.translate('previewFor')} <a href="/#${this.options.scope}/view/${this.currentEntity.id}" target="_blank">${name}</a>`);
+                this.$el.parent().find('label').html(`${this.translate('previewFor')} <a href="/#${this.scope}/view/${this.currentEntity.id}" target="_blank">${name}</a>`);
             }
         },
 
