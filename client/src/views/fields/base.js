@@ -860,5 +860,12 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }
         },
 
+        enable() {
+            this.$el.find(`[name="${this.name}"]`).prop('disabled', false)
+        },
+
+        disable() {
+            this.$el.find(`[name="${this.name}"]`).prop('disabled', true)
+        }
     });
 });
