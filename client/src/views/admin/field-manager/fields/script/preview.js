@@ -48,7 +48,7 @@ Espo.define('views/admin/field-manager/fields/script/preview', 'views/fields/bas
             this.scope = this.options.scope || this.model.name;
 
             this.preparePreview();
-            this.listenTo(this.model, 'change:script change:outputType', () => {
+            this.listenTo(this.model, 'change:script change:outputType after:save', () => {
                 this.preparePreview();
             });
         },
