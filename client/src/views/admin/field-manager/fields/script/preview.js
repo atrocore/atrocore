@@ -55,7 +55,7 @@ Espo.define('views/admin/field-manager/fields/script/preview', 'views/fields/bas
         preparePreview() {
             this.ajaxPostRequest('FieldManager/action/renderScriptPreview', {
                 scope: this.options.scope,
-                script: this.model.get('script'),
+                script: this.model.get('script') || '',
                 outputType: this.model.get('outputType')
             }).then(res => {
                 this.currentEntity = res.entity;
