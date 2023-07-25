@@ -10,6 +10,14 @@
       "type": "enum",
       "default": "text",
       "prohibitedEmptyValue": true,
+      "optionsIds": [
+        "text",
+        "int",
+        "float",
+        "bool",
+        "date",
+        "datetime"
+      ],
       "options": [
         "text",
         "int",

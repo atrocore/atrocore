@@ -1,1 +1,1 @@
-{{#if isNotEmpty}}<pre><code class="language-twig">{{value}}</code></pre>{{else}}{{#if valueIsSet}}{{translate 'None'}}{{else}}...{{/if}}{{/if}}
+{{#if isNotEmpty}}<pre style="padding: 0"><code class="language-twig">{{value}}</code></pre>{{else}}{{#if valueIsSet}}{{translate 'None'}}{{else}}...{{/if}}{{/if}}
