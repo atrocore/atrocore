@@ -505,7 +505,15 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
 
         attachFile: function () {
             var $form = this.$el.closest('.record');
-            $form.find('.field[data-name="'+this.params.attachmentField+'"] input.file').click();
+            $form.find('.field[data-name="' + this.params.attachmentField + '"] input.file').click();
+        },
+
+        enable() {
+            this.$summernote.summernote('enable')
+        },
+
+        disable() {
+            this.$summernote.summernote('disable')
         }
     });
 });
