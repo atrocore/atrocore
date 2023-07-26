@@ -54,6 +54,10 @@ Espo.define('views/admin/field-manager/fields/script/preview', 'views/fields/bas
         },
 
         preparePreview() {
+            if (this.model.get('type') !== 'script') {
+                return;
+            }
+
             this.ajaxPostRequest('FieldManager/action/renderScriptPreview', {
                 scope: this.scope,
                 field: this.name,
