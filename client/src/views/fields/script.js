@@ -36,6 +36,8 @@ Espo.define('views/fields/script', ['views/fields/text', 'lib!Highlight'], Dep =
 
         detailTemplate: 'fields/script/detail',
 
+        seeMoreDisabled: true,
+
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
