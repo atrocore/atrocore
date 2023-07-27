@@ -122,5 +122,9 @@
   },
   "messages": {
     "languageMustBeSelected": "Mindestens eine Sprache soll ausgewählt werden."
+  },
+  "exceptions": {
+    "variableKeyInvalid": "Der Schlüssel sollte mit einem Kleinbuchstaben beginnen und darf nur aus Buchstaben und Zahlen bestehen.",
+    "variableKeyIsExist": "Schlüssel '%s' existiert bereits."
   }
 }

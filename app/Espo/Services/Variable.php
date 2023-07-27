@@ -38,13 +38,20 @@ namespace Espo\Services;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Services\Base;
-use Espo\Core\Utils\Util;
 
 class Variable extends Base
 {
     public function findEntities(array $params): array
     {
-        $variables = $this->getConfig()->get('variables', []);
+        $variables = [];
+        foreach ($this->getConfig()->get('variables', []) as $key => $row) {
+            $variables[] = [
+                "id"    => $key,
+                "key"   => $key,
+                "type"  => $row['type'],
+                "value" => $row['value']
+            ];
+        }
 
         return [
             'total' => count($variables),
@@ -56,110 +63,75 @@ class Variable extends Base
     {
         $variables = $this->getConfig()->get('variables', []);
 
-        $name = $attachment->name;
+        $key = $attachment->key;
 
-        // validate name
-        $this->validateName($name);
-        if ($name === 'variables' || $this->getConfig()->has($name) || in_array($name, array_column($this->getConfig()->get('variables', []), 'name'))) {
-            throw new BadRequest("Such name '{$name}' is already using.");
+        // validate key
+        if (!preg_match('/^[a-z][a-zA-Z0-9]*$/', $key)) {
+            throw new BadRequest($this->getInjection('language')->translate('variableKeyInvalid', 'exceptions', 'Settings'));
+        }
+        if ($key === 'variables' || $this->getConfig()->has($key) || isset($variables[$key])) {
+            throw new BadRequest(sprintf($this->getInjection('language')->translate('variableKeyIsUsed', 'exceptions', 'Settings'), $key));
         }
 
-        $variable = [
-            'id'    => Util::generateId(),
-            'name'  => $name,
+        $variables[$key] = [
             'type'  => $attachment->type ?? 'text',
             'value' => $attachment->value ?? null,
         ];
 
-        $variables[] = $variable;
-
         $this->getConfig()->set('variables', $variables);
         $this->getConfig()->save();
 
-        return $variable;
+        return $this->readEntity($key);
     }
 
     public function updateEntity(string $id, \stdClass $data): array
     {
         $variables = $this->getConfig()->get('variables', []);
-
-        $index = null;
-        foreach ($variables as $k => $row) {
-            if ($row['id'] === $id) {
-                $index = $k;
-            }
-        }
-
-        if (empty($index)) {
+        if (!isset($variables[$id])) {
             throw new NotFound();
         }
 
-        // validate name
-        if (property_exists($data, 'name')) {
-            $this->validateName($data->name);
-            if ($data->name === 'variables' || $this->getConfig()->has($data->name)) {
-                throw new BadRequest("Such name '{$data->name}' is already using.");
-            }
-            foreach ($variables as $row) {
-                if ($row['name'] === $data->name && $row['id'] !== $id) {
-                    throw new BadRequest("Such name '{$data->name}' is already using.");
-                }
-            }
-            $variables[$index]['name'] = $data->name;
-        }
-
         if (property_exists($data, 'type')) {
-            $variables[$index]['type'] = $data->type;
+            $variables[$id]['type'] = $data->type;
         }
 
         if (property_exists($data, 'value')) {
-            $variables[$index]['value'] = $data->value;
+            $variables[$id]['value'] = $data->value;
         }
 
         $this->getConfig()->set('variables', $variables);
         $this->getConfig()->save();
 
-        return $variables[$index];
+        return $this->readEntity($id);
     }
 
     public function readEntity(string $id): array
     {
-        foreach ($this->getConfig()->get('variables', []) as $row) {
-            if ($row['id'] === $id) {
-                return $row;
-            }
+        $variables = $this->getConfig()->get('variables', []);
+        if (!isset($variables[$id])) {
+            throw new NotFound();
         }
 
-        throw new NotFound();
+        return [
+            "id"    => $id,
+            "key"   => $id,
+            "type"  => $variables[$id]['type'],
+            "value" => $variables[$id]['value']
+        ];
     }
 
     public function deleteEntity(string $id): bool
     {
-        $found = false;
-
-        $variables = [];
-        foreach ($this->getConfig()->get('variables', []) as $row) {
-            if ($row['id'] !== $id) {
-                $variables[] = $row;
-            } else {
-                $found = true;
-            }
-        }
-
-        if (!$found) {
+        $variables = $this->getConfig()->get('variables', []);
+        if (!isset($variables[$id])) {
             throw new NotFound();
         }
+
+        unset($variables[$id]);
 
         $this->getConfig()->set('variables', $variables);
         $this->getConfig()->save();
 
         return true;
-    }
-
-    protected function validateName(string $name): void
-    {
-        if (!preg_match('/^[a-z][a-zA-Z0-9]*$/', $name)) {
-            throw new BadRequest('Name is invalid.');
-        }
     }
 }

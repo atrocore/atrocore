@@ -1,13 +1,30 @@
 {
   "fields": {
-    "name": {
+    "key": {
       "type": "varchar"
     },
     "type": {
-      "type": "varchar"
+      "type": "enum",
+      "prohibitedEmptyValue": true,
+      "required": true,
+      "default": "text",
+      "optionsIds": [
+        "text",
+        "bool",
+        "int",
+        "float",
+        "array"
+      ],
+      "options": [
+        "text",
+        "bool",
+        "int",
+        "float",
+        "array"
+      ]
     },
     "value": {
-      "type": "varchar"
+      "type": "text"
     }
   }
 }

@@ -134,5 +134,9 @@
   },
   "messages": {
     "languageMustBeSelected": "Мінімум одна мова має бути обрана."
+  },
+  "exceptions": {
+    "variableKeyInvalid": "Ключ повинен починатися з маленької лат. літери і може складатися тільки з лат. букв і цифр.",
+    "variableKeyIsExist": "Ключ '%s' вже існує."
   }
 }

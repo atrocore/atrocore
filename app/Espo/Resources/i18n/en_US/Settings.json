@@ -139,5 +139,9 @@
   },
   "messages": {
     "languageMustBeSelected": "At least one language should be selected."
+  },
+  "exceptions": {
+    "variableKeyInvalid": "Key should start with a small letter and can consist only of letters and numbers.",
+    "variableKeyIsExist": "Key '%s' already exists."
   }
 }
