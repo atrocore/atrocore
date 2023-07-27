@@ -1,8 +1,8 @@
 {
   "fields": {
-    "key": "Ключ",
-    "type": "Тип",
-    "value": "Значення"
+    "key": "Key",
+    "type": "Type",
+    "value": "Value"
   },
   "options": {
     "type": {

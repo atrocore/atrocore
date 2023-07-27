@@ -70,7 +70,7 @@ class Variable extends Base
             throw new BadRequest($this->getInjection('language')->translate('variableKeyInvalid', 'exceptions', 'Settings'));
         }
         if ($key === 'variables' || $this->getConfig()->has($key) || isset($variables[$key])) {
-            throw new BadRequest(sprintf($this->getInjection('language')->translate('variableKeyIsUsed', 'exceptions', 'Settings'), $key));
+            throw new BadRequest(sprintf($this->getInjection('language')->translate('variableKeyIsExist', 'exceptions', 'Settings'), $key));
         }
 
         $variables[$key] = [
