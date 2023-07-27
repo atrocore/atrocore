@@ -1,5 +1,6 @@
 {
   "fields": {
+    "variables": "Variables",
     "locale": "Locale",
     "isMultilangActive": "Multilingual",
     "languageList": "Interface Languages",
@@ -81,6 +82,9 @@
     "notice": "Notice",
     "information": "Information",
     "error": "Error"
+  },
+  "links": {
+    "variables": "Variables"
   },
   "options": {
     "currencyFormat": {

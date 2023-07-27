@@ -1,0 +1,10 @@
+[
+  {
+    "name": "name",
+    "notSortable": true
+  },
+  {
+    "name": "value",
+    "notSortable": true
+  }
+]

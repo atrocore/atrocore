@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "destinationLanguage": {
+      "type": "varchar"
+    },
+    "sourceLanguage": {
+      "type": "array"
+    }
+  }
+}

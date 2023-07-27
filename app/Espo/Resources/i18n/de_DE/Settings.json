@@ -1,5 +1,6 @@
 {
   "fields": {
+    "variables": "Variablen",
     "locale": "Gebietsschema",
     "isMultilangActive": "Mehrsprachig",
     "mainLanguage": "Hauptsprache",
@@ -79,6 +80,9 @@
     "notice": "Notiz",
     "information": "Information",
     "error": "Fehler"
+  },
+  "links": {
+    "variables": "Variablen"
   },
   "tooltips": {
     "isStreamSide": "Wenn aktiviert, wird das Aktivitätenpanel seitlich angezeigt.",

@@ -30,14 +30,44 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/admin/settings', 'views/settings/record/edit', function (Dep) {
+Espo.define('views/settings/record/panels/variables', 'views/record/panels/relationship', Dep => {
 
     return Dep.extend({
 
-        layoutName: 'settings',
+        rowActionsView: 'views/record/row-actions/remove-only',
 
-        bottomView: 'views/settings/record/edit-bottom',
+        listRowsOrderSaveUrl: "TranslationsRule/action/sortOrder",
+
+        setup() {
+            this.defs.create = false;
+            this.url = 'TranslationsRule/action/list';
+
+            Dep.prototype.setup.call(this);
+
+            this.actionList = [];
+
+            this.buttonList.push({
+                title: 'Create',
+                action: 'createTranslationRule',
+                html: '<span class="fas fa-plus"></span>'
+            });
+        },
+
+        actionCreateTranslationRule() {
+            this.notify('Loading...');
+            this.createView('quickCreate', 'views/modals/edit', {
+                scope: 'TranslationsRule',
+                fullFormDisabled: true
+            }, view => {
+                view.render();
+                view.notify(false);
+                this.listenToOnce(view, 'after:save', () => {
+                    this.collection.fetch();
+                    this.model.trigger('after:relate', 'translationsRules');
+                });
+            });
+        },
 
     });
-});
 
+});

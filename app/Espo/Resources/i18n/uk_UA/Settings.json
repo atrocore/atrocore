@@ -1,5 +1,6 @@
 {
   "fields": {
+    "variables": "Змінні",
     "locale": "Локаль",
     "useCache": "Використовувати кеш",
     "defaultCurrency": "Валюта за замовчуванням",
@@ -81,6 +82,9 @@
     "notice": "Повідомлення",
     "information": "Інформація",
     "error": "Помилка"
+  },
+  "links": {
+    "variables": "Змінні"
   },
   "options": {
     "currencyFormat": {
