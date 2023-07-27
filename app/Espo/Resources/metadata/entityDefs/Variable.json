@@ -1,7 +1,8 @@
 {
   "fields": {
     "key": {
-      "type": "varchar"
+      "type": "varchar",
+      "view": "views/variable/fields/key"
     },
     "type": {
       "type": "enum",
