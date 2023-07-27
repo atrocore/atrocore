@@ -7,13 +7,9 @@
   "options": {
     "type": {
       "text": "Text",
-      "int": "Integer",
-      "float": "Float",
+      "float": "Number",
       "bool": "Boolean",
       "array": "Array"
     }
-  },
-  "exceptions": {
-    "valueTypeInvalid": "Validation failed. Value should be '%s' type."
   }
 }

@@ -41,15 +41,30 @@ use Espo\Core\Services\Base;
 
 class Variable extends Base
 {
+    public static function defineType($value): string
+    {
+        $type = 'text';
+        if (is_int($value) || is_float($value)) {
+            $type = 'float';
+        } elseif (is_bool($value)) {
+            $type = 'bool';
+        } elseif (is_array($value)) {
+            $type = 'array';
+        }
+
+        return $type;
+    }
+
     public function findEntities(array $params): array
     {
         $variables = [];
-        foreach ($this->getConfig()->get('variables', []) as $key => $row) {
+        foreach ($this->getConfig()->get('variables', []) as $key) {
+            $value = $this->getConfig()->get($key, '');
             $variables[] = [
                 "id"    => $key,
                 "key"   => $key,
-                "type"  => $row['type'],
-                "value" => $row['value']
+                "type"  => self::defineType($value),
+                "value" => $value
             ];
         }
 
@@ -69,18 +84,31 @@ class Variable extends Base
         if (!preg_match('/^[a-z][a-zA-Z0-9]*$/', $key)) {
             throw new BadRequest($this->getInjection('language')->translate('variableKeyInvalid', 'exceptions', 'Settings'));
         }
-        if ($key === 'variables' || $this->getConfig()->has($key) || isset($variables[$key])) {
+        if ($key === 'variables' || $this->getConfig()->has($key)) {
             throw new BadRequest(sprintf($this->getInjection('language')->translate('variableKeyIsExist', 'exceptions', 'Settings'), $key));
         }
 
-        $variables[$key] = [
-            'type'  => $attachment->type ?? 'text',
-            'value' => $attachment->value ?? null,
-        ];
+        $variables[] = $key;
 
-        $this->validateValue($variables[$key]['type'], $variables[$key]['value']);
+        $type = $attachment->type ?? 'text';
+        $value = $attachment->value ?? '';
+
+        if (empty($value)) {
+            switch ($type) {
+                case 'bool':
+                    $value = false;
+                    break;
+                case 'float':
+                    $value = 0;
+                    break;
+                case 'array':
+                    $value = [];
+                    break;
+            }
+        }
 
         $this->getConfig()->set('variables', $variables);
+        $this->getConfig()->set($key, $value);
         $this->getConfig()->save();
 
         return $this->readEntity($key);
@@ -89,21 +117,14 @@ class Variable extends Base
     public function updateEntity(string $id, \stdClass $data): array
     {
         $variables = $this->getConfig()->get('variables', []);
-        if (!isset($variables[$id])) {
+        if (!in_array($id, $variables)) {
             throw new NotFound();
         }
 
-        if (property_exists($data, 'type')) {
-            $variables[$id]['type'] = $data->type;
-        }
-
         if (property_exists($data, 'value')) {
-            $variables[$id]['value'] = $data->value;
-            $this->validateValue($variables[$id]['type'], $variables[$id]['value']);
+            $this->getConfig()->set($id, $data->value);
+            $this->getConfig()->save();
         }
-
-        $this->getConfig()->set('variables', $variables);
-        $this->getConfig()->save();
 
         return $this->readEntity($id);
     }
@@ -111,61 +132,38 @@ class Variable extends Base
     public function readEntity(string $id): array
     {
         $variables = $this->getConfig()->get('variables', []);
-        if (!isset($variables[$id])) {
+        if (!in_array($id, $variables)) {
             throw new NotFound();
         }
+
+        $value = $this->getConfig()->get($id, '');
 
         return [
             "id"    => $id,
             "key"   => $id,
-            "type"  => $variables[$id]['type'],
-            "value" => $variables[$id]['value']
+            "type"  => self::defineType($value),
+            "value" => $value
         ];
     }
 
     public function deleteEntity(string $id): bool
     {
         $variables = $this->getConfig()->get('variables', []);
-        if (!isset($variables[$id])) {
+        if (!in_array($id, $variables)) {
             throw new NotFound();
         }
 
-        unset($variables[$id]);
+        $newVariables = [];
+        foreach ($variables as $key) {
+            if ($key !== $id) {
+                $newVariables[] = $key;
+            }
+        }
 
-        $this->getConfig()->set('variables', $variables);
+        $this->getConfig()->set('variables', $newVariables);
+        $this->getConfig()->remove($id);
         $this->getConfig()->save();
 
         return true;
-    }
-
-    protected function validateValue(string $type, $value): void
-    {
-        if ($value === null) {
-            return;
-        }
-
-        switch ($type) {
-            case 'bool':
-                $valid = is_bool($value);
-                break;
-            case 'int':
-                $valid = is_int($value);
-                break;
-            case 'float':
-                $valid = is_float($value) || is_int($value);
-                break;
-            case 'array':
-                $valid = is_array($value);
-                break;
-            case 'text':
-                $valid = is_string($value);
-                break;
-            default:
-                $valid = false;
-        }
-
-        if (!$valid) {
-            throw new BadRequest(sprintf($this->getInjection('language')->translate('valueTypeInvalid', 'exceptions', 'Variable'), $type));
-        }
     }
 }
