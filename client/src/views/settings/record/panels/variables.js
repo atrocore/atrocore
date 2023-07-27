@@ -66,6 +66,12 @@ Espo.define('views/settings/record/panels/variables', 'views/record/panels/relat
             });
         },
 
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            this.$el.parent().css({"padding-bottom": "30px"});
+        },
+
     });
 
 });
