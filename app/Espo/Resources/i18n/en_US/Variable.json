@@ -12,5 +12,8 @@
       "bool": "Boolean",
       "array": "Array"
     }
+  },
+  "exceptions": {
+    "valueTypeInvalid": "Validation failed. Value should be '%s' type."
   }
 }

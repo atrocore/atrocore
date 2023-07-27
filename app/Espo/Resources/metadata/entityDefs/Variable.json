@@ -24,7 +24,8 @@
       ]
     },
     "value": {
-      "type": "text"
+      "type": "text",
+      "view": "views/variable/fields/value-container"
     }
   }
 }

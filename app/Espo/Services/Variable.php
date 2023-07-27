@@ -78,6 +78,8 @@ class Variable extends Base
             'value' => $attachment->value ?? null,
         ];
 
+        $this->validateValue($variables[$key]['type'], $variables[$key]['value']);
+
         $this->getConfig()->set('variables', $variables);
         $this->getConfig()->save();
 
@@ -97,6 +99,7 @@ class Variable extends Base
 
         if (property_exists($data, 'value')) {
             $variables[$id]['value'] = $data->value;
+            $this->validateValue($variables[$id]['type'], $variables[$id]['value']);
         }
 
         $this->getConfig()->set('variables', $variables);
@@ -133,5 +136,36 @@ class Variable extends Base
         $this->getConfig()->save();
 
         return true;
+    }
+
+    protected function validateValue(string $type, $value): void
+    {
+        if ($value === null) {
+            return;
+        }
+
+        switch ($type) {
+            case 'bool':
+                $valid = is_bool($value);
+                break;
+            case 'int':
+                $valid = is_int($value);
+                break;
+            case 'float':
+                $valid = is_float($value) || is_int($value);
+                break;
+            case 'array':
+                $valid = is_array($value);
+                break;
+            case 'text':
+                $valid = is_string($value);
+                break;
+            default:
+                $valid = false;
+        }
+
+        if (!$valid) {
+            throw new BadRequest(sprintf($this->getInjection('language')->translate('valueTypeInvalid', 'exceptions', 'Variable'), $type));
+        }
     }
 }
