@@ -36,11 +36,9 @@ Espo.define('views/settings/record/panels/variables', 'views/record/panels/relat
 
         rowActionsView: 'views/record/row-actions/remove-only',
 
-        listRowsOrderSaveUrl: "TranslationsRule/action/sortOrder",
-
         setup() {
             this.defs.create = false;
-            this.url = 'TranslationsRule/action/list';
+            this.url = 'Variable/action/list';
 
             Dep.prototype.setup.call(this);
 
@@ -48,22 +46,22 @@ Espo.define('views/settings/record/panels/variables', 'views/record/panels/relat
 
             this.buttonList.push({
                 title: 'Create',
-                action: 'createTranslationRule',
+                action: 'createVariable',
                 html: '<span class="fas fa-plus"></span>'
             });
         },
 
-        actionCreateTranslationRule() {
+        actionCreateVariable() {
             this.notify('Loading...');
             this.createView('quickCreate', 'views/modals/edit', {
-                scope: 'TranslationsRule',
+                scope: 'Variable',
                 fullFormDisabled: true
             }, view => {
                 view.render();
                 view.notify(false);
                 this.listenToOnce(view, 'after:save', () => {
                     this.collection.fetch();
-                    this.model.trigger('after:relate', 'translationsRules');
+                    this.model.trigger('after:relate', 'variables');
                 });
             });
         },
