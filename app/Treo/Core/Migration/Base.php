@@ -45,9 +45,9 @@ class Base
 
     private Config $config;
 
-    private ?PDO $pdo;
+    private PDO $pdo;
 
-    public function __construct(?PDO $pdo, Config $config, ?Schema $schema)
+    public function __construct(PDO $pdo, Config $config, ?Schema $schema)
     {
         $this->schema = $schema;
         $this->config = $config;

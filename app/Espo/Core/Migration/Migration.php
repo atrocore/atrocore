@@ -42,9 +42,9 @@ class Migration extends Injectable
 {
     public function __construct()
     {
-        $this->addDependency('schema');
         $this->addDependency('config');
         $this->addDependency('pdo');
+        $this->addDependency('schema');
     }
 
     /**
