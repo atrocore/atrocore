@@ -517,6 +517,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             this.notify('Loading...');
             this.createView('quickCreate', viewName, {
                 scope: scope,
+                fullFormDisabled: this.getMetadata().get('clientDefs.' + scope + '.modalFullFormDisabled') || false,
                 relate: {
                     model: this.model,
                     link: foreignLink,
