@@ -31,12 +31,13 @@
  * and "AtroCore" word.
  */
 
+declare(strict_types=1);
+
 namespace Espo\Controllers;
 
 use Espo\Core\Controllers\Base;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Utils\Util;
 
 class Variable extends Base
 {
@@ -46,12 +47,7 @@ class Variable extends Base
             throw new BadRequest();
         }
 
-        $variables = $this->getConfig()->get('variables', []);
-
-        return [
-            'total' => count($variables),
-            'list'  => $variables
-        ];
+        return $this->getRecordService()->findEntities($params);
     }
 
     public function actionCreate($params, $data, $request)
@@ -64,22 +60,33 @@ class Variable extends Base
             throw new Forbidden();
         }
 
-        $variables = $this->getConfig()->get('variables', []);
+        return $this->getRecordService()->createEntity($data);
+    }
 
-        if ($data->name === 'variables' || in_array($data->name, array_column($variables, 'name')) || $this->getConfig()->has($data->name)) {
-            throw new BadRequest("Such name '{$data->name}' is already using.");
+    public function actionRead($params, $data, $request)
+    {
+        if (!$request->isGet()) {
+            throw new BadRequest();
         }
 
-        $variables[] = [
-            'id'    => Util::generateId(),
-            'name'  => $data->name,
-            'type'  => $data->type,
-            'value' => $data->value,
-        ];
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
 
-        $this->getConfig()->set('variables', $variables);
+        return $this->getRecordService()->readEntity($params['id']);
+    }
 
-        return $this->getConfig()->save();
+    public function actionPatch($params, $data, $request)
+    {
+        if (!$request->isPatch()) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
+
+        return $this->getRecordService()->updateEntity($params['id'], $data);
     }
 
     public function actionDelete($params, $data, $request)
@@ -92,14 +99,11 @@ class Variable extends Base
             throw new Forbidden();
         }
 
-        $variables = [];
-        foreach ($this->getConfig()->get('variables', []) as $row) {
-            if ($row['id'] !== $params['id']) {
-                $variables[] = $row;
-            }
-        }
-        $this->getConfig()->set('variables', $variables);
+        return $this->getRecordService()->deleteEntity($params['id']);
+    }
 
-        return $this->getConfig()->save();
+    protected function getRecordService(): \Espo\Services\Variable
+    {
+        return $this->getService('Variable');
     }
 }
