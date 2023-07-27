@@ -3,5 +3,14 @@
     "key": "Ключ",
     "type": "Тип",
     "value": "Значення"
+  },
+  "options": {
+    "type": {
+      "text": "Text",
+      "int": "Integer",
+      "float": "Float",
+      "bool": "Boolean",
+      "array": "Array"
+    }
   }
 }
