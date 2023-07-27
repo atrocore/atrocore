@@ -59,6 +59,7 @@ class Variable extends Base
         $name = $attachment->name;
 
         // validate name
+        $this->validateName($name);
         if ($name === 'variables' || $this->getConfig()->has($name) || in_array($name, array_column($this->getConfig()->get('variables', []), 'name'))) {
             throw new BadRequest("Such name '{$name}' is already using.");
         }
@@ -95,6 +96,7 @@ class Variable extends Base
 
         // validate name
         if (property_exists($data, 'name')) {
+            $this->validateName($data->name);
             if ($data->name === 'variables' || $this->getConfig()->has($data->name)) {
                 throw new BadRequest("Such name '{$data->name}' is already using.");
             }
@@ -152,5 +154,12 @@ class Variable extends Base
         $this->getConfig()->save();
 
         return true;
+    }
+
+    protected function validateName(string $name): void
+    {
+        if (!preg_match('/^[a-z][a-zA-Z0-9]*$/', $name)) {
+            throw new BadRequest('Name is invalid.');
+        }
     }
 }
