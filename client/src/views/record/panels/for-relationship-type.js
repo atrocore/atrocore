@@ -43,12 +43,7 @@ Espo.define('views/record/panels/for-relationship-type', 'views/record/panels/re
 
             const relationshipScope = this.getMetadata().get(['entityDefs', this.model.name, 'links', this.panelName, 'entity']);
 
-            let relationshipEntities = [];
-            $.each(this.getMetadata().get(['entityDefs', relationshipScope, 'fields']), (field, fieldDefs) => {
-                if (fieldDefs.relationshipField === true) {
-                    relationshipEntities.push(this.getMetadata().get(['entityDefs', relationshipScope, 'links', field, 'entity']));
-                }
-            });
+            let relationshipEntities = this.getRelationshipEntities();
 
             if (relationshipEntities.length === 2) {
                 this.actionList.unshift({
@@ -74,6 +69,18 @@ Espo.define('views/record/panels/for-relationship-type', 'views/record/panels/re
                 acl: 'delete',
                 aclScope: relationshipScope
             });
+        },
+
+        getRelationshipEntities() {
+            const relationshipScope = this.getMetadata().get(['entityDefs', this.model.name, 'links', this.panelName, 'entity']);
+            let relationshipEntities = [];
+            $.each(this.getMetadata().get(['entityDefs', relationshipScope, 'fields']), (field, fieldDefs) => {
+                if (fieldDefs.relationshipField === true) {
+                    relationshipEntities.push(this.getMetadata().get(['entityDefs', relationshipScope, 'links', field, 'entity']));
+                }
+            });
+
+            return relationshipEntities;
         },
 
         createRelationshipEntities(selectObj) {
