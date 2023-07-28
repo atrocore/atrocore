@@ -43,7 +43,16 @@ Espo.define('views/variable/fields/value-container', 'views/fields/base', Dep =>
 
             this.listenTo(this.model, 'change:type', () => {
                 if (this.mode === 'edit') {
-                    this.model.set('value', null);
+                    let value = '';
+                    if (this.model.get('type') === 'array') {
+                        value = [];
+                    } else if (this.model.get('type') === 'bool') {
+                        value = false;
+                    } else if (this.model.get('type') === 'float') {
+                        value = 0;
+                    }
+
+                    this.model.set('value', value);
                     this.reRender();
                 }
             });
