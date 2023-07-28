@@ -68,7 +68,11 @@ class Relationship extends RDB
 
         foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields']) as $field => $fieldDefs) {
             if (!empty($fieldDefs['relationshipField'])) {
-                $where[$field . 'Id'] = $entity->get($field . 'Id');
+                if ($fieldDefs['type'] === 'link') {
+                    $where[$field . 'Id'] = $entity->get($field . 'Id');
+                } else {
+                    $where[$field] = $entity->get($field);
+                }
             }
         }
 
