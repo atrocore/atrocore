@@ -606,7 +606,7 @@ class Metadata extends AbstractListener
             if (!empty($row['hasArchive'])) {
                 $data['entityDefs'][$scope]['fields']['isArchived']['type'] = 'bool';
                 $data['entityDefs'][$scope]['fields']['isArchived']['notNull'] = true;
-                $data['clientDefs'][$entity]['filterList'][] = 'withArchived';
+                $data['clientDefs'][$scope]['filterList'][] = 'withArchived';
             }
         }
 
