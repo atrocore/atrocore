@@ -17907,11 +17907,11 @@ table.table {
     margin-top: -6px
 }
 
-.panel-extensibleEnumOptions > .panel-heading {
+.panel-extensibleEnumOptions > .panel-heading, .panel-variables > .panel-heading, .panel-translationsRules > .panel-heading, .panel-ldapMappingFields > .panel-heading {
     position: relative;
 }
 
-.panel-extensibleEnumOptions .panel-heading > .btn-group {
+.panel-extensibleEnumOptions .panel-heading > .btn-group, .panel-variables .panel-heading > .btn-group, .panel-translationsRules .panel-heading > .btn-group, .panel-ldapMappingFields .panel-heading > .btn-group {
     position: absolute;
     top: 0;
     right: 0

@@ -571,6 +571,20 @@
     },
     "error": {
       "type": "color"
+    },
+    "variables": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "noLoad": true
+    }
+  },
+  "links": {
+    "variables": {
+      "type": "hasMany",
+      "entity": "Variable",
+      "audited": false
     }
   }
 }

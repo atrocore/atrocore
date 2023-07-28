@@ -1,0 +1,7 @@
+{
+  "fields": {
+    "key": "Schlüssel",
+    "type": "Typ",
+    "value": "Wert"
+  }
+}

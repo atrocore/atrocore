@@ -1,0 +1,22 @@
+[
+  {
+    "label": "",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "key"
+        },
+        {
+          "name": "type"
+        }
+      ],
+      [
+        {
+          "name": "value",
+          "fullWidth": true
+        }
+      ]
+    ]
+  }
+]

@@ -2096,7 +2096,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     scope: scope,
                     id: id,
                     model: model,
-                    fullFormDisabled: data.noFullForm,
+                    fullFormDisabled: this.getMetadata().get('clientDefs.' + scope + '.modalFullFormDisabled') || false,
                     returnUrl: this.getRouter().getCurrentUrl(),
                     returnDispatchParams: {
                         controller: scope,

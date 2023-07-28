@@ -1,0 +1,30 @@
+{
+  "fields": {
+    "key": {
+      "type": "varchar",
+      "view": "views/variable/fields/key"
+    },
+    "type": {
+      "type": "enum",
+      "prohibitedEmptyValue": true,
+      "required": true,
+      "default": "text",
+      "optionsIds": [
+        "text",
+        "bool",
+        "float",
+        "array"
+      ],
+      "options": [
+        "text",
+        "bool",
+        "float",
+        "array"
+      ]
+    },
+    "value": {
+      "type": "text",
+      "view": "views/variable/fields/value-container"
+    }
+  }
+}

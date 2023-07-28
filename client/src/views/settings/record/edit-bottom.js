@@ -30,14 +30,23 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/admin/settings', 'views/settings/record/edit', function (Dep) {
+Espo.define('views/settings/record/edit-bottom', 'views/record/edit-bottom', Dep => {
 
     return Dep.extend({
 
-        layoutName: 'settings',
+        relationshipPanels: true,
 
-        bottomView: 'views/settings/record/edit-bottom',
+        setupRelationshipPanels() {
+            this.relationshipsLayout = [
+                {
+                    "name": "variables",
+                    "view": "views/settings/record/panels/variables"
+                }
+            ];
+
+            Dep.prototype.setupRelationshipPanels.call(this);
+        },
 
     });
-});
 
+});

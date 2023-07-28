@@ -17747,8 +17747,7 @@ table.table {
   margin-top: -6px;
 }
 
-
-.panel-extensibleEnumOptions > .panel-heading {
+.panel-extensibleEnumOptions > .panel-heading, .panel-variables > .panel-heading, .panel-translationsRules > .panel-heading, .panel-ldapMappingFields > .panel-heading {
   border: 0 !important;
 }
 

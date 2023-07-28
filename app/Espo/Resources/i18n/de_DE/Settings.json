@@ -1,5 +1,6 @@
 {
   "fields": {
+    "variables": "Variablen",
     "locale": "Gebietsschema",
     "isMultilangActive": "Mehrsprachig",
     "mainLanguage": "Hauptsprache",
@@ -80,6 +81,9 @@
     "information": "Information",
     "error": "Fehler"
   },
+  "links": {
+    "variables": "Variablen"
+  },
   "tooltips": {
     "isStreamSide": "Wenn aktiviert, wird das Aktivitätenpanel seitlich angezeigt.",
     "isStreamPanelFirst": "Wenn aktiviert, wird das Aktivitätenpanel direkt nach der Übersicht angezeigt.",
@@ -118,5 +122,9 @@
   },
   "messages": {
     "languageMustBeSelected": "Mindestens eine Sprache soll ausgewählt werden."
+  },
+  "exceptions": {
+    "variableKeyInvalid": "Der Schlüssel sollte mit einem Kleinbuchstaben beginnen und darf nur aus Buchstaben und Zahlen bestehen.",
+    "variableKeyIsExist": "Schlüssel '%s' existiert bereits."
   }
 }

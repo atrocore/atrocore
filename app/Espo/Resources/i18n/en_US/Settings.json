@@ -1,5 +1,6 @@
 {
   "fields": {
+    "variables": "Variables",
     "locale": "Locale",
     "isMultilangActive": "Multilingual",
     "languageList": "Interface Languages",
@@ -82,6 +83,9 @@
     "information": "Information",
     "error": "Error"
   },
+  "links": {
+    "variables": "Variables"
+  },
   "options": {
     "currencyFormat": {
       "1": "10 USD",
@@ -135,5 +139,9 @@
   },
   "messages": {
     "languageMustBeSelected": "At least one language should be selected."
+  },
+  "exceptions": {
+    "variableKeyInvalid": "Key should start with a small letter and can consist only of letters and numbers.",
+    "variableKeyIsExist": "Key '%s' already exists."
   }
 }

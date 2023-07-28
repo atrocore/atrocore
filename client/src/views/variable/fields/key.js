@@ -30,21 +30,16 @@
  * and "AtroCore" word.
  */
 
-Espo.define('treo-core:views/settings/record/row-actions/only-quick-edit', 'views/record/row-actions/default',
-    Dep => Dep.extend({
+Espo.define('views/variable/fields/key', 'views/fields/varchar', Dep => Dep.extend({
 
-        getActionList() {
-            if (this.options.acl.edit) {
-                return [{
-                    action: 'quickEditCustom',
-                    label: 'Edit',
-                    data: {
-                        id: this.model.id,
-                        noFullForm: true
-                    }
-                }];
+        setup() {
+            Dep.prototype.afterRender.call(this);
+
+            if (!this.model.isNew()) {
+                this.setReadOnly(true);
             }
-        }
+        },
 
     })
 );
+
