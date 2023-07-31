@@ -177,6 +177,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                 this.buttonList.push({
                     name: 'create',
                     label: 'Create ' + this.scope,
+                    style: 'primary',
                     onClick: this.create.bind(this)
                 })
             }
