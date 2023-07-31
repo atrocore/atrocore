@@ -862,6 +862,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     if (fieldView.mode == 'edit') {
                         fieldView.fetchToModel();
                         fieldView.removeInlineEditLinks();
+                        fieldView.inlineEditModeIsOn = false;
                     }
                     fieldView.setMode('edit');
                     fieldView.render(() => {

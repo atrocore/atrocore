@@ -655,7 +655,6 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             $cell.find('.inline-save-link').remove();
             $cell.find('.inline-cancel-link').remove();
             $cell.find('.inline-edit-link').addClass('hidden');
-            this.inlineEditModeIsOn = false;
         },
 
         addInlineEditLinks: function () {
@@ -679,6 +678,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 return;
             }
 
+            this.inlineEditModeIsOn = false;
             this.setMode('detail');
             this.once('after:render', function () {
                 this.removeInlineEditLinks();
