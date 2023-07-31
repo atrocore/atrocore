@@ -83,6 +83,9 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
         },
 
         events: {
+            'click [data-action="create"]': function () {
+                this.create();
+            },
             'click .list a': function (e) {
                 e.preventDefault();
             },
@@ -171,15 +174,6 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                 ) {
                     this.createButton = false;
                 }
-            }
-
-            if (this.createButton) {
-                this.buttonList.push({
-                    name: 'create',
-                    label: 'Create ' + this.scope,
-                    style: 'primary',
-                    onClick: this.create.bind(this)
-                })
             }
 
             this.header = '';
@@ -374,6 +368,8 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
+            let html = ''
+
             if (this.isHierarchical()) {
                 let treeButtonClass = 'btn-primary';
                 let tableButtonClass = 'btn-default';
@@ -383,13 +379,8 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                     tableButtonClass = 'btn-primary';
                 }
 
-                let html = '<div class="btn-group main-btn-group pull-right">';
-                html += '<div class="page-header" style="margin-top: 0">';
-                html += '<div class="header-buttons"><div class="header-items">';
                 html += `<a href="javascript:" class="btn action ${treeButtonClass} change-view action" data-view="tree"><span class="fa fa-stream"></span></a>`
                 html += `<a href="javascript:" class="btn action ${tableButtonClass} change-view action" data-view="list"><span class="fa fa-th-list"></span></a>`;
-                html += '</div></div></div>';
-                this.$el.find('.modal-footer').append(html);
 
                 this.setupTree();
                 this.toggleViewType();
@@ -408,6 +399,20 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                     }.bind(this));
                 }
             }
+
+            if (this.createButton) {
+                html += `<a href="javascript:" data-action="create" ${html ? 'style="margin-left: 15px"' : ''} class="btn action btn-primary">${'Create ' + this.scope}</a>`
+            }
+
+            if (html) {
+                this.$el.find('.modal-footer').append(`<div class="btn-group main-btn-group pull-right">
+                    <div class="page-header" style="margin-top: 0">
+                    <div class="header-buttons"><div class="header-items">${html}</div></div>
+                    </div>
+                    </div>`
+                );
+            }
+
         },
 
         isHierarchical() {
