@@ -78,6 +78,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         fieldActions: true,
 
+        inlineEditModeIsOn: false,
+
         isRequired: function () {
             return this.params.required;
         }, /**
@@ -653,6 +655,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             $cell.find('.inline-save-link').remove();
             $cell.find('.inline-cancel-link').remove();
             $cell.find('.inline-edit-link').addClass('hidden');
+            this.inlineEditModeIsOn = false;
         },
 
         addInlineEditLinks: function () {
@@ -700,6 +703,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 this.addInlineEditLinks();
             }, this);
 
+            this.inlineEditModeIsOn = true;
             this.reRender(true);
             this.trigger('inline-edit-on');
         },
