@@ -83,6 +83,9 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
         },
 
         events: {
+            'click button[data-action="create"]': function () {
+                this.create();
+            },
             'click .list a': function (e) {
                 e.preventDefault();
             },
@@ -171,14 +174,6 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                 ) {
                     this.createButton = false;
                 }
-            }
-
-            if (this.createButton) {
-                this.buttonList.push({
-                    name: 'create',
-                    label: 'Create ' + this.scope,
-                    onClick: this.create.bind(this)
-                })
             }
 
             this.header = '';
@@ -372,6 +367,11 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
 
         afterRender() {
             Dep.prototype.afterRender.call(this);
+
+            if (this.createButton) {
+                let html = `<div class="btn-group main-btn-group pull-right" style="margin-left: 10px"><button data-action="create" class="btn btn-primary">${'Create ' + this.scope}</button></div>`
+                this.$el.find('.modal-footer').append(html);
+            }
 
             if (this.isHierarchical()) {
                 let treeButtonClass = 'btn-primary';
