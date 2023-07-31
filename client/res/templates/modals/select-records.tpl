@@ -10,4 +10,3 @@
    </div>
 </div>
 {{/if}}
-{{#if createButton}}<div class="button-container"><button class="btn btn-default" data-action="create">{{createText}}</button></div>{{/if}}

@@ -76,8 +76,6 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
 
         data: function () {
             return {
-                createButton: this.createButton,
-                createText: this.translate('Create ' + this.scope, 'labels', this.scope),
                 hasTree: this.isHierarchical(),
                 hasTotalCount: this.getConfig().get('displayListViewRecordCount') && this.multiple,
                 totalCount: this.collection.total,
@@ -85,9 +83,6 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
         },
 
         events: {
-            'click button[data-action="create"]': function () {
-                this.create();
-            },
             'click .list a': function (e) {
                 e.preventDefault();
             },
@@ -176,6 +171,14 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                 ) {
                     this.createButton = false;
                 }
+            }
+
+            if (this.createButton) {
+                this.buttonList.push({
+                    name: 'create',
+                    label: 'Create ' + this.scope,
+                    onClick: this.create.bind(this)
+                })
             }
 
             this.header = '';
@@ -490,7 +493,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
         },
 
         loadMore(node, previous) {
-            this.ajaxGetRequest(this.generateUrl(node)).then(function(response) {
+            this.ajaxGetRequest(this.generateUrl(node)).then(function (response) {
                 if (response['list']) {
                     const id = node ? node.id : 'root';
                     response['list'] = this.filterResponse(id, response);
@@ -600,7 +603,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
 
                 if (selected_node.id === 'show-more') {
                     const previous = selected_node.getPreviousSibling(),
-                          parent = selected_node.parent && selected_node.parent.id ? selected_node.parent : null;
+                        parent = selected_node.parent && selected_node.parent.id ? selected_node.parent : null;
 
                     this.$el.find('.records-tree').tree('removeNode', selected_node);
                     selected_node = null;
