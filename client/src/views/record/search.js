@@ -848,6 +848,8 @@ Espo.define('views/record/search', 'view', function (Dep) {
             this.fetch();
             this.updateSearch();
             this.updateCollection();
+
+            Backbone.Events.trigger('search', this);
         },
 
         getFilterDataList: function () {
