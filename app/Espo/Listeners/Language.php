@@ -77,8 +77,6 @@ class Language extends AbstractListener
                     }
 
                     if (!empty($fieldDefs['relationshipFilterField'])) {
-                        $filterField = $this->getLabel($data, $locale, $entity, $fieldDefs['relationshipFilterField']);
-
                         if (!empty($data[$locale]['Global']['scopeNamesPlural'][$fieldDefs['entity']])) {
                             $filterEntity = $data[$locale]['Global']['scopeNamesPlural'][$fieldDefs['entity']];
                         } elseif (!empty($data['en_US']['Global']['scopeNamesPlural'][$fieldDefs['entity']])) {
@@ -87,7 +85,7 @@ class Language extends AbstractListener
                             $filterEntity = $fieldDefs['entity'];
                         }
 
-                        $data[$locale][$entity]['fields'][$field] = $filterField . ': ' . $filterEntity;
+                        $data[$locale][$entity]['fields'][$field] = $filterEntity;
                     }
 
                     if (!empty($fieldDefs['relationVirtualField'])) {
