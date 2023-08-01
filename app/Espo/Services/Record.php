@@ -1777,6 +1777,10 @@ class Record extends \Espo\Core\Services\Base
             return $this->$methodName($id, $params);
         }
 
+        if (!empty($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $link, 'relationshipFilterField']))) {
+            return $this->findLinkedRelationshipEntities($entity, $link);
+        }
+
         $foreignEntityName = $entity->relations[$link]['entity'];
 
         if (!$this->getAcl()->check($foreignEntityName, 'read')) {
@@ -1847,6 +1851,28 @@ class Record extends \Espo\Core\Services\Base
         return $this
             ->dispatchEvent('afterFindLinkedEntities', new Event(['id' => $id, 'service' => $this, 'link' => $link, 'params' => $params, 'result' => ['total' => $total,'collection' => $collection]]))
             ->getArgument('result');
+    }
+
+    /**
+     * Returns relationship related entities. Example: link productAssets_asset will return Assets
+     *
+     * @param Entity $entity
+     * @param string $link
+     *
+     * @return array
+     */
+    protected function findLinkedRelationshipEntities(Entity $entity, string $link): array
+    {
+        $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $link]);
+
+        $relationshipEntities = $entity->get($fieldDefs['relationshipFilterField']);
+        $params['where'][] = [
+            'type'      => 'equals',
+            'attribute' => 'id',
+            'value'     => array_column($relationshipEntities->toArray(), $fieldDefs['relationshipFilterForeignField'] . 'Id')
+        ];
+
+        return $this->getServiceFactory()->create($fieldDefs['entity'])->findEntities($params);
     }
 
     public function linkEntity($id, $link, $foreignId)
