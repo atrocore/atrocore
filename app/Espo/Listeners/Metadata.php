@@ -289,6 +289,127 @@ class Metadata extends AbstractListener
 
     protected function prepareRelationshipsEntities(array &$data): void
     {
+        foreach ($data['scopes'] as $scope => $scopeData) {
+            if (empty($scopeData['type']) || $scopeData['type'] !== 'Relationship' || empty($data['entityDefs'][$scope]['fields'])) {
+                continue;
+            }
+
+            $linkRelationshipFields = [];
+            foreach ($data['entityDefs'][$scope]['fields'] as $field => $fieldDefs) {
+                if (!empty($fieldDefs['relationshipField'])) {
+                    if (!isset($data['entityDefs'][$scope]['fields'][$field]['required'])) {
+                        $data['entityDefs'][$scope]['fields'][$field]['required'] = true;
+                    }
+                    if ($fieldDefs['type'] === 'link') {
+                        $linkRelationshipFields[] = $field;
+
+                        if (
+                            !isset($data['entityDefs'][$scope]['uniqueIndexes']['unique_relationship'])
+                            || !in_array(Util::toUnderScore($field) . '_id', $data['entityDefs'][$scope]['uniqueIndexes']['unique_relationship'])
+                        ) {
+                            $data['entityDefs'][$scope]['uniqueIndexes']['unique_relationship'][] = Util::toUnderScore($field) . '_id';
+                        }
+
+                        $foreignEntity = $data['entityDefs'][$scope]['links'][$field]['entity'];
+                        $foreignField = $data['entityDefs'][$scope]['links'][$field]['foreign'];
+                        $data['entityDefs'][$foreignEntity]['fields'][$foreignField]['massUpdateDisabled'] = true;
+                        $data['entityDefs'][$foreignEntity]['fields'][$foreignField]['importDisabled'] = true;
+                        if (!isset($data['clientDefs'][$foreignEntity]['relationshipPanels'][$foreignField]['view'])) {
+                            $data['clientDefs'][$foreignEntity]['relationshipPanels'][$foreignField]['view'] = "views/record/panels/for-relationship-type";
+                        }
+                    } else {
+                        if (
+                            !isset($data['entityDefs'][$scope]['uniqueIndexes']['unique_relationship'])
+                            || !in_array(Util::toUnderScore($field), $data['entityDefs'][$scope]['uniqueIndexes']['unique_relationship'])
+                        ) {
+                            $data['entityDefs'][$scope]['uniqueIndexes']['unique_relationship'][] = Util::toUnderScore($field);
+                        }
+                    }
+                }
+            }
+
+            // add deleted field to unique index if it needs
+            if (
+                !empty($data['entityDefs'][$scope]['uniqueIndexes']['unique_relationship'])
+                && !in_array('deleted', $data['entityDefs'][$scope]['uniqueIndexes']['unique_relationship'])
+            ) {
+                array_unshift($data['entityDefs'][$scope]['uniqueIndexes']['unique_relationship'], 'deleted');
+            }
+
+            if (count($linkRelationshipFields) === 2) {
+                $foreignEntity1 = $data['entityDefs'][$scope]['links'][$linkRelationshipFields[0]]['entity'];
+                $foreignField1 = $data['entityDefs'][$scope]['links'][$linkRelationshipFields[0]]['foreign'];
+                $entityType1 = $data['entityDefs'][$scope]['links'][$linkRelationshipFields[1]]['entity'];
+
+                if (!isset($data['entityDefs'][$foreignEntity1]['links'][$foreignField1]['addRelationCustomDefs']['link'])) {
+                    $data['entityDefs'][$foreignEntity1]['links'][$foreignField1]['addRelationCustomDefs']['link'] = lcfirst($entityType1) . 's';
+                }
+
+                $data['entityDefs'][$foreignEntity1]['links'][$foreignField1]['addRelationCustomDefs']['entity'] = $entityType1;
+
+                $foreignEntity2 = $data['entityDefs'][$scope]['links'][$linkRelationshipFields[1]]['entity'];
+                $foreignField2 = $data['entityDefs'][$scope]['links'][$linkRelationshipFields[1]]['foreign'];
+                $entityType2 = $data['entityDefs'][$scope]['links'][$linkRelationshipFields[0]]['entity'];
+
+                if (!isset($data['entityDefs'][$foreignEntity2]['links'][$foreignField2]['addRelationCustomDefs']['link'])) {
+                    $data['entityDefs'][$foreignEntity2]['links'][$foreignField2]['addRelationCustomDefs']['link'] = lcfirst($entityType2) . 's';
+                }
+
+                $data['entityDefs'][$foreignEntity2]['links'][$foreignField2]['addRelationCustomDefs']['entity'] = $entityType2;
+
+                $data['entityDefs'][$foreignEntity1]['fields'][$foreignField1 . '_' . $linkRelationshipFields[1]] = [
+                    'type'                           => 'linkMultiple',
+                    'entity'                         => $foreignEntity2,
+                    'relationshipFilterField'        => $foreignField1,
+                    'relationshipFilterForeignField' => $linkRelationshipFields[1],
+                    'notStorable'                    => true,
+                    'filterDisabled'                 => false,
+                    'layoutListDisabled'             => true,
+                    'layoutListSmallDisabled'        => true,
+                    'layoutDetailDisabled'           => true,
+                    'layoutDetailSmallDisabled'      => true,
+                    'massUpdateDisabled'             => true,
+                    'exportDisabled'                 => false,
+                    'importDisabled'                 => true,
+                    'emHidden'                       => true,
+                ];
+
+                $data['entityDefs'][$foreignEntity1]['links'][$foreignField1 . '_' . $linkRelationshipFields[1]] = [
+                    'type'                        => 'hasMany',
+                    'notStorable'                 => true,
+                    'entity'                      => $foreignEntity2,
+                    'layoutRelationshipsDisabled' => true
+                ];
+
+                $data['entityDefs'][$foreignEntity2]['fields'][$foreignField2 . '_' . $linkRelationshipFields[0]] = [
+                    'type'                           => 'linkMultiple',
+                    'entity'                         => $foreignEntity1,
+                    'relationshipFilterField'        => $foreignField2,
+                    'relationshipFilterForeignField' => $linkRelationshipFields[0],
+                    'notStorable'                    => true,
+                    'filterDisabled'                 => false,
+                    'layoutListDisabled'             => true,
+                    'layoutListSmallDisabled'        => true,
+                    'layoutDetailDisabled'           => true,
+                    'layoutDetailSmallDisabled'      => true,
+                    'massUpdateDisabled'             => true,
+                    'exportDisabled'                 => false,
+                    'importDisabled'                 => true,
+                    'emHidden'                       => true,
+                ];
+
+                $data['entityDefs'][$foreignEntity2]['links'][$foreignField2 . '_' . $linkRelationshipFields[0]] = [
+                    'type'                        => 'hasMany',
+                    'notStorable'                 => true,
+                    'entity'                      => $foreignEntity1,
+                    'layoutRelationshipsDisabled' => true
+                ];
+            }
+        }
+
+        /**
+         * Create virtual fields in relationship entities
+         */
         foreach ($data['entityDefs'] as $scope => $scopeData) {
             if (empty($scopeData['fields'])) {
                 continue;
@@ -346,6 +467,8 @@ class Metadata extends AbstractListener
                 }
             }
         }
+
+
     }
 
     protected function prepareHierarchyEntities(array $data): array
