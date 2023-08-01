@@ -1778,7 +1778,7 @@ class Record extends \Espo\Core\Services\Base
         }
 
         if (!empty($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $link, 'relationshipFilterField']))) {
-            return $this->findLinkedRelationshipEntities($entity, $link);
+            return $this->findLinkedRelationshipEntities($entity, $link, $params);
         }
 
         $foreignEntityName = $entity->relations[$link]['entity'];
@@ -1858,10 +1858,11 @@ class Record extends \Espo\Core\Services\Base
      *
      * @param Entity $entity
      * @param string $link
+     * @param array  $params
      *
      * @return array
      */
-    protected function findLinkedRelationshipEntities(Entity $entity, string $link): array
+    protected function findLinkedRelationshipEntities(Entity $entity, string $link, array $params = []): array
     {
         $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $link]);
 
