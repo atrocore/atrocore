@@ -22660,3 +22660,82 @@ code.hljs {
 .hljs-strong {
     font-weight: 700
 }
+
+/* mobile board */
+
+#tree-list-table .group-column > div {
+    min-height: auto !important;
+}
+div.list-kanban > div > table td.group-column {
+    height: 100%;
+}
+.kanban-columns-container {
+    height: calc(100vh - 245px);
+}
+.kanban-columns-container table.kanban-columns {
+    height: 100%;
+    padding: 20px 0;
+}
+.kanban-columns-container table.kanban-columns tbody {
+    height: 100%;
+}
+.kanban-columns-container table.kanban-columns tbody tr.kanban-row {
+    height: 100%;
+}
+.kanban-columns-container table.kanban-columns tbody tr.kanban-row td.group-column {
+    overflow-x: hidden;
+    overflow-y: auto;
+    min-width: 272px;
+    border-radius: 5px;
+    padding: 5px 5px 5px 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,.2);
+}
+.list-kanban .kanban-head-container {
+    box-shadow: none;
+}
+.list-kanban .kanban-head-container table.kanban-head thead tr.kanban-row {
+    overflow: inherit;
+}
+.list-kanban .kanban-head-container table.kanban-head thead tr.kanban-row th.group-header {
+    min-width: 272px;
+}
+.kanban-avatar {
+    padding-right: 3px;
+}
+div.list-kanban > div > table .item .panel .form-group {
+    padding-right: 35px;
+}
+@media (max-width: 1500px) {
+    div.list-kanban {
+        overflow-x: auto;
+    }
+   /* div.list-kanban > div > table th > div:after {
+        left: calc(100% - -2px);
+    }
+    div.list-kanban > div > table th > div:before {
+        left: calc(100% - 0px);
+    } */
+    .list-kanban .kanban-head-container table.kanban-head thead tr.kanban-row th.group-header .kanban-group-label::after {
+        position: absolute;
+        content: '';
+        background-color: #eee;
+        width: 28px;
+        height: 28px;
+        right: -20px;
+        top: 0;
+    }
+    .list-kanban .kanban-head-container table.kanban-head thead tr.kanban-row th.group-header .kanban-group-label::before {
+        position: absolute;
+        content: '';
+        width: calc(100% + 3px);
+        height: 5px;
+        background-color: #fff;
+        left: -15px;
+        top: -5px;
+    }
+    div.list-kanban {
+        min-width: 100% !important;
+        padding-top: 5px;
+    }
+
+}
