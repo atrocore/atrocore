@@ -245,17 +245,22 @@ class Base
                 $result['orderBy'] = [[$sortBy . 'Country', $orderPart], [$sortBy . 'City', $orderPart], [$sortBy . 'Street', $orderPart]];
                 return;
             } else if ($type === 'enum') {
-                $list = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'options']);
-                if ($list && is_array($list) && count($list)) {
+                $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy]);
+                if (!empty($fieldDefs['optionsIds'])) {
+                    $options = $fieldDefs['options'];
                     if ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'isSorted'])) {
-                        asort($list);
+                        asort($options);
                     }
+
+                    $list = [];
+                    foreach ($options as $i => $item) {
+                        $list[] = str_replace(',', '_COMMA_', $fieldDefs['optionsIds'][$i]);
+                    }
+
                     if ($desc) {
                         $list = array_reverse($list);
                     }
-                    foreach ($list as $i => $listItem) {
-                        $list[$i] = str_replace(',', '_COMMA_', $listItem);
-                    }
+
                     $result['orderBy'] = 'LIST:' . $sortBy . ':' . implode(',', $list);
                     return;
                 }
