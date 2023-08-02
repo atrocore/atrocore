@@ -594,6 +594,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
                 }
             }).error(function (xhr) {
                 let statusReason = xhr.responseText || '';
+                xhr.errorIsHandled = true;
                 if (xhr.status === 409) {
                     self.notify(false);
                     self.enableButtons();
