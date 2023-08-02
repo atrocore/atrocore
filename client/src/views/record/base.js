@@ -606,7 +606,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
                         attrs['_prev'] = null;
                         attrs['_ignoreConflict'] = true;
                         attrs['_silentMode'] = false;
-                        this.saveModel(model, callback, skipExit, attrs);
+                        self.saveModel(model, callback, skipExit, attrs);
                     })
                 } else {
                     self.enableButtons();
