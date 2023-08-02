@@ -250,9 +250,17 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
         },
 
         fetch: function (form) {
-            var data = {};
-            data[this.fromField] = this.parse(this.$from.val().trim());
-            data[this.toField] = this.parse(this.$to.val().trim());
+            let data = {};
+
+            let $from = this.$el.find('[name="' + this.fromField + '"]');
+            if ($from) {
+                data[this.fromField] = this.parse(($from.val() || '').trim());
+            }
+
+            let $to = this.$el.find('[name="' + this.toField + '"]');
+            if ($to) {
+                data[this.toField] = this.parse(($to.val() || '').trim());
+            }
 
             if (this.measureId) {
                 let $unit = this.$el.find(`[name="${this.unitFieldName}"]`);
