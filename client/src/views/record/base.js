@@ -592,7 +592,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
                 } else {
                     callback(self);
                 }
-            }).error(function (e, xhr) {
+            }).error(function (xhr) {
                 let statusReason = xhr.responseText || '';
                 if (xhr.status === 409) {
                     self.notify(false);
