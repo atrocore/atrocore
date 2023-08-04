@@ -37,12 +37,14 @@ Espo.define('views/settings/record/edit-bottom', 'views/record/edit-bottom', Dep
         relationshipPanels: true,
 
         setupRelationshipPanels() {
-            this.relationshipsLayout = [
-                {
-                    "name": "variables",
-                    "view": "views/settings/record/panels/variables"
-                }
-            ];
+            if (this.model.id === '1') {
+                this.relationshipsLayout = [
+                    {
+                        "name": "variables",
+                        "view": "views/settings/record/panels/variables"
+                    }
+                ];
+            }
 
             Dep.prototype.setupRelationshipPanels.call(this);
         },
