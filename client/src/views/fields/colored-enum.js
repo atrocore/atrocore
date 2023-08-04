@@ -54,6 +54,14 @@ Espo.define('views/fields/colored-enum', 'views/fields/enum', function (Dep) {
 
         data() {
             let data = Dep.prototype.data.call(this);
+            const translatedOptions = data.translatedOptions;
+            for (const key in translatedOptions) {
+                const item = translatedOptions[key];
+                if (typeof item !== 'string') {
+                    translatedOptions[key] = key;
+                }
+            }
+            data.translatedOptions = translatedOptions;
             data.options = (data.params.options || []).map(item => {
                 return _.extend({
                     selected: item === data.value,
