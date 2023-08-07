@@ -46,6 +46,8 @@ Espo.define('views/record/search', 'view', function (Dep) {
 
         primary: null,
 
+        presetFiltersDisabled: false,
+
         presetFilterList: null,
 
         advanced: null,
@@ -108,6 +110,8 @@ Espo.define('views/record/search', 'view', function (Dep) {
             this.entityType = this.collection.name;
             this.scope = this.options.scope || this.entityType;
 
+            this.presetFiltersDisabled = this.options.presetFiltersDisabled || false;
+
             this.searchManager = this.options.searchManager;
 
             this.textFilterDisabled = this.options.textFilterDisabled || this.textFilterDisabled;
@@ -166,6 +170,10 @@ Espo.define('views/record/search', 'view', function (Dep) {
             ((this.getPreferences().get('presetFilters') || {})[this.scope] || []).forEach(function (item) {
                 this.presetFilterList.push(item);
             }, this);
+
+            if (this.presetFiltersDisabled) {
+                this.presetFilterList = [];
+            }
 
             if (this.getMetadata().get('scopes.' + this.entityType + '.stream')) {
                 this.boolFilterList.push('followed');
@@ -233,6 +241,10 @@ Espo.define('views/record/search', 'view', function (Dep) {
         },
 
         isLeftDropdown: function () {
+            if (this.options.isLeftDropdown) {
+                return true;
+            }
+
             return this.presetFilterList.length || this.boolFilterList.length || Object.keys(this.advanced || {}).length || this.getAdvancedDefs().length;
         },
 
@@ -460,6 +472,10 @@ Espo.define('views/record/search', 'view', function (Dep) {
         },
 
         refresh: function () {
+            if (this.options.refreshDisabled) {
+                return;
+            }
+
             this.notify('Loading...');
             this.collection.abortLastFetch();
             this.collection.reset();
@@ -878,6 +894,10 @@ Espo.define('views/record/search', 'view', function (Dep) {
         },
 
         updateCollection() {
+            if (this.options.updateCollectionDisabled) {
+                return;
+            }
+
             let advanced = {};
             for (let field in this.advanced) {
                 if (!('value' in this.advanced[field]) || ![null, ''].includes(this.advanced[field].value) || 'subQuery' in this.advanced[field] || this.pinned[field]) {
