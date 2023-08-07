@@ -39,19 +39,16 @@ Espo.define('views/record/panels/search', ['views/record/panels/bottom', 'search
 
         collection: null,
 
+        scope: null,
+
         mode: 'detail',
 
         setup() {
             Dep.prototype.setup.call(this);
 
-            this.scope = this.model.get('entityType') || this.defs.scope;
+            this.scope = this.scope || this.defs.scope;
 
             this.setupSearchPanel();
-
-            this.listenTo(this.model, 'change:entityType', () => {
-                this.scope = this.model.get('entityType');
-                this.setupSearchPanel();
-            });
 
             this.listenTo(this.model, 'change:data', () => {
                 let data = _.extend({}, this.model.get('data'));
