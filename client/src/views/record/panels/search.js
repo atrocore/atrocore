@@ -39,6 +39,8 @@ Espo.define('views/record/panels/search', ['views/record/panels/bottom', 'search
 
         collection: null,
 
+        mode: 'detail',
+
         setup() {
             Dep.prototype.setup.call(this);
 
@@ -46,9 +48,12 @@ Espo.define('views/record/panels/search', ['views/record/panels/bottom', 'search
 
             this.setupSearchPanel();
 
-            this.listenTo(this.model, 'change:entity change:data', function () {
+            this.listenTo(this.model, 'change:entityType', () => {
                 this.scope = this.model.get('entityType');
+                this.setupSearchPanel();
+            });
 
+            this.listenTo(this.model, 'change:data', () => {
                 let data = _.extend({}, this.model.get('data'));
                 if (typeof data.whereScope === 'undefined' || data.whereScope !== this.scope) {
                     data = _.extend(data, {
@@ -58,6 +63,11 @@ Espo.define('views/record/panels/search', ['views/record/panels/bottom', 'search
                     });
                     this.model.set({data: data});
                 }
+                this.setupSearchPanel();
+            });
+
+            this.listenTo(this.model, 'after:change-mode', mode => {
+                this.mode = mode;
                 this.setupSearchPanel();
             });
         },
@@ -84,14 +94,12 @@ Espo.define('views/record/panels/search', ['views/record/panels/bottom', 'search
                     refreshDisabled: true,
                     updateCollectionDisabled: true,
                     disableSavePreset: true,
+                    mode: this.mode,
                     viewMode: 'list',
                     hiddenBoolFilterList: this.getMetadata().get(`clientDefs.${this.scope}.hiddenBoolFilterList`) || [],
                 }, view => {
                     view.render();
                     this.wait(false);
-                    this.listenToOnce(view, 'after:render', () => {
-                        console.log('qwe 111')
-                    });
                 });
             });
         },

@@ -660,6 +660,19 @@ Espo.define('views/record/search', 'view', function (Dep) {
                     textFilter.attr('placeholder', this.getTextFilterPlaceholder())
                 })
             }
+
+            /**
+             * Set mode for panel search
+             */
+            if (this.options.mode) {
+                if (this.options.mode === 'edit') {
+                    this.$el.find('select, input, button, .selectize-input,[data-action="clearLinkSubQuery"],.link-subquery').removeClass('disabled').removeAttr('disabled');
+                    this.$el.find('.remove-filter, .remove-attribute-filter').show();
+                } else {
+                    this.$el.find('select, input, button, .selectize-input,[data-action="clearLinkSubQuery"],.link-subquery').addClass('disabled').attr('disabled', true);
+                    this.$el.find('.remove-filter, .remove-attribute-filter').hide();
+                }
+            }
         },
 
         getTextFilterPlaceholder() {

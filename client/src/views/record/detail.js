@@ -880,6 +880,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
             this.mode = 'edit';
             this.trigger('after:set-edit-mode');
+            this.model.trigger('after:change-mode', 'edit');
         },
 
         setDetailMode: function () {
@@ -900,6 +901,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
             this.mode = 'detail';
             this.trigger('after:set-detail-mode');
+            this.model.trigger('after:change-mode', 'detail');
         },
 
         cancelEdit: function () {
