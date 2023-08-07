@@ -1533,6 +1533,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         beforeBeforeSave: function () {
             this.disableButtons();
+
+            this.model.trigger('before:save');
         },
 
         afterSaveError: function () {

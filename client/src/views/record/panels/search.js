@@ -43,29 +43,22 @@ Espo.define('views/record/panels/search', ['views/record/panels/bottom', 'search
 
         mode: 'detail',
 
+        searchView: null,
+
         setup() {
             Dep.prototype.setup.call(this);
 
             this.scope = this.scope || this.defs.scope;
 
             this.setupSearchPanel();
-
-            this.listenTo(this.model, 'change:data', () => {
-                let data = _.extend({}, this.model.get('data'));
-                if (typeof data.whereScope === 'undefined' || data.whereScope !== this.scope) {
-                    data = _.extend(data, {
-                        where: null,
-                        whereData: null,
-                        whereScope: this.scope,
-                    });
-                    this.model.set({data: data});
-                }
-                this.setupSearchPanel();
-            });
-
             this.listenTo(this.model, 'after:change-mode', mode => {
                 this.mode = mode;
                 this.setupSearchPanel();
+            });
+
+            this.listenTo(this.model, 'before:save', () => {
+                let filterData = this.getFilterData() || {};
+                this.model.set('data', _.extend({}, this.model.get('data'), filterData));
             });
         },
 
@@ -95,10 +88,20 @@ Espo.define('views/record/panels/search', ['views/record/panels/bottom', 'search
                     viewMode: 'list',
                     hiddenBoolFilterList: this.getMetadata().get(`clientDefs.${this.scope}.hiddenBoolFilterList`) || [],
                 }, view => {
+                    this.searchView = view;
                     view.render();
                     this.wait(false);
                 });
             });
+        },
+
+        getFilterData() {
+            this.searchView.search();
+            return {
+                where: Espo.Utils.cloneDeep(this.searchView.searchManager.getWhere()),
+                whereData: Espo.Utils.cloneDeep(this.searchView.searchManager.get()),
+                whereScope: this.searchView.scope,
+            }
         },
 
     })
