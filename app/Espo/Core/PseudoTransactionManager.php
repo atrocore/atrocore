@@ -291,7 +291,7 @@ class PseudoTransactionManager extends Injectable
 
     protected function getPDO(): PDO
     {
-        return $this->getInjection('container')->get('pdo');
+        return (new \Espo\Core\Application())->getContainer()->get('pdo');
     }
 
     protected function getServiceFactory(): ServiceFactory
