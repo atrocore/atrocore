@@ -2,7 +2,7 @@
     {
         "label": "Configuration",
         "rows": [
-            [{"name": "companyLogo"}, false],
+            [{"name": "companyLogo"}, {"name": "favicon"}],
             [{"name": "applicationName"}, {"name": "userThemesDisabled"}],
             [{"name": "recordsPerPage"},{"name": "displayListViewRecordCount"}],
             [{"name": "recordsPerPageSmall"}, {"name": "avatarsDisabled"}],

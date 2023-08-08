@@ -348,6 +348,9 @@
     "companyLogo": {
       "type": "image"
     },
+    "favicon": {
+      "type": "image"
+    },
     "assignmentEmailNotifications": {
       "type": "bool",
       "default": false
