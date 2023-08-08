@@ -52,7 +52,8 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         'config',
         'fieldManagerUtil',
         'eventManager',
-        'workflow'
+        'workflow',
+        'aclManager'
     );
 
     protected $injections = [];
@@ -865,9 +866,18 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
     }
 
+    protected function userCanReadEntity(string $userId, string $entityType): bool
+    {
+        return $this->getInjection('aclManager')->checkScope($this->getEntityManager()->getEntity('User', $userId), $entityType, "read");
+    }
+
     protected function createOwnNotification(Entity $entity, ?string $userId): void
     {
         if (empty($userId)) {
+            return;
+        }
+
+        if (!$this->userCanReadEntity($userId, $entity->getEntityType())) {
             return;
         }
 
@@ -895,6 +905,10 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     protected function createAssignmentNotification(Entity $entity, ?string $userId): void
     {
         if (empty($userId)) {
+            return;
+        }
+
+        if (!$this->userCanReadEntity($userId, $entity->getEntityType())) {
             return;
         }
 
