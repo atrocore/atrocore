@@ -255,12 +255,14 @@ class Converter
 
                     case 'foreignId':
                         $fieldParams = array_merge($this->idParams, $fieldParams);
-                        $fieldParams['notNull'] = false;
+                        if (!array_key_exists('notNull', $fieldParams)) {
+                            $fieldParams['notNull'] = false;
+                        }
                         break;
 
                     case 'foreignType':
                         $fieldParams['dbType'] = Entity::VARCHAR;
-                        if (empty($fieldParams['len'])) {
+                        if (!array_key_exists('len', $fieldParams)) {
                             $fieldParams['len'] = $this->defaultLength['varchar'];
                         }
                         break;

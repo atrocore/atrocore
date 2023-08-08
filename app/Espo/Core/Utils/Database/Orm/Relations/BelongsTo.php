@@ -37,6 +37,7 @@ class BelongsTo extends Base
 {
     protected function load($linkName, $entityName)
     {
+        $fieldDefs = $this->getMetadata()->get(['entityDefs', $entityName, 'fields', $linkName]);
         $linkParams = $this->getLinkParams();
 
         $foreignEntityName = $this->getForeignEntityName();
@@ -96,6 +97,14 @@ class BelongsTo extends Base
 
         if (!$noForeignName) {
             $data[$entityName]['fields'][$linkName.'Name'] = $fieldNameDefs;
+        }
+
+        if (array_key_exists('notNull', $fieldDefs)) {
+            $data[$entityName]['fields'][$linkName . 'Id']['notNull'] = $fieldDefs['notNull'];
+        }
+
+        if (array_key_exists('default', $fieldDefs)) {
+            $data[$entityName]['fields'][$linkName . 'Id']['default'] = $fieldDefs['default'];
         }
 
         return $data;
