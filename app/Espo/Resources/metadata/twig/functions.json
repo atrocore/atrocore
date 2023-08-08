@@ -1,4 +1,8 @@
 {
+  "isNew": "\\Espo\\TwigFunction\\IsNew",
+  "isAttributeChanged": "\\Espo\\TwigFunction\\IsAttributeChanged",
+  "getFetched": "\\Espo\\TwigFunction\\GetFetched",
+  "get": "\\Espo\\TwigFunction\\GetField",
   "findEntity": "\\Espo\\TwigFunction\\FindEntity",
   "findEntities": "\\Espo\\TwigFunction\\FindEntities"
 }
