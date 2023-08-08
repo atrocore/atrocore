@@ -60,6 +60,10 @@
       {
          "name": "unique",
          "type": "bool"
+      },
+      {
+         "name": "index",
+         "type": "bool"
       }
    ],
    "filter": true,

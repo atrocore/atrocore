@@ -191,6 +191,7 @@
     "pattern": "Regex pattern",
     "foreignName": "Foreign field",
     "unique": "Unique",
+    "index": "Database Index",
     "useDisabledTextareaInViewMode": "Use disabled textarea in view mode"
   },
   "messages": {
