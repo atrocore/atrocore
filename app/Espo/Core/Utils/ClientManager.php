@@ -82,6 +82,26 @@ class ClientManager
         return $this->getConfig()->get('cacheTimestamp', (string)time());
     }
 
+    protected function getFaviconUrl(string $faviconId): string
+    {
+        return '{{basePath}}?entryPoint=Download&id=' . $faviconId;
+    }
+
+    protected function getFaviconHtml()
+    {
+        $faviconId = $this->getConfig()->get('faviconId');
+        if (!empty($faviconId)) {
+            return '<link rel="icon" href="' . $this->getFaviconUrl($faviconId) . '" />';
+        } else {
+            return '<link rel="icon" href="{{basePath}}client/modules/treo-core/img/favicon.svg" type="image/svg+xml" />
+                    <link rel="icon" href="{{basePath}}client/modules/treo-core/img/favicon.ico" sizes="16x16" type="image/x-icon">
+                    <link rel="icon" href="{{basePath}}client/modules/treo-core/img/favicon_32.png" sizes="32x32" type="image/png">
+                    <link rel="icon" href="{{basePath}}client/modules/treo-core/img/favicon_48.png" sizes="48x48" type="image/png">
+                    <link rel="icon" href="{{basePath}}client/modules/treo-core/img/favicon_96.png" sizes="96x96" type="image/png">
+                    <link rel="icon" href="{{basePath}}client/modules/treo-core/img/favicon_144.png" sizes="144x144" type="image/png">';
+        }
+    }
+
     public function display($runScript = null, $htmlFilePath = null, $vars = array())
     {
         if (is_null($runScript)) {
@@ -101,14 +121,15 @@ class ClientManager
 
         $html = file_get_contents($htmlFilePath);
         foreach ($vars as $key => $value) {
-            $html = str_replace('{{'.$key.'}}', $value, $html);
+            $html = str_replace('{{' . $key . '}}', $value, $html);
         }
         $html = str_replace('{{applicationName}}', $this->getConfig()->get('applicationName', 'EspoCRM'), $html);
         $html = str_replace('{{cacheTimestamp}}', $this->getCacheTimestamp(), $html);
+        $html = str_replace('{{faviconHtml}}', $this->getFaviconHtml(), $html);
         $html = str_replace('{{useCache}}', $this->getConfig()->get('useCache') ? 'true' : 'false', $html);
         $html = str_replace('{{stylesheet}}', $this->getThemeManager()->getStylesheet(), $html);
-        $html = str_replace('{{runScript}}', $runScript , $html);
-        $html = str_replace('{{basePath}}', $this->basePath , $html);
+        $html = str_replace('{{runScript}}', $runScript, $html);
+        $html = str_replace('{{basePath}}', $this->basePath, $html);
 
         if (!empty($customStylesheet = $this->getThemeManager()->getCustomStylesheet())) {
             $link = '<link href="' . $this->basePath . $customStylesheet . '?r=' . $this->getCacheTimestamp() . '" rel="stylesheet" id="custom-stylesheet">';
