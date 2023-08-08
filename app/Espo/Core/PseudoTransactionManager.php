@@ -68,6 +68,11 @@ class PseudoTransactionManager extends Injectable
         return $this->push($entityType, $entityId, 'updateEntity', $this->prepareInputData($data), $parentId);
     }
 
+    public function pushMassUpdateEntityJob(string $entityType, $data, $params, string $parentId = null): string
+    {
+        return $this->push($entityType, '', 'massUpdate', $this->prepareInputData(['data' => $data, 'params' => $params]), $parentId);
+    }
+
     public function pushDeleteEntityJob(string $entityType, string $entityId, string $parentId = null): string
     {
         return $this->push($entityType, $entityId, 'deleteEntity', '', $parentId);
@@ -223,6 +228,16 @@ class PseudoTransactionManager extends Injectable
                 case 'updateEntity':
                     if (!$inputIsEmpty) {
                         $service->updateEntity($job['entity_id'], Json::decode($job['input_data']));
+                    }
+                    break;
+                case 'massUpdate':
+                    if (!$inputIsEmpty) {
+                        $payload = Json::decode($job['input_data'], true);
+                        if (array_key_exists('data', $payload)) {
+                            $data = json_decode(json_encode($payload['data']));
+                            $params = array_key_exists('params', $payload) ? $payload['params'] : [];
+                            $service->massUpdate($data, $params);
+                        }
                     }
                     break;
                 case 'deleteEntity':
