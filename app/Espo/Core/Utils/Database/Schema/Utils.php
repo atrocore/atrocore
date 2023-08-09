@@ -58,10 +58,15 @@ class Utils
                     if ($keyValue === true) {
                         $tableIndexName = static::generateIndexName($columnName);
                         $indexList[$entityName][$tableIndexName]['columns'] = array($columnName);
+                        if (array_key_exists('deleted', $entityParams['fields'])) {
+                            $tableIndexName = static::generateIndexName($columnName . '_deleted');
+                            $indexList[$entityName][$tableIndexName]['columns'] = [$columnName, 'deleted'];
+                        }
                     } else if (is_string($keyValue)) {
                         $tableIndexName = static::generateIndexName($keyValue);
                         $indexList[$entityName][$tableIndexName]['columns'][] = $columnName;
                     }
+
                 }
             }
 
@@ -100,7 +105,7 @@ class Utils
     {
         $nameList = [];
         $nameList[] = strtoupper($prefix);
-        $nameList[] = strtoupper( Util::toUnderScore($name) );
+        $nameList[] = strtoupper(Util::toUnderScore($name));
 
         return substr(implode('_', $nameList), 0, $maxLength);
     }
@@ -164,11 +169,11 @@ class Utils
 
         $defaultLength = array(
             'datetime' => 8,
-            'time' => 4,
-            'int' => 4,
-            'bool' => 1,
-            'float' => 4,
-            'varchar' => 255,
+            'time'     => 4,
+            'int'      => 4,
+            'bool'     => 1,
+            'float'    => 4,
+            'varchar'  => 255,
         );
 
         $type = static::getFieldType($ormFieldDefs);
