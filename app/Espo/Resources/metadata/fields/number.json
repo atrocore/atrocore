@@ -19,6 +19,10 @@
          "required": true,
          "min": 1,
          "max": 20
+      },
+      {
+         "name": "index",
+         "type": "bool"
       }
    ],
    "filter": true,

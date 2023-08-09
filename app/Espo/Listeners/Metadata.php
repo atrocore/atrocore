@@ -236,6 +236,16 @@ class Metadata extends AbstractListener
                     ];
                 }
 
+                if (!empty($fieldDefs['index'])) {
+                    $data['entityDefs'][$entity]['indexes'][$field] = [
+                        "columns" => [
+                            'deleted',
+                            Util::toUnderScore($field) . '_from',
+                            Util::toUnderScore($field) . '_to'
+                        ]
+                    ];
+                }
+
                 $data['entityDefs'][$entity]['fields'][$field]['filterDisabled'] = true;
                 $data['entityDefs'][$entity]['fields'][$field]['notStorable'] = true;
                 $data['entityDefs'][$entity]['fields'][$field]['exportDisabled'] = true;
@@ -272,6 +282,11 @@ class Metadata extends AbstractListener
                 if (!empty($fieldDefs['audited'])) {
                     $data['entityDefs'][$entity]['fields'][$fieldFrom]['audited'] = true;
                     $data['entityDefs'][$entity]['fields'][$fieldTo]['audited'] = true;
+                }
+
+                if (!empty($fieldDefs['index'])) {
+                    $data['entityDefs'][$entity]['fields'][$fieldFrom]['index'] = true;
+                    $data['entityDefs'][$entity]['fields'][$fieldTo]['index'] = true;
                 }
 
                 if ($fieldDefs['type'] === 'rangeFloat' && isset($fieldDefs['amountOfDigitsAfterComma'])) {
@@ -450,6 +465,7 @@ class Metadata extends AbstractListener
                             "entity"               => $foreignEntity,
                             "required"             => false,
                             "unique"               => false,
+                            "index"                => false,
                             "filterDisabled"       => true,
                             "massUpdateDisabled"   => true,
                             "exportDisabled"       => true,
@@ -875,7 +891,7 @@ class Metadata extends AbstractListener
     /**
      * Remove field from index
      *
-     * @param array  $indexes
+     * @param array $indexes
      * @param string $fieldName
      *
      * @return array

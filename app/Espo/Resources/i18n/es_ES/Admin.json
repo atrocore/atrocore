@@ -169,7 +169,8 @@
     "useNumericFormat": "Use Numeric Format",
     "strip": "Strip",
     "pattern": "Regex Pattern",
-    "unique": "Unique"
+    "unique": "Unique",
+    "index": "Índice de base de datos"
   },
   "messages": {
     "selectEntityType": "Seleccione el tipo de entidad en el menú de la izquierda.",
