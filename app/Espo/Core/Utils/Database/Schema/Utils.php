@@ -55,9 +55,6 @@ class Utils
                         $indexList[$entityName] = [];
                     }
 
-                    if ($fieldName == "testRangeFloat") {
-                        $a = 1;
-                    }
                     if ($keyValue === true) {
                         $tableIndexName = static::generateIndexName($columnName);
                         $indexList[$entityName][$tableIndexName]['columns'] = array($columnName);
