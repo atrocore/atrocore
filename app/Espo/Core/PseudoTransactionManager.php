@@ -48,6 +48,8 @@ class PseudoTransactionManager extends Injectable
 
     private array $canceledJobs = [];
 
+    private ?\PDO $pdo = null;
+
     public function __construct()
     {
         $this->addDependency('container');
@@ -291,7 +293,11 @@ class PseudoTransactionManager extends Injectable
 
     protected function getPDO(): PDO
     {
-        return (new \Espo\Core\Application())->getContainer()->get('pdo');
+        if ($this->pdo === null) {
+            $this->pdo = (new \Espo\Core\Application())->getContainer()->get('pdo');
+        }
+
+        return $this->pdo;
     }
 
     protected function getServiceFactory(): ServiceFactory
