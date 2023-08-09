@@ -672,6 +672,12 @@ Espo.define('views/record/search', 'view', function (Dep) {
                     this.$el.find('select, input, button, .selectize-input,[data-action="clearLinkSubQuery"],.link-subquery').addClass('disabled').attr('disabled', true);
                     this.$el.find('.remove-filter, .remove-attribute-filter').hide();
                 }
+
+                if (this.options.hasButtons !== true) {
+                    this.$el.find('.filter-actions').hide();
+                } else {
+                    this.$el.find('.filter-actions').show();
+                }
             }
         },
 

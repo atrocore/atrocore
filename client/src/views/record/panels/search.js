@@ -45,10 +45,14 @@ Espo.define('views/record/panels/search', ['views/record/panels/bottom', 'search
 
         searchView: null,
 
+        hasButtons: null,
+
         setup() {
             Dep.prototype.setup.call(this);
 
             this.scope = this.scope || this.defs.scope;
+
+            this.hasButtons = this.hasButtons || this.defs.hasButtons || false;
 
             this.setupSearchPanel();
             this.listenTo(this.model, 'after:change-mode', mode => {
@@ -84,6 +88,7 @@ Espo.define('views/record/panels/search', ['views/record/panels/bottom', 'search
                     refreshDisabled: true,
                     updateCollectionDisabled: true,
                     disableSavePreset: true,
+                    hasButtons: this.hasButtons,
                     mode: this.mode,
                     viewMode: 'list',
                     hiddenBoolFilterList: this.getMetadata().get(`clientDefs.${this.scope}.hiddenBoolFilterList`) || [],
