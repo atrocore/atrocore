@@ -674,9 +674,9 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 }
 
                 if (this.options.hasButtons !== true) {
-                    this.$el.find('.filter-actions').hide();
+                    this.$el.find('.filter-actions').addClass('hidden');
                 } else {
-                    this.$el.find('.filter-actions').show();
+                    this.$el.find('.filter-actions').removeClass('hidden');
                 }
             }
         },
