@@ -4,7 +4,6 @@
     "tab": true,
     "acl": true,
     "aclPortal": "recordAllAccountNo",
-    "module": "TreoCore",
     "customizable": true,
     "stream": true,
     "importable": true,
