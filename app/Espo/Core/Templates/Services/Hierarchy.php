@@ -73,6 +73,7 @@ class Hierarchy extends Record
         }
 
         foreach ($children as $child) {
+            $this->getServiceFactory()->create($child->getEntityType())->prepareEntityForOutput($child);
             $unInheritedFields = array_diff($inheritableFields, $this->getInheritedFromParentFields($parent, $child));
             foreach ($unInheritedFields as $unInheritedField) {
                 if ($child->get($unInheritedField) === null) {
@@ -425,17 +426,17 @@ class Hierarchy extends Record
 
         foreach ($records as $k => $record) {
             $result[] = [
-                'id' => $record['id'],
-                'name' => $record['name'],
-                'offset' => $offset + $k,
-                'total' => $total,
-                'disabled' => !in_array($record['id'], $ids),
+                'id'             => $record['id'],
+                'name'           => $record['name'],
+                'offset'         => $offset + $k,
+                'total'          => $total,
+                'disabled'       => !in_array($record['id'], $ids),
                 'load_on_demand' => !empty($record['childrenCount']) && $record['childrenCount'] > 0
             ];
         }
 
         return [
-            'list' => $result,
+            'list'  => $result,
             'total' => $total
         ];
     }
@@ -905,6 +906,7 @@ class Hierarchy extends Record
 
         $inheritedFields = [];
         foreach ($parents as $parent) {
+            $this->getServiceFactory()->create($parent->getEntityType())->prepareEntityForOutput($parent);
             $inheritedFields = array_merge($inheritedFields, $this->getInheritedFromParentFields($parent, $entity));
         }
 

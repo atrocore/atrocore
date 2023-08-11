@@ -1043,6 +1043,9 @@ class Record extends \Espo\Core\Services\Base
 
         $key = array_search($value, $fieldDefs['options']);
         if ($key === false) {
+            if (array_search($value, $fieldDefs['optionsIds']) !== false) {
+                return $value;
+            }
             if (!$validate) {
                 return '';
             }
@@ -1069,6 +1072,10 @@ class Record extends \Espo\Core\Services\Base
         foreach ($values as $v) {
             $key = array_search($v, $fieldDefs['options']);
             if ($key === false) {
+                if (array_search($v, $fieldDefs['optionsIds']) !== false) {
+                    $preparedValues[] = $v;
+                    continue;
+                }
                 if (!$validate) {
                     continue;
                 }
