@@ -47,7 +47,7 @@ class Twig extends Injectable
         $this->addDependency('container');
     }
 
-    public function renderTemplate(string $template, array $templateData, string &$outputType = 'text')
+    public function renderTemplate(string $template, array $templateData, string $outputType = 'text')
     {
         $twig = new \Twig\Environment(new \Twig\Loader\ArrayLoader(['template' => $template]));
         $templateData['config'] = $this->getConfig()->getData();
@@ -71,7 +71,6 @@ class Twig extends Injectable
 
             $res = $twig->render('template', $templateData);
         } catch (\Throwable $e) {
-            $outputType = 'text';
             return 'Error: ' . $e->getMessage();
         }
 

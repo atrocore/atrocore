@@ -169,6 +169,9 @@ class FieldManager extends \Espo\Core\Controllers\Base
         $outputType = property_exists($data, 'outputType') ? $data->outputType : 'text';
         $entity = $this->getContainer()->get('entityManager')->getRepository($data->scope)->order('id', 'ASC')->findOne();
         $preview = $this->getContainer()->get('twig')->renderTemplate($data->script, ['entity' => $entity], $outputType);
+        if (is_string($preview)) {
+            $outputType = 'text';
+        }
 
         return [
             'preview'    => $preview,
