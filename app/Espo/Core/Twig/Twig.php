@@ -74,6 +74,8 @@ class Twig extends Injectable
             return 'Error: ' . $e->getMessage();
         }
 
+        $res = trim($res);
+
         switch ($outputType) {
             case 'int':
                 $res = (int)$res;
@@ -82,7 +84,7 @@ class Twig extends Injectable
                 $res = (float)$res;
                 break;
             case 'bool':
-                $res = (bool)$res;
+                $res = $res === 'true' || $res === '1';
                 break;
             case 'date':
                 try {
