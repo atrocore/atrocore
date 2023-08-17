@@ -43,8 +43,10 @@ Espo.define('views/notification/items/assign', 'views/notification/items/base', 
 
             this.userId = data.userId;
 
+            let entityName = data.entityName || data.entityId;
+
             this.messageData['entityType'] = Espo.Utils.upperCaseFirst((this.translate(data.entityType, 'scopeNames') || '').toLowerCase());
-            this.messageData['entity'] = '<a href="#' + data.entityType + '/view/' + data.entityId + '">' + data.entityName + '</a>';
+            this.messageData['entity'] = '<a href="#' + data.entityType + '/view/' + data.entityId + '">' + entityName + '</a>';
 
             this.createMessage();
         },
