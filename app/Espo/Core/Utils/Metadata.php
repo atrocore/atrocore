@@ -286,13 +286,11 @@ class Metadata
             $this->dataManager->setCacheData('metadata', $this->objData);
         }
 
-        // dispatch an event
-        $event = $this
-            ->getEventManager()
-            ->dispatch('Metadata', 'modify', new Event(['data' => $this->objData]));
+        $data = $this->getEventManager()->dispatch('Metadata', 'modify', new Event(['data' => $this->objData]))->getArgument('data');
+        $data = $this->getEventManager()->dispatch('Metadata', 'afterInit', new Event(['data' => $data]))->getArgument('data');
 
         // set object data
-        $this->objData = Json::decode(Json::encode($event->getArgument('data')));
+        $this->objData = Json::decode(Json::encode($data));
 
         // clearing metadata
         $this->clearingMetadata();
