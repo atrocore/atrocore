@@ -76,6 +76,10 @@ class Twig extends Injectable
 
         $res = trim($res);
 
+        if (strtolower($res) === 'null' || ($outputType !== 'text' && $res === '')) {
+            return null;
+        }
+
         switch ($outputType) {
             case 'int':
                 $res = (int)$res;
@@ -84,7 +88,7 @@ class Twig extends Injectable
                 $res = (float)$res;
                 break;
             case 'bool':
-                $res = $res === 'true' || $res === '1';
+                $res = strtolower($res) === 'true' || $res === '1';
                 break;
             case 'date':
                 try {
