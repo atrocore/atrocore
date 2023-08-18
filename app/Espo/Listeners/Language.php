@@ -37,14 +37,10 @@ namespace Espo\Listeners;
 
 use Espo\Core\EventManager\Event;
 use Espo\Core\Utils\Util;
+use Espo\Core\Templates\Services\Relationship;
 
-/**
- * Class Language
- */
 class Language extends AbstractListener
 {
-    public const VIRTUAL_FIELD_DELIMITER = \Espo\Core\Templates\Services\Relationship::VIRTUAL_FIELD_DELIMITER;
-
     public function modify(Event $event): void
     {
         $data = $event->getArgument('data');
@@ -89,7 +85,7 @@ class Language extends AbstractListener
                     }
 
                     if (!empty($fieldDefs['relationVirtualField'])) {
-                        $parts = explode(self::VIRTUAL_FIELD_DELIMITER, (string)$field);
+                        $parts = explode(Relationship::VIRTUAL_FIELD_DELIMITER, (string)$field);
                         if (count($parts) === 2) {
                             $fieldLabel = $this->getLabel($data, $locale, $entity, $parts[0]);
                             $relatedFieldEntity = $this->getMetadata()->get(['entityDefs', $entity, 'links', $parts[0], 'entity']);
@@ -114,29 +110,20 @@ class Language extends AbstractListener
             }
         }
 
-        if (empty($this->getConfig()->get('isMultilangActive'))) {
-            return;
-        }
-
-        // get languages
-        if (empty($languages = $this->getConfig()->get('inputLanguageList', []))) {
-            return;
-        }
-
-        foreach ($data as $locale => $rows) {
-            foreach ($rows as $scope => $items) {
-                foreach (['fields', 'tooltips'] as $type) {
-                    if (isset($items[$type])) {
-                        foreach ($items[$type] as $field => $value) {
-                            foreach ($languages as $language) {
-                                // prepare multi-lang field
-                                $mField = $field . ucfirst(Util::toCamelCase(strtolower($language)));
-
-                                if (!isset($data[$locale][$scope][$type][$mField])) {
-                                    if ($type == 'fields') {
-                                        $data[$locale][$scope][$type][$mField] = $value . ' / ' . $language;
-                                    } else {
-                                        $data[$locale][$scope][$type][$mField] = $value;
+        if (!empty($this->getConfig()->get('isMultilangActive')) && !empty($languages = $this->getConfig()->get('inputLanguageList', []))) {
+            foreach ($data as $locale => $rows) {
+                foreach ($rows as $scope => $items) {
+                    foreach (['fields', 'tooltips'] as $type) {
+                        if (isset($items[$type])) {
+                            foreach ($items[$type] as $field => $value) {
+                                foreach ($languages as $language) {
+                                    $mField = $field . ucfirst(Util::toCamelCase(strtolower($language)));
+                                    if (!isset($data[$locale][$scope][$type][$mField])) {
+                                        if ($type == 'fields') {
+                                            $data[$locale][$scope][$type][$mField] = $value . ' / ' . $language;
+                                        } else {
+                                            $data[$locale][$scope][$type][$mField] = $value;
+                                        }
                                     }
                                 }
                             }
@@ -146,7 +133,6 @@ class Language extends AbstractListener
             }
         }
 
-        // set data
         $event->setArgument('data', $data);
     }
 
