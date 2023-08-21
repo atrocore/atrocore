@@ -1,4 +1,3 @@
-
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -35,7 +34,7 @@ Espo.define('views/settings/fields/thousand-separator', 'views/fields/varchar', 
 
     return Dep.extend({
 
-        validations: ['required', 'thousandSeparator', 'value'],
+        validations: ['thousandSeparator', 'value'],
 
         acceptableValues: ['.', ','],
 
@@ -49,7 +48,8 @@ Espo.define('views/settings/fields/thousand-separator', 'views/fields/varchar', 
         },
 
         validateValue: function () {
-            if (!this.acceptableValues.includes(this.model.get(this.name))) {
+            const value = this.model.get(this.name)
+            if (value && !this.acceptableValues.includes(this.model.get(this.name))) {
                 var msg = this.translate('incorrectThousandSeparatorOrDecimalMark', 'messages', 'Admin');
                 this.showValidationMessage(msg);
                 return true;
