@@ -49,7 +49,7 @@ Espo.define('views/settings/fields/thousand-separator', 'views/fields/varchar', 
 
         validateValue: function () {
             const value = this.model.get(this.name)
-            if (value && !this.acceptableValues.includes(this.model.get(this.name))) {
+            if (value && !this.acceptableValues.includes(value)) {
                 var msg = this.translate('incorrectThousandSeparatorOrDecimalMark', 'messages', 'Admin');
                 this.showValidationMessage(msg);
                 return true;
