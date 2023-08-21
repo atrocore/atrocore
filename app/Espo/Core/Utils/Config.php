@@ -49,7 +49,7 @@ class Config
             'timeZone'          => 'UTC',
             'weekStart'         => 0,
             'timeFormat'        => 'HH:mm',
-            'thousandSeparator' => ',',
+            'thousandSeparator' => '',
             'decimalMark'       => '.',
         ];
 
