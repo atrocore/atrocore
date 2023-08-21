@@ -206,7 +206,7 @@ class Htmlizer
 
                         $decimals = 0;
                         $decimalPoint = '.';
-                        $thousandsSeparator = '';
+                        $thousandsSeparator = ',';
 
                         if (isset($options['decimals'])) {
                             $decimals = $options['decimals'];
