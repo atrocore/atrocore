@@ -115,7 +115,7 @@ class Notification extends \Espo\Services\Record
     public function markAllRead($userId)
     {
         $pdo = $this->getEntityManager()->getPDO();
-        $sql = "UPDATE notification SET `read` = 1 WHERE user_id = ".$pdo->quote($userId)." AND `read` = 0";
+        $sql = "UPDATE notification SET `read` = 1 WHERE user_id = " . $pdo->quote($userId) . " AND `read` = 0";
         $pdo->prepare($sql)->execute();
 
         // update count for user
@@ -140,7 +140,7 @@ class Notification extends \Espo\Services\Record
             $where = [];
             $where[] = array(
                 'OR' => array(
-                    'relatedParentType' => null,
+                    'relatedParentType'   => null,
                     'relatedParentType!=' => $ignoreScopeList
                 )
             );
@@ -199,7 +199,7 @@ class Notification extends \Espo\Services\Record
                                 $note->set('relatedName', $related->get('name'));
                             }
                         }
-                        $note->loadLinkMultipleField('attachments');
+                        $this->getRecordService('Stream')->prepareForOutput($note);
                         $entity->set('noteData', $note->toArray());
                     } else {
                         unset($collection[$k]);
@@ -217,7 +217,7 @@ class Notification extends \Espo\Services\Record
                 $idQuotedList[] = $pdo->quote($id);
             }
 
-            $sql = "UPDATE notification SET `read` = 1 WHERE id IN (" . implode(', ', $idQuotedList) .")";
+            $sql = "UPDATE notification SET `read` = 1 WHERE id IN (" . implode(', ', $idQuotedList) . ")";
 
             $s = $pdo->prepare($sql);
             $s->execute();
@@ -227,7 +227,7 @@ class Notification extends \Espo\Services\Record
 
 
         return array(
-            'total' => $count,
+            'total'      => $count,
             'collection' => $collection
         );
     }
