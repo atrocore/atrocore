@@ -103,7 +103,9 @@ class Metadata
     private $frontendHiddenPathList
         = [
             ['app', 'formula', 'functionClassNameMap'],
-            ['app', 'fileStorage', 'implementationClassNameMap']
+            ['app', 'fileStorage', 'implementationClassNameMap'],
+            ['app', 'services'],
+            ['twig'],
         ];
 
     /**
@@ -131,9 +133,6 @@ class Metadata
         $this->dataManager = $dataManager;
         $this->moduleManager = $moduleManager;
         $this->eventManager = $eventManager;
-
-        // add hidden paths
-        $this->frontendHiddenPathList[] = ['app', 'services'];
     }
 
     public function isCached(): bool
@@ -232,6 +231,13 @@ class Metadata
     public function getAllForFrontend()
     {
         $data = $this->getAllObjects();
+
+
+//        // from DAM
+//        ['clientDefsForDam'],
+//            ['entityDefsForDam'],
+//            ['scopesForDam'],
+//            ['dashletsForDam'],
 
         foreach ($this->frontendHiddenPathList as $row) {
             $p =& $data;

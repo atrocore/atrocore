@@ -189,7 +189,7 @@
     "composer": "Aktualisieren Sie das System und alle installierten Module, installieren oder entfernen Sie öffentlich oder privat verfügbare Module. Modulversionsabhängigkeit wird automatisch berücksichtigt.",
     "connection": "Verwalten Sie Verbindungen mit anderen Systemen für einen automatischen Datenaustausch.",
     "measure": "Verwalten Sie Ihre Maße und Maßeinheiten, legen Sie standardmäßige Maßeinheiten und Multiplikatoren für die automatische Umrechnung von Maßeinheiten fest.",
-    "settings": "Verwalten Sie allgemeine Systemeinstellungen wie das Standardgebietsschema, Sucheinstellungen, Kontrolle von Asset-Duplikaten, aktive Sprachen der Benutzeroberflächen, Cache-Nutzung und mehr...",
+    "settings": "Verwalten Sie allgemeine Systemeinstellungen wie das Standardgebietsschema, Sucheinstellungen, aktive Sprachen der Benutzeroberflächen, Cache-Nutzung und mehr...",
     "scheduledJob": "Verwalten Sie geplante Systemjobs, wie einen Cron-Job, die im Hintergrund ausgeführt werden, und sehen Sie sich ihre Logs an.",
     "clearCache": "Löschen Sie den Metadaten-Cache und anderen System-Cache, verwenden Sie diese Option, wenn beim Arbeiten mit dem System Fehler auftreten.",
     "rebuildDb": "Richten Sie die Datenbankstruktur gemäß den konfigurierten Metadaten aus.",
