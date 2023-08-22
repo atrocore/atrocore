@@ -98,17 +98,6 @@ class Metadata
     private $customPath = 'custom/Espo/Custom/Resources/metadata';
 
     /**
-     * @var \string[][]
-     */
-    private $frontendHiddenPathList
-        = [
-            ['app', 'formula', 'functionClassNameMap'],
-            ['app', 'fileStorage', 'implementationClassNameMap'],
-            ['app', 'services'],
-            ['twig'],
-        ];
-
-    /**
      * @var array
      */
     private $deletedData = [];
@@ -232,14 +221,10 @@ class Metadata
     {
         $data = $this->getAllObjects();
 
+        $frontendHiddenPathList = $data->app->frontendHiddenPathList;
+        $frontendHiddenPathList[] = ['app', 'frontendHiddenPathList'];
 
-//        // from DAM
-//        ['clientDefsForDam'],
-//            ['entityDefsForDam'],
-//            ['scopesForDam'],
-//            ['dashletsForDam'],
-
-        foreach ($this->frontendHiddenPathList as $row) {
+        foreach ($frontendHiddenPathList as $row) {
             $p =& $data;
             $path = [&$p];
             foreach ($row as $i => $item) {
