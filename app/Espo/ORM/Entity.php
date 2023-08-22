@@ -373,7 +373,7 @@ abstract class Entity implements IEntity
 
     public function getVirtualFields(): array
     {
-        if (!$this->has('data')) {
+        if (empty($this->virtualFields)) {
             return [];
         }
 
@@ -384,7 +384,7 @@ abstract class Entity implements IEntity
 
     public function setVirtualField(string $name, $value): void
     {
-        if (!$this->has('data')) {
+        if (empty($this->virtualFields)) {
             return;
         }
 
