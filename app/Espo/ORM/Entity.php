@@ -41,6 +41,8 @@ abstract class Entity implements IEntity
 
     private $isSaved = false;
 
+    protected array $virtualFields = [];
+
     /**
      * Entity type.
      * @var string
@@ -151,6 +153,10 @@ abstract class Entity implements IEntity
         $method = '_get' . ucfirst($name);
         if (method_exists($this, $method)) {
             return $this->$method();
+        }
+
+        if (in_array($name, $this->virtualFields)) {
+            return $this->getVirtualField($name);
         }
 
         if ($this->hasAttribute($name) && array_key_exists($name, $this->valuesContainer)) {
@@ -358,7 +364,42 @@ abstract class Entity implements IEntity
             $arr['isInherited'] = $this->isInherited;
         }
 
+        foreach ($this->getVirtualFields() as $name => $value) {
+            $arr[$name] = $value;
+        }
+
         return $arr;
+    }
+
+    public function getVirtualFields(): array
+    {
+        if (!$this->has('data')) {
+            return [];
+        }
+
+        $data = empty($this->get('data')) ? [] : json_decode(json_encode($this->get('data')), true);
+
+        return isset($data['field']) && is_array($data['field']) ? $data['field'] : [];
+    }
+
+    public function setVirtualField(string $name, $value): void
+    {
+        if (!$this->has('data')) {
+            return;
+        }
+
+        $data = empty($this->get('data')) ? [] : json_decode(json_encode($this->get('data')), true);
+        $data['field'][$name] = $value;
+        $this->set('data', $data);
+
+        $this->valuesContainer[$name] = $value;
+    }
+
+    public function getVirtualField(string $name)
+    {
+        $data = $this->getVirtualFields();
+
+        return isset($data[$name]) ? $data[$name] : null;
     }
 
     public function getValueMap()
@@ -599,6 +640,11 @@ abstract class Entity implements IEntity
 
     protected function setFieldValue(string $field, $value): void
     {
+        if (in_array($field, $this->virtualFields)) {
+            $this->setVirtualField($field, $value);
+            return;
+        }
+
         $this->valuesContainer[$field] = $value;
     }
 

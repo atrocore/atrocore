@@ -4,5 +4,7 @@
   "getFetched": "\\Espo\\TwigFunction\\GetFetched",
   "get": "\\Espo\\TwigFunction\\GetField",
   "findEntity": "\\Espo\\TwigFunction\\FindEntity",
-  "findEntities": "\\Espo\\TwigFunction\\FindEntities"
+  "findRecord": "\\Espo\\TwigFunction\\FindEntity",
+  "findEntities": "\\Espo\\TwigFunction\\FindEntities",
+  "findRecords": "\\Espo\\TwigFunction\\FindEntities"
 }
