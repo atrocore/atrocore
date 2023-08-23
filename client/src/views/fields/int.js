@@ -163,9 +163,7 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
             }
 
             let invalid = false;
-            let pattern;
-
-            pattern = this.thousandSeparator ? "^-?[0-9]\\d*(\\" + this.thousandSeparator + "\\d+)?$" : "^-?\\d+$";
+            let pattern = this.thousandSeparator ? "^-?[0-9]\\d*(\\" + this.thousandSeparator + "\\d+)?$" : "^-?\\d+$";
             let matcher = new RegExp(pattern);
             if (!matcher.test(value)) {
                 invalid = true;
