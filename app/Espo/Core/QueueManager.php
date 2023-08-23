@@ -212,7 +212,9 @@ class QueueManager extends Injectable
         if ($item->get('createdById') === 'system') {
             $user = $this->getEntityManager()->getRepository('User')->get('system');
             $user->set('isAdmin', true);
-            $user->set('ipAddress', $_SERVER['REMOTE_ADDR']);
+            if (isset($_SERVER['REMOTE_ADDR'])) {
+                $user->set('ipAddress', $_SERVER['REMOTE_ADDR']);
+            }
         } else {
             $user = $item->get('createdBy');
         }
