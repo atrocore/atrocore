@@ -46,18 +46,6 @@ use Espo\Core\Utils\Metadata\Helper;
  */
 class FieldManager extends Injectable
 {
-    public const UNNECESSARY_FIELDS
-        = [
-            'name',
-            'label',
-            'translatedOptions',
-            'dynamicLogicVisible',
-            'dynamicLogicReadOnly',
-            'dynamicLogicRequired',
-            'dynamicLogicOptions',
-            'lingualFields'
-        ];
-
     protected $isChanged = null;
 
     protected $forbiddenFieldNameList = ['id', 'deleted'];
@@ -75,27 +63,12 @@ class FieldManager extends Injectable
         return $this->getInjection('container')->get('metadata');
     }
 
-    protected function getLanguage()
-    {
-        return $this->getInjection('container')->get('language');
-    }
-
-    protected function getBaseLanguage()
-    {
-        return $this->getInjection('container')->get('baseLanguage');
-    }
-
     /**
      * @return Helper
      */
     protected function getMetadataHelper()
     {
         return new Helper($this->getMetadata());
-    }
-
-    protected function getDefaultLanguage()
-    {
-        return $this->getInjection('container')->get('defaultLanguage');
     }
 
     public function read($scope, $name)
@@ -151,67 +124,11 @@ class FieldManager extends Injectable
             $fieldDefs['isCustom'] = true;
         }
 
-        $isCustom = false;
-        if (!empty($fieldDefs['isCustom'])) {
-            $isCustom = true;
-        }
-
         $result = true;
-        $isLabelChanged = false;
-
-        if (isset($fieldDefs['label']) && empty($fieldDefs['multilangField'])) {
-            $this->setLabel($scope, $name, $fieldDefs['label'], $isNew, $isCustom);
-            $isLabelChanged = true;
-        }
-
-        foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
-            $label = Util::toCamelCase('label_' . strtolower($locale));
-            $fieldKey = empty($fieldDefs['multilangField']) ? $name : $fieldDefs['multilangField'];
-            if (isset($fieldDefs[$label])) {
-                $languageObj = new Language($this->getInjection('container'), $locale);
-                $languageObj->set($scope, 'fields', $fieldKey, $fieldDefs[$label]);
-                $languageObj->save();
-                unset($fieldDefs[$label]);
-            }
-        }
-
-        if (isset($fieldDefs['tooltipText'])) {
-            $this->setTooltipText($scope, $name, $fieldDefs['tooltipText'], $isNew, $isCustom);
-            $isLabelChanged = true;
-        }
 
         $type = isset($fieldDefs['type']) ? $fieldDefs['type'] : $type = $this->getMetadata()->get(['entityDefs', $scope, 'fields', $name, 'type']);
 
         $this->processHook('beforeSave', $type, $scope, $name, $fieldDefs, array('isNew' => $isNew));
-
-        if ($isNew) {
-            $subFieldsDefs = $this->getMetadata()->get(['fields', $type, 'fields']);
-            if ($subFieldsDefs) {
-                foreach ($subFieldsDefs as $partField => $partFieldData) {
-                    $partLabel = $this->getLanguage()->get('FieldManager.fieldParts.' . $type . '.' . $partField);
-                    if ($partLabel) {
-                        if ($this->getMetadata()->get(['fields', $type, 'fields', 'naming']) === 'prefix') {
-                            $subFieldName = $partField . ucfirst($name);
-                            $subFieldLabel = $partLabel . ' ' . $fieldDefs['label'];
-                        } else {
-                            $subFieldName = $name . ucfirst($partField);
-                            $subFieldLabel = $fieldDefs['label'] . ' ' . $partLabel;
-                        }
-                        $this->setLabel($scope, $subFieldName, $subFieldLabel, $isNew, $isCustom);
-                        $isLabelChanged = true;
-                    }
-                }
-            }
-        }
-
-        if ($isLabelChanged) {
-            $this->getLanguage()->save();
-            if ($isNew || $isCustom) {
-                if ($this->getBaseLanguage()->getLanguage() !== $this->getLanguage()->getLanguage()) {
-                    $this->getBaseLanguage()->save();
-                }
-            }
-        }
 
         $metadataToBeSaved = false;
         $clientDefsToBeSet = false;
@@ -349,39 +266,9 @@ class FieldManager extends Injectable
 
         $this->processHook('beforeRemove', $type, $scope, $name);
 
-        $unsets = array(
-            'fields.' . $name,
-            'links.' . $name,
-        );
-
-        $this->getMetadata()->delete('entityDefs', $scope, $unsets);
-
-        $this->getMetadata()->delete(
-            'clientDefs', $scope, [
-                'dynamicLogic.fields.' . $name,
-                'dynamicLogic.options.' . $name
-            ]
-        );
-
+        $this->getMetadata()->delete('entityDefs', $scope, ['fields.' . $name, 'links.' . $name]);
+        $this->getMetadata()->delete('clientDefs', $scope, ['dynamicLogic.fields.' . $name, 'dynamicLogic.options.' . $name]);
         $res = $this->getMetadata()->save();
-        $this->deleteLabel($scope, $name);
-
-        $subFieldsDefs = $this->getMetadata()->get(['fields', $type, 'fields']);
-        if ($subFieldsDefs) {
-            foreach ($subFieldsDefs as $partField => $partFieldData) {
-                if ($this->getMetadata()->get(['fields', $type, 'fields', 'naming']) === 'prefix') {
-                    $subFieldName = $partField . ucfirst($name);
-                } else {
-                    $subFieldName = $name . ucfirst($partField);
-                }
-                $this->deleteLabel($scope, $subFieldName);
-            }
-        }
-
-        $this->getLanguage()->save();
-        if ($this->getBaseLanguage()->getLanguage() !== $this->getLanguage()->getLanguage()) {
-            $this->getBaseLanguage()->save();
-        }
 
         $this->processHook('afterRemove', $type, $scope, $name);
 
@@ -406,40 +293,6 @@ class FieldManager extends Injectable
             ]
         );
         $this->getMetadata()->save();
-
-        $this->getLanguage()->delete($scope, 'fields', $name);
-        $this->getLanguage()->delete($scope, 'tooltips', $name);
-
-        $this->getLanguage()->save();
-    }
-
-    protected function setLabel($scope, $name, $value, $isNew, $isCustom)
-    {
-        if ($isNew || $isCustom) {
-            $this->getBaseLanguage()->set($scope, 'fields', $name, $value);
-        }
-
-        $this->getLanguage()->set($scope, 'fields', $name, $value);
-    }
-
-    protected function setTooltipText($scope, $name, $value, $isNew, $isCustom)
-    {
-        if ($value && $value !== '') {
-            $this->getLanguage()->set($scope, 'tooltips', $name, $value);
-            $this->getBaseLanguage()->set($scope, 'tooltips', $name, $value);
-        } else {
-            $this->getLanguage()->delete($scope, 'tooltips', $name);
-            $this->getBaseLanguage()->delete($scope, 'tooltips', $name);
-        }
-    }
-
-    protected function deleteLabel($scope, $name)
-    {
-        $this->getLanguage()->delete($scope, 'fields', $name);
-        $this->getLanguage()->delete($scope, 'tooltips', $name);
-
-        $this->getBaseLanguage()->delete($scope, 'fields', $name);
-        $this->getBaseLanguage()->delete($scope, 'tooltips', $name);
     }
 
     protected function getFieldDefs($scope, $name)
@@ -452,19 +305,24 @@ class FieldManager extends Injectable
         return $this->getMetadata()->get('entityDefs' . '.' . $scope . '.links.' . $name);
     }
 
-    /**
-     * Prepare input fieldDefs, remove unnecessary fields
-     *
-     * @param string $fieldName
-     * @param array  $fieldDefs
-     * @param string $scope
-     *
-     * @return array
-     */
-    protected function prepareFieldDefs($scope, $name, $fieldDefs)
+    protected function prepareFieldDefs(string $scope, string $name, array $fieldDefs): array
     {
-        foreach (self::UNNECESSARY_FIELDS as $fieldName) {
-            if (isset($fieldDefs[$fieldName])) {
+        $toRemove = [
+            'name',
+            'translatedOptions',
+            'dynamicLogicVisible',
+            'dynamicLogicReadOnly',
+            'dynamicLogicRequired',
+            'dynamicLogicOptions',
+            'lingualFields',
+            'label'
+        ];
+        foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
+            $toRemove[] = Util::toCamelCase('label_' . strtolower($locale));
+        }
+
+        foreach ($toRemove as $fieldName) {
+            if (array_key_exists($fieldName, $fieldDefs)) {
                 unset($fieldDefs[$fieldName]);
             }
         }
@@ -573,18 +431,6 @@ class FieldManager extends Injectable
         $this->isChanged = empty($diffDefs) ? false : true;
 
         return $this->isChanged;
-    }
-
-
-    protected function isLabelChanged($scope, $category, $name, $newLabel)
-    {
-        $currentLabel = $this->getLanguage()->get([$scope, $category, $name]);
-
-        if ($newLabel != $currentLabel) {
-            return true;
-        }
-
-        return false;
     }
 
 

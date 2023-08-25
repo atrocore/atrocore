@@ -38,6 +38,8 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Utils\Language;
+use Espo\Core\Utils\Util;
 
 class FieldManager extends \Espo\Core\Controllers\Base
 {
@@ -78,6 +80,8 @@ class FieldManager extends \Espo\Core\Controllers\Base
             $fieldManager->delete($params['scope'], $data->name);
             throw new Error($e->getMessage());
         }
+
+        $this->updateTranslates($params['scope'], $data);
 
         return $fieldManager->read($params['scope'], $data->name);
     }
@@ -125,6 +129,8 @@ class FieldManager extends \Espo\Core\Controllers\Base
         } else {
             $this->getContainer()->get('dataManager')->clearCache();
         }
+
+        $this->updateTranslates($params['scope'], $data);
 
         return $fieldManager->read($params['scope'], $params['name']);
     }
@@ -179,5 +185,40 @@ class FieldManager extends \Espo\Core\Controllers\Base
             'entity'     => $entity->toArray(),
             'outputType' => $outputType
         ];
+    }
+
+    protected function updateTranslates(string $scope, \stdClass $input): void
+    {
+        if (!property_exists($input, 'name')) {
+            return;
+        }
+
+        $mainLanguage = $this->getConfig()->get('language');
+        foreach (array_merge([$mainLanguage], $this->getConfig()->get('inputLanguageList', [])) as $language) {
+            $languageObj = new Language($this->getContainer(), $language);
+
+            $needToSave = false;
+
+            $label = 'label';
+            if ($language !== $mainLanguage) {
+                $label = Util::toCamelCase('label_' . strtolower($language));
+            }
+
+            if (property_exists($input, $label) && $input->$label !== null && $input->$label !== '') {
+                $languageObj->set($scope, 'fields', $input->name, $input->$label);
+                $needToSave = true;
+            }
+
+            if ($language === $mainLanguage) {
+                if (property_exists($input, 'tooltipText') && $input->tooltipText !== null && $input->tooltipText !== '') {
+                    $languageObj->set($scope, 'tooltips', $input->name, $input->tooltipText);
+                    $needToSave = true;
+                }
+            }
+
+            if ($needToSave) {
+                $languageObj->save();
+            }
+        }
     }
 }
