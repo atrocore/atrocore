@@ -38,6 +38,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Utils\Language;
 
 class FieldManager extends \Espo\Core\Controllers\Base
 {
@@ -78,6 +79,8 @@ class FieldManager extends \Espo\Core\Controllers\Base
             $fieldManager->delete($params['scope'], $data->name);
             throw new Error($e->getMessage());
         }
+
+        $this->updateTranslates($params['scope'], $data);
 
         return $fieldManager->read($params['scope'], $data->name);
     }
@@ -125,6 +128,8 @@ class FieldManager extends \Espo\Core\Controllers\Base
         } else {
             $this->getContainer()->get('dataManager')->clearCache();
         }
+
+        $this->updateTranslates($params['scope'], $data);
 
         return $fieldManager->read($params['scope'], $params['name']);
     }
@@ -179,5 +184,49 @@ class FieldManager extends \Espo\Core\Controllers\Base
             'entity'     => $entity->toArray(),
             'outputType' => $outputType
         ];
+    }
+
+    protected function updateTranslates(string $scope, \stdClass $input): void
+    {
+        if (!property_exists($input, 'name')) {
+            return;
+        }
+
+//        echo '<pre>';
+//        print_r($scope);
+//        print_r($input);
+//        die();
+
+//        foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
+//            $label = Util::toCamelCase('label_' . strtolower($locale));
+//            $fieldKey = empty($fieldDefs['multilangField']) ? $name : $fieldDefs['multilangField'];
+//            if (isset($fieldDefs[$label])) {
+//
+//                unset($fieldDefs[$label]);
+//            }
+//        }
+
+//        if (property_exists($input, 'label')) {
+//            $languageObj = new Language($this->getContainer(), Language::detectLanguage($this->getContainer()->get('config')));
+//            $needToSave = false;
+//            if (property_exists($input, 'label') && $input->label !== null && $input->label !== '') {
+//                $languageObj->set($scope, 'fields', $input->name, $input->label);
+//                $needToSave = true;
+//            }
+//            if (property_exists($input, 'tooltipText') && $input->tooltipText !== null && $input->tooltipText !== '') {
+//                $languageObj->set($scope, 'tooltips', $input->name, $input->tooltipText);
+//                $needToSave = true;
+//            }
+//            if ($needToSave) {
+//                $languageObj->save();
+//            }
+//        }
+
+        //  [label] => New Field 1
+        //    [labelDeDe] => New Field 11
+        //    [labelEnUs] => New Field 111
+
+        //  [tooltipText] =>
+        //    [tooltipLink] =>
     }
 }

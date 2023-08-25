@@ -46,18 +46,6 @@ use Espo\Core\Utils\Metadata\Helper;
  */
 class FieldManager extends Injectable
 {
-    public const UNNECESSARY_FIELDS
-        = [
-            'name',
-            'label',
-            'translatedOptions',
-            'dynamicLogicVisible',
-            'dynamicLogicReadOnly',
-            'dynamicLogicRequired',
-            'dynamicLogicOptions',
-            'lingualFields'
-        ];
-
     protected $isChanged = null;
 
     protected $forbiddenFieldNameList = ['id', 'deleted'];
@@ -317,19 +305,24 @@ class FieldManager extends Injectable
         return $this->getMetadata()->get('entityDefs' . '.' . $scope . '.links.' . $name);
     }
 
-    /**
-     * Prepare input fieldDefs, remove unnecessary fields
-     *
-     * @param string $fieldName
-     * @param array  $fieldDefs
-     * @param string $scope
-     *
-     * @return array
-     */
-    protected function prepareFieldDefs($scope, $name, $fieldDefs)
+    protected function prepareFieldDefs(string $scope, string $name, array $fieldDefs): array
     {
-        foreach (self::UNNECESSARY_FIELDS as $fieldName) {
-            if (isset($fieldDefs[$fieldName])) {
+        $toRemove = [
+            'name',
+            'translatedOptions',
+            'dynamicLogicVisible',
+            'dynamicLogicReadOnly',
+            'dynamicLogicRequired',
+            'dynamicLogicOptions',
+            'lingualFields',
+            'label'
+        ];
+        foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
+            $toRemove[] = Util::toCamelCase('label_' . strtolower($locale));
+        }
+
+        foreach ($toRemove as $fieldName) {
+            if (array_key_exists($fieldName, $fieldDefs)) {
                 unset($fieldDefs[$fieldName]);
             }
         }
