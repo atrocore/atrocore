@@ -63,9 +63,6 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
             return '';
         },
 
-        setupMaxLength: function () {
-        },
-
         validateFloatByValue: function (value) {
             if (!value || value.length === 0) {
                 return {

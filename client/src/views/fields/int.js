@@ -55,8 +55,6 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.setupMaxLength();
-
             if (this.getPreferences().has('thousandSeparator')) {
                 this.thousandSeparator = this.getPreferences().get('thousandSeparator');
             } else {
@@ -145,14 +143,6 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
             } else {
                 $additionalInput.addClass('hidden');
                 $input.removeClass('hidden');
-            }
-        },
-
-        setupMaxLength: function () {
-            var maxValue = this.model.getFieldParam(this.name, 'max');
-            if (maxValue) {
-                maxValue = this.formatNumber(maxValue);
-                this.params.maxLength = maxValue.toString().length;
             }
         },
 
