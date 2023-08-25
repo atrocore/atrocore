@@ -92,7 +92,7 @@ class Base
     protected function rebuildByCronJob()
     {
         $id = Util::generateId();
-        $executeTime = (new \DateTime())->format('Y-m-d H:i:s');
+        $executeTime = (new \DateTime())->modify('+2 minutes')->format('Y-m-d H:i:s');
 
         $this->getPDO()->exec("INSERT INTO job (id, execute_time, created_at, method_name, service_name) VALUES ('$id', '$executeTime', '$executeTime', 'rebuild', 'App')");
     }

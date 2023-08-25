@@ -35,6 +35,7 @@ declare(strict_types=1);
 
 namespace Espo\Services;
 
+use Espo\Core\Application;
 use Espo\Core\Services\Base;
 use Espo\Core\Utils\Language;
 
@@ -42,7 +43,9 @@ class App extends Base
 {
     public function rebuild($data = null, $targetId = null, $targetType = null): void
     {
-        $this->getInjection('dataManager')->rebuild();
+        if (!Application::isSystemUpdating()) {
+            $this->getInjection('dataManager')->rebuild();
+        }
     }
 
     public function getUserData(): array
