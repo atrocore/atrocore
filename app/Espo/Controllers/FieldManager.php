@@ -39,6 +39,7 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Language;
+use Espo\Core\Utils\Util;
 
 class FieldManager extends \Espo\Core\Controllers\Base
 {
@@ -192,41 +193,32 @@ class FieldManager extends \Espo\Core\Controllers\Base
             return;
         }
 
-//        echo '<pre>';
-//        print_r($scope);
-//        print_r($input);
-//        die();
+        $mainLanguage = $this->getConfig()->get('language');
+        foreach (array_merge([$mainLanguage], $this->getConfig()->get('inputLanguageList', [])) as $language) {
+            $languageObj = new Language($this->getContainer(), $language);
 
-//        foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
-//            $label = Util::toCamelCase('label_' . strtolower($locale));
-//            $fieldKey = empty($fieldDefs['multilangField']) ? $name : $fieldDefs['multilangField'];
-//            if (isset($fieldDefs[$label])) {
-//
-//                unset($fieldDefs[$label]);
-//            }
-//        }
+            $needToSave = false;
 
-//        if (property_exists($input, 'label')) {
-//            $languageObj = new Language($this->getContainer(), Language::detectLanguage($this->getContainer()->get('config')));
-//            $needToSave = false;
-//            if (property_exists($input, 'label') && $input->label !== null && $input->label !== '') {
-//                $languageObj->set($scope, 'fields', $input->name, $input->label);
-//                $needToSave = true;
-//            }
-//            if (property_exists($input, 'tooltipText') && $input->tooltipText !== null && $input->tooltipText !== '') {
-//                $languageObj->set($scope, 'tooltips', $input->name, $input->tooltipText);
-//                $needToSave = true;
-//            }
-//            if ($needToSave) {
-//                $languageObj->save();
-//            }
-//        }
+            $label = 'label';
+            if ($language !== $mainLanguage) {
+                $label = Util::toCamelCase('label_' . strtolower($language));
+            }
 
-        //  [label] => New Field 1
-        //    [labelDeDe] => New Field 11
-        //    [labelEnUs] => New Field 111
+            if (property_exists($input, $label) && $input->$label !== null && $input->$label !== '') {
+                $languageObj->set($scope, 'fields', $input->name, $input->$label);
+                $needToSave = true;
+            }
 
-        //  [tooltipText] =>
-        //    [tooltipLink] =>
+            if ($language === $mainLanguage) {
+                if (property_exists($input, 'tooltipText') && $input->tooltipText !== null && $input->tooltipText !== '') {
+                    $languageObj->set($scope, 'tooltips', $input->name, $input->tooltipText);
+                    $needToSave = true;
+                }
+            }
+
+            if ($needToSave) {
+                $languageObj->save();
+            }
+        }
     }
 }
