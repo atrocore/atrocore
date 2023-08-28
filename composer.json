@@ -9,6 +9,7 @@
     "ext-pdo_mysql": "*",
     "ext-openssl": "*",
     "ext-json": "*",
+    "ext-pdo": "*",
     "ext-zip": "*",
     "ext-gd": "*",
     "ext-mbstring": "*",

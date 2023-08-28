@@ -38,12 +38,23 @@ namespace Espo\Services;
 use Espo\Core\Application;
 use Espo\Core\Services\Base;
 use Espo\Core\Utils\Language;
+use Espo\Core\Utils\Util;
 
 class App extends Base
 {
+    public static function createRebuildJob(\PDO $pdo): void
+    {
+        $id = Util::generateId();
+        $executeTime = (new \DateTime())->modify('+1 minutes')->format('Y-m-d H:i:s');
+
+        $pdo->exec("INSERT INTO job (id, execute_time, created_at, method_name, service_name) VALUES ('$id', '$executeTime', '$executeTime', 'rebuild', 'App')");
+    }
+
     public function rebuild($data = null, $targetId = null, $targetType = null): void
     {
-        if (!Application::isSystemUpdating()) {
+        if (Application::isSystemUpdating()) {
+            self::createRebuildJob($this->getInjection('pdo'));
+        } else {
             $this->getInjection('dataManager')->rebuild();
         }
     }
@@ -165,6 +176,7 @@ class App extends Base
     {
         parent::init();
 
+        $this->addDependency('pdo');
         $this->addDependency('preferences');
         $this->addDependency('acl');
         $this->addDependency('metadata');

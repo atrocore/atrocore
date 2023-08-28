@@ -35,7 +35,7 @@ namespace Treo\Core\Migration;
 
 use Doctrine\DBAL\Schema\Schema as DoctrineSchema;
 use Espo\Core\Utils\Database\Schema\Schema;
-use Espo\Core\Utils\Util;
+use Espo\Services\App;
 use PDO;
 use Espo\Core\Utils\Config;
 
@@ -91,10 +91,7 @@ class Base
 
     protected function rebuildByCronJob()
     {
-        $id = Util::generateId();
-        $executeTime = (new \DateTime())->modify('+2 minutes')->format('Y-m-d H:i:s');
-
-        $this->getPDO()->exec("INSERT INTO job (id, execute_time, created_at, method_name, service_name) VALUES ('$id', '$executeTime', '$executeTime', 'rebuild', 'App')");
+        App::createRebuildJob($this->getPDO());
     }
 
     protected function updateComposer(string $package, string $version): void
