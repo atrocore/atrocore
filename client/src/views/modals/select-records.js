@@ -401,7 +401,8 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
             }
 
             if (this.createButton) {
-                html += `<a href="javascript:" data-action="create" ${html ? 'style="margin-left: 15px"' : ''} class="btn action btn-primary">${'Create ' + this.scope}</a>`
+                let buttonLabel = this.translate('Create ' + this.scope, 'labels', this.scope);
+                html += `<a href="javascript:" data-action="create" ${html ? 'style="margin-left: 15px"' : ''} class="btn action btn-primary">${buttonLabel}</a>`
             }
 
             if (html) {
