@@ -464,33 +464,37 @@ class Metadata extends AbstractListener
                         continue;
                     }
 
-                    if (!in_array($foreignFieldDefs['type'], ['attachmentMultiple', 'linkMultiple'])) {
-                        $data['entityDefs'][$scope]['fields'][$field . Relationship::VIRTUAL_FIELD_DELIMITER . $foreignField] = array_merge($foreignFieldDefs, [
-                            "notStorable"          => true,
-                            "relationVirtualField" => true,
-                            "entity"               => $foreignEntity,
-                            "required"             => false,
-                            "unique"               => false,
-                            "index"                => false,
-                            "filterDisabled"       => true,
-                            "massUpdateDisabled"   => true,
-                            "exportDisabled"       => true,
-                            "importDisabled"       => true,
-                            "emHidden"             => true
-                        ]);
+                    if (in_array($foreignFieldDefs['type'], ['attachmentMultiple', 'linkMultiple'])) {
+                        continue;
+                    }
 
-                        if ($foreignFieldDefs['type'] === 'link') {
-                            if (!empty($data['entityDefs'][$foreignEntity]['links'][$foreignField]['entity'])) {
-                                $linkEntity = $data['entityDefs'][$foreignEntity]['links'][$foreignField]['entity'];
-                                $data['entityDefs'][$scope]['fields'][$field . Relationship::VIRTUAL_FIELD_DELIMITER . $foreignField]['entity'] = $linkEntity;
-                            }
+                    if (!empty($foreignFieldDefs['translationMetadataField'])) {
+                        continue;
+                    }
+
+                    $data['entityDefs'][$scope]['fields'][$field . Relationship::VIRTUAL_FIELD_DELIMITER . $foreignField] = array_merge($foreignFieldDefs, [
+                        "notStorable"          => true,
+                        "relationVirtualField" => true,
+                        "entity"               => $foreignEntity,
+                        "required"             => false,
+                        "unique"               => false,
+                        "index"                => false,
+                        "filterDisabled"       => true,
+                        "massUpdateDisabled"   => true,
+                        "exportDisabled"       => true,
+                        "importDisabled"       => true,
+                        "emHidden"             => true
+                    ]);
+
+                    if ($foreignFieldDefs['type'] === 'link') {
+                        if (!empty($data['entityDefs'][$foreignEntity]['links'][$foreignField]['entity'])) {
+                            $linkEntity = $data['entityDefs'][$foreignEntity]['links'][$foreignField]['entity'];
+                            $data['entityDefs'][$scope]['fields'][$field . Relationship::VIRTUAL_FIELD_DELIMITER . $foreignField]['entity'] = $linkEntity;
                         }
                     }
                 }
             }
         }
-
-
     }
 
     protected function prepareHierarchyEntities(array $data): array
@@ -897,7 +901,7 @@ class Metadata extends AbstractListener
     /**
      * Remove field from index
      *
-     * @param array $indexes
+     * @param array  $indexes
      * @param string $fieldName
      *
      * @return array

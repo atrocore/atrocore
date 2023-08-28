@@ -280,6 +280,8 @@ class Metadata
         $data = $this->getEventManager()->dispatch('Metadata', 'modify', new Event(['data' => $this->objData]))->getArgument('data');
         $data = $this->getEventManager()->dispatch('Metadata', 'afterInit', new Event(['data' => $data]))->getArgument('data');
 
+        $this->clearMetadata($data);
+
         // set object data
         $this->objData = Json::decode(Json::encode($data));
 
@@ -651,6 +653,38 @@ class Metadata
         }
 
         return $path;
+    }
+
+    protected function clearMetadata(array &$data): void
+    {
+        $boolParameters = [
+            'notNull',
+            'required',
+            'audited',
+            'readOnly',
+            'unique',
+            'index',
+            'tooltip',
+            'notStorable',
+            'emHidden',
+            'importDisabled',
+            'exportDisabled',
+            'massUpdateDisabled',
+            'filterDisabled',
+            'relationVirtualField',
+        ];
+
+        foreach ($data['entityDefs'] as $entityType => $entityDefs) {
+            if (!empty($entityDefs['fields'])) {
+                foreach ($entityDefs['fields'] as $field => $fieldDefs) {
+                    foreach ($fieldDefs as $param => $paramValue) {
+                        if (in_array($param, $boolParameters) && $paramValue === false) {
+                            unset($data['entityDefs'][$entityType]['fields'][$field][$param]);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /**
