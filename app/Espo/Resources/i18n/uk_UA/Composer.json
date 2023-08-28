@@ -16,7 +16,6 @@
   "exceptions": {
     "hasRequireds": "Модуль не відповідає вимогам",
     "hasRequiredsDelete": "Ви не можете видалити необхідний модуль",
-    "noSuchModule": "Такого модуля немає",
     "suchModuleIsAlreadyInstalled": "Даний модуль вже встановлений",
     "suchModuleVersionAlreadyInstalled": "Ця версія модуля вже встановлена",
     "noSuchModuleVersion": "Такої версії модуля немає",

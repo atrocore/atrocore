@@ -114,6 +114,7 @@ class TreoStore extends Base
         if (!empty($available = self::getPathContent($url))) {
             foreach ($this->parsePackages($available, 'available') as $id => $row) {
                 $packages[$id] = $row;
+                $packages[$id]['info'] = $available['info'][$row['packageId']] ?? null;
             }
         }
 
