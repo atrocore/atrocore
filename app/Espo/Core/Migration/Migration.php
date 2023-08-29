@@ -63,9 +63,6 @@ class Migration extends Injectable
             return false;
         }
 
-        // prepare message
-        $message = sprintf('Migrate %s %s -> %s ... ', ($module == 'Treo') ? 'Core' : $module, $from, $to);
-
         // prepare versions
         $from = $this->prepareVersion($from);
         $to = $this->prepareVersion($to);
@@ -88,8 +85,6 @@ class Migration extends Injectable
         if ($keyFrom == $keyTo) {
             return false;
         }
-
-        self::renderLine($message);
 
         // prepare increment
         if ($keyFrom < $keyTo) {
@@ -117,8 +112,6 @@ class Migration extends Injectable
                 }
             }
         }
-
-        self::renderLine('Migration done!');
 
         return true;
     }

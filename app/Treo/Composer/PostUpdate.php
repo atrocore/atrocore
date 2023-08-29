@@ -584,14 +584,12 @@ class PostUpdate
         $migration = self::$container->get('migration');
 
         if (isset($data['Treo'])) {
-            self::renderLine('Running migrations for Core');
             $migration->run('Treo', self::prepareVersion($data['Treo']['from']), self::prepareVersion($data['Treo']['to']));
 
         }
 
         foreach (self::getModules() as $id) {
             if (isset($data[$id])) {
-                self::renderLine('Running migrations for ' . $id);
                 $migration->run($id, self::prepareVersion($data[$id]['from']), self::prepareVersion($data[$id]['to']));
             }
         }
