@@ -256,9 +256,6 @@ class Composer extends \Espo\Core\Templates\Services\HasContainer
         // get diff
         $composerDiff = $this->getComposerDiff();
 
-        // Purchased until: 10.10.2023
-        // Rent until: 10/10/23
-
         $list = [
             [
                 'id'             => 'TreoCore',
@@ -451,8 +448,8 @@ class Composer extends \Espo\Core\Templates\Services\HasContainer
     public function getUsage(string $moduleId): ?string
     {
         foreach ($this->packages as $row) {
-            if ($row['treoId'] === $moduleId && !empty($row['info']['usage'])) {
-                return $row['info']['usage'];
+            if ($row['treoId'] === $moduleId && !empty($row['usage'])) {
+                return $row['usage'];
             }
         }
 
@@ -462,8 +459,8 @@ class Composer extends \Espo\Core\Templates\Services\HasContainer
     public function getExpirationDate(string $moduleId): ?string
     {
         foreach ($this->packages as $row) {
-            if ($row['treoId'] === $moduleId && !empty($row['info']['expirationDate'])) {
-                return $row['info']['expirationDate'];
+            if ($row['treoId'] === $moduleId && !empty($row['expirationDate'])) {
+                return $row['expirationDate'];
             }
         }
 

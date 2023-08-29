@@ -22,7 +22,9 @@
     "versionIsInvalid": "Версія неправильна"
   },
   "labels": {
-    "available": "Доступний",
+    "purchasedUntil": "Придбано до",
+    "rentUntil": "Орендовано до",
+    "available": "Доступно",
     "Installed": "Встановлено",
     "Store": "Магазин",
     "removeModule": "Видалення",

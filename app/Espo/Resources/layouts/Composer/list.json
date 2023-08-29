@@ -1,8 +1,9 @@
 [
   {
     "name": "name",
+    "view": "views/module-manager/fields/name",
     "notSortable": true,
-    "width": 15
+    "width": 18
   },
   {
     "name": "description",
