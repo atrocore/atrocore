@@ -10,7 +10,6 @@
   },
   "exceptions": {
     "hasRequiredsDelete": "Sie dürfen das gewünschte Modul nicht löschen, da dieses mit einem anderen verknüpft ist.",
-    "noSuchModule": "Es gibt kein solches Modul",
     "suchModuleIsAlreadyInstalled": "Dieses Modul ist schon installiert",
     "suchModuleVersionAlreadyInstalled": "Diese Modul-Version ist schon installiert",
     "noSuchModuleVersion": "Es gibt diese Modul-Version nicht",
@@ -18,6 +17,8 @@
     "hasRequireds": "Modul hat die Anforderungen nicht erfüllt"
   },
   "labels": {
+    "purchasedUntil": "Gekauft bis",
+    "rentUntil": "Miete bis",
     "Installed": "Installiert",
     "Store": "Store",
     "cancelModule": "Stornieren",

@@ -248,33 +248,31 @@ class Composer extends \Espo\Core\Templates\Services\HasContainer
      */
     public function getList(): array
     {
+        $this->loadPackages();
+
         // prepare composer data
         $composerData = self::getComposerJson();
 
         // get diff
         $composerDiff = $this->getComposerDiff();
 
-        // prepare result
-        $result = [
-            'total' => 1,
-            'list'  => [
-                [
-                    'id'             => 'TreoCore',
-                    'name'           => $this->translate('Core'),
-                    'description'    => $this->translate('Core', 'descriptions'),
-                    'currentVersion' => self::getCoreVersion(),
-                    'latestVersion'  => $this->getLatestVersion('Treo'),
-                    'isSystem'       => true,
-                    'isComposer'     => true,
-                    'status'         => $this->getModuleStatus($composerDiff, 'Treo'),
-                    'settingVersion' => self::getSettingVersion($composerData, 'atrocore/core')
-                ]
+        $list = [
+            [
+                'id'             => 'TreoCore',
+                'name'           => $this->translate('Core'),
+                'description'    => $this->translate('Core', 'descriptions'),
+                'currentVersion' => self::getCoreVersion(),
+                'latestVersion'  => $this->getLatestVersion('Treo'),
+                'isSystem'       => true,
+                'isComposer'     => true,
+                'status'         => $this->getModuleStatus($composerDiff, 'Treo'),
+                'settingVersion' => self::getSettingVersion($composerData, 'atrocore/core')
             ]
         ];
 
         // for installed modules
         foreach ($this->getInstalledModules() as $id => $module) {
-            $result['list'][$id] = [
+            $list[$id] = [
                 'id'             => $id,
                 'name'           => (empty($module->getName())) ? $id : $module->getName(),
                 'description'    => $module->getDescription(),
@@ -283,7 +281,9 @@ class Composer extends \Espo\Core\Templates\Services\HasContainer
                 'isSystem'       => $module->isSystem(),
                 'isComposer'     => !empty($module->getVersion()),
                 'status'         => $this->getModuleStatus($composerDiff, $id),
-                'settingVersion' => self::getSettingVersion($composerData, $module->getComposerName())
+                'settingVersion' => self::getSettingVersion($composerData, $module->getComposerName()),
+                'usage'          => $this->getUsage($id),
+                'expirationDate' => $this->getExpirationDate($id),
             ];
         }
 
@@ -307,15 +307,13 @@ class Composer extends \Espo\Core\Templates\Services\HasContainer
                 $item['description'] = $package->get('description');
             }
 
-            // push
-            $result['list'][$row['id']] = $item;
+            $list[$row['id']] = $item;
         }
 
-        // prepare result
-        $result['list'] = array_values($result['list']);
-        $result['total'] = count($result['list']);
-
-        return $result;
+        return [
+            'total' => count($list),
+            'list'  => array_values($list)
+        ];
     }
 
     public function installModule(string $id, string $version = null): bool
@@ -384,7 +382,7 @@ class Composer extends \Espo\Core\Templates\Services\HasContainer
 
         $package = $this->getPackage($id);
         if (empty($package)) {
-            throw new Exceptions\Error($this->translateError('noSuchModule'));
+            return $id;
         }
 
         return $package->get('packageId');
@@ -430,12 +428,13 @@ class Composer extends \Espo\Core\Templates\Services\HasContainer
         return $result;
     }
 
+    public function loadPackages(): void
+    {
+        $this->packages = $this->getContainer()->get('serviceFactory')->create('TreoStore')->getRemotePackages();
+    }
+
     public function getLatestVersion(string $moduleId): string
     {
-        if (empty($this->packages)) {
-            $this->packages = $this->getContainer()->get('serviceFactory')->create('TreoStore')->getRemotePackages();
-        }
-
         foreach ($this->packages as $row) {
             if ($row['treoId'] === $moduleId && !empty($row['versions'])) {
                 $latest = array_shift($row['versions']);
@@ -444,6 +443,28 @@ class Composer extends \Espo\Core\Templates\Services\HasContainer
         }
 
         return '';
+    }
+
+    public function getUsage(string $moduleId): ?string
+    {
+        foreach ($this->packages as $row) {
+            if ($row['treoId'] === $moduleId && !empty($row['usage'])) {
+                return $row['usage'];
+            }
+        }
+
+        return null;
+    }
+
+    public function getExpirationDate(string $moduleId): ?string
+    {
+        foreach ($this->packages as $row) {
+            if ($row['treoId'] === $moduleId && !empty($row['expirationDate'])) {
+                return $row['expirationDate'];
+            }
+        }
+
+        return null;
     }
 
     /**

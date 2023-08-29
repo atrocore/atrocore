@@ -15,7 +15,6 @@
   "exceptions": {
     "hasRequireds": "Module has not satisfied requireds",
     "hasRequiredsDelete": "You cann't delete required module",
-    "noSuchModule": "No such module",
     "suchModuleIsAlreadyInstalled": "Such module is already installed",
     "suchModuleVersionAlreadyInstalled": "Such module version already installed",
     "noSuchModuleVersion": "No such module version",

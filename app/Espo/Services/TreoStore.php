@@ -193,13 +193,15 @@ class TreoStore extends Base
 
             // prepare item
             $item = [
-                'treoId'      => $treoId,
-                'packageId'   => $rows[$max]['name'],
-                'url'         => $rows[$max]['source']['url'],
-                'name'        => !empty($rows[$max]['extra']['name']) ? $rows[$max]['extra']['name'] : $treoId,
-                'description' => !empty($rows[$max]['extra']['description']) ? $rows[$max]['extra']['description'] : '',
-                'tags'        => $tags,
-                'status'      => $status
+                'treoId'         => $treoId,
+                'packageId'      => $rows[$max]['name'],
+                'url'            => $rows[$max]['source']['url'],
+                'name'           => !empty($rows[$max]['extra']['name']) ? $rows[$max]['extra']['name'] : $treoId,
+                'description'    => !empty($rows[$max]['extra']['description']) ? $rows[$max]['extra']['description'] : '',
+                'tags'           => $tags,
+                'status'         => $status,
+                'usage'          => $rows[$max]['extra']['usage'] ?? null,
+                'expirationDate' => $rows[$max]['extra']['expirationDate'] ?? null,
             ];
 
             foreach ($versions as $version) {

@@ -16,13 +16,14 @@
   "exceptions": {
     "hasRequireds": "Module has not satisfied requireds",
     "hasRequiredsDelete": "You cann't delete required module",
-    "noSuchModule": "No such module",
     "suchModuleIsAlreadyInstalled": "Such module is already installed",
     "suchModuleVersionAlreadyInstalled": "Such module version already installed",
     "noSuchModuleVersion": "No such module version",
     "versionIsInvalid": "Version is invalid"
   },
   "labels": {
+    "purchasedUntil": "Purchased until",
+    "rentUntil": "Rent until",
     "available": "available",
     "Installed": "Installed",
     "Store": "Store",
