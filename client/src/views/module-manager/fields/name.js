@@ -42,12 +42,17 @@ Espo.define('views/module-manager/fields/name', 'views/fields/varchar', Dep => {
             if (this.mode === 'list') {
                 let usage = this.model.get('usage');
                 let expirationDate = this.model.get('expirationDate');
+
                 if (usage && expirationDate) {
+                    let preparedDate = this.getDateTime().toDisplayDate(expirationDate);
                     if (usage === 'Purchase') {
-                        data.purchaseInfo = `${this.translate('purchasedUntil', 'labels', 'Composer')}: ${this.getDateTime().toDisplayDate(expirationDate)}`;
+                        data.purchaseInfo = `${this.translate('purchased', 'labels', 'Composer')} · ${preparedDate}`;
+                        data.purchaseTitle = this.translate('purchasedUntil', 'labels', 'Composer') + ' ' + preparedDate;
                     } else if (usage === 'Rent') {
-                        data.purchaseInfo = `${this.translate('rentUntil', 'labels', 'Composer')}: ${this.getDateTime().toDisplayDate(expirationDate)}`;
+                        data.purchaseInfo = `${this.translate('rented', 'labels', 'Composer')} · ${preparedDate}`;
+                        data.purchaseTitle = this.translate('rentUntil', 'labels', 'Composer') + ' ' + preparedDate;
                     }
+
                     if (data.purchaseInfo && this.getDateTime().getToday() > expirationDate) {
                         data.expired = true;
                     }

@@ -17,8 +17,10 @@
     "hasRequireds": "Modul hat die Anforderungen nicht erfüllt"
   },
   "labels": {
-    "purchasedUntil": "Gekauft bis",
-    "rentUntil": "Miete bis",
+    "purchased": "Erworben ",
+    "rented": "Gemietet",
+    "purchasedUntil": "Erworben, Updates bis",
+    "rentUntil": "Gemietet, Updates bis",
     "Installed": "Installiert",
     "Store": "Store",
     "cancelModule": "Stornieren",

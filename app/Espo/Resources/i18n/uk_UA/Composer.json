@@ -22,8 +22,10 @@
     "versionIsInvalid": "Версія неправильна"
   },
   "labels": {
-    "purchasedUntil": "Придбано до",
-    "rentUntil": "Орендовано до",
+    "purchased": "Придбано",
+    "rented": "Орендовано",
+    "purchasedUntil": "Придбано, оновлення до",
+    "rentUntil": "Орендовано, оновлення до",
     "available": "Доступно",
     "Installed": "Встановлено",
     "Store": "Магазин",

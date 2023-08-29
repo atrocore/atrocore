@@ -1,1 +1,1 @@
-<div>{{value}}</div>{{#if purchaseInfo}}<span class="text-muted small" {{#if expired}}style="color: red"{{/if}}>{{{purchaseInfo}}}</span>{{/if}}
+<div>{{value}}</div>{{#if purchaseInfo}}<span title="{{purchaseTitle}}" class="text-muted small" {{#if expired}}style="color: red"{{/if}}>{{{purchaseInfo}}}</span>{{/if}}

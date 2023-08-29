@@ -22,8 +22,10 @@
     "versionIsInvalid": "Version is invalid"
   },
   "labels": {
-    "purchasedUntil": "Purchased until",
-    "rentUntil": "Rent until",
+    "purchased": "Purchased",
+    "rented": "Rented",
+    "purchasedUntil": "Purchased, updates until",
+    "rentUntil": "Rented, updates until",
     "available": "available",
     "Installed": "Installed",
     "Store": "Store",

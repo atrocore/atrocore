@@ -3,7 +3,7 @@
     "name": "name",
     "view": "views/module-manager/fields/name",
     "notSortable": true,
-    "width": 18
+    "width": 15
   },
   {
     "name": "description",
