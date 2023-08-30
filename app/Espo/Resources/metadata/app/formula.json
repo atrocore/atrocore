@@ -112,8 +112,5 @@
       "name": "env\\userAttribute",
       "insertText": "env\\userAttribute(ATTRIBUTE)"
     }
-  ],
-  "functionClassNameMap": {
-    "entity\\sumRelated": "\\Treo\\Core\\Formula\\Functions\\EntityGroup\\SumRelatedType"
-  }
+  ]
 }
