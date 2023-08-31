@@ -63,6 +63,19 @@
       "required": false,
       "trim": true
     },
+    "security": {
+      "type": "enum",
+      "notStorable": true,
+      "dataField": true,
+      "optionsIds": [
+        "SSL",
+        "TLS"
+      ],
+      "options": [
+        "SSL",
+        "TLS"
+      ]
+    },
     "oauthGrantType": {
       "type": "enum",
       "notStorable": true,

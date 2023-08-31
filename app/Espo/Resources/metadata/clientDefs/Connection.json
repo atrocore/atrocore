@@ -76,6 +76,19 @@
           ]
         }
       },
+      "security": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "ftp"
+              ]
+            }
+          ]
+        }
+      },
       "user": {
         "visible": {
           "conditionGroup": [
