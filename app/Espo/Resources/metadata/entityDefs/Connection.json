@@ -63,6 +63,11 @@
       "required": false,
       "trim": true
     },
+    "ftpSsl": {
+      "type": "bool",
+      "notStorable": true,
+      "dataField": true
+    },
     "oauthGrantType": {
       "type": "enum",
       "notStorable": true,

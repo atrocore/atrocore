@@ -37,26 +37,38 @@ namespace Espo\ConnectionType;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
+use Lazzard\FtpClient\Connection\FtpConnection;
+use Lazzard\FtpClient\Connection\FtpSSLConnection;
+use Lazzard\FtpClient\Config\FtpConfig;
+use Lazzard\FtpClient\FtpClient;
 
 class ConnectionFtp extends AbstractConnection
 {
-    public function connect(Entity $connection)
+    public function connect(Entity $connection): FtpClient
     {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "ftp://{$connection->get('host')}/");
+        $port = 21;
         if (!empty($connection->get('port'))) {
-            curl_setopt($ch, CURLOPT_PORT, $connection->get('port'));
-        }
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_USERPWD, $connection->get('user') . ":" . $this->decryptPassword($connection->get('password')));
-        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-        curl_setopt($ch, CURLOPT_DIRLISTONLY, true);
-        $data = curl_exec($ch);
-        curl_close($ch);
-        if ($data === false) {
-            throw new BadRequest(sprintf($this->exception('connectionFailed'), 'Connection failed.'));
+            $port = $connection->get('port');
         }
 
-        return 'curl';
+        $className = FtpConnection::class;
+        if (!empty($connection->get('ftpSsl'))) {
+            $className = FtpSSLConnection::class;
+        }
+
+        try {
+            $connection = new $className($connection->get('host'), $connection->get('user'), $this->decryptPassword($connection->get('password')), $port);
+            $connection->open();
+
+            $config = new FtpConfig($connection);
+            $config->setPassive(true);
+
+            $client = new FtpClient($connection);
+
+        } catch (\Throwable $e) {
+            throw new BadRequest(sprintf($this->exception('connectionFailed'), $e->getMessage()));
+        }
+
+        return $client;
     }
 }

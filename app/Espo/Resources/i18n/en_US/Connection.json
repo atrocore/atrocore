@@ -5,6 +5,7 @@
     "host": "Host",
     "port": "Port",
     "user": "User",
+    "ftpSsl": "SSL",
     "password": "Password",
     "oauthUrl": "OAuth URL",
     "oauthGrantType": "OAuth Grant Type",

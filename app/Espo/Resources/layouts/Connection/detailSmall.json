@@ -48,6 +48,12 @@
         {
           "name": "password"
         }
+      ],
+      [
+        {
+          "name": "ftpSsl"
+        },
+        false
       ]
     ]
   }
