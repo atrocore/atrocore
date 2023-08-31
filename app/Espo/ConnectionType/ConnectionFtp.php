@@ -37,7 +37,10 @@ namespace Espo\ConnectionType;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
-use FtpClient\FtpClient;
+use Lazzard\FtpClient\Connection\FtpConnection;
+use Lazzard\FtpClient\Connection\FtpSSLConnection;
+use Lazzard\FtpClient\Config\FtpConfig;
+use Lazzard\FtpClient\FtpClient;
 
 class ConnectionFtp extends AbstractConnection
 {
@@ -48,15 +51,24 @@ class ConnectionFtp extends AbstractConnection
             $port = $connection->get('port');
         }
 
-        $ftp = new FtpClient();
-
-        try {
-            $ftp->connect($connection->get('host'), !empty($connection->get('ftpSsl')), $port);
-            $ftp->login($connection->get('user'), $this->decryptPassword($connection->get('password')));
-        } catch (\Throwable $e) {
-            throw new BadRequest(sprintf($this->exception('connectionFailed'), 'Connection failed.') . ' ' . $e->getMessage());
+        $className = FtpConnection::class;
+        if (!empty($connection->get('ftpSsl'))) {
+            $className = FtpSSLConnection::class;
         }
 
-        return $ftp;
+        try {
+            $connection = new $className($connection->get('host'), $connection->get('user'), $this->decryptPassword($connection->get('password')), $port);
+            $connection->open();
+
+            $config = new FtpConfig($connection);
+            $config->setPassive(true);
+
+            $client = new FtpClient($connection);
+
+        } catch (\Throwable $e) {
+            throw new BadRequest(sprintf($this->exception('connectionFailed'), $e->getMessage()));
+        }
+
+        return $client;
     }
 }
