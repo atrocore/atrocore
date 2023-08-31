@@ -15,6 +15,7 @@
     "ext-mbstring": "*",
     "ext-xml": "*",
     "ext-curl": "*",
+    "ext-ftp": "*",
     "ext-exif": "*",
     "ext-imagick": "*",
     "gumlet/php-image-resize": "~1.9.2",
@@ -29,7 +30,8 @@
     "symfony/event-dispatcher": "<=6.1.0",
     "symfony/workflow": "<=6.0.10",
     "phpseclib/phpseclib": "^3.0",
-    "caxy/php-htmldiff": "^0.1.14"
+    "caxy/php-htmldiff": "^0.1.14",
+    "nicolab/php-ftp-client": "~2.0.2"
   },
   "conflict": {
     "atrocore/pim": "<1.7.25"

@@ -37,26 +37,26 @@ namespace Espo\ConnectionType;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
+use FtpClient\FtpClient;
 
 class ConnectionFtp extends AbstractConnection
 {
-    public function connect(Entity $connection)
+    public function connect(Entity $connection): FtpClient
     {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "ftp://{$connection->get('host')}/");
+        $port = 21;
         if (!empty($connection->get('port'))) {
-            curl_setopt($ch, CURLOPT_PORT, $connection->get('port'));
-        }
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_USERPWD, $connection->get('user') . ":" . $this->decryptPassword($connection->get('password')));
-        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-        curl_setopt($ch, CURLOPT_DIRLISTONLY, true);
-        $data = curl_exec($ch);
-        curl_close($ch);
-        if ($data === false) {
-            throw new BadRequest(sprintf($this->exception('connectionFailed'), 'Connection failed.'));
+            $port = $connection->get('port');
         }
 
-        return 'curl';
+        $ftp = new FtpClient();
+
+        try {
+            $ftp->connect($connection->get('host'), !empty($connection->get('ftpSsl')), $port);
+            $ftp->login($connection->get('user'), $this->decryptPassword($connection->get('password')));
+        } catch (\Throwable $e) {
+            throw new BadRequest(sprintf($this->exception('connectionFailed'), 'Connection failed.') . ' ' . $e->getMessage());
+        }
+
+        return $ftp;
     }
 }

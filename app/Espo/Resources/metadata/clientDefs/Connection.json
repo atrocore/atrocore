@@ -76,7 +76,7 @@
           ]
         }
       },
-      "security": {
+      "ftpSsl": {
         "visible": {
           "conditionGroup": [
             {
