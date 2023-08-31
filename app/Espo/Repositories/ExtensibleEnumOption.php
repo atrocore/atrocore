@@ -37,6 +37,7 @@ namespace Espo\Repositories;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Repositories\Base;
+use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 
 class ExtensibleEnumOption extends Base
@@ -72,6 +73,7 @@ class ExtensibleEnumOption extends Base
                 $this->cachedOptions[$id] = [
                     'id'                => $id,
                     'name'              => $id,
+                    'preparedName'      => $id,
                     'notExistingOption' => true
                 ];
 
@@ -85,7 +87,9 @@ class ExtensibleEnumOption extends Base
                 }
 
                 foreach ($this->select($select)->where(['extensibleEnumId' => $extensibleEnumId])->find() as $item) {
-                    $this->cachedOptions[$item->get('id')] = $item->toArray();
+                    $row = $item->toArray();
+                    $row['preparedName'] = $row[$this->getOptionName()];
+                    $this->cachedOptions[$item->get('id')] = $row;
                 }
             }
             $res[] = $this->cachedOptions[$id];
@@ -147,5 +151,17 @@ class ExtensibleEnumOption extends Base
         }
 
         return $names;
+    }
+
+    protected function getOptionName(): string
+    {
+        $language = \Espo\Core\Services\Base::getLanguagePrism();
+        if (!empty($language) && $language !== 'main') {
+            if ($this->getConfig()->get('isMultilangActive') && in_array($language, $this->getConfig()->get('inputLanguageList', []))) {
+                return Util::toCamelCase('name_' . strtolower($language));
+            }
+        }
+
+        return 'name';
     }
 }
