@@ -316,8 +316,7 @@ class PostUpdate
         // prepare data
         $data = [];
 
-        // set treo migrations
-        $data['Treo'] = 'vendor/atrocore/core/app/Treo/Migrations';
+        $data['Atro'] = 'vendor/atrocore/core/app/Atro/Migrations';
 
         foreach (self::getModules() as $id) {
             // prepare src
@@ -556,8 +555,8 @@ class PostUpdate
 
         $migration = self::$container->get('migration');
 
-        if (isset($data['Treo'])) {
-            $migration->run('Treo', self::prepareVersion($data['Treo']['from']), self::prepareVersion($data['Treo']['to']));
+        if (isset($data['Atro'])) {
+            $migration->run('Atro', self::prepareVersion($data['Atro']['from']), self::prepareVersion($data['Atro']['to']));
         }
 
         foreach (self::getModules() as $id) {
