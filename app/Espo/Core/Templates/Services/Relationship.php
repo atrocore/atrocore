@@ -39,7 +39,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\Services\Record;
-use Treo\Core\Exceptions\NotModified;
+use Atro\Core\Exceptions\NotModified;
 
 class Relationship extends Record
 {

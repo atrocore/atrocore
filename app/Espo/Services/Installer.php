@@ -42,7 +42,7 @@ use Espo\Core\Utils\Language;
 use Espo\Core\Utils\PasswordHash;
 use Espo\Core\Utils\Util;
 use Espo\Entities\User;
-use Treo\Core\ModuleManager\Manager;
+use Atro\Core\ModuleManager\Manager;
 
 class Installer extends \Espo\Core\Templates\Services\HasContainer
 {

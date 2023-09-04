@@ -34,7 +34,7 @@
 namespace Espo\Core\Utils;
 
 use Espo\Core\DataManager;
-use Treo\Core\ModuleManager\Manager as ModuleManager;
+use Atro\Core\ModuleManager\Manager as ModuleManager;
 
 /**
  * Class Route

@@ -558,7 +558,6 @@ class PostUpdate
 
         if (isset($data['Treo'])) {
             $migration->run('Treo', self::prepareVersion($data['Treo']['from']), self::prepareVersion($data['Treo']['to']));
-
         }
 
         foreach (self::getModules() as $id) {

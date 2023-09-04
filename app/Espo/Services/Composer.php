@@ -40,7 +40,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Json;
 use Slim\Http\Request;
 use Espo\Core\Application;
-use Treo\Core\ModuleManager\Manager as ModuleManager;
+use Atro\Core\ModuleManager\Manager as ModuleManager;
 
 class Composer extends \Espo\Core\Templates\Services\HasContainer
 {

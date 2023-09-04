@@ -44,7 +44,7 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\Services\Record;
-use Treo\Core\Exceptions\NotModified;
+use Atro\Core\Exceptions\NotModified;
 
 class Hierarchy extends Record
 {

@@ -39,7 +39,7 @@ use Espo\Core\Interfaces\Factory;
 use Espo\Core\Interfaces\Injectable;
 use Espo\Entities\Portal;
 use Espo\Entities\User;
-use Treo\Core\ModuleManager\Manager as ModuleManager;
+use Atro\Core\ModuleManager\Manager as ModuleManager;
 
 class Container
 {

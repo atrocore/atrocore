@@ -36,7 +36,7 @@ declare(strict_types=1);
 namespace Espo\Core\Migration;
 
 use Espo\Core\Injectable;
-use Treo\Core\Migration\Base;
+use Atro\Core\Migration\Base;
 
 class Migration extends Injectable
 {

@@ -44,7 +44,7 @@ use Espo\Core\Utils\File\Manager;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Metadata\OrmMetadata;
 use Espo\Core\Utils\Database\Schema\Converter;
-use Treo\Core\Utils\Database\Schema\Schema as Instance;
+use Atro\Core\Utils\Database\Schema\Schema as Instance;
 
 class Schema implements Factory
 {
