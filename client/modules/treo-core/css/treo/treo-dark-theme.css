@@ -20106,7 +20106,12 @@ select,
 #main .catalog-tree-panel.catalog-tree-panel-hidden + .list-container {
     margin-left: 25px;
     width: calc(100% - 25px);
+    overflow-x: scroll;
 }
+#main .catalog-tree-panel + .list-container {
+    overflow-x: scroll ;
+}
+
 
 #main .catalog-tree-panel + .list-buttons-container::before,
 #main .catalog-tree-panel + .list-buttons-container::after {
