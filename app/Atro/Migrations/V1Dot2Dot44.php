@@ -13,10 +13,12 @@ namespace Atro\Migrations;
 
 use Espo\Console\AbstractConsole;
 
+use Atro\Core\Migration\Base;
+
 /**
  * Migration for version 1.2.44
  */
-class V1Dot2Dot44 extends V1Dot1Dot17
+class V1Dot2Dot44 extends Base
 {
     /**
      * @inheritDoc
@@ -37,5 +39,13 @@ class V1Dot2Dot44 extends V1Dot1Dot17
     public function down(): void
     {
         $this->execute("DROP TABLE `translation`");
+    }
+
+    protected function execute(string $query): void
+    {
+        try {
+            $this->getPDO()->exec($query);
+        } catch (\Throwable $e) {
+        }
     }
 }
