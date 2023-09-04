@@ -35,7 +35,7 @@ declare(strict_types=1);
 
 namespace Espo\Jobs;
 
-use Espo\Core\Container;
+use Atro\Core\Container;
 use Espo\Core\EventManager\Event;
 use Espo\Core\Jobs\Base;
 use Espo\Core\Utils\Util;

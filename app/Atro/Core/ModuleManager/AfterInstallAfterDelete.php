@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core\ModuleManager;
 
-use Espo\Core\Container;
+use Atro\Core\Container;
 
 /**
  * Class AfterInstallAfterDelete

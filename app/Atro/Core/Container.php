@@ -27,7 +27,7 @@ class Container
         = [
             'crypt'                    => \Espo\Core\Utils\Crypt::class,
             'cronManager'              => \Espo\Core\CronManager::class,
-            'consoleManager'           => \Espo\Core\ConsoleManager::class,
+            'consoleManager'           => \Atro\Core\ConsoleManager::class,
             'slim'                     => \Espo\Core\Utils\Api\Slim::class,
             'thumbnail'                => \Espo\Core\Thumbnail\Image::class,
             'migration'                => \Atro\Core\Migration\Migration::class,

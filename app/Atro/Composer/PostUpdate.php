@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Atro\Composer;
 
-use Espo\Core\Container;
-use Espo\Core\Application as App;
+use Atro\Core\Container;
+use Atro\Core\Application as App;
 
 class PostUpdate
 {

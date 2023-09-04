@@ -20,7 +20,7 @@ class V1Dot5Dot29 extends Base
     public function up(): void
     {
         /** @var \Espo\Core\Utils\Metadata $metadata */
-        $metadata = (new \Espo\Core\Application())->getContainer()->get('metadata');
+        $metadata = (new \Atro\Core\Application())->getContainer()->get('metadata');
 
         $options = $this
             ->getPDO()

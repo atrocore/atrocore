@@ -23,7 +23,7 @@ class V1Dot5Dot0 extends Base
     public function up(): void
     {
         /** @var \Espo\Core\Utils\Metadata $metadata */
-        $metadata = (new \Espo\Core\Application())->getContainer()->get('metadata');
+        $metadata = (new \Atro\Core\Application())->getContainer()->get('metadata');
 
         foreach ($metadata->get('scopes') as $scope => $scopeDefs) {
             if (!empty($scopeDefs['notStorable'])) {

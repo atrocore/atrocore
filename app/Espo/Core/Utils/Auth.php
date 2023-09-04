@@ -33,7 +33,7 @@
 
 namespace Espo\Core\Utils;
 
-use Espo\Core\Container;
+use Atro\Core\Container;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Utils\Authentication\AbstractAuthentication;

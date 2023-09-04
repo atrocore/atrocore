@@ -35,7 +35,7 @@ declare(strict_types=1);
 
 namespace Espo\Core\EventManager;
 
-use Espo\Core\Container;
+use Atro\Core\Container;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Manager

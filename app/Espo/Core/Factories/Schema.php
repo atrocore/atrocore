@@ -35,7 +35,7 @@ declare(strict_types=1);
 
 namespace Espo\Core\Factories;
 
-use Espo\Core\Container;
+use Atro\Core\Container;
 use Espo\Core\Interfaces\Factory;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config;

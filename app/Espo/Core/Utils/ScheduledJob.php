@@ -61,7 +61,7 @@ class ScheduledJob
         'customPath' => 'custom/Espo/Custom/Jobs',
     );
 
-    public function __construct(\Espo\Core\Container $container)
+    public function __construct(\Atro\Core\Container $container)
     {
         $this->container = $container;
         $this->systemUtil = new \Espo\Core\Utils\System();

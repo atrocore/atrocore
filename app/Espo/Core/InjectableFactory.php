@@ -33,8 +33,8 @@
 
 namespace Espo\Core;
 
-use \Espo\Core\Exceptions\Error;
-use Espo\Core\Container;
+use Espo\Core\Exceptions\Error;
+use Atro\Core\Container;
 
 class InjectableFactory
 {

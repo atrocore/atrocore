@@ -61,7 +61,7 @@ class EntryPointManager
     );
 
 
-    public function __construct(\Espo\Core\Container $container)
+    public function __construct(\Atro\Core\Container $container)
     {
         $this->container = $container;
         $this->fileManager = $container->get('fileManager');

@@ -33,7 +33,7 @@
 
 namespace Espo\Core\Controllers;
 
-use Espo\Core\Container;
+use Atro\Core\Container;
 use Espo\Core\Utils\Config;
 
 abstract class Base

@@ -33,7 +33,7 @@
 
 namespace Espo\Core\Jobs;
 
-use Espo\Core\Container;
+use Atro\Core\Container;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\EntityManager;

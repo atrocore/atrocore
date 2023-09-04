@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core\Utils\Database\Schema;
 
-use Espo\Core\Container;
+use Atro\Core\Container;
 use Espo\Core\EventManager\Event;
 
 /**
