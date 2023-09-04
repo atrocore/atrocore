@@ -21,6 +21,8 @@ class_alias("\\Atro\\Core\\ModuleManager\\Manager", "\\Treo\\Core\\ModuleManager
 class_alias("\\Atro\\Core\\Utils\\Condition\\Condition", "\\Treo\\Core\\Utils\\Condition\\Condition");
 class_alias("\\Atro\\Core\\Utils\\Condition\\ConditionGroup", "\\Treo\\Core\\Utils\\Condition\\ConditionGroup");
 class_alias("\\Atro\\Core\\Utils\\Database\\Schema\\Schema", "\\Treo\\Core\\Utils\\Database\\Schema\\Schema");
+class_alias("\\Atro\\Core\\Container", "\\Espo\\Core\\Container");
+class_alias("\\Atro\\Core\\Application", "\\Espo\\Core\\Application");
 
 $migrations = [
     'V1Dot2Dot0', 'V1Dot2Dot43', 'V1Dot2Dot61', 'V1Dot3Dot32', 'V1Dot3Dot40', 'V1Dot4Dot0', 'V1Dot4Dot14', 'V1Dot4Dot40', 'V1Dot4Dot70', 'V1Dot5Dot0', 'V1Dot5Dot30',
