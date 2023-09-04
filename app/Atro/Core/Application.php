@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core;
 
+use Espo\Core\EntryPointManager;
 use Espo\Core\Utils\Api\Auth as ApiAuth;
 use Espo\Core\Utils\Auth;
 use Espo\Core\Utils\Config;
@@ -614,24 +615,31 @@ class Application
      */
     private function getQuery(): string
     {
-        if (empty($_GET['treoq'])) {
+        $name = 'atroq';
+
+        // for backward compatibility
+        if (!empty($_GET['treoq'])) {
+            $name = 'treoq';
+        }
+
+        if (empty($_GET[$name])) {
             return '';
         }
 
         /** @var string $query */
-        $query = $_GET['treoq'];
+        $query = $_GET[$name];
 
         // unset query from GET
-        unset($_GET['treoq']);
+        unset($_GET[$name]);
 
         // prepare redirect query string
         if (!empty($_SERVER['REDIRECT_QUERY_STRING'])) {
-            $_SERVER['REDIRECT_QUERY_STRING'] = str_replace("treoq=$query&", '', $_SERVER['REDIRECT_QUERY_STRING']);
+            $_SERVER['REDIRECT_QUERY_STRING'] = str_replace("$name=$query&", '', $_SERVER['REDIRECT_QUERY_STRING']);
         }
 
         // prepare query string
         if (!empty($_SERVER['QUERY_STRING'])) {
-            $_SERVER['QUERY_STRING'] = str_replace("treoq=$query&", '', $_SERVER['QUERY_STRING']);
+            $_SERVER['QUERY_STRING'] = str_replace("$name=$query&", '', $_SERVER['QUERY_STRING']);
         }
 
         return $query;

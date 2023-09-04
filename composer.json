@@ -47,7 +47,7 @@
     "psr-4": {
       "Atro\\": "app/Atro/",
       "Espo\\": "app/Espo/",
-      "files": ["app/helper.php"]
+      "files": ["app/class_aliases.php"]
     }
   },
   "extra": {

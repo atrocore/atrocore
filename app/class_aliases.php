@@ -25,6 +25,7 @@ class_alias("\\Atro\\Core\\Container", "\\Espo\\Core\\Container");
 class_alias("\\Atro\\Core\\Application", "\\Espo\\Core\\Application");
 class_alias("\\Atro\\Core\\Twig\\AbstractTwigFilter", "\\Espo\\Core\\Twig\\AbstractTwigFilter");
 class_alias("\\Atro\\Core\\Twig\\AbstractTwigFunction", "\\Espo\\Core\\Twig\\AbstractTwigFunction");
+class_alias("\\Atro\\Core\\Thumbnail\\Image", "\\Espo\\Core\\Thumbnail\\Image");
 
 $migrations = [
     'V1Dot2Dot0', 'V1Dot2Dot43', 'V1Dot2Dot61', 'V1Dot3Dot32', 'V1Dot3Dot40', 'V1Dot4Dot0', 'V1Dot4Dot14', 'V1Dot4Dot40', 'V1Dot4Dot70', 'V1Dot5Dot0', 'V1Dot5Dot30',
