@@ -14,6 +14,13 @@ class_alias("\\Atro\\Core\\Migration\\Base", "\\Treo\\Core\\Migration\\Base");
 class_alias("\\Atro\\Core\\FileStorage\\Storages\\Base", "\\Treo\\Core\\FileStorage\\Storages\\Base");
 class_alias("\\Atro\\Core\\FileStorage\\Storages\\UploadDir", "\\Treo\\Core\\FileStorage\\Storages\\UploadDir");
 class_alias("\\Atro\\Core\\Exceptions\\NotModified", "\\Treo\\Core\\Exceptions\\NotModified");
+class_alias("\\Atro\\Core\\ModuleManager\\AbstractEvent", "\\Treo\\Core\\ModuleManager\\AbstractEvent");
+class_alias("\\Atro\\Core\\ModuleManager\\AbstractModule", "\\Treo\\Core\\ModuleManager\\AbstractModule");
+class_alias("\\Atro\\Core\\ModuleManager\\AfterInstallAfterDelete", "\\Treo\\Core\\ModuleManager\\AfterInstallAfterDelete");
+class_alias("\\Atro\\Core\\ModuleManager\\Manager", "\\Treo\\Core\\ModuleManager\\Manager");
+class_alias("\\Atro\\Core\\Utils\\Condition\\Condition", "\\Treo\\Core\\Utils\\Condition\\Condition");
+class_alias("\\Atro\\Core\\Utils\\Condition\\ConditionGroup", "\\Treo\\Core\\Utils\\Condition\\ConditionGroup");
+class_alias("\\Atro\\Core\\Utils\\Database\\Schema\\Schema", "\\Treo\\Core\\Utils\\Database\\Schema\\Schema");
 
 $migrations = [
     'V1Dot2Dot0', 'V1Dot2Dot43', 'V1Dot2Dot61', 'V1Dot3Dot32', 'V1Dot3Dot40', 'V1Dot4Dot0', 'V1Dot4Dot14', 'V1Dot4Dot40', 'V1Dot4Dot70', 'V1Dot5Dot0', ' V1Dot5Dot30',

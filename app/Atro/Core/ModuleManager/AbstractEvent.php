@@ -11,12 +11,13 @@
 
 declare(strict_types=1);
 
-namespace Atro\Core\Exceptions;
+namespace Atro\Core\ModuleManager;
 
-class NotModified extends \Exception
+/**
+ * Class AbstractEvent
+ *
+ * @deprecated Please, use \Atro\Core\ModuleManager\AfterInstallAfterDelete instead.
+ */
+abstract class AbstractEvent extends AfterInstallAfterDelete
 {
-    /**
-     * @var int
-     */
-    protected $code = 304;
 }
