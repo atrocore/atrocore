@@ -28,6 +28,7 @@ class Container
             'consoleManager'           => \Atro\Core\ConsoleManager::class,
             'thumbnail'                => \Atro\Core\Thumbnail\Image::class,
             'migration'                => \Atro\Core\Migration\Migration::class,
+            'twig'                     => \Atro\Core\Twig\Twig::class,
             'crypt'                    => \Espo\Core\Utils\Crypt::class,
             'cronManager'              => \Espo\Core\CronManager::class,
             'slim'                     => \Espo\Core\Utils\Api\Slim::class,
@@ -72,7 +73,6 @@ class Container
             'metadata'                 => \Espo\Core\Factories\Metadata::class,
             'config'                   => \Espo\Core\Factories\Config::class,
             'internalAclManager'       => \Espo\Core\Factories\InternalAclManager::class,
-            'twig'                     => \Espo\Core\Twig\Twig::class,
         ];
 
     public function __construct()
