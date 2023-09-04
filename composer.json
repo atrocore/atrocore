@@ -46,7 +46,8 @@
     },
     "psr-4": {
       "Espo\\": "app/Espo/",
-      "Treo\\": "app/Treo/"
+      "Treo\\": "app/Treo/",
+      "files": ["app/helper.php"]
     }
   },
   "extra": {
