@@ -97,7 +97,7 @@ class PostUpdate
             self::onSuccess();
         } catch (\Throwable $e) {
             self::renderLine('Failed! ' . $e->getMessage());
-            exec(self::getPhpBin() . " composer.phar restore --force --auto >> data/treo-composer.log 2>&1");
+            exec(self::getPhpBin() . " composer.phar restore --force --auto >> data/atro-composer.log 2>&1");
             exit(1);
         }
     }

@@ -28,7 +28,7 @@ class Application
 {
     public const CONFIG_PATH = 'data/portals.json';
 
-    public const COMPOSER_LOG_FILE = 'data/treo-composer.log';
+    public const COMPOSER_LOG_FILE = 'data/atro-composer.log';
 
     /**
      * @var null|array
