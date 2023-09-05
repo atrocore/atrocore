@@ -32,6 +32,16 @@ class_alias("\\Atro\\Core\\EventManager\\Event", "\\Espo\\Core\\EventManager\\Ev
 class_alias("\\Atro\\Core\\EventManager\\Manager", "\\Espo\\Core\\EventManager\\Manager");
 class_alias("\\Atro\\Listeners\\AbstractListener", "\\Espo\\Listeners\\AbstractListener");
 class_alias("\\Atro\\Core\\OpenApiGenerator", "\\Espo\\Core\\OpenApiGenerator");
+class_alias("\\Atro\\Core\\OpenApiGenerator", "\\Espo\\Core\\OpenApiGenerator");
+class_alias("\\Atro\\Core\\Templates\\Controllers\\Hierarchy", "\\Espo\\Core\\Templates\\Controllers\\Hierarchy");
+class_alias("\\Atro\\Core\\Templates\\Controllers\\Relationship", "\\Espo\\Core\\Templates\\Controllers\\Relationship");
+class_alias("\\Atro\\Core\\Templates\\Entities\\Hierarchy", "\\Espo\\Core\\Templates\\Entities\\Hierarchy");
+class_alias("\\Atro\\Core\\Templates\\Entities\\Relationship", "\\Espo\\Core\\Templates\\Entities\\Relationship");
+class_alias("\\Atro\\Core\\Templates\\Repositories\\Hierarchy", "\\Espo\\Core\\Templates\\Repositories\\Hierarchy");
+class_alias("\\Atro\\Core\\Templates\\Repositories\\Relationship", "\\Espo\\Core\\Templates\\Repositories\\Relationship");
+class_alias("\\Atro\\Core\\Templates\\Services\\Hierarchy", "\\Espo\\Core\\Templates\\Services\\Hierarchy");
+class_alias("\\Atro\\Core\\Templates\\Services\\Relationship", "\\Espo\\Core\\Templates\\Services\\Relationship");
+class_alias("\\Atro\\Core\\Templates\\Services\\HasContainer", "\\Espo\\Core\\Templates\\Services\\HasContainer");
 
 // to remove after 01.09.2024
 $migrationsPath = 'vendor/atrocore/core/app/Atro/Migrations';
