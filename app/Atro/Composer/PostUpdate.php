@@ -103,14 +103,7 @@ class PostUpdate
     }
 
     /**
-     * PostUpdate constructor.
-     */
-    public function __construct()
-    {
-    }
-
-    /**
-     * @deprecated will be removed after 01.01.2022
+     * @deprecated use self::postUpdate() instead
      */
     public function run(): void
     {
@@ -555,7 +548,7 @@ class PostUpdate
 
         $migration = self::$container->get('migration');
 
-        if (isset($data['Atro'])) {
+        if (isset($data['Atro']) || isset($data['Treo'])) {
             $migration->run('Atro', self::prepareVersion($data['Atro']['from']), self::prepareVersion($data['Atro']['to']));
         }
 
@@ -626,7 +619,7 @@ class PostUpdate
     {
         $language = self::$container->get('language');
 
-        if ($module['id'] != 'Treo') {
+        if ($module['id'] !== 'Atro' && $module['id'] !== 'Treo') {
             $nameModule = !empty($module["package"]["extra"]["name"]["default"]) ? $module["package"]["extra"]["name"]["default"] : $module['id'];
         } else {
             $nameModule = 'System';
@@ -711,9 +704,6 @@ class PostUpdate
         return $result;
     }
 
-    /**
-     * @deprecated will be removed after 01.01.2022
-     */
     private static function getComposerDiffByFiles(): array
     {
         // prepare result

@@ -27,10 +27,12 @@ class_alias("\\Atro\\Core\\Twig\\AbstractTwigFilter", "\\Espo\\Core\\Twig\\Abstr
 class_alias("\\Atro\\Core\\Twig\\AbstractTwigFunction", "\\Espo\\Core\\Twig\\AbstractTwigFunction");
 class_alias("\\Atro\\Core\\Thumbnail\\Image", "\\Espo\\Core\\Thumbnail\\Image");
 
-$migrationsPath = file_exists('src/atrocore/app/Atro/Migrations') ? 'src/atrocore/app/Atro/Migrations' : 'vendor/atrocore/core/app/Atro/Migrations';
-foreach (scandir($migrationsPath) as $file) {
-    $migration = str_replace('.php', '', $file);
-    if (class_exists("\\Atro\\Migrations\\$migration")) {
-        class_alias("\\Atro\\Migrations\\$migration", "\\Treo\\Migrations\\$migration");
+$migrationsPath = 'vendor/atrocore/core/app/Atro/Migrations';
+if (file_exists($migrationsPath)) {
+    foreach (scandir($migrationsPath) as $file) {
+        $migration = str_replace('.php', '', $file);
+        if (class_exists("\\Atro\\Migrations\\$migration")) {
+            class_alias("\\Atro\\Migrations\\$migration", "\\Treo\\Migrations\\$migration");
+        }
     }
 }
