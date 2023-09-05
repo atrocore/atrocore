@@ -31,6 +31,7 @@ class_alias("\\Atro\\Core\\PseudoTransactionManager", "\\Espo\\Core\\PseudoTrans
 class_alias("\\Atro\\Core\\EventManager\\Event", "\\Espo\\Core\\EventManager\\Event");
 class_alias("\\Atro\\Core\\EventManager\\Manager", "\\Espo\\Core\\EventManager\\Manager");
 class_alias("\\Atro\\Listeners\\AbstractListener", "\\Espo\\Listeners\\AbstractListener");
+class_alias("\\Atro\\Core\\OpenApiGenerator", "\\Espo\\Core\\OpenApiGenerator");
 
 $migrationsPath = 'vendor/atrocore/core/app/Atro/Migrations';
 if (file_exists($migrationsPath)) {
