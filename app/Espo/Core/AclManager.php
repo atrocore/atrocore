@@ -81,7 +81,7 @@ class AclManager
                     $className = '\\' . $moduleName . '\\Acl\\' . $normalizedName;
                 }
                 if (!class_exists($className)) {
-                    $className = '\\Treo\\Acl\\' . $normalizedName;
+                    $className = '\\Atro\\Acl\\' . $normalizedName;
                 }
                 if (!class_exists($className)) {
                     $className = '\\Espo\\Acl\\' . $normalizedName;
