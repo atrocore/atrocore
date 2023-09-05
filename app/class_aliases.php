@@ -32,6 +32,14 @@ class_alias("\\Atro\\Core\\EventManager\\Event", "\\Espo\\Core\\EventManager\\Ev
 class_alias("\\Atro\\Core\\EventManager\\Manager", "\\Espo\\Core\\EventManager\\Manager");
 class_alias("\\Atro\\Listeners\\AbstractListener", "\\Espo\\Listeners\\AbstractListener");
 class_alias("\\Atro\\Core\\OpenApiGenerator", "\\Espo\\Core\\OpenApiGenerator");
+class_alias("\\Atro\\ConnectionType\\ConnectionInterface", "\\Espo\\ConnectionType\\ConnectionInterface");
+class_alias("\\Atro\\ConnectionType\\AbstractConnection", "\\Espo\\ConnectionType\\AbstractConnection");
+class_alias("\\Atro\\ConnectionType\\ConnectionFtp", "\\Espo\\ConnectionType\\ConnectionFtp");
+class_alias("\\Atro\\ConnectionType\\ConnectionMsql", "\\Espo\\ConnectionType\\ConnectionMsql");
+class_alias("\\Atro\\ConnectionType\\ConnectionMysql", "\\Espo\\ConnectionType\\ConnectionMysql");
+class_alias("\\Atro\\ConnectionType\\ConnectionOauth2", "\\Espo\\ConnectionType\\ConnectionOauth2");
+class_alias("\\Atro\\ConnectionType\\ConnectionPsql", "\\Espo\\ConnectionType\\ConnectionPsql");
+class_alias("\\Atro\\ConnectionType\\ConnectionSftp", "\\Espo\\ConnectionType\\ConnectionSftp");
 
 // to remove after 01.09.2024
 $migrationsPath = 'vendor/atrocore/core/app/Atro/Migrations';
