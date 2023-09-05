@@ -73,7 +73,7 @@ class SelectManagerFactory
                 $className = '\\' . $moduleName . '\\SelectManagers\\' . $normalizedName;
             }
             if (!class_exists($className)) {
-                $className = '\\Treo\\SelectManagers\\' . $normalizedName;
+                $className = '\\Atro\\SelectManagers\\' . $normalizedName;
             }
             if (!class_exists($className)) {
                 $className = '\\Espo\\SelectManagers\\' . $normalizedName;
