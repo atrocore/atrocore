@@ -21,6 +21,8 @@ class V1Dot6Dot36 extends Base
         copy('vendor/atrocore/core/copy/.htaccess', '.htaccess');
         copy('vendor/atrocore/core/copy/index.php', 'index.php');
 
+        $this->getPDO()->exec("UPDATE queue_item set priority='High' where priority='Crucial'");
+
         // prepare composer.json
         $this->updateComposer('atrocore/core', '^1.6.36');
 
