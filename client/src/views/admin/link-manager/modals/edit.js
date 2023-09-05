@@ -650,8 +650,10 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 (data.links || {})[link] = label;
 
                 data = ((this.getLanguage().data || {}) || {})[entityForeign];
-                (data.fields || {})[linkForeign] = labelForeign;
-                (data.links || {})[linkForeign] = labelForeign;
+                if (data){
+                    (data.fields || {})[linkForeign] = labelForeign;
+                    (data.links || {})[linkForeign] = labelForeign;
+                }
 
                 this.getMetadata().load(function () {
                     this.trigger('after:save');
