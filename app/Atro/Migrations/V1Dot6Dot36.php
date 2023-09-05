@@ -17,13 +17,19 @@ class V1Dot6Dot36 extends Base
 {
     public function up(): void
     {
+        // copy to root
         copy('vendor/atrocore/core/copy/.htaccess', '.htaccess');
         copy('vendor/atrocore/core/copy/index.php', 'index.php');
+
+        // prepare composer.json
+        $this->updateComposer('atrocore/core', '^1.6.36');
+
+        // reload daemons
+        file_put_contents('data/process-kill.txt', '1');
     }
 
     public function down(): void
     {
-        copy('vendor/atrocore/core/copy/.htaccess', '.htaccess');
-        copy('vendor/atrocore/core/copy/index.php', 'index.php');
+        throw new \Error("Downgrade is prohibited.");
     }
 }

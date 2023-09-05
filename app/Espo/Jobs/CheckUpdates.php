@@ -35,7 +35,7 @@ declare(strict_types=1);
 
 namespace Espo\Jobs;
 
-use Espo\Console\AbstractConsole;
+use Atro\Console\AbstractConsole;
 use Espo\Core\DataManager;
 use Espo\Core\Jobs\Base;
 

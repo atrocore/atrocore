@@ -46,9 +46,11 @@
     },
     "psr-4": {
       "Atro\\": "app/Atro/",
-      "Espo\\": "app/Espo/",
-      "files": ["app/class_aliases.php"]
-    }
+      "Espo\\": "app/Espo/"
+    },
+    "files": [
+      "app/class_aliases.php"
+    ]
   },
   "extra": {
     "treoId": "Atro"

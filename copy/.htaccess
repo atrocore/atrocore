@@ -14,7 +14,7 @@ RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^(.*)$ index.php?atroq=$1 [L,QSA]
 
-<FilesMatch "(publicData\.json|treo-composer\.log)$">
+<FilesMatch "(publicData\.json|atro-composer\.log)$">
   Allow from all
 </FilesMatch>
 

@@ -33,8 +33,8 @@
 
 namespace Espo\Controllers;
 
-use Espo\Console\AbstractConsole;
-use Espo\Console\RefreshTranslations;
+use Atro\Console\AbstractConsole;
+use Atro\Console\RefreshTranslations;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;

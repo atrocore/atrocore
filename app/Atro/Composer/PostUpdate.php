@@ -548,7 +548,7 @@ class PostUpdate
 
         $migration = self::$container->get('migration');
 
-        if (isset($data['Atro']) || isset($data['Treo'])) {
+        if (isset($data['Atro'])) {
             $migration->run('Atro', self::prepareVersion($data['Atro']['from']), self::prepareVersion($data['Atro']['to']));
         }
 
@@ -619,7 +619,7 @@ class PostUpdate
     {
         $language = self::$container->get('language');
 
-        if ($module['id'] !== 'Atro' && $module['id'] !== 'Treo') {
+        if ($module['id'] !== 'Atro') {
             $nameModule = !empty($module["package"]["extra"]["name"]["default"]) ? $module["package"]["extra"]["name"]["default"] : $module['id'];
         } else {
             $nameModule = 'System';
@@ -674,16 +674,17 @@ class PostUpdate
         $newData = self::getComposerLockPackages();
 
         foreach ($oldData as $package) {
+            $id = $package['extra']['treoId'] === 'Treo' ? 'Atro' : $package['extra']['treoId'];
             if (!isset($newData[$package['name']])) {
-                $result['delete'][$package['extra']['treoId']] = [
-                    'id'      => $package['extra']['treoId'],
+                $result['delete'][$id] = [
+                    'id'      => $id,
                     'package' => $package,
                     'from'    => null,
                     'to'      => null
                 ];
             } elseif ($package['version'] != $newData[$package['name']]['version']) {
-                $result['update'][$package['extra']['treoId']] = [
-                    'id'      => $package['extra']['treoId'],
+                $result['update'][$id] = [
+                    'id'      => $id,
                     'package' => $newData[$package['name']],
                     'from'    => $package['version'],
                     'to'      => $newData[$package['name']]['version']

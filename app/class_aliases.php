@@ -33,6 +33,7 @@ class_alias("\\Atro\\Core\\EventManager\\Manager", "\\Espo\\Core\\EventManager\\
 class_alias("\\Atro\\Listeners\\AbstractListener", "\\Espo\\Listeners\\AbstractListener");
 class_alias("\\Atro\\Core\\OpenApiGenerator", "\\Espo\\Core\\OpenApiGenerator");
 
+// to remove after 01.09.2024
 $migrationsPath = 'vendor/atrocore/core/app/Atro/Migrations';
 if (file_exists($migrationsPath)) {
     foreach (scandir($migrationsPath) as $file) {
