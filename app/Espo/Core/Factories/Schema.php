@@ -35,7 +35,7 @@ declare(strict_types=1);
 
 namespace Espo\Core\Factories;
 
-use Espo\Core\Container;
+use Atro\Core\Container;
 use Espo\Core\Interfaces\Factory;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config;
@@ -44,7 +44,7 @@ use Espo\Core\Utils\File\Manager;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Metadata\OrmMetadata;
 use Espo\Core\Utils\Database\Schema\Converter;
-use Treo\Core\Utils\Database\Schema\Schema as Instance;
+use Atro\Core\Utils\Database\Schema\Schema as Instance;
 
 class Schema implements Factory
 {

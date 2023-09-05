@@ -36,7 +36,7 @@ declare(strict_types=1);
 namespace Espo\Core\Mail;
 
 use Espo\Core\Exceptions\Error;
-use Espo\Core\QueueManager;
+use Atro\Core\QueueManager;
 use Espo\Core\Utils\Config;
 use Espo\ORM\EntityManager;
 use Laminas\Mail\Storage\Imap;

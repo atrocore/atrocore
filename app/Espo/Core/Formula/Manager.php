@@ -37,7 +37,7 @@ use \Espo\Core\Exceptions\Error;
 
 class Manager
 {
-    public function __construct(\Espo\Core\Container $container, \Espo\Core\Utils\Metadata $metadata)
+    public function __construct(\Atro\Core\Container $container, \Espo\Core\Utils\Metadata $metadata)
     {
         $functionClassNameMap = $metadata->get(['app', 'formula', 'functionClassNameMap'], array());
 

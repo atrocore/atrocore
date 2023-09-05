@@ -33,7 +33,7 @@
 
 namespace Espo\Core\Interfaces;
 
-use Espo\Core\Container;
+use Atro\Core\Container;
 
 interface Factory
 {

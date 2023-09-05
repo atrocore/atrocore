@@ -35,7 +35,7 @@ declare(strict_types=1);
 
 namespace Espo\Core\Utils\Authentication;
 
-use Espo\Core\Container;
+use Atro\Core\Container;
 use Espo\Core\Utils\Auth;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\PasswordHash;

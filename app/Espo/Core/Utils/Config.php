@@ -33,7 +33,7 @@
 
 namespace Espo\Core\Utils;
 
-use Espo\Core\Container;
+use Atro\Core\Container;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Repositories\Locale;
 

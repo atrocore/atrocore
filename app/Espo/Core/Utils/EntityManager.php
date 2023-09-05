@@ -34,7 +34,7 @@
 namespace Espo\Core\Utils;
 
 use Espo\Console\RefreshTranslations;
-use Espo\Core\Container;
+use Atro\Core\Container;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Error;

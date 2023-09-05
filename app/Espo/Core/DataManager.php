@@ -36,7 +36,7 @@ namespace Espo\Core;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
-use Treo\Core\ModuleManager\Manager as ModuleManager;
+use Atro\Core\ModuleManager\Manager as ModuleManager;
 
 /**
  * Class DataManager

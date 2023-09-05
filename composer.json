@@ -45,11 +45,12 @@
       "Espo\\Custom": "../../../custom/"
     },
     "psr-4": {
+      "Atro\\": "app/Atro/",
       "Espo\\": "app/Espo/",
-      "Treo\\": "app/Treo/"
+      "files": ["app/class_aliases.php"]
     }
   },
   "extra": {
-    "treoId": "Treo"
+    "treoId": "Atro"
   }
 }

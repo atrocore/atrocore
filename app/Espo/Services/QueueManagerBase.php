@@ -35,7 +35,7 @@ declare(strict_types=1);
 
 namespace Espo\Services;
 
-use Espo\Core\Container;
+use Atro\Core\Container;
 use Espo\Core\Services\Base;
 use Espo\ORM\Entity;
 use Espo\Entities\QueueItem;

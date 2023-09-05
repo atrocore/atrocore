@@ -47,7 +47,7 @@ class EntityManager extends \Espo\ORM\EntityManager
 
     private $entityClassNameHash = array();
 
-    public function setContainer(\Espo\Core\Container $container)
+    public function setContainer(\Atro\Core\Container $container)
     {
         $this->container = $container;
     }

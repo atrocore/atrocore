@@ -40,7 +40,7 @@ use Espo\Core\EventManager\Event;
 use Espo\Core\EventManager\Manager as EventManager;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\File\Unifier;
-use Treo\Core\ModuleManager\Manager as ModuleManager;
+use Atro\Core\ModuleManager\Manager as ModuleManager;
 
 /**
  * Class Metadata
