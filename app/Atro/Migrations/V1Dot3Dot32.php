@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Migrations;
 
-use Espo\Console\Cron;
+use Atro\Console\Cron;
 use Atro\Core\Migration\Base;
 
 class V1Dot3Dot32 extends Base

@@ -35,7 +35,7 @@ declare(strict_types=1);
 
 namespace Espo\Services;
 
-use Espo\Console\AbstractConsole;
+use Atro\Console\AbstractConsole;
 use Espo\Core\Exceptions;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Language;

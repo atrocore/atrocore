@@ -11,7 +11,7 @@
 
 namespace Atro\Migrations;
 
-use Espo\Console\AbstractConsole;
+use Atro\Console\AbstractConsole;
 
 use Atro\Core\Migration\Base;
 
