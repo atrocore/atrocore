@@ -64,9 +64,8 @@ class ControllerManager extends Injectable
             }
         }
 
-        // for Treo
         if (!class_exists($controllerClassName)) {
-            $controllerClassName = "\\Treo\\Controllers\\$className";
+            $controllerClassName = "\\Atro\\Controllers\\$className";
         }
 
         // for Espo
