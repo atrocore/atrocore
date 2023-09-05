@@ -174,12 +174,6 @@ class EntityManager
             throw new Error('Bad entity name.');
         }
 
-        $templateDefs = $this->getMetadata()->get(['app', 'entityTemplates', $type], []);
-
-        if (!empty($templateDefs['isNotCreatable']) && empty($params['forceCreate'])) {
-            throw new Error('Type \''.$type.'\' is not creatable.');
-        }
-
         if ($this->getMetadata()->get('scopes.' . $name)) {
             throw new Conflict('Entity \''.$name.'\' already exists.');
         }
@@ -203,8 +197,8 @@ class EntityManager
 
         $normalizedName = Util::normilizeClassName($name);
 
-        $templateNamespace = "\Espo\Core\Templates";
-        $templatePath = CORE_PATH . "/Espo/Core/Templates";
+        $templateNamespace = "\Atro\Core\Templates";
+        $templatePath = CORE_PATH . "/Atro/Core/Templates";
 
         $contents = "<" . "?" . "php\n\n".
             "namespace Espo\Custom\Entities;\n\n".
@@ -314,7 +308,7 @@ class EntityManager
         $scopesData['object'] = true;
         $scopesData['isCustom'] = true;
 
-        if (!empty($templateDefs['isNotRemovable']) ||!empty($params['isNotRemovable'])) {
+        if (!empty($params['isNotRemovable'])) {
             $scopesData['isNotRemovable'] = true;
         }
 
@@ -512,14 +506,7 @@ class EntityManager
 
         $isNotRemovable = $this->getMetadata()->get(['scopes', $name, 'isNotRemovable']);
 
-        $templateDefs = $this->getMetadata()->get(['app', 'entityTemplates', $type], []);
-
-        $templateModuleName = null;
-        if (!empty($templateDefs['module'])) {
-            $templateModuleName = $templateDefs['module'];
-        }
-
-        if ((!empty($templateDefs['isNotRemovable']) || $isNotRemovable) && empty($params['forceRemove'])) {
+        if ($isNotRemovable && empty($params['forceRemove'])) {
             throw new Error('Type \''.$type.'\' is not removable.');
         }
 
@@ -1041,21 +1028,7 @@ class EntityManager
 
     protected function getHook($type)
     {
-        $templateDefs = $this->getMetadata()->get(['app', 'entityTemplates', $type], []);
-
         $className = '\\Espo\\Core\\Utils\\EntityManager\\Hooks\\' . $type . 'Type';
-
-        $templateModuleName = null;
-        if (!empty($templateDefs['module'])) {
-            $templateModuleName = $templateDefs['module'];
-            $normalizedTemplateModuleName = Util::normilizeClassName($templateModuleName);
-            $className = '\\'.$normalizedTemplateModuleName.'\\Core\\Utils\\EntityManager\\Hooks\\' . $type . 'Type';
-        }
-
-
-
-        $className = $this->getMetadata()->get(['app', 'entityTemplates', $type, 'hookClassName'], $className);
-
         if (class_exists($className)) {
             $hook = new $className();
             foreach ($hook->getDependencyList() as $name) {
