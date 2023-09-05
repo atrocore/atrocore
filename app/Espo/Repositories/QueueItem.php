@@ -39,7 +39,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 use Espo\Core\Templates\Repositories\Base;
 use Espo\Services\QueueManagerServiceInterface;
-use Espo\Core\QueueManager;
+use Atro\Core\QueueManager;
 
 class QueueItem extends Base
 {

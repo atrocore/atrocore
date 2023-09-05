@@ -188,7 +188,7 @@ class Cron extends AbstractConsole
         }
 
         if ($created) {
-            file_put_contents(\Espo\Core\QueueManager::FILE_PATH, '1');
+            file_put_contents(\Atro\Core\QueueManager::FILE_PATH, '1');
         }
     }
 

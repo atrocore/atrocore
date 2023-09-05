@@ -26,6 +26,9 @@ class_alias("\\Atro\\Core\\Application", "\\Espo\\Core\\Application");
 class_alias("\\Atro\\Core\\Twig\\AbstractTwigFilter", "\\Espo\\Core\\Twig\\AbstractTwigFilter");
 class_alias("\\Atro\\Core\\Twig\\AbstractTwigFunction", "\\Espo\\Core\\Twig\\AbstractTwigFunction");
 class_alias("\\Atro\\Core\\Thumbnail\\Image", "\\Espo\\Core\\Thumbnail\\Image");
+class_alias("\\Atro\\Core\\QueueManager", "\\Espo\\Core\\QueueManager");
+
+
 
 $migrationsPath = 'vendor/atrocore/core/app/Atro/Migrations';
 if (file_exists($migrationsPath)) {

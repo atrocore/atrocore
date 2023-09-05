@@ -29,6 +29,7 @@ class Container
             'thumbnail'                => \Atro\Core\Thumbnail\Image::class,
             'migration'                => \Atro\Core\Migration\Migration::class,
             'twig'                     => \Atro\Core\Twig\Twig::class,
+            'queueManager'             => \Atro\Core\QueueManager::class,
             'crypt'                    => \Espo\Core\Utils\Crypt::class,
             'cronManager'              => \Espo\Core\CronManager::class,
             'slim'                     => \Espo\Core\Utils\Api\Slim::class,
@@ -59,7 +60,7 @@ class Container
             'serviceFactory'           => \Espo\Core\Factories\ServiceFactory::class,
             'templateFileManager'      => \Espo\Core\Factories\TemplateFileManager::class,
             'themeManager'             => \Espo\Core\Factories\ThemeManager::class,
-            'queueManager'             => \Espo\Core\QueueManager::class,
+
             'pseudoTransactionManager' => \Espo\Core\PseudoTransactionManager::class,
             'connection'               => \Espo\Core\Factories\Connection::class,
             'pdo'                      => \Espo\Core\Factories\Pdo::class,

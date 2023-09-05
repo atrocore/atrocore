@@ -123,7 +123,7 @@ class Daemon extends AbstractConsole
             }
 
             $expectedStream = time() % (int)$this->getConfig()->get('queueManagerWorkersCount', 4);
-            if (file_exists(\Espo\Core\QueueManager::FILE_PATH) && $expectedStream == $stream) {
+            if (file_exists(\Atro\Core\QueueManager::FILE_PATH) && $expectedStream == $stream) {
                 exec($this->getPhpBin() . " index.php qm $stream --run");
             }
 
