@@ -369,13 +369,6 @@ class Converter
         return $outputMeta;
     }
 
-    /**
-     * Correct fields defenitions based on \Espo\Custom\Core\Utils\Database\Orm\Fields
-     *
-     * @param  array  $ormMetadata
-     *
-     * @return array
-     */
     protected function correctFields($entityName, array $ormMetadata)
     {
         $entityDefs = $this->getEntityDefs();
