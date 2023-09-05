@@ -39,7 +39,7 @@ use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
-use Espo\Core\PseudoTransactionManager;
+use Atro\Core\PseudoTransactionManager;
 use Espo\Core\Utils\Database\Schema\Utils as SchemaUtils;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Language;

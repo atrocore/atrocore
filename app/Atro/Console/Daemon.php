@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Console;
 
 use Atro\Core\Application;
-use Espo\Core\PseudoTransactionManager;
+use Atro\Core\PseudoTransactionManager;
 use Espo\Entities\User;
 use Espo\Services\Composer;
 

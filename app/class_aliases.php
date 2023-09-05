@@ -27,6 +27,7 @@ class_alias("\\Atro\\Core\\Twig\\AbstractTwigFilter", "\\Espo\\Core\\Twig\\Abstr
 class_alias("\\Atro\\Core\\Twig\\AbstractTwigFunction", "\\Espo\\Core\\Twig\\AbstractTwigFunction");
 class_alias("\\Atro\\Core\\Thumbnail\\Image", "\\Espo\\Core\\Thumbnail\\Image");
 class_alias("\\Atro\\Core\\QueueManager", "\\Espo\\Core\\QueueManager");
+class_alias("\\Atro\\Core\\PseudoTransactionManager", "\\Espo\\Core\\PseudoTransactionManager");
 
 
 
