@@ -49,7 +49,8 @@
       "Espo\\": "app/Espo/"
     },
     "files": [
-      "app/class_aliases.php"
+      "app/class_aliases.php",
+      "app/helpers.php"
     ]
   },
   "extra": {
