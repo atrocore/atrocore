@@ -246,8 +246,7 @@ class Layout extends Injectable
         // prepare data
         $data = [];
 
-        // from treo core data
-        $filePath = $this->concatPath(CORE_PATH . '/Treo/Resources/layouts', $scope);
+        $filePath = $this->concatPath(CORE_PATH . '/Atro/Resources/layouts', $scope);
         $fileFullPath = $this->concatPath($filePath, $name . '.json');
         if (file_exists($fileFullPath)) {
             // get file data

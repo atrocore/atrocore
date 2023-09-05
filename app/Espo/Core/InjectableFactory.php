@@ -48,9 +48,9 @@ class InjectableFactory
     public function createByClassName($className)
     {
         if (strpos($className, 'Espo\\') !== false) {
-            $treoClassName = str_replace('Espo\\', 'Treo\\', $className);
-            if (class_exists($treoClassName)) {
-                $className = $treoClassName;
+            $newClassName = str_replace('Espo\\', 'Atro\\', $className);
+            if (class_exists($newClassName)) {
+                $className = $newClassName;
             }
         }
 
