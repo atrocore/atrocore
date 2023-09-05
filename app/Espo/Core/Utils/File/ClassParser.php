@@ -91,8 +91,8 @@ class ClassParser extends Injectable
         if ($cacheFile && file_exists($cacheFile) && $this->getConfig()->get('useCache')) {
             $data = $this->getFileManager()->getPhpContents($cacheFile);
         } else {
-            // load Treo
-            $data = $this->getClassNameHash(str_replace(CORE_PATH . '/Espo', CORE_PATH . '/Treo', $paths['corePath']));
+            // load Atro
+            $data = $this->getClassNameHash(str_replace(CORE_PATH . '/Espo', CORE_PATH . '/Atro', $paths['corePath']));
 
             // load Espo
             $data = array_merge($data, $this->getClassNameHash($paths['corePath']));
