@@ -127,6 +127,10 @@ class EntityManager
                     return true;
                 }
             }
+            $controllerClassName = '\\Atro\\Controllers\\' . Util::normilizeClassName($name);
+            if (class_exists($controllerClassName)) {
+                return true;
+            }
             $controllerClassName = '\\Espo\\Controllers\\' . Util::normilizeClassName($name);
             if (class_exists($controllerClassName)) {
                 return true;
@@ -199,6 +203,11 @@ class EntityManager
 
         $templateNamespace = "\Atro\Core\Templates";
         $templatePath = CORE_PATH . "/Atro/Core/Templates";
+
+        if ($type === 'Base') {
+            $templateNamespace = "\Espo\Core\Templates";
+            $templatePath = CORE_PATH . "/Espo/Core/Templates";
+        }
 
         $contents = "<" . "?" . "php\n\n".
             "namespace Espo\Custom\Entities;\n\n".
