@@ -122,12 +122,12 @@ class Container
                 return $this->data[$name];
             }
 
-            $reflection = new \ReflectionClass($className);
-            $params = $reflection->getConstructor()->getParameters();
-            if (!empty($params)) {
+            if (!empty($params = (new \ReflectionClass($className))->getConstructor()->getParameters())) {
                 $input = [];
                 foreach ($params as $param) {
-                    $input[] = $this->get($param->getClass()->name);
+                    if (!empty($paramClass = $param->getClass()) && property_exists($paramClass, 'name') && is_string($param->getClass()->name)) {
+                        $input[] = $this->get($param->getClass()->name);
+                    }
                 }
                 $this->data[$name] = new $className(...$input);
                 return $this->data[$name];
