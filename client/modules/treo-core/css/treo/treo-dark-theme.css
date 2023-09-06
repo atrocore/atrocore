@@ -22744,3 +22744,8 @@ div.list-kanban > div > table .item .panel .form-group {
     }
 
 }
+
+
+.list-container{
+    overflow-x: scroll;
+}
