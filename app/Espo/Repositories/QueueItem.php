@@ -90,13 +90,16 @@ class QueueItem extends Base
         $fileName = str_pad((string)($sortOrder % $filesInDir), 4, '0', STR_PAD_LEFT);
 
         switch ($priority) {
-            case 'High':
+            case 'Highest':
                 $dirPath = QueueManager::QUEUE_DIR_PATH . '/0';
                 break;
-            case 'Crucial':
+            case 'High':
                 $dirPath = QueueManager::QUEUE_DIR_PATH . '/000001';
                 break;
             case 'Low':
+                $dirPath = QueueManager::QUEUE_DIR_PATH . '/88888888888888';
+                break;
+            case 'Lowest':
                 $dirPath = QueueManager::QUEUE_DIR_PATH . '/99999999999999';
                 break;
             default:
