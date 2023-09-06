@@ -1,9 +1,0 @@
-{
-    "fields": {
-    },
-    "links": {
-    },
-    "labels": {
-        "Create {entityType}": "Create {entityTypeTranslated}"
-    }
-}

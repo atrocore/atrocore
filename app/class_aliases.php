@@ -33,6 +33,10 @@ class_alias("\\Atro\\Core\\EventManager\\Manager", "\\Espo\\Core\\EventManager\\
 class_alias("\\Atro\\Listeners\\AbstractListener", "\\Espo\\Listeners\\AbstractListener");
 class_alias("\\Atro\\Core\\OpenApiGenerator", "\\Espo\\Core\\OpenApiGenerator");
 class_alias("\\Atro\\Core\\Templates\\Services\\HasContainer", "\\Espo\\Core\\Templates\\Services\\HasContainer");
+class_alias("\\Atro\\Core\\Templates\\Controllers\\Base", "\\Espo\\Core\\Templates\\Controllers\\Base");
+class_alias("\\Atro\\Core\\Templates\\Entities\\Base", "\\Espo\\Core\\Templates\\Entities\\Base");
+class_alias("\\Atro\\Core\\Templates\\Repositories\\Base", "\\Espo\\Core\\Templates\\Repositories\\Base");
+class_alias("\\Atro\\Core\\Templates\\Services\\Base", "\\Espo\\Core\\Templates\\Services\\Base");
 class_alias("\\Atro\\Core\\Templates\\Controllers\\Hierarchy", "\\Espo\\Core\\Templates\\Controllers\\Hierarchy");
 class_alias("\\Atro\\Core\\Templates\\Entities\\Hierarchy", "\\Espo\\Core\\Templates\\Entities\\Hierarchy");
 class_alias("\\Atro\\Core\\Templates\\Repositories\\Hierarchy", "\\Espo\\Core\\Templates\\Repositories\\Hierarchy");

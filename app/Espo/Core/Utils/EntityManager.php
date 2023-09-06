@@ -204,11 +204,6 @@ class EntityManager
         $templateNamespace = "\Atro\Core\Templates";
         $templatePath = CORE_PATH . "/Atro/Core/Templates";
 
-        if ($type === 'Base') {
-            $templateNamespace = "\Espo\Core\Templates";
-            $templatePath = CORE_PATH . "/Espo/Core/Templates";
-        }
-
         $contents = "<" . "?" . "php\n\n".
             "namespace Espo\Custom\Entities;\n\n".
             "class {$normalizedName} extends {$templateNamespace}\Entities\\{$type}\n".
