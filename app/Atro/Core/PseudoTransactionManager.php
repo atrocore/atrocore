@@ -189,9 +189,11 @@ class PseudoTransactionManager extends Injectable
 
         try {
             $user = $this->getEntityManager()->getEntity('User', $job['created_by_id']);
+//            $user->set('isAdmin', true);
 
             $this->getInjection('container')->setUser($user);
             $this->getEntityManager()->setUser($user);
+          
             if (!empty($user->get('portalId'))) {
                 $this->getInjection('container')->setPortal($user->get('portal'));
             }
