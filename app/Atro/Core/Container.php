@@ -114,12 +114,27 @@ class Container
                 return $this->data[$name];
             }
 
-            $this->data[$name] = new $className();
             if (is_a($className, Injectable::class, true)) {
+                $this->data[$name] = new $className();
                 foreach ($this->data[$name]->getDependencyList() as $dependency) {
                     $this->data[$name]->inject($dependency, $this->get($dependency));
                 }
+                return $this->data[$name];
             }
+
+            $reflection = new \ReflectionClass($className);
+            $params = $reflection->getConstructor()->getParameters();
+            if (!empty($params)) {
+                $input = [];
+                foreach ($params as $param) {
+                    $input[] = $this->get($param->getClass()->name);
+                }
+                $this->data[$name] = new $className(...$input);
+                return $this->data[$name];
+            }
+
+            $this->data[$name] = new $className();
+
             return $this->data[$name];
         }
 
