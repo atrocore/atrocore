@@ -473,11 +473,6 @@ class Application
         $this->getSlim()->add($apiAuth);
         $this->getSlim()->hook('slim.before.dispatch', function () use ($slim, $container) {
             $route = $slim->router()->getCurrentRoute();
-            $conditions = $route->getConditions();
-
-            if (isset($conditions['useController']) && $conditions['useController'] == false) {
-                return;
-            }
 
             $routeOptions = call_user_func($route->getCallable());
             $routeKeys = is_array($routeOptions) ? array_keys($routeOptions) : array();
@@ -489,6 +484,7 @@ class Application
             $params = $route->getParams();
             $data = $slim->request()->getBody();
 
+            $controllerParams = [];
             foreach ($routeOptions as $key => $value) {
                 if (strstr($value, ':')) {
                     $paramName = str_replace(':', '', $value);
