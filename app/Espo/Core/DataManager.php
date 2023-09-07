@@ -37,6 +37,7 @@ use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
+use Espo\ORM\EntityManager;
 
 /**
  * Class DataManager
@@ -266,6 +267,7 @@ class DataManager
     public function rebuildScheduledJobs()
     {
         $metadata = $this->container->get('metadata');
+        /** @var EntityManager $entityManager */
         $entityManager = $this->container->get('entityManager');
 
         $jobs = $metadata->get(['entityDefs', 'ScheduledJob', 'jobs'], array());
