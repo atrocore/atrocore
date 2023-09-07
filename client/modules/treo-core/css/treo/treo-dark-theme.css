@@ -22742,10 +22742,4 @@ div.list-kanban > div > table .item .panel .form-group {
         min-width: 100% !important;
         padding-top: 5px;
     }
-
-}
-
-
-.list-container{
-    overflow-x: scroll;
 }
