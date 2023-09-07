@@ -18,6 +18,9 @@ class V1Dot6Dot37 extends Base
     public function up(): void
     {
         copy('vendor/atrocore/core/copy/.htaccess', '.htaccess');
+        copy('vendor/atrocore/core/copy/index.php', 'index.php');
+
+        $this->getPDO()->exec("UPDATE queue_item set priority='High' where priority='Crucial'");
 
         foreach (['composer.json', 'data/stable-composer.json'] as $filename) {
             if (!file_exists($filename)) {
@@ -33,13 +36,7 @@ class V1Dot6Dot37 extends Base
             file_put_contents($filename, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
         }
 
-        foreach (['data/composer.log', 'data/treo-composer.log', 'data/atro-composer.log'] as $filename) {
-            if (!file_exists($filename)) {
-                continue;
-            }
-            unlink($filename);
-        }
-
+        // reload daemons
         file_put_contents('data/process-kill.txt', '1');
     }
 
