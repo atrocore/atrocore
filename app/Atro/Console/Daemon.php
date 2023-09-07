@@ -3,7 +3,7 @@
 * AtroCore Software
 *
 * This source file is available under GNU General Public License version 3 (GPLv3).
-* Full copyright and license information is available in LICENSE.md, located in the root directory.
+* Full copyright and license information is available in LICENSE.txt, located in the root directory.
 *
 *  @copyright  Copyright (c) AtroCore UG (https://www.atrocore.com)
 *  @license    GPLv3 (https://www.gnu.org/licenses/)
@@ -16,6 +16,7 @@ namespace Atro\Console;
 use Atro\Core\Application;
 use Atro\Core\PseudoTransactionManager;
 use Espo\Entities\User;
+use Espo\ORM\EntityManager;
 use Espo\Services\Composer;
 
 /**
@@ -66,7 +67,7 @@ class Daemon extends AbstractConsole
             }
 
             if (file_exists($log)) {
-                $em = $this->getContainer()->get('entityManager');
+                $em = $this->getEntityManager();
 
                 /** @var User $user */
                 $user = $em
@@ -144,5 +145,10 @@ class Daemon extends AbstractConsole
 
             sleep(1);
         }
+    }
+
+    protected function getEntityManager(): EntityManager
+    {
+        return $this->getContainer()->get('entityManager');
     }
 }
