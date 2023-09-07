@@ -15,6 +15,7 @@ namespace Atro\Composer;
 
 use Atro\Core\Container;
 use Atro\Core\Application as App;
+use Espo\ORM\EntityManager;
 
 class PostUpdate
 {
@@ -589,6 +590,7 @@ class PostUpdate
         self::renderLine('Sending notification(s) to admin users');
 
         try {
+            /** @var EntityManager $em */
             $em = self::$container->get('entityManager');
             $users = $em->getRepository('User')->getAdminUsers();
             if (!empty($users)) {
