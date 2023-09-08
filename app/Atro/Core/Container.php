@@ -13,12 +13,14 @@ declare(strict_types=1);
 
 namespace Atro\Core;
 
+use Atro\Core\EventManager\Manager as EventManager;
 use Atro\Core\Factories\FactoryInterface as Factory;
 use Espo\Core\Interfaces\Injectable;
 use Espo\Entities\Portal;
 use Espo\Entities\User;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
 use Espo\ORM\EntityManager;
+use Doctrine\DBAL\Connection;
 
 class Container
 {
@@ -33,7 +35,9 @@ class Container
             'queueManager'             => \Atro\Core\QueueManager::class,
             'pseudoTransactionManager' => \Atro\Core\PseudoTransactionManager::class,
             'eventManager'             => \Atro\Core\Factories\EventManager::class,
+            EventManager::class        => \Atro\Core\Factories\EventManager::class,
             'connection'               => \Atro\Core\Factories\Connection::class,
+            Connection::class          => \Atro\Core\Factories\Connection::class,
             'crypt'                    => \Espo\Core\Utils\Crypt::class,
             'cronManager'              => \Espo\Core\CronManager::class,
             'slim'                     => \Espo\Core\Utils\Api\Slim::class,
