@@ -18,6 +18,7 @@ use Espo\Core\Interfaces\Injectable;
 use Espo\Entities\Portal;
 use Espo\Entities\User;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
+use Espo\ORM\EntityManager;
 
 class Container
 {
@@ -45,6 +46,7 @@ class Container
             'controllerManager'        => \Espo\Core\ControllerManager::class,
             'dateTime'                 => \Espo\Core\Factories\DateTime::class,
             'entityManager'            => \Espo\Core\Factories\EntityManager::class,
+            EntityManager::class       => \Espo\Core\Factories\EntityManager::class,
             'entityManagerUtil'        => \Espo\Core\Factories\EntityManagerUtil::class,
             'fieldManagerUtil'         => \Espo\Core\Factories\FieldManagerUtil::class,
             'workflow'                 => \Espo\Core\Factories\Workflow::class,
@@ -114,7 +116,8 @@ class Container
                 return $this->data[$name];
             }
 
-            if (!empty($params = (new \ReflectionClass($className))->getConstructor()->getParameters())) {
+            $reflectionClass = new \ReflectionClass($className);
+            if (!empty($constructor = $reflectionClass->getConstructor()) && !empty($params = $constructor->getParameters())) {
                 $input = [];
                 foreach ($params as $param) {
                     if (!empty($paramClass = $param->getClass()) && property_exists($paramClass, 'name') && is_string($param->getClass()->name)) {
