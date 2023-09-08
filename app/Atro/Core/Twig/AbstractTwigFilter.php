@@ -13,9 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core\Twig;
 
-use Espo\Core\Injectable;
-
-abstract class AbstractTwigFilter extends Injectable
+abstract class AbstractTwigFilter
 {
     protected array $templateData = [];
 

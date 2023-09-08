@@ -64,22 +64,11 @@ class EntityManager implements Factory
             'pdo'                        => $container->get('pdo')
         ];
 
-        // get class name
-        $className = $this->getEntityManagerClassName();
-
-        $entityManager = new $className($params);
+        $entityManager = new \Espo\Core\ORM\EntityManager($params);
         $entityManager->setEspoMetadata($container->get('metadata'));
         $entityManager->setContainer($container);
 
         return $entityManager;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getEntityManagerClassName(): string
-    {
-        return \Espo\Core\ORM\EntityManager::class;
     }
 
     /**
