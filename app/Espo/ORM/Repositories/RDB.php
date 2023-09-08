@@ -335,20 +335,10 @@ class RDB extends \Espo\ORM\Repository
         return $collection;
     }
 
-    /**
-     * Remove collection of entities
-     *
-     * @param array $options
-     */
     public function removeCollection(array $options = [])
     {
-        // get collection
-        $collection = $this->find();
-
-        if (count($collection) > 0) {
-            foreach ($collection as $item) {
-                $this->remove($item, $options);
-            }
+        foreach ($this->find() as $item) {
+            $this->remove($item, $options);
         }
     }
 
@@ -359,7 +349,7 @@ class RDB extends \Espo\ORM\Repository
     public function findOne(array $params = [])
     {
         $collection = $this->limit(0, 1)->find($params);
-        if (count($collection)) {
+        if (!empty($collection[0])) {
             return $collection[0];
         }
         return null;
