@@ -42,7 +42,7 @@ class Twig
 
             foreach ($this->getMetadata()->get(['twig', 'functions'], []) as $alias => $className) {
                 $twigFunction = $this->container->get($className);
-                if ($twigFunction instanceof AbstractTwigFunction) {
+                if ($twigFunction instanceof AbstractTwigFunction && method_exists($twigFunction, 'run')) {
                     $twigFunction->setTemplateData($templateData);
                     $twig->addFunction(new \Twig\TwigFunction($alias, [$twigFunction, 'run']));
                 }

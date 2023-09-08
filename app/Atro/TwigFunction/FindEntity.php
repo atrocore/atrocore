@@ -15,7 +15,6 @@ namespace Atro\TwigFunction;
 
 use Atro\Core\Twig\AbstractTwigFunction;
 use Espo\Core\ORM\EntityManager;
-use Espo\ORM\Entity;
 
 class FindEntity extends AbstractTwigFunction
 {
@@ -26,23 +25,14 @@ class FindEntity extends AbstractTwigFunction
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * @param string $entityName
-     * @param array  $where
-     *
-     * @return Entity|null
-     */
-    public function run(...$input)
+    public function run(string $entityName, array $where)
     {
         if (empty($input[0]) || empty($input[1])) {
             return null;
         }
 
-        $entityName = $input[0];
-        $where = $input[1];
-
         return $this->entityManager->getRepository($entityName)
-            ->where((array)$where)
+            ->where($where)
             ->findOne();
     }
 }

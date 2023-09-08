@@ -28,6 +28,4 @@ abstract class AbstractTwigFunction extends Injectable
     {
         return $this->templateData[$name] ?? null;
     }
-
-    abstract public function run(...$input);
 }
