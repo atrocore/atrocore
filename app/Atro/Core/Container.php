@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core;
 
-use Espo\Core\Interfaces\Factory;
+use Atro\Core\Factories\FactoryInterface as Factory;
 use Espo\Core\Interfaces\Injectable;
 use Espo\Entities\Portal;
 use Espo\Entities\User;
@@ -32,6 +32,7 @@ class Container
             'queueManager'             => \Atro\Core\QueueManager::class,
             'pseudoTransactionManager' => \Atro\Core\PseudoTransactionManager::class,
             'eventManager'             => \Atro\Core\Factories\EventManager::class,
+            'connection'               => \Atro\Core\Factories\Connection::class,
             'crypt'                    => \Espo\Core\Utils\Crypt::class,
             'cronManager'              => \Espo\Core\CronManager::class,
             'slim'                     => \Espo\Core\Utils\Api\Slim::class,
@@ -62,7 +63,6 @@ class Container
             'serviceFactory'           => \Espo\Core\Factories\ServiceFactory::class,
             'templateFileManager'      => \Espo\Core\Factories\TemplateFileManager::class,
             'themeManager'             => \Espo\Core\Factories\ThemeManager::class,
-            'connection'               => \Espo\Core\Factories\Connection::class,
             'pdo'                      => \Espo\Core\Factories\Pdo::class,
             'fileManager'              => \Espo\Core\Factories\FileManager::class,
             'log'                      => \Espo\Core\Factories\Log::class,

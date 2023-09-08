@@ -36,7 +36,7 @@ declare(strict_types=1);
 namespace Espo\Core\Factories;
 
 use Atro\Core\Container;
-use Espo\Core\Interfaces\Factory;
+use Atro\Core\Factories\FactoryInterface as Factory;
 use Espo\Core\Workflow\MarkingStore\MethodMarkingStore;
 use Symfony\Component\Workflow\DefinitionBuilder;
 use Symfony\Component\Workflow\Metadata\InMemoryMetadataStore;

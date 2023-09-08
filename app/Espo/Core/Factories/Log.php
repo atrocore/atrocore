@@ -36,7 +36,7 @@ declare(strict_types=1);
 namespace Espo\Core\Factories;
 
 use Atro\Core\Container;
-use Espo\Core\Interfaces\Factory;
+use Atro\Core\Factories\FactoryInterface as Factory;
 use Espo\Core\Utils\Log\Monolog\Handler\RotatingFileHandler;
 use Espo\Core\Utils\Log\Monolog\Handler\StreamHandler;
 use Monolog\ErrorHandler;

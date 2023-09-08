@@ -9,20 +9,11 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-declare(strict_types=1);
-
 namespace Atro\Core\Factories;
 
 use Atro\Core\Container;
-use Atro\Core\Factories\FactoryInterface as Factory;
 
-class EventManager implements Factory
+interface FactoryInterface
 {
-    public function create(Container $container)
-    {
-        $eventManager = new \Atro\Core\EventManager\Manager($container);
-        $eventManager->loadListeners();
-
-        return $eventManager;
-    }
+    public function create(Container $container);
 }

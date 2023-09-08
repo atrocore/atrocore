@@ -61,7 +61,7 @@ class Helper
                 return null;
             }
 
-            $this->connection = \Espo\Core\Factories\Connection::createConnection($connectionParams);
+            $this->connection = \Atro\Core\Factories\Connection::createConnection($connectionParams);
         }
 
         return $this->connection;

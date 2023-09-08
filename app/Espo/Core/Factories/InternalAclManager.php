@@ -37,7 +37,7 @@ namespace Espo\Core\Factories;
 
 use Espo\Core\AclManager;
 use Atro\Core\Container;
-use Espo\Core\Interfaces\Factory;
+use Atro\Core\Factories\FactoryInterface as Factory;
 
 class InternalAclManager implements Factory
 {

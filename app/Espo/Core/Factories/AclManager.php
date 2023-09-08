@@ -37,7 +37,7 @@ namespace Espo\Core\Factories;
 
 use Espo\Core\AclManager as MainAclManager;
 use Atro\Core\Container;
-use Espo\Core\Interfaces\Factory;
+use Atro\Core\Factories\FactoryInterface as Factory;
 use Espo\Core\Portal\AclManager as PortalAclManager;
 use Espo\Entities\Portal;
 
