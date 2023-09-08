@@ -14,14 +14,17 @@ declare(strict_types=1);
 namespace Atro\TwigFilter;
 
 use Atro\Core\Twig\AbstractTwigFilter;
+use Espo\Core\Factories\ServiceFactory;
 
 use Espo\ORM\Entity;
 
 class PrepareEntity extends AbstractTwigFilter
 {
-    public function __construct()
+    protected ServiceFactory $serviceFactory;
+
+    public function __construct(ServiceFactory $serviceFactory)
     {
-        $this->addDependency('serviceFactory');
+        $this->serviceFactory = $serviceFactory;
     }
 
     public function filter($value)
@@ -30,7 +33,7 @@ class PrepareEntity extends AbstractTwigFilter
             return null;
         }
 
-        $service = $this->getInjection('serviceFactory')->create($value->getEntityType());
+        $service = $this->serviceFactory->create($value->getEntityType());
         $service->prepareEntityForOutput($value);
 
         return $value;
