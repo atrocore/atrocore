@@ -45,6 +45,7 @@ abstract class Entity implements IEntity
 
     /**
      * Entity type.
+     *
      * @var string
      */
     protected $entityType;
@@ -103,6 +104,12 @@ abstract class Entity implements IEntity
         if (!empty($defs['relations'])) {
             $this->relations = $defs['relations'];
         }
+
+        foreach ($entityManager->getEspoMetadata()->get(['entityDefs', 'Attribute', 'fields'], []) as $field => $fieldDefs) {
+            if (!empty($fieldDefs['virtualField'])) {
+                $this->virtualFields[] = $field;
+            }
+        }
     }
 
     public function clear($name = null)
@@ -128,18 +135,20 @@ abstract class Entity implements IEntity
                 $p2 = false;
             }
             $this->populateFromArray($p1, $p2);
-        } else if (is_string($p1)) {
-            $name = $p1;
-            $value = $p2;
-            if ($name == 'id') {
-                $this->id = $value;
-            }
-            if ($this->hasAttribute($name)) {
-                $method = '_set' . ucfirst($name);
-                if (method_exists($this, $method)) {
-                    $this->$method($value);
-                } else {
-                    $this->setFieldValue($name, $value);
+        } else {
+            if (is_string($p1)) {
+                $name = $p1;
+                $value = $p2;
+                if ($name == 'id') {
+                    $this->id = $value;
+                }
+                if ($this->hasAttribute($name)) {
+                    $method = '_set' . ucfirst($name);
+                    if (method_exists($this, $method)) {
+                        $this->$method($value);
+                    } else {
+                        $this->setFieldValue($name, $value);
+                    }
                 }
             }
         }
@@ -405,7 +414,7 @@ abstract class Entity implements IEntity
     public function getValueMap()
     {
         $array = $this->toArray();
-        return (object) $array;
+        return (object)$array;
     }
 
     public function getFields()
@@ -467,7 +476,9 @@ abstract class Entity implements IEntity
 
     public function isAttributeChanged($name)
     {
-        if (!$this->has($name)) return false;
+        if (!$this->has($name)) {
+            return false;
+        }
 
         if (!$this->hasFetched($name)) {
             return true;
@@ -506,31 +517,33 @@ abstract class Entity implements IEntity
                 }
                 return true;
             }
-        } else if ($type === self::JSON_OBJECT) {
-            if (is_object($v1) && is_object($v2)) {
-                if ($v1 != $v2) {
-                    return false;
-                }
-                $a1 = get_object_vars($v1);
-                $a2 = get_object_vars($v2);
-                foreach ($v1 as $key => $itemValue) {
-                    if (is_object($a1[$key]) && is_object($a2[$key])) {
-                        if (!self::areValuesEqual(self::JSON_OBJECT, $a1[$key], $a2[$key])) {
-                            return false;
-                        }
-                        continue;
-                    }
-                    if (is_array($a1[$key]) && is_array($a2[$key])) {
-                        if (!self::areValuesEqual(self::JSON_ARRAY, $a1[$key], $a2[$key])) {
-                            return false;
-                        }
-                        continue;
-                    }
-                    if ($a1[$key] !== $a2[$key]) {
+        } else {
+            if ($type === self::JSON_OBJECT) {
+                if (is_object($v1) && is_object($v2)) {
+                    if ($v1 != $v2) {
                         return false;
                     }
+                    $a1 = get_object_vars($v1);
+                    $a2 = get_object_vars($v2);
+                    foreach ($v1 as $key => $itemValue) {
+                        if (is_object($a1[$key]) && is_object($a2[$key])) {
+                            if (!self::areValuesEqual(self::JSON_OBJECT, $a1[$key], $a2[$key])) {
+                                return false;
+                            }
+                            continue;
+                        }
+                        if (is_array($a1[$key]) && is_array($a2[$key])) {
+                            if (!self::areValuesEqual(self::JSON_ARRAY, $a1[$key], $a2[$key])) {
+                                return false;
+                            }
+                            continue;
+                        }
+                        if ($a1[$key] !== $a2[$key]) {
+                            return false;
+                        }
+                    }
+                    return true;
                 }
-                return true;
             }
         }
 
