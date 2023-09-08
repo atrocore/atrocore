@@ -133,7 +133,7 @@ class Config
     public function __construct(Container $container)
     {
         $this->fileManager = new FileManager();
-        $this->container = $container;
+        $this->container = $container->get('container');
     }
 
     protected function getFileManager()

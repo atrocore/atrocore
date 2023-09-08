@@ -53,7 +53,7 @@ class EntityManager implements Factory
             'charset'                    => $config->get('database.charset', 'utf8'),
             'password'                   => $config->get('database.password'),
             'metadata'                   => $container->get('ormMetadata')->getData(),
-            'repositoryFactoryClassName' => $this->getRepositoryFactoryClassName(),
+            'repositoryFactoryClassName' => \Espo\Core\ORM\RepositoryFactory::class,
             'driver'                     => $config->get('database.driver'),
             'platform'                   => $config->get('database.platform'),
             'sslCA'                      => $config->get('database.sslCA'),
@@ -69,13 +69,5 @@ class EntityManager implements Factory
         $entityManager->setContainer($container);
 
         return $entityManager;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getRepositoryFactoryClassName(): string
-    {
-        return \Espo\Core\ORM\RepositoryFactory::class;
     }
 }

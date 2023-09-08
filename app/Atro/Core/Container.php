@@ -21,6 +21,7 @@ use Espo\Entities\User;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
 use Espo\ORM\EntityManager;
 use Doctrine\DBAL\Connection;
+use Espo\Core\Utils;
 
 class Container
 {
@@ -63,10 +64,10 @@ class Container
             'ormMetadata'              => \Espo\Core\Factories\OrmMetadata::class,
             'output'                   => \Espo\Core\Factories\Output::class,
             'preferences'              => \Espo\Core\Factories\Preferences::class,
-            'scheduledJob'             => \Espo\Core\Factories\ScheduledJob::class,
+            'scheduledJob'             => \Espo\Core\Utils\ScheduledJob::class,
             'schema'                   => \Espo\Core\Factories\Schema::class,
-            'selectManagerFactory'     => \Espo\Core\Factories\SelectManagerFactory::class,
-            'serviceFactory'           => \Espo\Core\Factories\ServiceFactory::class,
+            'selectManagerFactory'     => \Espo\Core\SelectManagerFactory::class,
+            'serviceFactory'           => \Espo\Core\ServiceFactory::class,
             'templateFileManager'      => \Espo\Core\Factories\TemplateFileManager::class,
             'themeManager'             => \Espo\Core\Factories\ThemeManager::class,
             'pdo'                      => \Espo\Core\Factories\Pdo::class,
@@ -75,9 +76,11 @@ class Container
             'defaultLanguage'          => \Espo\Core\Factories\DefaultLanguage::class,
             'baseLanguage'             => \Espo\Core\Factories\BaseLanguage::class,
             'language'                 => \Espo\Core\Factories\Language::class,
+            Utils\Language::class      => \Espo\Core\Factories\Language::class,
             'dataManager'              => \Espo\Core\Factories\DataManager::class,
             'metadata'                 => \Espo\Core\Factories\Metadata::class,
-            'config'                   => \Espo\Core\Factories\Config::class,
+            Utils\Metadata::class      => \Espo\Core\Factories\Metadata::class,
+            'config'                   => \Espo\Core\Utils\Config::class,
             'internalAclManager'       => \Espo\Core\Factories\InternalAclManager::class,
         ];
 
@@ -125,7 +128,11 @@ class Container
                 $input = [];
                 foreach ($params as $param) {
                     if (!empty($paramClass = $param->getClass()) && property_exists($paramClass, 'name') && is_string($param->getClass()->name)) {
-                        $input[] = $this->get($param->getClass()->name);
+                        if ($param->getClass()->name === self::class) {
+                            $input[] = $this;
+                        } else {
+                            $input[] = $this->get($param->getClass()->name);
+                        }
                     }
                 }
                 $this->data[$name] = new $className(...$input);
