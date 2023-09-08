@@ -13,7 +13,9 @@ declare(strict_types=1);
 
 namespace Atro\Core\Twig;
 
-abstract class AbstractTwigFunction
+use Espo\Core\Injectable;
+
+abstract class AbstractTwigFunction extends Injectable
 {
     protected array $templateData = [];
 

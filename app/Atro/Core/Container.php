@@ -114,14 +114,6 @@ class Container
                 return $this->data[$name];
             }
 
-            if (is_a($className, Injectable::class, true)) {
-                $this->data[$name] = new $className();
-                foreach ($this->data[$name]->getDependencyList() as $dependency) {
-                    $this->data[$name]->inject($dependency, $this->get($dependency));
-                }
-                return $this->data[$name];
-            }
-
             if (!empty($params = (new \ReflectionClass($className))->getConstructor()->getParameters())) {
                 $input = [];
                 foreach ($params as $param) {
@@ -130,6 +122,14 @@ class Container
                     }
                 }
                 $this->data[$name] = new $className(...$input);
+                return $this->data[$name];
+            }
+
+            if (is_a($className, Injectable::class, true)) {
+                $this->data[$name] = new $className();
+                foreach ($this->data[$name]->getDependencyList() as $dependency) {
+                    $this->data[$name]->inject($dependency, $this->get($dependency));
+                }
                 return $this->data[$name];
             }
 
