@@ -13,22 +13,24 @@ declare(strict_types=1);
 
 namespace Atro\ConnectionType;
 
-use Espo\Core\Injectable;
+use Atro\Core\Container;
 
-abstract class AbstractConnection extends Injectable implements ConnectionInterface
+abstract class AbstractConnection implements ConnectionInterface
 {
-    public function __construct()
+    protected Container $container;
+
+    public function __construct(Container $container)
     {
-        $this->addDependencyList(['config', 'entityManager', 'user', 'language', 'serviceFactory']);
+        $this->container = $container;
     }
 
     protected function decryptPassword(string $hash): string
     {
-        return $this->getInjection('serviceFactory')->create('Connection')->decryptPassword($hash);
+        return $this->container->get('serviceFactory')->create('Connection')->decryptPassword($hash);
     }
 
     protected function exception(string $name, string $scope = 'Connection'): string
     {
-        return $this->getInjection('language')->translate($name, 'exceptions', 'Connection');
+        return $this->container->get('language')->translate($name, 'exceptions', 'Connection');
     }
 }
