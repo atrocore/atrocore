@@ -2573,7 +2573,7 @@ class Record extends \Espo\Core\Services\Base
         $this->dispatchEvent('prepareEntityForOutput', new Event(['entity' => $entity, 'service' => $this]));
     }
 
-    public function merge($id, array $sourceIdList = array(), $attributes)
+    public function merge($id, array $sourceIdList, array $attributes)
     {
         if (empty($id)) {
             throw new Error();
