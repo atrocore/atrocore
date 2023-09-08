@@ -14,15 +14,16 @@ declare(strict_types=1);
 namespace Atro\Core\Twig;
 
 use Atro\Core\Container;
-use Espo\Core\Injectable;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 
-class Twig extends Injectable
+class Twig
 {
-    public function __construct()
+    protected Container $container;
+
+    public function __construct(Container $container)
     {
-        $this->addDependency('container');
+        $this->container = $container;
     }
 
     public function renderTemplate(string $template, array $templateData, string $outputType = 'text')
@@ -32,7 +33,7 @@ class Twig extends Injectable
 
         try {
             foreach ($this->getMetadata()->get(['twig', 'filters'], []) as $alias => $className) {
-                $filter = $this->getContainer()->get($className);
+                $filter = $this->container->get($className);
                 if ($filter instanceof AbstractTwigFilter) {
                     $filter->setTemplateData($templateData);
                     $twig->addFilter(new \Twig\TwigFilter($alias, [$filter, 'filter']));
@@ -40,7 +41,7 @@ class Twig extends Injectable
             }
 
             foreach ($this->getMetadata()->get(['twig', 'functions'], []) as $alias => $className) {
-                $twigFunction = $this->getContainer()->get($className);
+                $twigFunction = $this->container->get($className);
                 if ($twigFunction instanceof AbstractTwigFunction) {
                     $twigFunction->setTemplateData($templateData);
                     $twig->addFunction(new \Twig\TwigFunction($alias, [$twigFunction, 'run']));
@@ -87,18 +88,13 @@ class Twig extends Injectable
         return $res;
     }
 
-    protected function getContainer(): Container
-    {
-        return $this->getInjection('container');
-    }
-
     protected function getConfig(): Config
     {
-        return $this->getContainer()->get('config');
+        return $this->container->get('config');
     }
 
     protected function getMetadata(): Metadata
     {
-        return $this->getContainer()->get('metadata');
+        return $this->container->get('metadata');
     }
 }

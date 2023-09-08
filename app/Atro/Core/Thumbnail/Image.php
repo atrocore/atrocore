@@ -24,7 +24,7 @@ use Espo\Core\Utils\File\Manager;
 
 class Image
 {
-    private Container $container;
+    protected Container $container;
 
     public function __construct(Container $container)
     {

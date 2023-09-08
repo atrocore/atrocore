@@ -18,7 +18,7 @@ use Espo\Core\Utils\Metadata;
 
 class ConsoleManager
 {
-    private Container $container;
+    protected Container $container;
 
     public function __construct(Container $container)
     {

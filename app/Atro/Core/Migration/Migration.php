@@ -13,15 +13,15 @@ declare(strict_types=1);
 
 namespace Atro\Core\Migration;
 
-use Espo\Core\Injectable;
+use Atro\Core\Container;
 
-class Migration extends Injectable
+class Migration
 {
-    public function __construct()
+    protected Container $container;
+
+    public function __construct(Container $container)
     {
-        $this->addDependency('config');
-        $this->addDependency('pdo');
-        $this->addDependency('schema');
+        $this->container = $container;
     }
 
     /**
@@ -160,7 +160,7 @@ class Migration extends Injectable
             return null;
         }
 
-        return new $className($this->getInjection('pdo'), $this->getInjection('config'), $this->getInjection('schema'));
+        return new $className($this->container->get('pdo'), $this->container->get('config'), $this->container->get('schema'));
     }
 
     /**

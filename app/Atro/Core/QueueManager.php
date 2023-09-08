@@ -15,7 +15,6 @@ namespace Atro\Core;
 
 use Espo\Core\Exceptions\Duplicate;
 use Espo\Core\Exceptions\Error;
-use Espo\Core\Injectable;
 use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\System;
 use Espo\Entities\User;
@@ -24,14 +23,16 @@ use Espo\Orm\EntityManager;
 use Espo\Repositories\QueueItem as Repository;
 use Espo\Services\QueueManagerServiceInterface;
 
-class QueueManager extends Injectable
+class QueueManager
 {
     const QUEUE_DIR_PATH = 'data/queue';
     const FILE_PATH = 'data/queue-exist.log';
 
-    public function __construct()
+    protected Container $container;
+
+    public function __construct(Container $container)
     {
-        $this->addDependency('container');
+        $this->container = $container;
     }
 
     public function run(int $stream): bool
@@ -76,7 +77,7 @@ class QueueManager extends Injectable
         $repository->deleteOldRecords();
 
         /** @var User $user */
-        $user = $this->getContainer()->get('user');
+        $user = $this->container->get('user');
 
         $item = $repository->get();
         $item->set(
@@ -96,7 +97,7 @@ class QueueManager extends Injectable
             $item->set('md5Hash', $md5Hash);
             $duplicate = $repository->select(['id'])->where(['md5Hash' => $md5Hash, 'status' => ['Pending', 'Running']])->findOne();
             if (!empty($duplicate)) {
-                throw new Duplicate($this->getContainer()->get('language')->translate('jobExist', 'exceptions', 'QueueItem'));
+                throw new Duplicate($this->container->get('language')->translate('jobExist', 'exceptions', 'QueueItem'));
             }
         }
 
@@ -198,15 +199,15 @@ class QueueManager extends Injectable
         } else {
             $user = $item->get('createdBy');
         }
-        $this->getContainer()->setUser($user);
+        $this->container->setUser($user);
         $this->getEntityManager()->setUser($user);
 
         if (!empty($user->get('portalId'))) {
-            $this->getContainer()->setPortal($user->get('portal'));
+            $this->container->setPortal($user->get('portal'));
         }
 
         // reload language
-        $this->getContainer()->reload('language');
+        $this->container->reload('language');
 
         // running
         $item->set('stream', $stream);
@@ -257,17 +258,12 @@ class QueueManager extends Injectable
 
     protected function getEntityManager(): EntityManager
     {
-        return $this->getContainer()->get('entityManager');
+        return $this->container->get('entityManager');
     }
 
     protected function getServiceFactory(): ServiceFactory
     {
-        return $this->getContainer()->get('serviceFactory');
-    }
-
-    protected function getContainer(): Container
-    {
-        return $this->getInjection('container');
+        return $this->container->get('serviceFactory');
     }
 
     protected function getRepository(): \Espo\Repositories\QueueItem
