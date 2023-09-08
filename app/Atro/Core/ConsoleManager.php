@@ -14,14 +14,15 @@ namespace Atro\Core;
 
 use Atro\Console;
 use Atro\Console\AbstractConsole;
-use Espo\Core\Injectable;
 use Espo\Core\Utils\Metadata;
 
-class ConsoleManager extends Injectable
+class ConsoleManager
 {
-    public function __construct()
+    private Container $container;
+
+    public function __construct(Container $container)
     {
-        $this->addDependency('container');
+        $this->container = $container;
     }
 
     /**
@@ -33,7 +34,7 @@ class ConsoleManager extends Injectable
     {
         if (!empty($data = $this->getRouteHandler($command))) {
             if (is_a($data['handler'], AbstractConsole::class, true)) {
-                (new $data['handler']($this->getInjection('container')))->run($data['data']);
+                (new $data['handler']($this->container))->run($data['data']);
                 die();
             }
             AbstractConsole::show('No such console handler as ' . $data['handler'], 2, true);
@@ -117,6 +118,6 @@ class ConsoleManager extends Injectable
      */
     protected function getMetadata(): Metadata
     {
-        return $this->getInjection('container')->get('metadata');
+        return $this->container->get('metadata');
     }
 }

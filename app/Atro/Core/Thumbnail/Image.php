@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Atro\Core\Thumbnail;
 
+use Atro\Core\Container;
 use Espo\Core\Exceptions\Error;
-use Espo\Core\Injectable;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\Attachment;
@@ -22,17 +22,13 @@ use Espo\ORM\EntityManager;
 use Gumlet\ImageResize;
 use Espo\Core\Utils\File\Manager;
 
-/**
- * Class Image
- */
-class Image extends Injectable
+class Image
 {
-    public function __construct()
+    private Container $container;
+
+    public function __construct(Container $container)
     {
-        $this->addDependency('metadata');
-        $this->addDependency('config');
-        $this->addDependency('fileManager');
-        $this->addDependency('entityManager');
+        $this->container = $container;
     }
 
     public function createThumbnailByPath(string $path): ?Attachment
@@ -97,21 +93,21 @@ class Image extends Injectable
 
     protected function getMetadata(): Metadata
     {
-        return $this->getInjection('metadata');
+        return $this->container->get('metadata');
     }
 
     protected function getFileManager(): Manager
     {
-        return $this->getInjection('fileManager');
+        return $this->container->get('fileManager');
     }
 
     protected function getEntityManager(): EntityManager
     {
-        return $this->getInjection('entityManager');
+        return $this->container->get('entityManager');
     }
 
     protected function getConfig(): Config
     {
-        return $this->getInjection('config');
+        return $this->container->get('config');
     }
 }
