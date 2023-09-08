@@ -10,7 +10,8 @@
       "asc": true,
       "dragDrop": {
         "isActive": true,
-        "sortField": "sortOrder"
+        "sortField": "sortOrder",
+        "maxSize": 20
       }
     }
   }
