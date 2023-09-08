@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Core;
 
-use Espo\Core\Injectable;
 use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
@@ -22,7 +21,7 @@ use Espo\ORM\EntityManager;
 use Espo\Services\Record;
 use PDO;
 
-class PseudoTransactionManager extends Injectable
+class PseudoTransactionManager
 {
     private const FILE_PATH = 'data/has-transactions-jobs.log';
 
@@ -30,9 +29,11 @@ class PseudoTransactionManager extends Injectable
 
     private ?\PDO $pdo = null;
 
-    public function __construct()
+    protected Container $container;
+
+    public function __construct(Container $container)
     {
-        $this->addDependency('container');
+        $this->container = $container;
     }
 
     public static function hasJobs(): bool
@@ -191,7 +192,7 @@ class PseudoTransactionManager extends Injectable
             $user = $this->getEntityManager()->getRepository('User')->get('system');
             $user->set('isAdmin', true);
 
-            $this->getInjection('container')->setUser($user);
+            $this->container->setUser($user);
             $this->getEntityManager()->setUser($user);
 
             $service = $this->getServiceFactory()->create($job['entity_type']);
@@ -280,16 +281,16 @@ class PseudoTransactionManager extends Injectable
 
     protected function getServiceFactory(): ServiceFactory
     {
-        return $this->getInjection('container')->get('serviceFactory');
+        return $this->container->get('serviceFactory');
     }
 
     protected function getUser(): User
     {
-        return $this->getInjection('container')->get('user');
+        return $this->container->get('user');
     }
 
     protected function getEntityManager(): EntityManager
     {
-        return $this->getInjection('container')->get('entityManager');
+        return $this->container->get('entityManager');
     }
 }
