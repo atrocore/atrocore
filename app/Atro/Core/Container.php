@@ -127,11 +127,12 @@ class Container
             if (!empty($constructor = $reflectionClass->getConstructor()) && !empty($params = $constructor->getParameters())) {
                 $input = [];
                 foreach ($params as $param) {
-                    if (!empty($paramClass = $param->getClass()) && property_exists($paramClass, 'name') && is_string($param->getClass()->name)) {
-                        if ($param->getClass()->name === self::class) {
+                    $dependencyClass = $param->getType() && !$param->getType()->isBuiltin() ? new \ReflectionClass($param->getType()->getName()) : null;
+                    if (!empty($dependencyClass)) {
+                        if ($dependencyClass->getName() === self::class) {
                             $input[] = $this;
                         } else {
-                            $input[] = $this->get($param->getClass()->name);
+                            $input[] = $this->get($dependencyClass->getName());
                         }
                     }
                 }
