@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core\Templates\Services;
 
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\Services\Record;
@@ -43,6 +44,110 @@ class Relationship extends Record
         }
 
         return $list;
+    }
+
+    public function createEntity($attachment)
+    {
+        if ($this->isPseudoTransaction()) {
+            return parent::createEntity($attachment);
+        }
+
+        $mainEntity = $this->getRepository()->getMainEntityType();
+        if (!$this->getMetadata()->get(['scopes', $mainEntity, 'relationInheritance'], false)) {
+            return parent::createEntity($attachment);
+        }
+
+        if (in_array($this->getRepository()->getMainEntityField(), $this->getMetadata()->get(['scopes', $mainEntity, 'unInheritedRelations'], []))) {
+            return parent::createEntity($attachment);
+        }
+
+        $inTransaction = false;
+        if (!$this->getEntityManager()->getPDO()->inTransaction()) {
+            $this->getEntityManager()->getPDO()->beginTransaction();
+            $inTransaction = true;
+        }
+        try {
+            $result = parent::createEntity($attachment);
+            $this->createEntityForChildren(clone $attachment);
+            if ($inTransaction) {
+                $this->getEntityManager()->getPDO()->commit();
+            }
+        } catch (\Throwable $e) {
+            if ($inTransaction) {
+                $this->getEntityManager()->getPDO()->rollBack();
+            }
+            throw $e;
+        }
+
+        return $result;
+    }
+
+    protected function createEntityForChildren(\stdClass $data, string $parentTransactionId = null): void
+    {
+        $mainEntity = $this->getRepository()->getMainEntityType();
+        $mainRelationshipFieldId = lcfirst($mainEntity) . 'Id';
+        $mainRelationshipFieldName = lcfirst($mainEntity) . 'Name';
+
+        if (!property_exists($data, $mainRelationshipFieldId)) {
+            return;
+        }
+
+        $children = $this->getEntityManager()->getRepository($mainEntity)->getChildrenArray($data->$mainRelationshipFieldId);
+        foreach ($children as $child) {
+            $inputData = clone $data;
+            $inputData->$mainRelationshipFieldId = $child['id'];
+            $inputData->$mainRelationshipFieldName = $child['name'];
+            $transactionId = $this->getPseudoTransactionManager()->pushCreateEntityJob($this->entityType, $inputData, $parentTransactionId);
+            if ($child['childrenCount'] > 0) {
+                $this->createEntityForChildren(clone $inputData, $transactionId);
+            }
+        }
+    }
+
+    public function deleteEntity($id)
+    {
+        if ($this->isPseudoTransaction()) {
+            return parent::deleteEntity($id);
+        }
+
+        $mainEntity = $this->getRepository()->getMainEntityType();
+        if (!$this->getMetadata()->get(['scopes', $mainEntity, 'relationInheritance'], false)) {
+            return parent::deleteEntity($id);
+        }
+
+        if (in_array($this->getRepository()->getMainEntityField(), $this->getMetadata()->get(['scopes', $mainEntity, 'unInheritedRelations'], []))) {
+            return parent::deleteEntity($id);
+        }
+
+        $inTransaction = false;
+        if (!$this->getEntityManager()->getPDO()->inTransaction()) {
+            $this->getEntityManager()->getPDO()->beginTransaction();
+            $inTransaction = true;
+        }
+        try {
+            $this->deleteEntityForChildren($id);
+            $result = parent::deleteEntity($id);
+            if ($inTransaction) {
+                $this->getEntityManager()->getPDO()->commit();
+            }
+        } catch (\Throwable $e) {
+            if ($inTransaction) {
+                $this->getEntityManager()->getPDO()->rollBack();
+            }
+            throw $e;
+        }
+
+        return $result;
+    }
+
+    protected function deleteEntityForChildren(string $id, string $parentTransactionId = null): void
+    {
+        foreach ($this->getRepository()->getChildren($id) as $record) {
+            $transactionId = $this->getPseudoTransactionManager()->pushDeleteEntityJob($this->entityType, $record['id'], $parentTransactionId);
+            if ($record['childrenCount'] > 0) {
+                $this->deleteEntityForChildren($record['id'], $transactionId);
+            }
+        }
     }
 
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
