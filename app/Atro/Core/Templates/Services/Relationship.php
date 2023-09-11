@@ -142,10 +142,10 @@ class Relationship extends Record
 
     protected function deleteEntityFromChildren(string $id, string $parentTransactionId = null): void
     {
-        foreach ($this->getRepository()->getChildren($id) as $record) {
-            $transactionId = $this->getPseudoTransactionManager()->pushDeleteEntityJob($this->entityType, $record['id'], $parentTransactionId);
-            if ($record['childrenCount'] > 0) {
-                $this->deleteEntityFromChildren($record['id'], $transactionId);
+        foreach ($this->getRepository()->getInheritedRecords($id) as $record) {
+            $transactionId = $this->getPseudoTransactionManager()->pushDeleteEntityJob($this->entityType, $record->get('id'), $parentTransactionId);
+            if ($record->_childrenCount > 0) {
+                $this->deleteEntityFromChildren($record->get('id'), $transactionId);
             }
         }
     }

@@ -15,8 +15,8 @@ namespace Atro\Core\Templates\Repositories;
 
 use Espo\Core\Exceptions\Error;
 use Espo\Core\ORM\Repositories\RDB;
-use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 
 class Relationship extends RDB
 {
@@ -42,46 +42,64 @@ class Relationship extends RDB
         throw new Error("Param 'mainRelationshipEntity' is required for Relationship entity.");
     }
 
-    public function getChildren(string $parentId): array
+    public function getInheritedRecords(string $parentId): EntityCollection
     {
-        $mainEntity = $this->getMainRelationshipEntity();
-        $mainRelationshipFieldId = lcfirst($mainEntity) . 'Id';
+        $mainRelationshipEntity = $this->getMainRelationshipEntity();
+        $mainRelationshipField = lcfirst($mainRelationshipEntity) . 'Id';
 
         $entity = $this->get($parentId);
-        if (empty($entity) || empty($entity->get($mainRelationshipFieldId))) {
-            return [];
+        if (empty($entity) || empty($entity->get($mainRelationshipField))) {
+            return new EntityCollection([], $this->entityType);
         }
 
-        $children = $this->getEntityManager()->getRepository($mainEntity)->getChildrenArray($entity->get($mainRelationshipFieldId));
+        $children = $this->getEntityManager()->getRepository($mainRelationshipEntity)->getChildrenArray($entity->get($mainRelationshipField));
         if (empty($children)) {
-            return [];
+            return new EntityCollection([], $this->entityType);
         }
 
-        $qb = $this->getConnection()->createQueryBuilder();
-        $qb
-            ->select('*')
-            ->from(Util::toUnderScore($this->entityType));
-        foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'uniqueIndexes', 'unique_relationship']) as $column) {
-            $field = Util::toCamelCase($column);
-            if ($field === $mainRelationshipFieldId) {
-                $qb->andWhere("$column IN (:{$field}s)")->setParameter("{$field}s", array_column($children, 'id'), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
-            } else {
-                $qb->andWhere("$column = :$field")->setParameter("$field", $entity->get($field));
+        // prepare where
+        $where = [$mainRelationshipField => array_column($children, 'id')];
+        foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields']) as $field => $fieldDefs) {
+            // skip virtual
+            if (!empty($fieldDefs['notStorable'])) {
+                continue;
+            }
+
+            // skip system
+            if (in_array($field, ['createdAt', 'modifiedAt', 'createdBy', 'modifiedBy', 'ownerUser', 'assignedUser'])) {
+                continue;
+            }
+
+            if (!empty($fieldDefs['mainRelationshipEntity'])) {
+                continue;
+            }
+
+            if (empty($fieldDefs['type']) || in_array($fieldDefs['type'], ['linkMultiple'])) {
+                continue;
+            }
+
+            if (in_array($fieldDefs['type'], ['link', 'asset'])) {
+                $field .= 'Id';
+            }
+
+            $where[$field] = $entity->get($field);
+            if (is_array($where[$field])) {
+                $where[$field] = json_encode($where[$field]);
             }
         }
-        $qb->orderBy('created_at', 'ASC');
 
-        $res = $qb->fetchAllAssociative();
+        $result = $this
+            ->where($where)
+            ->find();
 
-        $result = [];
-        foreach ($res as $record) {
+        foreach ($result as $record) {
+            $record->_childrenCount = 0;
             foreach ($children as $child) {
-                if ($child['id'] === $record[Util::toUnderScore($mainRelationshipFieldId)]) {
-                    $record['childrenCount'] = $child['childrenCount'];
-                    break 1;
+                if ($child['id'] === $record->get($mainRelationshipField)) {
+                    $record->_childrenCount = $child['childrenCount'];
+                    break;
                 }
             }
-            $result[] = $record;
         }
 
         return $result;
