@@ -20,31 +20,31 @@ use Espo\ORM\Entity;
 
 class Relationship extends RDB
 {
-    public function getMainEntityType(): string
+    public function getMainRelationshipEntity(): string
     {
         foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []) as $field => $fieldDefs) {
-            if (!empty($fieldDefs['mainRelationshipField'])) {
+            if (!empty($fieldDefs['mainRelationshipEntity'])) {
                 return $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $field, 'entity']);
             }
         }
 
-        throw new Error("Param 'mainRelationshipField' is required for Relationship entity.");
+        throw new Error("Param 'mainRelationshipEntity' is required for Relationship entity.");
     }
 
-    public function getMainEntityField(): string
+    public function getMainRelationshipEntityField(): string
     {
         foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []) as $field => $fieldDefs) {
-            if (!empty($fieldDefs['mainRelationshipField'])) {
+            if (!empty($fieldDefs['mainRelationshipEntity'])) {
                 return $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $field, 'foreign']);
             }
         }
 
-        throw new Error("Param 'mainRelationshipField' is required for Relationship entity.");
+        throw new Error("Param 'mainRelationshipEntity' is required for Relationship entity.");
     }
 
     public function getChildren(string $parentId): array
     {
-        $mainEntity = $this->getMainEntityType();
+        $mainEntity = $this->getMainRelationshipEntity();
         $mainRelationshipFieldId = lcfirst($mainEntity) . 'Id';
 
         $entity = $this->get($parentId);
@@ -123,22 +123,5 @@ class Relationship extends RDB
         }
 
         return $this->where($where)->findOne(['withDeleted' => $deleted]);
-    }
-
-    protected function prepareMainEntity(): void
-    {
-        if ($this->mainEntityType !== null) {
-            return;
-        }
-
-        foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []) as $field => $fieldDefs) {
-            if (!empty($fieldDefs['mainRelationshipField'])) {
-                $this->mainEntityType = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $field, 'entity']);
-                $this->mainEntityField = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $field, 'foreign']);
-                return;
-            }
-        }
-
-        throw new Error("Param 'mainRelationshipField' is required for Relationship entity.");
     }
 }

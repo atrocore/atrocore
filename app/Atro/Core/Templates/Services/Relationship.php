@@ -52,12 +52,12 @@ class Relationship extends Record
             return parent::createEntity($attachment);
         }
 
-        $mainEntity = $this->getRepository()->getMainEntityType();
+        $mainEntity = $this->getRepository()->getMainRelationshipEntity();
         if (!$this->getMetadata()->get(['scopes', $mainEntity, 'relationInheritance'], false)) {
             return parent::createEntity($attachment);
         }
 
-        if (in_array($this->getRepository()->getMainEntityField(), $this->getMetadata()->get(['scopes', $mainEntity, 'unInheritedRelations'], []))) {
+        if (in_array($this->getRepository()->getMainRelationshipEntityField(), $this->getMetadata()->get(['scopes', $mainEntity, 'unInheritedRelations'], []))) {
             return parent::createEntity($attachment);
         }
 
@@ -84,7 +84,7 @@ class Relationship extends Record
 
     protected function createEntityForChildren(\stdClass $data, string $parentTransactionId = null): void
     {
-        $mainEntity = $this->getRepository()->getMainEntityType();
+        $mainEntity = $this->getRepository()->getMainRelationshipEntity();
         $mainRelationshipFieldId = lcfirst($mainEntity) . 'Id';
         $mainRelationshipFieldName = lcfirst($mainEntity) . 'Name';
 
@@ -110,12 +110,12 @@ class Relationship extends Record
             return parent::deleteEntity($id);
         }
 
-        $mainEntity = $this->getRepository()->getMainEntityType();
+        $mainEntity = $this->getRepository()->getMainRelationshipEntity();
         if (!$this->getMetadata()->get(['scopes', $mainEntity, 'relationInheritance'], false)) {
             return parent::deleteEntity($id);
         }
 
-        if (in_array($this->getRepository()->getMainEntityField(), $this->getMetadata()->get(['scopes', $mainEntity, 'unInheritedRelations'], []))) {
+        if (in_array($this->getRepository()->getMainRelationshipEntityField(), $this->getMetadata()->get(['scopes', $mainEntity, 'unInheritedRelations'], []))) {
             return parent::deleteEntity($id);
         }
 
@@ -125,7 +125,7 @@ class Relationship extends Record
             $inTransaction = true;
         }
         try {
-            $this->deleteEntityForChildren($id);
+            $this->deleteEntityFromChildren($id);
             $result = parent::deleteEntity($id);
             if ($inTransaction) {
                 $this->getEntityManager()->getPDO()->commit();
@@ -140,12 +140,12 @@ class Relationship extends Record
         return $result;
     }
 
-    protected function deleteEntityForChildren(string $id, string $parentTransactionId = null): void
+    protected function deleteEntityFromChildren(string $id, string $parentTransactionId = null): void
     {
         foreach ($this->getRepository()->getChildren($id) as $record) {
             $transactionId = $this->getPseudoTransactionManager()->pushDeleteEntityJob($this->entityType, $record['id'], $parentTransactionId);
             if ($record['childrenCount'] > 0) {
-                $this->deleteEntityForChildren($record['id'], $transactionId);
+                $this->deleteEntityFromChildren($record['id'], $transactionId);
             }
         }
     }

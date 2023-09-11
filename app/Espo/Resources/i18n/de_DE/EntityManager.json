@@ -10,6 +10,7 @@
   },
   "fields": {
     "relationshipField": "Beziehungsentität",
+    "mainRelationshipEntity": "Hauptbeziehungseinheit",
     "multiParents": "Mehrere Elterndatensätze",
     "dragAndDrop": "Drag & Drop",
     "fieldValueInheritance": "Feldwertvererbung",
