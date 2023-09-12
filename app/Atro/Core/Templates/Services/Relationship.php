@@ -15,6 +15,7 @@ namespace Atro\Core\Templates\Services;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\NotFound;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\Services\Record;
@@ -46,6 +47,49 @@ class Relationship extends Record
         return $list;
     }
 
+    public function inheritAll(string $id): bool
+    {
+        $mainEntityType = $this->getRepository()->getMainRelationshipEntity();
+        if ($this->getMetadata()->get(['scopes', $mainEntityType, 'type']) !== 'Hierarchy'
+            || !$this->getMetadata()->get(['scopes', $mainEntityType, 'relationInheritance'], false)) {
+            return false;
+        }
+
+        $mainEntity = $this->getEntityManager()->getRepository($mainEntityType)->get($id);
+        if (empty($mainEntity)) {
+            return false;
+        }
+
+        $mainEntityParentsIds = $mainEntity->getLinkMultipleIdList('parents');
+        if (empty($mainEntityParentsIds)) {
+            return false;
+        }
+
+        foreach ($this->getRepository()->where([lcfirst($mainEntityType) . "Id" => $mainEntityParentsIds])->find() as $record) {
+            $input = new \stdClass();
+            foreach ($record->toArray() as $field => $value) {
+                foreach (\Atro\Core\Templates\Repositories\Relationship::SYSTEM_FIELDS as $systemField) {
+                    if (in_array($field, [$systemField, $systemField . 'Id', $systemField . 'Name'])) {
+                        continue 2;
+                    }
+                }
+
+                $input->$field = $value;
+            }
+
+            $input->{lcfirst($mainEntityType) . "Id"} = $mainEntity->get('id');
+            $input->{lcfirst($mainEntityType) . "Name"} = $mainEntity->get('name');
+
+            try {
+                $this->createEntity($input);
+            } catch (\Throwable $e) {
+                $GLOBALS['log']->error('Inherit All: ' . $e->getMessage());
+            }
+        }
+
+        return true;
+    }
+
     public function createEntity($attachment)
     {
         if ($this->isPseudoTransaction()) {
@@ -53,7 +97,7 @@ class Relationship extends Record
         }
 
         $mainEntity = $this->getRepository()->getMainRelationshipEntity();
-        if (!$this->getMetadata()->get(['scopes', $mainEntity, 'relationInheritance'], false)) {
+        if ($this->getMetadata()->get(['scopes', $mainEntity, 'type']) !== 'Hierarchy' || !$this->getMetadata()->get(['scopes', $mainEntity, 'relationInheritance'], false)) {
             return parent::createEntity($attachment);
         }
 
@@ -111,7 +155,7 @@ class Relationship extends Record
         }
 
         $mainEntity = $this->getRepository()->getMainRelationshipEntity();
-        if (!$this->getMetadata()->get(['scopes', $mainEntity, 'relationInheritance'], false)) {
+        if ($this->getMetadata()->get(['scopes', $mainEntity, 'type']) !== 'Hierarchy' || !$this->getMetadata()->get(['scopes', $mainEntity, 'relationInheritance'], false)) {
             return parent::updateEntity($id, $data);
         }
 
@@ -169,7 +213,7 @@ class Relationship extends Record
         }
 
         $mainEntity = $this->getRepository()->getMainRelationshipEntity();
-        if (!$this->getMetadata()->get(['scopes', $mainEntity, 'relationInheritance'], false)) {
+        if ($this->getMetadata()->get(['scopes', $mainEntity, 'type']) !== 'Hierarchy' || !$this->getMetadata()->get(['scopes', $mainEntity, 'relationInheritance'], false)) {
             return parent::deleteEntity($id);
         }
 

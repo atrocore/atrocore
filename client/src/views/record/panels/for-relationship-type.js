@@ -61,6 +61,16 @@ Espo.define('views/record/panels/for-relationship-type', 'views/record/panels/re
             }
 
             this.actionList.push({
+                label: 'inheritAll',
+                action: 'inheritAll',
+                data: {
+                    "relationshipScope": relationshipScope
+                },
+                acl: 'edit',
+                aclScope: relationshipScope
+            });
+
+            this.actionList.push({
                 label: 'deleteAll',
                 action: 'deleteAllRelationshipEntities',
                 data: {
@@ -113,6 +123,24 @@ Espo.define('views/record/panels/for-relationship-type', 'views/record/panels/re
                 this.notify(response.message, 'success');
                 this.actionRefresh();
                 this.model.trigger('after:relate', this.panelName);
+            });
+        },
+
+        actionInheritAll(data) {
+            this.confirm(this.translate('inheritAllConfirmation', 'messages'), () => {
+                this.notify('Please wait...');
+                $.ajax({
+                    url: `${data.relationshipScope}/action/inheritAll`,
+                    type: 'POST',
+                    data: JSON.stringify({
+                        id: this.model.id
+                    }),
+                }).done(() => {
+                    this.notify(false);
+                    this.notify('Linked', 'success');
+                    this.collection.fetch();
+                    this.model.trigger('after:relate', this.panelName);
+                });
             });
         },
 

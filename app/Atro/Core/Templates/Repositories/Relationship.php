@@ -20,6 +20,8 @@ use Espo\ORM\EntityCollection;
 
 class Relationship extends RDB
 {
+    public const SYSTEM_FIELDS = ['id', 'deleted', 'createdAt', 'modifiedAt', 'createdBy', 'modifiedBy', 'ownerUser', 'assignedUser'];
+
     public function getMainRelationshipEntity(): string
     {
         foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []) as $field => $fieldDefs) {
