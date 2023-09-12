@@ -53,10 +53,9 @@ class Daemon extends AbstractConsole
      */
     protected function composerDaemon(string $id): void
     {
-        /** @var string $log */
-        $log = Application::COMPOSER_LOG_FILE;
-
         while (true) {
+            $log = Application::COMPOSER_LOG_FILE;
+
             // delete check-up file
             if (file_exists(Composer::CHECK_UP_FILE)) {
                 unlink(Composer::CHECK_UP_FILE);
