@@ -368,7 +368,7 @@ class Relationship extends Record
                 try {
                     $record = $this->getRepository()->where($where)->findOne();
                     if (!empty($record)) {
-                        $this->getEntityManager()->removeEntity($record);
+                        $this->deleteEntity($record->get('id'));
                     }
                     $unRelated++;
                 } catch (\Throwable $e) {
