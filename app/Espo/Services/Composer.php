@@ -265,7 +265,7 @@ class Composer extends \Espo\Core\Templates\Services\HasContainer
                 'latestVersion'  => $this->getLatestVersion('Atro'),
                 'isSystem'       => true,
                 'isComposer'     => true,
-                'status'         => $this->getModuleStatus($composerDiff, 'Treo'),
+                'status'         => $this->getModuleStatus($composerDiff, 'Atro'),
                 'settingVersion' => self::getSettingVersion($composerData, 'atrocore/core')
             ]
         ];
