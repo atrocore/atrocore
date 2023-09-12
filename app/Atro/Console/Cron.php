@@ -45,7 +45,7 @@ class Cron extends AbstractConsole
         }
 
         // kill daemon killer
-        if (file_exists(self::DAEMON_KILLER) && !file_exists(Application::COMPOSER_LOG_FILE)) {
+        if (file_exists(self::DAEMON_KILLER) && !file_exists(Application::COMPOSER_LOG_FILE) && !file_exists('data/treo-composer.log')) {
             unlink(self::DAEMON_KILLER);
         }
 
