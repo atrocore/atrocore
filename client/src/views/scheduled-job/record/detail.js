@@ -34,8 +34,46 @@ Espo.define('views/scheduled-job/record/detail', 'views/record/detail', function
 
     return Dep.extend({
 
-    	duplicateAction: false
+        duplicateAction: false,
 
+        setup() {
+            Dep.prototype.setup.call(this);
+            this.additionalButtons = [
+                {
+                    action: 'executeNow',
+                    label: this.translate('executeNow', 'labels', 'ScheduledJob')
+                }
+            ];
+        },
+
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            this.handleExecuteNowButtonDisability();
+        },
+
+        handleExecuteNowButtonDisability() {
+            const $buttons = $('.additional-button[data-action="executeNow"]');
+            if (this.hasExecuteNow()) {
+                $buttons.removeClass('disabled');
+            } else {
+                $buttons.addClass('disabled');
+            }
+        },
+
+        hasExecuteNow() {
+            return this.model.get('status') === 'Active';
+        },
+
+        actionExecuteNow() {
+            if (!this.hasExecuteNow()) {
+                return;
+            }
+            this.ajaxPostRequest('ScheduledJob/action/executeNow', {id: this.model.id}).then(response => {
+                this.notify(this.translate(response ? 'jobLaunched' : 'jobAlreadyExist', 'messages', 'ScheduledJob'), response ? 'success' : 'danger');
+                $('button.action[data-action="refresh"][data-panel="log"]').click();
+            });
+        }
     });
 
 });

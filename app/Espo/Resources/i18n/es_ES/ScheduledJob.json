@@ -9,10 +9,15 @@
     "log": "Registro"
   },
   "labels": {
-    "Create ScheduledJob": "Crear tarea programada"
+    "Create ScheduledJob": "Crear tarea programada",
+    "executeNow": "Ejecutar ahora"
   },
   "exceptions": {
     "wrongCrontabConfiguration": "Wrong crontab configuration"
+  },
+  "messages": {
+    "jobLaunched": "El trabajo ha sido creado.",
+    "jobAlreadyExist": "Se ha creado un empleo hace menos de un minuto."
   },
   "options": {
     "job": {
