@@ -47,12 +47,6 @@ class Cron extends AbstractConsole
         // kill daemon killer
         if (file_exists(self::DAEMON_KILLER)) {
             unlink(self::DAEMON_KILLER);
-
-            // delete old log file
-            $logFilename = 'data/treo-composer.log';
-            if (file_exists($logFilename)) {
-                unlink($logFilename);
-            }
         }
 
         // get active processes

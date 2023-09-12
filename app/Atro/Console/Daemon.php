@@ -1,13 +1,13 @@
 <?php
 /**
-* AtroCore Software
-*
-* This source file is available under GNU General Public License version 3 (GPLv3).
-* Full copyright and license information is available in LICENSE.txt, located in the root directory.
-*
-*  @copyright  Copyright (c) AtroCore UG (https://www.atrocore.com)
-*  @license    GPLv3 (https://www.gnu.org/licenses/)
-*/
+ * AtroCore Software
+ *
+ * This source file is available under GNU General Public License version 3 (GPLv3).
+ * Full copyright and license information is available in LICENSE.txt, located in the root directory.
+ *
+ * @copyright  Copyright (c) AtroCore UG (https://www.atrocore.com)
+ * @license    GPLv3 (https://www.gnu.org/licenses/)
+ */
 
 declare(strict_types=1);
 
@@ -53,17 +53,12 @@ class Daemon extends AbstractConsole
      */
     protected function composerDaemon(string $id): void
     {
-        /** @var string $log */
-        $log = Application::COMPOSER_LOG_FILE;
-
         while (true) {
+            $log = Application::COMPOSER_LOG_FILE;
+
             // delete check-up file
             if (file_exists(Composer::CHECK_UP_FILE)) {
                 unlink(Composer::CHECK_UP_FILE);
-            }
-
-            if (file_exists(Cron::DAEMON_KILLER)) {
-                break;
             }
 
             if (file_exists($log)) {
@@ -106,7 +101,11 @@ class Daemon extends AbstractConsole
                 }
 
                 // remove log file
-                unlink($log);
+                if (file_exists($log)) {
+                    unlink($log);
+                }
+
+                break;
             }
 
             sleep(1);
