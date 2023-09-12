@@ -34,7 +34,6 @@
 namespace Espo\Core\Controllers;
 
 use Atro\Core\Container;
-use Espo\Core\Utils\Config;
 
 abstract class Base
 {
@@ -95,18 +94,24 @@ abstract class Base
         return $this->container->get('user');
     }
 
+    /**
+     * @return \Espo\Core\Acl
+     */
     protected function getAcl()
     {
         return $this->container->get('acl');
     }
 
+    /**
+     * @return \Espo\Core\AclManager
+     */
     protected function getAclManager()
     {
         return $this->container->get('aclManager');
     }
 
     /**
-     * @return Config
+     * @return \Espo\Core\Utils\Config;
      */
     protected function getConfig()
     {
@@ -118,11 +123,17 @@ abstract class Base
         return $this->container->get('preferences');
     }
 
+    /**
+     * @return \Espo\Core\Utils\Metadata\;
+     */
     protected function getMetadata()
     {
         return $this->container->get('metadata');
     }
 
+    /**
+     * @return \Espo\Core\ServiceFactory;
+     */
     protected function getServiceFactory()
     {
         return $this->container->get('serviceFactory');
