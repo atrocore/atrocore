@@ -104,6 +104,64 @@ class Relationship extends Record
         }
     }
 
+    public function updateEntity($id, $data)
+    {
+        if ($this->isPseudoTransaction()) {
+            return parent::updateEntity($id, $data);
+        }
+
+        $mainEntity = $this->getRepository()->getMainRelationshipEntity();
+        if (!$this->getMetadata()->get(['scopes', $mainEntity, 'relationInheritance'], false)) {
+            return parent::updateEntity($id, $data);
+        }
+
+        if (in_array($this->getRepository()->getMainRelationshipEntityField(), $this->getMetadata()->get(['scopes', $mainEntity, 'unInheritedRelations'], []))) {
+            return parent::updateEntity($id, $data);
+        }
+
+        $inTransaction = false;
+        if (!$this->getEntityManager()->getPDO()->inTransaction()) {
+            $this->getEntityManager()->getPDO()->beginTransaction();
+            $inTransaction = true;
+        }
+        try {
+            $this->updateEntityForChildren($id, clone $data);
+            $result = parent::updateEntity($id, $data);
+            if ($inTransaction) {
+                $this->getEntityManager()->getPDO()->commit();
+            }
+        } catch (\Throwable $e) {
+            if ($inTransaction) {
+                $this->getEntityManager()->getPDO()->rollBack();
+            }
+            throw $e;
+        }
+
+        return $result;
+    }
+
+    protected function updateEntityForChildren(string $id, \stdClass $data, string $parentTransactionId = null): void
+    {
+        foreach ($this->getRepository()->getInheritedEntities($id) as $child) {
+            $inputData = clone $data;
+
+            $toRemove = ['_prev'];
+            foreach ($toRemove as $key) {
+                if (property_exists($inputData, $key)) {
+                    unset($inputData->$key);
+                }
+            }
+
+            if (!empty((array)$inputData)) {
+                $transactionId = $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->entityType, $child->get('id'), $inputData, $parentTransactionId);
+
+                if ($child->_childrenCount > 0) {
+                    $this->updateEntityForChildren($child->get('id'), clone $inputData, $transactionId);
+                }
+            }
+        }
+    }
+
     public function deleteEntity($id)
     {
         if ($this->isPseudoTransaction()) {
@@ -142,10 +200,10 @@ class Relationship extends Record
 
     protected function deleteEntityFromChildren(string $id, string $parentTransactionId = null): void
     {
-        foreach ($this->getRepository()->getInheritedRecords($id) as $record) {
-            $transactionId = $this->getPseudoTransactionManager()->pushDeleteEntityJob($this->entityType, $record->get('id'), $parentTransactionId);
-            if ($record->_childrenCount > 0) {
-                $this->deleteEntityFromChildren($record->get('id'), $transactionId);
+        foreach ($this->getRepository()->getInheritedEntities($id) as $child) {
+            $transactionId = $this->getPseudoTransactionManager()->pushDeleteEntityJob($this->entityType, $child->get('id'), $parentTransactionId);
+            if ($child->_childrenCount > 0) {
+                $this->deleteEntityFromChildren($child->get('id'), $transactionId);
             }
         }
     }

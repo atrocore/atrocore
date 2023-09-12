@@ -42,7 +42,7 @@ class Relationship extends RDB
         throw new Error("Param 'mainRelationshipEntity' is required for Relationship entity.");
     }
 
-    public function getInheritedRecords(string $parentId): EntityCollection
+    public function getInheritedEntities(string $parentId): EntityCollection
     {
         $mainRelationshipEntity = $this->getMainRelationshipEntity();
         $mainRelationshipField = lcfirst($mainRelationshipEntity) . 'Id';
