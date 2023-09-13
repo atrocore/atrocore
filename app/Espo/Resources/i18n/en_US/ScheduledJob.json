@@ -9,10 +9,15 @@
     "log": "Log"
   },
   "labels": {
-    "Create ScheduledJob": "Create Scheduled Job"
+    "Create ScheduledJob": "Create Scheduled Job",
+    "executeNow": "Execute Now"
   },
   "exceptions": {
     "wrongCrontabConfiguration": "Wrong crontab configuration"
+  },
+  "messages": {
+    "jobLaunched": "The job has been created",
+    "jobAlreadyExist": "A job has been created less than a minute ago"
   },
   "options": {
     "job": {

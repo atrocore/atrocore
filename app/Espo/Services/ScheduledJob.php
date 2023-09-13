@@ -36,7 +36,9 @@ declare(strict_types=1);
 namespace Espo\Services;
 
 use Cron\CronExpression;
+use Espo\Core\CronManager;
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\NotFound;
 use Espo\ORM\Entity;
 
 class ScheduledJob extends \Espo\Core\Templates\Services\Base
@@ -91,6 +93,44 @@ class ScheduledJob extends \Espo\Core\Templates\Services\Base
                 throw new Error($message);
             }
         }
+
+        return true;
+    }
+
+    public function executeNow(string $id)
+    {
+        $entity = $this->getRepository()->get($id);
+        if (empty($entity)) {
+            throw new NotFound();
+        }
+
+        $start = date("Y-m-d H:i:00");
+        $end = date("Y-m-d H:i:59");
+        $result = $this->getRepository()->getConnection()->createQueryBuilder()
+            ->select(['id'])
+            ->from('job')
+            ->where('deleted = :deleted')
+            ->setParameter('deleted', false)
+            ->andWhere('scheduled_job_id = :scheduledJobId')
+            ->setParameter('scheduledJobId', $id)
+            ->andWhere("execute_time >= :start")
+            ->setParameter('start', $start)
+            ->andWhere("execute_time <= :end")
+            ->setParameter('end', $end)
+            ->fetchAllAssociative();
+
+        if (!empty($result)) {
+            return false;
+        }
+
+        $jobEntity = $this->getEntityManager()->getEntity('Job');
+        $jobEntity->set(array(
+            'name'           => $entity->get('name'),
+            'status'         => CronManager::PENDING,
+            'scheduledJobId' => $entity->id,
+            'executeTime'    => date("Y-m-d H:i:s")
+        ));
+        $this->getEntityManager()->saveEntity($jobEntity);
 
         return true;
     }
