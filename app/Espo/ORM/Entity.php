@@ -105,7 +105,7 @@ abstract class Entity implements IEntity
             $this->relations = $defs['relations'];
         }
 
-        foreach ($entityManager->getEspoMetadata()->get(['entityDefs', 'Attribute', 'fields'], []) as $field => $fieldDefs) {
+        foreach ($entityManager->getEspoMetadata()->get(['entityDefs', $this->entityType, 'fields'], []) as $field => $fieldDefs) {
             if (!empty($fieldDefs['virtualField'])) {
                 $this->virtualFields[] = $field;
             }
