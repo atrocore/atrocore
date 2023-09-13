@@ -44,6 +44,10 @@ Espo.define('views/scheduled-job/record/detail', 'views/record/detail', function
                     label: this.translate('executeNow', 'labels', 'ScheduledJob')
                 }
             ];
+
+            this.listenTo(this.model, 'after:save', () => {
+                this.handleExecuteNowButtonDisability()
+            })
         },
 
         afterRender() {
