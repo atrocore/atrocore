@@ -37,7 +37,7 @@ namespace Espo\Repositories;
 
 use Espo\Core\Acl;
 use Espo\Core\AclManager;
-use Espo\Core\EventManager\Event;
+use Atro\Core\EventManager\Event;
 use Espo\Core\Factories\AclManager as AclManagerFactory;
 use Espo\Core\ORM\Repositories\RDB;
 use Espo\Entities\User;
