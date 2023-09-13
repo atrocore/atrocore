@@ -35,8 +35,18 @@ declare(strict_types=1);
 
 namespace Espo\Controllers;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Controllers\Base;
+use Slim\Http\Request;
 
 class ExtensibleEnum extends Base
 {
+    public function actionGetExtensibleEnumOptions($params, $data, Request $request)
+    {
+        if (!$request->isGet() || empty($request->get('extensibleEnumId'))) {
+            throw new BadRequest();
+        }
+
+        return $this->getRecordService()->getExtensibleEnumOptions((string)$request->get('extensibleEnumId'));
+    }
 }

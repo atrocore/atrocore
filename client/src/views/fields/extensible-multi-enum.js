@@ -42,12 +42,7 @@ Espo.define('views/fields/extensible-multi-enum', ['treo-core:views/fields/filte
 
         boolFilterData: {
             onlyForExtensibleEnum() {
-                let extensibleEnumId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'extensibleEnumId']);
-                if (this.params.extensibleEnumId) {
-                    extensibleEnumId = this.params.extensibleEnumId;
-                }
-
-                return extensibleEnumId;
+                return this.getExtensibleEnumId();
             }
         },
 
@@ -65,7 +60,9 @@ Espo.define('views/fields/extensible-multi-enum', ['treo-core:views/fields/filte
 
             if (['list', 'detail'].includes(this.mode)) {
                 const ids = this.model.get(this.name);
-                const optionsData = this.model.get(this.name + 'OptionsData');
+                const optionsData = this.model.get(this.name + 'OptionsData') || this.getOptionsData();
+
+                console.log(optionsData);
 
                 data.selectedValues = [];
                 if (ids && ids.length > 0 && optionsData) {
@@ -86,6 +83,32 @@ Espo.define('views/fields/extensible-multi-enum', ['treo-core:views/fields/filte
             }
 
             return data;
+        },
+
+        getExtensibleEnumId() {
+            let extensibleEnumId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'extensibleEnumId']);
+            if (this.params.extensibleEnumId) {
+                extensibleEnumId = this.params.extensibleEnumId;
+            }
+
+            return extensibleEnumId;
+        },
+
+        getOptionsData() {
+            let res = [];
+
+            let ids = this.model.get(this.name);
+            if (ids && ids.length > 0) {
+                this.getListOptionsData(this.getExtensibleEnumId()).forEach(option => {
+                    ids.forEach(id => {
+                        if (option.id === id) {
+                            res.push(option);
+                        }
+                    });
+                });
+            }
+
+            return res;
         },
 
         fetchSearch: function () {

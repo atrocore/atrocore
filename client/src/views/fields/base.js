@@ -826,6 +826,19 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             return false;
         },
 
+        getListOptionsData(extensibleEnumId) {
+            let key = 'extensible_enum_' + extensibleEnumId;
+
+            if (!Espo[key]) {
+                Espo[key] = [];
+                this.ajaxGetRequest(`ExtensibleEnum/action/getExtensibleEnumOptions`, {extensibleEnumId: extensibleEnumId}, {async: false}).then(res => {
+                    Espo[key] = res;
+                });
+            }
+
+            return Espo[key];
+        },
+
         getMeasureUnits(measureId) {
             if (!measureId) {
                 return [];

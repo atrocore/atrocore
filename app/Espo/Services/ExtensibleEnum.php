@@ -39,4 +39,20 @@ use Espo\Core\Templates\Services\Base;
 
 class ExtensibleEnum extends Base
 {
+    public function getExtensibleEnumOptions(string $extensibleEnumId): array
+    {
+        $entity = $this->getEntity($extensibleEnumId);
+        if (empty($entity)) {
+            return [];
+        }
+
+        $ids = $entity->getLinkMultipleIdList('extensibleEnumOptions');
+        if (empty($ids)) {
+            return [];
+        }
+
+        $res = $this->getEntityManager()->getRepository('ExtensibleEnumOption')->getPreparedOptions($extensibleEnumId, $ids);
+
+        return empty($res) ? [] : $res;
+    }
 }

@@ -42,12 +42,7 @@ Espo.define('views/fields/extensible-enum', ['views/fields/link', 'views/fields/
 
         boolFilterData: {
             onlyForExtensibleEnum() {
-                let extensibleEnumId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'extensibleEnumId']);
-                if (this.params.extensibleEnumId) {
-                    extensibleEnumId = this.params.extensibleEnumId;
-                }
-
-                return extensibleEnumId;
+                return this.getExtensibleEnumId();
             }
         },
 
@@ -63,7 +58,7 @@ Espo.define('views/fields/extensible-enum', ['views/fields/link', 'views/fields/
             let data = Dep.prototype.data.call(this);
 
             if (['list', 'detail'].includes(this.mode)) {
-                const optionData = this.model.get(this.name + 'OptionData') || {};
+                const optionData = this.model.get(this.name + 'OptionData') || this.getOptionsData();
                 const fontSize = this.model.getFieldParam(this.name, 'fontSize');
 
                 data.description = optionData.description || '';
@@ -75,6 +70,31 @@ Espo.define('views/fields/extensible-enum', ['views/fields/link', 'views/fields/
             }
 
             return data;
+        },
+
+        getExtensibleEnumId() {
+            let extensibleEnumId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'extensibleEnumId']);
+            if (this.params.extensibleEnumId) {
+                extensibleEnumId = this.params.extensibleEnumId;
+            }
+
+            return extensibleEnumId;
+        },
+
+        getOptionsData() {
+            let res = {};
+
+            let id = this.model.get(this.name);
+            if (id) {
+                this.getListOptionsData(this.getExtensibleEnumId()).forEach(option => {
+                    if (option.id === id) {
+                        this.model.set(this.nameName, option.name);
+                        res = option;
+                    }
+                });
+            }
+
+            return res;
         },
 
     });
