@@ -104,11 +104,19 @@ class ScheduledJob extends \Espo\Core\Templates\Services\Base
             throw new NotFound();
         }
 
-        $date = date("Y-m-d H:i:59");
+        $start = date("Y-m-d H:i:00");
+        $end = date("Y-m-d H:i:59");
         $result = $this->getRepository()->getConnection()->createQueryBuilder()
             ->select(['id'])
             ->from('job')
-            ->where("deleted = 0 and scheduled_job_id='$id' and TIMESTAMPDIFF(MINUTE , execute_time, '$date')=0")
+            ->where('deleted = :deleted')
+            ->setParameter('deleted', false)
+            ->andWhere('scheduled_job_id = :scheduledJobId')
+            ->setParameter('scheduledJobId', $id)
+            ->andWhere("execute_time >= :start")
+            ->setParameter('start', $start)
+            ->andWhere("execute_time <= :end")
+            ->setParameter('end', $end)
             ->fetchAllAssociative();
 
         if (!empty($result)) {
