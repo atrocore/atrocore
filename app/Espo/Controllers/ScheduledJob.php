@@ -33,7 +33,9 @@
 
 namespace Espo\Controllers;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
+use Slim\Http\Request;
 
 class ScheduledJob extends \Espo\Core\Controllers\Record
 {
@@ -42,5 +44,18 @@ class ScheduledJob extends \Espo\Core\Controllers\Record
         if (!$this->getUser()->isAdmin()) {
             throw new Forbidden();
         }
+    }
+
+    public function actionExecuteNow($params, $data, Request $request): bool
+    {
+        if (!$request->isPost() || !property_exists($data, 'id')) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($this->name, 'read')) {
+            throw new Forbidden();
+        }
+
+        return $this->getRecordService()->executeNow($data->id);
     }
 }
