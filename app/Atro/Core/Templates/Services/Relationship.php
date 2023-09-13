@@ -278,6 +278,8 @@ class Relationship extends Record
         }
 
         parent::prepareEntityForOutput($entity);
+
+        $entity->set('isInherited', $this->getRepository()->isInherited($entity));
     }
 
     public function getRelationsVirtualFields(string $entityName, ?array $select = null): array

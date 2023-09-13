@@ -44,6 +44,11 @@ class Relationship extends RDB
         throw new Error("Param 'mainRelationshipEntity' is required for Relationship entity.");
     }
 
+    public function isInherited(Entity $entity): bool
+    {
+        return false;
+    }
+
     public function getInheritedEntities(string $parentId): EntityCollection
     {
         $mainRelationshipEntity = $this->getMainRelationshipEntity();
@@ -68,7 +73,7 @@ class Relationship extends RDB
             }
 
             // skip system
-            if (in_array($field, ['createdAt', 'modifiedAt', 'createdBy', 'modifiedBy', 'ownerUser', 'assignedUser'])) {
+            if (in_array($field, self::SYSTEM_FIELDS)) {
                 continue;
             }
 

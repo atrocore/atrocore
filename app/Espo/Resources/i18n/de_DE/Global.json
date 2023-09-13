@@ -432,6 +432,7 @@
     "convertCurrency": "Währung umrechnen"
   },
   "fields": {
+    "isInherited": "Vererbt",
     "isArchived": "Archiviert",
     "code": "Code",
     "extensibleEnum": "Liste",

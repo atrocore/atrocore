@@ -410,6 +410,7 @@
     "removeRelation": "Видалити зв'язок"
   },
   "fields": {
+    "isInherited": "Унаслідувано",
     "isArchived": "Заархівованo",
     "code": "Код",
     "extensibleEnum": "Список",

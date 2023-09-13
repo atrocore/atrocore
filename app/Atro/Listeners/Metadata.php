@@ -404,6 +404,15 @@ class Metadata extends AbstractListener
                     'layoutRelationshipsDisabled' => true
                 ];
             }
+
+            $data['entityDefs'][$scope]['fields']['isInherited'] = [
+                "type"               => "bool",
+                "notStorable"        => true,
+                "massUpdateDisabled" => true,
+                "filterDisabled"     => true,
+                "importDisabled"     => true,
+                "emHidden"           => true
+            ];
         }
 
         /**
