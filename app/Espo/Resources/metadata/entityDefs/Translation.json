@@ -207,7 +207,6 @@
     },
     "enUs": {
       "type": "text",
-      "required": true,
       "isValue": true
     },
     "enZw": {
