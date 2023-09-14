@@ -62,8 +62,6 @@ Espo.define('views/fields/extensible-multi-enum', ['treo-core:views/fields/filte
                 const ids = this.model.get(this.name);
                 const optionsData = this.model.get(this.name + 'OptionsData') || this.getOptionsData();
 
-                console.log(optionsData);
-
                 data.selectedValues = [];
                 if (ids && ids.length > 0 && optionsData) {
                     const fontSize = this.model.getFieldParam(this.name, 'fontSize');
