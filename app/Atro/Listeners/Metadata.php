@@ -324,7 +324,7 @@ class Metadata extends AbstractListener
                         $data['entityDefs'][$foreignEntity]['fields'][$foreignField]['massUpdateDisabled'] = true;
                         $data['entityDefs'][$foreignEntity]['fields'][$foreignField]['importDisabled'] = true;
                         if (!isset($data['clientDefs'][$foreignEntity]['relationshipPanels'][$foreignField]['view'])) {
-                            $data['clientDefs'][$foreignEntity]['relationshipPanels'][$foreignField]['view'] = "views/record/panels/for-relationship-type";
+                            $data['clientDefs'][$foreignEntity]['relationshipPanels'][$foreignField]['view'] = "treo-core:views/record/panels/for-relationship-type";
                         }
                     } else {
                         if (

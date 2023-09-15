@@ -46,7 +46,7 @@ class Relationship extends RDB
 
     public function isInherited(Entity $entity): bool
     {
-        return false;
+        return !empty(rand(0, 1));
     }
 
     public function getInheritedEntities(string $parentId): EntityCollection

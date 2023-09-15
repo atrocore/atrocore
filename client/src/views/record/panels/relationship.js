@@ -38,6 +38,8 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
         rowActionsView: 'views/record/row-actions/relationship',
 
+        rowActionsColumnWidth: 25,
+
         url: null,
 
         scope: null,
@@ -248,6 +250,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                         listLayout: listLayout,
                         checkboxes: false,
                         rowActionsView: this.defs.readOnly ? false : (this.defs.rowActionsView || this.rowActionsView),
+                        rowActionsColumnWidth: this.rowActionsColumnWidth,
                         buttonsDisabled: true,
                         el: this.options.el + ' .list-container',
                         skipBuildRows: true,

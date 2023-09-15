@@ -122,7 +122,9 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
             return {
                 acl: this.options.acl,
                 actionList: this.getActionList(),
-                scope: this.model.name
+                scope: this.model.name,
+                hasInheritedIcon: this.model.has('isInherited'),
+                isInherited: this.model.get('isInherited')
             };
         }
     });
