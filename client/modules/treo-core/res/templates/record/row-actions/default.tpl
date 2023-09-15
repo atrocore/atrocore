@@ -2,7 +2,7 @@
 <div class="list-row-buttons btn-group pull-right">
     {{#if hasInheritedIcon}}
     <button type="button" class="btn btn-link btn-sm">
-        {{#if isInherited}}<span class="fas fa-link fa-sm" title="Inherited"></span>{{/if}}
+        {{#if isInherited}}<span class="fas fa-link fa-sm" title="{{translate 'inherited'}}"></span>{{/if}}
     </button>
     {{/if}}
     <button type="button" class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown">

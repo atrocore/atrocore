@@ -22,6 +22,9 @@ class Relationship extends RDB
 {
     public const SYSTEM_FIELDS = ['id', 'deleted', 'createdAt', 'modifiedAt', 'createdBy', 'modifiedBy', 'ownerUser', 'assignedUser'];
 
+    protected array $mainEntities = [];
+    protected array $mainEntityParentIds = [];
+
     public function getMainRelationshipEntity(): string
     {
         foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []) as $field => $fieldDefs) {
@@ -44,9 +47,49 @@ class Relationship extends RDB
         throw new Error("Param 'mainRelationshipEntity' is required for Relationship entity.");
     }
 
+    public function getMainEntity(Entity $relationshipEntity): ?Entity
+    {
+        $entity = $this->getMainRelationshipEntity();
+
+        $id = $relationshipEntity->get(lcfirst($entity) . 'Id');
+        if (empty($id)) {
+            return null;
+        }
+
+        if (!isset($this->mainEntities[$id])) {
+            $this->mainEntities[$id] = $relationshipEntity->get(lcfirst($entity));
+        }
+
+        return $this->mainEntities[$id];
+    }
+
+    public function getMainEntityParentIds(Entity $mainEntity): array
+    {
+        if (!isset($this->mainEntityParentIds[$mainEntity->get('id')])) {
+            $this->mainEntityParentIds[$mainEntity->get('id')] = $mainEntity->getLinkMultipleIdList('parents');
+        }
+
+        return $this->mainEntityParentIds[$mainEntity->get('id')];
+    }
+
     public function isInherited(Entity $entity): bool
     {
-        return !empty(rand(0, 1));
+        $mainEntity = $this->getMainEntity($entity);
+        if (empty($mainEntity)) {
+            return false;
+        }
+
+        $parentIds = $this->getMainEntityParentIds($mainEntity);
+        if (empty($parentIds)) {
+            return false;
+        }
+
+        $parentRecord = $this
+            ->select(['id'])
+            ->where($this->prepareWhereForInheritanceCheck($entity, [lcfirst($mainEntity->getEntityType()) . 'Id' => $parentIds]))
+            ->findOne();
+
+        return !empty($parentRecord);
     }
 
     public function getInheritedEntities(string $parentId): EntityCollection
@@ -64,8 +107,25 @@ class Relationship extends RDB
             return new EntityCollection([], $this->entityType);
         }
 
-        // prepare where
-        $where = [$mainRelationshipField => array_column($children, 'id')];
+        $result = $this
+            ->where($this->prepareWhereForInheritanceCheck($entity, [$mainRelationshipField => array_column($children, 'id')]))
+            ->find();
+
+        foreach ($result as $record) {
+            $record->_childrenCount = 0;
+            foreach ($children as $child) {
+                if ($child['id'] === $record->get($mainRelationshipField)) {
+                    $record->_childrenCount = $child['childrenCount'];
+                    break;
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    protected function prepareWhereForInheritanceCheck(Entity $entity, array $where): array
+    {
         foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields']) as $field => $fieldDefs) {
             // skip virtual
             if (!empty($fieldDefs['notStorable'])) {
@@ -95,21 +155,7 @@ class Relationship extends RDB
             }
         }
 
-        $result = $this
-            ->where($where)
-            ->find();
-
-        foreach ($result as $record) {
-            $record->_childrenCount = 0;
-            foreach ($children as $child) {
-                if ($child['id'] === $record->get($mainRelationshipField)) {
-                    $record->_childrenCount = $child['childrenCount'];
-                    break;
-                }
-            }
-        }
-
-        return $result;
+        return $where;
     }
 
     public function remove(Entity $entity, array $options = [])
