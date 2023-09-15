@@ -49,6 +49,8 @@ class Metadata extends AbstractListener
 
         $this->prepareLanguageField($data);
 
+        $this->setTranslationRequiredLanguage($data);
+
         $this->prepareScriptField($data);
 
         $event->setArgument('data', $data);
@@ -61,6 +63,14 @@ class Metadata extends AbstractListener
         $this->prepareRelationshipsEntities($data);
 
         $event->setArgument('data', $data);
+    }
+
+    public function setTranslationRequiredLanguage(array &$data)
+    {
+        $language = Util::toCamelCase(strtolower($this->getConfig()->get('mainLanguage', 'en_Us')));
+        if (is_array($data['entityDefs']['Translation']['fields'][$language])) {
+            $data['entityDefs']['Translation']['fields'][$language]['required'] = true;
+        }
     }
 
     protected function prepareLanguageField(array &$data): void
@@ -888,7 +898,7 @@ class Metadata extends AbstractListener
     /**
      * Remove field from index
      *
-     * @param array  $indexes
+     * @param array $indexes
      * @param string $fieldName
      *
      * @return array

@@ -9,7 +9,12 @@
     "log": "Protokoll"
   },
   "labels": {
-    "Create ScheduledJob": "Geplante Aufgabe erstellen"
+    "Create ScheduledJob": "Geplante Aufgabe erstellen",
+    "executeNow": "Jetzt ausführen"
+  },
+  "messages": {
+    "jobLaunched": "Der Job wurde erstellt",
+    "jobAlreadyExist": "Ein Job wurde vor weniger als einer Minute erstellt"
   },
   "options": {
     "job": {

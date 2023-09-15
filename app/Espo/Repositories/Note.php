@@ -37,6 +37,7 @@ namespace Espo\Repositories;
 
 use Espo\Core\Acl;
 use Espo\Core\AclManager;
+use Atro\Core\EventManager\Event;
 use Espo\Core\Factories\AclManager as AclManagerFactory;
 use Espo\Core\ORM\Repositories\RDB;
 use Espo\Entities\User;
@@ -55,7 +56,7 @@ class Note extends RDB
 
     /**
      * @param Entity $entity
-     * @param array  $options
+     * @param array $options
      */
     protected function beforeSave(Entity $entity, array $options = [])
     {
@@ -76,7 +77,7 @@ class Note extends RDB
 
     /**
      * @param Entity $entity
-     * @param array  $options
+     * @param array $options
      */
     protected function afterSave(Entity $entity, array $options = [])
     {
@@ -324,7 +325,7 @@ class Note extends RDB
                                 $targetUserList = $this->getEntityManager()->getRepository('User')->find(
                                     array(
                                         'whereClause' => array(
-                                            'isActive'     => true
+                                            'isActive' => true
                                         )
                                     )
                                 );
@@ -339,6 +340,9 @@ class Note extends RDB
                     }
                 }
             }
+
+            $event = new Event(['entity' => $entity, 'notifyUserIdList' => $notifyUserIdList, 'repository' => $this]);
+            $notifyUserIdList = $this->getInjection('eventManager')->dispatch('NoteRepository', 'modifyNotifyUserList', $event)->getArgument('notifyUserIdList');
 
             $notifyUserIdList = array_unique($notifyUserIdList);
 
