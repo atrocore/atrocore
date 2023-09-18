@@ -47,6 +47,20 @@ class Relationship extends RDB
         throw new Error("Param 'mainRelationshipEntity' is required for Relationship entity.");
     }
 
+    public function inheritable(): bool
+    {
+        $mainEntity = $this->getMainRelationshipEntity();
+        if ($this->getMetadata()->get(['scopes', $mainEntity, 'type']) !== 'Hierarchy' || !$this->getMetadata()->get(['scopes', $mainEntity, 'relationInheritance'], false)) {
+            return false;
+        }
+
+        if (in_array($this->getMainRelationshipEntityField(), $this->getMetadata()->get(['scopes', $mainEntity, 'unInheritedRelations'], []))) {
+            return false;
+        }
+
+        return true;
+    }
+
     public function getMainEntity(Entity $relationshipEntity): ?Entity
     {
         $entity = $this->getMainRelationshipEntity();
