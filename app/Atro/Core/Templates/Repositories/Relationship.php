@@ -49,7 +49,12 @@ class Relationship extends RDB
 
     public function inheritable(): bool
     {
-        $mainEntity = $this->getMainRelationshipEntity();
+        try {
+            $mainEntity = $this->getMainRelationshipEntity();
+        } catch (Error $e) {
+            return false;
+        }
+
         if ($this->getMetadata()->get(['scopes', $mainEntity, 'type']) !== 'Hierarchy' || !$this->getMetadata()->get(['scopes', $mainEntity, 'relationInheritance'], false)) {
             return false;
         }
