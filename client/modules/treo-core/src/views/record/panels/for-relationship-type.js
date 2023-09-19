@@ -14,8 +14,6 @@ Espo.define('treo-core:views/record/panels/for-relationship-type', 'views/record
 
         rowActionsView: 'treo-core:views/record/row-actions/for-relationship-type',
 
-        rowActionsColumnWidth: 70,
-
         setup() {
             this.defs.select = false;
 

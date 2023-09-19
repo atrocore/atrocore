@@ -72,6 +72,16 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
             this.link = this.link || this.defs.link || this.panelName;
 
+            if (this.getMetadata().get(`scopes.${this.model.name}.relationInheritance`) === true) {
+                let unInheritedRelations = ['parents', 'children'];
+                (this.getMetadata().get(`scopes.${this.model.name}.unInheritedRelations`) || []).forEach(field => {
+                    unInheritedRelations.push(field);
+                });
+                if (!unInheritedRelations.includes(this.link)) {
+                    this.rowActionsColumnWidth = 70;
+                }
+            }
+
             if (!this.scope && !(this.link in this.model.defs.links)) {
                 throw new Error('Link \'' + this.link + '\' is not defined in model \'' + this.model.name + '\'');
             }
