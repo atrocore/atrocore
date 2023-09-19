@@ -340,9 +340,9 @@ class Hierarchy extends Record
         return true;
     }
 
-    public function unlinkAllHierarchicallyForLink(string $id, string $link): bool
+    public function unlinkAll(string $id, string $link): bool
     {
-        $event = $this->dispatchEvent('beforeUnlinkAllHierarchicallyForLink', new Event(['id' => $id, 'link' => $link]));
+        $event = $this->dispatchEvent('beforeUnlinkAll', new Event(['id' => $id, 'service' => $this, 'link' => $link]));
 
         $id = $event->getArgument('id');
         $link = $event->getArgument('link');
@@ -381,7 +381,7 @@ class Hierarchy extends Record
             }
         }
 
-        return $this->dispatchEvent('afterUnlinkAllHierarchicallyForLink', new Event(['entity' => $entity, 'link' => $link, 'result' => true]))->getArgument('result');
+        return $this->dispatchEvent('afterUnlinkAll', new Event(['entity' => $entity, 'service' => $this, 'link' => $link, 'result' => true]))->getArgument('result');
     }
 
     public function getChildren(string $parentId, array $params): array
@@ -608,10 +608,6 @@ class Hierarchy extends Record
             }
 
             return true;
-        }
-
-        if (!empty($this->originUnlinkAction)) {
-            return parent::unlinkEntity($id, $link, $foreignId);
         }
 
         if (empty($this->getMetadata()->get(['scopes', $this->entityType, 'relationInheritance']))) {

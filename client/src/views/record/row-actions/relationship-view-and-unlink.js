@@ -51,15 +51,6 @@ Espo.define('views/record/row-actions/relationship-view-and-unlink', 'views/reco
                         id: this.model.id
                     }
                 });
-                if (this.isInheritingRelation()) {
-                    list.push({
-                        action: 'unlinkRelatedHierarchically',
-                        label: 'unlinkHierarchically',
-                        data: {
-                            id: this.model.id
-                        }
-                    });
-                }
             }
             return list;
         },

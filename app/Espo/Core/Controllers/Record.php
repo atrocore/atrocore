@@ -412,7 +412,6 @@ class Record extends Base
         }
 
         $service = $this->getRecordService();
-        $service->originUnlinkAction = !property_exists($data, 'hierarchically') || empty($data->hierarchically);
 
         $result = false;
         foreach ($foreignIdList as $foreignId) {
@@ -420,8 +419,6 @@ class Record extends Base
                 $result = $result || true;
             }
         }
-
-        $service->originUnlinkAction = false;
 
         if ($result) {
             return true;

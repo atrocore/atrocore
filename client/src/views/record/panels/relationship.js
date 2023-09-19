@@ -140,8 +140,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 });
             }
 
-            let isInheritingRelation = this.isInheritingRelation();
-            if (isInheritingRelation && this.model.get('isRoot') !== true) {
+            if (this.isInheritingRelation() && this.model.get('isRoot') !== true) {
                 this.actionList.push({
                     label: 'inheritAll',
                     action: 'inheritAll',
@@ -155,16 +154,6 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 this.actionList.push({
                     label: 'unlinkAll',
                     action: 'unlinkAllRelated',
-                    data: data,
-                    acl: 'edit',
-                    aclScope: this.model.name
-                });
-            }
-
-            if (isInheritingRelation) {
-                this.actionList.push({
-                    label: 'unlinkAllHierarchically',
-                    action: 'unlinkAllRelatedHierarchically',
                     data: data,
                     acl: 'edit',
                     aclScope: this.model.name
@@ -595,35 +584,6 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             });
         },
 
-        actionUnlinkRelatedHierarchically: function (data) {
-            var id = data.id;
-
-            this.confirm({
-                message: this.translate('unlinkRecordConfirmationHierarchically', 'messages'),
-                confirmText: this.translate('Unlink')
-            }, function () {
-                var model = this.collection.get(id);
-                this.notify('Unlinking...');
-                $.ajax({
-                    url: this.collection.url,
-                    type: 'DELETE',
-                    data: JSON.stringify({
-                        id: id,
-                        hierarchically: true
-                    }),
-                    contentType: 'application/json',
-                    success: function () {
-                        this.notify('Unlinked', 'success');
-                        this.collection.fetch();
-                        this.model.trigger('after:unrelate');
-                    }.bind(this),
-                    error: function () {
-                        this.notify('Error occurred', 'error');
-                    }.bind(this),
-                });
-            }, this);
-        },
-
         actionRemoveRelated: function (data) {
             let id = data.id;
 
@@ -684,25 +644,6 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 this.notify('Please wait...');
                 $.ajax({
                     url: this.model.name + '/action/unlinkAll',
-                    type: 'POST',
-                    data: JSON.stringify({
-                        link: data.link,
-                        id: this.model.id
-                    }),
-                }).done(function () {
-                    this.notify(false);
-                    this.notify('Unlinked', 'success');
-                    this.collection.fetch();
-                    this.model.trigger('after:unrelate');
-                }.bind(this));
-            }, this);
-        },
-
-        actionUnlinkAllRelatedHierarchically: function (data) {
-            this.confirm(this.translate('unlinkAllHierarchicallyConfirmation', 'messages'), function () {
-                this.notify('Please wait...');
-                $.ajax({
-                    url: this.model.name + '/action/unlinkAllHierarchically',
                     type: 'POST',
                     data: JSON.stringify({
                         link: data.link,
