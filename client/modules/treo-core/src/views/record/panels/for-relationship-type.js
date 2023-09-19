@@ -40,15 +40,17 @@ Espo.define('treo-core:views/record/panels/for-relationship-type', 'views/record
                 });
             }
 
-            this.actionList.push({
-                label: 'inheritAll',
-                action: 'inheritAll',
-                data: {
-                    "relationshipScope": relationshipScope
-                },
-                acl: 'edit',
-                aclScope: relationshipScope
-            });
+            if (!this.model.get('isRoot')) {
+                this.actionList.push({
+                    label: 'inheritAll',
+                    action: 'inheritAll',
+                    data: {
+                        "relationshipScope": relationshipScope
+                    },
+                    acl: 'edit',
+                    aclScope: relationshipScope
+                });
+            }
 
             this.actionList.push({
                 label: 'deleteAll',
