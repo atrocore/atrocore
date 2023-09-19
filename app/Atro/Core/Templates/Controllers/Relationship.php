@@ -35,4 +35,21 @@ class Relationship extends Record
 
         return $this->getRecordService()->inheritAll((string)$data->id);
     }
+
+    public function actionInherit($params, $data, $request)
+    {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+
+        if (!property_exists($data, 'id')) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($this->name, 'edit')) {
+            throw new Forbidden();
+        }
+
+        return $this->getRecordService()->inherit((string)$data->id);
+    }
 }

@@ -12,7 +12,7 @@ Espo.define('treo-core:views/record/panels/for-relationship-type', 'views/record
 
     return Dep.extend({
 
-        rowActionsView: 'views/record/row-actions/relationship-no-unlink',
+        rowActionsView: 'treo-core:views/record/row-actions/for-relationship-type',
 
         rowActionsColumnWidth: 70,
 
@@ -121,6 +121,22 @@ Espo.define('treo-core:views/record/panels/for-relationship-type', 'views/record
                     this.collection.fetch();
                     this.model.trigger('after:relate', this.panelName);
                 });
+            });
+        },
+
+        actionInheritRelationship(data) {
+            this.notify('Please wait...');
+            $.ajax({
+                url: `${data.entity}/action/inherit`,
+                type: 'POST',
+                data: JSON.stringify({
+                    id: data.id
+                }),
+            }).done(() => {
+                this.notify(false);
+                this.notify('Linked', 'success');
+                this.collection.fetch();
+                this.model.trigger('after:relate', this.panelName);
             });
         },
 

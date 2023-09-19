@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 namespace Atro\Core\Templates\Services;
 
+use Atro\Core\Exceptions\NotModified;
+use Atro\Core\Templates\Repositories\Relationship as RelationshipRepository;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\Services\Record;
-use Atro\Core\Exceptions\NotModified;
 
 class Relationship extends Record
 {
@@ -68,7 +68,7 @@ class Relationship extends Record
         foreach ($this->getRepository()->where([lcfirst($mainEntityType) . "Id" => $mainEntityParentsIds])->find() as $record) {
             $input = new \stdClass();
             foreach ($record->toArray() as $field => $value) {
-                foreach (\Atro\Core\Templates\Repositories\Relationship::SYSTEM_FIELDS as $systemField) {
+                foreach (RelationshipRepository::SYSTEM_FIELDS as $systemField) {
                     if (in_array($field, [$systemField, $systemField . 'Id', $systemField . 'Name'])) {
                         continue 2;
                     }
@@ -85,6 +85,69 @@ class Relationship extends Record
             } catch (\Throwable $e) {
                 $GLOBALS['log']->error('Inherit All: ' . $e->getMessage());
             }
+        }
+
+        return true;
+    }
+
+    public function inherit(string $id): bool
+    {
+        if (!$this->getRepository()->inheritable()) {
+            return false;
+        }
+
+        $entity = $this->getEntity($id);
+        if (empty($entity)) {
+            return false;
+        }
+
+        $mainEntity = $this->getRepository()->getMainEntity($entity);
+        if (empty($mainEntity)) {
+            return false;
+        }
+
+        $parentIds = $this->getRepository()->getMainEntityParentIds($mainEntity);
+        if (empty($parentIds)) {
+            return false;
+        }
+
+        $columns = $this->getMetadata()->get(['entityDefs', $this->entityType, 'uniqueIndexes', 'unique_relationship']);
+        if (empty($columns)) {
+            return false;
+        }
+
+        $mainEntityField = lcfirst($mainEntity->getEntityType()) . 'Id';
+
+        $where = [$mainEntityField => $parentIds];
+        foreach ($columns as $column) {
+            if (in_array($column, ['deleted', Util::toUnderScore($mainEntityField)])) {
+                continue;
+            }
+            $field = Util::toCamelCase($column);
+            $where[$field] = $entity->get($field);
+        }
+
+        $parentRecord = $this
+            ->getRepository()
+            ->where($where)
+            ->findOne();
+
+        if (!empty($parentRecord)) {
+            $input = new \stdClass();
+            foreach ($parentRecord->toArray() as $field => $value) {
+                foreach (RelationshipRepository::SYSTEM_FIELDS as $systemField) {
+                    if (in_array($field, [$systemField, $systemField . 'Id', $systemField . 'Name'])) {
+                        continue 2;
+                    }
+                }
+
+                $input->$field = $value;
+            }
+
+            $input->{lcfirst($mainEntity->getEntityType()) . "Id"} = $mainEntity->get('id');
+            $input->{lcfirst($mainEntity->getEntityType()) . "Name"} = $mainEntity->get('name');
+
+            $this->updateEntity($entity->get('id'), $input);
         }
 
         return true;
