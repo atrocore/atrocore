@@ -105,13 +105,8 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 }
                 this.model.set('linkMultipleField', linkMultipleField);
 
-                let relationshipField = false;
-                if (this.getMetadata().get('scopes.' + scope + '.type') === 'Relationship') {
-                    if (this.getMetadata().get('entityDefs.' + scope + '.fields.' + link + '.relationshipField')) {
-                        relationshipField = true;
-                    }
-                }
-                this.model.set('relationshipField', relationshipField);
+                this.model.set('relationshipField', this.getMetadata().get('scopes.' + scope + '.type') === 'Relationship' && this.getMetadata().get('entityDefs.' + scope + '.fields.' + link + '.relationshipField'));
+                this.model.set('mainRelationshipEntity', this.getMetadata().get('scopes.' + scope + '.type') === 'Relationship' && this.getMetadata().get('entityDefs.' + scope + '.fields.' + link + '.mainRelationshipEntity'));
 
                 var linkMultipleFieldForeign = false;
                 if (this.getMetadata().get('entityDefs.' + entityForeign + '.fields.' + linkForeign + '.type') == 'linkMultiple') {
@@ -284,6 +279,16 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 tooltipLink: this.translate('relationshipField', 'tooltipLink', 'EntityManager')
             });
 
+            this.createView('mainRelationshipEntity', 'views/fields/bool', {
+                model: model,
+                mode: 'edit',
+                el: this.options.el + ' .field[data-name="mainRelationshipEntity"]',
+                defs: {
+                    name: 'mainRelationshipEntity'
+                },
+                readOnly: !isNew
+            });
+
             this.createView('linkMultipleFieldForeign', 'views/fields/bool', {
                 model: model,
                 mode: 'edit',
@@ -451,6 +456,7 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
 
         checkRelationshipFieldVisibility: function () {
             this.hideField('relationshipField');
+            this.hideField('mainRelationshipEntity');
             this.hideField('relationshipFieldForeign');
 
             if (this.getMetadata().get(['scopes', this.model.get('entityForeign'), 'type']) === 'Relationship' && this.model.get('linkType') === 'oneToMany') {
@@ -458,6 +464,7 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
             }
             if (this.getMetadata().get(['scopes', this.model.get('entity'), 'type']) === 'Relationship' && this.model.get('linkType') === 'manyToOne') {
                 this.showField('relationshipField');
+                this.showField('mainRelationshipEntity');
             }
         },
 
@@ -545,6 +552,7 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 'linkMultipleField',
                 'linkMultipleFieldForeign',
                 'relationshipField',
+                'mainRelationshipEntity',
                 'relationshipFieldForeign',
                 'audited',
                 'auditedForeign'
@@ -604,6 +612,7 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 linkMultipleField: linkMultipleField,
                 linkMultipleFieldForeign: linkMultipleFieldForeign,
                 relationshipField: this.model.get('relationshipField'),
+                mainRelationshipEntity: this.model.get('mainRelationshipEntity'),
                 relationshipFieldForeign: this.model.get('relationshipFieldForeign'),
                 audited: audited,
                 auditedForeign: auditedForeign
