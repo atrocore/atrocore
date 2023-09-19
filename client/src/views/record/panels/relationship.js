@@ -72,7 +72,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
             this.link = this.link || this.defs.link || this.panelName;
 
-            if (this.getMetadata().get(`scopes.${this.model.name}.relationInheritance`) === true) {
+            if (this.getMetadata().get(`scopes.${this.model.name}.relationInheritance`) === true && this.model.get('isRoot') === false) {
                 let unInheritedRelations = ['parents', 'children'];
                 (this.getMetadata().get(`scopes.${this.model.name}.unInheritedRelations`) || []).forEach(field => {
                     unInheritedRelations.push(field);
