@@ -324,7 +324,7 @@ class Metadata extends AbstractListener
                         $data['entityDefs'][$foreignEntity]['fields'][$foreignField]['massUpdateDisabled'] = true;
                         $data['entityDefs'][$foreignEntity]['fields'][$foreignField]['importDisabled'] = true;
                         if (!isset($data['clientDefs'][$foreignEntity]['relationshipPanels'][$foreignField]['view'])) {
-                            $data['clientDefs'][$foreignEntity]['relationshipPanels'][$foreignField]['view'] = "views/record/panels/for-relationship-type";
+                            $data['clientDefs'][$foreignEntity]['relationshipPanels'][$foreignField]['view'] = "treo-core:views/record/panels/for-relationship-type";
                         }
                     } else {
                         if (
@@ -414,6 +414,15 @@ class Metadata extends AbstractListener
                     'layoutRelationshipsDisabled' => true
                 ];
             }
+
+            $data['entityDefs'][$scope]['fields']['isInherited'] = [
+                "type"               => "bool",
+                "notStorable"        => true,
+                "massUpdateDisabled" => true,
+                "filterDisabled"     => true,
+                "importDisabled"     => true,
+                "emHidden"           => true
+            ];
         }
 
         /**

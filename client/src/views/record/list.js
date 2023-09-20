@@ -381,6 +381,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.checkboxes = _.isUndefined(this.options.checkboxes) ? this.checkboxes : this.options.checkboxes;
             this.selectable = _.isUndefined(this.options.selectable) ? this.selectable : this.options.selectable;
             this.rowActionsView = _.isUndefined(this.options.rowActionsView) ? this.rowActionsView : this.options.rowActionsView;
+            this.rowActionsColumnWidth = _.isUndefined(this.options.rowActionsColumnWidth) ? this.rowActionsColumnWidth : this.options.rowActionsColumnWidth;
             this.showMore = _.isUndefined(this.options.showMore) ? this.showMore : this.options.showMore;
 
             this.massActionsDisabled = this.options.massActionsDisabled || this.massActionsDisabled;

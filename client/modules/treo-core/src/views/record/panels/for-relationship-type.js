@@ -1,40 +1,18 @@
-/*
- * This file is part of EspoCRM and/or AtroCore.
+/**
+ * AtroCore Software
  *
- * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * This source file is available under GNU General Public License version 3 (GPLv3).
+ * Full copyright and license information is available in LICENSE.txt, located in the root directory.
  *
- * AtroCore is EspoCRM-based Open Source application.
- * Copyright (C) 2020 AtroCore UG (haftungsbeschränkt).
- *
- * AtroCore as well as EspoCRM is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * AtroCore as well as EspoCRM is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
- *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU General Public License version 3.
- *
- * In accordance with Section 7(b) of the GNU General Public License version 3,
- * these Appropriate Legal Notices must retain the display of the "EspoCRM" word
- * and "AtroCore" word.
+ * @copyright  Copyright (c) AtroCore UG (https://www.atrocore.com)
+ * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/record/panels/for-relationship-type', 'views/record/panels/relationship', Dep => {
+Espo.define('treo-core:views/record/panels/for-relationship-type', 'views/record/panels/relationship', Dep => {
 
     return Dep.extend({
 
-        rowActionsView: 'views/record/row-actions/relationship-no-unlink',
+        rowActionsView: 'treo-core:views/record/row-actions/for-relationship-type',
 
         setup() {
             this.defs.select = false;
@@ -56,6 +34,18 @@ Espo.define('views/record/panels/for-relationship-type', 'views/record/panels/re
                         massRelateDisabled: false
                     },
                     acl: 'create',
+                    aclScope: relationshipScope
+                });
+            }
+
+            if (!this.model.get('isRoot')) {
+                this.actionList.push({
+                    label: 'inheritAll',
+                    action: 'inheritAll',
+                    data: {
+                        "relationshipScope": relationshipScope
+                    },
+                    acl: 'edit',
                     aclScope: relationshipScope
                 });
             }
@@ -112,6 +102,40 @@ Espo.define('views/record/panels/for-relationship-type', 'views/record/panels/re
             }).then((response) => {
                 this.notify(response.message, 'success');
                 this.actionRefresh();
+                this.model.trigger('after:relate', this.panelName);
+            });
+        },
+
+        actionInheritAll(data) {
+            this.confirm(this.translate('inheritAllConfirmation', 'messages'), () => {
+                this.notify('Please wait...');
+                $.ajax({
+                    url: `${data.relationshipScope}/action/inheritAll`,
+                    type: 'POST',
+                    data: JSON.stringify({
+                        id: this.model.id
+                    }),
+                }).done(() => {
+                    this.notify(false);
+                    this.notify('Linked', 'success');
+                    this.collection.fetch();
+                    this.model.trigger('after:relate', this.panelName);
+                });
+            });
+        },
+
+        actionInheritRelationship(data) {
+            this.notify('Please wait...');
+            $.ajax({
+                url: `${data.entity}/action/inherit`,
+                type: 'POST',
+                data: JSON.stringify({
+                    id: data.id
+                }),
+            }).done(() => {
+                this.notify(false);
+                this.notify('Linked', 'success');
+                this.collection.fetch();
                 this.model.trigger('after:relate', this.panelName);
             });
         },

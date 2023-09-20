@@ -270,6 +270,9 @@ class EntityManager extends \Espo\Core\Controllers\Base
         if (array_key_exists('relationshipField', $data)) {
             $params['relationshipField'] = $data['relationshipField'];
         }
+        if (array_key_exists('mainRelationshipEntity', $data)) {
+            $params['mainRelationshipEntity'] = $data['mainRelationshipEntity'];
+        }
         if (array_key_exists('relationshipFieldForeign', $data)) {
             $params['relationshipFieldForeign'] = $data['relationshipFieldForeign'];
         }

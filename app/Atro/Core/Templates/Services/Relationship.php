@@ -13,11 +13,13 @@ declare(strict_types=1);
 
 namespace Atro\Core\Templates\Services;
 
+use Atro\Core\Exceptions\NotModified;
+use Atro\Core\Templates\Repositories\Relationship as RelationshipRepository;
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\Services\Record;
-use Atro\Core\Exceptions\NotModified;
 
 class Relationship extends Record
 {
@@ -43,6 +45,259 @@ class Relationship extends Record
         }
 
         return $list;
+    }
+
+    public function inheritAll(string $id): bool
+    {
+        if (!$this->getRepository()->inheritable()) {
+            return false;
+        }
+
+        $mainEntityType = $this->getRepository()->getMainRelationshipEntity();
+
+        $mainEntity = $this->getEntityManager()->getRepository($mainEntityType)->get($id);
+        if (empty($mainEntity)) {
+            return false;
+        }
+
+        $mainEntityParentsIds = $mainEntity->getLinkMultipleIdList('parents');
+        if (empty($mainEntityParentsIds)) {
+            return false;
+        }
+
+        foreach ($this->getRepository()->where([lcfirst($mainEntityType) . "Id" => $mainEntityParentsIds])->find() as $record) {
+            $input = new \stdClass();
+            foreach ($record->toArray() as $field => $value) {
+                foreach (RelationshipRepository::SYSTEM_FIELDS as $systemField) {
+                    if (in_array($field, [$systemField, $systemField . 'Id', $systemField . 'Name'])) {
+                        continue 2;
+                    }
+                }
+
+                $input->$field = $value;
+            }
+
+            $input->{lcfirst($mainEntityType) . "Id"} = $mainEntity->get('id');
+            $input->{lcfirst($mainEntityType) . "Name"} = $mainEntity->get('name');
+
+            try {
+                $this->createEntity($input);
+            } catch (\Throwable $e) {
+                $GLOBALS['log']->error('Inherit All: ' . $e->getMessage());
+            }
+        }
+
+        return true;
+    }
+
+    public function inherit(string $id): bool
+    {
+        if (!$this->getRepository()->inheritable()) {
+            return false;
+        }
+
+        $entity = $this->getEntity($id);
+        if (empty($entity)) {
+            return false;
+        }
+
+        $mainEntity = $this->getRepository()->getMainEntity($entity);
+        if (empty($mainEntity)) {
+            return false;
+        }
+
+        $parentIds = $this->getRepository()->getMainEntityParentIds($mainEntity);
+        if (empty($parentIds)) {
+            return false;
+        }
+
+        $columns = $this->getMetadata()->get(['entityDefs', $this->entityType, 'uniqueIndexes', 'unique_relationship']);
+        if (empty($columns)) {
+            return false;
+        }
+
+        $mainEntityField = lcfirst($mainEntity->getEntityType()) . 'Id';
+
+        $where = [$mainEntityField => $parentIds];
+        foreach ($columns as $column) {
+            if (in_array($column, ['deleted', Util::toUnderScore($mainEntityField)])) {
+                continue;
+            }
+            $field = Util::toCamelCase($column);
+            $where[$field] = $entity->get($field);
+        }
+
+        $parentRecord = $this
+            ->getRepository()
+            ->where($where)
+            ->findOne();
+
+        if (!empty($parentRecord)) {
+            $input = new \stdClass();
+            foreach ($parentRecord->toArray() as $field => $value) {
+                foreach (RelationshipRepository::SYSTEM_FIELDS as $systemField) {
+                    if (in_array($field, [$systemField, $systemField . 'Id', $systemField . 'Name'])) {
+                        continue 2;
+                    }
+                }
+
+                $input->$field = $value;
+            }
+
+            $input->{lcfirst($mainEntity->getEntityType()) . "Id"} = $mainEntity->get('id');
+            $input->{lcfirst($mainEntity->getEntityType()) . "Name"} = $mainEntity->get('name');
+
+            $this->updateEntity($entity->get('id'), $input);
+        }
+
+        return true;
+    }
+
+    public function createEntity($attachment)
+    {
+        if ($this->isPseudoTransaction()) {
+            return parent::createEntity($attachment);
+        }
+
+        if (!$this->getRepository()->inheritable()) {
+            return parent::createEntity($attachment);
+        }
+
+        $inTransaction = false;
+        if (!$this->getEntityManager()->getPDO()->inTransaction()) {
+            $this->getEntityManager()->getPDO()->beginTransaction();
+            $inTransaction = true;
+        }
+        try {
+            $result = parent::createEntity($attachment);
+            $this->createEntityForChildren(clone $attachment);
+            if ($inTransaction) {
+                $this->getEntityManager()->getPDO()->commit();
+            }
+        } catch (\Throwable $e) {
+            if ($inTransaction) {
+                $this->getEntityManager()->getPDO()->rollBack();
+            }
+            throw $e;
+        }
+
+        return $result;
+    }
+
+    protected function createEntityForChildren(\stdClass $data, string $parentTransactionId = null): void
+    {
+        $mainEntity = $this->getRepository()->getMainRelationshipEntity();
+        $mainRelationshipFieldId = lcfirst($mainEntity) . 'Id';
+        $mainRelationshipFieldName = lcfirst($mainEntity) . 'Name';
+
+        if (!property_exists($data, $mainRelationshipFieldId)) {
+            return;
+        }
+
+        $children = $this->getEntityManager()->getRepository($mainEntity)->getChildrenArray($data->$mainRelationshipFieldId);
+        foreach ($children as $child) {
+            $inputData = clone $data;
+            $inputData->$mainRelationshipFieldId = $child['id'];
+            $inputData->$mainRelationshipFieldName = $child['name'];
+            $transactionId = $this->getPseudoTransactionManager()->pushCreateEntityJob($this->entityType, $inputData, $parentTransactionId);
+            if ($child['childrenCount'] > 0) {
+                $this->createEntityForChildren(clone $inputData, $transactionId);
+            }
+        }
+    }
+
+    public function updateEntity($id, $data)
+    {
+        if ($this->isPseudoTransaction()) {
+            return parent::updateEntity($id, $data);
+        }
+
+        if (!$this->getRepository()->inheritable()) {
+            return parent::updateEntity($id, $data);
+        }
+
+        $inTransaction = false;
+        if (!$this->getEntityManager()->getPDO()->inTransaction()) {
+            $this->getEntityManager()->getPDO()->beginTransaction();
+            $inTransaction = true;
+        }
+        try {
+            $this->updateEntityForChildren($id, clone $data);
+            $result = parent::updateEntity($id, $data);
+            if ($inTransaction) {
+                $this->getEntityManager()->getPDO()->commit();
+            }
+        } catch (\Throwable $e) {
+            if ($inTransaction) {
+                $this->getEntityManager()->getPDO()->rollBack();
+            }
+            throw $e;
+        }
+
+        return $result;
+    }
+
+    protected function updateEntityForChildren(string $id, \stdClass $data, string $parentTransactionId = null): void
+    {
+        foreach ($this->getRepository()->getInheritedEntities($id) as $child) {
+            $inputData = clone $data;
+
+            $toRemove = ['_prev'];
+            foreach ($toRemove as $key) {
+                if (property_exists($inputData, $key)) {
+                    unset($inputData->$key);
+                }
+            }
+
+            if (!empty((array)$inputData)) {
+                $transactionId = $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->entityType, $child->get('id'), $inputData, $parentTransactionId);
+
+                if ($child->_childrenCount > 0) {
+                    $this->updateEntityForChildren($child->get('id'), clone $inputData, $transactionId);
+                }
+            }
+        }
+    }
+
+    public function deleteEntity($id)
+    {
+        if ($this->isPseudoTransaction()) {
+            return parent::deleteEntity($id);
+        }
+
+        if (!$this->getRepository()->inheritable()) {
+            return parent::deleteEntity($id);
+        }
+
+        $inTransaction = false;
+        if (!$this->getEntityManager()->getPDO()->inTransaction()) {
+            $this->getEntityManager()->getPDO()->beginTransaction();
+            $inTransaction = true;
+        }
+        try {
+            $this->deleteEntityFromChildren($id);
+            $result = parent::deleteEntity($id);
+            if ($inTransaction) {
+                $this->getEntityManager()->getPDO()->commit();
+            }
+        } catch (\Throwable $e) {
+            if ($inTransaction) {
+                $this->getEntityManager()->getPDO()->rollBack();
+            }
+            throw $e;
+        }
+
+        return $result;
+    }
+
+    protected function deleteEntityFromChildren(string $id, string $parentTransactionId = null): void
+    {
+        foreach ($this->getRepository()->getInheritedEntities($id) as $child) {
+            $transactionId = $this->getPseudoTransactionManager()->pushDeleteEntityJob($this->entityType, $child->get('id'), $parentTransactionId);
+            if ($child->_childrenCount > 0) {
+                $this->deleteEntityFromChildren($child->get('id'), $transactionId);
+            }
+        }
     }
 
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
@@ -71,6 +326,10 @@ class Relationship extends Record
         }
 
         parent::prepareEntityForOutput($entity);
+
+        if ($this->getRepository()->inheritable() && $entity->get('isInherited') === null) {
+            $entity->set('isInherited', $this->getRepository()->isInherited($entity));
+        }
     }
 
     public function getRelationsVirtualFields(string $entityName, ?array $select = null): array
@@ -263,7 +522,7 @@ class Relationship extends Record
                 try {
                     $record = $this->getRepository()->where($where)->findOne();
                     if (!empty($record)) {
-                        $this->getEntityManager()->removeEntity($record);
+                        $this->deleteEntity($record->get('id'));
                     }
                     $unRelated++;
                 } catch (\Throwable $e) {

@@ -10,7 +10,6 @@
     "other": "Інше"
   },
   "fields": {
-    "relationshipField": "Сутність відносин",
     "multiParents": "Кілька батьківських елементів",
     "dragAndDrop": "Drag & Drop",
     "fieldValueInheritance": "Успадкування значень полів",

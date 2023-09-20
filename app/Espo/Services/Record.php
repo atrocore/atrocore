@@ -2154,9 +2154,7 @@ class Record extends \Espo\Core\Services\Base
 
         foreach ($foreignIds as $k => $foreignId) {
             if ($k < $this->maxMassUnlinkCount) {
-                $this->originUnlinkAction = true;
                 $this->unlinkEntity($id, $link, $foreignId);
-                $this->originUnlinkAction = false;
             } else {
                 $this->getPseudoTransactionManager()->pushUnLinkEntityJob($this->entityType, $id, $link, $foreignId);
             }

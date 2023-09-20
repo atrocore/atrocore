@@ -749,6 +749,16 @@ class EntityManager
                 if (!empty($params['relationshipField'])) {
                     $dataLeft['fields'][$link]['relationshipField'] = true;
                 }
+                if (!empty($params['mainRelationshipEntity'])) {
+                    if (!empty($dataLeft['fields']) && is_array($dataLeft['fields'])) {
+                        foreach ($dataLeft['fields'] as $field => $fieldDefs) {
+                            if (!empty($fieldDefs['mainRelationshipEntity'])) {
+                                $dataLeft['fields'][$field]['mainRelationshipEntity'] = false;
+                            }
+                        }
+                    }
+                    $dataLeft['fields'][$link]['mainRelationshipEntity'] = true;
+                }
                 $dataRight = array(
                     'fields' => array(
                         $linkForeign => array(

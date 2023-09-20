@@ -11,6 +11,7 @@
   },
   "fields": {
     "relationshipField": "Relationship Entity",
+    "mainRelationshipEntity": "Main Relationship Entity",
     "multiParents": "Multiple Parents",
     "dragAndDrop": "Drag & Drop",
     "fieldValueInheritance": "Field Value Inheritance",
