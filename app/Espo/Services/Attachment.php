@@ -101,9 +101,9 @@ class Attachment extends Record
             $this->prepareAttachmentFilePath($attachment);
 
             // create file from chunks
-            file_put_contents($attachment->fileName, '');
+            $file = fopen($attachment->fileName, 'a+');
             foreach ($chunks as $chunk) {
-                file_put_contents($attachment->fileName, file_get_contents($path . '/' . $chunk), FILE_APPEND);
+                fwrite($file, file_get_contents($path . '/' . $chunk));
             }
 
             try {
