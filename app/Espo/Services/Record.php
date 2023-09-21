@@ -1165,7 +1165,13 @@ class Record extends \Espo\Core\Services\Base
                 case 'enum':
                     $data->{$field} = $this->modifyEnumValue($value, $field);
                     if (property_exists($data, '_prev') && !empty($data->_prev) && property_exists($data->_prev, $field)) {
-                        $data->_prev->{$field} = $this->modifyEnumValue($data->_prev->{$field}, $field, false);
+                        $value = $data->_prev->{$field};
+                        $modifiedValue = $this->modifyEnumValue($value, $field, false);
+                        if ($value !== $modifiedValue && $modifiedValue === '') {
+                            unset($data->_prev->{$field});
+                        } else {
+                            $data->_prev->{$field} = $modifiedValue;
+                        }
                     }
                     break;
                 case 'multiEnum':
