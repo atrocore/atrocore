@@ -1047,7 +1047,7 @@ class Record extends \Espo\Core\Services\Base
                 return $value;
             }
             if (!$validate) {
-                return '';
+                return $value;
             }
             throw new BadRequest(sprintf($this->getInjection('language')->translate('noSuchOptions', 'exceptions', 'Global'), $value, $fieldLabel));
         }
