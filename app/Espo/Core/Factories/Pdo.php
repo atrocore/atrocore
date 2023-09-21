@@ -42,45 +42,6 @@ class Pdo implements Factory
 {
     public function create(Container $container)
     {
-        $config = $container->get('config');
-
-        $params = [
-            'host'      => $config->get('database.host'),
-            'port'      => $config->get('database.port'),
-            'dbname'    => $config->get('database.dbname'),
-            'user'      => $config->get('database.user'),
-            'charset'   => $config->get('database.charset', 'utf8'),
-            'password'  => $config->get('database.password'),
-            'sslCA'     => $config->get('database.sslCA'),
-            'sslCert'   => $config->get('database.sslCert'),
-            'sslKey'    => $config->get('database.sslKey'),
-            'sslCAPath' => $config->get('database.sslCAPath'),
-            'sslCipher' => $config->get('database.sslCipher')
-        ];
-
-        // prepare params
-        $port = empty($params['port']) ? '' : "port={$params['port']};";
-
-        $options = [];
-        if (isset($params['sslCA'])) {
-            $options[\PDO::MYSQL_ATTR_SSL_CA] = $params['sslCA'];
-        }
-        if (isset($params['sslCert'])) {
-            $options[\PDO::MYSQL_ATTR_SSL_CERT] = $params['sslCert'];
-        }
-        if (isset($params['sslKey'])) {
-            $options[\PDO::MYSQL_ATTR_SSL_KEY] = $params['sslKey'];
-        }
-        if (isset($params['sslCAPath'])) {
-            $options[\PDO::MYSQL_ATTR_SSL_CAPATH] = $params['sslCAPath'];
-        }
-        if (isset($params['sslCipher'])) {
-            $options[\PDO::MYSQL_ATTR_SSL_CIPHER] = $params['sslCipher'];
-        }
-
-        $pdo = new \PDO("mysql:host={$params['host']};{$port}dbname={$params['dbname']};charset={$params['charset']}", $params['user'], $params['password'], $options);
-        $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-
-        return $pdo;
+        return $container->get('connection')->getWrappedConnection()->getWrappedConnection();
     }
 }
