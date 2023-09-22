@@ -1562,7 +1562,7 @@ class Record extends \Espo\Core\Services\Base
             ->dispatchEvent('beforeFindEntities', new Event(['params' => $params, 'service' => $this]))
             ->getArgument('params');
 
-        $disableCount = false;
+        $disableCount = $params['disableCount'] ?? false;
         if (
             $this->listCountQueryDisabled
             ||
