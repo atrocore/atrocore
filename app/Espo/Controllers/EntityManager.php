@@ -174,7 +174,7 @@ class EntityManager extends \Espo\Core\Controllers\Base
         }
 
         if ($this->getMetadata()->get(['scopes', $name, 'type']) === 'Hierarchy' && empty($data['multiParents']) && $this->getMetadata()->get(['scopes', $name, 'multiParents'])) {
-            if ($this->getContainer()->get('entityManager')->getRepository($name)->hasMultipleParents()) {
+            if ($this->getEntityManager()->getRepository($name)->hasMultipleParents()) {
                 throw new BadRequest($this->getContainer()->get('language')->translate('hasMultipleParents', 'exceptions'));
             }
         }
@@ -443,7 +443,7 @@ class EntityManager extends \Espo\Core\Controllers\Base
             }
 
             if (!empty($queries)) {
-                $this->getContainer()->get('pdo')->exec(implode(';', $queries));
+                $this->getEntityManager()->getPDO()->exec(implode(';', $queries));
             }
         }
 

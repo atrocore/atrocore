@@ -167,13 +167,13 @@ class FieldManager extends \Espo\Core\Controllers\Base
             throw new BadRequest();
         }
 
-        $event = $this->getContainer()->get('eventManager')->dispatch('FieldManagerController', 'renderScriptPreview', new Event(['data' => $data, 'result' => null]));
+        $event = $this->getEventManager()->dispatch('FieldManagerController', 'renderScriptPreview', new Event(['data' => $data, 'result' => null]));
         if (!empty($event->getArgument('result'))) {
             return $event->getArgument('result');
         }
 
         $outputType = property_exists($data, 'outputType') ? $data->outputType : 'text';
-        $entity = $this->getContainer()->get('entityManager')->getRepository($data->scope)->order('id', 'ASC')->findOne();
+        $entity = $this->getEntityManager()->getRepository($data->scope)->order('id', 'ASC')->findOne();
         $preview = $this->getContainer()->get('twig')->renderTemplate($data->script, ['entity' => $entity], $outputType);
         if (is_string($preview)) {
             $outputType = 'text';

@@ -47,11 +47,6 @@ class Record extends Base
 
     protected $defaultRecordServiceName = 'Record';
 
-    protected function getEntityManager()
-    {
-        return $this->getContainer()->get('entityManager');
-    }
-
     protected function getRecordService($name = null)
     {
         if (empty($name)) {

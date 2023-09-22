@@ -40,16 +40,6 @@ use \Espo\Core\Exceptions\NotFound;
 
 class Preferences extends \Espo\Core\Controllers\Base
 {
-    protected function getPreferences()
-    {
-        return $this->getContainer()->get('preferences');
-    }
-
-    protected function getEntityManager()
-    {
-        return $this->getContainer()->get('entityManager');
-    }
-
     protected function getCrypt()
     {
         return $this->getContainer()->get('crypt');

@@ -143,5 +143,21 @@ abstract class Base
     {
         return $this->getServiceFactory()->create($name);
     }
+
+    /**
+     * @return \Espo\ORM\EntityManager
+     */
+    protected function getEntityManager()
+    {
+        return $this->getContainer()->get('entityManager');
+    }
+
+    /**
+     * @return \Atro\Core\EventManager\Manager
+     */
+    protected function getEventManager()
+    {
+        return $this->getContainer()->get('eventManager');
+    }
 }
 
