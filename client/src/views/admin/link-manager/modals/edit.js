@@ -307,7 +307,6 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 defs: {
                     name: 'relationshipFieldForeign'
                 },
-                readOnly: !isNew,
                 tooltip: true,
                 tooltipText: this.translate('relationshipField', 'tooltips', 'EntityManager'),
                 tooltipLink: this.translate('relationshipField', 'tooltipLink', 'EntityManager')
