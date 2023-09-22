@@ -719,9 +719,6 @@ class EntityManager
                         )
                     )
                 );
-                if (!empty($params['relationshipFieldForeign'])) {
-                    $dataRight['fields'][$linkForeign]['relationshipField'] = true;
-                }
                 break;
             case 'manyToOne':
                 if ($this->getMetadata()->get('entityDefs.' . $entity . '.fields.' . $link)) {
@@ -749,17 +746,26 @@ class EntityManager
                         )
                     )
                 );
-                if (!empty($params['relationshipField'])) {
-                    $dataLeft['fields'][$link]['relationshipField'] = true;
-                }
-                if (!empty($params['mainRelationshipEntity'])) {
-                    foreach ($this->getMetadata()->get(['entityDefs', $entity, 'fields']) as $field => $fieldDefs) {
-                        if (!empty($fieldDefs['mainRelationshipEntity']) && $field !== $link) {
-                            throw new BadRequest($this->getLanguage()->translate('mainRelationshipEntityExists', 'exceptions', 'EntityManager'));
+
+                if (isset($params['mainRelationshipEntity'])) {
+                    $dataLeft['fields'][$link]['mainRelationshipEntity'] = !empty($params['mainRelationshipEntity']);
+                    if ($dataLeft['fields'][$link]['mainRelationshipEntity']) {
+                        $dataLeft['fields'][$link]['relationshipField'] = true;
+                        foreach ($this->getMetadata()->get(['entityDefs', $entity, 'fields']) as $field => $fieldDefs) {
+                            if (!empty($fieldDefs['mainRelationshipEntity']) && $field !== $link) {
+                                throw new BadRequest($this->getLanguage()->translate('mainRelationshipEntityExists', 'exceptions', 'EntityManager'));
+                            }
                         }
                     }
-                    $dataLeft['fields'][$link]['mainRelationshipEntity'] = true;
                 }
+
+                if (isset($params['relationshipField'])) {
+                    $dataLeft['fields'][$link]['relationshipField'] = !empty($params['relationshipField']);
+                    if (!$dataLeft['fields'][$link]['relationshipField']) {
+                        $dataLeft['fields'][$link]['mainRelationshipEntity'] = false;
+                    }
+                }
+
                 $dataRight = array(
                     'fields' => array(
                         $linkForeign => array(
@@ -867,6 +873,34 @@ class EntityManager
         }
 
         $isCustom = $this->getMetadata()->get("entityDefs.{$entity}.links.{$link}.isCustom");
+
+        if ($this->getMetadata()->get("entityDefs.{$entity}.links.{$link}.type") === 'belongsTo') {
+            $dataLeft = [];
+
+            if (isset($params['mainRelationshipEntity'])) {
+                $dataLeft['fields'][$link]['mainRelationshipEntity'] = !empty($params['mainRelationshipEntity']);
+                if ($dataLeft['fields'][$link]['mainRelationshipEntity']) {
+                    $dataLeft['fields'][$link]['relationshipField'] = true;
+                    foreach ($this->getMetadata()->get(['entityDefs', $entity, 'fields']) as $field => $fieldDefs) {
+                        if (!empty($fieldDefs['mainRelationshipEntity']) && $field !== $link) {
+                            throw new BadRequest($this->getLanguage()->translate('mainRelationshipEntityExists', 'exceptions', 'EntityManager'));
+                        }
+                    }
+                }
+            }
+
+            if (isset($params['relationshipField'])) {
+                $dataLeft['fields'][$link]['relationshipField'] = !empty($params['relationshipField']);
+                if (!$dataLeft['fields'][$link]['relationshipField']) {
+                    $dataLeft['fields'][$link]['mainRelationshipEntity'] = false;
+                }
+            }
+
+            if (!empty($dataLeft)) {
+                $this->getMetadata()->set('entityDefs', $entity, $dataLeft);
+                $this->getMetadata()->save();
+            }
+        }
 
         if (
             $this->getMetadata()->get("entityDefs.{$entity}.links.{$link}.type") == 'hasMany'
