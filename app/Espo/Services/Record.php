@@ -1629,7 +1629,7 @@ class Record extends \Espo\Core\Services\Base
             ->dispatchEvent('beforeGetListKanban', new Event(['params' => $params, 'service' => $this]))
             ->getArgument('params');
 
-        $disableCount = false;
+        $disableCount = $params['disableCount'] ?? false;
         if (
             $this->listCountQueryDisabled
             ||
@@ -1802,7 +1802,7 @@ class Record extends \Espo\Core\Services\Base
 
         $recordService = $this->getRecordService($foreignEntityName);
 
-        $disableCount = false;
+        $disableCount = $params['disableCount'] ?? false;
         if (
             in_array($this->entityType, $this->getConfig()->get('disabledCountQueryEntityList', []))
         ) {
