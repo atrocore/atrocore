@@ -316,6 +316,17 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 tooltipLink: this.translate('linkAudited', 'tooltipLink', 'EntityManager')
             });
 
+            this.listenTo(this.model, 'change:relationshipField', () => {
+                if (!this.model.get('relationshipField')){
+                    this.model.set('mainRelationshipEntity', false);
+                }
+            });
+
+            this.listenTo(this.model, 'change:mainRelationshipEntity', () => {
+                if (this.model.get('mainRelationshipEntity')){
+                    this.model.set('relationshipField', true);
+                }
+            });
 
             this.model.fetchedAttributes = this.model.getClonedAttributes();
         },
