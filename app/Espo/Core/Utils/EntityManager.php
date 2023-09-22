@@ -73,6 +73,9 @@ class EntityManager
         return $this->metadata;
     }
 
+    /**
+     * @return \Espo\ORM\EntityManager
+     */
     protected function getEntityManager()
     {
         if (!$this->container) return;
@@ -750,11 +753,9 @@ class EntityManager
                     $dataLeft['fields'][$link]['relationshipField'] = true;
                 }
                 if (!empty($params['mainRelationshipEntity'])) {
-                    if (!empty($dataLeft['fields']) && is_array($dataLeft['fields'])) {
-                        foreach ($dataLeft['fields'] as $field => $fieldDefs) {
-                            if (!empty($fieldDefs['mainRelationshipEntity'])) {
-                                $dataLeft['fields'][$field]['mainRelationshipEntity'] = false;
-                            }
+                    foreach ($this->getMetadata()->get(['entityDefs', $entity, 'fields']) as $field => $fieldDefs) {
+                        if (!empty($fieldDefs['mainRelationshipEntity']) && $field !== $link) {
+                            throw new BadRequest($this->getLanguage()->translate('mainRelationshipEntityExists', 'exceptions', 'EntityManager'));
                         }
                     }
                     $dataLeft['fields'][$link]['mainRelationshipEntity'] = true;

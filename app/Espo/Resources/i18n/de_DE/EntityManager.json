@@ -65,6 +65,9 @@
     "linkAlreadyExists": "Relationsnamenkonflikt",
     "linkConflict": "Eine Relation mit diesem Namen existiert bereits"
   },
+  "exceptions": {
+    "mainRelationshipEntityExists": "Für die Entität ist bereits eine Hauptbeziehungsentität vorhanden."
+  },
   "tooltips": {
     "dragAndDrop": "Diese Option aktiviert die Hierarchiesortierung, sodass keine andere Sortierung in der Hierarchienavigation möglich ist.",
     "relationshipField": "Aktivieren Sie diese Option, um die fremde Entität als die Zielentität für eine Beziehung zu markieren. Alle Zielentitäten bilden zusammen einen eindeutigen Index.",
