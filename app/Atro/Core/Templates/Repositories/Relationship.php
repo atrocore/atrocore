@@ -91,16 +91,16 @@ class Relationship extends RDB
         return $this->mainEntityParentIds[$mainEntity->get('id')];
     }
 
-    public function isInherited(Entity $entity): bool
+    public function isInherited(Entity $entity): ?bool
     {
         $mainEntity = $this->getMainEntity($entity);
         if (empty($mainEntity)) {
-            return false;
+            return null;
         }
 
         $parentIds = $this->getMainEntityParentIds($mainEntity);
         if (empty($parentIds)) {
-            return false;
+            return null;
         }
 
         $parentRecord = $this

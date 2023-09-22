@@ -327,7 +327,7 @@ class Relationship extends Record
 
         parent::prepareEntityForOutput($entity);
 
-        if ($this->getRepository()->inheritable() && $entity->get('isInherited') === null) {
+        if ($this->getRepository()->inheritable()) {
             $entity->set('isInherited', $this->getRepository()->isInherited($entity));
         }
     }
