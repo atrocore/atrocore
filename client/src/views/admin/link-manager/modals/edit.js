@@ -273,7 +273,6 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 defs: {
                     name: 'relationshipField'
                 },
-                readOnly: !isNew,
                 tooltip: true,
                 tooltipText: this.translate('relationshipField', 'tooltips', 'EntityManager'),
                 tooltipLink: this.translate('relationshipField', 'tooltipLink', 'EntityManager')
@@ -285,8 +284,7 @@ Espo.define('views/admin/link-manager/modals/edit', ['views/modal', 'views/admin
                 el: this.options.el + ' .field[data-name="mainRelationshipEntity"]',
                 defs: {
                     name: 'mainRelationshipEntity'
-                },
-                readOnly: !isNew
+                }
             });
 
             this.createView('linkMultipleFieldForeign', 'views/fields/bool', {
