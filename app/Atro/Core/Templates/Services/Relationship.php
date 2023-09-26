@@ -87,6 +87,23 @@ class Relationship extends Record
             }
         }
 
+        $stored = $this->findEntities([
+            'disableCount' => true,
+            'where'        => [
+                [
+                    'type'      => 'equal',
+                    'attribute' => lcfirst($mainEntityType) . "Id",
+                    'value'     => $mainEntity->get('id')
+                ]
+            ]
+        ]);
+
+        foreach ($stored['collection'] as $record) {
+            if ($record->get('isInherited') === false) {
+                $this->inherit($record->get('id'));
+            }
+        }
+
         return true;
     }
 
