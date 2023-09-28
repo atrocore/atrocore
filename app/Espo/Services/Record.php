@@ -72,8 +72,6 @@ class Record extends \Espo\Core\Services\Base
         'pseudoTransactionManager'
     );
 
-    protected $getEntityBeforeUpdate = false;
-
     protected $entityName;
 
     protected $entityType;
@@ -1306,29 +1304,23 @@ class Record extends \Espo\Core\Services\Base
         $id = $event->getArgument('id');
         $data = $event->getArgument('data');
 
-        unset($data->deleted);
-
         if (empty($id)) {
             throw new BadRequest();
+        }
+
+        $entity = $this->getRepository()->get($id);
+        if (empty($entity)) {
+            throw new NotFound();
         }
 
         $this->filterInput($data, $id);
         $this->handleInput($data, $id);
 
-        unset($data->modifiedById);
-        unset($data->modifiedByName);
-        unset($data->createdById);
-        unset($data->createdByName);
-        unset($data->createdAt);
-
-        if ($this->getEntityBeforeUpdate) {
-            $entity = $this->getEntity($id);
-        } else {
-            $entity = $this->getRepository()->get($id);
-        }
-
-        if (!$entity) {
-            throw new NotFound();
+        // remove system fields
+        foreach (['modifiedById', 'modifiedByName', 'createdById', 'createdByName', 'createdAt', 'deleted'] as $field) {
+            if (property_exists($data, $field)) {
+                unset($data->$field);
+            }
         }
 
         // set input data to entity property
