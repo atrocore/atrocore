@@ -55,32 +55,40 @@ class Twig
 
         $res = trim($res);
 
-        if (strtolower($res) === 'null' || ($outputType !== 'text' && $res === '')) {
+        if (strtolower($res) === 'null') {
             return null;
         }
 
         switch ($outputType) {
             case 'int':
-                $res = (int)$res;
+                $res = $res === '' ? null : (int)$res;
                 break;
             case 'float':
-                $res = (float)$res;
+                $res = $res === '' ? null : (float)$res;
                 break;
             case 'bool':
                 $res = strtolower($res) === 'true' || $res === '1';
                 break;
             case 'date':
-                try {
-                    $res = (new \DateTime($res))->format('Y-m-d');
-                } catch (\Throwable $e) {
+                if ($res === '') {
                     $res = null;
+                } else {
+                    try {
+                        $res = (new \DateTime($res))->format('Y-m-d');
+                    } catch (\Throwable $e) {
+                        $res = null;
+                    }
                 }
                 break;
             case 'datetime':
-                try {
-                    $res = (new \DateTime($res))->format('Y-m-d H:i:s');
-                } catch (\Throwable $e) {
+                if ($res === '') {
                     $res = null;
+                } else {
+                    try {
+                        $res = (new \DateTime($res))->format('Y-m-d H:i:s');
+                    } catch (\Throwable $e) {
+                        $res = null;
+                    }
                 }
                 break;
         }
