@@ -65,6 +65,11 @@ class Relationship extends Record
             return false;
         }
 
+        $columns = $this->getMetadata()->get(['entityDefs', $this->entityType, 'uniqueIndexes', 'unique_relationship']);
+        if (empty($columns)) {
+            return false;
+        }
+
         foreach ($this->getRepository()->where([lcfirst($mainEntityType) . "Id" => $mainEntityParentsIds])->find() as $record) {
             $input = new \stdClass();
             foreach ($record->toArray() as $field => $value) {
@@ -77,30 +82,32 @@ class Relationship extends Record
                 $input->$field = $value;
             }
 
-            $input->{lcfirst($mainEntityType) . "Id"} = $mainEntity->get('id');
+            $mainEntityField = lcfirst($mainEntity->getEntityType()) . 'Id';
+
+            $where = [$mainEntityField => $mainEntity->get('id')];
+            foreach ($columns as $column) {
+                if (in_array($column, ['deleted', Util::toUnderScore($mainEntityField)])) {
+                    continue;
+                }
+                $field = Util::toCamelCase($column);
+                $where[$field] = $record->get($field);
+            }
+            $childRecord = $this
+                ->getRepository()
+                ->where($where)
+                ->findOne();
+
+            $input->$mainEntityField = $mainEntity->get('id');
             $input->{lcfirst($mainEntityType) . "Name"} = $mainEntity->get('name');
 
             try {
-                $this->createEntity($input);
+                if (empty($childRecord)) {
+                    $this->createEntity($input);
+                } else {
+                    $this->updateEntity($childRecord->get('id'), $input);
+                }
             } catch (\Throwable $e) {
                 $GLOBALS['log']->error('Inherit All: ' . $e->getMessage());
-            }
-        }
-
-        $stored = $this->findEntities([
-            'disableCount' => true,
-            'where'        => [
-                [
-                    'type'      => 'equal',
-                    'attribute' => lcfirst($mainEntityType) . "Id",
-                    'value'     => $mainEntity->get('id')
-                ]
-            ]
-        ]);
-
-        foreach ($stored['collection'] as $record) {
-            if ($record->get('isInherited') === false) {
-                $this->inherit($record->get('id'));
             }
         }
 
