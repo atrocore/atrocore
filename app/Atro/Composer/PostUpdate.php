@@ -562,6 +562,7 @@ class PostUpdate
 
     private static function refreshTranslations()
     {
+        return;
         if (!self::isInstalled()) {
             return;
         }

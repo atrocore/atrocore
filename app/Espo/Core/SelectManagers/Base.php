@@ -350,13 +350,13 @@ class Base
                 case 'linkedWith':
                 case 'notLinkedWith':
                     $where[$k] = [
-                        'type' => $item['type'],
+                        'type'      => $item['type'],
                         'attribute' => $defs['relationshipFilterField'],
-                        'subQuery' => [
+                        'subQuery'  => [
                             [
-                                'type' => 'in',
+                                'type'      => 'in',
                                 'attribute' => $defs['relationshipFilterForeignField'] . 'Id',
-                                'value' => $item['value']
+                                'value'     => $item['value']
                             ]
                         ]
                     ];
@@ -364,7 +364,7 @@ class Base
                 case 'isNotLinked':
                 case 'isLinked':
                     $where[$k] = [
-                        'type' => $item['type'],
+                        'type'      => $item['type'],
                         'attribute' => 'productChannels'
                     ];
                     break;
@@ -675,7 +675,7 @@ class Base
             $this->addLeftJoin(['assignedUsers', 'assignedUsersAccess'], $result);
             $result['whereClause'][] = [
                 'OR' => [
-                    'teamsAccess.id' => $this->getUser()->getLinkMultipleIdList('teams'),
+                    'teamsAccess.id'         => $this->getUser()->getLinkMultipleIdList('teams'),
                     'assignedUsersAccess.id' => $this->getUser()->id
                 ]
             ];
@@ -721,7 +721,7 @@ class Base
             if ($this->getSeed()->hasAttribute('parentId') && $this->getSeed()->hasRelation('parent')) {
                 $d[] = array(
                     'parentType' => 'Account',
-                    'parentId' => $accountId
+                    'parentId'   => $accountId
                 );
             }
         }
@@ -776,6 +776,18 @@ class Base
     {
         $result['whereClause'][] = [
             'isActive' => true
+        ];
+    }
+
+    /**
+     * @param array $result
+     *
+     * @return void
+     */
+    protected function boolFilterOnlyArchived(array &$result): void
+    {
+        $result['whereClause'][] = [
+            'isArchived' => true
         ];
     }
 
@@ -876,8 +888,8 @@ class Base
         if ($this->metadata->get(['scopes', $this->entityType, 'hasArchive'])) {
             //filter only if boolean filter not activated
             $hasArchivedFilterInWhere = count(array_filter($result['whereClause'], function ($row) {
-                return isset($row['isArchived=']);
-            })) > 0;
+                    return isset($row['isArchived=']) || isset($row['isArchived']);
+                })) > 0;
 
             if (!isset($result['withArchived']) && !$hasArchivedFilterInWhere) {
                 $result['whereClause'][] = [
@@ -1333,7 +1345,7 @@ class Base
                     $dt = new \DateTime();
                     $part['AND'] = [
                         $attribute . '>=' => $dt->modify('first day of this month')->format('Y-m-d'),
-                        $attribute . '<' => $dt->add(new \DateInterval('P1M'))->format('Y-m-d'),
+                        $attribute . '<'  => $dt->add(new \DateInterval('P1M'))->format('Y-m-d'),
                     ];
                     break;
 
@@ -1341,7 +1353,7 @@ class Base
                     $dt = new \DateTime();
                     $part['AND'] = [
                         $attribute . '>=' => $dt->modify('first day of last month')->format('Y-m-d'),
-                        $attribute . '<' => $dt->add(new \DateInterval('P1M'))->format('Y-m-d'),
+                        $attribute . '<'  => $dt->add(new \DateInterval('P1M'))->format('Y-m-d'),
                     ];
                     break;
 
@@ -1349,7 +1361,7 @@ class Base
                     $dt = new \DateTime();
                     $part['AND'] = [
                         $attribute . '>=' => $dt->modify('first day of next month')->format('Y-m-d'),
-                        $attribute . '<' => $dt->add(new \DateInterval('P1M'))->format('Y-m-d'),
+                        $attribute . '<'  => $dt->add(new \DateInterval('P1M'))->format('Y-m-d'),
                     ];
                     break;
 
@@ -1359,7 +1371,7 @@ class Base
                     $dt->modify('first day of January this year');
                     $part['AND'] = [
                         $attribute . '>=' => $dt->add(new \DateInterval('P' . (($quarter - 1) * 3) . 'M'))->format('Y-m-d'),
-                        $attribute . '<' => $dt->add(new \DateInterval('P3M'))->format('Y-m-d'),
+                        $attribute . '<'  => $dt->add(new \DateInterval('P3M'))->format('Y-m-d'),
                     ];
                     break;
 
@@ -1374,7 +1386,7 @@ class Base
                     }
                     $part['AND'] = [
                         $attribute . '>=' => $dt->add(new \DateInterval('P' . (($quarter - 1) * 3) . 'M'))->format('Y-m-d'),
-                        $attribute . '<' => $dt->add(new \DateInterval('P3M'))->format('Y-m-d'),
+                        $attribute . '<'  => $dt->add(new \DateInterval('P3M'))->format('Y-m-d'),
                     ];
                     break;
 
@@ -1382,7 +1394,7 @@ class Base
                     $dt = new \DateTime();
                     $part['AND'] = [
                         $attribute . '>=' => $dt->modify('first day of January this year')->format('Y-m-d'),
-                        $attribute . '<' => $dt->add(new \DateInterval('P1Y'))->format('Y-m-d'),
+                        $attribute . '<'  => $dt->add(new \DateInterval('P1Y'))->format('Y-m-d'),
                     ];
                     break;
 
@@ -1390,7 +1402,7 @@ class Base
                     $dt = new \DateTime();
                     $part['AND'] = [
                         $attribute . '>=' => $dt->modify('first day of January last year')->format('Y-m-d'),
-                        $attribute . '<' => $dt->add(new \DateInterval('P1Y'))->format('Y-m-d'),
+                        $attribute . '<'  => $dt->add(new \DateInterval('P1Y'))->format('Y-m-d'),
                     ];
                     break;
 
@@ -1770,7 +1782,7 @@ class Base
 
     public function setDistinct($distinct, &$result)
     {
-        $result['distinct'] = (bool) $distinct;
+        $result['distinct'] = (bool)$distinct;
     }
 
     public function addAndWhere($whereClause, &$result)
@@ -1892,8 +1904,8 @@ class Base
             $where = $function . ':' . implode(',', $fullTextSearchColumnSanitizedList) . ':' . $textFilter;
 
             $result = [
-                'where' => $where,
-                'fieldList' => $fullTextSearchFieldList,
+                'where'      => $where,
+                'fieldList'  => $fullTextSearchFieldList,
                 'columnList' => $fullTextSearchColumnList
             ];
         }

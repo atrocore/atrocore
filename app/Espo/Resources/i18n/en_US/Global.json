@@ -382,6 +382,7 @@
   },
   "boolFilters": {
     "onlyActive": "Active",
+    "onlyArchived": "Archived",
     "onlyMy": "My",
     "assignedToMe": "Assigned to me",
     "ownedByMe": "Owned by me"

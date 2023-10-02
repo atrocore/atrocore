@@ -381,6 +381,7 @@
   },
   "boolFilters": {
     "onlyActive": "Активний",
+    "onlyArchived": "Архівовано",
     "assignedToMe": "Призначений мені",
     "ownedByMe": "Належить мені",
     "onlyMy": "Тільки мої",

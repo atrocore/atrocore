@@ -334,7 +334,8 @@
     "followed": "Siguiendo",
     "onlyActive": "Active",
     "assignedToMe": "Assigned to me",
-    "ownedByMe": "Owned by me"
+    "ownedByMe": "Owned by me",
+    "onlyArchived": "Archivado"
   },
   "presetFilters": {
     "followed": "Siguiendo",
