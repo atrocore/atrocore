@@ -114,6 +114,11 @@ class QueueItem extends Base
 
         $fileName = str_pad((string)($sortOrder % $filesInDir), 4, '0', STR_PAD_LEFT);
 
+        $parts = explode('.', (string)$sortOrder);
+        if (isset($parts[1])) {
+            $fileName .= '_' . str_pad((string)((int)$parts[1]), 4, '0', STR_PAD_LEFT);
+        }
+
         switch ($priority) {
             case 'Highest':
                 $dirPath = QueueManager::QUEUE_DIR_PATH . '/0';
