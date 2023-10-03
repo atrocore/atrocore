@@ -17,6 +17,8 @@ class V1Dot6Dot51 extends Base
 {
     public function up(): void
     {
+        $this->exec("CREATE INDEX IDX_PARENT_TYPE ON note (parent_type)");
+
         $this->exec("DROP INDEX UNIQ_BA4B6DE845AFA4EA ON queue_item");
 
         $this->exec("ALTER TABLE queue_item CHANGE sort_order sort_order DOUBLE PRECISION DEFAULT NULL COLLATE `utf8mb4_unicode_ci`");

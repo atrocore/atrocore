@@ -388,41 +388,23 @@ class Composer extends \Espo\Core\Templates\Services\HasContainer
         return $package->get('packageId');
     }
 
-    /**
-     * Get logs
-     *
-     * @param Request $request
-     *
-     * @return array
-     */
     public function getLogs(Request $request): array
     {
-        // prepare result
+        /** @var \Espo\Repositories\Note $repo */
+        $repo = $this->getEntityManager()->getRepository('Note');
+
         $result = [
-            'total' => 0,
-            'list'  => []
+            'list'  => [],
+            'total' => $repo->where(['parentType' => 'ModuleManager'])->count()
         ];
-
-        // prepare where
-        $where = [
-            'whereClause' => [
-                'parentType' => 'ModuleManager'
-            ],
-            'offset'      => (int)$request->get('offset'),
-            'limit'       => (int)$request->get('maxSize'),
-            'orderBy'     => 'number',
-            'order'       => 'DESC'
-        ];
-
-        $result['total'] = $this->getNoteCount($where);
 
         if ($result['total'] > 0) {
-            if (!empty($request->get('after'))) {
-                $where['whereClause']['createdAt>'] = $request->get('after');
-            }
-
-            // get collection
-            $result['list'] = $this->getNoteData($where);
+            $result['list'] = $repo
+                ->where(['parentType' => 'ModuleManager'])
+                ->order('number', 'DESC')
+                ->limit((int)$request->get('offset'), (int)$request->get('maxSize'))
+                ->find()
+                ->toArray();
         }
 
         return $result;
@@ -667,38 +649,6 @@ class Composer extends \Espo\Core\Templates\Services\HasContainer
         }
 
         return $result;
-    }
-
-    /**
-     * Get note count
-     *
-     * @param array $where
-     *
-     * @return int
-     */
-    protected function getNoteCount(array $where): int
-    {
-        return $this
-            ->getEntityManager()
-            ->getRepository('Note')
-            ->count(['whereClause' => $where['whereClause']]);
-    }
-
-    /**
-     * Get note data
-     *
-     * @param array $where
-     *
-     * @return array
-     */
-    protected function getNoteData(array $where): array
-    {
-        $entities = $this
-            ->getEntityManager()
-            ->getRepository('Note')
-            ->find($where);
-
-        return !empty($entities) ? $entities->toArray() : [];
     }
 
     /**

@@ -193,6 +193,10 @@
             "type": "index",
             "columns": ["parentId", "parentType"]
         },
+        "parentType": {
+            "type": "index",
+            "columns": ["parentType"]
+        },
         "parentAndSuperParent": {
             "type": "index",
             "columns": ["parentId", "parentType", "superParentId", "superParentType"]
