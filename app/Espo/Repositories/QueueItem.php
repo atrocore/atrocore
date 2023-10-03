@@ -49,9 +49,34 @@ class QueueItem extends Base
         $this->getPDO()->exec("DELETE FROM `queue_item` WHERE modified_at<'$date'");
     }
 
+    public function updateSortOrder(string $id): void
+    {
+        $entity = $this->get($id);
+        if (empty($entity)) {
+            return;
+        }
+
+        $sortOrder = $entity->get('position');
+        if (!empty($parent = $entity->get('parent'))) {
+            $sortOrder = $parent->get('position') . '.' . $sortOrder;
+        }
+
+        $this->getConnection()->createQueryBuilder()
+            ->update('queue_item')
+            ->set('sort_order', (float)$sortOrder)
+            ->where('id = :id')
+            ->setParameter('id', $entity->get('id'))
+            ->executeQuery();
+    }
+
     protected function afterSave(Entity $entity, array $options = [])
     {
         parent::afterSave($entity, $options);
+
+        // update sort order
+        if ($entity->isNew()) {
+            $this->updateSortOrder($entity->get('id'));
+        }
 
         /**
          * Create file
@@ -82,7 +107,7 @@ class QueueItem extends Base
         }
     }
 
-    public function getFilePath(int $sortOrder, string $priority): string
+    public function getFilePath(float $sortOrder, string $priority): string
     {
         $filesInDir = 7000;
         $dirName = (int)($sortOrder / $filesInDir);

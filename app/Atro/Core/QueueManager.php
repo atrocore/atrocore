@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core;
 
+use Atro\DTO\QueueItemDTO;
 use Espo\Core\Exceptions\Duplicate;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\ServiceFactory;
@@ -40,16 +41,42 @@ class QueueManager
         return $this->runJob($stream);
     }
 
-    public function push(string $name, string $serviceName, array $data = [], string $priority = 'Normal', string $md5Hash = ''): bool
+    /**
+     * @param QueueItemDTO $dto
+     *
+     * @return bool
+     * @throws Duplicate
+     * @throws Error
+     */
+    public function push(...$input): bool
     {
+        $dto = $this->prepareDTO($input);
+
         // validation
-        if (!$this->isService($serviceName)) {
+        if (!$this->isService($dto->getServiceName())) {
             return false;
         }
 
-        $id = $this->createQueueItem($name, $serviceName, $data, $priority, $md5Hash);
+        $id = $this->createQueueItem($dto);
 
         return !empty($id);
+    }
+
+    protected function prepareDTO(array $input): QueueItemDTO
+    {
+        $dto = $input[0];
+
+        if (!$input[0] instanceof QueueItemDTO) {
+            $dto = (new QueueItemDTO($input[0], $input[1], $input[2]));
+            if (isset($input[3])) {
+                $dto->setPriority($input[3]);
+            }
+            if (isset($input[4])) {
+                $dto->setHash($input[3]);
+            }
+        }
+
+        return $dto;
     }
 
     public function tryAgain(string $id): bool
@@ -68,8 +95,16 @@ class QueueManager
         return true;
     }
 
-    public function createQueueItem(string $name, string $serviceName, array $data = [], string $priority = 'Normal', string $md5Hash = ''): string
+    /**
+     * @param QueueItemDTO $dto
+     *
+     * @return string
+     * @throws Duplicate
+     */
+    public function createQueueItem(...$input): string
     {
+        $dto = $this->prepareDTO($input);
+
         /** @var Repository $repository */
         $repository = $this->getEntityManager()->getRepository('QueueItem');
 
@@ -82,10 +117,10 @@ class QueueManager
         $item = $repository->get();
         $item->set(
             [
-                'name'           => $name,
-                'serviceName'    => $serviceName,
-                'priority'       => $priority,
-                'data'           => $data,
+                'name'           => $dto->getName(),
+                'serviceName'    => $dto->getServiceName(),
+                'priority'       => $dto->getPriority(),
+                'data'           => $dto->getData(),
                 'createdById'    => $user->get('id'),
                 'ownerUserId'    => $user->get('id'),
                 'assignedUserId' => $user->get('id'),
@@ -93,9 +128,11 @@ class QueueManager
             ]
         );
 
-        if (!empty($md5Hash)) {
-            $item->set('md5Hash', $md5Hash);
-            $duplicate = $repository->select(['id'])->where(['md5Hash' => $md5Hash, 'status' => ['Pending', 'Running']])->findOne();
+        $hash = $dto->getHash();
+
+        if (!empty($hash)) {
+            $item->set('md5Hash', $hash);
+            $duplicate = $repository->select(['id'])->where(['md5Hash' => $hash, 'status' => ['Pending', 'Running']])->findOne();
             if (!empty($duplicate)) {
                 throw new Duplicate($this->container->get('language')->translate('jobExist', 'exceptions', 'QueueItem'));
             }
