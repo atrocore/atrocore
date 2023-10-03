@@ -113,7 +113,6 @@ class QueueItem extends Base
         $dirName = (int)($sortOrder / $filesInDir);
 
         $fileName = str_pad((string)($sortOrder % $filesInDir), 4, '0', STR_PAD_LEFT);
-
         $parts = explode('.', (string)$sortOrder);
         if (isset($parts[1])) {
             $fileName .= '_' . str_pad((string)((int)$parts[1]), 4, '0', STR_PAD_LEFT);
