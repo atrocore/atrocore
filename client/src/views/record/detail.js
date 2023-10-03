@@ -342,7 +342,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     this[method] = function () {
                         let path = dropDownItems[item].actionViewPath;
 
-                        let o = {};
+                        let o = {dropdownItem: dropDownItems[item]};
                         (dropDownItems[item].optionsToPass || []).forEach((option) => {
                             if (option in this) {
                                 o[option] = this[option];
