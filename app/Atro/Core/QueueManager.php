@@ -124,7 +124,8 @@ class QueueManager
                 'createdById'    => $user->get('id'),
                 'ownerUserId'    => $user->get('id'),
                 'assignedUserId' => $user->get('id'),
-                'createdAt'      => date("Y-m-d H:i:s")
+                'createdAt'      => date("Y-m-d H:i:s"),
+                'parentId'       => $dto->getParentId()
             ]
         );
 

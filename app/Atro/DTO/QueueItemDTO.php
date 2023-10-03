@@ -49,10 +49,9 @@ class QueueItemDTO
         return $this->priority;
     }
 
-    public function setPriority(string $priority): QueueItemDTO
+    public function setPriority(string $priority): void
     {
         $this->priority = $priority;
-        return $this;
     }
 
     public function getHash(): string
@@ -60,10 +59,9 @@ class QueueItemDTO
         return $this->hash;
     }
 
-    public function setHash(string $hash): QueueItemDTO
+    public function setHash(string $hash): void
     {
         $this->hash = $hash;
-        return $this;
     }
 
     public function getParentId(): ?string
@@ -71,9 +69,8 @@ class QueueItemDTO
         return $this->parentId;
     }
 
-    public function setParentId(string $parentId): QueueItemDTO
+    public function setParentId(string $parentId): void
     {
         $this->parentId = $parentId;
-        return $this;
     }
 }
