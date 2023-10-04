@@ -76,6 +76,10 @@ class Helper
      */
     public function getMaxIndexLength($tableName = null, $default = 1000)
     {
+        if ($this->getConfig()->get('database')['driver'] === 'pdo_pgsql') {
+            return 2700;
+        }
+
         $mysqlEngine = $this->getMysqlEngine($tableName);
         if (!$mysqlEngine) {
             return $default;
@@ -152,6 +156,10 @@ class Helper
      */
     public function isSupportsFulltext($tableName = null, $default = false)
     {
+        if ($this->getConfig()->get('database')['driver'] === 'pdo_pgsql') {
+            return true;
+        }
+
         $mysqlEngine = $this->getMysqlEngine($tableName);
         if (!$mysqlEngine) {
             return $default;
