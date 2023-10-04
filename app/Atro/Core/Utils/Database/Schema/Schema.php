@@ -128,7 +128,9 @@ class Schema extends \Espo\Core\Utils\Database\Schema\Schema
      */
     protected function dispatch(string $target, string $action, Event $event)
     {
-        if (!empty($eventManager = $this->getContainer()->get('eventManager'))) {
+        /** @var \Atro\Core\EventManager\Manager $eventManager */
+        $eventManager = $this->getContainer()->get('eventManager');
+        if (!empty($eventManager)) {
             return $eventManager->dispatch($target, $action, $event);
         }
 
