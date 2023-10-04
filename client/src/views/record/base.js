@@ -95,19 +95,23 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
                 var fieldView = this.getFieldView(name);
 
                 if (fieldView) {
-
+                    if(fieldView?.measureId != null){
+                        const unitFieldName= name + "Unit"
+                        this.hideField(unitFieldName)
+                        name = "unit" + name.replace(/^./, name[0].toUpperCase())
+                    }
 
                     var $field = fieldView.$el;
-                    var $cell = $field.closest('.cell[data-name="' +  (fieldView?.defs?.name ?? name) + '"]');
-                    var $label = $cell.find('label.control-label[data-name="' +  (fieldView?.defs?.name ?? name) + '"]');
+                    var $cell = $field.closest('.cell[data-name="' +  name + '"]');
+                    var $label = $cell.find('label.control-label[data-name="' +   name+ '"]');
 
                     $field.addClass('hidden');
                     $label.addClass('hidden');
                     $cell.addClass('hidden-cell');
                 } else {
-                    this.$el.find('.cell[data-name="' +  (fieldView?.defs?.name ?? name) + '"]').addClass('hidden-cell');
-                    this.$el.find('.field[data-name="' + (fieldView?.defs?.name ?? name) +  '"]').addClass('hidden');
-                    this.$el.find('label.control-label[data-name="' + (fieldView?.defs?.name ?? name) + '"]').addClass('hidden');
+                    this.$el.find('.cell[data-name="' +  name + '"]').addClass('hidden-cell');
+                    this.$el.find('.field[data-name="' + name +  '"]').addClass('hidden');
+                    this.$el.find('label.control-label[data-name="' +  name + '"]').addClass('hidden');
                 }
             }.bind(this);
             if (this.isRendered()) {
@@ -132,19 +136,24 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
 
             var processHtml = function () {
                 var fieldView = this.getFieldView(name);
+                if(fieldView?.measureId != null ){
+                    const unitFieldName= name + "Unit"
+                    this.showField(unitFieldName)
+                    name = "unit" + name.replace(/^./, name[0].toUpperCase())
+                }
 
                 if (fieldView) {
                     var $field = fieldView.$el;
-                    var $cell = $field.closest('.cell[data-name="' +  (fieldView?.defs?.name ?? name) + '"]');
-                    var $label = $cell.find('label.control-label[data-name="' +  (fieldView?.defs?.name ?? name) + '"]');
+                    var $cell = $field.closest('.cell[data-name="' +   name + '"]');
+                    var $label = $cell.find('label.control-label[data-name="' +  name + '"]');
 
                     $field.removeClass('hidden');
                     $label.removeClass('hidden');
                     $cell.removeClass('hidden-cell');
                 } else {
-                    this.$el.find('.cell[data-name="' +  (fieldView?.defs?.name ?? name) + '"]').removeClass('hidden-cell');
-                    this.$el.find('.field[data-name="' +  (fieldView?.defs?.name ?? name) + '"]').removeClass('hidden');
-                    this.$el.find('label.control-label[data-name="' +  (fieldView?.defs?.name ?? name) + '"]').removeClass('hidden');
+                    this.$el.find('.cell[data-name="' +  name + '"]').removeClass('hidden-cell');
+                    this.$el.find('.field[data-name="' +  name + '"]').removeClass('hidden');
+                    this.$el.find('label.control-label[data-name="' +   name + '"]').removeClass('hidden');
                 }
             }.bind(this);
 
