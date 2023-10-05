@@ -35,6 +35,7 @@
                             <pre id="log" style="margin: 10px 0;max-height: 350px;overflow: scroll"></pre>
                             <script type="text/javascript">
                                 let start = false;
+                                let count = 0;
                                 window.setInterval(function () {
                                     $.ajax({
                                         type: 'GET',
@@ -42,21 +43,30 @@
                                         cache: false,
                                         success: logs => {
                                             start = true;
+                                            count = count + 1;
 
                                             let preparedLogs = logs.trim();
                                             if (preparedLogs.search("composer") < 0) {
                                                 preparedLogs = 'Starting...';
+                                                if (count > 65) {
+                                                    preparedLogs = 'Something wrong. Please, reboot the server.';
+                                                }
                                             }
 
                                             $('#log').html(preparedLogs);
                                         },
                                         error: () => {
+                                            count = count + 1;
                                             if (start) {
                                                 setTimeout(() => {
                                                     location.reload();
                                                 }, 2000);
                                             } else {
-                                                $('#log').html('Starting...');
+                                                let message = 'Starting...';
+                                                if (count > 65) {
+                                                    message = 'Something wrong. Please, reboot the server.';
+                                                }
+                                                $('#log').html(message);
                                             }
                                         }
                                     });
