@@ -11,6 +11,7 @@
 
 namespace Atro\Core\Utils\Database\Schema\Columns;
 
+use Doctrine\DBAL\Schema\Table;
 use Espo\Core\Utils\Util;
 
 abstract class AbstractColumn implements ColumnInterface
@@ -25,18 +26,14 @@ abstract class AbstractColumn implements ColumnInterface
         $this->fieldDefs = $fieldDefs;
     }
 
-    public function getColumnName(): string
+    public function add(Table $table): void
     {
-        if (empty($this->fieldName)) {
-            throw new \Error('$fieldName is required.');
-        }
-
-        return Util::toUnderScore($this->fieldName);
+        $table->addColumn($this->getColumnName(), $this->fieldDefs['type'], $this->getColumnParameters());
     }
 
-    public function getColumnType(): string
+    public function getColumnName(): string
     {
-        return $this->fieldDefs['type'];
+        return Util::toUnderScore($this->fieldName);
     }
 
     public function getColumnParameters(): array

@@ -11,6 +11,8 @@
 
 namespace Atro\Core\Utils\Database\Schema\Columns;
 
+use Doctrine\DBAL\Schema\Table;
+
 class VarcharColumn extends AbstractColumn
 {
     protected array $columnParams
@@ -20,8 +22,8 @@ class VarcharColumn extends AbstractColumn
             'default' => 'default'
         ];
 
-    public function getColumnType(): string
+    public function add(Table $table): void
     {
-        return 'string';
+        $table->addColumn($this->getColumnName(), 'string', $this->getColumnParameters());
     }
 }

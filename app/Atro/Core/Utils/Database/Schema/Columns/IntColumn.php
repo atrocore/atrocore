@@ -11,17 +11,22 @@
 
 namespace Atro\Core\Utils\Database\Schema\Columns;
 
+use Doctrine\DBAL\Schema\Table;
+
 class IntColumn extends AbstractColumn
 {
     protected array $columnParams
         = [
-            'notNull' => 'notnull',
-            'default' => 'default',
-            'autoincrement' => 'autoincrement'
+            'notNull'       => 'notnull',
+            'default'       => 'default',
+//            'autoincrement' => 'autoincrement'
         ];
 
-    public function getColumnType(): string
+    public function add(Table $table): void
     {
-        return 'integer';
+        $table->addColumn($this->getColumnName(), 'integer', $this->getColumnParameters());
+        if (!empty($this->fieldDefs['autoincrement'])) {
+//            $table->addUniqueIndex([$this->getColumnName()]);
+        }
     }
 }

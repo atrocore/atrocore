@@ -11,6 +11,8 @@
 
 namespace Atro\Core\Utils\Database\Schema\Columns;
 
+use Doctrine\DBAL\Schema\Table;
+
 class JsonObjectColumn extends AbstractColumn
 {
     protected array $columnParams
@@ -18,8 +20,8 @@ class JsonObjectColumn extends AbstractColumn
             'notNull' => 'notnull'
         ];
 
-    public function getColumnType(): string
+    public function add(Table $table): void
     {
-        return 'json';
+        $table->addColumn($this->getColumnName(), 'json', $this->getColumnParameters());
     }
 }

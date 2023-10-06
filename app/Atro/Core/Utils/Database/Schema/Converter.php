@@ -74,25 +74,24 @@ class Converter
                     throw new \Error("No such column type '{$fieldDefs['type']}'.");
                 }
 
-                $columnName = Util::toUnderScore($fieldName);
-                if (!$table->hasColumn($columnName)) {
-                    $table->addColumn($column->getColumnName(), $column->getColumnType(), $column->getColumnParameters());
+                if (!$table->hasColumn($column->getColumnName())) {
+                    $column->add($table);
                 }
 
-                if (!empty($fieldDefs['unique']) && $fieldDefs['type'] !== 'id') {
-                    $columnNames = [];
-                    if (isset($ormMetadata[$entityName]['fields']['deleted'])) {
-                        $columnNames[] = 'deleted';
-                    }
-                    $columnNames[] = $column->getColumnName();
-
-                    $table->addUniqueIndex($columnNames);
-                }
+//                if (!empty($fieldDefs['unique']) && $fieldDefs['type'] !== 'id') {
+//                    $columnNames = [];
+//                    if (isset($ormMetadata[$entityName]['fields']['deleted'])) {
+//                        $columnNames[] = 'deleted';
+//                    }
+//                    $columnNames[] = $column->getColumnName();
+//
+//                    $table->addUniqueIndex($columnNames);
+//                }
             }
 
-            foreach ($this->metadata->get(['entityDefs', $entityName, 'uniqueIndexes'], []) as $indexName => $indexColumns) {
-                $table->addUniqueIndex($indexColumns, SchemaUtils::generateIndexName($indexName));
-            }
+//            foreach ($this->metadata->get(['entityDefs', $entityName, 'uniqueIndexes'], []) as $indexName => $indexColumns) {
+//                $table->addUniqueIndex($indexColumns, SchemaUtils::generateIndexName($indexName));
+//            }
 
             $table->setPrimaryKey($primaryColumns);
 

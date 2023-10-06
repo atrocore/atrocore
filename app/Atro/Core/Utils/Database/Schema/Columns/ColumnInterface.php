@@ -11,11 +11,11 @@
 
 namespace Atro\Core\Utils\Database\Schema\Columns;
 
+use Doctrine\DBAL\Schema\Table;
+
 interface ColumnInterface
 {
+    public function add(Table $table): void;
+
     public function getColumnName(): string;
-
-    public function getColumnType(): string;
-
-    public function getColumnParameters(): array;
 }
