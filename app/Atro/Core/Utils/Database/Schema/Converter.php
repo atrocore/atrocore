@@ -12,41 +12,188 @@
 namespace Atro\Core\Utils\Database\Schema;
 
 use Atro\Core\Container;
+use Atro\Core\Utils\Database\Schema\Columns\ColumnInterface;
 use Doctrine\DBAL\Schema\Schema;
 use Espo\Core\Utils\Metadata\OrmMetadata;
+use Espo\Core\Utils\Util;
 
 /**
  * @todo 1. delete app/Espo/Core/Utils/Database/Schema/tables/
  */
 class Converter
 {
+    protected Container $container;
     protected OrmMetadata $ormMetadata;
 
     public function __construct(Container $container)
     {
+        $this->container = $container;
         $this->ormMetadata = $container->get('ormMetadata');
     }
 
     public function createSchema(): Schema
     {
-        $ormMetadata = array_merge($this->ormMetadata->getData(), $this->getSystemOrmMetadata());
+        $ormMetadata = Util::unsetInArray(array_merge($this->ormMetadata->getData(), $this->getSystemOrmMetadata()), ['Preferences', 'Settings']);
+
+        $schema = new Schema();
+
+        $tables = [];
+        foreach ($ormMetadata as $entityName => $entityDefs) {
+            $tableName = Util::toUnderScore($entityName);
+            if ($schema->hasTable($tableName)) {
+                $table = $schema->getTable($tableName);
+            } else {
+                $table = $schema->createTable($tableName);
+            }
+
+            $primaryColumns = [];
+
+            foreach ($entityDefs['fields'] as $fieldName => $fieldDefs) {
+                if (!empty($fieldDefs['notStorable']) || empty($fieldDefs['type']) || $fieldDefs['type'] === 'foreign') {
+                    continue;
+                }
+
+                if ($fieldDefs['type'] === 'id') {
+                    $primaryColumns[] = Util::toUnderScore($fieldName);
+                }
+
+                $fieldType = $fieldDefs['dbType'] ?? $fieldDefs['type'];
+
+                $className = "\\Atro\\Core\\Utils\\Database\\Schema\\Columns\\" . ucfirst($fieldType) . "Column";
+
+                $column = new $className($fieldName, $fieldDefs);
+                if (!$column instanceof ColumnInterface) {
+                    throw new \Error("No such column type '{$fieldDefs['type']}'.");
+                }
+
+                $columnName = Util::toUnderScore($fieldName);
+                if (!$table->hasColumn($columnName)) {
+                    $table->addColumn($column->getColumnName(), $column->getColumnType(), $column->getColumnParameters());
+                }
+            }
+
+//            $table->setPrimaryKey($primaryColumns);
+//
+//            $tables[$entityName] = $table;
+        }
 
         echo '<pre>';
         print_r($ormMetadata);
         die();
+
+        // $indexList = SchemaUtils::getIndexList($ormMeta);
+        //        $fieldListExceededIndexMaxLength = SchemaUtils::getFieldListExceededIndexMaxLength($ormMeta, $this->getMaxIndexLength());
+        //
+        //        $tables = array();
+        //        foreach ($ormMeta as $entityName => $entityParams) {
+
+        //            $uniqueColumns = array();
+        //
+        //            foreach ($entityParams['fields'] as $fieldName => $fieldParams) {
+        //                //add unique
+        //                if ($fieldParams['type'] != 'id' && isset($fieldParams['unique'])) {
+        //                    $additionalFields = [];
+        //                    $metadataFieldType = $this->getMetadata()->get(['entityDefs', $entityName, 'fields', $fieldName, 'type']);
+        //                    if (!empty($metadataFieldType)) {
+        //                        $additionalFields = $this->getMetadata()->get(['fields', $metadataFieldType, 'actualFields'], []);
+        //                    }
+        //
+        //                    $uniqueColumns = $this->getKeyList($columnName, $fieldParams, $uniqueColumns, $additionalFields);
+        //                } //END: add unique
+        //            }
+        //
+        //            if (!empty($indexList[$entityName])) {
+        //                foreach($indexList[$entityName] as $indexName => $indexParams) {
+        //                    $indexColumnList = $indexParams['columns'];
+        //                    $indexFlagList = isset($indexParams['flags']) ? $indexParams['flags'] : array();
+        //                    $tables[$entityName]->addIndex($indexColumnList, $indexName, $indexFlagList);
+        //                }
+        //            }
+        //
+        //            if (!empty($uniqueColumns)) {
+        //                foreach($uniqueColumns as $uniqueItem) {
+        //                    $tables[$entityName]->addUniqueIndex($uniqueItem);
+        //                }
+        //            }
+        //
+        //            foreach ($this->getMetadata()->get(['entityDefs', $entityName, 'uniqueIndexes'], []) as $indexName => $indexColumns) {
+        //                $tables[$entityName]->addUniqueIndex($indexColumns, SchemaUtils::generateIndexName($indexName));
+        //            }
+        //        }
+        //
+        //        //check and create columns/tables for relations
+        //        foreach ($ormMeta as $entityName => $entityParams) {
+        //
+        //            if (!isset($entityParams['relations'])) {
+        //                continue;
+        //            }
+        //
+        //            foreach ($entityParams['relations'] as $relationName => $relationParams) {
+        //
+        //                 switch ($relationParams['type']) {
+        //                    case 'manyMany':
+        //                        $tableName = $relationParams['relationName'];
+        //
+        //                        //check for duplicate tables
+        //                        if (!isset($tables[$tableName])) { //no needs to create the table if it already exists
+        //                            $tables[$tableName] = $this->prepareManyMany($entityName, $relationParams, $tables);
+        //                        }
+        //                        break;
+        //                }
+        //            }
+        //        }
+        //        //END: check and create columns/tables for relations
+        //
+        //        $GLOBALS['log']->debug('Schema\Converter - End: building schema');
+        //
+        //        return $schema;
+    }
+
+    public function getDbFieldParams(array $fieldParams): array
+    {
+        $dbFieldParams = [];
+
+        foreach (self::$allowedDbFieldParams as $espoName => $dbalName) {
+            if (isset($fieldParams[$espoName])) {
+                $dbFieldParams[$dbalName] = $fieldParams[$espoName];
+            }
+        }
+
+        switch ($fieldParams['type']) {
+            case 'array':
+            case 'jsonArray':
+            case 'text':
+            case 'longtext':
+                if (!empty($dbFieldParams['default'])) {
+                    $dbFieldParams['comment'] = "default={" . $dbFieldParams['default'] . "}";
+                }
+                unset($dbFieldParams['default']); //for db type TEXT can't be defined a default value
+                break;
+
+            case 'bool':
+                $default = false;
+                if (array_key_exists('default', $dbFieldParams)) {
+                    $default = $dbFieldParams['default'];
+                }
+                $dbFieldParams['default'] = intval($default);
+                break;
+        }
+
+        if (isset($fieldParams['autoincrement']) && $fieldParams['autoincrement']) {
+            $dbFieldParams['unique'] = true;
+            $dbFieldParams['notnull'] = true;
+        }
+
+        if (isset($fieldParams['utf8mb3']) && $fieldParams['utf8mb3']) {
+            $dbFieldParams['platformOptions'] = ['collation' => 'utf8_unicode_ci'];
+        }
+
+        return $dbFieldParams;
     }
 
     protected function getSystemOrmMetadata(): array
     {
         return [
-            'unset'        => array(
-                'Preferences',
-                'Settings',
-            ),
-            'unsetIgnore'  => [
-                ['Preferences', 'fields', 'id'],
-                ['Preferences', 'fields', 'data']
-            ],
             'Autofollow'   => [
                 'fields' => [
                     'id'         => [
