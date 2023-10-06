@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Atro\Listeners;
 
 use Atro\Core\EventManager\Event;
-use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
 use Espo\Core\Templates\Services\Relationship;
 
@@ -66,10 +65,7 @@ class Metadata extends AbstractListener
         $this->prepareClientDefsForUnit($data);
 
         $event->setArgument('data', $data);
-
-
     }
-
 
     public function setTranslationRequiredLanguage(array &$data)
     {
@@ -161,35 +157,35 @@ class Metadata extends AbstractListener
                 }
 
                 $data['entityDefs'][$entityType]['fields'][$field . 'Unit'] = [
-                    "type" => "link",
-                    "view" => "views/fields/unit-link",
-                    "measureId" => $fieldDefs['measureId'],
+                    "type"        => "link",
+                    "view"        => "views/fields/unit-link",
+                    "measureId"   => $fieldDefs['measureId'],
                     "unitIdField" => true,
-                    "mainField" => $field,
-                    "required" => !empty($fieldDefs['required']),
-                    "audited" => !empty($fieldDefs['audited']),
-                    "emHidden" => true
+                    "mainField"   => $field,
+                    "required"    => !empty($fieldDefs['required']),
+                    "audited"     => !empty($fieldDefs['audited']),
+                    "emHidden"    => true
                 ];
 
                 $data['entityDefs'][$entityType]['links'][$field . 'Unit'] = [
-                    "type" => "belongsTo",
+                    "type"   => "belongsTo",
                     "entity" => "Unit"
                 ];
 
                 if (in_array($fieldDefs['type'], ['int', 'float'])) {
                     $data['entityDefs'][$entityType]['fields'][$field]['labelField'] = 'unit' . ucfirst($field);
                     $data['entityDefs'][$entityType]['fields']['unit' . ucfirst($field)] = [
-                        "type" => "varchar",
-                        "notStorable" => true,
-                        "view" => "views/fields/unit-{$fieldDefs['type']}",
-                        "measureId" => $fieldDefs['measureId'],
-                        "mainField" => $field,
-                        "unitField" => true,
-                        "required" => !empty($fieldDefs['required']),
-                        "audited" => false,
-                        "filterDisabled" => true,
+                        "type"               => "varchar",
+                        "notStorable"        => true,
+                        "view"               => "views/fields/unit-{$fieldDefs['type']}",
+                        "measureId"          => $fieldDefs['measureId'],
+                        "mainField"          => $field,
+                        "unitField"          => true,
+                        "required"           => !empty($fieldDefs['required']),
+                        "audited"            => false,
+                        "filterDisabled"     => true,
                         "massUpdateDisabled" => true,
-                        "emHidden" => true
+                        "emHidden"           => true
                     ];
                 } else {
                     $data['entityDefs'][$entityType]['fields'][$field]['unitField'] = true;
@@ -197,20 +193,20 @@ class Metadata extends AbstractListener
 
                 foreach (in_array($fieldDefs['type'], ['int', 'float']) ? [$field] : [$field . 'From', $field . 'To'] as $v) {
                     $data['entityDefs'][$entityType]['fields'][$v . 'AllUnits'] = [
-                        "type" => "jsonObject",
-                        "notStorable" => true,
-                        "mainField" => $field,
-                        "required" => false,
-                        "audited" => false,
-                        "layoutListDisabled" => true,
-                        "layoutListSmallDisabled" => true,
-                        "layoutDetailDisabled" => true,
+                        "type"                      => "jsonObject",
+                        "notStorable"               => true,
+                        "mainField"                 => $field,
+                        "required"                  => false,
+                        "audited"                   => false,
+                        "layoutListDisabled"        => true,
+                        "layoutListSmallDisabled"   => true,
+                        "layoutDetailDisabled"      => true,
                         "layoutDetailSmallDisabled" => true,
-                        "massUpdateDisabled" => true,
-                        "filterDisabled" => true,
-                        "exportDisabled" => true,
-                        "importDisabled" => true,
-                        "emHidden" => true
+                        "massUpdateDisabled"        => true,
+                        "filterDisabled"            => true,
+                        "exportDisabled"            => true,
+                        "importDisabled"            => true,
+                        "emHidden"                  => true
                     ];
                 }
             }
@@ -373,61 +369,61 @@ class Metadata extends AbstractListener
                 $data['entityDefs'][$foreignEntity2]['links'][$foreignField2]['addRelationCustomDefs']['entity'] = $entityType2;
 
                 $data['entityDefs'][$foreignEntity1]['fields'][$foreignField1 . '_' . $linkRelationshipFields[1]] = [
-                    'type' => 'linkMultiple',
-                    'entity' => $foreignEntity2,
-                    'relationshipFilterField' => $foreignField1,
+                    'type'                           => 'linkMultiple',
+                    'entity'                         => $foreignEntity2,
+                    'relationshipFilterField'        => $foreignField1,
                     'relationshipFilterForeignField' => $linkRelationshipFields[1],
-                    'notStorable' => true,
-                    'filterDisabled' => false,
-                    'layoutListDisabled' => true,
-                    'layoutListSmallDisabled' => true,
-                    'layoutDetailDisabled' => true,
-                    'layoutDetailSmallDisabled' => true,
-                    'massUpdateDisabled' => true,
-                    'exportDisabled' => false,
-                    'importDisabled' => true,
-                    'emHidden' => true,
+                    'notStorable'                    => true,
+                    'filterDisabled'                 => false,
+                    'layoutListDisabled'             => true,
+                    'layoutListSmallDisabled'        => true,
+                    'layoutDetailDisabled'           => true,
+                    'layoutDetailSmallDisabled'      => true,
+                    'massUpdateDisabled'             => true,
+                    'exportDisabled'                 => false,
+                    'importDisabled'                 => true,
+                    'emHidden'                       => true,
                 ];
 
                 $data['entityDefs'][$foreignEntity1]['links'][$foreignField1 . '_' . $linkRelationshipFields[1]] = [
-                    'type' => 'hasMany',
-                    'notStorable' => true,
-                    'entity' => $foreignEntity2,
+                    'type'                        => 'hasMany',
+                    'notStorable'                 => true,
+                    'entity'                      => $foreignEntity2,
                     'layoutRelationshipsDisabled' => true
                 ];
 
                 $data['entityDefs'][$foreignEntity2]['fields'][$foreignField2 . '_' . $linkRelationshipFields[0]] = [
-                    'type' => 'linkMultiple',
-                    'entity' => $foreignEntity1,
-                    'relationshipFilterField' => $foreignField2,
+                    'type'                           => 'linkMultiple',
+                    'entity'                         => $foreignEntity1,
+                    'relationshipFilterField'        => $foreignField2,
                     'relationshipFilterForeignField' => $linkRelationshipFields[0],
-                    'notStorable' => true,
-                    'filterDisabled' => false,
-                    'layoutListDisabled' => true,
-                    'layoutListSmallDisabled' => true,
-                    'layoutDetailDisabled' => true,
-                    'layoutDetailSmallDisabled' => true,
-                    'massUpdateDisabled' => true,
-                    'exportDisabled' => false,
-                    'importDisabled' => true,
-                    'emHidden' => true,
+                    'notStorable'                    => true,
+                    'filterDisabled'                 => false,
+                    'layoutListDisabled'             => true,
+                    'layoutListSmallDisabled'        => true,
+                    'layoutDetailDisabled'           => true,
+                    'layoutDetailSmallDisabled'      => true,
+                    'massUpdateDisabled'             => true,
+                    'exportDisabled'                 => false,
+                    'importDisabled'                 => true,
+                    'emHidden'                       => true,
                 ];
 
                 $data['entityDefs'][$foreignEntity2]['links'][$foreignField2 . '_' . $linkRelationshipFields[0]] = [
-                    'type' => 'hasMany',
-                    'notStorable' => true,
-                    'entity' => $foreignEntity1,
+                    'type'                        => 'hasMany',
+                    'notStorable'                 => true,
+                    'entity'                      => $foreignEntity1,
                     'layoutRelationshipsDisabled' => true
                 ];
             }
 
             $data['entityDefs'][$scope]['fields']['isInherited'] = [
-                "type" => "bool",
-                "notStorable" => true,
+                "type"               => "bool",
+                "notStorable"        => true,
                 "massUpdateDisabled" => true,
-                "filterDisabled" => true,
-                "importDisabled" => true,
-                "emHidden" => true
+                "filterDisabled"     => true,
+                "importDisabled"     => true,
+                "emHidden"           => true
             ];
         }
 
@@ -476,17 +472,17 @@ class Metadata extends AbstractListener
                     }
 
                     $data['entityDefs'][$scope]['fields'][$field . Relationship::VIRTUAL_FIELD_DELIMITER . $foreignField] = array_merge($foreignFieldDefs, [
-                        "notStorable" => true,
+                        "notStorable"          => true,
                         "relationVirtualField" => true,
-                        "entity" => $foreignEntity,
-                        "required" => false,
-                        "unique" => false,
-                        "index" => false,
-                        "filterDisabled" => true,
-                        "massUpdateDisabled" => true,
-                        "exportDisabled" => true,
-                        "importDisabled" => true,
-                        "emHidden" => true
+                        "entity"               => $foreignEntity,
+                        "required"             => false,
+                        "unique"               => false,
+                        "index"                => false,
+                        "filterDisabled"       => true,
+                        "massUpdateDisabled"   => true,
+                        "exportDisabled"       => true,
+                        "importDisabled"       => true,
+                        "emHidden"             => true
                     ]);
 
                     if ($foreignFieldDefs['type'] === 'link') {
@@ -517,59 +513,59 @@ class Metadata extends AbstractListener
             $data['entityDefs'][$scope]['fields']['parents']['layoutDetailDisabled'] = false;
 
             $data['entityDefs'][$scope]['fields']['isRoot'] = [
-                "type" => "bool",
-                "notStorable" => true,
-                "layoutListDisabled" => true,
-                "layoutListSmallDisabled" => true,
-                "layoutDetailDisabled" => true,
+                "type"                      => "bool",
+                "notStorable"               => true,
+                "layoutListDisabled"        => true,
+                "layoutListSmallDisabled"   => true,
+                "layoutDetailDisabled"      => true,
                 "layoutDetailSmallDisabled" => true,
-                "massUpdateDisabled" => true,
-                "filterDisabled" => true,
-                "importDisabled" => true,
-                "exportDisabled" => true,
-                "emHidden" => true
+                "massUpdateDisabled"        => true,
+                "filterDisabled"            => true,
+                "importDisabled"            => true,
+                "exportDisabled"            => true,
+                "emHidden"                  => true
             ];
 
             $data['entityDefs'][$scope]['fields']['hasChildren'] = [
-                "type" => "bool",
-                "notStorable" => true,
-                "layoutListDisabled" => true,
-                "layoutListSmallDisabled" => true,
-                "layoutDetailDisabled" => true,
+                "type"                      => "bool",
+                "notStorable"               => true,
+                "layoutListDisabled"        => true,
+                "layoutListSmallDisabled"   => true,
+                "layoutDetailDisabled"      => true,
                 "layoutDetailSmallDisabled" => true,
-                "massUpdateDisabled" => true,
-                "filterDisabled" => true,
-                "importDisabled" => true,
-                "exportDisabled" => true,
-                "emHidden" => true
+                "massUpdateDisabled"        => true,
+                "filterDisabled"            => true,
+                "importDisabled"            => true,
+                "exportDisabled"            => true,
+                "emHidden"                  => true
             ];
 
             $data['entityDefs'][$scope]['fields']['hierarchyRoute'] = [
-                "type" => "jsonObject",
-                "notStorable" => true,
-                "layoutListDisabled" => true,
-                "layoutListSmallDisabled" => true,
-                "layoutDetailDisabled" => true,
+                "type"                      => "jsonObject",
+                "notStorable"               => true,
+                "layoutListDisabled"        => true,
+                "layoutListSmallDisabled"   => true,
+                "layoutDetailDisabled"      => true,
                 "layoutDetailSmallDisabled" => true,
-                "massUpdateDisabled" => true,
-                "filterDisabled" => true,
-                "importDisabled" => true,
-                "exportDisabled" => true,
-                "emHidden" => true
+                "massUpdateDisabled"        => true,
+                "filterDisabled"            => true,
+                "importDisabled"            => true,
+                "exportDisabled"            => true,
+                "emHidden"                  => true
             ];
 
             $data['entityDefs'][$scope]['fields']['inheritedFields'] = [
-                "type" => "array",
-                "notStorable" => true,
-                "layoutListDisabled" => true,
-                "layoutListSmallDisabled" => true,
-                "layoutDetailDisabled" => true,
+                "type"                      => "array",
+                "notStorable"               => true,
+                "layoutListDisabled"        => true,
+                "layoutListSmallDisabled"   => true,
+                "layoutDetailDisabled"      => true,
                 "layoutDetailSmallDisabled" => true,
-                "massUpdateDisabled" => true,
-                "filterDisabled" => true,
-                "importDisabled" => true,
-                "exportDisabled" => true,
-                "emHidden" => true
+                "massUpdateDisabled"        => true,
+                "filterDisabled"            => true,
+                "importDisabled"            => true,
+                "exportDisabled"            => true,
+                "emHidden"                  => true
             ];
 
             foreach ($scopeData['fields'] as $fieldName => $fieldData) {
@@ -601,8 +597,8 @@ class Metadata extends AbstractListener
                 $new[] = $v;
                 if ($v['label'] == 'Authentication') {
                     $new[] = [
-                        "url" => "#Connection",
-                        "label" => "Connection",
+                        "url"         => "#Connection",
+                        "label"       => "Connection",
                         "description" => "connection"
                     ];
                 }
@@ -967,27 +963,27 @@ class Metadata extends AbstractListener
                 if (($readOnly = $this->getMetadata()->get(['clientDefs', $scope, 'dynamicLogic', 'fields', $name, 'readOnly']))) {
 
                     $this->prepareClientDefsFieldsDynamicLogic($data['clientDefs'], $name . "Unit");
-                   $data['clientDefs'][$scope]['dynamicLogic']['fields'][$name . "Unit"]['readOnly'] = $readOnly;
+                    $data['clientDefs'][$scope]['dynamicLogic']['fields'][$name . "Unit"]['readOnly'] = $readOnly;
                     $this->prepareClientDefsFieldsDynamicLogic($clientDefs, "unit" . ucfirst($name));
-                   $data['clientDefs'][$scope]['dynamicLogic']['fields']["unit" . ucfirst($name)]['readOnly'] = $readOnly;
+                    $data['clientDefs'][$scope]['dynamicLogic']['fields']["unit" . ucfirst($name)]['readOnly'] = $readOnly;
                 }
 
 
                 if ($requireLogic = $this->getMetadata()->get(['clientDefs', $scope, 'dynamicLogic', 'fields', $name, 'required'])) {
 
                     $this->prepareClientDefsFieldsDynamicLogic($data['clientDefs'], $name . "Unit");
-                   $data['clientDefs'][$scope]['dynamicLogic']['fields'][$name . "Unit"]['required'] = $requireLogic;
+                    $data['clientDefs'][$scope]['dynamicLogic']['fields'][$name . "Unit"]['required'] = $requireLogic;
                     $this->prepareClientDefsFieldsDynamicLogic($data['clientDefs'], "unit" . ucfirst($name));
-                   $data['clientDefs'][$scope]['dynamicLogic']['fields']["unit" . ucfirst($name)]['required'] = $requireLogic;
+                    $data['clientDefs'][$scope]['dynamicLogic']['fields']["unit" . ucfirst($name)]['required'] = $requireLogic;
 
                 }
 
                 if ($dynamicLogicOption = $this->getMetadata()->get(['clientDefs', $scope, 'dynamicLogic', 'options', $name])) {
 
                     $this->prepareClientDefsOptionsDynamicLogic($data['clientDefs'], $name . "Unit");
-                   $data['clientDefs'][$scope]['dynamicLogic']['options'][$name . "Unit"] = $dynamicLogicOption;
+                    $data['clientDefs'][$scope]['dynamicLogic']['options'][$name . "Unit"] = $dynamicLogicOption;
                     $this->prepareClientDefsOptionsDynamicLogic($data['clientDefs'], "unit" . ucfirst($name));
-                   $data['clientDefs'][$scope]['dynamicLogic']['options']["unit" . ucfirst($name)] = $dynamicLogicOption;
+                    $data['clientDefs'][$scope]['dynamicLogic']['options']["unit" . ucfirst($name)] = $dynamicLogicOption;
 
                 }
             }
