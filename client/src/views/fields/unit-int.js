@@ -35,13 +35,18 @@ Espo.define('views/fields/unit-int', 'views/fields/int', Dep => {
     return Dep.extend({
 
         setup() {
+
             Dep.prototype.setup.call(this);
+            this.prepareOriginalName()
             this.afterSetup();
+
         },
 
+
         afterSetup() {
+
             if (this.measureId) {
-                this.unitFieldName = this.name + 'UnitId';
+                this.unitFieldName = this.originalName + 'UnitId';
                 this.loadUnitOptions();
                 if (this.model.isNew() && this.defaultUnit) {
                     this.model.set(this.unitFieldName, this.defaultUnit);
@@ -65,12 +70,27 @@ Espo.define('views/fields/unit-int', 'views/fields/int', Dep => {
             }
 
             const inheritedFields = this.model.get('inheritedFields');
-
-            return inheritedFields && Array.isArray(inheritedFields) && inheritedFields.includes(this.name) && inheritedFields.includes(this.name + 'Unit');
+         
+            return inheritedFields && Array.isArray(inheritedFields) && inheritedFields.includes(this.originalName) && inheritedFields.includes(this.originalName + 'Unit');
         },
+        setDataWithOriginalName(){
+            const data = Dep.prototype.data.call(this);
+            data.value = this.model.get(this.originalName)
 
+            if (this.model.get(this.originalName) !== null && typeof this.model.get(this.originalName) !== 'undefined') {
+                data.isNotEmpty = true;
+            }
+            data.valueIsSet = this.model.has(this.originalName);
+            return data;
+        },
         data() {
-            return this.prepareMeasureData(Dep.prototype.data.call(this));
+            return this.prepareMeasureData(this.setDataWithOriginalName());
+        },
+        prepareOriginalName(){
+            this.originalName = this.name;
+            if (this.measureId) {
+                this.name = "unit"+this.originalName.charAt(0).toUpperCase()+this.originalName.slice(1)
+            }
         },
 
         prepareMeasureData(data) {
@@ -87,9 +107,13 @@ Espo.define('views/fields/unit-int', 'views/fields/int', Dep => {
 
         fetch() {
             let data = Dep.prototype.fetch.call(this);
+
             if (this.measureId) {
                 let $unit = this.$el.find(`[name="${this.unitFieldName}"]`);
                 data[this.unitFieldName] = $unit ? $unit.val() : null;
+                delete data[this.name];
+                $field = this.$el.find(`[name="${this.name}"]`);
+                data[this.originalName] = $field ? $field.val() : null;
             }
 
             return data;

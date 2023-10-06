@@ -139,6 +139,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
                     $label.removeClass('hidden');
                     $cell.removeClass('hidden-cell');
                 } else {
+
                     this.$el.find('.cell[data-name="' + name + '"]').removeClass('hidden-cell');
                     this.$el.find('.field[data-name="' + name + '"]').removeClass('hidden');
                     this.$el.find('label.control-label[data-name="' + name + '"]').removeClass('hidden');
