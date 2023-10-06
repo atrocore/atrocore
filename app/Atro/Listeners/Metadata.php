@@ -153,8 +153,8 @@ class Metadata extends AbstractListener
                     $data['entityDefs'][$entityType]['fields'][$field . 'From']['measureId'] = $fieldDefs['measureId'];
                     $data['entityDefs'][$entityType]['fields'][$field . 'To']['measureId'] = $fieldDefs['measureId'];
                 }
-
-                $data['entityDefs'][$entityType]['fields'][$field . 'Unit'] = [
+                $unitFieldName = $field . 'Unit';
+                $data['entityDefs'][$entityType]['fields'][$unitFieldName] = [
                     "type"        => "link",
                     "view"        => "views/fields/unit-link",
                     "measureId"   => $fieldDefs['measureId'],
@@ -165,14 +165,27 @@ class Metadata extends AbstractListener
                     "emHidden"    => true
                 ];
 
-                $data['entityDefs'][$entityType]['links'][$field . 'Unit'] = [
+                $data['entityDefs'][$entityType]['links'][$unitFieldName] = [
                     "type"   => "belongsTo",
                     "entity" => "Unit"
                 ];
 
+                if ($visibleLogic = $this->getMetadata()->get(['clientDefs', $entityType, 'dynamicLogic', 'fields', $field, 'visible'])) {
+                    $data['clientDefs'][$entityType]['dynamicLogic']['fields'][$unitFieldName]['visible'] = $visibleLogic;
+                }
+
+                if (($readOnly = $this->getMetadata()->get(['clientDefs', $entityType, 'dynamicLogic', 'fields', $field, 'readOnly']))) {
+                    $data['clientDefs'][$entityType]['dynamicLogic']['fields'][$unitFieldName]['readOnly'] = $readOnly;
+                }
+
+                if ($requireLogic = $this->getMetadata()->get(['clientDefs', $entityType, 'dynamicLogic', 'fields', $field, 'required'])) {
+                    $data['clientDefs'][$entityType]['dynamicLogic']['fields'][$unitFieldName]['required'] = $requireLogic;
+                }
+
                 if (in_array($fieldDefs['type'], ['int', 'float'])) {
-                    $data['entityDefs'][$entityType]['fields'][$field]['labelField'] = 'unit' . ucfirst($field);
-                    $data['entityDefs'][$entityType]['fields']['unit' . ucfirst($field)] = [
+                    $virtualFieldName  = 'unit' . ucfirst($field);
+                    $data['entityDefs'][$entityType]['fields'][$field]['labelField'] = $virtualFieldName;
+                    $data['entityDefs'][$entityType]['fields'][$virtualFieldName] = [
                         "type"               => "varchar",
                         "notStorable"        => true,
                         "view"               => "views/fields/unit-{$fieldDefs['type']}",
@@ -185,6 +198,17 @@ class Metadata extends AbstractListener
                         "massUpdateDisabled" => true,
                         "emHidden"           => true
                     ];
+                    if ($visibleLogic = $this->getMetadata()->get(['clientDefs', $entityType, 'dynamicLogic', 'fields', $field, 'visible'])) {
+                        $data['clientDefs'][$entityType]['dynamicLogic']['fields'][$virtualFieldName]['visible'] = $visibleLogic;
+                    }
+
+                    if (($readOnly = $this->getMetadata()->get(['clientDefs', $entityType, 'dynamicLogic', 'fields', $field, 'readOnly']))) {
+                        $data['clientDefs'][$entityType]['dynamicLogic']['fields'][$virtualFieldName]['readOnly'] = $readOnly;
+                    }
+
+                    if ($requireLogic = $this->getMetadata()->get(['clientDefs', $entityType, 'dynamicLogic', 'fields', $field, 'required'])) {
+                        $data['clientDefs'][$entityType]['dynamicLogic']['fields'][$virtualFieldName]['required'] = $requireLogic;
+                    }
                 } else {
                     $data['entityDefs'][$entityType]['fields'][$field]['unitField'] = true;
                 }
