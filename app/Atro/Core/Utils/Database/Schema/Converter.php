@@ -56,6 +56,8 @@ class Converter
 
             $primaryColumns = [];
 
+            $uniqueFields = [];
+
             foreach ($entityDefs['fields'] as $fieldName => $fieldDefs) {
                 if (!empty($fieldDefs['notStorable']) || empty($fieldDefs['type']) || $fieldDefs['type'] === 'foreign') {
                     continue;
@@ -78,20 +80,22 @@ class Converter
                     $column->add($table);
                 }
 
-//                if (!empty($fieldDefs['unique']) && $fieldDefs['type'] !== 'id') {
-//                    $columnNames = [];
-//                    if (isset($ormMetadata[$entityName]['fields']['deleted'])) {
-//                        $columnNames[] = 'deleted';
-//                    }
-//                    $columnNames[] = $column->getColumnName();
-//
-//                    $table->addUniqueIndex($columnNames);
-//                }
+                if (!empty($fieldDefs['unique']) && $fieldDefs['type'] !== 'id') {
+                    $columnNames = [$column->getColumnName()];
+                    if (isset($entityDefs['fields']['deleted'])) {
+                        $columnNames[] = 'deleted';
+                    }
+                    $uniqueFields[] = $columnNames;
+                }
             }
 
-//            foreach ($this->metadata->get(['entityDefs', $entityName, 'uniqueIndexes'], []) as $indexName => $indexColumns) {
-//                $table->addUniqueIndex($indexColumns, SchemaUtils::generateIndexName($indexName));
-//            }
+            foreach ($uniqueFields as $columnNames) {
+                $table->addUniqueIndex($columnNames);
+            }
+
+            foreach ($this->metadata->get(['entityDefs', $entityName, 'uniqueIndexes'], []) as $indexName => $indexColumns) {
+                $table->addUniqueIndex($indexColumns, SchemaUtils::generateIndexName($indexName, "IDX_{$tableName}", 120));
+            }
 
             $table->setPrimaryKey($primaryColumns);
 

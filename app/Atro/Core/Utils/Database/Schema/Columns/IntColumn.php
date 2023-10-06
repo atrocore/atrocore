@@ -19,14 +19,14 @@ class IntColumn extends AbstractColumn
         = [
             'notNull'       => 'notnull',
             'default'       => 'default',
-//            'autoincrement' => 'autoincrement'
+            'autoincrement' => 'autoincrement'
         ];
 
     public function add(Table $table): void
     {
         $table->addColumn($this->getColumnName(), 'integer', $this->getColumnParameters());
         if (!empty($this->fieldDefs['autoincrement'])) {
-//            $table->addUniqueIndex([$this->getColumnName()]);
+            $table->addUniqueIndex([$this->getColumnName()]);
         }
     }
 }
