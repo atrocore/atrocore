@@ -21,8 +21,25 @@
       "type": "jsonObject",
       "readOnly": true
     },
-    "sortOrder": {
+    "parent": {
+      "type": "link"
+    },
+    "position": {
       "type": "autoincrement",
+      "readOnly": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "textFilterDisabled": true,
+      "emHidden": true
+    },
+    "sortOrder": {
+      "type": "float",
       "readOnly": true
     },
     "priority": {
@@ -107,6 +124,10 @@
     }
   },
   "links": {
+    "parent": {
+      "type": "belongsTo",
+      "entity": "QueueItem"
+    },
     "createdBy": {
       "type": "belongsTo",
       "entity": "User"

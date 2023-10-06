@@ -129,6 +129,11 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
 
             var processHtml = function () {
                 var fieldView = this.getFieldView(name);
+                if(fieldView?.measureId != null ){
+                    const unitFieldName= name + "Unit"
+                    this.showField(unitFieldName)
+                    name = "unit" + name.replace(/^./, name[0].toUpperCase())
+                }
 
                 if (fieldView) {
                     var $field = fieldView.$el;
@@ -139,7 +144,6 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
                     $label.removeClass('hidden');
                     $cell.removeClass('hidden-cell');
                 } else {
-
                     this.$el.find('.cell[data-name="' + name + '"]').removeClass('hidden-cell');
                     this.$el.find('.field[data-name="' + name + '"]').removeClass('hidden');
                     this.$el.find('label.control-label[data-name="' + name + '"]').removeClass('hidden');
