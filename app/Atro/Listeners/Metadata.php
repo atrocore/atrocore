@@ -62,8 +62,6 @@ class Metadata extends AbstractListener
 
         $this->prepareRelationshipsEntities($data);
 
-        $this->prepareClientDefsForUnit($data);
-
         $event->setArgument('data', $data);
     }
 
@@ -155,8 +153,8 @@ class Metadata extends AbstractListener
                     $data['entityDefs'][$entityType]['fields'][$field . 'From']['measureId'] = $fieldDefs['measureId'];
                     $data['entityDefs'][$entityType]['fields'][$field . 'To']['measureId'] = $fieldDefs['measureId'];
                 }
-
-                $data['entityDefs'][$entityType]['fields'][$field . 'Unit'] = [
+                $unitFieldName = $field . 'Unit';
+                $data['entityDefs'][$entityType]['fields'][$unitFieldName] = [
                     "type"        => "link",
                     "view"        => "views/fields/unit-link",
                     "measureId"   => $fieldDefs['measureId'],
@@ -167,14 +165,27 @@ class Metadata extends AbstractListener
                     "emHidden"    => true
                 ];
 
-                $data['entityDefs'][$entityType]['links'][$field . 'Unit'] = [
+                $data['entityDefs'][$entityType]['links'][$unitFieldName] = [
                     "type"   => "belongsTo",
                     "entity" => "Unit"
                 ];
 
+                if ($visibleLogic = $this->getMetadata()->get(['clientDefs', $entityType, 'dynamicLogic', 'fields', $field, 'visible'])) {
+                    $data['clientDefs'][$entityType]['dynamicLogic']['fields'][$unitFieldName]['visible'] = $visibleLogic;
+                }
+
+                if (($readOnly = $this->getMetadata()->get(['clientDefs', $entityType, 'dynamicLogic', 'fields', $field, 'readOnly']))) {
+                    $data['clientDefs'][$entityType]['dynamicLogic']['fields'][$unitFieldName]['readOnly'] = $readOnly;
+                }
+
+                if ($requireLogic = $this->getMetadata()->get(['clientDefs', $entityType, 'dynamicLogic', 'fields', $field, 'required'])) {
+                    $data['clientDefs'][$entityType]['dynamicLogic']['fields'][$unitFieldName]['required'] = $requireLogic;
+                }
+
                 if (in_array($fieldDefs['type'], ['int', 'float'])) {
-                    $data['entityDefs'][$entityType]['fields'][$field]['labelField'] = 'unit' . ucfirst($field);
-                    $data['entityDefs'][$entityType]['fields']['unit' . ucfirst($field)] = [
+                    $virtualFieldName  = 'unit' . ucfirst($field);
+                    $data['entityDefs'][$entityType]['fields'][$field]['labelField'] = $virtualFieldName;
+                    $data['entityDefs'][$entityType]['fields'][$virtualFieldName] = [
                         "type"               => "varchar",
                         "notStorable"        => true,
                         "view"               => "views/fields/unit-{$fieldDefs['type']}",
@@ -187,6 +198,17 @@ class Metadata extends AbstractListener
                         "massUpdateDisabled" => true,
                         "emHidden"           => true
                     ];
+                    if ($visibleLogic = $this->getMetadata()->get(['clientDefs', $entityType, 'dynamicLogic', 'fields', $field, 'visible'])) {
+                        $data['clientDefs'][$entityType]['dynamicLogic']['fields'][$virtualFieldName]['visible'] = $visibleLogic;
+                    }
+
+                    if (($readOnly = $this->getMetadata()->get(['clientDefs', $entityType, 'dynamicLogic', 'fields', $field, 'readOnly']))) {
+                        $data['clientDefs'][$entityType]['dynamicLogic']['fields'][$virtualFieldName]['readOnly'] = $readOnly;
+                    }
+
+                    if ($requireLogic = $this->getMetadata()->get(['clientDefs', $entityType, 'dynamicLogic', 'fields', $field, 'required'])) {
+                        $data['clientDefs'][$entityType]['dynamicLogic']['fields'][$virtualFieldName]['required'] = $requireLogic;
+                    }
                 } else {
                     $data['entityDefs'][$entityType]['fields'][$field]['unitField'] = true;
                 }
@@ -936,85 +958,5 @@ class Metadata extends AbstractListener
         return $data;
     }
 
-    private function prepareClientDefsForUnit(array &$data)
-    {
-
-        foreach ($data['entityDefs'] as $entityType => $entityDefs) {
-            if (empty($entityDefs['fields'])) {
-                continue 1;
-            }
-            $scope = $entityType;
-            foreach ($entityDefs['fields'] as $field => $fieldDefs) {
-                $name = $field;
-
-                if (empty($fieldDefs['measureId'])) {
-                    continue;
-                }
-
-                if ($visibleLogic = $this->getMetadata()->get(['clientDefs', $scope, 'dynamicLogic', 'fields', $name, 'visible'])) {
-
-                    $this->prepareClientDefsFieldsDynamicLogic($data['clientDefs'], $name . "Unit");
-                    $data['clientDefs'][$scope]['dynamicLogic']['fields'][$name . "Unit"]['visible'] = $visibleLogic;
-                    $this->prepareClientDefsFieldsDynamicLogic($data['clientDefs'], "unit" . ucfirst($name));
-                    $data['clientDefs'][$scope]['dynamicLogic']['fields']["unit" . ucfirst($name)]['visible'] = $visibleLogic;
-
-                }
-
-                if (($readOnly = $this->getMetadata()->get(['clientDefs', $scope, 'dynamicLogic', 'fields', $name, 'readOnly']))) {
-
-                    $this->prepareClientDefsFieldsDynamicLogic($data['clientDefs'], $name . "Unit");
-                    $data['clientDefs'][$scope]['dynamicLogic']['fields'][$name . "Unit"]['readOnly'] = $readOnly;
-                    $this->prepareClientDefsFieldsDynamicLogic($clientDefs, "unit" . ucfirst($name));
-                    $data['clientDefs'][$scope]['dynamicLogic']['fields']["unit" . ucfirst($name)]['readOnly'] = $readOnly;
-                }
-
-
-                if ($requireLogic = $this->getMetadata()->get(['clientDefs', $scope, 'dynamicLogic', 'fields', $name, 'required'])) {
-
-                    $this->prepareClientDefsFieldsDynamicLogic($data['clientDefs'], $name . "Unit");
-                    $data['clientDefs'][$scope]['dynamicLogic']['fields'][$name . "Unit"]['required'] = $requireLogic;
-                    $this->prepareClientDefsFieldsDynamicLogic($data['clientDefs'], "unit" . ucfirst($name));
-                    $data['clientDefs'][$scope]['dynamicLogic']['fields']["unit" . ucfirst($name)]['required'] = $requireLogic;
-
-                }
-
-                if ($dynamicLogicOption = $this->getMetadata()->get(['clientDefs', $scope, 'dynamicLogic', 'options', $name])) {
-
-                    $this->prepareClientDefsOptionsDynamicLogic($data['clientDefs'], $name . "Unit");
-                    $data['clientDefs'][$scope]['dynamicLogic']['options'][$name . "Unit"] = $dynamicLogicOption;
-                    $this->prepareClientDefsOptionsDynamicLogic($data['clientDefs'], "unit" . ucfirst($name));
-                    $data['clientDefs'][$scope]['dynamicLogic']['options']["unit" . ucfirst($name)] = $dynamicLogicOption;
-
-                }
-            }
-        }
-
-    }
-
-    private function prepareClientDefsFieldsDynamicLogic(&$clientDefs, $name)
-    {
-        if (!array_key_exists('dynamicLogic', $clientDefs)) {
-            $clientDefs['dynamicLogic'] = array();
-        }
-        if (!array_key_exists('fields', $clientDefs['dynamicLogic'])) {
-            $clientDefs['dynamicLogic']['fields'] = array();
-        }
-        if (!array_key_exists($name, $clientDefs['dynamicLogic']['fields'])) {
-            $clientDefs['dynamicLogic']['fields'][$name] = array();
-        }
-    }
-
-    protected function prepareClientDefsOptionsDynamicLogic(&$clientDefs, $name)
-    {
-        if (!array_key_exists('dynamicLogic', $clientDefs)) {
-            $clientDefs['dynamicLogic'] = array();
-        }
-        if (!array_key_exists('options', $clientDefs['dynamicLogic'])) {
-            $clientDefs['dynamicLogic']['options'] = array();
-        }
-        if (!array_key_exists($name, $clientDefs['dynamicLogic']['options'])) {
-            $clientDefs['dynamicLogic']['options'][$name] = array();
-        }
-    }
 
 }
