@@ -957,6 +957,4 @@ class Metadata extends AbstractListener
 
         return $data;
     }
-
-
 }
