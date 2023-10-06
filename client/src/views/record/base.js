@@ -129,11 +129,6 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
 
             var processHtml = function () {
                 var fieldView = this.getFieldView(name);
-                if(fieldView?.measureId != null ){
-                    const unitFieldName= name + "Unit"
-                    this.showField(unitFieldName)
-                    name = "unit" + name.replace(/^./, name[0].toUpperCase())
-                }
 
                 if (fieldView) {
                     var $field = fieldView.$el;
