@@ -14,6 +14,8 @@ namespace Atro\Core\Utils\Database\Schema;
 use Atro\Core\Container;
 use Atro\Core\Utils\Database\Schema\Columns\ColumnInterface;
 use Doctrine\DBAL\Schema\Schema;
+use Espo\Core\Utils\Database\Schema\Utils as SchemaUtils;
+use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Metadata\OrmMetadata;
 use Espo\Core\Utils\Util;
 
@@ -24,11 +26,13 @@ class Converter
 {
     protected Container $container;
     protected OrmMetadata $ormMetadata;
+    protected Metadata $metadata;
 
     public function __construct(Container $container)
     {
         $this->container = $container;
         $this->ormMetadata = $container->get('ormMetadata');
+        $this->metadata = $container->get('metadata');
     }
 
     public function createSchema(): Schema
@@ -39,6 +43,10 @@ class Converter
 
         $tables = [];
         foreach ($ormMetadata as $entityName => $entityDefs) {
+            if (empty($entityDefs['fields'])) {
+                continue;
+            }
+
             $tableName = Util::toUnderScore($entityName);
             if ($schema->hasTable($tableName)) {
                 $table = $schema->getTable($tableName);
@@ -70,54 +78,42 @@ class Converter
                 if (!$table->hasColumn($columnName)) {
                     $table->addColumn($column->getColumnName(), $column->getColumnType(), $column->getColumnParameters());
                 }
+
+                if (!empty($fieldDefs['unique']) && $fieldDefs['type'] !== 'id') {
+                    $columnNames = [];
+                    if (isset($ormMetadata[$entityName]['fields']['deleted'])) {
+                        $columnNames[] = 'deleted';
+                    }
+                    $columnNames[] = $column->getColumnName();
+
+                    $table->addUniqueIndex($columnNames);
+                }
             }
 
-//            $table->setPrimaryKey($primaryColumns);
-//
-//            $tables[$entityName] = $table;
+            foreach ($this->metadata->get(['entityDefs', $entityName, 'uniqueIndexes'], []) as $indexName => $indexColumns) {
+                $table->addUniqueIndex($indexColumns, SchemaUtils::generateIndexName($indexName));
+            }
+
+            $table->setPrimaryKey($primaryColumns);
+
+            $tables[$entityName] = $table;
         }
 
-        echo '<pre>';
-        print_r($ormMetadata);
-        die();
+//        echo '<pre>';
+//        print_r('q11');
+//        die();
 
         // $indexList = SchemaUtils::getIndexList($ormMeta);
         //        $fieldListExceededIndexMaxLength = SchemaUtils::getFieldListExceededIndexMaxLength($ormMeta, $this->getMaxIndexLength());
         //
         //        $tables = array();
         //        foreach ($ormMeta as $entityName => $entityParams) {
-
-        //            $uniqueColumns = array();
-        //
-        //            foreach ($entityParams['fields'] as $fieldName => $fieldParams) {
-        //                //add unique
-        //                if ($fieldParams['type'] != 'id' && isset($fieldParams['unique'])) {
-        //                    $additionalFields = [];
-        //                    $metadataFieldType = $this->getMetadata()->get(['entityDefs', $entityName, 'fields', $fieldName, 'type']);
-        //                    if (!empty($metadataFieldType)) {
-        //                        $additionalFields = $this->getMetadata()->get(['fields', $metadataFieldType, 'actualFields'], []);
-        //                    }
-        //
-        //                    $uniqueColumns = $this->getKeyList($columnName, $fieldParams, $uniqueColumns, $additionalFields);
-        //                } //END: add unique
-        //            }
-        //
         //            if (!empty($indexList[$entityName])) {
         //                foreach($indexList[$entityName] as $indexName => $indexParams) {
         //                    $indexColumnList = $indexParams['columns'];
         //                    $indexFlagList = isset($indexParams['flags']) ? $indexParams['flags'] : array();
         //                    $tables[$entityName]->addIndex($indexColumnList, $indexName, $indexFlagList);
         //                }
-        //            }
-        //
-        //            if (!empty($uniqueColumns)) {
-        //                foreach($uniqueColumns as $uniqueItem) {
-        //                    $tables[$entityName]->addUniqueIndex($uniqueItem);
-        //                }
-        //            }
-        //
-        //            foreach ($this->getMetadata()->get(['entityDefs', $entityName, 'uniqueIndexes'], []) as $indexName => $indexColumns) {
-        //                $tables[$entityName]->addUniqueIndex($indexColumns, SchemaUtils::generateIndexName($indexName));
         //            }
         //        }
         //
@@ -143,10 +139,8 @@ class Converter
         //            }
         //        }
         //        //END: check and create columns/tables for relations
-        //
-        //        $GLOBALS['log']->debug('Schema\Converter - End: building schema');
-        //
-        //        return $schema;
+
+        return $schema;
     }
 
     public function getDbFieldParams(array $fieldParams): array
