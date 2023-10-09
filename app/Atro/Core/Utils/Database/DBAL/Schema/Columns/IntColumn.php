@@ -16,12 +16,6 @@ use Doctrine\DBAL\Schema\Table;
 
 class IntColumn extends AbstractColumn
 {
-    protected array $columnParams
-        = [
-            'notNull' => 'notnull',
-            'default' => 'default'
-        ];
-
     public function add(Table $table, Schema $schema): void
     {
         $columnParameters = $this->getColumnParameters();
@@ -33,6 +27,7 @@ class IntColumn extends AbstractColumn
                 $schema->createSequence($sequence);
                 $columnParameters['default'] = "nextval('$sequence')";
             }
+            $columnParameters['notnull'] = true;
         }
 
         $table->addColumn($this->getColumnName(), 'integer', $columnParameters);

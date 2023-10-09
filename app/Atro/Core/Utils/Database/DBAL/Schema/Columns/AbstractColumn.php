@@ -21,7 +21,6 @@ abstract class AbstractColumn implements ColumnInterface
     protected string $fieldName;
     protected array $fieldDefs = [];
     protected Connection $connection;
-    protected array $columnParams = [];
 
     public function __construct(string $fieldName, array $fieldDefs, Connection $connection)
     {
@@ -44,10 +43,10 @@ abstract class AbstractColumn implements ColumnInterface
     {
         $result = [];
 
-        foreach ($this->columnParams as $name => $dbalName) {
-            if (isset($this->fieldDefs[$name])) {
-                $result[$dbalName] = $this->fieldDefs[$name];
-            }
+        $result['notnull'] = !empty($this->fieldDefs['notNull']);
+
+        if (isset($this->fieldDefs['default'])) {
+            $result['default'] = $this->fieldDefs['default'];
         }
 
         return $result;

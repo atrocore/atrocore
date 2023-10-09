@@ -13,9 +13,4 @@ namespace Atro\Core\Utils\Database\DBAL\Schema\Columns;
 
 class DatetimeColumn extends AbstractColumn
 {
-    protected array $columnParams
-        = [
-            'notNull' => 'notnull',
-            'default' => 'default'
-        ];
 }

@@ -13,16 +13,18 @@ namespace Atro\Core\Utils\Database\DBAL\Schema\Columns;
 
 class TextColumn extends AbstractColumn
 {
-    protected array $columnParams
-        = [
-            'notNull' => 'notnull',
-            'len'     => 'length',
-            'default' => 'default'
-        ];
-
     public function getColumnParameters(): array
     {
         $result = parent::getColumnParameters();
+
+        if (isset($this->fieldDefs['len'])) {
+            $result['length'] = $this->fieldDefs['len'];
+        }
+
+        if (isset($this->fieldDefs['length'])) {
+            $result['length'] = $this->fieldDefs['length'];
+        }
+
         if (!empty($result['default'])) {
             $result['comment'] = "default={" . $result['default'] . "}";
         }

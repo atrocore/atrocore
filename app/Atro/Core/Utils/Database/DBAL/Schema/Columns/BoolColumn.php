@@ -16,12 +16,6 @@ use Doctrine\DBAL\Schema\Table;
 
 class BoolColumn extends AbstractColumn
 {
-    protected array $columnParams
-        = [
-            'notNull' => 'notnull',
-            'default' => 'default'
-        ];
-
     public function add(Table $table, Schema $schema): void
     {
         $table->addColumn($this->getColumnName(), 'boolean', $this->getColumnParameters());

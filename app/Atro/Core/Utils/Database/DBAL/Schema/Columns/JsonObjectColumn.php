@@ -16,11 +16,6 @@ use Doctrine\DBAL\Schema\Table;
 
 class JsonObjectColumn extends AbstractColumn
 {
-    protected array $columnParams
-        = [
-            'notNull' => 'notnull'
-        ];
-
     public function add(Table $table, Schema $schema): void
     {
         $table->addColumn($this->getColumnName(), 'json', $this->getColumnParameters());

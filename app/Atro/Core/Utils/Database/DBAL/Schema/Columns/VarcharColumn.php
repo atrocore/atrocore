@@ -16,15 +16,23 @@ use Doctrine\DBAL\Schema\Table;
 
 class VarcharColumn extends AbstractColumn
 {
-    protected array $columnParams
-        = [
-            'notNull' => 'notnull',
-            'len'     => 'length',
-            'default' => 'default'
-        ];
-
     public function add(Table $table, Schema $schema): void
     {
         $table->addColumn($this->getColumnName(), 'string', $this->getColumnParameters());
+    }
+
+    public function getColumnParameters(): array
+    {
+        $result = parent::getColumnParameters();
+
+        if (isset($this->fieldDefs['len'])) {
+            $result['length'] = $this->fieldDefs['len'];
+        }
+
+        if (isset($this->fieldDefs['length'])) {
+            $result['length'] = $this->fieldDefs['length'];
+        }
+
+        return $result;
     }
 }
