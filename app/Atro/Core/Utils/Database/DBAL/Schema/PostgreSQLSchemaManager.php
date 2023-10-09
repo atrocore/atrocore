@@ -33,12 +33,6 @@
 
 namespace Atro\Core\Utils\Database\DBAL\Schema;
 
-use Doctrine\DBAL\Events;
-use Doctrine\DBAL\Event\SchemaIndexDefinitionEventArgs;
-use Espo\Core\Utils\Database\DBAL\Schema\Index;
-use Espo\Core\Utils\Database\DBAL\Schema\Schema;
-use Espo\Core\Utils\Database\DBAL\Schema\Table;
-
 class PostgreSQLSchemaManager extends \Doctrine\DBAL\Schema\PostgreSQLSchemaManager
 {
     protected function _getPortableTableColumnDefinition($tableColumn)
