@@ -20,4 +20,13 @@ class JsonObjectColumn extends AbstractColumn
     {
         $table->addColumn($this->getColumnName(), 'json', $this->getColumnParameters());
     }
+
+    public function getColumnParameters(): array
+    {
+        $result = [];
+
+        $result['notnull'] = !empty($this->fieldDefs['notNull']);
+
+        return $result;
+    }
 }
