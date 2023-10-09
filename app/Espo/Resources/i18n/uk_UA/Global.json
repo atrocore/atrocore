@@ -384,10 +384,11 @@
     "assignedToMe": "Призначений мені",
     "ownedByMe": "Належить мені",
     "onlyMy": "Тільки мої",
-    "followed": "Ви підписані"
+    "followed": "Ви підписані",
+    "onlyArchived": "Без неархівних",
+    "withArchived": "З архівом"
   },
   "presetFilters": {
-    "withArchived": "Всі + Заархівовані",
     "followed": "Ви підписані",
     "all": "Усі"
   },

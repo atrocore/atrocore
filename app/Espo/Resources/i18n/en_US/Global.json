@@ -384,10 +384,11 @@
     "onlyActive": "Active",
     "onlyMy": "My",
     "assignedToMe": "Assigned to me",
-    "ownedByMe": "Owned by me"
+    "ownedByMe": "Owned by me",
+    "onlyArchived": "Without non-archived",
+    "withArchived": "With archived"
   },
   "presetFilters": {
-    "withArchived": "All + Archived",
     "followed": "Followed",
     "all": "All"
   },

@@ -406,10 +406,11 @@
     "assignedToMe": "Mir zugewiesen",
     "ownedByMe": "Gehört mir",
     "followed": "abonniert",
-    "onlyActive": "Aktiv"
+    "onlyActive": "Aktiv",
+    "onlyArchived": "Ohne nicht archiviert",
+    "withArchived": "Mit archiviert"
   },
   "presetFilters": {
-    "withArchived": "Alle + Archivierte",
     "followed": "abonniert",
     "all": "Alle"
   },
