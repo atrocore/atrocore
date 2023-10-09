@@ -20,7 +20,7 @@
     "ext-imagick": "*",
     "gumlet/php-image-resize": "~1.9.2",
     "composer/semver": "~3.3.2",
-    "doctrine/dbal": "~3.2.2",
+    "doctrine/dbal": "~3.7.0",
     "atrocore/slim": "~2.6.2",
     "atrocore/compatibilities": "1.0.2",
     "dragonmantank/cron-expression": "~1.0.3",
