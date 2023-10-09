@@ -39,7 +39,7 @@ class PostgreSQLSchemaManager extends \Doctrine\DBAL\Schema\PostgreSQLSchemaMana
     {
         $column = parent::_getPortableTableColumnDefinition($tableColumn);
 
-        if ($tableColumn['default'] !== null && preg_match("/^nextval\('(.*)'(::.*)?\)$/", $tableColumn['default'], $matches) === 1) {
+        if (isset($tableColumn['default']) && preg_match("/^nextval\('(.*)'(::.*)?\)$/", $tableColumn['default'], $matches) === 1) {
             $column->setAutoincrement(false);
             $column->setDefault("nextval('{$matches[1]}')");
         }
