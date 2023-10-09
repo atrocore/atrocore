@@ -9,13 +9,20 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-namespace Atro\Core\Utils\Database\Schema\Columns;
+namespace Atro\Core\Utils\Database\DBAL\Schema\Columns;
 
-class FloatColumn extends AbstractColumn
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Schema\Table;
+
+class JsonArrayColumn extends AbstractColumn
 {
     protected array $columnParams
         = [
-            'notNull' => 'notnull',
-            'default' => 'default'
+            'notNull' => 'notnull'
         ];
+
+    public function add(Table $table, Schema $schema): void
+    {
+        $table->addColumn($this->getColumnName(), 'array', $this->getColumnParameters());
+    }
 }

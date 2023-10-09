@@ -9,21 +9,13 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-namespace Atro\Core\Utils\Database\Schema\Columns;
+namespace Atro\Core\Utils\Database\DBAL\Schema\Columns;
 
-use Doctrine\DBAL\Schema\Table;
-
-class VarcharColumn extends AbstractColumn
+class DatetimeColumn extends AbstractColumn
 {
     protected array $columnParams
         = [
             'notNull' => 'notnull',
-            'len'     => 'length',
             'default' => 'default'
         ];
-
-    public function add(Table $table): void
-    {
-        $table->addColumn($this->getColumnName(), 'string', $this->getColumnParameters());
-    }
 }

@@ -9,9 +9,12 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-namespace Atro\Core\Utils\Database\Schema\Columns;
+namespace Atro\Core\Utils\Database\DBAL\Schema\Columns;
 
-class TextColumn extends AbstractColumn
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Schema\Table;
+
+class VarcharColumn extends AbstractColumn
 {
     protected array $columnParams
         = [
@@ -20,13 +23,8 @@ class TextColumn extends AbstractColumn
             'default' => 'default'
         ];
 
-    public function getColumnParameters(): array
+    public function add(Table $table, Schema $schema): void
     {
-        $result = parent::getColumnParameters();
-        if (!empty($result['default'])) {
-            $result['comment'] = "default={" . $result['default'] . "}";
-        }
-
-        return $result;
+        $table->addColumn($this->getColumnName(), 'string', $this->getColumnParameters());
     }
 }

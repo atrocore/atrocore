@@ -9,19 +9,14 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-namespace Atro\Core\Utils\Database\Schema\Columns;
+namespace Atro\Core\Utils\Database\DBAL\Schema\Columns;
 
+use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
 
-class JsonArrayColumn extends AbstractColumn
+interface ColumnInterface
 {
-    protected array $columnParams
-        = [
-            'notNull' => 'notnull'
-        ];
+    public function add(Table $table, Schema $schema): void;
 
-    public function add(Table $table): void
-    {
-        $table->addColumn($this->getColumnName(), 'array', $this->getColumnParameters());
-    }
+    public function getColumnName(): string;
 }

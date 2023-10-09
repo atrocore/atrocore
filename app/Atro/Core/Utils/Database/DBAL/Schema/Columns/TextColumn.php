@@ -9,13 +9,24 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-namespace Atro\Core\Utils\Database\Schema\Columns;
+namespace Atro\Core\Utils\Database\DBAL\Schema\Columns;
 
-class DateColumn extends AbstractColumn
+class TextColumn extends AbstractColumn
 {
     protected array $columnParams
         = [
             'notNull' => 'notnull',
+            'len'     => 'length',
             'default' => 'default'
         ];
+
+    public function getColumnParameters(): array
+    {
+        $result = parent::getColumnParameters();
+        if (!empty($result['default'])) {
+            $result['comment'] = "default={" . $result['default'] . "}";
+        }
+
+        return $result;
+    }
 }
