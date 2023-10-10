@@ -13,7 +13,6 @@ class DeleteForever extends  Base
     {
         parent::__construct($container);
 
-
         $this->db = $this->getConfig()->get('database')['dbname'];
     }
 
