@@ -89,7 +89,11 @@ class Converter
 
                 $this->addColumn($schema, $table, $fieldName, $fieldDefs);
 
-                if (!empty($fieldDefs['unique']) && $fieldDefs['type'] !== 'id') {
+                if (
+                    !empty($fieldDefs['unique'])
+                    && !in_array($fieldDefs['type'], ['id', 'autoincrement'])
+                    && empty($fieldDefs['autoincrement'])
+                ) {
                     $columnNames = [self::getColumnName($fieldName)];
                     if (isset($entityDefs['fields']['deleted'])) {
                         $columnNames[] = 'deleted';
