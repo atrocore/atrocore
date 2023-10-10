@@ -20,9 +20,6 @@ use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Metadata\OrmMetadata;
 use Espo\Core\Utils\Util;
 
-/**
- * @todo 1. delete app/Espo/Core/Utils/Database/Schema/tables/
- */
 class Converter
 {
     protected Container $container;
@@ -38,7 +35,7 @@ class Converter
 
     public function createSchema(Connection $connection): Schema
     {
-        $ormMetadata = Util::unsetInArray(array_merge($this->ormMetadata->getData(), $this->getSystemOrmMetadata()), ['Preferences', 'Settings']);
+        $ormMetadata = array_merge($this->ormMetadata->getData(), $this->getSystemOrmMetadata());
 
         $indexList = SchemaUtils::getIndexList($ormMetadata);
 
