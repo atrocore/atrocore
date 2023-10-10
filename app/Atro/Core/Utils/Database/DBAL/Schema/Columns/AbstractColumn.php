@@ -54,6 +54,6 @@ abstract class AbstractColumn implements ColumnInterface
 
     protected function isPgSQL(): bool
     {
-        return strpos(get_class($this->connection->getDriver()), 'PgSQL') !== false;
+        return \Espo\Core\Utils\Database\Schema\Utils::isPgSQL($this->connection);
     }
 }
