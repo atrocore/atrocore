@@ -217,6 +217,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
        if($result){
            $entity = $this->get($id);
            $this->restoreLinkedRelationshipEntities($entity);
+           $this->afterRestore($entity);
        }
 
        return $entity;
@@ -1010,6 +1011,10 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     }
 
     protected function beforeRestore($id)
+    {
+    }
+
+    protected function afterRestore(mixed $entity)
     {
     }
 }
