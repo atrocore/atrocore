@@ -204,6 +204,43 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         return $result;
     }
 
+    public function restore($id){
+        $this->beforeRestore($id);
+        $result = $this->getConnection()
+            ->createQueryBuilder()
+            ->update($this->entityType)
+            ->set('deleted','?')
+            ->where('id = ?')
+            ->setParameter(0, 0)
+            ->setParameter(1,$id)
+            ->executeStatement();
+       if($result){
+           $entity = $this->get($id);
+           $this->restoreLinkedRelationshipEntities($entity);
+       }
+
+       return $entity;
+    }
+
+    protected function restoreLinkedRelationshipEntities(Entity $entity): void
+    {
+        foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links'], []) as $linkDefs) {
+            if (!empty($linkDefs['entity']) && !empty($linkDefs['foreign'])) {
+                if (!empty($this->getMetadata()->get(['entityDefs', $linkDefs['entity'], 'fields', $linkDefs['foreign'], 'relationshipField']))) {
+                    $this->getConnection()
+                        ->createQueryBuilder()
+                        ->update($this->entityType)
+                        ->set('deleted','?')
+                        ->where(  $linkDefs['foreign'] . 'Id = ?')
+                        ->setParameter(0, 0)
+                        ->setParameter(1,$entity->get('id'))
+                        ->executeStatement();
+
+                }
+            }
+        }
+    }
+
     protected function beforeRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
     {
         parent::beforeRelate($entity, $relationName, $foreign, $data, $options);
@@ -970,5 +1007,9 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     public function getConnection(): \Doctrine\DBAL\Connection
     {
         return $this->getInjection('connection');
+    }
+
+    protected function beforeRestore($id)
+    {
     }
 }

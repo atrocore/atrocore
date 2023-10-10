@@ -568,12 +568,67 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }.bind(this));
             }, this);
         },
+        massActionRestore: function () {
+            if (!this.getAcl().check(this.entityType, 'delete')) {
+                this.notify('Access denied', 'error');
+                return false;
+            }
+
+            this.confirm({
+                message: this.prepareRestoreSelectedRecordsConfirmationMessage(),
+                confirmText: this.translate('Restore')
+            }, function () {
+                this.notify(this.translate('restoring', 'labels', 'Global'));
+
+                var ids = [];
+                var data = {};
+                if (this.allResultIsChecked) {
+                    data.where = this.collection.getWhere();
+                    data.selectData = this.collection.data || {};
+                    data.byWhere = true;
+                } else {
+                    data.ids = ids;
+                }
+
+                for (var i in this.checkedList) {
+                    ids.push(this.checkedList[i]);
+                }
+
+                $.ajax({
+                    url: this.entityType + '/action/massRestore',
+                    type: 'POST',
+                    data: JSON.stringify(data)
+                }).done(function (result) {
+                    this.collection.fetch();
+                }.bind(this));
+            }, this);
+        },
 
         prepareRemoveSelectedRecordsConfirmationMessage: function () {
             let scopeMessage = this.getMetadata()
                 .get(`clientDefs.${this.scope}.removeSelectedRecordsConfirmation`)
                 ?.split('.');
             let message = this.translate('removeSelectedRecordsConfirmation', 'messages');
+            if (scopeMessage?.length > 0) {
+                message = this.translate(scopeMessage.pop(), scopeMessage.pop(), scopeMessage.pop());
+                var selectedIds = this.checkedList;
+                var selectedNames = this.collection.models
+                    .filter(function (model) {
+                        return selectedIds.includes(model.id);
+                    })
+                    .map(function (model) {
+                        return "'"+model.attributes['name']+"'";
+                    })
+                    .join(", ");
+                message = message.replace('{{selectedNames}}', selectedNames);
+            }
+            return message;
+        },
+        prepareRestoreSelectedRecordsConfirmationMessage: function () {
+            let scopeMessage = this.getMetadata()
+                .get(`clientDefs.${this.scope}.restoreSelectedRecordsConfirmation`)
+                ?.split('.');
+            let message = this.translate('restoreSelectedRecordsConfirmation', 'messages');
             if (scopeMessage?.length > 0) {
                 message = this.translate(scopeMessage.pop(), scopeMessage.pop(), scopeMessage.pop());
                 var selectedIds = this.checkedList;
@@ -838,6 +893,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             this.setupMassActionItems();
 
+
+
             if (this.selectable) {
                 this.events['click .list a.link'] = function (e) {
                     e.preventDefault();
@@ -929,6 +986,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         afterRender: function () {
+
             if (this.allResultIsChecked) {
                 this.selectAllResult();
             } else {
@@ -1073,6 +1131,19 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         }.bind(this));
                     }
                 }.bind(this), 50)
+            }
+            const filters = this.getStorage().get('listSearch', this.scope);
+            if(filters.bool['onlyDeleted'] === true && !this.massActionList.includes('restore')){
+                this.massActionListBackup = this.massActionList;
+                this.checkAllResultMassActionListBackup = this.checkAllResultMassActionList;
+                this.massActionList = ['restore'];
+                this.checkAllResultMassActionList = ['restore'];this.reRender();
+            }
+
+            if(filters.bool['onlyDeleted'] !== true && this.massActionList.includes('restore')){
+                this.massActionList = this.massActionListBackup;
+                this.checkAllResultMassActionList = this.checkAllResultMassActionListBackup
+                this.reRender()
             }
         },
 
@@ -1882,7 +1953,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     model: model,
                     acl: acl,
                     el: this.options.el + ' .list-row[data-id="' + key + '"]',
-                    optionsToPass: ['acl'],
+                    optionsToPass: ['acl','scope'],
+                    scope: this.scope,
                     noCache: true,
                     _layout: {
                         type: this._internalLayoutType,
@@ -2196,6 +2268,49 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         this.collection.push(model);
                     }.bind(this)
                 });
+            }, this);
+        },
+        actionQuickRestore: function (data) {
+            data = data || {}
+            var id = data.id;
+            if (!id) return;
+
+            var model = this.collection.get(id);
+            if (!this.getAcl().checkModel(model, 'delete')) {
+                this.notify('Access denied', 'error');
+                return false;
+            }
+
+            let message = 'Global.messages.restoreRecordConfirmation';
+
+            let scopeMessage = this.getMetadata().get(`clientDefs.${this.scope}.restoreConfirmation`);
+            if (scopeMessage) {
+                message = scopeMessage;
+            }
+
+            let parts = message.split('.');
+
+            this.confirm({
+                message: (this.translate(parts.pop(), parts.pop(), parts.pop())).replace('{{name}}', model.get('name')),
+                confirmText: this.translate('Restore')
+            }, function () {
+                this.collection.trigger('model-removing', id);
+                this.collection.remove(model);
+                this.notify('restoring');
+                $.ajax({
+                    url: this.entityType + '/action/massRestore',
+                    type: 'POST',
+                    data: JSON.stringify({
+                        ids:[id]
+                    })
+                }).done(function (result) {
+                        this.notify('Restored', 'success');
+                        this.removeRecordFromList(id);
+                    }.bind(this)
+                ).fail(function(){
+                    this.notify('Error occured', 'error');
+                    this.collection.push(model);
+                }.bind(this))
             }, this);
         },
 

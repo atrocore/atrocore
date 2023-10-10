@@ -328,6 +328,29 @@ class Record extends Base
 
         return $this->getRecordService()->massRemove($params);
     }
+    public function actionMassRestore($params, $data, $request)
+    {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+        if (!$this->getAcl()->check($this->name, 'delete')) {
+            throw new Forbidden();
+        }
+
+        $params = array();
+        if (property_exists($data, 'where') && !empty($data->byWhere)) {
+            $where = json_decode(json_encode($data->where), true);
+            $params['where'] = $where;
+            if (property_exists($data, 'selectData')) {
+                $params['selectData'] = json_decode(json_encode($data->selectData), true);
+            }
+        }
+        if (property_exists($data, 'ids')) {
+            $params['ids'] = $data->ids;
+        }
+
+        return $this->getRecordService()->massRestore($params);
+    }
 
     public function actionCreateLink($params, $data, $request)
     {

@@ -29,6 +29,7 @@ class Metadata extends AbstractListener
         // add onlyActive bool filter
         $data = $this->addOnlyActiveFilter($data);
 
+        $data = $this->addOnlyDeletedFilter($data);
         // add archive
         $data = $this->addArchive($data);
         // set thumbs sizes to options of asset field type
@@ -954,6 +955,19 @@ class Metadata extends AbstractListener
                 // push
                 $data['clientDefs'][$entity]['boolFilterList'][] = 'onlyActive';
             }
+        }
+
+        return $data;
+    }
+    /**
+     * @param array $data
+     *
+     * @return array
+     */
+    protected function addOnlyDeletedFilter(array $data): array
+    {
+        foreach ($data['entityDefs'] as $entity => $row) {
+                $data['clientDefs'][$entity]['boolFilterList'][] = 'onlyDeleted';
         }
 
         return $data;
