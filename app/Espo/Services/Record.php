@@ -1318,7 +1318,6 @@ class Record extends \Espo\Core\Services\Base
             $entity->skipValidation('requiredField');
         }
 
-
         $this->filterInput($data, $id);
         $this->handleInput($data, $id);
 
