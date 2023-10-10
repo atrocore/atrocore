@@ -15,6 +15,7 @@ use Atro\Core\Container;
 use Atro\Core\Utils\Database\DBAL\Schema\FieldTypes\TypeInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Schema\Table;
 use Espo\Core\Utils\Database\Schema\Utils as SchemaUtils;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Metadata\OrmMetadata;
@@ -68,11 +69,7 @@ class Converter
                     $primaryColumns[] = Util::toUnderScore($fieldName);
                 }
 
-                $column = $this->createColumn($fieldName, $fieldDefs);
-
-                if (!$table->hasColumn($column->getColumnName())) {
-                    $column->add($table, $schema);
-                }
+                $column = $this->addColumn($schema, $table, $fieldName, $fieldDefs);
 
                 if (!empty($fieldDefs['unique']) && $fieldDefs['type'] !== 'id') {
                     $columnNames = [$column->getColumnName()];
@@ -143,24 +140,15 @@ class Converter
                         $uniqueIndex = [];
 
                         // ID column
-                        $idColumn = $this->createColumn('id', ['type' => 'id', 'dbType' => 'int', 'autoincrement' => true]);
-                        if (!$table->hasColumn($idColumn->getColumnName())) {
-                            $idColumn->add($table, $schema);
-                        }
+                        $this->addColumn($schema, $table, 'id', ['type' => 'id', 'dbType' => 'int', 'autoincrement' => true]);
 
                         // DELETED column
-                        $deletedColumn = $this->createColumn('deleted', ['type' => 'bool', 'default' => false]);
-                        if (!$table->hasColumn($deletedColumn->getColumnName())) {
-                            $deletedColumn->add($table, $schema);
-                        }
+                        $this->addColumn($schema, $table, 'deleted', ['type' => 'bool', 'default' => false]);
 
                         // MIDDLE columns
                         if (!empty($relationParams['midKeys'])) {
                             foreach ($relationParams['midKeys'] as $midKey) {
-                                $column = $this->createColumn($midKey, ['foreignId' => 'id', 'dbType' => 'varchar', 'len' => 24]);
-                                if (!$table->hasColumn($column->getColumnName())) {
-                                    $column->add($table, $schema);
-                                }
+                                $column = $this->addColumn($schema, $table, $midKey, ['foreignId' => 'id', 'dbType' => 'varchar', 'len' => 24]);
                                 $table->addIndex([$column->getColumnName()]);
                                 $uniqueIndex[] = $column->getColumnName();
                             }
@@ -175,10 +163,8 @@ class Converter
                                         'len'  => 255,
                                     ));
                                 }
-                                $column = $this->createColumn($fieldName, $fieldParams);
-                                if (!$table->hasColumn($column->getColumnName())) {
-                                    $column->add($table, $schema);
-                                }
+
+                                $this->addColumn($schema, $table, $fieldName, $fieldParams);
                             }
                         }
 
@@ -209,6 +195,17 @@ class Converter
         return new $className($fieldName, $fieldDefs, $this->connection);
     }
 
+    public function addColumn(Schema $schema, Table $table, string $fieldName, array $fieldDefs): TypeInterface
+    {
+        $column = $this->createColumn($fieldName, $fieldDefs);
+
+        if (!$table->hasColumn($column->getColumnName())) {
+            $column->add($table, $schema);
+        }
+
+        return $column;
+    }
+
     public function getColumnClassName(string $fieldType): string
     {
         return "\\Atro\\Core\\Utils\\Database\\DBAL\\Schema\\FieldTypes\\" . ucfirst($fieldType) . "Type";
@@ -222,7 +219,6 @@ class Converter
                     'id'         => [
                         'type'          => 'id',
                         'dbType'        => 'int',
-                        'len'           => '11',
                         'autoincrement' => true,
                         'unique'        => true,
                     ],
@@ -255,7 +251,6 @@ class Converter
                     'id'         => [
                         'type'          => 'id',
                         'dbType'        => 'int',
-                        'len'           => '11',
                         'autoincrement' => true,
                         'unique'        => true,
                     ],
