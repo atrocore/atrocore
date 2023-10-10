@@ -20,8 +20,8 @@ class Connection implements FactoryInterface
     protected static array $drivers
         = [
             'pdo_mysql' => '\Espo\Core\Utils\Database\DBAL\Driver\PDOMySql\Driver',
+            'pdo_pgsql' => '\Atro\Core\Utils\Database\DBAL\Driver\PDO\PgSQL\Driver',
         ];
-
 
     public function create(Container $container)
     {
@@ -32,7 +32,6 @@ class Connection implements FactoryInterface
     {
         if (!empty(self::$drivers[$params['driver']])) {
             $params['driverClass'] = self::$drivers[$params['driver']];
-            unset($params['driver']);
         }
 
         return \Doctrine\DBAL\DriverManager::getConnection($params, new \Doctrine\DBAL\Configuration());
