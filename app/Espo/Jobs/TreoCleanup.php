@@ -47,10 +47,7 @@ class TreoCleanup extends Base
      */
     private $date;
 
-    /**
-     * @var string
-     */
-    private $db;
+
 
     /**
      * @inheritDoc
@@ -60,7 +57,6 @@ class TreoCleanup extends Base
         parent::__construct($container);
 
         $this->date = (new \DateTime())->modify("-3 month")->format('Y-m-d');
-        $this->db = $this->getConfig()->get('database')['dbname'];
     }
 
     /**
@@ -75,7 +71,6 @@ class TreoCleanup extends Base
         $this->cleanupAuthLog();
         $this->cleanupActionHistory();
         $this->cleanupNotifications();
-        $this->cleanupDeleted();
         $this->cleanupAttachments();
         $this->cleanupDbSchema();
         $this->cleanupEntityTeam();
@@ -113,27 +108,7 @@ class TreoCleanup extends Base
         $this->exec("DELETE FROM scheduled_job_log_record WHERE DATE(execution_time)<'{$this->date}'");
     }
 
-    /**
-     * Cleanup deleted
-     */
-    protected function cleanupDeleted(): void
-    {
-        $tables = $this->getEntityManager()->nativeQuery('show tables')->fetchAll(\PDO::FETCH_COLUMN);
-        foreach ($tables as $table) {
-            if ($table == 'attachment') {
-                continue 1;
-            }
-            $columns = $this->getEntityManager()->nativeQuery("SHOW COLUMNS FROM {$this->db}.$table")->fetchAll(\PDO::FETCH_COLUMN);
-            if (!in_array('deleted', $columns)) {
-                continue 1;
-            }
-            if (!in_array('modified_at', $columns)) {
-                $this->exec("DELETE FROM {$this->db}.$table WHERE deleted=1");
-            } else {
-                $this->exec("DELETE FROM {$this->db}.$table WHERE deleted=1 AND DATE(modified_at)<'{$this->date}'");
-            }
-        }
-    }
+
 
     /**
      * Cleanup auth log

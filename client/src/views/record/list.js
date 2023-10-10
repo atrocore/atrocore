@@ -1133,14 +1133,14 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }.bind(this), 50)
             }
             const filters = this.getStorage().get('listSearch', this.scope);
-            if(filters.bool['onlyDeleted'] === true && !this.massActionList.includes('restore')){
+            if(filters && filters.bool['onlyDeleted'] === true && !this.massActionList.includes('restore')){
                 this.massActionListBackup = this.massActionList;
                 this.checkAllResultMassActionListBackup = this.checkAllResultMassActionList;
                 this.massActionList = ['restore'];
                 this.checkAllResultMassActionList = ['restore'];this.reRender();
             }
 
-            if(filters.bool['onlyDeleted'] !== true && this.massActionList.includes('restore')){
+            if(filters && filters.bool['onlyDeleted'] !== true && this.massActionList.includes('restore')){
                 this.massActionList = this.massActionListBackup;
                 this.checkAllResultMassActionList = this.checkAllResultMassActionListBackup
                 this.reRender()

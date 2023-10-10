@@ -3,7 +3,8 @@
     "name": "Nombre",
     "status": "Estado",
     "job": "Trabajo",
-    "scheduling": "Programación (notación CRONTab)"
+    "scheduling": "Programación (notación CRONTab)",
+    "minimum_age": "Edad mínima (en días) de los datos"
   },
   "links": {
     "log": "Registro"
@@ -21,8 +22,9 @@
   },
   "options": {
     "job": {
-      "TreoCleanup": "Antigua limpieza de datos eliminados",
-      "ComposerAutoUpdate": "Actualización automática del sistema"
+      "TreoCleanup": "Limpieza de datos antiguos",
+      "ComposerAutoUpdate": "Actualización automática del sistema",
+      "DeleteForever": "Borrar para siempre"
     },
     "status": {
       "Active": "Activo",

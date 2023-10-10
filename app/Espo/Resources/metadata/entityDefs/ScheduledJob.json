@@ -47,6 +47,9 @@
             "readOnly": true,
             "disabled": true,
             "default": false
+        },
+        "minimum_age": {
+            "type": "int"
         }
     },
     "links": {
@@ -74,6 +77,10 @@
     },
     "jobs": {
         "CheckUpdates": {
+            "isSystem": true,
+            "scheduling": "0 2 * * *"
+        },
+        "DeleteForever": {
             "isSystem": true,
             "scheduling": "0 2 * * *"
         }
