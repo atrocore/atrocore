@@ -33,7 +33,7 @@
 
 namespace Espo\Core\Utils\Database;
 
-use Espo\Core\Utils\Database\Schema\Utils as SchemaUtils;
+use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 
 class Helper
 {
@@ -67,48 +67,6 @@ class Helper
         }
 
         return $this->connection;
-    }
-
-    /**
-     * Get maximum index length. If $tableName is empty get a value for all database tables
-     *
-     * @param  string|null $tableName
-     *
-     * @return int
-     */
-    public function getMaxIndexLength($tableName = null, $default = 1000)
-    {
-        if (SchemaUtils::isPgSQL($this->getDbalConnection())) {
-            return 2700;
-        }
-
-        $mysqlEngine = $this->getMysqlEngine($tableName);
-        if (!$mysqlEngine) {
-            return $default;
-        }
-
-        switch ($mysqlEngine) {
-            case 'InnoDB':
-                $mysqlVersion = $this->getMysqlVersion();
-
-                if (version_compare($mysqlVersion, '10.0.0') >= 0) {
-                    return 767; //InnoDB, MariaDB
-                }
-
-                if (version_compare($mysqlVersion, '5.7.0') >= 0) {
-                    return 3072; //InnoDB, MySQL 5.7+
-                }
-
-                return 767; //InnoDB
-                break;
-        }
-
-        return 1000; //MyISAM
-    }
-
-    public function getTableMaxIndexLength($tableName, $default = 1000)
-    {
-        return $this->getMaxIndexLength($tableName, $default);
     }
 
     protected function getMysqlVersion()
@@ -158,7 +116,7 @@ class Helper
      */
     public function isSupportsFulltext($tableName = null, $default = false)
     {
-        if (SchemaUtils::isPgSQL($this->getDbalConnection())) {
+        if (Converter::isPgSQL($this->getDbalConnection())) {
             return true;
         }
 

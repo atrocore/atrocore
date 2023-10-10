@@ -16,7 +16,6 @@ use Atro\Core\Utils\Database\DBAL\Schema\FieldTypes\TypeInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
-use Espo\Core\Utils\Database\Schema\Utils as SchemaUtils;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Metadata\OrmMetadata;
 use Espo\Core\Utils\Util;
@@ -36,11 +35,26 @@ class Converter
         $this->connection = $container->get('connection');
     }
 
+    public static function generateIndexName(string $entityName, string $indexName, string $prefix = 'IDX', int $maxLength = 120): string
+    {
+        $nameList = [];
+        $nameList[] = strtoupper($prefix);
+        $nameList[] = strtoupper(Util::toUnderScore($entityName));
+        $nameList[] = strtoupper(Util::toUnderScore($indexName));
+
+        return substr(implode('_', $nameList), 0, $maxLength);
+    }
+
+    public static function isPgSQL(Connection $connection): bool
+    {
+        return strpos(get_class($connection->getDriver()), 'PgSQL') !== false;
+    }
+
     public function createSchema(): Schema
     {
         $ormMetadata = array_merge($this->ormMetadata->getData(), $this->getSystemOrmMetadata());
 
-        $indexList = SchemaUtils::getIndexList($ormMetadata);
+        $indexList = $this->getIndexList($ormMetadata);
 
         $schema = new Schema();
 
@@ -85,7 +99,7 @@ class Converter
             }
 
             foreach ($this->metadata->get(['entityDefs', $entityName, 'uniqueIndexes'], []) as $indexName => $indexColumns) {
-                $table->addUniqueIndex($indexColumns, SchemaUtils::generateIndexName($indexName, "IDX_{$tableName}", 120));
+                $table->addUniqueIndex($indexColumns, self::generateIndexName($entityName, $indexName));
             }
 
             if (!empty($indexList[$entityName])) {
@@ -95,7 +109,7 @@ class Converter
 
                     $options = [];
 
-                    if (!SchemaUtils::isPgSQL($this->connection)) {
+                    if (!self::isPgSQL($this->connection)) {
                         foreach ($indexParams['columns'] as $column) {
                             $type = $this->metadata->get(['entityDefs', $entityName, 'fields', Util::toCamelCase($column), 'type'], 'varchar');
                             if (in_array($type, ['text', 'wysiwyg'])) {
@@ -209,6 +223,71 @@ class Converter
     public function getColumnClassName(string $fieldType): string
     {
         return "\\Atro\\Core\\Utils\\Database\\DBAL\\Schema\\FieldTypes\\" . ucfirst($fieldType) . "Type";
+    }
+
+    protected function getIndexList(array $ormMeta, array $ignoreFlags = []): array
+    {
+        $indexList = [];
+
+        foreach ($ormMeta as $entityName => $entityParams) {
+            foreach ($entityParams['fields'] as $fieldName => $fieldParams) {
+                if (isset($fieldParams['notStorable']) && $fieldParams['notStorable']) {
+                    continue;
+                }
+
+                if (isset($fieldParams['index'])) {
+                    $keyValue = $fieldParams['index'];
+                    $columnName = Util::toUnderScore($fieldName);
+
+                    if (!isset($indexList[$entityName])) {
+                        $indexList[$entityName] = [];
+                    }
+
+                    if ($keyValue === true) {
+                        $tableIndexName = self::generateIndexName($entityName, $columnName);
+                        $indexList[$entityName][$tableIndexName]['columns'] = array($columnName);
+                        if (array_key_exists('deleted', $entityParams['fields'])) {
+                            $tableIndexName = self::generateIndexName($entityName, $columnName . '_deleted');
+                            $indexList[$entityName][$tableIndexName]['columns'] = [$columnName, 'deleted'];
+                        }
+                    } else {
+                        if (is_string($keyValue)) {
+                            $tableIndexName = self::generateIndexName($entityName, $keyValue);
+                            $indexList[$entityName][$tableIndexName]['columns'][] = $columnName;
+                        }
+                    }
+                }
+            }
+
+            if (isset($entityParams['indexes']) && is_array($entityParams['indexes'])) {
+                foreach ($entityParams['indexes'] as $indexName => $indexParams) {
+                    $tableIndexName = self::generateIndexName($entityName, $indexName);
+
+                    if (isset($indexParams['flags']) && is_array($indexParams['flags'])) {
+
+                        $skipIndex = false;
+                        foreach ($ignoreFlags as $ignoreFlag) {
+                            if (($flagKey = array_search($ignoreFlag, $indexParams['flags'])) !== false) {
+                                unset($indexParams['flags'][$flagKey]);
+                                $skipIndex = true;
+                            }
+                        }
+
+                        if ($skipIndex && empty($indexParams['flags'])) {
+                            continue;
+                        }
+
+                        $indexList[$entityName][$tableIndexName]['flags'] = $indexParams['flags'];
+                    }
+
+                    if (is_array($indexParams['columns'])) {
+                        $indexList[$entityName][$tableIndexName]['columns'] = Util::toUnderScore($indexParams['columns']);
+                    }
+                }
+            }
+        }
+
+        return $indexList;
     }
 
     protected function getSystemOrmMetadata(): array

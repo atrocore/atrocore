@@ -40,7 +40,6 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Atro\Core\PseudoTransactionManager;
-use Espo\Core\Utils\Database\Schema\Utils as SchemaUtils;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Metadata;
@@ -50,6 +49,7 @@ use Espo\ORM\EntityCollection;
 use Espo\ORM\IEntity;
 use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Utils\Condition\Condition;
+use Atro\Core\Utils\Database\DBAL\Schema\Converter as SchemaConverter;
 
 class Record extends \Espo\Core\Services\Base
 {
@@ -565,7 +565,7 @@ class Record extends \Espo\Core\Services\Base
                      * Check in metadata indexes
                      */
                     foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'uniqueIndexes'], []) as $indexName => $columns) {
-                        if (SchemaUtils::generateIndexName($indexName) === $keyName) {
+                        if (SchemaConverter::generateIndexName($entity->getEntityType(), $indexName) === $keyName) {
                             throw new BadRequest($this->prepareUniqueMessage($columns));
                         }
                     }

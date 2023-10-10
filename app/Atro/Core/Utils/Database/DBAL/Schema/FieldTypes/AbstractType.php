@@ -54,6 +54,6 @@ abstract class AbstractType implements TypeInterface
 
     protected function isPgSQL(): bool
     {
-        return \Espo\Core\Utils\Database\Schema\Utils::isPgSQL($this->connection);
+        return \Atro\Core\Utils\Database\DBAL\Schema\Converter::isPgSQL($this->connection);
     }
 }
