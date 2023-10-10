@@ -22,7 +22,6 @@
   },
   "options": {
     "job": {
-      "TreoCleanup": "Limpieza de datos antiguos",
       "ComposerAutoUpdate": "Actualización automática del sistema",
       "DeleteForever": "Borrar para siempre"
     },

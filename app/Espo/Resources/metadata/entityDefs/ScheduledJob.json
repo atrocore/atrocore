@@ -72,15 +72,10 @@
         "asc": true
     },
     "jobSchedulingMap": {
-        "TreoCleanup": "0 3 1 * *",
         "ComposerAutoUpdate": "0 5 * * SUN"
     },
     "jobs": {
         "CheckUpdates": {
-            "isSystem": true,
-            "scheduling": "0 2 * * *"
-        },
-        "DeleteForever": {
             "isSystem": true,
             "scheduling": "0 2 * * *"
         }

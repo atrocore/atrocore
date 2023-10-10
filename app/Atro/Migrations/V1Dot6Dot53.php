@@ -21,6 +21,7 @@ class V1Dot6Dot53 extends Base
         $this->exec(
             "INSERT INTO scheduled_job (id, `name`, job, minimum_age, `status`, scheduling) VALUES ('DeleteForever','Delete data forever','DeleteForever',90,'Active','0 0 1 * *')"
         );
+        $this->exec("DELETE FROM scheduled_job WHERE id = 'TreoCleanup'");
 
         $this->updateComposer('atrocore/core', '^1.6.53');
     }
@@ -29,6 +30,8 @@ class V1Dot6Dot53 extends Base
     {
         $this->exec("ALTER TABLE scheduled_job drop column minimum_age;");
         $this->exec("DELETE FROM scheduled_job WHERE id = 'DeleteForever'");
+        $this->exec("INSERT INTO scheduled_job (id, `name`, job, `status`, scheduling) 
+                VALUES ('TreoCleanup','Old deleted data cleanup','TreoCleanup','Active','0 0 1 * *')");
     }
 
     protected function exec(string $query): void

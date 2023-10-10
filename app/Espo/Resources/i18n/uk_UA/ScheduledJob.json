@@ -22,7 +22,6 @@
   },
   "options": {
     "job": {
-      "TreoCleanup": "Очищення невикористаних даних.",
       "ComposerAutoUpdate": "Автооновлення модулів",
       "DeleteForever": "Видалити назавжди"
     },
