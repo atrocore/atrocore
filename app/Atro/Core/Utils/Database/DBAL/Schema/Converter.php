@@ -12,7 +12,6 @@
 namespace Atro\Core\Utils\Database\DBAL\Schema;
 
 use Atro\Core\Container;
-use Atro\Core\Utils\Database\DBAL\Schema\FieldTypes\TypeInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
