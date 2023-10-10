@@ -40,6 +40,8 @@ class Converter
     {
         $ormMetadata = Util::unsetInArray(array_merge($this->ormMetadata->getData(), $this->getSystemOrmMetadata()), ['Preferences', 'Settings']);
 
+        $indexList = SchemaUtils::getIndexList($ormMetadata);
+
         $schema = new Schema();
 
         $tables = [];
@@ -67,12 +69,7 @@ class Converter
                     $primaryColumns[] = Util::toUnderScore($fieldName);
                 }
 
-                $className = $this->getColumnClassName($fieldDefs['dbType'] ?? $fieldDefs['type']);
-
-                $column = new $className($fieldName, $fieldDefs, $connection);
-                if (!$column instanceof ColumnInterface) {
-                    throw new \Error("No such column type '{$fieldDefs['type']}'.");
-                }
+                $column = $this->createColumn($fieldName, $fieldDefs, $connection);
 
                 if (!$table->hasColumn($column->getColumnName())) {
                     $column->add($table, $schema);
@@ -95,49 +92,122 @@ class Converter
                 $table->addUniqueIndex($indexColumns, SchemaUtils::generateIndexName($indexName, "IDX_{$tableName}", 120));
             }
 
+            if (!empty($indexList[$entityName])) {
+                foreach ($indexList[$entityName] as $indexName => $indexParams) {
+                    $indexColumnList = $indexParams['columns'];
+                    $indexFlagList = $indexParams['flags'] ?? [];
+
+                    $options = [];
+
+                    if (!SchemaUtils::isPgSQL($connection)) {
+                        foreach ($indexParams['columns'] as $column) {
+                            $type = $this->metadata->get(['entityDefs', $entityName, 'fields', Util::toCamelCase($column), 'type'], 'varchar');
+                            if (in_array($type, ['text', 'wysiwyg'])) {
+                                $options['lengths'] = [200];
+                                break;
+                            }
+                        }
+                    }
+
+                    $table->addIndex($indexColumnList, $indexName, $indexFlagList, $options);
+                }
+            }
+
             $table->setPrimaryKey($primaryColumns);
 
             $tables[$entityName] = $table;
         }
 
-        // $indexList = SchemaUtils::getIndexList($ormMeta);
-        //        $fieldListExceededIndexMaxLength = SchemaUtils::getFieldListExceededIndexMaxLength($ormMeta, $this->getMaxIndexLength());
-        //
-        //        $tables = array();
-        //        foreach ($ormMeta as $entityName => $entityParams) {
-        //            if (!empty($indexList[$entityName])) {
-        //                foreach($indexList[$entityName] as $indexName => $indexParams) {
-        //                    $indexColumnList = $indexParams['columns'];
-        //                    $indexFlagList = isset($indexParams['flags']) ? $indexParams['flags'] : array();
-        //                    $tables[$entityName]->addIndex($indexColumnList, $indexName, $indexFlagList);
-        //                }
-        //            }
-        //        }
-        //
-        //        //check and create columns/tables for relations
-        //        foreach ($ormMeta as $entityName => $entityParams) {
-        //
-        //            if (!isset($entityParams['relations'])) {
-        //                continue;
-        //            }
-        //
-        //            foreach ($entityParams['relations'] as $relationName => $relationParams) {
-        //
-        //                 switch ($relationParams['type']) {
-        //                    case 'manyMany':
-        //                        $tableName = $relationParams['relationName'];
-        //
-        //                        //check for duplicate tables
-        //                        if (!isset($tables[$tableName])) { //no needs to create the table if it already exists
-        //                            $tables[$tableName] = $this->prepareManyMany($entityName, $relationParams, $tables);
-        //                        }
-        //                        break;
-        //                }
-        //            }
-        //        }
-        //        //END: check and create columns/tables for relations
+        /**
+         * ManyToMany
+         */
+        foreach ($ormMetadata as $entityDefs) {
+            if (!isset($entityDefs['relations'])) {
+                continue;
+            }
+
+            foreach ($entityDefs['relations'] as $relationParams) {
+                if (empty($relationParams['type']) || $relationParams['type'] !== 'manyMany') {
+                    continue;
+                }
+
+                $entityName = $relationParams['relationName'];
+
+                if (!isset($tables[$entityName])) {
+                    $tableName = Util::toUnderScore($entityName);
+
+                    if ($schema->hasTable($tableName)) {
+                        $table = $schema->getTable($tableName);
+                    } else {
+                        $table = $schema->createTable($tableName);
+
+                        $uniqueIndex = [];
+
+                        // ID column
+                        $idColumn = $this->createColumn('id', ['type' => 'id', 'dbType' => 'int', 'autoincrement' => true], $connection);
+                        if (!$table->hasColumn($idColumn->getColumnName())) {
+                            $idColumn->add($table, $schema);
+                        }
+
+                        // DELETED column
+                        $deletedColumn = $this->createColumn('deleted', ['type' => 'bool', 'default' => false], $connection);
+                        if (!$table->hasColumn($deletedColumn->getColumnName())) {
+                            $deletedColumn->add($table, $schema);
+                        }
+
+                        // MIDDLE columns
+                        if (!empty($relationParams['midKeys'])) {
+                            foreach ($relationParams['midKeys'] as $midKey) {
+                                $column = $this->createColumn($midKey, ['foreignId' => 'id', 'dbType' => 'varchar', 'len' => 24], $connection);
+                                if (!$table->hasColumn($column->getColumnName())) {
+                                    $column->add($table, $schema);
+                                }
+                                $table->addIndex([$column->getColumnName()]);
+                                $uniqueIndex[] = $column->getColumnName();
+                            }
+                        }
+
+                        // ADDITIONAL columns
+                        if (!empty($relationParams['additionalColumns'])) {
+                            foreach ($relationParams['additionalColumns'] as $fieldName => $fieldParams) {
+                                if (!isset($fieldParams['type'])) {
+                                    $fieldParams = array_merge($fieldParams, array(
+                                        'type' => 'varchar',
+                                        'len'  => 255,
+                                    ));
+                                }
+                                $column = $this->createColumn($fieldName, $fieldParams, $connection);
+                                if (!$table->hasColumn($column->getColumnName())) {
+                                    $column->add($table, $schema);
+                                }
+                            }
+                        }
+
+                        if (!empty($relationParams['conditions'])) {
+                            foreach ($relationParams['conditions'] as $fieldName => $fieldParams) {
+                                $uniqueIndex[] = Util::toUnderScore($fieldName);
+                            }
+                        }
+
+                        if (!empty($uniqueIndex)) {
+                            $table->addUniqueIndex($uniqueIndex);
+                        }
+                        $table->setPrimaryKey(['id']);
+                    }
+
+                    $tables[$entityName] = $table;
+                }
+            }
+        }
 
         return $schema;
+    }
+
+    public function createColumn(string $fieldName, array $fieldDefs, Connection $connection): ColumnInterface
+    {
+        $className = $this->getColumnClassName($fieldDefs['dbType'] ?? $fieldDefs['type']);
+
+        return new $className($fieldName, $fieldDefs, $connection);
     }
 
     public function getColumnClassName(string $fieldType): string
