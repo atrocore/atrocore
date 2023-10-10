@@ -33,6 +33,8 @@
 
 namespace Espo\Core\Utils\Database;
 
+use Espo\Core\Utils\Database\Schema\Utils as SchemaUtils;
+
 class Helper
 {
     private $config;
@@ -76,7 +78,7 @@ class Helper
      */
     public function getMaxIndexLength($tableName = null, $default = 1000)
     {
-        if ($this->getConfig()->get('database')['driver'] === 'pdo_pgsql') {
+        if (SchemaUtils::isPgSQL($this->getDbalConnection())) {
             return 2700;
         }
 
@@ -156,7 +158,7 @@ class Helper
      */
     public function isSupportsFulltext($tableName = null, $default = false)
     {
-        if ($this->getConfig()->get('database')['driver'] === 'pdo_pgsql') {
+        if (SchemaUtils::isPgSQL($this->getDbalConnection())) {
             return true;
         }
 
