@@ -9,10 +9,11 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-namespace Atro\Core\Utils\Database\Schema;
+namespace Atro\Core\Utils\Database\DBAL\Schema;
 
 use Atro\Core\Container;
-use Atro\Core\Utils\Database\Schema\Columns\ColumnInterface;
+use Atro\Core\Utils\Database\DBAL\Schema\Columns\ColumnInterface;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Schema;
 use Espo\Core\Utils\Database\Schema\Utils as SchemaUtils;
 use Espo\Core\Utils\Metadata;
@@ -35,7 +36,7 @@ class Converter
         $this->metadata = $container->get('metadata');
     }
 
-    public function createSchema(): Schema
+    public function createSchema(Connection $connection): Schema
     {
         $ormMetadata = Util::unsetInArray(array_merge($this->ormMetadata->getData(), $this->getSystemOrmMetadata()), ['Preferences', 'Settings']);
 
@@ -55,7 +56,6 @@ class Converter
             }
 
             $primaryColumns = [];
-
             $uniqueFields = [];
 
             foreach ($entityDefs['fields'] as $fieldName => $fieldDefs) {
@@ -67,17 +67,15 @@ class Converter
                     $primaryColumns[] = Util::toUnderScore($fieldName);
                 }
 
-                $fieldType = $fieldDefs['dbType'] ?? $fieldDefs['type'];
+                $className = $this->getColumnClassName($fieldDefs['dbType'] ?? $fieldDefs['type']);
 
-                $className = "\\Atro\\Core\\Utils\\Database\\Schema\\Columns\\" . ucfirst($fieldType) . "Column";
-
-                $column = new $className($fieldName, $fieldDefs);
+                $column = new $className($fieldName, $fieldDefs, $connection);
                 if (!$column instanceof ColumnInterface) {
                     throw new \Error("No such column type '{$fieldDefs['type']}'.");
                 }
 
                 if (!$table->hasColumn($column->getColumnName())) {
-                    $column->add($table);
+                    $column->add($table, $schema);
                 }
 
                 if (!empty($fieldDefs['unique']) && $fieldDefs['type'] !== 'id') {
@@ -101,10 +99,6 @@ class Converter
 
             $tables[$entityName] = $table;
         }
-
-//        echo '<pre>';
-//        print_r('q11');
-//        die();
 
         // $indexList = SchemaUtils::getIndexList($ormMeta);
         //        $fieldListExceededIndexMaxLength = SchemaUtils::getFieldListExceededIndexMaxLength($ormMeta, $this->getMaxIndexLength());
@@ -146,46 +140,9 @@ class Converter
         return $schema;
     }
 
-    public function getDbFieldParams(array $fieldParams): array
+    public function getColumnClassName(string $fieldType): string
     {
-        $dbFieldParams = [];
-
-        foreach (self::$allowedDbFieldParams as $espoName => $dbalName) {
-            if (isset($fieldParams[$espoName])) {
-                $dbFieldParams[$dbalName] = $fieldParams[$espoName];
-            }
-        }
-
-        switch ($fieldParams['type']) {
-            case 'array':
-            case 'jsonArray':
-            case 'text':
-            case 'longtext':
-                if (!empty($dbFieldParams['default'])) {
-                    $dbFieldParams['comment'] = "default={" . $dbFieldParams['default'] . "}";
-                }
-                unset($dbFieldParams['default']); //for db type TEXT can't be defined a default value
-                break;
-
-            case 'bool':
-                $default = false;
-                if (array_key_exists('default', $dbFieldParams)) {
-                    $default = $dbFieldParams['default'];
-                }
-                $dbFieldParams['default'] = intval($default);
-                break;
-        }
-
-        if (isset($fieldParams['autoincrement']) && $fieldParams['autoincrement']) {
-            $dbFieldParams['unique'] = true;
-            $dbFieldParams['notnull'] = true;
-        }
-
-        if (isset($fieldParams['utf8mb3']) && $fieldParams['utf8mb3']) {
-            $dbFieldParams['platformOptions'] = ['collation' => 'utf8_unicode_ci'];
-        }
-
-        return $dbFieldParams;
+        return "\\Atro\\Core\\Utils\\Database\\DBAL\\Schema\\Columns\\" . ucfirst($fieldType) . "Column";
     }
 
     protected function getSystemOrmMetadata(): array
