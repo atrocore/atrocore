@@ -87,7 +87,7 @@ class MassRestore extends QueueManagerBase
                 $service->restoreEntity($id);
                 $restored++;
                 if ((time() - $start) > 3) {
-                    self::updatePublicData($entityType, ['deleted' => $restored, 'total' => $total]);
+                    self::updatePublicData($entityType, ['restored' => $restored, 'total' => $total]);
                     $start = time();
                 }
             } catch (\Throwable $e) {
@@ -97,7 +97,7 @@ class MassRestore extends QueueManagerBase
             }
         }
 
-        self::updatePublicData($entityType, ['deleted' => $restored, 'total' => $total, 'done' => Util::generateId()]);
+        self::updatePublicData($entityType, ['restored' => $restored, 'total' => $total, 'done' => Util::generateId()]);
         sleep(2);
 
         return true;
