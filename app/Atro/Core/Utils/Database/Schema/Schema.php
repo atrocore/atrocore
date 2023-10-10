@@ -54,17 +54,14 @@ class Schema
 
     public function rebuild(): bool
     {
-        $fromSchema = $this->getCurrentSchema();
-        $toSchema = $this->schemaConverter->createSchema();
-
         // init rebuild actions
-        $this->initRebuildActions($fromSchema, $toSchema);
+        $this->initRebuildActions();
 
         // execute rebuild actions
         $this->executeRebuildActions('beforeRebuild');
 
         // get queries
-        $queries = $this->getDiffSql($fromSchema, $toSchema);
+        $queries = $this->getDiffQueries(false);
 
         // prepare queries
         $queries = $this->eventManager->dispatch('Schema', 'prepareQueries', new Event(['queries' => $queries]))->getArgument('queries');
@@ -92,23 +89,48 @@ class Schema
         return $result;
     }
 
-    public function getDiffQueries(): array
+    public function getDiffQueries(bool $strictType = true): array
     {
-        // set strict type
-        $this->getPlatform()->strictType = true;
+        if ($strictType) {
+            $this->getPlatform()->strictType = true;
+        }
 
         $fromSchema = $this->getCurrentSchema();
         $toSchema = $this->schemaConverter->createSchema();
+        $clonedToSchema = clone $toSchema;
+
         $diff = $this->comparator->compareSchemas($fromSchema, $toSchema);
+
+        // if system try to add autoincrement column it should be added in two steps, because of dbal problem
+        $hasModification = false;
+        foreach ($diff->changedTables as $tableDiff) {
+            foreach ($tableDiff->addedColumns as $column) {
+                if ($column->getAutoincrement()) {
+                    $column->setAutoincrement(false);
+                    $hasModification = true;
+                }
+            }
+//            foreach ($tableDiff->renamedColumns as $column) {
+//                if ($column->getAutoincrement()) {
+//                    $column->setAutoincrement(false);
+//                    $hasModification = true;
+//                }
+//            }
+        }
 
         // get queries
         $queries = $diff->toSql($this->getPlatform());
 
+        if ($hasModification) {
+            $queries = array_merge($queries, $this->comparator->compareSchemas($toSchema, $clonedToSchema)->toSql($this->getPlatform()));
+        }
+
         // prepare queries
         $queries = $this->eventManager->dispatch('Schema', 'prepareQueries', new Event(['queries' => $queries]))->getArgument('queries');
 
-        // set strict type
-        $this->getPlatform()->strictType = false;
+        if ($strictType) {
+            $this->getPlatform()->strictType = false;
+        }
 
         return $queries;
     }
@@ -128,15 +150,11 @@ class Schema
         return $schema->toSaveSql($this->getPlatform());
     }
 
-    public function getDiffSql(SchemaDBAL $fromSchema, SchemaDBAL $toSchema): array
+    protected function initRebuildActions(): void
     {
-        $schemaDiff = $this->comparator->compareSchemas($fromSchema, $toSchema);
+        $currentSchema = $this->getCurrentSchema();
+        $metadataSchema = $this->schemaConverter->createSchema();
 
-        return $this->toSql($schemaDiff);
-    }
-
-    protected function initRebuildActions($currentSchema = null, $metadataSchema = null): void
-    {
         $methods = array('beforeRebuild', 'afterRebuild');
 
         $this->classParser->setAllowedMethods($methods);
