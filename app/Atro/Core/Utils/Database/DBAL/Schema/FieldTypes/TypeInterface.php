@@ -9,8 +9,14 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-namespace Atro\Core\Utils\Database\DBAL\Schema\Columns;
+namespace Atro\Core\Utils\Database\DBAL\Schema\FieldTypes;
 
-class FloatColumn extends AbstractColumn
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Schema\Table;
+
+interface TypeInterface
 {
+    public function add(Table $table, Schema $schema): void;
+
+    public function getColumnName(): string;
 }

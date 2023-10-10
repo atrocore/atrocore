@@ -9,14 +9,14 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-namespace Atro\Core\Utils\Database\DBAL\Schema\Columns;
+namespace Atro\Core\Utils\Database\DBAL\Schema\FieldTypes;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
 use Espo\Core\Utils\Util;
 
-abstract class AbstractColumn implements ColumnInterface
+abstract class AbstractType implements TypeInterface
 {
     protected string $fieldName;
     protected array $fieldDefs = [];

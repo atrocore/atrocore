@@ -12,7 +12,7 @@
 namespace Atro\Core\Utils\Database\DBAL\Schema;
 
 use Atro\Core\Container;
-use Atro\Core\Utils\Database\DBAL\Schema\Columns\ColumnInterface;
+use Atro\Core\Utils\Database\DBAL\Schema\FieldTypes\TypeInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Schema;
 use Espo\Core\Utils\Database\Schema\Utils as SchemaUtils;
@@ -203,7 +203,7 @@ class Converter
         return $schema;
     }
 
-    public function createColumn(string $fieldName, array $fieldDefs, Connection $connection): ColumnInterface
+    public function createColumn(string $fieldName, array $fieldDefs, Connection $connection): TypeInterface
     {
         $className = $this->getColumnClassName($fieldDefs['dbType'] ?? $fieldDefs['type']);
 
@@ -212,7 +212,7 @@ class Converter
 
     public function getColumnClassName(string $fieldType): string
     {
-        return "\\Atro\\Core\\Utils\\Database\\DBAL\\Schema\\Columns\\" . ucfirst($fieldType) . "Column";
+        return "\\Atro\\Core\\Utils\\Database\\DBAL\\Schema\\FieldTypes\\" . ucfirst($fieldType) . "Type";
     }
 
     protected function getSystemOrmMetadata(): array

@@ -9,9 +9,9 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-namespace Atro\Core\Utils\Database\DBAL\Schema\Columns;
+namespace Atro\Core\Utils\Database\DBAL\Schema\FieldTypes;
 
-class TextColumn extends AbstractColumn
+class TextType extends AbstractType
 {
     public function getColumnParameters(): array
     {

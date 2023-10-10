@@ -9,15 +9,24 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-namespace Atro\Core\Utils\Database\DBAL\Schema\Columns;
+namespace Atro\Core\Utils\Database\DBAL\Schema\FieldTypes;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
 
-class BoolColumn extends AbstractColumn
+class JsonObjectType extends AbstractType
 {
     public function add(Table $table, Schema $schema): void
     {
-        $table->addColumn($this->getColumnName(), 'boolean', $this->getColumnParameters());
+        $table->addColumn($this->getColumnName(), 'json', $this->getColumnParameters());
+    }
+
+    public function getColumnParameters(): array
+    {
+        $result = [];
+
+        $result['notnull'] = !empty($this->fieldDefs['notNull']);
+
+        return $result;
     }
 }
