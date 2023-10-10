@@ -3,7 +3,14 @@
     "name": "Nombre",
     "emailAddress": "Correo electrónico",
     "phoneNumber": "Teléfono",
-    "description": "Descripción"
+    "description": "Descripción",
+    "type": "tipo"
+  },
+  "options": {
+    "type": {
+      "individual": "individual",
+      "company": "Compañía"
+    }
   },
   "links": {
     "portalUsers": "Usuarios del portal"

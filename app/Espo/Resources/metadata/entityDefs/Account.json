@@ -9,6 +9,20 @@
     "description": {
       "type": "text"
     },
+    "type": {
+      "type": "enum",
+      "required": true,
+      "prohibitedEmptyValue": true,
+      "notNull": true,
+      "options": [
+        "individual",
+        "company"
+      ],
+      "optionsIds": [
+        "individual",
+        "company"
+      ]
+    },
     "emailAddress": {
       "type": "email"
     },
@@ -40,6 +54,20 @@
     "teams": {
       "type": "linkMultiple",
       "view": "views/fields/teams"
+    },
+    "contacts": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true
+    },
+    "addresses": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true
     }
   },
   "links": {
@@ -65,6 +93,17 @@
       "type": "hasMany",
       "entity": "User",
       "foreign": "account"
+    },
+    "contacts": {
+      "type": "hasMany",
+      "relationName": "contactAccount",
+      "foreign": "accounts",
+      "entity": "Contact"
+    },
+    "addresses": {
+      "type": "hasMany",
+      "foreign": "account",
+      "entity": "Address"
     }
   },
   "collection": {

@@ -2,7 +2,14 @@
   "fields": {
     "emailAddress": "E-Mail",
     "phoneNumber": "Telefon",
-    "description": "Beschreibung"
+    "description": "Beschreibung",
+    "type": "Typ"
+  },
+  "options": {
+    "type": {
+      "individual": "Person",
+      "company": "Unternehmen"
+    }
   },
   "links": {
     "portalUsers": "Portal Benutzer"

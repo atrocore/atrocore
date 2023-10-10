@@ -1,0 +1,60 @@
+[
+  {
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        false
+      ],
+      [
+        {
+          "name": "type"
+        },
+        {
+          "name": "account"
+        }
+      ],
+      [
+        {
+          "name": "phone"
+        },
+        {
+          "name": "email"
+        }
+      ],
+      [
+        {
+          "name": "street"
+        },
+        {
+          "name": "city"
+        }
+      ],
+      [
+        {
+          "name": "zip"
+        },
+        {
+          "name": "box"
+        }
+      ],
+      [
+        {
+          "name": "country"
+        },
+        {
+          "name": "countryCode"
+        }
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
+        }
+      ]
+    ],
+    "style": "default",
+    "label": ""
+  }
+]

@@ -1,0 +1,98 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true
+    },
+    "firstName": {
+      "type": "varchar"
+    },
+    "secondName": {
+      "type": "varchar"
+    },
+    "title": {
+      "type": "varchar"
+    },
+    "jobPosition": {
+      "type": "varchar"
+    },
+    "phone": {
+      "type": "varchar"
+    },
+    "mobile": {
+      "type": "varchar"
+    },
+    "email": {
+      "type": "email"
+    },
+    "street": {
+      "type": "text"
+    },
+    "zip": {
+      "type": "varchar"
+    },
+    "city": {
+      "type": "varchar"
+    },
+    "country": {
+      "type": "varchar"
+    },
+    "countryCode": {
+      "type": "varchar"
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "accounts": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true
+    }
+  },
+  "links": {
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "accounts": {
+      "type": "hasMany",
+      "relationName": "contactAccount",
+      "foreign": "contacts",
+      "entity": "Account"
+    }
+  },
+  "collection": {
+    "sortBy": "createdAt",
+    "asc": false
+  },
+  "indexes": {
+    "name": {
+      "columns": [
+        "name",
+        "deleted"
+      ]
+    }
+  }
+}
