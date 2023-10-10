@@ -99,7 +99,7 @@ class Schema
 
         $fromSchema = $this->getCurrentSchema();
         $toSchema = $this->schemaConverter->createSchema();
-        $diff = $this->comparator->compare($fromSchema, $toSchema);
+        $diff = $this->comparator->compareSchemas($fromSchema, $toSchema);
 
         // get queries
         $queries = $diff->toSql($this->getPlatform());
