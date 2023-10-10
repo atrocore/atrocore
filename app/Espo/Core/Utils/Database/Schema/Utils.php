@@ -33,10 +33,16 @@
 
 namespace Espo\Core\Utils\Database\Schema;
 
+use Doctrine\DBAL\Connection;
 use Espo\Core\Utils\Util;
 
 class Utils
 {
+    public static function isPgSQL(Connection $connection): bool
+    {
+        return strpos(get_class($connection->getDriver()), 'PgSQL') !== false;
+    }
+
     public static function getIndexList(array $ormMeta, array $ignoreFlags = [])
     {
         $indexList = array();
@@ -56,22 +62,24 @@ class Utils
                     }
 
                     if ($keyValue === true) {
-                        $tableIndexName = static::generateIndexName($columnName);
+                        $tableIndexName = static::generateIndexName($columnName, 'IDX_' . $entityName, 120);
                         $indexList[$entityName][$tableIndexName]['columns'] = array($columnName);
                         if (array_key_exists('deleted', $entityParams['fields'])) {
-                            $tableIndexName = static::generateIndexName($columnName . '_deleted');
+                            $tableIndexName = static::generateIndexName($columnName . '_deleted', 'IDX_' . $entityName, 120);
                             $indexList[$entityName][$tableIndexName]['columns'] = [$columnName, 'deleted'];
                         }
-                    } else if (is_string($keyValue)) {
-                        $tableIndexName = static::generateIndexName($keyValue);
-                        $indexList[$entityName][$tableIndexName]['columns'][] = $columnName;
+                    } else {
+                        if (is_string($keyValue)) {
+                            $tableIndexName = static::generateIndexName($keyValue, 'IDX_' . $entityName, 120);
+                            $indexList[$entityName][$tableIndexName]['columns'][] = $columnName;
+                        }
                     }
                 }
             }
 
             if (isset($entityParams['indexes']) && is_array($entityParams['indexes'])) {
                 foreach ($entityParams['indexes'] as $indexName => $indexParams) {
-                    $tableIndexName = static::generateIndexName($indexName);
+                    $tableIndexName = static::generateIndexName($indexName, 'IDX_' . $entityName, 120);
 
                     if (isset($indexParams['flags']) && is_array($indexParams['flags'])) {
 
