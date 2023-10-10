@@ -34,6 +34,11 @@ class Converter
         $this->connection = $container->get('connection');
     }
 
+    public static function getColumnName(string $fieldName): string
+    {
+        return Util::toUnderScore($fieldName);
+    }
+
     public static function generateIndexName(string $entityName, string $indexName, string $prefix = 'IDX', int $maxLength = 120): string
     {
         $nameList = [];
@@ -85,7 +90,7 @@ class Converter
                 $this->addColumn($schema, $table, $fieldName, $fieldDefs);
 
                 if (!empty($fieldDefs['unique']) && $fieldDefs['type'] !== 'id') {
-                    $columnNames = [$this->getColumnName($fieldName)];
+                    $columnNames = [self::getColumnName($fieldName)];
                     if (isset($entityDefs['fields']['deleted'])) {
                         $columnNames[] = 'deleted';
                     }
@@ -162,8 +167,8 @@ class Converter
                         if (!empty($relationParams['midKeys'])) {
                             foreach ($relationParams['midKeys'] as $midKey) {
                                 $this->addColumn($schema, $table, $midKey, ['foreignId' => 'id', 'dbType' => 'varchar', 'len' => 24]);
-                                $table->addIndex([$this->getColumnName($midKey)]);
-                                $uniqueIndex[] = $this->getColumnName($midKey);
+                                $table->addIndex([self::getColumnName($midKey)]);
+                                $uniqueIndex[] = self::getColumnName($midKey);
                             }
                         }
 
@@ -201,9 +206,9 @@ class Converter
         return $schema;
     }
 
-    public function addColumn(Schema $schema, Table $table, string $fieldName, array $fieldDefs): void
+    protected function addColumn(Schema $schema, Table $table, string $fieldName, array $fieldDefs): void
     {
-        $columnName = $this->getColumnName($fieldName);
+        $columnName = self::getColumnName($fieldName);
 
         $fieldDefs['notnull'] = !empty($fieldDefs['notNull']);
         if (isset($fieldDefs['len'])) {
@@ -264,11 +269,6 @@ class Converter
         if (!empty($fieldDefs['autoincrement'])) {
             $table->addUniqueIndex([$columnName]);
         }
-    }
-
-    public function getColumnName(string $fieldName): string
-    {
-        return Util::toUnderScore($fieldName);
     }
 
     protected function getIndexList(array $ormMeta, array $ignoreFlags = []): array
