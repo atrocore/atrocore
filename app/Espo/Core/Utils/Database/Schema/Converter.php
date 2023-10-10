@@ -77,7 +77,7 @@ class Converter
 
     protected $maxIndexLength;
 
-    public function __construct(\Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\Database\Schema\Schema $databaseSchema, \Espo\Core\Utils\Config $config = null)
+    public function __construct(\Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager, \Atro\Core\Utils\Database\Schema\Schema $databaseSchema, \Espo\Core\Utils\Config $config = null)
     {
         $this->metadata = $metadata;
         $this->fileManager = $fileManager;

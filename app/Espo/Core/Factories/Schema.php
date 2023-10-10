@@ -37,46 +37,11 @@ namespace Espo\Core\Factories;
 
 use Atro\Core\Container;
 use Atro\Core\Factories\FactoryInterface as Factory;
-use Espo\Core\ORM\EntityManager;
-use Espo\Core\Utils\Config;
-use Espo\Core\Utils\File\ClassParser;
-use Espo\Core\Utils\File\Manager;
-use Espo\Core\Utils\Metadata;
-use Espo\Core\Utils\Metadata\OrmMetadata;
-use Espo\Core\Utils\Database\Schema\Converter;
-use Atro\Core\Utils\Database\Schema\Schema as Instance;
 
 class Schema implements Factory
 {
     public function create(Container $container)
     {
-        $config = $container->get('config');
-        $metadata = $container->get('metadata');
-        $fileManager = $container->get('fileManager');
-        $entityManager = $container->get('entityManager');
-        $classParser = $container->get('classParser');
-        $ormMetadata = $container->get('ormMetadata');
-
-        // create
-        $schema = $this->getSchema($config, $metadata, $fileManager, $entityManager, $classParser, $ormMetadata);
-
-        // set container
-        $schema->setContainer($container);
-
-        // set converter
-        $schema->schemaConverter = new Converter($metadata, $fileManager, $schema, $config);
-
-        return $schema;
-    }
-
-    protected function getSchema(
-        Config $config,
-        Metadata $metadata,
-        Manager $fileManager,
-        EntityManager $entityManager,
-        ClassParser $classParser,
-        OrmMetadata $ormMetadata
-    ) {
-        return new Instance($config, $metadata, $fileManager, $entityManager, $classParser, $ormMetadata);
+        return new \Atro\Core\Utils\Database\Schema\Schema($container);
     }
 }

@@ -25,15 +25,17 @@ class Converter
     protected Container $container;
     protected OrmMetadata $ormMetadata;
     protected Metadata $metadata;
+    protected Connection $connection;
 
     public function __construct(Container $container)
     {
         $this->container = $container;
         $this->ormMetadata = $container->get('ormMetadata');
         $this->metadata = $container->get('metadata');
+        $this->connection = $container->get('connection');
     }
 
-    public function createSchema(Connection $connection): Schema
+    public function createSchema(): Schema
     {
         $ormMetadata = array_merge($this->ormMetadata->getData(), $this->getSystemOrmMetadata());
 
@@ -66,7 +68,7 @@ class Converter
                     $primaryColumns[] = Util::toUnderScore($fieldName);
                 }
 
-                $column = $this->createColumn($fieldName, $fieldDefs, $connection);
+                $column = $this->createColumn($fieldName, $fieldDefs);
 
                 if (!$table->hasColumn($column->getColumnName())) {
                     $column->add($table, $schema);
@@ -96,7 +98,7 @@ class Converter
 
                     $options = [];
 
-                    if (!SchemaUtils::isPgSQL($connection)) {
+                    if (!SchemaUtils::isPgSQL($this->connection)) {
                         foreach ($indexParams['columns'] as $column) {
                             $type = $this->metadata->get(['entityDefs', $entityName, 'fields', Util::toCamelCase($column), 'type'], 'varchar');
                             if (in_array($type, ['text', 'wysiwyg'])) {
@@ -141,13 +143,13 @@ class Converter
                         $uniqueIndex = [];
 
                         // ID column
-                        $idColumn = $this->createColumn('id', ['type' => 'id', 'dbType' => 'int', 'autoincrement' => true], $connection);
+                        $idColumn = $this->createColumn('id', ['type' => 'id', 'dbType' => 'int', 'autoincrement' => true]);
                         if (!$table->hasColumn($idColumn->getColumnName())) {
                             $idColumn->add($table, $schema);
                         }
 
                         // DELETED column
-                        $deletedColumn = $this->createColumn('deleted', ['type' => 'bool', 'default' => false], $connection);
+                        $deletedColumn = $this->createColumn('deleted', ['type' => 'bool', 'default' => false]);
                         if (!$table->hasColumn($deletedColumn->getColumnName())) {
                             $deletedColumn->add($table, $schema);
                         }
@@ -155,7 +157,7 @@ class Converter
                         // MIDDLE columns
                         if (!empty($relationParams['midKeys'])) {
                             foreach ($relationParams['midKeys'] as $midKey) {
-                                $column = $this->createColumn($midKey, ['foreignId' => 'id', 'dbType' => 'varchar', 'len' => 24], $connection);
+                                $column = $this->createColumn($midKey, ['foreignId' => 'id', 'dbType' => 'varchar', 'len' => 24]);
                                 if (!$table->hasColumn($column->getColumnName())) {
                                     $column->add($table, $schema);
                                 }
@@ -173,7 +175,7 @@ class Converter
                                         'len'  => 255,
                                     ));
                                 }
-                                $column = $this->createColumn($fieldName, $fieldParams, $connection);
+                                $column = $this->createColumn($fieldName, $fieldParams);
                                 if (!$table->hasColumn($column->getColumnName())) {
                                     $column->add($table, $schema);
                                 }
@@ -200,11 +202,11 @@ class Converter
         return $schema;
     }
 
-    public function createColumn(string $fieldName, array $fieldDefs, Connection $connection): TypeInterface
+    public function createColumn(string $fieldName, array $fieldDefs): TypeInterface
     {
         $className = $this->getColumnClassName($fieldDefs['dbType'] ?? $fieldDefs['type']);
 
-        return new $className($fieldName, $fieldDefs, $connection);
+        return new $className($fieldName, $fieldDefs, $this->connection);
     }
 
     public function getColumnClassName(string $fieldType): string

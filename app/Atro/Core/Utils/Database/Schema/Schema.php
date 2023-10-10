@@ -15,70 +15,68 @@ namespace Atro\Core\Utils\Database\Schema;
 
 use Atro\Core\Container;
 use Espo\Core\EventManager\Event;
+use Atro\Core\Utils\Database\DBAL\Schema\Converter;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\File\ClassParser;
+use Espo\Core\Utils\Metadata\OrmMetadata;
+use Doctrine\DBAL\Schema\Schema as SchemaDBAL;
+use Doctrine\DBAL\Schema\SchemaDiff;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Schema\Comparator;
 
-/**
- * Class Schema
- */
-class Schema extends \Espo\Core\Utils\Database\Schema\Schema
+class Schema
 {
-    /**
-     * @var Container
-     */
-    protected $container;
+    private Container $container;
+    private Config $config;
+    private Metadata $metadata;
+    private EntityManager $entityManager;
+    private ClassParser $classParser;
+    private OrmMetadata $ormMetadata;
+    private Connection $connection;
+    private Converter $schemaConverter;
+    private Comparator $comparator;
 
-    /**
-     * Set container
-     *
-     * @param Container $container
-     *
-     * @return $this
-     */
-    public function setContainer(Container $container)
+    protected ?array $rebuildActionClasses = null;
+
+    public function __construct(Container $container)
     {
         $this->container = $container;
-
-        return $this;
+        $this->config = $container->get('config');
+        $this->metadata = $container->get('metadata');
+        $this->entityManager = $container->get('entityManager');
+        $this->classParser = $container->get('classParser');
+        $this->ormMetadata = $container->get('ormMetadata');
+        $this->connection = $container->get('connection');
+        $this->schemaConverter = $container->get(Converter::class);
+        $this->comparator = new Comparator();
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function rebuild($entityList = null)
+    public function rebuild(): bool
     {
-        if (!$this->getConverter()->process()) {
-            return false;
-        }
-
-        // get current schema
-        $currentSchema = $this->getCurrentSchema();
-
-        // get entityDefs
-        $entityDefs = $this
-            ->dispatch('Schema', 'prepareEntityDefsBeforeRebuild', new Event(['data' => $this->ormMetadata->getData()]))
-            ->getArgument('data');
-
-        // get metadata schema
-        $metadataSchema = $this->schemaConverter->process($entityDefs, $entityList);
+        $fromSchema = $this->getCurrentSchema();
+        $toSchema = $this->schemaConverter->createSchema();
 
         // init rebuild actions
-        $this->initRebuildActions($currentSchema, $metadataSchema);
+        $this->initRebuildActions($fromSchema, $toSchema);
 
         // execute rebuild actions
         $this->executeRebuildActions('beforeRebuild');
 
         // get queries
-        $queries = $this->getDiffSql($currentSchema, $metadataSchema);
+        $queries = $this->getDiffSql($fromSchema, $toSchema);
 
         // prepare queries
         $queries = $this->dispatch('Schema', 'prepareQueries', new Event(['queries' => $queries]))->getArgument('queries');
 
         // run rebuild
         $result = true;
-        $connection = $this->getConnection();
         foreach ($queries as $sql) {
             $GLOBALS['log']->info('SCHEMA, Execute Query: ' . $sql);
             try {
-                $result &= (bool)$connection->executeQuery($sql);
+                $result &= (bool)$this->connection->executeQuery($sql);
             } catch (\Exception $e) {
                 $GLOBALS['log']->alert('Rebuild database fault: ' . $e);
                 $result = false;
@@ -102,8 +100,8 @@ class Schema extends \Espo\Core\Utils\Database\Schema\Schema
         $this->getPlatform()->strictType = true;
 
         $fromSchema = $this->getCurrentSchema();
-        $toSchema = $this->schemaConverter->process($this->ormMetadata->getData(), null);
-        $diff = $this->getComparator()->compare($fromSchema, $toSchema);
+        $toSchema = $this->schemaConverter->createSchema();
+        $diff = $this->comparator->compare($fromSchema, $toSchema);
 
         // get queries
         $queries = $diff->toSql($this->getPlatform());
@@ -129,7 +127,7 @@ class Schema extends \Espo\Core\Utils\Database\Schema\Schema
     protected function dispatch(string $target, string $action, Event $event)
     {
         /** @var \Atro\Core\EventManager\Manager $eventManager */
-        $eventManager = $this->getContainer()->get('eventManager');
+        $eventManager = $this->container->get('eventManager');
         if (!empty($eventManager)) {
             return $eventManager->dispatch($target, $action, $event);
         }
@@ -137,13 +135,65 @@ class Schema extends \Espo\Core\Utils\Database\Schema\Schema
         return $event;
     }
 
-    /**
-     * Get container
-     *
-     * @return Container
-     */
-    protected function getContainer(): Container
+    public function getPlatform(): AbstractPlatform
     {
-        return $this->container;
+        return $this->connection->getDatabasePlatform();
+    }
+
+    public function getCurrentSchema(): SchemaDBAL
+    {
+        return $this->connection->createSchemaManager()->createSchema();
+    }
+
+    public function toSql(SchemaDiff $schema): array
+    {
+        return $schema->toSaveSql($this->getPlatform());
+    }
+
+    public function getDiffSql(SchemaDBAL $fromSchema, SchemaDBAL $toSchema): array
+    {
+        $schemaDiff = $this->comparator->compareSchemas($fromSchema, $toSchema);
+
+        return $this->toSql($schemaDiff);
+    }
+
+    protected function initRebuildActions($currentSchema = null, $metadataSchema = null): void
+    {
+        $methods = array('beforeRebuild', 'afterRebuild');
+
+        $this->classParser->setAllowedMethods($methods);
+        $rebuildActions = $this->classParser->getData(['corePath' => CORE_PATH . '/Espo/Core/Utils/Database/Schema/rebuildActions']);
+
+        $classes = array();
+        foreach ($rebuildActions as $actionName => $actionClass) {
+            $rebuildActionClass = new $actionClass($this->metadata, $this->config, $this->entityManager);
+            if (isset($currentSchema)) {
+                $rebuildActionClass->setCurrentSchema($currentSchema);
+            }
+            if (isset($metadataSchema)) {
+                $rebuildActionClass->setMetadataSchema($metadataSchema);
+            }
+
+            foreach ($methods as $methodName) {
+                if (method_exists($rebuildActionClass, $methodName)) {
+                    $classes[$methodName][] = $rebuildActionClass;
+                }
+            }
+        }
+
+        $this->rebuildActionClasses = $classes;
+    }
+
+    protected function executeRebuildActions($action = 'beforeRebuild'): void
+    {
+        if (!isset($this->rebuildActionClasses)) {
+            $this->initRebuildActions();
+        }
+
+        if (isset($this->rebuildActionClasses[$action])) {
+            foreach ($this->rebuildActionClasses[$action] as $rebuildActionClass) {
+                $rebuildActionClass->$action();
+            }
+        }
     }
 }
