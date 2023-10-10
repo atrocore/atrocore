@@ -14,13 +14,13 @@ declare(strict_types=1);
 namespace Atro\Core\Utils\Database\Schema;
 
 use Atro\Core\Container;
+use Atro\Core\EventManager\Manager as EventManager;
 use Espo\Core\EventManager\Event;
 use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\File\ClassParser;
-use Espo\Core\Utils\Metadata\OrmMetadata;
 use Doctrine\DBAL\Schema\Schema as SchemaDBAL;
 use Doctrine\DBAL\Schema\SchemaDiff;
 use Doctrine\DBAL\Connection;
@@ -29,12 +29,11 @@ use Doctrine\DBAL\Schema\Comparator;
 
 class Schema
 {
-    private Container $container;
+    private EventManager $eventManager;
     private Config $config;
     private Metadata $metadata;
     private EntityManager $entityManager;
     private ClassParser $classParser;
-    private OrmMetadata $ormMetadata;
     private Connection $connection;
     private Converter $schemaConverter;
     private Comparator $comparator;
@@ -43,12 +42,11 @@ class Schema
 
     public function __construct(Container $container)
     {
-        $this->container = $container;
+        $this->eventManager = $container->get('eventManager');
         $this->config = $container->get('config');
         $this->metadata = $container->get('metadata');
         $this->entityManager = $container->get('entityManager');
         $this->classParser = $container->get('classParser');
-        $this->ormMetadata = $container->get('ormMetadata');
         $this->connection = $container->get('connection');
         $this->schemaConverter = $container->get(Converter::class);
         $this->comparator = new Comparator();
@@ -69,7 +67,7 @@ class Schema
         $queries = $this->getDiffSql($fromSchema, $toSchema);
 
         // prepare queries
-        $queries = $this->dispatch('Schema', 'prepareQueries', new Event(['queries' => $queries]))->getArgument('queries');
+        $queries = $this->eventManager->dispatch('Schema', 'prepareQueries', new Event(['queries' => $queries]))->getArgument('queries');
 
         // run rebuild
         $result = true;
@@ -87,7 +85,7 @@ class Schema
         $this->executeRebuildActions('afterRebuild');
 
         // after rebuild action
-        $result = $this
+        $result = $this->eventManager
             ->dispatch('Schema', 'afterRebuild', new Event(['result' => (bool)$result, 'queries' => $queries]))
             ->getArgument('result');
 
@@ -107,32 +105,12 @@ class Schema
         $queries = $diff->toSql($this->getPlatform());
 
         // prepare queries
-        $queries = $this->dispatch('Schema', 'prepareQueries', new Event(['queries' => $queries]))->getArgument('queries');
+        $queries = $this->eventManager->dispatch('Schema', 'prepareQueries', new Event(['queries' => $queries]))->getArgument('queries');
 
         // set strict type
         $this->getPlatform()->strictType = false;
 
         return $queries;
-    }
-
-    /**
-     * Dispatch an event
-     *
-     * @param string $target
-     * @param string $action
-     * @param Event  $event
-     *
-     * @return mixed
-     */
-    protected function dispatch(string $target, string $action, Event $event)
-    {
-        /** @var \Atro\Core\EventManager\Manager $eventManager */
-        $eventManager = $this->container->get('eventManager');
-        if (!empty($eventManager)) {
-            return $eventManager->dispatch($target, $action, $event);
-        }
-
-        return $event;
     }
 
     public function getPlatform(): AbstractPlatform

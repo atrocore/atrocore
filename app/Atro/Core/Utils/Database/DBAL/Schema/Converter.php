@@ -83,10 +83,10 @@ class Converter
                     $primaryColumns[] = Util::toUnderScore($fieldName);
                 }
 
-                $column = $this->addColumn($schema, $table, $fieldName, $fieldDefs);
+                $this->addColumn($schema, $table, $fieldName, $fieldDefs);
 
                 if (!empty($fieldDefs['unique']) && $fieldDefs['type'] !== 'id') {
-                    $columnNames = [$column->getColumnName()];
+                    $columnNames = [$this->getColumnName($fieldName)];
                     if (isset($entityDefs['fields']['deleted'])) {
                         $columnNames[] = 'deleted';
                     }
@@ -162,9 +162,9 @@ class Converter
                         // MIDDLE columns
                         if (!empty($relationParams['midKeys'])) {
                             foreach ($relationParams['midKeys'] as $midKey) {
-                                $column = $this->addColumn($schema, $table, $midKey, ['foreignId' => 'id', 'dbType' => 'varchar', 'len' => 24]);
-                                $table->addIndex([$column->getColumnName()]);
-                                $uniqueIndex[] = $column->getColumnName();
+                                $this->addColumn($schema, $table, $midKey, ['foreignId' => 'id', 'dbType' => 'varchar', 'len' => 24]);
+                                $table->addIndex([$this->getColumnName($midKey)]);
+                                $uniqueIndex[] = $this->getColumnName($midKey);
                             }
                         }
 
@@ -202,27 +202,74 @@ class Converter
         return $schema;
     }
 
-    public function createColumn(string $fieldName, array $fieldDefs): TypeInterface
+    public function addColumn(Schema $schema, Table $table, string $fieldName, array $fieldDefs): void
     {
-        $className = $this->getColumnClassName($fieldDefs['dbType'] ?? $fieldDefs['type']);
+        $columnName = $this->getColumnName($fieldName);
 
-        return new $className($fieldName, $fieldDefs, $this->connection);
-    }
-
-    public function addColumn(Schema $schema, Table $table, string $fieldName, array $fieldDefs): TypeInterface
-    {
-        $column = $this->createColumn($fieldName, $fieldDefs);
-
-        if (!$table->hasColumn($column->getColumnName())) {
-            $column->add($table, $schema);
+        $fieldDefs['notnull'] = !empty($fieldDefs['notNull']);
+        if (isset($fieldDefs['len'])) {
+            $fieldDefs['length'] = $fieldDefs['len'];
         }
 
-        return $column;
+        $type = $fieldDefs['dbType'] ?? $fieldDefs['type'];
+
+        $allowedParams = ['notnull', 'comment', 'default'];
+
+        switch ($type) {
+            case 'bool':
+                $type = 'boolean';
+                break;
+            case 'jsonArray':
+                $type = 'array';
+                $allowedParams = ['notnull', 'comment'];
+                break;
+            case 'jsonObject':
+                $type = 'json';
+                $allowedParams = ['notnull', 'comment'];
+                break;
+            case 'varchar':
+                $type = 'string';
+                $allowedParams[] = 'length';
+                break;
+            case 'text':
+                $allowedParams = ['notnull', 'comment', 'length'];
+                if (!empty($fieldDefs['default'])) {
+                    $fieldDefs['comment'] = "default={" . $fieldDefs['default'] . "}";
+                }
+                break;
+            case 'int':
+                $type = 'integer';
+                $allowedParams[] = 'autoincrement';
+                if (!empty($fieldDefs['autoincrement'])) {
+                    if (self::isPgSQL($this->connection)) {
+                        $sequence = "{$table->getName()}_{$columnName}_seq";
+                        $schema->createSequence($sequence);
+                        $fieldDefs['default'] = "nextval('$sequence')";
+                        unset($fieldDefs['autoincrement']);
+                    }
+                    $fieldDefs['notnull'] = true;
+                }
+                break;
+        }
+
+        foreach ($fieldDefs as $key => $value) {
+            if (!in_array($key, $allowedParams)) {
+                unset($fieldDefs[$key]);
+            }
+        }
+
+        if (!$table->hasColumn($columnName)) {
+            $table->addColumn($columnName, $type, $fieldDefs);
+        }
+
+        if (!empty($fieldDefs['autoincrement'])) {
+            $table->addUniqueIndex([$columnName]);
+        }
     }
 
-    public function getColumnClassName(string $fieldType): string
+    public function getColumnName(string $fieldName): string
     {
-        return "\\Atro\\Core\\Utils\\Database\\DBAL\\Schema\\FieldTypes\\" . ucfirst($fieldType) . "Type";
+        return Util::toUnderScore($fieldName);
     }
 
     protected function getIndexList(array $ormMeta, array $ignoreFlags = []): array
