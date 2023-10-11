@@ -33,11 +33,6 @@
 
 namespace Espo\ORM\DB\Query;
 
-use Espo\ORM\Entity;
-use Espo\ORM\IEntity;
-use Espo\ORM\EntityFactory;
-use PDO;
-
 class Mysql extends Base
 {
     public function selectFieldSQL(string $field, string $alias, string $tableName = null): string
