@@ -56,7 +56,12 @@ class EntityManager
 
     protected $query;
 
-    protected $driverPlatformMap = ['pdo_mysql' => 'Mysql', 'mysqli' => 'Mysql'];
+    protected $driverPlatformMap
+        = [
+            'pdo_mysql' => 'Mysql',
+            'mysqli'    => 'Mysql',
+            'pdo_pgsql' => 'PostgreSQL'
+        ];
 
     public function __construct($params)
     {
