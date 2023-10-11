@@ -35,6 +35,7 @@ namespace Espo\Core\Utils;
 
 use Atro\Core\Container;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Types\Types as FieldTypes;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Repositories\Locale;
 
@@ -361,9 +362,10 @@ class Config
 
         $qb = $connection->createQueryBuilder();
         $data = $qb
-            ->select('*')
-            ->from('locale')
-            ->where($qb->expr()->eq('deleted', 0))
+            ->select('l.*')
+            ->from($connection->quoteIdentifier('locale'), 'l')
+            ->where('l.deleted = :deleted')
+            ->setParameter('deleted', false, FieldTypes::BOOLEAN)
             ->fetchAllAssociative();
 
         $result = [];
