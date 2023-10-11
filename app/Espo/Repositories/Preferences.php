@@ -35,6 +35,7 @@ namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Json;
+use Doctrine\DBAL\Connection;
 
 class Preferences extends \Espo\Core\ORM\Repository
 {
@@ -53,6 +54,7 @@ class Preferences extends \Espo\Core\ORM\Repository
             'config',
             'entityManager',
             'portal',
+            'connection'
         ]);
     }
 
@@ -76,25 +78,28 @@ class Preferences extends \Espo\Core\ORM\Repository
         return $this->getInjection('config');
     }
 
+    protected function getConnection(): Connection
+    {
+        return $this->getInjection('connection');
+    }
+
     public function get($id = null)
     {
         if ($id) {
             $entity = $this->entityFactory->create('Preferences');
             $entity->id = $id;
             if (empty($this->data[$id])) {
-                $pdo = $this->getEntityManger()->getPDO();
-                $sql = "SELECT `id`, `data` FROM `preferences` WHERE id = ".$pdo->quote($id);
-                $ps = $pdo->query($sql);
+                $row = $this->getConnection()->createQueryBuilder()
+                    ->select('id, data')
+                    ->from('preferences')
+                    ->where('id = :id')
+                    ->setParameter('id', $id)
+                    ->fetchAssociative();
 
                 $data = null;
-
-                $sth = $pdo->prepare($sql);
-                $sth->execute();
-
-                while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
+                if (!empty($row)){
                     $data = Json::decode($row['data']);
                     $data = get_object_vars($data);
-                    break;
                 }
 
                 if ($data) {
