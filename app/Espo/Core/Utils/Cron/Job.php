@@ -33,6 +33,7 @@
 
 namespace Espo\Core\Utils\Cron;
 
+use Doctrine\DBAL\Types\Types;
 use PDO;
 use Espo\Core\CronManager;
 use Espo\Core\Utils\Config;
@@ -126,21 +127,19 @@ class Job
     {
         $list = [];
 
-        $pdo = $this->getEntityManager()->getPDO();
+        $connection = $this->getEntityManager()->getConnection();
+        $rowList = $connection->createQueryBuilder()
+            ->select('j.scheduled_job_id')
+            ->from($connection->quoteIdentifier('job'), 'j')
+            ->where("{$connection->quoteIdentifier('status')} = :status")
+            ->setParameter('status', 'Running')
+            ->andWhere('scheduled_job_id IS NOT NULL')
+            ->andWhere('target_id IS IS NULL')
+            ->andWhere('deleted = :deleted')
+            ->setParameter('deleted', false, Types::BOOLEAN)
+            ->orderBy('j.execute_time', 'ASC')
+            ->fetchAllAssociative();
 
-        $query = "
-            SELECT scheduled_job_id FROM job
-            WHERE
-                `status` = 'Running' AND
-                scheduled_job_id IS NOT NULL AND
-                target_id IS NULL AND
-                deleted = 0
-            ORDER BY execute_time
-        ";
-        $sth = $pdo->prepare($query);
-        $sth->execute();
-
-        $rowList = $sth->fetchAll(PDO::FETCH_ASSOC);
         foreach ($rowList as $row) {
             $list[] = $row['scheduled_job_id'];
         }
@@ -161,21 +160,18 @@ class Job
         $dateObj = new \DateTime($time);
         $timeWithoutSeconds = $dateObj->format('Y-m-d H:i:');
 
-        $pdo = $this->getEntityManager()->getPDO();
-
-        $query = "
-            SELECT * FROM job
-            WHERE
-                scheduled_job_id = ".$pdo->quote($scheduledJobId)."
-                AND execute_time LIKE ". $pdo->quote($timeWithoutSeconds . '%') . "
-                AND deleted = 0
-            LIMIT 1
-        ";
-
-        $sth = $pdo->prepare($query);
-        $sth->execute();
-
-        $scheduledJob = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $connection = $this->getEntityManager()->getConnection();
+        $scheduledJob = $connection->createQueryBuilder()
+            ->select('j.*')
+            ->from($connection->quoteIdentifier('job'), 'j')
+            ->where("scheduled_job_id = :scheduledJobId")
+            ->setParameter('scheduledJobId', $scheduledJobId)
+            ->andWhere('execute_time LIKE :timeWithoutSeconds')
+            ->setParameter('timeWithoutSeconds', $timeWithoutSeconds . '%')
+            ->andWhere('deleted = :deleted')
+            ->setParameter('deleted', false, Types::BOOLEAN)
+            ->setMaxResults(1)
+            ->fetchAssociative();
 
         return $scheduledJob;
     }
