@@ -33,6 +33,7 @@
 
 namespace Espo\ORM;
 
+use Doctrine\DBAL\Connection;
 use Espo\Core\Exceptions\Error;
 
 class EntityManager
@@ -56,6 +57,8 @@ class EntityManager
 
     protected $query;
 
+    protected Connection $connection;
+
     protected $driverPlatformMap
         = [
             'pdo_mysql' => 'Mysql',
@@ -65,6 +68,9 @@ class EntityManager
 
     public function __construct($params)
     {
+        $this->connection = $params['connection'];
+        $this->pdo = $params['pdo'];
+
         $this->params = $params;
 
         $this->metadata = new Metadata();
@@ -194,15 +200,8 @@ class EntityManager
         return $this->getMetadata();
     }
 
-    /**
-     * @return \PDO
-     */
-    public function getPDO()
+    public function getPDO(): \PDO
     {
-        if (empty($this->pdo)) {
-            $this->pdo = $this->params['pdo'];
-        }
-
         return $this->pdo;
     }
 
@@ -255,6 +254,11 @@ class EntityManager
 
     protected function init()
     {
+    }
+
+    public function getConnection(): Connection
+    {
+        return $this->connection;
     }
 }
 
