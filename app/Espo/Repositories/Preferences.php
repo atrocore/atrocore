@@ -167,18 +167,17 @@ class Preferences extends \Espo\Core\ORM\Repository
     {
         $id = $entity->id;
 
+        $rows = $this->getConnection()->createQueryBuilder()
+            ->select('entity_type')
+            ->from('autofollow')
+            ->where('user_id = :id')
+            ->setParameter('id', $id)
+            ->orderBy('entity_type', 'ASC')
+            ->fetchAllAssociative();
+
         $autoFollowEntityTypeList = [];
-        $pdo = $this->getEntityManger()->getPDO();
-        $sql = "
-            SELECT `entity_type` AS 'entityType' FROM `autofollow`
-            WHERE `user_id` = ".$pdo->quote($id)."
-            ORDER BY `entity_type`
-        ";
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
-        $rows = $sth->fetchAll();
         foreach ($rows as $row) {
-            $autoFollowEntityTypeList[] = $row['entityType'];
+            $autoFollowEntityTypeList[] = $row['entity_type'];
         }
         $this->data[$id]['autoFollowEntityTypeList'] = $autoFollowEntityTypeList;
         $entity->set('autoFollowEntityTypeList', $autoFollowEntityTypeList);
