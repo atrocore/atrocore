@@ -1313,6 +1313,11 @@ class Record extends \Espo\Core\Services\Base
             throw new NotFound();
         }
 
+        // skip required field if we are doing massUpdate
+        if (!empty($event->getArgument('massUpdateData'))) {
+            $entity->skipValidation('requiredField');
+        }
+
         $this->filterInput($data, $id);
         $this->handleInput($data, $id);
 

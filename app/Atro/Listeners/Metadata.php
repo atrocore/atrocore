@@ -326,7 +326,12 @@ class Metadata extends AbstractListener
             if (empty($scopeData['type']) || $scopeData['type'] !== 'Relationship' || empty($data['entityDefs'][$scope]['fields'])) {
                 continue;
             }
-
+            $linkedFields = array_filter($data['entityDefs'][$scope]['fields'], function($data){
+                return $data['type'] === 'link';
+            });
+            if(count($linkedFields) < 2){
+                 continue;
+            }
             $linkRelationshipFields = [];
             foreach ($data['entityDefs'][$scope]['fields'] as $field => $fieldDefs) {
                 if (!empty($fieldDefs['relationshipField'])) {
