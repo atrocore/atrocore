@@ -510,12 +510,12 @@ abstract class Base
         $foreignKey = $keySet['foreignKey'];
 
         if (!$alias) {
-            $alias = $this->getAlias($entity, $relationName);
+            $alias = $this->getRelationAlias($entity, $relationName);
         }
 
         if ($alias) {
             return $this->joinSQL('', $this->toDb($r['entity']), $alias) . ' ' .
-                   $this->toDb($entity->getEntityType()) . "." . $this->toDb($key) . " = " . $alias . "." . $this->toDb($foreignKey);
+                   $this->getTableAlias($this->toDb($entity->getEntityType())) . "." . $this->toDb($key) . " = " . $alias . "." . $this->toDb($foreignKey);
         }
     }
 
@@ -701,10 +701,32 @@ abstract class Base
         return "_" . strtolower($matches[1]);
     }
 
-    protected function getAlias(IEntity $entity, $relationName)
+    protected function getTableAlias(string $tableName): string
+    {
+        return 'atro_' . $tableName;
+    }
+
+    protected function getRelationAlias(IEntity $entity, $relationName)
     {
         if (!isset($this->aliasesCache[$entity->getEntityType()])) {
-            $this->aliasesCache[$entity->getEntityType()] = $this->getTableAliases($entity);
+            $this->aliasesCache[$entity->getEntityType()] = [];
+            $occurrenceHash = [];
+            foreach ($entity->relations as $name => $r) {
+                if ($r['type'] == IEntity::BELONGS_TO) {
+                    if (!array_key_exists($name, $this->aliasesCache[$entity->getEntityType()])) {
+                        if (array_key_exists($name, $occurrenceHash)) {
+                            $occurrenceHash[$name]++;
+                        } else {
+                            $occurrenceHash[$name] = 0;
+                        }
+                        $suffix = '';
+                        if ($occurrenceHash[$name] > 0) {
+                            $suffix .= '_' . $occurrenceHash[$name];
+                        }
+                        $this->aliasesCache[$entity->getEntityType()][$name] = 'atro_' . $name . $suffix;
+                    }
+                }
+            }
         }
 
         if (isset($this->aliasesCache[$entity->getEntityType()][$relationName])) {
@@ -712,35 +734,6 @@ abstract class Base
         } else {
             return false;
         }
-    }
-
-    protected function getTableAliases(IEntity $entity)
-    {
-        $aliases = array();
-        $c = 0;
-
-        $occuranceHash = array();
-
-        foreach ($entity->relations as $name => $r) {
-            if ($r['type'] == IEntity::BELONGS_TO) {
-
-                if (!array_key_exists($name, $aliases)) {
-                    if (array_key_exists($name, $occuranceHash)) {
-                        $occuranceHash[$name]++;
-                    } else {
-                        $occuranceHash[$name] = 0;
-                    }
-                    $suffix = '_a';
-                    if ($occuranceHash[$name] > 0) {
-                        $suffix .= '_' . $occuranceHash[$name];
-                    }
-
-                    $aliases[$name] = $name . $suffix;
-                }
-            }
-        }
-
-        return $aliases;
     }
 
     protected function getFieldPath(IEntity $entity, $field)
@@ -764,25 +757,23 @@ abstract class Base
                 case 'foreign':
                     if (isset($f['relation'])) {
                         $relationName = $f['relation'];
-
-                        $foreigh = $f['foreign'];
-
-                        if (is_array($foreigh)) {
-                            foreach ($foreigh as $i => $value) {
+                        $foreign = $f['foreign'];
+                        if (is_array($foreign)) {
+                            foreach ($foreign as $i => $value) {
                                 if ($value == ' ') {
-                                    $foreigh[$i] = '\' \'';
+                                    $foreign[$i] = '\' \'';
                                 } else {
-                                    $foreigh[$i] = $this->getAlias($entity, $relationName) . '.' . $this->toDb($value);
+                                    $foreign[$i] = $this->getRelationAlias($entity, $relationName) . '.' . $this->toDb($value);
                                 }
                             }
-                            $fieldPath = 'TRIM(CONCAT(' . implode(', ', $foreigh). '))';
+                            $fieldPath = 'TRIM(CONCAT(' . implode(', ', $foreign). '))';
                         } else {
-                            $fieldPath = $this->getAlias($entity, $relationName) . '.' . $this->toDb($foreigh);
+                            $fieldPath = $this->getRelationAlias($entity, $relationName) . '.' . $this->toDb($foreign);
                         }
                     }
                     break;
                 default:
-                    $fieldPath = $this->toDb($entity->getEntityType()) . '.' . $this->toDb($this->sanitize($field));
+                    $fieldPath = $this->getTableAlias($this->toDb($entity->getEntityType())) . '.' . $this->toDb($this->sanitize($field));
             }
 
             return $fieldPath;
@@ -961,7 +952,7 @@ abstract class Base
                                 $relationName = $fieldDefs['relation'];
                                 if (isset($entity->relations[$relationName])) {
 
-                                    $alias = $this->getAlias($entity, $relationName);
+                                    $alias = $this->getRelationAlias($entity, $relationName);
                                     if ($alias) {
                                         if (!is_array($fieldDefs['foreign'])) {
                                             $leftPart = $alias . '.' . $this->toDb($fieldDefs['foreign']);
@@ -972,7 +963,7 @@ abstract class Base
                                 }
                             }
                         } else {
-                            $leftPart = $this->toDb($entity->getEntityType()) . '.' . $this->toDb($this->sanitize($field));
+                            $leftPart = $this->getTableAlias($this->toDb($entity->getEntityType())) . '.' . $this->toDb($this->sanitize($field));
                         }
                     }
                 }
@@ -1287,11 +1278,11 @@ abstract class Base
                 $distantTable = $this->toDb($relOpt['entity']);
 
                 $sql =
-                    "{$prefix}JOIN `{$distantTable}` AS `{$alias}` ON " . $this->toDb($entity->getEntityType()) . "." . $this->toDb('id') . " = {$alias}." . $this->toDb($foreignKey)
+                    $this->joinSQL($prefix, $distantTable, $alias) . " " . $this->toDb($entity->getEntityType()) . "." . $this->toDb('id') . " = {$alias}." . $this->toDb($foreignKey)
                     . " AND "
                     . "{$alias}." . $this->toDb($foreignType) . " = " . $this->pdo->quote($entity->getEntityType())
                     . " AND "
-                    . "{$alias}.deleted = " . $this->pdo->quote(0) . "";
+                    . "{$alias}.deleted = " . $this->pdo->quote(0);
 
                 $joinSqlList = [];
                 foreach ($conditions as $left => $right) {
@@ -1321,7 +1312,6 @@ abstract class Base
             $sql .= " DISTINCT";
         }
 
-//        $sql .= " {$select} FROM `{$table}`";
         $sql .= " {$select} " . $this->fromSQL($table);
 
         if (!empty($joins)) {

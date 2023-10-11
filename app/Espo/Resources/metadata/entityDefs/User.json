@@ -26,7 +26,6 @@
         },
         "name": {
             "type": "varchar",
-            "notStorable": true,
             "view": "views/user/fields/name"
         },
         "password": {
