@@ -85,11 +85,6 @@
     "unit": {
       "unit": "(Unit)"
     },
-    "personName": {
-      "salutation": "Звернення",
-      "first": "Ім'я",
-      "last": "Прізвище"
-    },
     "currency": {
       "converted": "(Сконвертована)",
       "currency": "(Валюта)"

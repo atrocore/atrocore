@@ -135,7 +135,9 @@ class QueueManager
             $item->set('md5Hash', $hash);
             $duplicate = $repository->select(['id'])->where(['md5Hash' => $hash, 'status' => ['Pending', 'Running']])->findOne();
             if (!empty($duplicate)) {
-                throw new Duplicate($this->container->get('language')->translate('jobExist', 'exceptions', 'QueueItem'));
+                /** @var \Espo\Core\Utils\Language $language */
+                $language = $this->container->get('language');
+                throw new Duplicate($language->translate('jobExist', 'exceptions', 'QueueItem'));
             }
         }
 

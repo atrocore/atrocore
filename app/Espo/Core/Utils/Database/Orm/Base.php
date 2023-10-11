@@ -222,12 +222,6 @@ class Base
 
     protected function getForeignField($name, $entityName)
     {
-        $foreignFieldType = $this->getMetadata()->get('entityDefs.' . $entityName . '.fields.' . $name . '.type');
-
-        if ($foreignFieldType === 'personName') {
-            return ['first' . ucfirst($name), ' ', 'last' . ucfirst($name)];
-        }
-
         return $name;
     }
 

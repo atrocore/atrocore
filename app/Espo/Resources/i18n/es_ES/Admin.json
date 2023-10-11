@@ -81,7 +81,6 @@
     "foreign": "Clave foránea",
     "duration": "Duración",
     "password": "Contraseña",
-    "personName": "Nombre",
     "autoincrement": "Incremental",
     "bool": "SI / NO",
     "currency": "Moneda",

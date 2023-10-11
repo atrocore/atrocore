@@ -34,6 +34,7 @@
 namespace Espo\Core\Utils;
 
 use Atro\Core\Container;
+use Doctrine\DBAL\Connection;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Repositories\Locale;
 
@@ -355,9 +356,15 @@ class Config
             return $data;
         }
 
-        $data = $this->container->get('pdo')
-            ->query("SELECT * FROM `locale` WHERE deleted=0")
-            ->fetchAll(\PDO::FETCH_ASSOC);
+        /** @var Connection $connection */
+        $connection = $this->container->get('connection');
+
+        $qb = $connection->createQueryBuilder();
+        $data = $qb
+            ->select('l.*')
+            ->from('locale', 'l')
+            ->where($qb->expr()->eq('l.deleted', false))
+            ->fetchAllAssociative();
 
         $result = [];
         foreach ($data as $row) {

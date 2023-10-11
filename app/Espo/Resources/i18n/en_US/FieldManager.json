@@ -85,11 +85,6 @@
     "unit": {
       "unit": "(Unit)"
     },
-    "personName": {
-      "salutation": "Salutation",
-      "first": "First",
-      "last": "Last"
-    },
     "currency": {
       "converted": "(Converted)",
       "currency": "(Currency)"

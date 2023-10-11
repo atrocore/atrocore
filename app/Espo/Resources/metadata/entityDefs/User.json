@@ -25,7 +25,8 @@
             "tooltip": true
         },
         "name": {
-            "type": "personName",
+            "type": "varchar",
+            "notStorable": true,
             "view": "views/user/fields/name"
         },
         "password": {
