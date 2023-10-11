@@ -183,10 +183,10 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             var layout = this.defs.layout || null;
             if (layout) {
                 if (typeof layout == 'string') {
-                     layoutName = layout;
+                    layoutName = layout;
                 } else {
-                     layoutName = 'listRelationshipCustom';
-                     listLayout = layout;
+                    layoutName = 'listRelationshipCustom';
+                    listLayout = layout;
                 }
             }
 
@@ -264,8 +264,8 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                             collection.fetch();
                         }.bind(this));
                     });
+                    this.setupTotal.call(this)
                 }, this);
-
                 this.wait(false);
             }, this);
 
@@ -305,9 +305,26 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             }
         },
 
-        setupListLayout: function () {},
+        setupTotal() {
+            let $btnGroup = this.$el.parent().find('.panel-heading .btn-group');
+            $btnGroup.find('.list-total').remove();
 
-        setupActions: function () {},
+            const $buttonHtml = $('<button type="button" style="width: auto" class="btn btn-default btn-sm action list-total"><span style="line-height: 0px"></span></button>');
+            $btnGroup.prepend($buttonHtml);
+            $buttonHtml.hide()
+
+            this.listenTo(this.collection, 'update', () => {
+                const total = this.collection.total || this.collection.length
+                $buttonHtml.find('span').text(`${this.translate('Total', 'labels', 'Global')}: ${total}`)
+                $buttonHtml.show()
+            })
+        },
+
+        setupListLayout: function () {
+        },
+
+        setupActions: function () {
+        },
 
         setupFilterActions: function () {
             if (this.filterList && this.filterList.length) {
@@ -463,7 +480,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             this.setFilter(filterInternal);
 
             this.filterList.forEach(function (item) {
-                var $el = this.$el.closest('.panel').find('[data-name="'+item+'"] span');
+                var $el = this.$el.closest('.panel').find('[data-name="' + item + '"] span');
                 if (item === filter) {
                     $el.removeClass('hidden');
                 } else {
