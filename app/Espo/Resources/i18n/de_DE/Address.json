@@ -9,7 +9,8 @@
     "city": "Stadt",
     "country": "Land",
     "countryCode": "Landesvorwahl",
-    "type": "Typ"
+    "type": "Typ",
+    "account": "Konto"
   },
   "options": {
     "type": {

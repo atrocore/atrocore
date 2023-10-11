@@ -9,7 +9,8 @@
     "city": "City",
     "country": "Country",
     "countryCode": "Country Code",
-    "type": "Type"
+    "type": "Type",
+    "account": "Account"
   },
   "options": {
     "type": {

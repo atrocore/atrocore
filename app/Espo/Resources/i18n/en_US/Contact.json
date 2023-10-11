@@ -1,0 +1,24 @@
+{
+  "fields": {
+    "name": "Name",
+    "firstName": "First Name",
+    "secondName": "Second Name",
+    "title": "Title",
+    "jobPosition": "Job Position",
+    "email": "Email",
+    "phone": "Phone",
+    "mobile": "Mobile",
+    "street": "Street",
+    "zip": "ZIP",
+    "box": "Box",
+    "city": "City",
+    "country": "Country",
+    "countryCode": "Country Code"
+  },
+  "links": {
+    "accounts": "Accounts"
+  },
+  "labels": {
+    "Create Contact": "Create Contact"
+  }
+}

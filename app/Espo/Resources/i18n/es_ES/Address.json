@@ -8,7 +8,8 @@
     "city": "Ciudad",
     "country": "País",
     "countryCode": "Código de país",
-    "type": "Tipo"
+    "type": "Tipo",
+    "account": "Cuenta"
   },
   "options": {
     "type": {
