@@ -61,6 +61,7 @@ class EntityManager implements Factory
             'sslKey'                     => $config->get('database.sslKey'),
             'sslCAPath'                  => $config->get('database.sslCAPath'),
             'sslCipher'                  => $config->get('database.sslCipher'),
+            'connection'                 => $container->get('connection'),
             'pdo'                        => $container->get('pdo')
         ];
 
