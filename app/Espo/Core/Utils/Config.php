@@ -361,9 +361,9 @@ class Config
 
         $qb = $connection->createQueryBuilder();
         $data = $qb
-            ->select('l.*')
-            ->from('locale', 'l')
-            ->where($qb->expr()->eq('l.deleted', false))
+            ->select('*')
+            ->from('locale')
+            ->where($qb->expr()->eq('deleted', 0))
             ->fetchAllAssociative();
 
         $result = [];
