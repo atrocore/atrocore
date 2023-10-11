@@ -33,7 +33,8 @@
 
 namespace Espo\Core\Utils\Cron;
 
-use Doctrine\DBAL\Types\Types;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
 use PDO;
 use Espo\Core\CronManager;
 use Espo\Core\Utils\Config;
@@ -131,12 +132,12 @@ class Job
         $rowList = $connection->createQueryBuilder()
             ->select('j.scheduled_job_id')
             ->from($connection->quoteIdentifier('job'), 'j')
-            ->where("{$connection->quoteIdentifier('status')} = :status")
-            ->setParameter('status', 'Running')
-            ->andWhere('scheduled_job_id IS NOT NULL')
-            ->andWhere('target_id IS IS NULL')
-            ->andWhere('deleted = :deleted')
-            ->setParameter('deleted', false, Types::BOOLEAN)
+            ->where("j.{$connection->quoteIdentifier('status')} = :status")
+            ->setParameter('status', CronManager::RUNNING)
+            ->andWhere('j.scheduled_job_id IS NOT NULL')
+            ->andWhere('j.target_id IS IS NULL')
+            ->andWhere('j.deleted = :deleted')
+            ->setParameter('deleted', false, ParameterType::BOOLEAN)
             ->orderBy('j.execute_time', 'ASC')
             ->fetchAllAssociative();
 
@@ -164,12 +165,12 @@ class Job
         $scheduledJob = $connection->createQueryBuilder()
             ->select('j.*')
             ->from($connection->quoteIdentifier('job'), 'j')
-            ->where("scheduled_job_id = :scheduledJobId")
+            ->where("j.scheduled_job_id = :scheduledJobId")
             ->setParameter('scheduledJobId', $scheduledJobId)
-            ->andWhere('execute_time LIKE :timeWithoutSeconds')
+            ->andWhere('j.execute_time LIKE :timeWithoutSeconds')
             ->setParameter('timeWithoutSeconds', $timeWithoutSeconds . '%')
-            ->andWhere('deleted = :deleted')
-            ->setParameter('deleted', false, Types::BOOLEAN)
+            ->andWhere('j.deleted = :deleted')
+            ->setParameter('deleted', false, ParameterType::BOOLEAN)
             ->setMaxResults(1)
             ->fetchAssociative();
 
@@ -191,21 +192,23 @@ class Job
     {
         $time = time() - $this->getConfig()->get($period);
 
-        $pdo = $this->getEntityManager()->getPDO();
+        $connection = $this->getEntityManager()->getConnection();
+        $rows = $connection->createQueryBuilder()
+            ->select('j.*')
+            ->from($connection->quoteIdentifier('job'), 'j')
+            ->where("j.{$connection->quoteIdentifier('status')} = :status")
+            ->setParameter('status', CronManager::RUNNING)
+            ->andWhere('j.execute_time < :executeTime')
+            ->setParameter('executeTime', date('Y-m-d H:i:s', $time))
+            ->fetchAllAssociative();
 
-        $select = "
-            SELECT id, scheduled_job_id, execute_time, target_id, target_type, pid FROM `job`
-            WHERE
-            `status` = '" . CronManager::RUNNING ."' AND execute_time < '".date('Y-m-d H:i:s', $time)."'
-        ";
-        $sth = $pdo->prepare($select);
-        $sth->execute();
+        $pdo = $this->getEntityManager()->getPDO();
 
         $jobData = array();
 
         switch ($period) {
             case 'jobPeriod':
-                while ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
+                foreach ($rows as $row) {
                     if (empty($row['pid']) || !System::isProcessActive($row['pid'])) {
                         $jobData[$row['id']] = $row;
                     }
@@ -213,7 +216,7 @@ class Job
                 break;
 
             case 'jobPeriodForActiveProcess':
-                while ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
+                foreach ($rows as $row) {
                     $jobData[$row['id']] = $row;
                 }
                 break;
@@ -225,14 +228,13 @@ class Job
                 $jobQuotedIdList[] = $pdo->quote($jobId);
             }
 
-            $update = "
-                UPDATE job
-                SET `status` = '" . CronManager::FAILED . "', attempts = 0
-                WHERE id IN (".implode(", ", $jobQuotedIdList).")
-            ";
-
-            $sth = $pdo->prepare($update);
-            $sth->execute();
+            $connection->createQueryBuilder()
+                ->update($connection->quoteIdentifier('job'), 'j')
+                ->set("j.{$connection->quoteIdentifier('status')}", CronManager::FAILED)
+                ->set("j.attempts", 0)
+                ->where('j.id IN (:ids)')
+                ->setParameter('ids', $jobQuotedIdList, Connection::PARAM_STR_ARRAY)
+                ->executeQuery();
 
             $cronScheduledJob = $this->getCronScheduledJob();
             foreach ($jobData as $jobId => $job) {
