@@ -33,11 +33,6 @@
 
 namespace Espo\ORM\DB\Query;
 
-use Espo\ORM\Entity;
-use Espo\ORM\IEntity;
-use Espo\ORM\EntityFactory;
-use PDO;
-
 class PostgreSQL extends Base
 {
     public function selectFieldSQL(string $field, string $alias, string $tableName = null): string
@@ -49,7 +44,7 @@ class PostgreSQL extends Base
 
     public function fromSQL(string $table): string
     {
-        return "FROM {$table}";
+        return "FROM \"{$table}\" {$this->getTableAlias($table)}";
     }
 
     public function joinSQL(string $prefix, string $table, string $alias): string
