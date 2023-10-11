@@ -40,8 +40,10 @@ class SqlDiffRun extends AbstractConsole
         }
 
         if (!empty($queries)) {
+            /** @var \PDO $pdo */
+            $pdo = $this->getContainer()->get('pdo');
             foreach ($queries as $query) {
-                $this->getContainer()->get('pdo')->exec($query);
+                $pdo->exec($query);
                 echo $query;
                 self::show(' Done!', self::SUCCESS);
             }

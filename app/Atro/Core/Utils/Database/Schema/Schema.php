@@ -110,12 +110,6 @@ class Schema
                     $hasModification = true;
                 }
             }
-//            foreach ($tableDiff->renamedColumns as $column) {
-//                if ($column->getAutoincrement()) {
-//                    $column->setAutoincrement(false);
-//                    $hasModification = true;
-//                }
-//            }
         }
 
         // get queries
