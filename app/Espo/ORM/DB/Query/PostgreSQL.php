@@ -40,13 +40,31 @@ use PDO;
 
 class PostgreSQL extends Base
 {
-    public function limit($sql, $offset, $limit)
+    public function selectFieldSQL(string $field, string $alias, string $tableName = null): string
+    {
+        $prefix = $tableName !== null ? "$tableName." : '';
+
+        return "{$prefix}{$field} AS {$alias}";
+    }
+
+    public function fromSQL(string $table): string
+    {
+        return "FROM {$table}";
+    }
+
+    public function joinSQL(string $prefix, string $table, string $alias): string
+    {
+        return $prefix . "JOIN \"{$table}\" {$alias} ON";
+    }
+
+    public function limitSQL(string $sql, ?string $offset, ?string $limit): string
     {
         if (!is_null($offset) && !is_null($limit)) {
             $offset = intval($offset);
             $limit = intval($limit);
             $sql .= " LIMIT $limit OFFSET $offset";
         }
+
         return $sql;
     }
 }

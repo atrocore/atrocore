@@ -187,7 +187,7 @@ abstract class Base
                 foreach ($params['additionalColumns'] as $column => $field) {
                     $relTableName = $this->toDb($this->sanitize($params['relationName']));
                     $relColumnName = $this->toDb($this->sanitize($column));
-                    $selectPart .= ", `$relTableName`.$relColumnName AS `$field`";
+                    $selectPart .= ", " . $this->selectFieldSQL($relColumnName, $field, $relTableName);
                     if ($params['orderBy'] === $field) {
                         $orderPart = "ORDER BY `$relTableName`.$relColumnName " . $this->prepareOrderParameter($params['order']);
                     }
@@ -196,7 +196,7 @@ abstract class Base
 
             if (!empty($params['additionalSelectColumns']) && is_array($params['additionalSelectColumns'])) {
                 foreach ($params['additionalSelectColumns'] as $column => $field) {
-                    $selectPart .= ", " . $column . " AS `{$field}`";
+                    $selectPart .= ", " . $this->selectFieldSQL($column, $field);
                 }
             }
 
@@ -466,7 +466,7 @@ abstract class Base
                     }
                 }
 
-                $arr[] = $part . ' AS `' . $this->sanitizeAlias($attribute[1]) . '`';
+                $arr[] = $this->selectFieldSQL($part, $this->sanitizeAlias($attribute[1]));
                 continue;
             }
 
@@ -474,7 +474,7 @@ abstract class Base
                 $fieldDefs = $entity->fields[$attribute];
             } else {
                 $part = $this->convertComplexExpression($entity, $attribute, $distinct);
-                $arr[] = $part . ' AS `' . $attribute . '`';
+                $arr[] = $this->selectFieldSQL($part, $attribute);
                 continue;
             }
 
@@ -488,18 +488,16 @@ abstract class Base
                     continue;
                 }
                 $fieldPath = $this->getFieldPath($entity, $attribute);
-//                if ($attributeType === $entity::TEXT && $maxTextColumnsLength !== null) {
-//                    $fieldPath = 'LEFT(' . $fieldPath . ', '. intval($maxTextColumnsLength) . ')';
-//                }
             }
-
-            $arr[] = $fieldPath . ' AS `' . $attribute . '`';
+            $arr[] = $this->selectFieldSQL($fieldPath, $attribute);
         }
 
         $select = implode(', ', $arr);
 
         return $select;
     }
+
+    abstract public function selectFieldSQL(string $field, string $alias, string $tableName = null): string;
 
     protected function getBelongsToJoin(IEntity $entity, $relationName, $r = null, $alias = null)
     {
@@ -516,7 +514,7 @@ abstract class Base
         }
 
         if ($alias) {
-            return "JOIN `" . $this->toDb($r['entity']) . "` AS `" . $alias . "` ON ".
+            return $this->joinSQL('', $this->toDb($r['entity']), $alias) . ' ' .
                    $this->toDb($entity->getEntityType()) . "." . $this->toDb($key) . " = " . $alias . "." . $this->toDb($foreignKey);
         }
     }
@@ -732,7 +730,7 @@ abstract class Base
                     } else {
                         $occuranceHash[$name] = 0;
                     }
-                    $suffix = '';
+                    $suffix = '_a';
                     if ($occuranceHash[$name] > 0) {
                         $suffix .= '_' . $occuranceHash[$name];
                     }
@@ -1185,6 +1183,8 @@ abstract class Base
         }
     }
 
+    abstract protected function joinSQL(string $prefix, string $table, string $alias): string;
+
     protected function getJoin(IEntity $entity, $name, $left = false, $conditions = array(), $alias = null)
     {
         $prefix = ($left) ? 'LEFT ' : '';
@@ -1195,7 +1195,7 @@ abstract class Base
             }
             $table = $this->toDb($this->sanitize($name));
 
-            $sql = $prefix . "JOIN `{$table}` AS `{$alias}` ON";
+            $sql = $this->joinSQL($prefix, $table, $alias);
 
             if (empty($conditions)) return '';
 
@@ -1311,6 +1311,8 @@ abstract class Base
         return false;
     }
 
+    abstract public function fromSQL(string $table): string;
+
     public function composeSelectQuery($table, $select, $joins = '', $where = '', $order = '', $offset = null, $limit = null, $distinct = null, $aggregation = false, $groupBy = null, $having = null)
     {
         $sql = "SELECT";
@@ -1319,7 +1321,8 @@ abstract class Base
             $sql .= " DISTINCT";
         }
 
-        $sql .= " {$select} FROM `{$table}`";
+//        $sql .= " {$select} FROM `{$table}`";
+        $sql .= " {$select} " . $this->fromSQL($table);
 
         if (!empty($joins)) {
             $sql .= " {$joins}";
@@ -1345,12 +1348,12 @@ abstract class Base
             $offset = 0;
         }
 
-        $sql = $this->limit($sql, $offset, $limit);
+        $sql = $this->limitSQL($sql, $offset, $limit);
 
         return $sql;
     }
 
-    abstract public function limit($sql, $offset, $limit);
+    abstract public function limitSQL(string $sql, ?string $offset, ?string $limit): string;
 
     public function getKeys(IEntity $entity, $relationName)
     {
