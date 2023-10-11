@@ -49,34 +49,23 @@ class QueueItem extends Base
         $this->getPDO()->exec("DELETE FROM `queue_item` WHERE modified_at<'$date'");
     }
 
-    public function updateSortOrder(string $id): void
+    protected function beforeSave(Entity $entity, array $options = [])
     {
-        $entity = $this->get($id);
-        if (empty($entity)) {
-            return;
+        // update sort order
+        if ($entity->isNew()) {
+            $sortOrder = time() - (new \DateTime('2023-09-01'))->getTimestamp();
+            if (!empty($entity->get('parentId')) && !empty($parent = $this->get($entity->get('parentId')))) {
+                $sortOrder = $parent->get('sortOrder') . '.' . $sortOrder;
+            }
+            $entity->set('sortOrder', $sortOrder);
         }
 
-        $sortOrder = $entity->get('position');
-        if (!empty($parent = $entity->get('parent'))) {
-            $sortOrder = $parent->get('position') . '.' . $sortOrder;
-        }
-
-        $this->getConnection()->createQueryBuilder()
-            ->update('queue_item')
-            ->set('sort_order', (float)$sortOrder)
-            ->where('id = :id')
-            ->setParameter('id', $entity->get('id'))
-            ->executeQuery();
+        parent::beforeSave($entity, $options);
     }
 
     protected function afterSave(Entity $entity, array $options = [])
     {
         parent::afterSave($entity, $options);
-
-        // update sort order
-        if ($entity->isNew()) {
-            $this->updateSortOrder($entity->get('id'));
-        }
 
         /**
          * Create file

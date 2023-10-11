@@ -1,7 +1,7 @@
 {
   "fields": {
     "sortOrder": {
-      "type": "autoincrement",
+      "type": "int",
       "readOnly": true
     },
     "entityType": {
