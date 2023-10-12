@@ -23,7 +23,7 @@ class V1Dot6Dot54 extends Base
         );
         $this->exec("DELETE FROM scheduled_job WHERE id = 'TreoCleanup'");
 
-//      Delete all phantom entity in hierarchy relationship
+//      Delete all phantom entities in hierarchy relationship tables
         $tables = $this->getPDO()->query('show tables')->fetchAll(\PDO::FETCH_COLUMN);
         foreach ($tables as $hierarchyTable) {
             if (!str_contains($hierarchyTable,'_hierarchy')) {
