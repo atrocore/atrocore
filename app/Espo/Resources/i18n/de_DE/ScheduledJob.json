@@ -3,7 +3,8 @@
     "isInternal": "Ist intern",
     "job": "Aufgabe",
     "lastRun": "Zuletzt ausgeführt",
-    "scheduling": "Planung"
+    "scheduling": "Planung",
+    "minimum_age": "Mindestalter (in Tagen) der Daten"
   },
   "links": {
     "log": "Protokoll"
@@ -18,7 +19,8 @@
   },
   "options": {
     "job": {
-      "ModuleAutoUpdate": "Alle installierten Module automatisch aktualisieren"
+      "ComposerAutoUpdate": "Alle installierten Module automatisch aktualisieren",
+      "DeleteForever": "Unwiederuflich löschen"
     },
     "status": {
       "Active": "Aktiv",

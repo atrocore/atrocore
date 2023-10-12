@@ -107,6 +107,7 @@
     "Auth error": "Authentication failed. Please re-login again.",
     "Post cannot be empty": "La entrada no puede estar vacia",
     "removing": "Removiendo...",
+    "restoring": "Restaurando...",
     "Unlinking...": "Desenlazando...",
     "Posting...": "Publicando...",
     "Username can not be empty!": "¡El nombre de usuario no puede estar vacío!",
@@ -261,6 +262,7 @@
   "messages": {
     "pleaseWait": "Por favor espere...",
     "posting": "Publicando...",
+    "massRestoring": "Restaurando: {{restaurado}} de {{total}}",
     "confirmLeaveOutMessage": "¿Seguro que quieres salir del formulario?",
     "notModified": "Usted no ha modificado el registro",
     "fieldIsRequired": "{field} es requerido",
@@ -273,9 +275,11 @@
     "unlinkAllConfirmation": "¿Seguro que deseas desvincular todos los registros relacionados?",
     "resetPreferencesConfirmation": "¿Está seguro que desea restablecer las preferencias?",
     "removeRecordConfirmation": "El registro seleccionado se eliminará de forma permanente. ¿Está seguro de que desea eliminarlo?",
+    "restoreRecordConfirmation": "El registro seleccionado será restaurado. ¿Estás seguro de que quieres restaurarlo?",
     "removeRecordConfirmationHierarchically": "El registro seleccionado y sus registros secundarios se eliminarán de forma permanente. ¿Estás seguro de que quieres eliminarlos?",
     "unlinkRecordConfirmation": "¿Está seguro que quiere desenlazar la relación?",
     "removeSelectedRecordsConfirmation": "¿Está seguro de que desea eliminar los registros seleccionados de forma permanente?",
+    "restoreSelectedRecordsConfirmation": "¿Está seguro de que desea restaurar los registros seleccionados de forma?",
     "massUpdateResult": "{count} registros se han actualizado",
     "massUpdateResultSingle": "{count} registro ha sido actualizado",
     "noRecordsUpdated": "Ningún registro fue actualizado",
@@ -301,6 +305,10 @@
     "massUnfollowResultSingle": "Se han dejado de seguir {count} registro",
     "massFollowZeroResult": "Nada se siguió",
     "massUnfollowZeroResult": "Nada se dejó de seguir",
+    "massRestoreResult": "Зараз відновлено {count} записів",
+    "confirmMassRestore": "Ви впевнені, що бажаєте відновити вибрані записи?",
+    "massRestoreResultSingle": "{count} registro ahora está restaurado",
+    "massRestoreZeroResult": "No se restauró nada",
     "fieldShouldBeEmail": "{field} debe ser un correo electrónico válido",
     "fieldShouldBeFloat": "{field} debe ser un decimal válido",
     "fieldShouldBeInt": "{field} debe ser un entero válido",
@@ -353,7 +361,8 @@
     "removePartial": "Remove (Part %s)",
     "addRelation": "Add relation",
     "removeRelation": "Remove relation",
-    "convertCurrency": "Convert Currency"
+    "convertCurrency": "Convert Currency",
+    "restore": "Restaurar"
   },
   "fields": {
     "name": "Nombre",

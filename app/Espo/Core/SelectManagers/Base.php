@@ -800,6 +800,18 @@ class Base
     {
         $result['withArchived'] = true;
     }
+    /**
+     * @param array $result
+     *
+     * @return void
+     */
+    protected function boolFilterOnlyDeleted(array &$result): void
+    {
+        $result['withDeleted'] = true;
+        $result['whereClause'][] = [
+            "deleted" => 1
+        ];
+    }
 
     /**
      * @return bool

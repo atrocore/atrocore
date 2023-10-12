@@ -203,6 +203,45 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $result = parent::remove($entity, $options);
         return $result;
     }
+    public function restore($id){
+
+        $this->beforeRestore($id);
+        $result = $this->getConnection()
+            ->createQueryBuilder()
+            ->update(Util::toUnderScore($this->entityType))
+            ->set('deleted','?')
+            ->where('id = ?')
+            ->setParameter(0, 0)
+            ->setParameter(1,$id)
+            ->executeStatement();
+       if($result){
+           $entity = $this->get($id);
+           $this->restoreLinkedRelationshipEntities($entity);
+           $this->afterRestore($entity);
+       }
+
+       return $entity ?? false;
+    }
+
+    protected function restoreLinkedRelationshipEntities(Entity $entity): void
+    {
+        foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links'], []) as $linkDefs) {
+
+            if (!empty($linkDefs['entity']) && !empty($linkDefs['foreign'])) {
+                if (!empty($this->getMetadata()->get(['entityDefs', $linkDefs['entity'], 'fields', $linkDefs['foreign'], 'relationshipField']))) {
+                    $this->getConnection()
+                        ->createQueryBuilder()
+                        ->update(Util::toUnderScore($linkDefs['entity']))
+                        ->set('deleted','?')
+                        ->where(  Util::toUnderScore($linkDefs['foreign']) . '_id = ?')
+                        ->setParameter(0, 0)
+                        ->setParameter(1,$entity->get('id'))
+                        ->executeStatement();
+
+                }
+            }
+        }
+    }
 
     protected function beforeRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
     {
@@ -970,5 +1009,13 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     public function getConnection(): \Doctrine\DBAL\Connection
     {
         return $this->getInjection('connection');
+    }
+
+    protected function beforeRestore($id)
+    {
+    }
+
+    protected function afterRestore($entity)
+    {
     }
 }

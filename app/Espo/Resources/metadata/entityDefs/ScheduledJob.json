@@ -47,6 +47,9 @@
             "readOnly": true,
             "disabled": true,
             "default": false
+        },
+        "minimum_age": {
+            "type": "int"
         }
     },
     "links": {
@@ -69,7 +72,6 @@
         "asc": true
     },
     "jobSchedulingMap": {
-        "TreoCleanup": "0 3 1 * *",
         "ComposerAutoUpdate": "0 5 * * SUN"
     },
     "jobs": {

@@ -3,7 +3,8 @@
     "name": "Name",
     "status": "Status",
     "job": "Job",
-    "scheduling": "Scheduling"
+    "scheduling": "Scheduling",
+    "minimum_age": "Minimum age (in days) of data"
   },
   "links": {
     "log": "Log"
@@ -21,8 +22,9 @@
   },
   "options": {
     "job": {
-      "TreoCleanup": "Old deleted data cleanup",
-      "ComposerAutoUpdate": "Automatic system update"
+      "TreoCleanup": "Old data cleanup",
+      "ComposerAutoUpdate": "Automatic system update",
+      "DeleteForever": "Delete forever"
     },
     "status": {
       "Active": "Active",

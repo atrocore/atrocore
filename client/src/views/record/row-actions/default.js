@@ -88,6 +88,19 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
         },
 
         getActionList: function () {
+            const scope = this.options.scope ;
+            const filters = this.getStorage().get('listSearch', scope);
+            if(filters && filters.bool['onlyDeleted'] === true){
+                if (this.options.acl.delete) {
+                    return [{
+                        action: 'quickRestore',
+                        label: 'Restore',
+                        data: {
+                            id: this.model.id
+                        }
+                    }];
+                }
+            }
             var list = [{
                 action: 'quickView',
                 label: 'View',
@@ -117,7 +130,10 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
             }
             return list;
         },
-
+        handleDataBeforeRender: function (data) {
+            Dep.prototype.handleDataBeforeRender.call(data)
+            data['actionList'] = this.getActionList();
+        },
         data: function () {
             return {
                 acl: this.options.acl,
