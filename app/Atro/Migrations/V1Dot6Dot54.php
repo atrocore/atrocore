@@ -23,7 +23,7 @@ class V1Dot6Dot54 extends Base
         );
         $this->exec("DELETE FROM scheduled_job WHERE id = 'TreoCleanup'");
 
-        $this->updateComposer('atrocore/core', '^1.6.53');
+        $this->updateComposer('atrocore/core', '^1.6.54');
     }
 
     public function down(): void
