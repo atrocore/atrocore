@@ -1240,9 +1240,7 @@ abstract class Base
                 $sql =
                     "{$prefix}JOIN `{$relTable}` AS `{$midAlias}` ON {$this->toDb($entity->getEntityType())}." . $this->toDb($key) . " = {$midAlias}." . $this->toDb($nearKey)
                     . " AND "
-                    . "{$midAlias}.deleted = " . $this->pdo->quote(0)
-                    . " AND "
-                    ."(EXISTS(SELECT tmp.{$this->toDb($key)} FROM $distantTable as tmp WHERE tmp.{$this->toDb($key)}={$this->toDb($distantKey)}))";
+                    . "{$midAlias}.deleted = " . $this->pdo->quote(0);
 
                 if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
                     $conditions = array_merge($conditions, $relOpt['conditions']);

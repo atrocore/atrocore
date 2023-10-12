@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core\Templates\Repositories;
 
+use Doctrine\DBAL\Types\Types;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\ORM\Repositories\RDB;
 use Espo\Core\Utils\Util;
@@ -527,5 +528,32 @@ class Hierarchy extends RDB
                 $this->collectChildren($v, $ids);
             }
         }
+    }
+
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        parent::afterRemove($entity, $options);
+        $this->getConnection()
+            ->createQueryBuilder()
+            ->update($this->getConnection()->quoteIdentifier($this->hierarchyTableName))
+            ->where('entity_id = :entityId')
+            ->orWhere('parent_id = :entityId')
+            ->set('deleted',':deleted')
+            ->setParameter('entityId',$entity->get('id'))
+            ->setParameter('deleted',true,Types::BOOLEAN)
+            ->executeStatement();
+    }
+    protected function afterRestore($entity, array $options = [])
+    {
+        parent::afterRestore($entity, $options);
+        $this->getConnection()
+            ->createQueryBuilder()
+            ->update($this->getConnection()->quoteIdentifier($this->hierarchyTableName))
+            ->where('entity_id = :entityId')
+            ->orWhere('parent_id = :entityId')
+            ->set('deleted',':deleted')
+            ->setParameter('entityId',$entity->get('id'))
+            ->setParameter('deleted',false,Types::BOOLEAN)
+            ->executeStatement();
     }
 }
