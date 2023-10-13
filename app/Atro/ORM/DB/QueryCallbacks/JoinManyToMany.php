@@ -42,10 +42,9 @@ class JoinManyToMany
         $distantKey = $keySet['distantKey'];
 
         $relTable = $mapper->toDb($relOpt['relationName']);
-        $relAlias = $relTable . '_a';
-        $distantTable = $mapper->toDb($relOpt['entity']);
+        $relAlias = $mapper->getRelationAlias($entity, $relOpt['relationName']);
 
-        $condition = "{$distantTable}.{$mapper->toDb($foreignKey)} = {$relAlias}.{$mapper->toDb($distantKey)}";
+        $condition = Mapper::TABLE_ALIAS . ".{$mapper->toDb($foreignKey)} = {$relAlias}.{$mapper->toDb($distantKey)}";
 
         $condition .= " AND {$relAlias}.{$mapper->toDb($nearKey)} = :{$key}_mm";
         $qb->setParameter("{$key}_mm", Mapper::getParameterType($entity->get($key)));
