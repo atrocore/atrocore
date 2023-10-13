@@ -35,6 +35,40 @@ class Mapper implements IMapper
     protected array $fieldsMapCache = [];
     protected array $relationAliases = [];
 
+    protected array $matchFunctionList = ['MATCH_BOOLEAN', 'MATCH_NATURAL_LANGUAGE', 'MATCH_QUERY_EXPANSION'];
+
+    protected array $functionList
+        = [
+            'COUNT',
+            'SUM',
+            'AVG',
+            'MAX',
+            'MIN',
+            'MONTH',
+            'DAY',
+            'YEAR',
+            'WEEK',
+            'WEEK_0',
+            'WEEK_1',
+            'DAYOFMONTH',
+            'DAYOFWEEK',
+            'DAYOFWEEK_NUMBER',
+            'MONTH_NUMBER',
+            'DATE_NUMBER',
+            'YEAR_NUMBER',
+            'HOUR_NUMBER',
+            'HOUR',
+            'MINUTE_NUMBER',
+            'MINUTE',
+            'WEEK_NUMBER',
+            'WEEK_NUMBER_0',
+            'WEEK_NUMBER_1',
+            'LOWER',
+            'UPPER',
+            'TRIM',
+            'LENGTH'
+        ];
+
     protected static array $selectParamList
         = [
             'select',
@@ -491,12 +525,9 @@ class Mapper implements IMapper
                 }
 
                 if (strpos($field, '.') !== false || strpos($field, ':') !== false) {
-                    print_r('convertComplexExpression qqwe');
-                    die();
-//                    $leftPart = $this->convertComplexExpression($entity, $field);
-//                    $isComplex = true;
+                    $leftPart = $this->convertComplexExpression($entity, $field);
+                    $isComplex = true;
                 }
-
 
                 if (empty($isComplex)) {
                     if (!isset($entity->fields[$field])) {
@@ -1340,5 +1371,110 @@ class Mapper implements IMapper
         }
 
         return $value;
+    }
+
+    protected function convertComplexExpression(IEntity $entity, string $field, bool $distinct = false): string
+    {
+        $function = null;
+        $relName = null;
+
+        $entityType = $entity->getEntityType();
+
+        if (strpos($field, ':')) {
+            $delimeterPosition = strpos($field, ':');
+            $function = substr($field, 0, $delimeterPosition);
+
+            if (in_array($function, $this->matchFunctionList)) {
+                print_r('convertMatchExpression qwe qwe qwe qwe ');
+                die();
+//                return $this->convertMatchExpression($entity, $field);
+            }
+
+            $field = substr($field, $delimeterPosition + 1);
+        }
+        if (!empty($function)) {
+            $function = preg_replace('/[^A-Za-z0-9_]+/', '', $function);
+        }
+
+        if (strpos($field, '.')) {
+            list($relName, $field) = explode('.', $field);
+        }
+
+        if (!empty($relName)) {
+            $relName = preg_replace('/[^A-Za-z0-9_]+/', '', $relName);
+        }
+        if (!empty($field)) {
+            $field = preg_replace('/[^A-Za-z0-9_]+/', '', $field);
+        }
+
+        $part = $this->toDb($field);
+        if ($relName) {
+            $part = $relName . '.' . $part;
+        } else {
+            if (!empty($entity->fields[$field]['select'])) {
+                $part = $entity->fields[$field]['select'];
+            } else {
+                $part = $this->toDb($entityType) . '.' . $part;
+            }
+        }
+        if ($function) {
+            $part = $this->getFunctionPart(strtoupper($function), $part, $entityType, $distinct);
+        }
+
+        return $part;
+    }
+
+    protected function getFunctionPart(string $function, string $part, string $entityType, bool $distinct = false): string
+    {
+        if (!in_array($function, $this->functionList)) {
+            throw new \Exception("Not allowed function '" . $function . "'.");
+        }
+
+        switch ($function) {
+            case 'MONTH':
+                return "DATE_FORMAT({$part}, '%Y-%m')";
+            case 'DAY':
+                return "DATE_FORMAT({$part}, '%Y-%m-%d')";
+            case 'WEEK':
+            case 'WEEK_0':
+                return "CONCAT(YEAR({$part}), '/', WEEK({$part}, 0))";
+            case 'WEEK_1':
+                return "CONCAT(YEAR({$part}), '/', WEEK({$part}, 5))";
+            case 'MONTH_NUMBER':
+                $function = 'MONTH';
+                break;
+            case 'DATE_NUMBER':
+                $function = 'DAYOFMONTH';
+                break;
+            case 'YEAR_NUMBER':
+                $function = 'YEAR';
+                break;
+            case 'WEEK_NUMBER':
+                $function = 'WEEK';
+                break;
+            case 'WEEK_NUMBER_0':
+                return "WEEK({$part}, 0)";
+            case 'WEEK_NUMBER_1':
+                return "WEEK({$part}, 5)";
+            case 'HOUR_NUMBER':
+                $function = 'HOUR';
+                break;
+            case 'MINUTE_NUMBER':
+                $function = 'MINUTE';
+                break;
+            case 'DAYOFWEEK_NUMBER':
+                $function = 'DAYOFWEEK';
+                break;
+        }
+        if ($distinct) {
+            $idPart = $this->toDb($entityType) . ".id";
+            switch ($function) {
+                case 'SUM':
+                case 'COUNT':
+                    return $function . "({$part}) * COUNT(DISTINCT {$idPart}) / COUNT({$idPart})";
+            }
+        }
+
+        return $function . '(' . $part . ')';
     }
 }
