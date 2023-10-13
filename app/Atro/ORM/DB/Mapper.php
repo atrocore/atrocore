@@ -251,10 +251,9 @@ class Mapper implements IMapper
         }
 
         try {
-            $sql = $qb->getSQL();
             $res = $qb->fetchAllAssociative();
         } catch (\Throwable $e) {
-            $GLOBALS['log']->error("RDB Mapper failed: {$e->getMessage()}" . PHP_EOL . "SQL: $sql");
+            $GLOBALS['log']->error("RDB SELECT failed: {$e->getMessage()}");
         }
 
         return $res;
@@ -1003,9 +1002,27 @@ class Mapper implements IMapper
 
     public function insert(IEntity $entity)
     {
-        echo '<pre>';
-        print_r('insert');
-        die();
+        $dataArr = $this->toValueMap($entity);
+
+        if (!empty($dataArr)) {
+            $qb = $this->connection->createQueryBuilder();
+
+            $qb->insert($this->connection->quoteIdentifier($this->toDb($entity->getEntityType())));
+            foreach ($dataArr as $field => $value) {
+                $value = $this->prepareValueForUpdate($entity->fields[$field]['type'], $value);
+                $qb->setValue($this->connection->quoteIdentifier($this->toDb($field)), ":i_$field");
+                $qb->setParameter("i_$field", $value, self::getParameterType($value));
+            }
+
+            try {
+                $qb->executeQuery();
+            } catch (\Throwable $e) {
+                $GLOBALS['log']->error("RDB INSERT failed: {$e->getMessage()}");
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public function update(IEntity $entity)
@@ -1025,7 +1042,7 @@ class Mapper implements IMapper
                 continue;
             }
 
-            $setArr[$attribute] = $value;
+            $setArr[$attribute] = $this->prepareValueForUpdate($type, $value);
         }
 
         if (count($setArr) == 0) {
@@ -1036,30 +1053,30 @@ class Mapper implements IMapper
 
         $qb->update($this->connection->quoteIdentifier($this->toDb($entity->getEntityType())));
         foreach ($setArr as $field => $value) {
-            $qb->set($this->toDb($field), ":$field");
-            $qb->setParameter($field, $value, self::getParameterType($value));
+            $qb->set($this->connection->quoteIdentifier($this->toDb($field)), ":u_$field");
+            $qb->setParameter("u_$field", $value, self::getParameterType($value));
         }
 
         $qb->where('id = :id');
-        $qb->setParameter('id', self::getParameterType($entity->id));
+        $qb->setParameter('id', $entity->id, self::getParameterType($entity->id));
         $qb->andWhere('deleted = :deleted');
-        $qb->setParameter('deleted', self::getParameterType(false));
+        $qb->setParameter('deleted', false, self::getParameterType(false));
 
         try {
-            $sql = $qb->getSQL();
             $qb->executeQuery();
         } catch (\Throwable $e) {
-            $GLOBALS['log']->error("RDB Mapper failed: {$e->getMessage()}" . PHP_EOL . "SQL: $sql");
+            $GLOBALS['log']->error("RDB UPDATE failed: {$e->getMessage()}");
+            return false;
         }
 
-        return $entity->id;
+        return true;
     }
 
     public function delete(IEntity $entity)
     {
-        echo '<pre>';
-        print_r('delete');
-        die();
+        $entity->set('deleted', true);
+
+        return $this->update($entity);
     }
 
     public function setCollectionClass($collectionClass)
@@ -1298,5 +1315,22 @@ class Mapper implements IMapper
         }
 
         return $data;
+    }
+
+    public function prepareValueForUpdate($type, $value)
+    {
+        if ($type == IEntity::JSON_ARRAY && is_array($value)) {
+            $value = json_encode($value, \JSON_UNESCAPED_UNICODE);
+        } else {
+            if ($type == IEntity::JSON_OBJECT && (is_array($value) || $value instanceof \stdClass)) {
+                $value = json_encode($value, \JSON_UNESCAPED_UNICODE);
+            }
+        }
+
+        if ($type === IEntity::BOOL && $value === null) {
+            $value = false;
+        }
+
+        return $value;
     }
 }
