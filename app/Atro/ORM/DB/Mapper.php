@@ -21,6 +21,7 @@ use Espo\ORM\DB\IMapper;
 use Espo\ORM\IEntity;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\EntityCollection;
+use PDO;
 
 class Mapper implements IMapper
 {
@@ -117,7 +118,17 @@ class Mapper implements IMapper
         $qb = $this->connection->createQueryBuilder();
 
         $qb->from($this->connection->quoteIdentifier($this->toDb($entity->getEntityType())), self::TABLE_ALIAS);
-        $this->prepareWhere($entity, $qb, $params);
+
+        $whereClause = $params['whereClause'] ?? [];
+        if (empty($params['withDeleted'])) {
+            $whereClause = $whereClause + ['deleted' => false];
+        }
+
+        $qb->andWhere($this->getWhere($entity, $whereClause, 'AND', $params));
+
+        foreach ($params['queryParameters'] ?? [] as $parameterName => $value) {
+            $qb->setParameter($parameterName, $value, self::getParameterType($value));
+        }
 
         if (!empty($params['havingClause'])) {
             print_r('$havingPart: Stop here!');
@@ -412,49 +423,45 @@ class Mapper implements IMapper
         }
     }
 
-    protected function prepareWhere(IEntity $entity, QueryBuilder $qb, array &$params): void
+    public function getWhere(IEntity $entity, array $whereClause, string $sqlOp = 'AND', array &$params = [], int $level = 0): string
     {
-        $whereClause = $params['whereClause'] ?? [];
-        if (empty($params['withDeleted'])) {
-            $whereClause = $whereClause + ['deleted' => false];
-        }
+        $whereParts = [];
 
         foreach ($whereClause as $field => $value) {
-
             if (is_int($field)) {
-                print_r('prepareWhere: Stop here!');
-                die();
-//                if (is_string($value)) {
-//                    if (strpos($value, 'MATCH_') === 0) {
+                if (is_string($value)) {
+                    if (strpos($value, 'MATCH_') === 0) {
+                        print_r('MATCH_ convertMatchExpression');
+                        die();
 //                        $rightPart = $this->convertMatchExpression($entity, $value);
 //                        $whereParts[] = $rightPart;
 //                        continue;
-//                    }
-//                }
-//                $field = 'AND';
+                    }
+                }
+                $field = 'AND';
             }
 
             if ($field === 'NOT') {
-                print_r('prepareWhere: Stop here!!');
-                die();
-//                if ($level > 1) break;
-//
-//                $field = 'id!=s';
-//                $value = array(
-//                    'selectParams' => array(
-//                        'select' => ['id'],
-//                        'whereClause' => $value
-//                    )
-//                );
-//                if (!empty($params['joins'])) {
-//                    $value['selectParams']['joins'] = $params['joins'];
-//                }
-//                if (!empty($params['leftJoins'])) {
-//                    $value['selectParams']['leftJoins'] = $params['leftJoins'];
-//                }
-//                if (!empty($params['customJoin'])) {
-//                    $value['selectParams']['customJoin'] = $params['customJoin'];
-//                }
+                if ($level > 1) {
+                    break;
+                }
+
+                $field = 'id!=s';
+                $value = array(
+                    'selectParams' => array(
+                        'select'      => ['id'],
+                        'whereClause' => $value
+                    )
+                );
+                if (!empty($params['joins'])) {
+                    $value['selectParams']['joins'] = $params['joins'];
+                }
+                if (!empty($params['leftJoins'])) {
+                    $value['selectParams']['leftJoins'] = $params['leftJoins'];
+                }
+                if (!empty($params['customJoin'])) {
+                    $value['selectParams']['customJoin'] = $params['customJoin'];
+                }
             }
 
             if (!in_array($field, self::$sqlOperators)) {
@@ -483,11 +490,12 @@ class Mapper implements IMapper
                 }
 
                 if (strpos($field, '.') !== false || strpos($field, ':') !== false) {
-                    print_r('prepareWhere: Stop here!!22');
+                    print_r('convertComplexExpression qqwe');
                     die();
 //                    $leftPart = $this->convertComplexExpression($entity, $field);
 //                    $isComplex = true;
                 }
+
 
                 if (empty($isComplex)) {
                     if (!isset($entity->fields[$field])) {
@@ -545,18 +553,19 @@ class Mapper implements IMapper
                     }
 
                     if (!empty($fieldDefs['where']) && !empty($fieldDefs['where'][$operatorModified])) {
-                        print_r('prepareWhere: Stop here!!2233');
-                        die();
-//                        $whereSqlPart = '';
-//                        if (is_string($fieldDefs['where'][$operatorModified])) {
-//                            $whereSqlPart = $fieldDefs['where'][$operatorModified];
-//                        } else {
-//                            if (!empty($fieldDefs['where'][$operatorModified]['sql'])) {
-//                                $whereSqlPart = $fieldDefs['where'][$operatorModified]['sql'];
-//                            }
-//                        }
-//                        if (!empty($fieldDefs['where'][$operatorModified]['leftJoins'])) {
-//                            foreach ($fieldDefs['where'][$operatorModified]['leftJoins'] as $j) {
+                        $whereSqlPart = '';
+                        if (is_string($fieldDefs['where'][$operatorModified])) {
+                            $whereSqlPart = $fieldDefs['where'][$operatorModified];
+                        } else {
+                            if (!empty($fieldDefs['where'][$operatorModified]['sql'])) {
+                                $whereSqlPart = $fieldDefs['where'][$operatorModified]['sql'];
+                            }
+                        }
+                        if (!empty($fieldDefs['where'][$operatorModified]['leftJoins'])) {
+                            foreach ($fieldDefs['where'][$operatorModified]['leftJoins'] as $j) {
+                                print_r('obtainJoinAlias 11');
+                                die();
+
 //                                $jAlias = $this->obtainJoinAlias($j);
 //                                foreach ($params['leftJoins'] as $jE) {
 //                                    $jEAlias = $this->obtainJoinAlias($jE);
@@ -565,10 +574,12 @@ class Mapper implements IMapper
 //                                    }
 //                                }
 //                                $params['leftJoins'][] = $j;
-//                            }
-//                        }
-//                        if (!empty($fieldDefs['where'][$operatorModified]['joins'])) {
-//                            foreach ($fieldDefs['where'][$operatorModified]['joins'] as $j) {
+                            }
+                        }
+                        if (!empty($fieldDefs['where'][$operatorModified]['joins'])) {
+                            foreach ($fieldDefs['where'][$operatorModified]['joins'] as $j) {
+                                print_r('obtainJoinAlias 22');
+                                die();
 //                                $jAlias = $this->obtainJoinAlias($j);
 //                                foreach ($params['joins'] as $jE) {
 //                                    $jEAlias = $this->obtainJoinAlias($jE);
@@ -577,40 +588,40 @@ class Mapper implements IMapper
 //                                    }
 //                                }
 //                                $params['joins'][] = $j;
-//                            }
-//                        }
-//                        if (!empty($fieldDefs['where'][$operatorModified]['customJoin'])) {
-//                            $params['customJoin'] .= ' ' . $fieldDefs['where'][$operatorModified]['customJoin'];
-//                        }
-//                        if (!empty($fieldDefs['where'][$operatorModified]['distinct'])) {
-//                            $params['distinct'] = true;
-//                        }
+                            }
+                        }
+                        if (!empty($fieldDefs['where'][$operatorModified]['customJoin'])) {
+                            $params['customJoin'] .= ' ' . $fieldDefs['where'][$operatorModified]['customJoin'];
+                        }
+                        if (!empty($fieldDefs['where'][$operatorModified]['distinct'])) {
+                            $params['distinct'] = true;
+                        }
+
+                        print_r('stringifyValue 123');
+                        die();
+
 //                        $whereParts[] = str_replace('{value}', $this->stringifyValue($value), $whereSqlPart);
                     } else {
                         if ($fieldDefs['type'] == IEntity::FOREIGN) {
-                            print_r('prepareWhere: Stop here!!223344');
-                            die();
-//                            $leftPart = '';
-//                            if (isset($fieldDefs['relation'])) {
-//                                $relationName = $fieldDefs['relation'];
-//                                if (isset($entity->relations[$relationName])) {
-//
-//                                    $alias = $this->getRelationAlias($entity, $relationName);
-//                                    if ($alias) {
-//                                        if (!is_array($fieldDefs['foreign'])) {
-//                                            $leftPart = $alias . '.' . $this->toDb($fieldDefs['foreign']);
-//                                        } else {
-//                                            $leftPart = $this->getFieldPath($entity, $field);
-//                                        }
-//                                    }
-//                                }
-//                            }
+                            $leftPart = '';
+                            if (isset($fieldDefs['relation'])) {
+                                $relationName = $fieldDefs['relation'];
+                                if (isset($entity->relations[$relationName])) {
+                                    $alias = $this->getRelationAlias($entity, $relationName);
+                                    if ($alias) {
+                                        if (!is_array($fieldDefs['foreign'])) {
+                                            $leftPart = $alias . '.' . $this->toDb($fieldDefs['foreign']);
+                                        } else {
+                                            $leftPart = $this->getFieldPath($entity, $field);
+                                        }
+                                    }
+                                }
+                            }
                         } else {
                             $leftPart = self::TABLE_ALIAS . '.' . $this->toDb(self::sanitize($field));
                         }
                     }
                 }
-
                 if (!empty($leftPart)) {
                     if ($operatorOrm === '=s' || $operatorOrm === '!=s') {
                         if (!is_array($value)) {
@@ -630,19 +641,21 @@ class Mapper implements IMapper
                             $withDeleted = true;
                         }
 
-                        print_r('prepareWhere: Stop here!!223344555');
+                        echo '<pre>';
+                        print_r('in q11121212');
                         die();
+
 //                        $whereParts[] = $leftPart . " " . $operator . " (" . $this->createSelectQuery($subQueryEntityType, $subQuerySelectParams, $withDeleted) . ")";
                     } else {
                         if (!is_array($value)) {
                             if (!is_null($value)) {
                                 if ($isNotValue) {
-                                    print_r('prepareWhere: Stop here!!222222223344555');
+                                    print_r('convertComplexExpression asd asd 1');
                                     die();
 //                                    $whereParts[] = $leftPart . " " . $operator . " " . $this->convertComplexExpression($entity, $value);
                                 } else {
-                                    $qb->andWhere("$leftPart $operator :{$field}");
-                                    $qb->setParameter($field, $value, self::getParameterType($value));
+                                    $whereParts[] = "$leftPart $operator :{$field}_w1";
+                                    $params['queryParameters']["{$field}_w1"] = $value;
                                 }
                             } else {
                                 if ($operator == '=') {
@@ -654,36 +667,37 @@ class Mapper implements IMapper
                                 }
                             }
                         } else {
-                            print_r('prepareWhere: Stop here!!dsd222222223344555');
+                            echo '<pre>';
+                            print_r('333');
                             die();
-//                            $valArr = $value;
-//                            foreach ($valArr as $k => $v) {
-//                                $valArr[$k] = $this->pdo->quote($valArr[$k]);
-//                            }
-//                            $oppose = '';
-//                            $emptyValue = '0';
-//                            if ($operator == '<>') {
-//                                $oppose = 'NOT ';
-//                                $emptyValue = '1';
-//                            }
-//                            if (!empty($valArr)) {
-//                                $whereParts[] = $leftPart . " {$oppose}IN " . "(" . implode(',', $valArr) . ")";
-//                            } else {
-//                                $whereParts[] = "" . $emptyValue;
-//                            }
+
+                            $valArr = $value;
+                            foreach ($valArr as $k => $v) {
+                                $valArr[$k] = $this->pdo->quote($valArr[$k]);
+                            }
+                            $oppose = '';
+                            $emptyValue = '0';
+                            if ($operator == '<>') {
+                                $oppose = 'NOT ';
+                                $emptyValue = '1';
+                            }
+                            if (!empty($valArr)) {
+                                $whereParts[] = $leftPart . " {$oppose}IN " . "(" . implode(',', $valArr) . ")";
+                            } else {
+                                $whereParts[] = "" . $emptyValue;
+                            }
                         }
                     }
                 }
             } else {
-                echo '<pre>';
-                print_r('prepareWhere: Stop here!!!!');
-                die();
-//                $internalPart = $this->getWhere($entity, $value, $field, $params, $level + 1);
-//                if ($internalPart || $internalPart === '0') {
-//                    $whereParts[] = "(" . $internalPart . ")";
-//                }
+                $internalPart = $this->getWhere($entity, $value, $field, $params, $level + 1);
+                if ($internalPart || $internalPart === '0') {
+                    $whereParts[] = "(" . $internalPart . ")";
+                }
             }
         }
+
+        return implode(" " . $sqlOp . " ", $whereParts);
     }
 
     protected function prepareOrder(IEntity $entity, QueryBuilder $qb, array &$params): void
