@@ -143,14 +143,16 @@ class Mapper implements IMapper
             }
 
         } else {
-            print_r('aggregation: Stop here!');
-            die();
+            if (!isset($params['aggregationBy']) || !isset($params['aggregation']) || !isset($entity->fields[$params['aggregationBy']])) {
+                throw new \Error('Error in building aggregation select');
+            }
 
-//            $aggDist = false;
-//            if ($params['distinct'] && $params['aggregation'] == 'COUNT') {
-//                $aggDist = true;
-//            }
-//            $selectPart = $this->getAggregationSelect($entity, $params['aggregation'], $params['aggregationBy'], $aggDist);
+            $aggregation = strtoupper($params['aggregation']);
+            $distinctPart = '';
+            if ($params['distinct'] && $params['aggregation'] == 'COUNT') {
+                $distinctPart = 'DISTINCT ';
+            }
+            $qb->select("{$aggregation}({$distinctPart}" . self::TABLE_ALIAS . "." . $this->toDb($this->sanitize($params['aggregationBy'])) . ") AS AggregateValue");
         }
 
         $this->prepareBelongsToJoins($entity, $qb, $params);
@@ -224,14 +226,15 @@ class Mapper implements IMapper
             if (!empty($params['distinct'])) {
                 $qb->distinct();
             }
-//            $sql = $this->composeSelectQuery($this->toDb($entity->getEntityType()), $selectPart, $joinsPart, $wherePart, $orderPart, $params['offset'], $params['limit'], $params['distinct'], null, $groupByPart, $havingPart);
         } else {
-            print_r('aggregation die here');
-            die();
-//            $sql = $this->composeSelectQuery($this->toDb($entity->getEntityType()), $selectPart, $joinsPart, $wherePart, null, null, null, false, $params['aggregation'], $groupByPart, $havingPart);
-//            if ($params['aggregation'] === 'COUNT' && $groupByPart && $havingPart) {
+            $groupByPart = !empty($params['groupBy']);
+            $havingPart = !empty($params['havingClause']) || !empty($params['customHaving']);
+
+            if ($params['aggregation'] === 'COUNT' && $groupByPart && $havingPart) {
+                print_r('aggregation die here');
+                die();
 //                $sql = "SELECT COUNT(*) AS `AggregateValue` FROM ({$sql}) AS `countAlias`";
-//            }
+            }
         }
 
         if (!empty($params['callbacks'])) {
@@ -789,9 +792,15 @@ class Mapper implements IMapper
 
     public function count(IEntity $entity, $params = []): int
     {
-        echo '<pre>';
-        print_r('count');
-        die();
+        $params['aggregation'] = 'COUNT';
+        $params['aggregationBy'] = 'id';
+
+        $res = $this->select($entity, $params);
+        foreach ($res as $row) {
+            return $row['AggregateValue'] ?? 0;
+        }
+
+        return 0;
     }
 
     public function max(IEntity $entity, $params, $field, $deleted = false)
