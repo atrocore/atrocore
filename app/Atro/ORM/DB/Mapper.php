@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\ORM\DB;
 
+use Atro\ORM\DB\QueryCallbacks\JoinManyToMany;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
@@ -122,17 +123,14 @@ class Mapper implements IMapper
             $this->prepareOrder($entity, $qb, $params);
 
             if (!empty($params['additionalColumns']) && is_array($params['additionalColumns']) && !empty($params['relationName'])) {
-                echo '<pre>';
-                print_r('q11');
-                die();
-//                foreach ($params['additionalColumns'] as $column => $field) {
-//                    $relTableName = $this->toDb(self::sanitize($params['relationName']));
-//                    $relColumnName = $this->toDb(self::sanitize($column));
-//                    $selectPart .= ", " . $this->selectFieldSQL($relColumnName, $field, $relTableName);
-//                    if ($params['orderBy'] === $field) {
-//                        $orderPart = "ORDER BY `$relTableName`.$relColumnName " . $this->prepareOrderParameter($params['order']);
-//                    }
-//                }
+                foreach ($params['additionalColumns'] as $column => $field) {
+                    $relationTableAlias = $this->getRelationAlias($entity, $params['relationName']);
+                    $relColumnName = $this->toDb(self::sanitize($column));
+                    $qb->addSelect("{$relationTableAlias}.{$relColumnName} AS {$this->connection->quoteIdentifier($field)}");
+                    if ($params['orderBy'] === $field) {
+                        $qb->addOrderBy("{$relationTableAlias}.{$relColumnName}", $this->prepareOrderParameter($params['order']));
+                    }
+                }
             }
 
             if (!empty($params['additionalSelectColumns']) && is_array($params['additionalSelectColumns'])) {
@@ -236,7 +234,22 @@ class Mapper implements IMapper
 //            }
         }
 
-        return $qb->fetchAllAssociative();
+        if (!empty($params['callbacks'])) {
+            foreach ($params['callbacks'] as $callback) {
+                call_user_func($callback, $this, $qb, $entity, $params);
+            }
+        }
+
+        try {
+            $sql = $qb->getSQL();
+            $res = $qb->fetchAllAssociative();
+        } catch (\Throwable $e) {
+            echo $e->getMessage() . PHP_EOL;
+            echo $sql . PHP_EOL;
+            die();
+        }
+
+        return $res;
     }
 
     protected function prepareBelongsToJoins(IEntity $entity, QueryBuilder $qb, array &$params): void
@@ -362,7 +375,7 @@ class Mapper implements IMapper
                 }
 
                 $alias = self::sanitizeAlias($attribute[1]);
-                $qb->addSelect("$part AS $alias");
+                $qb->addSelect("$part AS {$this->connection->quoteIdentifier($alias)}");
                 continue;
             }
 
@@ -388,7 +401,7 @@ class Mapper implements IMapper
                 $fieldPath = $this->getFieldPath($entity, $attribute);
             }
 
-            $qb->addSelect("$fieldPath AS $attribute");
+            $qb->addSelect("$fieldPath AS {$this->connection->quoteIdentifier($attribute)}");
         }
     }
 
@@ -806,9 +819,144 @@ class Mapper implements IMapper
 
     public function selectRelated(IEntity $entity, $relName, $params = [], $totalCount = false)
     {
-        echo '<pre>';
-        print_r('selectRelated');
-        die();
+        $relOpt = $entity->relations[$relName];
+
+        if (!isset($relOpt['type'])) {
+            throw new \LogicException("Missing 'type' in definition for relationship {$relName} in " . $entity->getEntityType() . " entity");
+        }
+
+        if ($relOpt['type'] !== IEntity::BELONGS_TO_PARENT) {
+            if (!isset($relOpt['entity'])) {
+                throw new \LogicException("Missing 'entity' in defenition for relationship {$relName} in " . $entity->getEntityType() . " entity");
+            }
+
+            $relEntityName = (!empty($relOpt['class'])) ? $relOpt['class'] : $relOpt['entity'];
+            $relEntity = $this->entityFactory->create($relEntityName);
+
+            if (!$relEntity) {
+                return null;
+            }
+        }
+
+        if ($totalCount) {
+            $params['aggregation'] = 'COUNT';
+            $params['aggregationBy'] = 'id';
+        }
+
+        if (empty($params['whereClause'])) {
+            $params['whereClause'] = [];
+        }
+
+        $relType = $relOpt['type'];
+
+        $keySet = $this->getRelationKeySet($entity, $relName);
+
+        $key = $keySet['key'];
+        $foreignKey = $keySet['foreignKey'];
+
+        switch ($relType) {
+            case IEntity::BELONGS_TO:
+                $params['whereClause'][$foreignKey] = $entity->get($key);
+                $params['offset'] = 0;
+                $params['limit'] = 1;
+
+                $rows = $this->select($relEntity, $params);
+
+                if ($rows) {
+                    foreach ($rows as $row) {
+                        if (!$totalCount) {
+                            $relEntity->set($row);
+                            $relEntity->setAsFetched();
+                            return $relEntity;
+                        } else {
+                            return $row['AggregateValue'];
+                        }
+                    }
+                }
+                return null;
+            case IEntity::HAS_MANY:
+            case IEntity::HAS_CHILDREN:
+            case IEntity::HAS_ONE:
+                $params['whereClause'][$foreignKey] = $entity->get($key);
+
+                if ($relType == IEntity::HAS_CHILDREN) {
+                    $foreignType = $keySet['foreignType'];
+                    $params['whereClause'][$foreignType] = $entity->getEntityType();
+                }
+
+                if ($relType == IEntity::HAS_ONE) {
+                    $params['offset'] = 0;
+                    $params['limit'] = 1;
+                }
+
+                $resultArr = [];
+
+                $rows = $this->select($relEntity, $params);
+                if ($rows) {
+                    if (!$totalCount) {
+                        $resultArr = $rows;
+                    } else {
+                        foreach ($rows as $row) {
+                            return $row['AggregateValue'];
+                        }
+                    }
+                }
+
+                if ($relType == IEntity::HAS_ONE) {
+                    if (count($resultArr)) {
+                        $relEntity->set($resultArr[0]);
+                        $relEntity->setAsFetched();
+                        return $relEntity;
+                    }
+                    return null;
+                } else {
+                    return $resultArr;
+                }
+
+            case IEntity::MANY_MANY:
+                $params['relationName'] = $relOpt['relationName'];
+                $params['callbacks'][] = [new JoinManyToMany($entity, $relName, $keySet), 'run'];
+
+                $resultArr = [];
+                $rows = $this->select($relEntity, $params);
+                if ($rows) {
+                    if (!$totalCount) {
+                        $resultArr = $rows;
+                    } else {
+                        foreach ($rows as $row) {
+                            return $row['AggregateValue'];
+                        }
+                    }
+                }
+                return $resultArr;
+            case IEntity::BELONGS_TO_PARENT:
+                $foreignEntityType = $entity->get($keySet['typeKey']);
+                $foreignEntityId = $entity->get($key);
+                if (!$foreignEntityType || !$foreignEntityId) {
+                    return null;
+                }
+                $params['whereClause'][$foreignKey] = $foreignEntityId;
+                $params['offset'] = 0;
+                $params['limit'] = 1;
+
+                $relEntity = $this->entityFactory->create($foreignEntityType);
+
+                $rows = $this->select($relEntity, $params);
+
+                if ($rows) {
+                    foreach ($rows as $row) {
+                        if (!$totalCount) {
+                            $relEntity->set($row);
+                            return $relEntity;
+                        } else {
+                            return $row['AggregateValue'];
+                        }
+                    }
+                }
+                return null;
+        }
+
+        return null;
     }
 
     public function countRelated(IEntity $entity, $relName, $params)
@@ -893,7 +1041,7 @@ class Mapper implements IMapper
         return null;
     }
 
-    protected function toDb(string $field): string
+    public function toDb(string $field): string
     {
         if (array_key_exists($field, $this->fieldsMapCache)) {
             return $this->fieldsMapCache[$field];
@@ -959,7 +1107,7 @@ class Mapper implements IMapper
         return $fieldPath;
     }
 
-    protected function getRelationAlias(IEntity $entity, $relationName): ?string
+    public function getRelationAlias(IEntity $entity, $relationName): ?string
     {
         if (!isset($this->relationAliases[$entity->getEntityType()])) {
             $this->relationAliases[$entity->getEntityType()] = [];
@@ -982,7 +1130,11 @@ class Mapper implements IMapper
             }
         }
 
-        return $this->relationAliases[$entity->getEntityType()][$relationName] ?? null;
+        if (!isset($this->relationAliases[$entity->getEntityType()][$relationName])) {
+            $this->relationAliases[$entity->getEntityType()][$relationName] = $this->toDb(self::sanitize($relationName)) . '_aa';
+        }
+
+        return $this->relationAliases[$entity->getEntityType()][$relationName];
     }
 
     protected function getRelationKeySet(IEntity $entity, string $relationName): array
