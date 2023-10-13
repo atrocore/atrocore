@@ -43,6 +43,7 @@ class JoinManyToMany
 
         $relTable = $mapper->toDb($relOpt['relationName']);
         $relAlias = $mapper->getRelationAlias($entity, $relOpt['relationName']);
+//        $distantTable = $mapper->toDb($relOpt['entity']);
 
         $condition = Mapper::TABLE_ALIAS . ".{$mapper->toDb($foreignKey)} = {$relAlias}.{$mapper->toDb($distantKey)}";
 
