@@ -26,6 +26,7 @@ use PDO;
 class Mapper implements IMapper
 {
     public const TABLE_ALIAS = 't1';
+    public const QUERY_PARAMETERS = 'queryParameters';
 
     protected Connection $connection;
     protected EntityFactory $entityFactory;
@@ -126,7 +127,7 @@ class Mapper implements IMapper
 
         $qb->andWhere($this->getWhere($entity, $whereClause, 'AND', $params));
 
-        foreach ($params['queryParameters'] ?? [] as $parameterName => $value) {
+        foreach ($params[self::QUERY_PARAMETERS] ?? [] as $parameterName => $value) {
             $qb->setParameter($parameterName, $value, self::getParameterType($value));
         }
 
@@ -655,7 +656,7 @@ class Mapper implements IMapper
 //                                    $whereParts[] = $leftPart . " " . $operator . " " . $this->convertComplexExpression($entity, $value);
                                 } else {
                                     $whereParts[] = "$leftPart $operator :{$field}_w1";
-                                    $params['queryParameters']["{$field}_w1"] = $value;
+                                    $params[self::QUERY_PARAMETERS]["{$field}_w1"] = $value;
                                 }
                             } else {
                                 if ($operator == '=') {
@@ -667,25 +668,18 @@ class Mapper implements IMapper
                                 }
                             }
                         } else {
-                            echo '<pre>';
-                            print_r('333');
-                            die();
-//
-//                            $valArr = $value;
-//                            foreach ($valArr as $k => $v) {
-//                                $valArr[$k] = $this->pdo->quote($valArr[$k]);
-//                            }
-//                            $oppose = '';
-//                            $emptyValue = '0';
-//                            if ($operator == '<>') {
-//                                $oppose = 'NOT ';
-//                                $emptyValue = '1';
-//                            }
-//                            if (!empty($valArr)) {
-//                                $whereParts[] = $leftPart . " {$oppose}IN " . "(" . implode(',', $valArr) . ")";
-//                            } else {
-//                                $whereParts[] = "" . $emptyValue;
-//                            }
+                            $oppose = '';
+                            $emptyValue = '0';
+                            if ($operator == '<>') {
+                                $oppose = 'NOT ';
+                                $emptyValue = '1';
+                            }
+                            if (!empty($value)) {
+                                $whereParts[] = $leftPart . " {$oppose}IN " . "(:{$field}_w2)";
+                                $params[self::QUERY_PARAMETERS]["{$field}_w2"] = $value;
+                            } else {
+                                $whereParts[] = $emptyValue;
+                            }
                         }
                     }
                 }
