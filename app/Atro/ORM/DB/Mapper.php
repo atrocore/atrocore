@@ -244,9 +244,7 @@ class Mapper implements IMapper
             $sql = $qb->getSQL();
             $res = $qb->fetchAllAssociative();
         } catch (\Throwable $e) {
-            echo $e->getMessage() . PHP_EOL;
-            echo $sql . PHP_EOL;
-            die();
+            $GLOBALS['log']->error("RDB Mapper failed: {$e->getMessage()}" . PHP_EOL . "SQL: $sql");
         }
 
         return $res;
@@ -996,9 +994,49 @@ class Mapper implements IMapper
 
     public function update(IEntity $entity)
     {
-        echo '<pre>';
-        print_r('update');
-        die();
+        $setArr = [];
+        foreach ($this->toValueMap($entity) as $attribute => $value) {
+            if ($attribute == 'id') {
+                continue;
+            }
+            $type = $entity->getAttributeType($attribute);
+
+            if ($type == IEntity::FOREIGN) {
+                continue;
+            }
+
+            if (!$entity->isAttributeChanged($attribute) && $type !== IEntity::JSON_OBJECT) {
+                continue;
+            }
+
+            $setArr[$attribute] = $value;
+        }
+
+        if (count($setArr) == 0) {
+            return $entity->id;
+        }
+
+        $qb = $this->connection->createQueryBuilder();
+
+        $qb->update($this->connection->quoteIdentifier($this->toDb($entity->getEntityType())));
+        foreach ($setArr as $field => $value) {
+            $qb->set($this->toDb($field), ":$field");
+            $qb->setParameter($field, $value, self::getParameterType($value));
+        }
+
+        $qb->where('id = :id');
+        $qb->setParameter('id', self::getParameterType($entity->id));
+        $qb->andWhere('deleted = :deleted');
+        $qb->setParameter('deleted', self::getParameterType(false));
+
+        try {
+            $sql = $qb->getSQL();
+            $qb->executeQuery();
+        } catch (\Throwable $e) {
+            $GLOBALS['log']->error("RDB Mapper failed: {$e->getMessage()}" . PHP_EOL . "SQL: $sql");
+        }
+
+        return $entity->id;
     }
 
     public function delete(IEntity $entity)
@@ -1220,5 +1258,29 @@ class Mapper implements IMapper
         }
 
         return [];
+    }
+
+    public function toValueMap(IEntity $entity, bool $onlyStorable = true): array
+    {
+        $data = [];
+        foreach ($entity->getAttributes() as $attribute => $defs) {
+            if ($entity->has($attribute)) {
+                if ($onlyStorable) {
+                    if (
+                        !empty($defs['notStorable'])
+                        || !empty($defs['autoincrement'])
+                        || isset($defs['source']) && $defs['source'] != 'db'
+                    ) {
+                        continue;
+                    }
+                    if ($defs['type'] == IEntity::FOREIGN) {
+                        continue;
+                    }
+                }
+                $data[$attribute] = $entity->get($attribute);
+            }
+        }
+
+        return $data;
     }
 }
