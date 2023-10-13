@@ -315,7 +315,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
             this.listenTo(this.collection, 'update', () => {
                 const total = this.collection.total || this.collection.length
-                $buttonHtml.find('span').text(`${this.translate('Total', 'labels', 'Global')}: ${total}`)
+                $buttonHtml.find('span').text(`${this.translate('Shown', 'labels', 'Global')}: ${this.collection.length} | ${this.translate('Total', 'labels', 'Global')}: ${total}`)
                 $buttonHtml.show()
             })
         },
