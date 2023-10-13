@@ -84,9 +84,21 @@ class Mapper implements IMapper
 
     public function selectById(IEntity $entity, $id, $params = []): IEntity
     {
-        echo '<pre>';
-        print_r('selectById');
-        die();
+        if (!array_key_exists('whereClause', $params)) {
+            $params['whereClause'] = [];
+        }
+
+        $params['whereClause']['id'] = $id;
+
+        $res = $this->select($entity, $params);
+
+        foreach ($res as $row) {
+            $entity->set($row);
+            $entity->setAsFetched();
+            break;
+        }
+
+        return $entity;
     }
 
     public function select(IEntity $entity, $params): array
