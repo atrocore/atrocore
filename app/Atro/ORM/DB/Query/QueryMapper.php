@@ -524,7 +524,7 @@ class QueryMapper
 
         if ($alias) {
             return $this->joinSQL('', $this->toDb($r['entity']), $alias) . ' ' .
-                $this->toDb($entity->getEntityType()) . "." . $this->toDb($key) . " = " . $alias . "." . $this->toDb($foreignKey);
+                self::TABLE_ALIAS . "." . $this->toDb($key) . " = " . $alias . "." . $this->toDb($foreignKey);
         }
     }
 
@@ -728,7 +728,7 @@ class QueryMapper
                         } else {
                             $occurrenceHash[$name] = 0;
                         }
-                        $suffix = '';
+                        $suffix = '_a';
                         if ($occurrenceHash[$name] > 0) {
                             $suffix .= '_' . $occurrenceHash[$name];
                         }
@@ -1203,7 +1203,7 @@ class QueryMapper
 
     protected function joinSQL(string $prefix, string $table, string $alias): string
     {
-        return $prefix . "JOIN \"{$table}\" {$alias} ON";
+        return $prefix . "JOIN {$this->connection->quoteIdentifier($table)} {$alias} ON";
     }
 
     protected function getJoin(IEntity $entity, $name, $left = false, $conditions = array(), $alias = null)
