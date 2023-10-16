@@ -13,11 +13,14 @@ declare(strict_types=1);
 
 namespace Atro\ORM\DB\Query;
 
+use Doctrine\DBAL\Connection;
 use Espo\ORM\IEntity;
 use Espo\ORM\EntityFactory;
 
 class QueryMapper
 {
+    public const TABLE_ALIAS = 't1';
+
     protected static array $selectParamList
         = [
             'select',
@@ -103,16 +106,17 @@ class QueryMapper
         ];
 
     protected EntityFactory $entityFactory;
+    protected Connection $connection;
 
     protected array $fieldsMapCache = [];
-
     protected array $aliasesCache = [];
-
     protected array $seedCache = [];
+    protected array $parameters = [];
 
-    public function __construct(EntityFactory $entityFactory)
+    public function __construct(EntityFactory $entityFactory, Connection $connection)
     {
         $this->entityFactory = $entityFactory;
+        $this->connection = $connection;
     }
 
     public function createSelectQuery(string $entityType, array $params = [], bool $deleted = false): array
@@ -158,7 +162,12 @@ class QueryMapper
                 foreach ($params['additionalColumns'] as $column => $field) {
                     $relTableName = $this->toDb($this->sanitize($params['relationName']));
                     $relColumnName = $this->toDb($this->sanitize($column));
-                    $selectPart .= ", " . $this->selectFieldSQL($relColumnName, $field, $relTableName);
+
+                    echo '<pre>';
+                    print_r('55');
+                    die();
+
+                    $selectPart[] = $this->selectFieldSQL($relColumnName, $field, $relTableName);
                     if ($params['orderBy'] === $field) {
                         $orderPart = "ORDER BY `$relTableName`.$relColumnName " . $this->prepareOrderParameter($params['order']);
                     }
@@ -167,7 +176,10 @@ class QueryMapper
 
             if (!empty($params['additionalSelectColumns']) && is_array($params['additionalSelectColumns'])) {
                 foreach ($params['additionalSelectColumns'] as $column => $field) {
-                    $selectPart .= ", " . $this->selectFieldSQL($column, $field);
+                    echo '<pre>';
+                    print_r('444');
+                    die();
+                    $selectPart[] = $this->selectFieldSQL($column, $field);
                 }
             }
 
@@ -234,7 +246,10 @@ class QueryMapper
         }
 
         $result = [
-            'table'       => $this->toDb($entity->getEntityType()),
+            'table'       => [
+                'tableName'  => $this->toDb($entity->getEntityType()),
+                'tableAlias' => self::TABLE_ALIAS
+            ],
             'select'      => $selectPart,
             'joins'       => $joinsPart,
             'where'       => $wherePart,
@@ -245,6 +260,7 @@ class QueryMapper
             'aggregation' => false,
             'groupBy'     => $groupByPart,
             'having'      => $havingPart,
+            'parameters'  => $this->parameters,
         ];
 
         if (empty($params['aggregation'])) {
@@ -360,6 +376,10 @@ class QueryMapper
 
     protected function convertComplexExpression($entity, $field, $distinct = false)
     {
+        echo '<pre>';
+        print_r('convertComplexExpression');
+        die();
+
         $function = null;
         $relName = null;
 
@@ -458,7 +478,7 @@ class QueryMapper
                     }
                 }
 
-                $arr[] = $this->selectFieldSQL($part, $this->sanitizeAlias($attribute[1]));
+                $arr[] = "{$part} AS {$this->sanitizeAlias($attribute[1])}";
                 continue;
             }
 
@@ -466,7 +486,7 @@ class QueryMapper
                 $fieldDefs = $entity->fields[$attribute];
             } else {
                 $part = $this->convertComplexExpression($entity, $attribute, $distinct);
-                $arr[] = $this->selectFieldSQL($part, $attribute);
+                $arr[] = "{$part} AS {$attribute}";
                 continue;
             }
 
@@ -481,19 +501,11 @@ class QueryMapper
                 }
                 $fieldPath = $this->getFieldPath($entity, $attribute);
             }
-            $arr[] = $this->selectFieldSQL($fieldPath, $attribute);
+
+            $arr[] = "{$fieldPath} AS {$attribute}";
         }
 
-        $select = implode(', ', $arr);
-
-        return $select;
-    }
-
-    public function selectFieldSQL(string $field, string $alias, string $tableName = null): string
-    {
-        $prefix = $tableName !== null ? "$tableName." : '';
-
-        return "{$prefix}{$field} AS {$alias}";
+        return $arr;
     }
 
     protected function getBelongsToJoin(IEntity $entity, $relationName, $r = null, $alias = null)
@@ -729,6 +741,10 @@ class QueryMapper
         if (isset($this->aliasesCache[$entity->getEntityType()][$relationName])) {
             return $this->aliasesCache[$entity->getEntityType()][$relationName];
         } else {
+            echo '<pre>';
+            print_r('1qeqweqwe23');
+            die();
+
             return false;
         }
     }
@@ -770,7 +786,7 @@ class QueryMapper
                     }
                     break;
                 default:
-                    $fieldPath = $this->toDb($entity->getEntityType()) . '.' . $this->toDb($this->sanitize($field));
+                    $fieldPath = self::TABLE_ALIAS . '.' . $this->toDb($this->sanitize($field));
             }
 
             return $fieldPath;
