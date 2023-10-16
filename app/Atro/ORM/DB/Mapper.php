@@ -317,8 +317,7 @@ class Mapper implements IMapper
 
     public function countRelated(IEntity $entity, $relName, $params)
     {
-        echo 'TODO: countRelated' . PHP_EOL;
-        die();
+        return $this->selectRelated($entity, $relName, $params, true);
     }
 
     public function addRelation(IEntity $entity, $relName, $id)
