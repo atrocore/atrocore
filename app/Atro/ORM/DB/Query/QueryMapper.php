@@ -156,18 +156,13 @@ class QueryMapper
 
         if (empty($params['aggregation'])) {
             $selectPart = $this->getSelect($entity, $params['select'], $params['distinct'], $params['skipTextColumns'], $params['maxTextColumnsLength']);
-            $orderPart = $this->getOrder($entity, $params['orderBy'], $params['order']);
+            $orderPart = $this->getOrderPart($entity, $params['orderBy'], $params['order']);
 
             if (!empty($params['additionalColumns']) && is_array($params['additionalColumns']) && !empty($params['relationName'])) {
                 foreach ($params['additionalColumns'] as $column => $field) {
                     $relTableName = $this->toDb($this->sanitize($params['relationName']));
                     $relColumnName = $this->toDb($this->sanitize($column));
-
-                    echo '<pre>';
-                    print_r('55');
-                    die();
-
-                    $selectPart[] = $this->selectFieldSQL($relColumnName, $field, $relTableName);
+                    $selectPart[] = "{$this->getRelationAlias($entity, $params['relationName'])}.{$field} AS {$relColumnName}";
                     if ($params['orderBy'] === $field) {
                         $orderPart = "ORDER BY `$relTableName`.$relColumnName " . $this->prepareOrderParameter($params['order']);
                     }
@@ -176,10 +171,7 @@ class QueryMapper
 
             if (!empty($params['additionalSelectColumns']) && is_array($params['additionalSelectColumns'])) {
                 foreach ($params['additionalSelectColumns'] as $column => $field) {
-                    echo '<pre>';
-                    print_r('444');
-                    die();
-                    $selectPart[] = $this->selectFieldSQL($column, $field);
+                    $selectPart[] = "$column AS $field";
                 }
             }
 
@@ -188,7 +180,7 @@ class QueryMapper
             if ($params['distinct'] && $params['aggregation'] == 'COUNT') {
                 $aggDist = true;
             }
-            $selectPart = $this->getAggregationSelect($entity, $params['aggregation'], $params['aggregationBy'], $aggDist);
+            $selectPart = [$this->getAggregationSelect($entity, $params['aggregation'], $params['aggregationBy'], $aggDist)];
         }
 
         $joinsPart = $this->getBelongsToJoins($entity, $params['select'], array_merge($params['joins'], $params['leftJoins']));
@@ -211,44 +203,39 @@ class QueryMapper
             // TODO array unique
             $joinsRelated = $this->getJoins($entity, $params['joins'], false, $params['joinConditions']);
 
-            echo '<pre>';
             print_r('joins');
             die();
-
-            if (!empty($joinsRelated)) {
-                if (!empty($joinsPart)) {
-                    $joinsPart .= ' ';
-                }
-                $joinsPart .= $joinsRelated;
-            }
+//            if (!empty($joinsRelated)) {
+//                if (!empty($joinsPart)) {
+//                    $joinsPart .= ' ';
+//                }
+//                $joinsPart .= $joinsRelated;
+//            }
         }
 
         if (!empty($params['leftJoins']) && is_array($params['leftJoins'])) {
             // TODO array unique
             $joinsRelated = $this->getJoins($entity, $params['leftJoins'], true, $params['joinConditions']);
 
-            echo '<pre>';
             print_r('leftJoins');
             die();
 
-            if (!empty($joinsRelated)) {
-                if (!empty($joinsPart)) {
-                    $joinsPart .= ' ';
-                }
-                $joinsPart .= $joinsRelated;
-            }
+//            if (!empty($joinsRelated)) {
+//                if (!empty($joinsPart)) {
+//                    $joinsPart .= ' ';
+//                }
+//                $joinsPart .= $joinsRelated;
+//            }
         }
 
         if (!empty($params['customJoin'])) {
-
-            echo '<pre>';
             print_r('customJoin');
             die();
 
-            if (!empty($joinsPart)) {
-                $joinsPart .= ' ';
-            }
-            $joinsPart .= $params['customJoin'];
+//            if (!empty($joinsPart)) {
+//                $joinsPart .= ' ';
+//            }
+//            $joinsPart .= $params['customJoin'];
         }
 
         $groupByPart = null;
@@ -596,11 +583,9 @@ class QueryMapper
 
     protected function getOrderPart(IEntity $entity, $orderBy = null, $order = null)
     {
-
         if (!is_null($orderBy)) {
             if (is_array($orderBy)) {
-                $arr = array();
-
+                $arr = [];
                 foreach ($orderBy as $item) {
                     if (is_array($item)) {
                         $orderByInternal = $item[0];
@@ -611,7 +596,7 @@ class QueryMapper
                         $arr[] = $this->getOrderPart($entity, $orderByInternal, $orderInternal);
                     }
                 }
-                return implode(", ", $arr);
+                return $arr;
             }
 
             if (strpos($orderBy, 'LIST:') === 0) {
@@ -667,15 +652,6 @@ class QueryMapper
         return $order;
     }
 
-    protected function getOrder(IEntity $entity, $orderBy = null, $order = null)
-    {
-        $orderPart = $this->getOrderPart($entity, $orderBy, $order);
-        if ($orderPart) {
-            return "ORDER BY " . $orderPart;
-        }
-
-    }
-
     protected function getFieldPathForOrderBy($entity, $orderBy)
     {
         if (strpos($orderBy, '.') !== false) {
@@ -700,7 +676,8 @@ class QueryMapper
             $distinctPart = 'DISTINCT ';
         }
 
-        $selectPart = "{$aggregation}({$distinctPart}" . $this->toDb($entity->getEntityType()) . "." . $this->toDb($this->sanitize($aggregationBy)) . ") AS AggregateValue";
+        $selectPart = "{$aggregation}({$distinctPart}" . self::TABLE_ALIAS . "." . $this->toDb($this->sanitize($aggregationBy)) . ") AS AggregateValue";
+
         return $selectPart;
     }
 
@@ -759,15 +736,11 @@ class QueryMapper
             }
         }
 
-        if (isset($this->aliasesCache[$entity->getEntityType()][$relationName])) {
-            return $this->aliasesCache[$entity->getEntityType()][$relationName];
-        } else {
-            echo '<pre>';
-            print_r('1qeqweqwe23');
-            die();
-
-            return false;
+        if (!isset($this->relationAliases[$entity->getEntityType()][$relationName])) {
+            $this->relationAliases[$entity->getEntityType()][$relationName] = $this->toDb(self::sanitize($relationName)) . '_aa';
         }
+
+        return $this->relationAliases[$entity->getEntityType()][$relationName];
     }
 
     protected function getFieldPath(IEntity $entity, $field)
