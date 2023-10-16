@@ -200,36 +200,21 @@ class QueryMapper
         }
 
         if (!empty($params['joins']) && is_array($params['joins'])) {
-            // TODO array unique
             $joinsRelated = $this->getJoins($entity, $params['joins'], false, $params['joinConditions']);
-
-            print_r('joins');
-            die();
-//            if (!empty($joinsRelated)) {
-//                if (!empty($joinsPart)) {
-//                    $joinsPart .= ' ';
-//                }
-//                $joinsPart .= $joinsRelated;
-//            }
+            if (!empty($joinsRelated)) {
+                $joinsPart = array_merge($joinsPart, $joinsRelated);
+            }
         }
 
         if (!empty($params['leftJoins']) && is_array($params['leftJoins'])) {
-            // TODO array unique
             $joinsRelated = $this->getJoins($entity, $params['leftJoins'], true, $params['joinConditions']);
-
-            print_r('leftJoins');
-            die();
-
-//            if (!empty($joinsRelated)) {
-//                if (!empty($joinsPart)) {
-//                    $joinsPart .= ' ';
-//                }
-//                $joinsPart .= $joinsRelated;
-//            }
+            if (!empty($joinsRelated)) {
+                $joinsPart = array_merge($joinsPart, $joinsRelated);
+            }
         }
 
         if (!empty($params['customJoin'])) {
-            print_r('customJoin');
+            print_r('customJoin 333');
             die();
 
 //            if (!empty($joinsPart)) {
@@ -378,10 +363,6 @@ class QueryMapper
 
     protected function convertComplexExpression($entity, $field, $distinct = false)
     {
-        echo '<pre>';
-        print_r('convertComplexExpression');
-        die();
-
         $function = null;
         $relName = null;
 
@@ -863,7 +844,6 @@ class QueryMapper
                     $isComplex = true;
                 }
 
-
                 if (empty($isComplex)) {
 
                     if (!isset($entity->fields[$field])) {
@@ -1031,8 +1011,10 @@ class QueryMapper
                                 $emptyValue = '1';
                             }
                             if (!empty($value)) {
-                                $whereParts[] = $leftPart . " {$oppose}IN " . "(:{$field}_w2)";
-                                $this->parameters["{$field}_w2"] = $value;
+                                $parts = explode('.', $field);
+                                $param = $parts[1] ?? $parts[0];
+                                $whereParts[] = $leftPart . " {$oppose}IN " . "(:{$param}_w2)";
+                                $this->parameters["{$param}_w2"] = $value;
                             } else {
                                 $whereParts[] = $emptyValue;
                             }
@@ -1113,15 +1095,20 @@ class QueryMapper
             foreach ($itemConditions as $left => $right) {
                 $conditions[$left] = $right;
             }
-            if ($sql = $this->getJoin($entity, $relationName, $left, $conditions, $alias)) {
-                $joinSqlList[] = $sql;
+            if ($join = $this->getJoin($entity, $relationName, $left, $conditions, $alias)) {
+                $joinSqlList[] = $join;
             }
         }
-        return implode(' ', $joinSqlList);
+
+        return $joinSqlList;
     }
 
     protected function buildJoinConditionStatement($entity, $alias = null, $left, $right)
     {
+        echo '<pre>';
+        print_r('buildJoinConditionStatement pereprer');
+        die();
+
         $sql = '';
 
         $operator = '=';
@@ -1211,6 +1198,10 @@ class QueryMapper
             }
             $table = $this->toDb($this->sanitize($name));
 
+            echo '<pre>';
+            print_r('joinSQL sdsd sd sd ');
+            die();
+
             $sql = $this->joinSQL($prefix, $table, $alias);
 
             if (empty($conditions)) {
@@ -1240,10 +1231,6 @@ class QueryMapper
         $alias = $this->sanitize($alias);
 
         $type = $relOpt['type'];
-
-        echo '<pre>';
-        print_r('123232323');
-        die();
 
         switch ($type) {
             case IEntity::MANY_MANY:
@@ -1279,6 +1266,10 @@ class QueryMapper
                     . " AND "
                     . "{$alias}.deleted = " . 0 . "";
 
+                echo '<pre>';
+                print_r('1111');
+                die();
+
                 return $sql;
 
             case IEntity::HAS_MANY:
@@ -1286,20 +1277,26 @@ class QueryMapper
                 $foreignKey = $keySet['foreignKey'];
                 $distantTable = $this->toDb($relOpt['entity']);
 
-                $sql = "{$prefix}JOIN `{$distantTable}` AS `{$alias}` ON {$this->toDb($entity->getEntityType())}." . $this->toDb('id') . " = {$alias}." . $this->toDb($foreignKey)
-                    . " AND "
-                    . "{$alias}.deleted = " . 0 . "";
+                $condition = self::TABLE_ALIAS . "." . $this->toDb('id') . " = {$alias}." . $this->toDb($foreignKey) . " AND {$alias}.deleted = :deleted_j1";
+                $this->parameters['deleted_j1'] = false;
 
+                $sql = "{$prefix}JOIN `{$distantTable}` AS `{$alias}` ON $condition";
 
                 $joinSqlList = [];
                 foreach ($conditions as $left => $right) {
                     $joinSqlList[] = $this->buildJoinConditionStatement($entity, $alias, $left, $right);
                 }
                 if (count($joinSqlList)) {
-                    $sql .= " AND " . implode(" AND ", $joinSqlList);
+                    $condition .= " AND " . implode(" AND ", $joinSqlList);
                 }
 
-                return $sql;
+                return [
+                    'type'      => $left ? 'left' : 'inner',
+                    'fromAlias' => self::TABLE_ALIAS,
+                    'table'     => $this->connection->quoteIdentifier($distantTable),
+                    'alias'     => $alias,
+                    'condition' => $condition
+                ];
 
             case IEntity::HAS_CHILDREN:
                 $foreignKey = $keySet['foreignKey'];
@@ -1321,11 +1318,19 @@ class QueryMapper
                 if (count($joinSqlList)) {
                     $sql .= " AND " . implode(" AND ", $joinSqlList);
                 }
+                echo '<pre>';
+                print_r('33333');
+                die();
 
                 return $sql;
 
             case IEntity::BELONGS_TO:
                 $sql = $prefix . $this->getBelongsToJoin($entity, $relationName, null, $alias);
+
+                echo '<pre>';
+                print_r('44444');
+                die();
+
                 return $sql;
         }
 
