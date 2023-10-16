@@ -214,9 +214,9 @@ class QueryMapper
         }
 
         if (!empty($params['customJoin'])) {
-            print_r('customJoin 333');
+            echo 'TODO: customJoin' . PHP_EOL;
+            print_r($params);
             die();
-
 //            if (!empty($joinsPart)) {
 //                $joinsPart .= ' ';
 //            }
@@ -258,7 +258,7 @@ class QueryMapper
         } else {
             $result['aggregation'] = $params['aggregation'];
             if ($params['aggregation'] === 'COUNT' && $groupByPart && $havingPart) {
-                print_r('Stop here! Do something...');
+                echo 'TODO: AggregateValue' . PHP_EOL;
                 die();
 //                $sql = "SELECT COUNT(*) AS `AggregateValue` FROM ({$sql}) AS `countAlias`";
             }
@@ -694,7 +694,7 @@ class QueryMapper
         return "_" . strtolower($matches[1]);
     }
 
-    protected function getRelationAlias(IEntity $entity, $relationName)
+    public function getRelationAlias(IEntity $entity, $relationName)
     {
         if (!isset($this->aliasesCache[$entity->getEntityType()])) {
             $this->aliasesCache[$entity->getEntityType()] = [];
@@ -982,7 +982,7 @@ class QueryMapper
                             $withDeleted = true;
                         }
 
-                        print_r('createSelectQuery subwhere');
+                        echo 'TODO: createSelectQuery' . PHP_EOL;
                         die();
 //                        $whereParts[] = $leftPart . " " . $operator . " (" . $this->createSelectQuery($subQueryEntityType, $subQuerySelectParams, $withDeleted) . ")";
                     } else {
@@ -1105,10 +1105,6 @@ class QueryMapper
 
     protected function buildJoinConditionStatement($entity, $alias = null, $left, $right)
     {
-        echo '<pre>';
-        print_r('buildJoinConditionStatement pereprer');
-        die();
-
         $sql = '';
 
         $operator = '=';
@@ -1133,8 +1129,10 @@ class QueryMapper
             list($alias, $attribute) = explode('.', $left);
             $alias = $this->sanitize($alias);
             $column = $this->toDb($this->sanitize($attribute));
+            $parameterName = "{$attribute}_j44";
         } else {
             $column = $this->toDb($this->sanitize($left));
+            $parameterName = "{$left}_j44";
         }
         $sql .= "{$alias}.{$column}";
 
@@ -1148,7 +1146,8 @@ class QueryMapper
                 $operator = 'NOT IN';
             }
             if (count($arr)) {
-                $sql .= " " . $operator . " (" . implode(', ', $arr) . ")";
+                $sql .= " " . $operator . " (:{$parameterName})";
+                $this->parameters[$parameterName] = $arr;
             } else {
                 if ($operator === 'IN') {
                     $sql .= " IS NULL";
@@ -1177,7 +1176,8 @@ class QueryMapper
                 return $sql;
             }
 
-            $sql .= " " . $operator . " " . $value;
+            $sql .= " " . $operator . " :" . $parameterName;
+            $this->parameters[$parameterName] = $value;
 
             return $sql;
         }
@@ -1198,8 +1198,7 @@ class QueryMapper
             }
             $table = $this->toDb($this->sanitize($name));
 
-            echo '<pre>';
-            print_r('joinSQL sdsd sd sd ');
+            echo 'TODO: getJoin 1';
             die();
 
             $sql = $this->joinSQL($prefix, $table, $alias);
@@ -1246,6 +1245,9 @@ class QueryMapper
 
                 $midAlias = $alias . 'Middle';
 
+                echo 'TODO: getJoin 2';
+                die();
+
                 $sql = "{$prefix}JOIN `{$relTable}` AS `{$midAlias}` ON {$this->toDb($entity->getEntityType())}." . $this->toDb($key) . " = {$midAlias}." . $this->toDb($nearKey)
                     . " AND "
                     . "{$midAlias}.deleted = " . 0;
@@ -1266,10 +1268,6 @@ class QueryMapper
                     . " AND "
                     . "{$alias}.deleted = " . 0 . "";
 
-                echo '<pre>';
-                print_r('1111');
-                die();
-
                 return $sql;
 
             case IEntity::HAS_MANY:
@@ -1279,8 +1277,6 @@ class QueryMapper
 
                 $condition = self::TABLE_ALIAS . "." . $this->toDb('id') . " = {$alias}." . $this->toDb($foreignKey) . " AND {$alias}.deleted = :deleted_j1";
                 $this->parameters['deleted_j1'] = false;
-
-                $sql = "{$prefix}JOIN `{$distantTable}` AS `{$alias}` ON $condition";
 
                 $joinSqlList = [];
                 foreach ($conditions as $left => $right) {
@@ -1303,6 +1299,9 @@ class QueryMapper
                 $foreignType = $keySet['foreignType'];
                 $distantTable = $this->toDb($relOpt['entity']);
 
+                echo 'TODO: getJoin 3';
+                die();
+
                 $sql = $this->joinSQL($prefix, $distantTable, $alias) . " " . $this->toDb($entity->getEntityType()) . "." . $this->toDb('id') . " = {$alias}." . $this->toDb(
                         $foreignKey
                     )
@@ -1318,20 +1317,13 @@ class QueryMapper
                 if (count($joinSqlList)) {
                     $sql .= " AND " . implode(" AND ", $joinSqlList);
                 }
-                echo '<pre>';
-                print_r('33333');
-                die();
 
                 return $sql;
 
             case IEntity::BELONGS_TO:
-                $sql = $prefix . $this->getBelongsToJoin($entity, $relationName, null, $alias);
-
-                echo '<pre>';
-                print_r('44444');
-                die();
-
-                return $sql;
+                $join = $this->getBelongsToJoin($entity, $relationName, null, $alias);
+                $join['type'] = $left ? 'left' : 'inner';
+                return $join;
         }
 
         return false;
