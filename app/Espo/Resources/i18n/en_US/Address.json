@@ -1,0 +1,24 @@
+{
+  "fields": {
+    "buyer": "Buyer",
+    "email": "Email",
+    "phone": "Phone",
+    "street": "Street",
+    "zip": "ZIP",
+    "box": "Box",
+    "city": "City",
+    "country": "Country",
+    "countryCode": "Country Code",
+    "type": "Type",
+    "account": "Account"
+  },
+  "options": {
+    "type": {
+      "billing": "Billing",
+      "delivery": "Delivery"
+    }
+  },
+  "labels": {
+    "Create Address": "Create Address"
+  }
+}

@@ -3,7 +3,14 @@
     "name": "Ім'я",
     "emailAddress": "Адреса ел. пошти",
     "phoneNumber": "Телефон",
-    "description": "Опис"
+    "description": "Опис",
+    "type": "типовий"
+  },
+  "options": {
+    "type": {
+      "individual": "індивідуальний",
+      "company": "Компанія"
+    }
   },
   "links": {
     "portalUsers": "Користувачі порталу"

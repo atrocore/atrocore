@@ -1,0 +1,24 @@
+{
+  "fields": {
+    "name": "Name",
+    "firstName": "Vorname",
+    "secondName": "Zweitname",
+    "title": "Titel",
+    "jobPosition": "Berufliche Stellung",
+    "email": "Email",
+    "phone": "Telefon",
+    "mobile": "Handy, Mobiltelefon",
+    "street": "Straße",
+    "zip": "ZIP",
+    "box": "Box",
+    "city": "City",
+    "country": "Land",
+    "countryCode": "Landesvorwahl"
+  },
+  "links": {
+    "accounts": "Konto"
+  },
+  "labels": {
+    "Create Contact": "Kontakt erstellen"
+  }
+}

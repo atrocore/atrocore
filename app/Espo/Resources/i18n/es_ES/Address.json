@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "email": "Correo electrónico",
+    "phone": "Teléfono",
+    "street": "Calle",
+    "zip": "ZIP",
+    "box": "Box",
+    "city": "Ciudad",
+    "country": "País",
+    "countryCode": "Código de país",
+    "type": "Tipo",
+    "account": "Cuenta"
+  },
+  "options": {
+    "type": {
+      "billing": "Facturación",
+      "delivery": "Entrega"
+    }
+  },
+  "labels": {
+    "Create Address": "Crear dirección"
+  }
+}
