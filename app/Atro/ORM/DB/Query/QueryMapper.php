@@ -210,6 +210,11 @@ class QueryMapper
         if (!empty($params['joins']) && is_array($params['joins'])) {
             // TODO array unique
             $joinsRelated = $this->getJoins($entity, $params['joins'], false, $params['joinConditions']);
+
+            echo '<pre>';
+            print_r('joins');
+            die();
+
             if (!empty($joinsRelated)) {
                 if (!empty($joinsPart)) {
                     $joinsPart .= ' ';
@@ -221,6 +226,11 @@ class QueryMapper
         if (!empty($params['leftJoins']) && is_array($params['leftJoins'])) {
             // TODO array unique
             $joinsRelated = $this->getJoins($entity, $params['leftJoins'], true, $params['joinConditions']);
+
+            echo '<pre>';
+            print_r('leftJoins');
+            die();
+
             if (!empty($joinsRelated)) {
                 if (!empty($joinsPart)) {
                     $joinsPart .= ' ';
@@ -230,10 +240,15 @@ class QueryMapper
         }
 
         if (!empty($params['customJoin'])) {
+
+            echo '<pre>';
+            print_r('customJoin');
+            die();
+
             if (!empty($joinsPart)) {
                 $joinsPart .= ' ';
             }
-            $joinsPart .= '' . $params['customJoin'] . '';
+            $joinsPart .= $params['customJoin'];
         }
 
         $groupByPart = null;
@@ -508,7 +523,7 @@ class QueryMapper
         return $arr;
     }
 
-    protected function getBelongsToJoin(IEntity $entity, $relationName, $r = null, $alias = null)
+    protected function getBelongsToJoin(IEntity $entity, $relationName, $r = null, $alias = null): ?array
     {
         if (empty($r)) {
             $r = $entity->relations[$relationName];
@@ -523,9 +538,15 @@ class QueryMapper
         }
 
         if ($alias) {
-            return $this->joinSQL('', $this->toDb($r['entity']), $alias) . ' ' .
-                self::TABLE_ALIAS . "." . $this->toDb($key) . " = " . $alias . "." . $this->toDb($foreignKey);
+            return [
+                'fromAlias' => self::TABLE_ALIAS,
+                'table'     => $this->connection->quoteIdentifier($this->toDb($r['entity'])),
+                'alias'     => $alias,
+                'condition' => self::TABLE_ALIAS . "." . $this->toDb($key) . " = " . $alias . "." . $this->toDb($foreignKey)
+            ];
         }
+
+        return null;
     }
 
     protected function getBelongsToJoins(IEntity $entity, $select = null, $skipList = array())
@@ -565,12 +586,12 @@ class QueryMapper
 
                 $join = $this->getBelongsToJoin($entity, $relationName, $r);
                 if ($join) {
-                    $joinsArr[] = 'LEFT ' . $join;
+                    $joinsArr[] = array_merge($join, ['type' => 'left']);
                 }
             }
         }
 
-        return implode(' ', $joinsArr);
+        return $joinsArr;
     }
 
     protected function getOrderPart(IEntity $entity, $orderBy = null, $order = null)
@@ -984,7 +1005,7 @@ class QueryMapper
                                 }
                             }
                         } else {
-                            $leftPart = $this->toDb($entity->getEntityType()) . '.' . $this->toDb($this->sanitize($field));
+                            $leftPart = self::TABLE_ALIAS . '.' . $this->toDb($this->sanitize($field));
                         }
                     }
                 }
@@ -1246,6 +1267,10 @@ class QueryMapper
         $alias = $this->sanitize($alias);
 
         $type = $relOpt['type'];
+
+        echo '<pre>';
+        print_r('123232323');
+        die();
 
         switch ($type) {
             case IEntity::MANY_MANY:
