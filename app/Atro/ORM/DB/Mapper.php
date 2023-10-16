@@ -205,7 +205,7 @@ class Mapper implements IMapper
 
         $relType = $relOpt['type'];
 
-        $keySet = $this->queryMapper->getKeys($entity, $relName);
+        $keySet = $this->getKeys($entity, $relName);
 
         $key = $keySet['key'];
         $foreignKey = $keySet['foreignKey'];
@@ -320,16 +320,148 @@ class Mapper implements IMapper
         return $this->selectRelated($entity, $relName, $params, true);
     }
 
-    public function addRelation(IEntity $entity, $relName, $id)
+    public function addRelation(IEntity $entity, $relName, $id = null, $relEntity = null, $data = null)
     {
-        echo 'TODO: addRelation' . PHP_EOL;
-        die();
+        if (!is_null($relEntity)) {
+            $id = $relEntity->id;
+        }
+
+        if (empty($id) || empty($relName)) {
+            return false;
+        }
+
+        $relOpt = $entity->relations[$relName];
+
+        if (!isset($relOpt['entity']) || !isset($relOpt['type'])) {
+            return false;
+        }
+
+        $relType = $relOpt['type'];
+
+        $className = (!empty($relOpt['class'])) ? $relOpt['class'] : $relOpt['entity'];
+
+        if (is_null($relEntity)) {
+            $relEntity = $this->entityFactory->create($className);
+            if (!$relEntity) {
+                return null;
+            }
+            $relEntity->id = $id;
+        }
+
+        $keySet = $this->getKeys($entity, $relName);
+
+        if ($relType !== IEntity::MANY_MANY) {
+            return false;
+        }
+
+        $nearKey = $keySet['nearKey'];
+        $distantKey = $keySet['distantKey'];
+
+        if ($this->count($relEntity, ['whereClause' => ['id' => $id]]) > 0) {
+            $relTable = $this->toDb($relOpt['relationName']);
+
+            $wherePart
+                = $this->toDb($nearKey) . " = " . $entity->id . " " .
+                "AND " . $this->toDb($distantKey) . " = " . $relEntity->id;
+            if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
+                foreach ($relOpt['conditions'] as $f => $v) {
+                    $wherePart .= " AND " . $this->toDb($f) . " = " . $v;
+                }
+            }
+
+            $qb = $this->connection->createQueryBuilder();
+            $qb
+                ->select('*')
+                ->from($this->connection->quoteIdentifier($relTable))
+                ->where("{$this->toDb($nearKey)} = :$nearKey")
+                ->setParameter($nearKey, $entity->id, self::getParameterType($entity->id))
+                ->andWhere("{$this->toDb($distantKey)} = :$distantKey")
+                ->setParameter($distantKey, $relEntity->id, self::getParameterType($relEntity->id));
+
+            if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
+                foreach ($relOpt['conditions'] as $f => $v) {
+                    $qb->andWhere("{$this->toDb($f)} = :$f");
+                    $qb->setParameter($f, $v, self::getParameterType($v));
+                }
+            }
+
+            $res = $qb->fetchAssociative();
+
+            if (empty($res)) {
+                $qb = $this->connection->createQueryBuilder();
+                $qb->insert($relTable);
+
+                $qb->set($this->toDb($nearKey), ":$nearKey")->setParameter($nearKey, $entity->id);
+                $qb->set($this->toDb($distantKey), ":$distantKey")->setParameter($distantKey, $relEntity->id);
+
+                if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
+                    foreach ($relOpt['conditions'] as $f => $v) {
+                        $qb->set($this->toDb($f), ":$f")->setParameter($f, $v);
+                    }
+                }
+                if (!empty($data) && is_array($data)) {
+                    foreach ($data as $column => $columnValue) {
+                        $qb->set($this->toDb($column), ":$column")->setParameter($column, $columnValue);
+                    }
+                }
+
+                $qb->executeQuery();
+
+                $this->updateModifiedAtForManyToMany($entity, $relEntity);
+
+                return true;
+            } else {
+
+                echo '<pre>';
+                print_r('11');
+                die();
+
+                $setPart = 'deleted = 0';
+
+                if (!empty($data) && is_array($data)) {
+                    $setArr = array();
+                    foreach ($data as $column => $value) {
+                        $setArr[] = $this->toDb($column) . " = " . $this->quote($value);
+                    }
+                    $setPart .= ', ' . implode(', ', $setArr);
+                }
+
+                $wherePart
+                    = $this->toDb($nearKey) . " = " . $this->pdo->quote($entity->id) . "
+                            AND " . $this->toDb($distantKey) . " = " . $this->pdo->quote($relEntity->id) . "
+                            ";
+
+                if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
+                    foreach ($relOpt['conditions'] as $f => $v) {
+                        $wherePart .= " AND " . $this->toDb($f) . " = " . $this->pdo->quote($v);
+                    }
+                }
+
+                $sql = $this->composeUpdateQuery($relTable, $setPart, $wherePart);
+                if ($this->pdo->query($sql)) {
+                    $this->updateModifiedAtForManyToMany($entity, $relEntity);
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
-    public function removeRelation(IEntity $entity, $relName, $id)
+    public function relate(IEntity $entityFrom, $relationName, IEntity $entityTo, $data = null)
+    {
+        return $this->addRelation($entityFrom, $relationName, null, $entityTo, $data);
+    }
+
+    public function removeRelation(IEntity $entity, $relName, $id = null, $all = false, IEntity $relEntity = null, bool $force = false)
     {
         echo 'TODO: removeRelation' . PHP_EOL;
         die();
+    }
+
+    public function unrelate(IEntity $entityFrom, $relationName, IEntity $entityTo, bool $force = false)
+    {
+        return $this->removeRelation($entityFrom, $relationName, null, false, $entityTo, $force);
     }
 
     public function removeAllRelations(IEntity $entity, $relName)
@@ -345,10 +477,10 @@ class Mapper implements IMapper
         if (!empty($dataArr)) {
             $qb = $this->connection->createQueryBuilder();
 
-            $qb->insert($this->connection->quoteIdentifier($this->queryMapper->toDb($entity->getEntityType())));
+            $qb->insert($this->connection->quoteIdentifier($this->toDb($entity->getEntityType())));
             foreach ($dataArr as $field => $value) {
                 $value = $this->prepareValueForUpdate($entity->fields[$field]['type'], $value);
-                $qb->setValue($this->connection->quoteIdentifier($this->queryMapper->toDb($field)), ":i_$field");
+                $qb->setValue($this->connection->quoteIdentifier($this->toDb($field)), ":i_$field");
                 $qb->setParameter("i_$field", $value, self::getParameterType($value));
             }
 
@@ -389,9 +521,9 @@ class Mapper implements IMapper
 
         $qb = $this->connection->createQueryBuilder();
 
-        $qb->update($this->connection->quoteIdentifier($this->queryMapper->toDb($entity->getEntityType())));
+        $qb->update($this->connection->quoteIdentifier($this->toDb($entity->getEntityType())));
         foreach ($setArr as $field => $value) {
-            $qb->set($this->connection->quoteIdentifier($this->queryMapper->toDb($field)), ":u_$field");
+            $qb->set($this->connection->quoteIdentifier($this->toDb($field)), ":u_$field");
             $qb->setParameter("u_$field", $value, self::getParameterType($value));
         }
 
@@ -479,5 +611,51 @@ class Mapper implements IMapper
         }
 
         return $value;
+    }
+
+    protected function updateModifiedAtForManyToMany(IEntity $entity, IEntity $relEntity): void
+    {
+        $this->updateModifiedAt($entity);
+        $this->updateModifiedBy($entity);
+
+        $this->updateModifiedAt($relEntity);
+        $this->updateModifiedBy($relEntity);
+    }
+
+    protected function updateModifiedAt(IEntity $entity)
+    {
+        try {
+            $this->connection->createQueryBuilder()
+                ->update($this->connection->quoteIdentifier($this->toDb($entity->getEntityType())))
+                ->set('modified_at', date('Y-m-d H:i:s'))
+                ->where('id = :id')
+                ->setParameter('id', $entity->get('id'))
+                ->executeQuery();
+        } catch (\Throwable $e) {
+        }
+    }
+
+    protected function updateModifiedBy(IEntity $entity)
+    {
+        try {
+            $userId = $this->entityFactory->getEntityManager()->getUser()->get('id');
+            $this->connection->createQueryBuilder()
+                ->update($this->connection->quoteIdentifier($this->toDb($entity->getEntityType())))
+                ->set('modified_by_id', $userId)
+                ->where('id = :id')
+                ->setParameter('id', $entity->get('id'))
+                ->executeQuery();
+        } catch (\Throwable $e) {
+        }
+    }
+
+    protected function toDb(string $field): string
+    {
+        return $this->queryMapper->toDb($field);
+    }
+
+    protected function getKeys(IEntity $entity, string $relationName): array
+    {
+        return $this->queryMapper->getKeys($entity, $relationName);
     }
 }
