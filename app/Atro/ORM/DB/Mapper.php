@@ -391,17 +391,17 @@ class Mapper implements IMapper
                 $qb = $this->connection->createQueryBuilder();
                 $qb->insert($relTable);
 
-                $qb->set($this->toDb($nearKey), ":$nearKey")->setParameter($nearKey, $entity->id);
-                $qb->set($this->toDb($distantKey), ":$distantKey")->setParameter($distantKey, $relEntity->id);
+                $qb->setValue($this->toDb($nearKey), ":$nearKey")->setParameter($nearKey, $entity->id);
+                $qb->setValue($this->toDb($distantKey), ":$distantKey")->setParameter($distantKey, $relEntity->id);
 
                 if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
                     foreach ($relOpt['conditions'] as $f => $v) {
-                        $qb->set($this->toDb($f), ":$f")->setParameter($f, $v);
+                        $qb->setValue($this->toDb($f), ":$f")->setParameter($f, $v);
                     }
                 }
                 if (!empty($data) && is_array($data)) {
                     foreach ($data as $column => $columnValue) {
-                        $qb->set($this->toDb($column), ":$column")->setParameter($column, $columnValue);
+                        $qb->setValue($this->toDb($column), ":$column")->setParameter($column, $columnValue);
                     }
                 }
 
