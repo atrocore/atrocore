@@ -1007,14 +1007,18 @@ class QueryMapper
                         if (!empty($value['withDeleted'])) {
                             $withDeleted = true;
                         }
-                        $whereParts[] = $leftPart . " " . $operator . " (" . $this->createSelectQuery($subQueryEntityType, $subQuerySelectParams, $withDeleted) . ")";
+
+                        print_r('createSelectQuery subwhere');
+                        die();
+//                        $whereParts[] = $leftPart . " " . $operator . " (" . $this->createSelectQuery($subQueryEntityType, $subQuerySelectParams, $withDeleted) . ")";
                     } else {
                         if (!is_array($value)) {
                             if (!is_null($value)) {
                                 if ($isNotValue) {
                                     $whereParts[] = $leftPart . " " . $operator . " " . $this->convertComplexExpression($entity, $value);
                                 } else {
-                                    $whereParts[] = $leftPart . " " . $operator . " " . $value;
+                                    $whereParts[] = "$leftPart $operator :{$field}_w1";
+                                    $this->parameters["{$field}_w1"] = $value;
                                 }
                             } else {
                                 if ($operator == '=') {
@@ -1026,20 +1030,17 @@ class QueryMapper
                                 }
                             }
                         } else {
-                            $valArr = $value;
-                            foreach ($valArr as $k => $v) {
-                                $valArr[$k] = $valArr[$k];
-                            }
                             $oppose = '';
                             $emptyValue = '0';
                             if ($operator == '<>') {
                                 $oppose = 'NOT ';
                                 $emptyValue = '1';
                             }
-                            if (!empty($valArr)) {
-                                $whereParts[] = $leftPart . " {$oppose}IN " . "(" . implode(',', $valArr) . ")";
+                            if (!empty($value)) {
+                                $whereParts[] = $leftPart . " {$oppose}IN " . "(:{$field}_w2)";
+                                $this->parameters["{$field}_w2"] = $value;
                             } else {
-                                $whereParts[] = "" . $emptyValue;
+                                $whereParts[] = $emptyValue;
                             }
                         }
                     }
