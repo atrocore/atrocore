@@ -1198,7 +1198,7 @@ class QueryMapper
             }
             $table = $this->toDb($this->sanitize($name));
 
-            echo 'TODO: getJoin 1';
+            echo 'TODO: getJoin not hasRelation';
             die();
 
             $sql = $this->joinSQL($prefix, $table, $alias);
@@ -1245,7 +1245,7 @@ class QueryMapper
 
                 $midAlias = $alias . 'Middle';
 
-                echo 'TODO: getJoin 2';
+                echo 'TODO: getJoin MANY_MANY';
                 die();
 
                 $sql = "{$prefix}JOIN `{$relTable}` AS `{$midAlias}` ON {$this->toDb($entity->getEntityType())}." . $this->toDb($key) . " = {$midAlias}." . $this->toDb($nearKey)
@@ -1299,7 +1299,7 @@ class QueryMapper
                 $foreignType = $keySet['foreignType'];
                 $distantTable = $this->toDb($relOpt['entity']);
 
-                echo 'TODO: getJoin 3';
+                echo 'TODO: getJoin HAS_CHILDREN';
                 die();
 
                 $sql = $this->joinSQL($prefix, $distantTable, $alias) . " " . $this->toDb($entity->getEntityType()) . "." . $this->toDb('id') . " = {$alias}." . $this->toDb(
