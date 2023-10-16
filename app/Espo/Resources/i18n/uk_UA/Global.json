@@ -141,6 +141,7 @@
     "Auth error": "Помилка аутентифікації. Будь ласка, залогіньтеся знову.",
     "Post cannot be empty": "Повідомлення не може бути порожнім",
     "removing": "Видаляється...",
+    "restoring": "Відновлення...",
     "Unlinking...": "Посилання прибирається...",
     "Posting...": "Розміщується...",
     "Username cannot be empty!": "Ім'я користувача не може бути порожнім!",
@@ -302,6 +303,7 @@
   "messages": {
     "confirmInheritAllForChildren": "Ви впевнені, що хочете, щоб усі дочірні елементи успадкували значення полів (і атрибутів), а також відносини від цього батьківського елемента? Існуючі значення не будуть замінені.",
     "massDeleting": "Видаляється: {{deleted}} з {{total}}",
+    "massRestoring": "Відновлення: {{відновлено}} із {{загальної}}",
     "optionValueCannotBeEmpty": "Значення опції не може бути порожнім",
     "minimumOneOptionsRequired": "Потрібно мінімум одне значення параметра.",
     "defaultEnumValueCannotBeEmpty": "Якщо порожні значення заборонені, слід вибрати значення за замовчуванням.",
@@ -323,9 +325,11 @@
     "deleteAllConfirmation": "Ви дійсно хочете видалити всі записи?",
     "resetPreferencesConfirmation": "Ви дійсно хочете відновити значення за замовчуванням?",
     "removeRecordConfirmation": "Ви дійсно хочете видалити запис?",
+    "restoreRecordConfirmation": "Вибраний запис буде відновлено. Ви впевнені, що бажаєте його відновити?",
     "unlinkRecordConfirmation": "Ви дійсно хочете прибрати пов'язаний запис?",
     "removeRecordConfirmationHierarchically": "Ви дійсно хочете видалити записи ієрархічно?",
     "removeSelectedRecordsConfirmation": "Ви дійсно хочете видалити вибрані записи?",
+    "restoreSelectedRecordsConfirmation": "Ви впевнені, що бажаєте остаточно відновити вибрані?",
     "massUpdateResult": "{count} записів було оновлено",
     "massUpdateResultSingle": "{count} запис було оновлено",
     "noRecordsUpdated": "Записи не були оновлені",
@@ -347,6 +351,10 @@
     "confirmMassUnfollow": "Ви впевнені, що хочете відписатися від вибраних записів?",
     "massFollowZeroResult": "Нема на що підписуватися",
     "massUnfollowZeroResult": "Нема від чого відписуватися",
+    "massRestoreResult": "{count} рецордс нов ле ресторед",
+    "confirmMassRestore": "Аре іу сре іу вант то ресторе селецтед рецордс?",
+    "massRestoreResultSingle": "{count} рецорд нов іс ресторед",
+    "massRestoreZeroResult": "Нотґінг гот ресторе",
     "internalPostTitle": "Повідомлення видно лише внутрішнім користувачам",
     "loading": "Завантаження...",
     "saving": "Зберігається...",
@@ -403,7 +411,8 @@
     "massUpdatePartial": "Масове оновлення (Part %s)",
     "removePartial": "Видалити (Part %s)",
     "addRelation": "Додати зв'язок",
-    "removeRelation": "Видалити зв'язок"
+    "removeRelation": "Видалити зв'язок",
+    "restore": "Відновлення"
   },
   "fields": {
     "isInherited": "Унаслідувано",

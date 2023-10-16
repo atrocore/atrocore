@@ -73,6 +73,7 @@ Espo.define('views/main', 'view', function (Dep) {
 
             this.updateLastUrl();
             this.setupMassDeletingNotification();
+            this.setupMassRestoringNotification();
             this.setupMassUpdatingNotification();
         },
 
@@ -100,6 +101,35 @@ Espo.define('views/main', 'view', function (Dep) {
                             }
                         } else {
                             Espo.Ui.notify(this.translate('massDeleting', 'messages', 'Global').replace('{{deleted}}', scopeData.deleted).replace('{{total}}', scopeData.total), null, 2000);
+                        }
+                    }
+                }
+            });
+        },
+        setupMassRestoringNotification: function () {
+            this.listenTo(Backbone.Events, 'publicData', data => {
+                let locationHash = window.location.hash;
+
+                let hashScope = null;
+                if (locationHash === '#Admin/jobs') {
+                    hashScope = 'Job';
+                } else {
+                    hashScope = locationHash.split('/').shift().replace('#', '');
+                }
+
+                if (data.massRestore && hashScope === this.scope) {
+                    if (data.massRestore[this.scope]) {
+                        let scopeData = data.massRestore[this.scope];
+                        if (scopeData.done) {
+                            if (this.getStorage().get('massRestoreDoneHash', this.scope) !== scopeData.done) {
+                                this.getStorage().set('massRestoreDoneHash', this.scope, scopeData.done);
+                                Espo.Ui.notify(this.translate('Done'), 'success', 2000);
+                                if (this.collection) {
+                                    this.collection.fetch();
+                                }
+                            }
+                        } else {
+                            Espo.Ui.notify(this.translate('massRestoring', 'messages', 'Global').replace('{{restored}}', scopeData.restored).replace('{{total}}', scopeData.total), null, 2000);
                         }
                     }
                 }
