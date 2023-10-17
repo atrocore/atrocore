@@ -401,37 +401,28 @@ class Mapper
 
                 return true;
             } else {
-
-                echo '<pre>';
-                print_r('11');
-                die();
-
-                $setPart = 'deleted = 0';
-
+                $qb = $this->connection->createQueryBuilder();
+                $qb->update($relTable)
+                    ->set('deleted', ':deleted')->setParameter('deleted', false, self::getParameterType(false));
                 if (!empty($data) && is_array($data)) {
-                    $setArr = array();
                     foreach ($data as $column => $value) {
-                        $setArr[] = $this->toDb($column) . " = " . $this->quote($value);
+                        $qb->set($this->toDb($column), ":$column")->setParameter($column, $value, self::getParameterType($value));
                     }
-                    $setPart .= ', ' . implode(', ', $setArr);
                 }
 
-                $wherePart
-                    = $this->toDb($nearKey) . " = " . $this->pdo->quote($entity->id) . "
-                            AND " . $this->toDb($distantKey) . " = " . $this->pdo->quote($relEntity->id) . "
-                            ";
+                $qb->where("{$this->toDb($nearKey)} = :$nearKey")->setParameter($nearKey, $entity->id, self::getParameterType($entity->id));
+                $qb->andWhere("{$this->toDb($distantKey)} = :$distantKey")->setParameter($distantKey, $relEntity->id, self::getParameterType($relEntity->id));
 
                 if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
                     foreach ($relOpt['conditions'] as $f => $v) {
-                        $wherePart .= " AND " . $this->toDb($f) . " = " . $this->pdo->quote($v);
+                        $qb->andWhere("{$this->toDb($f)} = :$f")->setParameter($f, $v, self::getParameterType($v));
                     }
                 }
 
-                $sql = $this->composeUpdateQuery($relTable, $setPart, $wherePart);
-                if ($this->pdo->query($sql)) {
-                    $this->updateModifiedAtForManyToMany($entity, $relEntity);
-                    return true;
-                }
+                $qb->executeQuery();
+                $this->updateModifiedAtForManyToMany($entity, $relEntity);
+
+                return true;
             }
         }
 
