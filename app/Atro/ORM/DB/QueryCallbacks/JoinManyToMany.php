@@ -33,40 +33,53 @@ class JoinManyToMany
         $this->queryConverter = $queryConverter;
     }
 
-    public function run(QueryBuilder $qb, IEntity $entity, array $params): void
+    public function run(QueryBuilder $qb, IEntity $relEntity, array $params): void
     {
+        $entity = $this->entity;
+        $relationName = $this->relationName;
         $keySet = $this->keySet;
 
-        $relOpt = $this->entity->relations[$this->relationName];
+        $relOpt = $entity->relations[$relationName];
 
         $key = $keySet['key'];
         $foreignKey = $keySet['foreignKey'];
         $nearKey = $keySet['nearKey'];
         $distantKey = $keySet['distantKey'];
 
-        $relTable = $this->queryConverter->toDb($relOpt['relationName']);
-        $relAlias = $this->queryConverter->getRelationAlias($entity, $relOpt['relationName']);
-//        $distantTable = $mapper->toDb($relOpt['entity']);
+        $relTable = $this->toDb($relOpt['relationName']);
+        $relAlias = "{$relTable}_mm";
+        $alias = QueryConverter::TABLE_ALIAS;
 
-        $condition = QueryConverter::TABLE_ALIAS . ".{$this->queryConverter->toDb($foreignKey)} = {$relAlias}.{$this->queryConverter->toDb($distantKey)}";
+        $condition = "{$alias}.{$this->toDb($foreignKey)} = {$relAlias}.{$this->toDb($distantKey)}";
 
-        $condition .= " AND {$relAlias}.{$this->queryConverter->toDb($nearKey)} = :{$key}_mm";
-        $qb->setParameter("{$key}_mm", Mapper::getParameterType($entity->get($key)));
-        $condition .= " AND {$relAlias}.deleted = :deleted_mm";
-        $qb->setParameter("deleted_mm", Mapper::getParameterType(false));
+        $condition .= " AND {$relAlias}.{$this->toDb($nearKey)} = :{$key}_mm1";
+        $qb->setParameter("{$key}_mm1", $entity->get($key), Mapper::getParameterType($entity->get($key)));
 
-        $conditions = $relOpt['conditions'] ?? [];
-        foreach ($conditions as $f => $v) {
-            $condition .= " AND {$relAlias}.{$this->queryConverter->toDb($f)} = :{$f}_mm";
-            $qb->setParameter("{$f}_mm", Mapper::getParameterType($v));
+        $condition .= " AND {$relAlias}.deleted = :deleted_mm2";
+        $qb->setParameter("deleted_mm2", false, Mapper::getParameterType(false));
+
+        if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
+            foreach ($relOpt['conditions'] as $f => $v) {
+                $condition .= " AND {$relAlias}.{$this->toDb($f)} = :{$f}_mm3";
+                $qb->setParameter("{$f}_mm3", $v, Mapper::getParameterType($v));
+            }
         }
 
-        $conditions = $params['additionalColumnsConditions'] ?? [];
-        foreach ($conditions as $f => $v) {
-            $condition .= " AND {$relAlias}.{$this->queryConverter->toDb($f)} = :{$f}_mm1";
-            $qb->setParameter("{$f}_mm1", Mapper::getParameterType($v));
+        foreach ($params['additionalColumnsConditions'] ?? [] as $f => $v) {
+            $condition .= " AND {$relAlias}.{$this->toDb($f)} = :{$f}_mm4";
+            $qb->setParameter("{$f}_mm4", $v, Mapper::getParameterType($v));
         }
 
-        $qb->innerJoin(QueryConverter::TABLE_ALIAS, $relTable, $relAlias, $condition);
+        $qb->innerJoin($alias, $this->quoteIdentifier($relTable), $relAlias, $condition);//
+    }
+
+    protected function toDb(?string $f): ?string
+    {
+        return $this->queryConverter->toDb($f);
+    }
+
+    protected function quoteIdentifier(string $v): string
+    {
+        return $this->queryConverter->quoteIdentifier($v);
     }
 }
