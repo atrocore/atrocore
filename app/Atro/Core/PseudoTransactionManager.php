@@ -13,13 +13,14 @@ declare(strict_types=1);
 
 namespace Atro\Core;
 
+use Atro\ORM\DB\Mapper;
+use Doctrine\DBAL\Connection;
 use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
 use Espo\Services\Record;
-use PDO;
 
 class PseudoTransactionManager
 {
@@ -27,13 +28,14 @@ class PseudoTransactionManager
 
     private array $canceledJobs = [];
 
-    private ?\PDO $pdo = null;
-
     protected Container $container;
+
+    protected Connection $connection;
 
     public function __construct(Container $container)
     {
         $this->container = $container;
+        $this->connection = \Atro\Core\Factories\Connection::createConnection($container->get('config')->get('database'));
     }
 
     public static function hasJobs(): bool
@@ -123,31 +125,44 @@ class PseudoTransactionManager
 
     protected function fetchJobs(): array
     {
-        return $this
-            ->getPDO()
-            ->query("SELECT * FROM `pseudo_transaction_job` WHERE deleted=0 ORDER BY sort_order ASC LIMIT 0,50")
-            ->fetchAll(PDO::FETCH_ASSOC);
+        return $this->connection->createQueryBuilder()
+            ->select('*')
+            ->from('pseudo_transaction_job')
+            ->where('deleted = :deleted')
+            ->setParameter('deleted', false, Mapper::getParameterType(false))
+            ->orderBy('sort_order', 'ASC')
+            ->setFirstResult(0)
+            ->setMaxResults(50)
+            ->fetchAllAssociative();
     }
 
     protected function fetchJob(string $entityType = '', string $entityId = '', string $parentId = ''): array
     {
-        $query = "SELECT * FROM `pseudo_transaction_job` WHERE deleted=0";
+        $qb = $this->connection->createQueryBuilder();
+
+        $qb->select('*')
+            ->from('pseudo_transaction_job')
+            ->where('deleted = :deleted')
+            ->setParameter('deleted', false, Mapper::getParameterType(false));
 
         if (!empty($entityType) && empty($parentId)) {
-            $query .= " AND entity_type=" . $this->getPDO()->quote($entityType);
+            $qb->andWhere('entity_type = :entityType')->setParameter('entityType', $entityType);
         }
 
         if (!empty($entityId) && empty($parentId)) {
-            $query .= " AND entity_id=" . $this->getPDO()->quote($entityId);
+            $qb->andWhere('entity_id = :entityId')->setParameter('entityId', $entityId);
         }
 
         if (!empty($parentId)) {
-            $query .= " AND id=" . $this->getPDO()->quote($parentId);
+            $qb->andWhere('id = :id')->setParameter('id', $parentId);
         }
 
-        $query .= " ORDER BY sort_order ASC LIMIT 0,1";
+        $qb
+            ->orderBy('sort_order', 'ASC')
+            ->setFirstResult(0)
+            ->setMaxResults(1);
 
-        $record = $this->getPDO()->query($query)->fetch(PDO::FETCH_ASSOC);
+        $record = $qb->fetchAssociative();
         $job = empty($record) ? [] : $record;
 
         if (!empty($job['parent_id']) && !empty($parentJob = $this->fetchJob($entityType, $entityId, $job['parent_id']))) {
@@ -159,23 +174,42 @@ class PseudoTransactionManager
 
     protected function push(string $entityType, string $entityId, string $action, string $input, string $parentId = null): string
     {
-        $md5 = md5("{$entityType}_{$entityId}_{$action}_{$input}_{$parentId}");
         $id = Util::generateId();
-        $entityType = $this->getPDO()->quote($entityType);
-        $entityId = $this->getPDO()->quote($entityId);
-        $input = $this->getPDO()->quote($input);
-        $createdById = $this->getUser()->get('id');
-        $parentId = empty($parentId) ? 'NULL' : $this->getPDO()->quote($parentId);
-        $sortOrder = time() - (new \DateTime('2023-09-01'))->getTimestamp();
+        $parentId = empty($parentId) ? null : $parentId;
+        $md5 = md5("{$entityType}_{$entityId}_{$action}_{$input}_{$parentId}");
 
         try {
-            $this->getPDO()->exec(
-                "INSERT INTO `pseudo_transaction_job` (id,sort_order,entity_type,entity_id,`action`,input_data,created_by_id,parent_id,md5) VALUES ('$id',$sortOrder,$entityType,$entityId,'$action',$input,'$createdById',$parentId,'$md5')"
-            );
+            $this->connection->createQueryBuilder()
+                ->insert('pseudo_transaction_job')
+                ->setValue('id', ':id')
+                ->setParameter('id', $id)
+                ->setValue('sort_order', ':sortOrder')
+                ->setParameter('sortOrder', time() - (new \DateTime('2023-09-01'))->getTimestamp())
+                ->setValue('entity_type', ':entityType')
+                ->setParameter('entityType', $entityType)
+                ->setValue('entity_id', ':entityId')
+                ->setParameter('entityId', $entityId)
+                ->setValue($this->connection->quoteIdentifier('action'), ':action')
+                ->setParameter('action', $action)
+                ->setValue('input_data', ':input')
+                ->setParameter('input', $input)
+                ->setValue('created_by_id', ':createdById')
+                ->setParameter('createdById', $this->getUser()->get('id'))
+                ->setValue('parent_id', ':parentId')
+                ->setParameter('parentId', $parentId, Mapper::getParameterType($parentId))
+                ->setValue('md5', ':md5')
+                ->setParameter('md5', $md5)
+                ->executeQuery();
         } catch (\PDOException $e) {
             if (!empty($e->errorInfo[1]) && $e->errorInfo[1] == 1062) {
-                $id = $this->getPDO()->query("SELECT id FROM `pseudo_transaction_job` WHERE md5='$md5'")->fetch(PDO::FETCH_COLUMN);
-                return is_string($id) ? $id : '';
+                $row = $this->connection->createQueryBuilder()
+                    ->select('id')
+                    ->from('pseudo_transaction_job')
+                    ->where('md5 = :md5')
+                    ->setParameter('md5', $md5)
+                    ->fetchAssociative();
+
+                return isset($row['id']) && is_string($row['id']) ? $row['id'] : '';
             }
             throw $e;
         }
@@ -251,33 +285,39 @@ class PseudoTransactionManager
             $childrenIds = [];
             $this->collectChildren($job['id'], $childrenIds);
             $this->canceledJobs = array_merge($this->canceledJobs, $childrenIds);
-            $this->getPDO()->exec("DELETE FROM `pseudo_transaction_job` WHERE id IN ('" . implode("','", $childrenIds) . "')");
+
+            $this->connection->createQueryBuilder()
+                ->delete('pseudo_transaction_job')
+                ->where('id IN (:ids)')
+                ->setParameter('ids', $childrenIds, Mapper::getParameterType($childrenIds))
+                ->executeQuery();
         }
 
-        $this->getPDO()->exec("DELETE FROM `pseudo_transaction_job` WHERE id='{$job['id']}'");
+        $this->connection->createQueryBuilder()
+            ->delete('pseudo_transaction_job')
+            ->where('id = :id')
+            ->setParameter('id', $job['id'])
+            ->executeQuery();
     }
 
     protected function collectChildren(string $parentId, array &$childrenIds): void
     {
-        $ids = $this
-            ->getPDO()
-            ->query("SELECT id FROM `pseudo_transaction_job` WHERE parent_id='$parentId' AND deleted=0")
-            ->fetchAll(\PDO::FETCH_COLUMN);
+        $rows = $this->connection->createQueryBuilder()
+            ->select('id')
+            ->from('pseudo_transaction_job')
+            ->where('parent_id = :parentId')
+            ->setParameter('parentId', $parentId)
+            ->andWhere('deleted = :deleted')
+            ->setParameter('deleted', false, Mapper::getParameterType(false))
+            ->fetchAllAssociative();
+
+        $ids = array_column($rows, 'id');
 
         $childrenIds = array_merge($childrenIds, $ids);
 
         foreach ($ids as $id) {
             $this->collectChildren($id, $childrenIds);
         }
-    }
-
-    protected function getPDO(): PDO
-    {
-        if ($this->pdo === null) {
-            $this->pdo = (new \Espo\Core\Application())->getContainer()->get('pdo');
-        }
-
-        return $this->pdo;
     }
 
     protected function getServiceFactory(): ServiceFactory
