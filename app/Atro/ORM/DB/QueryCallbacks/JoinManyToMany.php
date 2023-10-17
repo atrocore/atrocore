@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\ORM\DB\QueryCallbacks;
 
 use Atro\ORM\DB\Mapper;
-use Atro\ORM\DB\Query\QueryMapper;
+use Atro\ORM\DB\Query\QueryConverter;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\IEntity;
 
@@ -23,14 +23,14 @@ class JoinManyToMany
     protected IEntity $entity;
     protected string $relationName;
     protected array $keySet;
-    protected QueryMapper $queryMapper;
+    protected QueryConverter $queryConverter;
 
-    public function __construct(IEntity $entity, string $relationName, array $keySet, QueryMapper $queryMapper)
+    public function __construct(IEntity $entity, string $relationName, array $keySet, QueryConverter $queryConverter)
     {
         $this->entity = $entity;
         $this->relationName = $relationName;
         $this->keySet = $keySet;
-        $this->queryMapper = $queryMapper;
+        $this->queryConverter = $queryConverter;
     }
 
     public function run(QueryBuilder $qb, IEntity $entity, array $params): void
@@ -44,29 +44,29 @@ class JoinManyToMany
         $nearKey = $keySet['nearKey'];
         $distantKey = $keySet['distantKey'];
 
-        $relTable = $this->queryMapper->toDb($relOpt['relationName']);
-        $relAlias = $this->queryMapper->getRelationAlias($entity, $relOpt['relationName']);
+        $relTable = $this->queryConverter->toDb($relOpt['relationName']);
+        $relAlias = $this->queryConverter->getRelationAlias($entity, $relOpt['relationName']);
 //        $distantTable = $mapper->toDb($relOpt['entity']);
 
-        $condition = QueryMapper::TABLE_ALIAS . ".{$this->queryMapper->toDb($foreignKey)} = {$relAlias}.{$this->queryMapper->toDb($distantKey)}";
+        $condition = QueryConverter::TABLE_ALIAS . ".{$this->queryConverter->toDb($foreignKey)} = {$relAlias}.{$this->queryConverter->toDb($distantKey)}";
 
-        $condition .= " AND {$relAlias}.{$this->queryMapper->toDb($nearKey)} = :{$key}_mm";
+        $condition .= " AND {$relAlias}.{$this->queryConverter->toDb($nearKey)} = :{$key}_mm";
         $qb->setParameter("{$key}_mm", Mapper::getParameterType($entity->get($key)));
         $condition .= " AND {$relAlias}.deleted = :deleted_mm";
         $qb->setParameter("deleted_mm", Mapper::getParameterType(false));
 
         $conditions = $relOpt['conditions'] ?? [];
         foreach ($conditions as $f => $v) {
-            $condition .= " AND {$relAlias}.{$this->queryMapper->toDb($f)} = :{$f}_mm";
+            $condition .= " AND {$relAlias}.{$this->queryConverter->toDb($f)} = :{$f}_mm";
             $qb->setParameter("{$f}_mm", Mapper::getParameterType($v));
         }
 
         $conditions = $params['additionalColumnsConditions'] ?? [];
         foreach ($conditions as $f => $v) {
-            $condition .= " AND {$relAlias}.{$this->queryMapper->toDb($f)} = :{$f}_mm1";
+            $condition .= " AND {$relAlias}.{$this->queryConverter->toDb($f)} = :{$f}_mm1";
             $qb->setParameter("{$f}_mm1", Mapper::getParameterType($v));
         }
 
-        $qb->innerJoin(QueryMapper::TABLE_ALIAS, $relTable, $relAlias, $condition);
+        $qb->innerJoin(QueryConverter::TABLE_ALIAS, $relTable, $relAlias, $condition);
     }
 }

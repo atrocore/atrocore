@@ -17,7 +17,7 @@ use Doctrine\DBAL\Connection;
 use Espo\ORM\IEntity;
 use Espo\ORM\EntityFactory;
 
-class QueryMapper
+class QueryConverter
 {
     public const TABLE_ALIAS = 't1';
 

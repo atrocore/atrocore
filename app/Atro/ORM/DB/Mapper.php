@@ -13,33 +13,27 @@ declare(strict_types=1);
 
 namespace Atro\ORM\DB;
 
-use Atro\ORM\DB\Query\QueryMapper;
+use Atro\ORM\DB\Query\QueryConverter;
 use Atro\ORM\DB\QueryCallbacks\JoinManyToMany;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
-use Doctrine\DBAL\Query\QueryBuilder;
-use Espo\ORM\DB\IMapper;
 use Espo\ORM\IEntity;
 use Espo\ORM\EntityFactory;
-use Espo\ORM\EntityCollection;
-use PDO;
 
-class Mapper implements IMapper
+class Mapper
 {
     protected Connection $connection;
     protected EntityFactory $entityFactory;
-    protected QueryMapper $queryMapper;
-
-    protected string $collectionClass = EntityCollection::class;
+    protected QueryConverter $queryConverter;
 
     public function __construct(Connection $connection, EntityFactory $entityFactory)
     {
         $this->connection = $connection;
         $this->entityFactory = $entityFactory;
-        $this->queryMapper = new \Atro\ORM\DB\Query\QueryMapper($this->entityFactory, $this->connection);
+        $this->queryConverter = new QueryConverter($this->entityFactory, $this->connection);
     }
 
-    public function selectById(IEntity $entity, $id, $params = []): IEntity
+    public function selectById(IEntity $entity, string $id, $params = []): IEntity
     {
         $params['whereClause']['id'] = $id;
 
@@ -53,10 +47,10 @@ class Mapper implements IMapper
         return $entity;
     }
 
-    public function select(IEntity $entity, $params): array
+    public function select(IEntity $entity, array $params): array
     {
         try {
-            $queryData = $this->queryMapper->createSelectQuery($entity->getEntityType(), $params, !empty($params['withDeleted']));
+            $queryData = $this->queryConverter->createSelectQuery($entity->getEntityType(), $params, !empty($params['withDeleted']));
         } catch (\Throwable $e) {
             $GLOBALS['log']->error("RDB QUERY failed: {$e->getMessage()}");
         }
@@ -142,7 +136,7 @@ class Mapper implements IMapper
         die();
     }
 
-    public function count(IEntity $entity, $params = []): int
+    public function count(IEntity $entity, array $params = []): int
     {
         $params['aggregation'] = 'COUNT';
         $params['aggregationBy'] = 'id';
@@ -155,25 +149,25 @@ class Mapper implements IMapper
         return 0;
     }
 
-    public function max(IEntity $entity, $params, $field, $deleted = false)
+    public function max(IEntity $entity, array $params, string $field, bool $deleted = false)
     {
         echo 'TODO: max' . PHP_EOL;
         die();
     }
 
-    public function min(IEntity $entity, $params, $field, $deleted = false)
+    public function min(IEntity $entity, array $params, string $field, bool $deleted = false)
     {
         echo 'TODO: min' . PHP_EOL;
         die();
     }
 
-    public function sum(IEntity $entity, $params)
+    public function sum(IEntity $entity, array $params = [])
     {
         echo 'TODO: sum' . PHP_EOL;
         die();
     }
 
-    public function selectRelated(IEntity $entity, $relName, $params = [], $totalCount = false)
+    public function selectRelated(IEntity $entity, string $relName, array $params = [], bool $totalCount = false)
     {
         $relOpt = $entity->relations[$relName];
 
@@ -271,7 +265,7 @@ class Mapper implements IMapper
 
             case IEntity::MANY_MANY:
                 $params['relationName'] = $relOpt['relationName'];
-                $params['callbacks'][] = [new JoinManyToMany($entity, $relName, $keySet, $this->queryMapper), 'run'];
+                $params['callbacks'][] = [new JoinManyToMany($entity, $relName, $keySet, $this->queryConverter), 'run'];
 
                 $resultArr = [];
                 $rows = $this->select($relEntity, $params);
@@ -315,12 +309,12 @@ class Mapper implements IMapper
         return null;
     }
 
-    public function countRelated(IEntity $entity, $relName, $params)
+    public function countRelated(IEntity $entity, string $relName, array $params)
     {
         return $this->selectRelated($entity, $relName, $params, true);
     }
 
-    public function addRelation(IEntity $entity, $relName, $id = null, $relEntity = null, $data = null)
+    public function addRelation(IEntity $entity, string $relName, string $id = null, IEntity $relEntity = null, array $data = null): bool
     {
         if (!is_null($relEntity)) {
             $id = $relEntity->id;
@@ -343,7 +337,7 @@ class Mapper implements IMapper
         if (is_null($relEntity)) {
             $relEntity = $this->entityFactory->create($className);
             if (!$relEntity) {
-                return null;
+                return false;
             }
             $relEntity->id = $id;
         }
@@ -448,29 +442,29 @@ class Mapper implements IMapper
         return false;
     }
 
-    public function relate(IEntity $entityFrom, $relationName, IEntity $entityTo, $data = null)
+    public function relate(IEntity $entityFrom, string $relationName, IEntity $entityTo, array $data = null): bool
     {
         return $this->addRelation($entityFrom, $relationName, null, $entityTo, $data);
     }
 
-    public function removeRelation(IEntity $entity, $relName, $id = null, $all = false, IEntity $relEntity = null, bool $force = false)
+    public function removeRelation(IEntity $entity, string $relName, string $id = null, bool $all = false, IEntity $relEntity = null, bool $force = false): bool
     {
         echo 'TODO: removeRelation' . PHP_EOL;
         die();
     }
 
-    public function unrelate(IEntity $entityFrom, $relationName, IEntity $entityTo, bool $force = false)
+    public function unrelate(IEntity $entityFrom, string $relationName, IEntity $entityTo, bool $force = false): bool
     {
         return $this->removeRelation($entityFrom, $relationName, null, false, $entityTo, $force);
     }
 
-    public function removeAllRelations(IEntity $entity, $relName)
+    public function removeAllRelations(IEntity $entity, string $relName): bool
     {
         echo 'TODO: removeAllRelations' . PHP_EOL;
         die();
     }
 
-    public function insert(IEntity $entity)
+    public function insert(IEntity $entity): bool
     {
         $dataArr = $this->toValueMap($entity);
 
@@ -495,7 +489,7 @@ class Mapper implements IMapper
         return true;
     }
 
-    public function update(IEntity $entity)
+    public function update(IEntity $entity): bool
     {
         $setArr = [];
         foreach ($this->toValueMap($entity) as $attribute => $value) {
@@ -516,7 +510,7 @@ class Mapper implements IMapper
         }
 
         if (count($setArr) == 0) {
-            return $entity->id;
+            return false;
         }
 
         $qb = $this->connection->createQueryBuilder();
@@ -542,16 +536,11 @@ class Mapper implements IMapper
         return true;
     }
 
-    public function delete(IEntity $entity)
+    public function delete(IEntity $entity): bool
     {
         $entity->set('deleted', true);
 
         return $this->update($entity);
-    }
-
-    public function setCollectionClass($collectionClass)
-    {
-        $this->collectionClass = $collectionClass;
     }
 
     public static function getParameterType($value): ?int
@@ -651,11 +640,11 @@ class Mapper implements IMapper
 
     protected function toDb(string $field): string
     {
-        return $this->queryMapper->toDb($field);
+        return $this->queryConverter->toDb($field);
     }
 
     protected function getKeys(IEntity $entity, string $relationName): array
     {
-        return $this->queryMapper->getKeys($entity, $relationName);
+        return $this->queryConverter->getKeys($entity, $relationName);
     }
 }
