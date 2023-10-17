@@ -14,12 +14,14 @@ declare(strict_types=1);
 namespace Atro\ORM\DB\Query;
 
 use Doctrine\DBAL\Connection;
+use Espo\Core\Utils\Util;
 use Espo\ORM\IEntity;
 use Espo\ORM\EntityFactory;
 
 class QueryConverter
 {
     public const TABLE_ALIAS = 't1';
+    public const AGGREGATE_VALUE = 'aggregate_value';
 
     protected static array $selectParamList
         = [
@@ -108,6 +110,7 @@ class QueryConverter
     protected EntityFactory $entityFactory;
     protected Connection $connection;
 
+    protected array $selectFieldAliases = [];
     protected array $fieldsMapCache = [];
     protected array $aliasesCache = [];
     protected array $seedCache = [];
@@ -162,7 +165,7 @@ class QueryConverter
                 foreach ($params['additionalColumns'] as $column => $field) {
                     $relTableName = $this->toDb($this->sanitize($params['relationName']));
                     $relColumnName = $this->toDb($this->sanitize($column));
-                    $selectPart[] = "{$this->getRelationAlias($entity, $params['relationName'])}.{$field}";
+                    $selectPart[] = "{$this->getRelationAlias($entity, $params['relationName'])}.{$field} AS {$this->fieldToAlias($relColumnName)}";
                     if ($params['orderBy'] === $field) {
                         $orderPart = "ORDER BY `$relTableName`.$relColumnName " . $this->prepareOrderParameter($params['order']);
                     }
@@ -171,7 +174,7 @@ class QueryConverter
 
             if (!empty($params['additionalSelectColumns']) && is_array($params['additionalSelectColumns'])) {
                 foreach ($params['additionalSelectColumns'] as $column => $field) {
-                    $selectPart[] = "$column";
+                    $selectPart[] = "$column AS {$this->fieldToAlias($field)}";
                 }
             }
 
@@ -455,7 +458,7 @@ class QueryConverter
                     }
                 }
 
-                $arr[] = "{$part} AS {$this->sanitizeAlias($attribute[1])}";
+                $arr[] = "{$part} AS {$this->fieldToAlias($attribute[1])}";
                 continue;
             }
 
@@ -463,7 +466,7 @@ class QueryConverter
                 $fieldDefs = $entity->fields[$attribute];
             } else {
                 $part = $this->convertComplexExpression($entity, $attribute, $distinct);
-                $arr[] = "{$part} AS {$attribute}";
+                $arr[] = "{$part} AS {$this->fieldToAlias($attribute)}";
                 continue;
             }
 
@@ -479,7 +482,7 @@ class QueryConverter
                 $fieldPath = $this->getFieldPath($entity, $attribute);
             }
 
-            $arr[] = "{$fieldPath}";
+            $arr[] = "{$fieldPath} AS {$this->fieldToAlias($attribute)}";
         }
 
         return $arr;
@@ -651,7 +654,7 @@ class QueryConverter
             $distinctPart = 'DISTINCT ';
         }
 
-        $selectPart = "{$aggregation}({$distinctPart}" . self::TABLE_ALIAS . "." . $this->toDb($this->sanitize($aggregationBy)) . ") AS aggregate_value";
+        $selectPart = "{$aggregation}({$distinctPart}" . self::TABLE_ALIAS . "." . $this->toDb($this->sanitize($aggregationBy)) . ") AS " . self::AGGREGATE_VALUE;
 
         return $selectPart;
     }
@@ -1321,6 +1324,22 @@ class QueryConverter
         }
 
         return false;
+    }
+
+    public function fieldToAlias(string $field): string
+    {
+        if (!isset($this->selectFieldAliases[$field])) {
+            $this->selectFieldAliases[$field] = 'atro_' . Util::toUnderScore($this->sanitizeAlias($field));
+        }
+
+        return $this->selectFieldAliases[$field];
+    }
+
+    public function aliasToField(string $alias): string
+    {
+        $field = array_search($alias, $this->selectFieldAliases);
+
+        return $field === false ? $alias : $field;
     }
 
     public function quoteIdentifier(string $val): string
