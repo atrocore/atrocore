@@ -122,16 +122,15 @@ class Mapper
             }
         }
 
-        $dbData = $qb->fetchAllAssociative();
+        $res = $qb->fetchAllAssociative();
 
-        $result = [];
-        foreach ($dbData as $k => $row) {
-            foreach ($row as $name => $value) {
-                $result[$k][Util::toCamelCase($name)] = $value;
+        foreach ($res as $k => $row) {
+            foreach ($row as $field => $value) {
+                $res[$k][$this->queryConverter->aliasToField($field)] = $value;
             }
         }
 
-        return $result;
+        return $res;
     }
 
     public function aggregate(IEntity $entity, $params, $aggregation, $aggregationBy, $deleted = false)
@@ -147,7 +146,7 @@ class Mapper
 
         $res = $this->select($entity, $params);
         foreach ($res as $row) {
-            return $row['aggregateValue'] ?? 0;
+            return $row[QueryConverter::AGGREGATE_VALUE] ?? 0;
         }
 
         return 0;
@@ -223,7 +222,7 @@ class Mapper
                             $relEntity->setAsFetched();
                             return $relEntity;
                         } else {
-                            return $row['aggregateValue'];
+                            return $row[QueryConverter::AGGREGATE_VALUE];
                         }
                     }
                 }
@@ -251,7 +250,7 @@ class Mapper
                         $resultArr = $rows;
                     } else {
                         foreach ($rows as $row) {
-                            return $row['aggregateValue'];
+                            return $row[QueryConverter::AGGREGATE_VALUE];
                         }
                     }
                 }
@@ -278,7 +277,7 @@ class Mapper
                         $resultArr = $rows;
                     } else {
                         foreach ($rows as $row) {
-                            return $row['aggregateValue'];
+                            return $row[QueryConverter::AGGREGATE_VALUE];
                         }
                     }
                 }
@@ -303,7 +302,7 @@ class Mapper
                             $relEntity->set($row);
                             return $relEntity;
                         } else {
-                            return $row['aggregateValue'];
+                            return $row[QueryConverter::AGGREGATE_VALUE];
                         }
                     }
                 }
@@ -357,15 +356,6 @@ class Mapper
 
         if ($this->count($relEntity, ['whereClause' => ['id' => $id]]) > 0) {
             $relTable = $this->toDb($relOpt['relationName']);
-
-            $wherePart
-                = $this->toDb($nearKey) . " = " . $entity->id . " " .
-                "AND " . $this->toDb($distantKey) . " = " . $relEntity->id;
-            if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
-                foreach ($relOpt['conditions'] as $f => $v) {
-                    $wherePart .= " AND " . $this->toDb($f) . " = " . $v;
-                }
-            }
 
             $qb = $this->connection->createQueryBuilder();
             $qb
