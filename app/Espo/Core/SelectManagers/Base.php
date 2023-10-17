@@ -1140,8 +1140,8 @@ class Base
             if (!empty($foreignEntity)) {
                 $sp = $this->createSelectManager($foreignEntity)->getSelectParams(['where' => $item['subQuery']], true, true);
                 $sp['select'] = ['id'];
-                $query = $this->getEntityManager()->getQuery()->createSelectQuery($foreignEntity, $sp);
-                $item['value'] = $this->getEntityManager()->getPDO()->query($query)->fetchAll(\PDO::FETCH_COLUMN);
+                $collection = $this->getEntityManager()->getRepository($foreignEntity)->find($sp);
+                $item['value'] = array_column($collection->toArray(), 'id');
             }
             unset($item['subQuery']);
         }
