@@ -214,13 +214,7 @@ class QueryConverter
         }
 
         if (!empty($params['customJoin'])) {
-            echo 'TODO: customJoin' . PHP_EOL;
-            print_r($params);
-            die();
-//            if (!empty($joinsPart)) {
-//                $joinsPart .= ' ';
-//            }
-//            $joinsPart .= $params['customJoin'];
+            throw new \Error('CustomJoin does not supporting. Use callbacks instead.');
         }
 
         $groupByPart = null;
@@ -258,7 +252,7 @@ class QueryConverter
         } else {
             $result['aggregation'] = $params['aggregation'];
             if ($params['aggregation'] === 'COUNT' && $groupByPart && $havingPart) {
-                echo 'TODO: AggregateValue' . PHP_EOL;
+                echo '2023-10-11 TODO: AggregateValue' . PHP_EOL;
                 die();
 //                $sql = "SELECT COUNT(*) AS `AggregateValue` FROM ({$sql}) AS `countAlias`";
             }
@@ -982,7 +976,7 @@ class QueryConverter
                             $withDeleted = true;
                         }
 
-                        echo 'TODO: createSelectQuery' . PHP_EOL;
+                        echo '2023-10-11 TODO: createSelectQuery' . PHP_EOL;
                         die();
 //                        $whereParts[] = $leftPart . " " . $operator . " (" . $this->createSelectQuery($subQueryEntityType, $subQuerySelectParams, $withDeleted) . ")";
                     } else {
@@ -1193,29 +1187,29 @@ class QueryConverter
         $prefix = ($left) ? 'LEFT ' : '';
 
         if (!$entity->hasRelation($name)) {
-            if (!$alias) {
-                $alias = $this->sanitize($name);
-            }
-            $table = $this->toDb($this->sanitize($name));
-
-            echo 'TODO: getJoin not hasRelation';
+            echo '2023-10-11 TODO: getJoin not hasRelation';
             die();
 
-            $sql = $this->joinSQL($prefix, $table, $alias);
-
-            if (empty($conditions)) {
-                return '';
-            }
-
-            $joinSqlList = [];
-            foreach ($conditions as $left => $right) {
-                $joinSqlList[] = $this->buildJoinConditionStatement($entity, $alias, $left, $right);
-            }
-            if (count($joinSqlList)) {
-                $sql .= " " . implode(" AND ", $joinSqlList);
-            }
-
-            return $sql;
+//            if (!$alias) {
+//                $alias = $this->sanitize($name);
+//            }
+//            $table = $this->toDb($this->sanitize($name));
+//
+//            $sql = $this->joinSQL($prefix, $table, $alias);
+//
+//            if (empty($conditions)) {
+//                return '';
+//            }
+//
+//            $joinSqlList = [];
+//            foreach ($conditions as $left => $right) {
+//                $joinSqlList[] = $this->buildJoinConditionStatement($entity, $alias, $left, $right);
+//            }
+//            if (count($joinSqlList)) {
+//                $sql .= " " . implode(" AND ", $joinSqlList);
+//            }
+//
+//            return $sql;
         }
 
         $relationName = $name;
@@ -1233,42 +1227,42 @@ class QueryConverter
 
         switch ($type) {
             case IEntity::MANY_MANY:
-                $key = $keySet['key'];
-                $foreignKey = $keySet['foreignKey'];
-                $nearKey = $keySet['nearKey'];
-                $distantKey = $keySet['distantKey'];
-
-                $relTable = $this->toDb($relOpt['relationName']);
-                $midAlias = lcfirst($this->sanitize($relOpt['relationName']));
-
-                $distantTable = $this->toDb($relOpt['entity']);
-
-                $midAlias = $alias . 'Middle';
-
-                echo 'TODO: getJoin MANY_MANY';
+                echo '2023-10-11 TODO: getJoin MANY_MANY';
                 die();
 
-                $sql = "{$prefix}JOIN `{$relTable}` AS `{$midAlias}` ON {$this->toDb($entity->getEntityType())}." . $this->toDb($key) . " = {$midAlias}." . $this->toDb($nearKey)
-                    . " AND "
-                    . "{$midAlias}.deleted = " . 0;
-
-                if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
-                    $conditions = array_merge($conditions, $relOpt['conditions']);
-                }
-
-                $joinSqlList = [];
-                foreach ($conditions as $left => $right) {
-                    $joinSqlList[] = $this->buildJoinConditionStatement($entity, $midAlias, $left, $right);
-                }
-                if (count($joinSqlList)) {
-                    $sql .= " AND " . implode(" AND ", $joinSqlList);
-                }
-
-                $sql .= " {$prefix}JOIN `{$distantTable}` AS `{$alias}` ON {$alias}." . $this->toDb($foreignKey) . " = {$midAlias}." . $this->toDb($distantKey)
-                    . " AND "
-                    . "{$alias}.deleted = " . 0 . "";
-
-                return $sql;
+//                $key = $keySet['key'];
+//                $foreignKey = $keySet['foreignKey'];
+//                $nearKey = $keySet['nearKey'];
+//                $distantKey = $keySet['distantKey'];
+//
+//                $relTable = $this->toDb($relOpt['relationName']);
+//                $midAlias = lcfirst($this->sanitize($relOpt['relationName']));
+//
+//                $distantTable = $this->toDb($relOpt['entity']);
+//
+//                $midAlias = $alias . 'Middle';
+//
+//                $sql = "{$prefix}JOIN `{$relTable}` AS `{$midAlias}` ON {$this->toDb($entity->getEntityType())}." . $this->toDb($key) . " = {$midAlias}." . $this->toDb($nearKey)
+//                    . " AND "
+//                    . "{$midAlias}.deleted = " . 0;
+//
+//                if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
+//                    $conditions = array_merge($conditions, $relOpt['conditions']);
+//                }
+//
+//                $joinSqlList = [];
+//                foreach ($conditions as $left => $right) {
+//                    $joinSqlList[] = $this->buildJoinConditionStatement($entity, $midAlias, $left, $right);
+//                }
+//                if (count($joinSqlList)) {
+//                    $sql .= " AND " . implode(" AND ", $joinSqlList);
+//                }
+//
+//                $sql .= " {$prefix}JOIN `{$distantTable}` AS `{$alias}` ON {$alias}." . $this->toDb($foreignKey) . " = {$midAlias}." . $this->toDb($distantKey)
+//                    . " AND "
+//                    . "{$alias}.deleted = " . 0 . "";
+//
+//                return $sql;
 
             case IEntity::HAS_MANY:
             case IEntity::HAS_ONE:
@@ -1295,30 +1289,30 @@ class QueryConverter
                 ];
 
             case IEntity::HAS_CHILDREN:
-                $foreignKey = $keySet['foreignKey'];
-                $foreignType = $keySet['foreignType'];
-                $distantTable = $this->toDb($relOpt['entity']);
-
-                echo 'TODO: getJoin HAS_CHILDREN';
+                echo '2023-10-11  TODO: getJoin HAS_CHILDREN';
                 die();
 
-                $sql = $this->joinSQL($prefix, $distantTable, $alias) . " " . $this->toDb($entity->getEntityType()) . "." . $this->toDb('id') . " = {$alias}." . $this->toDb(
-                        $foreignKey
-                    )
-                    . " AND "
-                    . "{$alias}." . $this->toDb($foreignType) . " = " . $entity->getEntityType()
-                    . " AND "
-                    . "{$alias}.deleted = " . 0;
-
-                $joinSqlList = [];
-                foreach ($conditions as $left => $right) {
-                    $joinSqlList[] = $this->buildJoinConditionStatement($entity, $alias, $left, $right);
-                }
-                if (count($joinSqlList)) {
-                    $sql .= " AND " . implode(" AND ", $joinSqlList);
-                }
-
-                return $sql;
+//                $foreignKey = $keySet['foreignKey'];
+//                $foreignType = $keySet['foreignType'];
+//                $distantTable = $this->toDb($relOpt['entity']);
+//
+//                $sql = $this->joinSQL($prefix, $distantTable, $alias) . " " . $this->toDb($entity->getEntityType()) . "." . $this->toDb('id') . " = {$alias}." . $this->toDb(
+//                        $foreignKey
+//                    )
+//                    . " AND "
+//                    . "{$alias}." . $this->toDb($foreignType) . " = " . $entity->getEntityType()
+//                    . " AND "
+//                    . "{$alias}.deleted = " . 0;
+//
+//                $joinSqlList = [];
+//                foreach ($conditions as $left => $right) {
+//                    $joinSqlList[] = $this->buildJoinConditionStatement($entity, $alias, $left, $right);
+//                }
+//                if (count($joinSqlList)) {
+//                    $sql .= " AND " . implode(" AND ", $joinSqlList);
+//                }
+//
+//                return $sql;
 
             case IEntity::BELONGS_TO:
                 $join = $this->getBelongsToJoin($entity, $relationName, null, $alias);
