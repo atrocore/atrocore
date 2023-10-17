@@ -443,10 +443,76 @@ class Mapper
         return $this->addRelation($entityFrom, $relationName, null, $entityTo, $data);
     }
 
-    public function removeRelation(IEntity $entity, string $relName, string $id = null, bool $all = false, IEntity $relEntity = null, bool $force = false): bool
+    public function removeRelation(IEntity $entity, string $relationName, string $id = null, bool $all = false, IEntity $relEntity = null, bool $force = false): bool
     {
-        echo 'TODO: removeRelation' . PHP_EOL;
-        die();
+        if (!is_null($relEntity)) {
+            $id = $relEntity->id;
+        }
+
+        if (empty($id) && empty($all) || empty($relationName)) {
+            return false;
+        }
+
+        $relOpt = $entity->relations[$relationName];
+
+        if (!isset($relOpt['entity']) || !isset($relOpt['type'])) {
+            throw new \LogicException("Not appropriate definition for relationship {$relationName} in " . $entity->getEntityType() . " entity");
+        }
+
+        $relType = $relOpt['type'];
+
+        $className = (!empty($relOpt['class'])) ? $relOpt['class'] : $relOpt['entity'];
+
+        if (is_null($relEntity)) {
+            $relEntity = $this->entityFactory->create($className);
+            if (!$relEntity) {
+                return false;
+            }
+            $relEntity->id = $id;
+        }
+
+        $keySet = $this->getKeys($entity, $relationName);
+
+        if ($relType !== IEntity::MANY_MANY) {
+            return false;
+        }
+
+        $nearKey = $keySet['nearKey'];
+        $distantKey = $keySet['distantKey'];
+
+        $relTable = $this->toDb($relOpt['relationName']);
+
+        $qb = $this->connection->createQueryBuilder();
+
+        if ($force) {
+            $qb->delete($this->connection->quoteIdentifier($relTable));
+        } else {
+            $qb
+                ->update($this->connection->quoteIdentifier($relTable))
+                ->set('deleted', ':deleted')
+                ->setParameter('deleted', true, self::getParameterType(true));
+        }
+
+        $qb->where("{$this->toDb($nearKey)} = :$nearKey");
+        $qb->setParameter($nearKey, $entity->id, self::getParameterType($entity->id));
+
+        if (empty($all)) {
+            $qb->andWhere("{$this->toDb($distantKey)} = :$distantKey");
+            $qb->setParameter($distantKey, $id, self::getParameterType($id));
+        }
+
+        if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
+            foreach ($relOpt['conditions'] as $f => $v) {
+                $qb->andWhere("{$this->toDb($f)} = :$f");
+                $qb->setParameter($f, $v, self::getParameterType($v));
+            }
+        }
+
+        $qb->executeQuery();
+
+        $this->updateModifiedAtForManyToMany($entity, $relEntity);
+
+        return true;
     }
 
     public function unrelate(IEntity $entityFrom, string $relationName, IEntity $entityTo, bool $force = false): bool
