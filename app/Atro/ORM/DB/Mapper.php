@@ -104,13 +104,13 @@ class Mapper
         }
 
         if (!empty($queryData['groupBy'])) {
-            echo 'TODO: group by' . PHP_EOL;
+            echo '2023-10-17 TODO: group by' . PHP_EOL;
             print_r($queryData);
             die();
         }
 
         if (!empty($queryData['having'])) {
-            echo 'TODO: having' . PHP_EOL;
+            echo '2023-10-17 TODO: having' . PHP_EOL;
             print_r($queryData);
             die();
         }
@@ -128,7 +128,7 @@ class Mapper
 
     public function aggregate(IEntity $entity, $params, $aggregation, $aggregationBy, $deleted = false)
     {
-        echo 'TODO: aggregate' . PHP_EOL;
+        echo '2023-10-17 TODO: aggregate' . PHP_EOL;
         die();
     }
 
@@ -147,19 +147,19 @@ class Mapper
 
     public function max(IEntity $entity, array $params, string $field, bool $deleted = false)
     {
-        echo 'TODO: max' . PHP_EOL;
+        echo '2023-10-17 TODO: max' . PHP_EOL;
         die();
     }
 
     public function min(IEntity $entity, array $params, string $field, bool $deleted = false)
     {
-        echo 'TODO: min' . PHP_EOL;
+        echo '2023-10-17 TODO: min' . PHP_EOL;
         die();
     }
 
     public function sum(IEntity $entity, array $params = [])
     {
-        echo 'TODO: sum' . PHP_EOL;
+        echo '2023-10-17 TODO: sum' . PHP_EOL;
         die();
     }
 
@@ -513,7 +513,7 @@ class Mapper
 
     public function removeAllRelations(IEntity $entity, string $relName): bool
     {
-        echo 'TODO: removeAllRelations' . PHP_EOL;
+        echo '2023-10-17 TODO: removeAllRelations' . PHP_EOL;
         die();
     }
 
