@@ -162,7 +162,7 @@ class QueryConverter
                 foreach ($params['additionalColumns'] as $column => $field) {
                     $relTableName = $this->toDb($this->sanitize($params['relationName']));
                     $relColumnName = $this->toDb($this->sanitize($column));
-                    $selectPart[] = "{$this->getRelationAlias($entity, $params['relationName'])}.{$field} AS {$relColumnName}";
+                    $selectPart[] = "{$this->getRelationAlias($entity, $params['relationName'])}.{$field}";
                     if ($params['orderBy'] === $field) {
                         $orderPart = "ORDER BY `$relTableName`.$relColumnName " . $this->prepareOrderParameter($params['order']);
                     }
@@ -171,7 +171,7 @@ class QueryConverter
 
             if (!empty($params['additionalSelectColumns']) && is_array($params['additionalSelectColumns'])) {
                 foreach ($params['additionalSelectColumns'] as $column => $field) {
-                    $selectPart[] = "$column AS $field";
+                    $selectPart[] = "$column";
                 }
             }
 
@@ -479,7 +479,7 @@ class QueryConverter
                 $fieldPath = $this->getFieldPath($entity, $attribute);
             }
 
-            $arr[] = "{$fieldPath} AS {$attribute}";
+            $arr[] = "{$fieldPath}";
         }
 
         return $arr;
@@ -651,7 +651,7 @@ class QueryConverter
             $distinctPart = 'DISTINCT ';
         }
 
-        $selectPart = "{$aggregation}({$distinctPart}" . self::TABLE_ALIAS . "." . $this->toDb($this->sanitize($aggregationBy)) . ") AS AggregateValue";
+        $selectPart = "{$aggregation}({$distinctPart}" . self::TABLE_ALIAS . "." . $this->toDb($this->sanitize($aggregationBy)) . ") AS aggregate_value";
 
         return $selectPart;
     }

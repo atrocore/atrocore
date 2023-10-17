@@ -17,6 +17,7 @@ use Atro\ORM\DB\Query\QueryConverter;
 use Atro\ORM\DB\QueryCallbacks\JoinManyToMany;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
+use Espo\Core\Utils\Util;
 use Espo\ORM\IEntity;
 use Espo\ORM\EntityFactory;
 
@@ -121,9 +122,16 @@ class Mapper
             }
         }
 
-        $res = $qb->fetchAllAssociative();
+        $dbData = $qb->fetchAllAssociative();
 
-        return $res;
+        $result = [];
+        foreach ($dbData as $k => $row) {
+            foreach ($row as $name => $value) {
+                $result[$k][Util::toCamelCase($name)] = $value;
+            }
+        }
+
+        return $result;
     }
 
     public function aggregate(IEntity $entity, $params, $aggregation, $aggregationBy, $deleted = false)
@@ -139,7 +147,7 @@ class Mapper
 
         $res = $this->select($entity, $params);
         foreach ($res as $row) {
-            return $row['AggregateValue'] ?? 0;
+            return $row['aggregateValue'] ?? 0;
         }
 
         return 0;
@@ -215,7 +223,7 @@ class Mapper
                             $relEntity->setAsFetched();
                             return $relEntity;
                         } else {
-                            return $row['AggregateValue'];
+                            return $row['aggregateValue'];
                         }
                     }
                 }
@@ -243,7 +251,7 @@ class Mapper
                         $resultArr = $rows;
                     } else {
                         foreach ($rows as $row) {
-                            return $row['AggregateValue'];
+                            return $row['aggregateValue'];
                         }
                     }
                 }
@@ -270,7 +278,7 @@ class Mapper
                         $resultArr = $rows;
                     } else {
                         foreach ($rows as $row) {
-                            return $row['AggregateValue'];
+                            return $row['aggregateValue'];
                         }
                     }
                 }
@@ -295,7 +303,7 @@ class Mapper
                             $relEntity->set($row);
                             return $relEntity;
                         } else {
-                            return $row['AggregateValue'];
+                            return $row['aggregateValue'];
                         }
                     }
                 }
