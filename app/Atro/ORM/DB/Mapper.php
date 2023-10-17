@@ -689,12 +689,12 @@ class Mapper
         }
     }
 
-    protected function toDb(string $field): string
+    public function toDb(string $field): string
     {
         return $this->queryConverter->toDb($field);
     }
 
-    protected function getKeys(IEntity $entity, string $relationName): array
+    public function getKeys(IEntity $entity, string $relationName): array
     {
         return $this->queryConverter->getKeys($entity, $relationName);
     }
