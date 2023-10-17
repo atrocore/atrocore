@@ -508,7 +508,7 @@ class QueryConverter
         if ($alias) {
             return [
                 'fromAlias' => self::TABLE_ALIAS,
-                'table'     => $this->connection->quoteIdentifier($this->toDb($r['entity'])),
+                'table'     => $this->quoteIdentifier($this->toDb($r['entity'])),
                 'alias'     => $alias,
                 'condition' => self::TABLE_ALIAS . "." . $this->toDb($key) . " = " . $alias . "." . $this->toDb($foreignKey)
             ];
@@ -718,7 +718,7 @@ class QueryConverter
         }
 
         if (!isset($this->relationAliases[$entity->getEntityType()][$relationName])) {
-            $this->relationAliases[$entity->getEntityType()][$relationName] = $this->toDb(self::sanitize($relationName)) . '_aa';
+            $this->relationAliases[$entity->getEntityType()][$relationName] = $this->toDb(self::sanitize($relationName)) . '_mm';
         }
 
         return $this->relationAliases[$entity->getEntityType()][$relationName];
@@ -1185,7 +1185,7 @@ class QueryConverter
 
     protected function joinSQL(string $prefix, string $table, string $alias): string
     {
-        return $prefix . "JOIN {$this->connection->quoteIdentifier($table)} {$alias} ON";
+        return $prefix . "JOIN {$this->quoteIdentifier($table)} {$alias} ON";
     }
 
     protected function getJoin(IEntity $entity, $name, $left = false, $conditions = array(), $alias = null)
@@ -1289,7 +1289,7 @@ class QueryConverter
                 return [
                     'type'      => $left ? 'left' : 'inner',
                     'fromAlias' => self::TABLE_ALIAS,
-                    'table'     => $this->connection->quoteIdentifier($distantTable),
+                    'table'     => $this->quoteIdentifier($distantTable),
                     'alias'     => $alias,
                     'condition' => $condition
                 ];
@@ -1327,6 +1327,11 @@ class QueryConverter
         }
 
         return false;
+    }
+
+    public function quoteIdentifier(string $val): string
+    {
+        return $this->connection->quoteIdentifier($val);
     }
 
     public function getKeys(IEntity $entity, string $relationName): array
