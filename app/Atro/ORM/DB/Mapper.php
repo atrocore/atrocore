@@ -121,11 +121,7 @@ class Mapper
             }
         }
 
-        try {
-            $res = $qb->fetchAllAssociative();
-        } catch (\Throwable $e) {
-            $GLOBALS['log']->error("RDB SELECT failed: {$e->getMessage()}");
-        }
+        $res = $qb->fetchAllAssociative();
 
         return $res;
     }
@@ -167,17 +163,17 @@ class Mapper
         die();
     }
 
-    public function selectRelated(IEntity $entity, string $relName, array $params = [], bool $totalCount = false)
+    public function selectRelated(IEntity $entity, string $relationName, array $params = [], bool $totalCount = false)
     {
-        $relOpt = $entity->relations[$relName];
+        $relOpt = $entity->relations[$relationName];
 
         if (!isset($relOpt['type'])) {
-            throw new \LogicException("Missing 'type' in definition for relationship {$relName} in " . $entity->getEntityType() . " entity");
+            throw new \LogicException("Missing 'type' in definition for relationship {$relationName} in " . $entity->getEntityType() . " entity");
         }
 
         if ($relOpt['type'] !== IEntity::BELONGS_TO_PARENT) {
             if (!isset($relOpt['entity'])) {
-                throw new \LogicException("Missing 'entity' in defenition for relationship {$relName} in " . $entity->getEntityType() . " entity");
+                throw new \LogicException("Missing 'entity' in definition for relationship {$relationName} in " . $entity->getEntityType() . " entity");
             }
 
             $relEntityName = (!empty($relOpt['class'])) ? $relOpt['class'] : $relOpt['entity'];
@@ -199,7 +195,7 @@ class Mapper
 
         $relType = $relOpt['type'];
 
-        $keySet = $this->getKeys($entity, $relName);
+        $keySet = $this->getKeys($entity, $relationName);
 
         $key = $keySet['key'];
         $foreignKey = $keySet['foreignKey'];
@@ -265,7 +261,7 @@ class Mapper
 
             case IEntity::MANY_MANY:
                 $params['relationName'] = $relOpt['relationName'];
-                $params['callbacks'][] = [new JoinManyToMany($entity, $relName, $keySet, $this->queryConverter), 'run'];
+                $params['callbacks'][] = [new JoinManyToMany($entity, $relationName, $keySet, $this->queryConverter), 'run'];
 
                 $resultArr = [];
                 $rows = $this->select($relEntity, $params);
