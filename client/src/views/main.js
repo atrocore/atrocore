@@ -205,7 +205,7 @@ Espo.define('views/main', 'view', function (Dep) {
             if (isAdmin) {
                 a.unshift(`<a href='#Admin' class="action">${this.getLanguage().translate('Administration', 'labels')}</a>`);
             } else {
-                a.unshift(`<a href='#Dashboard' class="action">${this.getLanguage().translate('Dashboard', 'labels')}</a>`);
+                a.unshift(`<a href='#' class="action">${this.getLanguage().translate('Dashboard', 'labels')}</a>`);
             }
 
             arr.forEach(function (item, index) {
