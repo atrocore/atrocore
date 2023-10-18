@@ -122,7 +122,12 @@ class Mapper implements MapperInterface
             }
         }
 
-        $res = $qb->fetchAllAssociative();
+        try {
+            $res = $qb->fetchAllAssociative();
+        } catch (\Throwable $e) {
+            $GLOBALS['log']->error("RDB SELECT failed for SQL: {$qb->getSQL()}");
+            throw $e;
+        }
 
         foreach ($res as $k => $row) {
             foreach ($row as $field => $value) {
@@ -369,7 +374,12 @@ class Mapper implements MapperInterface
                     }
                 }
 
-                $qb->executeQuery();
+                try {
+                    $qb->executeQuery();
+                } catch (\Throwable $e) {
+                    $GLOBALS['log']->error("RDB addRelation failed for SQL: {$qb->getSQL()}");
+                    throw $e;
+                }
 
                 $this->updateModifiedAtForManyToMany($entity, $relEntity);
 
@@ -393,7 +403,13 @@ class Mapper implements MapperInterface
                     }
                 }
 
-                $qb->executeQuery();
+                try {
+                    $qb->executeQuery();
+                } catch (\Throwable $e) {
+                    $GLOBALS['log']->error("RDB addRelation failed for SQL: {$qb->getSQL()}");
+                    throw $e;
+                }
+
                 $this->updateModifiedAtForManyToMany($entity, $relEntity);
 
                 return true;
@@ -468,7 +484,12 @@ class Mapper implements MapperInterface
             }
         }
 
-        $qb->executeQuery();
+        try {
+            $qb->executeQuery();
+        } catch (\Throwable $e) {
+            $GLOBALS['log']->error("RDB removeRelation failed for SQL: {$qb->getSQL()}");
+            throw $e;
+        }
 
         $this->updateModifiedAtForManyToMany($entity, $relEntity);
 
@@ -492,8 +513,8 @@ class Mapper implements MapperInterface
             try {
                 $qb->executeQuery();
             } catch (\Throwable $e) {
-                $GLOBALS['log']->error("RDB INSERT failed: {$e->getMessage()}");
-                return false;
+                $GLOBALS['log']->error("RDB INSERT failed for SQL: {$qb->getSQL()}");
+                throw $e;
             }
         }
 
@@ -540,8 +561,8 @@ class Mapper implements MapperInterface
         try {
             $qb->executeQuery();
         } catch (\Throwable $e) {
-            $GLOBALS['log']->error("RDB UPDATE failed: {$e->getMessage()}");
-            return false;
+            $GLOBALS['log']->error("RDB UPDATE failed for SQL: {$qb->getSQL()}");
+            throw $e;
         }
 
         return true;
