@@ -35,13 +35,11 @@ namespace Espo\Core;
 
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Json;
+use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Util;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
 use Espo\ORM\EntityManager;
 
-/**
- * Class DataManager
- */
 class DataManager
 {
     public const CACHE_DIR_PATH = 'data/cache';
@@ -50,16 +48,8 @@ class DataManager
 
     public const MANDATORY_CACHED = ['translations', 'locales', 'cronLastRunTime'];
 
-    /**
-     * @var Container
-     */
-    private $container;
+    private Container $container;
 
-    /**
-     * DataManager constructor.
-     *
-     * @param Container $container
-     */
     public function __construct(Container $container)
     {
         $this->container = $container;
@@ -185,8 +175,6 @@ class DataManager
      */
     public function rebuild($entityList = null)
     {
-        $this->populateConfigParameters();
-
         $result = $this->clearCache();
 
         $result &= $this->rebuildMetadata();
@@ -250,15 +238,15 @@ class DataManager
      */
     public function rebuildMetadata()
     {
+        /** @var Metadata $metadata */
         $metadata = $this->container->get('metadata');
-
         $metadata->init(true);
 
         $ormData = $this->container->get('ormMetadata')->getData(true);
 
         $this->clearCache();
 
-        return empty($ormData) ? false : true;
+        return !empty($ormData);
     }
 
     /**
@@ -266,11 +254,13 @@ class DataManager
      */
     public function rebuildScheduledJobs()
     {
+        /** @var Metadata $metadata */
         $metadata = $this->container->get('metadata');
+
         /** @var EntityManager $entityManager */
         $entityManager = $this->container->get('entityManager');
 
-        $jobs = $metadata->get(['entityDefs', 'ScheduledJob', 'jobs'], array());
+        $jobs = $metadata->get(['entityDefs', 'ScheduledJob', 'jobs'], []);
 
         foreach ($jobs as $jobName => $defs) {
             if ($jobName && !empty($defs['isSystem']) && !empty($defs['scheduling'])) {
@@ -307,27 +297,6 @@ class DataManager
                 }
             }
         }
-    }
-
-    /**
-     * Populate config parameters
-     */
-    protected function populateConfigParameters()
-    {
-        $pdo = $this->container->get('pdo');
-        $query = "SHOW VARIABLES LIKE 'ft_min_word_len'";
-        $sth = $pdo->prepare($query);
-        $sth->execute();
-
-        $fullTextSearchMinLength = null;
-        if ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
-            if (isset($row['Value'])) {
-                $fullTextSearchMinLength = intval($row['Value']);
-            }
-        }
-
-        $this->getConfig()->set('fullTextSearchMinLength', $fullTextSearchMinLength);
-        $this->getConfig()->save();
     }
 
     /**
