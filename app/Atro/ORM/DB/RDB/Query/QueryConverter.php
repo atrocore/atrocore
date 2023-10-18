@@ -159,7 +159,7 @@ class QueryConverter
                 foreach ($params['additionalColumns'] as $column => $field) {
                     $relTableName = $this->toDb($this->sanitize($params['relationName']));
                     $relColumnName = $this->toDb($this->sanitize($column));
-                    $selectPart[] = "{$this->getRelationAlias($entity, $params['relationName'])}.{$field} AS {$this->fieldToAlias($relColumnName)}";
+                    $selectPart[] = "{$this->getRelationAlias($entity, $params['relationName'])}.{$column} AS {$this->fieldToAlias($relColumnName)}";
                     if ($params['orderBy'] === $field) {
                         $orderPart = "ORDER BY `$relTableName`.$relColumnName " . $this->prepareOrderParameter($params['order']);
                     }
