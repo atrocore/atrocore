@@ -33,123 +33,57 @@
 
 namespace Espo\Services;
 
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\NotFound;
+use Espo\Core\Services\Base;
+use Espo\Core\Utils\Metadata;
 
-use Espo\ORM\Entity;
-
-class GlobalSearch extends \Espo\Core\Services\Base
+class GlobalSearch extends Base
 {
-    protected function init()
+    public function find(string $query, int $offset, int $maxSize): array
     {
-        parent::init();
-        $this->addDependencyList([
-            'entityManager',
-            'user',
-            'metadata',
-            'acl',
-            'selectManagerFactory',
-            'config'
-        ]);
-    }
+        $result = [
+            'count' => 0,
+            'list'  => []
+        ];
 
-    protected function getSelectManagerFactory()
-    {
-        return $this->injections['selectManagerFactory'];
-    }
-
-    protected function getEntityManager()
-    {
-        return $this->injections['entityManager'];
-    }
-
-    protected function getAcl()
-    {
-        return $this->injections['acl'];
-    }
-
-    protected function getMetadata()
-    {
-        return $this->injections['metadata'];
-    }
-
-    public function find($query, $offset, $maxSize)
-    {
-        $entityTypeList = $this->getConfig()->get('globalSearchEntityList');
-
-        $unionPartList = [];
-        foreach ($entityTypeList as $entityType) {
-            if (!$this->getAcl()->checkScope($entityType, 'read')) {
+        foreach ($this->getConfig()->get('globalSearchEntityList', []) as $entityType) {
+            if (!$this->getInjection('acl')->checkScope($entityType, 'read')) {
                 continue;
             }
             if (!$this->getMetadata()->get(['scopes', $entityType])) {
                 continue;
             }
 
-            $selectManager = $this->getSelectManagerFactory()->create($entityType);
-
-            $params = [
-                'select' => ['id', 'name', ['VALUE:' . $entityType, 'entityType']]
-            ];
-
-            $params['select'][] = ['VALUE:1.1', '_relevance'];
+            $selectManager = $this->getInjection('selectManagerFactory')->create($entityType);
+            $params = ['select' => ['id', 'name']];
 
             $selectManager->manageAccess($params);
-            $params['useFullTextSearch'] = true;
             $selectManager->applyTextFilter($query, $params);
 
-            $sql = $this->getEntityManager()->getQuery()->createSelectQuery($entityType, $params);
-
-            $unionPartList[] = '' . $sql . '';
-        }
-        if (empty($unionPartList)) {
-            return [
-                'total' => 0,
-                'list' => []
-            ];
-        }
-
-        $pdo = $this->getEntityManager()->getPDO();
-
-        $unionSql = implode(' UNION ', $unionPartList);
-        $countSql = "SELECT COUNT(*) AS 'COUNT' FROM ({$unionSql}) AS c";
-        $sth = $pdo->prepare($countSql);
-        $sth->execute();
-        $row = $sth->fetch(\PDO::FETCH_ASSOC);
-        $totalCount = $row['COUNT'];
-
-        if (count($entityTypeList)) {
-            $entityListQuoted = [];
-            foreach ($entityTypeList as $entityType) {
-                $entityListQuoted[] = $pdo->quote($entityType);
+            $count = $this->getEntityManager()->getRepository($entityType)->count($params);
+            if ($count > 0) {
+                $result['count'] += $count;
+                $collection = $this->getEntityManager()->getRepository($entityType)->find($params);
+                foreach ($collection as $entity) {
+                    $result['list'] = array_merge($entity->toArray(), ['_scope' => $entity->getEntityType()]);
+                }
             }
-            $unionSql .= " ORDER BY FIELD(entityType, ".implode(', ', $entityListQuoted)."), name";
-        } else {
-            $unionSql .= " ORDER BY name";
         }
 
-        $unionSql .= " LIMIT :offset, :maxSize";
+        return $result;
+    }
 
-        $sth = $pdo->prepare($unionSql);
+    protected function init()
+    {
+        parent::init();
 
-        $sth->bindParam(':offset', $offset, \PDO::PARAM_INT);
-        $sth->bindParam(':maxSize', $maxSize, \PDO::PARAM_INT);
-        $sth->execute();
-        $rows = $sth->fetchAll(\PDO::FETCH_ASSOC);
+        $this->addDependency('metadata');
+        $this->addDependency('acl');
+        $this->addDependency('selectManagerFactory');
+    }
 
-        $entityDataList = [];
-
-        foreach ($rows as $row) {
-            $entity = $this->getEntityManager()->getEntity($row['entityType'], $row['id']);
-            $entityData = $entity->toArray();
-            $entityData['_scope'] = $entity->getEntityType();
-            $entityDataList[] = $entityData;
-        }
-
-        return array(
-            'total' => $totalCount,
-            'list' => $entityDataList,
-        );
+    protected function getMetadata(): Metadata
+    {
+        return $this->getInjection('metadata');
     }
 }
 
