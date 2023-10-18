@@ -48,9 +48,13 @@ class Currency extends \Espo\Core\Utils\Database\Schema\BaseRebuildActions
 
         $currencyRates[$defaultCurrency] = '1.00';
 
-        $this->getEntityManager()->getPDO()->exec("TRUNCATE `currency`");
-
         $connection = $this->getEntityManager()->getConnection();
+
+        // delete old
+        $connection->createQueryBuilder()
+            ->delete($connection->quoteIdentifier('currency'))
+            ->executeQuery();
+
         foreach ($currencyRates as $currencyName => $rate) {
             $connection->createQueryBuilder()
                 ->insert($connection->quoteIdentifier('currency'))
