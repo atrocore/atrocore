@@ -332,16 +332,9 @@ class MassActions extends HasContainer
     {
         $selectParams = $this->getSelectManagerFactory()->create($entityType)->getSelectParams(['where' => $where]);
         $this->getEntityManager()->getRepository($entityType)->handleSelectParams($selectParams);
-        $query = $this
-            ->getEntityManager()
-            ->getQuery()
-            ->createSelectQuery($entityType, array_merge($selectParams, ['select' => ['id']]));
+        $collection = $this->getEntityManager()->getRepository($entityType)->find(array_merge($selectParams, ['select' => ['id']]));
 
-        return $this
-            ->getEntityManager()
-            ->getPDO()
-            ->query($query)
-            ->fetchAll(\PDO::FETCH_COLUMN);
+        return array_column($collection->toArray(), 'id');
     }
 
 
