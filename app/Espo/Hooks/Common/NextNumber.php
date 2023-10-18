@@ -40,16 +40,6 @@ class NextNumber extends \Espo\Core\Hooks\Base
 {
     public static $order = 9;
 
-    protected function init()
-    {
-        $this->addDependency('metadata');
-    }
-
-    protected function getMetadata()
-    {
-        return $this->getInjection('metadata');
-    }
-
     protected function composeNumberAttribute(Entity $nextNumber)
     {
         $entityType = $nextNumber->get('entityType');

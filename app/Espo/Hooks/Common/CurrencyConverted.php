@@ -40,22 +40,6 @@ class CurrencyConverted extends \Espo\Core\Hooks\Base
 {
     public static $order = 1;
 
-    protected function init()
-    {
-        $this->addDependency('metadata');
-        $this->addDependency('config');
-    }
-
-    protected function getMetadata()
-    {
-        return $this->getInjection('metadata');
-    }
-
-    protected function getConfig()
-    {
-        return $this->getInjection('config');
-    }
-
     public function beforeSave(Entity $entity, array $options = array())
     {
         $fieldDefs = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []);

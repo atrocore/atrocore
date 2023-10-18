@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core;
 
-use Atro\ORM\DB\Mapper;
+use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
 use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\Json;

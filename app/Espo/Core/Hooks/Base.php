@@ -34,6 +34,9 @@
 namespace Espo\Core\Hooks;
 
 use Espo\Core\Interfaces\Injectable;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
+use Espo\ORM\EntityManager;
 
 abstract class Base implements Injectable
 {
@@ -91,7 +94,7 @@ abstract class Base implements Injectable
         return $this->getInjection('container');
     }
 
-    protected function getEntityManager()
+    protected function getEntityManager(): EntityManager
     {
         return $this->getInjection('entityManager');
     }
@@ -111,12 +114,12 @@ abstract class Base implements Injectable
         return $this->getInjection('aclManager');
     }
 
-    protected function getConfig()
+    protected function getConfig(): Config
     {
         return $this->getInjection('config');
     }
 
-    protected function getMetadata()
+    protected function getMetadata(): Metadata
     {
         return $this->getInjection('metadata');
     }

@@ -11,12 +11,12 @@
 
 declare(strict_types=1);
 
-namespace Atro\ORM\DB\Query;
+namespace Atro\ORM\DB\RDB\Query;
 
 use Doctrine\DBAL\Connection;
 use Espo\Core\Utils\Util;
-use Espo\ORM\IEntity;
 use Espo\ORM\EntityFactory;
+use Espo\ORM\IEntity;
 
 class QueryConverter
 {

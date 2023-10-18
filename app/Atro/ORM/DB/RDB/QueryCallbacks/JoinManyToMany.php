@@ -11,10 +11,10 @@
 
 declare(strict_types=1);
 
-namespace Atro\ORM\DB\QueryCallbacks;
+namespace Atro\ORM\DB\RDB\QueryCallbacks;
 
-use Atro\ORM\DB\Mapper;
-use Atro\ORM\DB\Query\QueryConverter;
+use Atro\ORM\DB\RDB\Mapper;
+use Atro\ORM\DB\RDB\Query\QueryConverter;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\IEntity;
 

@@ -33,7 +33,7 @@
 
 namespace Espo\Hooks\Common;
 
-use Atro\ORM\DB\Mapper;
+use Atro\ORM\DB\RDB\Mapper;
 use Espo\ORM\Entity;
 
 class Stream extends \Espo\Core\Hooks\Base

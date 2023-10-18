@@ -42,18 +42,13 @@ class StreamNotesAcl extends \Espo\Core\Hooks\Base
     protected function init()
     {
         parent::init();
+
         $this->addDependency('serviceFactory');
-        $this->addDependency('aclManager');
     }
 
     protected function getServiceFactory()
     {
         return $this->getInjection('serviceFactory');
-    }
-
-    protected function getAclManager()
-    {
-        return $this->getInjection('aclManager');
     }
 
     public function afterSave(Entity $entity, array $options = [])

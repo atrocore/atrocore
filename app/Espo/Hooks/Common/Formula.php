@@ -42,13 +42,7 @@ class Formula extends \Espo\Core\Hooks\Base
 
     protected function init()
     {
-        $this->addDependency('metadata');
         $this->addDependency('formulaManager');
-    }
-
-    protected function getMetadata()
-    {
-        return $this->getInjection('metadata');
     }
 
     protected function getFormulaManager()

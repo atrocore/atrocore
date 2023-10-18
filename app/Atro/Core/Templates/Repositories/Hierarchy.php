@@ -29,7 +29,7 @@ class Hierarchy extends RDB
     {
         parent::__construct($entityType, $entityManager, $entityFactory);
 
-        $this->tableName = $entityManager->getQuery()->toDb($this->entityType);
+        $this->tableName = $entityManager->getMapper()->toDb($this->entityType);
         $this->hierarchyTableName = $this->tableName . '_hierarchy';
     }
 

@@ -11,17 +11,17 @@
 
 declare(strict_types=1);
 
-namespace Atro\ORM\DB;
+namespace Atro\ORM\DB\RDB;
 
-use Atro\ORM\DB\Query\QueryConverter;
-use Atro\ORM\DB\QueryCallbacks\JoinManyToMany;
+use Atro\ORM\DB\MapperInterface;
+use Atro\ORM\DB\RDB\Query\QueryConverter;
+use Atro\ORM\DB\RDB\QueryCallbacks\JoinManyToMany;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
-use Espo\Core\Utils\Util;
-use Espo\ORM\IEntity;
 use Espo\ORM\EntityFactory;
+use Espo\ORM\IEntity;
 
-class Mapper
+class Mapper implements MapperInterface
 {
     protected Connection $connection;
     protected EntityFactory $entityFactory;
