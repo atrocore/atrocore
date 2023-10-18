@@ -641,6 +641,10 @@ class Stream extends \Espo\Core\Services\Base
             }
         }
 
+        echo '<pre>';
+        print_r('Todo 11');
+        die();
+
         $sqlPartList = [];
         foreach ($selectParamsList as $i => $selectParams) {
             if (empty($selectParams['whereClause'])) {
@@ -1309,8 +1313,8 @@ class Stream extends \Espo\Core\Services\Base
         $connection = $this->getEntityManager()->getConnection();
 
         $condition = 's.user_id = u.id';
-        $condition .= 'AND s.entity_id = :entityId';
-        $condition .= 'AND s.entity_type = :entityType';
+        $condition .= ' AND s.entity_id = :entityId';
+        $condition .= ' AND s.entity_type = :entityType';
 
         $res = $connection->createQueryBuilder()
             ->select('u.id, u.name')
