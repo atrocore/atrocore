@@ -177,26 +177,6 @@ Espo.define('views/fields/user', 'views/fields/link', function (Dep) {
             return $el;
         },
 
-        fetchSearch: function () {
-            var type = this.$el.find('select.search-type').val();
-
-            if (type == 'isFromTeams') {
-                var data = {
-                    type: 'isUserFromTeams',
-                    field: this.name,
-                    value: this.searchData.teamIdList,
-                    data: {
-                        type: type,
-                        teamIdList: this.searchData.teamIdList,
-                        teamNameHash: this.searchData.teamNameHash
-                    }
-                };
-                return data;
-            }
-
-            return Dep.prototype.fetchSearch.call(this);
-        }
-
     });
 });
 
