@@ -31,8 +31,6 @@ class QueryConverter
             'limit',
             'order',
             'orderBy',
-            'customWhere',
-            'customJoin',
             'joins',
             'leftJoins',
             'distinct',
@@ -41,7 +39,6 @@ class QueryConverter
             'aggregationBy',
             'groupBy',
             'havingClause',
-            'customHaving',
             'skipTextColumns',
             'maxTextColumnsLength'
         ];
@@ -145,9 +142,6 @@ class QueryConverter
         if (empty($params['leftJoins'])) {
             $params['leftJoins'] = array();
         }
-        if (empty($params['customJoin'])) {
-            $params['customJoin'] = '';
-        }
 
         $wherePart = $this->getWhere($entity, $whereClause, 'AND', $params);
 
@@ -189,17 +183,11 @@ class QueryConverter
         $joinsPart = $this->getBelongsToJoins($entity, $params['select'], array_merge($params['joins'], $params['leftJoins']));
 
         if (!empty($params['customWhere'])) {
-            if (!empty($wherePart)) {
-                $wherePart .= ' ';
-            }
-            $wherePart .= $params['customWhere'];
+            throw new \Error('CustomWhere does not supporting. Use callbacks instead.');
         }
 
         if (!empty($params['customHaving'])) {
-            if (!empty($havingPart)) {
-                $havingPart .= ' ';
-            }
-            $havingPart .= $params['customHaving'];
+            throw new \Error('CustomHaving does not supporting. Use callbacks instead.');
         }
 
         if (!empty($params['joins']) && is_array($params['joins'])) {
@@ -787,7 +775,7 @@ class QueryConverter
                     $value['selectParams']['leftJoins'] = $params['leftJoins'];
                 }
                 if (!empty($params['customJoin'])) {
-                    $value['selectParams']['customJoin'] = $params['customJoin'];
+                    throw new \Error('CustomJoin (1) does not supporting. Use callbacks instead.');
                 }
             }
 
@@ -911,7 +899,7 @@ class QueryConverter
                             }
                         }
                         if (!empty($fieldDefs['where'][$operatorModified]['customJoin'])) {
-                            $params['customJoin'] .= ' ' . $fieldDefs['where'][$operatorModified]['customJoin'];
+                            throw new \Error('CustomJoin (2) does not supporting. Use callbacks instead.');
                         }
                         if (!empty($fieldDefs['where'][$operatorModified]['distinct'])) {
                             $params['distinct'] = true;
