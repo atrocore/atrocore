@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Console;
 
+use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Util;
@@ -87,7 +88,11 @@ class RefreshTranslations extends AbstractConsole
         $connection = $this->getContainer()->get('connection');
 
         // delete old
-        $connection->createQueryBuilder()->delete('translation')->where('is_customized=:customized')->setParameter('customized', 0)->executeQuery();
+        $connection->createQueryBuilder()
+            ->delete('translation')
+            ->where('is_customized = :customized')
+            ->setParameter('customized', false, Mapper::getParameterType(false))
+            ->executeQuery();
 
         /** @var EntityManager $em */
         $em = $this->getContainer()->get('entityManager');
