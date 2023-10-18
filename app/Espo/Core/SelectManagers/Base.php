@@ -89,9 +89,7 @@ class Base
 
     private $seed = null;
 
-    private $userTimeZone = null;
-
-    protected $additionalFilterTypeList = ['inCategory', 'isUserFromTeams'];
+    protected $additionalFilterTypeList = ['inCategory'];
 
     protected $textFilterUseContainsAttributeList = [];
 
@@ -458,43 +456,6 @@ class Base
 
         if (!empty($part)) {
             $result['whereClause'][] = $part;
-        }
-
-        $this->setDistinct(true, $result);
-    }
-
-    protected function applyIsUserFromTeams($link, $idsValue, &$result)
-    {
-        if (is_array($idsValue) && count($idsValue) == 1) {
-            $idsValue = $idsValue[0];
-        }
-
-        $query = $this->getEntityManager()->getQuery();
-
-        $seed = $this->getSeed();
-
-        $relDefs = $seed->getRelations();
-
-        if (!$seed->hasRelation($link))
-            return;
-
-        $relationType = $seed->getRelationType($link);
-
-        if ($relationType == 'belongsTo') {
-            $key = $seed->getRelationParam($link, 'key');
-
-            $aliasName = 'usersTeams' . ucfirst($link);
-
-            $result['customJoin'] .= "
-                JOIN team_user AS {$aliasName}Middle ON {$aliasName}Middle.user_id = " . $query->toDb($seed->getEntityType()) . "." . $query->toDb($key) . " AND {$aliasName}Middle.deleted = 0
-                JOIN team AS {$aliasName} ON {$aliasName}.deleted = 0 AND {$aliasName}Middle.team_id = {$aliasName}.id
-            ";
-
-            $result['whereClause'][] = array(
-                $aliasName . 'Middle.teamId' => $idsValue
-            );
-        } else {
-            return;
         }
 
         $this->setDistinct(true, $result);
@@ -914,7 +875,7 @@ class Base
                 $attribute = $w['attribute'];
             }
             if ($attribute) {
-                if (isset($w['type']) && in_array($w['type'], ['isLinked', 'isNotLinked', 'linkedWith', 'notLinkedWith', 'isUserFromTeams'])) {
+                if (isset($w['type']) && in_array($w['type'], ['isLinked', 'isNotLinked', 'linkedWith', 'notLinkedWith'])) {
                     if (in_array($attribute, $this->getAcl()->getScopeForbiddenFieldList($this->getEntityType()))) {
                         throw new Forbidden();
                     }
@@ -928,21 +889,6 @@ class Base
                 $this->checkWhere($w['value']);
             }
         }
-    }
-
-    public function getUserTimeZone()
-    {
-        if (empty($this->userTimeZone)) {
-            $preferences = $this->getEntityManager()->getEntity('Preferences', $this->getUser()->id);
-            if ($preferences) {
-                $timeZone = $preferences->get('timeZone');
-                $this->userTimeZone = $timeZone;
-            } else {
-                $this->userTimeZone = 'UTC';
-            }
-        }
-
-        return $this->userTimeZone;
     }
 
     public function convertDateTimeWhere($item)
