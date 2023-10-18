@@ -674,21 +674,14 @@ class QueryConverter
 
     public function toDb($field)
     {
-        if (array_key_exists($field, $this->fieldsMapCache)) {
-            return $this->fieldsMapCache[$field];
-
-        } else {
-            $field = lcfirst($field);
-            $dbField = preg_replace_callback('/([A-Z])/', array($this, 'toDbConversion'), $field);
-
-            $this->fieldsMapCache[$field] = $dbField;
-            return $dbField;
+        $field = lcfirst($field);
+        if (!array_key_exists($field, $this->fieldsMapCache)) {
+            $this->fieldsMapCache[$field] = preg_replace_callback('/([A-Z])/', function ($matches) {
+                return "_" . strtolower($matches[1]);
+            }, $field);
         }
-    }
 
-    protected function toDbConversion($matches)
-    {
-        return "_" . strtolower($matches[1]);
+        return $this->fieldsMapCache[$field];
     }
 
     public function getRelationAlias(IEntity $entity, $relationName)

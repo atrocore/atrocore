@@ -93,6 +93,11 @@ class EntityManager
         die();
     }
 
+    public function strToDb(string $str): string
+    {
+        return $this->getMapper()->toDb($str);
+    }
+
     public function getMapper(string $name = 'RDB'): MapperInterface
     {
         $className = "\\Atro\\ORM\\DB\\$name\\Mapper";

@@ -335,7 +335,7 @@ class EntityManager
         $filePath = $templatePath . "/Metadata/{$type}/entityDefs.json";
         $entityDefsDataContents = $this->getFileManager()->getContents($filePath);
         $entityDefsDataContents = str_replace('{entityType}', $name, $entityDefsDataContents);
-        $entityDefsDataContents = str_replace('{tableName}', $this->getEntityManager()->getQuery()->toDb($name), $entityDefsDataContents);
+        $entityDefsDataContents = str_replace('{tableName}', $this->getEntityManager()->strToDb($name), $entityDefsDataContents);
         foreach ($replaceData as $key => $value) {
             $entityDefsDataContents = str_replace('{'.$key.'}', $value, $entityDefsDataContents);
         }
