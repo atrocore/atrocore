@@ -577,21 +577,6 @@ class QueryConverter
                 return $arr;
             }
 
-            if (strpos($orderBy, 'LIST:') === 0) {
-                echo '2023-10-18 TODO: LIST:' . PHP_EOL;
-                die();
-//                list($l, $field, $list) = explode(':', $orderBy);
-//                $fieldPath = $this->getFieldPathForOrderBy($entity, $field);
-//                $listQuoted = [];
-//                $list = array_reverse(explode(',', $list));
-//                foreach ($list as $i => $listItem) {
-//                    $listItem = str_replace('_COMMA_', ',', $listItem);
-//                    $listQuoted[] = $this->quote($listItem);
-//                }
-//                $part = "FIELD(" . $fieldPath . ", " . implode(", ", $listQuoted) . ") DESC";
-//                return $part;
-            }
-
             $order = $this->prepareOrderParameter($order);
 
             if (is_integer($orderBy)) {
