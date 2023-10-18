@@ -38,12 +38,11 @@ use Espo\Core\Utils\Metadata;
 
 class GlobalSearch extends Base
 {
+    public const MAX = 20;
+
     public function find(string $query, int $offset, int $maxSize): array
     {
-        $result = [
-            'count' => 0,
-            'list'  => []
-        ];
+        $list = [];
 
         foreach ($this->getConfig()->get('globalSearchEntityList', []) as $entityType) {
             if (!$this->getInjection('acl')->checkScope($entityType, 'read')) {
@@ -59,17 +58,19 @@ class GlobalSearch extends Base
             $selectManager->manageAccess($params);
             $selectManager->applyTextFilter($query, $params);
 
-            $count = $this->getEntityManager()->getRepository($entityType)->count($params);
-            if ($count > 0) {
-                $result['count'] += $count;
-                $collection = $this->getEntityManager()->getRepository($entityType)->find($params);
-                foreach ($collection as $entity) {
-                    $result['list'] = array_merge($entity->toArray(), ['_scope' => $entity->getEntityType()]);
+            $collection = $this->getEntityManager()->getRepository($entityType)->find($params);
+            foreach ($collection as $entity) {
+                if (count($list) >= self::MAX) {
+                    break 2;
                 }
+                $list[] = array_merge($entity->toArray(), ['_scope' => $entity->getEntityType()]);
             }
         }
 
-        return $result;
+        return [
+            'count' => count($list),
+            'list'  => $list
+        ];
     }
 
     protected function init()
