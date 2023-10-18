@@ -348,12 +348,6 @@ class OpenApiGenerator
                 }
             }
 
-            $fields = [];
-            if (!empty($entity = $entityManager->getRepository($scopeName)->get())) {
-                $fields = array_keys($entity->getFields());
-                sort($fields);
-            }
-
             $result['paths']["/{$scopeName}"]['get'] = [
                 'tags'        => [$scopeName],
                 "summary"     => "Returns a collection of $scopeName records",
@@ -375,7 +369,7 @@ class OpenApiGenerator
                         "name"        => "select",
                         "in"          => "query",
                         "required"    => false,
-                        "description" => "Available fields: " . implode(', ', $fields),
+                        "description" => "Available fields: id, name, createdAt, ...",
                         "schema"      => [
                             "type"    => "string",
                             "example" => "name,createdAt"
