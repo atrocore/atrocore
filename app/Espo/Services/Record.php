@@ -2099,16 +2099,9 @@ class Record extends \Espo\Core\Services\Base
         $selectParams = $this->getRecordService($foreignEntityType)->getSelectParams(['where' => $where]);
         $this->getEntityManager()->getRepository($foreignEntityType)->handleSelectParams($selectParams);
 
-        $query = $this
-            ->getEntityManager()
-            ->getQuery()
-            ->createSelectQuery($foreignEntityType, array_merge($selectParams, ['select' => ['id']]));
+        $collection = $this->getEntityManager()->getRepository($foreignEntityType)->find(array_merge($selectParams, ['select' => ['id']]));
 
-        $foreignIds = $this
-            ->getEntityManager()
-            ->getPDO()
-            ->query($query)
-            ->fetchAll(\PDO::FETCH_COLUMN);
+        $foreignIds = array_column($collection->toArray(), 'id');
 
         foreach ($foreignIds as $k => $foreignId) {
             if ($k < $this->maxMassLinkCount) {
@@ -2179,16 +2172,9 @@ class Record extends \Espo\Core\Services\Base
             $selectParams = $this->getSelectParams(['where' => $params['where']]);
             $this->getEntityManager()->getRepository($this->getEntityType())->handleSelectParams($selectParams);
 
-            $query = $this
-                ->getEntityManager()
-                ->getQuery()
-                ->createSelectQuery($this->getEntityType(), array_merge($selectParams, ['select' => ['id']]));
+            $collection = $this->getEntityManager()->getRepository($this->getEntityType())->find(array_merge($selectParams, ['select' => ['id']]));
 
-            $ids = $this
-                ->getEntityManager()
-                ->getPDO()
-                ->query($query)
-                ->fetchAll(\PDO::FETCH_COLUMN);
+            $ids = array_column($collection->toArray(), 'id');
         }
 
         $position = 0;
@@ -2312,17 +2298,9 @@ class Record extends \Espo\Core\Services\Base
             $selectParams = $this->getSelectParams(['where' => $params['where']]);
             $this->getEntityManager()->getRepository($this->getEntityType())->handleSelectParams($selectParams);
 
-            $query = $this
-                ->getEntityManager()
-                ->getQuery()
-                ->createSelectQuery($this->getEntityType(), array_merge($selectParams, ['select' => ['id']]));
+            $collection = $this->getEntityManager()->getRepository($this->getEntityType())->find(array_merge($selectParams, ['select' => ['id']]));
 
-            $ids = $this
-                ->getEntityManager()
-                ->getPDO()
-                ->query($query)
-                ->fetchAll(\PDO::FETCH_COLUMN);
-
+            $ids = array_column($collection->toArray(), 'id');
         }
 
         foreach ($ids as $id) {
@@ -2362,16 +2340,9 @@ class Record extends \Espo\Core\Services\Base
             $selectParams = $this->getSelectParams(['where' => $params['where']]);
             $this->getEntityManager()->getRepository($this->getEntityType())->handleSelectParams($selectParams);
 
-            $query = $this
-                ->getEntityManager()
-                ->getQuery()
-                ->createSelectQuery($this->getEntityType(), array_merge($selectParams, ['select' => ['id']]));
+            $collection = $this->getEntityManager()->getRepository($this->getEntityType())->find(array_merge($selectParams, ['select' => ['id']]));
 
-            $ids = $this
-                ->getEntityManager()
-                ->getPDO()
-                ->query($query)
-                ->fetchAll(\PDO::FETCH_COLUMN);
+            $ids = array_column($collection->toArray(), 'id');
         }
 
         $streamService = $this->getStreamService();
