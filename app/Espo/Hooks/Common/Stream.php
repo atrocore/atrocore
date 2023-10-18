@@ -40,8 +40,6 @@ class Stream extends \Espo\Core\Hooks\Base
 {
     protected $streamService = null;
 
-    protected $auditedFieldsCache = array();
-
     protected $hasStreamCache = array();
 
     protected $isLinkObservableInStreamCache = array();
