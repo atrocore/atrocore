@@ -238,26 +238,6 @@ class Base
                 }
                 $result['orderBy'] = [[$sortBy . 'Country', $orderPart], [$sortBy . 'City', $orderPart], [$sortBy . 'Street', $orderPart]];
                 return;
-            } else if ($type === 'enum') {
-                $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy]);
-                if (!empty($fieldDefs['optionsIds'])) {
-                    $options = $fieldDefs['options'];
-                    if ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'isSorted'])) {
-                        asort($options);
-                    }
-
-                    $list = [];
-                    foreach ($options as $i => $item) {
-                        $list[] = str_replace(',', '_COMMA_', $fieldDefs['optionsIds'][$i]);
-                    }
-
-                    if ($desc) {
-                        $list = array_reverse($list);
-                    }
-
-                    $result['orderBy'] = 'LIST:' . $sortBy . ':' . implode(',', $list);
-                    return;
-                }
             }
         }
         if (!$desc) {
