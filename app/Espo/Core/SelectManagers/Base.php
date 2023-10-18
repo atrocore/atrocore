@@ -89,8 +89,6 @@ class Base
 
     private $seed = null;
 
-    protected $additionalFilterTypeList = ['inCategory'];
-
     protected $textFilterUseContainsAttributeList = [];
 
     const MIN_LENGTH_FOR_CONTENT_SEARCH = 4;
@@ -374,7 +372,7 @@ class Base
     {
         $whereClause = [];
 
-        $ignoreTypeList = array_merge(['bool', 'primary'], $this->additionalFilterTypeList);
+        $ignoreTypeList = ['bool', 'primary'];
 
         foreach ($where as $item) {
             if (!isset($item['type']))
@@ -387,7 +385,7 @@ class Base
                     $whereClause[] = $part;
                 }
             } else {
-                if (!$ignoreAdditionaFilterTypes && in_array($type, $this->additionalFilterTypeList)) {
+                if (!$ignoreAdditionaFilterTypes) {
                     if (!empty($item['value'])) {
                         $methodName = 'apply' . ucfirst($type);
 
@@ -459,49 +457,6 @@ class Base
         }
 
         $this->setDistinct(true, $result);
-    }
-
-    public function applyInCategory($link, $value, &$result)
-    {
-        $relDefs = $this->getSeed()->getRelations();
-
-        $query = $this->getEntityManager()->getQuery();
-
-        $tableName = $query->toDb($this->getSeed()->getEntityType());
-
-        if (!empty($relDefs[$link])) {
-            $defs = $relDefs[$link];
-
-            $foreignEntity = $defs['entity'];
-            if (empty($foreignEntity)) {
-                return;
-            }
-
-            $pathName = lcfirst($query->sanitize($foreignEntity . 'Path'));
-
-            if ($defs['type'] == 'manyMany') {
-                if (!empty($defs['midKeys'])) {
-                    $result['distinct'] = true;
-                    $result['joins'][] = $link;
-                    $key = $defs['midKeys'][1];
-
-                    $middleName = $link . 'Middle';
-
-                    $result['customJoin'] .= "
-                        JOIN " . $query->toDb($pathName) . " AS `{$pathName}` ON {$pathName}.descendor_id = " . $query->sanitize($middleName) . "." . $query->toDb($key) . "
-                    ";
-                    $result['whereClause'][$pathName . '.ascendorId'] = $value;
-                }
-            } else if ($defs['type'] == 'belongsTo') {
-                if (!empty($defs['key'])) {
-                    $key = $defs['key'];
-                    $result['customJoin'] .= "
-                        JOIN " . $query->toDb($pathName) . " AS `{$pathName}` ON {$pathName}.descendor_id = {$tableName}." . $query->toDb($key) . "
-                    ";
-                    $result['whereClause'][$pathName . '.ascendorId'] = $value;
-                }
-            }
-        }
     }
 
     protected function q($params, &$result)
