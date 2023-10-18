@@ -25,7 +25,7 @@ interface MapperInterface
 
     public function selectRelated(IEntity $entity, string $relationName, array $params = [], bool $totalCount = false);
 
-    public function countRelated(IEntity $entity, string $relName, array $params);
+    public function countRelated(IEntity $entity, string $relName, array $params): int;
 
     public function addRelation(IEntity $entity, string $relName, string $id = null, IEntity $relEntity = null, array $data = null): bool;
 

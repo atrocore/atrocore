@@ -288,7 +288,7 @@ class Mapper implements MapperInterface
         return null;
     }
 
-    public function countRelated(IEntity $entity, string $relName, array $params)
+    public function countRelated(IEntity $entity, string $relName, array $params): int
     {
         return $this->selectRelated($entity, $relName, $params, true);
     }

@@ -77,10 +77,6 @@ class GlobalSearch extends \Espo\Core\Services\Base
     {
         $entityTypeList = $this->getConfig()->get('globalSearchEntityList');
 
-        $hasFullTextSearch = false;
-
-        $relevanceSelectPosition = 0;
-
         $unionPartList = [];
         foreach ($entityTypeList as $entityType) {
             if (!$this->getAcl()->checkScope($entityType, 'read')) {
@@ -96,16 +92,7 @@ class GlobalSearch extends \Espo\Core\Services\Base
                 'select' => ['id', 'name', ['VALUE:' . $entityType, 'entityType']]
             ];
 
-            $fullTextSearchData = $selectManager->getFullTextSearchDataForTextFilter($query);
-
-            if ($fullTextSearchData) {
-                $hasFullTextSearch = true;
-                $params['select'][] = [$fullTextSearchData['where'], '_relevance'];
-                $relevanceSelectPosition = count($params['select']);
-            } else {
-                $params['select'][] = ['VALUE:1.1', '_relevance'];
-                $relevanceSelectPosition = count($params['select']);
-            }
+            $params['select'][] = ['VALUE:1.1', '_relevance'];
 
             $selectManager->manageAccess($params);
             $params['useFullTextSearch'] = true;
@@ -136,11 +123,7 @@ class GlobalSearch extends \Espo\Core\Services\Base
             foreach ($entityTypeList as $entityType) {
                 $entityListQuoted[] = $pdo->quote($entityType);
             }
-            if ($hasFullTextSearch) {
-                $unionSql .= " ORDER BY " . $relevanceSelectPosition . " DESC, FIELD(entityType, ".implode(', ', $entityListQuoted)."), name";
-            } else {
-                $unionSql .= " ORDER BY FIELD(entityType, ".implode(', ', $entityListQuoted)."), name";
-            }
+            $unionSql .= " ORDER BY FIELD(entityType, ".implode(', ', $entityListQuoted)."), name";
         } else {
             $unionSql .= " ORDER BY name";
         }
