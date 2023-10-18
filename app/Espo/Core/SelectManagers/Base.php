@@ -1895,17 +1895,6 @@ class Base
         $result['whereClause'][] = ['id!=' => $ids];
     }
 
-    protected function filterFollowed(&$result)
-    {
-        $query = $this->getEntityManager()->getQuery();
-        $result['customJoin'] .= "
-            JOIN subscription ON
-                subscription.entity_type = " . $query->quote($this->getEntityType()) . " AND
-                subscription.entity_id = " . $query->toDb($this->getEntityType()) . ".id AND
-                subscription.user_id = " . $query->quote($this->getUser()->id) . "
-        ";
-    }
-
     /**
      * @param string $filterName
      *
@@ -1922,10 +1911,5 @@ class Base
         }
 
         return null;
-    }
-
-    protected function boolFilterFollowed(&$result)
-    {
-        $this->filterFollowed($result);
     }
 }
