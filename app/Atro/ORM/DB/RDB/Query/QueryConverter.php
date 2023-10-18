@@ -672,7 +672,7 @@ class QueryConverter
         }
     }
 
-    public function toDb($field)
+    public function toDb(string $field): string
     {
         $field = lcfirst($field);
         if (!array_key_exists($field, $this->fieldsMapCache)) {
