@@ -1306,48 +1306,37 @@ class Stream extends \Espo\Core\Services\Base
 
     public function getEntityFollowers(Entity $entity, $offset = 0, $limit = false)
     {
-        $query = $this->getEntityManager()->getQuery();
-        $pdo = $this->getEntityManager()->getPDO();
+        $connection = $this->getEntityManager()->getConnection();
 
-        if (!$limit) {
-            $limit = 200;
-        }
+        $condition = 's.user_id = u.id';
+        $condition .= 'AND s.entity_id = :entityId';
+        $condition .= 'AND s.entity_type = :entityType';
 
-        $sql = $query->createSelectQuery('User', array(
-            'select' => ['id', 'name'],
-            'customJoin' => "
-                JOIN subscription AS `subscription` ON
-                    subscription.user_id = user.id AND
-                    subscription.entity_id = ".$query->quote($entity->id)." AND
-                    subscription.entity_type = ".$query->quote($entity->getEntityType())."
-            ",
-            'offset' => $offset,
-            'limit' => $limit,
-            'whereClause' => array(
-                'isActive' => true
-            ),
-            'orderBy' => [
-                ['LIST:id:' . $this->getUser()->id, 'DESC'],
-                ['name']
-            ]
-        ));
-
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
+        $res = $connection->createQueryBuilder()
+            ->select('u.id, u.name')
+            ->from($connection->quoteIdentifier('user'), 'u')
+            ->innerJoin('u', $connection->quoteIdentifier('subscription'), 's', $condition)
+            ->setParameter('entityId', $entity->id)
+            ->setParameter('entityType', $entity->getEntityType())
+            ->where('u.is_active = :isActive')
+            ->setParameter('isActive', true, Mapper::getParameterType(true))
+            ->setFirstResult($offset)
+            ->setMaxResults($limit ?? 200)
+            ->orderBy('u.name', 'ASC')
+            ->fetchAllAssociative();
 
         $data = array(
-            'idList' => [],
+            'idList'  => [],
             'nameMap' => new \StdClass()
         );
 
-        while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
+        foreach ($res as $row) {
             $id = $row['id'];
             $data['idList'][] = $id;
             $data['nameMap']->$id = $row['name'];
         }
 
         return $data;
-
     }
 
     protected function getOnlyTeamEntityTypeList(\Espo\Entities\User $user)
