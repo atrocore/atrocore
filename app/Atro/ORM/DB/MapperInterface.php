@@ -29,19 +29,11 @@ interface MapperInterface
 
     public function addRelation(IEntity $entity, string $relName, string $id = null, IEntity $relEntity = null, array $data = null): bool;
 
-    public function relate(IEntity $entityFrom, string $relationName, IEntity $entityTo, array $data = null): bool;
-
     public function removeRelation(IEntity $entity, string $relationName, string $id = null, bool $all = false, IEntity $relEntity = null, bool $force = false): bool;
-
-    public function unrelate(IEntity $entityFrom, string $relationName, IEntity $entityTo, bool $force = false): bool;
 
     public function insert(IEntity $entity): bool;
 
     public function update(IEntity $entity): bool;
 
     public function delete(IEntity $entity): bool;
-
-    public function toDb(string $field): string;
-
-    public function getKeys(IEntity $entity, string $relationName): array;
 }

@@ -403,11 +403,6 @@ class Mapper implements MapperInterface
         return false;
     }
 
-    public function relate(IEntity $entityFrom, string $relationName, IEntity $entityTo, array $data = null): bool
-    {
-        return $this->addRelation($entityFrom, $relationName, null, $entityTo, $data);
-    }
-
     public function removeRelation(IEntity $entity, string $relationName, string $id = null, bool $all = false, IEntity $relEntity = null, bool $force = false): bool
     {
         if (!is_null($relEntity)) {
@@ -478,17 +473,6 @@ class Mapper implements MapperInterface
         $this->updateModifiedAtForManyToMany($entity, $relEntity);
 
         return true;
-    }
-
-    public function unrelate(IEntity $entityFrom, string $relationName, IEntity $entityTo, bool $force = false): bool
-    {
-        return $this->removeRelation($entityFrom, $relationName, null, false, $entityTo, $force);
-    }
-
-    public function removeAllRelations(IEntity $entity, string $relName): bool
-    {
-        echo '2023-10-17 TODO: removeAllRelations' . PHP_EOL;
-        die();
     }
 
     public function insert(IEntity $entity): bool

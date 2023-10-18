@@ -492,7 +492,7 @@ class RDB extends \Espo\ORM\Repository
                 $d = get_object_vars($d);
             }
             if ($foreign instanceof Entity) {
-                $result = $this->getMapper()->relate($entity, $relationName, $foreign, $d);
+                $result = $this->getMapper()->addRelation($entity, $relationName, null, $foreign, $d);
             }
             if (is_string($foreign)) {
                 $result = $this->getMapper()->addRelation($entity, $relationName, $foreign, null, $d);
@@ -549,13 +549,13 @@ class RDB extends \Espo\ORM\Repository
             $result = $this->$methodName($entity, $foreign, $options);
         } else {
             if ($foreign instanceof Entity) {
-                $result = $this->getMapper()->unrelate($entity, $relationName, $foreign, true);
+                $result = $this->getMapper()->removeRelation($entity, $relationName, null, false, $foreign, true);
             }
             if (is_string($foreign)) {
                 $result = $this->getMapper()->removeRelation($entity, $relationName, $foreign, false, null, true);
             }
             if ($foreign === true) {
-                $result = $this->getMapper()->removeAllRelations($entity, $relationName, true);
+                $GLOBALS['log']->error('removeAllRelations is deprecated. Use removeRelation instead.');
             }
         }
 
