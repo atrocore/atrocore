@@ -369,7 +369,7 @@ class OpenApiGenerator
                         "name"        => "select",
                         "in"          => "query",
                         "required"    => false,
-                        "description" => "Available fields: id, name, createdAt, ...",
+                        "description" => "Fields according to $scopeName metadata. For example: id, name, createdAt, ...",
                         "schema"      => [
                             "type"    => "string",
                             "example" => "name,createdAt"
