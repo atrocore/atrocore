@@ -133,12 +133,6 @@ class Mapper implements MapperInterface
         return $res;
     }
 
-    public function aggregate(IEntity $entity, $params, $aggregation, $aggregationBy, $deleted = false)
-    {
-        echo '2023-10-17 TODO: aggregate' . PHP_EOL;
-        die();
-    }
-
     public function count(IEntity $entity, array $params = []): int
     {
         $params['aggregation'] = 'COUNT';
@@ -150,24 +144,6 @@ class Mapper implements MapperInterface
         }
 
         return 0;
-    }
-
-    public function max(IEntity $entity, array $params, string $field, bool $deleted = false)
-    {
-        echo '2023-10-17 TODO: max' . PHP_EOL;
-        die();
-    }
-
-    public function min(IEntity $entity, array $params, string $field, bool $deleted = false)
-    {
-        echo '2023-10-17 TODO: min' . PHP_EOL;
-        die();
-    }
-
-    public function sum(IEntity $entity, array $params = [])
-    {
-        echo '2023-10-17 TODO: sum' . PHP_EOL;
-        die();
     }
 
     public function selectRelated(IEntity $entity, string $relationName, array $params = [], bool $totalCount = false)

@@ -660,24 +660,6 @@ class RDB extends \Espo\ORM\Repository
         return intval($count);
     }
 
-    public function max($field)
-    {
-        $params = $this->getSelectParams();
-        return $this->getMapper()->max($this->seed, $params, $field);
-    }
-
-    public function min($field)
-    {
-        $params = $this->getSelectParams();
-        return $this->getMapper()->min($this->seed, $params, $field);
-    }
-
-    public function sum($field)
-    {
-        $params = $this->getSelectParams();
-        return $this->getMapper()->sum($this->seed, $params, $field);
-    }
-
     public function join()
     {
         $args = func_get_args();
