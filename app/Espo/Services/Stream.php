@@ -33,6 +33,7 @@
 
 namespace Espo\Services;
 
+use Atro\ORM\DB\RDB\Mapper;
 use Caxy\HtmlDiff\HtmlDiff;
 use Espo\Core\EventManager\Event;
 use \Espo\Core\Exceptions\Forbidden;
@@ -1284,30 +1285,23 @@ class Stream extends \Espo\Core\Services\Base
 
     public function getEntityFolowerIdList(Entity $entity)
     {
-        $query = $this->getEntityManager()->getQuery();
-        $pdo = $this->getEntityManager()->getPDO();
-        $sql = $query->createSelectQuery('User', array(
-            'select' => ['id'],
-            'customJoin' => "
-                JOIN subscription AS `subscription` ON
-                    subscription.user_id = user.id AND
-                    subscription.entity_id = ".$query->quote($entity->id)." AND
-                    subscription.entity_type = ".$query->quote($entity->getEntityType())."
-            ",
-            'whereClause' => array(
-                'isActive' => true
-            )
-        ));
+        $connection = $this->getEntityManager()->getConnection();
 
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
+        $condition = 's.user_id = u.id';
+        $condition .= ' AND s.entity_id = :entityId';
+        $condition .= ' AND s.entity_type = :entityType';
 
-        $idList = [];
-        while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
-            $idList[] = $row['id'];
-        }
+        $res = $connection->createQueryBuilder()
+            ->select('u.id')
+            ->from($connection->quoteIdentifier('user'), 'u')
+            ->where('u.is_active = :isActive')
+            ->setParameter('isActive', true, Mapper::getParameterType(true))
+            ->innerJoin('u', $connection->quoteIdentifier('subscription'), 's', $condition)
+            ->setParameter('entityId', $entity->id)
+            ->setParameter('entityType', $entity->getEntityType())
+            ->fetchAllAssociative();
 
-        return $idList;
+        return array_column($res, 'id');
     }
 
     public function getEntityFollowers(Entity $entity, $offset = 0, $limit = false)
