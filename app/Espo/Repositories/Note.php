@@ -35,6 +35,7 @@ declare(strict_types=1);
 
 namespace Espo\Repositories;
 
+use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\Acl;
 use Espo\Core\AclManager;
 use Atro\Core\EventManager\Event;
@@ -361,36 +362,31 @@ class Note extends RDB
 
     protected function getSubscriberList(string $parentType, string $parentId, bool $isInternal = false): EntityCollection
     {
-        $pdo = $this->getEntityManager()->getPDO();
+        $connection = $this->getEntityManager()->getConnection();
 
-        if (!$isInternal) {
-            $sql = "
-                SELECT user_id AS userId
-                FROM subscription
-                WHERE entity_id = " . $pdo->quote($parentId) . " AND entity_type = " . $pdo->quote($parentType) . "
-            ";
-        } else {
-            $sql = "
-                SELECT subscription.user_id AS userId
-                FROM subscription
-                JOIN user ON user.id = subscription.user_id
-                WHERE
-                    entity_id = " . $pdo->quote($parentId) . " AND entity_type = " . $pdo->quote($parentType) . " AND
-                    user.is_portal_user = 0
-            ";
+        $qb = $connection->createQueryBuilder();
+        $qb
+            ->select('s.user_id')
+            ->from($connection->quoteIdentifier('subscription'), 's')
+            ->where('s.entity_id = :entityId')
+            ->setParameter('entityId', $parentId)
+            ->andWhere('s.entity_type = :entityType')
+            ->setParameter('entityType', $parentType);
+
+        if ($isInternal) {
+            $qb
+                ->innerJoin('s', $connection->quoteIdentifier('user'), 'u', 'u.id = s.user_id')
+                ->andWhere('u.is_portal_user = :isPortalUser')
+                ->setParameter('isPortalUser', false, Mapper::getParameterType(false));
         }
 
-        $userList = $this->getEntityManager()->getRepository('User')->where(
-            [
+        return $this->getEntityManager()->getRepository('User')
+            ->select(['id', 'isAdmin'])
+            ->where([
+                'id'       => array_column($qb->fetchAllAssociative(), 'user_id'),
                 'isActive' => true
-            ]
-        )->select(['id', 'isAdmin'])->find(
-            [
-                'customWhere' => "AND user.id IN (" . $sql . ")"
-            ]
-        );
-
-        return $userList;
+            ])
+            ->find();
     }
 
     protected function getInternalAclManager(): AclManager
