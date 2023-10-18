@@ -25,8 +25,7 @@
             "tooltip": true
         },
         "name": {
-            "type": "varchar",
-            "view": "views/user/fields/name"
+            "type": "varchar"
         },
         "password": {
             "type": "password",
