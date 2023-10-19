@@ -49,29 +49,29 @@ class Note extends \Espo\Core\ORM\Entity
 
     public function loadAttachments()
     {
-        $data = $this->get('data');
-        if (!empty($data) && !empty($data->attachmentsIds) && is_array($data->attachmentsIds)) {
-            $attachmentsIds = $data->attachmentsIds;
-            $collection = $this->entityManager->getRepository('Attachment')->select(['id', 'name', 'type'])->order('createdAt')->where([
-                'id' => $attachmentsIds
-            ])->find();
-        } else {
-            $this->loadLinkMultipleField('attachments');
+        if (empty($data = $this->get('data')) || !property_exists($data, 'attachmentsIds') || empty($data->attachmentsIds)) {
             return;
         }
 
-        $ids = array();
-        $names = new \stdClass();
-        $types = new \stdClass();
+        $collection = $this->entityManager->getRepository('Attachment')
+            ->select(['id', 'name', 'type'])
+            ->where(['id' => $data->attachmentsIds])
+            ->order('createdAt')
+            ->find();
+
+        $attachmentsIds = [];
+        $attachmentsNames = new \stdClass();
+        $attachmentsTypes = new \stdClass();
         foreach ($collection as $e) {
             $id = $e->id;
-            $ids[] = $id;
-            $names->$id = $e->get('name');
-            $types->$id = $e->get('type');
+            $attachmentsIds[] = $id;
+            $attachmentsNames->$id = $e->get('name');
+            $attachmentsTypes->$id = $e->get('type');
         }
-        $this->set('attachmentsIds', $ids);
-        $this->set('attachmentsNames', $names);
-        $this->set('attachmentsTypes', $types);
+
+        $this->set('attachmentsIds', $attachmentsIds);
+        $this->set('attachmentsNames', $attachmentsNames);
+        $this->set('attachmentsTypes', $attachmentsTypes);
     }
 
     public function addNotifiedUserId($userId)
