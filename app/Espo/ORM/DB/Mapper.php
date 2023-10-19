@@ -109,7 +109,6 @@ abstract class Mapper implements IMapper
     public function select(IEntity $entity, $params = array())
     {
         $sql = $this->query->createSelectQuery($entity->getEntityType(), $params, !empty($params['withDeleted']));
-
         return $this->selectByQuery($entity, $sql);
     }
 
