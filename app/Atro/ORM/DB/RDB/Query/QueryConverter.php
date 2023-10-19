@@ -810,9 +810,7 @@ class QueryConverter
                 }
 
                 if (empty($isComplex)) {
-
                     if (!isset($entity->fields[$field])) {
-//                        $whereParts[] = '0';
                         continue;
                     }
 
@@ -970,18 +968,14 @@ class QueryConverter
                             }
                         } else {
                             $oppose = '';
-                            $emptyValue = '0';
                             if ($operator == '<>') {
                                 $oppose = 'NOT ';
-                                $emptyValue = '1';
                             }
                             if (!empty($value)) {
                                 $parts = explode('.', $field);
                                 $param = $parts[1] ?? $parts[0];
                                 $whereParts[] = $leftPart . " {$oppose}IN " . "(:{$param}_w2)";
                                 $this->parameters["{$param}_w2"] = $value;
-                            } else {
-                                $whereParts[] = $emptyValue;
                             }
                         }
                     }
