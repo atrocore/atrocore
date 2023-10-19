@@ -36,8 +36,6 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
 
         sideView: 'views/user/record/detail-side',
 
-        bottomView: 'views/user/record/detail-bottom',
-
         editModeDisabled: true,
 
         setup: function () {
