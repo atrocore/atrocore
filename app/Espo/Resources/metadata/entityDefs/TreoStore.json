@@ -52,8 +52,7 @@
     "asc": false,
     "textFilterFields": [
       "name"
-    ],
-    "fullTextSearch": false
+    ]
   },
   "indexes": {
     "name": {

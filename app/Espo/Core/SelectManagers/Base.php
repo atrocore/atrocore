@@ -1683,8 +1683,6 @@ class Base
             $textFilter = str_replace('*', '%', $textFilter);
         }
 
-        $fullTextGroup = [];
-
         foreach ($fieldList as $field) {
             $attributeType = null;
             if (!empty($fieldDefs[$field]['type'])) {
@@ -1719,10 +1717,6 @@ class Base
             }
 
             $group[$field . '*'] = $expression;
-        }
-
-        if (!empty($fullTextGroup)) {
-            $group['AND'] = $fullTextGroup;
         }
 
         if (count($group) === 0) {

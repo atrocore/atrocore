@@ -35,8 +35,7 @@
     "color": "Color",
     "kanbanViewMode": "Kanban View",
     "kanbanStatusIgnoreList": "Ignored groups in Kanban view",
-    "iconClass": "Icon",
-    "fullTextSearch": "Full-Text Search"
+    "iconClass": "Icon"
   },
   "options": {
     "linkType": {
@@ -65,7 +64,6 @@
     "linkMultipleField": "El campo de relaciones múltiples proporciona una manera práctica de editar relaciones. No lo use si puede tener un gran número de registros relacionados.",
     "hasAssignedUser": "Has Assigned User",
     "hasTeam": "Has Team",
-    "hasOwner": "Has Owner",
-    "fullTextSearch": "Provides an ability to perform a much faster and comprehensive text search."
+    "hasOwner": "Has Owner"
   }
 }

@@ -44,8 +44,7 @@
     "beforeSaveCustomScript": "vor dem Speicher benutzerdefiniertes Script",
     "color": "Farbe",
     "kanbanViewMode": "Kanban-Ansicht",
-    "kanbanStatusIgnoreList": "Ignorierte Gruppen in der Kanban-Ansicht",
-    "fullTextSearch": "Volltextsuche"
+    "kanbanStatusIgnoreList": "Ignorierte Gruppen in der Kanban-Ansicht"
   },
   "options": {
     "linkType": {
@@ -82,7 +81,6 @@
     "textFilterFields": "Von der Textsuche verwendete Felder.",
     "stream": "Aktivitätenpanel wird verwendet, um den Änderungsverlauf anzuzeigen und Beiträge mit Anhängen hinzuzufügen.",
     "linkAudited": "Das Erstellen eines verknüpften Datensatzes und das Verknüpfen mit dem vorhandenen Datensatz wird in Stream protokolliert.",
-    "linkMultipleField": "verlinken mehrere Felder bietet eine praktische Möglichkeit Beziehungen zu bearbeiten. Nicht benutzen wenn Sie eine große Anzahl von Verknüpfungen haben.",
-    "fullTextSearch": "Bietet die Möglichkeit an, eine viel schnellere und umfassendere Textsuche durchzuführen."
+    "linkMultipleField": "verlinken mehrere Felder bietet eine praktische Möglichkeit Beziehungen zu bearbeiten. Nicht benutzen wenn Sie eine große Anzahl von Verknüpfungen haben."
   }
 }
