@@ -466,7 +466,6 @@
     "shippingAddressMap": "Karte (Lieferadresse)",
     "firstName": "Vorname",
     "lastName": "Nachname",
-    "salutationName": "Anrede",
     "assignedUser": "Zugewiesener Benutzer",
     "assignedUsers": "Zugewiesene Benutzer",
     "emailAddress": "E-Mail",
@@ -634,11 +633,6 @@
     "Sa": "Sa"
   },
   "options": {
-    "salutationName": {
-      "Mr.": "Herr",
-      "Mrs.": "Frau",
-      "Ms.": "Frau"
-    },
     "language": {
       "af_ZA": "Afrikaans (af_ZA)",
       "az_AZ": "Aserbaidschanisch (az_AZ)",

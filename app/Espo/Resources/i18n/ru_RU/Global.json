@@ -405,7 +405,6 @@
     "name": "Название",
     "firstName": "Имя",
     "lastName": "Фамилия",
-    "salutationName": "Обращение",
     "assignedUser": "Ответственный",
     "assignedUsers": "Ответственные",
     "assignedUserName": "Имя ответственного",
@@ -615,12 +614,6 @@
     "s": "с"
   },
   "options": {
-    "salutationName": {
-      "Mr.": "Г-н.",
-      "Mrs.": "Г-жа.",
-      "Ms.": "Мисс.",
-      "Dr.": "Д-р."
-    },
     "fieldFilter": {
       "allValues": "Все значения",
       "filled": "Заполненые значения",

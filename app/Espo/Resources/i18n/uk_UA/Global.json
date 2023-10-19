@@ -416,7 +416,6 @@
     "name": "Назва",
     "firstName": "Ім'я",
     "lastName": "Прізвище",
-    "salutationName": "Звернення",
     "assignedUser": "Відповідальний",
     "assignedUsers": "Відповідальні",
     "assignedUserName": "Ім'я відповідального",
@@ -626,12 +625,6 @@
     "s": "с"
   },
   "options": {
-    "salutationName": {
-      "Mr.": "Пан.",
-      "Mrs.": "Пані.",
-      "Ms.": "Міс.",
-      "Dr.": "Д-р."
-    },
     "fieldFilter": {
       "allValues": "Усі значення",
       "filled": "Заповнені значення",

@@ -42,11 +42,6 @@
             "notStorable": true,
             "tooltip": true
         },
-        "salutationName": {
-            "type": "enum",
-            "optionsIds": ["", "Mr.", "Ms.", "Mrs.", "Dr."],
-            "options": ["", "Mr.", "Ms.", "Mrs.", "Dr."]
-        },
         "firstName": {
             "type": "varchar",
             "maxLength": 100,

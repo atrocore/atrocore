@@ -357,7 +357,6 @@
     "name": "Nombre",
     "firstName": "Nombre",
     "lastName": "Apellidos",
-    "salutationName": "Saludo",
     "assignedUser": "Usuario asignado",
     "assignedUsers": "Usuarios asignados",
     "emailAddress": "Correo electrónico",
@@ -556,12 +555,6 @@
     "s": "s"
   },
   "options": {
-    "salutationName": {
-      "Mr.": "Sr.",
-      "Mrs.": "Sra.",
-      "Ms.": "Sta.",
-      "Dr.": "Dr."
-    },
     "fieldsFilter": {
       "allFields": "All Fields",
       "empty": "Empty Fields",
