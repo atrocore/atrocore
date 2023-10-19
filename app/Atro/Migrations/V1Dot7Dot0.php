@@ -21,7 +21,8 @@ class V1Dot7Dot0 extends Base
         $this->exec("ALTER TABLE pseudo_transaction_job CHANGE sort_order sort_order INT DEFAULT NULL");
         $this->exec("DROP INDEX UNIQ_9AEE3C0845AFA4EA ON pseudo_transaction_job");
         $this->exec("ALTER TABLE `user` ADD name VARCHAR(255) DEFAULT NULL");
-//        $this->exec("ALTER TABLE `user` DROP salutation_name");
+        $this->exec("ALTER TABLE `user` DROP salutation_name");
+        $this->exec("ALTER TABLE `user` ADD department VARCHAR(255) DEFAULT NULL");
 
         $this->updateComposer('atrocore/core', '^1.7.0');
     }

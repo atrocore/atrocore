@@ -106,9 +106,6 @@
             },
             "KnowledgeBaseArticle": {
                 "assignedUser": false
-            },
-            "User": {
-                "gender": false
             }
         }
     },

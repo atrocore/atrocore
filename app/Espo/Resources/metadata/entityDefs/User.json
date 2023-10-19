@@ -25,6 +25,11 @@
             "tooltip": true
         },
         "name": {
+            "type": "varchar",
+            "trim": true,
+            "required": true
+        },
+        "department": {
             "type": "varchar"
         },
         "password": {
@@ -51,7 +56,7 @@
         "lastName": {
             "type": "varchar",
             "maxLength": 100,
-            "required": true,
+            "required": false,
             "default":"",
             "trim": true
         },
