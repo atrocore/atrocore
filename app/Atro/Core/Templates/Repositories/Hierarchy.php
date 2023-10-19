@@ -523,7 +523,7 @@ class Hierarchy extends RDB
         $res = $this->getConnection()->createQueryBuilder()
             ->select('r.entity_id')
             ->from($this->hierarchyTableName, 'r')
-            ->leftJoin('r', $this->tableName, 'm', 'r.entity_id=m.id')
+            ->leftJoin('r', $this->tableName, 'm', 'r.entity_id = m.id')
             ->where('r.deleted = :false')
             ->andWhere('m.deleted = :false')
             ->setParameter('false', false, Mapper::getParameterType(false))
