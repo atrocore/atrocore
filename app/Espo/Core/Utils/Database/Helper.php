@@ -33,8 +33,6 @@
 
 namespace Espo\Core\Utils\Database;
 
-use Atro\Core\Utils\Database\DBAL\Schema\Converter;
-
 class Helper
 {
     private $config;
@@ -67,43 +65,5 @@ class Helper
         }
 
         return $this->connection;
-    }
-
-    protected function getMysqlVersion()
-    {
-        $connection = $this->getDbalConnection();
-        if (!$connection) {
-            return null;
-        }
-
-        return $connection->executeQuery("select version()")->fetchOne();
-    }
-
-    /**
-     * Get table/database tables engine. If $tableName is empty get a value for all database tables
-     *
-     * @param  string|null $tableName
-     *
-     * @return string
-     */
-    protected function getMysqlEngine($tableName = null, $default = null)
-    {
-        $connection = $this->getDbalConnection();
-        if (!$connection) {
-            return $default;
-        }
-
-        $query = "SHOW TABLE STATUS WHERE Engine = 'MyISAM'";
-        if (!empty($tableName)) {
-            $query = "SHOW TABLE STATUS WHERE Engine = 'MyISAM' AND Name = '" . $tableName . "'";
-        }
-
-        $result = $connection->executeQuery($query)->fetchOne();
-
-        if (!empty($result)) {
-            return 'MyISAM';
-        }
-
-        return 'InnoDB';
     }
 }

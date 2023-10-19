@@ -104,15 +104,6 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
                     'isValid'    => ($preparedSystemValue >= $preparedValue || in_array($systemValue, [0, -1]))
                 ];
             }
-
-            // for mysql version
-            $mysqlVersion = self::prepareVersion($this->getMysqlVersion(), true);
-            $result[] = [
-                'name'       => $this->translate('mysqlVersion', 'requirements', 'Installer'),
-                'validValue' => '>= ' . $data['mysqlVersion'],
-                'value'      => $mysqlVersion,
-                'isValid'    => version_compare($mysqlVersion, $data['mysqlVersion'], '>=')
-            ];
         }
 
         return $result;
@@ -448,22 +439,6 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
                 'mysqlVersion' => '5.5.3'
             ]
         ];
-    }
-
-    /**
-     * Get mysql version
-     *
-     * @return string|null
-     */
-    protected function getMysqlVersion(): ?string
-    {
-        $sth = $this->getEntityManager()->getPDO()->prepare("SHOW VARIABLES LIKE 'version'");
-        $sth->execute();
-        $res = $sth->fetch(\PDO::FETCH_NUM);
-
-        $version = empty($res[1]) ? null : $res[1];
-
-        return $version;
     }
 
     /**
