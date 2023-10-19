@@ -106,42 +106,4 @@ class Helper
 
         return 'InnoDB';
     }
-
-    /**
-     * Check if full text supports. If $tableName is empty get a value for all database tables
-     *
-     * @param  string $tableName
-     *
-     * @return boolean
-     */
-    public function isSupportsFulltext($tableName = null, $default = false)
-    {
-        if (Converter::isPgSQL($this->getDbalConnection())) {
-            return true;
-        }
-
-        $mysqlEngine = $this->getMysqlEngine($tableName);
-        if (!$mysqlEngine) {
-            return $default;
-        }
-
-        switch ($mysqlEngine) {
-            case 'InnoDB':
-                $mysqlVersion = $this->getMysqlVersion();
-
-                if (version_compare($mysqlVersion, '5.6.4') >= 0) {
-                    return true; //InnoDB, MySQL 5.6.4+
-                }
-
-                return false; //InnoDB
-                break;
-        }
-
-        return true; //MyISAM
-    }
-
-    public function isTableSupportsFulltext($tableName, $default = false)
-    {
-        return $this->isSupportsFulltext($tableName, $default);
-    }
 }
