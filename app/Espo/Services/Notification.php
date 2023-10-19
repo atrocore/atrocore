@@ -119,7 +119,7 @@ class Notification extends \Espo\Services\Record
 
         $connection->createQueryBuilder()
             ->update('notification', 'n')
-            ->set('n.read', ':true')
+            ->set('read', ':true')
             ->setParameter('true', true, Mapper::getParameterType(true))
             ->where('n.user_id = :userId')
             ->setParameter('userId', $userId)
@@ -223,7 +223,7 @@ class Notification extends \Espo\Services\Record
             $connection = $this->getEntityManager()->getConnection();
             $connection->createQueryBuilder()
                 ->update('notification', 'n')
-                ->set('n.read', ':true')
+                ->set('read', ':true')
                 ->setParameter('true', true, Mapper::getParameterType(true))
                 ->where('n.id IN (:ids)')
                 ->setParameter('ids', $ids, Mapper::getParameterType($ids))
