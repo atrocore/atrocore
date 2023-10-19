@@ -1028,15 +1028,4 @@ class Stream extends \Espo\Core\Services\Base
             }
         }
     }
-
-    /**
-     * @param string $entityName
-     *
-     * @return bool
-     * @throws \Espo\Core\Exceptions\Error
-     */
-    public function isExistEntity(string $entityName): bool
-    {
-        return class_exists($this->getEntityManager()->normalizeEntityName($entityName));
-    }
 }
