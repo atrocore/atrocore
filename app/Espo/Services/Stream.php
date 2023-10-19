@@ -182,26 +182,25 @@ class Stream extends \Espo\Core\Services\Base
             $userId = $this->getUser()->id;
         }
 
-        $pdo = $this->getEntityManager()->getPDO();
-        $sql = "
-            SELECT id FROM subscription
-            WHERE
-                entity_id = " . $pdo->quote($entity->id) . " AND entity_type = " . $pdo->quote($entity->getEntityName()) . " AND
-                user_id = " . $pdo->quote($userId) . "
-        ";
+        $connection = $this->getEntityManager()->getConnection();
+        $res = $connection->createQueryBuilder()
+            ->select('s.id')
+            ->from($connection->quoteIdentifier('subscription'), 's')
+            ->where('s.entity_id = :entityId')
+            ->setParameter('entityId', $entity->id)
+            ->andWhere('s.entity_type = :entityType')
+            ->setParameter('entityType', $entity->getEntityName())
+            ->andWhere('s.user_id = :userId')
+            ->setParameter('userId', $userId)
+            ->fetchAllAssociative();
 
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
-        if ($sth->fetchAll()) {
-            return true;
-        }
-        return false;
+        return !empty($res);
     }
 
-    public function followEntityMass(Entity $entity, array $sourceUserIdList)
+    public function followEntityMass(Entity $entity, array $sourceUserIdList): void
     {
         if (!$this->getMetadata()->get('scopes.' . $entity->getEntityName() . '.stream')) {
-            return false;
+            return;
         }
 
         $userIdList = [];
@@ -218,32 +217,27 @@ class Stream extends \Espo\Core\Services\Base
             return;
         }
 
-        $pdo = $this->getEntityManager()->getPDO();
+        $connection = $this->getEntityManager()->getConnection();
 
-        $userIdQuotedList = [];
+        $connection->createQueryBuilder()
+            ->delete($connection->quoteIdentifier('subscription'), 's')
+            ->where('s.entity_id = :entityId')
+            ->setParameter('entityId', $entity->id)
+            ->andWhere('s.user_id IN (:userIds)')
+            ->setParameter('userIds', $userIdList, Mapper::getParameterType($userIdList))
+            ->executeQuery();
+
         foreach ($userIdList as $userId) {
-            $userIdQuotedList[] = $pdo->quote($userId);
+            $connection->createQueryBuilder()
+                ->insert($connection->quoteIdentifier('subscription'))
+                ->setValue('entity_id', ':entityId')
+                ->setParameter('entityId', $entity->id)
+                ->setValue('entity_type', ':entityType')
+                ->setParameter('entityType', $entity->getEntityType())
+                ->setValue('user_id', ':userId')
+                ->setParameter('userId', $userId)
+                ->executeQuery();
         }
-
-        $sql = "
-            DELETE FROM subscription WHERE user_id IN (".implode(', ', $userIdQuotedList).") AND entity_id = ".$pdo->quote($entity->id) . "
-        ";
-        $pdo->query($sql);
-
-        $sql = "
-            INSERT INTO subscription
-            (entity_id, entity_type, user_id)
-            VALUES
-        ";
-        foreach ($userIdList as $userId) {
-            $arr[] = "
-                (".$pdo->quote($entity->id) . ", " . $pdo->quote($entity->getEntityType()) . ", " . $pdo->quote($userId).")
-            ";
-        }
-
-        $sql .= implode(", ", $arr);
-
-        $pdo->query($sql);
     }
 
     public function followEntity(Entity $entity, $userId)
