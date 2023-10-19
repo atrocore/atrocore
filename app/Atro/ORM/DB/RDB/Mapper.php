@@ -576,9 +576,21 @@ class Mapper implements MapperInterface
 
     public function delete(IEntity $entity): bool
     {
-        $entity->set('deleted', true);
+        $qb = $this->connection->createQueryBuilder();
 
-        return $this->update($entity);
+        $qb->delete($this->connection->quoteIdentifier($this->toDb($entity->getEntityType())))
+            ->where('id = :id')
+            ->setParameter('id', $entity->id, self::getParameterType($entity->id));
+
+        try {
+            $qb->executeQuery();
+        } catch (\Throwable $e) {
+            $sql = $qb->getSQL();
+            $GLOBALS['log']->error("RDB DELETE failed for SQL: $sql");
+            throw $e;
+        }
+
+        return true;
     }
 
     public static function getParameterType($value): ?int

@@ -76,7 +76,7 @@ class RDB extends \Espo\ORM\Repository
         $this->entityManager = $entityManager;
     }
 
-    protected function getMapper()
+    public function getMapper()
     {
         if (empty($this->mapper)) {
             $this->mapper = $this->getEntityManager()->getMapper('RDB');
@@ -300,7 +300,8 @@ class RDB extends \Espo\ORM\Repository
     public function remove(Entity $entity, array $options = [])
     {
         $this->beforeRemove($entity, $options);
-        $result = $this->getMapper()->delete($entity);
+        $entity->set('deleted', true);
+        $result = $this->getMapper()->update($entity);
         if ($result) {
             $this->deleteLinkedRelationshipEntities($entity);
             $this->afterRemove($entity, $options);
@@ -308,9 +309,12 @@ class RDB extends \Espo\ORM\Repository
         return $result;
     }
 
-    public function deleteFromDb($id, $onlyDeleted = false)
+    public function deleteFromDb(string $id): bool
     {
-        return $this->getMapper()->deleteFromDb($this->entityType, $id, $onlyDeleted);
+        $entity = $this->getEntityManager()->getEntity($this->entityType);
+        $entity->id = $id;
+
+        return $this->getMapper()->delete($entity);
     }
 
     /**

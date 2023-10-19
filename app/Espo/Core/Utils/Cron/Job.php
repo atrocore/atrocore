@@ -172,7 +172,7 @@ class Job
 
         $scheduledJob = $qb->fetchAssociative();
 
-        return $scheduledJob;
+        return empty($scheduledJob) ? [] : $scheduledJob;
     }
 
     /**

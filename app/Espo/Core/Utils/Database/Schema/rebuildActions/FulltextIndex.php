@@ -68,6 +68,10 @@ class FulltextIndex extends \Espo\Core\Utils\Database\Schema\BaseRebuildActions
                         continue;
                     }
 
+                    if (empty($row)) {
+                        continue;
+                    }
+
                     switch (strtoupper($row['Type'])) {
                         case 'LONGTEXT':
                             $alterQuery = "ALTER TABLE `". $tableName ."` MODIFY `". $columnName ."` MEDIUMTEXT COLLATE ". $row['Collation'] ."";
