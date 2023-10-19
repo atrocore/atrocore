@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core\Templates\Repositories;
 
+use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\ORM\Repositories\RDB;
 use Espo\Core\Utils\Util;
@@ -519,9 +520,19 @@ class Hierarchy extends RDB
 
     protected function collectChildren(string $id, array &$ids): void
     {
-        $id = $this->getPDO()->quote($id);
-        $query = "SELECT r.entity_id FROM `$this->hierarchyTableName` r LEFT JOIN `$this->tableName` m ON r.entity_id=m.id WHERE r.deleted=0 AND r.parent_id=$id AND m.deleted=0";
-        if (!empty($res = $this->getPDO()->query($query)->fetchAll(\PDO::FETCH_COLUMN))) {
+        $res = $this->getConnection()->createQueryBuilder()
+            ->select('r.entity_id')
+            ->from($this->hierarchyTableName, 'r')
+            ->leftJoin('r', $this->tableName, 'm', 'r.entity_id=m.id')
+            ->where('r.deleted = :false')
+            ->andWhere('m.deleted = :false')
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->andWhere('r.parent_id = :parentId')
+            ->setParameter('parentId', $id)
+            ->fetchAllAssociative();
+
+        if (!empty($res)) {
+            $res = array_column($res, 'entity_id');
             $ids = array_values(array_unique(array_merge($ids, $res)));
             foreach ($res as $v) {
                 $this->collectChildren($v, $ids);
