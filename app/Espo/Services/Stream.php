@@ -240,25 +240,26 @@ class Stream extends \Espo\Core\Services\Base
         }
     }
 
-    public function followEntity(Entity $entity, $userId)
+    public function followEntity(Entity $entity, string $userId): bool
     {
         if ($userId == 'system') {
-            return;
+            return false;
         }
         if (!$this->getMetadata()->get('scopes.' . $entity->getEntityName() . '.stream')) {
             return false;
         }
 
-        $pdo = $this->getEntityManager()->getPDO();
-
         if (!$this->checkIsFollowed($entity, $userId)) {
-            $sql = "
-                INSERT INTO subscription
-                (entity_id, entity_type, user_id)
-                VALUES
-                (".$pdo->quote($entity->id) . ", " . $pdo->quote($entity->getEntityName()) . ", " . $pdo->quote($userId).")
-            ";
-            $sth = $pdo->prepare($sql)->execute();
+            $connection = $this->getEntityManager()->getConnection();
+            $connection->createQueryBuilder()
+                ->insert($connection->quoteIdentifier('subscription'))
+                ->setValue('entity_id', ':entityId')
+                ->setParameter('entityId', $entity->id)
+                ->setValue('entity_type', ':entityType')
+                ->setParameter('entityType', $entity->getEntityType())
+                ->setValue('user_id', ':userId')
+                ->setParameter('userId', $userId)
+                ->executeQuery();
         }
         return true;
     }
@@ -269,33 +270,36 @@ class Stream extends \Espo\Core\Services\Base
             return false;
         }
 
-        $pdo = $this->getEntityManager()->getPDO();
+        $connection = $this->getEntityManager()->getConnection();
 
-        $sql = "
-            DELETE FROM subscription
-            WHERE
-                entity_id = " . $pdo->quote($entity->id) . " AND entity_type = " . $pdo->quote($entity->getEntityName()) . " AND
-                user_id = " . $pdo->quote($userId) . "
-        ";
-        $sth = $pdo->prepare($sql)->execute();
+        $connection->createQueryBuilder()
+            ->delete($connection->quoteIdentifier('subscription'), 's')
+            ->where('s.entity_id = :entityId')
+            ->setParameter('entityId', $entity->id)
+            ->andWhere('s.entity_type = :entityType')
+            ->setParameter('entityType', $entity->getEntityName())
+            ->andWhere('s.user_id = :userId')
+            ->setParameter('userId', $userId)
+            ->executeQuery();
 
         return true;
     }
 
-
-    public function unfollowAllUsersFromEntity(Entity $entity)
+    public function unfollowAllUsersFromEntity(Entity $entity): void
     {
         if (empty($entity->id)) {
             return;
         }
 
-        $pdo = $this->getEntityManager()->getPDO();
-        $sql = "
-            DELETE FROM subscription
-            WHERE
-                entity_id = " . $pdo->quote($entity->id) . " AND entity_type = " . $pdo->quote($entity->getEntityType()) . "
-        ";
-        $sth = $pdo->prepare($sql)->execute();
+        $connection = $this->getEntityManager()->getConnection();
+
+        $connection->createQueryBuilder()
+            ->delete($connection->quoteIdentifier('subscription'), 's')
+            ->where('s.entity_id = :entityId')
+            ->setParameter('entityId', $entity->id)
+            ->andWhere('s.entity_type = :entityType')
+            ->setParameter('entityType', $entity->getEntityName())
+            ->executeQuery();
     }
 
     public function find($scope, $id, $params = [])
