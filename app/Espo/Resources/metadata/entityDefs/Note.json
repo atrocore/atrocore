@@ -44,7 +44,7 @@
             "view": "views/stream/fields/attachment-multiple"
         },
         "number": {
-            "type": "autoincrement",
+            "type": "int",
             "index": true,
             "readOnly": true
         },

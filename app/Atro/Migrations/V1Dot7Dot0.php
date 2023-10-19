@@ -24,6 +24,9 @@ class V1Dot7Dot0 extends Base
         $this->exec("ALTER TABLE `user` DROP salutation_name");
         $this->exec("ALTER TABLE `user` ADD department VARCHAR(255) DEFAULT NULL");
 
+        $this->exec("DROP INDEX UNIQ_CFBDFA1496901F54 ON note");
+        $this->exec("ALTER TABLE note CHANGE number number INT DEFAULT NULL");
+
         $this->updateComposer('atrocore/core', '^1.7.0');
     }
 

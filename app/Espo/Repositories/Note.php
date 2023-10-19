@@ -61,6 +61,10 @@ class Note extends RDB
      */
     protected function beforeSave(Entity $entity, array $options = [])
     {
+        if ($entity->isNew()) {
+            $entity->set('number', time() - (new \DateTime('2023-10-19'))->getTimestamp());
+        }
+
         if ($entity->get('type') == 'Post') {
             $this->addMentionData($entity);
         }
