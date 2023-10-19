@@ -154,11 +154,8 @@ class Job
      *
      * @return array
      */
-    public function getJobByScheduledJob($scheduledJobId, $time)
+    public function getJobByScheduledJob(string $scheduledJobId, string $date): array
     {
-        $dateObj = new \DateTime();
-        $dateObj->setTimestamp($time);
-
         $connection = $this->getEntityManager()->getConnection();
         $qb = $connection->createQueryBuilder()
             ->select('j.*')
@@ -166,9 +163,9 @@ class Job
             ->where("j.scheduled_job_id = :scheduledJobId")
             ->setParameter('scheduledJobId', $scheduledJobId)
             ->andWhere('j.execute_time >= :from')
-            ->setParameter('from', $dateObj->format('Y-m-d H:i:00'))
+            ->setParameter('from', (new \DateTime($date))->format('Y-m-d H:i:00'))
             ->andWhere('j.execute_time < :to')
-            ->setParameter('to', (clone $dateObj)->modify('+1 minute')->format('Y-m-d H:i:00'))
+            ->setParameter('to', (new \DateTime($date))->modify('+1 minute')->format('Y-m-d H:i:00'))
             ->andWhere('j.deleted = :deleted')
             ->setParameter('deleted', false, Mapper::getParameterType(false))
             ->setMaxResults(1);
