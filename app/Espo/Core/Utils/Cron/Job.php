@@ -156,21 +156,24 @@ class Job
      */
     public function getJobByScheduledJob($scheduledJobId, $time)
     {
-        $dateObj = new \DateTime($time);
-        $timeWithoutSeconds = $dateObj->format('Y-m-d H:i:');
+        $dateObj = new \DateTime();
+        $dateObj->setTimestamp($time);
 
         $connection = $this->getEntityManager()->getConnection();
-        $scheduledJob = $connection->createQueryBuilder()
+        $qb = $connection->createQueryBuilder()
             ->select('j.*')
             ->from($connection->quoteIdentifier('job'), 'j')
             ->where("j.scheduled_job_id = :scheduledJobId")
             ->setParameter('scheduledJobId', $scheduledJobId)
-            ->andWhere('j.execute_time LIKE :timeWithoutSeconds')
-            ->setParameter('timeWithoutSeconds', $timeWithoutSeconds . '%')
+            ->andWhere('j.execute_time >= :from')
+            ->setParameter('from', $dateObj->format('Y-m-d H:i:00'))
+            ->andWhere('j.execute_time < :to')
+            ->setParameter('to', (clone $dateObj)->modify('+1 minute')->format('Y-m-d H:i:00'))
             ->andWhere('j.deleted = :deleted')
             ->setParameter('deleted', false, Mapper::getParameterType(false))
-            ->setMaxResults(1)
-            ->fetchAssociative();
+            ->setMaxResults(1);
+
+        $scheduledJob = $qb->fetchAssociative();
 
         return $scheduledJob;
     }
