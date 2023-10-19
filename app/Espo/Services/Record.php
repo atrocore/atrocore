@@ -2945,7 +2945,7 @@ class Record extends \Espo\Core\Services\Base
         $seed = $this->getEntityManager()->getEntity($this->getEntityType());
 
         if (array_key_exists('select', $params)) {
-            $passedAttributeList = $params['select'];
+            $passedAttributeList = array_map('trim', $params['select']);
         } else {
             $passedAttributeList = null;
         }
@@ -2969,7 +2969,7 @@ class Record extends \Espo\Core\Services\Base
 
             foreach ($passedAttributeList as $attribute) {
                 if (!in_array($attribute, $attributeList) && $seed->hasAttribute($attribute)) {
-                    $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $attribute]);
+                    $fieldDefs = $this->getMetadata()->get(['entityDefs', $seed->getEntityType(), 'fields', $attribute]);
 
                     $attributeList[] = $attribute;
                     if (
