@@ -36,6 +36,7 @@ namespace Espo\Controllers;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Util;
 
 class EntityManager extends \Espo\Core\Controllers\Base
@@ -164,7 +165,9 @@ class EntityManager extends \Espo\Core\Controllers\Base
 
         if ($this->getMetadata()->get(['scopes', $name, 'type']) === 'Hierarchy' && empty($data['multiParents']) && $this->getMetadata()->get(['scopes', $name, 'multiParents'])) {
             if ($this->getEntityManager()->getRepository($name)->hasMultipleParents()) {
-                throw new BadRequest($this->getContainer()->get('language')->translate('hasMultipleParents', 'exceptions'));
+                /** @var Language $language */
+                $language = $this->getContainer()->get('language');
+                throw new BadRequest($language->translate('hasMultipleParents', 'exceptions'));
             }
         }
 
