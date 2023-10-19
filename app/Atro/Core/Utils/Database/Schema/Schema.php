@@ -63,9 +63,6 @@ class Schema
         // get queries
         $queries = $this->getDiffQueries(false);
 
-        // prepare queries
-        $queries = $this->eventManager->dispatch('Schema', 'prepareQueries', new Event(['queries' => $queries]))->getArgument('queries');
-
         // run rebuild
         $result = true;
         foreach ($queries as $sql) {
@@ -118,9 +115,6 @@ class Schema
         if ($hasModification) {
             $queries = array_merge($queries, $this->comparator->compareSchemas($toSchema, $clonedToSchema)->toSql($this->getPlatform()));
         }
-
-        // prepare queries
-        $queries = $this->eventManager->dispatch('Schema', 'prepareQueries', new Event(['queries' => $queries]))->getArgument('queries');
 
         if ($strictType) {
             $this->getPlatform()->strictType = false;
