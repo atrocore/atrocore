@@ -3,8 +3,7 @@
     "Fields": "Campos",
     "Relationships": "Relaciones",
     "Schedule": "Programar",
-    "Log": "Registros",
-    "Formula": "Fórmula"
+    "Log": "Registros"
   },
   "fields": {
     "name": "Nombre",

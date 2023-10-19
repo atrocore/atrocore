@@ -373,24 +373,6 @@ class EntityManager extends \Espo\Core\Controllers\Base
         return true;
     }
 
-    public function postActionFormula($params, $data, $request)
-    {
-        if (empty($data->scope)) {
-            throw new BadRequest();
-        }
-        if (!property_exists($data, 'data')) {
-            throw new BadRequest();
-        }
-
-        $formulaData = get_object_vars($data->data);
-
-        $this->getContainer()->get('entityManagerUtil')->setFormulaData($data->scope, $formulaData);
-
-        $this->getContainer()->get('dataManager')->clearCache();
-
-        return true;
-    }
-
     public function postActionResetToDefault($params, $data, $request)
     {
         if (empty($data->scope)) {
