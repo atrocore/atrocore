@@ -33,6 +33,7 @@
 
 namespace Espo\Services;
 
+use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 use Espo\Repositories\Notification as NotificationRepository;
@@ -114,12 +115,20 @@ class Notification extends \Espo\Services\Record
 
     public function markAllRead($userId)
     {
-        $pdo = $this->getEntityManager()->getPDO();
-        $sql = "UPDATE notification SET `read` = 1 WHERE user_id = " . $pdo->quote($userId) . " AND `read` = 0";
-        $pdo->prepare($sql)->execute();
+        $connection = $this->getEntityManager()->getConnection();
+
+        $connection->createQueryBuilder()
+            ->update('notification', 'n')
+            ->set('n.read', ':true')
+            ->setParameter('true', true, Mapper::getParameterType(true))
+            ->where('n.user_id = :userId')
+            ->setParameter('userId', $userId)
+            ->andWhere('n.read = :false')
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->executeQuery();
 
         // update count for user
-        NotificationRepository::refreshNotReadCount($pdo);
+        NotificationRepository::refreshNotReadCount($connection);
 
         return true;
     }
@@ -211,20 +220,16 @@ class Notification extends \Espo\Services\Record
         }
 
         if (!empty($ids)) {
-            $pdo = $this->getEntityManager()->getPDO();
-            $idQuotedList = [];
-            foreach ($ids as $id) {
-                $idQuotedList[] = $pdo->quote($id);
-            }
-
-            $sql = "UPDATE notification SET `read` = 1 WHERE id IN (" . implode(', ', $idQuotedList) . ")";
-
-            $s = $pdo->prepare($sql);
-            $s->execute();
-
-            NotificationRepository::refreshNotReadCount($pdo);
+            $connection = $this->getEntityManager()->getConnection();
+            $connection->createQueryBuilder()
+                ->update('notification', 'n')
+                ->set('n.read', ':true')
+                ->setParameter('true', true, Mapper::getParameterType(true))
+                ->where('n.id IN (:ids)')
+                ->setParameter('ids', $ids, Mapper::getParameterType($ids))
+                ->executeQuery();
+            NotificationRepository::refreshNotReadCount($connection);
         }
-
 
         return array(
             'total'      => $count,

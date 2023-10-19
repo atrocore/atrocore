@@ -38,7 +38,7 @@ class Notification extends AbstractConsole
             exit(1);
         }
 
-        NotificationRepository::refreshNotReadCount($this->getContainer()->get('pdo'));
+        NotificationRepository::refreshNotReadCount($this->getContainer()->get('connection'));
 
         self::show('Users notifications cache refreshed successfully', self::SUCCESS, true);
     }
