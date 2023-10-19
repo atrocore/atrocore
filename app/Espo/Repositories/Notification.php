@@ -70,6 +70,15 @@ class Notification extends RDB
         DataManager::pushPublicData('notReadCount', json_encode(array_column($data, 'total', 'userId')));
     }
 
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        if ($entity->isNew()) {
+            $entity->set('number', time() - (new \DateTime('2023-10-19'))->getTimestamp());
+        }
+
+        parent::beforeSave($entity, $options);
+    }
+
     /**
      * @param Entity $entity
      * @param array  $options

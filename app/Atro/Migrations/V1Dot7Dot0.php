@@ -27,6 +27,12 @@ class V1Dot7Dot0 extends Base
         $this->exec("DROP INDEX UNIQ_CFBDFA1496901F54 ON note");
         $this->exec("ALTER TABLE note CHANGE number number INT DEFAULT NULL");
 
+        $this->exec("DROP INDEX UNIQ_5C817D7F96901F54 ON action_history_record");
+        $this->exec("ALTER TABLE action_history_record CHANGE number number INT DEFAULT NULL");
+
+        $this->exec("DROP INDEX UNIQ_BF5476CA96901F54 ON notification");
+        $this->exec("ALTER TABLE notification CHANGE number number INT DEFAULT NULL");
+
         $this->updateComposer('atrocore/core', '^1.7.0');
     }
 

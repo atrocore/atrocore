@@ -36,6 +36,7 @@ declare(strict_types=1);
 namespace Espo\Jobs;
 
 use Atro\Core\Container;
+use Atro\Core\EventManager\Manager;
 use Espo\Core\EventManager\Event;
 use Espo\Core\Jobs\Base;
 use Espo\Core\Utils\Util;
@@ -80,8 +81,9 @@ class TreoCleanup extends Base
         $this->cleanupDbSchema();
         $this->cleanupEntityTeam();
 
-        // dispatch an event
-        $this->getContainer()->get('eventManager')->dispatch('TreoCleanupJob', 'run', new Event());
+        /** @var Manager $eventManager */
+        $eventManager = $this->getContainer()->get('eventManager');
+        $eventManager->dispatch('TreoCleanupJob', 'run', new Event());
 
         return true;
     }
