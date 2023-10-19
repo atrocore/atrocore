@@ -133,7 +133,7 @@ class QueryConverter
         }
 
         if (!$deleted) {
-            $whereClause = $whereClause + array('deleted' => 0);
+            $whereClause = $whereClause + ['deleted' => false];
         }
 
         if (empty($params['joins'])) {
@@ -812,7 +812,7 @@ class QueryConverter
                 if (empty($isComplex)) {
 
                     if (!isset($entity->fields[$field])) {
-                        $whereParts[] = '0';
+//                        $whereParts[] = '0';
                         continue;
                     }
 
