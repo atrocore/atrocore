@@ -22,7 +22,6 @@ use Espo\Core\Utils\Metadata;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\File\ClassParser;
 use Doctrine\DBAL\Schema\Schema as SchemaDBAL;
-use Doctrine\DBAL\Schema\SchemaDiff;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Schema\Comparator;
