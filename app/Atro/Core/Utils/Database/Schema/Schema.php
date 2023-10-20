@@ -94,27 +94,10 @@ class Schema
 
         $fromSchema = $this->getCurrentSchema();
         $toSchema = $this->schemaConverter->createSchema();
-        $clonedToSchema = clone $toSchema;
 
         $diff = $this->comparator->compareSchemas($fromSchema, $toSchema);
 
-        // if system try to add autoincrement column it should be added in two steps, because of dbal problem
-        $hasModification = false;
-        foreach ($diff->changedTables as $tableDiff) {
-            foreach ($tableDiff->addedColumns as $column) {
-                if ($column->getAutoincrement()) {
-                    $column->setAutoincrement(false);
-                    $hasModification = true;
-                }
-            }
-        }
-
-        // get queries
         $queries = $diff->toSql($this->getPlatform());
-
-        if ($hasModification) {
-            $queries = array_merge($queries, $this->comparator->compareSchemas($toSchema, $clonedToSchema)->toSql($this->getPlatform()));
-        }
 
         if ($strictType) {
             $this->getPlatform()->strictType = false;
@@ -131,11 +114,6 @@ class Schema
     public function getCurrentSchema(): SchemaDBAL
     {
         return $this->connection->createSchemaManager()->createSchema();
-    }
-
-    public function toSql(SchemaDiff $schema): array
-    {
-        return $schema->toSaveSql($this->getPlatform());
     }
 
     protected function initRebuildActions(): void
