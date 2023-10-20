@@ -62,7 +62,7 @@ class Base
 
     protected function rebuildByCronJob()
     {
-        App::createRebuildJob($this->getPDO());
+        App::createRebuildJob($this->getSchema()->getConnection());
     }
 
     protected function updateComposer(string $package, string $version): void

@@ -115,6 +115,11 @@ class Schema
         return $this->connection->createSchemaManager()->createSchema();
     }
 
+    public function getConnection(): Connection
+    {
+        return $this->connection;
+    }
+
     protected function initRebuildActions(): void
     {
         $currentSchema = $this->getCurrentSchema();

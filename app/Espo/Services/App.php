@@ -42,18 +42,28 @@ use Espo\Core\Utils\Util;
 
 class App extends Base
 {
-    public static function createRebuildJob(\PDO $pdo): void
+    public static function createRebuildJob(\Doctrine\DBAL\Connection $connection): void
     {
-        $id = Util::generateId();
-        $executeTime = (new \DateTime())->modify('+1 minutes')->format('Y-m-d H:i:s');
-
-        $pdo->exec("INSERT INTO job (id, execute_time, created_at, method_name, service_name) VALUES ('$id', '$executeTime', '$executeTime', 'rebuild', 'App')");
+        $connection->createQueryBuilder()
+            ->insert($connection->quoteIdentifier('job'))
+            ->setValue('id', ':id')
+            ->setValue('execute_time', ':executeTime')
+            ->setValue('created_at', ':executeTime')
+            ->setValue('method_name', ':methodName')
+            ->setValue('service_name', ':serviceName')
+            ->setParameters([
+                'id'          => Util::generateId(),
+                'executeTime' => (new \DateTime())->modify('+1 minutes')->format('Y-m-d H:i:s'),
+                'methodName'  => 'rebuild',
+                'serviceName' => 'App'
+            ])
+            ->executeQuery();
     }
 
     public function rebuild($data = null, $targetId = null, $targetType = null): void
     {
         if (Application::isSystemUpdating()) {
-            self::createRebuildJob($this->getInjection('pdo'));
+            self::createRebuildJob($this->getInjection('connection'));
         } else {
             $this->getInjection('dataManager')->rebuild();
         }
@@ -177,6 +187,7 @@ class App extends Base
         parent::init();
 
         $this->addDependency('pdo');
+        $this->addDependency('connection');
         $this->addDependency('preferences');
         $this->addDependency('acl');
         $this->addDependency('metadata');
