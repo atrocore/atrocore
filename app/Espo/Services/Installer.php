@@ -36,6 +36,7 @@ declare(strict_types=1);
 namespace Espo\Services;
 
 use Atro\Console\AbstractConsole;
+use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\Exceptions;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Language;
@@ -507,17 +508,30 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
      */
     protected function createSuperAdminUser(string $username, string $password): User
     {
+        $connection = $this->getEntityManager()->getConnection();
+
         // prepare data
         $passwordHash = $this->getPasswordHash()->hash($password);
         $today = (new \DateTime())->format('Y-m-d H:i:s');
 
-        $sql
-            = "INSERT INTO `user` (id, user_name, password, last_name, is_admin, created_at)
-					VALUES ('1', '$username', '$passwordHash', 'Admin', '1', '$today')";
-
-        $pdo = $this->getEntityManager()->getPDO();
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
+        $connection->createQueryBuilder()
+            ->insert($connection->quoteIdentifier('user'))
+            ->setValue('id', ':id')
+            ->setValue($connection->quoteIdentifier('name'), ':name')
+            ->setValue('last_name', ':name')
+            ->setValue('user_name', ':userName')
+            ->setValue('password', ':password')
+            ->setValue('is_admin', ':isAdmin')
+            ->setValue('created_at', ':createdAt')
+            ->setParameters([
+                'id' => '1',
+                'name' => 'Admin',
+                'userName' => $username,
+                'password' => $passwordHash,
+                'createdAt' => $today
+            ])
+            ->setParameter('isAdmin', true, Mapper::getParameterType(true))
+            ->executeQuery();
 
         return $this->getEntityManager()->getEntity('User', 1);
     }
@@ -667,15 +681,47 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
             unlink($file);
         }
 
-        $this->exec(
-            "INSERT INTO `locale` (id, `name`, `language`, date_format, time_zone, week_start, time_format, thousand_separator, decimal_mark) VALUES ('1', 'Main', 'en_US', 'DD.MM.YYYY', 'UTC', 'monday', 'HH:mm', '.', ',')"
-        );
-        $this->exec(
-            "INSERT INTO scheduled_job (id, `name`, job, `status`, scheduling) VALUES ('ComposerAutoUpdate', 'Automatic system update', 'ComposerAutoUpdate', 'Active', '0 0 * * SUN')"
-        );
-        $this->exec(
-            "INSERT INTO scheduled_job (id, `name`, job, `status`, scheduling) VALUES ('TreoCleanup','Old deleted data cleanup','TreoCleanup','Active','0 0 1 * *')"
-        );
+        $connection = $this->getEntityManager()->getConnection();
+
+        $connection->createQueryBuilder()
+            ->insert($connection->quoteIdentifier('locale'))
+            ->setValue('id', ':id')
+            ->setValue($connection->quoteIdentifier('name'), ':name')
+            ->setValue('language', ':language')
+            ->setValue('date_format', ':dateFormat')
+            ->setValue('time_zone', ':timeZone')
+            ->setValue('week_start', ':weekStart')
+            ->setValue('time_format', ':timeFormat')
+            ->setValue('thousand_separator', ':thousandSeparator')
+            ->setValue('decimal_mark', ':decimalMark')
+            ->setParameters([
+                'id' => '1',
+                'name' => 'Main',
+                'language' => 'en_US',
+                'dateFormat' => 'DD.MM.YYYY',
+                'timeZone' => 'UTC',
+                'weekStart' => 'monday',
+                'timeFormat' => 'HH:mm',
+                'thousandSeparator' => '.',
+                'decimalMark' => ',',
+            ])
+            ->executeQuery();
+
+        $connection->createQueryBuilder()
+            ->insert($connection->quoteIdentifier('scheduled_job'))
+            ->setValue('id', ':id')
+            ->setValue($connection->quoteIdentifier('name'), ':name')
+            ->setValue('job', ':job')
+            ->setValue($connection->quoteIdentifier('status'), ':status')
+            ->setValue('scheduling', ':scheduling')
+            ->setParameters([
+                'id' => 'ComposerAutoUpdate',
+                'name' => 'Automatic system update',
+                'job' => 'ComposerAutoUpdate',
+                'status' => 'Active',
+                'scheduling' => '0 0 * * SUN'
+            ])
+            ->executeQuery();
 
         foreach ($this->getModuleManager()->getModulesList() as $name) {
             try {
@@ -704,15 +750,6 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
         // set to config
         $this->getConfig()->set('appId', $appId);
         $this->getConfig()->save();
-    }
-
-    private function exec(string $query): void
-    {
-        try {
-            $this->getContainer()->get('pdo')->exec($query);
-        } catch (\Throwable $e) {
-            $GLOBALS['log']->error("PDO Error: {$e->getMessage()}. For query '$query'");
-        }
     }
 
     /**
