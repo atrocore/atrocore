@@ -697,4 +697,9 @@ class Mapper implements MapperInterface
     {
         return $this->queryConverter->getKeys($entity, $relationName);
     }
+
+    public function getWhereQuery(string $entityType, array $whereClause): string
+    {
+        return $this->queryConverter->getWhere($this->queryConverter->getSeed($entityType), $whereClause);
+    }
 }

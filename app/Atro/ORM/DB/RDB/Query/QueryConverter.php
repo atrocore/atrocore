@@ -1396,7 +1396,7 @@ class QueryConverter
         return [];
     }
 
-    protected function getSeed($entityType)
+    public function getSeed($entityType)
     {
         if (empty($this->seedCache[$entityType])) {
             $this->seedCache[$entityType] = $this->entityFactory->create($entityType);
