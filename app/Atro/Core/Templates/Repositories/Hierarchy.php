@@ -341,7 +341,7 @@ class Hierarchy extends RDB
 
         $select = 'e.*';
         if ($withChildrenCount) {
-            $select .= ", (SELECT COUNT(r1.id) FROM $quotedHierarchyTableName r1 JOIN $quotedTableName e1 ON e1.id=r1.entity_id WHERE r1.parent_id=e.id AND e1.deleted = :deleted {$childWhere}) as childrenCount";
+            $select .= ", (SELECT COUNT(r1.id) FROM $quotedHierarchyTableName r1 JOIN $quotedTableName e1 ON e1.id=r1.entity_id WHERE r1.parent_id=e.id AND e1.deleted = :deleted {$childWhere}) as children_count";
         }
 
         $where = "";
