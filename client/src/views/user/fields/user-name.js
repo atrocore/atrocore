@@ -34,10 +34,6 @@ Espo.define('views/user/fields/user-name', 'views/fields/varchar', function (Dep
 
     return Dep.extend({
 
-        setup() {
-            Dep.prototype.setup.call(this);
-        },
-
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
