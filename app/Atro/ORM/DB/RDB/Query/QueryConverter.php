@@ -953,8 +953,9 @@ class QueryConverter
                                 if ($isNotValue) {
                                     $whereParts[] = $leftPart . " " . $operator . " " . $this->convertComplexExpression($entity, $value);
                                 } else {
-                                    $whereParts[] = "$leftPart $operator :{$field}_w1";
-                                    $this->parameters["{$field}_w1"] = $value;
+                                    $param = $this->sanitize($field) . '_w1';
+                                    $whereParts[] = "$leftPart $operator :$param";
+                                    $this->parameters[$param] = $value;
                                 }
                             } else {
                                 if ($operator == '=') {
@@ -1053,8 +1054,8 @@ class QueryConverter
             foreach ($itemConditions as $left => $right) {
                 $conditions[$left] = $right;
             }
-            if ($join = $this->getJoin($entity, $relationName, $left, $conditions, $alias)) {
-                $joinSqlList[] = $join;
+            if ($joinPart = $this->getJoinPart($entity, $relationName, $left, $conditions, $alias)) {
+                $joinSqlList = array_merge($joinSqlList, $joinPart);
             }
         }
 
@@ -1146,7 +1147,7 @@ class QueryConverter
         return $prefix . "JOIN {$this->quoteIdentifier($table)} {$alias} ON";
     }
 
-    protected function getJoin(IEntity $entity, $name, $left = false, $conditions = array(), $alias = null)
+    protected function getJoinPart(IEntity $entity, $name, $left = false, $conditions = array(), $alias = null)
     {
         $prefix = ($left) ? 'LEFT ' : '';
 
@@ -1191,43 +1192,47 @@ class QueryConverter
 
         switch ($type) {
             case IEntity::MANY_MANY:
-                echo '2023-10-11 TODO: getJoin MANY_MANY';
-                die();
+                $key = $keySet['key'];
+                $foreignKey = $keySet['foreignKey'];
+                $nearKey = $keySet['nearKey'];
+                $distantKey = $keySet['distantKey'];
 
-//                $key = $keySet['key'];
-//                $foreignKey = $keySet['foreignKey'];
-//                $nearKey = $keySet['nearKey'];
-//                $distantKey = $keySet['distantKey'];
-//
-//                $relTable = $this->toDb($relOpt['relationName']);
-//                $midAlias = lcfirst($this->sanitize($relOpt['relationName']));
-//
-//                $distantTable = $this->toDb($relOpt['entity']);
-//
-//                $midAlias = $alias . 'Middle';
-//
-//                $sql = "{$prefix}JOIN `{$relTable}` AS `{$midAlias}` ON {$this->toDb($entity->getEntityType())}." . $this->toDb($key) . " = {$midAlias}." . $this->toDb($nearKey)
-//                    . " AND "
-//                    . "{$midAlias}.deleted = " . 0;
-//
-//                if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
-//                    $conditions = array_merge($conditions, $relOpt['conditions']);
-//                }
-//
-//                $joinSqlList = [];
-//                foreach ($conditions as $left => $right) {
-//                    $joinSqlList[] = $this->buildJoinConditionStatement($entity, $midAlias, $left, $right);
-//                }
-//                if (count($joinSqlList)) {
-//                    $sql .= " AND " . implode(" AND ", $joinSqlList);
-//                }
-//
-//                $sql .= " {$prefix}JOIN `{$distantTable}` AS `{$alias}` ON {$alias}." . $this->toDb($foreignKey) . " = {$midAlias}." . $this->toDb($distantKey)
-//                    . " AND "
-//                    . "{$alias}.deleted = " . 0 . "";
-//
-//                return $sql;
+                $relTable = $this->toDb($relOpt['relationName']);
+                $midAlias = lcfirst($this->sanitize($relOpt['relationName']));
 
+                $distantTable = $this->toDb($relOpt['entity']);
+
+                $midAlias = $alias . 'Middle';
+
+                $condition = self::TABLE_ALIAS . ".{$this->toDb($key)} = {$midAlias}.{$this->toDb($nearKey)} AND {$midAlias}.deleted = :deleted_mm5";
+                if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
+                    $conditions = array_merge($conditions, $relOpt['conditions']);
+                }
+
+                $joinSqlList = [];
+                foreach ($conditions as $left => $right) {
+                    $joinSqlList[] = $this->buildJoinConditionStatement($entity, $midAlias, $left, $right);
+                }
+                if (count($joinSqlList)) {
+                    $condition .= " AND " . implode(" AND ", $joinSqlList);
+                }
+
+                $res[] = [
+                    'type'      => $left ? 'left' : 'inner',
+                    'fromAlias' => self::TABLE_ALIAS,
+                    'table'     => $this->quoteIdentifier($relTable),
+                    'alias'     => $midAlias,
+                    'condition' => $condition
+                ];
+                $res[] = [
+                    'type'      => $left ? 'left' : 'inner',
+                    'fromAlias' => self::TABLE_ALIAS,
+                    'table'     => $this->quoteIdentifier($distantTable),
+                    'alias'     => $alias,
+                    'condition' => "{$alias}.{$this->toDb($foreignKey)} = {$midAlias}.{$this->toDb($distantKey)} AND {$alias}.deleted = :deleted_mm5"
+                ];
+                $this->parameters['deleted_mm5'] = false;
+                return $res;
             case IEntity::HAS_MANY:
             case IEntity::HAS_ONE:
                 $foreignKey = $keySet['foreignKey'];
@@ -1245,11 +1250,13 @@ class QueryConverter
                 }
 
                 return [
-                    'type'      => $left ? 'left' : 'inner',
-                    'fromAlias' => self::TABLE_ALIAS,
-                    'table'     => $this->quoteIdentifier($distantTable),
-                    'alias'     => $alias,
-                    'condition' => $condition
+                    [
+                        'type'      => $left ? 'left' : 'inner',
+                        'fromAlias' => self::TABLE_ALIAS,
+                        'table'     => $this->quoteIdentifier($distantTable),
+                        'alias'     => $alias,
+                        'condition' => $condition
+                    ]
                 ];
 
             case IEntity::HAS_CHILDREN:
@@ -1281,7 +1288,7 @@ class QueryConverter
             case IEntity::BELONGS_TO:
                 $join = $this->getBelongsToJoin($entity, $relationName, null, $alias);
                 $join['type'] = $left ? 'left' : 'inner';
-                return $join;
+                return [$join];
         }
 
         return false;

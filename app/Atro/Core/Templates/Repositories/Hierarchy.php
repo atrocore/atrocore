@@ -46,44 +46,47 @@ class Hierarchy extends RDB
 
     public function getEntityPosition(Entity $entity, string $parentId): ?int
     {
-        echo '<pre>';
-        print_r('getEntityPosition');
-        die();
+        $quotedTableName = $this->getConnection()->quoteIdentifier($this->tableName);
+        $quotedHierarchyTableName = $this->getConnection()->quoteIdentifier($this->hierarchyTableName);
 
-//        $sortBy = Util::toUnderScore($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy'], 'name'));
-//        $sortOrder = !empty($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'asc'])) ? 'ASC' : 'DESC';
-//
-//        $id = $this->getPDO()->quote($entity->get('id'));
-//
-//        if (empty($parentId)) {
-//            $query = "SELECT x.position
-//                      FROM (SELECT t.id, @rownum:=@rownum + 1 AS position
-//                            FROM `$this->tableName` t
-//                                JOIN (SELECT @rownum:=0) r
-//                                LEFT JOIN `$this->hierarchyTableName` h ON t.id=h.entity_id AND h.deleted=0
-//                            WHERE t.deleted=0
-//                              AND h.entity_id IS NULL
-//                            ORDER BY t.sort_order ASC, t.$sortBy $sortOrder, t.id ASC) x
-//                      WHERE x.id=$id";
-//        } else {
-//            $parentId = $this->getPDO()->quote($parentId);
-//            $query = "SELECT x.position
-//                      FROM (SELECT t.id, @rownum:=@rownum + 1 AS position
-//                            FROM `$this->hierarchyTableName` h
-//                                JOIN (SELECT @rownum:=0) r
-//                                LEFT JOIN `$this->tableName` t ON t.id=h.entity_id
-//                                LEFT JOIN `$this->tableName` t1 ON t1.id=h.parent_id
-//                            WHERE h.parent_id=$parentId
-//                              AND h.deleted=0
-//                              AND t.deleted=0
-//                              AND t1.deleted=0
-//                            ORDER BY h.hierarchy_sort_order ASC, t.$sortBy $sortOrder, t.id ASC) x
-//                      WHERE x.id=$id";
-//        }
-//
-//        $position = $this->getPDO()->query($query)->fetch(\PDO::FETCH_COLUMN);
-//
-//        return (int)$position;
+        $sortBy = Util::toUnderScore($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy'], 'name'));
+        $sortOrder = !empty($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'asc'])) ? 'ASC' : 'DESC';
+
+        $id = $this->getPDO()->quote($entity->get('id'));
+
+        if (empty($parentId)) {
+            $query = "SELECT x.position
+                      FROM (SELECT t.id, @rownum:=@rownum + 1 AS position
+                            FROM $quotedTableName t
+                                JOIN (SELECT @rownum:=0) r
+                                LEFT JOIN $quotedHierarchyTableName h ON t.id=h.entity_id AND h.deleted=:deleted
+                            WHERE t.deleted=:deleted
+                              AND h.entity_id IS NULL
+                            ORDER BY t.sort_order ASC, t.$sortBy $sortOrder, t.id ASC) x
+                      WHERE x.id=$id";
+        } else {
+            $parentId = $this->getPDO()->quote($parentId);
+            $query = "SELECT x.position
+                      FROM (SELECT t.id, @rownum:=@rownum + 1 AS position
+                            FROM $quotedHierarchyTableName h
+                                JOIN (SELECT @rownum:=0) r
+                                LEFT JOIN $quotedTableName t ON t.id=h.entity_id
+                                LEFT JOIN $quotedTableName t1 ON t1.id=h.parent_id
+                            WHERE h.parent_id=$parentId
+                              AND h.deleted=:deleted
+                              AND t.deleted=:deleted
+                              AND t1.deleted=:deleted
+                            ORDER BY h.hierarchy_sort_order ASC, t.$sortBy $sortOrder, t.id ASC) x
+                      WHERE x.id=$id";
+        }
+
+        $sth = $this->getEntityManager()->getPDO()->prepare($query);
+        $sth->bindValue(':deleted', false, \PDO::PARAM_BOOL);
+        $sth->execute();
+
+        $position = $sth->fetch(\PDO::FETCH_COLUMN);
+
+        return (int)$position;
     }
 
     public function getInheritableFields(): array
@@ -252,21 +255,21 @@ class Hierarchy extends RDB
 
     public function hasMultipleParents(): bool
     {
-        echo '<pre>';
-        print_r('hasMultipleParents');
-        die();
+        $quotedTableName = $this->getConnection()->quoteIdentifier($this->tableName);
+        $quotedHierarchyTableName = $this->getConnection()->quoteIdentifier($this->hierarchyTableName);
 
-//        $query = "SELECT COUNT(e.id) as total
-//                  FROM (SELECT entity_id FROM `$this->hierarchyTableName` WHERE deleted=0 GROUP BY entity_id HAVING COUNT(entity_id) > 1) AS rel
-//                  LEFT JOIN `$this->tableName` e ON e.id=rel.entity_id
-//                  WHERE e.deleted=0";
-//
-//        $count = $this
-//            ->getPDO()
-//            ->query($query)
-//            ->fetch(\PDO::FETCH_COLUMN);
-//
-//        return !empty($count);
+        $query = "SELECT COUNT(e.id) as total
+                  FROM (SELECT entity_id FROM $quotedHierarchyTableName WHERE deleted=:deleted GROUP BY entity_id HAVING COUNT(entity_id) > 1) AS rel
+                  LEFT JOIN $quotedTableName e ON e.id=rel.entity_id
+                  WHERE e.deleted=:deleted";
+
+        $sth = $this->getEntityManager()->getPDO()->prepare($query);
+        $sth->bindValue(':deleted', false, \PDO::PARAM_BOOL);
+        $sth->execute();
+
+        $count = $sth->fetch(\PDO::FETCH_COLUMN);
+
+        return !empty($count);
     }
 
     public function updateHierarchySortOrder(string $parentId, array $ids): void
