@@ -712,6 +712,24 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
             ])
             ->executeQuery();
 
+        $connection->createQueryBuilder()
+            ->insert($connection->quoteIdentifier('scheduled_job'))
+            ->setValue('id', ':id')
+            ->setValue($connection->quoteIdentifier('name'), ':name')
+            ->setValue('job', ':job')
+            ->setValue($connection->quoteIdentifier('status'), ':status')
+            ->setValue('scheduling', ':scheduling')
+            ->setValue('minimum_age', ':minimumAge')
+            ->setParameters([
+                'id'         => 'DeleteForever',
+                'name'       => 'Delete data forever',
+                'job'        => 'DeleteForever',
+                'status'     => 'Active',
+                'scheduling' => '0 0 1 * *',
+                'minimumAge' => 90
+            ])
+            ->executeQuery();
+
         foreach ($this->getModuleManager()->getModulesList() as $name) {
             try {
                 $this->getModuleManager()->getModuleInstallDeleteObject($name)->afterInstall();
