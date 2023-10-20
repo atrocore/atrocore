@@ -312,6 +312,7 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
     {
         // prepare params
         return [
+            'driver'   => (string)$data['driver'],
             'host'     => (string)$data['host'],
             'port'     => isset($data['port']) ? (string)$data['port'] : '',
             'dbname'   => (string)$data['dbname'],
@@ -320,36 +321,27 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
         ];
     }
 
-
-    /**
-     * Check connect to db
-     *
-     * @param array $dbSettings
-     *
-     * @return bool
-     */
-    protected function isConnectToDb(array $dbSettings)
+    protected function isConnectToDb(array $dbSettings): bool
     {
+        $system = str_replace('pdo_', '', $dbSettings['driver']);
+
         $port = !empty($dbSettings['port']) ? '; port=' . $dbSettings['port'] : '';
 
-        $dsn = 'mysql' . ':host=' . $dbSettings['host'] . $port . ';dbname=' . $dbSettings['dbname'] . ';';
+        $dsn = $system . ':host=' . $dbSettings['host'] . $port . ';dbname=' . $dbSettings['dbname'] . ';';
 
-        $this->createDataBaseIfNotExists($dbSettings, $port);
+        try {
+            $this->createDataBaseIfNotExists($system, $dbSettings, $port);
+        } catch (\Throwable $e) {
+        }
 
         new \PDO($dsn, $dbSettings['user'], $dbSettings['password'], [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_WARNING]);
 
         return true;
     }
 
-    /**
-     * Create database if not exists
-     *
-     * @param array  $dbSettings
-     * @param string $port
-     */
-    protected function createDataBaseIfNotExists(array $dbSettings, string $port)
+    protected function createDataBaseIfNotExists(string $system, array $dbSettings, string $port): void
     {
-        $dsn = 'mysql' . ':host=' . $dbSettings['host'] . $port;
+        $dsn = $system . ':host=' . $dbSettings['host'] . $port;
 
         $pdo = new \PDO(
             $dsn,
@@ -358,14 +350,9 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
             [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_WARNING]
         );
 
-        $pdo->exec("CREATE DATABASE IF NOT EXISTS `" . $dbSettings['dbname'] . "`");
+        $pdo->exec("CREATE DATABASE " . $dbSettings['dbname']);
     }
 
-    /**
-     * Get file manager
-     *
-     * @return FileManager
-     */
     protected function getFileManager(): FileManager
     {
         return $this->getContainer()->get('fileManager');
@@ -524,10 +511,10 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
             ->setValue('is_admin', ':isAdmin')
             ->setValue('created_at', ':createdAt')
             ->setParameters([
-                'id' => '1',
-                'name' => 'Admin',
-                'userName' => $username,
-                'password' => $passwordHash,
+                'id'        => '1',
+                'name'      => 'Admin',
+                'userName'  => $username,
+                'password'  => $passwordHash,
                 'createdAt' => $today
             ])
             ->setParameter('isAdmin', true, Mapper::getParameterType(true))
@@ -697,15 +684,15 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
             ->setValue('thousand_separator', ':thousandSeparator')
             ->setValue('decimal_mark', ':decimalMark')
             ->setParameters([
-                'id' => '1',
-                'name' => 'Main',
-                'language' => 'en_US',
-                'dateFormat' => 'DD.MM.YYYY',
-                'timeZone' => 'UTC',
-                'weekStart' => 'monday',
-                'timeFormat' => 'HH:mm',
+                'id'                => '1',
+                'name'              => 'Main',
+                'language'          => 'en_US',
+                'dateFormat'        => 'DD.MM.YYYY',
+                'timeZone'          => 'UTC',
+                'weekStart'         => 'monday',
+                'timeFormat'        => 'HH:mm',
                 'thousandSeparator' => '.',
-                'decimalMark' => ',',
+                'decimalMark'       => ',',
             ])
             ->executeQuery();
 
@@ -717,10 +704,10 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
             ->setValue($connection->quoteIdentifier('status'), ':status')
             ->setValue('scheduling', ':scheduling')
             ->setParameters([
-                'id' => 'ComposerAutoUpdate',
-                'name' => 'Automatic system update',
-                'job' => 'ComposerAutoUpdate',
-                'status' => 'Active',
+                'id'         => 'ComposerAutoUpdate',
+                'name'       => 'Automatic system update',
+                'job'        => 'ComposerAutoUpdate',
+                'status'     => 'Active',
                 'scheduling' => '0 0 * * SUN'
             ])
             ->executeQuery();

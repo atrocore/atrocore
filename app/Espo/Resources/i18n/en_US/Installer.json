@@ -14,6 +14,7 @@
     "requiredSettings": "Required Settings",
     "chooseYourLanguage": "Choose your language",
     "acceptTheAgreement": "I accept the agreement",
+    "dbSystem": "Database System",
     "hostName": "Host Name",
     "databaseName": "Database Name",
     "databaseUserName": "Database User Name",
