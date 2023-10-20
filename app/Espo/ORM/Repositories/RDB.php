@@ -513,23 +513,30 @@ class RDB extends \Espo\ORM\Repository
 
     public function updateRelationData(string $relationName, array $setData, string $re1, string $re1Id, string $re2, string $re2Id): void
     {
-        $setPart = [];
-        foreach ($setData as $field => $value) {
-            if (is_array($value)) {
-                $value = Json::encode($value);
-            }
-            $setPart[] = Util::toUnderScore($field) . '=' . $this->getMapper()->quote($value);
-        }
-
-        if (empty($setPart)) {
+        if (empty($setData)) {
             return;
         }
 
-        $query = "UPDATE `" . Util::toUnderScore($relationName) . "` SET " . implode(',', $setPart) . " WHERE deleted=0";
-        $query .= " AND " . Util::toUnderScore(lcfirst($re1)) . "=" . $this->getPDO()->quote($re1Id);
-        $query .= " AND " . Util::toUnderScore(lcfirst($re2)) . "=" . $this->getPDO()->quote($re2Id);
+        $connection = $this->getEntityManager()->getConnection();
 
-        $this->getPDO()->exec($query);
+        $qb = $connection->createQueryBuilder();
+        $qb->update($connection->quoteIdentifier(Util::toUnderScore($relationName)));
+        foreach ($setData as $field => $value) {
+            $qb->set(Util::toUnderScore($field), ":{$field}_a");
+            $qb->setParameter("{$field}_a", is_array($value) ? Json::encode($value) : $value);
+        }
+        $qb->where('deleted = :false');
+        $qb->setParameter('false', false, Mapper::getParameterType(false));
+
+        $re1 = lcfirst($re1);
+        $qb->andWhere(Util::toUnderScore($re1) . " = :$re1");
+        $qb->setParameter($re1, $re1Id, Mapper::getParameterType($re1Id));
+
+        $re2 = lcfirst($re2);
+        $qb->andWhere(Util::toUnderScore($re2) . " = :$re2");
+        $qb->setParameter($re2, $re2Id, Mapper::getParameterType($re2Id));
+
+        $qb->executeQuery();
     }
 
     public function unrelate(Entity $entity, $relationName, $foreign, array $options = [])

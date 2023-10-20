@@ -33,6 +33,7 @@
 
 namespace Espo\Services;
 
+use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\EventManager\Event;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Conflict;
@@ -2575,23 +2576,26 @@ class Record extends \Espo\Core\Services\Base
 
         $this->beforeMerge($entity, $sourceList, $attributes);
 
-        $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', array());
+        $connection = $this->getEntityManager()->getConnection();
 
-        $pdo = $this->getEntityManager()->getPDO();
+        $types = ['Post', 'EmailSent', 'EmailReceived'];
 
         foreach ($sourceList as $source) {
-            $sql = "
-                UPDATE `note`
-                    SET
-                        `parent_id` = " . $pdo->quote($entity->id) . ",
-                        `parent_type` = " . $pdo->quote($entity->getEntityType()) . "
-                WHERE
-                    `type` IN ('Post', 'EmailSent', 'EmailReceived') AND
-                    `parent_id` = " . $pdo->quote($source->id) . " AND
-                    `parent_type` = ".$pdo->quote($source->getEntityType())." AND
-                    `deleted` = 0
-            ";
-            $pdo->query($sql);
+            $connection->createQueryBuilder()
+                ->update($connection->quoteIdentifier('note'), 'n')
+                ->set('parent_id', ':entityId')
+                ->set('parent_type', ':entityType')
+                ->where('n.type IN (:types)')
+                ->andWhere('n.parent_id = :sourceId')
+                ->andWhere('n.parent_type = :sourceType')
+                ->andWhere('n.deleted = :false')
+                ->setParameter('entityId', $entity->id)
+                ->setParameter('entityType', $entity->getEntityType())
+                ->setParameter('types', $types, Mapper::getParameterType($types))
+                ->setParameter('sourceId', $source->id)
+                ->setParameter('sourceType', $source->getEntityType())
+                ->setParameter('deleted', false, Mapper::getParameterType(false))
+                ->executeQuery();
         }
 
         $mergeLinkList = [];
