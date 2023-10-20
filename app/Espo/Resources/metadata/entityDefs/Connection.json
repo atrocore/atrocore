@@ -10,7 +10,8 @@
         "msql",
         "ftp",
         "sftp",
-        "oauth2"
+        "oauth2",
+        "otto"
       ],
       "options": [
         "mysql",
@@ -18,7 +19,8 @@
         "msql",
         "ftp",
         "sftp",
-        "oauth2"
+        "oauth2",
+        "otto"
       ],
       "default": "mysql"
     },
@@ -102,6 +104,54 @@
       "dataField": true,
       "required": false,
       "trim": true
+    },
+    "oauthScope": {
+      "type": "varchar",
+      "notStorable": true,
+      "dataField": true,
+      "required": false,
+      "trim": true,
+      "default": "partnerId installation developer"
+    },
+    "vendorOauthUrl": {
+      "type": "varchar",
+      "notStorable": true,
+      "dataField": true,
+      "required": false,
+      "trim": true
+    },
+    "vendorOauthScopes": {
+      "type": "multiEnum",
+      "notStorable": true,
+      "dataField": true,
+      "required": false,
+      "optionsIds": [
+        "orders",
+        "shipments",
+        "quantities",
+        "returns",
+        "products",
+        "receipts",
+        "price-reduction"
+      ],
+      "options": [
+        "orders",
+        "shipments",
+        "quantities",
+        "returns",
+        "products",
+        "receipts",
+        "price-reduction"
+      ],
+      "default": [
+        "orders",
+        "shipments",
+        "quantities",
+        "returns",
+        "products",
+        "receipts",
+        "price-reduction"
+      ]
     },
     "data": {
       "type": "jsonObject",
