@@ -673,9 +673,24 @@ class Base
         ];
     }
 
-    protected function filterWithArchived(array &$result): void
+    protected function boolFilterOnlyArchived(array &$result): void
+    {
+        $result['whereClause'][] = [
+            'isArchived' => true
+        ];
+    }
+
+    protected function boolFilterWithArchived(array &$result): void
     {
         $result['withArchived'] = true;
+    }
+
+    protected function boolFilterOnlyDeleted(array &$result): void
+    {
+        $result['withDeleted'] = true;
+        $result['whereClause'][] = [
+            "deleted" => true
+        ];
     }
 
     /**
@@ -770,7 +785,7 @@ class Base
         if ($this->metadata->get(['scopes', $this->entityType, 'hasArchive'])) {
             //filter only if boolean filter not activated
             $hasArchivedFilterInWhere = count(array_filter($result['whereClause'], function ($row) {
-                return isset($row['isArchived=']);
+                return isset($row['isArchived=']) || isset($row['isArchived']);
             })) > 0;
 
             if (!isset($result['withArchived']) && !$hasArchivedFilterInWhere) {
