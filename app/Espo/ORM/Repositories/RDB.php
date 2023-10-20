@@ -33,6 +33,7 @@
 
 namespace Espo\ORM\Repositories;
 
+use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
 use Espo\ORM\EntityManager;
@@ -219,9 +220,15 @@ class RDB extends \Espo\ORM\Repository
 
             $where = implode(' OR ', $uniques);
 
-            $this
-                ->getEntityManager()
-                ->nativeQuery("DELETE FROM `$dbTable` WHERE deleted=1 AND id!='$entity->id' AND ($where)");
+            $connection = $this->getEntityManager()->getConnection();
+            $connection->createQueryBuilder()
+                ->delete($connection->quoteIdentifier($dbTable))
+                ->where('deleted = :false')
+                ->andWhere('id != :id')
+                ->andWhere($where)
+                ->setParameter('false', false, Mapper::getParameterType(false))
+                ->setParameter('id', $entity->id)
+                ->executeQuery();
         }
     }
 

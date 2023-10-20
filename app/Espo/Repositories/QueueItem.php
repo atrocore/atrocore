@@ -43,13 +43,7 @@ use Atro\Core\QueueManager;
 
 class QueueItem extends Base
 {
-    public function deleteOldRecords(): void
-    {
-        $date = (new \DateTime())->modify('-30 days')->format('Y-m-d H:i:s');
-        $this->getPDO()->exec("DELETE FROM `queue_item` WHERE modified_at<'$date'");
-    }
-
-    protected function beforeSave(Entity $entity, array $options = [])
+   protected function beforeSave(Entity $entity, array $options = [])
     {
         // update sort order
         if ($entity->isNew()) {

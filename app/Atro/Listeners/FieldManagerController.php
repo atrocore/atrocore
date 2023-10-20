@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Listeners;
 
 use Atro\Core\EventManager\Event;
+use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Util;
 
@@ -253,22 +254,25 @@ class FieldManagerController extends AbstractListener
      */
     protected function removeDeletedDuplicate(string $table, array $fields): void
     {
-        $sql = "SELECT DISTINCT first.id AS id FROM $table as first, $table as second WHERE first.id <> second.id AND first.deleted = 1";
+        $connection = $this->getEntityManager()->getConnection();
+
+        $sql = "SELECT DISTINCT first.id AS id FROM {$connection->quoteIdentifier($table)} as first, {$connection->quoteIdentifier($table)} as second WHERE first.id <> second.id AND first.deleted = :deleted";
         foreach ($fields as $field) {
             $sql .= " AND first.$field = second.$field";
         }
 
-        $notUniqueDeletedIds = $this
-            ->getEntityManager()
-            ->nativeQuery($sql)
-            ->fetchAll(\PDO::FETCH_ASSOC|\PDO::FETCH_COLUMN);
+        $sth = $this->getEntityManager()->getPDO()->prepare($sql);
+        $sth->bindValue(':deleted', false, \PDO::PARAM_BOOL);
+        $sth->execute();
+
+        $notUniqueDeletedIds = $sth->fetchAll(\PDO::FETCH_ASSOC|\PDO::FETCH_COLUMN);
 
         if (!empty($notUniqueDeletedIds)) {
-            $ids = "'" . implode("','", $notUniqueDeletedIds) . "'";
-
-            $this
-                ->getEntityManager()
-                ->nativeQuery("DELETE FROM $table WHERE id IN ($ids)");
+            $connection->createQueryBuilder()
+                ->delete($connection->quoteIdentifier($table))
+                ->where('id IN (:ids)')
+                ->setParameter('ids', $notUniqueDeletedIds, Mapper::getParameterType($notUniqueDeletedIds))
+                ->executeQuery();
         }
     }
 

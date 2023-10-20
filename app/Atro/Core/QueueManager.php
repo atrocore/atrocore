@@ -108,9 +108,6 @@ class QueueManager
         /** @var Repository $repository */
         $repository = $this->getEntityManager()->getRepository('QueueItem');
 
-        // delete old
-        $repository->deleteOldRecords();
-
         /** @var User $user */
         $user = $this->container->get('user');
 
