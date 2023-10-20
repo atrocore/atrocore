@@ -78,7 +78,7 @@ class Hierarchy extends RDB
 
         $position = $this->getPDO()->query($query)->fetch(\PDO::FETCH_COLUMN);
 
-        return (int) $position;
+        return (int)$position;
     }
 
     public function getInheritableFields(): array
@@ -340,7 +340,7 @@ class Hierarchy extends RDB
                         AND h.parent_id='$parentId'";
         }
 
-        return (int) $this->getPDO()->query($query)->fetch(\PDO::FETCH_ASSOC)['count'];
+        return (int)$this->getPDO()->query($query)->fetch(\PDO::FETCH_ASSOC)['count'];
     }
 
     public function isRoot(string $id): bool
@@ -534,15 +534,17 @@ class Hierarchy extends RDB
     {
         parent::afterRemove($entity, $options);
 
-        $this->getConnection()
-            ->createQueryBuilder()
-            ->update($this->getConnection()->quoteIdentifier($this->hierarchyTableName))
-            ->set('deleted', ':deleted')
-            ->setParameter('deleted', true, ParameterType::BOOLEAN)
-            ->where('entity_id = :entityId')
-            ->orWhere('parent_id = :entityId')
-            ->setParameter('entityId', $entity->get('id'))
-            ->executeQuery();
+        if ($this->getConnection()->createSchemaManager()->tablesExist(array($this->hierarchyTableName))) {
+            $this->getConnection()
+                ->createQueryBuilder()
+                ->update($this->getConnection()->quoteIdentifier($this->hierarchyTableName))
+                ->set('deleted', ':deleted')
+                ->setParameter('deleted', true, ParameterType::BOOLEAN)
+                ->where('entity_id = :entityId')
+                ->orWhere('parent_id = :entityId')
+                ->setParameter('entityId', $entity->get('id'))
+                ->executeQuery();
+        }
     }
 
     protected function afterRestore($entity, array $options = [])
