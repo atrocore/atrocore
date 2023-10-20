@@ -139,13 +139,13 @@ class User extends \Espo\Core\ORM\Repositories\RDB
             $arr[] = $pdo->quote($teamId);
         }
 
-        $sql = "SELECT * FROM team_user WHERE deleted = 0 AND user_id = :userId AND team_id IN (".implode(", ", $arr).")";
+        $sql = "SELECT * FROM team_user WHERE deleted = :deleted AND user_id = :userId AND team_id IN (".implode(", ", $arr).")";
 
         $sth = $pdo->prepare($sql);
-        $sth->execute(array(
-            ':userId' => $userId
-        ));
-        if ($row = $sth->fetch()) {
+        $sth->bindValue(':deleted', false, \PDO::PARAM_BOOL);
+        $sth->bindValue(':userId', $userId);
+        $sth->execute();
+        if ($sth->fetch()) {
             return true;
         }
         return false;

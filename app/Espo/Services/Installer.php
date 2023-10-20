@@ -580,17 +580,19 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
     }
 
     /**
-     * Remove all existing tables and rub rebuild
+     * Remove all existing tables and run rebuild
      */
     protected function prepareDataBase()
     {
         /** @var array $dbParams */
         $dbParams = $this->getConfig()->get('database');
 
+        $tableSchema = $dbParams['driver'] === 'pdo_pgsql' ? 'public' : $dbParams['dbname'];
+
         // get existing db tables
         $tables = $this
             ->getEntityManager()
-            ->nativeQuery("SELECT table_name FROM information_schema.tables WHERE table_schema='{$dbParams['dbname']}';")
+            ->nativeQuery("SELECT table_name FROM information_schema.tables WHERE table_schema='$tableSchema'")
             ->fetchAll(\PDO::FETCH_ASSOC);
 
         // drop all existing tables if it needs
@@ -605,7 +607,7 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
                 }
 
                 if ($tableName) {
-                    $this->getEntityManager()->nativeQuery("DROP TABLE `$tableName`");
+                    $this->getEntityManager()->nativeQuery("DROP TABLE " . $this->getEntityManager()->getConnection()->quoteIdentifier($tableName));
                 }
             }
         }
