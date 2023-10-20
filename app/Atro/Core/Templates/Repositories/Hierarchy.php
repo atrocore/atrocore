@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core\Templates\Repositories;
 
+use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Atro\ORM\DB\RDB\Mapper;
 use Atro\ORM\DB\RDB\Query\QueryConverter;
 use Espo\Core\Exceptions\BadRequest;
@@ -54,8 +55,26 @@ class Hierarchy extends RDB
 
         $id = $this->getPDO()->quote($entity->get('id'));
 
-        if (empty($parentId)) {
-            $query = "SELECT x.position
+        if (Converter::isPgSQL($this->getConnection())) {
+            if (empty($parentId)) {
+                $query = "SELECT x.position
+                      FROM (SELECT t.id, row_number() over(ORDER BY t.sort_order ASC, t.$sortBy $sortOrder, t.id ASC) AS position
+                            FROM $quotedTableName t
+                            LEFT JOIN $quotedHierarchyTableName h ON t.id=h.entity_id AND h.deleted=:deleted
+                            WHERE t.deleted=:deleted AND h.entity_id IS NULL) x
+                      WHERE x.id=$id";
+            } else {
+                $query = "SELECT x.position
+                      FROM (SELECT t.id, row_number() over(ORDER BY h.hierarchy_sort_order ASC, t.$sortBy $sortOrder, t.id ASC) AS position
+                            FROM $quotedHierarchyTableName h
+                                LEFT JOIN $quotedTableName t ON t.id=h.entity_id
+                                LEFT JOIN $quotedTableName t1 ON t1.id=h.parent_id
+                            WHERE h.parent_id=:parentId AND h.deleted=:deleted AND t.deleted=:deleted AND t1.deleted=:deleted) x
+                      WHERE x.id=$id";
+            }
+        } else {
+            if (empty($parentId)) {
+                $query = "SELECT x.position
                       FROM (SELECT t.id, @rownum:=@rownum + 1 AS position
                             FROM $quotedTableName t
                                 JOIN (SELECT @rownum:=0) r
@@ -64,24 +83,27 @@ class Hierarchy extends RDB
                               AND h.entity_id IS NULL
                             ORDER BY t.sort_order ASC, t.$sortBy $sortOrder, t.id ASC) x
                       WHERE x.id=$id";
-        } else {
-            $parentId = $this->getPDO()->quote($parentId);
-            $query = "SELECT x.position
+            } else {
+                $query = "SELECT x.position
                       FROM (SELECT t.id, @rownum:=@rownum + 1 AS position
                             FROM $quotedHierarchyTableName h
                                 JOIN (SELECT @rownum:=0) r
                                 LEFT JOIN $quotedTableName t ON t.id=h.entity_id
                                 LEFT JOIN $quotedTableName t1 ON t1.id=h.parent_id
-                            WHERE h.parent_id=$parentId
+                            WHERE h.parent_id=:parentId
                               AND h.deleted=:deleted
                               AND t.deleted=:deleted
                               AND t1.deleted=:deleted
                             ORDER BY h.hierarchy_sort_order ASC, t.$sortBy $sortOrder, t.id ASC) x
                       WHERE x.id=$id";
+            }
         }
 
         $sth = $this->getEntityManager()->getPDO()->prepare($query);
         $sth->bindValue(':deleted', false, \PDO::PARAM_BOOL);
+        if (!empty($parentId)){
+            $sth->bindValue(':parentId', $parentId, \PDO::PARAM_STR);
+        }
         $sth->execute();
 
         $position = $sth->fetch(\PDO::FETCH_COLUMN);
