@@ -33,6 +33,7 @@
 
 namespace Espo\Services;
 
+use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Services\Base;
 use Espo\Core\Utils\Util;
@@ -44,11 +45,14 @@ class Translation extends Base
 {
     public function push(): bool
     {
+        $connection = $this->getEntityManager()->getConnection();
         $data = [];
-        $data['data'] = $this
-            ->getEntityManager()
-            ->nativeQuery("SELECT * FROM translation WHERE is_customized=1 OR deleted=1")
-            ->fetchAll(\PDO::FETCH_ASSOC);
+        $data['data'] = $connection->createQueryBuilder()
+            ->select('*')
+            ->from($connection->quoteIdentifier('translation'))
+            ->where('deleted = :true OR is_customized = :true')
+            ->setParameter('true', true, Mapper::getParameterType(true))
+            ->fetchAllAssociative();
 
         if (empty($data['data'])) {
             throw new BadRequest($this->getInjection('language')->translate('nothingToPush', 'messages', 'Translation'));

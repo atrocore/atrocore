@@ -33,13 +33,12 @@
 
 namespace Espo\Repositories;
 
+use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\AclManager;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Utils\Language;
 use \Espo\ORM\Entity;
 
 use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\Conflict;
 
 class User extends \Espo\Core\ORM\Repositories\RDB
 {
@@ -50,17 +49,16 @@ class User extends \Espo\Core\ORM\Repositories\RDB
      */
     public function getAdminUsers(): array
     {
-        $sql
-            = 'SELECT 
-                 u.id AS id, p.data AS data
-               FROM user AS u
-               LEFT JOIN preferences AS p ON u.id = p.id
-               WHERE u.deleted = 0 AND u.is_admin = 1 AND u.is_active = 1';
-
-        $sth = $this->getEntityManager()->getPDO()->prepare($sql);
-        $sth->execute();
-
-        return $sth->fetchAll(\PDO::FETCH_ASSOC);
+        return $this->getConnection()->createQueryBuilder()
+            ->select('u.id, p.data')
+            ->from($this->getConnection()->quoteIdentifier('user'), 'u')
+            ->leftJoin('u', $this->getConnection()->quoteIdentifier('preferences'), 'p', 'u.id = p.id')
+            ->where('u.deleted = :false')
+            ->andWhere('u.is_admin = :true')
+            ->andWhere('u.is_active = :true')
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->setParameter('true', true, Mapper::getParameterType(true))
+            ->fetchAllAssociative();
     }
 
     protected function init()
