@@ -66,7 +66,11 @@ class TreoStore extends Base
      */
     protected function savePackages(array $data): void
     {
-        $sql = ["DELETE FROM treo_store WHERE 1"];
+        $connection = $this->getEntityManager()->getConnection();
+
+        $connection->createQueryBuilder()
+            ->delete('treo_store')
+            ->executeQuery();
 
         foreach ($data as $package) {
             if (empty($package['name']) || empty($package['description'])) {
@@ -78,11 +82,28 @@ class TreoStore extends Base
             $versions = Json::encode($package['versions']);
             $tags = Json::encode($package['tags']);
 
-            $sql[]
-                = "INSERT INTO `treo_store` (`id`,`package_id`,`url`,`status`,`versions`,`name`,`description`,`tags`) VALUES ('{$package['treoId']}','{$package['packageId']}','{$package['url']}','{$package['status']}','{$versions}','{$name}','{$description}','{$tags}')";
+            $connection->createQueryBuilder()
+                ->insert('treo_store')
+                ->setValue('id', ':id')
+                ->setValue('package_id', ':packageId')
+                ->setValue('url', ':url')
+                ->setValue('status', ':status')
+                ->setValue('versions', ':versions')
+                ->setValue('name', ':name')
+                ->setValue('description', ':description')
+                ->setValue('tags', ':tags')
+                ->setParameters([
+                    'id'          => $package['treoId'],
+                    'packageId'   => $package['packageId'],
+                    'url'         => $package['url'],
+                    'status'      => $package['status'],
+                    'versions'    => $versions,
+                    'name'        => $name,
+                    'description' => $description,
+                    'tags'        => $tags,
+                ])
+                ->executeQuery();
         }
-
-        $this->getEntityManager()->nativeQuery(implode(';', $sql));
     }
 
     public function getRemotePackages(): array
