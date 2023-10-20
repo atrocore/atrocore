@@ -78,7 +78,7 @@ class Hierarchy extends RDB
 
         $position = $this->getPDO()->query($query)->fetch(\PDO::FETCH_COLUMN);
 
-        return (int) $position;
+        return (int)$position;
     }
 
     public function getInheritableFields(): array
@@ -183,13 +183,20 @@ class Hierarchy extends RDB
 
     public function updatePositionInTree(string $entityId, string $position, string $target, string $parentId): void
     {
-        // prepare vars
-        $preparedEntityId = $this->getPDO()->quote($entityId);
-        $preparedParentId = $this->getPDO()->quote($parentId);
+        $this->getConnection()->createQueryBuilder()
+            ->delete($this->hierarchyTableName)
+            ->andWhere('entity_id = :entityId')
+            ->setParameter('entityId', $entityId)
+            ->executeQuery();
 
-        $this->getPDO()->exec("DELETE FROM `$this->hierarchyTableName` WHERE entity_id=$preparedEntityId");
         if (!empty($parentId)) {
-            $this->getPDO()->exec("INSERT INTO `$this->hierarchyTableName` (entity_id, parent_id) VALUES ($preparedEntityId, $preparedParentId)");
+            $this->getConnection()->createQueryBuilder()
+                ->insert($this->hierarchyTableName)
+                ->setValue('entity_id', ':entityId')
+                ->setParameter('entityId', $entityId)
+                ->setValue('parent_id', ':parentId')
+                ->setParameter('parentId', $parentId)
+                ->executeQuery();
         }
 
         $ids = array_column($this->getChildrenArray($parentId, false), 'id');
@@ -211,15 +218,35 @@ class Hierarchy extends RDB
         foreach ($sortedIds as $k => $id) {
             $sortOrder = $k * 10;
             if (empty($parentId)) {
-                $this->getPDO()->exec("UPDATE `$this->tableName` SET sort_order=$sortOrder WHERE id='$id' AND deleted=0");
+                $this->getConnection()->createQueryBuilder()
+                    ->update($this->tableName)
+                    ->set('sort_order', ':sortOrder')
+                    ->setParameter('sortOrder', $sortOrder)
+                    ->andWhere('id = :id')
+                    ->setParameter('id', $id)
+                    ->andWhere('deleted = :false')
+                    ->setParameter('false', false, Mapper::getParameterType(false))
+                    ->executeQuery();
             } else {
-                $this->getPDO()->exec("UPDATE `$this->hierarchyTableName` SET hierarchy_sort_order=$sortOrder WHERE entity_id='$id' AND deleted=0");
+                $this->getConnection()->createQueryBuilder()
+                    ->update($this->hierarchyTableName)
+                    ->set('hierarchy_sort_order', ':sortOrder')
+                    ->setParameter('sortOrder', $sortOrder)
+                    ->andWhere('entity_id = :entityId')
+                    ->setParameter('entityId', $id)
+                    ->andWhere('deleted = :false')
+                    ->setParameter('false', false, Mapper::getParameterType(false))
+                    ->executeQuery();
             }
         }
     }
 
     public function hasMultipleParents(): bool
     {
+        echo '<pre>';
+        print_r('hasMultipleParents');
+        die();
+
         $query = "SELECT COUNT(e.id) as total 
                   FROM (SELECT entity_id FROM `$this->hierarchyTableName` WHERE deleted=0 GROUP BY entity_id HAVING COUNT(entity_id) > 1) AS rel 
                   LEFT JOIN `$this->tableName` e ON e.id=rel.entity_id 
@@ -235,11 +262,19 @@ class Hierarchy extends RDB
 
     public function updateHierarchySortOrder(string $parentId, array $ids): void
     {
-        $parentId = $this->getPDO()->quote($parentId);
         foreach ($ids as $k => $id) {
-            $id = $this->getPDO()->quote($id);
             $sortOrder = $k * 10;
-            $this->getPDO()->exec("UPDATE `$this->hierarchyTableName` SET hierarchy_sort_order=$sortOrder WHERE parent_id=$parentId AND entity_id=$id AND deleted=0");
+            $this->getConnection()->createQueryBuilder()
+                ->update($this->hierarchyTableName)
+                ->set('hierarchy_sort_order', ':sortOrder')
+                ->setParameter('sortOrder', $sortOrder)
+                ->where('parent_id = :parentId')
+                ->setParameter('parentId', $parentId)
+                ->andWhere('entity_id = :entityId')
+                ->setParameter('entityId', $id)
+                ->andWhere('deleted = :false')
+                ->setParameter('false', false, Mapper::getParameterType(false))
+                ->executeQuery();
         }
     }
 
@@ -261,6 +296,10 @@ class Hierarchy extends RDB
 
     public function getChildrenArray(string $parentId, bool $withChildrenCount = true, int $offset = null, $maxSize = null, $selectParams = null): array
     {
+        echo '<pre>';
+        print_r('getChildrenArray');
+        die();
+
         $childWhere = "";
         if ($selectParams) {
             $childWhere = $this->getMapper()->getWhereQuery($this->entityType, $selectParams['whereClause']);
@@ -311,11 +350,12 @@ class Hierarchy extends RDB
         return $this->getPDO()->query($query)->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    /**
-     * @return int
-     */
-    public function getChildrenCount(string $parentId, $selectParams = null): int
+    public function getChildrenCount(string $parentId, array $selectParams = null): int
     {
+        echo '<pre>';
+        print_r('getChildrenCount');
+        die();
+
         $where = "";
         if ($selectParams) {
             $where = $this->getMapper()->getWhereQuery($this->entityType, $selectParams['whereClause']);
@@ -340,19 +380,19 @@ class Hierarchy extends RDB
                         AND h.parent_id='$parentId'";
         }
 
-        return (int) $this->getPDO()->query($query)->fetch(\PDO::FETCH_ASSOC)['count'];
+        return (int)$this->getPDO()->query($query)->fetch(\PDO::FETCH_ASSOC)['count'];
     }
 
     public function isRoot(string $id): bool
     {
-        $id = $this->getPDO()->quote($id);
-
-        $query = "SELECT id
-                  FROM `$this->hierarchyTableName`
-                  WHERE deleted=0
-                    AND entity_id={$id}";
-
-        $record = $this->getPDO()->query($query)->fetch(\PDO::FETCH_COLUMN);
+        $record = $this->getConnection()->createQueryBuilder()
+            ->select('h.id')
+            ->from($this->hierarchyTableName, 'h')
+            ->where('h.deleted = :false')
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->andWhere('h.entity_id = :entityId')
+            ->setParameter('entityId', $id)
+            ->fetchAssociative();
 
         return empty($record);
     }
@@ -371,16 +411,16 @@ class Hierarchy extends RDB
 
     public function getParentRecord(string $id): array
     {
-        $id = $this->getPDO()->quote($id);
-
-        $query = "SELECT t.*
-                  FROM `$this->hierarchyTableName` h
-                  LEFT JOIN `$this->tableName` t ON t.id=h.parent_id
-                  WHERE h.deleted=0
-                    AND t.deleted=0
-                    AND h.entity_id={$id}";
-
-        $record = $this->getPDO()->query($query)->fetch(\PDO::FETCH_ASSOC);
+        $record = $this->getConnection()->createQueryBuilder()
+            ->select('t.*')
+            ->from($this->hierarchyTableName, 'h')
+            ->leftJoin('h', $this->tableName, 't', 't.id = h.parent_id')
+            ->where('h.deleted = :false')
+            ->andWhere('t.deleted = :false')
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->andWhere('h.entity_id = :entityId')
+            ->setParameter('entityId', $id)
+            ->fetchAssociative();
 
         return empty($record) ? [] : $record;
     }
@@ -406,7 +446,9 @@ class Hierarchy extends RDB
 
             if ($hasNonArchivedChildren) {
                 $language = $this->getLanguage();
-                throw new BadRequest(sprintf($language->translate('childsMustBeArchived', 'exceptions', 'Global'), $language->translate($fieldName, 'fields', $entity->getEntityType())));
+                throw new BadRequest(
+                    sprintf($language->translate('childsMustBeArchived', 'exceptions', 'Global'), $language->translate($fieldName, 'fields', $entity->getEntityType()))
+                );
             }
         }
     }
@@ -508,9 +550,19 @@ class Hierarchy extends RDB
 
     protected function collectParents(string $id, array &$ids): void
     {
-        $id = $this->getPDO()->quote($id);
-        $query = "SELECT r.parent_id FROM `$this->hierarchyTableName` r LEFT JOIN `$this->tableName` m ON r.parent_id=m.id WHERE r.deleted=0 AND r.entity_id=$id AND m.deleted=0";
-        if (!empty($res = $this->getPDO()->query($query)->fetchAll(\PDO::FETCH_COLUMN))) {
+        $res = $this->getConnection()->createQueryBuilder()
+            ->select('r.parent_id')
+            ->from($this->hierarchyTableName, 'r')
+            ->leftJoin('r', $this->tableName, 'm', 'r.parent_id = m.id')
+            ->where('r.deleted = :false')
+            ->andWhere('m.deleted = :false')
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->andWhere('r.entity_id = :entityId')
+            ->setParameter('entityId', $id)
+            ->fetchAllAssociative();
+
+        if (!empty($res)) {
+            $res = array_column($res, 'parent_id');
             $ids = array_values(array_unique(array_merge($ids, $res)));
             foreach ($res as $v) {
                 $this->collectParents($v, $ids);
