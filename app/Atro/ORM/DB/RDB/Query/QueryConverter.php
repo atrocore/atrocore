@@ -132,7 +132,7 @@ class QueryConverter
             $whereClause = array();
         }
 
-        if (!$deleted) {
+        if (!$deleted && !(!empty($params['withDeleted']) && $params['withDeleted'] === true)) {
             $whereClause = $whereClause + ['deleted' => false];
         }
 

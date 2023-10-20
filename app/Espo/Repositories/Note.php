@@ -65,16 +65,21 @@ class Note extends RDB
             $entity->set('number', time() - (new \DateTime('2023-10-19'))->getTimestamp());
         }
 
-        if ($entity->get('type') == 'Post') {
+        if (in_array($entity->get('type'), $this->getMetadata()->get(['app', 'noteTypesWithMention'], []))) {
             $this->addMentionData($entity);
         }
 
         if ($entity->has('attachmentsIds')) {
             $data = $entity->get('data');
+            if (empty($data)) {
+                $data = new \stdClass();
+            }
             $data->attachmentsIds = $entity->get('attachmentsIds');
             $entity->clear('attachmentsIds');
             $entity->clear('attachmentsNames');
             $entity->clear('attachmentsTypes');
+
+            $entity->set('data', $data);
         }
 
         parent::beforeSave($entity, $options);
