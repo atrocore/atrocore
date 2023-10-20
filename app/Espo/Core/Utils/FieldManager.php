@@ -217,7 +217,7 @@ class FieldManager extends Injectable
             $result &= $this->getMetadata()->save();
 
             if (isset($oldFieldDefs['isMultilang']) && $oldFieldDefs['isMultilang'] == true && !$this->getMetadata()->get(['entityDefs', $scope, 'fields', $name, 'isMultilang'], false)) {
-                (new \Espo\Jobs\TreoCleanup($this->getInjection('container')))->run();
+                (new \Espo\Jobs\DeleteForever($this->getInjection('container')))->run();
             }
 
             $event = new Event(['scope' => $scope, 'field' => $name, 'oldFieldDefs' => $oldFieldDefs]);

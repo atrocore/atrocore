@@ -1314,6 +1314,11 @@ class Record extends \Espo\Core\Services\Base
             throw new NotFound();
         }
 
+        // skip required field if we are doing massUpdate
+        if (!empty($event->getArgument('massUpdateData'))) {
+            $entity->skipValidation('requiredField');
+        }
+
         $this->filterInput($data, $id);
         $this->handleInput($data, $id);
 
@@ -1540,6 +1545,26 @@ class Record extends \Espo\Core\Services\Base
         }
 
         return $result;
+    }
+    public function restoreEntity($id)
+    {
+        $id = $this
+            ->dispatchEvent('beforeRestoreEntity', new Event(['id' => $id, 'service' => $this]))
+            ->getArgument('id');
+
+        if (empty($id)) {
+            throw new BadRequest();
+        }
+
+        $this->beforeRestoreEntity($id);
+        $entity = $this->getRepository()->restore($id);
+        if ($entity) {
+            $this->afterRestoreEntity($entity);
+            $this->processActionHistoryRecord('restore', $entity);
+            return $this->dispatchEvent('afterRestoreEntity', new Event(['id' => $id, 'result' => $entity, 'service' => $this]))->getArgument('result');
+        }
+
+        return  false;
     }
 
     protected function getSelectParams($params)
@@ -2231,6 +2256,31 @@ class Record extends \Espo\Core\Services\Base
         return true;
     }
 
+    public function massRestore(array $params)
+    {
+        $params = $this
+            ->dispatchEvent('beforeMassRestore', new Event(['params' => $params, 'service' => $this]))
+            ->getArgument('params');
+
+        $name = $this->getInjection('language')->translate('restore', 'massActions', 'Global') . ': ' . $this->entityType;
+
+        $data = [
+            'entityType' => $this->entityType
+        ];
+        if (array_key_exists('ids', $params) && !empty($params['ids']) && is_array($params['ids'])) {
+            $data['ids'] = $params['ids'];
+        }
+        if (array_key_exists('where', $params)) {
+            $data['where'] = $params['where'];
+        }
+
+        $this
+            ->getInjection('queueManager')
+            ->push($name, 'MassRestore', $data, 'High');
+
+        return true;
+    }
+
     public function follow($id, $userId = null)
     {
         $event = $this->dispatchEvent('beforeFollow', new Event(['id' => $id, 'service' => $this, 'userId' => $userId]));
@@ -2870,7 +2920,7 @@ class Record extends \Espo\Core\Services\Base
         $seed = $this->getEntityManager()->getEntity($this->getEntityType());
 
         if (array_key_exists('select', $params)) {
-            $passedAttributeList = $params['select'];
+            $passedAttributeList = array_map('trim', $params['select']);
         } else {
             $passedAttributeList = null;
         }
@@ -2894,7 +2944,7 @@ class Record extends \Espo\Core\Services\Base
 
             foreach ($passedAttributeList as $attribute) {
                 if (!in_array($attribute, $attributeList) && $seed->hasAttribute($attribute)) {
-                    $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $attribute]);
+                    $fieldDefs = $this->getMetadata()->get(['entityDefs', $seed->getEntityType(), 'fields', $attribute]);
 
                     $attributeList[] = $attribute;
                     if (
@@ -3287,5 +3337,13 @@ class Record extends \Espo\Core\Services\Base
 
         $this->addDependency('queueManager');
         $this->addDependency('twig');
+    }
+
+    protected function beforeRestoreEntity($entity)
+    {
+    }
+
+    protected function afterRestoreEntity($entity)
+    {
     }
 }

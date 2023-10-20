@@ -163,6 +163,7 @@
     "Auth error": "Authentication failed. Please re-login again.",
     "Post cannot be empty": "Post cannot be empty",
     "removing": "Deleting...",
+    "restoring": "Restoring...",
     "Unlinking...": "Unlinking...",
     "Posting...": "Posting...",
     "Username can not be empty!": "Username can not be empty!",
@@ -303,6 +304,7 @@
     "confirmInheritAllForChildren": "Are you sure you want all child items to inherit field (and attribute) values as well as relations from this parent item? Existing values will not be replaced.",
     "massDeleting": "Deleting: {{deleted}} from {{total}}",
     "massUpdating": "Updating: {{deleted}} from {{total}}",
+    "massRestoring": "Restoring: {{restored}} from {{total}}",
     "optionValueCannotBeEmpty": "Option value cannot be empty",
     "minimumOneOptionsRequired": "Minimum one option value is required.",
     "defaultEnumValueCannotBeEmpty": "Default value should be selected if empty value is disabled.",
@@ -349,9 +351,11 @@
     "deleteAllConfirmation": "Are you sure you want to delete all records?",
     "resetPreferencesConfirmation": "Are you sure you want to reset preferences to defaults?",
     "removeRecordConfirmation": "The selected record will be deleted permanently. Are you sure you want to delete it?",
+    "restoreRecordConfirmation": "The selected record will be restore. Are you sure you want to restore it?",
     "unlinkRecordConfirmation": "Are you sure you want to unlink the related record?",
     "removeRecordConfirmationHierarchically": "The selected record and its children records will be permanently deleted. Are you sure you want to delete it/them?",
     "removeSelectedRecordsConfirmation": "Are you sure you want to delete the selected records permanently?",
+    "restoreSelectedRecordsConfirmation": "Are you sure you want to restore the selected records?",
     "massUpdateResultSingle": "{count} record has been updated",
     "noRecordsUpdated": "No records were updated",
     "massRemoveResult": "{count} records have been deleted",
@@ -376,6 +380,10 @@
     "massUnfollowResultSingle": "{count} record now is not followed",
     "massFollowZeroResult": "Nothing got followed",
     "massUnfollowZeroResult": "Nothing got unfollowed",
+    "massRestoreResult": "{count} records now are restored",
+    "confirmMassRestore": "Are you sure you want to restore selected records?",
+    "massRestoreResultSingle": "{count} record now is restored",
+    "massRestoreZeroResult": "Nothing got restore",
     "erasePersonalDataConfirmation": "Checked fields will be erased permanently. Are you sure?",
     "clearAclCacheError": "ACL cache could not be cleared.",
     "emptyMultilangOptions": "Options list cannot be empty while multi-language option is activated."
@@ -384,10 +392,12 @@
     "onlyActive": "Active",
     "onlyMy": "My",
     "assignedToMe": "Assigned to me",
-    "ownedByMe": "Owned by me"
+    "ownedByMe": "Owned by me",
+    "onlyArchived": "Without non-archived",
+    "withArchived": "With archived",
+    "onlyDeleted": "Deleted"
   },
   "presetFilters": {
-    "withArchived": "All + Archived",
     "followed": "Followed",
     "all": "All"
   },
@@ -402,7 +412,8 @@
     "export": "Export",
     "follow": "Follow",
     "unfollow": "Unfollow",
-    "convertCurrency": "Convert Currency"
+    "convertCurrency": "Convert Currency",
+    "restore": "Restore"
   },
   "fields": {
     "isInherited": "Inherited",

@@ -36,6 +36,7 @@ Espo.define('views/fields/unit-float', ['views/fields/float', 'views/fields/unit
 
         setup() {
             Dep.prototype.setup.call(this);
+            Int.prototype.prepareOriginalName.call(this);
             Int.prototype.afterSetup.call(this);
         },
 
@@ -49,7 +50,7 @@ Espo.define('views/fields/unit-float', ['views/fields/float', 'views/fields/unit
         },
 
         data() {
-            return Int.prototype.prepareMeasureData.call(this, Dep.prototype.data.call(this));
+            return Int.prototype.prepareMeasureData.call(this, Int.prototype.setDataWithOriginalName.call(this));
         },
 
         fetch() {

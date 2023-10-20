@@ -3,6 +3,7 @@
         "rows": [
             [{"name": "job"}, {"name": "status"}],
             [{"name": "name"}, false],
+            [{"name": "minimum_age"}, false],
             [{"name": "scheduling"}, false]
         ]
     }

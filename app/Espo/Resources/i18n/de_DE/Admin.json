@@ -52,7 +52,10 @@
     "Action History": "Aktionsverlauf",
     "Auth Log": "Auth-Protokoll",
     "Attachments": "Anhänge",
-    "Layout Manager": "Layouts"
+    "Layout Manager": "Layouts",
+    "Accounts": "Konto",
+    "Contacts": "Kontakte",
+    "Addresses": "Adressen"
   },
   "logicalOperators": {
     "and": "UND",
@@ -210,7 +213,10 @@
     "actionHistory": "Sehen Sie den Verlauf aller Benutzeraktionen im System an, einschließlich Benutzername, Zieldatensatz, Aktionstyp, IP-Adresse, Zugriffsdatum und -zeit.",
     "labelManager": "Verwalten Sie Label-Übersetzungen für vorausgewählte Sprachen, übermitteln Sie Ihre Übersetzungen zur Überprüfung durch das AtroCore-Team, setzen Sie Ihre Übersetzungen auf Standardwerte zurück.",
     "authLog": "Überprüfen Sie den Anmeldeverlauf.",
-    "attachments": "Verwalten Sie alle im System gespeicherten Dateien (Anhänge)."
+    "attachments": "Verwalten Sie alle im System gespeicherten Dateien (Anhänge).",
+    "accounts": "Konten verwalten",
+    "contacts": "Kontakte verwalten",
+    "addresses": "Adressen verwalten"
   },
   "options": {
     "previewSize": {

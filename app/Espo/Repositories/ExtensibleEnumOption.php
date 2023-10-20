@@ -62,7 +62,6 @@ class ExtensibleEnumOption extends Base
         }
 
         $res = [];
-
         foreach ($ids as $id) {
             $id = (string)$id;
             if ($id === '') {
@@ -78,15 +77,14 @@ class ExtensibleEnumOption extends Base
                 ];
 
                 // prepare select
-                $select = ['id', 'code', 'color', 'name'];
+                $select = ['id', 'code', 'color', 'name','sortOrder'];
                 foreach ($this->getLingualFields('name') as $lingualField) {
                     $select[] = $lingualField;
                 }
                 if ($this->getMetadata()->get(['entityDefs', 'ExtensibleEnumOption', 'fields', 'description'])) {
                     $select[] = 'description';
                 }
-
-                foreach ($this->select($select)->where(['extensibleEnumId' => $extensibleEnumId])->find() as $item) {
+                foreach ($this->select($select)->order('sortOrder')->where(['extensibleEnumId' => $extensibleEnumId])->find() as $item) {
                     $row = $item->toArray();
                     $row['preparedName'] = $row[$this->getOptionName()];
                     $this->cachedOptions[$item->get('id')] = $row;
@@ -95,6 +93,11 @@ class ExtensibleEnumOption extends Base
             $res[] = $this->cachedOptions[$id];
         }
 
+        if(count($res) > 1){
+            usort($res, function($option1, $option2){
+                return ($option1['sortOrder'] < $option2['sortOrder']) ?  -1 : 1;
+            });
+        }
         return $res;
     }
 

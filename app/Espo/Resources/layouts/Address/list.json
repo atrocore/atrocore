@@ -1,0 +1,24 @@
+[
+  {
+    "name": "name",
+    "link": true
+  },
+  {
+    "name": "type"
+  },
+  {
+    "name": "phone"
+  },
+  {
+    "name": "email"
+  },
+  {
+    "name": "street"
+  },
+  {
+    "name": "city"
+  },
+  {
+    "name": "country"
+  }
+]

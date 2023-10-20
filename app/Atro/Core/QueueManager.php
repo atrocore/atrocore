@@ -72,7 +72,7 @@ class QueueManager
                 $dto->setPriority($input[3]);
             }
             if (isset($input[4])) {
-                $dto->setHash($input[3]);
+                $dto->setHash($input[4]);
             }
         }
 

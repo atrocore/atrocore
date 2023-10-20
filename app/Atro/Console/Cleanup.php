@@ -35,7 +35,7 @@ class Cleanup extends AbstractConsole
      */
     public function run(array $data): void
     {
-        if ((new \Espo\Jobs\TreoCleanup($this->getContainer()))->run()) {
+        if ((new \Espo\Jobs\DeleteForever($this->getContainer()))->run()) {
             self::show('Cleanup successfully finished', self::SUCCESS);
         } else {
             self::show('Something wrong. Cleanup failed. Check log for details', self::ERROR);

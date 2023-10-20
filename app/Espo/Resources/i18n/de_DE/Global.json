@@ -158,6 +158,7 @@
     "Auth error": "Authentifizierung fehlgeschlagen. Bitte melden Sie sich erneut an.",
     "Post cannot be empty": "Notiz darf nicht leer sein",
     "removing": "Lösche...",
+    "restoring": "Wiederherstellen...",
     "Unlinking...": "Lösche Verknüpfung...",
     "Posting...": "Poste...",
     "Username can not be empty!": "Der Benutzername darf nicht leer sein!",
@@ -284,6 +285,7 @@
     "confirmInheritAllForChildren": "Sind Sie sicher, dass alle untergeordneten Elemente Feld- (und Attribut-) Werte sowie auch Beziehungen von diesem übergeordneten Element erben sollen? Vorhandene Werte werden nicht ersetzt.",
     "massDeleting": "Entferne: {{deleted}} vom {{total}}",
     "massUpdating": "Aktualisieren: {{deleted}} vom {{total}}",
+    "massRestoring": "Wiederherstellung: {{restored}} von {{total}}",
     "optionValueCannotBeEmpty": "Option darf nicht leer sein",
     "minimumOneOptionsRequired": "Mindestens ein Optionswert ist erforderlich.",
     "defaultEnumValueCannotBeEmpty": "Der Standardwert sollte ausgewählt werden, wenn der leere Wert deaktiviert ist.",
@@ -307,6 +309,10 @@
     "massUnfollowResult": "{count} Datensätze werden nicht mehr abonniert",
     "massUnfollowResultSingle": "{count} Datensatz wird nicht mehr abonniert",
     "massUnfollowZeroResult": "Keine Datensätze wurden abbestellt",
+    "massRestoreResult": "{count} Die Datensätze sind jetzt wiederhergestellt",
+    "confirmMassRestore": "Sind Sie sicher, dass Sie die ausgewählten Datensätze wiederherstellen möchten?",
+    "massRestoreResultSingle": "{count} Datensatz ist jetzt wiederhergestellt",
+    "massRestoreZeroResult": "Es wurde nichts wiederhergestellt",
     "posting": "postiere...",
     "streamPostInfo": "Schreiben Sie <strong>@username</strong> um Benutzer in der Post zu nennen.\\nVerfügbare Syntax:`<code>code</code>````<code>multiline code</code>```**<strong>strong text</strong>***<em>emphasized text</em>*~~<del>deleted text</del>~~> blockquote[link text](url)",
     "writeMessageToSelf": "Nachricht bei eigenen Aktivitäten erfassen",
@@ -336,9 +342,11 @@
     "deleteAllConfirmation": "Möchten Sie wirklich alle Datensätze löschen?",
     "resetPreferencesConfirmation": "Sind Sie sicher, dass Sie die Einstellungen auf Standardwerte zurücksetzen wollen?",
     "removeRecordConfirmation": "Sind Sie sicher, dass Sie den Eintrag löschen wollen?",
+    "restoreRecordConfirmation": "Der ausgewählte Datensatz wird wiederhergestellt. Sind Sie sicher, dass Sie es wiederherstellen möchten?",
     "unlinkRecordConfirmation": "Wollen Sie die Verknüpfung mit dem Datensatz wirklich endgültig löschen?",
     "removeRecordConfirmationHierarchically": "Wollen Sie wirklich die Datensätze hierarchisch löschen?",
     "removeSelectedRecordsConfirmation": "Sind Sie sicher, dass Sie die ausgewählten Datensätze endgültig löschen möchten?",
+    "restoreSelectedRecordsConfirmation": "Sind Sie sicher, dass Sie die ausgewählten Datensätze dauerhaft wiederherstellen?",
     "massUpdateResultSingle": "{count} Eintrag wurde aktualisiert",
     "noRecordsUpdated": "Es wurden keine Einträge aktualisiert",
     "massRemoveResult": "{count} Einträge wurden gelöscht",
@@ -406,10 +414,11 @@
     "assignedToMe": "Mir zugewiesen",
     "ownedByMe": "Gehört mir",
     "followed": "abonniert",
-    "onlyActive": "Aktiv"
+    "onlyActive": "Aktiv",
+    "onlyArchived": "Ohne nicht archiviert",
+    "withArchived": "Mit archiviert"
   },
   "presetFilters": {
-    "withArchived": "Alle + Archivierte",
     "followed": "abonniert",
     "all": "Alle"
   },
@@ -424,7 +433,8 @@
     "addRelation": "Beziehung hinzufügen",
     "removeRelation": "Beziehung entfernen",
     "massUpdate": "Massenänderung",
-    "convertCurrency": "Währung umrechnen"
+    "convertCurrency": "Währung umrechnen",
+    "restore": "Wiederherstellen"
   },
   "fields": {
     "isInherited": "Vererbt",
