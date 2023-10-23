@@ -43,6 +43,7 @@ use Espo\Core\ORM\Repositories\RDB;
 use Espo\Core\SelectManagerFactory;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Util;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
 
@@ -808,7 +809,7 @@ class Base
     protected function boolFilterOnlyDeleted(array &$result): void
     {
         $result['withDeleted'] = true;
-        $result['additionalSelectColumns']["deleted"] = "deleted";
+        $result['additionalSelectColumns'][ Util::toCamelCase($this->getEntityType()).".deleted"] = "deleted";
         $result['whereClause'][] = [
             "deleted" => 1
         ];
