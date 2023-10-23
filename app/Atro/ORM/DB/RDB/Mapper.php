@@ -252,7 +252,7 @@ class Mapper implements MapperInterface
 
             case IEntity::MANY_MANY:
                 $params['relationName'] = $relOpt['relationName'];
-                $params['callbacks'][] = [new JoinManyToMany($entity, $relationName, $keySet, $this->getQueryConverter()), 'run'];
+                $params['callbacks'][] = [new JoinManyToMany($entity, $relationName, $keySet), 'run'];
 
                 $resultArr = [];
                 $rows = $this->select($relEntity, $params);
