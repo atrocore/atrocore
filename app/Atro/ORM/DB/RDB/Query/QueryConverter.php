@@ -384,7 +384,7 @@ class QueryConverter
             if (!empty($entity->fields[$field]['select'])) {
                 $part = $entity->fields[$field]['select'];
             } else {
-                $part = $this->toDb($entityType) . '.' . $part;
+                $part = self::TABLE_ALIAS . '.' . $part;
             }
         }
         if ($function) {
@@ -1147,34 +1147,31 @@ class QueryConverter
         return $prefix . "JOIN {$this->quoteIdentifier($table)} {$alias} ON";
     }
 
-    protected function getJoinPart(IEntity $entity, $name, $left = false, $conditions = array(), $alias = null)
+    protected function getJoinPart(IEntity $entity, $name, $left = false, $conditions = array(), $alias = null): array
     {
-        $prefix = ($left) ? 'LEFT ' : '';
-
         if (!$entity->hasRelation($name)) {
-            echo '2023-10-11 TODO: getJoin not hasRelation';
-            die();
+            if (empty($conditions)) {
+                return [];
+            }
 
-//            if (!$alias) {
-//                $alias = $this->sanitize($name);
-//            }
-//            $table = $this->toDb($this->sanitize($name));
-//
-//            $sql = $this->joinSQL($prefix, $table, $alias);
-//
-//            if (empty($conditions)) {
-//                return '';
-//            }
-//
-//            $joinSqlList = [];
-//            foreach ($conditions as $left => $right) {
-//                $joinSqlList[] = $this->buildJoinConditionStatement($entity, $alias, $left, $right);
-//            }
-//            if (count($joinSqlList)) {
-//                $sql .= " " . implode(" AND ", $joinSqlList);
-//            }
-//
-//            return $sql;
+            if (!$alias) {
+                $alias = $this->sanitize($name);
+            }
+
+            $conditionsParts = [];
+            foreach ($conditions as $l => $r) {
+                $conditionsParts[] = $this->buildJoinConditionStatement($entity, $alias, $l, $r);
+            }
+
+            return [
+                [
+                    'type'      => $left ? 'left' : 'inner',
+                    'fromAlias' => self::TABLE_ALIAS,
+                    'table'     => $this->toDb($this->sanitize($name)),
+                    'alias'     => $alias,
+                    'condition' => implode(" AND ", $conditionsParts)
+                ]
+            ];
         }
 
         $relationName = $name;
@@ -1291,7 +1288,7 @@ class QueryConverter
                 return [$join];
         }
 
-        return false;
+        return [];
     }
 
     public function fieldToAlias(string $field): string
