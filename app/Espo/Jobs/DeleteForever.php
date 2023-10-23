@@ -39,6 +39,7 @@ use Atro\Core\Container;
 use Espo\Core\EventManager\Event;
 use Espo\Core\Jobs\Base;
 use Espo\Core\Utils\Util;
+use Espo\ORM\EntityManager;
 
 class DeleteForever extends Base
 {
@@ -126,18 +127,40 @@ class DeleteForever extends Base
     {
         $tables = $this->getEntityManager()->nativeQuery('show tables')->fetchAll(\PDO::FETCH_COLUMN);
         foreach ($tables as $table) {
-            if ($table == 'attachment') {
-                continue 1;
-            }
+
             $columns = $this->getEntityManager()->nativeQuery("SHOW COLUMNS FROM {$this->db}.$table")->fetchAll(\PDO::FETCH_COLUMN);
             if (!in_array('deleted', $columns)) {
                 continue 1;
             }
-            if (!in_array('modified_at', $columns)) {
-                $this->exec("DELETE FROM {$this->db}.$table WHERE deleted=1");
-            } else {
+            if ($table == 'attachment') {
+                $fileManager = $this->getContainer()->get('fileStorageManager');
+                $repository = $this->getEntityManager()->getRepository('Attachment');
+                $attachments = $repository
+                    ->where([
+                        'deleted' => 1,
+                        'createdAt<=' => $this->date
+                    ])
+                    ->find(["withDeleted" => true]);
+                foreach ($attachments as $entity){
+                    // unlink file
+                    $fileManager->unlink($entity);
+                    // remove record from DB table
+                    $repository->deleteFromDb($entity->get('id'));
+                }
+                continue 1;
+            }
+            if(in_array('modified_at',$columns)){
                 $this->exec("DELETE FROM {$this->db}.$table WHERE deleted=1 AND DATE(modified_at)<'{$this->date}'");
             }
+
+            if (!in_array('modified_at', $columns) && in_array('created_at', $columns) ) {
+                $this->exec("DELETE FROM {$this->db}.$table WHERE deleted=1 DATE(created_at)<'{$this->date}' ");
+            }
+
+            if (!in_array('modified_at', $columns) && !in_array('created_at', $columns) ) {
+                $this->exec("DELETE FROM {$this->db}.$table WHERE deleted=1");
+            }
+
         }
     }
 
@@ -201,4 +224,6 @@ class DeleteForever extends Base
             $GLOBALS['log']->error('DeleteForever: ' . $e->getMessage() . ' | ' . $sql);
         }
     }
+
+
 }
