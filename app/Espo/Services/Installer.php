@@ -317,7 +317,8 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
             'port'     => isset($data['port']) ? (string)$data['port'] : '',
             'dbname'   => (string)$data['dbname'],
             'user'     => (string)$data['user'],
-            'password' => isset($data['password']) ? (string)$data['password'] : ''
+            'password' => isset($data['password']) ? (string)$data['password'] : '',
+            'charset'  => $data['driver'] === 'pdo_pgsql' ? 'utf8' : 'utf8mb4',
         ];
     }
 
@@ -666,7 +667,9 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
          */
         $file = 'data/after_install_script.php';
         if (file_exists($file)) {
-            include_once $file;
+            if ($this->getConfig()->get('config')->get('database')['driver'] !== 'pdo_pgsql') {
+                include_once $file;
+            }
             unlink($file);
         }
 
