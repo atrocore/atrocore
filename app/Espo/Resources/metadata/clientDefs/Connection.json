@@ -130,7 +130,8 @@
               "type": "in",
               "attribute": "type",
               "value": [
-                "oauth2"
+                "oauth2",
+                "otto"
               ]
             }
           ]
@@ -143,7 +144,8 @@
               "type": "in",
               "attribute": "type",
               "value": [
-                "oauth2"
+                "oauth2",
+                "otto"
               ]
             }
           ]
@@ -156,7 +158,8 @@
               "type": "in",
               "attribute": "type",
               "value": [
-                "oauth2"
+                "oauth2",
+                "otto"
               ]
             },
             {
@@ -176,7 +179,8 @@
               "type": "in",
               "attribute": "type",
               "value": [
-                "oauth2"
+                "oauth2",
+                "otto"
               ]
             },
             {
@@ -184,6 +188,45 @@
               "attribute": "oauthGrantType",
               "value": [
                 "client_credentials"
+              ]
+            }
+          ]
+        }
+      },
+      "vendorOauthUrl": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "otto"
+              ]
+            }
+          ]
+        }
+      },
+      "oauthScope": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "otto"
+              ]
+            }
+          ]
+        }
+      },
+      "vendorOauthScopes": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "otto"
               ]
             }
           ]
