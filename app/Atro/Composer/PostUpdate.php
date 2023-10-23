@@ -15,6 +15,7 @@ namespace Atro\Composer;
 
 use Atro\Core\Container;
 use Atro\Core\Application as App;
+use Espo\Core\Utils\Language;
 use Espo\ORM\EntityManager;
 
 class PostUpdate
@@ -619,6 +620,7 @@ class PostUpdate
      */
     private static function getMessageForComposer(string $status, array $module): string
     {
+        /** @var Language $language */
         $language = self::$container->get('language');
 
         if ($module['id'] !== 'Atro') {
