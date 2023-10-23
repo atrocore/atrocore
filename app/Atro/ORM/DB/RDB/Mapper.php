@@ -51,7 +51,7 @@ class Mapper implements MapperInterface
     public function select(IEntity $entity, array $params): array
     {
         try {
-            $queryData = $this->queryConverter->createSelectQuery($entity->getEntityType(), $params, !empty($params['withDeleted']));
+            $queryData = $this->getQueryConverter()->createSelectQuery($entity->getEntityType(), $params, !empty($params['withDeleted']));
         } catch (\Throwable $e) {
             $GLOBALS['log']->error("RDB QUERY failed: {$e->getMessage()}");
             throw $e;
@@ -119,25 +119,26 @@ class Mapper implements MapperInterface
 
         if (!empty($params['callbacks'])) {
             foreach ($params['callbacks'] as $callback) {
-                call_user_func($callback, $qb, $entity, $params);
+                call_user_func($callback, $qb, $entity, $params, $this);
             }
         }
 
         try {
-            $res = $qb->fetchAllAssociative();
+            $rows = $qb->fetchAllAssociative();
         } catch (\Throwable $e) {
             $sql = $qb->getSQL();
             $GLOBALS['log']->error("RDB SELECT failed for SQL: $sql");
             throw $e;
         }
 
-        foreach ($res as $k => $row) {
+        $result = [];
+        foreach ($rows as $k => $row) {
             foreach ($row as $field => $value) {
-                $res[$k][$this->queryConverter->aliasToField($field)] = $value;
+                $result[$k][$this->getQueryConverter()->aliasToField($field)] = $value;
             }
         }
 
-        return $res;
+        return $result;
     }
 
     public function count(IEntity $entity, array $params = []): int
@@ -251,7 +252,7 @@ class Mapper implements MapperInterface
 
             case IEntity::MANY_MANY:
                 $params['relationName'] = $relOpt['relationName'];
-                $params['callbacks'][] = [new JoinManyToMany($entity, $relationName, $keySet, $this->queryConverter), 'run'];
+                $params['callbacks'][] = [new JoinManyToMany($entity, $relationName, $keySet, $this->getQueryConverter()), 'run'];
 
                 $resultArr = [];
                 $rows = $this->select($relEntity, $params);
@@ -691,16 +692,22 @@ class Mapper implements MapperInterface
 
     public function toDb(string $field): string
     {
-        return $this->queryConverter->toDb($field);
+        return $this->getQueryConverter()->toDb($field);
     }
 
     public function getKeys(IEntity $entity, string $relationName): array
     {
-        return $this->queryConverter->getKeys($entity, $relationName);
+        return $this->getQueryConverter()->getKeys($entity, $relationName);
     }
 
     public function getWhereQuery(string $entityType, array $whereClause): string
     {
-        return $this->queryConverter->getWhere($this->queryConverter->getSeed($entityType), $whereClause);
+        $entity = $this->getQueryConverter()->getSeed($entityType);
+        return $this->getQueryConverter()->getWhere($entity, $whereClause);
+    }
+
+    public function getQueryConverter(): QueryConverter
+    {
+        return $this->queryConverter;
     }
 }
