@@ -809,11 +809,10 @@ class Base
     protected function boolFilterOnlyDeleted(array &$result): void
     {
         $result['withDeleted'] = true;
-        $result['additionalSelectColumns'][ Util::toCamelCase($this->getEntityType()).".deleted"] = "deleted";
         $result['whereClause'][] = [
             "deleted" => 1
         ];
-
+        $result['additionalSelectColumns'][ Util::toCamelCase($this->getEntityType()).".deleted"] = "deleted";
     }
 
     /**

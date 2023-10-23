@@ -224,6 +224,4 @@ class DeleteForever extends Base
             $GLOBALS['log']->error('DeleteForever: ' . $e->getMessage() . ' | ' . $sql);
         }
     }
-
-
 }

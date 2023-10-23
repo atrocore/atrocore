@@ -1078,7 +1078,7 @@ abstract class Base
         return preg_replace('/[^A-Za-z0-9_:.]+/', '', $string);
     }
 
-    protected function getJoins(IEntity $entity, array $joins, $left = false, $joinConditions = array(), $withDeleted=false)
+    protected function getJoins(IEntity $entity, array $joins, $left = false, $joinConditions = array(), $withDeleted = false)
     {
         $joinSqlList = [];
         foreach ($joins as $item) {
@@ -1239,6 +1239,7 @@ abstract class Base
 
                 $sql =
                     "{$prefix}JOIN `{$relTable}` AS `{$midAlias}` ON {$this->toDb($entity->getEntityType())}." . $this->toDb($key) . " = {$midAlias}." . $this->toDb($nearKey);
+
                 if(!$withDeleted){
                     $sql .=  " AND {$midAlias}.deleted = " . $this->pdo->quote(0) . "";
                 }
@@ -1256,7 +1257,8 @@ abstract class Base
                 }
 
                 $sql .= " {$prefix}JOIN `{$distantTable}` AS `{$alias}` ON {$alias}." . $this->toDb($foreignKey) . " = {$midAlias}." . $this->toDb($distantKey);
-                 if(!$withDeleted){
+
+                if(!$withDeleted){
                      $sql .=  " AND {$alias}.deleted = " . $this->pdo->quote(0) . "";
                  }
 
@@ -1273,7 +1275,7 @@ abstract class Base
                 if(!$withDeleted){
                     $sql .=  " AND {$alias}.deleted = " . $this->pdo->quote(0) . "";
                 }
-            $joinSqlList = [];
+                $joinSqlList = [];
                 foreach ($conditions as $left => $right) {
                     $joinSqlList[] = $this->buildJoinConditionStatement($entity, $alias, $left, $right);
                 }

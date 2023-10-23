@@ -4,5 +4,5 @@
   "tab": false,
   "acl": false,
   "customizable": false,
-  "showInAdminPanel": true
+  "showInAdminPanel": false
 }
