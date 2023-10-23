@@ -808,9 +808,11 @@ class Base
     protected function boolFilterOnlyDeleted(array &$result): void
     {
         $result['withDeleted'] = true;
+        $result['additionalSelectColumns']["deleted"] = "deleted";
         $result['whereClause'][] = [
             "deleted" => 1
         ];
+
     }
 
     /**
