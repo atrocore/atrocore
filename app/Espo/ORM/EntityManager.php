@@ -176,31 +176,6 @@ class EntityManager
         return $this->entityFactory;
     }
 
-    /**
-     * @param string $sql
-     * @param array  $inputParams
-     *
-     * @return \PDOStatement
-     */
-    public function nativeQuery(string $sql, array $inputParams = []):\PDOStatement
-    {
-        // prepare params
-        $params = null;
-        if (!empty($inputParams)) {
-            $params = [];
-            foreach ($inputParams as $key => $value) {
-                $params[':' . $key] = $value;
-            }
-        }
-
-        $sth = $this
-            ->getPDO()
-            ->prepare($sql);
-        $sth->execute($params);
-
-        return $sth;
-    }
-
     protected function init()
     {
     }

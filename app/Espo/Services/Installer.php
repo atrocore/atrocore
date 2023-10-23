@@ -580,7 +580,8 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
         // get existing db tables
         $tables = $this
             ->getEntityManager()
-            ->nativeQuery("SELECT table_name FROM information_schema.tables WHERE table_schema='$tableSchema'")
+            ->getPDO()
+            ->query("SELECT table_name FROM information_schema.tables WHERE table_schema='$tableSchema'")
             ->fetchAll(\PDO::FETCH_ASSOC);
 
         // drop all existing tables if it needs
@@ -595,7 +596,7 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
                 }
 
                 if ($tableName) {
-                    $this->getEntityManager()->nativeQuery("DROP TABLE " . $this->getEntityManager()->getConnection()->quoteIdentifier($tableName));
+                    $this->getEntityManager()->getPDO()->exec("DROP TABLE " . $this->getEntityManager()->getConnection()->quoteIdentifier($tableName));
                 }
             }
         }

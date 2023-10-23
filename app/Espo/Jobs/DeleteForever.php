@@ -207,7 +207,7 @@ class DeleteForever extends Base
     protected function exec(string $sql): void
     {
         try {
-            $this->getEntityManager()->nativeQuery($sql);
+            $this->getEntityManager()->getPDO()->exec($sql);
         } catch (\PDOException $e) {
             $GLOBALS['log']->error('DeleteForever: ' . $e->getMessage() . ' | ' . $sql);
         }
