@@ -54,6 +54,7 @@ class Mapper implements MapperInterface
             $queryData = $this->queryConverter->createSelectQuery($entity->getEntityType(), $params, !empty($params['withDeleted']));
         } catch (\Throwable $e) {
             $GLOBALS['log']->error("RDB QUERY failed: {$e->getMessage()}");
+            throw $e;
         }
 
         $qb = $this->connection->createQueryBuilder();
