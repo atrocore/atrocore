@@ -113,10 +113,6 @@ class Record extends \Espo\Core\Services\Base
 
     protected string $pseudoTransactionId = '';
 
-    protected int $maxMassUpdateCount = 20;
-    protected int $maxMassLinkCount = 20;
-    protected int $maxMassUnlinkCount = 20;
-
     /**
      * @var bool|array
      */
@@ -1315,7 +1311,7 @@ class Record extends \Espo\Core\Services\Base
         }
 
         // skip required field if we are doing massUpdate
-        if (!empty($event->getArgument('massUpdateData'))) {
+        if (property_exists($data, '_isMassUpdate')) {
             $entity->skipValidation('requiredField');
         }
 
@@ -2129,8 +2125,10 @@ class Record extends \Espo\Core\Services\Base
 
         $foreignIds = array_column($collection->toArray(), 'id');
 
+        $maxMassLinkCount = $this->getConfig()->get('maxMassLinkCount', 20);
+
         foreach ($foreignIds as $k => $foreignId) {
-            if ($k < $this->maxMassLinkCount) {
+            if ($k < $maxMassLinkCount) {
                 $this->linkEntity($id, $link, $foreignId);
             } else {
                 $this->getPseudoTransactionManager()->pushLinkEntityJob($this->entityType, $id, $link, $foreignId);
@@ -2169,8 +2167,10 @@ class Record extends \Espo\Core\Services\Base
 
         $foreignIds = $entity->getLinkMultipleIdList($link);
 
+        $maxMassUnlinkCount = $this->getConfig()->get('maxMassUnlinkCount', 20);
+
         foreach ($foreignIds as $k => $foreignId) {
-            if ($k < $this->maxMassUnlinkCount) {
+            if ($k < $maxMassUnlinkCount) {
                 $this->unlinkEntity($id, $link, $foreignId);
             } else {
                 $this->getPseudoTransactionManager()->pushUnLinkEntityJob($this->entityType, $id, $link, $foreignId);
@@ -2195,35 +2195,53 @@ class Record extends \Espo\Core\Services\Base
         }
 
         if (array_key_exists('where', $params)) {
-            $selectParams = $this->getSelectParams(['where' => $params['where']]);
-            $this->getEntityManager()->getRepository($this->getEntityType())->handleSelectParams($selectParams);
+            $repository = $this->getEntityManager()->getRepository($this->getEntityType());
 
-            $collection = $this->getEntityManager()->getRepository($this->getEntityType())->find(array_merge($selectParams, ['select' => ['id']]));
+            $selectParams = $this->getSelectParams(['where' => $params['where']]);
+            $repository->handleSelectParams($selectParams);
+
+            $collection = $repository->find(array_merge($selectParams, ['select' => ['id']]));
 
             $ids = array_column($collection->toArray(), 'id');
         }
 
-        $position = 0;
         $total = count($ids);
+        $maxMassUpdateCount = $this->getConfig()->get('maxMassUpdateCount', 200);
 
-        foreach ($ids as $k => $id) {
-            $cloned = clone $data;
-            $cloned->massUpdateData = [
-                'position' => $position,
-                'total' => $total
-            ];
-
-            if ($k < $this->maxMassUpdateCount) {
+        if ($total <= $maxMassUpdateCount) {
+            foreach ($ids as $id) {
                 try {
-                    $this->updateEntity($id, $cloned);
+                    $this->updateEntity($id, clone $data);
                 } catch (\Throwable $e) {
-                    $GLOBALS['log']->error("Update $this->entityType '$id' failed: {$e->getMessage()}");
+                    $GLOBALS['log']->error("Update {$this->getEntityType()} '$id' failed: {$e->getMessage()}");
                 }
-            } else {
-                $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->entityType, $id, $cloned);
             }
+        } else {
+            $massUpdateChunkSize = $this->getConfig()->get('massUpdateChunkSize', 2000);
+            $position = 0;
+            $chunks = array_chunk($ids, $massUpdateChunkSize);
+            foreach ($chunks as $part => $chunk) {
+                $jobData = [
+                    'entityType' => $this->getEntityType(),
+                    'ids'        => [],
+                    'total'      => $total,
+                    'input'      => clone $data,
+                    'last'       => !isset($chunks[$part + 1])
+                ];
+                foreach ($chunk as $id) {
+                    $jobData['ids'][$id] = $position;
+                    $position++;
+                }
 
-            $position++;
+                $name = $this->getInjection('language')->translate('massUpdate', 'massActions', 'Global') . ': ' . $this->getEntityType();
+                if ($part > 0) {
+                    $name .= " ($part)";
+                }
+
+                $this
+                    ->getInjection('queueManager')
+                    ->push($name, 'MassUpdate', $jobData);
+            }
         }
 
         return $this
