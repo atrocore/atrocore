@@ -1294,7 +1294,7 @@ class QueryConverter
     public function fieldToAlias(string $field): string
     {
         if (!isset($this->selectFieldAliases[$field])) {
-            $this->selectFieldAliases[$field] = 'atro_' . Util::toUnderScore($this->sanitizeAlias($field));
+            $this->selectFieldAliases[$field] = 'atro_' . Util::toUnderScore($this->sanitizeAlias(str_replace('.', '__dot__', $field)));
         }
 
         return $this->selectFieldAliases[$field];
