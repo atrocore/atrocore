@@ -121,7 +121,6 @@
     "rangeCurrency": "Currency Range",
     "wysiwyg": "HTML",
     "map": "Map",
-    "number": "Number (auto-increment)",
     "colorpicker": "Color picker",
     "jsonArray": "JSON array",
     "jsonObject": "JSON object",
