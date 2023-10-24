@@ -429,6 +429,7 @@
     "follow": "Abonnieren",
     "export": "Exportieren",
     "merge": "Zusammenführen",
+    "cancel": "Stornieren",
     "remove": "Löschen",
     "addRelation": "Beziehung hinzufügen",
     "removeRelation": "Beziehung entfernen",

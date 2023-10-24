@@ -35,11 +35,74 @@ declare(strict_types=1);
 
 namespace Espo\Services;
 
-use Espo\Core\Templates\Services\Base;
+use Atro\Core\Exceptions\NotModified;
+use Espo\Core\EventManager\Event;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+use Atro\Core\Templates\Services\Base;
 
-/**
- * Class QueueItem
- */
 class QueueItem extends Base
 {
+    public function massCancel(\stdClass $data): bool
+    {
+        if (property_exists($data, 'ids')) {
+            $collection = $this->getRepository()->where(['id' => $data->ids, 'status!=' => 'Canceled'])->find();
+        } elseif (property_exists($data, 'where')) {
+            $where = json_decode(json_encode($data->where), true);
+            $where[] = [
+                'type'      => 'notIn',
+                'attribute' => 'status',
+                'value'     => [
+                    'Canceled'
+                ],
+            ];
+
+            $selectParams = $this->getSelectParams(['where' => $where]);
+            $this->getRepository()->handleSelectParams($selectParams);
+            $collection = $this->getRepository()->find(array_merge($selectParams));
+        } else {
+            return false;
+        }
+
+        foreach ($collection as $entity) {
+            if (!$this->getAcl()->check($entity, 'edit')) {
+                continue;
+            }
+            $entity->set('status', 'Canceled');
+            try {
+                $this->getEntityManager()->saveEntity($entity);
+            } catch (BadRequest $e) {
+            } catch (NotModified $e) {
+            } catch (Forbidden $e) {
+            }
+        }
+
+        return true;
+    }
+
+    public function massRemove(array $params)
+    {
+        $params = $this
+            ->dispatchEvent('beforeMassRemove', new Event(['params' => $params, 'service' => $this]))
+            ->getArgument('params');
+
+        if (array_key_exists('ids', $params) && !empty($params['ids']) && is_array($params['ids'])) {
+            $collection = $this->getRepository()->where(['id' => $params['ids']])->find();
+        } elseif (array_key_exists('where', $params)) {
+            $selectParams = $this->getSelectParams(['where' => $params['where']]);
+            $this->getRepository()->handleSelectParams($selectParams);
+            $collection = $this->getRepository()->find(array_merge($selectParams));
+        } else {
+            return false;
+        }
+
+        foreach ($collection as $entity) {
+            if (!$this->getAcl()->check($entity, 'delete')) {
+                continue;
+            }
+            $this->getEntityManager()->removeEntity($entity);
+        }
+
+        return true;
+    }
 }

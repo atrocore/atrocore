@@ -406,6 +406,7 @@
     "removePartial": "Remove (Part %s)",
     "addRelation": "Add relation",
     "removeRelation": "Remove relation",
+    "cancel": "Cancel",
     "remove": "Delete",
     "merge": "Merge",
     "massUpdate": "Mass Update",

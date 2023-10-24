@@ -35,12 +35,13 @@ declare(strict_types=1);
 
 namespace Espo\Controllers;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\NotFound;
 
 /**
  * Class QueueItem
  */
-class QueueItem extends \Espo\Core\Templates\Controllers\Base
+class QueueItem extends \Atro\Core\Templates\Controllers\Base
 {
     /**
      * @inheritdoc
@@ -48,5 +49,14 @@ class QueueItem extends \Espo\Core\Templates\Controllers\Base
     public function actionCreate($params, $data, $request)
     {
         throw new NotFound();
+    }
+
+    public function actionMassCancel($params, $data, $request)
+    {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+
+        return $this->getRecordService()->massCancel($data);
     }
 }
