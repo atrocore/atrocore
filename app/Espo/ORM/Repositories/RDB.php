@@ -191,67 +191,44 @@ class RDB extends \Espo\ORM\Repository
         return $result;
     }
 
-    /**
-     * @param Entity $entity
-     * @param array $options
-     */
     protected function beforeRemove(Entity $entity, array $options = [])
     {
         $uniques = $this->getUniqueFields($entity);
 
         if (!empty($uniques)) {
-            $dbTable = Util::toUnderScore($entity->getEntityType());
+            $connection = $this->getEntityManager()->getConnection();
 
+            $parameters = [];
             foreach ($uniques as $key => $unique) {
                 if (is_array($unique)) {
                     $sqlCondition = [];
                     foreach ($unique as $field) {
-                        $value = $entity->get($field);
-
-                        $sqlCondition[] = $this->prepareWhereConditions($field, $value);
+                        $sqlCondition[] = $connection->quoteIdentifier(Util::toUnderScore($field)) . " = :{$field}_un";
+                        $parameters["{$field}_un"] = $entity->get($field);
                     }
                     $uniques[$key] = '(' . implode(' AND ', $sqlCondition) . ')';
                 } else {
-                    $value = $entity->get($unique);
-
-                    $uniques[$key] = $this->prepareWhereConditions($unique, $value);
+                    $uniques[$key] = $connection->quoteIdentifier(Util::toUnderScore($unique)) . " = :{$unique}_un1";
+                    $parameters["{$unique}_un1"] = $entity->get($unique);
                 }
             }
 
-            $where = implode(' OR ', $uniques);
-
-            $connection = $this->getEntityManager()->getConnection();
-            $connection->createQueryBuilder()
-                ->delete($connection->quoteIdentifier($dbTable))
+            $qb = $connection->createQueryBuilder()
+                ->delete($connection->quoteIdentifier(Util::toUnderScore($entity->getEntityType())))
                 ->where('deleted = :false')
                 ->andWhere('id != :id')
-                ->andWhere($where)
+                ->andWhere(implode(' OR ', $uniques))
                 ->setParameter('false', false, Mapper::getParameterType(false))
-                ->setParameter('id', $entity->id)
-                ->executeQuery();
+                ->setParameter('id', $entity->id);
+
+            foreach ($parameters as $name => $value){
+                $qb->setParameter($name, $value, Mapper::getParameterType($value));
+            }
+
+            $qb->executeQuery();
         }
     }
 
-    /**
-     * @param string $field
-     * @param $value
-     *
-     * @return string
-     */
-    protected function prepareWhereConditions(string $field, $value): string
-    {
-        if (is_null($value)) {
-            $result = "`" . Util::toUnderScore($field) . "` IS NULL";
-        } else {
-            $result = "`" . Util::toUnderScore($field) . "`=" . $this->getPDO()->quote($value);
-        }
-
-        return $result;
-    }
-
-    /**
-     * @return array
-     */
     protected function getUniqueFields(Entity $entity): array
     {
         $result = [];
