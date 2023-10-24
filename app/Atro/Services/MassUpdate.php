@@ -34,13 +34,11 @@ class MassUpdate extends QueueManagerBase
             $input = json_decode(json_encode($data['input']));
             $input->_isMassUpdate = true;
 
-            $publicData = DataManager::getPublicData('massUpdate')[$entityType] ?? [];
+            $publicData = DataManager::getPublicData('massUpdate');
 
-            $massUpdateData = ['total' => $data['total']];
-            if (isset($publicData['updated'])) {
-                $massUpdateData['updated'] = $publicData['updated'];
-            } else {
-                $massUpdateData['updated'] = 0;
+            $massUpdateData = $publicData[$entityType] ?? ['total' => $data['total'], 'updated' => 0];
+
+            if (empty($publicData[$entityType]['updated'])) {
                 $this->updateMassUpdatePublicData($entityType, $massUpdateData);
             }
 
@@ -51,26 +49,26 @@ class MassUpdate extends QueueManagerBase
                 $GLOBALS['log']->error("Update {$data['entityType']} '$id' failed: {$e->getMessage()}");
             }
 
-            $massUpdateData['updated']++;
-            $this->updateMassUpdatePublicData($entityType, $massUpdateData);
-        }
-
-        if (!empty($data['last'])) {
-            $massUpdateData['done'] = Util::generateId();
-            $this->updateMassUpdatePublicData($entityType, $massUpdateData);
+            $updated = $position + 1;
+            if ($massUpdateData['updated'] < $updated) {
+                $massUpdateData['updated'] = $updated;
+                if ($massUpdateData['updated'] === $massUpdateData['total'] || !empty($data['last'])) {
+                    $massUpdateData['done'] = Util::generateId();
+                }
+                $this->updateMassUpdatePublicData($entityType, $massUpdateData);
+            }
         }
 
         return true;
     }
 
-    protected function updateMassUpdatePublicData(string $entityType, ?array $data): void
+    protected function updateMassUpdatePublicData(string $entityType, array $data): void
     {
-        $publicData = DataManager::getPublicData('massUpdate')[$entityType] ?? [];
-        if (!empty($publicData[$entityType]['done'])) {
-            return;
+        $publicData = DataManager::getPublicData('massUpdate');
+        if (empty($publicData[$entityType])) {
+            $publicData[$entityType] = [];
         }
 
-        $publicData[$entityType] = $data;
-        DataManager::pushPublicData('massUpdate', $publicData);
+        DataManager::pushPublicData('massUpdate', array_merge($publicData[$entityType], $data));
     }
 }
