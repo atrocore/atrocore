@@ -545,7 +545,7 @@ class Hierarchy extends RDB
             ->executeQuery();
     }
 
-    protected function afterRestore($entity, array $options = [])
+    protected function afterRestore($entity)
     {
         parent::afterRestore($entity);
 
