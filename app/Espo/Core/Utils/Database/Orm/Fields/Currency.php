@@ -33,6 +33,7 @@
 
 namespace Espo\Core\Utils\Database\Orm\Fields;
 
+use Atro\ORM\DB\RDB\Query\QueryConverter;
 use Espo\Core\Utils\Util;
 
 class Currency extends Base
@@ -68,7 +69,7 @@ class Currency extends Base
         } else {
             $d[$entityName]['fields'][$fieldName . 'Converted'] = [
                 'type' => 'float',
-                'select' => Util::toUnderScore($entityName) . "." . $currencyColumnName . " * {$alias}.rate" ,
+                'select' => QueryConverter::TABLE_ALIAS . "." . $currencyColumnName . " * {$alias}.rate" ,
                 'where' =>
                 [
                         "=" => Util::toUnderScore($entityName) . "." . $currencyColumnName . " * {$alias}.rate = {value}",

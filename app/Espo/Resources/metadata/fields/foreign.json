@@ -15,7 +15,7 @@
    ],
    "fieldTypeList": ["varchar", "enum", "enumInt", "enumFloat", "int", "float", "website", "date", "datetime", "text", "bool"],
    "filter": true,
-   "notCreatable": false,
+   "notCreatable": true,
    "fieldDefs": {
       "readOnly": true
    }
