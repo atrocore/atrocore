@@ -810,6 +810,8 @@ class QueryConverter
 
                 if (empty($isComplex)) {
                     if (!isset($entity->fields[$field])) {
+                        $whereParts[] = ':false';
+                        $this->parameters['false'] = false;
                         continue;
                     }
 
@@ -968,21 +970,26 @@ class QueryConverter
                             }
                         } else {
                             $oppose = '';
+                            $emptyValue = false;
                             if ($operator == '<>') {
                                 $oppose = 'NOT ';
+                                $emptyValue = true;
                             }
                             if (!empty($value)) {
                                 $parts = explode('.', $field);
                                 $param = $parts[1] ?? $parts[0];
                                 $whereParts[] = $leftPart . " {$oppose}IN " . "(:{$param}_w2)";
                                 $this->parameters["{$param}_w2"] = $value;
+                            } else {
+                                $whereParts[] = ':emptyValue';
+                                $this->parameters['emptyValue'] = $emptyValue;
                             }
                         }
                     }
                 }
             } else {
                 $internalPart = $this->getWhere($entity, $value, $field, $params, $level + 1);
-                if ($internalPart || $internalPart === '0') {
+                if ($internalPart || $internalPart === ':false') {
                     $whereParts[] = "(" . $internalPart . ")";
                 }
             }
