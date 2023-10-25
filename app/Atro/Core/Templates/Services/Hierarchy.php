@@ -340,50 +340,6 @@ class Hierarchy extends Record
         return true;
     }
 
-    public function unlinkAll(string $id, string $link): bool
-    {
-        $event = $this->dispatchEvent('beforeUnlinkAll', new Event(['id' => $id, 'service' => $this, 'link' => $link]));
-
-        $id = $event->getArgument('id');
-        $link = $event->getArgument('link');
-
-        if (empty($id) || empty($link)) {
-            throw new BadRequest("'id' and 'link' is required parameters.");
-        }
-
-        if (in_array($link, $this->getRepository()->getUnInheritedRelations())) {
-            return false;
-        }
-
-        if (empty($entity = $this->getRepository()->get($id))) {
-            throw new NotFound();
-        }
-
-        if (!$this->getAcl()->check($entity, 'edit')) {
-            throw new Forbidden();
-        }
-
-        if (empty($foreignEntityType = $entity->getRelationParam($link, 'entity'))) {
-            throw new Error();
-        }
-
-        if (!$this->getAcl()->check($foreignEntityType, in_array($link, $this->noEditAccessRequiredLinkList) ? 'read' : 'edit')) {
-            throw new Forbidden();
-        }
-
-        $foreignIds = $entity->getLinkMultipleIdList($link);
-
-        foreach ($foreignIds as $k => $foreignId) {
-            if ($k < $this->maxMassUnlinkCount) {
-                $this->unlinkEntity($id, $link, $foreignId);
-            } else {
-                $this->getPseudoTransactionManager()->pushUnLinkEntityJob($this->entityType, $id, $link, $foreignId);
-            }
-        }
-
-        return $this->dispatchEvent('afterUnlinkAll', new Event(['entity' => $entity, 'service' => $this, 'link' => $link, 'result' => true]))->getArgument('result');
-    }
-
     public function getChildren(string $parentId, array $params): array
     {
         $result = [];
