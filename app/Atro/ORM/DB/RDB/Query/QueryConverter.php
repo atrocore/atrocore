@@ -1408,4 +1408,9 @@ class QueryConverter
 
         return $this->seedCache[$entityType];
     }
+
+    public function getParameters(): array
+    {
+        return $this->parameters;
+    }
 }

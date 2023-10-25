@@ -131,7 +131,7 @@ class Hierarchy extends RDB
         $sth = $this->getEntityManager()->getPDO()->prepare($query);
         $sth->bindValue(':id', $entity->get('id'), \PDO::PARAM_STR);
         $sth->bindValue(':deleted', false, \PDO::PARAM_BOOL);
-        if (!empty($parentId)){
+        if (!empty($parentId)) {
             $sth->bindValue(':parentId', $parentId, \PDO::PARAM_STR);
         }
         $sth->execute();
@@ -364,8 +364,9 @@ class Hierarchy extends RDB
         $quotedHierarchyTableName = $this->getConnection()->quoteIdentifier($this->hierarchyTableName);
 
         $childWhere = "";
+        $childParameters = [];
         if ($selectParams) {
-            $childWhere = $this->getMapper()->getWhereQuery($this->entityType, $selectParams['whereClause']);
+            $childWhere = $this->getMapper()->getWhereQuery($this->entityType, $selectParams['whereClause'], $childParameters);
             if (!empty($childWhere)) {
                 $childWhere = "AND " . str_replace(QueryConverter::TABLE_ALIAS . '.', 'e1.', $childWhere);
             }
@@ -377,8 +378,9 @@ class Hierarchy extends RDB
         }
 
         $where = "";
+        $whereParameters = [];
         if ($selectParams) {
-            $where = $this->getMapper()->getWhereQuery($this->entityType, $selectParams['whereClause']);
+            $where = $this->getMapper()->getWhereQuery($this->entityType, $selectParams['whereClause'], $whereParameters);
             if (!empty($where)) {
                 $where = "AND " . str_replace(QueryConverter::TABLE_ALIAS . '.', 'e.', $where);
             }
@@ -411,8 +413,14 @@ class Hierarchy extends RDB
 
         $sth = $this->getEntityManager()->getPDO()->prepare($query);
         $sth->bindValue(':deleted', false, \PDO::PARAM_BOOL);
-        if (!empty($parentId)){
+        if (!empty($parentId)) {
             $sth->bindValue(':parentId', $parentId, \PDO::PARAM_STR);
+        }
+        foreach ($childParameters as $name => $value) {
+            $sth->bindValue(":{$name}", $value, Mapper::getParameterType($value));
+        }
+        foreach ($whereParameters as $name => $value) {
+            $sth->bindValue(":{$name}", $value, Mapper::getParameterType($value));
         }
         $sth->execute();
 
@@ -425,8 +433,9 @@ class Hierarchy extends RDB
         $quotedHierarchyTableName = $this->getConnection()->quoteIdentifier($this->hierarchyTableName);
 
         $where = "";
+        $whereParameters = [];
         if ($selectParams) {
-            $where = $this->getMapper()->getWhereQuery($this->entityType, $selectParams['whereClause']);
+            $where = $this->getMapper()->getWhereQuery($this->entityType, $selectParams['whereClause'], $whereParameters);
             if (!empty($where)) {
                 $where = "AND " . str_replace(QueryConverter::TABLE_ALIAS . '.', 'e.', $where);
             }
@@ -450,6 +459,9 @@ class Hierarchy extends RDB
 
         $sth = $this->getEntityManager()->getPDO()->prepare($query);
         $sth->bindValue(':deleted', false, \PDO::PARAM_BOOL);
+        foreach ($whereParameters as $name => $value) {
+            $sth->bindValue(":{$name}", $value, Mapper::getParameterType($value));
+        }
         $sth->execute();
 
         return (int)$sth->fetch(\PDO::FETCH_ASSOC)['count'];
