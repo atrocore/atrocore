@@ -741,6 +741,9 @@ class Metadata extends AbstractListener
                             $mParams['required'] = false;
                             $mParams['emHidden'] = true;
                         }
+                        if ($mParams['type'] == 'script') {
+                            $mParams['script'] = $mParams['script' . $preparedLocale];
+                        }
 
                         if (isset($data['entityDefs'][$scope]['fields'][$mField])) {
                             $mParams = array_merge($mParams, $data['entityDefs'][$scope]['fields'][$mField]);

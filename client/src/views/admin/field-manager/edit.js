@@ -38,6 +38,8 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
 
         entityTypeWithTranslatedOptionsList: ['enum', 'multiEnum', 'array'],
 
+        scriptTypeFields: ['script', 'preview'],
+
         paramWithTooltipList: ['audited', 'required', 'default', 'min', 'max', 'maxLength', 'after', 'before', 'readOnly'],
 
         data: function () {
@@ -98,6 +100,48 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
 
             this.listenTo(this.model, 'change:readOnly', function () {
                 this.readOnlyControl();
+            }, this);
+
+            this.listenTo(this.model, 'change:isMultilang', function () {
+                if (this.model.get('type') === 'script' && this.getConfig().get('isMultilangActive')) {
+                    if (this.model.get('isMultilang')) {
+                        (this.getConfig().get('inputLanguageList') || []).forEach(locale => {
+                            this.scriptTypeFields.forEach(field => {
+                                let params =  this.paramList.find(item => item.name === field);
+
+                                if (params) {
+                                    let multiLangParams = _.clone(params);
+
+                                    multiLangParams.language = locale;
+                                    multiLangParams.name += locale.charAt(0).toUpperCase() + locale.charAt(1) + locale.charAt(3) + locale.charAt(4).toLowerCase();
+
+                                    if (this.paramList.findIndex(item => item.name === multiLangParams.name) === -1) {
+                                        this.paramList.push(multiLangParams);
+
+                                        this.createFieldView(multiLangParams.type, multiLangParams.name, null, multiLangParams);
+                                    }
+                                }
+                            });
+                        });
+
+                        this.reRender();
+                    } else {
+                        (this.getConfig().get('inputLanguageList') || []).forEach(locale => {
+                            this.scriptTypeFields.forEach(field => {
+                                let multilangField = field + locale.charAt(0).toUpperCase() + locale.charAt(1) + locale.charAt(3) + locale.charAt(4).toLowerCase(),
+                                    index = this.paramList.findIndex(item => item.name === multilangField);
+                                if (index !== -1) {
+                                    debugger
+                                    let view = this.getView(multilangField);
+                                    if (view) {
+                                        view.hide();
+                                        this.model.set(multilangField, "");
+                                    }
+                                }
+                            });
+                        });
+                    }
+                }
             }, this);
 
             var hasRequired = false;
