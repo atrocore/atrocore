@@ -150,36 +150,26 @@ class DeleteForever extends Base
                 }
                 continue 1;
             }
+            $query =   $connexion->createQueryBuilder()
+                ->delete($connexion->quoteIdentifier($table),'t')
+                ->where('t.deleted = :deleted')
+                ->setParameter('deleted', true, ParameterType::BOOLEAN);
             /** @var Connection $connexion */
             $connexion = $this->getContainer()->get('connection');
 
             if(in_array('modified_at',$columns)){
-                $connexion->createQueryBuilder()
-                    ->delete($connexion->quoteIdentifier($table),'t')
-                    ->where('DATE(t.modified_at) < :date')
-                    ->andWhere('t.deleted = :deleted')
-                    ->setParameter('date', $this->date)
-                    ->setParameter('deleted', true, ParameterType::BOOLEAN)
-                    ->executeQuery();
+                $query
+                    ->andWhere('DATE(modified_at)= :date')
+                    ->setParameter('date', $this->date);
             }
 
             if (!in_array('modified_at', $columns) && in_array('created_at', $columns) ) {
-                $connexion->createQueryBuilder()
-                    ->delete($connexion->quoteIdentifier($table),'t')
-                    ->where('DATE(t.created_at) < :date')
-                    ->andWhere('t.deleted = :deleted')
-                    ->setParameter('date', $this->date)
-                    ->setParameter('deleted', true, ParameterType::BOOLEAN)
-                    ->executeQuery();
+                $query
+                    ->andWhere('DATE(t.created_at) < :date')
+                    ->setParameter('date', $this->date);
             }
 
-            if (!in_array('modified_at', $columns) && !in_array('created_at', $columns) ) {
-                $connexion->createQueryBuilder()
-                    ->delete($connexion->quoteIdentifier($table),'t' )
-                    ->where('t.deleted = :deleted')
-                    ->setParameter('deleted', true, ParameterType::BOOLEAN)
-                    ->executeQuery();
-            }
+            $query->executeQuery();
         }
     }
 
