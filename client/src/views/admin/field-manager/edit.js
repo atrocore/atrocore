@@ -131,7 +131,6 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                                 let multilangField = field + locale.charAt(0).toUpperCase() + locale.charAt(1) + locale.charAt(3) + locale.charAt(4).toLowerCase(),
                                     index = this.paramList.findIndex(item => item.name === multilangField);
                                 if (index !== -1) {
-                                    debugger
                                     let view = this.getView(multilangField);
                                     if (view) {
                                         view.hide();
