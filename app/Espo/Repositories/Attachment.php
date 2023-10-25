@@ -157,7 +157,9 @@ class Attachment extends RDB
         $this->getFileStorageManager()->unlink($entity);
 
         // remove record from DB table
-        $this->deleteFromDb($entity->get('id'));
+        if (!empty($entity->get('id'))) {
+            $this->deleteFromDb($entity->get('id'));
+        }
 
         return $result;
     }
