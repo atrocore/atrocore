@@ -154,7 +154,7 @@ class DeleteForever extends Base
             /** @var Connection $connexion */
             $connexion = $this->getContainer()->get('connection');
 
-            $query =   $connexion->createQueryBuilder()
+            $query = $connexion->createQueryBuilder()
                 ->delete($connexion->quoteIdentifier($table),'t')
                 ->where('t.deleted = :deleted')
                 ->setParameter('deleted', true, ParameterType::BOOLEAN);
