@@ -700,21 +700,6 @@ class Mapper implements MapperInterface
         return $this->getQueryConverter()->getKeys($entity, $relationName);
     }
 
-    public function getWhereQuery(string $entityType, array $whereClause, array &$parameters): string
-    {
-        $entity = $this->getQueryConverter()->getSeed($entityType);
-
-        $query = $this->getQueryConverter()->getWhere($entity, $whereClause);
-
-        foreach ($this->getQueryConverter()->getParameters() as $name => $value) {
-            if (strpos($query, ":{$name}") !== false) {
-                $parameters[$name] = $value;
-            }
-        }
-
-        return $query;
-    }
-
     public function getQueryConverter(): QueryConverter
     {
         return $this->queryConverter;

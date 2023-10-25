@@ -366,7 +366,7 @@ class Hierarchy extends RDB
         $childWhere = "";
         $childParameters = [];
         if ($selectParams) {
-            $childWhere = $this->getMapper()->getWhereQuery($this->entityType, $selectParams['whereClause'], $childParameters);
+            $childWhere = $this->getWhereQuery($this->entityType, $selectParams['whereClause'], $childParameters);
             if (!empty($childWhere)) {
                 $childWhere = "AND " . str_replace(QueryConverter::TABLE_ALIAS . '.', 'e1.', $childWhere);
             }
@@ -380,7 +380,7 @@ class Hierarchy extends RDB
         $where = "";
         $whereParameters = [];
         if ($selectParams) {
-            $where = $this->getMapper()->getWhereQuery($this->entityType, $selectParams['whereClause'], $whereParameters);
+            $where = $this->getWhereQuery($this->entityType, $selectParams['whereClause'], $whereParameters);
             if (!empty($where)) {
                 $where = "AND " . str_replace(QueryConverter::TABLE_ALIAS . '.', 'e.', $where);
             }
@@ -416,10 +416,7 @@ class Hierarchy extends RDB
         if (!empty($parentId)) {
             $sth->bindValue(':parentId', $parentId, \PDO::PARAM_STR);
         }
-        foreach ($childParameters as $name => $value) {
-            $sth->bindValue(":{$name}", $value, Mapper::getParameterType($value));
-        }
-        foreach ($whereParameters as $name => $value) {
+        foreach (array_merge($whereParameters, $childParameters) as $name => $value) {
             $sth->bindValue(":{$name}", $value, Mapper::getParameterType($value));
         }
         $sth->execute();
@@ -435,7 +432,7 @@ class Hierarchy extends RDB
         $where = "";
         $whereParameters = [];
         if ($selectParams) {
-            $where = $this->getMapper()->getWhereQuery($this->entityType, $selectParams['whereClause'], $whereParameters);
+            $where = $this->getWhereQuery($this->entityType, $selectParams['whereClause'], $whereParameters);
             if (!empty($where)) {
                 $where = "AND " . str_replace(QueryConverter::TABLE_ALIAS . '.', 'e.', $where);
             }
@@ -465,6 +462,27 @@ class Hierarchy extends RDB
         $sth->execute();
 
         return (int)$sth->fetch(\PDO::FETCH_ASSOC)['count'];
+    }
+
+    protected function getWhereQuery(string $entityType, array $whereClause, array &$parameters): string
+    {
+        $queryConverter = $this->getMapper()->getQueryConverter();
+
+        $entity = $queryConverter->getSeed($entityType);
+
+        $query = $queryConverter->getWhere($entity, $whereClause);
+
+        foreach ($queryConverter->getParameters() as $name => $value) {
+            if (strpos($query, ":{$name}") !== false) {
+                if (is_array($value)) {
+                    $query = str_replace(":{$name}", "'" . implode("','", $value) . "'", $query);
+                } else {
+                    $parameters[$name] = $value;
+                }
+            }
+        }
+
+        return $query;
     }
 
     public function isRoot(string $id): bool
