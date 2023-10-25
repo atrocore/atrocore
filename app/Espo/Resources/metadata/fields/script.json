@@ -36,5 +36,6 @@
   "notCreatable": true,
   "fieldDefs": {
     "type": "text"
-  }
+  },
+  "multilingual": true
 }
