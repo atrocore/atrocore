@@ -150,16 +150,18 @@ class DeleteForever extends Base
                 }
                 continue 1;
             }
+
+            /** @var Connection $connexion */
+            $connexion = $this->getContainer()->get('connection');
+
             $query =   $connexion->createQueryBuilder()
                 ->delete($connexion->quoteIdentifier($table),'t')
                 ->where('t.deleted = :deleted')
                 ->setParameter('deleted', true, ParameterType::BOOLEAN);
-            /** @var Connection $connexion */
-            $connexion = $this->getContainer()->get('connection');
 
             if(in_array('modified_at',$columns)){
                 $query
-                    ->andWhere('DATE(modified_at)= :date')
+                    ->andWhere('DATE(t.modified_at)= :date')
                     ->setParameter('date', $this->date);
             }
 
