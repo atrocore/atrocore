@@ -41,14 +41,22 @@ Espo.define('views/admin/field-manager/fields/script/preview', 'views/fields/bas
 
         previewData: {},
 
+        relatedScriptFieldName: 'script',
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
             this.name = this.options.name || this.defs.name;
             this.scope = this.options.scope || this.model.name;
 
+            if (this.params.language) {
+                let locale = this.params.language;
+
+                this.relatedScriptFieldName += locale.charAt(0).toUpperCase() + locale.charAt(1) + locale.charAt(3) + locale.charAt(4).toLowerCase();
+            }
+
             this.preparePreview();
-            this.listenTo(this.model, 'change:script change:outputType after:save', () => {
+            this.listenTo(this.model, `change:${this.relatedScriptFieldName} change:outputType after:save`, () => {
                 this.preparePreview();
             });
         },
@@ -61,12 +69,12 @@ Espo.define('views/admin/field-manager/fields/script/preview', 'views/fields/bas
             this.ajaxPostRequest('FieldManager/action/renderScriptPreview', {
                 scope: this.scope,
                 field: this.name,
-                script: this.model.get('script') || '',
+                script: this.model.get(this.relatedScriptFieldName) || '',
                 outputType: this.model.get('outputType'),
                 id: this.model.get('id')
             }).then(res => {
                 this.previewData = res;
-                this.model.set('preview', res.preview);
+                this.model.set(this.name, res.preview);
                 this.reRender();
             });
         },

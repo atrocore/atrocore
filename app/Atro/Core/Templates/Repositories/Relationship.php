@@ -185,7 +185,7 @@ class Relationship extends RDB
             // delete duplicate
             if ($e instanceof \PDOException && strpos($e->getMessage(), '1062') !== false) {
                 if (!empty($toDelete = $this->getDuplicateEntity($entity, true))) {
-                    $this->deleteFromDb($toDelete->get('id'), true);
+                    $this->deleteFromDb($toDelete->get('id'));
                 }
                 return parent::remove($entity, $options);
             }

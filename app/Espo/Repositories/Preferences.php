@@ -35,6 +35,7 @@ namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Json;
+use Doctrine\DBAL\Connection;
 
 class Preferences extends \Espo\Core\ORM\Repository
 {
@@ -53,6 +54,7 @@ class Preferences extends \Espo\Core\ORM\Repository
             'config',
             'entityManager',
             'portal',
+            'connection'
         ]);
     }
 
@@ -76,25 +78,28 @@ class Preferences extends \Espo\Core\ORM\Repository
         return $this->getInjection('config');
     }
 
+    protected function getConnection(): Connection
+    {
+        return $this->getInjection('connection');
+    }
+
     public function get($id = null)
     {
         if ($id) {
             $entity = $this->entityFactory->create('Preferences');
             $entity->id = $id;
             if (empty($this->data[$id])) {
-                $pdo = $this->getEntityManger()->getPDO();
-                $sql = "SELECT `id`, `data` FROM `preferences` WHERE id = ".$pdo->quote($id);
-                $ps = $pdo->query($sql);
+                $row = $this->getConnection()->createQueryBuilder()
+                    ->select('id, data')
+                    ->from('preferences')
+                    ->where('id = :id')
+                    ->setParameter('id', $id)
+                    ->fetchAssociative();
 
                 $data = null;
-
-                $sth = $pdo->prepare($sql);
-                $sth->execute();
-
-                while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
+                if (!empty($row)){
                     $data = Json::decode($row['data']);
                     $data = get_object_vars($data);
-                    break;
                 }
 
                 if ($data) {
@@ -162,18 +167,17 @@ class Preferences extends \Espo\Core\ORM\Repository
     {
         $id = $entity->id;
 
+        $rows = $this->getConnection()->createQueryBuilder()
+            ->select('entity_type')
+            ->from('autofollow')
+            ->where('user_id = :id')
+            ->setParameter('id', $id)
+            ->orderBy('entity_type', 'ASC')
+            ->fetchAllAssociative();
+
         $autoFollowEntityTypeList = [];
-        $pdo = $this->getEntityManger()->getPDO();
-        $sql = "
-            SELECT `entity_type` AS 'entityType' FROM `autofollow`
-            WHERE `user_id` = ".$pdo->quote($id)."
-            ORDER BY `entity_type`
-        ";
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
-        $rows = $sth->fetchAll();
         foreach ($rows as $row) {
-            $autoFollowEntityTypeList[] = $row['entityType'];
+            $autoFollowEntityTypeList[] = $row['entity_type'];
         }
         $this->data[$id]['autoFollowEntityTypeList'] = $autoFollowEntityTypeList;
         $entity->set('autoFollowEntityTypeList', $autoFollowEntityTypeList);
@@ -196,18 +200,25 @@ class Preferences extends \Espo\Core\ORM\Repository
         if ($was == $became) {
             return;
         }
-        $pdo = $this->getEntityManger()->getPDO();
-        $sql = "DELETE FROM autofollow WHERE user_id = ".$pdo->quote($id)."";
-        $pdo->query($sql);
+
+        $connection = $this->getEntityManager()->getConnection();
+
+        $connection->createQueryBuilder()
+            ->delete('autofollow')
+            ->where('user_id = :userId')
+            ->setParameter('userId', $id)
+            ->executeQuery();
 
         $scopes = $this->getMetadata()->get('scopes');
         foreach ($became as $entityType) {
             if (isset($scopes[$entityType]) && !empty($scopes[$entityType]['stream'])) {
-                $sql = "
-                    INSERT INTO autofollow (user_id, entity_type)
-                    VALUES (".$pdo->quote($id).", ".$pdo->quote($entityType).")
-                ";
-                $pdo->query($sql);
+                $connection->createQueryBuilder()
+                    ->insert('autofollow')
+                    ->setValue('user_id', ':userId')
+                    ->setValue('entity_type', ':entityType')
+                    ->setParameter('userId', $id)
+                    ->setParameter('entityType', $entityType)
+                    ->executeQuery();
             }
         }
     }
@@ -236,14 +247,21 @@ class Preferences extends \Espo\Core\ORM\Repository
 
         $dataString = Json::encode($data, \JSON_PRETTY_PRINT);
 
-        $pdo = $this->getEntityManger()->getPDO();
+        $connection = $this->getEntityManager()->getConnection();
 
-        $sql = "
-            INSERT INTO `preferences` (`id`, `data`) VALUES (".$pdo->quote($entity->id).", ".$pdo->quote($dataString).")
-            ON DUPLICATE KEY UPDATE `data` = ".$pdo->quote($dataString)."
-        ";
+        $connection->createQueryBuilder()
+            ->delete($connection->quoteIdentifier('preferences'))
+            ->where('id = :id')
+            ->setParameter('id', $entity->id)
+            ->executeQuery();
 
-        $pdo->query($sql);
+        $connection->createQueryBuilder()
+            ->insert($connection->quoteIdentifier('preferences'))
+            ->setValue('id', ':id')
+            ->setValue('data', ':data')
+            ->setParameter('id', $entity->id)
+            ->setParameter('data', $dataString)
+            ->executeQuery();
 
         $user = $this->getEntityManger()->getEntity('User', $entity->id);
         if ($user && !$user->get('isPortalUser')) {
@@ -255,9 +273,13 @@ class Preferences extends \Espo\Core\ORM\Repository
 
     public function deleteFromDb($id)
     {
-        $pdo = $this->getEntityManger()->getPDO();
-        $sql = "DELETE  FROM `preferences` WHERE `id` = " . $pdo->quote($id);
-        $ps = $pdo->query($sql);
+        $connection = $this->getEntityManager()->getConnection();
+
+        $connection->createQueryBuilder()
+            ->delete($connection->quoteIdentifier('preferences'))
+            ->where('id = :id')
+            ->setParameter('id', $id)
+            ->executeQuery();
     }
 
     public function remove(Entity $entity, array $options = array())
@@ -279,11 +301,15 @@ class Preferences extends \Espo\Core\ORM\Repository
 
     public function hasLocale(string $locale): bool
     {
-        $count = $this
-            ->getEntityManger()
-            ->getPDO()
-            ->query("SELECT COUNT(id) FROM `preferences` WHERE `data` LIKE '%\"locale\": \"$locale\"%' OR `data` LIKE '%\"locale\":\"$locale\"%'")
-            ->fetch(\PDO::FETCH_COLUMN);
+        $connection = $this->getEntityManager()->getConnection();
+
+        $count = $connection->createQueryBuilder()
+            ->select('p.id')
+            ->from($connection->quoteIdentifier('preferences'), 'p')
+            ->where("p.data LIKE :val1 OR p.data LIKE :val2")
+            ->setParameter('val1', "%\"locale\": \"$locale\"%")
+            ->setParameter('val2', "%\"locale\":\"$locale\"%")
+            ->fetchAssociative();
 
         return !empty($count);
     }

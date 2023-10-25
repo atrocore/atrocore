@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Listeners;
 
 use Atro\Core\EventManager\Event;
+use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Util;
 
@@ -60,16 +61,17 @@ class FieldManagerController extends AbstractListener
                 }
             }
 
+            $connection = $this->getEntityManager()->getConnection();
+
             $wheres = [];
             foreach ($fields as $v) {
-                $wheres[] = "`$v` IS NOT NULL AND `$v` != ''";
+                $wheres[] = "{$connection->quoteIdentifier($v)} IS NOT NULL AND {$connection->quoteIdentifier($v)} != ''";
             }
 
-            $records = $this
-                ->getEntityManager()
-                ->getPDO()
-                ->query("SELECT * FROM $table WHERE deleted=0 AND (" . implode(' OR ', $wheres) . ")")
-                ->fetchAll(\PDO::FETCH_ASSOC);
+            $sth = $this->getEntityManager()->getPDO()->prepare("SELECT * FROM {$connection->quoteIdentifier($table)} WHERE deleted=:deleted AND (" . implode(' OR ', $wheres) . ")");
+            $sth->bindValue(':deleted', false, \PDO::PARAM_BOOL);
+            $sth->execute();
+            $records = $sth->fetchAll(\PDO::FETCH_ASSOC);
 
             foreach ($records as $valueData) {
                 foreach ($fields as $v) {
@@ -197,33 +199,33 @@ class FieldManagerController extends AbstractListener
                 case 'asset':
                     $this->removeDeletedDuplicate($table, [$field . '_id']);
 
-                    $sql = "SELECT COUNT(*) FROM $table WHERE $table.{$field}_id IS NOT NULL AND deleted = 0 GROUP BY $table.{$field}_id HAVING COUNT($table.{$field}_id) > 1";
-                    $result = $this->fetch($sql);
+                    $sql = "SELECT COUNT(*) FROM $table WHERE $table.{$field}_id IS NOT NULL AND deleted = :deleted GROUP BY $table.{$field}_id HAVING COUNT($table.{$field}_id) > 1";
+                    $result = $this->fetch($sql, [':deleted' => false]);
                     break;
                 case 'currency':
                     $this->removeDeletedDuplicate($table, [$field, $field . '_currency']);
 
-                    $sql = "SELECT COUNT(*) FROM $table WHERE $table.$field IS NOT NULL AND {$field}_currency IS NOT NULL AND deleted = 0 GROUP BY $table.$field, {$field}_currency HAVING COUNT($table.$field) > 1 AND COUNT({$field}_currency) > 1";
-                    $result = $this->fetch($sql);
+                    $sql = "SELECT COUNT(*) FROM $table WHERE $table.$field IS NOT NULL AND {$field}_currency IS NOT NULL AND deleted = :deleted GROUP BY $table.$field, {$field}_currency HAVING COUNT($table.$field) > 1 AND COUNT({$field}_currency) > 1";
+                    $result = $this->fetch($sql, [':deleted' => false]);
                     break;
                 case 'unit':
                     $this->removeDeletedDuplicate($table, [$field, $field . '_unit']);
 
-                    $sql = "SELECT COUNT(*) FROM $table WHERE $table.$field IS NOT NULL AND {$field}_unit IS NOT NULL AND deleted = 0 GROUP BY $table.$field, {$field}_unit HAVING COUNT($table.$field) > 1 AND COUNT({$field}_unit) > 1";
-                    $result = $this->fetch($sql);
+                    $sql = "SELECT COUNT(*) FROM $table WHERE $table.$field IS NOT NULL AND {$field}_unit IS NOT NULL AND deleted = :deleted GROUP BY $table.$field, {$field}_unit HAVING COUNT($table.$field) > 1 AND COUNT({$field}_unit) > 1";
+                    $result = $this->fetch($sql, [':deleted' => false]);
                     break;
                 case 'rangeInt':
                 case 'rangeFloat':
                     $this->removeDeletedDuplicate($table, [$field . '_from', $field . '_to']);
 
-                    $sql = "SELECT COUNT(*) FROM $table WHERE {$field}_from IS NOT NULL AND {$field}_to IS NOT NULL AND deleted=0 GROUP BY {$field}_from, {$field}_to HAVING COUNT({$field}_from) > 1 AND COUNT({$field}_to) > 1";
-                    $result = $this->fetch($sql);
+                    $sql = "SELECT COUNT(*) FROM $table WHERE {$field}_from IS NOT NULL AND {$field}_to IS NOT NULL AND deleted=:deleted GROUP BY {$field}_from, {$field}_to HAVING COUNT({$field}_from) > 1 AND COUNT({$field}_to) > 1";
+                    $result = $this->fetch($sql, [':deleted' => false]);
                     break;
                 default:
                     $this->removeDeletedDuplicate($table, [$field]);
 
-                    $sql = "SELECT COUNT(*) FROM $table WHERE $table.$field IS NOT NULL AND deleted = 0 GROUP BY $table.$field HAVING COUNT($table.$field) > 1;";
-                    $result = $this->fetch($sql);
+                    $sql = "SELECT COUNT(*) FROM $table WHERE $table.$field IS NOT NULL AND deleted = :deleted GROUP BY $table.$field HAVING COUNT($table.$field) > 1;";
+                    $result = $this->fetch($sql, [':deleted' => false]);
 
                     if (!$result && !empty($defs['isMultilang']) && $this->getConfig()->get('isMultilangActive', false)) {
                         foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
@@ -231,8 +233,8 @@ class FieldManagerController extends AbstractListener
 
                             $this->removeDeletedDuplicate($table, [$field . '_' . $locale]);
 
-                            $sql = "SELECT COUNT(*) FROM $table WHERE $table.{$field}_$locale IS NOT NULL AND deleted = 0 GROUP BY $table.{$field}_$locale HAVING COUNT($table.{$field}_$locale) > 1;";
-                            $result = $result || $this->fetch($sql);
+                            $sql = "SELECT COUNT(*) FROM $table WHERE $table.{$field}_$locale IS NOT NULL AND deleted = :deleted GROUP BY $table.{$field}_$locale HAVING COUNT($table.{$field}_$locale) > 1;";
+                            $result = $result || $this->fetch($sql, [':deleted' => false]);
                         }
                     }
             }
@@ -253,37 +255,49 @@ class FieldManagerController extends AbstractListener
      */
     protected function removeDeletedDuplicate(string $table, array $fields): void
     {
-        $sql = "SELECT DISTINCT first.id AS id FROM $table as first, $table as second WHERE first.id <> second.id AND first.deleted = 1";
+        $connection = $this->getEntityManager()->getConnection();
+
+        $sql = "SELECT DISTINCT first.id AS id FROM {$connection->quoteIdentifier($table)} as first, {$connection->quoteIdentifier($table)} as second WHERE first.id <> second.id AND first.deleted = :deleted";
         foreach ($fields as $field) {
             $sql .= " AND first.$field = second.$field";
         }
 
-        $notUniqueDeletedIds = $this
-            ->getEntityManager()
-            ->nativeQuery($sql)
-            ->fetchAll(\PDO::FETCH_ASSOC|\PDO::FETCH_COLUMN);
+        $sth = $this->getEntityManager()->getPDO()->prepare($sql);
+        $sth->bindValue(':deleted', false, \PDO::PARAM_BOOL);
+        $sth->execute();
+
+        $notUniqueDeletedIds = $sth->fetchAll(\PDO::FETCH_ASSOC|\PDO::FETCH_COLUMN);
 
         if (!empty($notUniqueDeletedIds)) {
-            $ids = "'" . implode("','", $notUniqueDeletedIds) . "'";
-
-            $this
-                ->getEntityManager()
-                ->nativeQuery("DELETE FROM $table WHERE id IN ($ids)");
+            $connection->createQueryBuilder()
+                ->delete($connection->quoteIdentifier($table))
+                ->where('id IN (:ids)')
+                ->setParameter('ids', $notUniqueDeletedIds, Mapper::getParameterType($notUniqueDeletedIds))
+                ->executeQuery();
         }
     }
 
     /**
      * @param string $sql
+     * @param array $params
      *
      * @return mixed
      */
-    protected function fetch(string $sql)
+    protected function fetch(string $sql, array $params = [])
     {
         $pdo = $this
             ->getContainer()
             ->get('pdo');
         $sth = $pdo->prepare($sql);
         $sth->execute();
+
+        foreach ($params as $name => $value) {
+            if (is_bool($value)) {
+                $sth->bindValue($name, $value, \PDO::PARAM_BOOL);
+            } else {
+                $sth->bindValue($name, $value);
+            }
+        }
 
         return $sth->fetch();
     }

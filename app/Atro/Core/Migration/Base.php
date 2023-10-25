@@ -12,7 +12,7 @@
 namespace Atro\Core\Migration;
 
 use Doctrine\DBAL\Schema\Schema as DoctrineSchema;
-use Espo\Core\Utils\Database\Schema\Schema;
+use Atro\Core\Utils\Database\Schema\Schema;
 use Espo\Services\App;
 use PDO;
 use Espo\Core\Utils\Config;
@@ -50,13 +50,6 @@ class Base
         return $this->config;
     }
 
-    protected function migrateSchema(DoctrineSchema $fromSchema, DoctrineSchema $toSchema): void
-    {
-        foreach ($this->getSchema()->getMigrateToSql($fromSchema, $toSchema) as $sql) {
-            $this->getSchema()->getConnection()->executeQuery($sql);
-        }
-    }
-
     protected function getDbFieldParams(array $params): array
     {
         return $this->getSchema()->getSchemaConverter()->getDbFieldParams($params);
@@ -69,7 +62,7 @@ class Base
 
     protected function rebuildByCronJob()
     {
-        App::createRebuildJob($this->getPDO());
+        App::createRebuildJob($this->getSchema()->getConnection());
     }
 
     protected function updateComposer(string $package, string $version): void

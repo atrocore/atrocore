@@ -33,10 +33,10 @@
 
 namespace Espo\Core\Utils\Cron;
 
-use PDO;
+use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\CronManager;
-use Espo\Core\Utils\Config;
 use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Config;
 use Espo\Core\Utils\System;
 
 class Job
@@ -73,7 +73,7 @@ class Job
     public function isJobPending($id)
     {
         return !!$this->getEntityManager()->getRepository('Job')->select(['id'])->where([
-            'id' => $id,
+            'id'     => $id,
             'status' => CronManager::PENDING
         ])->findOne();
     }
@@ -83,7 +83,7 @@ class Job
         $limit = intval($this->getConfig()->get('jobMaxPortion', 0));
 
         $selectParams = [
-            'select' => [
+            'select'      => [
                 'id',
                 'scheduledJobId',
                 'scheduledJobJob',
@@ -96,10 +96,10 @@ class Job
                 'data'
             ],
             'whereClause' => [
-                'status' => CronManager::PENDING,
+                'status'        => CronManager::PENDING,
                 'executeTime<=' => date('Y-m-d H:i:s')
             ],
-            'orderBy' => 'executeTime'
+            'orderBy'     => 'executeTime'
         ];
         if ($limit) {
             $selectParams['offset'] = 0;
@@ -113,7 +113,7 @@ class Job
     {
         $where = [
             'scheduledJobId' => $scheduledJobId,
-            'status' => CronManager::RUNNING
+            'status'         => CronManager::RUNNING
         ];
         if ($targetId && $targetType) {
             $where['targetId'] = $targetId;
@@ -126,21 +126,19 @@ class Job
     {
         $list = [];
 
-        $pdo = $this->getEntityManager()->getPDO();
+        $connection = $this->getEntityManager()->getConnection();
+        $rowList = $connection->createQueryBuilder()
+            ->select('j.scheduled_job_id')
+            ->from($connection->quoteIdentifier('job'), 'j')
+            ->where("j.status = :status")
+            ->setParameter('status', CronManager::RUNNING)
+            ->andWhere('j.scheduled_job_id IS NOT NULL')
+            ->andWhere('j.target_id IS NULL')
+            ->andWhere('j.deleted = :deleted')
+            ->setParameter('deleted', false, Mapper::getParameterType(false))
+            ->orderBy('j.execute_time', 'ASC')
+            ->fetchAllAssociative();
 
-        $query = "
-            SELECT scheduled_job_id FROM job
-            WHERE
-                `status` = 'Running' AND
-                scheduled_job_id IS NOT NULL AND
-                target_id IS NULL AND
-                deleted = 0
-            ORDER BY execute_time
-        ";
-        $sth = $pdo->prepare($query);
-        $sth->execute();
-
-        $rowList = $sth->fetchAll(PDO::FETCH_ASSOC);
         foreach ($rowList as $row) {
             $list[] = $row['scheduled_job_id'];
         }
@@ -151,33 +149,30 @@ class Job
     /**
      * Get Jobs by ScheduledJobId and date
      *
-     * @param  string $scheduledJobId
-     * @param  string $time
+     * @param string $scheduledJobId
+     * @param string $time
      *
      * @return array
      */
-    public function getJobByScheduledJob($scheduledJobId, $time)
+    public function getJobByScheduledJob(string $scheduledJobId, string $date): array
     {
-        $dateObj = new \DateTime($time);
-        $timeWithoutSeconds = $dateObj->format('Y-m-d H:i:');
+        $connection = $this->getEntityManager()->getConnection();
+        $qb = $connection->createQueryBuilder()
+            ->select('j.*')
+            ->from($connection->quoteIdentifier('job'), 'j')
+            ->where("j.scheduled_job_id = :scheduledJobId")
+            ->setParameter('scheduledJobId', $scheduledJobId)
+            ->andWhere('j.execute_time >= :from')
+            ->setParameter('from', (new \DateTime($date))->format('Y-m-d H:i:00'))
+            ->andWhere('j.execute_time < :to')
+            ->setParameter('to', (new \DateTime($date))->modify('+1 minute')->format('Y-m-d H:i:00'))
+            ->andWhere('j.deleted = :deleted')
+            ->setParameter('deleted', false, Mapper::getParameterType(false))
+            ->setMaxResults(1);
 
-        $pdo = $this->getEntityManager()->getPDO();
+        $scheduledJob = $qb->fetchAssociative();
 
-        $query = "
-            SELECT * FROM job
-            WHERE
-                scheduled_job_id = ".$pdo->quote($scheduledJobId)."
-                AND execute_time LIKE ". $pdo->quote($timeWithoutSeconds . '%') . "
-                AND deleted = 0
-            LIMIT 1
-        ";
-
-        $sth = $pdo->prepare($query);
-        $sth->execute();
-
-        $scheduledJob = $sth->fetchAll(PDO::FETCH_ASSOC);
-
-        return $scheduledJob;
+        return empty($scheduledJob) ? [] : $scheduledJob;
     }
 
     /**
@@ -195,21 +190,23 @@ class Job
     {
         $time = time() - $this->getConfig()->get($period);
 
-        $pdo = $this->getEntityManager()->getPDO();
+        $connection = $this->getEntityManager()->getConnection();
+        $rows = $connection->createQueryBuilder()
+            ->select('j.*')
+            ->from($connection->quoteIdentifier('job'), 'j')
+            ->where("j.status = :status")
+            ->setParameter('status', CronManager::RUNNING)
+            ->andWhere('j.execute_time < :executeTime')
+            ->setParameter('executeTime', date('Y-m-d H:i:s', $time))
+            ->fetchAllAssociative();
 
-        $select = "
-            SELECT id, scheduled_job_id, execute_time, target_id, target_type, pid FROM `job`
-            WHERE
-            `status` = '" . CronManager::RUNNING ."' AND execute_time < '".date('Y-m-d H:i:s', $time)."'
-        ";
-        $sth = $pdo->prepare($select);
-        $sth->execute();
+        $pdo = $this->getEntityManager()->getPDO();
 
         $jobData = array();
 
         switch ($period) {
             case 'jobPeriod':
-                while ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
+                foreach ($rows as $row) {
                     if (empty($row['pid']) || !System::isProcessActive($row['pid'])) {
                         $jobData[$row['id']] = $row;
                     }
@@ -217,7 +214,7 @@ class Job
                 break;
 
             case 'jobPeriodForActiveProcess':
-                while ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
+                foreach ($rows as $row) {
                     $jobData[$row['id']] = $row;
                 }
                 break;
@@ -229,14 +226,13 @@ class Job
                 $jobQuotedIdList[] = $pdo->quote($jobId);
             }
 
-            $update = "
-                UPDATE job
-                SET `status` = '" . CronManager::FAILED . "', attempts = 0
-                WHERE id IN (".implode(", ", $jobQuotedIdList).")
-            ";
-
-            $sth = $pdo->prepare($update);
-            $sth->execute();
+            $connection->createQueryBuilder()
+                ->update($connection->quoteIdentifier('job'), 'j')
+                ->set("j.{$connection->quoteIdentifier('status')}", CronManager::FAILED)
+                ->set("j.attempts", 0)
+                ->where('j.id IN (:ids)')
+                ->setParameter('ids', $jobQuotedIdList, Mapper::getParameterType(PARAM_STR_ARRAY))
+                ->executeQuery();
 
             $cronScheduledJob = $this->getCronScheduledJob();
             foreach ($jobData as $jobId => $job) {
@@ -254,60 +250,50 @@ class Job
      */
     public function removePendingJobDuplicates()
     {
-        $pdo = $this->getEntityManager()->getPDO();
+        $connection = $this->getEntityManager()->getConnection();
 
-        $query = "
-            SELECT scheduled_job_id
-            FROM job
-            WHERE
-                scheduled_job_id IS NOT NULL AND
-                `status` = '".CronManager::PENDING."' AND
-                execute_time <= '".date('Y-m-d H:i:s')."' AND
-                target_id IS NULL AND
-                deleted = 0
-            GROUP BY scheduled_job_id
-            HAVING count( * ) > 1
-            ORDER BY MAX(execute_time) ASC
-        ";
-        $sth = $pdo->prepare($query);
-        $sth->execute();
-
-        $duplicateJobList = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $duplicateJobList = $connection->createQueryBuilder()
+            ->select('j.scheduled_job_id')
+            ->from($connection->quoteIdentifier('job'), 'j')
+            ->where('j.scheduled_job_id IS NOT NULL')
+            ->andWhere('j.status = :status')
+            ->setParameter('status', CronManager::PENDING)
+            ->andWhere('j.execute_time <= :executeTime')
+            ->setParameter('executeTime', date('Y-m-d H:i:s'))
+            ->andWhere('target_id IS NULL')
+            ->andWhere('j.deleted = :deleted')
+            ->setParameter('deleted', false, Mapper::getParameterType(false))
+            ->groupBy('j.scheduled_job_id')
+            ->orderBy('MAX(j.execute_time)', 'ASC')
+            ->fetchAllAssociative();
 
         foreach ($duplicateJobList as $row) {
             if (!empty($row['scheduled_job_id'])) {
+                $res = $connection->createQueryBuilder()
+                    ->select('j.id')
+                    ->from($connection->quoteIdentifier('job'), 'j')
+                    ->where('j.scheduled_job_id = :scheduledJobId')
+                    ->setParameter('scheduledJobId', $row['scheduled_job_id'], Mapper::getParameterType($row['scheduled_job_id']))
+                    ->andWhere('j.status = :status')
+                    ->setParameter('status', CronManager::PENDING)
+                    ->orderBy('j.execute_time', 'ASC')
+                    ->setFirstResult(1)
+                    ->setMaxResults(100000)
+                    ->fetchAllAssociative();
 
-                /* no possibility to use limit in update or subqueries */
-                $query = "
-                    SELECT id FROM `job`
-                    WHERE
-                        scheduled_job_id = ".$pdo->quote($row['scheduled_job_id'])."
-                        AND `status` = '" . CronManager::PENDING ."'
-                        ORDER BY execute_time
-                        DESC LIMIT 1, 100000
-                    ";
-                $sth = $pdo->prepare($query);
-                $sth->execute();
-                $jobIdList = $sth->fetchAll(PDO::FETCH_COLUMN);
+                $jobIdList = array_column($res, 'id');
 
                 if (empty($jobIdList)) {
                     continue;
                 }
 
-                $quotedJobIdList = [];
-                foreach ($jobIdList as $jobId) {
-                    $quotedJobIdList[] = $pdo->quote($jobId);
-                }
-
-                $update = "
-                    UPDATE job
-                    SET deleted = 1
-                    WHERE
-                        id IN (".implode(", ", $quotedJobIdList).")
-                ";
-
-                $sth = $pdo->prepare($update);
-                $sth->execute();
+                $connection->createQueryBuilder()
+                    ->update($connection->quoteIdentifier('job'))
+                    ->set('deleted', ':deleted')
+                    ->setParameter('deleted', true, Mapper::getParameterType(true))
+                    ->where('id IN (:ids)')
+                    ->setParameter('ids', $jobIdList, Mapper::getParameterType($jobIdList))
+                    ->executeQuery();
             }
         }
     }
@@ -319,20 +305,21 @@ class Job
      */
     public function updateFailedJobAttempts()
     {
-        $query = "
-            SELECT * FROM job
-            WHERE
-                `status` = '" . CronManager::FAILED . "' AND
-                deleted = 0 AND
-                execute_time <= '".date('Y-m-d H:i:s')."' AND
-                attempts > 0
-        ";
+        $connection = $this->getEntityManager()->getConnection();
 
-        $pdo = $this->getEntityManager()->getPDO();
-        $sth = $pdo->prepare($query);
-        $sth->execute();
+        $rows = $connection->createQueryBuilder()
+            ->select('j.*')
+            ->from($connection->quoteIdentifier('job'), 'j')
+            ->where('j.status = :status')
+            ->setParameter('status', CronManager::FAILED)
+            ->andWhere('j.deleted = :deleted')
+            ->setParameter('deleted', false, Mapper::getParameterType(false))
+            ->andWhere('j.execute_time <= :executeTime')
+            ->setParameter('executeTime', date('Y-m-d H:i:s'))
+            ->andWhere('j.attempts > :attempts')
+            ->setParameter('attempts', 0, Mapper::getParameterType(0))
+            ->fetchAllAssociative();
 
-        $rows = $sth->fetchAll(PDO::FETCH_ASSOC);
         if ($rows) {
             foreach ($rows as $row) {
                 $row['failed_attempts'] = isset($row['failed_attempts']) ? $row['failed_attempts'] : 0;
@@ -340,16 +327,17 @@ class Job
                 $attempts = $row['attempts'] - 1;
                 $failedAttempts = $row['failed_attempts'] + 1;
 
-                $update = "
-                    UPDATE job
-                    SET
-                        `status` = '" . CronManager::PENDING ."',
-                        attempts = ".$pdo->quote($attempts).",
-                        failed_attempts = ".$pdo->quote($failedAttempts)."
-                    WHERE
-                        id = ".$pdo->quote($row['id'])."
-                ";
-                $pdo->prepare($update)->execute();
+                $connection->createQueryBuilder()
+                    ->update($connection->quoteIdentifier('job'), 'j')
+                    ->set('j.status', ':status')
+                    ->setParameter('status', CronManager::PENDING)
+                    ->set('j.attempts', ':attempts')
+                    ->setParameter('attempts', $attempts, Mapper::getParameterType($attempts))
+                    ->set('j.failed_attempts', ':failedAttempts')
+                    ->setParameter('failedAttempts', $failedAttempts, Mapper::getParameterType($failedAttempts))
+                    ->where('id = :id)')
+                    ->setParameter('id', $row['id'], Mapper::getParameterType($row['id']))
+                    ->executeQuery();
             }
         }
     }

@@ -1,5 +1,7 @@
 {
   "fields": {
+    "department": "Abteilung",
+    "name": "Anzeigename",
     "acceptanceStatus": "Acceptance Status",
     "isActive": "Aktiv",
     "userName": "Benutzername",

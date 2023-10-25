@@ -33,6 +33,7 @@
 
 namespace Espo\Services;
 
+use Atro\ORM\DB\RDB\Mapper;
 use Caxy\HtmlDiff\HtmlDiff;
 use Espo\Core\EventManager\Event;
 use \Espo\Core\Exceptions\Forbidden;
@@ -181,26 +182,25 @@ class Stream extends \Espo\Core\Services\Base
             $userId = $this->getUser()->id;
         }
 
-        $pdo = $this->getEntityManager()->getPDO();
-        $sql = "
-            SELECT id FROM subscription
-            WHERE
-                entity_id = " . $pdo->quote($entity->id) . " AND entity_type = " . $pdo->quote($entity->getEntityName()) . " AND
-                user_id = " . $pdo->quote($userId) . "
-        ";
+        $connection = $this->getEntityManager()->getConnection();
+        $res = $connection->createQueryBuilder()
+            ->select('s.id')
+            ->from($connection->quoteIdentifier('subscription'), 's')
+            ->where('s.entity_id = :entityId')
+            ->setParameter('entityId', $entity->id)
+            ->andWhere('s.entity_type = :entityType')
+            ->setParameter('entityType', $entity->getEntityName())
+            ->andWhere('s.user_id = :userId')
+            ->setParameter('userId', $userId)
+            ->fetchAllAssociative();
 
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
-        if ($sth->fetchAll()) {
-            return true;
-        }
-        return false;
+        return !empty($res);
     }
 
-    public function followEntityMass(Entity $entity, array $sourceUserIdList)
+    public function followEntityMass(Entity $entity, array $sourceUserIdList): void
     {
         if (!$this->getMetadata()->get('scopes.' . $entity->getEntityName() . '.stream')) {
-            return false;
+            return;
         }
 
         $userIdList = [];
@@ -217,53 +217,49 @@ class Stream extends \Espo\Core\Services\Base
             return;
         }
 
-        $pdo = $this->getEntityManager()->getPDO();
+        $connection = $this->getEntityManager()->getConnection();
 
-        $userIdQuotedList = [];
+        $connection->createQueryBuilder()
+            ->delete($connection->quoteIdentifier('subscription'), 's')
+            ->where('s.entity_id = :entityId')
+            ->setParameter('entityId', $entity->id)
+            ->andWhere('s.user_id IN (:userIds)')
+            ->setParameter('userIds', $userIdList, Mapper::getParameterType($userIdList))
+            ->executeQuery();
+
         foreach ($userIdList as $userId) {
-            $userIdQuotedList[] = $pdo->quote($userId);
+            $connection->createQueryBuilder()
+                ->insert($connection->quoteIdentifier('subscription'))
+                ->setValue('entity_id', ':entityId')
+                ->setParameter('entityId', $entity->id)
+                ->setValue('entity_type', ':entityType')
+                ->setParameter('entityType', $entity->getEntityType())
+                ->setValue('user_id', ':userId')
+                ->setParameter('userId', $userId)
+                ->executeQuery();
         }
-
-        $sql = "
-            DELETE FROM subscription WHERE user_id IN (".implode(', ', $userIdQuotedList).") AND entity_id = ".$pdo->quote($entity->id) . "
-        ";
-        $pdo->query($sql);
-
-        $sql = "
-            INSERT INTO subscription
-            (entity_id, entity_type, user_id)
-            VALUES
-        ";
-        foreach ($userIdList as $userId) {
-            $arr[] = "
-                (".$pdo->quote($entity->id) . ", " . $pdo->quote($entity->getEntityType()) . ", " . $pdo->quote($userId).")
-            ";
-        }
-
-        $sql .= implode(", ", $arr);
-
-        $pdo->query($sql);
     }
 
-    public function followEntity(Entity $entity, $userId)
+    public function followEntity(Entity $entity, string $userId): bool
     {
         if ($userId == 'system') {
-            return;
+            return false;
         }
         if (!$this->getMetadata()->get('scopes.' . $entity->getEntityName() . '.stream')) {
             return false;
         }
 
-        $pdo = $this->getEntityManager()->getPDO();
-
         if (!$this->checkIsFollowed($entity, $userId)) {
-            $sql = "
-                INSERT INTO subscription
-                (entity_id, entity_type, user_id)
-                VALUES
-                (".$pdo->quote($entity->id) . ", " . $pdo->quote($entity->getEntityName()) . ", " . $pdo->quote($userId).")
-            ";
-            $sth = $pdo->prepare($sql)->execute();
+            $connection = $this->getEntityManager()->getConnection();
+            $connection->createQueryBuilder()
+                ->insert($connection->quoteIdentifier('subscription'))
+                ->setValue('entity_id', ':entityId')
+                ->setParameter('entityId', $entity->id)
+                ->setValue('entity_type', ':entityType')
+                ->setParameter('entityType', $entity->getEntityType())
+                ->setValue('user_id', ':userId')
+                ->setParameter('userId', $userId)
+                ->executeQuery();
         }
         return true;
     }
@@ -274,456 +270,40 @@ class Stream extends \Espo\Core\Services\Base
             return false;
         }
 
-        $pdo = $this->getEntityManager()->getPDO();
+        $connection = $this->getEntityManager()->getConnection();
 
-        $sql = "
-            DELETE FROM subscription
-            WHERE
-                entity_id = " . $pdo->quote($entity->id) . " AND entity_type = " . $pdo->quote($entity->getEntityName()) . " AND
-                user_id = " . $pdo->quote($userId) . "
-        ";
-        $sth = $pdo->prepare($sql)->execute();
+        $connection->createQueryBuilder()
+            ->delete($connection->quoteIdentifier('subscription'), 's')
+            ->where('s.entity_id = :entityId')
+            ->setParameter('entityId', $entity->id)
+            ->andWhere('s.entity_type = :entityType')
+            ->setParameter('entityType', $entity->getEntityName())
+            ->andWhere('s.user_id = :userId')
+            ->setParameter('userId', $userId)
+            ->executeQuery();
 
         return true;
     }
 
-
-    public function unfollowAllUsersFromEntity(Entity $entity)
+    public function unfollowAllUsersFromEntity(Entity $entity): void
     {
         if (empty($entity->id)) {
             return;
         }
 
-        $pdo = $this->getEntityManager()->getPDO();
-        $sql = "
-            DELETE FROM subscription
-            WHERE
-                entity_id = " . $pdo->quote($entity->id) . " AND entity_type = " . $pdo->quote($entity->getEntityType()) . "
-        ";
-        $sth = $pdo->prepare($sql)->execute();
-    }
+        $connection = $this->getEntityManager()->getConnection();
 
-    public function findUserStream($userId, $params = array())
-    {
-        $offset = intval($params['offset']);
-        $maxSize = intval($params['maxSize']);
-
-        if ($userId === $this->getUser()->id) {
-            $user = $this->getUser();
-        } else {
-            $user = $this->getEntityManager()->getEntity('User', $userId);
-            if (!$user) {
-                throw new NotFound();
-            }
-        }
-
-        $teamIdList = $user->getTeamIdList();
-
-        $pdo = $this->getEntityManager()->getPDO();
-
-        $select = [
-            'id', 'number', 'type', 'post', 'data', 'parentType', 'parentId', 'relatedType', 'relatedId',
-            'targetType', 'createdAt', 'createdById', 'createdByName', 'isGlobal', 'isInternal', 'createdByGender', 'modifiedAt'
-        ];
-
-        $notes = $this->getEntityManager()->getRepository('Note')
-            ->select(['parentType'])
-            ->distinct()
-            ->find()
-            ->toArray();
-
-        foreach ($notes as $key => $note) {
-            if (!empty($note['parentType']) && !$this->isExistEntity($note['parentType'])) {
-                //if do not exist entity, then add IN NOT()
-                $inNotParentType[] = $note['parentType'];
-            }
-        }
-
-        $onlyTeamEntityTypeList = $this->getOnlyTeamEntityTypeList($user);
-        $onlyOwnEntityTypeList = $this->getOnlyOwnEntityTypeList($user);
-        $selectParamsList = [];
-
-        $selectParamsSubscription = [
-            'select' => $select,
-            'leftJoins' => ['createdBy'],
-            'customJoin' => "
-                JOIN subscription AS `subscription` ON
-                    (
-                        (
-                            note.parent_type = subscription.entity_type AND
-                            note.parent_id = subscription.entity_id
-                        )
-                    ) AND
-                    subscription.user_id = ". $pdo->quote($user->id) ."
-            ",
-            'whereClause' => [],
-            'orderBy' => $params['orderBy'],
-            'order' => 'DESC'
-        ];
-        if (!empty($inNotParentType)) {
-            $selectParamsSubscription['whereClause']['parentType!='] = $inNotParentType;
-        }
-        if ($user->isPortal()) {
-            $selectParamsSubscription['whereClause'][] = [
-                'isInternal' => false
-            ];
-
-            $notAllEntityTypeList = $this->getNotAllEntityTypeList($user);
-
-            $selectParamsSubscription['whereClause'][] = [
-                'OR' => [
-                    [
-                        'relatedId' => null
-                    ],
-                    [
-                        'relatedId!=' => null,
-                        'relatedType!=' => $notAllEntityTypeList
-                    ]
-                ]
-            ];
-
-            $selectParamsList[] = $selectParamsSubscription;
-        } else {
-            $selectParamsSubscriptionRest = $selectParamsSubscription;
-            $selectParamsSubscriptionRest['whereClause'][] = [
-                'OR' => [
-                    [
-                        'relatedId!=' => null,
-                        'relatedType!=' => array_merge($onlyTeamEntityTypeList, $onlyOwnEntityTypeList)
-                    ],
-                    [
-                        'relatedId=' => null
-                    ]
-                ]
-            ];
-            $selectParamsList[] = $selectParamsSubscriptionRest;
-
-            if (count($onlyTeamEntityTypeList)) {
-                $selectParamsSubscriptionTeam = $selectParamsSubscription;
-                $selectParamsSubscriptionTeam['distinct'] = true;
-                $selectParamsSubscriptionTeam['leftJoins'][] = ['noteTeam', 'noteTeam', ['noteTeam.noteId=:' => 'id', 'noteTeam.deleted' => false]];
-                $selectParamsSubscriptionTeam['leftJoins'][] = ['noteUser', 'noteUser', ['noteUser.noteId=:' => 'id', 'noteUser.deleted' => false]];
-                $selectParamsSubscriptionTeam['whereClause'][] = [
-                    [
-                        'relatedId!=' => null,
-                        'relatedType=' => $onlyTeamEntityTypeList
-                    ],
-                    [
-                        'OR' => [
-                            'noteTeam.teamId' => $teamIdList,
-                            'noteUser.userId' => $user->id
-                        ]
-                    ]
-                ];
-                $selectParamsList[] = $selectParamsSubscriptionTeam;
-            }
-
-            if (count($onlyOwnEntityTypeList)) {
-                $selectParamsSubscriptionOwn = $selectParamsSubscription;
-                $selectParamsSubscriptionOwn['distinct'] = true;
-                $selectParamsSubscriptionOwn['leftJoins'][] = ['noteUser', 'noteUser', ['noteUser.noteId=:' => 'id', 'noteUser.deleted' => false]];
-                $selectParamsSubscriptionOwn['whereClause'][] = [
-                    [
-                        'relatedId!=' => null,
-                        'relatedType=' => $onlyOwnEntityTypeList
-                    ],
-                    'noteUser.userId' => $user->id
-                ];
-                $selectParamsList[] = $selectParamsSubscriptionOwn;
-            }
-        }
-
-        $selectParamsSubscriptionSuper = [
-            'select' => $select,
-            'leftJoins' => ['createdBy'],
-            'customJoin' => "
-                JOIN subscription AS `subscription` ON
-                    (
-                        (
-                            note.super_parent_type = subscription.entity_type AND
-                            note.super_parent_id = subscription.entity_id
-                        )
-                    ) AND
-                    subscription.user_id = ".$pdo->quote($user->id)."
-            ",
-            'customWhere' => ' AND (
-                    note.parent_id <> note.super_parent_id
-                    OR
-                    note.parent_type <> note.super_parent_type
-                )
-            ',
-            'whereClause' => [],
-            'orderBy' => 'number',
-            'order' => 'DESC'
-        ];
-
-        if ($user->isPortal()) {
-
-        } else {
-            $selectParamsSubscriptionRest = $selectParamsSubscriptionSuper;
-            $selectParamsSubscriptionRest['whereClause'][] = [
-                'OR' => [
-                    [
-                        'relatedId!=' => null,
-                        'relatedType!=' => array_merge($onlyTeamEntityTypeList, $onlyOwnEntityTypeList)
-                    ],
-                    [
-                        'relatedId=' => null,
-                        'parentType!=' => array_merge($onlyTeamEntityTypeList, $onlyOwnEntityTypeList)
-                    ]
-                ]
-            ];
-            $selectParamsList[] = $selectParamsSubscriptionRest;
-
-            if (count($onlyTeamEntityTypeList)) {
-                $selectParamsSubscriptionTeam = $selectParamsSubscriptionSuper;
-                $selectParamsSubscriptionTeam['distinct'] = true;
-                $selectParamsSubscriptionTeam['leftJoins'][] = ['noteTeam', 'noteTeam', ['noteTeam.noteId=:' => 'id', 'noteTeam.deleted' => false]];
-                $selectParamsSubscriptionTeam['leftJoins'][] = ['noteUser', 'noteUser', ['noteUser.noteId=:' => 'id', 'noteUser.deleted' => false]];
-                $selectParamsSubscriptionTeam['whereClause'][] = [
-                    'OR' => [
-                        [
-                            'relatedId!=' => null,
-                            'relatedType=' => $onlyTeamEntityTypeList
-                        ],
-                        [
-                            'relatedId=' => null,
-                            'parentType=' => $onlyTeamEntityTypeList
-                        ]
-                    ],
-                    [
-                        'OR' => [
-                            'noteTeam.teamId' => $teamIdList,
-                            'noteUser.userId' => $user->id
-                        ]
-                    ]
-                ];
-                $selectParamsList[] = $selectParamsSubscriptionTeam;
-            }
-
-            if (count($onlyOwnEntityTypeList)) {
-                $selectParamsSubscriptionOwn = $selectParamsSubscriptionSuper;
-                $selectParamsSubscriptionOwn['distinct'] = true;
-                $selectParamsSubscriptionOwn['leftJoins'][] = ['noteUser', 'noteUser', ['noteUser.noteId=:' => 'id', 'noteUser.deleted' => false]];
-                $selectParamsSubscriptionOwn['whereClause'][] = [
-                    'OR' => [
-                        [
-                            'relatedId!=' => null,
-                            'relatedType=' => $onlyOwnEntityTypeList
-                        ],
-                        [
-                            'relatedId=' => null,
-                            'parentType=' => $onlyOwnEntityTypeList
-                        ]
-                    ],
-                    'noteUser.userId' => $user->id
-                ];
-                $selectParamsList[] = $selectParamsSubscriptionOwn;
-            }
-        }
-
-        $selectParamsList[] = [
-            'select' => $select,
-            'leftJoins' => ['createdBy'],
-            'whereClause' => [
-                'createdById' => $user->id,
-                'parentId' => null,
-                'type' => 'Post',
-                'isGlobal' => false
-            ],
-            'orderBy' => $params['orderBy'],
-            'order' => 'DESC'
-        ];
-
-        $selectParamsList[] = [
-            'select' => $select,
-            'leftJoins' => ['users', 'createdBy'],
-            'whereClause' => [
-                'createdById!=' => $user->id,
-                'usersMiddle.userId' => $user->id,
-                'parentId' => null,
-                'type' => 'Post',
-                'isGlobal' => false
-            ],
-            'orderBy' => 'number',
-            'order' => 'DESC'
-        ];
-
-        if (!$user->get('isPortalUser') || $user->get('isAdmin')) {
-            $selectParamsList[] = [
-                'select' => $select,
-                'leftJoins' => ['createdBy'],
-                'whereClause' => [
-                    'parentId' => null,
-                    'type' => 'Post',
-                    'isGlobal' => true
-                ],
-                'orderBy' => $params['orderBy'],
-                'order' => 'DESC'
-            ];
-        }
-
-        if ($user->get('isPortalUser')) {
-            $portalIdList = $user->getLinkMultipleIdList('portals');
-            $portalIdQuotedList = [];
-            foreach ($portalIdList as $portalId) {
-                $portalIdQuotedList[] = $pdo->quote($portalId);
-            }
-            if (!empty($portalIdQuotedList)) {
-                $selectParamsList[] = [
-                    'select' => $select,
-                    'leftJoins' => ['portals', 'createdBy'],
-                    'whereClause' => [
-                        'parentId' => null,
-                        'portalsMiddle.portalId' => $portalIdList,
-                        'type' => 'Post',
-                        'isGlobal' => false
-                    ],
-                    'orderBy' => $params['orderBy'],
-                    'order' => 'DESC'
-                ];
-            }
-        }
-
-        if (!empty($teamIdList)) {
-            $selectParamsList[] = [
-                'select' => $select,
-                'leftJoins' => ['teams', 'createdBy'],
-                'whereClause' => [
-                    'parentId' => null,
-                    'teamsMiddle.teamId' => $teamIdList,
-                    'type' => 'Post',
-                    'isGlobal' => false
-                ],
-                'orderBy' => $params['orderBy'],
-                'order' => 'DESC'
-            ];
-        }
-
-        $whereClause = [];
-        if (!empty($params['after'])) {
-            $whereClause[]['createdAt>'] = $params['after'];
-        }
-
-        if (!empty($params['filter'])) {
-            switch ($params['filter']) {
-                case 'posts':
-                    $whereClause[]['type'] = 'Post';
-                    break;
-                case 'updates':
-                    $whereClause[]['type'] = ['Update', 'Status'];
-                    break;
-            }
-        }
-
-
-
-        $ignoreScopeList = $this->getIgnoreScopeList($user);
-
-        if (!empty($ignoreScopeList)) {
-            $whereClause[] = [
-                'OR' => [
-                    'relatedType' => null,
-                    'relatedType!=' => $ignoreScopeList
-                ]
-            ];
-            $whereClause[] = [
-                'OR' => [
-                    'parentType' => null,
-                    'parentType!=' => $ignoreScopeList
-                ]
-            ];
-            if (in_array('Email', $ignoreScopeList)) {
-                $whereClause[] = [
-                    'type!=' => ['EmailReceived', 'EmailSent']
-                ];
-            }
-        }
-
-        $sqlPartList = [];
-        foreach ($selectParamsList as $i => $selectParams) {
-            if (empty($selectParams['whereClause'])) {
-                $selectParams['whereClause'] = [];
-            }
-            $selectParams['whereClause'][] = $whereClause;
-            $sqlPartList[] = "(\n" . $this->getEntityManager()->getQuery()->createSelectQuery('Note', $selectParams) . "\n)";
-        }
-
-        $sql = implode("\n UNION \n", $sqlPartList) . "
-            ORDER BY {$params['orderBy']} DESC
-        ";
-
-        $sql = $this->getEntityManager()->getQuery()->limit($sql, $offset, $maxSize + 1);
-
-        $collection = $this->getEntityManager()->getRepository('Note')->findByQuery($sql);
-
-        foreach ($collection as $e) {
-            if ($e->get('type') == 'Post' || $e->get('type') == 'EmailReceived') {
-                $e->loadAttachments();
-            }
-            if ($e->get('type') == 'Update') {
-                $data = $e->get('data');
-                if (!empty($data->fields) && count($data->fields) == 1) {
-                    $fieldType = $this->getMetadata()->get(['entityDefs', $e->get('parentType'), 'fields', $data->fields[0], 'type']);
-                    if (in_array($fieldType,['text', 'wysiwyg'])) {
-                        $became = $data->attributes->became->{$data->fields[0]};
-                        if ($fieldType == 'text') {
-                            $became = nl2br($became);
-                        }
-                        $diff = (new HtmlDiff(html_entity_decode($data->attributes->was->{$data->fields[0]}), html_entity_decode($became)))->build();
-                        $e->set('diff',$diff);
-                    }
-
-                }
-            }
-        }
-
-
-        foreach ($collection as $e) {
-            if ($e->get('parentId') && $e->get('parentType')) {
-                $e->loadParentNameField('parent');
-            }
-            if ($e->get('relatedId') && $e->get('relatedType')) {
-                $e->loadParentNameField('related');
-            }
-            if ($e->get('type') == 'Post' && $e->get('parentId') === null && !$e->get('isGlobal')) {
-                $targetType = $e->get('targetType');
-                if (!$targetType || $targetType === 'users' || $targetType === 'self') {
-                    $e->loadLinkMultipleField('users');
-                }
-                if ($targetType !== 'users' && $targetType !== 'self') {
-                    if (!$targetType || $targetType === 'teams') {
-                        $e->loadLinkMultipleField('teams');
-                    } else if ($targetType === 'portals') {
-                        $e->loadLinkMultipleField('portals');
-                    }
-                }
-            }
-
-            $this->prepareForOutput($e);
-        }
-
-        if (count($collection) > $maxSize) {
-            $total = -1;
-            unset($collection[count($collection) - 1]);
-        } else {
-            $total = -2;
-        }
-
-        return array(
-            'total' => $total,
-            'collection' => $collection,
-        );
+        $connection->createQueryBuilder()
+            ->delete($connection->quoteIdentifier('subscription'), 's')
+            ->where('s.entity_id = :entityId')
+            ->setParameter('entityId', $entity->id)
+            ->andWhere('s.entity_type = :entityType')
+            ->setParameter('entityType', $entity->getEntityName())
+            ->executeQuery();
     }
 
     public function find($scope, $id, $params = [])
     {
-        if ($scope === 'User') {
-            if (empty($id)) {
-                $id = $this->getUser()->id;
-            }
-            return $this->findUserStream($id, $params);
-        }
         $entity = $this->getEntityManager()->getEntity($scope, $id);
 
         $onlyTeamEntityTypeList = $this->getOnlyTeamEntityTypeList($this->getUser());
@@ -1284,76 +864,58 @@ class Stream extends \Espo\Core\Services\Base
 
     public function getEntityFolowerIdList(Entity $entity)
     {
-        $query = $this->getEntityManager()->getQuery();
-        $pdo = $this->getEntityManager()->getPDO();
-        $sql = $query->createSelectQuery('User', array(
-            'select' => ['id'],
-            'customJoin' => "
-                JOIN subscription AS `subscription` ON
-                    subscription.user_id = user.id AND
-                    subscription.entity_id = ".$query->quote($entity->id)." AND
-                    subscription.entity_type = ".$query->quote($entity->getEntityType())."
-            ",
-            'whereClause' => array(
-                'isActive' => true
-            )
-        ));
+        $connection = $this->getEntityManager()->getConnection();
 
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
+        $condition = 's.user_id = u.id';
+        $condition .= ' AND s.entity_id = :entityId';
+        $condition .= ' AND s.entity_type = :entityType';
 
-        $idList = [];
-        while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
-            $idList[] = $row['id'];
-        }
+        $res = $connection->createQueryBuilder()
+            ->select('u.id')
+            ->from($connection->quoteIdentifier('user'), 'u')
+            ->where('u.is_active = :isActive')
+            ->setParameter('isActive', true, Mapper::getParameterType(true))
+            ->innerJoin('u', $connection->quoteIdentifier('subscription'), 's', $condition)
+            ->setParameter('entityId', $entity->id)
+            ->setParameter('entityType', $entity->getEntityType())
+            ->fetchAllAssociative();
 
-        return $idList;
+        return array_column($res, 'id');
     }
 
     public function getEntityFollowers(Entity $entity, $offset = 0, $limit = false)
     {
-        $query = $this->getEntityManager()->getQuery();
-        $pdo = $this->getEntityManager()->getPDO();
+        $connection = $this->getEntityManager()->getConnection();
 
-        if (!$limit) {
-            $limit = 200;
-        }
+        $condition = 's.user_id = u.id';
+        $condition .= ' AND s.entity_id = :entityId';
+        $condition .= ' AND s.entity_type = :entityType';
 
-        $sql = $query->createSelectQuery('User', array(
-            'select' => ['id', 'name'],
-            'customJoin' => "
-                JOIN subscription AS `subscription` ON
-                    subscription.user_id = user.id AND
-                    subscription.entity_id = ".$query->quote($entity->id)." AND
-                    subscription.entity_type = ".$query->quote($entity->getEntityType())."
-            ",
-            'offset' => $offset,
-            'limit' => $limit,
-            'whereClause' => array(
-                'isActive' => true
-            ),
-            'orderBy' => [
-                ['LIST:id:' . $this->getUser()->id, 'DESC'],
-                ['name']
-            ]
-        ));
-
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
+        $res = $connection->createQueryBuilder()
+            ->select('u.id, u.name')
+            ->from($connection->quoteIdentifier('user'), 'u')
+            ->innerJoin('u', $connection->quoteIdentifier('subscription'), 's', $condition)
+            ->setParameter('entityId', $entity->id)
+            ->setParameter('entityType', $entity->getEntityType())
+            ->where('u.is_active = :isActive')
+            ->setParameter('isActive', true, Mapper::getParameterType(true))
+            ->setFirstResult($offset)
+            ->setMaxResults($limit ?? 200)
+            ->orderBy('u.name', 'ASC')
+            ->fetchAllAssociative();
 
         $data = array(
-            'idList' => [],
+            'idList'  => [],
             'nameMap' => new \StdClass()
         );
 
-        while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
+        foreach ($res as $row) {
             $id = $row['id'];
             $data['idList'][] = $id;
             $data['nameMap']->$id = $row['name'];
         }
 
         return $data;
-
     }
 
     protected function getOnlyTeamEntityTypeList(\Espo\Entities\User $user)
@@ -1465,16 +1027,5 @@ class Stream extends \Espo\Core\Services\Base
                 }
             }
         }
-    }
-
-    /**
-     * @param string $entityName
-     *
-     * @return bool
-     * @throws \Espo\Core\Exceptions\Error
-     */
-    public function isExistEntity(string $entityName): bool
-    {
-        return class_exists($this->getEntityManager()->normalizeEntityName($entityName));
     }
 }

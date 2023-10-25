@@ -252,6 +252,17 @@ class Metadata
                 }
             }
         }
+
+        if (property_exists($data, 'entityDefs')) {
+            foreach ($data->entityDefs as $entityType => $entityDefs) {
+                if (!property_exists($entityDefs, 'fields') || property_exists($entityDefs->fields, 'id')) {
+                    continue;
+                }
+                $data->entityDefs->{$entityType}->fields->id = new \stdClass();
+                $data->entityDefs->{$entityType}->fields->id->type = 'varchar';
+            }
+        }
+
         return $data;
     }
 

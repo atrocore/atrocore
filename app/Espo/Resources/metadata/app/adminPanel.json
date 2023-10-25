@@ -139,13 +139,29 @@
         "url": "#PortalRole",
         "label": "Portal Roles",
         "description": "portalRoles"
+      },
+      {
+        "url": "#Account",
+        "label": "Accounts",
+        "description": "accounts"
+      },
+      {
+        "url": "#Contact",
+        "label": "Contacts",
+        "description": "contacts"
+      },
+      {
+        "url": "#Address",
+        "label": "Addresses",
+        "description": "addresses"
       }
     ],
     "order": 40
   },
   "data": {
     "label": "Data",
-    "itemList": [],
+    "itemList": [
+    ],
     "order": 50
   }
 }

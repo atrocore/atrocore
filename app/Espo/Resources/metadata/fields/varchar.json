@@ -47,6 +47,5 @@
   "filter": true,
   "multilingual": true,
   "personalData": true,
-  "textFilter": true,
-  "fullTextSearch": true
+  "textFilter": true
 }

@@ -136,6 +136,13 @@
             <div class="stepTitle text-center"><%= translate.labels.databaseConfiguration %></div>
             <div class="col-md-12 col-lg-6 modal-body" style="margin: 10px 0">
                 <div class="form-group">
+                    <label for="driver"><%= translate.labels.dbSystem %> *</label>
+                    <select class="form-control" id="driver">
+                        <option value="pdo_mysql">MySQL</option>
+                        <option value="pdo_pgsql">PostgreSQL</option>
+                    </select>
+                </div>
+                <div class="form-group">
                     <label for="host"><%= translate.labels.hostName %> *</label>
                     <input type="text" class="form-control" id="host" value="<%= dbSettings.host %>">
                 </div>

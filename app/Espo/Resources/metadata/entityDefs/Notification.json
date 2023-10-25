@@ -1,7 +1,7 @@
 {
   "fields": {
     "number": {
-      "type": "autoincrement",
+      "type": "int",
       "index": true
     },
     "data": {

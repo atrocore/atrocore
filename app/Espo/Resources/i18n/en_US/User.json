@@ -1,6 +1,7 @@
 {
   "fields": {
-    "name": "Name",
+    "department": "Department",
+    "name": "Display Name",
     "userName": "User Name",
     "title": "Title",
     "isAdmin": "Is Admin",

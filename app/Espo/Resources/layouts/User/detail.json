@@ -1,10 +1,45 @@
 [
-    {
-        "label": "Overview",
-        "rows": [
-            [{"name": "emailAddress"}, {"name":"userName"}],
-            [{"name": "name"}, {"name": "title"}],
-            [{"name":"gender"}, {"name": "phoneNumber"}]
-        ]
-    }
+  {
+    "label": "Overview",
+    "rows": [
+      [
+        {
+          "name": "emailAddress"
+        },
+        {
+          "name": "userName"
+        }
+      ],
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "title"
+        }
+      ],
+      [
+        {
+          "name": "firstName"
+        },
+        {
+          "name": "lastName"
+        }
+      ],
+      [
+        {
+          "name": "department"
+        },
+        false
+      ],
+      [
+        {
+          "name": "gender"
+        },
+        {
+          "name": "phoneNumber"
+        }
+      ]
+    ]
+  }
 ]

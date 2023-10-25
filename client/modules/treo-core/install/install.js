@@ -221,6 +221,7 @@ $(function () {
 
         setFieldsValuesToModel() {
             let data = {
+                driver: this.$el.find('#driver').val(),
                 host: this.$el.find('#host').val(),
                 dbname: this.$el.find('#dbname').val(),
                 user: this.$el.find('#user').val(),
@@ -244,6 +245,7 @@ $(function () {
 
         checkDbConnect() {
             let data = {
+                driver: this.model.get('dbSettings').driver,
                 host: this.model.get('dbSettings').host,
                 dbname: this.model.get('dbSettings').dbname,
                 user: this.model.get('dbSettings').user,
@@ -279,6 +281,7 @@ $(function () {
 
         setDbSettings() {
             let data = {
+                driver: this.model.get('dbSettings').driver,
                 host: this.model.get('dbSettings').host,
                 dbname: this.model.get('dbSettings').dbname,
                 user: this.model.get('dbSettings').user,

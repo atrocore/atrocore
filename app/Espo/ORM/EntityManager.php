@@ -33,6 +33,8 @@
 
 namespace Espo\ORM;
 
+use Atro\ORM\DB\MapperInterface;
+use Doctrine\DBAL\Connection;
 use Espo\Core\Exceptions\Error;
 
 class EntityManager
@@ -46,34 +48,24 @@ class EntityManager
 
     protected $repositoryFactory;
 
-    protected $mappers = array();
+    protected array $mappers = [];
 
-    protected $metadata;
+    protected Metadata $metadata;
 
-    protected $repositoryHash = array();
+    protected array $repositoryHash = [];
 
-    protected $params = array();
+    protected array $params = [];
 
-    protected $query;
-
-    protected $driverPlatformMap = ['pdo_mysql' => 'Mysql', 'mysqli' => 'Mysql'];
+    protected Connection $connection;
 
     public function __construct($params)
     {
+        $this->connection = $params['connection'];
+        $this->pdo = $params['pdo'];
+
         $this->params = $params;
 
         $this->metadata = new Metadata();
-
-        if (empty($this->params['platform'])) {
-            if (empty($this->params['driver'])) {
-                throw new \Exception('No database driver specified.');
-            }
-            $driver = $this->params['driver'];
-            if (empty($this->driverPlatformMap[$driver])) {
-                throw new \Exception("Database driver '{$driver}' is not supported.");
-            }
-            $this->params['platform'] = $this->driverPlatformMap[$this->params['driver']];
-        }
 
         if (!empty($params['metadata'])) {
             $this->setMetadata($params['metadata']);
@@ -94,45 +86,13 @@ class EntityManager
         $this->init();
     }
 
-    public function getQuery()
+    public function getMapper(string $name = 'RDB'): MapperInterface
     {
-        if (empty($this->query)) {
-            $platform = $this->params['platform'];
-            $className = '\\Espo\\ORM\\DB\\Query\\' . ucfirst($platform);
-            $this->query = new $className($this->getPDO(), $this->entityFactory);
-        }
-        return $this->query;
-    }
-
-    protected function getMapperClassName($name)
-    {
-        $className = null;
-
-        switch ($name) {
-            case 'RDB':
-                $className = $this->getMysqlMapperClassName();
-                break;
-        }
-
-        return $className;
-    }
-
-    protected function getMysqlMapperClassName(): string
-    {
-        return \Espo\ORM\DB\MysqlMapper::class;
-    }
-
-    public function getMapper($name = 'RDB')
-    {
-        if (substr($name, 0, 1) == '\\') {
-            $className = $name;
-        } else {
-            $className = $this->getMapperClassName($name);
-        }
-
+        $className = "\\Atro\\ORM\\DB\\$name\\Mapper";
         if (empty($this->mappers[$className])) {
-            $this->mappers[$className] = new $className($this->getPDO(), $this->entityFactory, $this->getQuery());
+            $this->mappers[$className] = new $className($this->connection, $this->entityFactory);
         }
+
         return $this->mappers[$className];
     }
 
@@ -189,15 +149,8 @@ class EntityManager
         return $this->getMetadata();
     }
 
-    /**
-     * @return \PDO
-     */
-    public function getPDO()
+    public function getPDO(): \PDO
     {
-        if (empty($this->pdo)) {
-            $this->pdo = $this->params['pdo'];
-        }
-
         return $this->pdo;
     }
 
@@ -223,33 +176,13 @@ class EntityManager
         return $this->entityFactory;
     }
 
-    /**
-     * @param string $sql
-     * @param array  $inputParams
-     *
-     * @return \PDOStatement
-     */
-    public function nativeQuery(string $sql, array $inputParams = []):\PDOStatement
-    {
-        // prepare params
-        $params = null;
-        if (!empty($inputParams)) {
-            $params = [];
-            foreach ($inputParams as $key => $value) {
-                $params[':' . $key] = $value;
-            }
-        }
-
-        $sth = $this
-            ->getPDO()
-            ->prepare($sql);
-        $sth->execute($params);
-
-        return $sth;
-    }
-
     protected function init()
     {
+    }
+
+    public function getConnection(): Connection
+    {
+        return $this->connection;
     }
 }
 

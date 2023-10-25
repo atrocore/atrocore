@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Listeners;
 
 use Atro\Core\EventManager\Event;
+use Atro\Core\EventManager\Manager;
 use Espo\Hooks\Common;
 
 class Entity extends AbstractListener
@@ -25,9 +26,6 @@ class Entity extends AbstractListener
         if (empty($event->getArgument('hooksDisabled')) && empty($event->getArgument('options')['skipHooks']) && empty($GLOBALS['skipHooks'])) {
             $this
                 ->createHook(Common\CurrencyConverted::class)
-                ->beforeSave($event->getArgument('entity'), $event->getArgument('options'));
-            $this
-                ->createHook(Common\Formula::class)
                 ->beforeSave($event->getArgument('entity'), $event->getArgument('options'));
             $this
                 ->createHook(Common\NextNumber::class)
@@ -118,7 +116,9 @@ class Entity extends AbstractListener
 
     protected function dispatch(string $target, string $action, Event $event): void
     {
-        $this->getContainer()->get('eventManager')->dispatch($target, $action, $event);
+        /** @var Manager $eventManager */
+        $eventManager = $this->getContainer()->get('eventManager');
+        $eventManager->dispatch($target, $action, $event);
     }
 
     /**

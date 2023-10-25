@@ -33,13 +33,12 @@
 
 namespace Espo\Hooks\Common;
 
+use Atro\ORM\DB\RDB\Mapper;
 use Espo\ORM\Entity;
 
 class Stream extends \Espo\Core\Hooks\Base
 {
     protected $streamService = null;
-
-    protected $auditedFieldsCache = array();
 
     protected $hasStreamCache = array();
 
@@ -89,18 +88,17 @@ class Stream extends \Espo\Core\Hooks\Base
         if ($this->checkHasStream($entity)) {
             $this->getStreamService()->unfollowAllUsersFromEntity($entity);
         }
-        $query = $this->getEntityManager()->getQuery();
-        $sql = "
-            UPDATE `note`
-            SET `deleted` = 1
-            WHERE
-                (
-                    (related_id = ".$query->quote($entity->id)." AND related_type = ".$query->quote($entity->getEntityType()) .")
-                OR
-                    (parent_id = ".$query->quote($entity->id)." AND parent_type = ".$query->quote($entity->getEntityType()) .")
-                )
-        ";
-        $this->getEntityManager()->getPDO()->query($sql);
+
+        $connection = $this->getEntityManager()->getConnection();
+
+        $connection->createQueryBuilder()
+            ->update($connection->quoteIdentifier('note'))
+            ->set('deleted', ':deleted')
+            ->setParameter('deleted', true, Mapper::getParameterType(true))
+            ->where("(related_id = :entityId AND related_type = :entityType) OR (parent_id = :entityId AND parent_type = :entityType)")
+            ->setParameter('entityId', $entity->id)
+            ->setParameter('entityType', $entity->getEntityType())
+            ->executeQuery();
     }
 
     protected function handleCreateRelated(Entity $entity)
@@ -159,18 +157,17 @@ class Stream extends \Espo\Core\Hooks\Base
 
     protected function getAutofollowUserIdList(Entity $entity, array $ignoreList = array())
     {
-        $entityType = $entity->getEntityType();
-        $pdo = $this->getEntityManager()->getPDO();
         $userIdList = [];
 
-        $sql = "
-            SELECT user_id AS 'userId' FROM autofollow WHERE entity_type = ".$pdo->quote($entityType)."
-        ";
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
-        $rows = $sth->fetchAll();
+        $rows = $this->getEntityManager()->getConnection()->createQueryBuilder()
+            ->select('user_id')
+            ->from('autofollow')
+            ->where("entity_type = :entityType")
+            ->setParameter('entityType', $entity->getEntityType())
+            ->fetchAllAssociative();
+
         foreach ($rows as $row) {
-            $userId = $row['userId'];
+            $userId = $row['user_id'];
             if (in_array($userId, $ignoreList)) {
                 continue;
             }

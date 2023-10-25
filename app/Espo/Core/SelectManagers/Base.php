@@ -90,17 +90,11 @@ class Base
 
     private $seed = null;
 
-    private $userTimeZone = null;
-
-    protected $additionalFilterTypeList = ['inCategory', 'isUserFromTeams'];
-
     protected $textFilterUseContainsAttributeList = [];
 
     const MIN_LENGTH_FOR_CONTENT_SEARCH = 4;
 
     const MIN_LENGTH_FOR_FULL_TEXT_SEARCH = 4;
-
-    protected $fullTextSearchDataCacheHash = [];
 
     public function __construct($entityManager, User $user, Acl $acl, AclManager $aclManager, Metadata $metadata, Config $config, InjectableFactory $injectableFactory)
     {
@@ -245,26 +239,6 @@ class Base
                 }
                 $result['orderBy'] = [[$sortBy . 'Country', $orderPart], [$sortBy . 'City', $orderPart], [$sortBy . 'Street', $orderPart]];
                 return;
-            } else if ($type === 'enum') {
-                $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy]);
-                if (!empty($fieldDefs['optionsIds'])) {
-                    $options = $fieldDefs['options'];
-                    if ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'isSorted'])) {
-                        asort($options);
-                    }
-
-                    $list = [];
-                    foreach ($options as $i => $item) {
-                        $list[] = str_replace(',', '_COMMA_', $fieldDefs['optionsIds'][$i]);
-                    }
-
-                    if ($desc) {
-                        $list = array_reverse($list);
-                    }
-
-                    $result['orderBy'] = 'LIST:' . $sortBy . ':' . implode(',', $list);
-                    return;
-                }
             }
         }
         if (!$desc) {
@@ -351,13 +325,13 @@ class Base
                 case 'linkedWith':
                 case 'notLinkedWith':
                     $where[$k] = [
-                        'type'      => $item['type'],
+                        'type' => $item['type'],
                         'attribute' => $defs['relationshipFilterField'],
-                        'subQuery'  => [
+                        'subQuery' => [
                             [
-                                'type'      => 'in',
+                                'type' => 'in',
                                 'attribute' => $defs['relationshipFilterForeignField'] . 'Id',
-                                'value'     => $item['value']
+                                'value' => $item['value']
                             ]
                         ]
                     ];
@@ -365,7 +339,7 @@ class Base
                 case 'isNotLinked':
                 case 'isLinked':
                     $where[$k] = [
-                        'type'      => $item['type'],
+                        'type' => $item['type'],
                         'attribute' => 'productChannels'
                     ];
                     break;
@@ -377,7 +351,7 @@ class Base
     {
         $whereClause = [];
 
-        $ignoreTypeList = array_merge(['bool', 'primary'], $this->additionalFilterTypeList);
+        $ignoreTypeList = ['bool', 'primary'];
 
         foreach ($where as $item) {
             if (!isset($item['type']))
@@ -390,7 +364,7 @@ class Base
                     $whereClause[] = $part;
                 }
             } else {
-                if (!$ignoreAdditionaFilterTypes && in_array($type, $this->additionalFilterTypeList)) {
+                if (!$ignoreAdditionaFilterTypes) {
                     if (!empty($item['value'])) {
                         $methodName = 'apply' . ucfirst($type);
 
@@ -462,86 +436,6 @@ class Base
         }
 
         $this->setDistinct(true, $result);
-    }
-
-    protected function applyIsUserFromTeams($link, $idsValue, &$result)
-    {
-        if (is_array($idsValue) && count($idsValue) == 1) {
-            $idsValue = $idsValue[0];
-        }
-
-        $query = $this->getEntityManager()->getQuery();
-
-        $seed = $this->getSeed();
-
-        $relDefs = $seed->getRelations();
-
-        if (!$seed->hasRelation($link))
-            return;
-
-        $relationType = $seed->getRelationType($link);
-
-        if ($relationType == 'belongsTo') {
-            $key = $seed->getRelationParam($link, 'key');
-
-            $aliasName = 'usersTeams' . ucfirst($link);
-
-            $result['customJoin'] .= "
-                JOIN team_user AS {$aliasName}Middle ON {$aliasName}Middle.user_id = " . $query->toDb($seed->getEntityType()) . "." . $query->toDb($key) . " AND {$aliasName}Middle.deleted = 0
-                JOIN team AS {$aliasName} ON {$aliasName}.deleted = 0 AND {$aliasName}Middle.team_id = {$aliasName}.id
-            ";
-
-            $result['whereClause'][] = array(
-                $aliasName . 'Middle.teamId' => $idsValue
-            );
-        } else {
-            return;
-        }
-
-        $this->setDistinct(true, $result);
-    }
-
-    public function applyInCategory($link, $value, &$result)
-    {
-        $relDefs = $this->getSeed()->getRelations();
-
-        $query = $this->getEntityManager()->getQuery();
-
-        $tableName = $query->toDb($this->getSeed()->getEntityType());
-
-        if (!empty($relDefs[$link])) {
-            $defs = $relDefs[$link];
-
-            $foreignEntity = $defs['entity'];
-            if (empty($foreignEntity)) {
-                return;
-            }
-
-            $pathName = lcfirst($query->sanitize($foreignEntity . 'Path'));
-
-            if ($defs['type'] == 'manyMany') {
-                if (!empty($defs['midKeys'])) {
-                    $result['distinct'] = true;
-                    $result['joins'][] = $link;
-                    $key = $defs['midKeys'][1];
-
-                    $middleName = $link . 'Middle';
-
-                    $result['customJoin'] .= "
-                        JOIN " . $query->toDb($pathName) . " AS `{$pathName}` ON {$pathName}.descendor_id = " . $query->sanitize($middleName) . "." . $query->toDb($key) . "
-                    ";
-                    $result['whereClause'][$pathName . '.ascendorId'] = $value;
-                }
-            } else if ($defs['type'] == 'belongsTo') {
-                if (!empty($defs['key'])) {
-                    $key = $defs['key'];
-                    $result['customJoin'] .= "
-                        JOIN " . $query->toDb($pathName) . " AS `{$pathName}` ON {$pathName}.descendor_id = {$tableName}." . $query->toDb($key) . "
-                    ";
-                    $result['whereClause'][$pathName . '.ascendorId'] = $value;
-                }
-            }
-        }
     }
 
     protected function q($params, &$result)
@@ -676,7 +570,7 @@ class Base
             $this->addLeftJoin(['assignedUsers', 'assignedUsersAccess'], $result);
             $result['whereClause'][] = [
                 'OR' => [
-                    'teamsAccess.id'         => $this->getUser()->getLinkMultipleIdList('teams'),
+                    'teamsAccess.id' => $this->getUser()->getLinkMultipleIdList('teams'),
                     'assignedUsersAccess.id' => $this->getUser()->id
                 ]
             ];
@@ -722,7 +616,7 @@ class Base
             if ($this->getSeed()->hasAttribute('parentId') && $this->getSeed()->hasRelation('parent')) {
                 $d[] = array(
                     'parentType' => 'Account',
-                    'parentId'   => $accountId
+                    'parentId' => $accountId
                 );
             }
         }
@@ -780,11 +674,6 @@ class Base
         ];
     }
 
-    /**
-     * @param array $result
-     *
-     * @return void
-     */
     protected function boolFilterOnlyArchived(array &$result): void
     {
         $result['whereClause'][] = [
@@ -792,25 +681,16 @@ class Base
         ];
     }
 
-    /**
-     * @param array $result
-     *
-     * @return void
-     */
     protected function boolFilterWithArchived(array &$result): void
     {
         $result['withArchived'] = true;
     }
-    /**
-     * @param array $result
-     *
-     * @return void
-     */
+
     protected function boolFilterOnlyDeleted(array &$result): void
     {
         $result['withDeleted'] = true;
         $result['whereClause'][] = [
-            "deleted" => 1
+            "deleted" => true
         ];
         $result['additionalSelectColumns'][ Util::toCamelCase($this->getEntityType()).".deleted"] = "deleted";
     }
@@ -907,8 +787,8 @@ class Base
         if ($this->metadata->get(['scopes', $this->entityType, 'hasArchive'])) {
             //filter only if boolean filter not activated
             $hasArchivedFilterInWhere = count(array_filter($result['whereClause'], function ($row) {
-                    return isset($row['isArchived=']) || isset($row['isArchived']);
-                })) > 0;
+                return isset($row['isArchived=']) || isset($row['isArchived']);
+            })) > 0;
 
             if (!isset($result['withArchived']) && !$hasArchivedFilterInWhere) {
                 $result['whereClause'][] = [
@@ -945,7 +825,7 @@ class Base
                 $attribute = $w['attribute'];
             }
             if ($attribute) {
-                if (isset($w['type']) && in_array($w['type'], ['isLinked', 'isNotLinked', 'linkedWith', 'notLinkedWith', 'isUserFromTeams'])) {
+                if (isset($w['type']) && in_array($w['type'], ['isLinked', 'isNotLinked', 'linkedWith', 'notLinkedWith'])) {
                     if (in_array($attribute, $this->getAcl()->getScopeForbiddenFieldList($this->getEntityType()))) {
                         throw new Forbidden();
                     }
@@ -959,21 +839,6 @@ class Base
                 $this->checkWhere($w['value']);
             }
         }
-    }
-
-    public function getUserTimeZone()
-    {
-        if (empty($this->userTimeZone)) {
-            $preferences = $this->getEntityManager()->getEntity('Preferences', $this->getUser()->id);
-            if ($preferences) {
-                $timeZone = $preferences->get('timeZone');
-                $this->userTimeZone = $timeZone;
-            } else {
-                $this->userTimeZone = 'UTC';
-            }
-        }
-
-        return $this->userTimeZone;
     }
 
     public function convertDateTimeWhere($item)
@@ -1171,8 +1036,8 @@ class Base
             if (!empty($foreignEntity)) {
                 $sp = $this->createSelectManager($foreignEntity)->getSelectParams(['where' => $item['subQuery']], true, true);
                 $sp['select'] = ['id'];
-                $query = $this->getEntityManager()->getQuery()->createSelectQuery($foreignEntity, $sp);
-                $item['value'] = $this->getEntityManager()->getPDO()->query($query)->fetchAll(\PDO::FETCH_COLUMN);
+                $collection = $this->getEntityManager()->getRepository($foreignEntity)->find($sp);
+                $item['value'] = array_column($collection->toArray(), 'id');
             }
             unset($item['subQuery']);
         }
@@ -1364,7 +1229,7 @@ class Base
                     $dt = new \DateTime();
                     $part['AND'] = [
                         $attribute . '>=' => $dt->modify('first day of this month')->format('Y-m-d'),
-                        $attribute . '<'  => $dt->add(new \DateInterval('P1M'))->format('Y-m-d'),
+                        $attribute . '<' => $dt->add(new \DateInterval('P1M'))->format('Y-m-d'),
                     ];
                     break;
 
@@ -1372,7 +1237,7 @@ class Base
                     $dt = new \DateTime();
                     $part['AND'] = [
                         $attribute . '>=' => $dt->modify('first day of last month')->format('Y-m-d'),
-                        $attribute . '<'  => $dt->add(new \DateInterval('P1M'))->format('Y-m-d'),
+                        $attribute . '<' => $dt->add(new \DateInterval('P1M'))->format('Y-m-d'),
                     ];
                     break;
 
@@ -1380,7 +1245,7 @@ class Base
                     $dt = new \DateTime();
                     $part['AND'] = [
                         $attribute . '>=' => $dt->modify('first day of next month')->format('Y-m-d'),
-                        $attribute . '<'  => $dt->add(new \DateInterval('P1M'))->format('Y-m-d'),
+                        $attribute . '<' => $dt->add(new \DateInterval('P1M'))->format('Y-m-d'),
                     ];
                     break;
 
@@ -1390,7 +1255,7 @@ class Base
                     $dt->modify('first day of January this year');
                     $part['AND'] = [
                         $attribute . '>=' => $dt->add(new \DateInterval('P' . (($quarter - 1) * 3) . 'M'))->format('Y-m-d'),
-                        $attribute . '<'  => $dt->add(new \DateInterval('P3M'))->format('Y-m-d'),
+                        $attribute . '<' => $dt->add(new \DateInterval('P3M'))->format('Y-m-d'),
                     ];
                     break;
 
@@ -1405,7 +1270,7 @@ class Base
                     }
                     $part['AND'] = [
                         $attribute . '>=' => $dt->add(new \DateInterval('P' . (($quarter - 1) * 3) . 'M'))->format('Y-m-d'),
-                        $attribute . '<'  => $dt->add(new \DateInterval('P3M'))->format('Y-m-d'),
+                        $attribute . '<' => $dt->add(new \DateInterval('P3M'))->format('Y-m-d'),
                     ];
                     break;
 
@@ -1413,7 +1278,7 @@ class Base
                     $dt = new \DateTime();
                     $part['AND'] = [
                         $attribute . '>=' => $dt->modify('first day of January this year')->format('Y-m-d'),
-                        $attribute . '<'  => $dt->add(new \DateInterval('P1Y'))->format('Y-m-d'),
+                        $attribute . '<' => $dt->add(new \DateInterval('P1Y'))->format('Y-m-d'),
                     ];
                     break;
 
@@ -1421,7 +1286,7 @@ class Base
                     $dt = new \DateTime();
                     $part['AND'] = [
                         $attribute . '>=' => $dt->modify('first day of January last year')->format('Y-m-d'),
-                        $attribute . '<'  => $dt->add(new \DateInterval('P1Y'))->format('Y-m-d'),
+                        $attribute . '<' => $dt->add(new \DateInterval('P1Y'))->format('Y-m-d'),
                     ];
                     break;
 
@@ -1801,7 +1666,7 @@ class Base
 
     public function setDistinct($distinct, &$result)
     {
-        $result['distinct'] = (bool)$distinct;
+        $result['distinct'] = (bool) $distinct;
     }
 
     public function addAndWhere($whereClause, &$result)
@@ -1816,124 +1681,6 @@ class Base
         );
     }
 
-    public function getFullTextSearchDataForTextFilter($textFilter, $isAuxiliaryUse = false)
-    {
-        if (array_key_exists($textFilter, $this->fullTextSearchDataCacheHash)) {
-            return $this->fullTextSearchDataCacheHash[$textFilter];
-        }
-
-        if ($this->getConfig()->get('fullTextSearchDisabled')) {
-            return null;
-        }
-
-        $result = null;
-
-        $fieldList = $this->getTextFilterFieldList();
-
-        if ($isAuxiliaryUse) {
-            $textFilter = str_replace('%', '', $textFilter);
-        }
-
-        $fullTextSearchColumnList = $this->getEntityManager()->getOrmMetadata()->get($this->getEntityType(), ['fullTextSearchColumnList']);
-
-        $useFullTextSearch = false;
-
-        if (
-            $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'collection', 'fullTextSearch'])
-            &&
-            !empty($fullTextSearchColumnList)
-        ) {
-            $fullTextSearchMinLength = $this->getConfig()->get('fullTextSearchMinLength', self::MIN_LENGTH_FOR_FULL_TEXT_SEARCH);
-            if (!$fullTextSearchMinLength) {
-                $fullTextSearchMinLength = 0;
-            }
-            $textFilterWoWildcards = str_replace('*', '', $textFilter);
-            if (mb_strlen($textFilterWoWildcards) >= $fullTextSearchMinLength) {
-                $useFullTextSearch = true;
-            }
-        }
-
-        $fullTextSearchFieldList = [];
-
-        if ($useFullTextSearch) {
-            foreach ($fieldList as $field) {
-                $defs = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $field], []);
-                if (empty($defs['type']))
-                    continue;
-                $fieldType = $defs['type'];
-                if (!empty($defs['notStorable']))
-                    continue;
-                if (!$this->getMetadata()->get(['fields', $fieldType, 'fullTextSearch']))
-                    continue;
-                $fullTextSearchFieldList[] = $field;
-            }
-            if (!count($fullTextSearchFieldList)) {
-                $useFullTextSearch = false;
-            }
-        }
-
-        if (empty($fullTextSearchColumnList)) {
-            $useFullTextSearch = false;
-        }
-
-        if ($isAuxiliaryUse) {
-            if (mb_strpos($textFilter, '@') !== false) {
-                $useFullTextSearch = false;
-            }
-        }
-
-        if ($useFullTextSearch) {
-            $textFilter = str_replace(['(', ')'], '', $textFilter);
-
-            if (
-                $isAuxiliaryUse && mb_strpos($textFilter, '*') === false
-                ||
-                mb_strpos($textFilter, ' ') === false
-                &&
-                mb_strpos($textFilter, '+') === false
-                &&
-                mb_strpos($textFilter, '-') === false
-                &&
-                mb_strpos($textFilter, '*') === false
-            ) {
-                $function = 'MATCH_NATURAL_LANGUAGE';
-            } else {
-                $function = 'MATCH_BOOLEAN';
-            }
-
-            $textFilter = str_replace('"*', '"', $textFilter);
-            $textFilter = str_replace('*"', '"', $textFilter);
-
-            while (strpos($textFilter, '**')) {
-                $textFilter = str_replace('**', '*', $textFilter);
-                $textFilter = trim($textFilter);
-            }
-
-            while (mb_substr($textFilter, -2) === ' *') {
-                $textFilter = mb_substr($textFilter, 0, mb_strlen($textFilter) - 2);
-                $textFilter = trim($textFilter);
-            }
-
-            $fullTextSearchColumnSanitizedList = [];
-            $query = $this->getEntityManager()->getQuery();
-            foreach ($fullTextSearchColumnList as $i => $field) {
-                $fullTextSearchColumnSanitizedList[$i] = $query->sanitize($query->toDb($field));
-            }
-
-            $where = $function . ':' . implode(',', $fullTextSearchColumnSanitizedList) . ':' . $textFilter;
-
-            $result = [
-                'where'      => $where,
-                'fieldList'  => $fullTextSearchFieldList,
-                'columnList' => $fullTextSearchColumnList
-            ];
-        }
-
-        $this->fullTextSearchDataCacheHash[$textFilter] = $result;
-
-        return $result;
-    }
-
     protected function textFilter($textFilter, &$result)
     {
         $fieldDefs = $this->getSeed()->getAttributes();
@@ -1942,63 +1689,18 @@ class Base
 
         $textFilterContainsMinLength = $this->getConfig()->get('textFilterContainsMinLength', self::MIN_LENGTH_FOR_CONTENT_SEARCH);
 
-        $fullTextSearchData = null;
-
-        $forceFullTextSearch = false;
-
-        $useFullTextSearch = !empty($result['useFullTextSearch']);
-
         if (mb_strpos($textFilter, 'ft:') === 0) {
             $textFilter = mb_substr($textFilter, 3);
-            $useFullTextSearch = true;
-            $forceFullTextSearch = true;
         }
-
-        $textFilterForFullTextSearch = $textFilter;
 
         $skipWidlcards = false;
 
         if (mb_strpos($textFilter, '*') !== false) {
             $skipWidlcards = true;
             $textFilter = str_replace('*', '%', $textFilter);
-        } else {
-            if (!$useFullTextSearch) {
-                $textFilterForFullTextSearch .= ' *';
-            }
-        }
-
-        $textFilterForFullTextSearch = str_replace('%', '*', $textFilterForFullTextSearch);
-
-        $skipFullTextSearch = false;
-        if (!$forceFullTextSearch) {
-            if (mb_strpos($textFilterForFullTextSearch, '*') === 0) {
-                $skipFullTextSearch = true;
-            } else if (mb_strpos($textFilterForFullTextSearch, ' *') !== false) {
-                $skipFullTextSearch = true;
-            }
-        }
-
-        $fullTextSearchData = null;
-        if (!$skipFullTextSearch) {
-            $fullTextSearchData = $this->getFullTextSearchDataForTextFilter($textFilterForFullTextSearch, !$useFullTextSearch);
-        }
-
-        $fullTextGroup = [];
-
-        $fullTextSearchFieldList = [];
-        if ($fullTextSearchData) {
-            $fullTextGroup[] = $fullTextSearchData['where'];
-            $fullTextSearchFieldList = $fullTextSearchData['fieldList'];
         }
 
         foreach ($fieldList as $field) {
-            if ($useFullTextSearch) {
-                if (in_array($field, $fullTextSearchFieldList))
-                    continue;
-            }
-            if ($forceFullTextSearch)
-                continue;
-
             $attributeType = null;
             if (!empty($fieldDefs[$field]['type'])) {
                 $attributeType = $fieldDefs[$field]['type'];
@@ -2031,27 +1733,7 @@ class Base
                 $expression = $textFilter;
             }
 
-            if ($fullTextSearchData) {
-                if (!$useFullTextSearch) {
-                    if (in_array($field, $fullTextSearchFieldList)) {
-                        if (!array_key_exists('OR', $fullTextGroup)) {
-                            $fullTextGroup['OR'] = [];
-                        }
-                        $fullTextGroup['OR'][$field . '*'] = $expression;
-                        continue;
-                    }
-                }
-            }
-
             $group[$field . '*'] = $expression;
-        }
-
-        if (!$forceFullTextSearch) {
-            $this->applyAdditionalToTextFilterGroup($textFilter, $group, $result);
-        }
-
-        if (!empty($fullTextGroup)) {
-            $group['AND'] = $fullTextGroup;
         }
 
         if (count($group) === 0) {
@@ -2063,10 +1745,6 @@ class Base
         $result['whereClause'][] = [
             'OR' => $group
         ];
-    }
-
-    protected function applyAdditionalToTextFilterGroup($textFilter, &$group, &$result)
-    {
     }
 
     public function applyAccess(&$result)
@@ -2208,17 +1886,6 @@ class Base
         $result['whereClause'][] = ['id!=' => $ids];
     }
 
-    protected function filterFollowed(&$result)
-    {
-        $query = $this->getEntityManager()->getQuery();
-        $result['customJoin'] .= "
-            JOIN subscription ON
-                subscription.entity_type = " . $query->quote($this->getEntityType()) . " AND
-                subscription.entity_id = " . $query->toDb($this->getEntityType()) . ".id AND
-                subscription.user_id = " . $query->quote($this->getUser()->id) . "
-        ";
-    }
-
     /**
      * @param string $filterName
      *
@@ -2235,10 +1902,5 @@ class Base
         }
 
         return null;
-    }
-
-    protected function boolFilterFollowed(&$result)
-    {
-        $this->filterFollowed($result);
     }
 }

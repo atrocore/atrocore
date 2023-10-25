@@ -49,6 +49,5 @@
   },
   "filter": true,
   "personalData": true,
-  "textFilter": true,
-  "fullTextSearch": true
+  "textFilter": true
 }

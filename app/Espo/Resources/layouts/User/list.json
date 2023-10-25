@@ -1,6 +1,15 @@
 [
-    {"name":"name","width":30,"link":true},
-    {"name":"userName"},
-    {"name":"emailAddress"},
-    {"name":"isActive", "width":10}
+  {
+    "name": "name",
+    "link": true
+  },
+  {
+    "name": "userName"
+  },
+  {
+    "name": "emailAddress"
+  },
+  {
+    "name": "isActive"
+  }
 ]

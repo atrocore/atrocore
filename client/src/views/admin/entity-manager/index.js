@@ -52,10 +52,6 @@ Espo.define('views/admin/entity-manager/index', 'view', function (Dep) {
                 var scope = $(e.currentTarget).data('scope');
                 this.editEntity(scope);
             },
-            'click [data-action="editFormula"]': function (e) {
-                var scope = $(e.currentTarget).data('scope');
-                this.editFormula(scope);
-            },
             'click button[data-action="createEntity"]': function (e) {
                 this.createEntity();
             },
@@ -169,22 +165,6 @@ Espo.define('views/admin/entity-manager/index', 'view', function (Dep) {
                     }.bind(this), true);
                 }.bind(this), true);
             }.bind(this));
-        },
-
-        editFormula: function (scope) {
-            this.createView('edit', 'views/admin/entity-manager/modals/edit-formula', {
-                scope: scope
-            }, function (view) {
-                view.render();
-
-                this.listenTo(view, 'after:save', function () {
-                    this.clearView('edit');
-                }, this);
-
-                this.listenTo(view, 'close', function () {
-                    this.clearView('edit');
-                }, this);
-            }, this);
         },
 
         updatePageTitle: function () {

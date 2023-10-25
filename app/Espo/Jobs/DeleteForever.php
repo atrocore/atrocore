@@ -35,46 +35,21 @@ declare(strict_types=1);
 
 namespace Espo\Jobs;
 
-use Atro\Core\Container;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\ParameterType;
+use Atro\Core\EventManager\Manager;
+use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\EventManager\Event;
 use Espo\Core\Jobs\Base;
 use Espo\Core\Utils\Util;
-use Espo\ORM\EntityManager;
 
 class DeleteForever extends Base
 {
-    /**
-     * @var string
-     */
-    private $date;
+    private string $date;
 
-    /**
-     * @var string
-     */
-    private $db;
-
-    /**
-     * @inheritDoc
-     */
-    public function __construct(Container $container)
-    {
-        parent::__construct($container);
-
-        $this->db = $this->getConfig()->get('database')['dbname'];
-    }
-
-    /**
-     * Run cron job
-     *
-     * @return bool
-     */
     public function run($data = null, $targetId = null, $targetType = null, $scheduledJobId = null): bool
     {
         $scheduledJob = $this->getEntityManager()->getEntity('ScheduledJob', $scheduledJobId ?? 'DeleteForever');
 
-        if(empty($scheduledJob) ){
+        if (empty($scheduledJob)) {
             return true;
         }
 
@@ -84,23 +59,27 @@ class DeleteForever extends Base
         $this->cleanupAuthLog();
         $this->cleanupActionHistory();
         $this->cleanupNotifications();
-        $this->cleanupDeleted();
         $this->cleanupAttachments();
+        $this->cleanupDeleted();
         $this->cleanupDbSchema();
         $this->cleanupEntityTeam();
 
-        // dispatch an event
-        $this->getContainer()->get('eventManager')->dispatch('DeleteForeverJob', 'run', new Event());
+        $this->getEventManager()->dispatch('DeleteForeverJob', 'run', new Event());
 
         return true;
     }
 
     protected function cleanupEntityTeam()
     {
+        $connection = $this->getEntityManager()->getConnection();
         foreach ($this->getMetadata()->get('entityDefs', []) as $scope => $data) {
-            $table = Util::toUnderScore($scope);
             try {
-                $this->getEntityManager()->nativeQuery("DELETE FROM entity_team WHERE entity_type='$scope' AND entity_id NOT IN (SELECT id FROM $table WHERE deleted=0)");
+                $connection->createQueryBuilder()
+                    ->delete('entity_team')
+                    ->where('entity_type = :entityType AND entity_id NOT IN (SELECT id FROM ' . $connection->quoteIdentifier(Util::toUnderScore($scope)) . ' WHERE deleted=:false)')
+                    ->setParameter('entityType', $scope)
+                    ->setParameter('false', false, Mapper::getParameterType(false))
+                    ->executeQuery();
             } catch (\Throwable $e) {
             }
         }
@@ -111,7 +90,22 @@ class DeleteForever extends Base
      */
     protected function cleanupJobs(): void
     {
-        $this->exec("DELETE FROM job WHERE DATE(execute_time)<'{$this->date}' AND status IN ('Success','Failed')");
+
+        $statuses = ['Success', 'Failed'];
+
+        $connection = $this->getEntityManager()->getConnection();
+        try{
+            $connection->createQueryBuilder()
+                ->delete($connection->quoteIdentifier('job'), 'j')
+                ->where('DATE(j.execute_time) < :executeTime')
+                ->andWhere('j.status IN (:statuses)')
+                ->setParameter('executeTime', $this->date)
+                ->setParameter('statuses', $statuses, Mapper::getParameterType($statuses))
+                ->executeQuery();
+        }catch (\Throwable $e){
+            var_dump($e); die();
+        }
+
     }
 
     /**
@@ -119,7 +113,13 @@ class DeleteForever extends Base
      */
     protected function cleanupScheduledJobLog(): void
     {
-        $this->exec("DELETE FROM scheduled_job_log_record WHERE DATE(execution_time)<'{$this->date}'");
+        $connection = $this->getEntityManager()->getConnection();
+
+        $connection->createQueryBuilder()
+            ->delete($connection->quoteIdentifier('scheduled_job_log_record'), 'j')
+            ->where('DATE(j.execute_time) < :executeTime')
+            ->setParameter('executeTime', $this->date)
+            ->executeQuery();
     }
 
     /**
@@ -127,60 +127,34 @@ class DeleteForever extends Base
      */
     protected function cleanupDeleted(): void
     {
-        $tables = $this->getEntityManager()->nativeQuery('show tables')->fetchAll(\PDO::FETCH_COLUMN);
-        foreach ($tables as $table) {
-            $columns = $this->getEntityManager()->nativeQuery("SHOW COLUMNS FROM {$this->db}.$table")->fetchAll(\PDO::FETCH_COLUMN);
-            if (!in_array('deleted', $columns)) {
-                continue 1;
+        $connection = $this->getEntityManager()->getConnection();
+        foreach ($this->getMetadata()->get(['entityDefs'], []) as $entityType => $entityDefs) {
+            $qb = $connection->createQueryBuilder()
+                ->delete($connection->quoteIdentifier(Util::toUnderScore(lcfirst($entityType))), 't')
+                ->where('DATE(t.modified_at) < :date')
+                ->andWhere('t.deleted = :true')
+                ->setParameter('date', $this->date)
+                ->setParameter('true', true, Mapper::getParameterType(true));
+            try {
+                $qb->executeQuery();
+            } catch (\Throwable $e) {
+                var_dump($e); die();
             }
-            if ($table == 'attachment') {
-                $fileManager = $this->getContainer()->get('fileStorageManager');
-                $repository = $this->getEntityManager()->getRepository('Attachment');
-                $attachments = $repository
-                    ->where([
-                        'deleted' => 1,
-                        'createdAt<=' => $this->date
-                    ])
-                    ->find(["withDeleted" => true]);
-                foreach ($attachments as $entity){
-                    // unlink file
-                    $fileManager->unlink($entity);
-                    // remove record from DB table
-                    $repository->deleteFromDb($entity->get('id'));
-                }
-                continue 1;
-            }
-
-            /** @var Connection $connexion */
-            $connexion = $this->getContainer()->get('connection');
-
-            $query = $connexion->createQueryBuilder()
-                ->delete($connexion->quoteIdentifier($table),'t')
-                ->where('t.deleted = :deleted')
-                ->setParameter('deleted', true, ParameterType::BOOLEAN);
-
-            if(in_array('modified_at',$columns)){
-                $query
-                    ->andWhere('DATE(t.modified_at)= :date')
-                    ->setParameter('date', $this->date);
-            }
-
-            if (!in_array('modified_at', $columns) && in_array('created_at', $columns) ) {
-                $query
-                    ->andWhere('DATE(t.created_at) < :date')
-                    ->setParameter('date', $this->date);
-            }
-
-            $query->executeQuery();
         }
     }
+
 
     /**
      * Cleanup auth log
      */
     protected function cleanupAuthLog(): void
     {
-        $this->exec("DELETE FROM `auth_log_record` WHERE DATE(created_at)<'{$this->date}'");
+        $connection = $this->getEntityManager()->getConnection();
+        $connection->createQueryBuilder()
+            ->delete($connection->quoteIdentifier('auth_log_record'), 't')
+            ->where('DATE(t.created_at) < :date')
+            ->setParameter('date', $this->date)
+            ->executeQuery();
     }
 
     /**
@@ -188,7 +162,12 @@ class DeleteForever extends Base
      */
     protected function cleanupActionHistory(): void
     {
-        $this->exec("DELETE FROM `action_history_record` WHERE DATE(created_at)<'{$this->date}'");
+        $connection = $this->getEntityManager()->getConnection();
+        $connection->createQueryBuilder()
+            ->delete($connection->quoteIdentifier('action_history_record'), 't')
+            ->where('DATE(t.created_at) < :date')
+            ->setParameter('date', $this->date)
+            ->executeQuery();
     }
 
     /**
@@ -196,16 +175,40 @@ class DeleteForever extends Base
      */
     protected function cleanupNotifications(): void
     {
-        $this->exec("DELETE FROM `notification` WHERE DATE(created_at)<'{$this->date}'");
+        $connection = $this->getEntityManager()->getConnection();
+        $connection->createQueryBuilder()
+            ->delete($connection->quoteIdentifier('notification'), 't')
+            ->where('DATE(t.created_at) < :date')
+            ->setParameter('date', $this->date)
+            ->executeQuery();
     }
 
     /**
      * Cleanup attachments
      *
-     * @todo will be developed soon
      */
     protected function cleanupAttachments(): void
     {
+        $connection = $this->getEntityManager()->getConnection();
+        $fileManager = $this->getContainer()->get('fileStorageManager');
+        $repository = $this->getEntityManager()->getRepository('Attachment');
+        $attachments = $repository
+            ->where([
+                'deleted' => 1,
+                'createdAt<=' => $this->date
+            ])
+            ->find(["withDeleted" => true]);
+        foreach ($attachments as $entity){
+            $fileManager->unlink($entity);
+        }
+
+        $connection->createQueryBuilder()
+            ->delete($connection->quoteIdentifier('attachment'), 't')
+            ->where('DATE(t.created_at) < :date')
+            ->andWhere('t.deleted = :deleted')
+            ->setParameter('date', $this->date)
+            ->setParameter('deleted', true,  Mapper::getParameterType(true))
+            ->executeQuery();
     }
 
     /**
@@ -230,9 +233,14 @@ class DeleteForever extends Base
     protected function exec(string $sql): void
     {
         try {
-            $this->getEntityManager()->nativeQuery($sql);
+            $this->getEntityManager()->getPDO()->exec($sql);
         } catch (\PDOException $e) {
             $GLOBALS['log']->error('DeleteForever: ' . $e->getMessage() . ' | ' . $sql);
         }
+    }
+
+    protected function getEventManager(): Manager
+    {
+        return $this->getContainer()->get('eventManager');
     }
 }

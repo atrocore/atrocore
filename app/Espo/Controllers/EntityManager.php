@@ -36,6 +36,7 @@ namespace Espo\Controllers;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Util;
 
 class EntityManager extends \Espo\Core\Controllers\Base
@@ -103,17 +104,10 @@ class EntityManager extends \Espo\Core\Controllers\Base
         if (!empty($data['iconClass'])) {
             $params['iconClass'] = $data['iconClass'];
         }
-        if (isset($data['fullTextSearch'])) {
-            $params['fullTextSearch'] = $data['fullTextSearch'];
-        }
 
         $params['kanbanViewMode'] = !empty($data['kanbanViewMode']);
         if (!empty($data['kanbanStatusIgnoreList'])) {
             $params['kanbanStatusIgnoreList'] = $data['kanbanStatusIgnoreList'];
-        }
-
-        if (!empty($data['fullTextSearch'])) {
-            $this->prepareFullTextSearchFields($name, $data['textFilterFields']);
         }
 
         $additionalFields = array_keys($this->getMetadata()->get(['app', 'additionalEntityParams', 'fields'], []));
@@ -169,13 +163,11 @@ class EntityManager extends \Espo\Core\Controllers\Base
             $data['asc'] = $data['sortDirection'] === 'asc';
         }
 
-        if (!empty($data['fullTextSearch'])) {
-            $this->prepareFullTextSearchFields($name, $data['textFilterFields']);
-        }
-
         if ($this->getMetadata()->get(['scopes', $name, 'type']) === 'Hierarchy' && empty($data['multiParents']) && $this->getMetadata()->get(['scopes', $name, 'multiParents'])) {
             if ($this->getEntityManager()->getRepository($name)->hasMultipleParents()) {
-                throw new BadRequest($this->getContainer()->get('language')->translate('hasMultipleParents', 'exceptions'));
+                /** @var Language $language */
+                $language = $this->getContainer()->get('language');
+                throw new BadRequest($language->translate('hasMultipleParents', 'exceptions'));
             }
         }
 
@@ -381,24 +373,6 @@ class EntityManager extends \Espo\Core\Controllers\Base
         return true;
     }
 
-    public function postActionFormula($params, $data, $request)
-    {
-        if (empty($data->scope)) {
-            throw new BadRequest();
-        }
-        if (!property_exists($data, 'data')) {
-            throw new BadRequest();
-        }
-
-        $formulaData = get_object_vars($data->data);
-
-        $this->getContainer()->get('entityManagerUtil')->setFormulaData($data->scope, $formulaData);
-
-        $this->getContainer()->get('dataManager')->clearCache();
-
-        return true;
-    }
-
     public function postActionResetToDefault($params, $data, $request)
     {
         if (empty($data->scope)) {
@@ -407,45 +381,6 @@ class EntityManager extends \Espo\Core\Controllers\Base
 
         $this->getContainer()->get('entityManagerUtil')->resetToDefaults($data->scope);
         $this->getContainer()->get('dataManager')->clearCache();
-
-        return true;
-    }
-
-    /**
-     * @param string $name
-     * @param array  $fields
-     *
-     * @return bool
-     */
-    protected function prepareFullTextSearchFields(string $name, array $fields): bool
-    {
-        $oldFields = $this->getMetadata()->get(['entityDefs', $name, 'collection', 'textFilterFields'], []);
-
-        if ($oldFields != $fields) {
-            // prepare table name
-            $table = Util::toUnderScore($name);
-
-            // get charset
-            $charset = $this->getConfig()->get('database')['charset'];
-
-            foreach ($fields as $field) {
-                // prepare field
-                $field = Util::toUnderScore($field);
-
-                $fieldType = $this->getMetadata()->get(['entityDefs', $name, 'fields', $field, 'type']);
-                if ($fieldType == 'varchar') {
-                    $maxLength = $this->getMetadata()->get(['entityDefs', $name, 'fields', $field, 'maxLength'], '255');
-                    $fieldType = "varchar({$maxLength})";
-                } else {
-                    $fieldType = 'mediumtext';
-                }
-                $queries[] = "ALTER TABLE {$table} MODIFY COLUMN {$field} {$fieldType} CHARACTER SET {$charset} COLLATE {$charset}_unicode_ci";
-            }
-
-            if (!empty($queries)) {
-                $this->getEntityManager()->getPDO()->exec(implode(';', $queries));
-            }
-        }
 
         return true;
     }

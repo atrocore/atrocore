@@ -55,7 +55,10 @@
     "addOption": "Add option",
     "addMeasureUnit": "Add measure unit",
     "progressLog": "Progress Log",
-    "Roles": "Roles"
+    "Roles": "Roles",
+    "Accounts": "Cuenta",
+    "Contacts": "Contactos",
+    "Addresses": "Direcciones"
   },
   "layouts": {
     "list": "Lista",
@@ -81,7 +84,6 @@
     "foreign": "Clave foránea",
     "duration": "Duración",
     "password": "Contraseña",
-    "personName": "Nombre",
     "autoincrement": "Incremental",
     "bool": "SI / NO",
     "currency": "Moneda",
@@ -109,7 +111,6 @@
     "currencyConverted": "Moneda (convertido)",
     "colorpicker": "Selector de color",
     "int": "Entero",
-    "number": "Número",
     "color": "Color",
     "unit": "Unit",
     "datetime": "Date-Time",
@@ -203,7 +204,10 @@
     "leadCapture": "Puntos de acceso al API para Web-to-Lead.",
     "attachments": "Todos los archivos adjuntos almacenados en el sistema.",
     "composer": "Installation / uninstallation / updating of modules, which is dependency consistent",
-    "unit": "Units of measure settings"
+    "unit": "Units of measure settings",
+    "accounts": "Cuentas de administración",
+    "contacts": "Gestionar contactos",
+    "addresses": "Administrar direcciones"
   },
   "options": {
     "previewSize": {

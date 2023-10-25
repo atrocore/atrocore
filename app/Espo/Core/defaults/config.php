@@ -92,8 +92,8 @@ return [
     'recordsPerPageSmall'                   => 20,
     'lastViewedCount'                       => 20,
     'useCache'                              => true,
-    'applicationName'                       => 'AtroCORE',
-    'outboundEmailFromName'                 => 'AtroCORE',
+    'applicationName'                       => 'AtroPIM',
+    'outboundEmailFromName'                 => 'AtroPIM',
     'attachmentDuplicates'                  => 'notAllowByContentAndName',
     'defaultFileStorage'                    => 'UploadDir',
     'filesPath'                             => 'upload/files/',
@@ -118,7 +118,7 @@ return [
     'theme'                                 => 'TreoDarkTheme',
     'dashboardLayout'                       => [
         (object)[
-            'name'   => 'My AtroCORE',
+            'name'   => 'My AtroPIM',
             'layout' => []
         ]
     ],

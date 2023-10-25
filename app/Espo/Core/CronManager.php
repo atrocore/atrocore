@@ -33,6 +33,7 @@
 
 namespace Espo\Core;
 
+use Doctrine\DBAL\Connection;
 use Espo\Core\Utils\Json;
 use Espo\Core\Exceptions\NotFound;
 use Espo\ORM\Entity;
@@ -146,7 +147,6 @@ class CronManager extends Injectable
 
         foreach ($pendingJobList as $job) {
             $skip = false;
-            $this->getEntityManager()->getPdo()->query('LOCK TABLES `job` WRITE');
             if ($this->getCronJobUtil()->isJobPending($job->id)) {
                 if ($job->get('scheduledJobId')) {
                     if ($this->getCronJobUtil()->isScheduledJobRunning($job->get('scheduledJobId'), $job->get('targetId'), $job->get('targetType'))) {
@@ -158,14 +158,12 @@ class CronManager extends Injectable
             }
 
             if ($skip) {
-                $this->getEntityManager()->getPdo()->query('UNLOCK TABLES');
                 continue;
             }
 
             $job->set('status', self::RUNNING);
             $job->set('pid', $this->getCronJobUtil()->getPid());
             $this->getEntityManager()->saveEntity($job);
-            $this->getEntityManager()->getPdo()->query('UNLOCK TABLES');
 
             $isSuccess = true;
             $skipLog = false;

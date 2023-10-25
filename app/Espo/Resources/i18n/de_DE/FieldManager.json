@@ -81,11 +81,6 @@
     "foreignName": "In der Relation anzuzeigendes Feld."
   },
   "fieldParts": {
-    "personName": {
-      "salutation": "Anrede",
-      "first": "Vorname",
-      "last": "Nachname"
-    },
     "currency": {
       "converted": "(Konvertiert)",
       "currency": "(Währung)"

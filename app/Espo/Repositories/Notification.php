@@ -33,6 +33,8 @@
 
 namespace Espo\Repositories;
 
+use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\Connection;
 use Espo\Core\DataManager;
 use Espo\Core\Htmlizer\Htmlizer;
 use Espo\Core\Mail\Sender;
@@ -55,13 +57,26 @@ class Notification extends RDB
      */
     protected $userIdPortalCacheMap = [];
 
-    public static function refreshNotReadCount(\Pdo $pdo): void
+    public static function refreshNotReadCount(Connection $connection): void
     {
-        $sth = $pdo->prepare("SELECT n.user_id as userId, COUNT(n.id) as total FROM notification AS n WHERE n.read=0 GROUP BY n.user_id");
-        $sth->execute();
-        $data = $sth->fetchAll(\PDO::FETCH_ASSOC);
+        $data = $connection->createQueryBuilder()
+            ->select('n.user_id, COUNT(n.id) as total')
+            ->from('notification', 'n')
+            ->where('n.read = :false')
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->groupBy('n.user_id')
+            ->fetchAllAssociative();
 
         DataManager::pushPublicData('notReadCount', json_encode(array_column($data, 'total', 'userId')));
+    }
+
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        if ($entity->isNew()) {
+            $entity->set('number', time() - (new \DateTime('2023-10-19'))->getTimestamp());
+        }
+
+        parent::beforeSave($entity, $options);
     }
 
     /**
@@ -70,7 +85,7 @@ class Notification extends RDB
      */
     protected function afterSave(Entity $entity, array $options = [])
     {
-        self::refreshNotReadCount($this->getPDO());
+        self::refreshNotReadCount($this->getConnection());
 
         if ($entity->isNew()) {
             $this->createNote($entity);

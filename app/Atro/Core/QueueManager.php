@@ -72,7 +72,7 @@ class QueueManager
                 $dto->setPriority($input[3]);
             }
             if (isset($input[4])) {
-                $dto->setHash($input[3]);
+                $dto->setHash($input[4]);
             }
         }
 
@@ -108,9 +108,6 @@ class QueueManager
         /** @var Repository $repository */
         $repository = $this->getEntityManager()->getRepository('QueueItem');
 
-        // delete old
-        $repository->deleteOldRecords();
-
         /** @var User $user */
         $user = $this->container->get('user');
 
@@ -135,7 +132,9 @@ class QueueManager
             $item->set('md5Hash', $hash);
             $duplicate = $repository->select(['id'])->where(['md5Hash' => $hash, 'status' => ['Pending', 'Running']])->findOne();
             if (!empty($duplicate)) {
-                throw new Duplicate($this->container->get('language')->translate('jobExist', 'exceptions', 'QueueItem'));
+                /** @var \Espo\Core\Utils\Language $language */
+                $language = $this->container->get('language');
+                throw new Duplicate($language->translate('jobExist', 'exceptions', 'QueueItem'));
             }
         }
 

@@ -33,6 +33,7 @@
 
 namespace Espo\Services;
 
+use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\EventManager\Event;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Conflict;
@@ -40,7 +41,6 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Atro\Core\PseudoTransactionManager;
-use Espo\Core\Utils\Database\Schema\Utils as SchemaUtils;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Metadata;
@@ -50,6 +50,7 @@ use Espo\ORM\EntityCollection;
 use Espo\ORM\IEntity;
 use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Utils\Condition\Condition;
+use Atro\Core\Utils\Database\DBAL\Schema\Converter as SchemaConverter;
 
 class Record extends \Espo\Core\Services\Base
 {
@@ -111,10 +112,6 @@ class Record extends \Espo\Core\Services\Base
     protected $forceSelectAllAttributes = false;
 
     protected string $pseudoTransactionId = '';
-
-    protected int $maxMassUpdateCount = 20;
-    protected int $maxMassLinkCount = 20;
-    protected int $maxMassUnlinkCount = 20;
 
     /**
      * @var bool|array
@@ -565,7 +562,7 @@ class Record extends \Espo\Core\Services\Base
                      * Check in metadata indexes
                      */
                     foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'uniqueIndexes'], []) as $indexName => $columns) {
-                        if (SchemaUtils::generateIndexName($indexName) === $keyName) {
+                        if (SchemaConverter::generateIndexName($entity->getEntityType(), $indexName) === $keyName) {
                             throw new BadRequest($this->prepareUniqueMessage($columns));
                         }
                     }
@@ -1314,7 +1311,7 @@ class Record extends \Espo\Core\Services\Base
         }
 
         // skip required field if we are doing massUpdate
-        if (!empty($event->getArgument('massUpdateData'))) {
+        if (property_exists($data, '_isMassUpdate')) {
             $entity->skipValidation('requiredField');
         }
 
@@ -2124,19 +2121,14 @@ class Record extends \Espo\Core\Services\Base
         $selectParams = $this->getRecordService($foreignEntityType)->getSelectParams(['where' => $where]);
         $this->getEntityManager()->getRepository($foreignEntityType)->handleSelectParams($selectParams);
 
-        $query = $this
-            ->getEntityManager()
-            ->getQuery()
-            ->createSelectQuery($foreignEntityType, array_merge($selectParams, ['select' => ['id']]));
+        $collection = $this->getEntityManager()->getRepository($foreignEntityType)->find(array_merge($selectParams, ['select' => ['id']]));
 
-        $foreignIds = $this
-            ->getEntityManager()
-            ->getPDO()
-            ->query($query)
-            ->fetchAll(\PDO::FETCH_COLUMN);
+        $foreignIds = array_column($collection->toArray(), 'id');
+
+        $maxMassLinkCount = $this->getConfig()->get('maxMassLinkCount', 20);
 
         foreach ($foreignIds as $k => $foreignId) {
-            if ($k < $this->maxMassLinkCount) {
+            if ($k < $maxMassLinkCount) {
                 $this->linkEntity($id, $link, $foreignId);
             } else {
                 $this->getPseudoTransactionManager()->pushLinkEntityJob($this->entityType, $id, $link, $foreignId);
@@ -2175,8 +2167,10 @@ class Record extends \Espo\Core\Services\Base
 
         $foreignIds = $entity->getLinkMultipleIdList($link);
 
+        $maxMassUnlinkCount = $this->getConfig()->get('maxMassUnlinkCount', 20);
+
         foreach ($foreignIds as $k => $foreignId) {
-            if ($k < $this->maxMassUnlinkCount) {
+            if ($k < $maxMassUnlinkCount) {
                 $this->unlinkEntity($id, $link, $foreignId);
             } else {
                 $this->getPseudoTransactionManager()->pushUnLinkEntityJob($this->entityType, $id, $link, $foreignId);
@@ -2201,42 +2195,53 @@ class Record extends \Espo\Core\Services\Base
         }
 
         if (array_key_exists('where', $params)) {
+            $repository = $this->getEntityManager()->getRepository($this->getEntityType());
+
             $selectParams = $this->getSelectParams(['where' => $params['where']]);
-            $this->getEntityManager()->getRepository($this->getEntityType())->handleSelectParams($selectParams);
+            $repository->handleSelectParams($selectParams);
 
-            $query = $this
-                ->getEntityManager()
-                ->getQuery()
-                ->createSelectQuery($this->getEntityType(), array_merge($selectParams, ['select' => ['id']]));
+            $collection = $repository->find(array_merge($selectParams, ['select' => ['id']]));
 
-            $ids = $this
-                ->getEntityManager()
-                ->getPDO()
-                ->query($query)
-                ->fetchAll(\PDO::FETCH_COLUMN);
+            $ids = array_column($collection->toArray(), 'id');
         }
 
-        $position = 0;
         $total = count($ids);
+        $maxMassUpdateCount = $this->getConfig()->get('maxMassUpdateCount', 200);
 
-        foreach ($ids as $k => $id) {
-            $cloned = clone $data;
-            $cloned->massUpdateData = [
-                'position' => $position,
-                'total' => $total
-            ];
-
-            if ($k < $this->maxMassUpdateCount) {
+        if ($total <= $maxMassUpdateCount) {
+            foreach ($ids as $id) {
                 try {
-                    $this->updateEntity($id, $cloned);
+                    $this->updateEntity($id, clone $data);
                 } catch (\Throwable $e) {
-                    $GLOBALS['log']->error("Update $this->entityType '$id' failed: {$e->getMessage()}");
+                    $GLOBALS['log']->error("Update {$this->getEntityType()} '$id' failed: {$e->getMessage()}");
                 }
-            } else {
-                $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->entityType, $id, $cloned);
             }
+        } else {
+            $massUpdateChunkSize = $this->getConfig()->get('massUpdateChunkSize', 2000);
+            $position = 0;
+            $chunks = array_chunk($ids, $massUpdateChunkSize);
+            foreach ($chunks as $part => $chunk) {
+                $jobData = [
+                    'entityType' => $this->getEntityType(),
+                    'ids'        => [],
+                    'total'      => $total,
+                    'input'      => clone $data,
+                    'last'       => !isset($chunks[$part + 1])
+                ];
+                foreach ($chunk as $id) {
+                    $jobData['ids'][$id] = $position;
+                    $position++;
+                }
 
-            $position++;
+                $name = $this->getInjection('language')->translate('massUpdate', 'massActions', 'Global') . ': ' . $this->getEntityType();
+                if ($part > 0) {
+                    $name .= " ($part)";
+                }
+
+                $this
+                    ->getInjection('queueManager')
+                    ->push($name, 'MassUpdate', $jobData);
+            }
         }
 
         return $this
@@ -2362,17 +2367,9 @@ class Record extends \Espo\Core\Services\Base
             $selectParams = $this->getSelectParams(['where' => $params['where']]);
             $this->getEntityManager()->getRepository($this->getEntityType())->handleSelectParams($selectParams);
 
-            $query = $this
-                ->getEntityManager()
-                ->getQuery()
-                ->createSelectQuery($this->getEntityType(), array_merge($selectParams, ['select' => ['id']]));
+            $collection = $this->getEntityManager()->getRepository($this->getEntityType())->find(array_merge($selectParams, ['select' => ['id']]));
 
-            $ids = $this
-                ->getEntityManager()
-                ->getPDO()
-                ->query($query)
-                ->fetchAll(\PDO::FETCH_COLUMN);
-
+            $ids = array_column($collection->toArray(), 'id');
         }
 
         foreach ($ids as $id) {
@@ -2412,16 +2409,9 @@ class Record extends \Espo\Core\Services\Base
             $selectParams = $this->getSelectParams(['where' => $params['where']]);
             $this->getEntityManager()->getRepository($this->getEntityType())->handleSelectParams($selectParams);
 
-            $query = $this
-                ->getEntityManager()
-                ->getQuery()
-                ->createSelectQuery($this->getEntityType(), array_merge($selectParams, ['select' => ['id']]));
+            $collection = $this->getEntityManager()->getRepository($this->getEntityType())->find(array_merge($selectParams, ['select' => ['id']]));
 
-            $ids = $this
-                ->getEntityManager()
-                ->getPDO()
-                ->query($query)
-                ->fetchAll(\PDO::FETCH_COLUMN);
+            $ids = array_column($collection->toArray(), 'id');
         }
 
         $streamService = $this->getStreamService();
@@ -2654,23 +2644,26 @@ class Record extends \Espo\Core\Services\Base
 
         $this->beforeMerge($entity, $sourceList, $attributes);
 
-        $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', array());
+        $connection = $this->getEntityManager()->getConnection();
 
-        $pdo = $this->getEntityManager()->getPDO();
+        $types = ['Post', 'EmailSent', 'EmailReceived'];
 
         foreach ($sourceList as $source) {
-            $sql = "
-                UPDATE `note`
-                    SET
-                        `parent_id` = " . $pdo->quote($entity->id) . ",
-                        `parent_type` = " . $pdo->quote($entity->getEntityType()) . "
-                WHERE
-                    `type` IN ('Post', 'EmailSent', 'EmailReceived') AND
-                    `parent_id` = " . $pdo->quote($source->id) . " AND
-                    `parent_type` = ".$pdo->quote($source->getEntityType())." AND
-                    `deleted` = 0
-            ";
-            $pdo->query($sql);
+            $connection->createQueryBuilder()
+                ->update($connection->quoteIdentifier('note'), 'n')
+                ->set('parent_id', ':entityId')
+                ->set('parent_type', ':entityType')
+                ->where('n.type IN (:types)')
+                ->andWhere('n.parent_id = :sourceId')
+                ->andWhere('n.parent_type = :sourceType')
+                ->andWhere('n.deleted = :false')
+                ->setParameter('entityId', $entity->id)
+                ->setParameter('entityType', $entity->getEntityType())
+                ->setParameter('types', $types, Mapper::getParameterType($types))
+                ->setParameter('sourceId', $source->id)
+                ->setParameter('sourceType', $source->getEntityType())
+                ->setParameter('deleted', false, Mapper::getParameterType(false))
+                ->executeQuery();
         }
 
         $mergeLinkList = [];
@@ -2945,7 +2938,7 @@ class Record extends \Espo\Core\Services\Base
         $seed = $this->getEntityManager()->getEntity($this->getEntityType());
 
         if (array_key_exists('select', $params)) {
-            $passedAttributeList = $params['select'];
+            $passedAttributeList = array_map('trim', $params['select']);
         } else {
             $passedAttributeList = null;
         }
@@ -2969,7 +2962,7 @@ class Record extends \Espo\Core\Services\Base
 
             foreach ($passedAttributeList as $attribute) {
                 if (!in_array($attribute, $attributeList) && $seed->hasAttribute($attribute)) {
-                    $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $attribute]);
+                    $fieldDefs = $this->getMetadata()->get(['entityDefs', $seed->getEntityType(), 'fields', $attribute]);
 
                     $attributeList[] = $attribute;
                     if (

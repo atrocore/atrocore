@@ -25,8 +25,14 @@
             "tooltip": true
         },
         "name": {
-            "type": "personName",
-            "view": "views/user/fields/name"
+            "type": "varchar",
+            "view": "treo-core:views/user/fields/name",
+            "trim": true,
+            "required": true
+        },
+        "department": {
+            "type": "varchar",
+            "trim": true
         },
         "password": {
             "type": "password",
@@ -43,11 +49,6 @@
             "notStorable": true,
             "tooltip": true
         },
-        "salutationName": {
-            "type": "enum",
-            "optionsIds": ["", "Mr.", "Ms.", "Mrs.", "Dr."],
-            "options": ["", "Mr.", "Ms.", "Mrs.", "Dr."]
-        },
         "firstName": {
             "type": "varchar",
             "maxLength": 100,
@@ -57,7 +58,7 @@
         "lastName": {
             "type": "varchar",
             "maxLength": 100,
-            "required": true,
+            "required": false,
             "default":"",
             "trim": true
         },

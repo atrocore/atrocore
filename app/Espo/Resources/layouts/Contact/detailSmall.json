@@ -1,0 +1,62 @@
+[
+  {
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        false
+      ],
+      [
+        {
+          "name": "firstName"
+        },
+        {
+          "name": "secondName"
+        }
+      ],
+      [
+        {
+          "name": "title"
+        },
+        {
+          "jobPosition": "city"
+        }
+      ],
+      [
+        {
+          "name": "phone"
+        },
+        {
+          "name": "mobile"
+        }
+      ],
+      [
+        {
+          "name": "email"
+        },
+        {
+          "name": "street"
+        }
+      ],
+      [
+        {
+          "name": "zip"
+        },
+        {
+          "name": "city"
+        }
+      ],
+      [
+        {
+          "name": "country"
+        },
+        {
+          "name": "countryCode"
+        }
+      ]
+    ],
+    "style": "default",
+    "label": "Overview"
+  }
+]

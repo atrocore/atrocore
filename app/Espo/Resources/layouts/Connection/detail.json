@@ -43,6 +43,20 @@
       ],
       [
         {
+          "name": "oauthScope"
+        },
+        false
+      ],
+      [
+        {
+          "name": "vendorOauthUrl"
+        },
+        {
+          "name": "vendorOauthScopes"
+        }
+      ],
+      [
+        {
           "name": "user"
         },
         {

@@ -36,6 +36,7 @@ declare(strict_types=1);
 namespace Espo\Services;
 
 use Atro\Console\AbstractConsole;
+use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\Exceptions;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Language;
@@ -104,15 +105,6 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
                     'isValid'    => ($preparedSystemValue >= $preparedValue || in_array($systemValue, [0, -1]))
                 ];
             }
-
-            // for mysql version
-            $mysqlVersion = self::prepareVersion($this->getMysqlVersion(), true);
-            $result[] = [
-                'name'       => $this->translate('mysqlVersion', 'requirements', 'Installer'),
-                'validValue' => '>= ' . $data['mysqlVersion'],
-                'value'      => $mysqlVersion,
-                'isValid'    => version_compare($mysqlVersion, $data['mysqlVersion'], '>=')
-            ];
         }
 
         return $result;
@@ -320,44 +312,37 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
     {
         // prepare params
         return [
+            'driver'   => (string)$data['driver'],
             'host'     => (string)$data['host'],
             'port'     => isset($data['port']) ? (string)$data['port'] : '',
             'dbname'   => (string)$data['dbname'],
             'user'     => (string)$data['user'],
-            'password' => isset($data['password']) ? (string)$data['password'] : ''
+            'password' => isset($data['password']) ? (string)$data['password'] : '',
+            'charset'  => $data['driver'] === 'pdo_pgsql' ? 'utf8' : 'utf8mb4',
         ];
     }
 
-
-    /**
-     * Check connect to db
-     *
-     * @param array $dbSettings
-     *
-     * @return bool
-     */
-    protected function isConnectToDb(array $dbSettings)
+    protected function isConnectToDb(array $dbSettings): bool
     {
+        $system = str_replace('pdo_', '', $dbSettings['driver']);
+
         $port = !empty($dbSettings['port']) ? '; port=' . $dbSettings['port'] : '';
 
-        $dsn = 'mysql' . ':host=' . $dbSettings['host'] . $port . ';dbname=' . $dbSettings['dbname'] . ';';
+        $dsn = $system . ':host=' . $dbSettings['host'] . $port . ';dbname=' . $dbSettings['dbname'] . ';';
 
-        $this->createDataBaseIfNotExists($dbSettings, $port);
+        try {
+            $this->createDataBaseIfNotExists($system, $dbSettings, $port);
+        } catch (\Throwable $e) {
+        }
 
         new \PDO($dsn, $dbSettings['user'], $dbSettings['password'], [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_WARNING]);
 
         return true;
     }
 
-    /**
-     * Create database if not exists
-     *
-     * @param array  $dbSettings
-     * @param string $port
-     */
-    protected function createDataBaseIfNotExists(array $dbSettings, string $port)
+    protected function createDataBaseIfNotExists(string $system, array $dbSettings, string $port): void
     {
-        $dsn = 'mysql' . ':host=' . $dbSettings['host'] . $port;
+        $dsn = $system . ':host=' . $dbSettings['host'] . $port;
 
         $pdo = new \PDO(
             $dsn,
@@ -366,14 +351,9 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
             [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_WARNING]
         );
 
-        $pdo->exec("CREATE DATABASE IF NOT EXISTS `" . $dbSettings['dbname'] . "`");
+        $pdo->exec("CREATE DATABASE " . $dbSettings['dbname']);
     }
 
-    /**
-     * Get file manager
-     *
-     * @return FileManager
-     */
     protected function getFileManager(): FileManager
     {
         return $this->getContainer()->get('fileManager');
@@ -451,22 +431,6 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
     }
 
     /**
-     * Get mysql version
-     *
-     * @return string|null
-     */
-    protected function getMysqlVersion(): ?string
-    {
-        $sth = $this->getEntityManager()->getPDO()->prepare("SHOW VARIABLES LIKE 'version'");
-        $sth->execute();
-        $res = $sth->fetch(\PDO::FETCH_NUM);
-
-        $version = empty($res[1]) ? null : $res[1];
-
-        return $version;
-    }
-
-    /**
      * Convert to bytes
      *
      * @param string $value
@@ -532,17 +496,30 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
      */
     protected function createSuperAdminUser(string $username, string $password): User
     {
+        $connection = $this->getEntityManager()->getConnection();
+
         // prepare data
         $passwordHash = $this->getPasswordHash()->hash($password);
         $today = (new \DateTime())->format('Y-m-d H:i:s');
 
-        $sql
-            = "INSERT INTO `user` (id, user_name, password, last_name, is_admin, created_at)
-					VALUES ('1', '$username', '$passwordHash', 'Admin', '1', '$today')";
-
-        $pdo = $this->getEntityManager()->getPDO();
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
+        $connection->createQueryBuilder()
+            ->insert($connection->quoteIdentifier('user'))
+            ->setValue('id', ':id')
+            ->setValue($connection->quoteIdentifier('name'), ':name')
+            ->setValue('last_name', ':name')
+            ->setValue('user_name', ':userName')
+            ->setValue('password', ':password')
+            ->setValue('is_admin', ':isAdmin')
+            ->setValue('created_at', ':createdAt')
+            ->setParameters([
+                'id'        => '1',
+                'name'      => 'Admin',
+                'userName'  => $username,
+                'password'  => $passwordHash,
+                'createdAt' => $today
+            ])
+            ->setParameter('isAdmin', true, Mapper::getParameterType(true))
+            ->executeQuery();
 
         return $this->getEntityManager()->getEntity('User', 1);
     }
@@ -591,17 +568,20 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
     }
 
     /**
-     * Remove all existing tables and rub rebuild
+     * Remove all existing tables and run rebuild
      */
     protected function prepareDataBase()
     {
         /** @var array $dbParams */
         $dbParams = $this->getConfig()->get('database');
 
+        $tableSchema = $dbParams['driver'] === 'pdo_pgsql' ? 'public' : $dbParams['dbname'];
+
         // get existing db tables
         $tables = $this
             ->getEntityManager()
-            ->nativeQuery("SELECT table_name FROM information_schema.tables WHERE table_schema='{$dbParams['dbname']}';")
+            ->getPDO()
+            ->query("SELECT table_name FROM information_schema.tables WHERE table_schema='$tableSchema'")
             ->fetchAll(\PDO::FETCH_ASSOC);
 
         // drop all existing tables if it needs
@@ -616,7 +596,7 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
                 }
 
                 if ($tableName) {
-                    $this->getEntityManager()->nativeQuery("DROP TABLE `$tableName`");
+                    $this->getEntityManager()->getPDO()->exec("DROP TABLE " . $this->getEntityManager()->getConnection()->quoteIdentifier($tableName));
                 }
             }
         }
@@ -688,20 +668,71 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
          */
         $file = 'data/after_install_script.php';
         if (file_exists($file)) {
-            include_once $file;
+            if ($this->getConfig()->get('config')->get('database')['driver'] !== 'pdo_pgsql') {
+                include_once $file;
+            }
             unlink($file);
         }
 
-        $this->exec(
-            "INSERT INTO `locale` (id, `name`, `language`, date_format, time_zone, week_start, time_format, thousand_separator, decimal_mark) VALUES ('1', 'Main', 'en_US', 'DD.MM.YYYY', 'UTC', 'monday', 'HH:mm', '.', ',')"
-        );
-        $this->exec(
-            "INSERT INTO scheduled_job (id, `name`, job, `status`, scheduling) VALUES ('ComposerAutoUpdate', 'Automatic system update', 'ComposerAutoUpdate', 'Active', '0 0 * * SUN')"
-        );
+        $connection = $this->getEntityManager()->getConnection();
 
-        $this->exec(
-            "INSERT INTO scheduled_job (id, `name`, job, minimum_age, `status`, scheduling) VALUES ('DeleteForever','Delete data forever','DeleteForever',90,'Active','0 0 1 * *')"
-        );
+        $connection->createQueryBuilder()
+            ->insert($connection->quoteIdentifier('locale'))
+            ->setValue('id', ':id')
+            ->setValue($connection->quoteIdentifier('name'), ':name')
+            ->setValue('language', ':language')
+            ->setValue('date_format', ':dateFormat')
+            ->setValue('time_zone', ':timeZone')
+            ->setValue('week_start', ':weekStart')
+            ->setValue('time_format', ':timeFormat')
+            ->setValue('thousand_separator', ':thousandSeparator')
+            ->setValue('decimal_mark', ':decimalMark')
+            ->setParameters([
+                'id'                => '1',
+                'name'              => 'Main',
+                'language'          => 'en_US',
+                'dateFormat'        => 'DD.MM.YYYY',
+                'timeZone'          => 'UTC',
+                'weekStart'         => 'monday',
+                'timeFormat'        => 'HH:mm',
+                'thousandSeparator' => '.',
+                'decimalMark'       => ',',
+            ])
+            ->executeQuery();
+
+        $connection->createQueryBuilder()
+            ->insert($connection->quoteIdentifier('scheduled_job'))
+            ->setValue('id', ':id')
+            ->setValue($connection->quoteIdentifier('name'), ':name')
+            ->setValue('job', ':job')
+            ->setValue($connection->quoteIdentifier('status'), ':status')
+            ->setValue('scheduling', ':scheduling')
+            ->setParameters([
+                'id'         => 'ComposerAutoUpdate',
+                'name'       => 'Automatic system update',
+                'job'        => 'ComposerAutoUpdate',
+                'status'     => 'Active',
+                'scheduling' => '0 0 * * SUN'
+            ])
+            ->executeQuery();
+
+        $connection->createQueryBuilder()
+            ->insert($connection->quoteIdentifier('scheduled_job'))
+            ->setValue('id', ':id')
+            ->setValue($connection->quoteIdentifier('name'), ':name')
+            ->setValue('job', ':job')
+            ->setValue($connection->quoteIdentifier('status'), ':status')
+            ->setValue('scheduling', ':scheduling')
+            ->setValue('minimum_age', ':minimumAge')
+            ->setParameters([
+                'id'         => 'DeleteForever',
+                'name'       => 'Delete data forever',
+                'job'        => 'DeleteForever',
+                'status'     => 'Active',
+                'scheduling' => '0 0 1 * *',
+                'minimumAge' => 90
+            ])
+            ->executeQuery();
 
         foreach ($this->getModuleManager()->getModulesList() as $name) {
             try {
@@ -730,15 +761,6 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
         // set to config
         $this->getConfig()->set('appId', $appId);
         $this->getConfig()->save();
-    }
-
-    private function exec(string $query): void
-    {
-        try {
-            $this->getContainer()->get('pdo')->exec($query);
-        } catch (\Throwable $e) {
-            $GLOBALS['log']->error("PDO Error: {$e->getMessage()}. For query '$query'");
-        }
     }
 
     /**

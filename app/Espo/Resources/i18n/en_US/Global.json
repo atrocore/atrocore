@@ -406,6 +406,7 @@
     "removePartial": "Remove (Part %s)",
     "addRelation": "Add relation",
     "removeRelation": "Remove relation",
+    "cancel": "Cancel",
     "remove": "Delete",
     "merge": "Merge",
     "massUpdate": "Mass Update",
@@ -450,7 +451,6 @@
     "assignedAccounts": "Accounts",
     "firstName": "First Name",
     "lastName": "Last Name",
-    "salutationName": "Salutation",
     "assignedUser": "Assigned User",
     "assignedUsers": "Assigned Users",
     "emailAddress": "Email",
@@ -635,12 +635,6 @@
     "s": "s"
   },
   "options": {
-    "salutationName": {
-      "Mr.": "Mr.",
-      "Mrs.": "Mrs.",
-      "Ms.": "Ms.",
-      "Dr.": "Dr."
-    },
     "fieldFilter": {
       "allValues": "All Values",
       "filled": "Filled",

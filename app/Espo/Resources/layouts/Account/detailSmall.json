@@ -6,7 +6,9 @@
         {
           "name": "name"
         },
-        false
+        {
+          "name": "type"
+        }
       ],
       [
         {
@@ -21,6 +23,12 @@
         {
           "name": "phoneNumber"
         }
+      ],
+      [
+        {
+          "name": "channel"
+        },
+        false
       ]
     ]
   }
