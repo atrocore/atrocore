@@ -36,6 +36,8 @@ declare(strict_types=1);
 namespace Espo\Jobs;
 
 use Atro\Core\Container;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\EventManager\Event;
 use Espo\Core\Jobs\Base;
 use Espo\Core\Utils\Util;
@@ -127,7 +129,6 @@ class DeleteForever extends Base
     {
         $tables = $this->getEntityManager()->nativeQuery('show tables')->fetchAll(\PDO::FETCH_COLUMN);
         foreach ($tables as $table) {
-
             $columns = $this->getEntityManager()->nativeQuery("SHOW COLUMNS FROM {$this->db}.$table")->fetchAll(\PDO::FETCH_COLUMN);
             if (!in_array('deleted', $columns)) {
                 continue 1;
@@ -154,11 +155,27 @@ class DeleteForever extends Base
             }
 
             if (!in_array('modified_at', $columns) && in_array('created_at', $columns) ) {
-                $this->exec("DELETE FROM {$this->db}.$table WHERE deleted=1 DATE(created_at)<'{$this->date}' ");
+                /** @var Connection $connexion */
+                $connexion = $this->getContainer()->get('connection');
+
+                $connexion->createQueryBuilder()
+                    ->delete($connexion->quoteIdentifier($table),'t')
+                    ->where('DATE(t.created_at) < :date')
+                    ->andWhere('t.deleted = :deleted')
+                    ->setParameter('date', $this->date)
+                    ->setParameter('deleted', true, ParameterType::BOOLEAN)
+                    ->executeQuery();
+
             }
 
             if (!in_array('modified_at', $columns) && !in_array('created_at', $columns) ) {
-                $this->exec("DELETE FROM {$this->db}.$table WHERE deleted=1");
+                /** @var Connection $connexion */
+                $connexion = $this->getContainer()->get('connection');
+                $connexion->createQueryBuilder()
+                    ->delete($connexion->quoteIdentifier($table),'t' )
+                    ->where('t.deleted = :deleted')
+                    ->setParameter('deleted', true, ParameterType::BOOLEAN)
+                    ->executeQuery();
             }
 
         }
