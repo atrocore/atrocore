@@ -193,7 +193,7 @@ class Metadata extends AbstractListener
                         "measureId"          => $fieldDefs['measureId'],
                         "mainField"          => $field,
                         "unitField"          => true,
-                        "required"           => !empty($fieldDefs['required']),
+                        "required"           => false,
                         "audited"            => false,
                         "filterDisabled"     => true,
                         "massUpdateDisabled" => true,

@@ -101,7 +101,6 @@ Espo.define('views/fields/unit-varchar', 'views/fields/varchar', Dep => {
                 data.unitValue = this.model.get(this.unitFieldName);
                 data.unitValueTranslate = this.unitListTranslates[data.unitValue] || data.unitValue;
             }
-
             return data;
         },
 
