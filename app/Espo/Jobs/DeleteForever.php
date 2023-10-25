@@ -59,8 +59,8 @@ class DeleteForever extends Base
         $this->cleanupAuthLog();
         $this->cleanupActionHistory();
         $this->cleanupNotifications();
-        $this->cleanupAttachments();
         $this->cleanupDeleted();
+        $this->cleanupAttachments();
         $this->cleanupDbSchema();
         $this->cleanupEntityTeam();
 
@@ -90,22 +90,17 @@ class DeleteForever extends Base
      */
     protected function cleanupJobs(): void
     {
-
         $statuses = ['Success', 'Failed'];
 
         $connection = $this->getEntityManager()->getConnection();
-        try{
-            $connection->createQueryBuilder()
-                ->delete($connection->quoteIdentifier('job'), 'j')
-                ->where('DATE(j.execute_time) < :executeTime')
-                ->andWhere('j.status IN (:statuses)')
-                ->setParameter('executeTime', $this->date)
-                ->setParameter('statuses', $statuses, Mapper::getParameterType($statuses))
-                ->executeQuery();
-        }catch (\Throwable $e){
-            var_dump($e); die();
-        }
 
+        $connection->createQueryBuilder()
+            ->delete($connection->quoteIdentifier('job'), 'j')
+            ->where('DATE(j.execute_time) < :executeTime')
+            ->andWhere('j.status IN (:statuses)')
+            ->setParameter('executeTime', $this->date)
+            ->setParameter('statuses', $statuses, Mapper::getParameterType($statuses))
+            ->executeQuery();
     }
 
     /**
@@ -138,11 +133,9 @@ class DeleteForever extends Base
             try {
                 $qb->executeQuery();
             } catch (\Throwable $e) {
-                var_dump($e); die();
             }
         }
     }
-
 
     /**
      * Cleanup auth log
@@ -186,29 +179,10 @@ class DeleteForever extends Base
     /**
      * Cleanup attachments
      *
+     * @todo will be developed soon
      */
     protected function cleanupAttachments(): void
     {
-        $connection = $this->getEntityManager()->getConnection();
-        $fileManager = $this->getContainer()->get('fileStorageManager');
-        $repository = $this->getEntityManager()->getRepository('Attachment');
-        $attachments = $repository
-            ->where([
-                'deleted' => 1,
-                'createdAt<=' => $this->date
-            ])
-            ->find(["withDeleted" => true]);
-        foreach ($attachments as $entity){
-            $fileManager->unlink($entity);
-        }
-
-        $connection->createQueryBuilder()
-            ->delete($connection->quoteIdentifier('attachment'), 't')
-            ->where('DATE(t.created_at) < :date')
-            ->andWhere('t.deleted = :deleted')
-            ->setParameter('date', $this->date)
-            ->setParameter('deleted', true,  Mapper::getParameterType(true))
-            ->executeQuery();
     }
 
     /**
