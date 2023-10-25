@@ -150,6 +150,7 @@ class DeleteForever extends Base
                 }
                 continue 1;
             }
+
             if(in_array('modified_at',$columns)){
                 $this->exec("DELETE FROM {$this->db}.$table WHERE deleted=1 AND DATE(modified_at)<'{$this->date}'");
             }
@@ -157,7 +158,6 @@ class DeleteForever extends Base
             if (!in_array('modified_at', $columns) && in_array('created_at', $columns) ) {
                 /** @var Connection $connexion */
                 $connexion = $this->getContainer()->get('connection');
-
                 $connexion->createQueryBuilder()
                     ->delete($connexion->quoteIdentifier($table),'t')
                     ->where('DATE(t.created_at) < :date')
@@ -165,7 +165,6 @@ class DeleteForever extends Base
                     ->setParameter('date', $this->date)
                     ->setParameter('deleted', true, ParameterType::BOOLEAN)
                     ->executeQuery();
-
             }
 
             if (!in_array('modified_at', $columns) && !in_array('created_at', $columns) ) {
@@ -177,7 +176,6 @@ class DeleteForever extends Base
                     ->setParameter('deleted', true, ParameterType::BOOLEAN)
                     ->executeQuery();
             }
-
         }
     }
 
