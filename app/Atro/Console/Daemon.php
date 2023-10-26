@@ -95,7 +95,7 @@ class Daemon extends AbstractConsole
                     $note->set('parentType', 'ModuleManager');
                     $note->set('data', ['status' => ($exitCode == 0) ? 0 : 1, 'output' => file_get_contents($log)]);
                     $note->set('createdById', $user->get('id'));
-                    $em->saveEntity($note, ['skipAll' => true]);
+                    $em->saveEntity($note);
                 } catch (\Throwable $e) {
                     $GLOBALS['log']->error('Creating composer update log failed: ' . $e->getMessage());
                 }
