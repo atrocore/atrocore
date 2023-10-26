@@ -53,7 +53,7 @@ class App extends Base
             ->setValue('service_name', ':serviceName')
             ->setParameters([
                 'id'          => Util::generateId(),
-                'executeTime' => (new \DateTime())->modify('+1 minutes')->format('Y-m-d H:i:s'),
+                'executeTime' => (new \DateTime())->modify('+3 minutes')->format('Y-m-d H:i:s'),
                 'methodName'  => 'rebuild',
                 'serviceName' => 'App'
             ])

@@ -34,6 +34,8 @@ class V1Dot7Dot0 extends Base
         $this->exec("ALTER TABLE notification CHANGE number number INT DEFAULT NULL");
 
         $this->updateComposer('atrocore/core', '^1.7.0');
+
+        $this->rebuildByCronJob();
     }
 
     public function down(): void
