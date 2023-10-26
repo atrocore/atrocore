@@ -236,7 +236,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                     $this->getConnection()
                         ->createQueryBuilder()
                         ->update($this->getConnection()->quoteIdentifier(Util::toUnderScore(lcfirst($linkDefs['entity']))))
-                        ->set('deleted', ':deleted')
+                        ->set('deleted', ':false')
                         ->where(Util::toUnderScore(lcfirst($linkDefs['foreign'])) . '_id = :id')
                         ->setParameter('false', false, Mapper::getParameterType(false))
                         ->setParameter('id', $entity->get('id'))
