@@ -148,7 +148,8 @@ class Mapper implements MapperInterface
 
         $res = $this->select($entity, $params);
         foreach ($res as $row) {
-            return $row[QueryConverter::AGGREGATE_VALUE] ?? 0;
+            $count = $row[QueryConverter::AGGREGATE_VALUE] ?? 0;
+            return (int)$count;
         }
 
         return 0;
