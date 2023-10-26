@@ -45,9 +45,6 @@ use Espo\Entities\User;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 
-/**
- * Class Note
- */
 class Note extends RDB
 {
     /**
@@ -55,16 +52,8 @@ class Note extends RDB
      */
     protected $notificationService = null;
 
-    /**
-     * @param Entity $entity
-     * @param array $options
-     */
     protected function beforeSave(Entity $entity, array $options = [])
     {
-        if ($entity->isNew()) {
-            $entity->set('number', time() - (new \DateTime('2023-10-19'))->getTimestamp());
-        }
-
         if (in_array($entity->get('type'), $this->getMetadata()->get(['app', 'noteTypesWithMention'], []))) {
             $this->addMentionData($entity);
         }
@@ -83,6 +72,15 @@ class Note extends RDB
         }
 
         parent::beforeSave($entity, $options);
+    }
+
+    public function save(Entity $entity, array $options = [])
+    {
+        if ($entity->isNew()) {
+            $entity->set('number', time() - (new \DateTime('2023-10-19'))->getTimestamp());
+        }
+
+        return parent::save($entity, $options);
     }
 
     /**
