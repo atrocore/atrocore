@@ -345,16 +345,16 @@ class RDB extends \Espo\ORM\Repository
 
     public function findRelated(Entity $entity, $relationName, array $params = [])
     {
-        if (!$entity->id) {
-            return [];
-        }
-
         $relationType = $entity->getRelationType($relationName);
 
         if ($relationType === Entity::BELONGS_TO_PARENT) {
             $entityType = $entity->get($relationName . 'Type');
         } else {
             $entityType = $entity->getRelationParam($relationName, 'entity');
+        }
+
+        if (!$entity->id) {
+            return new EntityCollection([], $entityType, $this->entityFactory);
         }
 
         /**
