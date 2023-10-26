@@ -1420,4 +1420,9 @@ class QueryConverter
     {
         return $this->parameters;
     }
+
+    public function getMainTableAlias(): string
+    {
+        return self::TABLE_ALIAS;
+    }
 }
