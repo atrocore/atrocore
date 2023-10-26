@@ -300,7 +300,6 @@ class Mapper implements MapperInterface
     public function countRelated(IEntity $entity, string $relName, array $params): int
     {
         $res = $this->selectRelated($entity, $relName, $params, true);
-        
         return (int)$res;
     }
 
