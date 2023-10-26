@@ -146,23 +146,6 @@ class Attachment extends RDB
         return $result;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function remove(Entity $entity, array $options = [])
-    {
-        $result = parent::remove($entity, $options);
-
-        // unlink file
-        $this->getFileStorageManager()->unlink($entity);
-
-        // remove record from DB table
-        if (!empty($entity->get('id'))) {
-            $this->deleteFromDb($entity->get('id'));
-        }
-
-        return $result;
-    }
 
     /**
      * @inheritDoc

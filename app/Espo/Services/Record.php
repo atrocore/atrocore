@@ -470,7 +470,7 @@ class Record extends \Espo\Core\Services\Base
         }
 
         $attachmentRepository = $this->getEntityManager()->getRepository('Attachment');
-        foreach ($attachmentRepository->where(['id' => $ids])->find() as $attachment) {
+        foreach ($attachmentRepository->where(['id' => $ids])->find(["withDeleted" => count($ids) > 0 ? $collection[0]->get('deleted') : false]) as $attachment) {
             $attachments[$attachment->get('id')] = [
                 'name'      => $attachment->get('name'),
                 'pathsData' => $attachmentRepository->getAttachmentPathsData($attachment),

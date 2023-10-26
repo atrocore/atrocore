@@ -59,8 +59,8 @@ class DeleteForever extends Base
         $this->cleanupAuthLog();
         $this->cleanupActionHistory();
         $this->cleanupNotifications();
-        $this->cleanupDeleted();
         $this->cleanupAttachments();
+        $this->cleanupDeleted();
         $this->cleanupDbSchema();
         $this->cleanupEntityTeam();
 
@@ -179,10 +179,29 @@ class DeleteForever extends Base
     /**
      * Cleanup attachments
      *
-     * @todo will be developed soon
      */
     protected function cleanupAttachments(): void
     {
+        $connection = $this->getEntityManager()->getConnection();
+        $fileManager = $this->getContainer()->get('fileStorageManager');
+        $repository = $this->getEntityManager()->getRepository('Attachment');
+        $attachments = $repository
+            ->where([
+                'deleted' => 1,
+                'createdAt<=' => $this->date
+            ])
+            ->find(["withDeleted" => true]);
+        foreach ($attachments as $entity){
+            $fileManager->unlink($entity);
+        }
+
+        $connection->createQueryBuilder()
+            ->delete($connection->quoteIdentifier('attachment'), 't')
+            ->where('DATE(t.created_at) < :date')
+            ->andWhere('t.deleted = :deleted')
+            ->setParameter('date', $this->date)
+            ->setParameter('deleted', true,  Mapper::getParameterType(true))
+            ->executeQuery();
     }
 
     /**

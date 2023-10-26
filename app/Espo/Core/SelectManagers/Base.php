@@ -33,6 +33,7 @@
 
 namespace Espo\Core\SelectManagers;
 
+use Atro\ORM\DB\RDB\Query\QueryConverter;
 use Espo\Core\Acl;
 use Espo\Core\AclManager;
 use Espo\Core\EventManager\Event;
@@ -691,6 +692,7 @@ class Base
         $result['whereClause'][] = [
             "deleted" => true
         ];
+        $result['additionalSelectColumns'][QueryConverter::TABLE_ALIAS.".deleted"] = "deleted";
     }
 
     /**
