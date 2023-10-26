@@ -146,7 +146,7 @@ class Metadata extends AbstractListener
                 if (!empty($fieldDefs['relationVirtualField'])) {
                     continue;
                 }
-                if (empty($fieldDefs['type']) || !in_array($fieldDefs['type'], ['int', 'float', 'rangeInt', 'rangeFloat'])) {
+                if (empty($fieldDefs['type']) || !in_array($fieldDefs['type'], ['int', 'float', 'rangeInt', 'rangeFloat', 'varchar'])) {
                     continue;
                 }
 
@@ -183,8 +183,8 @@ class Metadata extends AbstractListener
                     $data['clientDefs'][$entityType]['dynamicLogic']['fields'][$unitFieldName]['required'] = $requireLogic;
                 }
 
-                if (in_array($fieldDefs['type'], ['int', 'float'])) {
-                    $virtualFieldName  = 'unit' . ucfirst($field);
+                if (in_array($fieldDefs['type'], ['int', 'float', 'varchar'])) {
+                    $virtualFieldName = 'unit' . ucfirst($field);
                     $data['entityDefs'][$entityType]['fields'][$field]['labelField'] = $virtualFieldName;
                     $data['entityDefs'][$entityType]['fields'][$virtualFieldName] = [
                         "type"               => "varchar",
@@ -193,7 +193,7 @@ class Metadata extends AbstractListener
                         "measureId"          => $fieldDefs['measureId'],
                         "mainField"          => $field,
                         "unitField"          => true,
-                        "required"           => !empty($fieldDefs['required']),
+                        "required"           => false,
                         "audited"            => false,
                         "filterDisabled"     => true,
                         "massUpdateDisabled" => true,
@@ -214,7 +214,7 @@ class Metadata extends AbstractListener
                     $data['entityDefs'][$entityType]['fields'][$field]['unitField'] = true;
                 }
 
-                foreach (in_array($fieldDefs['type'], ['int', 'float']) ? [$field] : [$field . 'From', $field . 'To'] as $v) {
+                foreach (in_array($fieldDefs['type'], ['int', 'float', 'varchar']) ? [$field] : [$field . 'From', $field . 'To'] as $v) {
                     $data['entityDefs'][$entityType]['fields'][$v . 'AllUnits'] = [
                         "type"                      => "jsonObject",
                         "notStorable"               => true,
@@ -327,11 +327,11 @@ class Metadata extends AbstractListener
             if (empty($scopeData['type']) || $scopeData['type'] !== 'Relationship' || empty($data['entityDefs'][$scope]['fields'])) {
                 continue;
             }
-            $linkedFields = array_filter($data['entityDefs'][$scope]['fields'], function($data){
+            $linkedFields = array_filter($data['entityDefs'][$scope]['fields'], function ($data) {
                 return $data['type'] === 'link';
             });
-            if(count($linkedFields) < 2){
-                 continue;
+            if (count($linkedFields) < 2) {
+                continue;
             }
             $linkRelationshipFields = [];
             foreach ($data['entityDefs'][$scope]['fields'] as $field => $fieldDefs) {
@@ -964,6 +964,7 @@ class Metadata extends AbstractListener
 
         return $data;
     }
+
     /**
      * @param array $data
      *
@@ -972,7 +973,7 @@ class Metadata extends AbstractListener
     protected function addOnlyDeletedFilter(array $data): array
     {
         foreach ($data['entityDefs'] as $entity => $row) {
-                $data['clientDefs'][$entity]['boolFilterList'][] = 'onlyDeleted';
+            $data['clientDefs'][$entity]['boolFilterList'][] = 'onlyDeleted';
         }
 
         return $data;
