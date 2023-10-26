@@ -1,6 +1,6 @@
 ![logo](_assets/AtroCore_logo_color_248.png)
 
-## What Is AtroCore?
+## What Is AtroCore? 
 
 AtroCore is an open-source software distributed under GPLv3 License for free.
 
