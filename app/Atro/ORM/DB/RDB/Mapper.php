@@ -549,7 +549,7 @@ class Mapper implements MapperInterface
         }
 
         if (count($setArr) == 0) {
-            return false;
+            return true;
         }
 
         $qb = $this->connection->createQueryBuilder();
