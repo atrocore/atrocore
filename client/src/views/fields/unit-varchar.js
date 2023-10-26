@@ -77,7 +77,13 @@ Espo.define('views/fields/unit-varchar', 'views/fields/varchar', Dep => {
             const data = Dep.prototype.data.call(this);
             data.value = this.model.get(this.originalName)
 
-            if (this.model.get(this.originalName) !== null && typeof this.model.get(this.originalName) !== 'undefined') {
+            if (
+                this.model.get(this.originalName) !== null
+                &&
+                this.model.get(this.originalName) !== ''
+                &&
+                this.model.has(this.originalName)
+            ) {
                 data.isNotEmpty = true;
             }
             data.valueIsSet = this.model.has(this.originalName);
@@ -105,13 +111,10 @@ Espo.define('views/fields/unit-varchar', 'views/fields/varchar', Dep => {
         },
 
         addMeasureDataOnFetch(data) {
-            if (this.measureId) {
-                let $unit = this.$el.find(`[name="${this.unitFieldName}"]`);
-                data[this.unitFieldName] = $unit ? $unit.val() : null;
-                delete data[this.name];
-                $field = this.$el.find(`[name="${this.name}"]`);
-                data[this.originalName] = $field ? $field.val() : null;
-            }
+            let $unit = this.$el.find(`[name="${this.unitFieldName}"]`);
+            data[this.unitFieldName] = $unit ? $unit.val() : null;
+            data[this.originalName] = data[this.name]
+            delete data[this.name];
         },
 
         fetch() {

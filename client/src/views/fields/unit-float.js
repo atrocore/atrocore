@@ -50,14 +50,27 @@ Espo.define('views/fields/unit-float', ['views/fields/float', 'views/fields/unit
         },
 
         data() {
-            return Varchar.prototype.prepareMeasureData.call(this, Varchar.prototype.setDataWithOriginalName.call(this));
+            return Varchar.prototype.prepareMeasureData.call(this, this.setDataWithOriginalName());
+        },
+
+        setDataWithOriginalName() {
+            const data = Dep.prototype.data.call(this);
+            const value = isNaN(this.model.get(this.originalName)) ? null : this.model.get(this.originalName);
+            data.value = Dep.prototype.formatNumber.call(this, value);
+
+            if (this.model.get(this.originalName) !== null && typeof this.model.get(this.originalName) !== 'undefined') {
+                data.isNotEmpty = true;
+            }
+            data.valueIsSet = this.model.has(this.originalName);
+
+            return data
         },
 
         fetch() {
             let data = Dep.prototype.fetch.call(this);
             Varchar.prototype.addMeasureDataOnFetch.call(this, data)
             return data;
-        }
+        },
 
     });
 });
