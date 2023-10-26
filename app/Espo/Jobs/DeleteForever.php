@@ -36,9 +36,12 @@ declare(strict_types=1);
 namespace Espo\Jobs;
 
 use Atro\Core\Container;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\EventManager\Event;
 use Espo\Core\Jobs\Base;
 use Espo\Core\Utils\Util;
+use Espo\ORM\EntityManager;
 
 class DeleteForever extends Base
 {
@@ -126,18 +129,49 @@ class DeleteForever extends Base
     {
         $tables = $this->getEntityManager()->nativeQuery('show tables')->fetchAll(\PDO::FETCH_COLUMN);
         foreach ($tables as $table) {
-            if ($table == 'attachment') {
-                continue 1;
-            }
             $columns = $this->getEntityManager()->nativeQuery("SHOW COLUMNS FROM {$this->db}.$table")->fetchAll(\PDO::FETCH_COLUMN);
             if (!in_array('deleted', $columns)) {
                 continue 1;
             }
-            if (!in_array('modified_at', $columns)) {
-                $this->exec("DELETE FROM {$this->db}.$table WHERE deleted=1");
-            } else {
-                $this->exec("DELETE FROM {$this->db}.$table WHERE deleted=1 AND DATE(modified_at)<'{$this->date}'");
+            if ($table == 'attachment') {
+                $fileManager = $this->getContainer()->get('fileStorageManager');
+                $repository = $this->getEntityManager()->getRepository('Attachment');
+                $attachments = $repository
+                    ->where([
+                        'deleted' => 1,
+                        'createdAt<=' => $this->date
+                    ])
+                    ->find(["withDeleted" => true]);
+                foreach ($attachments as $entity){
+                    // unlink file
+                    $fileManager->unlink($entity);
+                    // remove record from DB table
+                    $repository->deleteFromDb($entity->get('id'));
+                }
+                continue 1;
             }
+
+            /** @var Connection $connexion */
+            $connexion = $this->getContainer()->get('connection');
+
+            $query = $connexion->createQueryBuilder()
+                ->delete($connexion->quoteIdentifier($table),'t')
+                ->where('t.deleted = :deleted')
+                ->setParameter('deleted', true, ParameterType::BOOLEAN);
+
+            if(in_array('modified_at',$columns)){
+                $query
+                    ->andWhere('DATE(t.modified_at)= :date')
+                    ->setParameter('date', $this->date);
+            }
+
+            if (!in_array('modified_at', $columns) && in_array('created_at', $columns) ) {
+                $query
+                    ->andWhere('DATE(t.created_at) < :date')
+                    ->setParameter('date', $this->date);
+            }
+
+            $query->executeQuery();
         }
     }
 

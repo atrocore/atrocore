@@ -517,7 +517,7 @@ abstract class Base
 
         if ($alias) {
             return "JOIN `" . $this->toDb($r['entity']) . "` AS `" . $alias . "` ON ".
-                   $this->toDb($entity->getEntityType()) . "." . $this->toDb($key) . " = " . $alias . "." . $this->toDb($foreignKey);
+                $this->toDb($entity->getEntityType()) . "." . $this->toDb($key) . " = " . $alias . "." . $this->toDb($foreignKey);
         }
     }
 
