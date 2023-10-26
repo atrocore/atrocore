@@ -33,6 +33,23 @@ class V1Dot7Dot0 extends Base
         $this->exec("DROP INDEX UNIQ_BF5476CA96901F54 ON notification");
         $this->exec("ALTER TABLE notification CHANGE number number INT DEFAULT NULL");
 
+        $connection = $this->getSchema()->getConnection();
+
+        $rows = $connection->createQueryBuilder()
+            ->select('u.*')
+            ->from($connection->quoteIdentifier('user'), 'u')
+            ->fetchAllAssociative();
+
+        foreach ($rows as $row) {
+            $connection->createQueryBuilder()
+                ->update($connection->quoteIdentifier('user'), 'u')
+                ->set($connection->quoteIdentifier('name'), ':name')
+                ->where('u.id = :id')
+                ->setParameter('id', $row['id'])
+                ->setParameter('name', trim("{$row['first_name']} {$row['last_name']}"))
+                ->executeQuery();
+        }
+
         $this->updateComposer('atrocore/core', '^1.7.0');
 
         $this->rebuildByCronJob();
