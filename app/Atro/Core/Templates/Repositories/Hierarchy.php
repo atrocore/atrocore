@@ -62,9 +62,9 @@ class Hierarchy extends RDB
         }
     }
 
-    protected function afterRestore($entity, array $options = [])
+    protected function afterRestore($entity)
     {
-        parent::afterRestore($entity, $options);
+        parent::afterRestore($entity);
 
         $this->getConnection()
             ->createQueryBuilder()
