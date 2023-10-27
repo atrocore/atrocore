@@ -129,7 +129,7 @@ class QueryConverter
 
         $whereClause = $params['whereClause'];
         if (empty($whereClause)) {
-            $whereClause = array();
+            $whereClause = [];
         }
 
         if (!$deleted && !(!empty($params['withDeleted']) && $params['withDeleted'] === true)) {
@@ -137,10 +137,11 @@ class QueryConverter
         }
 
         if (empty($params['joins'])) {
-            $params['joins'] = array();
+            $params['joins'] = [];
         }
+
         if (empty($params['leftJoins'])) {
-            $params['leftJoins'] = array();
+            $params['leftJoins'] = [];
         }
 
         $wherePart = $this->getWhere($entity, $whereClause, 'AND', $params);
@@ -201,6 +202,14 @@ class QueryConverter
             if (!empty($joinsRelated)) {
                 $joinsPart = array_merge($joinsPart, $joinsRelated);
             }
+        }
+
+        if (!empty($joinsPart)) {
+            $uniqueJoinsPart = [];
+            foreach ($joinsPart as $join) {
+                $uniqueJoinsPart[md5(json_encode($join))] = $join;
+            }
+            $joinsPart = array_values($uniqueJoinsPart);
         }
 
         if (!empty($params['customJoin'])) {
