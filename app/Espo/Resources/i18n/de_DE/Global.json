@@ -98,6 +98,7 @@
     "inherited": "Vererbt",
     "resetAllToDefault": "Alles auf Standardwerte zurücksetzen",
     "pleaseReloadPage": "Bitte <a href=\"javascript:\" onClick=\"window.location.reload();\">laden</a> Sie die Seite neu, um die Metadaten zu aktualisieren.",
+    "pleaseRebuildDatabase": "Bitte <a href=\"javascript:\" onClick=\"window.location.reload();\">aktualisieren Sie die Datenbankstruktur</a> über die Administration. Das Datenbankschema ist inkonsistent.",
     "youHaveNewNotification": "Sie haben eine neue Benachrichtigung!",
     "youHaveNewNotifications": "Sie haben neue Benachrichtigungen!",
     "Add Group": "Gruppe hinzufügen",
