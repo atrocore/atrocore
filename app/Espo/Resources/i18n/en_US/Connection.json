@@ -13,7 +13,16 @@
     "oauthClientSecret": "OAuth Client Secret",
     "oauthScope": "Oauth Scope",
     "vendorOauthUrl": "Vendor Oauth URL",
-    "vendorOauthScopes": "Vendor Oauth Scopes"
+    "vendorOauthScopes": "Vendor Oauth Scopes",
+    "oauthConsumerKey": "Oauth Consummer Key",
+    "oauthConsumerSecret": "Oauth Consummer Secret",
+    "requestTokenUrl": "Request token url",
+    "accessTokenUrl": "Access Token Url",
+    "oauthVerifier": "Oauth Verifier",
+    "oauthToken": "Access Token",
+    "oauthTokenSecret": "Access Token Secret",
+    "callbackUrl": "Callback Url",
+    "linkUrl": "Link Url"
   },
   "labels": {
     "connectionSuccess": "Connection is successfully established",
@@ -33,7 +42,8 @@
     "returns":  "Returns",
     "products": "Products",
     "receipts": "Receipts",
-    "price-reduction": "Price reduction"
+    "price-reduction": "Price reduction",
+    "oauth1": "Oauth 1.0"
   },
   "exceptions": {
     "sqlsrvMissing": "PHP MSSQL extension is not installed.",

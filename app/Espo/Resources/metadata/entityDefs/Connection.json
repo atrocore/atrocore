@@ -11,6 +11,7 @@
         "ftp",
         "sftp",
         "oauth2",
+        "oauth1",
         "otto"
       ],
       "options": [
@@ -20,6 +21,7 @@
         "ftp",
         "sftp",
         "oauth2",
+        "oauth1",
         "otto"
       ],
       "default": "mysql"
@@ -152,6 +154,70 @@
         "receipts",
         "price-reduction"
       ]
+    },
+    "oauthConsumerKey": {
+      "type": "varchar",
+      "notStorable": true,
+      "dataField": true,
+      "required": false,
+      "trim": true,
+      "readOnly": true
+    },
+    "oauthConsumerSecret": {
+      "type": "varchar",
+      "notStorable": true,
+      "dataField": true,
+      "required": false,
+      "trim": true,
+      "readOnly": true
+    },
+    "requestTokenUrl": {
+      "type": "varchar",
+      "notStorable": true,
+      "dataField": true,
+      "required": false,
+      "trim": true
+    },
+    "accessTokenUrl": {
+      "type": "varchar",
+      "notStorable": true,
+      "dataField": true,
+      "required": false,
+      "trim": true
+    },
+    "oauthVerifier": {
+      "type": "varchar",
+      "notStorable": true,
+      "dataField": true,
+      "required": false,
+      "trim": true,
+      "readOnly": true
+    },
+    "oauthToken": {
+      "type": "varchar",
+      "notStorable": true,
+      "dataField": true,
+      "required": false,
+      "trim": true,
+      "readOnly": true
+    },
+    "oauthTokenSecret": {
+      "type": "password",
+      "notStorable": true,
+      "dataField": true,
+      "required": false,
+      "trim": true,
+      "readOnly": true
+    },
+    "callbackUrl": {
+      "type": "varchar",
+      "notStorable": true,
+      "readOnly": true
+    },
+    "linkUrl": {
+      "type": "varchar",
+      "notStorable": true,
+      "readOnly": true
     },
     "data": {
       "type": "jsonObject",

@@ -36,11 +36,12 @@ namespace Espo\Services;
 use Atro\ConnectionType\ConnectionInterface;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Templates\Services\Base;
+use Atro\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
 
 class Connection extends Base
 {
+    use Oauth1Connection;
     protected $mandatorySelectAttributeList = ['data'];
 
     public function testConnection(string $id): bool
@@ -96,6 +97,12 @@ class Connection extends Base
 
         foreach ($entity->getDataFields() as $name => $value) {
             $entity->set($name, $value);
+        }
+        if($entity->get('type') === 'oauth1'){
+            $callbackUrl  = $this->getConfig()->get('siteUrl') . '?entryPoint=oauth1Callback&connectionId=' . $this->encryptPassword($entity->get('id')).'&type=callback';
+            $linkUrl = $this->getConfig()->get('siteUrl') . '?entryPoint=oauth1Callback&connectionId=' . $this->encryptPassword($entity->get('id')).'&type=link';
+            $entity->set('callbackUrl', $callbackUrl);
+            $entity->set('linkUrl', $linkUrl);
         }
     }
 
