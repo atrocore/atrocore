@@ -60,9 +60,17 @@ class Base
         return $this->pdo;
     }
 
+    protected function rebuild()
+    {
+        App::createRebuildNotification();
+    }
+
+    /**
+     * @deprecated use rebuild instead
+     */
     protected function rebuildByCronJob()
     {
-        App::createRebuildJob($this->getSchema()->getConnection());
+        $this->rebuild();
     }
 
     protected function updateComposer(string $package, string $version): void

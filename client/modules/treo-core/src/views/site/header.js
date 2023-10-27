@@ -34,6 +34,10 @@ Espo.define('treo-core:views/site/header', 'class-replace!treo-core:views/site/h
                         });
                         this.isNeedToReloadPage();
                     }
+
+                    if (response.isNeedToRebuildDatabase){
+                        Espo.Ui.notify(this.translate('pleaseRebuildDatabase'), 'info', 1000 * 60, true);
+                    }
                 });
             }, 1000);
         },

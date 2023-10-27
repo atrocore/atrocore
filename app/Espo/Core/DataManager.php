@@ -226,6 +226,7 @@ class DataManager
             throw new Exceptions\Error("Error while rebuilding database. See log file for details.");
         }
 
+        self::pushPublicData('isNeedToRebuildDatabase', false);
         $this->clearCache();
 
         return $result;

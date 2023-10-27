@@ -113,6 +113,7 @@
     "inherited": "Inherited",
     "resetAllToDefault": "Reset all to Default",
     "pleaseReloadPage": "Please <a href=\"javascript:\" onClick=\"window.location.reload();\">refresh</a> the page to update the metadata.",
+    "pleaseRebuildDatabase": "Please Rebuild database from administration panel. Database schema is inconsistent.",
     "youHaveNewNotification": "You have new notification!",
     "youHaveNewNotifications": "You have new notifications!",
     "status": "Status",

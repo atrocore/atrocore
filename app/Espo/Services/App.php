@@ -36,34 +36,22 @@ declare(strict_types=1);
 namespace Espo\Services;
 
 use Espo\Core\Application;
+use Espo\Core\DataManager;
 use Espo\Core\Services\Base;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Util;
 
 class App extends Base
 {
-    public static function createRebuildJob(\Doctrine\DBAL\Connection $connection): void
+    public static function createRebuildNotification(): void
     {
-        $connection->createQueryBuilder()
-            ->insert($connection->quoteIdentifier('job'))
-            ->setValue('id', ':id')
-            ->setValue('execute_time', ':executeTime')
-            ->setValue('created_at', ':executeTime')
-            ->setValue('method_name', ':methodName')
-            ->setValue('service_name', ':serviceName')
-            ->setParameters([
-                'id'          => Util::generateId(),
-                'executeTime' => (new \DateTime())->modify('+3 minutes')->format('Y-m-d H:i:s'),
-                'methodName'  => 'rebuild',
-                'serviceName' => 'App'
-            ])
-            ->executeQuery();
+        DataManager::pushPublicData('isNeedToRebuildDatabase', true);
     }
 
     public function rebuild($data = null, $targetId = null, $targetType = null): void
     {
         if (Application::isSystemUpdating()) {
-            self::createRebuildJob($this->getInjection('connection'));
+            self::createRebuildNotification();
         } else {
             $this->getInjection('dataManager')->rebuild();
         }

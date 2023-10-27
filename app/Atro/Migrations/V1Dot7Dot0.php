@@ -52,7 +52,7 @@ class V1Dot7Dot0 extends Base
 
         $this->updateComposer('atrocore/core', '^1.7.0');
 
-        $this->rebuildByCronJob();
+        $this->rebuild();
     }
 
     public function down(): void
