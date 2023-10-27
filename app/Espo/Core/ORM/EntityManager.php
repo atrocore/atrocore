@@ -33,6 +33,7 @@
 
 namespace Espo\Core\ORM;
 
+use Doctrine\DBAL\Connection;
 use \Espo\Core\Utils\Util;
 
 class EntityManager extends \Espo\ORM\EntityManager
@@ -55,6 +56,11 @@ class EntityManager extends \Espo\ORM\EntityManager
     public function getContainer()
     {
         return $this->container;
+    }
+
+    public function getConnection(): Connection
+    {
+        return $this->getContainer()->get('connection');
     }
 
     public function setUser($user)
