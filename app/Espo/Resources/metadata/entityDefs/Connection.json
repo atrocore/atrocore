@@ -219,6 +219,14 @@
       "notStorable": true,
       "readOnly": true
     },
+    "storeUrl": {
+      "type": "varchar",
+      "notStorable": true,
+      "dataField": true,
+      "required": false,
+      "trim": true,
+      "readOnly": true
+    },
     "data": {
       "type": "jsonObject",
       "layoutDetailDisabled": true,

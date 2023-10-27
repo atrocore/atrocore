@@ -45,6 +45,7 @@ class Oauth1Callback extends AbstractEntryPoint
         $connection->set('oauthConsumerKey', $_POST['oauth_consumer_key']);
         $connection->set('oauthConsumerSecret', $_POST['oauth_consumer_secret']);
         $connection->set('oauthVerifier', $_POST['oauth_verifier']);
+        $connection->set('storeUrl', $_POST['store_base_url']);
         $this->getEntityManager()->saveEntity($connection);
     }
     
@@ -107,7 +108,7 @@ class Oauth1Callback extends AbstractEntryPoint
             $this->consumerSecret
         );
 
-       return $this->connectionService->buildHeader($parameters);
+       return $this->connectionService->buildAuthorizationHeader($parameters);
     }
 
 
@@ -127,7 +128,7 @@ class Oauth1Callback extends AbstractEntryPoint
             $requestToken['oauth_token_secret']
         );
 
-        return $this->connectionService->buildHeader($authParameters);
+        return $this->connectionService->buildAuthorizationHeader($authParameters);
     }
 
 

@@ -3,6 +3,9 @@
 namespace Espo\Services;
 
 use Espo\Core\Exceptions\BadRequest;
+use Espo\ORM\Entity;
+use OAuth\Common\Http\Uri\UriInterface;
+use OAuth\OAuth1\Token\TokenInterface;
 
 trait Oauth1Connection
 {
@@ -35,16 +38,20 @@ trait Oauth1Connection
 
     public function getSignature($url, array $params, $method = 'POST',$consumerSecret = null, $tokenSecret = null)
     {
+        $dataUri = parse_url($url);
 
-        foreach ($params as $key => $value) {
+        if(!empty($dataUri['query'])){
+            parse_str($dataUri['query'], $queryStringData);
+        }
+
+        foreach (array_merge($queryStringData ?? [], $params) as $key => $value) {
             $signatureData[rawurlencode($key)] = rawurlencode($value);
         }
 
         ksort($signatureData);
         $baseString = strtoupper($method) . '&';
-        $baseString .= rawurlencode($url) . '&';
+        $baseString .= rawurlencode($this->getBaseUri($dataUri)) . '&';
         $baseString .= rawurlencode($this->buildSignatureDataString($signatureData));
-
         return base64_encode($this->hash($baseString, $consumerSecret, $tokenSecret));
     }
 
@@ -54,7 +61,6 @@ trait Oauth1Connection
         $delimiter = '';
         foreach ($signatureData as $key => $value) {
             $signatureString .= $delimiter . $key . '=' . $value;
-
             $delimiter = '&';
         }
 
@@ -126,13 +132,13 @@ trait Oauth1Connection
         curl_close($curl);
 
         if($curlInfo['http_code'] !== 200){
-            throw new BadRequest($response,$curlInfo['http_code']);
+            throw new BadRequest($response." ApiStatusCode: ".$curlInfo['http_code']);
         }
 
         return $this->parseResponseBody($response);
     }
 
-    public function buildHeader($parameters){
+    public function buildAuthorizationHeader($parameters){
         $authorizationHeader = 'OAuth ';
         $delimiter = '';
         foreach ($parameters as $key => $value) {
@@ -141,6 +147,53 @@ trait Oauth1Connection
         }
 
         return $authorizationHeader;
+    }
+
+    protected function buildAuthorizationHeaderForAPIRequest(Entity $connection,$method, $url, $bodyParams = []) : array {
+
+        $authParameters = $this->getBasicAuthorizationHeaderInfo($connection->get('oauthConsumerKey'));
+        if (isset($authParameters['oauth_callback'])) {
+            unset($authParameters['oauth_callback']);
+        }
+
+        $authParameters['oauth_token'] = $connection->get('oauthToken');
+
+        $signatureParams = array_merge($authParameters, $bodyParams) ;
+        $authParameters['oauth_signature'] = $this->getSignature($url, $signatureParams, $method, $connection->get('oauthConsumerSecret'), $connection->get('oauthTokenSecret'));
+
+        if (is_array($bodyParams) && isset($bodyParams['oauth_session_handle'])) {
+            $authParameters['oauth_session_handle'] = $bodyParams['oauth_session_handle'];
+            unset($bodyParams['oauth_session_handle']);
+        }
+
+        return ["Authorization"  => $this->buildAuthorizationHeader($authParameters)];
+    }
+
+    public function apiRequest(Entity  $connection, $method, $url, $bodyParams = []){
+        return $this->request(
+            $method,
+            $url,
+            $this->buildAuthorizationHeaderForAPIRequest($connection, $method, $url, $bodyParams),
+            $bodyParams
+        );
+    }
+
+    private function getBaseUri($data){
+        $baseUri = $data['scheme'] . '//';
+        if(!empty($data['user'])){
+            $baseUri .= $data['user'];
+        }
+        if(!empty($data['pass'])){
+            $baseUri .= ":".$data['pass'] . "@";
+        }
+        $baseUri .= $data['host'];
+        if(!empty($data['port'])){
+            $baseUri .= ":".$data['port'];
+        }
+        if(!empty($data['path'])){
+            $baseUri .= $data['path'];
+        }
+        return $baseUri;
     }
 
 }
