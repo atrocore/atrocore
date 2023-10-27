@@ -268,7 +268,7 @@
     "Erase": "Стерти",
     "Move Over": "Посунути",
     "pleaseReloadPage": "Будь ласка <a href=\"javascript:\" onClick=\"window.location.reload();\">оновіть</a> сторінку, щоб оновити мета-дані.",
-    "pleaseRebuildDatabase": "Будь ласка <a href=\"javascript:\" onClick=\"window.location.reload();\">оновіть структуру БД</a> з Адміністрування. Структура БД не консистентна.",
+    "pleaseRebuildDatabase": "Будь ласка <a href=\"javascript:\" data-action=\"rebuild-notification\">оновіть структуру БД</a> з Адміністрування. Структура БД не консистентна.",
     "youHaveNewNotification": "У Вас нове повідомлення!",
     "youHaveNewNotifications": "У Вас нові повідомлення!",
     "status": "Статус",

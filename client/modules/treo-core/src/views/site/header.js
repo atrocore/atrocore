@@ -16,12 +16,18 @@ Espo.define('treo-core:views/site/header', 'class-replace!treo-core:views/site/h
 
         dataTimestamp: null,
 
+        rebuilding: false,
+
         setup: function () {
             this.navbarView = this.getMetadata().get('app.clientDefs.navbarView') || this.navbarView;
 
             Dep.prototype.setup.call(this);
 
             this.getPublicData();
+
+            $(document).on('click', 'a[data-action="rebuild-notification"]', () => {
+                this.rebuildDb();
+            });
         },
 
         getPublicData() {
@@ -35,7 +41,7 @@ Espo.define('treo-core:views/site/header', 'class-replace!treo-core:views/site/h
                         this.isNeedToReloadPage();
                     }
 
-                    if (response.isNeedToRebuildDatabase){
+                    if (response.isNeedToRebuildDatabase && !this.rebuilding) {
                         Espo.Ui.notify(this.translate('pleaseRebuildDatabase'), 'info', 1000 * 60, true);
                     }
                 });
@@ -51,6 +57,25 @@ Espo.define('treo-core:views/site/header', 'class-replace!treo-core:views/site/h
             }
             this.dataTimestamp = localStorage.getItem(key);
         },
+
+        rebuildDb() {
+            this.rebuilding = true;
+            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+
+            Espo.Ui.confirm(this.translate('rebuildDb', 'messages', 'Admin'), {
+                confirmText: this.translate('Apply'),
+                cancelText: this.translate('Cancel')
+            }, () => {
+                $.ajax({
+                    url: 'Admin/rebuildDb',
+                    type: 'POST',
+                    success: () => {
+                        this.rebuilding = false;
+                        Espo.Ui.success('Success');
+                    }
+                });
+            });
+        }
 
     });
 
