@@ -236,7 +236,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                     $this->getConnection()
                         ->createQueryBuilder()
                         ->update($this->getConnection()->quoteIdentifier(Util::toUnderScore(lcfirst($linkDefs['entity']))))
-                        ->set('deleted', ':deleted')
+                        ->set('deleted', ':false')
                         ->where(Util::toUnderScore(lcfirst($linkDefs['foreign'])) . '_id = :id')
                         ->setParameter('false', false, Mapper::getParameterType(false))
                         ->setParameter('id', $entity->get('id'))
@@ -464,7 +464,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     protected function roundValueUsingAmountOfDigitsAfterComma($value, $amountOfDigitsAfterComma)
     {
-        if(empty($value) || empty($amountOfDigitsAfterComma)){
+        if (empty($value) || empty($amountOfDigitsAfterComma)) {
             return $value;
         }
 
@@ -481,7 +481,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
         $this->validateText($entity, $fieldName, $fieldData);
 
-        if (!empty($fieldData['measureId'])) {
+        if (!empty($fieldData['unitIdField']) && !empty($fieldData['measureId'])) {
             $unit = $this->getEntityManager()->getRepository('Unit')
                 ->where([
                     'id'        => $entity->get($fieldName),
@@ -587,7 +587,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     /**
      * @param Entity $entity
-     * @param array  $options
+     * @param array $options
      */
     protected function beforeSave(Entity $entity, array $options = [])
     {
@@ -609,7 +609,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     /**
      * @param Entity $entity
-     * @param array  $options
+     * @param array $options
      */
     protected function afterSave(Entity $entity, array $options = [])
     {
@@ -697,7 +697,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             $attachment = $this->getEntityManager()->getEntity('Attachment', $entity->get($attribute));
             if (!$attachment || !empty($attachment->get('relatedId'))) continue;
             $attachment->set(array(
-                'relatedId' => $entity->id,
+                'relatedId'   => $entity->id,
                 'relatedType' => $entity->getEntityType()
             ));
             $this->getEntityManager()->saveEntity($attachment);
@@ -720,7 +720,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                             if ($attachment) {
                                 if (!$attachment->get('relatedId')) {
                                     $attachment->set([
-                                        'relatedId' => $entity->id,
+                                        'relatedId'   => $entity->id,
                                         'relatedType' => $entity->getEntityType()
                                     ]);
                                     $this->getEntityManager()->saveEntity($attachment);
@@ -985,10 +985,10 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
      *
      * @param string $action
      * @param Entity $entity
-     * @param array  $options
-     * @param mixed  $arg1
-     * @param mixed  $arg2
-     * @param mixed  $arg3
+     * @param array $options
+     * @param mixed $arg1
+     * @param mixed $arg2
+     * @param mixed $arg3
      */
     private function dispatch(string $action, Entity $entity, $options, $arg1 = null, $arg2 = null, $arg3 = null)
     {
