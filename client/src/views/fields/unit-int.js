@@ -30,94 +30,47 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/fields/unit-int', 'views/fields/int', Dep => {
+Espo.define('views/fields/unit-int', ['views/fields/int', 'views/fields/unit-varchar'], (Dep, Varchar) => {
 
     return Dep.extend({
 
         setup() {
-
             Dep.prototype.setup.call(this);
-            this.prepareOriginalName()
-            this.afterSetup();
-
-        },
-
-
-        afterSetup() {
-
-            if (this.measureId) {
-                this.unitFieldName = this.originalName + 'UnitId';
-                this.loadUnitOptions();
-                if (this.model.isNew() && this.defaultUnit) {
-                    this.model.set(this.unitFieldName, this.defaultUnit);
-                }
-            }
+            Varchar.prototype.prepareOriginalName.call(this);
+            Varchar.prototype.afterSetup.call(this);
         },
 
         init() {
-            this.prepareOptionName();
+            Varchar.prototype.prepareOptionName.call(this);
             Dep.prototype.init.call(this);
         },
 
-        prepareOptionName() {
-            let fieldName = this.options.name || this.options.defs.name;
-            this.options.name = this.getMetadata().get(['entityDefs', this.model.name, 'fields', fieldName, 'mainField']) || fieldName;
-        },
-
         isInheritedField: function () {
-            if (!['detail', 'edit'].includes(this.mode) || !this.model || !this.model.urlRoot || !this.isInheritableField()) {
-                return false;
-            }
-
-            const inheritedFields = this.model.get('inheritedFields');
-         
-            return inheritedFields && Array.isArray(inheritedFields) && inheritedFields.includes(this.originalName) && inheritedFields.includes(this.originalName + 'Unit');
+            return Varchar.prototype.isInheritedField.call(this);
         },
-        setDataWithOriginalName(){
+
+        data() {
+            return Varchar.prototype.prepareMeasureData.call(this, this.setDataWithOriginalName());
+        },
+
+        setDataWithOriginalName() {
             const data = Dep.prototype.data.call(this);
-            data.value = this.model.get(this.originalName)
+            const value = isNaN(this.model.get(this.originalName)) ? null : this.model.get(this.originalName);
+            data.value = Dep.prototype.formatNumber.call(this, value);
 
             if (this.model.get(this.originalName) !== null && typeof this.model.get(this.originalName) !== 'undefined') {
                 data.isNotEmpty = true;
             }
             data.valueIsSet = this.model.has(this.originalName);
-            return data;
-        },
-        data() {
-            return this.prepareMeasureData(this.setDataWithOriginalName());
-        },
-        prepareOriginalName(){
-            this.originalName = this.name;
-            if (this.measureId) {
-                this.name = "unit"+this.originalName.charAt(0).toUpperCase()+this.originalName.slice(1)
-            }
-        },
 
-        prepareMeasureData(data) {
-            if (this.measureId) {
-                data.unitFieldName = this.unitFieldName;
-                data.unitList = this.unitList;
-                data.unitListTranslates = this.unitListTranslates;
-                data.unitValue = this.model.get(this.unitFieldName);
-                data.unitValueTranslate = this.unitListTranslates[data.unitValue] || data.unitValue;
-            }
-
-            return data;
+            return data
         },
 
         fetch() {
             let data = Dep.prototype.fetch.call(this);
-
-            if (this.measureId) {
-                let $unit = this.$el.find(`[name="${this.unitFieldName}"]`);
-                data[this.unitFieldName] = $unit ? $unit.val() : null;
-                delete data[this.name];
-                $field = this.$el.find(`[name="${this.name}"]`);
-                data[this.originalName] = $field ? $field.val() : null;
-            }
-
+            Varchar.prototype.addMeasureDataOnFetch.call(this, data)
             return data;
-        },
+        }
 
     });
 });
