@@ -24,20 +24,21 @@ class Oauth1Callback extends AbstractEntryPoint
         if (empty($_GET['connectionId'])) {
             throw new BadRequest();
         }
-        $this->connectionService = $this->getServiceFactory()->create('Connection');
 
         $type = $_GET['type'];
+        $this->connectionService = $this->getServiceFactory()->create('Connection');
         $connectionId = $this->connectionService->decryptPassword($_GET['connectionId']);
         $connection = $this->getEntityManager()->getEntity('Connection', $connectionId);
+
         if (empty($connection) || $connection->get('type') !== 'oauth1') {
             throw new BadRequest();
         }
+
         if ($type === 'callback') {
             $this->runCallback($connection);
         } else {
             $this->runTokenExchange($connection);
         }
-
 
     }
 
@@ -52,7 +53,6 @@ class Oauth1Callback extends AbstractEntryPoint
 
     private function runTokenExchange(Entity $connection)
     {
-        $callback = $_GET['success_call_back'];
         $consumerKey = $_GET['oauth_consumer_key'] ?? $_GET['?oauth_consumer_key'];
 
         $this->requestTokenUrl = $connection->get('requestTokenUrl');
@@ -65,13 +65,12 @@ class Oauth1Callback extends AbstractEntryPoint
         }
 
         $requestToken = $this->requestRequestToken();
-
         $accessToken = $this->requestAccessToken($connection->get('oauthVerifier'), $requestToken);
 
         $connection->set('oauthToken', $accessToken['oauth_token']);
         $connection->set('oauthTokenSecret', $this->connectionService->encryptPassword($accessToken['oauth_token_secret']));
-        $this->getEntityManager()->saveEntity($connection);
 
+        $this->getEntityManager()->saveEntity($connection);
     }
 
     public function requestRequestToken()
