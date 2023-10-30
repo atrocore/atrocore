@@ -29,7 +29,7 @@ class ConnectionCookie extends AbstractConnection
         $payload = json_decode($payload, true);
 
         if (empty($payload)) {
-            throw new BadRequest(sprintf($this->exception('invalidJson'), 'Connection failed.'));
+            throw new BadRequest(sprintf($this->exception('connectionFailed'), 'Invalid Json payload.'));
         }
 
         return $payload;
