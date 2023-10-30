@@ -21,7 +21,7 @@ class Oauth1Callback extends AbstractEntryPoint
 
     public function run()
     {
-        if (empty($_GET['connectionId']) ) {
+        if (empty($_GET['connectionId'])) {
             throw new BadRequest();
         }
         $this->connectionService = $this->getServiceFactory()->create('Connection');
@@ -32,38 +32,41 @@ class Oauth1Callback extends AbstractEntryPoint
         if (empty($connection) || $connection->get('type') !== 'oauth1') {
             throw new BadRequest();
         }
-        if($type === 'callback'){
+        if ($type === 'callback') {
             $this->runCallback($connection);
-        }else{
+        } else {
             $this->runTokenExchange($connection);
         }
-       
+
 
     }
 
-    private function runCallback(Entity $connection){
+    private function runCallback(Entity $connection)
+    {
         $connection->set('oauthConsumerKey', $_POST['oauth_consumer_key']);
         $connection->set('oauthConsumerSecret', $_POST['oauth_consumer_secret']);
         $connection->set('oauthVerifier', $_POST['oauth_verifier']);
         $connection->set('storeUrl', $_POST['store_base_url']);
         $this->getEntityManager()->saveEntity($connection);
     }
-    
-    private function runTokenExchange(Entity $connection){
+
+    private function runTokenExchange(Entity $connection)
+    {
         $callback = $_GET['success_call_back'];
         $consumerKey = $_GET['oauth_consumer_key'] ?? $_GET['?oauth_consumer_key'];
 
         $this->requestTokenUrl = $connection->get('requestTokenUrl');
         $this->accessTokenUrl = $connection->get('accessTokenUrl');
         $this->consumerKey = $connection->get('oauthConsumerKey');
-        $this->consumerSecret =  $connection->get('oauthConsumerSecret');
+        $this->consumerSecret = $connection->get('oauthConsumerSecret');
 
-        if($consumerKey !== $this->consumerKey){
-            throw  new BadRequest("Mismatch of consumerKey send in callback and link url, please check again",400);
+        if ($consumerKey !== $this->consumerKey) {
+            throw  new BadRequest("Mismatch of consumerKey send in callback and link url, please check again", 400);
         }
 
-        $requestToken =   $this->requestRequestToken();
-        $accessToken = $this->requestAccessToken($connection->get('oauthVerifier'),$requestToken);
+        $requestToken = $this->requestRequestToken();
+
+        $accessToken = $this->requestAccessToken($connection->get('oauthVerifier'), $requestToken);
 
         $connection->set('oauthToken', $accessToken['oauth_token']);
         $connection->set('oauthTokenSecret', $this->connectionService->encryptPassword($accessToken['oauth_token_secret']));
@@ -73,8 +76,9 @@ class Oauth1Callback extends AbstractEntryPoint
 
     public function requestRequestToken()
     {
+
         $headers = ['Authorization' => $this->buildAuthorizationHeaderForTokenRequest()];
-        $requestToken = $this->connectionService->request('POST',$this->requestTokenUrl, $headers);
+        $requestToken = $this->connectionService->request('POST', $this->requestTokenUrl, $headers);
 
         return $requestToken;
     }
@@ -92,7 +96,7 @@ class Oauth1Callback extends AbstractEntryPoint
                 $bodyParams
             )
         ];
-        $token = $this->connectionService->request('POST',$this->accessTokenUrl, $headers, $bodyParams);
+        $token = $this->connectionService->request('POST', $this->accessTokenUrl, $headers, $bodyParams);
 
         return $token;
     }
@@ -100,7 +104,6 @@ class Oauth1Callback extends AbstractEntryPoint
     protected function buildAuthorizationHeaderForTokenRequest()
     {
         $parameters = $this->connectionService->getBasicAuthorizationHeaderInfo($this->consumerKey);
-
         $parameters['oauth_signature'] = $this->connectionService->getSignature(
             $this->requestTokenUrl,
             $parameters,
@@ -108,7 +111,7 @@ class Oauth1Callback extends AbstractEntryPoint
             $this->consumerSecret
         );
 
-       return $this->connectionService->buildAuthorizationHeader($parameters);
+        return $this->connectionService->buildAuthorizationHeader($parameters);
     }
 
 
@@ -116,7 +119,7 @@ class Oauth1Callback extends AbstractEntryPoint
     {
         $authParameters = $this->connectionService->getBasicAuthorizationHeaderInfo($this->consumerKey);
         $authParameters['oauth_token'] = $requestToken['oauth_token'];
-        if(!empty($bodyParams['oauth_verifier'])){
+        if (!empty($bodyParams['oauth_verifier'])) {
             $authParameters['oauth_verifier'] = $bodyParams['oauth_verifier'];
         }
         $signatureParams = (is_array($bodyParams)) ? array_merge($authParameters, $bodyParams) : $authParameters;
@@ -130,7 +133,6 @@ class Oauth1Callback extends AbstractEntryPoint
 
         return $this->connectionService->buildAuthorizationHeader($authParameters);
     }
-
 
 
 }

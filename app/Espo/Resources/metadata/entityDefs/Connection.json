@@ -175,14 +175,14 @@
       "type": "varchar",
       "notStorable": true,
       "dataField": true,
-      "required": false,
+      "required": true,
       "trim": true
     },
     "accessTokenUrl": {
       "type": "varchar",
       "notStorable": true,
       "dataField": true,
-      "required": false,
+      "required": true,
       "trim": true
     },
     "oauthVerifier": {
@@ -199,7 +199,7 @@
       "dataField": true,
       "required": false,
       "trim": true,
-      "readOnly": true
+      "readOnly": false
     },
     "oauthTokenSecret": {
       "type": "password",
@@ -207,7 +207,7 @@
       "dataField": true,
       "required": false,
       "trim": true,
-      "readOnly": true
+      "readOnly": false
     },
     "callbackUrl": {
       "type": "varchar",
@@ -226,6 +226,14 @@
       "required": false,
       "trim": true,
       "readOnly": true
+    },
+    "apiTestUrl": {
+      "type": "varchar",
+      "notStorable": true,
+      "dataField": true,
+      "required": true,
+      "trim": true,
+      "default": "https://staging.davidsonsinc.com/rest/V1/products/011418204"
     },
     "data": {
       "type": "jsonObject",

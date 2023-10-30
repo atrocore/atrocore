@@ -14,26 +14,36 @@ class ConnectionOauth1 extends AbstractConnection
         if (empty($connection->get('oauthToken')) || empty($connection->get('oauthTokenSecret')) || empty($connection->get('storeUrl'))) {
             throw new BadRequest(sprintf($this->exception('connectionFailed'), 'You should authorize this connection on the provider using the callback and link urls below'));
         }
+
+        $url = $connection->get('apiTestUrl');
+
         /** @var Connection $connectionService */
         $connectionService = $this->container->get('serviceFactory')->create('Connection');
-        $criteria = [
-            'searchCriteria' => [
-                'filterGroups' => [
-                    [
-                        'filters' => [
-                            [
-                                'field' => 'name',
-                                'value' => '%a%',
-                                'condition_type' => 'like'
-                            ]
-                        ]
-                    ]
-                ]
-            ]
-        ];
-        $url = $connection->get('storeUrl') . "rest/V1/products/?".http_build_query($criteria);
-        $data = $connectionService->apiRequest($connection, 'GET', $url);
-        var_dump($data);
+        $authorization = $connectionService->buildAuthorizationHeaderForAPIRequest($connection, 'GET', $url);
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_HTTPHEADER => [
+                'Authorization: ' . $authorization,
+                'Accept: application/json',
+            ],
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        echo $response;
+
 
     }
 }

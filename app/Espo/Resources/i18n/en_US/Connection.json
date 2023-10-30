@@ -22,7 +22,8 @@
     "oauthToken": "Access Token",
     "oauthTokenSecret": "Access Token Secret",
     "callbackUrl": "Callback Url",
-    "linkUrl": "Link Url"
+    "linkUrl": "Link Url",
+    "apiTestUrl": "Test api url"
   },
   "labels": {
     "connectionSuccess": "Connection is successfully established",
