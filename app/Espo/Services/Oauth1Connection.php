@@ -117,9 +117,9 @@ trait Oauth1Connection
     public function request($method, string $url, array $headers, array $bodyParams = [])
     {
         $curlHeader = ['Content-Type: application/x-www-form-urlencoded'];
-//        foreach ($headers as $key => $header) {
-//            $curlHeader[] = "$key: $header";
-//        }
+        foreach ($headers as $key => $header) {
+            $curlHeader[] = "$key: $header";
+        }
 
         $curl = curl_init();
         $options = [
@@ -149,9 +149,9 @@ trait Oauth1Connection
         return $this->parseResponseBody($response, $curlInfo);
     }
 
-    public function buildAuthorizationHeader($parameters)
+    public function buildAuthorizationHeader($parameters, $withTokenType = true)
     {
-        $authorizationHeader = 'OAuth ';
+        $authorizationHeader = $withTokenType ? 'OAuth ' : '';
         $delimiter = '';
         foreach ($parameters as $key => $value) {
             $authorizationHeader .= $delimiter . rawurlencode($key) . '="' . rawurlencode($value) . '"';
@@ -170,7 +170,7 @@ trait Oauth1Connection
 
         $authParameters['oauth_signature'] = $this->getSignature($url, $authParameters, $method, $connection->get('oauthConsumerSecret'), $this->decryptPassword($connection->get('oauthTokenSecret')));
 
-        return $this->buildAuthorizationHeader($authParameters);
+        return $this->buildAuthorizationHeader($authParameters, false);
     }
 
 
