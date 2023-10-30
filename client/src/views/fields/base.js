@@ -863,7 +863,6 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                     nameField += Espo.Utils.hyphenToUpperCamelCase(lang.replaceAll('_', '-').toLowerCase())
                 }
                 this.getMeasureUnits(this.measureId).forEach(unit => {
-                    console.log('lang', lang, nameField, unit)
                     this.unitList.push(unit.id);
                     this.unitListTranslates[unit.id] = unit[nameField] || unit.name;
                 });
