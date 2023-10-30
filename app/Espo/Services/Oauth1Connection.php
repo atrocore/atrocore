@@ -182,7 +182,6 @@ trait Oauth1Connection
         return $this->buildAuthorizationHeader($authParameters, false);
     }
 
-
     private function getBaseUri($data)
     {
         $baseUri = $data['scheme'] . '://';
