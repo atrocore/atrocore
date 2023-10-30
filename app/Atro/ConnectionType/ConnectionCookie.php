@@ -49,8 +49,12 @@ class ConnectionCookie extends AbstractConnection
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         $response = curl_exec($ch);
+        if ($response === false) {
+            $message = curl_error($ch);
+        }
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
+
 
         if (!empty($response) && $httpCode == 200) {
             $cookies = $this->extractCookiesFromResponse($response);
@@ -61,7 +65,8 @@ class ConnectionCookie extends AbstractConnection
             }
         }
 
-        throw new BadRequest(sprintf($this->exception('connectionFailed'), 'Connection failed.'));
+
+        throw new BadRequest(sprintf($this->exception('connectionFailed'), $message ?? 'Connection failed.'));
     }
 
     public function extractCookiesFromResponse(string $result): string
