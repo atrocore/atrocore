@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core\Templates\Repositories;
 
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\ORM\Repositories\RDB;
 use Espo\ORM\Entity;
@@ -181,15 +182,11 @@ class Relationship extends RDB
     {
         try {
             $result = parent::remove($entity, $options);
-        } catch (\Throwable $e) {
-            // delete duplicate
-            if ($e instanceof \PDOException && strpos($e->getMessage(), '1062') !== false) {
-                if (!empty($toDelete = $this->getDuplicateEntity($entity, true))) {
-                    $this->deleteFromDb($toDelete->get('id'));
-                }
-                return parent::remove($entity, $options);
+        } catch (UniqueConstraintViolationException $e) {
+            if (!empty($toDelete = $this->getDuplicateEntity($entity, true))) {
+                $this->deleteFromDb($toDelete->get('id'));
             }
-            throw $e;
+            return parent::remove($entity, $options);
         }
 
         return $result;

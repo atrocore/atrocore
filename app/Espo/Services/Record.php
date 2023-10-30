@@ -34,6 +34,7 @@
 namespace Espo\Services;
 
 use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Espo\Core\EventManager\Event;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Conflict;
@@ -50,7 +51,6 @@ use Espo\ORM\EntityCollection;
 use Espo\ORM\IEntity;
 use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Utils\Condition\Condition;
-use Atro\Core\Utils\Database\DBAL\Schema\Converter as SchemaConverter;
 
 class Record extends \Espo\Core\Services\Base
 {
@@ -545,41 +545,41 @@ class Record extends \Espo\Core\Services\Base
 
     protected function storeEntity(Entity $entity)
     {
-        $result = null;
-
         try {
             $result = $this->getRepository()->save($entity, $this->getDefaultRepositoryOptions());
-        } catch (\PDOException $e) {
-            if (!empty($e->errorInfo[1]) && $e->errorInfo[1] == 1062) {
-                $message = $e->getMessage();
-                $tableName = Util::toUnderScore($entity->getEntityType());
-
-                if (preg_match("/SQLSTATE\[23000\]: Integrity constraint violation: 1062 Duplicate entry '(.*)' for key '(.*)'/", $message, $matches) && !empty($matches[2])) {
-                    $keyNameParts = explode('.', $matches[2]);
-                    $keyName = array_pop($keyNameParts);
-
-                    /**
-                     * Check in metadata indexes
-                     */
-                    foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'uniqueIndexes'], []) as $indexName => $columns) {
-                        if (SchemaConverter::generateIndexName($entity->getEntityType(), $indexName) === $keyName) {
-                            throw new BadRequest($this->prepareUniqueMessage($columns));
-                        }
-                    }
-
-                    $data = $this
-                        ->getEntityManager()
-                        ->getPDO()
-                        ->query("SHOW INDEX FROM $tableName WHERE Key_name = '$keyName' AND Seq_in_index = 1")
-                        ->fetch(\PDO::FETCH_ASSOC);
-
-                    if (!empty($data['Column_name'])) {
-                        throw new BadRequest($this->prepareUniqueMessage([$data['Column_name']]));
-                    }
+        } catch (UniqueConstraintViolationException $e) {
+            // find duplicate via fields
+            foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []) as $field => $fieldDefs) {
+                if (empty($fieldDefs['unique']) || $entity->get($field) === null) {
+                    continue;
+                }
+                $duplicate = $this->getRepository()->where([$field => $entity->get($field), 'id!=' => $entity->get('id')])->findOne();
+                if (!empty($duplicate)) {
+                    throw new BadRequest($this->prepareUniqueMessage([Util::toUnderScore($field)]));
                 }
             }
 
-            throw $e;
+            // find duplicate via indexes
+            foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'uniqueIndexes'], []) as $columns) {
+                $where = ['id!=' => $entity->get('id')];
+                foreach ($columns as $column) {
+                    if ($column === 'deleted') {
+                        continue;
+                    }
+                    $field = Util::toCamelCase($column);
+                    if ($entity->get($field) === null) {
+                        continue;
+                    }
+                    $where[$field] = $entity->get($field);
+                }
+
+                $duplicate = $this->getRepository()->where($where)->findOne();
+                if (!empty($duplicate)) {
+                    throw new BadRequest($this->prepareUniqueMessage($columns));
+                }
+            }
+
+            throw new $e;
         }
 
         return $result;
