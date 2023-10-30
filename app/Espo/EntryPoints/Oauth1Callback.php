@@ -69,13 +69,11 @@ class Oauth1Callback extends AbstractEntryPoint
 
         $connection->set('oauthToken', $accessToken['oauth_token']);
         $connection->set('oauthTokenSecret', $this->connectionService->encryptPassword($accessToken['oauth_token_secret']));
-
         $this->getEntityManager()->saveEntity($connection);
     }
 
     public function requestRequestToken()
     {
-
         $headers = ['Authorization' => $this->buildAuthorizationHeaderForTokenRequest()];
         $requestToken = $this->connectionService->request('POST', $this->requestTokenUrl, $headers);
 
