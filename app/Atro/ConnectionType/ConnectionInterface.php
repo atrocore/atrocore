@@ -23,4 +23,6 @@ interface ConnectionInterface
      * @return mixed
      */
     public function connect(Entity $connection);
+
+    public function getHeaders(array $connectionData);
 }
