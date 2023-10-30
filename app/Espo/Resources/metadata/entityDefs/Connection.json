@@ -27,7 +27,9 @@
       "default": "mysql"
     },
     "payload": {
-      "type": "jsonObject",
+      "type": "text",
+      "view": "views/fields/script",
+      "default": "{# { \"Username\": \"{{ username }}\\n Password: {{ password }}\" } #}",
       "notStorable": true,
       "dataField": true,
       "required": false

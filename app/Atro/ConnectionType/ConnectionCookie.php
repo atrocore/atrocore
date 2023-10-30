@@ -13,14 +13,31 @@ declare(strict_types=1);
 
 namespace Atro\ConnectionType;
 
+use Atro\Core\Twig\Twig;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
 class ConnectionCookie extends AbstractConnection
 {
-    public function connect(Entity $connection)
+    public function buildBody(Entity $connection): array
     {
-        $body = $connection->get('payload');
+        $payload = $this->getTwig()->renderTemplate($connection->get('payload'), [
+            'username' => $connection->get('user'),
+            'password' => $this->decryptPassword($connection->get('password')),
+        ]);
+
+        $payload = json_decode($payload, true);
+
+        if (empty($payload)) {
+            throw new BadRequest(sprintf($this->exception('invalidJson'), 'Connection failed.'));
+        }
+
+        return $payload;
+    }
+
+    public function connect(Entity $connection): array
+    {
+        $body = $this->buildBody($connection);
         $url = $connection->get('loginUrl');
 
         $ch = curl_init();
@@ -58,5 +75,15 @@ class ConnectionCookie extends AbstractConnection
         }
 
         return join("; ", $cookies);
+    }
+
+    public function getHeaders(array $connectionData): array
+    {
+        return ["Cookie: {$connectionData['cookie']}"];
+    }
+
+    private function getTwig(): Twig
+    {
+        return $this->container->get('twig');
     }
 }

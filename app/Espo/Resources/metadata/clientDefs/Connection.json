@@ -100,7 +100,8 @@
                 "psql",
                 "msql",
                 "ftp",
-                "sftp"
+                "sftp",
+                "cookie"
               ]
             }
           ]
@@ -117,7 +118,8 @@
                 "psql",
                 "msql",
                 "ftp",
-                "sftp"
+                "sftp",
+                "cookie"
               ]
             }
           ]
