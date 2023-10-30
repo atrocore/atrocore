@@ -33,6 +33,8 @@
 
 namespace Espo\ORM\Repositories;
 
+use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
 use Espo\ORM\EntityManager;
@@ -40,6 +42,7 @@ use Espo\ORM\EntityFactory;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\Entity;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\ORM\IEntity;
 use Symfony\Component\Workflow\Exception\LogicException;
 
 
@@ -76,7 +79,7 @@ class RDB extends \Espo\ORM\Repository
         $this->entityManager = $entityManager;
     }
 
-    protected function getMapper()
+    public function getMapper()
     {
         if (empty($this->mapper)) {
             $this->mapper = $this->getEntityManager()->getMapper('RDB');
@@ -190,61 +193,44 @@ class RDB extends \Espo\ORM\Repository
         return $result;
     }
 
-    /**
-     * @param Entity $entity
-     * @param array $options
-     */
     protected function beforeRemove(Entity $entity, array $options = [])
     {
         $uniques = $this->getUniqueFields($entity);
 
         if (!empty($uniques)) {
-            $dbTable = Util::toUnderScore($entity->getEntityType());
+            $connection = $this->getEntityManager()->getConnection();
 
+            $parameters = [];
             foreach ($uniques as $key => $unique) {
                 if (is_array($unique)) {
                     $sqlCondition = [];
                     foreach ($unique as $field) {
-                        $value = $entity->get($field);
-
-                        $sqlCondition[] = $this->prepareWhereConditions($field, $value);
+                        $sqlCondition[] = $connection->quoteIdentifier(Util::toUnderScore($field)) . " = :{$field}_un";
+                        $parameters["{$field}_un"] = $entity->get($field);
                     }
                     $uniques[$key] = '(' . implode(' AND ', $sqlCondition) . ')';
                 } else {
-                    $value = $entity->get($unique);
-
-                    $uniques[$key] = $this->prepareWhereConditions($unique, $value);
+                    $uniques[$key] = $connection->quoteIdentifier(Util::toUnderScore($unique)) . " = :{$unique}_un1";
+                    $parameters["{$unique}_un1"] = $entity->get($unique);
                 }
             }
 
-            $where = implode(' OR ', $uniques);
+            $qb = $connection->createQueryBuilder()
+                ->delete($connection->quoteIdentifier(Util::toUnderScore($entity->getEntityType())))
+                ->where('deleted = :false')
+                ->andWhere('id != :id')
+                ->andWhere(implode(' OR ', $uniques))
+                ->setParameter('false', false, Mapper::getParameterType(false))
+                ->setParameter('id', $entity->id);
 
-            $this
-                ->getEntityManager()
-                ->nativeQuery("DELETE FROM `$dbTable` WHERE deleted=1 AND id!='$entity->id' AND ($where)");
+            foreach ($parameters as $name => $value){
+                $qb->setParameter($name, $value, Mapper::getParameterType($value));
+            }
+
+            $qb->executeQuery();
         }
     }
 
-    /**
-     * @param string $field
-     * @param $value
-     *
-     * @return string
-     */
-    protected function prepareWhereConditions(string $field, $value): string
-    {
-        if (is_null($value)) {
-            $result = "`" . Util::toUnderScore($field) . "` IS NULL";
-        } else {
-            $result = "`" . Util::toUnderScore($field) . "`=" . $this->getPDO()->quote($value);
-        }
-
-        return $result;
-    }
-
-    /**
-     * @return array
-     */
     protected function getUniqueFields(Entity $entity): array
     {
         $result = [];
@@ -300,7 +286,8 @@ class RDB extends \Espo\ORM\Repository
     public function remove(Entity $entity, array $options = [])
     {
         $this->beforeRemove($entity, $options);
-        $result = $this->getMapper()->delete($entity);
+        $entity->set('deleted', true);
+        $result = $this->getMapper()->update($entity);
         if ($result) {
             $this->deleteLinkedRelationshipEntities($entity);
             $this->afterRemove($entity, $options);
@@ -308,9 +295,12 @@ class RDB extends \Espo\ORM\Repository
         return $result;
     }
 
-    public function deleteFromDb($id, $onlyDeleted = false)
+    public function deleteFromDb(string $id): bool
     {
-        return $this->getMapper()->deleteFromDb($this->entityType, $id, $onlyDeleted);
+        $entity = $this->getEntityManager()->getEntity($this->entityType);
+        $entity->id = $id;
+
+        return $this->getMapper()->delete($entity);
     }
 
     /**
@@ -355,28 +345,18 @@ class RDB extends \Espo\ORM\Repository
         return null;
     }
 
-    public function findByQuery($sql)
-    {
-        $dataArr = $this->getMapper()->selectByQuery($this->seed, $sql);
-
-        $collection = new EntityCollection($dataArr, $this->entityType, $this->entityFactory);
-        $this->reset();
-
-        return $collection;
-    }
-
     public function findRelated(Entity $entity, $relationName, array $params = [])
     {
-        if (!$entity->id) {
-            return [];
-        }
-
         $relationType = $entity->getRelationType($relationName);
 
         if ($relationType === Entity::BELONGS_TO_PARENT) {
             $entityType = $entity->get($relationName . 'Type');
         } else {
             $entityType = $entity->getRelationParam($relationName, 'entity');
+        }
+
+        if (!$entity->id) {
+            return new EntityCollection([], $entityType, $this->entityFactory);
         }
 
         /**
@@ -492,7 +472,7 @@ class RDB extends \Espo\ORM\Repository
                 $d = get_object_vars($d);
             }
             if ($foreign instanceof Entity) {
-                $result = $this->getMapper()->relate($entity, $relationName, $foreign, $d);
+                $result = $this->getMapper()->addRelation($entity, $relationName, null, $foreign, $d);
             }
             if (is_string($foreign)) {
                 $result = $this->getMapper()->addRelation($entity, $relationName, $foreign, null, $d);
@@ -512,23 +492,30 @@ class RDB extends \Espo\ORM\Repository
 
     public function updateRelationData(string $relationName, array $setData, string $re1, string $re1Id, string $re2, string $re2Id): void
     {
-        $setPart = [];
-        foreach ($setData as $field => $value) {
-            if (is_array($value)) {
-                $value = Json::encode($value);
-            }
-            $setPart[] = Util::toUnderScore($field) . '=' . $this->getMapper()->quote($value);
-        }
-
-        if (empty($setPart)) {
+        if (empty($setData)) {
             return;
         }
 
-        $query = "UPDATE `" . Util::toUnderScore($relationName) . "` SET " . implode(',', $setPart) . " WHERE deleted=0";
-        $query .= " AND " . Util::toUnderScore(lcfirst($re1)) . "=" . $this->getPDO()->quote($re1Id);
-        $query .= " AND " . Util::toUnderScore(lcfirst($re2)) . "=" . $this->getPDO()->quote($re2Id);
+        $connection = $this->getEntityManager()->getConnection();
 
-        $this->getPDO()->exec($query);
+        $qb = $connection->createQueryBuilder();
+        $qb->update($connection->quoteIdentifier(Util::toUnderScore($relationName)));
+        foreach ($setData as $field => $value) {
+            $qb->set(Util::toUnderScore($field), ":{$field}_a");
+            $qb->setParameter("{$field}_a", is_array($value) ? Json::encode($value) : $value);
+        }
+        $qb->where('deleted = :false');
+        $qb->setParameter('false', false, Mapper::getParameterType(false));
+
+        $re1 = lcfirst($re1);
+        $qb->andWhere(Util::toUnderScore($re1) . " = :$re1");
+        $qb->setParameter($re1, $re1Id, Mapper::getParameterType($re1Id));
+
+        $re2 = lcfirst($re2);
+        $qb->andWhere(Util::toUnderScore($re2) . " = :$re2");
+        $qb->setParameter($re2, $re2Id, Mapper::getParameterType($re2Id));
+
+        $qb->executeQuery();
     }
 
     public function unrelate(Entity $entity, $relationName, $foreign, array $options = [])
@@ -549,13 +536,13 @@ class RDB extends \Espo\ORM\Repository
             $result = $this->$methodName($entity, $foreign, $options);
         } else {
             if ($foreign instanceof Entity) {
-                $result = $this->getMapper()->unrelate($entity, $relationName, $foreign, true);
+                $result = $this->getMapper()->removeRelation($entity, $relationName, null, false, $foreign, true);
             }
             if (is_string($foreign)) {
                 $result = $this->getMapper()->removeRelation($entity, $relationName, $foreign, false, null, true);
             }
             if ($foreign === true) {
-                $result = $this->getMapper()->removeAllRelations($entity, $relationName, true);
+                $GLOBALS['log']->error('removeAllRelations is deprecated. Use removeRelation instead.');
             }
         }
 
@@ -609,37 +596,61 @@ class RDB extends \Espo\ORM\Repository
     {
     }
 
-    public function updateRelation(Entity $entity, $relationName, $foreign, $data)
+    public function updateRelation(Entity $entity, $relationName, $foreign, $data): bool
     {
         if (!$entity->id) {
-            return;
+            return false;
         }
-        if ($data instanceof \stdClass) {
-            $data = get_object_vars($data);
-        }
+
         if ($foreign instanceof Entity) {
             $id = $foreign->id;
         } else {
             $id = $foreign;
         }
-        if (is_string($foreign)) {
-            return $this->getMapper()->updateRelation($entity, $relationName, $id, $data);
-        }
-        return null;
-    }
 
-    public function massRelate(Entity $entity, $relationName, array $params = [], array $options = [])
-    {
-        if (!$entity->id) {
-            return;
-        }
-        $this->beforeMassRelate($entity, $relationName, $params, $options);
+        if (is_string($foreign) && $data instanceof \stdClass) {
+            $columnData = get_object_vars($data);
 
-        $result = $this->getMapper()->massRelate($entity, $relationName, $params);
-        if ($result) {
-            $this->afterMassRelate($entity, $relationName, $params, $options);
+            $relOpt = $entity->relations[$relationName];
+            $keySet = $this->getMapper()->getKeys($entity, $relationName);
+
+            $relType = $relOpt['type'];
+
+            switch ($relType) {
+                case IEntity::MANY_MANY:
+                    $relTable = $this->getMapper()->toDb($relOpt['relationName']);
+                    $nearKey = $keySet['nearKey'];
+                    $distantKey = $keySet['distantKey'];
+
+                    $connection = $this->getEntityManager()->getConnection();
+
+                    $qb = $connection->createQueryBuilder();
+                    $qb->update($connection->quoteIdentifier($relTable), 't1');
+                    foreach ($columnData as $column => $value) {
+                        $qb->set($this->getMapper()->toDb($column), ":{$column}ee2");
+                        $qb->setParameter("{$column}ee2", $value, Mapper::getParameterType($value));
+                    }
+                    $qb->where("t1.{$this->getMapper()->toDb($nearKey)} = :entityId");
+                    $qb->setParameter('entityId', $entity->get('id'));
+                    $qb->andWhere("t1.{$this->getMapper()->toDb($distantKey)} = :id");
+                    $qb->setParameter('id', $id);
+                    $qb->andWhere("t1.deleted = :false");
+                    $qb->setParameter('false', false, ParameterType::BOOLEAN);
+
+                    if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
+                        foreach ($relOpt['conditions'] as $f => $v) {
+                            $qb->andWhere("t1.{$this->getMapper()->toDb($f)} = :{$f}qq1");
+                            $qb->setParameter("{$f}qq1", $v, Mapper::getParameterType($v));
+                        }
+                    }
+
+                    $qb->executeQuery();
+
+                    return true;
+            }
         }
-        return $result;
+
+        return false;
     }
 
     public function getAll()
@@ -658,24 +669,6 @@ class RDB extends \Espo\ORM\Repository
         $count = $this->getMapper()->count($this->seed, $params);
         $this->reset();
         return intval($count);
-    }
-
-    public function max($field)
-    {
-        $params = $this->getSelectParams();
-        return $this->getMapper()->max($this->seed, $params, $field);
-    }
-
-    public function min($field)
-    {
-        $params = $this->getSelectParams();
-        return $this->getMapper()->min($this->seed, $params, $field);
-    }
-
-    public function sum($field)
-    {
-        $params = $this->getSelectParams();
-        return $this->getMapper()->sum($this->seed, $params, $field);
     }
 
     public function join()
