@@ -231,6 +231,32 @@
             }
           ]
         }
+      },
+      "payload": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "cookie"
+              ]
+            }
+          ]
+        }
+      },
+      "loginUrl": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "cookie"
+              ]
+            }
+          ]
+        }
       }
     }
   }
