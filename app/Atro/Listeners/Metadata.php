@@ -156,14 +156,15 @@ class Metadata extends AbstractListener
                 }
                 $unitFieldName = $field . 'Unit';
                 $data['entityDefs'][$entityType]['fields'][$unitFieldName] = [
-                    "type"        => "link",
-                    "view"        => "views/fields/unit-link",
-                    "measureId"   => $fieldDefs['measureId'],
-                    "unitIdField" => true,
-                    "mainField"   => $field,
-                    "required"    => !empty($fieldDefs['required']),
-                    "audited"     => !empty($fieldDefs['audited']),
-                    "emHidden"    => true
+                    "type"            => "link",
+                    "view"            => "views/fields/unit-link",
+                    "measureId"       => $fieldDefs['measureId'],
+                    "multilangLocale" => $fieldDefs['multilangLocale'],
+                    "unitIdField"     => true,
+                    "mainField"       => $field,
+                    "required"        => !empty($fieldDefs['required']),
+                    "audited"         => !empty($fieldDefs['audited']),
+                    "emHidden"        => true
                 ];
 
                 $data['entityDefs'][$entityType]['links'][$unitFieldName] = [
@@ -191,6 +192,7 @@ class Metadata extends AbstractListener
                         "notStorable"        => true,
                         "view"               => "views/fields/unit-{$fieldDefs['type']}",
                         "measureId"          => $fieldDefs['measureId'],
+                        "multilangLocale"    => $fieldDefs['multilangLocale'],
                         "mainField"          => $field,
                         "unitField"          => true,
                         "required"           => false,
@@ -219,6 +221,7 @@ class Metadata extends AbstractListener
                         "type"                      => "jsonObject",
                         "notStorable"               => true,
                         "mainField"                 => $field,
+                        "multilangLocale"           => $fieldDefs['multilangLocale'],
                         "required"                  => false,
                         "audited"                   => false,
                         "layoutListDisabled"        => true,

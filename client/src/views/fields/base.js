@@ -857,9 +857,15 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             this.unitListTranslates = {'': ''};
 
             if (this.measureId) {
+                let nameField = 'name'
+                const lang = this.params.multilangLocale || this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'multilangLocale'])
+                if (lang && lang !== 'main') {
+                    nameField += Espo.Utils.hyphenToUpperCamelCase(lang.replaceAll('_', '-').toLowerCase())
+                }
                 this.getMeasureUnits(this.measureId).forEach(unit => {
+                    console.log('lang', lang, nameField, unit)
                     this.unitList.push(unit.id);
-                    this.unitListTranslates[unit.id] = unit.name;
+                    this.unitListTranslates[unit.id] = unit[nameField] || unit.name;
                 });
             }
         },
