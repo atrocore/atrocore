@@ -89,7 +89,7 @@ class Oauth1Callback extends AbstractEntryPoint
             'oauth_verifier' => $verifier,
         ];
         $headers = [
-            'Authorization' => $this->buildAuthorizationHeaderForAPIRequest(
+            'Authorization' => $this->buildAuthorizationHeaderForAccessTokenReqest(
                 'POST',
                 $this->accessTokenUrl,
                 $requestToken,
@@ -115,7 +115,7 @@ class Oauth1Callback extends AbstractEntryPoint
     }
 
 
-    protected function buildAuthorizationHeaderForAPIRequest($method, $url, $requestToken, $bodyParams = null)
+    protected function buildAuthorizationHeaderForAccessTokenReqest($method, $url, $requestToken, $bodyParams = null)
     {
         $authParameters = $this->connectionService->getBasicAuthorizationHeaderInfo($this->consumerKey);
         $authParameters['oauth_token'] = $requestToken['oauth_token'];

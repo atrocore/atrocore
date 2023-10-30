@@ -28,9 +28,9 @@ trait Oauth1Connection
     protected function generateNonce($length = 32)
     {
         $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
-
         $nonce = '';
         $maxRand = strlen($characters) - 1;
+
         for ($i = 0; $i < $length; $i++) {
             $nonce .= $characters[rand(0, $maxRand)];
         }
@@ -54,6 +54,7 @@ trait Oauth1Connection
         foreach (array_merge($queryStringData ?? [], $params) as $key => $value) {
             $signatureData[rawurlencode($key)] = rawurlencode($value);
         }
+
         ksort($signatureData);
 
         $baseString = strtoupper($method) . '&';
@@ -67,6 +68,7 @@ trait Oauth1Connection
     {
         $signatureString = '';
         $delimiter = '';
+
         foreach ($signatureData as $key => $value) {
             $signatureString .= $delimiter . $key . '=' . $value;
             $delimiter = '&';
@@ -79,9 +81,11 @@ trait Oauth1Connection
     protected function getSigningKey($consumeSecret, $tokenSecret = null)
     {
         $signingKey = rawurlencode($consumeSecret) . '&';
+
         if ($tokenSecret) {
             $signingKey .= rawurlencode($tokenSecret);
         }
+
         return $signingKey;
     }
 
@@ -102,21 +106,26 @@ trait Oauth1Connection
         if (!is_string($responseBody)) {
             throw new \Exception("Response body is expected to be a string.");
         }
+
         if (!empty($curlInfo['content_type']) && $curlInfo['content_type'] === 'application/json') {
             return @json_decode($responseBody, true);
         }
+
         parse_str($responseBody, $data);
+
         if (null === $data || !is_array($data)) {
             throw new \Exception('Unable to parse response.');
         } elseif (isset($data['error'])) {
             throw new \Exception("Error occurred: '{$data['error']}'");
         }
+
         return $data;
     }
 
     public function request($method, string $url, array $headers, array $bodyParams = [])
     {
         $curlHeader = ['Content-Type: application/x-www-form-urlencoded'];
+
         foreach ($headers as $key => $header) {
             $curlHeader[] = "$key: $header";
         }
@@ -133,13 +142,16 @@ trait Oauth1Connection
             CURLOPT_CUSTOMREQUEST => $method,
             CURLOPT_HTTPHEADER => $curlHeader
         ];
+
         if ($method === ' POST' && !empty($bodyParams)) {
             $options[CURLOPT_CUSTOMREQUEST] = http_build_query($bodyParams);
         }
+
         curl_setopt_array($curl, $options);
 
         $response = curl_exec($curl);
         $curlInfo = curl_getinfo($curl);
+
         curl_close($curl);
 
         if ($curlInfo['http_code'] !== 200) {
@@ -163,11 +175,8 @@ trait Oauth1Connection
 
     public function buildAuthorizationHeaderForAPIRequest(Entity $connection, $method, $url)
     {
-
         $authParameters = $this->getBasicAuthorizationHeaderInfo($connection->get('oauthConsumerKey'));
-
         $authParameters['oauth_token'] = $connection->get('oauthToken');
-
         $authParameters['oauth_signature'] = $this->getSignature($url, $authParameters, $method, $connection->get('oauthConsumerSecret'), $this->decryptPassword($connection->get('oauthTokenSecret')));
 
         return $this->buildAuthorizationHeader($authParameters, false);
