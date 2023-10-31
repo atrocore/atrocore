@@ -697,7 +697,7 @@ class QueryConverter
 
     public function relationNameToAlias(string $relationName): string
     {
-        if (strpos($relationName, 'Filter') !== false) {
+        if (strpos($relationName, 'LinkedFilter') !== false) {
             return $relationName;
         }
 
