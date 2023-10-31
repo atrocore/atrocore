@@ -71,6 +71,44 @@
       ],
       [
         {
+          "name": "requestTokenUrl"
+        },
+        {
+          "name": "accessTokenUrl"
+        }
+      ],
+      [
+        {
+          "name": "callbackUrl"
+        },
+        {
+          "name": "linkUrl"
+        }
+      ],
+      [
+        {
+          "name": "oauthConsumerKey"
+        },
+        {
+          "name": "oauthConsumerSecret"
+        }
+      ],
+      [
+        {
+          "name": "oauthToken"
+        },
+        {
+          "name": "oauthTokenSecret"
+        }
+      ],
+      [
+        {
+          "name": "apiTestUrl"
+        },
+        false
+      ],
+      [
+        {
           "name": "loginUrl"
         },
         {

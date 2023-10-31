@@ -11,6 +11,7 @@
         "ftp",
         "sftp",
         "oauth2",
+        "oauth1",
         "otto",
         "cookie"
       ],
@@ -21,6 +22,7 @@
         "ftp",
         "sftp",
         "oauth2",
+        "oauth1",
         "otto",
         "cookie"
       ],
@@ -168,6 +170,86 @@
         "receipts",
         "price-reduction"
       ]
+    },
+    "oauthConsumerKey": {
+      "type": "varchar",
+      "notStorable": true,
+      "dataField": true,
+      "required": false,
+      "trim": true,
+      "readOnly": true
+    },
+    "oauthConsumerSecret": {
+      "type": "varchar",
+      "notStorable": true,
+      "dataField": true,
+      "required": false,
+      "trim": true,
+      "readOnly": true
+    },
+    "requestTokenUrl": {
+      "type": "varchar",
+      "notStorable": true,
+      "dataField": true,
+      "required": true,
+      "trim": true
+    },
+    "accessTokenUrl": {
+      "type": "varchar",
+      "notStorable": true,
+      "dataField": true,
+      "required": true,
+      "trim": true
+    },
+    "oauthVerifier": {
+      "type": "varchar",
+      "notStorable": true,
+      "dataField": true,
+      "required": false,
+      "trim": true,
+      "readOnly": true
+    },
+    "oauthToken": {
+      "type": "varchar",
+      "notStorable": true,
+      "dataField": true,
+      "required": false,
+      "trim": true,
+      "readOnly": false
+    },
+    "oauthTokenSecret": {
+      "type": "password",
+      "notStorable": true,
+      "dataField": true,
+      "required": false,
+      "trim": true,
+      "readOnly": false
+    },
+    "callbackUrl": {
+      "type": "varchar",
+      "notStorable": true,
+      "readOnly": true
+    },
+    "linkUrl": {
+      "type": "varchar",
+      "notStorable": true,
+      "readOnly": true
+    },
+    "storeUrl": {
+      "type": "varchar",
+      "notStorable": true,
+      "dataField": true,
+      "required": false,
+      "trim": true,
+      "readOnly": true
+    },
+    "apiTestUrl": {
+      "type": "varchar",
+      "notStorable": true,
+      "dataField": true,
+      "required": true,
+      "trim": true,
+      "default": "https://staging.davidsonsinc.com/rest/V1/products/011418204"
     },
     "data": {
       "type": "jsonObject",

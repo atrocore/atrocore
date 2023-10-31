@@ -234,6 +234,123 @@
           ]
         }
       },
+      "oauthConsumerKey": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "oauth1"
+              ]
+            }
+          ]
+        }
+      },
+      "oauthConsumerSecret": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "oauth1"
+              ]
+            }
+          ]
+        }
+      },
+      "requestTokenUrl": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "oauth1"
+              ]
+            }
+          ]
+        }
+      },
+      "accessTokenUrl": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "oauth1"
+              ]
+            }
+          ]
+        }
+      },
+      "oauthVerifier": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "oauth1"
+              ]
+            }
+          ]
+        }
+      },
+      "oauthToken": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "oauth1"
+              ]
+            }
+          ]
+        }
+      },
+      "oauthTokenSecret": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "oauth1"
+              ]
+            }
+          ]
+        }
+      },
+      "callbackUrl": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "oauth1"
+              ]
+            }
+          ]
+        }
+      },
+      "linkUrl": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "oauth1"
+              ]
+            }
+          ]
+        }
+      },
       "payload": {
         "visible": {
           "conditionGroup": [
