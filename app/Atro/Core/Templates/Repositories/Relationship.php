@@ -180,16 +180,13 @@ class Relationship extends RDB
 
     public function remove(Entity $entity, array $options = [])
     {
-        try {
-            $result = parent::remove($entity, $options);
-        } catch (UniqueConstraintViolationException $e) {
-            if (!empty($toDelete = $this->getDuplicateEntity($entity, true))) {
-                $this->deleteFromDb($toDelete->get('id'));
-            }
-            return parent::remove($entity, $options);
+        // find and delete duplicate
+        $toDelete = $this->getDuplicateEntity($entity, true);
+        if (!empty($toDelete)) {
+            $this->deleteFromDb($toDelete->get('id'));
         }
 
-        return $result;
+        return parent::remove($entity, $options);
     }
 
     public function getDuplicateEntity(Entity $entity, bool $deleted = false): ?Entity
