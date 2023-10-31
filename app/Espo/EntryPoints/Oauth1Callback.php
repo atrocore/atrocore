@@ -2,6 +2,7 @@
 
 namespace Espo\EntryPoints;
 
+use Atro\ConnectionType\ConnectionOauth1;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\ORM\Entity;
 use Espo\Services\Connection;
@@ -15,9 +16,11 @@ class Oauth1Callback extends AbstractEntryPoint
     private $requestTokenUrl;
     private $accessTokenUrl;
     /**
-     * @var Connection
+    
+    /**
+     * @var ConnectionOauth1
      */
-    private $connectionService;
+    private $connectionOauth1;
 
     public function run()
     {
@@ -26,8 +29,10 @@ class Oauth1Callback extends AbstractEntryPoint
         }
 
         $type = $_GET['type'];
-        $this->connectionService = $this->getServiceFactory()->create('Connection');
-        $connectionId = $this->connectionService->decryptPassword($_GET['connectionId']);
+        $this->connectionOauth1 = $this->getContainer()->get(ConnectionOauth1::class);
+        $connectionId = $this->getServiceFactory()
+            ->create('Connection')
+            ->decryptPassword($_GET['connectionId']);
         $connection = $this->getEntityManager()->getEntity('Connection', $connectionId);
 
         if (empty($connection) || $connection->get('type') !== 'oauth1') {
@@ -68,7 +73,12 @@ class Oauth1Callback extends AbstractEntryPoint
         $accessToken = $this->requestAccessToken($connection->get('oauthVerifier'), $requestToken);
 
         $connection->set('oauthToken', $accessToken['oauth_token']);
-        $connection->set('oauthTokenSecret', $this->connectionService->encryptPassword($accessToken['oauth_token_secret']));
+        $connection->set(
+            'oauthTokenSecret',
+            $this->getServiceFactory()
+                ->create('Connection')
+                ->encryptPassword($accessToken['oauth_token_secret'])
+        );
         $this->getEntityManager()->saveEntity($connection);
     }
 
@@ -100,21 +110,21 @@ class Oauth1Callback extends AbstractEntryPoint
 
     protected function buildAuthorizationHeaderForTokenRequest()
     {
-        $parameters = $this->connectionService->getBasicAuthorizationHeaderInfo($this->consumerKey);
-        $parameters['oauth_signature'] = $this->connectionService->getSignature(
+        $parameters = $this->connectionOauth1->getBasicAuthorizationHeaderInfo($this->consumerKey);
+        $parameters['oauth_signature'] = $this->connectionOauth1->getSignature(
             $this->requestTokenUrl,
             $parameters,
             'POST',
             $this->consumerSecret
         );
 
-        return $this->connectionService->buildAuthorizationHeader($parameters);
+        return $this->connectionOauth1->buildAuthorizationHeader($parameters);
     }
 
 
     protected function buildAuthorizationHeaderForAccessTokenReqest($method, $url, $requestToken, $bodyParams = null)
     {
-        $authParameters = $this->connectionService->getBasicAuthorizationHeaderInfo($this->consumerKey);
+        $authParameters = $this->connectionOauth1->getBasicAuthorizationHeaderInfo($this->consumerKey);
         $authParameters['oauth_token'] = $requestToken['oauth_token'];
 
         if (!empty($bodyParams['oauth_verifier'])) {
@@ -122,7 +132,7 @@ class Oauth1Callback extends AbstractEntryPoint
         }
 
         $signatureParams = (is_array($bodyParams)) ? array_merge($authParameters, $bodyParams) : $authParameters;
-        $authParameters['oauth_signature'] = $this->connectionService->getSignature(
+        $authParameters['oauth_signature'] = $this->connectionOauth1->getSignature(
             $url,
             $signatureParams,
             $method,
@@ -130,7 +140,7 @@ class Oauth1Callback extends AbstractEntryPoint
             $requestToken['oauth_token_secret']
         );
 
-        return $this->connectionService->buildAuthorizationHeader($authParameters);
+        return $this->connectionOauth1->buildAuthorizationHeader($authParameters);
     }
 
     private function request($method, string $url, array $headers, array $bodyParams = [])
