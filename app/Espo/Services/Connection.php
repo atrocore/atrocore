@@ -103,6 +103,12 @@ class Connection extends Base
         foreach ($entity->getDataFields() as $name => $value) {
             $entity->set($name, $value);
         }
+        if($entity->get('type') === 'oauth1'){
+            $callbackUrl  = $this->getConfig()->get('siteUrl') . '?entryPoint=oauth1Callback&connectionId=' . $this->encryptPassword($entity->get('id')).'&type=callback';
+            $linkUrl = $this->getConfig()->get('siteUrl') . '?entryPoint=oauth1Callback&connectionId=' . $this->encryptPassword($entity->get('id')).'&type=link';
+            $entity->set('callbackUrl', $callbackUrl);
+            $entity->set('linkUrl', $linkUrl);
+        }
     }
 
     protected function init()
@@ -159,4 +165,6 @@ class Connection extends Base
     {
         return $this->getInjection('language')->translate($name, 'exceptions', $scope);
     }
+
+
 }
