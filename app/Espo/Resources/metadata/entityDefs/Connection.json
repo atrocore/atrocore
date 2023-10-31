@@ -47,16 +47,14 @@
       "notStorable": true,
       "dataField": true,
       "required": false,
-      "trim": true,
-      "readOnly": true
+      "trim": true
     },
     "oauthConsumerSecret": {
       "type": "varchar",
       "notStorable": true,
       "dataField": true,
       "required": false,
-      "trim": true,
-      "readOnly": true
+      "trim": true
     },
     "requestTokenUrl": {
       "type": "varchar",
