@@ -33,4 +33,9 @@ abstract class AbstractConnection implements ConnectionInterface
     {
         return $this->container->get('language')->translate($name, 'exceptions', 'Connection');
     }
+
+    public function getHeaders(array $connectionData) : array
+    {
+        return [];
+    }
 }

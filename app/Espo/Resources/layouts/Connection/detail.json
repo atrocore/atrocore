@@ -68,6 +68,14 @@
           "name": "ftpSsl"
         },
         false
+      ],
+      [
+        {
+          "name": "loginUrl"
+        },
+        {
+          "name": "payload"
+        }
       ]
     ]
   }

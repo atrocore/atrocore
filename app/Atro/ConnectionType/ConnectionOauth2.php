@@ -51,4 +51,9 @@ class ConnectionOauth2 extends AbstractConnection
 
         throw new BadRequest(sprintf($this->exception('connectionFailed'), 'Connection failed.'));
     }
+
+    public function getHeaders(array $connectionData): array
+    {
+        return ["Authorization: {$connectionData['token_type']} {$connectionData['access_token']}"];
+    }
 }
