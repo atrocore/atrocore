@@ -178,10 +178,6 @@ class Oauth1Callback extends AbstractEntryPoint
             throw new \Exception("Response body is expected to be a string.");
         }
 
-        if (!empty($curlInfo['content_type']) && $curlInfo['content_type'] === 'application/json') {
-            return @json_decode($responseBody, true);
-        }
-
         parse_str($responseBody, $data);
 
         if (null === $data || !is_array($data)) {
