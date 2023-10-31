@@ -39,14 +39,14 @@ class Converter
         return Util::toUnderScore($fieldName);
     }
 
-    public static function generateIndexName(string $entityName, string $indexName, string $prefix = 'IDX', int $maxLength = 120): string
+    public static function generateIndexName(string $entityName, string $indexName): string
     {
-        $nameList = [];
-        $nameList[] = strtoupper($prefix);
-        $nameList[] = strtoupper(Util::toUnderScore($entityName));
-        $nameList[] = strtoupper(Util::toUnderScore($indexName));
+        $res = Util::toUnderScore($entityName) . '_' . Util::toUnderScore($indexName);
+        if (strlen($res) > 55) {
+            $res = md5($res);
+        }
 
-        return substr(implode('_', $nameList), 0, $maxLength);
+        return 'IDX_' . strtoupper($res);
     }
 
     public static function isPgSQL(Connection $connection): bool

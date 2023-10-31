@@ -100,7 +100,8 @@
                 "psql",
                 "msql",
                 "ftp",
-                "sftp"
+                "sftp",
+                "cookie"
               ]
             }
           ]
@@ -117,7 +118,8 @@
                 "psql",
                 "msql",
                 "ftp",
-                "sftp"
+                "sftp",
+                "cookie"
               ]
             }
           ]
@@ -344,6 +346,32 @@
               "attribute": "type",
               "value": [
                 "oauth1"
+              ]
+            }
+          ]
+        }
+      },
+      "payload": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "cookie"
+              ]
+            }
+          ]
+        }
+      },
+      "loginUrl": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "cookie"
               ]
             }
           ]

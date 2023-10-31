@@ -67,7 +67,7 @@ class Notification extends RDB
             ->groupBy('n.user_id')
             ->fetchAllAssociative();
 
-        DataManager::pushPublicData('notReadCount', json_encode(array_column($data, 'total', 'userId')));
+        DataManager::pushPublicData('notReadCount', json_encode(array_column($data, 'total', 'user_id')));
     }
 
     protected function beforeSave(Entity $entity, array $options = [])

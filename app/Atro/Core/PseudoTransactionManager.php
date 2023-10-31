@@ -15,6 +15,7 @@ namespace Atro\Core;
 
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
@@ -200,18 +201,15 @@ class PseudoTransactionManager
                 ->setValue('md5', ':md5')
                 ->setParameter('md5', $md5)
                 ->executeQuery();
-        } catch (\PDOException $e) {
-            if (!empty($e->errorInfo[1]) && $e->errorInfo[1] == 1062) {
-                $row = $this->connection->createQueryBuilder()
-                    ->select('id')
-                    ->from('pseudo_transaction_job')
-                    ->where('md5 = :md5')
-                    ->setParameter('md5', $md5)
-                    ->fetchAssociative();
+        } catch (UniqueConstraintViolationException $e) {
+            $row = $this->connection->createQueryBuilder()
+                ->select('id')
+                ->from('pseudo_transaction_job')
+                ->where('md5 = :md5')
+                ->setParameter('md5', $md5)
+                ->fetchAssociative();
 
-                return isset($row['id']) && is_string($row['id']) ? $row['id'] : '';
-            }
-            throw $e;
+            return isset($row['id']) ? (string)$row['id'] : '';
         }
 
         file_put_contents(self::FILE_PATH, '1');

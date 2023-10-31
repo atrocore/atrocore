@@ -22,7 +22,7 @@ class ConnectionOauth1 extends AbstractConnection
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
-                CURLOPT_URL => $url,
+                CURLOPT_URL => $httpUrl,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
                 CURLOPT_MAXREDIRS => 10,
@@ -42,7 +42,9 @@ class ConnectionOauth1 extends AbstractConnection
             if ($curlInfo['http_code'] !== 200) {
                 throw new BadRequest($response . " ApiStatusCode: " . $curlInfo['http_code']);
             }
+            return true;
         }else{
+            $httpUrl = $this->data['httpUrl'];
             $authorization = $this->buildAuthorizationHeaderForAPIRequest($connection, 'GET', $httpUrl);
 
             return [
@@ -50,7 +52,11 @@ class ConnectionOauth1 extends AbstractConnection
                 "access_token" => $authorization
             ];
         }
+    }
 
+    public function getHeaders(array $connectionData) : array
+    {
+        return ["Authorization" => "{$connectionData['token_type']} {$connectionData['access_token']}"];
     }
 
     public function getBasicAuthorizationHeaderInfo($consumerKey)

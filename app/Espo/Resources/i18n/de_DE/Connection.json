@@ -5,12 +5,15 @@
     "host": "Host",
     "port": "Port",
     "user": "Benutzer",
-    "password": "Passwort"
+    "password": "Passwort",
+    "payload": "Nutzlast",
+    "loginUrl": "Anmelde-URL"
   },
   "labels": {
     "connectionSuccess": "Verbindung wurde erfolgreich hergestellt",
     "testConnection": "Verbindung testen",
-    "Create Connection": "Verbindung erstellen"
+    "Create Connection": "Verbindung erstellen",
+    "cookie": "Cookie-Sitzung"
   },
   "exceptions": {
     "sqlsrvMissing": "PHP MSSQL-Erweiterung ist nicht installiert.",

@@ -15,6 +15,7 @@ namespace Atro\Core\Templates\Services;
 
 use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Templates\Repositories\Relationship as RelationshipRepository;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
@@ -649,11 +650,8 @@ class Relationship extends Record
         try {
             try {
                 $result = $this->getRepository()->save($entity, $this->getDefaultRepositoryOptions());
-            } catch (\PDOException $e) {
-                if (!empty($e->errorInfo[1]) && $e->errorInfo[1] == 1062) {
-                    return true;
-                }
-                throw $e;
+            } catch (UniqueConstraintViolationException $e) {
+                return true;
             }
 
             foreach ($this->prepareRelationFieldDataToUpdate($entity) as $preparedData) {

@@ -106,6 +106,14 @@
           "name": "apiTestUrl"
         },
         false
+      ],
+      [
+        {
+          "name": "loginUrl"
+        },
+        {
+          "name": "payload"
+        }
       ]
     ]
   }

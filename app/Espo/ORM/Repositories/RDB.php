@@ -34,6 +34,7 @@
 namespace Espo\ORM\Repositories;
 
 use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
 use Espo\ORM\EntityManager;
@@ -41,6 +42,7 @@ use Espo\ORM\EntityFactory;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\Entity;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\ORM\IEntity;
 use Symfony\Component\Workflow\Exception\LogicException;
 
 
@@ -594,37 +596,61 @@ class RDB extends \Espo\ORM\Repository
     {
     }
 
-    public function updateRelation(Entity $entity, $relationName, $foreign, $data)
+    public function updateRelation(Entity $entity, $relationName, $foreign, $data): bool
     {
         if (!$entity->id) {
-            return;
+            return false;
         }
-        if ($data instanceof \stdClass) {
-            $data = get_object_vars($data);
-        }
+
         if ($foreign instanceof Entity) {
             $id = $foreign->id;
         } else {
             $id = $foreign;
         }
-        if (is_string($foreign)) {
-            return $this->getMapper()->updateRelation($entity, $relationName, $id, $data);
-        }
-        return null;
-    }
 
-    public function massRelate(Entity $entity, $relationName, array $params = [], array $options = [])
-    {
-        if (!$entity->id) {
-            return;
-        }
-        $this->beforeMassRelate($entity, $relationName, $params, $options);
+        if (is_string($foreign) && $data instanceof \stdClass) {
+            $columnData = get_object_vars($data);
 
-        $result = $this->getMapper()->massRelate($entity, $relationName, $params);
-        if ($result) {
-            $this->afterMassRelate($entity, $relationName, $params, $options);
+            $relOpt = $entity->relations[$relationName];
+            $keySet = $this->getMapper()->getKeys($entity, $relationName);
+
+            $relType = $relOpt['type'];
+
+            switch ($relType) {
+                case IEntity::MANY_MANY:
+                    $relTable = $this->getMapper()->toDb($relOpt['relationName']);
+                    $nearKey = $keySet['nearKey'];
+                    $distantKey = $keySet['distantKey'];
+
+                    $connection = $this->getEntityManager()->getConnection();
+
+                    $qb = $connection->createQueryBuilder();
+                    $qb->update($connection->quoteIdentifier($relTable), 't1');
+                    foreach ($columnData as $column => $value) {
+                        $qb->set($this->getMapper()->toDb($column), ":{$column}ee2");
+                        $qb->setParameter("{$column}ee2", $value, Mapper::getParameterType($value));
+                    }
+                    $qb->where("t1.{$this->getMapper()->toDb($nearKey)} = :entityId");
+                    $qb->setParameter('entityId', $entity->get('id'));
+                    $qb->andWhere("t1.{$this->getMapper()->toDb($distantKey)} = :id");
+                    $qb->setParameter('id', $id);
+                    $qb->andWhere("t1.deleted = :false");
+                    $qb->setParameter('false', false, ParameterType::BOOLEAN);
+
+                    if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
+                        foreach ($relOpt['conditions'] as $f => $v) {
+                            $qb->andWhere("t1.{$this->getMapper()->toDb($f)} = :{$f}qq1");
+                            $qb->setParameter("{$f}qq1", $v, Mapper::getParameterType($v));
+                        }
+                    }
+
+                    $qb->executeQuery();
+
+                    return true;
+            }
         }
-        return $result;
+
+        return false;
     }
 
     public function getAll()

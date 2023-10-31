@@ -18,6 +18,7 @@ use Atro\Core\Container;
 abstract class AbstractConnection implements ConnectionInterface
 {
     protected Container $container;
+    protected array $data;
 
     public function __construct(Container $container)
     {
@@ -32,5 +33,14 @@ abstract class AbstractConnection implements ConnectionInterface
     protected function exception(string $name, string $scope = 'Connection'): string
     {
         return $this->container->get('language')->translate($name, 'exceptions', 'Connection');
+    }
+
+    public function setData(array $data) {
+        $this->data = $data;
+    }
+
+    public function getHeaders(array $connectionData) : array
+    {
+        return [];
     }
 }

@@ -12,7 +12,8 @@
         "sftp",
         "oauth2",
         "oauth1",
-        "otto"
+        "otto",
+        "cookie"
       ],
       "options": [
         "mysql",
@@ -22,9 +23,24 @@
         "sftp",
         "oauth2",
         "oauth1",
-        "otto"
+        "otto",
+        "cookie"
       ],
       "default": "mysql"
+    },
+    "payload": {
+      "type": "text",
+      "view": "views/fields/script",
+      "default": "{# { \"Username\": \"{{ username }}\\n Password: {{ password }}\" } #}",
+      "notStorable": true,
+      "dataField": true,
+      "required": false
+    },
+    "loginUrl": {
+      "type": "url",
+      "notStorable": true,
+      "dataField": true,
+      "required": false
     },
     "name": {
       "type": "varchar",
