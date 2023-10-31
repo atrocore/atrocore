@@ -11,7 +11,7 @@ class ConnectionOauth1 extends AbstractConnection
 
     public function connect(Entity $connection, $httpUrl = null)
     {
-        if (empty($connection->get('oauthToken')) || empty($connection->get('oauthTokenSecret')) || empty($connection->get('storeUrl'))) {
+        if (empty($connection->get('oauthToken')) || empty($connection->get('oauthTokenSecret'))) {
             throw new BadRequest(sprintf($this->exception('connectionFailed'), 'You should authorize this connection on the provider using the callback and link urls below'));
         }
 
