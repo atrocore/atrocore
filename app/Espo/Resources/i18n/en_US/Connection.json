@@ -23,7 +23,7 @@
     "oauthTokenSecret": "Access Token Secret",
     "callbackUrl": "Callback Url",
     "linkUrl": "Link Url",
-    "apiTestUrl": "Test api url"
+    "apiTestUrl": "Test api url",
     "payload": "Payload",
     "loginUrl": "Login URL"
   },
