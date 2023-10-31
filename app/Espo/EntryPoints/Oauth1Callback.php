@@ -75,7 +75,7 @@ class Oauth1Callback extends AbstractEntryPoint
     public function requestRequestToken()
     {
         $headers = ['Authorization' => $this->buildAuthorizationHeaderForTokenRequest()];
-        $requestToken = $this->connectionService->request('POST', $this->requestTokenUrl, $headers);
+        $requestToken = $this->request('POST', $this->requestTokenUrl, $headers);
 
         return $requestToken;
     }
@@ -93,7 +93,7 @@ class Oauth1Callback extends AbstractEntryPoint
                 $bodyParams
             )
         ];
-        $token = $this->connectionService->request('POST', $this->accessTokenUrl, $headers, $bodyParams);
+        $token = $this->request('POST', $this->accessTokenUrl, $headers, $bodyParams);
 
         return $token;
     }
@@ -116,9 +116,11 @@ class Oauth1Callback extends AbstractEntryPoint
     {
         $authParameters = $this->connectionService->getBasicAuthorizationHeaderInfo($this->consumerKey);
         $authParameters['oauth_token'] = $requestToken['oauth_token'];
+
         if (!empty($bodyParams['oauth_verifier'])) {
             $authParameters['oauth_verifier'] = $bodyParams['oauth_verifier'];
         }
+
         $signatureParams = (is_array($bodyParams)) ? array_merge($authParameters, $bodyParams) : $authParameters;
         $authParameters['oauth_signature'] = $this->connectionService->getSignature(
             $url,
@@ -129,6 +131,66 @@ class Oauth1Callback extends AbstractEntryPoint
         );
 
         return $this->connectionService->buildAuthorizationHeader($authParameters);
+    }
+
+    private function request($method, string $url, array $headers, array $bodyParams = [])
+    {
+        $curlHeader = ['Content-Type: application/x-www-form-urlencoded'];
+
+        foreach ($headers as $key => $header) {
+            $curlHeader[] = "$key: $header";
+        }
+
+        $curl = curl_init();
+        $options = [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => $method,
+            CURLOPT_HTTPHEADER => $curlHeader
+        ];
+
+        if ($method === ' POST' && !empty($bodyParams)) {
+            $options[CURLOPT_CUSTOMREQUEST] = http_build_query($bodyParams);
+        }
+
+        curl_setopt_array($curl, $options);
+
+        $response = curl_exec($curl);
+        $curlInfo = curl_getinfo($curl);
+
+        curl_close($curl);
+
+        if ($curlInfo['http_code'] !== 200) {
+            throw new BadRequest($response . " ApiStatusCode: " . $curlInfo['http_code']);
+        }
+
+        return $this->parseResponseBody($response, $curlInfo);
+    }
+    
+    private function parseResponseBody($responseBody, $curlInfo = [])
+    {
+        if (!is_string($responseBody)) {
+            throw new \Exception("Response body is expected to be a string.");
+        }
+
+        if (!empty($curlInfo['content_type']) && $curlInfo['content_type'] === 'application/json') {
+            return @json_decode($responseBody, true);
+        }
+
+        parse_str($responseBody, $data);
+
+        if (null === $data || !is_array($data)) {
+            throw new \Exception('Unable to parse response.');
+        } elseif (isset($data['error'])) {
+            throw new \Exception("Error occurred: '{$data['error']}'");
+        }
+
+        return $data;
     }
 
 
