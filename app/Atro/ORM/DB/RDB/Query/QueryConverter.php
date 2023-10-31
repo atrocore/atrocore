@@ -697,6 +697,10 @@ class QueryConverter
 
     public function relationNameToAlias(string $relationName): string
     {
+        if (strpos($relationName, 'Filter') !== false) {
+            return $relationName;
+        }
+
         return $this->toDb(self::sanitize($relationName)) . '_mm';
     }
 
