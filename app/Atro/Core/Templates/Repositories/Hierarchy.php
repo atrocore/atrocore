@@ -414,10 +414,10 @@ class Hierarchy extends RDB
         $sth = $this->getEntityManager()->getPDO()->prepare($query);
         $sth->bindValue(':deleted', false, \PDO::PARAM_BOOL);
         if (!empty($parentId)) {
-            $sth->bindValue(':parentId', $parentId, \PDO::PARAM_STR);
+            $sth->bindValue(':parentId', $parentId);
         }
         foreach (array_merge($whereParameters, $childParameters) as $name => $value) {
-            $sth->bindValue(":{$name}", $value, Mapper::getParameterType($value));
+            $sth->bindValue(":{$name}", $value, Mapper::getParameterType($value) ?? \PDO::PARAM_STR);
         }
         $sth->execute();
 
@@ -457,7 +457,7 @@ class Hierarchy extends RDB
         $sth = $this->getEntityManager()->getPDO()->prepare($query);
         $sth->bindValue(':deleted', false, \PDO::PARAM_BOOL);
         foreach ($whereParameters as $name => $value) {
-            $sth->bindValue(":{$name}", $value, Mapper::getParameterType($value));
+            $sth->bindValue(":{$name}", $value, Mapper::getParameterType($value) ?? \PDO::PARAM_STR);
         }
         $sth->execute();
 

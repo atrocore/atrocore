@@ -608,8 +608,15 @@ class Mapper implements MapperInterface
             if (!empty($value[0]) && is_string($value[0])) {
                 $res = Connection::PARAM_STR_ARRAY;;
             }
-
             return $res;
+        }
+
+        if (is_string($value)) {
+            return ParameterType::STRING;
+        }
+
+        if ($value === null) {
+            return ParameterType::NULL;
         }
 
         return null;
