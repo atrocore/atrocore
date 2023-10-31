@@ -228,11 +228,9 @@ class Converter
                 $type = 'boolean';
                 break;
             case 'jsonArray':
-                $type = 'array';
                 $allowedParams = ['notnull', 'comment'];
                 break;
             case 'jsonObject':
-                $type = 'json';
                 $allowedParams = ['notnull', 'comment'];
                 break;
             case 'varchar':

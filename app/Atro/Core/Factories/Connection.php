@@ -19,7 +19,6 @@ class Connection implements FactoryInterface
 {
     protected static array $drivers
         = [
-            'pdo_mysql' => '\Atro\Core\Utils\Database\DBAL\Driver\PDO\MySQL\Driver',
             'pdo_pgsql' => '\Atro\Core\Utils\Database\DBAL\Driver\PDO\PgSQL\Driver',
         ];
 

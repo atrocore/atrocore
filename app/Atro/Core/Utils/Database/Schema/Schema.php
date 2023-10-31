@@ -15,6 +15,8 @@ namespace Atro\Core\Utils\Database\Schema;
 
 use Atro\Core\Container;
 use Atro\Core\EventManager\Manager as EventManager;
+use Atro\Core\Utils\Database\DBAL\FieldTypes\JsonArrayType;
+use Atro\Core\Utils\Database\DBAL\FieldTypes\JsonObjectType;
 use Espo\Core\EventManager\Event;
 use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Espo\Core\Utils\Config;
@@ -25,6 +27,7 @@ use Doctrine\DBAL\Schema\Schema as SchemaDBAL;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Schema\Comparator;
+use Doctrine\DBAL\Types\Type;
 
 class Schema
 {
@@ -49,6 +52,9 @@ class Schema
         $this->connection = $container->get('connection');
         $this->schemaConverter = $container->get(Converter::class);
         $this->comparator = new Comparator();
+
+        Type::addType('jsonArray', JsonArrayType::class);
+        Type::addType('jsonObject', JsonObjectType::class);
     }
 
     public function rebuild(): bool
