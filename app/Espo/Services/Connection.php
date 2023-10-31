@@ -36,7 +36,7 @@ namespace Espo\Services;
 use Atro\ConnectionType\ConnectionInterface;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Templates\Services\Base;
+use Atro\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
 
 class Connection extends Base
@@ -57,7 +57,13 @@ class Connection extends Base
 
     public function connect(Entity $connectionEntity)
     {
-        $connection = $this->getInjection('container')->get('\\Atro\\ConnectionType\\Connection' . ucfirst($connectionEntity->get('type')));
+        $type = $connectionEntity->get('type');
+        $connectionClass = $this->getMetadata()->get(['app', 'connectionTypes', $type]);
+
+        if (empty($connectionClass)) {
+            $connectionClass = '\\Atro\\ConnectionType\\Connection' . ucfirst($type);
+        }
+        $connection = $this->getInjection('container')->get($connectionClass);
 
         if (empty($connection) || !$connection instanceof ConnectionInterface) {
             throw new BadRequest(sprintf($this->exception('connectionFailed'), $this->exception('noSuchType')));
