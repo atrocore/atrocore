@@ -15,7 +15,17 @@
     "vendorOauthUrl": "Vendor Oauth URL",
     "vendorOauthScopes": "Vendor Oauth Scopes",
     "payload": "Payload",
-    "loginUrl": "Login URL"
+    "loginUrl": "Login URL",
+    "oauthConsumerKey": "Oauth Consummer Key",
+    "oauthConsumerSecret": "Oauth Consummer Secret",
+    "requestTokenUrl": "Request token url",
+    "accessTokenUrl": "Access Token Url",
+    "oauthVerifier": "Oauth Verifier",
+    "oauthToken": "Access Token",
+    "oauthTokenSecret": "Access Token Secret",
+    "callbackUrl": "Callback Url",
+    "linkUrl": "Link Url",
+    "apiTestUrl": "Test api url"
   },
   "labels": {
     "connectionSuccess": "Connection is successfully established",
@@ -28,6 +38,7 @@
     "oauth2": "OAuth 2.0",
     "otto": "Otto oauth",
     "cookie": "Cookie Session",
+    "oauth1": "Oauth 1.0",
     "client_credentials": "Client Credentials",
     "Create Connection": "Create Connection",
     "orders" : "Orders",
