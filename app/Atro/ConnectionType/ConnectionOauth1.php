@@ -160,7 +160,13 @@ class ConnectionOauth1 extends AbstractConnection
     {
         $authParameters = $this->getBasicAuthorizationHeaderInfo($connection->get('oauthConsumerKey'));
         $authParameters['oauth_token'] = $connection->get('oauthToken');
-        $authParameters['oauth_signature'] = $this->getSignature($url, $authParameters, $method, $connection->get('oauthConsumerSecret'), $this->decryptPassword($connection->get('oauthTokenSecret')));
+        $authParameters['oauth_signature'] = $this->getSignature(
+            $url,
+            $authParameters,
+            $method,
+            $connection->get('oauthConsumerSecret'),
+            $this->decryptPassword($connection->get('oauthTokenSecret'))
+        );
 
         return $this->buildAuthorizationHeader($authParameters, false);
     }
