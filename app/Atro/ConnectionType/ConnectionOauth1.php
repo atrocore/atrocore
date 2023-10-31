@@ -56,7 +56,7 @@ class ConnectionOauth1 extends AbstractConnection
 
     public function getHeaders(array $connectionData) : array
     {
-        return ["Authorization" => "{$connectionData['token_type']} {$connectionData['access_token']}"];
+        return ["Authorization: {$connectionData['token_type']} {$connectionData['access_token']}"];
     }
 
     public function getBasicAuthorizationHeaderInfo($consumerKey)
