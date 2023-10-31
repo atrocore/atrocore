@@ -388,7 +388,7 @@ class QueryConverter
 
         $part = $this->toDb($field);
         if ($relName) {
-            $part = $relName . '.' . $part;
+            $part = $this->relationNameToAlias($relName) . '.' . $part;
         } else {
             if (!empty($entity->fields[$field]['select'])) {
                 $part = $entity->fields[$field]['select'];
@@ -404,9 +404,7 @@ class QueryConverter
 
     protected function getSelect(IEntity $entity, $fields = null, $distinct = false, $skipTextColumns = false, $maxTextColumnsLength = null)
     {
-        $select = "";
         $arr = array();
-        $specifiedList = is_array($fields) ? true : false;
 
         if (empty($fields)) {
             $attributeList = array_keys($entity->fields);
@@ -691,10 +689,15 @@ class QueryConverter
         }
 
         if (!isset($this->relationAliases[$entity->getEntityType()][$relationName])) {
-            $this->relationAliases[$entity->getEntityType()][$relationName] = $this->toDb(self::sanitize($relationName)) . '_mm';
+            $this->relationAliases[$entity->getEntityType()][$relationName] = $this->relationNameToAlias($relationName);
         }
 
         return $this->relationAliases[$entity->getEntityType()][$relationName];
+    }
+
+    public function relationNameToAlias(string $relationName): string
+    {
+        return $this->toDb(self::sanitize($relationName)) . '_mm';
     }
 
     protected function getFieldPath(IEntity $entity, $field)
@@ -1057,11 +1060,11 @@ class QueryConverter
                         $itemConditions = $item[2];
                     }
                 } else {
-                    $alias = $relationName;
+                    $alias = $this->relationNameToAlias($relationName);
                 }
             } else {
                 $relationName = $item;
-                $alias = $relationName;
+                $alias = $this->relationNameToAlias($relationName);
             }
             $conditions = [];
             if (!empty($joinConditions[$alias])) {

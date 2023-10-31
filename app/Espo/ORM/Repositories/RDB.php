@@ -79,7 +79,7 @@ class RDB extends \Espo\ORM\Repository
         $this->entityManager = $entityManager;
     }
 
-    public function getMapper()
+    public function getMapper(): Mapper
     {
         if (empty($this->mapper)) {
             $this->mapper = $this->getEntityManager()->getMapper('RDB');
