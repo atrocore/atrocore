@@ -17,7 +17,7 @@
       "readOnly": true
     },
     "inputData": {
-      "type": "jsonObject",
+      "type": "wysiwyg",
       "readOnly": true
     },
     "createdBy": {

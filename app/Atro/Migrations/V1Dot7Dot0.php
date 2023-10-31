@@ -33,6 +33,8 @@ class V1Dot7Dot0 extends Base
         $this->exec("DROP INDEX UNIQ_BF5476CA96901F54 ON notification");
         $this->exec("ALTER TABLE notification CHANGE number number INT DEFAULT NULL");
 
+        $this->exec("ALTER TABLE pseudo_transaction_job CHANGE input_data input_data LONGTEXT DEFAULT NULL");
+
         $connection = $this->getSchema()->getConnection();
 
         $rows = $connection->createQueryBuilder()
