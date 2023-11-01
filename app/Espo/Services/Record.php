@@ -79,7 +79,7 @@ class Record extends \Espo\Core\Services\Base
 
     private $streamService;
 
-    protected $notFilteringAttributeList =[]; // TODO maybe remove it
+    protected $notFilteringAttributeList = []; // TODO maybe remove it
 
     protected $internalAttributeList = [];
 
@@ -239,7 +239,7 @@ class Record extends \Espo\Core\Services\Base
         if ($entity) {
             $historyRecord->set(array(
                 'targetType' => $entity->getEntityType(),
-                'targetId' => $entity->id
+                'targetId'   => $entity->id
             ));
         }
 
@@ -668,7 +668,7 @@ class Record extends \Espo\Core\Services\Base
     }
 
     /**
-     * @param Entity    $entity
+     * @param Entity $entity
      * @param \stdClass $data
      *
      * @return array
@@ -1186,7 +1186,7 @@ class Record extends \Espo\Core\Services\Base
             if (!empty($duplicates)) {
                 $reason = array(
                     'reason' => 'Duplicate',
-                    'data' => $duplicates
+                    'data'   => $duplicates
                 );
                 throw new Conflict(json_encode($reason));
             }
@@ -1215,7 +1215,7 @@ class Record extends \Espo\Core\Services\Base
                         $entity->addLinkMultipleId('teams', $defaultTeamId);
                         $teamsNames = $entity->get('teamsNames');
                         if (!$teamsNames || !is_object($teamsNames)) {
-                            $teamsNames = (object) [];
+                            $teamsNames = (object)[];
                         }
                         $teamsNames->$defaultTeamId = $this->getUser()->get('defaultTeamName');
                         $entity->set('teamsNames', $teamsNames);
@@ -1542,6 +1542,7 @@ class Record extends \Espo\Core\Services\Base
 
         return $result;
     }
+
     public function restoreEntity($id)
     {
         $id = $this
@@ -1560,7 +1561,7 @@ class Record extends \Espo\Core\Services\Base
             return $this->dispatchEvent('afterRestoreEntity', new Event(['id' => $id, 'result' => $entity, 'service' => $this]))->getArgument('result');
         }
 
-        return  false;
+        return false;
     }
 
     protected function getSelectParams($params)
@@ -1587,10 +1588,10 @@ class Record extends \Espo\Core\Services\Base
 
         $maxSize = 0;
         if ($disableCount) {
-           if (!empty($params['maxSize'])) {
-               $maxSize = $params['maxSize'];
-               $params['maxSize'] = $params['maxSize'] + 1;
-           }
+            if (!empty($params['maxSize'])) {
+                $maxSize = $params['maxSize'];
+                $params['maxSize'] = $params['maxSize'] + 1;
+            }
         }
 
         $selectParams = $this->getSelectParams($params);
@@ -1654,10 +1655,10 @@ class Record extends \Espo\Core\Services\Base
 
         $maxSize = 0;
         if ($disableCount) {
-           if (!empty($params['maxSize'])) {
-               $maxSize = $params['maxSize'];
-               $params['maxSize'] = $params['maxSize'] + 1;
-           }
+            if (!empty($params['maxSize'])) {
+                $maxSize = $params['maxSize'];
+                $params['maxSize'] = $params['maxSize'] + 1;
+            }
         }
 
         $selectParams = $this->getSelectParams($params);
@@ -1687,7 +1688,7 @@ class Record extends \Espo\Core\Services\Base
 
         $statusIgnoreList = $this->getMetadata()->get(['scopes', $this->entityType, 'kanbanStatusIgnoreList'], []);
 
-        $additionalData = (object) [
+        $additionalData = (object)[
             'groupList' => []
         ];
 
@@ -1748,7 +1749,7 @@ class Record extends \Espo\Core\Services\Base
         }
 
         return $this
-            ->dispatchEvent('afterGetListKanban', new Event(['params' => $params, 'service' => $this, 'result' => (object) ['total' => $total,'collection' => $collection,'additionalData' => $additionalData]]))
+            ->dispatchEvent('afterGetListKanban', new Event(['params' => $params, 'service' => $this, 'result' => (object)['total' => $total, 'collection' => $collection, 'additionalData' => $additionalData]]))
             ->getArgument('result');
     }
 
@@ -1876,7 +1877,7 @@ class Record extends \Espo\Core\Services\Base
         }
 
         return $this
-            ->dispatchEvent('afterFindLinkedEntities', new Event(['id' => $id, 'service' => $this, 'link' => $link, 'params' => $params, 'result' => ['total' => $total,'collection' => $collection]]))
+            ->dispatchEvent('afterFindLinkedEntities', new Event(['id' => $id, 'service' => $this, 'link' => $link, 'params' => $params, 'result' => ['total' => $total, 'collection' => $collection]]))
             ->getArgument('result');
     }
 
@@ -1885,7 +1886,7 @@ class Record extends \Espo\Core\Services\Base
      *
      * @param Entity $entity
      * @param string $link
-     * @param array  $params
+     * @param array $params
      *
      * @return array
      */
@@ -2439,7 +2440,7 @@ class Record extends \Espo\Core\Services\Base
     public function checkEntityForDuplicate(Entity $entity, $data = null)
     {
         if (!$data) {
-            $data = (object) [];
+            $data = (object)[];
         }
 
         $where = $this->getDuplicateWhereClause($entity, $data);
@@ -2492,7 +2493,7 @@ class Record extends \Espo\Core\Services\Base
         /** @var \Espo\Repositories\Measure $measureRepository */
         $measureRepository = $this->getEntityManager()->getRepository('Measure');
 
-        $entity->set($fieldName . 'AllUnits', $measureRepository->convertMeasureUnit($value, $fieldDefs['measureId'], $unitId));
+        $entity->set($fieldName . 'AllUnits', $fieldDefs['type'] == 'varchar' ? [] : $measureRepository->convertMeasureUnit($value, $fieldDefs['measureId'], $unitId));
 
         /**
          * Set unit name to virtual field for backward compatibility
@@ -2721,7 +2722,7 @@ class Record extends \Espo\Core\Services\Base
 
         foreach ($data['idList'] as $id) {
             $list[] = array(
-                'id' => $id,
+                'id'   => $id,
                 'name' => $data['nameMap']->$id
             );
         }
@@ -2735,7 +2736,7 @@ class Record extends \Espo\Core\Services\Base
 
         return array(
             'total' => $total,
-            'list' => $list
+            'list'  => $list
         );
     }
 
@@ -2783,8 +2784,8 @@ class Record extends \Espo\Core\Services\Base
                 $attachmentList = $entity->get($field);
                 if (count($attachmentList)) {
                     $idList = [];
-                    $nameHash = (object) [];
-                    $typeHash = (object) [];
+                    $nameHash = (object)[];
+                    $typeHash = (object)[];
                     foreach ($attachmentList as $attachment) {
                         $attachment = $this->getEntityManager()->getRepository('Attachment')->getCopiedAttachment($attachment);
                         if ($attachment) {
@@ -3141,7 +3142,7 @@ class Record extends \Espo\Core\Services\Base
     }
 
     /**
-     * @param Entity    $entity
+     * @param Entity $entity
      * @param \stdClass $data
      *
      * @return array
@@ -3315,7 +3316,7 @@ class Record extends \Espo\Core\Services\Base
 
     /**
      * @param string $action
-     * @param Event  $event
+     * @param Event $event
      *
      * @return Event
      */

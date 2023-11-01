@@ -292,6 +292,23 @@ class Util
         return preg_replace_callback('/' . $symbol . '([a-zA-Z])/', 'static::toCamelCaseConversion', $name);
     }
 
+    public static function arrayKeysToCamelCase(array $array, string $symbol = '_', bool $capitaliseFirstChar = false): array
+    {
+        $result = [];
+        foreach ($array as $key => $value) {
+            if (is_array($value)) {
+                $value = self::arrayKeysToCamelCase($value, $symbol, $capitaliseFirstChar);
+            }
+            if (is_string($key)) {
+                $result[self::toCamelCase($key, $symbol, $capitaliseFirstChar)] = $value;
+            } else {
+                $result[$key] = $value;
+            }
+        }
+
+        return $result;
+    }
+
     protected static function toCamelCaseConversion($matches)
     {
         return strtoupper($matches[1]);

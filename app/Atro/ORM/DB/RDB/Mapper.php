@@ -34,11 +34,15 @@ class Mapper implements MapperInterface
         $this->queryConverter = new QueryConverter($this->entityFactory, $this->connection);
     }
 
-    public function selectById(IEntity $entity, string $id, $params = []): IEntity
+    public function selectById(IEntity $entity, string $id, $params = []): ?IEntity
     {
         $params['whereClause']['id'] = $id;
 
         $res = $this->select($entity, $params);
+        if (empty($res)){
+            return null;
+        }
+
         foreach ($res as $row) {
             $entity->set($row);
             $entity->setAsFetched();
