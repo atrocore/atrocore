@@ -335,7 +335,7 @@ class Job
                     ->setParameter('attempts', $attempts, Mapper::getParameterType($attempts))
                     ->set('j.failed_attempts', ':failedAttempts')
                     ->setParameter('failedAttempts', $failedAttempts, Mapper::getParameterType($failedAttempts))
-                    ->where('id = :id)')
+                    ->where('id = :id')
                     ->setParameter('id', $row['id'], Mapper::getParameterType($row['id']))
                     ->executeQuery();
             }
