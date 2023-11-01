@@ -73,9 +73,10 @@ Espo.define('views/fields/unit-int', 'views/fields/int', Dep => {
 
             return inheritedFields && Array.isArray(inheritedFields) && inheritedFields.includes(this.originalName) && inheritedFields.includes(this.originalName + 'Unit');
         },
-        setDataWithOriginalName(){
+        setDataWithOriginalName() {
             const data = Dep.prototype.data.call(this);
-            data.value = this.model.get(this.originalName)
+            const value = isNaN(this.model.get(this.originalName)) ? null : this.model.get(this.originalName);
+            data.value = Dep.prototype.formatNumber.call(this, value);
 
             if (this.model.get(this.originalName) !== null && typeof this.model.get(this.originalName) !== 'undefined') {
                 data.isNotEmpty = true;
@@ -86,10 +87,10 @@ Espo.define('views/fields/unit-int', 'views/fields/int', Dep => {
         data() {
             return this.prepareMeasureData(this.setDataWithOriginalName());
         },
-        prepareOriginalName(){
+        prepareOriginalName() {
             this.originalName = this.name;
             if (this.measureId) {
-                this.name = "unit"+this.originalName.charAt(0).toUpperCase()+this.originalName.slice(1)
+                this.name = "unit" + this.originalName.charAt(0).toUpperCase() + this.originalName.slice(1)
             }
         },
 
@@ -105,6 +106,13 @@ Espo.define('views/fields/unit-int', 'views/fields/int', Dep => {
             return data;
         },
 
+        addMeasureDataOnFetch(data) {
+            let $unit = this.$el.find(`[name="${this.unitFieldName}"]`);
+            data[this.unitFieldName] = $unit ? $unit.val() : null;
+            data[this.originalName] = data[this.name]
+            delete data[this.name];
+        },
+
         fetch() {
             let data = Dep.prototype.fetch.call(this);
 
@@ -112,12 +120,6 @@ Espo.define('views/fields/unit-int', 'views/fields/int', Dep => {
             return data;
         },
 
-        addMeasureDataOnFetch(data) {
-            let $unit = this.$el.find(`[name="${this.unitFieldName}"]`);
-            data[this.unitFieldName] = $unit ? $unit.val() : null;
-            data[this.originalName] = data[this.name]
-            delete data[this.name];
-        },
 
     });
 });

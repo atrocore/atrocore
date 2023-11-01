@@ -49,12 +49,28 @@ Espo.define('views/fields/unit-float', ['views/fields/float', 'views/fields/unit
             return Int.prototype.isInheritedField.call(this);
         },
 
+        setDataWithOriginalName() {
+            const data = Dep.prototype.data.call(this);
+            const value = isNaN(this.model.get(this.originalName)) ? null : this.model.get(this.originalName);
+            data.value = Dep.prototype.formatNumber.call(this, value);
+
+            if (this.model.get(this.originalName) !== null && typeof this.model.get(this.originalName) !== 'undefined') {
+                data.isNotEmpty = true;
+            }
+            data.valueIsSet = this.model.has(this.originalName);
+
+            return data
+        },
+
         data() {
-            return Int.prototype.prepareMeasureData.call(this, Int.prototype.setDataWithOriginalName.call(this));
+            return Int.prototype.prepareMeasureData.call(this, this.setDataWithOriginalName());
         },
 
         fetch() {
-            return Int.prototype.fetch.call(this);
+            let data = Dep.prototype.fetch.call(this);
+
+            Int.prototype.addMeasureDataOnFetch.call(this, data)
+            return data;
         },
 
     });
