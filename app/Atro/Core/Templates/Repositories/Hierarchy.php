@@ -421,7 +421,7 @@ class Hierarchy extends RDB
         }
         $sth->execute();
 
-        return $sth->fetchAll(\PDO::FETCH_ASSOC);
+        return Util::arrayKeysToCamelCase($sth->fetchAll(\PDO::FETCH_ASSOC));
     }
 
     public function getChildrenCount(string $parentId, array $selectParams = null): int
