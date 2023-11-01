@@ -30,47 +30,94 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/fields/unit-int', ['views/fields/int', 'views/fields/unit-varchar'], (Dep, Varchar) => {
+Espo.define('views/fields/unit-int', 'views/fields/int', Dep => {
 
     return Dep.extend({
 
         setup() {
+
             Dep.prototype.setup.call(this);
-            Varchar.prototype.prepareOriginalName.call(this);
-            Varchar.prototype.afterSetup.call(this);
+            this.prepareOriginalName()
+            this.afterSetup();
+
+        },
+
+
+        afterSetup() {
+
+            if (this.measureId) {
+                this.unitFieldName = this.originalName + 'UnitId';
+                this.loadUnitOptions();
+                if (this.model.isNew() && this.defaultUnit) {
+                    this.model.set(this.unitFieldName, this.defaultUnit);
+                }
+            }
         },
 
         init() {
-            Varchar.prototype.prepareOptionName.call(this);
+            this.prepareOptionName();
             Dep.prototype.init.call(this);
         },
 
+        prepareOptionName() {
+            let fieldName = this.options.name || this.options.defs.name;
+            this.options.name = this.getMetadata().get(['entityDefs', this.model.name, 'fields', fieldName, 'mainField']) || fieldName;
+        },
+
         isInheritedField: function () {
-            return Varchar.prototype.isInheritedField.call(this);
-        },
+            if (!['detail', 'edit'].includes(this.mode) || !this.model || !this.model.urlRoot || !this.isInheritableField()) {
+                return false;
+            }
 
-        data() {
-            return Varchar.prototype.prepareMeasureData.call(this, this.setDataWithOriginalName());
-        },
+            const inheritedFields = this.model.get('inheritedFields');
 
-        setDataWithOriginalName() {
+            return inheritedFields && Array.isArray(inheritedFields) && inheritedFields.includes(this.originalName) && inheritedFields.includes(this.originalName + 'Unit');
+        },
+        setDataWithOriginalName(){
             const data = Dep.prototype.data.call(this);
-            const value = isNaN(this.model.get(this.originalName)) ? null : this.model.get(this.originalName);
-            data.value = Dep.prototype.formatNumber.call(this, value);
+            data.value = this.model.get(this.originalName)
 
             if (this.model.get(this.originalName) !== null && typeof this.model.get(this.originalName) !== 'undefined') {
                 data.isNotEmpty = true;
             }
             data.valueIsSet = this.model.has(this.originalName);
+            return data;
+        },
+        data() {
+            return this.prepareMeasureData(this.setDataWithOriginalName());
+        },
+        prepareOriginalName(){
+            this.originalName = this.name;
+            if (this.measureId) {
+                this.name = "unit"+this.originalName.charAt(0).toUpperCase()+this.originalName.slice(1)
+            }
+        },
 
-            return data
+        prepareMeasureData(data) {
+            if (this.measureId) {
+                data.unitFieldName = this.unitFieldName;
+                data.unitList = this.unitList;
+                data.unitListTranslates = this.unitListTranslates;
+                data.unitValue = this.model.get(this.unitFieldName);
+                data.unitValueTranslate = this.unitListTranslates[data.unitValue] || data.unitValue;
+            }
+
+            return data;
         },
 
         fetch() {
             let data = Dep.prototype.fetch.call(this);
-            Varchar.prototype.addMeasureDataOnFetch.call(this, data)
+
+            this.addMeasureDataOnFetch(data)
             return data;
-        }
+        },
+
+        addMeasureDataOnFetch(data) {
+            let $unit = this.$el.find(`[name="${this.unitFieldName}"]`);
+            data[this.unitFieldName] = $unit ? $unit.val() : null;
+            data[this.originalName] = data[this.name]
+            delete data[this.name];
+        },
 
     });
 });

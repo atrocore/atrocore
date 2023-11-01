@@ -146,7 +146,7 @@ class Metadata extends AbstractListener
                 if (!empty($fieldDefs['relationVirtualField'])) {
                     continue;
                 }
-                if (empty($fieldDefs['type']) || !in_array($fieldDefs['type'], ['int', 'float', 'rangeInt', 'rangeFloat', 'varchar'])) {
+                if (empty($fieldDefs['type']) || !in_array($fieldDefs['type'], ['int', 'float', 'rangeInt', 'rangeFloat'])) {
                     continue;
                 }
 
@@ -184,7 +184,7 @@ class Metadata extends AbstractListener
                     $data['clientDefs'][$entityType]['dynamicLogic']['fields'][$unitFieldName]['required'] = $requireLogic;
                 }
 
-                if (in_array($fieldDefs['type'], ['int', 'float', 'varchar'])) {
+                if (in_array($fieldDefs['type'], ['int', 'float'])) {
                     $virtualFieldName = 'unit' . ucfirst($field);
                     $data['entityDefs'][$entityType]['fields'][$field]['labelField'] = $virtualFieldName;
                     $data['entityDefs'][$entityType]['fields'][$virtualFieldName] = [
@@ -216,7 +216,7 @@ class Metadata extends AbstractListener
                     $data['entityDefs'][$entityType]['fields'][$field]['unitField'] = true;
                 }
 
-                foreach (in_array($fieldDefs['type'], ['int', 'float', 'varchar']) ? [$field] : [$field . 'From', $field . 'To'] as $v) {
+                foreach (in_array($fieldDefs['type'], ['int', 'float']) ? [$field] : [$field . 'From', $field . 'To'] as $v) {
                     $data['entityDefs'][$entityType]['fields'][$v . 'AllUnits'] = [
                         "type"                      => "jsonObject",
                         "notStorable"               => true,

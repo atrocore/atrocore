@@ -480,7 +480,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
         $this->validateText($entity, $fieldName, $fieldData);
 
-        if (!empty($fieldData['unitIdField']) && !empty($fieldData['measureId'])) {
+        if (!empty($fieldData['measureId'])) {
             $unit = $this->getEntityManager()->getRepository('Unit')
                 ->where([
                     'id'        => $entity->get($fieldName),
