@@ -179,6 +179,8 @@ class Converter
 
         $ormMetadata = $this->afterProcess($ormMetadata);
 
+        $ormMetadata['TreoStore']['fields']['id']['len'] = 255;
+
         return $ormMetadata;
     }
 
