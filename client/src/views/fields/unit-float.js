@@ -30,27 +30,23 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/fields/unit-float', ['views/fields/float', 'views/fields/unit-varchar'], (Dep, Varchar) => {
+Espo.define('views/fields/unit-float', ['views/fields/float', 'views/fields/unit-int'], (Dep, Int) => {
 
     return Dep.extend({
 
         setup() {
             Dep.prototype.setup.call(this);
-            Varchar.prototype.prepareOriginalName.call(this);
-            Varchar.prototype.afterSetup.call(this);
+            Int.prototype.prepareOriginalName.call(this);
+            Int.prototype.afterSetup.call(this);
         },
 
         init() {
-            Varchar.prototype.prepareOptionName.call(this);
+            Int.prototype.prepareOptionName.call(this);
             Dep.prototype.init.call(this);
         },
 
         isInheritedField: function () {
-            return Varchar.prototype.isInheritedField.call(this);
-        },
-
-        data() {
-            return Varchar.prototype.prepareMeasureData.call(this, this.setDataWithOriginalName());
+            return Int.prototype.isInheritedField.call(this);
         },
 
         setDataWithOriginalName() {
@@ -66,9 +62,14 @@ Espo.define('views/fields/unit-float', ['views/fields/float', 'views/fields/unit
             return data
         },
 
+        data() {
+            return Int.prototype.prepareMeasureData.call(this, this.setDataWithOriginalName());
+        },
+
         fetch() {
             let data = Dep.prototype.fetch.call(this);
-            Varchar.prototype.addMeasureDataOnFetch.call(this, data)
+
+            Int.prototype.addMeasureDataOnFetch.call(this, data)
             return data;
         },
 
