@@ -37,7 +37,6 @@ namespace Espo\Services;
 
 use Espo\Core\Templates\Services\Base;
 use Espo\Core\Utils\Json;
-use Espo\Core\Utils\Util;
 
 class TreoStore extends Base
 {
@@ -94,7 +93,7 @@ class TreoStore extends Base
                 ->setValue('description', ':description')
                 ->setValue('tags', ':tags')
                 ->setParameters([
-                    'id'          => Util::generateId(),
+                    'id'          => $package['treoId'],
                     'packageId'   => $package['packageId'],
                     'url'         => $package['url'],
                     'status'      => $package['status'],

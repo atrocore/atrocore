@@ -17,7 +17,7 @@ use Espo\ORM\IEntity;
 
 interface MapperInterface
 {
-    public function selectById(IEntity $entity, string $id, $params = []): IEntity;
+    public function selectById(IEntity $entity, string $id, $params = []): ?IEntity;
 
     public function select(IEntity $entity, array $params): array;
 
