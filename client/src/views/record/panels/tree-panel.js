@@ -276,6 +276,11 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                 url += '&selectedId=' + this.model.id;
             }
 
+            let whereData = this.getStorage().get('treeWhereData', this.treeScope) || [];
+            if(whereData.length > 0){
+                url += "&";
+                url += $.param({"where" : whereData});
+            }
             return url;
         },
 
@@ -360,14 +365,11 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
         buildTree(data = null) {
             let $tree = this.getTreeEl();
             let whereData = this.getStorage().get('treeWhereData', this.treeScope) || [];
-
             let searchValue = this.getStorage().get('treeSearchValue', this.treeScope) || null;
-            if (searchValue) {
-                this.$el.find('.search-in-tree-input').val(searchValue);
-                whereData = [{"type": "textFilter", "value": searchValue}];
-            }
 
-            if (data === null && whereData.length > 0) {
+            if (data === null && searchValue) {
+                this.$el.find('.search-in-tree-input').val(searchValue);
+                whereData.push({"type": "textFilter", "value": searchValue})
                 $tree.html(this.translate('Loading...'));
                 this.ajaxGetRequest(`${this.treeScope}/action/TreeData`, {"where": whereData}).then(response => {
                     this.buildTree(response.tree);
