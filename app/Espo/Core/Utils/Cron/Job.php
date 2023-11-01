@@ -228,10 +228,10 @@ class Job
 
             $connection->createQueryBuilder()
                 ->update($connection->quoteIdentifier('job'), 'j')
-                ->set("j.{$connection->quoteIdentifier('status')}", CronManager::FAILED)
-                ->set("j.attempts", 0)
+                ->set("{$connection->quoteIdentifier('status')}", CronManager::FAILED)
+                ->set("attempts", 0)
                 ->where('j.id IN (:ids)')
-                ->setParameter('ids', $jobQuotedIdList, Mapper::getParameterType(PARAM_STR_ARRAY))
+                ->setParameter('ids', $jobQuotedIdList, Mapper::getParameterType($jobQuotedIdList))
                 ->executeQuery();
 
             $cronScheduledJob = $this->getCronScheduledJob();
@@ -290,8 +290,8 @@ class Job
                 $connection->createQueryBuilder()
                     ->update($connection->quoteIdentifier('job'))
                     ->set('deleted', ':deleted')
-                    ->setParameter('deleted', true, Mapper::getParameterType(true))
                     ->where('id IN (:ids)')
+                    ->setParameter('deleted', true, Mapper::getParameterType(true))
                     ->setParameter('ids', $jobIdList, Mapper::getParameterType($jobIdList))
                     ->executeQuery();
             }
@@ -329,13 +329,13 @@ class Job
 
                 $connection->createQueryBuilder()
                     ->update($connection->quoteIdentifier('job'), 'j')
-                    ->set('j.status', ':status')
-                    ->setParameter('status', CronManager::PENDING)
-                    ->set('j.attempts', ':attempts')
-                    ->setParameter('attempts', $attempts, Mapper::getParameterType($attempts))
-                    ->set('j.failed_attempts', ':failedAttempts')
-                    ->setParameter('failedAttempts', $failedAttempts, Mapper::getParameterType($failedAttempts))
+                    ->set('status', ':status')
+                    ->set('attempts', ':attempts')
+                    ->set('failed_attempts', ':failedAttempts')
                     ->where('id = :id')
+                    ->setParameter('status', CronManager::PENDING)
+                    ->setParameter('attempts', $attempts, Mapper::getParameterType($attempts))
+                    ->setParameter('failedAttempts', $failedAttempts, Mapper::getParameterType($failedAttempts))
                     ->setParameter('id', $row['id'], Mapper::getParameterType($row['id']))
                     ->executeQuery();
             }
