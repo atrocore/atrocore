@@ -39,7 +39,7 @@ class Mapper implements MapperInterface
         $params['whereClause']['id'] = $id;
 
         $res = $this->select($entity, $params);
-        if (empty($res)){
+        if (empty($res)) {
             return null;
         }
 
@@ -517,7 +517,7 @@ class Mapper implements MapperInterface
 
             $qb->insert($this->connection->quoteIdentifier($this->toDb($entity->getEntityType())));
             foreach ($dataArr as $field => $value) {
-                $value = $this->prepareValueForUpdate($entity->fields[$field]['type'], $value);
+                $value = $this->prepareValueForUpdate($entity->getAttributeType($field), $value);
                 $qb->setValue($this->connection->quoteIdentifier($this->toDb($field)), ":i_$field");
                 $qb->setParameter("i_$field", $value, self::getParameterType($value));
             }
