@@ -2765,14 +2765,10 @@ class Record extends \Espo\Core\Services\Base
 
             if (!empty($item['relationVirtualField'])) {
                 Util::unsetProperty($attributes, $field);
-                if ($type === 'link') {
-                    Util::unsetProperty($attributes, "{$field}Id");
-                    Util::unsetProperty($attributes, "{$field}Name");
-                }
-                if ($type === 'linkMultiple') {
-                    Util::unsetProperty($attributes, "{$field}Ids");
-                    Util::unsetProperty($attributes, "{$field}Names");
-                }
+                Util::unsetProperty($attributes, "{$field}Id");
+                Util::unsetProperty($attributes, "{$field}Name");
+                Util::unsetProperty($attributes, "{$field}Ids");
+                Util::unsetProperty($attributes, "{$field}Names");
                 continue;
             }
 
