@@ -2763,6 +2763,19 @@ class Record extends \Espo\Core\Services\Base
             if (empty($item['type'])) continue;
             $type = $item['type'];
 
+            if (!empty($item['relationVirtualField'])) {
+                Util::unsetProperty($attributes, $field);
+                if ($type === 'link') {
+                    Util::unsetProperty($attributes, "{$field}Id");
+                    Util::unsetProperty($attributes, "{$field}Name");
+                }
+                if ($type === 'linkMultiple') {
+                    Util::unsetProperty($attributes, "{$field}Ids");
+                    Util::unsetProperty($attributes, "{$field}Names");
+                }
+                continue;
+            }
+
             if (!empty($item['duplicateIgnore'])) {
                 $attributeToIgnoreList = $fieldManager->getAttributeList($this->entityType, $field);
                 foreach ($attributeToIgnoreList as $attribute) {

@@ -96,6 +96,13 @@ class Util
         return $value;
     }
 
+    public static function unsetProperty(\stdClass $object, string $property): void
+    {
+        if (property_exists($object, $property)){
+            unset($object->$property);
+        }
+    }
+
     /**
      * @param string $dir
      *
