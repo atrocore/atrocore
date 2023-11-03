@@ -82,7 +82,7 @@ class PostUpdate
             self::createConfig();
 
             // update client files
-//            self::updateClientFiles();
+            self::updateClientFiles();
 
             // run migrations
             self::runMigrations();
