@@ -2212,7 +2212,9 @@ class Record extends \Espo\Core\Services\Base
         if ($total <= $maxMassUpdateCount) {
             foreach ($ids as $id) {
                 try {
-                    $this->updateEntity($id, clone $data);
+                    $input = clone $data;
+                    $input->_isMassUpdate = true;
+                    $this->updateEntity($id, $input);
                 } catch (\Throwable $e) {
                     $GLOBALS['log']->error("Update {$this->getEntityType()} '$id' failed: {$e->getMessage()}");
                 }
