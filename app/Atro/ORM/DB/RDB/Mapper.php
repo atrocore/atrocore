@@ -689,29 +689,33 @@ class Mapper implements MapperInterface
 
     protected function updateModifiedAt(IEntity $entity)
     {
-        try {
-            $this->connection->createQueryBuilder()
-                ->update($this->connection->quoteIdentifier($this->toDb($entity->getEntityType())))
-                ->set('modified_at', date('Y-m-d H:i:s'))
-                ->where('id = :id')
-                ->setParameter('id', $entity->get('id'))
-                ->executeQuery();
-        } catch (\Throwable $e) {
+        if (empty($entity->getAttributeType('modifiedAt'))) {
+            return;
         }
+
+        $this->connection->createQueryBuilder()
+            ->update($this->connection->quoteIdentifier($this->toDb($entity->getEntityType())))
+            ->set('modified_at', ':date')
+            ->where('id = :id')
+            ->setParameter('date', date('Y-m-d H:i:s'))
+            ->setParameter('id', $entity->get('id'))
+            ->executeQuery();
     }
 
     protected function updateModifiedBy(IEntity $entity)
     {
-        try {
-            $userId = $this->entityFactory->getEntityManager()->getUser()->get('id');
-            $this->connection->createQueryBuilder()
-                ->update($this->connection->quoteIdentifier($this->toDb($entity->getEntityType())))
-                ->set('modified_by_id', $userId)
-                ->where('id = :id')
-                ->setParameter('id', $entity->get('id'))
-                ->executeQuery();
-        } catch (\Throwable $e) {
+        if (empty($entity->getAttributeType('modifiedBy'))) {
+            return;
         }
+
+        $userId = $this->entityFactory->getEntityManager()->getUser()->get('id');
+        $this->connection->createQueryBuilder()
+            ->update($this->connection->quoteIdentifier($this->toDb($entity->getEntityType())))
+            ->set('modified_by_id', ':userId')
+            ->where('id = :id')
+            ->setParameter('userId', $userId)
+            ->setParameter('id', $entity->get('id'))
+            ->executeQuery();
     }
 
     public function toDb(string $field): string
