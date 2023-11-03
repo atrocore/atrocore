@@ -11,7 +11,6 @@
 
 namespace Atro\Core\Migration;
 
-use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Atro\Core\Utils\Database\Schema\Schema;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Schema as DoctrineSchema;
