@@ -160,7 +160,7 @@ class Migration
             return null;
         }
 
-        return new $className($this->container->get('connection'), $this->container->get('config'));
+        return new $className($this->container->get('schema'), $this->container->get('config'));
     }
 
     /**
