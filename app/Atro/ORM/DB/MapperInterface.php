@@ -31,7 +31,7 @@ interface MapperInterface
 
     public function removeRelation(IEntity $entity, string $relationName, string $id = null, bool $all = false, IEntity $relEntity = null, bool $force = false): bool;
 
-    public function insert(IEntity $entity): bool;
+    public function insert(IEntity $entity, bool $ignoreDuplicate = false): bool;
 
     public function update(IEntity $entity): bool;
 

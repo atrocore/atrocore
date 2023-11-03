@@ -18,6 +18,7 @@ use Atro\ORM\DB\RDB\Query\QueryConverter;
 use Atro\ORM\DB\RDB\QueryCallbacks\JoinManyToMany;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\IEntity;
 
@@ -508,7 +509,7 @@ class Mapper implements MapperInterface
         return true;
     }
 
-    public function insert(IEntity $entity): bool
+    public function insert(IEntity $entity, bool $ignoreDuplicate = false): bool
     {
         $dataArr = $this->toValueMap($entity);
 
@@ -522,8 +523,18 @@ class Mapper implements MapperInterface
                 $qb->setParameter("i_$field", $value, self::getParameterType($value));
             }
 
+            $sql = $qb->getSQL();
+
+            if ($ignoreDuplicate) {
+                if ($this->connection->getDatabasePlatform() instanceof PostgreSQLPlatform) {
+                    $sql .= ' ON CONFLICT DO NOTHING';
+                } else {
+                    $sql = str_replace('INSERT INTO', 'INSERT IGNORE INTO', $sql);
+                }
+            }
+
             try {
-                $qb->executeQuery();
+                $this->connection->executeQuery($sql, $qb->getParameters(), $qb->getParameterTypes());
             } catch (\Throwable $e) {
                 $sql = $qb->getSQL();
                 $GLOBALS['log']->error("RDB INSERT failed for SQL: $sql");

@@ -159,8 +159,7 @@ class RDB extends \Espo\ORM\Repository
         if ($entity->isNew() && !$entity->isSaved()) {
             // check workflow init states if it needs
             $this->workflowInitStates($entity);
-
-            $result = $this->getMapper()->insert($entity);
+            $result = $this->getMapper()->insert($entity, !empty($options['ignoreDuplicate']));
         } else {
             // run workflow method "can()" if it needs
             $this->workflowCan($entity);
