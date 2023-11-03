@@ -45,11 +45,6 @@ class Base
     {
     }
 
-    protected function getSchema(): Schema
-    {
-        return $this->schema;
-    }
-
     protected function getConnection(): Connection
     {
         return $this->connection;
@@ -65,9 +60,14 @@ class Base
         return $this->comparator;
     }
 
+    protected function getCurrentSchema(): DoctrineSchema
+    {
+        return $this->schema->getCurrentSchema();
+    }
+
     protected function addColumn(DoctrineSchema $schema, string $tableName, string $columnName, array $params): void
     {
-        $this->getSchema()->getSchemaConverter()->addColumn($schema, $schema->getTable($tableName), $columnName, $this->ormConverter->convertField($params));
+        $this->schema->getSchemaConverter()->addColumn($schema, $schema->getTable($tableName), $columnName, $this->ormConverter->convertField($params));
     }
 
     protected function dropColumn(DoctrineSchema $schema, string $tableName, string $columnName): void
