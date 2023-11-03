@@ -160,7 +160,7 @@ class Migration
             return null;
         }
 
-        return new $className($this->container->get('pdo'), $this->container->get('config'), $this->container->get('schema'));
+        return new $className($this->container->get('connection'), $this->container->get('config'));
     }
 
     /**

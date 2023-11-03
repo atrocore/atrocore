@@ -11,25 +11,22 @@
 
 namespace Atro\Core\Migration;
 
-use Doctrine\DBAL\Schema\Schema as DoctrineSchema;
-use Atro\Core\Utils\Database\Schema\Schema;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Schema\Comparator;
 use Espo\Services\App;
-use PDO;
 use Espo\Core\Utils\Config;
 
 class Base
 {
-    private ?Schema $schema;
-
+    private Connection $connection;
     private Config $config;
+    private Comparator $comparator;
 
-    private PDO $pdo;
-
-    public function __construct(PDO $pdo, Config $config, ?Schema $schema)
+    public function __construct(Connection $connection, Config $config)
     {
-        $this->schema = $schema;
+        $this->connection = $connection;
         $this->config = $config;
-        $this->pdo = $pdo;
+        $this->comparator = new Comparator();
     }
 
     public function up(): void
@@ -40,9 +37,9 @@ class Base
     {
     }
 
-    protected function getSchema(): Schema
+    protected function getConnection(): Connection
     {
-        return $this->schema;
+        return $this->connection;
     }
 
     protected function getConfig(): Config
@@ -50,14 +47,14 @@ class Base
         return $this->config;
     }
 
-    protected function getDbFieldParams(array $params): array
+    protected function getComparator(): Comparator
     {
-        return $this->getSchema()->getSchemaConverter()->getDbFieldParams($params);
+        return $this->comparator;
     }
 
-    protected function getPDO(): PDO
+    protected function getPDO(): \PDO
     {
-        return $this->pdo;
+        return $this->getConnection()->getWrappedConnection()->getWrappedConnection();
     }
 
     protected function rebuild()
