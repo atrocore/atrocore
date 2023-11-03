@@ -335,7 +335,7 @@ class Converter
             /** check if "fields" option exists in $fieldMeta */
             $fieldTypeMetadata = $this->getMetadataHelper()->getFieldDefsByType($fieldParams);
 
-            $fieldDefs = $this->convertField($entityName, $fieldName, $fieldParams, $fieldTypeMetadata);
+            $fieldDefs = $this->convertField($fieldParams, $fieldTypeMetadata);
 
             if ($fieldDefs !== false) {
                 //push fieldDefs to the ORM metadata array
@@ -428,7 +428,7 @@ class Converter
         return $ormMetadata;
     }
 
-    protected function convertField($entityName, $fieldName, array $fieldParams, $fieldTypeMetadata = null)
+    public function convertField(array $fieldParams, $fieldTypeMetadata = null)
     {
         /** merge fieldDefs option from field definition */
         if (!isset($fieldTypeMetadata)) {

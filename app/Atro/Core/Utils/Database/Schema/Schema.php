@@ -126,6 +126,11 @@ class Schema
         return $this->connection;
     }
 
+    public function getSchemaConverter(): Converter
+    {
+        return $this->schemaConverter;
+    }
+
     protected function initRebuildActions(): void
     {
         $currentSchema = $this->getCurrentSchema();
