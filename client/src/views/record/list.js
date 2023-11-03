@@ -141,14 +141,12 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }
             },
             'click .select-all': function (e) {
-                // if (!this.checkAllResultDisabled) {
-                    if (this.allResultIsChecked) {
-                        this.unselectAllResult();
-                    } else {
-                        this.selectAllResult();
-                    }
-                    return;
-                // }
+                if (this.allResultIsChecked) {
+                    this.unselectAllResult();
+                } else {
+                    this.selectAllResult();
+                }
+                return;
 
                 let checkbox = this.$el.find('.full-table').find('.select-all');
                 let checkboxFixed = this.$el.find('.fixed-header-table').find('.select-all');
@@ -315,14 +313,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         checkedList: null,
 
-        checkAllResultDisabled: false,
-
         buttonsDisabled: false,
 
         allResultIsChecked: false,
 
         data: function () {
-
             var paginationTop = this.pagination === 'both' || this.pagination === true || this.pagination === 'top';
             var paginationBottom = this.pagination === 'both' || this.pagination === true || this.pagination === 'bottom';
             return {
@@ -341,7 +336,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 rowList: this.rowList,
                 topBar: paginationTop || this.checkboxes || (this.buttonList.length && !this.buttonsDisabled),
                 bottomBar: paginationBottom,
-                checkAllResultDisabled: this.checkAllResultDisabled,
                 buttonList: this.buttonList,
                 displayTotalCount: this.displayTotalCount && this.collection.total > 0,
                 countLabel: this.getShowMoreLabel()
@@ -395,10 +389,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             if ('buttonsDisabled' in this.options) {
                 this.buttonsDisabled = this.options.buttonsDisabled;
-            }
-
-            if ('checkAllResultDisabled' in this.options) {
-                this.checkAllResultDisabled = this.options.checkAllResultDisabled;
             }
         },
 

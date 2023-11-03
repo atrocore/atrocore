@@ -313,7 +313,6 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                 rowActionsView: false,
                 layoutName: this.layoutName,
                 searchManager: this.searchManager,
-                checkAllResultDisabled: !this.massRelateEnabled,
                 buttonsDisabled: true,
                 skipBuildRows: true
             }, function (view) {

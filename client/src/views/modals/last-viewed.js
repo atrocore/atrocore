@@ -96,7 +96,6 @@ Espo.define('views/modals/last-viewed', ['views/modal', 'search-manager'], funct
                     rowActionsView: false,
                     type: 'listLastViewed',
                     searchManager: this.searchManager,
-                    checkAllResultDisabled: true,
                     buttonsDisabled: true,
                     headerDisabled: true
                 });
