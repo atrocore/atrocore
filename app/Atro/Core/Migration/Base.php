@@ -70,6 +70,11 @@ class Base
         $this->getSchema()->getSchemaConverter()->addColumn($schema, $schema->getTable($tableName), $columnName, $this->ormConverter->convertField($params));
     }
 
+    protected function dropColumn(DoctrineSchema $schema, string $tableName, string $columnName): void
+    {
+        $schema->getTable($tableName)->dropColumn($columnName);
+    }
+
     protected function getPDO(): \PDO
     {
         return $this->getConnection()->getWrappedConnection()->getWrappedConnection();
