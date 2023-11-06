@@ -92,4 +92,9 @@ class ConnectionOtto extends AbstractConnection
         }
         return null;
     }
+
+    public function getHeaders(array $connectionData): array
+    {
+        return ["Authorization: {$connectionData['token_type']} {$connectionData['access_token']}"];
+    }
 }
