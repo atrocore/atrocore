@@ -351,6 +351,19 @@
           ]
         }
       },
+      "apiTestUrl": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "oauth1"
+              ]
+            }
+          ]
+        }
+      },
       "payload": {
         "visible": {
           "conditionGroup": [
