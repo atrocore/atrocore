@@ -189,21 +189,18 @@
       "type": "varchar",
       "notStorable": true,
       "dataField": true,
-      "required": true,
       "trim": true
     },
     "accessTokenUrl": {
       "type": "varchar",
       "notStorable": true,
       "dataField": true,
-      "required": true,
       "trim": true
     },
     "oauthVerifier": {
       "type": "varchar",
       "notStorable": true,
       "dataField": true,
-      "required": false,
       "trim": true,
       "readOnly": true
     },
@@ -245,7 +242,7 @@
       "type": "varchar",
       "notStorable": true,
       "dataField": true,
-      "required": true,
+      "required": false,
       "trim": true,
       "default": "https://staging.davidsonsinc.com/rest/V1/products/011418204"
     },
