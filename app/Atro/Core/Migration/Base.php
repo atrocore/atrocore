@@ -17,7 +17,6 @@ use Doctrine\DBAL\Schema\Schema as DoctrineSchema;
 use Doctrine\DBAL\Schema\Comparator;
 use Espo\Services\App;
 use Espo\Core\Utils\Config;
-use Espo\Core\Utils\Database\Orm\Converter as OrmConverter;
 
 class Base
 {
@@ -25,14 +24,12 @@ class Base
     private Connection $connection;
     private Config $config;
     private Comparator $comparator;
-    private OrmConverter $ormConverter;
 
-    public function __construct(Schema $schema, Config $config, OrmConverter $ormConverter)
+    public function __construct(\PDO $pdo, Config $config, ?Schema $schema)
     {
         $this->schema = $schema;
         $this->connection = $schema->getConnection();
         $this->config = $config;
-        $this->ormConverter = $ormConverter;
         $this->comparator = new Comparator();
     }
 
@@ -66,7 +63,7 @@ class Base
 
     protected function addColumn(DoctrineSchema $schema, string $tableName, string $columnName, array $params): void
     {
-        $this->schema->getSchemaConverter()->addColumn($schema, $schema->getTable($tableName), $columnName, $this->ormConverter->convertField($params));
+        $this->schema->getSchemaConverter()->addColumn($schema, $schema->getTable($tableName), $columnName, $this->schema->getOrmConverter()->convertField($params));
     }
 
     protected function dropColumn(DoctrineSchema $schema, string $tableName, string $columnName): void

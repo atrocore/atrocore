@@ -20,6 +20,7 @@ use Atro\Core\Utils\Database\DBAL\FieldTypes\JsonObjectType;
 use Espo\Core\EventManager\Event;
 use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Database\Orm\Converter as OrmConverter;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\File\ClassParser;
@@ -39,6 +40,7 @@ class Schema
     private Connection $connection;
     private Converter $schemaConverter;
     private Comparator $comparator;
+    private OrmConverter $ormConverter;
 
     protected ?array $rebuildActionClasses = null;
 
@@ -52,6 +54,8 @@ class Schema
         $this->connection = $container->get('connection');
         $this->schemaConverter = $container->get(Converter::class);
         $this->comparator = new Comparator();
+
+        $this->ormConverter = new OrmConverter($container->get('metadata'), $container->get('fileManager'), $container->get('config'));
 
         Type::addType('jsonArray', JsonArrayType::class);
         Type::addType('jsonObject', JsonObjectType::class);
@@ -129,6 +133,11 @@ class Schema
     public function getSchemaConverter(): Converter
     {
         return $this->schemaConverter;
+    }
+
+    public function getOrmConverter(): OrmConverter
+    {
+        return $this->ormConverter;
     }
 
     protected function initRebuildActions(): void

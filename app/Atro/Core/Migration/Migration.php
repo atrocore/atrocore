@@ -14,17 +14,14 @@ declare(strict_types=1);
 namespace Atro\Core\Migration;
 
 use Atro\Core\Container;
-use Espo\Core\Utils\Database\Orm\Converter as OrmConverter;
 
 class Migration
 {
     protected Container $container;
-    protected OrmConverter $ormConverter;
 
     public function __construct(Container $container)
     {
         $this->container = $container;
-        $this->ormConvertor = new OrmConverter($this->container->get('metadata'), $this->container->get('fileManager'), $this->container->get('config'));
     }
 
     /**
@@ -163,7 +160,7 @@ class Migration
             return null;
         }
 
-        return new $className($this->container->get('schema'), $this->container->get('config'), $this->ormConverter);
+        return new $className($this->container->get('pdo'), $this->container->get('config'), $this->container->get('schema'));
     }
 
     /**
