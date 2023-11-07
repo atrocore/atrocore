@@ -14,6 +14,9 @@ declare(strict_types=1);
 namespace Atro\Core\Factories;
 
 use Atro\Core\Container;
+use Atro\Core\Utils\Database\DBAL\FieldTypes\JsonArrayType;
+use Atro\Core\Utils\Database\DBAL\FieldTypes\JsonObjectType;
+use Doctrine\DBAL\Types\Type;
 
 class Connection implements FactoryInterface
 {
@@ -32,6 +35,9 @@ class Connection implements FactoryInterface
         if (!empty(self::$drivers[$params['driver']])) {
             $params['driverClass'] = self::$drivers[$params['driver']];
         }
+
+        Type::addType('jsonArray', JsonArrayType::class);
+        Type::addType('jsonObject', JsonObjectType::class);
 
         return \Doctrine\DBAL\DriverManager::getConnection($params, new \Doctrine\DBAL\Configuration());
     }
