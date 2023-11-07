@@ -90,7 +90,7 @@ Espo.define('views/admin/layouts/list', 'views/admin/layouts/rows', function (De
         },
 
         readDataFromLayout: function (model, layout) {
-            var allFields = ['id'];
+            var allFields = [];
             for (var field in model.defs.fields) {
                 if (this.checkFieldType(model.getFieldParam(field, 'type')) && this.isFieldEnabled(model, field)) {
 
