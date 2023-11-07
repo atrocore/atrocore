@@ -159,13 +159,16 @@ class Metadata extends AbstractListener
                     "type"            => "link",
                     "view"            => "views/fields/unit-link",
                     "measureId"       => $fieldDefs['measureId'],
-                    "multilangLocale" => $fieldDefs['multilangLocale'],
                     "unitIdField"     => true,
                     "mainField"       => $field,
                     "required"        => !empty($fieldDefs['required']),
                     "audited"         => !empty($fieldDefs['audited']),
                     "emHidden"        => true
                 ];
+
+                if (isset($fieldDefs['multilangLocale'])) {
+                    $data['entityDefs'][$entityType]['fields'][$unitFieldName]['multilangLocale'] = $fieldDefs['multilangLocale'];
+                }
 
                 $data['entityDefs'][$entityType]['links'][$unitFieldName] = [
                     "type"   => "belongsTo",
@@ -192,7 +195,6 @@ class Metadata extends AbstractListener
                         "notStorable"        => true,
                         "view"               => "views/fields/unit-{$fieldDefs['type']}",
                         "measureId"          => $fieldDefs['measureId'],
-                        "multilangLocale"    => $fieldDefs['multilangLocale'],
                         "mainField"          => $field,
                         "unitField"          => true,
                         "required"           => false,
@@ -201,6 +203,11 @@ class Metadata extends AbstractListener
                         "massUpdateDisabled" => true,
                         "emHidden"           => true
                     ];
+
+                    if (isset($fieldDefs['multilangLocale'])) {
+                        $data['entityDefs'][$entityType]['fields'][$field]['labelField']['multilangLocale'] = $fieldDefs['multilangLocale'];
+                    }
+
                     if ($visibleLogic = $this->getMetadata()->get(['clientDefs', $entityType, 'dynamicLogic', 'fields', $field, 'visible'])) {
                         $data['clientDefs'][$entityType]['dynamicLogic']['fields'][$virtualFieldName]['visible'] = $visibleLogic;
                     }
@@ -221,7 +228,6 @@ class Metadata extends AbstractListener
                         "type"                      => "jsonObject",
                         "notStorable"               => true,
                         "mainField"                 => $field,
-                        "multilangLocale"           => $fieldDefs['multilangLocale'],
                         "required"                  => false,
                         "audited"                   => false,
                         "layoutListDisabled"        => true,
@@ -234,6 +240,10 @@ class Metadata extends AbstractListener
                         "importDisabled"            => true,
                         "emHidden"                  => true
                     ];
+
+                    if (isset($fieldDefs['multilangLocale'])) {
+                        $data['entityDefs'][$entityType]['fields'][$v . 'AllUnits']['multilangLocale'] = $fieldDefs['multilangLocale'];
+                    }
                 }
             }
         }

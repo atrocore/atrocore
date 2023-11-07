@@ -35,7 +35,7 @@ class V1Dot7Dot0 extends Base
 
         $this->exec("ALTER TABLE pseudo_transaction_job CHANGE input_data input_data LONGTEXT DEFAULT NULL");
 
-        $connection = $this->getSchema()->getConnection();
+        $connection = $this->getConnection();
 
         $rows = $connection->createQueryBuilder()
             ->select('u.*')

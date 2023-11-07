@@ -38,9 +38,7 @@ Espo.define('Views.Team.Record.List', 'Views.Record.List', function (Dep) {
 
         quickEditDisabled: true,
 
-        massActionList: ['remove'],
-
-        checkAllResultDisabled: true
+        massActionList: ['remove']
 
     });
 

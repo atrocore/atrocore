@@ -37,6 +37,7 @@ namespace Espo\Jobs;
 
 use Atro\Core\EventManager\Manager;
 use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\Schema\Column;
 use Espo\Core\EventManager\Event;
 use Espo\Core\Jobs\Base;
 use Espo\Core\Utils\Util;
@@ -112,7 +113,7 @@ class DeleteForever extends Base
 
         $connection->createQueryBuilder()
             ->delete($connection->quoteIdentifier('scheduled_job_log_record'), 'j')
-            ->where('DATE(j.execute_time) < :executeTime')
+            ->where('DATE(j.execution_time) < :executeTime')
             ->setParameter('executeTime', $this->date)
             ->executeQuery();
     }
@@ -123,16 +124,40 @@ class DeleteForever extends Base
     protected function cleanupDeleted(): void
     {
         $connection = $this->getEntityManager()->getConnection();
-        foreach ($this->getMetadata()->get(['entityDefs'], []) as $entityType => $entityDefs) {
+        $tables = $connection->createSchemaManager()->listTableNames();
+        foreach ($tables as $table) {
+            if($table == 'attachment'){
+                continue 1;
+            }
+
+            $columns = $connection->createSchemaManager()->listTableColumns($table);
+            $columnNames = array_map(function(Column  $table){
+                 return $table->getName();
+            }, $columns);
+
+            if (!in_array('deleted', $columnNames)) {
+                continue 1;
+            }
+
             $qb = $connection->createQueryBuilder()
-                ->delete($connection->quoteIdentifier(Util::toUnderScore(lcfirst($entityType))), 't')
-                ->where('DATE(t.modified_at) < :date')
-                ->andWhere('t.deleted = :true')
-                ->setParameter('date', $this->date)
-                ->setParameter('true', true, Mapper::getParameterType(true));
+                ->delete($connection->quoteIdentifier($table), 't')
+                ->where('t.deleted = :true')
+                ->setParameter('true', true, Mapper::getParameterType(true));;
+
+            if(in_array('created_at', $columnNames) && !in_array('modified_at', $columnNames)){
+               $qb->andWhere('DATE(t.created_at) < :date')
+                   ->setParameter('date', $this->date);
+            }
+
+            if(!in_array('created_at', $columnNames) && in_array('modified_at', $columnNames)){
+               $qb->andWhere('DATE(t.modified_at) < :date')
+                   ->setParameter('date', $this->date);
+            }
+
             try {
                 $qb->executeQuery();
             } catch (\Throwable $e) {
+                var_dump("Delete forever: {$e->getMessage()}");
             }
         }
     }

@@ -118,7 +118,6 @@ Espo.define('views/modals/select-category-tree-records', 'views/modals/select-re
                             checkboxes: this.multiple,
                             massActionsDisabled: true,
                             searchManager: searchManager,
-                            checkAllResultDisabled: true,
                             buttonsDisabled: true
                         }, function (list) {
                             list.once('select', function (model) {

@@ -210,7 +210,7 @@ class Converter
         return $schema;
     }
 
-    protected function addColumn(Schema $schema, Table $table, string $fieldName, array $fieldDefs): void
+    public function addColumn(Schema $schema, Table $table, string $fieldName, array $fieldDefs): void
     {
         $columnName = self::getColumnName($fieldName);
 

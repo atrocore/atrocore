@@ -170,7 +170,7 @@ class Relationship extends RDB
             }
 
             $where[$field] = $entity->get($field);
-            if (is_array($where[$field])) {
+            if (is_array($where[$field]) || $where[$field] instanceof \stdClass) {
                 $where[$field] = json_encode($where[$field]);
             }
         }

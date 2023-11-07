@@ -13,11 +13,14 @@ declare(strict_types=1);
 
 namespace Atro\ORM\DB;
 
+use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\IEntity;
 
 interface MapperInterface
 {
     public function selectById(IEntity $entity, string $id, $params = []): ?IEntity;
+
+    public function selectQueryBuilder(IEntity $entity, array $params): QueryBuilder;
 
     public function select(IEntity $entity, array $params): array;
 
@@ -31,7 +34,7 @@ interface MapperInterface
 
     public function removeRelation(IEntity $entity, string $relationName, string $id = null, bool $all = false, IEntity $relEntity = null, bool $force = false): bool;
 
-    public function insert(IEntity $entity): bool;
+    public function insert(IEntity $entity, bool $ignoreDuplicate = false): bool;
 
     public function update(IEntity $entity): bool;
 

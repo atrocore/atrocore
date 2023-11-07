@@ -11,25 +11,26 @@
 
 namespace Atro\Core\Migration;
 
-use Doctrine\DBAL\Schema\Schema as DoctrineSchema;
 use Atro\Core\Utils\Database\Schema\Schema;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Schema\Schema as DoctrineSchema;
+use Doctrine\DBAL\Schema\Comparator;
 use Espo\Services\App;
-use PDO;
 use Espo\Core\Utils\Config;
 
 class Base
 {
-    private ?Schema $schema;
-
+    private Schema $schema;
+    private Connection $connection;
     private Config $config;
+    private Comparator $comparator;
 
-    private PDO $pdo;
-
-    public function __construct(PDO $pdo, Config $config, ?Schema $schema)
+    public function __construct(\PDO $pdo, Config $config, ?Schema $schema)
     {
         $this->schema = $schema;
+        $this->connection = $schema->getConnection();
         $this->config = $config;
-        $this->pdo = $pdo;
+        $this->comparator = new Comparator();
     }
 
     public function up(): void
@@ -40,9 +41,9 @@ class Base
     {
     }
 
-    protected function getSchema(): Schema
+    protected function getConnection(): Connection
     {
-        return $this->schema;
+        return $this->connection;
     }
 
     protected function getConfig(): Config
@@ -50,14 +51,34 @@ class Base
         return $this->config;
     }
 
-    protected function getDbFieldParams(array $params): array
+    protected function getComparator(): Comparator
     {
-        return $this->getSchema()->getSchemaConverter()->getDbFieldParams($params);
+        return $this->comparator;
     }
 
-    protected function getPDO(): PDO
+    protected function getCurrentSchema(): DoctrineSchema
     {
-        return $this->pdo;
+        return $this->schema->getCurrentSchema();
+    }
+
+    protected function addColumn(DoctrineSchema $schema, string $tableName, string $columnName, array $params): void
+    {
+        $this->schema->getSchemaConverter()->addColumn($schema, $schema->getTable($tableName), $columnName, $this->schema->getOrmConverter()->convertField($params));
+    }
+
+    protected function dropColumn(DoctrineSchema $schema, string $tableName, string $columnName): void
+    {
+        $schema->getTable($tableName)->dropColumn($columnName);
+    }
+
+    protected function getPDO(): \PDO
+    {
+        return $this->getConnection()->getWrappedConnection()->getWrappedConnection();
+    }
+
+    protected function schemasDiffToSql(DoctrineSchema $fromSchema, DoctrineSchema $toSchema): array
+    {
+        return $this->getComparator()->compareSchemas($fromSchema, $toSchema)->toSql($this->getConnection()->getDatabasePlatform());
     }
 
     protected function rebuild()

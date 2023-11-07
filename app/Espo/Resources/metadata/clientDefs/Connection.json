@@ -206,6 +206,17 @@
               ]
             }
           ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+               "otto"
+              ]
+            }
+          ]
         }
       },
       "oauthScope": {
@@ -271,10 +282,32 @@
               ]
             }
           ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "oauth1"
+              ]
+            }
+          ]
         }
       },
       "accessTokenUrl": {
         "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "oauth1"
+              ]
+            }
+          ]
+        },
+        "required": {
           "conditionGroup": [
             {
               "type": "in",
@@ -340,6 +373,30 @@
       },
       "linkUrl": {
         "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "oauth1"
+              ]
+            }
+          ]
+        }
+      },
+      "apiTestUrl": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "oauth1"
+              ]
+            }
+          ]
+        },
+        "required": {
           "conditionGroup": [
             {
               "type": "in",

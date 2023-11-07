@@ -668,8 +668,12 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
          */
         $file = 'data/after_install_script.php';
         if (file_exists($file)) {
-            if ($this->getConfig()->get('config')->get('database')['driver'] !== 'pdo_pgsql') {
-                include_once $file;
+            $configFile = 'data/config.php';
+            if (file_exists($configFile)){
+                $configData = include $configFile;
+                if (!empty($configData['database']['driver']) && $configData['database']['driver'] !== 'pdo_pgsql') {
+                    include_once $file;
+                }
             }
             unlink($file);
         }

@@ -93,8 +93,8 @@ AtroCore has a REST API and can be integrated with any third-party system. You c
 
 * Dedicated (virtual) Linux-based server with root permissions. 
 * Ubuntu as Operating System is recommended but not required.
-* PHP 7.4 or above.
-* MySQL 5.5.3 or above **(not MariaDB)**.
+* PHP 7.4 (or above).
+* MySQL 5.5.3 (or above) or PostgreSQL 14.9 (or above).
 
 > Please note, system will definitely NOT work on a usual hosting, a managed server hosting should be checked on a case-by-case basis – with a high probability it will NOT work.
 

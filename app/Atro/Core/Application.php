@@ -15,6 +15,7 @@ namespace Atro\Core;
 
 use Espo\Core\EntryPointManager;
 use Espo\Core\Utils\Api\Auth as ApiAuth;
+use Espo\Core\Utils\Api\Output;
 use Espo\Core\Utils\Auth;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Json;
@@ -474,11 +475,14 @@ class Application
         $this->getSlim()->hook('slim.before.dispatch', function () use ($slim, $container) {
             $route = $slim->router()->getCurrentRoute();
 
+            /** @var \Espo\Core\Utils\Api\Output $output */
+            $output = $container->get('output');
+
             $routeOptions = call_user_func($route->getCallable());
             $routeKeys = is_array($routeOptions) ? array_keys($routeOptions) : array();
 
             if (!in_array('controller', $routeKeys, true)) {
-                return $container->get('output')->render($routeOptions);
+                return $output->render($routeOptions);
             }
 
             $params = $route->getParams();
@@ -508,9 +512,9 @@ class Application
             try {
                 $controllerManager = $this->getContainer()->get('controllerManager');
                 $result = $controllerManager->process($controllerName, $actionName, $params, $data, $slim->request(), $slim->response());
-                $container->get('output')->render($result);
+                $output->render($result);
             } catch (\Exception $e) {
-                $container->get('output')->processError($e->getMessage(), $e->getCode(), false, $e);
+                $output->processError($e->getMessage(), $e->getCode(), false, $e);
             }
         });
 

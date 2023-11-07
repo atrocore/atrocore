@@ -2212,7 +2212,9 @@ class Record extends \Espo\Core\Services\Base
         if ($total <= $maxMassUpdateCount) {
             foreach ($ids as $id) {
                 try {
-                    $this->updateEntity($id, clone $data);
+                    $input = clone $data;
+                    $input->_isMassUpdate = true;
+                    $this->updateEntity($id, $input);
                 } catch (\Throwable $e) {
                     $GLOBALS['log']->error("Update {$this->getEntityType()} '$id' failed: {$e->getMessage()}");
                 }
@@ -2610,7 +2612,7 @@ class Record extends \Espo\Core\Services\Base
         $this->dispatchEvent('prepareEntityForOutput', new Event(['entity' => $entity, 'service' => $this]));
     }
 
-    public function merge($id, array $sourceIdList, array $attributes)
+    public function merge($id, array $sourceIdList, \stdClass $attributes)
     {
         if (empty($id)) {
             throw new Error();
@@ -2663,7 +2665,7 @@ class Record extends \Espo\Core\Services\Base
                 ->setParameter('types', $types, Mapper::getParameterType($types))
                 ->setParameter('sourceId', $source->id)
                 ->setParameter('sourceType', $source->getEntityType())
-                ->setParameter('deleted', false, Mapper::getParameterType(false))
+                ->setParameter('false', false, Mapper::getParameterType(false))
                 ->executeQuery();
         }
 
@@ -2762,6 +2764,15 @@ class Record extends \Espo\Core\Services\Base
         foreach ($fields as $field => $item) {
             if (empty($item['type'])) continue;
             $type = $item['type'];
+
+            if (!empty($item['relationVirtualField'])) {
+                Util::unsetProperty($attributes, $field);
+                Util::unsetProperty($attributes, "{$field}Id");
+                Util::unsetProperty($attributes, "{$field}Name");
+                Util::unsetProperty($attributes, "{$field}Ids");
+                Util::unsetProperty($attributes, "{$field}Names");
+                continue;
+            }
 
             if (!empty($item['duplicateIgnore'])) {
                 $attributeToIgnoreList = $fieldManager->getAttributeList($this->entityType, $field);

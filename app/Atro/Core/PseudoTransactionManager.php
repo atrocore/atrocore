@@ -278,7 +278,7 @@ class PseudoTransactionManager
                     break;
             }
         } catch (\Throwable $e) {
-            $GLOBALS['log']->error("PseudoTransaction job failed: {$e->getMessage()}");
+            $GLOBALS['log']->error("PseudoTransaction job failed: ({$e->getCode()}) {$e->getMessage()}");
 
             $childrenIds = [];
             $this->collectChildren($job['id'], $childrenIds);

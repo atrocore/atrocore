@@ -18,6 +18,8 @@ use Atro\ORM\DB\RDB\Query\QueryConverter;
 use Atro\ORM\DB\RDB\QueryCallbacks\JoinManyToMany;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\IEntity;
 
@@ -39,7 +41,7 @@ class Mapper implements MapperInterface
         $params['whereClause']['id'] = $id;
 
         $res = $this->select($entity, $params);
-        if (empty($res)){
+        if (empty($res)) {
             return null;
         }
 
@@ -52,7 +54,7 @@ class Mapper implements MapperInterface
         return $entity;
     }
 
-    public function select(IEntity $entity, array $params): array
+    public function selectQueryBuilder(IEntity $entity, array $params): QueryBuilder
     {
         try {
             $queryData = $this->getQueryConverter()->createSelectQuery($entity->getEntityType(), $params, !empty($params['withDeleted']));
@@ -126,6 +128,13 @@ class Mapper implements MapperInterface
                 call_user_func($callback, $qb, $entity, $params, $this);
             }
         }
+
+        return $qb;
+    }
+
+    public function select(IEntity $entity, array $params): array
+    {
+        $qb = $this->selectQueryBuilder($entity, $params);
 
         try {
             $rows = $qb->fetchAllAssociative();
@@ -508,7 +517,7 @@ class Mapper implements MapperInterface
         return true;
     }
 
-    public function insert(IEntity $entity): bool
+    public function insert(IEntity $entity, bool $ignoreDuplicate = false): bool
     {
         $dataArr = $this->toValueMap($entity);
 
@@ -517,13 +526,23 @@ class Mapper implements MapperInterface
 
             $qb->insert($this->connection->quoteIdentifier($this->toDb($entity->getEntityType())));
             foreach ($dataArr as $field => $value) {
-                $value = $this->prepareValueForUpdate($entity->fields[$field]['type'], $value);
+                $value = $this->prepareValueForUpdate($entity->getAttributeType($field), $value);
                 $qb->setValue($this->connection->quoteIdentifier($this->toDb($field)), ":i_$field");
                 $qb->setParameter("i_$field", $value, self::getParameterType($value));
             }
 
+            $sql = $qb->getSQL();
+
+            if ($ignoreDuplicate) {
+                if ($this->connection->getDatabasePlatform() instanceof PostgreSQLPlatform) {
+                    $sql .= ' ON CONFLICT DO NOTHING';
+                } else {
+                    $sql = str_replace('INSERT INTO', 'INSERT IGNORE INTO', $sql);
+                }
+            }
+
             try {
-                $qb->executeQuery();
+                $this->connection->executeQuery($sql, $qb->getParameters(), $qb->getParameterTypes());
             } catch (\Throwable $e) {
                 $sql = $qb->getSQL();
                 $GLOBALS['log']->error("RDB INSERT failed for SQL: $sql");
@@ -678,29 +697,33 @@ class Mapper implements MapperInterface
 
     protected function updateModifiedAt(IEntity $entity)
     {
-        try {
-            $this->connection->createQueryBuilder()
-                ->update($this->connection->quoteIdentifier($this->toDb($entity->getEntityType())))
-                ->set('modified_at', date('Y-m-d H:i:s'))
-                ->where('id = :id')
-                ->setParameter('id', $entity->get('id'))
-                ->executeQuery();
-        } catch (\Throwable $e) {
+        if (empty($entity->getAttributeType('modifiedAt'))) {
+            return;
         }
+
+        $this->connection->createQueryBuilder()
+            ->update($this->connection->quoteIdentifier($this->toDb($entity->getEntityType())))
+            ->set('modified_at', ':date')
+            ->where('id = :id')
+            ->setParameter('date', date('Y-m-d H:i:s'))
+            ->setParameter('id', $entity->get('id'))
+            ->executeQuery();
     }
 
     protected function updateModifiedBy(IEntity $entity)
     {
-        try {
-            $userId = $this->entityFactory->getEntityManager()->getUser()->get('id');
-            $this->connection->createQueryBuilder()
-                ->update($this->connection->quoteIdentifier($this->toDb($entity->getEntityType())))
-                ->set('modified_by_id', $userId)
-                ->where('id = :id')
-                ->setParameter('id', $entity->get('id'))
-                ->executeQuery();
-        } catch (\Throwable $e) {
+        if (empty($entity->getAttributeType('modifiedBy'))) {
+            return;
         }
+
+        $userId = $this->entityFactory->getEntityManager()->getUser()->get('id');
+        $this->connection->createQueryBuilder()
+            ->update($this->connection->quoteIdentifier($this->toDb($entity->getEntityType())))
+            ->set('modified_by_id', ':userId')
+            ->where('id = :id')
+            ->setParameter('userId', $userId)
+            ->setParameter('id', $entity->get('id'))
+            ->executeQuery();
     }
 
     public function toDb(string $field): string
