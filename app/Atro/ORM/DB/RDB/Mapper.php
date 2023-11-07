@@ -19,6 +19,7 @@ use Atro\ORM\DB\RDB\QueryCallbacks\JoinManyToMany;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\IEntity;
 
@@ -53,7 +54,7 @@ class Mapper implements MapperInterface
         return $entity;
     }
 
-    public function select(IEntity $entity, array $params): array
+    public function selectQueryBuilder(IEntity $entity, array $params): QueryBuilder
     {
         try {
             $queryData = $this->getQueryConverter()->createSelectQuery($entity->getEntityType(), $params, !empty($params['withDeleted']));
@@ -127,6 +128,13 @@ class Mapper implements MapperInterface
                 call_user_func($callback, $qb, $entity, $params, $this);
             }
         }
+
+        return $qb;
+    }
+
+    public function select(IEntity $entity, array $params): array
+    {
+        $qb = $this->selectQueryBuilder($entity, $params);
 
         try {
             $rows = $qb->fetchAllAssociative();
