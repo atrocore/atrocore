@@ -36,8 +36,13 @@ class Connection implements FactoryInterface
             $params['driverClass'] = self::$drivers[$params['driver']];
         }
 
-        Type::addType('jsonArray', JsonArrayType::class);
-        Type::addType('jsonObject', JsonObjectType::class);
+        if(!Type::hasType('jsonArray')){
+            Type::addType('jsonArray', JsonArrayType::class);
+        }
+
+        if(!Type::hasType('jsonObject')){
+            Type::addType('jsonObject', JsonObjectType::class);
+        }
 
         return \Doctrine\DBAL\DriverManager::getConnection($params, new \Doctrine\DBAL\Configuration());
     }
