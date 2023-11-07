@@ -56,9 +56,6 @@ class Schema
         $this->comparator = new Comparator();
 
         $this->ormConverter = new OrmConverter($container->get('metadata'), $container->get('fileManager'), $container->get('config'));
-
-        Type::addType('jsonArray', JsonArrayType::class);
-        Type::addType('jsonObject', JsonObjectType::class);
     }
 
     public function rebuild(): bool
