@@ -971,7 +971,7 @@ class QueryConverter
                                 if ($isNotValue) {
                                     $whereParts[] = $leftPart . " " . $operator . " " . $this->convertComplexExpression($entity, $value);
                                 } else {
-                                    $param = $this->sanitize($field) . '_w1';
+                                    $param = $this->sanitize($field) . '_w1_' . Util::generateId();
                                     $whereParts[] = "$leftPart $operator :$param";
                                     $this->parameters[$param] = $value;
                                 }
@@ -994,8 +994,9 @@ class QueryConverter
                             if (!empty($value)) {
                                 $parts = explode('.', $field);
                                 $param = $parts[1] ?? $parts[0];
-                                $whereParts[] = $leftPart . " {$oppose}IN " . "(:{$param}_w2)";
-                                $this->parameters["{$param}_w2"] = $value;
+                                $param = "{$param}_w2_" . Util::generateId();
+                                $whereParts[] = $leftPart . " {$oppose}IN " . "(:{$param})";
+                                $this->parameters[$param] = $value;
                             } else {
                                 $whereParts[] = ':emptyValue';
                                 $this->parameters['emptyValue'] = $emptyValue;
