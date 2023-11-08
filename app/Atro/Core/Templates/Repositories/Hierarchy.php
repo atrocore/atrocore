@@ -398,10 +398,6 @@ class Hierarchy extends RDB
                 ->orderBy('e.sort_order')
                 ->orderBy("e.$sortBy", $sortOrder)
                 ->orderBy('e.id');
-
-            if($childQuery){
-                $qb->andWhere($expr->in('e.id', $childQuery->getSQL()));
-            }
         } else {
             $qb = $this->getConnection()
                 ->createQueryBuilder()
@@ -414,19 +410,19 @@ class Hierarchy extends RDB
                 ->orderBy('h.hierarchy_sort_order')
                 ->orderBy("e.$sortBy", $sortOrder)
                 ->orderBy('e.id');
+        }
 
-            if($childQuery){
-                $qb->andWhere($expr->in('e.id', $childQuery->getSQL()));
+        if($childQuery) {
+            $qb->andWhere($expr->in('e.id', $childQuery->getSQL()));
+
+            foreach($childQuery->getParameters() as $parameter => $value){
+                $qb->setParameter($parameter, $value, Mapper::getParameterType($value));
             }
         }
 
         if (!is_null($offset) && !is_null($maxSize)) {
             $qb->setFirstResult($offset);
             $qb->setMaxResults($maxSize);
-        }
-
-        if($childQuery){
-            $qb->setParameters($childQuery->getParameters());
         }
 
         $qb->setParameter('deleted',false, Mapper::getParameterType(false));
@@ -443,61 +439,51 @@ class Hierarchy extends RDB
         $quotedTableName = $this->getConnection()->quoteIdentifier($this->tableName);
         $quotedHierarchyTableName = $this->getConnection()->quoteIdentifier($this->hierarchyTableName);
 
-        $where = "";
-        $whereParameters = [];
         if ($selectParams) {
-            $where = $this->getWhereQuery($this->entityType, $selectParams['whereClause'], $whereParameters);
-            if (!empty($where)) {
-                $where = "AND " . str_replace(QueryConverter::TABLE_ALIAS . '.', 'e.', $where);
-            }
+            $selectParams['select'] = ['id'];
+            unset($selectParams['limit']);
+            unset($selectParams['offset']);
+            $childQuery = $this->getMapper()->selectQueryBuilder(
+                $this->entityFactory->create($this->entityType),
+                $selectParams
+            );
         }
+        $expr = $this->getConnection()->createExpressionBuilder();
 
         if (empty($parentId)) {
-            $query = "SELECT COUNT(e.id) as count
-                      FROM $quotedTableName e
-                      WHERE e.id NOT IN (SELECT e1.entity_id FROM $quotedHierarchyTableName e1 WHERE e1.deleted = :deleted)
-                      AND e.deleted = :deleted
-                      {$where}";
+            $qb = $this->getConnection()
+                ->createQueryBuilder()
+                ->from($quotedTableName,'e')
+                ->select('COUNT(e.id) as count')
+                ->where($expr->notIn('e.id', "SELECT entity_id FROM $quotedHierarchyTableName qh WHERE qh.deleted = :deleted"))
+                ->andWhere('e.deleted = :deleted');
         } else {
-            $query = "SELECT COUNT(e.id) as count
-                      FROM $quotedTableName e
-                      LEFT JOIN $quotedHierarchyTableName h on e.id=h.entity_id
-                      WHERE e.deleted = :deleted
-                        AND h.deleted = :deleted
-                        {$where}
-                        AND h.parent_id='$parentId'";
+            $qb = $this->getConnection()
+                ->createQueryBuilder()
+                ->from($quotedHierarchyTableName,'h')
+                ->select('COUNT(e.id) as count')
+                ->leftJoin('h',$quotedTableName, 'e', 'e.id = h.entity_id')
+                ->where('e.deleted = :deleted')
+                ->andWhere('h.deleted = :deleted')
+                ->andWhere('h.parent_id = :parentId');
         }
 
-        $sth = $this->getEntityManager()->getPDO()->prepare($query);
-        $sth->bindValue(':deleted', false, \PDO::PARAM_BOOL);
-        foreach ($whereParameters as $name => $value) {
-            $sth->bindValue(":{$name}", $value, Mapper::getParameterType($value) ?? \PDO::PARAM_STR);
-        }
-        $sth->execute();
-
-        return (int)$sth->fetch(\PDO::FETCH_ASSOC)['count'];
-    }
-
-    protected function getWhereQuery(string $entityType, array $whereClause, array &$parameters): string
-    {
-        $queryConverter = $this->getMapper()->getQueryConverter();
-
-        $entity = $queryConverter->getSeed($entityType);
-
-        $query = $queryConverter->getWhere($entity, $whereClause);
-
-        foreach ($queryConverter->getParameters() as $name => $value) {
-            if (strpos($query, ":{$name}") !== false) {
-                if (is_array($value)) {
-                    $query = str_replace(":{$name}", "'" . implode("','", $value) . "'", $query);
-                } else {
-                    $parameters[$name] = $value;
-                }
+        if($childQuery) {
+            $qb->andWhere($expr->in('e.id', $childQuery->getSQL()));
+            foreach($childQuery->getParameters() as $parameter => $value){
+                $qb->setParameter($parameter, $value, Mapper::getParameterType($value));
             }
         }
 
-        return $query;
+        $qb->setParameter('deleted',false, Mapper::getParameterType(false));
+
+        if (!empty($parentId)) {
+            $qb->setParameter('parentId',$parentId, Mapper::getParameterType($parentId));
+        }
+
+        return (int) $qb->fetchAssociative()['count'];
     }
+
 
     public function isRoot(string $id): bool
     {
