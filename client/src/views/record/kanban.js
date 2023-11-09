@@ -445,9 +445,6 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
 
         removeRecordFromList: function (id) {
             this.collection.remove(id);
-            if (this.collection.total > 0) {
-                this.collection.total--;
-            }
             this.totalCount = this.collection.total;
 
             this.$el.find('.total-count-span').text(this.totalCount.toString());
