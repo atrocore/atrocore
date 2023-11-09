@@ -156,14 +156,14 @@ class Metadata extends AbstractListener
                 }
                 $unitFieldName = $field . 'Unit';
                 $data['entityDefs'][$entityType]['fields'][$unitFieldName] = [
-                    "type"            => "link",
-                    "view"            => "views/fields/unit-link",
-                    "measureId"       => $fieldDefs['measureId'],
-                    "unitIdField"     => true,
-                    "mainField"       => $field,
-                    "required"        => !empty($fieldDefs['required']),
-                    "audited"         => !empty($fieldDefs['audited']),
-                    "emHidden"        => true
+                    "type"        => "link",
+                    "view"        => "views/fields/unit-link",
+                    "measureId"   => $fieldDefs['measureId'],
+                    "unitIdField" => true,
+                    "mainField"   => $field,
+                    "required"    => !empty($fieldDefs['required']),
+                    "audited"     => !empty($fieldDefs['audited']),
+                    "emHidden"    => true
                 ];
 
                 if (isset($fieldDefs['multilangLocale'])) {
@@ -204,7 +204,7 @@ class Metadata extends AbstractListener
                         "emHidden"           => true
                     ];
 
-                    if (isset($fieldDefs['multilangLocale'])) {
+                    if (isset($fieldDefs['multilangLocale']) && isset($data['entityDefs'][$entityType]['fields'][$field]['labelField'])) {
                         $data['entityDefs'][$entityType]['fields'][$field]['labelField']['multilangLocale'] = $fieldDefs['multilangLocale'];
                     }
 

@@ -352,7 +352,6 @@ class Hierarchy extends Record
         $offset = $params['offset'];
         $total = $this->getRepository()->getChildrenCount($parentId, $selectParams);
         $ids = [];
-
         foreach ($this->getRepository()->where(['id' => array_column($records, 'id')])->find() as $entity) {
             if ($this->getAcl()->check($entity, 'read')) {
                 $ids[] = $entity->get('id');

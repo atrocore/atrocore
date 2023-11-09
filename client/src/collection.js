@@ -69,7 +69,7 @@ Espo.define('collection', [], function () {
             Backbone.Collection.prototype.initialize.call(this);
         },
 
-        _onModelEvent: function(event, model, collection, options) {
+        _onModelEvent: function (event, model, collection, options) {
             if (event === 'sync' && collection !== this) return;
             Backbone.Collection.prototype._onModelEvent.apply(this, arguments);
         },
@@ -77,6 +77,14 @@ Espo.define('collection', [], function () {
         reset: function (models, options) {
             this.lengthCorrection = 0;
             Backbone.Collection.prototype.reset.call(this, models, options);
+        },
+
+        remove: function (element, options) {
+            const removed = Backbone.Collection.prototype.remove.call(this, element, options);
+            if (this.total > 0) {
+                this.total -= _.isArray(removed) ? removed.length : 1
+                this.trigger('update-total', this, options);
+            }
         },
 
         sort: function (field, asc) {

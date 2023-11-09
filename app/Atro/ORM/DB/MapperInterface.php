@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\ORM\DB;
 
-use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\IEntity;
 
 interface MapperInterface

@@ -359,73 +359,74 @@ class Hierarchy extends RDB
         return $ids;
     }
 
+    protected function getChildrenArrayUsingSelectParams(array $selectParams, string $parentId, QueryBuilder  $selectCountQuery) {
+
+        $quotedHierarchyTableName = $this->getConnection()->quoteIdentifier($this->hierarchyTableName);
+        $sortBy = Util::toUnderScore($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy'], 'name'));
+        $sortOrder = !empty($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'asc'])) ? 'ASC' : 'DESC';
+        $withDeleted = !empty($selectParams['withDeleted']) && $selectParams['withDeleted'] === true;
+
+        $selectParams['callbacks'][] = function(QueryBuilder  $qb, $entity, $params, Mapper $mapper)
+        use($quotedHierarchyTableName, $parentId, $sortOrder, $sortBy, $selectCountQuery, $withDeleted)
+        {
+            $expr = $this->getConnection()->createExpressionBuilder();
+            $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
+            $subQuery = clone $qb;
+
+            $subQuery->setFirstResult(0);
+            $subQuery->setMaxResults(null);
+            $selectCountQuery
+                ->andWhere($expr->in("$tableAlias.id", $subQuery->select("$tableAlias.id")->getSQL()));
+
+            $qb->select("$tableAlias.*","({$selectCountQuery->where("$tableAlias.id = r1.parent_id")->getSQL()}) as children_count");
+
+            if(empty($parentId)) {
+                $qb->andWhere(
+                    $expr->notIn(
+                        "$tableAlias.id",
+                        "SELECT entity_id FROM $quotedHierarchyTableName qh WHERE qh.deleted = :deleted"
+                    ))
+                    ->orderBy("$tableAlias.sort_order")
+                    ->orderBy("$tableAlias.$sortBy", $sortOrder)
+                    ->orderBy("$tableAlias.id");
+            }else{
+                $qb->leftJoin($tableAlias,$quotedHierarchyTableName, 'h', "h.entity_id = $tableAlias.id")
+                    ->andWhere('h.parent_id = :parentId')
+                    ->orderBy('h.hierarchy_sort_order')
+                    ->orderBy("$tableAlias.$sortBy", $sortOrder)
+                    ->orderBy("$tableAlias.id")
+                    ->setParameter('parentId', $parentId, Mapper::getParameterType($parentId));
+
+                if(!$withDeleted){
+                    $qb->andWhere('h.deleted = :deleted');
+                }
+            }
+            if(!$withDeleted){
+                $qb->setParameter('deleted',false, Mapper::getParameterType(false));
+            }
+        };
+        $result = $this->getMapper()->select($this->entityFactory->create($this->entityName),$selectParams);
+
+        return Util::arrayKeysToCamelCase($result);
+    }
+
     public function getChildrenArray(string $parentId, bool $withChildrenCount = true, int $offset = null, $maxSize = null, $selectParams = null): array
     {
         $quotedTableName = $this->getConnection()->quoteIdentifier($this->tableName);
         $quotedHierarchyTableName = $this->getConnection()->quoteIdentifier($this->hierarchyTableName);
         $sortBy = Util::toUnderScore($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy'], 'name'));
         $sortOrder = !empty($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'asc'])) ? 'ASC' : 'DESC';
-        $withDeleted = !empty($params['withDeleted']) && $params['withDeleted'] === true;
-
+        $withDeleted = !empty($selectParams['withDeleted']) && $selectParams['withDeleted'] === true;
         $selectCountQuery = $this->getConnection()->createQueryBuilder()
             ->from($quotedHierarchyTableName, 'r1')
             ->select('COUNT(r1.id)')
-            ->join('r1',$quotedTableName, 'e1', 'e1.id = r1.entity_id')
-            ->where('r1.parent_id = e.id')
-            ->andWhere('e1.deleted = :deleted');
+            ->join('r1',$quotedTableName, 'e1', 'e1.id = r1.entity_id');
+
         if(!$withDeleted){
             $selectCountQuery->andWhere('e1.deleted = :deleted');
         }
         if ($selectParams) {
-//            $selectParams['select'] = ['id'];
-//            unset($selectParams['limit']);
-//            unset($selectParams['offset']);
-//            $childQuery = $this->getMapper()->selectQueryBuilder(
-//                $this->entityFactory->create($this->entityType),
-//                $selectParams
-//            );
-            $selectParams['callbacks'][] = function(QueryBuilder  $qb, $entity, $params, Mapper $mapper)
-            use($quotedHierarchyTableName, $quotedTableName, $parentId, $offset, $maxSize, $sortOrder, $sortBy, $selectCountQuery, $withDeleted)
-            {
-                $expr = $this->getConnection()->createExpressionBuilder();
-                $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
-                $subQuery = clone $qb;
-
-                $subQuery->setFirstResult(0);
-                $subQuery->setMaxResults(null);
-                $selectCountQuery
-                    ->andWhere($expr->in('e1.id', $subQuery->select("$tableAlias.id")->getSQL()));
-
-                $qb->addSelect("({$selectCountQuery->getSQL()}) as children_count");
-
-                if(empty($parentId)) {
-                    $qb->andWhere(
-                            $expr->notIn(
-                                "$tableAlias.id",
-                                "SELECT entity_id FROM $quotedHierarchyTableName qh WHERE qh.deleted = :deleted"
-                            )
-                        )
-                        ->orderBy("$tableAlias.sort_order")
-                        ->orderBy("$tableAlias.$sortBy", $sortOrder)
-                        ->orderBy("$tableAlias.id");
-                }else{
-                    $qb->leftJoin($tableAlias,$quotedHierarchyTableName, 'h', "h.entity_id = $tableAlias.id")
-                        ->andWhere('h.parent_id = :parentId')
-                        ->orderBy('h.hierarchy_sort_order')
-                        ->orderBy("$tableAlias.$sortBy", $sortOrder)
-                        ->orderBy("$tableAlias.id")
-                        ->setParameter('parentId', $parentId, Mapper::getParameterType($parentId));
-
-                    if(!$withDeleted){
-                        $qb->andWhere('h.deleted = :deleted');
-                    }
-                }
-                if(!$withDeleted){
-                    $qb->setParameter('deleted',false, Mapper::getParameterType(false));
-                }
-            };
-            $result = $this->getMapper()->select($this->entityFactory->create($this->entityName),$selectParams);
-            var_dump($result);
+            return $this->getChildrenArrayUsingSelectParams($selectParams, $parentId, $selectCountQuery);
         }
 
         $expr = $this->getConnection()->createExpressionBuilder();
@@ -433,14 +434,18 @@ class Hierarchy extends RDB
         $qb = $this->getConnection()
             ->createQueryBuilder()
             ->from($quotedTableName,'e')
-            ->select('e.*',"({$selectCountQuery->getSQL()}) as children_count");
+            ->select('e.*',"({$selectCountQuery->where('e.id = r1.parent_id')->getSQL()}) as children_count");
 
         if(!$withDeleted){
             $qb->where('e.deleted = :deleted');
         }
 
         if (empty($parentId)) {
-            $qb->andWhere($expr->notIn('e.id', "SELECT entity_id FROM $quotedHierarchyTableName qh WHERE qh.deleted = :deleted"))
+            $qb->andWhere(
+                $expr->notIn(
+                    'e.id',
+                    "SELECT entity_id FROM $quotedHierarchyTableName qh WHERE qh.deleted = :deleted"
+                ))
                 ->orderBy('e.sort_order')
                 ->orderBy("e.$sortBy", $sortOrder)
                 ->orderBy('e.id');
@@ -470,45 +475,75 @@ class Hierarchy extends RDB
         return Util::arrayKeysToCamelCase($qb->fetchAllAssociative());
     }
 
+    protected function getChildrenCountUsingSelectParams(array $selectParams, string $parentId) : int
+    {
+        $quotedHierarchyTableName = $this->getConnection()->quoteIdentifier($this->hierarchyTableName);
+        $withDeleted = !empty($selectParams['withDeleted']) && $selectParams['withDeleted'] === true;
+
+        $selectParams['callbacks'][] = function(QueryBuilder  $qb, $entity, $params, Mapper $mapper)
+        use($quotedHierarchyTableName, $parentId, $withDeleted)
+        {
+            $expr = $this->getConnection()->createExpressionBuilder();
+            $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
+
+            $qb->select("COUNT($tableAlias.id) as count");
+
+            if(empty($parentId)) {
+                $qb->andWhere(
+                    $expr->notIn(
+                        "$tableAlias.id",
+                        "SELECT entity_id FROM $quotedHierarchyTableName qh WHERE qh.deleted = :deleted"
+                    )
+                );
+            }else{
+                $qb->leftJoin($tableAlias,$quotedHierarchyTableName, 'h', "h.entity_id = $tableAlias.id")
+                    ->andWhere('h.parent_id = :parentId')
+                    ->setParameter('parentId', $parentId, Mapper::getParameterType($parentId));
+
+                if(!$withDeleted){
+                    $qb->andWhere('h.deleted = :deleted');
+                }
+            }
+            if(!$withDeleted){
+                $qb->setParameter('deleted',false, Mapper::getParameterType(false));
+            }
+        };
+        $result = $this->getMapper()->select($this->entityFactory->create($this->entityName),$selectParams);
+
+        return (int) $result['count'];
+    }
+
     public function getChildrenCount(string $parentId, array $selectParams = null): int
     {
         $quotedTableName = $this->getConnection()->quoteIdentifier($this->tableName);
         $quotedHierarchyTableName = $this->getConnection()->quoteIdentifier($this->hierarchyTableName);
+        $withDeleted = !empty($selectParams['withDeleted']) && $selectParams['withDeleted'] === true;
 
-        if ($selectParams) {
-            $selectParams['select'] = ['id'];
-            unset($selectParams['limit']);
-            unset($selectParams['offset']);
-            $childQuery = $this->getMapper()->selectQueryBuilder(
-                $this->entityFactory->create($this->entityType),
-                $selectParams
-            );
+        if($selectParams) {
+            return $this->getChildrenCountUsingSelectParams($selectParams, $parentId);
         }
+
         $expr = $this->getConnection()->createExpressionBuilder();
+        $qb = $this->getConnection()
+            ->createQueryBuilder()
+            ->from($quotedTableName,'e')
+            ->select('COUNT(e.id) as count');
+
+        if(!$withDeleted) {
+            $qb->where('e.deleted = :deleted');
+        }
 
         if (empty($parentId)) {
-            $qb = $this->getConnection()
-                ->createQueryBuilder()
-                ->from($quotedTableName,'e')
-                ->select('COUNT(e.id) as count')
-                ->where($expr->notIn('e.id', "SELECT entity_id FROM $quotedHierarchyTableName qh WHERE qh.deleted = :deleted"))
-                ->andWhere('e.deleted = :deleted');
+            $qb->where(
+                $expr->notIn(
+                    'e.id',
+                    "SELECT entity_id FROM $quotedHierarchyTableName qh WHERE qh.deleted = :deleted"
+                )
+            );
         } else {
-            $qb = $this->getConnection()
-                ->createQueryBuilder()
-                ->from($quotedHierarchyTableName,'h')
-                ->select('COUNT(e.id) as count')
-                ->leftJoin('h',$quotedTableName, 'e', 'e.id = h.entity_id')
-                ->where('e.deleted = :deleted')
+            $qb->leftJoin('e',$quotedHierarchyTableName, 'h', 'h.entity_id = e.id')
                 ->andWhere('h.deleted = :deleted')
                 ->andWhere('h.parent_id = :parentId');
-        }
-
-        if($childQuery) {
-            $qb->andWhere($expr->in('e.id', $childQuery->getSQL()));
-            foreach($childQuery->getParameters() as $parameter => $value){
-                $qb->setParameter($parameter, $value, Mapper::getParameterType($value));
-            }
         }
 
         $qb->setParameter('deleted',false, Mapper::getParameterType(false));
@@ -519,7 +554,6 @@ class Hierarchy extends RDB
 
         return (int) $qb->fetchAssociative()['count'];
     }
-
 
     public function isRoot(string $id): bool
     {

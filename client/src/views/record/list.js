@@ -2306,9 +2306,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         removeRecordFromList: function (id) {
             this.collection.remove(id);
-            if (this.collection.total > 0) {
-                this.collection.total--;
-            }
             this.$el.find('.total-count-span').text(this.collection.total.toString());
 
             var index = this.checkedList.indexOf(id);

@@ -81,7 +81,7 @@ class Manager
         }
 
         if (!array_key_exists($storage, $this->implementationClassNameMap)) {
-            throw new Error("FileStorageManager: Unknown storage '{$storage}'");
+            $storage = 'UploadDir';
         }
         $className = $this->implementationClassNameMap[$storage];
 
