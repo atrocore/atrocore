@@ -146,6 +146,7 @@
     "tooltipLink": "Tooltip link",
     "required": "Required",
     "default": "Default",
+    "defaultDate": "Default",
     "maxLength": "Max length",
     "countBytesInsteadOfCharacters": "Count bytes instead of characters",
     "amountOfDigitsAfterComma": "Amount of digits after coma",

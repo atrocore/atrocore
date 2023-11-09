@@ -462,6 +462,31 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
     }
 
+    protected function prepareFieldTypeDate(Entity $entity, string $fieldName, array $fieldData): void
+    {
+        if ($entity->isAttributeChanged($fieldName)) {
+            if (!empty($value = $entity->get($fieldName)) && array_key_exists('defaultDate', $fieldData) && !empty($modifier = $fieldData['defaultDate'])) {
+                $entity->set($fieldName, $this->convertDateWithModifier($value, $modifier));
+            }
+        }
+    }
+
+    protected function prepareFieldTypeDateTime(Entity $entity, string $fieldName, array $fieldData): void
+    {
+        if ($entity->isAttributeChanged($fieldName)) {
+            if (!empty($value = $entity->get($fieldName)) && array_key_exists('defaultDate', $fieldData) && !empty($modifier = $fieldData['defaultDate'])) {
+                $entity->set($fieldName, $this->convertDateWithModifier($value, $modifier, 'Y-m-d H:i:s'));
+            }
+        }
+    }
+
+    public function convertDateWithModifier(string $date, string $modifier, string $format = 'Y-m-d'): string
+    {
+        $dt = new \DateTime($date);
+        $dt->modify($modifier);
+        return $dt->format($format);
+    }
+
     protected function roundValueUsingAmountOfDigitsAfterComma($value, $amountOfDigitsAfterComma)
     {
         if (empty($value) || empty($amountOfDigitsAfterComma)) {
