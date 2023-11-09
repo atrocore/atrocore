@@ -20,8 +20,6 @@ interface MapperInterface
 {
     public function selectById(IEntity $entity, string $id, $params = []): ?IEntity;
 
-    public function selectQueryBuilder(IEntity $entity, array $params): QueryBuilder;
-
     public function select(IEntity $entity, array $params): array;
 
     public function count(IEntity $entity, array $params = []): int;
