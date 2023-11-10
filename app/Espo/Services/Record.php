@@ -3384,7 +3384,12 @@ class Record extends \Espo\Core\Services\Base
 
     protected function getMeasureUnits(string $measureId): array
     {
-        return $this->getEntityManager()->getRepository('Measure')->getMeasureUnits($measureId);
+        if (!isset($this->measureUnits[$measureId])) {
+            $this->measureUnits[$measureId] = $this->getEntityManager()->getRepository('Measure')
+                ->getMeasureUnits($measureId);
+        }
+
+        return $this->measureUnits[$measureId];
     }
 
     protected function init()
