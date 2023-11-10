@@ -130,6 +130,10 @@ class Note extends Record
 
     public function checkAssignment(Entity $entity)
     {
+        if ($this->isImport) {
+            return true;
+        }
+
         if ($entity->isNew()) {
             $targetType = $entity->get('targetType');
 

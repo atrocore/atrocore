@@ -113,6 +113,8 @@ class Record extends \Espo\Core\Services\Base
 
     protected string $pseudoTransactionId = '';
 
+    public bool $isImport = false;
+
     /**
      * @var bool|array
      */
@@ -220,7 +222,7 @@ class Record extends \Espo\Core\Services\Base
 
     protected function processActionHistoryRecord($action, Entity $entity)
     {
-        if ($this->actionHistoryDisabled) return;
+        if ($this->actionHistoryDisabled || $this->isImport) return;
         if ($this->getConfig()->get('actionHistoryDisabled')) return;
 
         // skip if import
@@ -494,6 +496,10 @@ class Record extends \Espo\Core\Services\Base
 
     public function loadPreview(Entity $entity): void
     {
+        if ($this->isImport) {
+            return;
+        }
+
         $fields = [];
         foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []) as $field => $data) {
             if (in_array($data['type'], ['asset', 'image', 'file']) && !empty($entity->get("{$field}Id"))) {
@@ -700,6 +706,10 @@ class Record extends \Espo\Core\Services\Base
 
     public function checkAssignment(Entity $entity)
     {
+        if ($this->isImport) {
+            return true;
+        }
+
         if (!$this->isPermittedAssignedUser($entity)) {
             return false;
         }
@@ -1181,6 +1191,10 @@ class Record extends \Espo\Core\Services\Base
 
     protected function processDuplicateCheck(Entity $entity, $data)
     {
+        if ($this->isImport) {
+            return;
+        }
+
         if (empty($data->forceDuplicate)) {
             $duplicates = $this->checkEntityForDuplicate($entity, $data);
             if (!empty($duplicates)) {
@@ -1277,12 +1291,12 @@ class Record extends \Espo\Core\Services\Base
 
         if ($this->storeEntity($entity)) {
             $this->linkHierarchically($entity, $attachment);
-            $this->updateRelationData($entity, $attachment);
             $this->afterCreateEntity($entity, $attachment);
             $this->afterCreateProcessDuplicating($entity, $attachment);
-            $this->prepareEntityForOutput($entity);
-            $this->loadPreview($entity);
-
+            if (!$this->isImport) {
+                $this->prepareEntityForOutput($entity);
+                $this->loadPreview($entity);
+            }
             $this->processActionHistoryRecord('create', $entity);
 
             return $this
@@ -1362,12 +1376,16 @@ class Record extends \Espo\Core\Services\Base
         }
 
         if ($this->storeEntity($entity)) {
-            if ($this->isRelationPanelChanges($data)) {
+            if (!$this->isImport && $this->isRelationPanelChanges($data)) {
                 $this->updateRelationData($entity, $data);
             }
 
             $this->afterUpdateEntity($entity, $data);
-            $this->prepareEntityForOutput($entity);
+
+            if (!$this->isImport) {
+                $this->prepareEntityForOutput($entity);
+            }
+
             $this->loadPreview($entity);
 
             $this->processActionHistoryRecord('update', $entity);
@@ -2509,6 +2527,10 @@ class Record extends \Espo\Core\Services\Base
 
     public function prepareEntityForOutput(Entity $entity)
     {
+        if ($this->isImport) {
+            return;
+        }
+
         foreach ($this->internalAttributeList as $field) {
             $entity->clear($field);
         }
@@ -2830,7 +2852,7 @@ class Record extends \Espo\Core\Services\Base
 
     protected function afterCreateProcessDuplicating(Entity $entity, $data)
     {
-        if (!isset($data->_duplicatingEntityId)) return;
+        if (!isset($data->_duplicatingEntityId) || $this->isImport) return;
 
         $duplicatingEntityId = $data->_duplicatingEntityId;
         if (!$duplicatingEntityId) return;
@@ -3160,6 +3182,10 @@ class Record extends \Espo\Core\Services\Base
      */
     protected function getFieldsThatConflict(Entity $entity, \stdClass $data): array
     {
+        if ($this->isImport) {
+            return [];
+        }
+
         // prepare data
         $data = json_decode(json_encode($data, JSON_PRESERVE_ZERO_FRACTION | JSON_NUMERIC_CHECK), true);
 
