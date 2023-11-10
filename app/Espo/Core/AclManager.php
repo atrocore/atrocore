@@ -35,15 +35,17 @@ namespace Espo\Core;
 
 use \Espo\Core\Exceptions\Error;
 
+use Espo\Core\Utils\Metadata;
 use \Espo\ORM\Entity;
 use \Espo\Entities\User;
 use \Espo\Core\Utils\Util;
+use Espo\ORM\EntityManager;
 
 class AclManager
 {
     private $container;
 
-    private $metadata;
+    private Metadata $metadata;
 
     protected $implementationHashMap = array();
 
@@ -283,7 +285,9 @@ class AclManager
 
         if ($permission === 'team') {
             $teamIdList = $user->getLinkMultipleIdList('teams');
-            if (!$this->getContainer()->get('entityManager')->getRepository('User')->checkBelongsToAnyOfTeams($userId, $teamIdList)) {
+            /** @var EntityManager $em */
+            $em = $this->getContainer()->get('entityManager');
+            if (!$em->getRepository('User')->checkBelongsToAnyOfTeams($userId, $teamIdList)) {
                 return false;
             }
         }
