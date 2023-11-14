@@ -128,6 +128,8 @@ class Mapper implements MapperInterface
             }
         }
 
+        $this->debugSql($qb->getSQL());
+
         try {
             $rows = $qb->fetchAllAssociative();
         } catch (\Throwable $e) {
@@ -364,6 +366,8 @@ class Mapper implements MapperInterface
                 }
             }
 
+            $this->debugSql($qb->getSQL());
+
             $res = $qb->fetchAssociative();
 
             if (empty($res)) {
@@ -383,6 +387,8 @@ class Mapper implements MapperInterface
                         $qb->setValue($this->toDb($column), ":$column")->setParameter($column, $columnValue);
                     }
                 }
+
+                $this->debugSql($qb->getSQL());
 
                 try {
                     $qb->executeQuery();
@@ -413,6 +419,8 @@ class Mapper implements MapperInterface
                         $qb->andWhere("{$this->toDb($f)} = :$f")->setParameter($f, $v, self::getParameterType($v));
                     }
                 }
+
+                $this->debugSql($qb->getSQL());
 
                 try {
                     $qb->executeQuery();
@@ -496,6 +504,8 @@ class Mapper implements MapperInterface
             }
         }
 
+        $this->debugSql($qb->getSQL());
+
         try {
             $qb->executeQuery();
         } catch (\Throwable $e) {
@@ -532,6 +542,8 @@ class Mapper implements MapperInterface
                     $sql = str_replace('INSERT INTO', 'INSERT IGNORE INTO', $sql);
                 }
             }
+
+            $this->debugSql($sql);
 
             try {
                 $this->connection->executeQuery($sql, $qb->getParameters(), $qb->getParameterTypes());
@@ -582,6 +594,8 @@ class Mapper implements MapperInterface
         $qb->andWhere('deleted = :deleted');
         $qb->setParameter('deleted', false, self::getParameterType(false));
 
+        $this->debugSql($qb->getSQL());
+
         try {
             $qb->executeQuery();
         } catch (\Throwable $e) {
@@ -600,6 +614,8 @@ class Mapper implements MapperInterface
         $qb->delete($this->connection->quoteIdentifier($this->toDb($entity->getEntityType())))
             ->where('id = :id')
             ->setParameter('id', $entity->id, self::getParameterType($entity->id));
+
+        $this->debugSql($qb->getSQL());
 
         try {
             $qb->executeQuery();
@@ -693,13 +709,16 @@ class Mapper implements MapperInterface
             return;
         }
 
-        $this->connection->createQueryBuilder()
+        $qb = $this->connection->createQueryBuilder()
             ->update($this->connection->quoteIdentifier($this->toDb($entity->getEntityType())))
             ->set('modified_at', ':date')
             ->where('id = :id')
             ->setParameter('date', date('Y-m-d H:i:s'))
-            ->setParameter('id', $entity->get('id'))
-            ->executeQuery();
+            ->setParameter('id', $entity->get('id'));
+
+        $this->debugSql($qb->getSQL());
+
+        $qb->executeQuery();
     }
 
     protected function updateModifiedBy(IEntity $entity)
@@ -709,13 +728,16 @@ class Mapper implements MapperInterface
         }
 
         $userId = $this->entityFactory->getEntityManager()->getUser()->get('id');
-        $this->connection->createQueryBuilder()
+        $qb = $this->connection->createQueryBuilder()
             ->update($this->connection->quoteIdentifier($this->toDb($entity->getEntityType())))
             ->set('modified_by_id', ':userId')
             ->where('id = :id')
             ->setParameter('userId', $userId)
-            ->setParameter('id', $entity->get('id'))
-            ->executeQuery();
+            ->setParameter('id', $entity->get('id'));
+
+        $this->debugSql($qb->getSQL());
+
+        $qb->executeQuery();
     }
 
     public function toDb(string $field): string
@@ -731,5 +753,15 @@ class Mapper implements MapperInterface
     public function getQueryConverter(): QueryConverter
     {
         return $this->queryConverter;
+    }
+
+    /**
+     * For debug only
+     */
+    protected function debugSql(string $sql): void
+    {
+        if (isset($GLOBALS['debugSQL'])) {
+            $GLOBALS['debugSQL'][] = $sql;
+        }
     }
 }

@@ -77,7 +77,7 @@ class Note extends RDB
     public function save(Entity $entity, array $options = [])
     {
         if ($entity->isNew()) {
-            $entity->set('number', time() - (new \DateTime('2023-10-19'))->getTimestamp());
+            $entity->set('number', time() - (new \DateTime('2023-01-01'))->getTimestamp());
         }
 
         return parent::save($entity, $options);

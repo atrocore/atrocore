@@ -108,8 +108,7 @@ class ExtensibleEnumOption extends Base
         }
 
         if ($entity->isNew() && $entity->get('sortOrder') === null) {
-            $last = $this->where(['extensibleEnumId' => $entity->get('extensibleEnumId')])->order('sortOrder', 'DESC')->findOne();
-            $entity->set('sortOrder', empty($last) ? 0 : (int)$last->get('sortOrder') + 10);
+            $entity->set('sortOrder', time() - (new \DateTime('2023-01-01'))->getTimestamp());
         }
 
         $extensibleEnum = $entity->get('extensibleEnum');

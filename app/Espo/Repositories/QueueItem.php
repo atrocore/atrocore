@@ -47,7 +47,7 @@ class QueueItem extends Base
     {
         // update sort order
         if ($entity->isNew()) {
-            $sortOrder = time() - (new \DateTime('2023-09-01'))->getTimestamp();
+            $sortOrder = time() - (new \DateTime('2023-01-01'))->getTimestamp();
             if (!empty($entity->get('parentId')) && !empty($parent = $this->get($entity->get('parentId')))) {
                 $sortOrder = $parent->get('sortOrder') . '.' . $sortOrder;
             }
