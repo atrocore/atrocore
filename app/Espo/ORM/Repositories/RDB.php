@@ -68,6 +68,8 @@ class RDB extends \Espo\ORM\Repository
      */
     protected $listParams = [];
 
+    protected array $cachedEntities = [];
+
     public function __construct($entityType, EntityManager $entityManager, EntityFactory $entityFactory)
     {
         $this->entityType = $entityType;
@@ -122,15 +124,26 @@ class RDB extends \Espo\ORM\Repository
     {
         $entity = $this->entityFactory->create($this->entityType);
 
-        if (!$entity) return null;
-
-        $params = [];
-        $this->handleSelectParams($params);
-        if ($this->getMapper()->selectById($entity, $id, $params)) {
-            return $entity;
+        if (!$entity) {
+            return null;
         }
 
-        return null;
+        if (!isset($this->cachedEntities[$id])) {
+            $select = [];
+            foreach ($entity->fields as $fieldName => $fieldDefs) {
+                // skip links
+                if (!empty($fieldDefs['isLinkEntity']) || !empty($fieldDefs['isLinkEntityName'])) {
+                    continue;
+                }
+                $select[] = $fieldName;
+            }
+
+            $params = ['select' => $select];
+            $this->handleSelectParams($params);
+            $this->cachedEntities[$id] = $this->getMapper()->selectById($entity, $id, $params);
+        }
+
+        return $this->cachedEntities[$id];
     }
 
     public function get($id = null)
