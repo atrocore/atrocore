@@ -174,7 +174,12 @@ abstract class Entity implements IEntity
 
         if ($this->hasRelation($name) && $this->id) {
             if (!array_key_exists($name, $this->relationsContainer)) {
-                $this->relationsContainer[$name] = $this->getEntityManager()->getRepository($this->getEntityType())->findRelated($this, $name, $params);
+                $relationType = $this->getRelationType($name);
+                if (empty($params) && $relationType === IEntity::BELONGS_TO) {
+                    $this->relationsContainer[$name] = $this->getEntityManager()->getRepository($this->getRelationParam($name, 'entity'))->get($this->get("{$name}Id"));
+                }else{
+                    $this->relationsContainer[$name] = $this->getEntityManager()->getRepository($this->getEntityType())->findRelated($this, $name, $params);
+                }
             }
             return $this->relationsContainer[$name];
         }
