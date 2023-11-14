@@ -572,9 +572,7 @@ class Hierarchy extends RDB
         }
 
         if ($entity->get('sortOrder') === null) {
-            $last = $this->where(['sortOrder!=' => null])->order('sortOrder', 'DESC')->findOne();
-            $sortOrder = empty($last) ? 0 : $last->get('sortOrder') + 10;
-            $entity->set('sortOrder', $sortOrder);
+            $entity->set('sortOrder', time() - (new \DateTime('2023-01-01'))->getTimestamp());
         }
     }
 
