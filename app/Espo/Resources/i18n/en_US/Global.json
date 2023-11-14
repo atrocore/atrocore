@@ -1037,8 +1037,7 @@
     "notDashletService": "Service %s must implement Dashlet Interface",
     "editedByAnotherUser": "The data set [%s] has been changed in the meantime. You can <a href=\"javascript:\" onclick=\"location.reload();\">reload the page</a> to see the new values, return to editing by pressing \"Cancel\" or overwrite the data by pressing \"Apply\". Do you want to overwrite the data?",
     "dontMatchToPattern": "The value of the field \"{field}\" does not correspond to the pattern \"{pattern}\".",
-    "notUniqueValue": "Value for the field '%s' should be unique.",
-    "notUniqueValues": "Value combination for the fields '%s' should be unique."
+    "notUniqueValue": "The record cannot be created/updated due to database constraints."
   },
   "themes": {
     "TreoDarkTheme": "Atro Dark Theme",

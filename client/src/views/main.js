@@ -75,6 +75,10 @@ Espo.define('views/main', 'view', function (Dep) {
             this.setupMassDeletingNotification();
             this.setupMassRestoringNotification();
             this.setupMassUpdatingNotification();
+
+            $(document).on('click', '.show-hidden', function () {
+                $(this).parent().find('.hidden').attr('style', 'display: block !important');
+            });
         },
 
         setupMassDeletingNotification: function () {

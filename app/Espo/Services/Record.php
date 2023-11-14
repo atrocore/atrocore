@@ -554,61 +554,14 @@ class Record extends \Espo\Core\Services\Base
         try {
             $result = $this->getRepository()->save($entity, $this->getDefaultRepositoryOptions());
         } catch (UniqueConstraintViolationException $e) {
-            // find duplicate via fields
-            foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []) as $field => $fieldDefs) {
-                if (empty($fieldDefs['unique']) || $entity->get($field) === null) {
-                    continue;
-                }
-                $duplicate = $this->getRepository()->where([$field => $entity->get($field), 'id!=' => $entity->get('id')])->findOne();
-                if (!empty($duplicate)) {
-                    throw new BadRequest($this->prepareUniqueMessage([Util::toUnderScore($field)]));
-                }
-            }
-
-            // find duplicate via indexes
-            foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'uniqueIndexes'], []) as $columns) {
-                $where = ['id!=' => $entity->get('id')];
-                foreach ($columns as $column) {
-                    if ($column === 'deleted') {
-                        continue;
-                    }
-                    $field = Util::toCamelCase($column);
-                    if ($entity->get($field) === null) {
-                        continue;
-                    }
-                    $where[$field] = $entity->get($field);
-                }
-
-                $duplicate = $this->getRepository()->where($where)->findOne();
-                if (!empty($duplicate)) {
-                    throw new BadRequest($this->prepareUniqueMessage($columns));
-                }
-            }
-
-            throw new $e;
+            $lang = $this->getInjection('language');
+            $message = $lang->translate('notUniqueValue', 'exceptions');
+            $message .= ' <a href="javascript:" class="show-hidden">' . $lang->translate('Details') . '</a>';
+            $message .= PHP_EOL . '<pre class="hidden">' . $e->getMessage() . '</pre>';
+            throw new BadRequest($message);
         }
 
         return $result;
-    }
-
-    protected function prepareUniqueMessage(array $columns): string
-    {
-        /** @var Language $language */
-        $language = $this->getInjection('language');
-
-        $fields = [];
-        foreach ($columns as $column) {
-            if ($column === 'deleted') {
-                continue;
-            }
-            $fields[] = $language->translate(Util::toCamelCase($column), 'fields', $this->getEntityType());
-        }
-
-        if (count($fields) > 1) {
-            return sprintf($language->translate('notUniqueValues', 'exceptions'), implode(', ', $fields));
-        }
-
-        return sprintf($language->translate('notUniqueValue', 'exceptions'), implode(', ', $fields));
     }
 
     protected function checkRequiredFields(Entity $entity, \stdClass $data): bool
