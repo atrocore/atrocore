@@ -558,6 +558,11 @@ class Record extends \Espo\Core\Services\Base
             $message = $lang->translate('notUniqueValue', 'exceptions');
             $message .= ' <a href="javascript:" class="show-hidden">' . $lang->translate('Details') . '</a>';
             $message .= PHP_EOL . '<pre class="hidden">' . $e->getMessage() . '</pre>';
+
+            if ($this->isImport) {
+                $message = $e->getMessage();
+            }
+
             throw new BadRequest($message);
         }
 
