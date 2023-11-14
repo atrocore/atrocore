@@ -361,7 +361,7 @@ class RDB extends \Espo\ORM\Repository
     {
         $relationType = $entity->getRelationType($relationName);
 
-        if ($relationType === Entity::BELONGS_TO_PARENT) {
+        if ($relationType === IEntity::BELONGS_TO_PARENT) {
             $entityType = $entity->get($relationName . 'Type');
         } else {
             $entityType = $entity->getRelationParam($relationName, 'entity');
@@ -399,6 +399,10 @@ class RDB extends \Espo\ORM\Repository
             if (empty($params['skipAdditionalSelectParams'])) {
                 $this->getEntityManager()->getRepository($entityType)->handleSelectParams($params);
             }
+        }
+
+        if (empty($params) && $relationType === IEntity::BELONGS_TO) {
+            return $this->getEntityManager()->getRepository($entityType)->get($entity->get("{$relationName}Id"));
         }
 
         $result = $this->getMapper()->selectRelated($entity, $relationName, $params);
