@@ -158,7 +158,7 @@ class FieldManagerController extends AbstractListener
      * Is default value valid
      *
      * @param string $type
-     * @param mixed $default
+     * @param mixed  $default
      *
      * @return bool
      * @throws BadRequest
@@ -266,7 +266,7 @@ class FieldManagerController extends AbstractListener
         $sth->bindValue(':deleted', false, \PDO::PARAM_BOOL);
         $sth->execute();
 
-        $notUniqueDeletedIds = $sth->fetchAll(\PDO::FETCH_ASSOC | \PDO::FETCH_COLUMN);
+        $notUniqueDeletedIds = $sth->fetchAll(\PDO::FETCH_ASSOC|\PDO::FETCH_COLUMN);
 
         if (!empty($notUniqueDeletedIds)) {
             $connection->createQueryBuilder()
@@ -289,8 +289,6 @@ class FieldManagerController extends AbstractListener
             ->getContainer()
             ->get('pdo');
         $sth = $pdo->prepare($sql);
-        $sth->execute();
-
         foreach ($params as $name => $value) {
             if (is_bool($value)) {
                 $sth->bindValue($name, $value, \PDO::PARAM_BOOL);
@@ -298,6 +296,8 @@ class FieldManagerController extends AbstractListener
                 $sth->bindValue($name, $value);
             }
         }
+
+        $sth->execute();
 
         return $sth->fetch();
     }

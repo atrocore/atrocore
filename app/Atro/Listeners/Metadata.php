@@ -204,10 +204,6 @@ class Metadata extends AbstractListener
                         "emHidden"           => true
                     ];
 
-//                    if (isset($fieldDefs['multilangLocale']) && isset($data['entityDefs'][$entityType]['fields'][$field]['labelField'])) {
-//                        $data['entityDefs'][$entityType]['fields'][$field]['labelField']['multilangLocale'] = $fieldDefs['multilangLocale'];
-//                    }
-
                     if ($visibleLogic = $this->getMetadata()->get(['clientDefs', $entityType, 'dynamicLogic', 'fields', $field, 'visible'])) {
                         $data['clientDefs'][$entityType]['dynamicLogic']['fields'][$virtualFieldName]['visible'] = $visibleLogic;
                     }
