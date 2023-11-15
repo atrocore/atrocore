@@ -636,6 +636,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
 
         populateDefaults: function () {
             this.model.populateDefaults();
+
             var defaultHash = {};
 
             if (!this.getUser().get('portalId')) {

@@ -33,8 +33,6 @@
 
 namespace Espo\ORM;
 
-use Atro\Core\Twig\Twig;
-
 abstract class Entity implements IEntity
 {
     public $id = null;
