@@ -33,6 +33,7 @@
 
 namespace Espo\ORM;
 
+
 class EntityFactory
 {
     protected EntityManager $entityManager;
