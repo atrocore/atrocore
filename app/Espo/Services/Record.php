@@ -113,6 +113,8 @@ class Record extends \Espo\Core\Services\Base
 
     protected string $pseudoTransactionId = '';
 
+    public bool $isImport = false;
+
     /**
      * @var bool|array
      */
@@ -220,7 +222,7 @@ class Record extends \Espo\Core\Services\Base
 
     protected function processActionHistoryRecord($action, Entity $entity)
     {
-        if ($this->actionHistoryDisabled) return;
+        if ($this->actionHistoryDisabled || $this->isImport) return;
         if ($this->getConfig()->get('actionHistoryDisabled')) return;
 
         // skip if import
@@ -274,7 +276,7 @@ class Record extends \Espo\Core\Services\Base
 
         $this->getPseudoTransactionManager()->runForEntity($this->getEntityType(), $id);
 
-        $entity = $this->getRepository()->get($id);
+        $entity = $this->getRepository()->where(['id' => $id])->findOne();
         if (!empty($entity) && !empty($id)) {
             $this->loadAdditionalFields($entity);
 
@@ -494,6 +496,10 @@ class Record extends \Espo\Core\Services\Base
 
     public function loadPreview(Entity $entity): void
     {
+        if ($this->isImport) {
+            return;
+        }
+
         $fields = [];
         foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []) as $field => $data) {
             if (in_array($data['type'], ['asset', 'image', 'file']) && !empty($entity->get("{$field}Id"))) {
@@ -548,61 +554,19 @@ class Record extends \Espo\Core\Services\Base
         try {
             $result = $this->getRepository()->save($entity, $this->getDefaultRepositoryOptions());
         } catch (UniqueConstraintViolationException $e) {
-            // find duplicate via fields
-            foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []) as $field => $fieldDefs) {
-                if (empty($fieldDefs['unique']) || $entity->get($field) === null) {
-                    continue;
-                }
-                $duplicate = $this->getRepository()->where([$field => $entity->get($field), 'id!=' => $entity->get('id')])->findOne();
-                if (!empty($duplicate)) {
-                    throw new BadRequest($this->prepareUniqueMessage([Util::toUnderScore($field)]));
-                }
+            $lang = $this->getInjection('language');
+            $message = $lang->translate('notUniqueValue', 'exceptions');
+            $message .= ' <a href="javascript:" class="show-hidden">' . $lang->translate('Details') . '</a>';
+            $message .= PHP_EOL . '<pre class="hidden">' . $e->getMessage() . '</pre>';
+
+            if ($this->isImport) {
+                $message = $e->getMessage();
             }
 
-            // find duplicate via indexes
-            foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'uniqueIndexes'], []) as $columns) {
-                $where = ['id!=' => $entity->get('id')];
-                foreach ($columns as $column) {
-                    if ($column === 'deleted') {
-                        continue;
-                    }
-                    $field = Util::toCamelCase($column);
-                    if ($entity->get($field) === null) {
-                        continue;
-                    }
-                    $where[$field] = $entity->get($field);
-                }
-
-                $duplicate = $this->getRepository()->where($where)->findOne();
-                if (!empty($duplicate)) {
-                    throw new BadRequest($this->prepareUniqueMessage($columns));
-                }
-            }
-
-            throw new $e;
+            throw new BadRequest($message);
         }
 
         return $result;
-    }
-
-    protected function prepareUniqueMessage(array $columns): string
-    {
-        /** @var Language $language */
-        $language = $this->getInjection('language');
-
-        $fields = [];
-        foreach ($columns as $column) {
-            if ($column === 'deleted') {
-                continue;
-            }
-            $fields[] = $language->translate(Util::toCamelCase($column), 'fields', $this->getEntityType());
-        }
-
-        if (count($fields) > 1) {
-            return sprintf($language->translate('notUniqueValues', 'exceptions'), implode(', ', $fields));
-        }
-
-        return sprintf($language->translate('notUniqueValue', 'exceptions'), implode(', ', $fields));
     }
 
     protected function checkRequiredFields(Entity $entity, \stdClass $data): bool
@@ -700,6 +664,10 @@ class Record extends \Espo\Core\Services\Base
 
     public function checkAssignment(Entity $entity)
     {
+        if ($this->isImport) {
+            return true;
+        }
+
         if (!$this->isPermittedAssignedUser($entity)) {
             return false;
         }
@@ -1181,6 +1149,10 @@ class Record extends \Espo\Core\Services\Base
 
     protected function processDuplicateCheck(Entity $entity, $data)
     {
+        if ($this->isImport) {
+            return;
+        }
+
         if (empty($data->forceDuplicate)) {
             $duplicates = $this->checkEntityForDuplicate($entity, $data);
             if (!empty($duplicates)) {
@@ -1277,12 +1249,12 @@ class Record extends \Espo\Core\Services\Base
 
         if ($this->storeEntity($entity)) {
             $this->linkHierarchically($entity, $attachment);
-            $this->updateRelationData($entity, $attachment);
             $this->afterCreateEntity($entity, $attachment);
             $this->afterCreateProcessDuplicating($entity, $attachment);
-            $this->prepareEntityForOutput($entity);
-            $this->loadPreview($entity);
-
+            if (!$this->isImport) {
+                $this->prepareEntityForOutput($entity);
+                $this->loadPreview($entity);
+            }
             $this->processActionHistoryRecord('create', $entity);
 
             return $this
@@ -1362,12 +1334,16 @@ class Record extends \Espo\Core\Services\Base
         }
 
         if ($this->storeEntity($entity)) {
-            if ($this->isRelationPanelChanges($data)) {
+            if (!$this->isImport && $this->isRelationPanelChanges($data)) {
                 $this->updateRelationData($entity, $data);
             }
 
             $this->afterUpdateEntity($entity, $data);
-            $this->prepareEntityForOutput($entity);
+
+            if (!$this->isImport) {
+                $this->prepareEntityForOutput($entity);
+            }
+
             $this->loadPreview($entity);
 
             $this->processActionHistoryRecord('update', $entity);
@@ -2509,6 +2485,10 @@ class Record extends \Espo\Core\Services\Base
 
     public function prepareEntityForOutput(Entity $entity)
     {
+        if ($this->isImport) {
+            return;
+        }
+
         foreach ($this->internalAttributeList as $field) {
             $entity->clear($field);
         }
@@ -2830,7 +2810,7 @@ class Record extends \Espo\Core\Services\Base
 
     protected function afterCreateProcessDuplicating(Entity $entity, $data)
     {
-        if (!isset($data->_duplicatingEntityId)) return;
+        if (!isset($data->_duplicatingEntityId) || $this->isImport) return;
 
         $duplicatingEntityId = $data->_duplicatingEntityId;
         if (!$duplicatingEntityId) return;
@@ -3160,6 +3140,10 @@ class Record extends \Espo\Core\Services\Base
      */
     protected function getFieldsThatConflict(Entity $entity, \stdClass $data): array
     {
+        if ($this->isImport) {
+            return [];
+        }
+
         // prepare data
         $data = json_decode(json_encode($data, JSON_PRESERVE_ZERO_FRACTION | JSON_NUMERIC_CHECK), true);
 
@@ -3358,7 +3342,12 @@ class Record extends \Espo\Core\Services\Base
 
     protected function getMeasureUnits(string $measureId): array
     {
-        return $this->getEntityManager()->getRepository('Measure')->getMeasureUnits($measureId);
+        if (!isset($this->measureUnits[$measureId])) {
+            $this->measureUnits[$measureId] = $this->getEntityManager()->getRepository('Measure')
+                ->getMeasureUnits($measureId);
+        }
+
+        return $this->measureUnits[$measureId];
     }
 
     protected function init()

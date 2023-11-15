@@ -68,6 +68,8 @@ class RDB extends \Espo\ORM\Repository
      */
     protected $listParams = [];
 
+    protected array $cachedEntities = [];
+
     public function __construct($entityType, EntityManager $entityManager, EntityFactory $entityFactory)
     {
         $this->entityType = $entityType;
@@ -122,15 +124,17 @@ class RDB extends \Espo\ORM\Repository
     {
         $entity = $this->entityFactory->create($this->entityType);
 
-        if (!$entity) return null;
-
-        $params = [];
-        $this->handleSelectParams($params);
-        if ($this->getMapper()->selectById($entity, $id, $params)) {
-            return $entity;
+        if (!$entity) {
+            return null;
         }
 
-        return null;
+        if (!isset($this->cachedEntities[$id])) {
+            $params = ['select' => $this->prepareDefaultSelect($entity)];
+            $this->handleSelectParams($params);
+            $this->cachedEntities[$id] = $this->getMapper()->selectById($entity, $id, $params);
+        }
+
+        return $this->cachedEntities[$id];
     }
 
     public function get($id = null)
@@ -348,7 +352,7 @@ class RDB extends \Espo\ORM\Repository
     {
         $relationType = $entity->getRelationType($relationName);
 
-        if ($relationType === Entity::BELONGS_TO_PARENT) {
+        if ($relationType === IEntity::BELONGS_TO_PARENT) {
             $entityType = $entity->get($relationName . 'Type');
         } else {
             $entityType = $entity->getRelationParam($relationName, 'entity');
@@ -386,6 +390,10 @@ class RDB extends \Espo\ORM\Repository
             if (empty($params['skipAdditionalSelectParams'])) {
                 $this->getEntityManager()->getRepository($entityType)->handleSelectParams($params);
             }
+        }
+
+        if (empty($params['select'])){
+            $params['select'] = $this->prepareDefaultSelect($this->getEntityManager()->getRepository($entityType)->get());
         }
 
         $result = $this->getMapper()->selectRelated($entity, $relationName, $params);
@@ -916,6 +924,25 @@ class RDB extends \Espo\ORM\Repository
                 }
             }
         }
+    }
+
+    protected function prepareDefaultSelect(Entity $entity): array
+    {
+        $select = [];
+        foreach ($entity->fields as $fieldName => $fieldDefs) {
+            if (
+                !empty($fieldDefs['isLinkEntity'])
+                || !empty($fieldDefs['isLinkEntityName'])
+                || !empty($fieldDefs['isLinkMultipleCollection'])
+                || !empty($fieldDefs['isLinkMultipleIdList'])
+                || !empty($fieldDefs['isLinkMultipleNameMap'])
+            ) {
+                continue;
+            }
+            $select[] = $fieldName;
+        }
+
+        return $select;
     }
 
     /**

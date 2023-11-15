@@ -360,7 +360,7 @@ class Stream extends \Espo\Core\Services\Base
             ];
         } else {
             if (count($onlyTeamEntityTypeList) || count($onlyOwnEntityTypeList)) {
-                $selectParams['leftJoins'] = ['teams', 'users'];
+                $selectParams['leftJoins'] = [['teams', 'teamsMiddle'], ['users', 'usersMiddle']];
                 $selectParams['distinct'] = true;
                 $where[] = [
                     'OR' => [

@@ -48,7 +48,7 @@ class ActionHistoryRecord extends \Espo\Core\ORM\Repositories\RDB
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if ($entity->isNew()) {
-            $entity->set('number', time() - (new \DateTime('2023-10-19'))->getTimestamp());
+            $entity->set('number', time() - (new \DateTime('2023-01-01'))->getTimestamp());
         }
 
         parent::beforeSave($entity, $options);

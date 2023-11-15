@@ -134,6 +134,7 @@
     "label": "Label",
     "required": "Erforderlich",
     "default": "Standardwert",
+    "defaultDate": "Standardwert",
     "maxLength": "Maximallänge",
     "amountOfDigitsAfterComma": "Anzahl der Ziffern nach dem Komma",
     "options": "Optionen",

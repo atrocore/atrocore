@@ -289,8 +289,6 @@ class FieldManagerController extends AbstractListener
             ->getContainer()
             ->get('pdo');
         $sth = $pdo->prepare($sql);
-        $sth->execute();
-
         foreach ($params as $name => $value) {
             if (is_bool($value)) {
                 $sth->bindValue($name, $value, \PDO::PARAM_BOOL);
@@ -298,6 +296,8 @@ class FieldManagerController extends AbstractListener
                 $sth->bindValue($name, $value);
             }
         }
+
+        $sth->execute();
 
         return $sth->fetch();
     }
