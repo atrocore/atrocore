@@ -1219,11 +1219,14 @@ class QueryConverter
                 $distantKey = $keySet['distantKey'];
 
                 $relTable = $this->toDb($relOpt['relationName']);
-                $midAlias = lcfirst($this->sanitize($relOpt['relationName']));
 
                 $distantTable = $this->toDb($relOpt['entity']);
 
-                $midAlias = $this->toDb($alias) . '_mm';
+                if (strpos($alias, 'Filter') !== false) {
+                    $midAlias = $alias . 'Middle';
+                } else {
+                    $midAlias = $this->toDb($alias) . '_mm';
+                }
 
                 $condition = self::TABLE_ALIAS . ".{$this->toDb($key)} = {$midAlias}.{$this->toDb($nearKey)} AND {$midAlias}.deleted = :deleted_mm5";
                 if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
