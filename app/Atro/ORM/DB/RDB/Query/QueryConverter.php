@@ -1223,7 +1223,7 @@ class QueryConverter
 
                 $distantTable = $this->toDb($relOpt['entity']);
 
-                $midAlias = $alias . 'Middle';
+                $midAlias = $this->toDb($alias) . '_mm';
 
                 $condition = self::TABLE_ALIAS . ".{$this->toDb($key)} = {$midAlias}.{$this->toDb($nearKey)} AND {$midAlias}.deleted = :deleted_mm5";
                 if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
