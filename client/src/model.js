@@ -50,7 +50,6 @@ Espo.define('model', [], function () {
             this.defs = this.defs || {};
             this.defs.fields = this.defs.fields || {};
             this.defs.links = this.defs.links || {};
-            console.log('initialize model', this.name)
             Dep.prototype.initialize.call(this);
         },
 
