@@ -53,4 +53,18 @@ class EntityFactory
         $defs = $this->metadata->get($name);
         if (is_null($defs)) {
             return null;
-    
+        }
+
+        return new $className($defs, $this->entityManager);
+    }
+
+    public function getEntityManager(): EntityManager
+    {
+        return $this->entityManager;
+    }
+
+    public function getMetadata(): Metadata
+    {
+        return $this->metadata;
+    }
+}
