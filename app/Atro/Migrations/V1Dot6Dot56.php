@@ -36,7 +36,6 @@ class V1Dot6Dot56 extends Base
         try {
             $this->getPDO()->exec($query);
         } catch (\Throwable $e) {
-            var_dump($e);
         }
     }
 }
