@@ -454,6 +454,10 @@ class Record extends \Espo\Core\Services\Base
     {
         $this->dispatchEvent('loadPreviewForCollection', new Event(['collection' => $collection, 'service' => $this]));
 
+        if (empty($collection[0])) {
+            return;
+        }
+
         $fields = [];
         foreach ($this->getMetadata()->get(['entityDefs', $collection->getEntityName(), 'fields'], []) as $field => $data) {
             if (in_array($data['type'], ['asset', 'image', 'file']) && empty($data['relationVirtualField'])) {
