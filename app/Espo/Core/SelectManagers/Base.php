@@ -541,11 +541,6 @@ class Base
 
     protected function accessOnlyOwn(&$result)
     {
-        if ($this->hasAssignedUsersField()) {
-            echo '2023-11-16 TODO: hasAssignedUsersField' . PHP_EOL;
-            die();
-        }
-
         if ($this->hasOwnerUserField()) {
             $d['ownerUserId'] = $this->getUser()->id;
         }
@@ -566,11 +561,6 @@ class Base
         }
 
         $this->setDistinct(true, $result);
-
-        if ($this->hasAssignedUsersField()) {
-            echo '2023-11-16 TODO: hasAssignedUsersField' . PHP_EOL;
-            die();
-        }
 
         $result['callbacks'][] = [$this, 'applyAccessOnlyTeam'];
     }
@@ -646,13 +636,11 @@ class Base
     }
 
     /**
-     * @return bool
+     * @deprecated will be removed soon
      */
     protected function hasAssignedUsersField()
     {
-        return $this->getMetadata()->get('scopes.' . $this->getEntityType() . '.hasAssignedUser')
-            && $this->getSeed()->hasRelation('assignedUsers')
-            && $this->getSeed()->hasAttribute('assignedUsersIds');
+        return false;
     }
 
     /**
@@ -1843,13 +1831,7 @@ class Base
     protected function boolFilterAssignedToMe(&$result)
     {
         if (!$this->checkIsPortal()) {
-            if ($this->hasAssignedUsersField()) {
-                $this->setDistinct(true, $result);
-                $this->addLeftJoin(['assignedUsers', 'assignedUsersAccess'], $result);
-                $result['whereClause'][] = [
-                    'assignedUsersAccess.id' => $this->getUser()->id
-                ];
-            } else if ($this->hasAssignedUserField()) {
+            if ($this->hasAssignedUserField()) {
                 $result['whereClause'][] = [
                     'assignedUserId' => $this->getUser()->id
                 ];
