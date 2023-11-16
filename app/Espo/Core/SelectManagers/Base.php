@@ -33,7 +33,11 @@
 
 namespace Espo\Core\SelectManagers;
 
+use Atro\ORM\DB\RDB\Mapper;
 use Atro\ORM\DB\RDB\Query\QueryConverter;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\Core\Acl;
 use Espo\Core\AclManager;
 use Espo\Core\EventManager\Event;
@@ -538,10 +542,8 @@ class Base
     protected function accessOnlyOwn(&$result)
     {
         if ($this->hasAssignedUsersField()) {
-            $this->setDistinct(true, $result);
-            $this->addLeftJoin('assignedUsers', $result);
-            $result['whereClause'][] = ['assignedUsers.id' => $this->getUser()->id];
-            return;
+            echo '2023-11-16 TODO: hasAssignedUsersField' . PHP_EOL;
+            die();
         }
 
         if ($this->hasOwnerUserField()) {
@@ -564,34 +566,41 @@ class Base
         }
 
         $this->setDistinct(true, $result);
-        $this->addLeftJoin(['teams', 'teamsAccess'], $result);
 
         if ($this->hasAssignedUsersField()) {
-            $this->addLeftJoin(['assignedUsers', 'assignedUsersAccess'], $result);
-            $result['whereClause'][] = [
-                'OR' => [
-                    'teamsAccess.id' => $this->getUser()->getLinkMultipleIdList('teams'),
-                    'assignedUsersAccess.id' => $this->getUser()->id
-                ]
-            ];
-            return;
+            echo '2023-11-16 TODO: hasAssignedUsersField' . PHP_EOL;
+            die();
         }
 
-        $d = ['teamsAccess.id' => $this->getUser()->getLinkMultipleIdList('teams')];
+        $result['callbacks'][] = [$this, 'applyAccessOnlyTeam'];
+    }
+
+    public function applyAccessOnlyTeam(QueryBuilder $qb, $entity, $params, Mapper $mapper): void
+    {
+        $currentUserId = $this->getUser()->id;
+
+        $ta = $mapper->getQueryConverter()->getMainTableAlias();
+        $sql = "($ta.id IN (SELECT entity_id FROM entity_team WHERE deleted=:false AND entity_type=:entityType AND team_id IN (:teamsIds)))";
 
         if ($this->hasOwnerUserField()) {
-            $d['ownerUserId'] = $this->getUser()->id;
+            $sql .= " OR ($ta.owner_user_id = :currentUserId)";
+            $qb->setParameter('currentUserId', $currentUserId);
         }
 
         if ($this->hasAssignedUserField()) {
-            $d['assignedUserId'] = $this->getUser()->id;
+            $sql .= " OR ($ta.assigned_user_id = :currentUserId)";
+            $qb->setParameter('currentUserId', $currentUserId);
         }
 
         if ($this->hasCreatedByField() && !$this->hasAssignedUserField() && !$this->hasOwnerUserField()) {
-            $d['createdById'] = $this->getUser()->id;
+            $sql .= " OR ($ta.created_by_id = :currentUserId)";
+            $qb->setParameter('currentUserId', $currentUserId);
         }
 
-        $result['whereClause'][] = ['OR' => $d];
+        $qb->andWhere($sql);
+        $qb->setParameter('teamsIds', $this->getUser()->getLinkMultipleIdList('teams'), Connection::PARAM_STR_ARRAY);
+        $qb->setParameter('entityType', $this->entityType);
+        $qb->setParameter('false', false, ParameterType::BOOLEAN);
     }
 
     protected function accessPortalOnlyAccount(&$result)
