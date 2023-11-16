@@ -632,13 +632,16 @@ class Hierarchy extends Record
             return;
         }
 
-        $entity->set('isRoot', $this->getRepository()->isRoot($entity->get('id')));
-        $entity->set('hasChildren', !empty($children = $entity->get('children')) && count($children) > 0);
-        if ($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']) !== true) {
-            $entity->set('hierarchyRoute', $this->getRepository()->getHierarchyRoute($entity->get('id')));
-        }
-        if ($entity->has('hierarchySortOrder')) {
-            $entity->set('sortOrder', $entity->get('hierarchySortOrder'));
+        if (!$this->isExport){
+            $entity->set('isRoot', $this->getRepository()->isRoot($entity->get('id')));
+            $entity->set('hasChildren', !empty($children = $entity->get('children')) && count($children) > 0);
+
+            if ($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']) !== true) {
+                $entity->set('hierarchyRoute', $this->getRepository()->getHierarchyRoute($entity->get('id')));
+            }
+            if ($entity->has('hierarchySortOrder')) {
+                $entity->set('sortOrder', $entity->get('hierarchySortOrder'));
+            }
         }
     }
 
