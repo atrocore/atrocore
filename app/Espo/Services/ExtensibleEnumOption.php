@@ -37,6 +37,7 @@ namespace Espo\Services;
 
 use Espo\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 
 class ExtensibleEnumOption extends Base
 {
@@ -52,11 +53,33 @@ class ExtensibleEnumOption extends Base
         return parent::updateEntity($id, $data);
     }
 
+    public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
+    {
+        parent::prepareCollectionForOutput($collection, $selectParams);
+
+        $extensibleEnumIds = array_unique(array_column($collection->toArray(), 'extensibleEnumId'));
+        if (!empty($extensibleEnumIds)) {
+            $extensibleEnums = $this->getEntityManager()->getRepository('ExtensibleEnum')
+                ->select(['id', 'multilingual'])
+                ->where(['id' => $extensibleEnumIds])
+                ->find();
+
+            foreach ($collection as $entity) {
+                foreach ($extensibleEnums as $extensibleEnum) {
+                    if ($entity->get('extensibleEnumId') === $extensibleEnum->get('id')) {
+                        $entity->set('listMultilingual', !empty($extensibleEnum->get('multilingual')));
+                        continue 2;
+                    }
+                }
+            }
+        }
+    }
+
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);
 
-        if (!empty($entity->get('extensibleEnumId'))) {
+        if (!empty($entity->get('extensibleEnumId')) && $entity->get('listMultilingual') === null) {
             $extensibleEnum = $this->getEntityManager()->getRepository('ExtensibleEnum')->get($entity->get('extensibleEnumId'));
             if (!empty($extensibleEnum)) {
                 $entity->set('listMultilingual', !empty($extensibleEnum->get('multilingual')));
