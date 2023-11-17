@@ -43,13 +43,13 @@ class QueryConverter
             'maxTextColumnsLength'
         ];
 
-    protected static array $sqlOperators
+    public static array $sqlOperators
         = [
             'OR',
             'AND',
         ];
 
-    protected static array $comparisonOperators
+    public static array $comparisonOperators
         = [
             '!=s' => 'NOT IN',
             '=s'  => 'IN',
