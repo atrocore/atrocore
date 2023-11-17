@@ -129,7 +129,7 @@ class RDB extends \Espo\ORM\Repository
         }
 
         if (!isset($this->cachedEntities[$id])) {
-            $params = ['select' => $this->prepareDefaultSelect($entity)];
+            $params = [];
             $this->handleSelectParams($params);
             $this->cachedEntities[$id] = $this->getMapper()->selectById($entity, $id, $params);
         }
@@ -390,10 +390,6 @@ class RDB extends \Espo\ORM\Repository
             if (empty($params['skipAdditionalSelectParams'])) {
                 $this->getEntityManager()->getRepository($entityType)->handleSelectParams($params);
             }
-        }
-
-        if (empty($params['select'])){
-            $params['select'] = $this->prepareDefaultSelect($this->getEntityManager()->getRepository($entityType)->get());
         }
 
         $result = $this->getMapper()->selectRelated($entity, $relationName, $params);
@@ -924,25 +920,6 @@ class RDB extends \Espo\ORM\Repository
                 }
             }
         }
-    }
-
-    protected function prepareDefaultSelect(Entity $entity): array
-    {
-        $select = [];
-        foreach ($entity->fields as $fieldName => $fieldDefs) {
-            if (
-                !empty($fieldDefs['isLinkEntity'])
-                || !empty($fieldDefs['isLinkEntityName'])
-                || !empty($fieldDefs['isLinkMultipleCollection'])
-                || !empty($fieldDefs['isLinkMultipleIdList'])
-                || !empty($fieldDefs['isLinkMultipleNameMap'])
-            ) {
-                continue;
-            }
-            $select[] = $fieldName;
-        }
-
-        return $select;
     }
 
     /**
