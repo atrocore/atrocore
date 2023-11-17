@@ -277,7 +277,7 @@ class Record extends \Espo\Core\Services\Base
 
         $this->getPseudoTransactionManager()->runForEntity($this->getEntityType(), $id);
 
-        $entity = $this->getRepository()->where(['id' => $id])->findOne();
+        $entity = $this->getRepository()->get($id);
         if (!empty($entity) && !empty($id)) {
             $this->loadAdditionalFields($entity);
 
