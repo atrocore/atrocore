@@ -180,7 +180,7 @@ class Notification extends \Espo\Services\Record
             switch ($entity->get('type')) {
                 case 'Note':
                 case 'MentionInPost':
-                    $note = $this->getEntityManager()->getEntity('Note', $data->noteId);
+                    $note = $this->getEntityManager()->getRepository('Note')->where(['id' => $data->noteId])->findOne();
                     if ($note) {
                         if ($note->get('parentId') && $note->get('parentType')) {
                             $parent = $this->getEntityManager()->getEntity($note->get('parentType'), $note->get('parentId'));
