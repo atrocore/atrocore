@@ -561,9 +561,10 @@ class Record extends Base
             throw new BadRequest();
         }
 
-        if (!$this->getAcl()->check($this->name, 'edit')) {
+        if (!$this->getAcl()->check($this->name, 'read')) {
             throw new Forbidden();
         }
+        
         return $this->getEntityManager()->getRepository($this->name)->get()->getValueMap();
     }
 
