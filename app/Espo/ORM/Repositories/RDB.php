@@ -577,10 +577,10 @@ class RDB extends \Espo\ORM\Repository
             $result = $this->$methodName($entity, $foreign, $options);
         } else {
             if ($foreign instanceof Entity) {
-                $result = $this->getMapper()->removeRelation($entity, $relationName, null, false, $foreign, true);
+                $result = $this->getMapper()->removeRelation($entity, $relationName, null, false, $foreign);
             }
             if (is_string($foreign)) {
-                $result = $this->getMapper()->removeRelation($entity, $relationName, $foreign, false, null, true);
+                $result = $this->getMapper()->removeRelation($entity, $relationName, $foreign, false, null);
             }
             if ($foreign === true) {
                 $GLOBALS['log']->error('removeAllRelations is deprecated. Use removeRelation instead.');

@@ -159,10 +159,10 @@ class Converter
                     } else {
                         $table = $schema->createTable($tableName);
 
-                        $uniqueIndex = [];
+                        $uniqueIndex = ['deleted'];
 
                         // ID column
-                        $this->addColumn($schema, $table, 'id', ['type' => 'id', 'dbType' => 'int', 'autoincrement' => true]);
+                        $this->addColumn($schema, $table, 'id', ['type' => 'id', 'dbType' => 'varchar', 'len' => 24]);
 
                         // DELETED column
                         $this->addColumn($schema, $table, 'deleted', ['type' => 'bool', 'default' => false]);
