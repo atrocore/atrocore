@@ -77,7 +77,8 @@ Espo.define('views/main', 'view', function (Dep) {
             this.setupMassUpdatingNotification();
 
             $(document).on('click', '.show-hidden', function () {
-                $(this).parent().find('.hidden').attr('style', 'display: block !important');
+                let message = $(this).parent().find('textarea.hidden').val();
+                Espo.Ui.notify(message, 'info', 1000 * 60 * 60, true);
             });
         },
 

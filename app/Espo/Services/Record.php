@@ -561,8 +561,7 @@ class Record extends \Espo\Core\Services\Base
         } catch (UniqueConstraintViolationException $e) {
             $lang = $this->getInjection('language');
             $message = $lang->translate('notUniqueValue', 'exceptions');
-            $message .= ' <a href="javascript:" class="show-hidden">' . $lang->translate('Details') . '</a>';
-            $message .= PHP_EOL . '<pre class="hidden">' . $e->getMessage() . '</pre>';
+            $message .= ' <a href="javascript:" class="show-hidden">' . $lang->translate('Details') . '</a><textarea class="hidden">' . $e->getMessage() . '</textarea>';
 
             if ($this->isImport) {
                 $message = $e->getMessage();
