@@ -410,7 +410,6 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
                 'phpRequires'  => [
                     'json',
                     'openssl',
-                    'pdo_mysql',
                     'mbstring',
                     'zip',
                     'gd',
@@ -424,8 +423,7 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
                     'memory_limit'        => '256M',
                     'post_max_size'       => '20M',
                     'upload_max_filesize' => '20M'
-                ],
-                'mysqlVersion' => '5.5.3'
+                ]
             ]
         ];
     }
