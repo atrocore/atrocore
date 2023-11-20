@@ -6,7 +6,6 @@
   "minimum-stability": "stable",
   "require": {
     "php": "^7.4|^8.0",
-    "ext-pdo_mysql": "*",
     "ext-openssl": "*",
     "ext-json": "*",
     "ext-pdo": "*",
