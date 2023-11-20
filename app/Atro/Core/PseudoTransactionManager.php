@@ -20,7 +20,6 @@ use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
 use Espo\Entities\User;
-use Espo\ORM\EntityManager;
 use Espo\Services\Record;
 
 class PseudoTransactionManager
@@ -29,7 +28,8 @@ class PseudoTransactionManager
 
     private array $canceledJobs = [];
 
-    protected Container $container;
+    private Container $container;
+    private Container $systemContainer;
 
     protected Connection $connection;
 
@@ -37,6 +37,10 @@ class PseudoTransactionManager
     {
         $this->container = $container;
         $this->connection = \Atro\Core\Factories\Connection::createConnection($container->get('config')->get('database'));
+
+        $this->systemContainer = new Container();
+        $auth = new \Espo\Core\Utils\Auth($this->systemContainer);
+        $auth->useNoAuth();
     }
 
     public static function hasJobs(): bool
@@ -222,12 +226,6 @@ class PseudoTransactionManager
         $inputIsEmpty = $job['input_data'] === '';
 
         try {
-            $user = $this->getEntityManager()->getRepository('User')->get('system');
-            $user->set('isAdmin', true);
-
-            $this->container->setUser($user);
-            $this->getEntityManager()->setUser($user);
-
             $service = $this->getServiceFactory()->create($job['entity_type']);
             if ($service instanceof Record) {
                 $service->setPseudoTransactionId($job['id']);
@@ -320,16 +318,11 @@ class PseudoTransactionManager
 
     protected function getServiceFactory(): ServiceFactory
     {
-        return $this->container->get('serviceFactory');
+        return $this->systemContainer->get('serviceFactory');
     }
 
     protected function getUser(): User
     {
         return $this->container->get('user');
-    }
-
-    protected function getEntityManager(): EntityManager
-    {
-        return $this->container->get('entityManager');
     }
 }

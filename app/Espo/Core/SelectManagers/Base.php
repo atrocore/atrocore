@@ -33,7 +33,11 @@
 
 namespace Espo\Core\SelectManagers;
 
+use Atro\ORM\DB\RDB\Mapper;
 use Atro\ORM\DB\RDB\Query\QueryConverter;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\Core\Acl;
 use Espo\Core\AclManager;
 use Espo\Core\EventManager\Event;
@@ -537,13 +541,6 @@ class Base
 
     protected function accessOnlyOwn(&$result)
     {
-        if ($this->hasAssignedUsersField()) {
-            $this->setDistinct(true, $result);
-            $this->addLeftJoin('assignedUsers', $result);
-            $result['whereClause'][] = ['assignedUsers.id' => $this->getUser()->id];
-            return;
-        }
-
         if ($this->hasOwnerUserField()) {
             $d['ownerUserId'] = $this->getUser()->id;
         }
@@ -564,34 +561,36 @@ class Base
         }
 
         $this->setDistinct(true, $result);
-        $this->addLeftJoin(['teams', 'teamsAccess'], $result);
 
-        if ($this->hasAssignedUsersField()) {
-            $this->addLeftJoin(['assignedUsers', 'assignedUsersAccess'], $result);
-            $result['whereClause'][] = [
-                'OR' => [
-                    'teamsAccess.id' => $this->getUser()->getLinkMultipleIdList('teams'),
-                    'assignedUsersAccess.id' => $this->getUser()->id
-                ]
-            ];
-            return;
-        }
+        $result['callbacks'][] = [$this, 'applyAccessOnlyTeam'];
+    }
 
-        $d = ['teamsAccess.id' => $this->getUser()->getLinkMultipleIdList('teams')];
+    public function applyAccessOnlyTeam(QueryBuilder $qb, $entity, $params, Mapper $mapper): void
+    {
+        $currentUserId = $this->getUser()->id;
+
+        $ta = $mapper->getQueryConverter()->getMainTableAlias();
+        $sql = "($ta.id IN (SELECT entity_id FROM entity_team WHERE deleted=:false AND entity_type=:entityType AND team_id IN (:teamsIds)))";
 
         if ($this->hasOwnerUserField()) {
-            $d['ownerUserId'] = $this->getUser()->id;
+            $sql .= " OR ($ta.owner_user_id = :currentUserId)";
+            $qb->setParameter('currentUserId', $currentUserId);
         }
 
         if ($this->hasAssignedUserField()) {
-            $d['assignedUserId'] = $this->getUser()->id;
+            $sql .= " OR ($ta.assigned_user_id = :currentUserId)";
+            $qb->setParameter('currentUserId', $currentUserId);
         }
 
         if ($this->hasCreatedByField() && !$this->hasAssignedUserField() && !$this->hasOwnerUserField()) {
-            $d['createdById'] = $this->getUser()->id;
+            $sql .= " OR ($ta.created_by_id = :currentUserId)";
+            $qb->setParameter('currentUserId', $currentUserId);
         }
 
-        $result['whereClause'][] = ['OR' => $d];
+        $qb->andWhere($sql);
+        $qb->setParameter('teamsIds', $this->getUser()->getLinkMultipleIdList('teams'), Connection::PARAM_STR_ARRAY);
+        $qb->setParameter('entityType', $this->entityType);
+        $qb->setParameter('false', false, ParameterType::BOOLEAN);
     }
 
     protected function accessPortalOnlyAccount(&$result)
@@ -637,13 +636,11 @@ class Base
     }
 
     /**
-     * @return bool
+     * @deprecated will be removed soon
      */
     protected function hasAssignedUsersField()
     {
-        return $this->getMetadata()->get('scopes.' . $this->getEntityType() . '.hasAssignedUser')
-            && $this->getSeed()->hasRelation('assignedUsers')
-            && $this->getSeed()->hasAttribute('assignedUsersIds');
+        return false;
     }
 
     /**
@@ -1834,13 +1831,7 @@ class Base
     protected function boolFilterAssignedToMe(&$result)
     {
         if (!$this->checkIsPortal()) {
-            if ($this->hasAssignedUsersField()) {
-                $this->setDistinct(true, $result);
-                $this->addLeftJoin(['assignedUsers', 'assignedUsersAccess'], $result);
-                $result['whereClause'][] = [
-                    'assignedUsersAccess.id' => $this->getUser()->id
-                ];
-            } else if ($this->hasAssignedUserField()) {
+            if ($this->hasAssignedUserField()) {
                 $result['whereClause'][] = [
                     'assignedUserId' => $this->getUser()->id
                 ];

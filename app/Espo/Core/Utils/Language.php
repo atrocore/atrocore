@@ -106,7 +106,7 @@ class Language
         $this->container = $container;
         $this->currentLanguage = $currentLanguage;
         $this->noCustom = $noCustom;
-        $this->unifier = new Unifier($this->container->get('fileManager'), $this->container->get('metadata'));
+        $this->unifier = new Unifier($this->container->get('fileManager'), $this->getMetadata());
     }
 
     public static function detectLanguage(Config $config, Preferences $preferences = null): string
@@ -244,22 +244,19 @@ class Language
     {
         $field = Util::toCamelCase(strtolower($this->getLanguage()));
 
-        /** @var \Espo\ORM\EntityManager $em */
-        $em = $this->container->get('entityManager');
-
         if (!empty($this->changedData)) {
             $simplifiedTranslates = [];
             RefreshTranslations::toSimpleArray($this->changedData, $simplifiedTranslates);
 
             foreach ($simplifiedTranslates as $key => $value) {
-                $label = $em->getRepository('Translation')->where(['name' => $key])->findOne();
+                $label = $this->getEntityManager()->getRepository('Translation')->where(['name' => $key])->findOne();
                 if (empty($label)) {
-                    $label = $em->getRepository('Translation')->get();
+                    $label = $this->getEntityManager()->getRepository('Translation')->get();
                     $label->set(['name' => $key, 'module' => 'custom']);
                 }
                 $label->set('isCustomized', true);
                 $label->set($field, $value);
-                $em->saveEntity($label);
+                $this->getEntityManager()->saveEntity($label);
             }
         }
 
@@ -267,9 +264,9 @@ class Language
             foreach ($this->deletedData as $scope => $unsetData) {
                 foreach ($unsetData as $category => $names) {
                     foreach ($names as $name) {
-                        $label = $em->getRepository('Translation')->where(['name' => "$scope.$category.$name", 'module' => 'custom', 'isCustomized' => true])->findOne();
+                        $label = $this->getEntityManager()->getRepository('Translation')->where(['name' => "$scope.$category.$name", 'module' => 'custom', 'isCustomized' => true])->findOne();
                         if (!empty($label)) {
-                            $em->removeEntity($label);
+                            $this->getEntityManager()->removeEntity($label);
                         }
                     }
                 }
@@ -304,7 +301,7 @@ class Language
         $data['core'] = $this->unify($this->corePath);
 
         // load modules
-        foreach ($this->container->get('metadata')->getModules() as $name => $module) {
+        foreach ($this->getMetadata()->getModules() as $name => $module) {
             $data[$name] = [];
             $module->loadTranslates($data[$name]);
         }
@@ -378,8 +375,8 @@ class Language
     public function reload(): array
     {
         $data = [];
-        $languageList = $this->container->get('metadata')->get('multilang.languageList', []);
-        $dbData = $this->container->get('entityManager')->getRepository('Translation')->find();
+        $languageList = $this->getMetadata()->get('multilang.languageList', []);
+        $dbData = $this->getEntityManager()->getRepository('Translation')->find();
         foreach ($dbData as $record) {
             foreach ($languageList as $locale) {
                 $row = [];
@@ -393,7 +390,7 @@ class Language
             }
         }
 
-        $this->container->get('dataManager')->setCacheData('translations', $data);
+        $this->getDataManager()->setCacheData('translations', $data);
 
         return $data;
     }
@@ -412,12 +409,12 @@ class Language
     protected function init(): void
     {
         /** @var bool $installed */
-        $installed = $this->container->get('config')->get('isInstalled', false);
+        $installed = $this->getConfig()->get('isInstalled', false);
 
         $data = [];
 
         if ($installed) {
-            $data = $this->container->get('dataManager')->getCacheData('translations');
+            $data = $this->getDataManager()->getCacheData('translations');
             if (empty($data)) {
                 $data = $this->reload();
             }
@@ -435,7 +432,7 @@ class Language
         }
 
         // load modules
-        foreach ($this->container->get('metadata')->getModules() as $name => $module) {
+        foreach ($this->getMetadata()->getModules() as $name => $module) {
             if (!empty($data[$name])) {
                 $fullData = Util::merge($fullData, $data[$name]);
             }
@@ -454,7 +451,7 @@ class Language
         }
 
         if ($installed) {
-            $this->data = $this->container->get('eventManager')->dispatch('Language', 'modify', new Event(['data' => $this->data]))->getArgument('data');
+            $this->data = $this->getEventManager()->dispatch('Language', 'modify', new Event(['data' => $this->data]))->getArgument('data');
         }
     }
 
@@ -497,5 +494,30 @@ class Language
                 $result[$first] = $value;
             }
         }
+    }
+
+    private function getEntityManager(): \Espo\ORM\EntityManager
+    {
+        return $this->container->get('entityManager');
+    }
+
+    private function getMetadata(): \Espo\Core\Utils\Metadata
+    {
+        return $this->container->get('metadata');
+    }
+
+    private function getEventManager(): \Atro\Core\EventManager\Manager
+    {
+        return $this->container->get('eventManager');
+    }
+
+    private function getDataManager(): \Espo\Core\DataManager
+    {
+        return $this->container->get('dataManager');
+    }
+
+    private function getConfig(): \Espo\Core\Utils\Config
+    {
+        return $this->container->get('config');
     }
 }

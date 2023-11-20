@@ -114,6 +114,7 @@ class Record extends \Espo\Core\Services\Base
     protected string $pseudoTransactionId = '';
 
     public bool $isImport = false;
+    public bool $isExport = false;
 
     /**
      * @var bool|array
@@ -276,7 +277,7 @@ class Record extends \Espo\Core\Services\Base
 
         $this->getPseudoTransactionManager()->runForEntity($this->getEntityType(), $id);
 
-        $entity = $this->getRepository()->where(['id' => $id])->findOne();
+        $entity = $this->getRepository()->get($id);
         if (!empty($entity) && !empty($id)) {
             $this->loadAdditionalFields($entity);
 
@@ -453,9 +454,13 @@ class Record extends \Espo\Core\Services\Base
     {
         $this->dispatchEvent('loadPreviewForCollection', new Event(['collection' => $collection, 'service' => $this]));
 
+        if (empty($collection[0])) {
+            return;
+        }
+
         $fields = [];
         foreach ($this->getMetadata()->get(['entityDefs', $collection->getEntityName(), 'fields'], []) as $field => $data) {
-            if (in_array($data['type'], ['asset', 'image', 'file'])) {
+            if (in_array($data['type'], ['asset', 'image', 'file']) && empty($data['relationVirtualField'])) {
                 $fields[] = $field;
             }
         }

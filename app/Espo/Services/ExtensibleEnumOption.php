@@ -37,6 +37,7 @@ namespace Espo\Services;
 
 use Espo\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 
 class ExtensibleEnumOption extends Base
 {
@@ -56,7 +57,7 @@ class ExtensibleEnumOption extends Base
     {
         parent::prepareEntityForOutput($entity);
 
-        if (!empty($entity->get('extensibleEnumId'))) {
+        if (!$this->isExport && !$this->isImport && !empty($entity->get('extensibleEnumId')) && $entity->get('listMultilingual') === null) {
             $extensibleEnum = $this->getEntityManager()->getRepository('ExtensibleEnum')->get($entity->get('extensibleEnumId'));
             if (!empty($extensibleEnum)) {
                 $entity->set('listMultilingual', !empty($extensibleEnum->get('multilingual')));

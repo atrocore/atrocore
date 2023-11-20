@@ -45,7 +45,8 @@ class ConnectionOauth1 extends AbstractConnection
             return true;
         }else{
             $httpUrl = $this->data['httpUrl'];
-            $authorization = $this->buildAuthorizationHeaderForAPIRequest($connection, 'GET', $httpUrl);
+            $method = empty($this->data['method']) ? 'GET' : $this->data['method'];
+            $authorization = $this->buildAuthorizationHeaderForAPIRequest($connection, $method, $httpUrl);
 
             return [
                 "token_type" => "Oauth",

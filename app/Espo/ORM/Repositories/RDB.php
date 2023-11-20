@@ -34,6 +34,7 @@
 namespace Espo\ORM\Repositories;
 
 use Atro\ORM\DB\RDB\Mapper;
+use Atro\ORM\DB\RDB\Query\QueryConverter;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
@@ -129,12 +130,17 @@ class RDB extends \Espo\ORM\Repository
         }
 
         if (!isset($this->cachedEntities[$id])) {
-            $params = ['select' => $this->prepareDefaultSelect($entity)];
+            $params = [];
             $this->handleSelectParams($params);
-            $this->cachedEntities[$id] = $this->getMapper()->selectById($entity, $id, $params);
+            $this->putToCache($id, $this->getMapper()->selectById($entity, $id, $params));
         }
 
         return $this->cachedEntities[$id];
+    }
+
+    public function putToCache(string $id, ?Entity $entity): void
+    {
+        $this->cachedEntities[$id] = $entity;
     }
 
     public function get($id = null)
@@ -190,6 +196,7 @@ class RDB extends \Espo\ORM\Repository
                     $entity->updateFetchedValues();
                 }
             }
+            $this->putToCache($entity->get('id'), $entity);
         }
         $entity->setAsNotBeingSaved();
 
@@ -335,16 +342,47 @@ class RDB extends \Espo\ORM\Repository
         }
     }
 
-    /**
-     * @param array $params
-     * @return Entity|null
-     */
     public function findOne(array $params = [])
     {
+        if (empty($params)) {
+            $entity = $this->findInCache();
+            if ($entity !== null) {
+                return $entity;
+            }
+        }
+
+        $canBeCached = empty($this->listParams['select']) && empty($params['select']);
+
         $collection = $this->limit(0, 1)->find($params);
+
         if (!empty($collection[0])) {
+            if ($canBeCached) {
+                $this->putToCache($collection[0]->get('id'), $collection[0]);
+            }
             return $collection[0];
         }
+
+        return null;
+    }
+
+    public function findInCache(): ?Entity
+    {
+        foreach ($this->cachedEntities as $id => $entity) {
+            foreach ($this->whereClause as $field => $value) {
+                // exit if whereClause is complex
+                if (is_array($field) || in_array($field, QueryConverter::$sqlOperators) || in_array($field, array_keys(QueryConverter::$comparisonOperators))) {
+                    break 2;
+                }
+
+                // exit if value is different
+                if ($entity->get($field) !== $value) {
+                    break 2;
+                }
+            }
+
+            return $entity;
+        }
+
         return null;
     }
 
@@ -390,10 +428,6 @@ class RDB extends \Espo\ORM\Repository
             if (empty($params['skipAdditionalSelectParams'])) {
                 $this->getEntityManager()->getRepository($entityType)->handleSelectParams($params);
             }
-        }
-
-        if (empty($params['select'])){
-            $params['select'] = $this->prepareDefaultSelect($this->getEntityManager()->getRepository($entityType)->get());
         }
 
         $result = $this->getMapper()->selectRelated($entity, $relationName, $params);
@@ -924,25 +958,6 @@ class RDB extends \Espo\ORM\Repository
                 }
             }
         }
-    }
-
-    protected function prepareDefaultSelect(Entity $entity): array
-    {
-        $select = [];
-        foreach ($entity->fields as $fieldName => $fieldDefs) {
-            if (
-                !empty($fieldDefs['isLinkEntity'])
-                || !empty($fieldDefs['isLinkEntityName'])
-                || !empty($fieldDefs['isLinkMultipleCollection'])
-                || !empty($fieldDefs['isLinkMultipleIdList'])
-                || !empty($fieldDefs['isLinkMultipleNameMap'])
-            ) {
-                continue;
-            }
-            $select[] = $fieldName;
-        }
-
-        return $select;
     }
 
     /**

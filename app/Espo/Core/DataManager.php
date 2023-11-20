@@ -142,12 +142,12 @@ class DataManager
 
     public function isUseCache(string $name): bool
     {
-        if (substr(php_sapi_name(), 0, 3) == 'cli') {
-            return false;
-        }
-
         if (in_array($name, self::MANDATORY_CACHED)) {
             return true;
+        }
+
+        if (substr(php_sapi_name(), 0, 3) == 'cli') {
+            return false;
         }
 
         return $this->getConfig()->get('useCache', false);
