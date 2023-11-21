@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Listeners;
 
 use Atro\Core\EventManager\Event;
-use Espo\Core\Utils\Metadata\OrmMetadata;
+use Espo\Core\Utils\Database\Orm\RelationManager;
 use Espo\Core\Utils\Util;
 use Espo\Core\Templates\Services\Relationship;
 
@@ -339,12 +339,31 @@ class Metadata extends AbstractListener
 
     protected function prepareRelationEntities(array &$data): void
     {
-        /** @var OrmMetadata $ormMetadataObj */
-        $ormMetadataObj = $this->getContainer()->get('ormMetadata');
+        if (empty($data['entityDefs'])) {
+            return;
+        }
+
+        $relationManager = new RelationManager($data['entityDefs']);
+
+        $ormMetadata = [];
+        foreach ($data['entityDefs'] as $entityName => $entityDefs) {
+            if (empty($entityDefs['links'])){
+                continue;
+            }
+            foreach ($entityDefs['links'] as $linkName => $linkParams){
+                if (isset($linkParams['skipOrmDefs']) && $linkParams['skipOrmDefs'] === true) {
+                    continue;
+                }
+                $convertedLink = $relationManager->convert($linkName, $linkParams, $entityName, $ormMetadata);
+                if (isset($convertedLink)) {
+                    $ormMetadata = Util::merge($convertedLink, $ormMetadata);
+                }
+            }
+        }
 
         $res = [];
 
-        foreach ($ormMetadataObj->getData() as $scope => $entityDefs) {
+        foreach ($ormMetadata as $scope => $entityDefs) {
             if (!isset($entityDefs['relations'])) {
                 continue;
             }
@@ -415,15 +434,21 @@ class Metadata extends AbstractListener
             }
         }
 
-        foreach (['clientDefs', 'entityDefs', 'scopes'] as $cat) {
-            $default = json_decode(file_get_contents(dirname(__DIR__) . '/Core/Templates/Metadata/Relation/' . $cat . '.json'), true);
-            foreach ($res as $entityName => $entityDefs) {
-                $current = $data[$cat][$entityName] ?? [];
-                if ($cat === 'entityDefs'){
-                    $current = Util::merge($entityDefs, $current);
-                }
-                $data[$cat][$entityName] = Util::merge($default, $current);
-            }
+        $defaultClientDefs = json_decode(file_get_contents(dirname(__DIR__) . '/Core/Templates/Metadata/Relation/clientDefs.json'), true);
+        $defaultEntityDefs = json_decode(file_get_contents(dirname(__DIR__) . '/Core/Templates/Metadata/Relation/entityDefs.json'), true);
+        $defaultScopes = json_decode(file_get_contents(dirname(__DIR__) . '/Core/Templates/Metadata/Relation/scopes.json'), true);
+
+        foreach ($res as $entityName => $entityDefs) {
+            $current = $data['clientDefs'][$entityName] ?? [];
+            $data['clientDefs'][$entityName] = Util::merge($defaultClientDefs, $current);
+
+            $current = $data['entityDefs'][$entityName] ?? [];
+            $current = Util::merge($entityDefs, $current);
+            $data['entityDefs'][$entityName] = Util::merge($defaultEntityDefs, $current);
+
+            $current = $data['scopes'][$entityName] ?? [];
+            $data['scopes'][$entityName] = Util::merge($defaultScopes, $current);
+//            $data['scopes'][$entityName]['customizable'] = false;
         }
     }
 
