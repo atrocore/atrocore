@@ -360,9 +360,6 @@ class Metadata extends AbstractListener
                     continue;
                 }
 
-                $res[$entityName]['fields']['id'] = ['type' => 'id', 'dbType' => 'varchar', 'len' => 24];
-                $res[$entityName]['fields']['deleted'] = ['type' => 'bool', 'default' => false];
-
                 // MIDDLE columns
                 if (!empty($relationParams['midKeys'])) {
                     $leftId = $relationParams['midKeys'][0];
@@ -418,18 +415,15 @@ class Metadata extends AbstractListener
             }
         }
 
-        foreach ($res as $entityName => $entityDefs) {
-            $data['entityDefs'][$entityName] = $entityDefs;
-            $data['scopes'][$entityName] = [
-                'type'          => 'Relation',
-                'entity'        => true,
-                'layouts'       => true,
-                'tab'           => true,
-                'acl'           => false,
-                'customizable'  => true,
-                'importable'    => true,
-                'notifications' => true
-            ];
+        foreach (['clientDefs', 'entityDefs', 'scopes'] as $cat) {
+            $default = json_decode(file_get_contents(dirname(__DIR__) . '/Core/Templates/Metadata/Relation/' . $cat . '.json'), true);
+            foreach ($res as $entityName => $entityDefs) {
+                $current = $data[$cat][$entityName] ?? [];
+                if ($cat === 'entityDefs'){
+                    $current = Util::merge($entityDefs, $current);
+                }
+                $data[$cat][$entityName] = Util::merge($default, $current);
+            }
         }
     }
 
