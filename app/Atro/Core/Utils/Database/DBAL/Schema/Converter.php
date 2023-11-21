@@ -197,7 +197,7 @@ class Converter
                         }
 
                         if (!empty($uniqueIndex)) {
-                            $table->addUniqueIndex($uniqueIndex);
+                            $table->addUniqueIndex($uniqueIndex, self::generateIndexName(ucfirst($entityName), 'unique_relation'));
                         }
                         $table->setPrimaryKey(['id']);
                     }
