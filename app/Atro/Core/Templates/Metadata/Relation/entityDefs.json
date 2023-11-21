@@ -1,14 +1,5 @@
 {
   "fields": {
-    "id": {
-      "type": "id",
-      "dbType": "varchar",
-      "len": 24
-    },
-    "deleted": {
-      "type": "bool",
-      "default": false
-    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
