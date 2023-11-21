@@ -14,9 +14,9 @@ declare(strict_types=1);
 namespace Atro\Listeners;
 
 use Atro\Core\EventManager\Event;
+use Espo\Core\Utils\Metadata\OrmMetadata;
 use Espo\Core\Utils\Util;
 use Espo\Core\Templates\Services\Relationship;
-use Espo\Core\Utils\Metadata\OrmMetadata;
 
 class Metadata extends AbstractListener
 {
@@ -339,13 +339,12 @@ class Metadata extends AbstractListener
 
     protected function prepareRelationEntities(array &$data): void
     {
-//        $ormMetadata = new \Espo\Core\Utils\Metadata\OrmMetadata($this->getContainer()->get('metadata'), $this->getContainer()->get('fileManager'), $this->getContainer()->get('config'));
-
-        $ormMetadata = $this->getContainer()->get('ormMetadata');
+        /** @var OrmMetadata $ormMetadataObj */
+        $ormMetadataObj = $this->getContainer()->get('ormMetadata');
 
         $res = [];
 
-        foreach ($ormMetadata->getData() as $scope => $entityDefs) {
+        foreach ($ormMetadataObj->getData() as $scope => $entityDefs) {
             if (!isset($entityDefs['relations'])) {
                 continue;
             }
@@ -366,10 +365,11 @@ class Metadata extends AbstractListener
 
                 // MIDDLE columns
                 if (!empty($relationParams['midKeys'])) {
-                    $left = $relationParams['midKeys'][0];
+                    $leftId = $relationParams['midKeys'][0];
+                    $left = substr($leftId, 0, -2);
 
                     if ($entityName === 'EntityTeam') {
-                        $res[$entityName]['fields'][$left] = [
+                        $res[$entityName]['fields'][$leftId] = [
                             'type'     => 'varchar',
                             'len'      => 24,
                             'required' => true
@@ -385,7 +385,9 @@ class Metadata extends AbstractListener
                         ];
                     }
 
-                    $right = $relationParams['midKeys'][1];
+                    $rightId = $relationParams['midKeys'][1];
+                    $right = substr($rightId, 0, -2);
+
                     $res[$entityName]['fields'][$right] = [
                         'type'     => 'link',
                         'required' => true
@@ -395,7 +397,7 @@ class Metadata extends AbstractListener
                         'entity' => $relationParams['entity']
                     ];
 
-                    $res[$entityName]['uniqueIndexes']['unique_relation'] = ['deleted', Util::toUnderScore($left), Util::toUnderScore($right)];
+                    $res[$entityName]['uniqueIndexes']['unique_relation'] = ['deleted', Util::toUnderScore($leftId), Util::toUnderScore($rightId)];
                 }
 
                 // ADDITIONAL columns
