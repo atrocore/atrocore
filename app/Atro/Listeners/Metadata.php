@@ -345,7 +345,7 @@ class Metadata extends AbstractListener
 
         $relationManager = new RelationManager($data['entityDefs']);
 
-        $ormMetadata = [];
+        $relations = [];
         foreach ($data['entityDefs'] as $entityName => $entityDefs) {
             if (empty($entityDefs['links'])){
                 continue;
@@ -354,20 +354,18 @@ class Metadata extends AbstractListener
                 if (isset($linkParams['skipOrmDefs']) && $linkParams['skipOrmDefs'] === true) {
                     continue;
                 }
-                $convertedLink = $relationManager->convert($linkName, $linkParams, $entityName, $ormMetadata);
-                if (isset($convertedLink)) {
-                    $ormMetadata = Util::merge($convertedLink, $ormMetadata);
+                $convertedLink = $relationManager->convert($linkName, $linkParams, $entityName, []);
+                if (isset($convertedLink[$entityName]['relations'])) {
+                    foreach ($convertedLink[$entityName]['relations'] as $k => $v){
+                        $relations[$entityName]['relations'][$k] = $v;
+                    }
                 }
             }
         }
 
         $res = [];
 
-        foreach ($ormMetadata as $scope => $entityDefs) {
-            if (!isset($entityDefs['relations'])) {
-                continue;
-            }
-
+        foreach ($relations as $scope => $entityDefs) {
             foreach ($entityDefs['relations'] as $relationParams) {
                 if (empty($relationParams['type']) || $relationParams['type'] !== 'manyMany') {
                     continue;
@@ -440,14 +438,14 @@ class Metadata extends AbstractListener
 
         foreach ($res as $entityName => $entityDefs) {
             $current = $data['clientDefs'][$entityName] ?? [];
-            $data['clientDefs'][$entityName] = Util::merge($defaultClientDefs, $current);
+            $data['clientDefs'][$entityName] = empty($current) ? $defaultClientDefs : Util::merge($defaultClientDefs, $current);
 
             $current = $data['entityDefs'][$entityName] ?? [];
-            $current = Util::merge($entityDefs, $current);
+            $current = empty($current) ? $entityDefs : Util::merge($entityDefs, $current);
             $data['entityDefs'][$entityName] = Util::merge($defaultEntityDefs, $current);
 
             $current = $data['scopes'][$entityName] ?? [];
-            $data['scopes'][$entityName] = Util::merge($defaultScopes, $current);
+            $data['scopes'][$entityName] = empty($current) ? $defaultScopes : Util::merge($defaultScopes, $current);
 //            $data['scopes'][$entityName]['customizable'] = false;
         }
     }
