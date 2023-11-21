@@ -1,0 +1,10 @@
+{
+  "type": "Relation",
+  "entity": true,
+  "layouts": true,
+  "tab": true,
+  "acl": false,
+  "customizable": true,
+  "importable": true,
+  "notifications": true
+}
