@@ -353,9 +353,22 @@ class Mapper implements MapperInterface
         $qb = $this->connection->createQueryBuilder();
         $qb->insert($relTable);
 
-        $qb->setValue('id', ":id")->setParameter('id', Util::generateId());
-        $qb->setValue($this->toDb($nearKey), ":$nearKey")->setParameter($nearKey, $entity->id);
-        $qb->setValue($this->toDb($distantKey), ":$distantKey")->setParameter($distantKey, $relEntity->id);
+        $qb->setValue('id', ":id")
+            ->setParameter('id', Util::generateId());
+
+        $qb->setValue($this->toDb($nearKey), ":$nearKey")
+            ->setParameter($nearKey, $entity->id);
+
+        $qb->setValue($this->toDb($distantKey), ":$distantKey")
+            ->setParameter($distantKey, $relEntity->id);
+
+        $qb->setValue('created_at', ":currentDate")
+            ->setValue('modified_at', ":currentDate")
+            ->setParameter('currentDate', date('Y-m-d H:i:s'));
+
+        $qb->setValue('created_by_id', ":userId")
+            ->setValue('modified_by_id', ":userId")
+            ->setParameter('userId', $this->entityFactory->getEntityManager()->getUser()->get('id'));
 
         if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
             foreach ($relOpt['conditions'] as $f => $v) {
@@ -457,7 +470,12 @@ class Mapper implements MapperInterface
         $qb2
             ->update($this->connection->quoteIdentifier($relTable))
             ->set('deleted', ':true')
-            ->setParameter('true', true, ParameterType::BOOLEAN);
+            ->set('modified_at', ':currentDate')
+            ->set('modified_by_id', ':userId')
+            ->setParameter('true', true, ParameterType::BOOLEAN)
+            ->setParameter('currentDate', date('Y-m-d H:i:s'))
+            ->setParameter('userId', $this->entityFactory->getEntityManager()->getUser()->get('id'));
+
         $this->debugSql($qb2->getSQL());
         try {
             $qb2->executeQuery();
