@@ -88,11 +88,15 @@ abstract class Entity implements IEntity
      */
     protected $skipValidations = [];
 
-    public function __construct($defs = array(), EntityManager $entityManager = null)
+    public function __construct($defs = array(), EntityManager $entityManager = null, $entityType = null)
     {
         if (empty($this->entityType)) {
-            $classNames = explode('\\', get_class($this));
-            $this->entityType = end($classNames);
+            if (empty($entityType)) {
+                $classNames = explode('\\', get_class($this));
+                $this->entityType = end($classNames);
+            } else {
+                $this->entityType = $entityType;
+            }
         }
 
         $this->entityManager = $entityManager;
