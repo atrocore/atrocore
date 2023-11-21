@@ -60,14 +60,7 @@ class RelationManager
 
     protected function getRelationClass($relationName)
     {
-        $relationName = ucfirst($relationName);
-
-        $className = '\Espo\Custom\Core\Utils\Database\Orm\Relations\\'.$relationName;
-
-        if (empty($className) || !class_exists($className)) {
-            $className = '\Espo\Core\Utils\Database\Orm\Relations\\' . $relationName;
-        }
-
+        $className = '\Espo\Core\Utils\Database\Orm\Relations\\' . ucfirst($relationName);
         if (class_exists($className)) {
             return $className;
         }
