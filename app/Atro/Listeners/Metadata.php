@@ -16,6 +16,7 @@ namespace Atro\Listeners;
 use Atro\Core\EventManager\Event;
 use Espo\Core\Utils\Util;
 use Espo\Core\Templates\Services\Relationship;
+use Espo\Core\Utils\Metadata\OrmMetadata;
 
 class Metadata extends AbstractListener
 {
@@ -53,6 +54,8 @@ class Metadata extends AbstractListener
         $this->setTranslationRequiredLanguage($data);
 
         $this->prepareScriptField($data);
+
+        $this->prepareRelationEntities($data);
 
         $event->setArgument('data', $data);
     }
@@ -331,6 +334,100 @@ class Metadata extends AbstractListener
                     $data['clientDefs'][$entity]['dynamicLogic']['fields'][$fieldTo] = $data['clientDefs'][$entity]['dynamicLogic']['fields'][$field];
                 }
             }
+        }
+    }
+
+    protected function prepareRelationEntities(array &$data): void
+    {
+//        $ormMetadata = new \Espo\Core\Utils\Metadata\OrmMetadata($this->getContainer()->get('metadata'), $this->getContainer()->get('fileManager'), $this->getContainer()->get('config'));
+
+        $ormMetadata = $this->getContainer()->get('ormMetadata');
+
+        $res = [];
+
+        foreach ($ormMetadata->getData() as $scope => $entityDefs) {
+            if (!isset($entityDefs['relations'])) {
+                continue;
+            }
+
+            foreach ($entityDefs['relations'] as $relationParams) {
+                if (empty($relationParams['type']) || $relationParams['type'] !== 'manyMany') {
+                    continue;
+                }
+
+                $entityName = ucfirst($relationParams['relationName']);
+
+                if (isset($res[$entityName])) {
+                    continue;
+                }
+
+                $res[$entityName]['fields']['id'] = ['type' => 'id', 'dbType' => 'varchar', 'len' => 24];
+                $res[$entityName]['fields']['deleted'] = ['type' => 'bool', 'default' => false];
+
+                // MIDDLE columns
+                if (!empty($relationParams['midKeys'])) {
+                    $left = $relationParams['midKeys'][0];
+
+                    if ($entityName === 'EntityTeam') {
+                        $res[$entityName]['fields'][$left] = [
+                            'type'     => 'varchar',
+                            'len'      => 24,
+                            'required' => true
+                        ];
+                    } else {
+                        $res[$entityName]['fields'][$left] = [
+                            'type'     => 'link',
+                            'required' => true
+                        ];
+                        $res[$entityName]['links'][$left] = [
+                            'type'   => 'belongsTo',
+                            'entity' => $scope
+                        ];
+                    }
+
+                    $right = $relationParams['midKeys'][1];
+                    $res[$entityName]['fields'][$right] = [
+                        'type'     => 'link',
+                        'required' => true
+                    ];
+                    $res[$entityName]['links'][$right] = [
+                        'type'   => 'belongsTo',
+                        'entity' => $relationParams['entity']
+                    ];
+
+                    $res[$entityName]['uniqueIndexes']['unique_relation'] = ['deleted', Util::toUnderScore($left), Util::toUnderScore($right)];
+                }
+
+                // ADDITIONAL columns
+                if (!empty($relationParams['additionalColumns'])) {
+                    foreach ($relationParams['additionalColumns'] as $fieldName => $fieldParams) {
+                        if (!isset($fieldParams['type'])) {
+                            $fieldParams = array_merge($fieldParams, ['type' => 'varchar', 'len' => 255]);
+                        }
+                        $res[$entityName]['fields'][$fieldName] = $fieldParams;
+                    }
+                }
+
+                if (!empty($relationParams['conditions'])) {
+                    foreach ($relationParams['conditions'] as $fieldName => $fieldParams) {
+                        $res[$entityName]['uniqueIndexes']['unique_relation'][] = Util::toUnderScore($fieldName);
+                    }
+                }
+            }
+        }
+
+        foreach ($res as $entityName => $entityDefs) {
+            $data['entityDefs'][$entityName] = $entityDefs;
+            $data['scopes'][$entityName] = [
+                'type'          => 'Relation',
+                'entity'        => true,
+                'layouts'       => true,
+                'tab'           => true,
+                'acl'           => false,
+                'customizable'  => true,
+                'importable'    => true,
+                'notifications' => true
+            ];
         }
     }
 
@@ -945,7 +1042,7 @@ class Metadata extends AbstractListener
     /**
      * Remove field from index
      *
-     * @param array $indexes
+     * @param array  $indexes
      * @param string $fieldName
      *
      * @return array
