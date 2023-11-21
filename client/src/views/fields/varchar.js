@@ -209,8 +209,8 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
                 }
                 return data;
             } else {
-                var value = this.$element.val().toString().trim();
-                value = value.trim();
+                const field = this.$element || this.$el.find("[name=" + this.name + "]");
+                var value = field.val().toString().trim();
                 data = {
                     value: value,
                     type: type,
