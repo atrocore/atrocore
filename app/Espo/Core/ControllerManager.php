@@ -68,9 +68,13 @@ class ControllerManager extends Injectable
             $controllerClassName = "\\Atro\\Controllers\\$className";
         }
 
-        // for Espo
         if (!class_exists($controllerClassName)) {
             $controllerClassName = "\\Espo\\Controllers\\$className";
+        }
+
+        if (!class_exists($controllerClassName)) {
+            $type = $metadata->get(['scopes', $controllerName, 'type']);
+            $controllerClassName = "\\Atro\\Core\\Templates\\Controllers\\$type";
         }
 
         if (!class_exists($controllerClassName)) {
@@ -95,7 +99,7 @@ class ControllerManager extends Injectable
      */
     public function process($controllerName, $actionName, $params, $data, $request, $response = null)
     {
-        $controllerClassName = self::getControllerClassName($controllerName, $this->getContainer()->get('metadata'));
+        $controllerClassName = self::getControllerClassName($controllerName, $this->getMetadata());
 
         if (empty($controllerClassName) || !class_exists($controllerClassName)) {
             throw new NotFound("Controller '$controllerName' is not found");
@@ -109,7 +113,7 @@ class ControllerManager extends Injectable
             $data = json_decode($data);
         }
 
-        $controller = new $controllerClassName($this->getContainer(), $request->getMethod());
+        $controller = new $controllerClassName($this->getContainer(), $request->getMethod(), $controllerName);
 
         if ($actionName == 'index') {
             $actionName = $controllerClassName::$defaultAction;
@@ -233,5 +237,10 @@ class ControllerManager extends Injectable
     protected function getContainer(): Container
     {
         return $this->getInjection('container');
+    }
+
+    protected function getMetadata(): Metadata
+    {
+        return $this->getContainer()->get('metadata');
     }
 }
