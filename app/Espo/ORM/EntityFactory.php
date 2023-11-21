@@ -55,7 +55,7 @@ class EntityFactory
             return null;
         }
 
-        return new $className($defs, $this->entityManager);
+        return new $className($defs, $this->entityManager, $name);
     }
 
     public function getEntityManager(): EntityManager
