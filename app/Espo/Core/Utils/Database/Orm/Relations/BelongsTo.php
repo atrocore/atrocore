@@ -98,7 +98,7 @@ class BelongsTo extends Base
             $data[$entityName]['fields'][$linkName.'Name'] = $fieldNameDefs;
         }
 
-        $fieldDefs = $this->getMetadata()->get(['entityDefs', $entityName, 'fields', $linkName]);
+        $fieldDefs = $this->getEntityDefs()[$entityName]['fields'][$linkName] ?? null;
         if (!empty($fieldDefs)) {
             if (array_key_exists('notNull', $fieldDefs)) {
                 $data[$entityName]['fields'][$linkName . 'Id']['notNull'] = $fieldDefs['notNull'];

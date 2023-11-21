@@ -41,22 +41,14 @@ class Base
 
     private $entityName = null;
 
-    private $metadata;
-
     private $ormEntityDefs;
 
     private $entityDefs;
 
-    public function __construct(\Espo\Core\Utils\Metadata $metadata, array $ormEntityDefs, array $entityDefs)
+    public function __construct(array $ormEntityDefs, array $entityDefs)
     {
-        $this->metadata = $metadata;
         $this->ormEntityDefs = $ormEntityDefs;
         $this->entityDefs = $entityDefs;
-    }
-
-    protected function getMetadata()
-    {
-        return $this->metadata;
     }
 
     protected function getOrmEntityDefs()

@@ -37,16 +37,11 @@ use Espo\Core\Utils\Util;
 
 class RelationManager
 {
-    private $metadata;
+    private array $entityDefs;
 
-    public function __construct(\Espo\Core\Utils\Metadata $metadata)
+    public function __construct(array $entityDefs)
     {
-        $this->metadata = $metadata;
-    }
-
-    protected function getMetadata()
-    {
-        return $this->metadata;
+        $this->entityDefs = $entityDefs;
     }
 
     public function getLinkEntityName($entityName, $linkParams)
@@ -68,10 +63,6 @@ class RelationManager
         $relationName = ucfirst($relationName);
 
         $className = '\Espo\Custom\Core\Utils\Database\Orm\Relations\\'.$relationName;
-
-        if (!class_exists($className)) {
-            $className = $this->getMetadata()->get(['app', 'relationClass', $relationName]);
-        }
 
         if (empty($className) || !class_exists($className)) {
             $className = '\Espo\Core\Utils\Database\Orm\Relations\\' . $relationName;
@@ -114,7 +105,7 @@ class RelationManager
 
     public function convert($linkName, $linkParams, $entityName, $ormMetadata)
     {
-        $entityDefs = $this->getMetadata()->get('entityDefs');
+        $entityDefs = $this->entityDefs;
 
         $foreignEntityName = $this->getLinkEntityName($entityName, $linkParams);
 
@@ -149,7 +140,7 @@ class RelationManager
         }
 
         if (isset($className) && $className !== false) {
-            $helperClass = new $className($this->metadata, $ormMetadata, $entityDefs);
+            $helperClass = new $className($ormMetadata, $entityDefs);
             $foreignLinkName = !empty($foreignLink['name']) ? $foreignLink['name'] : false;
             return $helperClass->process($linkName, $entityName, $foreignLinkName, $foreignEntityName);
         }

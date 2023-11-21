@@ -70,7 +70,7 @@ class LinkMultiple extends Base
             }
         }
 
-        $columns = $this->getMetadata()->get("entityDefs.{$entityName}.fields.{$fieldName}.columns");
+        $columns = $this->getEntityDefs()[$entityName]['fields'][$fieldName]['columns'] ?? null;
         if (!empty($columns)) {
             $data[$entityName]['fields'][$fieldName . 'Columns'] = [
                 'type' => 'jsonObject',
