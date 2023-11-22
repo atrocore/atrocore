@@ -418,7 +418,7 @@ class Hierarchy extends Record
             return parent::updateEntity($id, $data);
         }
 
-        if (property_exists($data, '_sortedIds') && property_exists($data, '_id')) {
+        if (property_exists($data, '_sortedIds') && property_exists($data, '_id') && property_exists($data, '_link') && $data->_link === 'children') {
             $this->getRepository()->updateHierarchySortOrder($data->_id, $data->_sortedIds);
             return $this->getEntity($id);
         }
