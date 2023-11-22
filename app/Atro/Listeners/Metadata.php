@@ -464,7 +464,7 @@ class Metadata extends AbstractListener
                 });
                 foreach ($relFields as $relField => $relDefs) {
                     $relEntity = $entityDefs['links'][$relField]['entity'];
-                    $data['entityDefs'][$relEntity]['fields'][Relation::buildVirtualFieldName($entityName, 'id')] = array_merge(['type' => 'varchar'], $virtualFieldDefs);
+                    $data['entityDefs'][$relEntity]['fields'][Relation::buildVirtualFieldName($entityName, 'id')] = array_merge(['type' => 'varchar', 'relId' => true], $virtualFieldDefs);
                     foreach ($additionalFields as $additionalField => $additionalFieldDefs) {
                         if (!empty($additionalFieldDefs['notStorable'])) {
                             continue;

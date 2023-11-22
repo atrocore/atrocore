@@ -33,6 +33,7 @@
 
 namespace Espo\Services;
 
+use Atro\Core\Templates\Repositories\Relation;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Espo\Core\EventManager\Event;
@@ -1258,6 +1259,7 @@ class Record extends \Espo\Core\Services\Base
             if (!$this->isImport) {
                 $this->prepareEntityForOutput($entity);
                 $this->loadPreview($entity);
+                $this->updateRelationEntity($entity, $attachment);
             }
             $this->processActionHistoryRecord('create', $entity);
 
@@ -1339,6 +1341,7 @@ class Record extends \Espo\Core\Services\Base
 
         if ($this->storeEntity($entity)) {
             if (!$this->isImport && $this->isRelationPanelChanges($data)) {
+                $this->updateRelationEntity($entity, $data);
                 $this->updateRelationData($entity, $data);
             }
 
@@ -1383,6 +1386,9 @@ class Record extends \Espo\Core\Services\Base
         }
     }
 
+    /**
+     * @deprecated
+     */
     protected function updateRelationData(Entity $entity, \stdClass $data): void
     {
         if (!$this->isRelationPanelChanges($data)) {
@@ -1412,6 +1418,54 @@ class Record extends \Espo\Core\Services\Base
         $this
             ->getRepository()
             ->updateRelationData($linkData['relationName'], $setData, $rel1, $data->_relationEntityId, $rel2, $entity->get('id'));
+    }
+
+    protected function updateRelationEntity(Entity $entity, \stdClass $input): void
+    {
+        if (!property_exists($input, '_relationEntityId')) {
+            return;
+        }
+
+        $relEntityType = null;
+        $relInput = new \stdClass();
+        foreach ($input as $fieldName => $value) {
+            $data = Relation::isVirtualRelationField($fieldName);
+            if (empty($data)) {
+                continue;
+            }
+
+            $relEntityType = $data['relationName'];
+            $relInput->{$data['fieldName']} = $value;
+        }
+
+        if (!empty($relEntityType)) {
+            $relId = property_exists($input, '_relationId') ? $input->_relationId : null;
+
+            // find relation ID
+            if (empty($relId)) {
+                $where = [];
+                foreach ($this->getMetadata()->get(['entityDefs', $relEntityType, 'fields']) as $f => $d) {
+                    if (empty($d['relationField'])) {
+                        continue;
+                    }
+                    if ($this->getMetadata()->get(['entityDefs', $relEntityType, 'links', $f, 'entity']) === $entity->getEntityType()) {
+                        $where["{$f}Id"] = $entity->get('id');
+                    } else {
+                        $where["{$f}Id"] = $input->_relationEntityId;
+                    }
+                }
+                if (count($where) === 2) {
+                    $relEntity = $this->getEntityManager()->getRepository($relEntityType)->select(['id'])->where($where)->findOne();
+                    if (!empty($relEntity)) {
+                        $relId = $relEntity->get('id');
+                    }
+                }
+            }
+
+            if (!empty($relId)) {
+                $this->getServiceFactory()->create($relEntityType)->updateEntity($relId, $relInput);
+            }
+        }
     }
 
     protected function beforeCreateEntity(Entity $entity, $data)
@@ -3038,6 +3092,14 @@ class Record extends \Espo\Core\Services\Base
 
         $entity = $event->getArgument('entity');
         $data = $event->getArgument('data');
+
+        // return true if relation virtual file has been changed
+        foreach ($data as $fieldName => $value) {
+            $rData = Relation::isVirtualRelationField($fieldName);
+            if (!empty($rData)) {
+                return true;
+            }
+        }
 
         $skip = [
             'id',
