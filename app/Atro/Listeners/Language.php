@@ -33,6 +33,14 @@ class Language extends AbstractListener
                         continue;
                     }
                     switch ($fieldDefs['type']) {
+                        case 'link':
+                            if (!isset($data[$locale][$entity]['fields'][$field])) {
+                                $entityType = $this->getMetadata()->get(['entityDefs', $entity, 'links', $field, 'entity']);
+                                if (isset($data[$locale]['Global']['scopeNames'][$entityType])) {
+                                    $data[$locale][$entity]['fields'][$field] = $data[$locale]['Global']['scopeNames'][$entityType];
+                                }
+                            }
+                            break;
                         case 'rangeInt':
                         case 'rangeFloat':
                             $fieldLabel = !empty($rows[$entity]['fields'][$field]) ? $rows[$entity]['fields'][$field] : $field;

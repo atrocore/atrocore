@@ -346,16 +346,16 @@ class Metadata extends AbstractListener
 
         $relations = [];
         foreach ($data['entityDefs'] as $entityName => $entityDefs) {
-            if (empty($entityDefs['links'])){
+            if (empty($entityDefs['links'])) {
                 continue;
             }
-            foreach ($entityDefs['links'] as $linkName => $linkParams){
+            foreach ($entityDefs['links'] as $linkName => $linkParams) {
                 if (isset($linkParams['skipOrmDefs']) && $linkParams['skipOrmDefs'] === true) {
                     continue;
                 }
                 $convertedLink = $relationManager->convert($linkName, $linkParams, $entityName, []);
                 if (isset($convertedLink[$entityName]['relations'])) {
-                    foreach ($convertedLink[$entityName]['relations'] as $k => $v){
+                    foreach ($convertedLink[$entityName]['relations'] as $k => $v) {
                         $relations[$entityName]['relations'][$k] = $v;
                     }
                 }
@@ -389,8 +389,9 @@ class Metadata extends AbstractListener
                         ];
                     } else {
                         $res[$entityName]['fields'][$left] = [
-                            'type'     => 'link',
-                            'required' => true
+                            'type'          => 'link',
+                            'required'      => true,
+                            'relationField' => true
                         ];
                         $res[$entityName]['links'][$left] = [
                             'type'   => 'belongsTo',
@@ -402,8 +403,9 @@ class Metadata extends AbstractListener
                     $right = substr($rightId, 0, -2);
 
                     $res[$entityName]['fields'][$right] = [
-                        'type'     => 'link',
-                        'required' => true
+                        'type'          => 'link',
+                        'required'      => true,
+                        'relationField' => true
                     ];
                     $res[$entityName]['links'][$right] = [
                         'type'   => 'belongsTo',
