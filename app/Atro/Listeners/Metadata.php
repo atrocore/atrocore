@@ -55,8 +55,6 @@ class Metadata extends AbstractListener
 
         $this->prepareScriptField($data);
 
-        $this->prepareRelationEntities($data);
-
         $event->setArgument('data', $data);
     }
 
@@ -64,6 +62,7 @@ class Metadata extends AbstractListener
     {
         $data = $event->getArgument('data');
 
+        $this->prepareRelationEntities($data);
         $this->prepareRelationshipsEntities($data);
 
         $event->setArgument('data', $data);
@@ -446,7 +445,10 @@ class Metadata extends AbstractListener
 
             $current = $data['scopes'][$entityName] ?? [];
             $data['scopes'][$entityName] = empty($current) ? $defaultScopes : Util::merge($defaultScopes, $current);
-//            $data['scopes'][$entityName]['customizable'] = false;
+
+            $data['scopes'][$entityName]['tab'] = false;
+            $data['scopes'][$entityName]['layouts'] = false;
+            $data['scopes'][$entityName]['customizable'] = false;
         }
     }
 
