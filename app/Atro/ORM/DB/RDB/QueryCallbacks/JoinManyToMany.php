@@ -78,7 +78,7 @@ class JoinManyToMany
                     if ($relOpt['relationName'] === lcfirst($data['relationName'])) {
                         $fieldAlias = $queryConverter->fieldToAlias($item);
                         $additionalSelect[$item] = "$relAlias.{$mapper->toDb($data['fieldName'])} AS $fieldAlias";
-                        $idItem = "rel_{$data['relationName']}_id";
+                        $idItem = Relation::buildVirtualFieldName($data['relationName'], 'id');
                         $idFieldAlias = $queryConverter->fieldToAlias($idItem);
                         $additionalSelect[$idItem] = "$relAlias.id AS $idFieldAlias";
                     }
