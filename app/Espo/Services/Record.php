@@ -1891,6 +1891,19 @@ class Record extends \Espo\Core\Services\Base
             $selectParams['skipTextColumns'] = $recordService->isSkipSelectTextAttributes();
         }
 
+        // add relation virtual field to select
+        if (!empty($selectParams['select'])) {
+            $relationName = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $link, 'relationName']);
+            if (!empty($relationName)) {
+                foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields']) as $f => $d) {
+                    $relData = Relation::isVirtualRelationField($f);
+                    if (!empty($relData) && $relData['relationName'] === ucfirst($relationName)) {
+                        $selectParams['select'][] = $f;
+                    }
+                }
+            }
+        }
+
         $total = 0;
         $collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
 
