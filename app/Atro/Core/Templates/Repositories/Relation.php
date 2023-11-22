@@ -17,4 +17,19 @@ use Espo\Core\ORM\Repositories\RDB;
 
 class Relation extends RDB
 {
+    public static function buildVirtualFieldName(string $relationName, string $fieldName): string
+    {
+        return "rel_{$relationName}_{$fieldName}";
+    }
+
+    public static function isVirtualRelationField(string $fieldName): array
+    {
+        if (preg_match_all('/^rel\_(.*)\_(.*)$/', $fieldName, $matches)) {
+            return [
+                'relationName' => $matches[1][0],
+                'fieldName'    => $matches[2][0]
+            ];
+        }
+        return [];
+    }
 }

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\ORM\DB\RDB\QueryCallbacks;
 
+use Atro\Core\Templates\Repositories\Relation;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\IEntity;
@@ -67,6 +68,25 @@ class JoinManyToMany
         foreach ($params['additionalColumnsConditions'] ?? [] as $f => $v) {
             $condition .= " AND {$relAlias}.{$mapper->toDb($f)} = :{$f}_mm4";
             $qb->setParameter("{$f}_mm4", $v, Mapper::getParameterType($v));
+        }
+
+        // put additional select
+        if (empty($params['aggregation']) && !empty($params['select'])) {
+            $additionalSelect = [];
+            foreach ($params['select'] as $item) {
+                if (!empty($data = Relation::isVirtualRelationField($item))) {
+                    if ($relOpt['relationName'] === lcfirst($data['relationName'])) {
+                        $fieldAlias = $queryConverter->fieldToAlias($item);
+                        $additionalSelect[$item] = "$relAlias.{$mapper->toDb($data['fieldName'])} AS $fieldAlias";
+                        $idItem = "rel_{$data['relationName']}_id";
+                        $idFieldAlias = $queryConverter->fieldToAlias($idItem);
+                        $additionalSelect[$idItem] = "$relAlias.id AS $idFieldAlias";
+                    }
+                }
+            }
+            foreach ($additionalSelect as $sql) {
+                $qb->addSelect($sql);
+            }
         }
 
         $qb->innerJoin($alias, $queryConverter->quoteIdentifier($relTable), $relAlias, $condition);

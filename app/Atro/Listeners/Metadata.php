@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Listeners;
 
 use Atro\Core\EventManager\Event;
+use Atro\Core\Templates\Repositories\Relation;
 use Espo\Core\Utils\Database\Orm\RelationManager;
 use Espo\Core\Utils\Util;
 use Espo\Core\Templates\Services\Relationship;
@@ -437,12 +438,48 @@ class Metadata extends AbstractListener
         $defaultEntityDefs = json_decode(file_get_contents(dirname(__DIR__) . '/Core/Templates/Metadata/Relation/entityDefs.json'), true);
         $defaultScopes = json_decode(file_get_contents(dirname(__DIR__) . '/Core/Templates/Metadata/Relation/scopes.json'), true);
 
+        $virtualFieldDefs = [
+            'notStorable'        => true,
+            'importDisabled'     => true,
+            'exportDisabled'     => true,
+            'massUpdateDisabled' => true,
+            'isCustom'           => false
+        ];
+
         foreach ($res as $entityName => $entityDefs) {
             $current = $data['clientDefs'][$entityName] ?? [];
             $data['clientDefs'][$entityName] = empty($current) ? $defaultClientDefs : Util::merge($defaultClientDefs, $current);
 
             $current = $data['entityDefs'][$entityName] ?? [];
             $current = empty($current) ? $entityDefs : Util::merge($entityDefs, $current);
+
+            $additionalFields = array_filter($current['fields'], function ($row) {
+                return empty($row['relationField']);
+            });
+
+            // put virtual fields to entities
+            if (!empty($additionalFields)) {
+                $relFields = array_filter($current['fields'], function ($row) {
+                    return !empty($row['relationField']);
+                });
+                foreach ($relFields as $relField => $relDefs) {
+                    $relEntity = $entityDefs['links'][$relField]['entity'];
+                    $data['entityDefs'][$relEntity]['fields'][Relation::buildVirtualFieldName($entityName, 'id')] = array_merge(['type' => 'varchar'], $virtualFieldDefs);
+                    foreach ($additionalFields as $additionalField => $additionalFieldDefs) {
+                        if (!empty($additionalFieldDefs['notStorable'])) {
+                            continue;
+                        }
+                        if ($additionalFieldDefs['type'] === 'link') {
+                            continue;
+                        }
+                        if ($additionalFieldDefs['type'] === 'linkMultiple') {
+                            continue;
+                        }
+                        $data['entityDefs'][$relEntity]['fields'][Relation::buildVirtualFieldName($entityName, $additionalField)] = array_merge($additionalFieldDefs, $virtualFieldDefs);
+                    }
+                }
+            }
+
             $data['entityDefs'][$entityName] = Util::merge($defaultEntityDefs, $current);
 
             $current = $data['scopes'][$entityName] ?? [];
