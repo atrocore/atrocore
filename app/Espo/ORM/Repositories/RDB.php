@@ -369,9 +369,23 @@ class RDB extends \Espo\ORM\Repository
     {
         foreach ($this->cachedEntities as $id => $entity) {
             foreach ($this->whereClause as $field => $value) {
-                // exit if whereClause is complex
-                if (is_array($field) || in_array($field, QueryConverter::$sqlOperators) || in_array($field, array_keys(QueryConverter::$comparisonOperators))) {
+                // exit if field is array
+                if (is_array($field)) {
                     break 2;
+                }
+
+                // exit if field is sql operator
+                foreach (QueryConverter::$sqlOperators as $v) {
+                    if (strpos($field, $v) !== false) {
+                        break 3;
+                    }
+                }
+
+                // exit if field is comparison operator
+                foreach (QueryConverter::$comparisonOperators as $k => $v) {
+                    if (strpos($field, $k) !== false) {
+                        break 3;
+                    }
                 }
 
                 // exit if value is different
