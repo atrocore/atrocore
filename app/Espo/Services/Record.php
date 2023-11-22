@@ -1274,10 +1274,15 @@ class Record extends \Espo\Core\Services\Base
     public function updateEntity($id, $data)
     {
         $event = $this
-            ->dispatchEvent('beforeUpdateEntity', new Event(['id' => $id, 'data' => $data, 'entityType' => $this->getEntityType(), 'service' => $this]));
+            ->dispatchEvent('beforeUpdateEntity', new Event(['id' => $id, 'data' => $data, 'entityType' => $this->getEntityType(), 'service' => $this, 'result' => null]));
 
         $id = $event->getArgument('id');
         $data = $event->getArgument('data');
+        $result = $event->getArgument('result');
+
+        if ($result !== null) {
+            return $result;
+        }
 
         if (empty($id)) {
             throw new BadRequest();
@@ -1422,49 +1427,53 @@ class Record extends \Espo\Core\Services\Base
 
     protected function updateRelationEntity(Entity $entity, \stdClass $input): void
     {
-        if (!property_exists($input, '_relationEntityId')) {
+        if (
+            !property_exists($input, '_relationEntityId')
+            || !property_exists($input, '_relationEntity')
+            || !property_exists($input, '_relationName')
+        ) {
             return;
         }
 
-        $relEntityType = null;
-        $relInput = new \stdClass();
-        foreach ($input as $fieldName => $value) {
-            $data = Relation::isVirtualRelationField($fieldName);
-            if (empty($data)) {
-                continue;
-            }
-
-            $relEntityType = $data['relationName'];
-            $relInput->{$data['fieldName']} = $value;
+        $relationName = $this->getMetadata()->get(['entityDefs', $input->_relationEntity, 'links', $input->_relationName, 'relationName']);
+        if (empty($relationName)) {
+            return;
         }
 
-        if (!empty($relEntityType)) {
-            $relId = property_exists($input, '_relationId') ? $input->_relationId : null;
+        $relEntityType = ucfirst($relationName);
+        $relInput = new \stdClass();
+        foreach ($this->getMetadata()->get(['entityDefs', $relEntityType, 'fields']) as $field => $fieldDefs) {
+            $relField = Relation::buildVirtualFieldName($relEntityType, $field);
+            if (property_exists($input, $relField)) {
+                $relInput->$field = $input->$relField;
+            }
+        }
 
-            // find relation ID
-            if (empty($relId)) {
-                $where = [];
-                foreach ($this->getMetadata()->get(['entityDefs', $relEntityType, 'fields']) as $f => $d) {
-                    if (empty($d['relationField'])) {
-                        continue;
-                    }
-                    if ($this->getMetadata()->get(['entityDefs', $relEntityType, 'links', $f, 'entity']) === $entity->getEntityType()) {
-                        $where["{$f}Id"] = $entity->get('id');
-                    } else {
-                        $where["{$f}Id"] = $input->_relationEntityId;
-                    }
+        $relId = property_exists($input, '_relationId') ? $input->_relationId : null;
+
+        // find relation ID
+        if (empty($relId)) {
+            $where = [];
+            foreach ($this->getMetadata()->get(['entityDefs', $relEntityType, 'fields']) as $f => $d) {
+                if (empty($d['relationField'])) {
+                    continue;
                 }
-                if (count($where) === 2) {
-                    $relEntity = $this->getEntityManager()->getRepository($relEntityType)->select(['id'])->where($where)->findOne();
-                    if (!empty($relEntity)) {
-                        $relId = $relEntity->get('id');
-                    }
+                if ($this->getMetadata()->get(['entityDefs', $relEntityType, 'links', $f, 'entity']) === $entity->getEntityType()) {
+                    $where["{$f}Id"] = $entity->get('id');
+                } else {
+                    $where["{$f}Id"] = $input->_relationEntityId;
                 }
             }
-
-            if (!empty($relId)) {
-                $this->getServiceFactory()->create($relEntityType)->updateEntity($relId, $relInput);
+            if (count($where) === 2) {
+                $relEntity = $this->getEntityManager()->getRepository($relEntityType)->select(['id'])->where($where)->findOne();
+                if (!empty($relEntity)) {
+                    $relId = $relEntity->get('id');
+                }
             }
+        }
+
+        if (!empty($relId)) {
+            $this->getServiceFactory()->create($relEntityType)->updateEntity($relId, $relInput);
         }
     }
 
