@@ -75,7 +75,7 @@ abstract class Entity implements IEntity
     protected array $relationsContainer = [];
 
     /**
-     * @var EntityManager Entity Manager.
+     * @var \Espo\Core\ORM\EntityManager Entity Manager.
      */
     protected $entityManager;
 
@@ -647,6 +647,14 @@ abstract class Entity implements IEntity
                                 }
                             }
                             break;
+                    }
+                }
+
+                // default value for varchar
+                if ($fieldData['type'] === 'varchar') {
+                    if (strpos($default, '{{') >= 0 && strpos($default, '}}') >= 0) {
+                        // use twig
+                        $default = $this->getEntityManager()->getContainer()->get('twig')->renderTemplate($default, []);
                     }
                 }
                 $this->setFieldValue($field, $default);
