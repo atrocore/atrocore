@@ -344,7 +344,7 @@ class RDB extends \Espo\ORM\Repository
 
     public function findOne(array $params = [])
     {
-        if (empty($params)) {
+        if (!empty($params['noCache']) || empty($params)) {
             $entity = $this->findInCache();
             if ($entity !== null) {
                 return $entity;
