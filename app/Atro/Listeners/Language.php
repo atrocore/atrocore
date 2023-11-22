@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Listeners;
 
 use Atro\Core\EventManager\Event;
+use Atro\Core\Templates\Repositories\Relation;
 use Espo\Core\Utils\Util;
 use Espo\Core\Templates\Services\Relationship;
 
@@ -32,6 +33,12 @@ class Language extends AbstractListener
                     if (empty($fieldDefs['type'])) {
                         continue;
                     }
+
+                    // add translate for relation virtual field
+                    if (!isset($data[$locale][$entity]['fields'][$field]) && !empty($relData = Relation::isVirtualRelationField($field))) {
+                        $data[$locale][$entity]['fields'][$field] = $data[$locale][$relData['relationName']]['fields'][$relData['fieldName']] ?? $relData['fieldName'];
+                    }
+
                     switch ($fieldDefs['type']) {
                         case 'link':
                             if (!isset($data[$locale][$entity]['fields'][$field])) {
