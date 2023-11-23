@@ -1589,6 +1589,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 entityId = parentView.options.model.get('id');
             }
 
+            listLayout = Espo.Utils.cloneDeep(listLayout);
+
             // remove relation virtual fields
             if (this.layoutName === 'listSmall') {
                 let toRemove = [];
