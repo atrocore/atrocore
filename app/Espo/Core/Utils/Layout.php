@@ -274,7 +274,15 @@ class Layout extends Injectable
             $module->loadLayouts($scope, $name, $data);
         }
 
-        // default
+        // default by method
+        if (empty($data)) {
+            $type = $this->getMetadata()->get(['scopes', $scope, 'type']);
+            $method = "getDefaultFor{$type}EntityType";
+            if (method_exists($this, $method)) {
+                $data = $this->$method($scope, $name);
+            }
+        }
+
         if (empty($data)) {
             // prepare file path
             $fileFullPath = $this->concatPath($this->concatPath(CORE_PATH . '/Espo/Core/defaults', 'layouts'), $name . '.json');
@@ -290,6 +298,52 @@ class Layout extends Injectable
 
         if (in_array($name, ['detail', 'detailSmall'])) {
             $data = $this->injectMultiLanguageFields($data, $scope);
+        }
+
+        return $data;
+    }
+
+    protected function getDefaultForRelationEntityType(string $scope, string $name): array
+    {
+        $relationFields = [];
+        foreach ($this->getMetadata()->get(['entityDefs', $scope, 'fields']) as $field => $fieldDefs) {
+            if (!empty($fieldDefs['relationField'])) {
+                $relationFields[] = $field;
+            }
+        }
+
+        $data = [];
+
+        switch ($name) {
+            case 'list':
+            case 'listSmall':
+                $data = [
+                    [
+                        'name' => $relationFields[0]
+                    ],
+                    [
+                        'name' => $relationFields[1]
+                    ],
+                ];
+                break;
+            case 'detail':
+            case 'detailSmall':
+                $data = [
+                    [
+                        "label" => "Overview",
+                        "rows"  => [
+                            [
+                                [
+                                    "name" => $relationFields[0]
+                                ],
+                                [
+                                    "name" => $relationFields[1]
+                                ]
+                            ]
+                        ]
+                    ]
+                ];
+                break;
         }
 
         return $data;

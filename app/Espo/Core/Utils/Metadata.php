@@ -607,6 +607,11 @@ class Metadata
             $path = implode($delim, ['Espo', 'Entities', Util::normilizeClassName(ucfirst($entityName))]);
         }
 
+        if (!class_exists($path)) {
+            $type = $this->get('scopes.' . $entityName . '.type');
+            $path = "\\Atro\\Core\\Templates\\Entities\\$type";
+        }
+
         return $path;
     }
 
@@ -618,6 +623,11 @@ class Metadata
 
         if (!class_exists($path)) {
             $path = implode($delim, ['Espo', 'Repositories', Util::normilizeClassName(ucfirst($entityName))]);
+        }
+
+        if (!class_exists($path)) {
+            $type = $this->get('scopes.' . $entityName . '.type');
+            $path = "\\Atro\\Core\\Templates\\Repositories\\$type";
         }
 
         return $path;

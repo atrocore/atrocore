@@ -37,24 +37,15 @@ use \Espo\Core\Utils\Util;
 
 class EntityManager extends \Espo\ORM\EntityManager
 {
-    protected $espoMetadata;
-
     protected $user;
-
-    protected $container;
 
     private $repositoryClassNameHash = array();
 
     private $entityClassNameHash = array();
 
-    public function setContainer(\Atro\Core\Container $container)
+    public function getEspoMetadata()
     {
-        $this->container = $container;
-    }
-
-    public function getContainer()
-    {
-        return $this->container;
+        return $this->getContainer()->get('metadata');
     }
 
     public function setUser($user)
@@ -67,22 +58,12 @@ class EntityManager extends \Espo\ORM\EntityManager
         return $this->user;
     }
 
-    public function getEspoMetadata()
-    {
-        return $this->espoMetadata;
-    }
-
-    public function setEspoMetadata($espoMetadata)
-    {
-        $this->espoMetadata = $espoMetadata;
-    }
-
     public function normalizeRepositoryName($name)
     {
         if (empty($this->repositoryClassNameHash[$name])) {
             $className = '\\Espo\\Custom\\Repositories\\' . Util::normilizeClassName($name);
             if (!class_exists($className)) {
-                $className = $this->espoMetadata->getRepositoryPath($name);
+                $className = $this->getEspoMetadata()->getRepositoryPath($name);
             }
             $this->repositoryClassNameHash[$name] = $className;
         }
@@ -94,7 +75,7 @@ class EntityManager extends \Espo\ORM\EntityManager
         if (empty($this->entityClassNameHash[$name])) {
             $className = '\\Espo\\Custom\\Entities\\' . Util::normilizeClassName($name);
             if (!class_exists($className)) {
-                $className = $this->espoMetadata->getEntityPath($name);
+                $className = $this->getEspoMetadata()->getEntityPath($name);
             }
             $this->entityClassNameHash[$name] = $className;
         }

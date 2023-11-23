@@ -19,19 +19,23 @@ use Atro\ORM\DB\RDB\QueryCallbacks\JoinManyToMany;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
+use Espo\Core\Utils\Util;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\IEntity;
+use Espo\Core\Utils\Metadata;
 
 class Mapper implements MapperInterface
 {
     protected Connection $connection;
     protected EntityFactory $entityFactory;
+    protected Metadata $metadata;
     protected QueryConverter $queryConverter;
 
-    public function __construct(Connection $connection, EntityFactory $entityFactory)
+    public function __construct(Connection $connection, EntityFactory $entityFactory, Metadata $metadata)
     {
         $this->connection = $connection;
         $this->entityFactory = $entityFactory;
+        $this->metadata = $metadata;
         $this->queryConverter = new QueryConverter($this->entityFactory, $this->connection);
     }
 
@@ -310,6 +314,9 @@ class Mapper implements MapperInterface
         return (int)$res;
     }
 
+    /**
+     * @deprecated
+     */
     public function addRelation(IEntity $entity, string $relName, string $id = null, IEntity $relEntity = null, array $data = null): bool
     {
         if (!is_null($relEntity)) {
@@ -347,99 +354,56 @@ class Mapper implements MapperInterface
         $nearKey = $keySet['nearKey'];
         $distantKey = $keySet['distantKey'];
 
-        if ($this->count($relEntity, ['whereClause' => ['id' => $id]]) > 0) {
-            $relTable = $this->toDb($relOpt['relationName']);
+        $relTable = $this->toDb($relOpt['relationName']);
 
-            $qb = $this->connection->createQueryBuilder();
-            $qb
-                ->select('*')
-                ->from($this->connection->quoteIdentifier($relTable))
-                ->where("{$this->toDb($nearKey)} = :$nearKey")
-                ->setParameter($nearKey, $entity->id, self::getParameterType($entity->id))
-                ->andWhere("{$this->toDb($distantKey)} = :$distantKey")
-                ->setParameter($distantKey, $relEntity->id, self::getParameterType($relEntity->id));
+        $qb = $this->connection->createQueryBuilder();
+        $qb->insert($relTable);
 
-            if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
-                foreach ($relOpt['conditions'] as $f => $v) {
-                    $qb->andWhere("{$this->toDb($f)} = :$f");
-                    $qb->setParameter($f, $v, self::getParameterType($v));
-                }
+        $qb->setValue('id', ":id")
+            ->setParameter('id', Util::generateId());
+
+        $qb->setValue($this->toDb($nearKey), ":$nearKey")
+            ->setParameter($nearKey, $entity->id);
+
+        $qb->setValue($this->toDb($distantKey), ":$distantKey")
+            ->setParameter($distantKey, $relEntity->id);
+
+        $qb->setValue('created_at', ":currentDate")
+            ->setValue('modified_at', ":currentDate")
+            ->setParameter('currentDate', date('Y-m-d H:i:s'));
+
+        $qb->setValue('created_by_id', ":userId")
+            ->setValue('modified_by_id', ":userId")
+            ->setParameter('userId', $this->entityFactory->getEntityManager()->getUser()->get('id'));
+
+        if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
+            foreach ($relOpt['conditions'] as $f => $v) {
+                $qb->setValue($this->toDb($f), ":$f")->setParameter($f, $v);
             }
-
-            $this->debugSql($qb->getSQL());
-
-            $res = $qb->fetchAssociative();
-
-            if (empty($res)) {
-                $qb = $this->connection->createQueryBuilder();
-                $qb->insert($relTable);
-
-                $qb->setValue($this->toDb($nearKey), ":$nearKey")->setParameter($nearKey, $entity->id);
-                $qb->setValue($this->toDb($distantKey), ":$distantKey")->setParameter($distantKey, $relEntity->id);
-
-                if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
-                    foreach ($relOpt['conditions'] as $f => $v) {
-                        $qb->setValue($this->toDb($f), ":$f")->setParameter($f, $v);
-                    }
-                }
-                if (!empty($data) && is_array($data)) {
-                    foreach ($data as $column => $columnValue) {
-                        $qb->setValue($this->toDb($column), ":$column")->setParameter($column, $columnValue);
-                    }
-                }
-
-                $this->debugSql($qb->getSQL());
-
-                try {
-                    $qb->executeQuery();
-                } catch (\Throwable $e) {
-                    $sql = $qb->getSQL();
-                    $GLOBALS['log']->error("RDB addRelation failed for SQL: $sql");
-                    throw $e;
-                }
-
-                $this->updateModifiedAtForManyToMany($entity, $relEntity);
-
-                return true;
-            } else {
-                $qb = $this->connection->createQueryBuilder();
-                $qb->update($relTable)
-                    ->set('deleted', ':deleted')->setParameter('deleted', false, self::getParameterType(false));
-                if (!empty($data) && is_array($data)) {
-                    foreach ($data as $column => $value) {
-                        $qb->set($this->toDb($column), ":$column")->setParameter($column, $value, self::getParameterType($value));
-                    }
-                }
-
-                $qb->where("{$this->toDb($nearKey)} = :$nearKey")->setParameter($nearKey, $entity->id, self::getParameterType($entity->id));
-                $qb->andWhere("{$this->toDb($distantKey)} = :$distantKey")->setParameter($distantKey, $relEntity->id, self::getParameterType($relEntity->id));
-
-                if (!empty($relOpt['conditions']) && is_array($relOpt['conditions'])) {
-                    foreach ($relOpt['conditions'] as $f => $v) {
-                        $qb->andWhere("{$this->toDb($f)} = :$f")->setParameter($f, $v, self::getParameterType($v));
-                    }
-                }
-
-                $this->debugSql($qb->getSQL());
-
-                try {
-                    $qb->executeQuery();
-                } catch (\Throwable $e) {
-                    $sql = $qb->getSQL();
-                    $GLOBALS['log']->error("RDB addRelation failed for SQL: $sql");
-                    throw $e;
-                }
-
-                $this->updateModifiedAtForManyToMany($entity, $relEntity);
-
-                return true;
+        }
+        if (!empty($data) && is_array($data)) {
+            foreach ($data as $column => $columnValue) {
+                $qb->setValue($this->toDb($column), ":$column")->setParameter($column, $columnValue);
             }
         }
 
-        return false;
+        $this->debugSql($qb->getSQL());
+
+        try {
+            $qb->executeQuery();
+        } catch (\Throwable $e) {
+            $sql = $qb->getSQL();
+            $GLOBALS['log']->error("RDB addRelation failed for SQL: $sql");
+            throw $e;
+        }
+
+        return true;
     }
 
-    public function removeRelation(IEntity $entity, string $relationName, string $id = null, bool $all = false, IEntity $relEntity = null, bool $force = false): bool
+    /**
+     * @deprecated
+     */
+    public function removeRelation(IEntity $entity, string $relationName, string $id = null, bool $all = false, IEntity $relEntity = null): bool
     {
         if (!is_null($relEntity)) {
             $id = $relEntity->id;
@@ -479,16 +443,6 @@ class Mapper implements MapperInterface
         $relTable = $this->toDb($relOpt['relationName']);
 
         $qb = $this->connection->createQueryBuilder();
-
-        if ($force) {
-            $qb->delete($this->connection->quoteIdentifier($relTable));
-        } else {
-            $qb
-                ->update($this->connection->quoteIdentifier($relTable))
-                ->set('deleted', ':deleted')
-                ->setParameter('deleted', true, self::getParameterType(true));
-        }
-
         $qb->where("{$this->toDb($nearKey)} = :$nearKey");
         $qb->setParameter($nearKey, $entity->id, self::getParameterType($entity->id));
 
@@ -504,17 +458,39 @@ class Mapper implements MapperInterface
             }
         }
 
-        $this->debugSql($qb->getSQL());
-
+        // delete prev
+        $qb1 = clone $qb;
+        $qb1->delete($this->connection->quoteIdentifier($relTable))
+            ->andWhere('deleted = :true')
+            ->setParameter('true', true, ParameterType::BOOLEAN);
+        $this->debugSql($qb1->getSQL());
         try {
-            $qb->executeQuery();
+            $qb1->executeQuery();
         } catch (\Throwable $e) {
-            $sql = $qb->getSQL();
+            $sql = $qb1->getSQL();
             $GLOBALS['log']->error("RDB removeRelation failed for SQL: $sql");
             throw $e;
         }
 
-        $this->updateModifiedAtForManyToMany($entity, $relEntity);
+        // update current
+        $qb2 = clone $qb;
+        $qb2
+            ->update($this->connection->quoteIdentifier($relTable))
+            ->set('deleted', ':true')
+            ->set('modified_at', ':currentDate')
+            ->set('modified_by_id', ':userId')
+            ->setParameter('true', true, ParameterType::BOOLEAN)
+            ->setParameter('currentDate', date('Y-m-d H:i:s'))
+            ->setParameter('userId', $this->entityFactory->getEntityManager()->getUser()->get('id'));
+
+        $this->debugSql($qb2->getSQL());
+        try {
+            $qb2->executeQuery();
+        } catch (\Throwable $e) {
+            $sql = $qb2->getSQL();
+            $GLOBALS['log']->error("RDB removeRelation failed for SQL: $sql");
+            throw $e;
+        }
 
         return true;
     }
@@ -694,52 +670,6 @@ class Mapper implements MapperInterface
         return $value;
     }
 
-    protected function updateModifiedAtForManyToMany(IEntity $entity, IEntity $relEntity): void
-    {
-        $this->updateModifiedAt($entity);
-        $this->updateModifiedBy($entity);
-
-        $this->updateModifiedAt($relEntity);
-        $this->updateModifiedBy($relEntity);
-    }
-
-    protected function updateModifiedAt(IEntity $entity)
-    {
-        if (empty($entity->getAttributeType('modifiedAt'))) {
-            return;
-        }
-
-        $qb = $this->connection->createQueryBuilder()
-            ->update($this->connection->quoteIdentifier($this->toDb($entity->getEntityType())))
-            ->set('modified_at', ':date')
-            ->where('id = :id')
-            ->setParameter('date', date('Y-m-d H:i:s'))
-            ->setParameter('id', $entity->get('id'));
-
-        $this->debugSql($qb->getSQL());
-
-        $qb->executeQuery();
-    }
-
-    protected function updateModifiedBy(IEntity $entity)
-    {
-        if (empty($entity->getAttributeType('modifiedBy'))) {
-            return;
-        }
-
-        $userId = $this->entityFactory->getEntityManager()->getUser()->get('id');
-        $qb = $this->connection->createQueryBuilder()
-            ->update($this->connection->quoteIdentifier($this->toDb($entity->getEntityType())))
-            ->set('modified_by_id', ':userId')
-            ->where('id = :id')
-            ->setParameter('userId', $userId)
-            ->setParameter('id', $entity->get('id'));
-
-        $this->debugSql($qb->getSQL());
-
-        $qb->executeQuery();
-    }
-
     public function toDb(string $field): string
     {
         return $this->getQueryConverter()->toDb($field);
@@ -753,6 +683,11 @@ class Mapper implements MapperInterface
     public function getQueryConverter(): QueryConverter
     {
         return $this->queryConverter;
+    }
+
+    public function getMetadata(): Metadata
+    {
+        return $this->metadata;
     }
 
     /**

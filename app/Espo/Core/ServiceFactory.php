@@ -38,6 +38,7 @@ namespace Espo\Core;
 use Atro\Core\Container;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Interfaces\Injectable;
+use Espo\Services\Record;
 
 class ServiceFactory
 {
@@ -96,6 +97,9 @@ class ServiceFactory
 
             // create service
             $service = new $className();
+            if ($service instanceof Record) {
+                $service->setEntityType($name);
+            }
 
             if ($service instanceof Injectable) {
                 foreach ($service->getDependencyList() as $name) {
@@ -131,6 +135,11 @@ class ServiceFactory
             }
 
             $this->classNames[$name] = "\\$module\\Services\\$name";
+        }
+
+        if (!class_exists($this->classNames[$name])) {
+            $type = $this->getMetadata()->get(['scopes', $name, 'type']);
+            $this->classNames[$name] = "\\Atro\\Core\\Templates\\Services\\$type";
         }
 
         if (!class_exists($this->classNames[$name])) {

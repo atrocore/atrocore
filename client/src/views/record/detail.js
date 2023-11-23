@@ -1772,6 +1772,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                         var name = cellDefs.name;
 
+                        // remove relation virtual fields
+                        let parts = name.split('__');
+                        if (parts.length === 2 && !this.model.has(name)) {
+                            continue;
+                        }
+
                         var type = cellDefs.type || this.model.getFieldType(name) || 'base';
                         var viewName = cellDefs.view || this.model.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
 

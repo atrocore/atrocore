@@ -35,6 +35,7 @@ namespace Espo\ORM\Repositories;
 
 use Atro\ORM\DB\RDB\Mapper;
 use Atro\ORM\DB\RDB\Query\QueryConverter;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
@@ -344,14 +345,14 @@ class RDB extends \Espo\ORM\Repository
 
     public function findOne(array $params = [])
     {
-        if (empty($params['noCache']) || empty($params)) {
+        if (!empty($params['noCache']) || empty($params)) {
             $entity = $this->findInCache();
             if ($entity !== null) {
                 return $entity;
             }
         }
 
-        $canBeCached = (empty($this->listParams['select']) && empty($params['select'])) && empty($params['noCache']);
+        $canBeCached = empty($this->listParams['select']) && empty($params['select']);
 
         $collection = $this->limit(0, 1)->find($params);
 
@@ -526,12 +527,27 @@ class RDB extends \Espo\ORM\Repository
             if ($d instanceof \stdClass) {
                 $d = get_object_vars($d);
             }
-            if ($foreign instanceof Entity) {
-                $result = $this->getMapper()->addRelation($entity, $relationName, null, $foreign, $d);
+            $relationEntityName = ucfirst($this->getEntityManager()->getEspoMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $relationName, 'relationName']));
+            $keySet = $this->getMapper()->getKeys($entity, $relationName);
+
+            $fieldsData = [
+                $keySet['nearKey']    => $entity->get('id'),
+                $keySet['distantKey'] => is_string($foreign) ? $foreign : $foreign->get('id')
+            ];
+
+            if (!empty($d)) {
+                $fieldsData = array_merge($fieldsData, $d);
             }
-            if (is_string($foreign)) {
-                $result = $this->getMapper()->addRelation($entity, $relationName, $foreign, null, $d);
+
+            $relEntity = $this->getEntityManager()->getRepository($relationEntityName)->get();
+            $relEntity->set($fieldsData);
+
+            try {
+                $this->getEntityManager()->saveEntity($relEntity);
+            } catch (UniqueConstraintViolationException $e) {
             }
+
+            $result = true;
         }
 
         if ($result) {
@@ -590,14 +606,33 @@ class RDB extends \Espo\ORM\Repository
         if (method_exists($this, $methodName)) {
             $result = $this->$methodName($entity, $foreign, $options);
         } else {
-            if ($foreign instanceof Entity) {
-                $result = $this->getMapper()->removeRelation($entity, $relationName, null, false, $foreign, true);
-            }
-            if (is_string($foreign)) {
-                $result = $this->getMapper()->removeRelation($entity, $relationName, $foreign, false, null, true);
-            }
-            if ($foreign === true) {
-                $GLOBALS['log']->error('removeAllRelations is deprecated. Use removeRelation instead.');
+            $relationEntityName = ucfirst($this->getEntityManager()->getEspoMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $relationName, 'relationName']));
+            $keySet = $this->getMapper()->getKeys($entity, $relationName);
+
+            $where = [
+                $keySet['nearKey']    => $entity->get('id'),
+                $keySet['distantKey'] => is_string($foreign) ? $foreign : $foreign->get('id')
+            ];
+
+            $relEntity = $this->getEntityManager()->getRepository($relationEntityName)
+                ->select(['id'])
+                ->where($where)
+                ->findOne();
+
+            if (!empty($relEntity)) {
+                // delete already deleted
+                $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
+                $qb->delete($this->getEntityManager()->getConnection()->quoteIdentifier($this->getMapper()->toDb($relationEntityName)), 't2');
+                $qb->where('t2.deleted = :true');
+                $qb->setParameter("true", true, ParameterType::BOOLEAN);
+                foreach ($where as $f => $val){
+                    $qb->andWhere("t2.{$this->getMapper()->toDb($f)} = :{$f}Val");
+                    $qb->setParameter("{$f}Val", $val, Mapper::getParameterType($val));
+                }
+                $qb->executeQuery();
+
+                $this->getEntityManager()->removeEntity($relEntity);
+                $result = true;
             }
         }
 

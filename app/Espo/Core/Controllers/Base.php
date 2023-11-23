@@ -45,7 +45,7 @@ abstract class Base
 
     public static $defaultAction = 'index';
 
-    public function __construct(Container $container, $requestMethod = null)
+    public function __construct(Container $container, $requestMethod = null, $controllerName = null)
     {
         $this->container = $container;
 
@@ -54,7 +54,7 @@ abstract class Base
         }
 
         if (empty($this->name)) {
-            $name = get_class($this);
+            $name = $controllerName ?? get_class($this);
             if (preg_match('@\\\\([\w]+)$@', $name, $matches)) {
                 $name = $matches[1];
             }

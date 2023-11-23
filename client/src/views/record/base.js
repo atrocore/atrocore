@@ -522,6 +522,12 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
                 attrs._relationEntity = hashParts[0].replace('#', '');
                 attrs._relationEntityId = hashParts[1];
 
+                $.each(this.model.defs.fields, (field, fieldDefs) => {
+                    if (fieldDefs.relId && model.get(field)) {
+                        attrs._relationId = model.get(field);
+                    }
+                });
+
                 // @todo remove it soon
                 attrs._mainEntityId = hashParts[1];
             }

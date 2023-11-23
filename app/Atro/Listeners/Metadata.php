@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Atro\Listeners;
 
 use Atro\Core\EventManager\Event;
+use Atro\Core\Templates\Repositories\Relation;
+use Espo\Core\Utils\Database\Orm\RelationManager;
 use Espo\Core\Utils\Util;
 use Espo\Core\Templates\Services\Relationship;
 
@@ -61,6 +63,7 @@ class Metadata extends AbstractListener
     {
         $data = $event->getArgument('data');
 
+        $this->prepareRelationEntities($data);
         $this->prepareRelationshipsEntities($data);
 
         $event->setArgument('data', $data);
@@ -327,6 +330,160 @@ class Metadata extends AbstractListener
                     $data['clientDefs'][$entity]['dynamicLogic']['fields'][$fieldTo] = $data['clientDefs'][$entity]['dynamicLogic']['fields'][$field];
                 }
             }
+        }
+    }
+
+    protected function prepareRelationEntities(array &$data): void
+    {
+        if (empty($data['entityDefs'])) {
+            return;
+        }
+
+        $relationManager = new RelationManager($data['entityDefs']);
+
+        $relations = [];
+        foreach ($data['entityDefs'] as $entityName => $entityDefs) {
+            if (empty($entityDefs['links'])) {
+                continue;
+            }
+            foreach ($entityDefs['links'] as $linkName => $linkParams) {
+                if (isset($linkParams['skipOrmDefs']) && $linkParams['skipOrmDefs'] === true) {
+                    continue;
+                }
+                $convertedLink = $relationManager->convert($linkName, $linkParams, $entityName, []);
+                if (isset($convertedLink[$entityName]['relations'])) {
+                    foreach ($convertedLink[$entityName]['relations'] as $k => $v) {
+                        $relations[$entityName]['relations'][$k] = $v;
+                    }
+                }
+            }
+        }
+
+        $res = [];
+
+        foreach ($relations as $scope => $entityDefs) {
+            foreach ($entityDefs['relations'] as $relationParams) {
+                if (empty($relationParams['type']) || $relationParams['type'] !== 'manyMany') {
+                    continue;
+                }
+
+                $entityName = ucfirst($relationParams['relationName']);
+
+                if (isset($res[$entityName])) {
+                    continue;
+                }
+
+                // MIDDLE columns
+                if (!empty($relationParams['midKeys'])) {
+                    $leftId = $relationParams['midKeys'][0];
+                    $left = substr($leftId, 0, -2);
+
+                    if ($entityName === 'EntityTeam') {
+                        $res[$entityName]['fields'][$leftId] = [
+                            'type'     => 'varchar',
+                            'len'      => 24,
+                            'required' => true
+                        ];
+                    } else {
+                        $res[$entityName]['fields'][$left] = [
+                            'type'          => 'link',
+                            'required'      => true,
+                            'relationField' => true
+                        ];
+                        $res[$entityName]['links'][$left] = [
+                            'type'   => 'belongsTo',
+                            'entity' => $scope
+                        ];
+                    }
+
+                    $rightId = $relationParams['midKeys'][1];
+                    $right = substr($rightId, 0, -2);
+
+                    $res[$entityName]['fields'][$right] = [
+                        'type'          => 'link',
+                        'required'      => true,
+                        'relationField' => true
+                    ];
+                    $res[$entityName]['links'][$right] = [
+                        'type'   => 'belongsTo',
+                        'entity' => $relationParams['entity']
+                    ];
+
+                    $res[$entityName]['uniqueIndexes']['unique_relation'] = ['deleted', Util::toUnderScore($leftId), Util::toUnderScore($rightId)];
+                }
+
+                // ADDITIONAL columns
+                if (!empty($relationParams['additionalColumns'])) {
+                    foreach ($relationParams['additionalColumns'] as $fieldName => $fieldParams) {
+                        if (!isset($fieldParams['type'])) {
+                            $fieldParams = array_merge($fieldParams, ['type' => 'varchar', 'len' => 255]);
+                        }
+                        $res[$entityName]['fields'][$fieldName] = $fieldParams;
+                    }
+                }
+
+                if (!empty($relationParams['conditions'])) {
+                    foreach ($relationParams['conditions'] as $fieldName => $fieldParams) {
+                        $res[$entityName]['uniqueIndexes']['unique_relation'][] = Util::toUnderScore($fieldName);
+                    }
+                }
+            }
+        }
+
+        $defaultClientDefs = json_decode(file_get_contents(dirname(__DIR__) . '/Core/Templates/Metadata/Relation/clientDefs.json'), true);
+        $defaultEntityDefs = json_decode(file_get_contents(dirname(__DIR__) . '/Core/Templates/Metadata/Relation/entityDefs.json'), true);
+        $defaultScopes = json_decode(file_get_contents(dirname(__DIR__) . '/Core/Templates/Metadata/Relation/scopes.json'), true);
+
+        $virtualFieldDefs = [
+            'notStorable'        => true,
+            'importDisabled'     => true,
+            'exportDisabled'     => true,
+            'massUpdateDisabled' => true,
+            'isCustom'           => false
+        ];
+
+        foreach ($res as $entityName => $entityDefs) {
+            $current = $data['clientDefs'][$entityName] ?? [];
+            $data['clientDefs'][$entityName] = empty($current) ? $defaultClientDefs : Util::merge($defaultClientDefs, $current);
+
+            $current = $data['entityDefs'][$entityName] ?? [];
+            $current = empty($current) ? $entityDefs : Util::merge($entityDefs, $current);
+
+            $additionalFields = array_filter($current['fields'], function ($row) {
+                return empty($row['relationField']);
+            });
+
+            // put virtual fields to entities
+            if (!empty($additionalFields)) {
+                $relFields = array_filter($current['fields'], function ($row) {
+                    return !empty($row['relationField']);
+                });
+                foreach ($relFields as $relField => $relDefs) {
+                    $relEntity = $entityDefs['links'][$relField]['entity'];
+                    $data['entityDefs'][$relEntity]['fields'][Relation::buildVirtualFieldName($entityName, 'id')] = array_merge(['type' => 'varchar', 'relId' => true], $virtualFieldDefs);
+                    foreach ($additionalFields as $additionalField => $additionalFieldDefs) {
+                        if (!empty($additionalFieldDefs['notStorable'])) {
+                            continue;
+                        }
+                        if ($additionalFieldDefs['type'] === 'linkMultiple') {
+                            continue;
+                        }
+                        if ($additionalFieldDefs['type'] === 'link') {
+                            $additionalFieldDefs['entity'] = $current['links'][$additionalField]['entity'];
+                        }
+                        $data['entityDefs'][$relEntity]['fields'][Relation::buildVirtualFieldName($entityName, $additionalField)] = array_merge($additionalFieldDefs, $virtualFieldDefs);
+                    }
+                }
+            }
+
+            $data['entityDefs'][$entityName] = Util::merge($defaultEntityDefs, $current);
+
+            $current = $data['scopes'][$entityName] ?? [];
+            $data['scopes'][$entityName] = empty($current) ? $defaultScopes : Util::merge($defaultScopes, $current);
+
+            $data['scopes'][$entityName]['tab'] = false;
+            $data['scopes'][$entityName]['layouts'] = false;
+            $data['scopes'][$entityName]['customizable'] = false;
         }
     }
 
@@ -941,7 +1098,7 @@ class Metadata extends AbstractListener
     /**
      * Remove field from index
      *
-     * @param array $indexes
+     * @param array  $indexes
      * @param string $fieldName
      *
      * @return array

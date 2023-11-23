@@ -33,6 +33,7 @@
 
 namespace Espo\ORM;
 
+use Atro\Core\Container;
 use Atro\ORM\DB\MapperInterface;
 use Doctrine\DBAL\Connection;
 use Espo\Core\Exceptions\Error;
@@ -43,6 +44,8 @@ class EntityManager
      * @var \PDO
      */
     protected $pdo;
+
+    protected Container $container;
 
     protected $entityFactory;
 
@@ -60,8 +63,9 @@ class EntityManager
 
     public function __construct($params)
     {
-        $this->connection = $params['connection'];
-        $this->pdo = $params['pdo'];
+        $this->container = $params['container'];
+        $this->connection = $this->container->get('connection');
+        $this->pdo = $this->container->get('pdo');
 
         $this->params = $params;
 
@@ -90,7 +94,7 @@ class EntityManager
     {
         $className = "\\Atro\\ORM\\DB\\$name\\Mapper";
         if (empty($this->mappers[$className])) {
-            $this->mappers[$className] = new $className($this->connection, $this->entityFactory);
+            $this->mappers[$className] = new $className($this->connection, $this->entityFactory, $this->getContainer()->get('metadata'));
         }
 
         return $this->mappers[$className];
@@ -152,6 +156,11 @@ class EntityManager
     public function getPDO(): \PDO
     {
         return $this->pdo;
+    }
+
+    public function getContainer(): Container
+    {
+        return $this->container;
     }
 
     public function normalizeRepositoryName($name)
