@@ -61,14 +61,9 @@ class EntityManager implements Factory
             'sslKey'                     => $config->get('database.sslKey'),
             'sslCAPath'                  => $config->get('database.sslCAPath'),
             'sslCipher'                  => $config->get('database.sslCipher'),
-            'connection'                 => $container->get('connection'),
-            'pdo'                        => $container->get('pdo')
+            'container'                  => $container
         ];
 
-        $entityManager = new \Espo\Core\ORM\EntityManager($params);
-        $entityManager->setEspoMetadata($container->get('metadata'));
-        $entityManager->setContainer($container);
-
-        return $entityManager;
+        return new \Espo\Core\ORM\EntityManager($params);
     }
 }
