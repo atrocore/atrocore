@@ -1315,8 +1315,14 @@ class Record extends \Espo\Core\Services\Base
             throw new Forbidden();
         }
 
-        if ($this->getConfig()->get('checkForConflicts', true) && !empty($conflicts = $this->getFieldsThatConflict($entity, $data))) {
-            throw (new Conflict(sprintf($this->getInjection('language')->translate('editedByAnotherUser', 'exceptions', 'Global'), implode(', ', $conflicts))))->setFields($conflicts);
+        // check if record has been changed by someone else
+        $skipCheckForConflicts = property_exists($data, '_skipCheckForConflicts') && !empty($data->_skipCheckForConflicts);
+        if (!$this->isImport && !$skipCheckForConflicts && $this->getConfig()->get('checkForConflicts', true)) {
+            $conflicts = $this->getFieldsThatConflict($entity, $data);
+            if (!empty($conflicts)) {
+                $message = $this->getInjection('language')->translate('editedByAnotherUser', 'exceptions', 'Global');
+                throw (new Conflict(sprintf($message, implode(', ', $conflicts))))->setFields($conflicts);
+            }
         }
 
         if (!$this->isEntityUpdated($entity, $data)) {
@@ -1441,15 +1447,21 @@ class Record extends \Espo\Core\Services\Base
         }
 
         $relEntityType = ucfirst($relationName);
-        $relInput = new \stdClass();
         foreach ($this->getMetadata()->get(['entityDefs', $relEntityType, 'fields']) as $field => $fieldDefs) {
             if ($fieldDefs['type'] === 'link') {
                 $field .= 'Id';
             }
             $relField = Relation::buildVirtualFieldName($relEntityType, $field);
             if (property_exists($input, $relField)) {
+                if (!isset($relInput)) {
+                    $relInput = new \stdClass();
+                }
                 $relInput->$field = $input->$relField;
             }
+        }
+
+        if (!isset($relInput)) {
+            return;
         }
 
         $relId = property_exists($input, '_relationId') ? $input->_relationId : null;
@@ -1476,7 +1488,11 @@ class Record extends \Espo\Core\Services\Base
         }
 
         if (!empty($relId)) {
-            $this->getServiceFactory()->create($relEntityType)->updateEntity($relId, $relInput);
+            $relInput->_skipCheckForConflicts = true;
+            try {
+                $this->getServiceFactory()->create($relEntityType)->updateEntity($relId, $relInput);
+            }catch (NotModified $e){
+            }
         }
     }
 
