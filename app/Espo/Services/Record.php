@@ -1443,6 +1443,9 @@ class Record extends \Espo\Core\Services\Base
         $relEntityType = ucfirst($relationName);
         $relInput = new \stdClass();
         foreach ($this->getMetadata()->get(['entityDefs', $relEntityType, 'fields']) as $field => $fieldDefs) {
+            if ($fieldDefs['type'] === 'link') {
+                $field .= 'Id';
+            }
             $relField = Relation::buildVirtualFieldName($relEntityType, $field);
             if (property_exists($input, $relField)) {
                 $relInput->$field = $input->$relField;
