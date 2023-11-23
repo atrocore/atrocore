@@ -22,17 +22,20 @@ use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Espo\Core\Utils\Util;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\IEntity;
+use Espo\Core\Utils\Metadata;
 
 class Mapper implements MapperInterface
 {
     protected Connection $connection;
     protected EntityFactory $entityFactory;
+    protected Metadata $metadata;
     protected QueryConverter $queryConverter;
 
-    public function __construct(Connection $connection, EntityFactory $entityFactory)
+    public function __construct(Connection $connection, EntityFactory $entityFactory, Metadata $metadata)
     {
         $this->connection = $connection;
         $this->entityFactory = $entityFactory;
+        $this->metadata = $metadata;
         $this->queryConverter = new QueryConverter($this->entityFactory, $this->connection);
     }
 
@@ -724,6 +727,11 @@ class Mapper implements MapperInterface
     public function getQueryConverter(): QueryConverter
     {
         return $this->queryConverter;
+    }
+
+    public function getMetadata(): Metadata
+    {
+        return $this->metadata;
     }
 
     /**

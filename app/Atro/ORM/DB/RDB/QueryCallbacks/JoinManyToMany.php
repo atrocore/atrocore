@@ -16,6 +16,7 @@ namespace Atro\ORM\DB\RDB\QueryCallbacks;
 use Atro\Core\Templates\Repositories\Relation;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Espo\Core\Utils\Util;
 use Espo\ORM\IEntity;
 
 class JoinManyToMany
@@ -76,8 +77,26 @@ class JoinManyToMany
             foreach ($params['select'] as $item) {
                 if (!empty($data = Relation::isVirtualRelationField($item))) {
                     if ($relOpt['relationName'] === lcfirst($data['relationName'])) {
-                        $fieldAlias = $queryConverter->fieldToAlias($item);
-                        $additionalSelect[$item] = "$relAlias.{$mapper->toDb($data['fieldName'])} AS $fieldAlias";
+                        $foreignEntity = $mapper->getMetadata()->get(['entityDefs', $data['relationName'], 'links', $data['fieldName'], 'entity']);
+                        if (!empty($foreignEntity)) {
+                            $relationColumn = $mapper->toDb("{$data['fieldName']}Id");
+                            $relationForeignAlias = $mapper->toDb($foreignEntity) . '_' . Util::generateId();
+                            $relationCondition = "$relAlias.{$relationColumn} = $relationForeignAlias.id AND $relationForeignAlias.deleted=:deleted_mm2";
+
+                            $qb->leftJoin($relAlias, $queryConverter->quoteIdentifier($mapper->toDb($foreignEntity)), $relationForeignAlias, $relationCondition);
+
+                            $relIdItem = $item . 'Id';
+                            $relIdFieldAlias = $queryConverter->fieldToAlias($relIdItem);
+                            $additionalSelect[$relIdItem] = "$relationForeignAlias.id AS $relIdFieldAlias";
+
+                            $relNameItem = $item . 'Name';
+                            $relNameFieldAlias = $queryConverter->fieldToAlias($relNameItem);
+                            $additionalSelect[$relNameItem] = "$relationForeignAlias.name AS $relNameFieldAlias";
+                        } else {
+                            $fieldAlias = $queryConverter->fieldToAlias($item);
+                            $additionalSelect[$item] = "$relAlias.{$mapper->toDb($data['fieldName'])} AS $fieldAlias";
+                        }
+
                         $idItem = Relation::buildVirtualFieldName($data['relationName'], 'id');
                         $idFieldAlias = $queryConverter->fieldToAlias($idItem);
                         $additionalSelect[$idItem] = "$relAlias.id AS $idFieldAlias";

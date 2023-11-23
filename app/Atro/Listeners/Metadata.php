@@ -469,11 +469,11 @@ class Metadata extends AbstractListener
                         if (!empty($additionalFieldDefs['notStorable'])) {
                             continue;
                         }
-                        if ($additionalFieldDefs['type'] === 'link') {
-                            continue;
-                        }
                         if ($additionalFieldDefs['type'] === 'linkMultiple') {
                             continue;
+                        }
+                        if ($additionalFieldDefs['type'] === 'link') {
+                            $additionalFieldDefs['entity'] = $current['links'][$additionalField]['entity'];
                         }
                         $data['entityDefs'][$relEntity]['fields'][Relation::buildVirtualFieldName($entityName, $additionalField)] = array_merge($additionalFieldDefs, $virtualFieldDefs);
                     }
