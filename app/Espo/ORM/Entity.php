@@ -622,6 +622,7 @@ abstract class Entity implements IEntity
             if (!empty($fieldData['relationVirtualField'])) {
                 continue;
             }
+
             if (array_key_exists('default', $defs)) {
                 $default = $defs['default'];
 
@@ -650,14 +651,17 @@ abstract class Entity implements IEntity
                     }
                 }
 
-                // default value for varchar
-                if ($fieldData['type'] === 'varchar') {
+                $this->setFieldValue($field, $default);
+            } else if (array_key_exists('default', $fieldData)) {
+                $default = $fieldData['default'];
+                if (!empty($default) && $fieldData['type'] === 'varchar') {
+                    // if default value is twig template, default value is only present in espo metadata
                     if (strpos($default, '{{') >= 0 && strpos($default, '}}') >= 0) {
                         // use twig
                         $default = $this->getEntityManager()->getContainer()->get('twig')->renderTemplate($default, []);
+                        $this->setFieldValue($field, $default);
                     }
                 }
-                $this->setFieldValue($field, $default);
             }
 
             // default for unit
