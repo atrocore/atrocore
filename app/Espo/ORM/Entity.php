@@ -652,12 +652,15 @@ abstract class Entity implements IEntity
                 }
 
                 $this->setFieldValue($field, $default);
-            } else if (array_key_exists('default', $fieldData) && !empty($default = $fieldData['default']) && $fieldData['type'] === 'varchar') {
-                // if default value is twig template, default value is only present in espo metadata
-                if (strpos($default, '{{') >= 0 && strpos($default, '}}') >= 0) {
-                    // use twig
-                    $default = $this->getEntityManager()->getContainer()->get('twig')->renderTemplate($default, []);
-                    $this->setFieldValue($field, $default);
+            } else if (array_key_exists('default', $fieldData)) {
+                $default = $fieldData['default'];
+                if (!empty($default) && $fieldData['type'] === 'varchar') {
+                    // if default value is twig template, default value is only present in espo metadata
+                    if (strpos($default, '{{') >= 0 && strpos($default, '}}') >= 0) {
+                        // use twig
+                        $default = $this->getEntityManager()->getContainer()->get('twig')->renderTemplate($default, []);
+                        $this->setFieldValue($field, $default);
+                    }
                 }
             }
 
