@@ -1589,6 +1589,22 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 entityId = parentView.options.model.get('id');
             }
 
+            // remove relation virtual fields
+            if (this.layoutName === 'listSmall' && entityType) {
+                let relationName = this.getMetadata().get(['entityDefs', entityType, 'links', this.relationName, 'relationName']);
+                if (relationName) {
+                    let relEntity = relationName.charAt(0).toUpperCase() + relationName.slice(1);
+                    if (relEntity) {
+                        listLayout.forEach((item, k) => {
+                            let parts = item.name.split('__');
+                            if (parts.length === 2 && parts[0] !== relEntity) {
+                                listLayout.splice(k, 1);
+                            }
+                        });
+                    }
+                }
+            }
+
             let filteredListLayout = [];
 
             listLayout.forEach(item => {
