@@ -18,10 +18,11 @@ class V1Dot7Dot14 extends Base
     public function up(): void
     {
         $this->rebuild();
+        $this->updateComposer('atrocore/core', '^1.7.14');
     }
 
     public function down(): void
     {
-        $this->rebuild();
+        throw new \Error("Downgrade is prohibited.");
     }
 }
