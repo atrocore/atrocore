@@ -50,7 +50,6 @@ Espo.define('model', [], function () {
             this.defs = this.defs || {};
             this.defs.fields = this.defs.fields || {};
             this.defs.links = this.defs.links || {};
-
             Dep.prototype.initialize.call(this);
         },
 
@@ -102,9 +101,21 @@ Espo.define('model', [], function () {
 
         populateDefaults: function () {
             var defaultHash = {};
+
+            const seed = $.ajax({
+                url: this.name + '/action/Seed?silent=true',
+                type: 'GET',
+                dataType: 'json',
+                async: false,
+            }).responseJSON
+
             if ('fields' in this.defs) {
                 for (var field in this.defs.fields) {
                     var defaultValue = this.getFieldParam(field, 'default');
+
+                    if (seed && seed[field] != null) {
+                        defaultValue = seed[field]
+                    }
 
                     if (defaultValue != null) {
                         var defaultValue = this.parseDefaultValue(defaultValue);
@@ -131,9 +142,9 @@ Espo.define('model', [], function () {
         },
 
         parseDefaultValue: function (defaultValue) {
-            if (typeof defaultValue == 'string' && defaultValue.indexOf('javascript:') === 0 ) {
+            if (typeof defaultValue == 'string' && defaultValue.indexOf('javascript:') === 0) {
                 var code = defaultValue.substring(11);
-                defaultValue = (new Function( "with(this) { " + code + "}")).call(this);
+                defaultValue = (new Function("with(this) { " + code + "}")).call(this);
             }
             return defaultValue;
         },

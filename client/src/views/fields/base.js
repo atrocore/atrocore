@@ -793,7 +793,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         clearSearch: function () {
-            this.$element.val('');
+            const field = this.$element || this.$el.find('[name="'+this.name+'"]');
+            field.val('');
         },
 
         fetchSearch: function () {

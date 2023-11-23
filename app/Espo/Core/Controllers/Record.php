@@ -137,12 +137,12 @@ class Record extends Base
         }
 
         $params = array(
-            'where' => $where,
-            'offset' => $offset,
-            'maxSize' => $maxSize,
-            'asc' => $asc,
-            'sortBy' => $sortBy,
-            'q' => $q,
+            'where'      => $where,
+            'offset'     => $offset,
+            'maxSize'    => $maxSize,
+            'asc'        => $asc,
+            'sortBy'     => $sortBy,
+            'q'          => $q,
             'textFilter' => $textFilter
         );
 
@@ -156,7 +156,7 @@ class Record extends Base
 
         return array(
             'total' => $result['total'],
-            'list' => isset($result['collection']) ? $result['collection']->getValueMapList() : $result['list']
+            'list'  => isset($result['collection']) ? $result['collection']->getValueMapList() : $result['list']
         );
     }
 
@@ -179,12 +179,12 @@ class Record extends Base
         }
 
         $params = array(
-            'where' => $where,
-            'offset' => $offset,
-            'maxSize' => $maxSize,
-            'asc' => $asc,
-            'sortBy' => $sortBy,
-            'q' => $q,
+            'where'      => $where,
+            'offset'     => $offset,
+            'maxSize'    => $maxSize,
+            'asc'        => $asc,
+            'sortBy'     => $sortBy,
+            'q'          => $q,
             'textFilter' => $textFilter
         );
 
@@ -192,9 +192,9 @@ class Record extends Base
 
         $result = $this->getRecordService()->getListKanban($params);
 
-        return (object) [
-            'total' => $result->total,
-            'list' => $result->collection->getValueMapList(),
+        return (object)[
+            'total'          => $result->total,
+            'list'           => $result->collection->getValueMapList(),
             'additionalData' => $result->additionalData
         ];
     }
@@ -234,12 +234,12 @@ class Record extends Base
         }
 
         $params = array(
-            'where' => $where,
-            'offset' => $offset,
-            'maxSize' => $maxSize,
-            'asc' => $asc,
-            'sortBy' => $sortBy,
-            'q' => $q,
+            'where'      => $where,
+            'offset'     => $offset,
+            'maxSize'    => $maxSize,
+            'asc'        => $asc,
+            'sortBy'     => $sortBy,
+            'q'          => $q,
             'textFilter' => $textFilter
         );
 
@@ -328,6 +328,7 @@ class Record extends Base
 
         return $this->getRecordService()->massRemove($params);
     }
+
     public function actionMassRestore($params, $data, $request)
     {
         if (!$request->isPost()) {
@@ -552,6 +553,19 @@ class Record extends Base
         }
 
         return $this->getRecordService()->massUnfollow($params);
+    }
+
+    public function actionSeed($params, $data, $request)
+    {
+        if (!$request->isGet()) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($this->name, 'read')) {
+            throw new Forbidden();
+        }
+        
+        return $this->getEntityManager()->getRepository($this->name)->get()->getValueMap();
     }
 
     protected function prepareWhereQuery($where)
