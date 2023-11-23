@@ -1590,19 +1590,28 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             // remove relation virtual fields
-            if (this.layoutName === 'listSmall' && entityType) {
-                let relationName = this.getMetadata().get(['entityDefs', entityType, 'links', this.relationName, 'relationName']);
-                if (relationName) {
-                    let relEntity = relationName.charAt(0).toUpperCase() + relationName.slice(1);
-                    if (relEntity) {
-                        listLayout.forEach((item, k) => {
-                            let parts = item.name.split('__');
-                            if (parts.length === 2 && parts[0] !== relEntity) {
-                                listLayout.splice(k, 1);
-                            }
-                        });
+            if (this.layoutName === 'listSmall') {
+                let toRemove = [];
+                listLayout.forEach((item, k) => {
+                    let parts = item.name.split('__');
+                    if (parts.length === 2) {
+                        toRemove.push({number: k, relEntity: parts[0]});
+                    }
+                });
+
+                let relEntity = null;
+                if (entityType) {
+                    let relationName = this.getMetadata().get(['entityDefs', entityType, 'links', this.relationName, 'relationName']);
+                    if (relationName) {
+                        relEntity = relationName.charAt(0).toUpperCase() + relationName.slice(1);
                     }
                 }
+
+                toRemove.forEach(item => {
+                    if (!relEntity || item.relEntity !== relEntity) {
+                        listLayout.splice(item.number, 1);
+                    }
+                });
             }
 
             let filteredListLayout = [];
