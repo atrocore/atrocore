@@ -451,6 +451,10 @@ class Converter
 
         $fieldDefs = $this->getInitValues($fieldParams);
 
+        if ($fieldParams['type'] === 'bool' && array_key_exists('default', $fieldParams)){
+            $fieldDefs['default'] = !empty($fieldDefs['default']);
+        }
+
         /** check if the field need to be saved in database    */
         if ( (isset($fieldParams['db']) && $fieldParams['db'] === false) ) {
             $fieldDefs['notStorable'] = true;
