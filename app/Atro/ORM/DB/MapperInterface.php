@@ -27,10 +27,6 @@ interface MapperInterface
 
     public function countRelated(IEntity $entity, string $relName, array $params): int;
 
-    public function addRelation(IEntity $entity, string $relName, string $id = null, IEntity $relEntity = null, array $data = null): bool;
-
-    public function removeRelation(IEntity $entity, string $relationName, string $id = null, bool $all = false, IEntity $relEntity = null): bool;
-
     public function insert(IEntity $entity, bool $ignoreDuplicate = false): bool;
 
     public function update(IEntity $entity): bool;

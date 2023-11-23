@@ -314,6 +314,9 @@ class Mapper implements MapperInterface
         return (int)$res;
     }
 
+    /**
+     * @deprecated
+     */
     public function addRelation(IEntity $entity, string $relName, string $id = null, IEntity $relEntity = null, array $data = null): bool
     {
         if (!is_null($relEntity)) {
@@ -394,11 +397,12 @@ class Mapper implements MapperInterface
             throw $e;
         }
 
-        $this->updateModifiedAtForManyToMany($entity, $relEntity);
-
         return true;
     }
 
+    /**
+     * @deprecated
+     */
     public function removeRelation(IEntity $entity, string $relationName, string $id = null, bool $all = false, IEntity $relEntity = null): bool
     {
         if (!is_null($relEntity)) {
@@ -487,8 +491,6 @@ class Mapper implements MapperInterface
             $GLOBALS['log']->error("RDB removeRelation failed for SQL: $sql");
             throw $e;
         }
-
-        $this->updateModifiedAtForManyToMany($entity, $relEntity);
 
         return true;
     }
@@ -666,52 +668,6 @@ class Mapper implements MapperInterface
         }
 
         return $value;
-    }
-
-    protected function updateModifiedAtForManyToMany(IEntity $entity, IEntity $relEntity): void
-    {
-        $this->updateModifiedAt($entity);
-        $this->updateModifiedBy($entity);
-
-        $this->updateModifiedAt($relEntity);
-        $this->updateModifiedBy($relEntity);
-    }
-
-    protected function updateModifiedAt(IEntity $entity)
-    {
-        if (empty($entity->getAttributeType('modifiedAt'))) {
-            return;
-        }
-
-        $qb = $this->connection->createQueryBuilder()
-            ->update($this->connection->quoteIdentifier($this->toDb($entity->getEntityType())))
-            ->set('modified_at', ':date')
-            ->where('id = :id')
-            ->setParameter('date', date('Y-m-d H:i:s'))
-            ->setParameter('id', $entity->get('id'));
-
-        $this->debugSql($qb->getSQL());
-
-        $qb->executeQuery();
-    }
-
-    protected function updateModifiedBy(IEntity $entity)
-    {
-        if (empty($entity->getAttributeType('modifiedBy'))) {
-            return;
-        }
-
-        $userId = $this->entityFactory->getEntityManager()->getUser()->get('id');
-        $qb = $this->connection->createQueryBuilder()
-            ->update($this->connection->quoteIdentifier($this->toDb($entity->getEntityType())))
-            ->set('modified_by_id', ':userId')
-            ->where('id = :id')
-            ->setParameter('userId', $userId)
-            ->setParameter('id', $entity->get('id'));
-
-        $this->debugSql($qb->getSQL());
-
-        $qb->executeQuery();
     }
 
     public function toDb(string $field): string
