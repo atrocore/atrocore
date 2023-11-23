@@ -1774,7 +1774,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                         // remove relation virtual fields
                         let parts = name.split('__');
-                        if (parts.length === 2 && !this.model.has(name)) {
+                        if (parts.length === 2 && !this.model.has(name) && !this.model.has(name + 'Id')) {
                             continue;
                         }
 
