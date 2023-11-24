@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\ORM\DB\RDB\Query;
 
+use Atro\Core\Templates\Repositories\Relation;
 use Doctrine\DBAL\Connection;
 use Espo\Core\Utils\Util;
 use Espo\ORM\EntityFactory;
@@ -426,6 +427,11 @@ class QueryConverter
                 if ($attributeType === $entity::TEXT) {
                     continue;
                 }
+            }
+
+            $relationFieldData = Relation::isVirtualRelationField($attribute);
+            if (!empty($relationFieldData)) {
+                continue;
             }
 
             if (is_array($attribute) && count($attribute) == 2) {
