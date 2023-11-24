@@ -49,6 +49,18 @@ Espo.define('views/fields/hierarchy-parents', 'views/fields/link-multiple',
             }
         },
 
+        afterAddLink: function (id) {
+            if (this.linkMultiple) return
+
+            if (this.ids.length > 1) {
+                // remove all previous elements
+                const idsToDelete = this.ids.slice(0, -1)
+                idsToDelete.forEach(id => {
+                    this.deleteLink(id)
+                })
+            }
+        },
+
         loadParentData() {
             setTimeout(() => {
                 let parentsIds = Espo.Utils.clone(this.model.get('parentsIds'));
