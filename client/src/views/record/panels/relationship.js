@@ -540,6 +540,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 relate: {
                     model: this.model,
                     link: foreignLink,
+                    panelName: this.panelName
                 },
                 attributes: attributes,
             }, view => {

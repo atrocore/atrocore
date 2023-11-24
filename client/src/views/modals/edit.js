@@ -140,6 +140,7 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
                     this.model = model;
                     if (this.options.relate) {
                         model.setRelate(this.options.relate);
+                        model._relateData = this.options.relate;
                     }
                     if (this.options.attributes) {
                         model.set(this.options.attributes);

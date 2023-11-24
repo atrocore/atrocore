@@ -1774,8 +1774,20 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                         // remove relation virtual fields
                         let parts = name.split('__');
-                        if (parts.length === 2 && !this.model.has(name) && !this.model.has(name + 'Id')) {
-                            continue;
+                        if (parts.length === 2) {
+                            if (this.model._relateData) {
+                                let relationName = this.getMetadata().get(['entityDefs', this.model._relateData.model.urlRoot, 'links', this.model._relateData.panelName, 'relationName']);
+                                if (relationName) {
+                                    let relEntity = relationName.charAt(0).toUpperCase() + relationName.slice(1);
+                                    if (relEntity !== parts[0]) {
+                                        continue;
+                                    }
+                                }
+                            } else {
+                                if (!this.model.has(name) && !this.model.has(name + 'Id')) {
+                                    continue;
+                                }
+                            }
                         }
 
                         var type = cellDefs.type || this.model.getFieldType(name) || 'base';
