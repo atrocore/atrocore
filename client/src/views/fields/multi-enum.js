@@ -195,7 +195,7 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
         fetch: function () {
             let value = (this.$element?.length === 0) ? '' : this.$element?.val();
             var data = {};
-
+console.log(value,'multienum', data)
             if (typeof value !== 'undefined' && value !== null) {
                 var list = value.split(':,:');
                 if (list.length == 1 && list[0] == '') {
