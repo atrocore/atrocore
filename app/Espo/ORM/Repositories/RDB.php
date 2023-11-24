@@ -527,19 +527,28 @@ class RDB extends \Espo\ORM\Repository
             if ($d instanceof \stdClass) {
                 $d = get_object_vars($d);
             }
-            $relationEntityName = ucfirst($this->getEntityManager()->getEspoMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $relationName, 'relationName']));
-            $keySet = $this->getMapper()->getKeys($entity, $relationName);
 
-            $fieldsData = [
-                $keySet['nearKey']    => $entity->get('id'),
-                $keySet['distantKey'] => is_string($foreign) ? $foreign : $foreign->get('id')
-            ];
+            $foreignId = is_string($foreign) ? $foreign : $foreign->get('id');
+            $keySet = $this->getMapper()->getKeys($entity, $relationName);
+            $linkDefs = $this->getEntityManager()->getEspoMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $relationName]);
+
+            if (empty($linkDefs['relationName'])) {
+                $relEntity = $this->getEntityManager()->getRepository($linkDefs['entity'])->get($foreignId);
+                $fieldsData = [
+                    $keySet['foreignKey'] => $entity->get('id')
+                ];
+            } else {
+                $relEntity = $this->getEntityManager()->getRepository(ucfirst($linkDefs['relationName']))->get();
+                $fieldsData = [
+                    $keySet['nearKey']    => $entity->get('id'),
+                    $keySet['distantKey'] => $foreignId
+                ];
+            }
 
             if (!empty($d)) {
                 $fieldsData = array_merge($fieldsData, $d);
             }
 
-            $relEntity = $this->getEntityManager()->getRepository($relationEntityName)->get();
             $relEntity->set($fieldsData);
 
             try {
