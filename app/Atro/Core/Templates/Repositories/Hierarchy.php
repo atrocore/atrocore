@@ -41,6 +41,7 @@ class Hierarchy extends RDB
     {
         if ($relationName === 'children') {
             $params['orderBy'] = $this->hierarchyTableName . '_mm.hierarchy_sort_order';
+            $params['order'] = "ASC";
         }
 
         return parent::findRelated($entity, $relationName, $params);
@@ -702,8 +703,6 @@ class Hierarchy extends RDB
                 $qb->leftJoin($tableAlias, $quotedHierarchyTableName, 'h', "h.entity_id = $tableAlias.id")
                     ->andWhere('h.parent_id = :parentId')
                     ->orderBy('h.hierarchy_sort_order')
-                    ->orderBy("$tableAlias.$sortBy", $sortOrder)
-                    ->orderBy("$tableAlias.id")
                     ->setParameter('parentId', $parentId, Mapper::getParameterType($parentId));
 
                 if (!$withDeleted) {

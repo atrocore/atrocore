@@ -277,9 +277,9 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
             }
 
             let whereData = this.getStorage().get('treeWhereData', this.treeScope) || [];
-            if(whereData.length > 0){
+            if (whereData.length > 0) {
                 url += "&";
-                url += $.param({"where" : whereData});
+                url += $.param({"where": whereData});
             }
             return url;
         },
@@ -451,7 +451,7 @@ Espo.define('views/record/panels/tree-panel', ['view', 'lib!JsTree'],
                 .on('tree.move', e => {
                     e.preventDefault();
 
-                    const parentName = this.treeScope === 'Category' ? 'categoryParent' : 'parent';
+                    const parentName = 'parent';
 
                     let moveInfo = e.move_info;
                     let data = {
