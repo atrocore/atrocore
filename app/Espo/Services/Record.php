@@ -33,6 +33,8 @@
 
 namespace Espo\Services;
 
+use Atro\Core\Exceptions\NotUnique;
+use Espo\Core\Services\Base;
 use Atro\Core\Templates\Repositories\Relation;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -53,7 +55,7 @@ use Espo\ORM\IEntity;
 use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Utils\Condition\Condition;
 
-class Record extends \Espo\Core\Services\Base
+class Record extends Base
 {
     protected $dependencies = array(
         'entityManager',
@@ -568,7 +570,7 @@ class Record extends \Espo\Core\Services\Base
                 $message = $e->getMessage();
             }
 
-            throw new BadRequest($message);
+            throw new NotUnique($message);
         }
 
         return $result;
@@ -2052,7 +2054,22 @@ class Record extends \Espo\Core\Services\Base
             throw new Forbidden();
         }
 
-        $this->getRepository()->relate($entity, $link, $foreignEntity, null, $this->getDefaultRepositoryOptions());
+        $relationName = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $link, 'relationName']);
+
+        $keySet = $this->getRepository()->getMapper()->getKeys($entity, $link);
+
+        $input = new \stdClass();
+        $input->{$keySet['nearKey']} = $entity->get('id');
+        $input->{$keySet['distantKey']} = $foreignEntity->get('id');
+
+        $relService = $this->getServiceFactory()->create(ucfirst($relationName));
+        $relService->isImport = $this->isImport;
+        $relService->isExport = $this->isExport;
+
+        try {
+            $relService->createEntity($input);
+        } catch (NotUnique $e) {
+        }
 
         return $this
             ->dispatchEvent('afterLinkEntity', new Event(['id' => $id, 'service' => $this, 'entity' => $entity, 'link' => $link, 'foreignEntity' => $foreignEntity, 'result' => true]))
@@ -2132,10 +2149,24 @@ class Record extends \Espo\Core\Services\Base
             throw new Forbidden();
         }
 
-        $this->getRepository()->unrelate($entity, $link, $foreignEntity, $this->getDefaultRepositoryOptions());
+        $relationName = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $link, 'relationName']);
+        $relEntityType = ucfirst($relationName);
+
+        $keySet = $this->getRepository()->getMapper()->getKeys($entity, $link);
+
+        $relEntity = $this->getEntityManager()->getRepository($relEntityType)
+            ->where([
+                $keySet['nearKey']    => $entity->get('id'),
+                $keySet['distantKey'] => $foreignEntity->get('id')
+            ])
+            ->findOne();
+
+        if (!empty($relEntity)){
+            $result = $this->getServiceFactory()->create($relEntityType)->deleteEntity($relEntity->get('id'));
+        }
 
         return $this
-            ->dispatchEvent('afterUnlinkEntity', new Event(['id' => $id, 'service' => $this, 'link' => $link, 'foreignEntity' => $foreignEntity, 'result' => true]))
+            ->dispatchEvent('afterUnlinkEntity', new Event(['id' => $id, 'service' => $this, 'link' => $link, 'foreignEntity' => $foreignEntity, 'result' => $result]))
             ->getArgument('result');
     }
 
