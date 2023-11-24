@@ -228,9 +228,10 @@ class Job
 
             $connection->createQueryBuilder()
                 ->update($connection->quoteIdentifier('job'), 'j')
-                ->set("{$connection->quoteIdentifier('status')}", CronManager::FAILED)
+                ->set("{$connection->quoteIdentifier('status')}", ':status')
                 ->set("attempts", 0)
                 ->where('j.id IN (:ids)')
+                ->setParameter('status', CronManager::FAILED)
                 ->setParameter('ids', $jobQuotedIdList, Mapper::getParameterType($jobQuotedIdList))
                 ->executeQuery();
 
