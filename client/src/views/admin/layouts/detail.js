@@ -34,6 +34,8 @@ Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (
 
     return Dep.extend({
 
+        layoutDisabledParameter: 'layoutDetailDisabled',
+
         dataAttributeList: ['name', 'fullWidth', 'customLabel', 'noLabel'],
 
         panelDataAttributeList: ['panelName', 'style', 'dynamicLogicVisible'],
@@ -182,7 +184,7 @@ Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (
                     return false;
                 }
             }
-            return !model.getFieldParam(name, 'disabled') && !model.getFieldParam(name, 'layoutDetailDisabled');
+            return !model.getFieldParam(name, 'disabled') && !model.getFieldParam(name, this.layoutDisabledParameter);
         },
 
         hasDefaultPanel: function () {

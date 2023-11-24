@@ -34,6 +34,8 @@ Espo.define('views/admin/layouts/list', 'views/admin/layouts/rows', function (De
 
     return Dep.extend({
 
+        layoutDisabledParameter: 'layoutListDisabled',
+
         dataAttributeList: ['name', 'width', 'widthPx', 'link', 'notSortable', 'align', 'view', 'customLabel'],
 
         dataAttributesDefs: {
@@ -181,7 +183,7 @@ Espo.define('views/admin/layouts/list', 'views/admin/layouts/rows', function (De
             if (this.ignoreTypeList.indexOf(model.getFieldParam(name, 'type')) != -1) {
                 return false;
             }
-            return !model.getFieldParam(name, 'disabled') && !model.getFieldParam(name, 'layoutListDisabled');
+            return !model.getFieldParam(name, 'disabled') && !model.getFieldParam(name, this.layoutDisabledParameter);
         }
 
     });

@@ -36,6 +36,8 @@ Espo.define('views/admin/layouts/detail-small', 'views/admin/layouts/detail', fu
 
         columnCount: 2,
 
+        layoutDisabledParameter: 'layoutDetailSmallDisabled',
+
     });
 });
 

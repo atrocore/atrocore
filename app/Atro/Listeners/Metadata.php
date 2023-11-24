@@ -435,11 +435,14 @@ class Metadata extends AbstractListener
         $defaultScopes = json_decode(file_get_contents(dirname(__DIR__) . '/Core/Templates/Metadata/Relation/scopes.json'), true);
 
         $virtualFieldDefs = [
-            'notStorable'        => true,
-            'importDisabled'     => true,
-            'exportDisabled'     => true,
-            'massUpdateDisabled' => true,
-            'isCustom'           => false
+            'notStorable'          => true,
+            'layoutListDisabled'   => true,
+            'layoutDetailDisabled' => true,
+            'massUpdateDisabled'   => true,
+            'importDisabled'       => true,
+            'exportDisabled'       => true,
+            'emHidden'             => true,
+            'isCustom'             => false
         ];
 
         foreach ($res as $entityName => $entityDefs) {
