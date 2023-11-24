@@ -615,33 +615,38 @@ class RDB extends \Espo\ORM\Repository
         if (method_exists($this, $methodName)) {
             $result = $this->$methodName($entity, $foreign, $options);
         } else {
-            $relationEntityName = ucfirst($this->getEntityManager()->getEspoMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $relationName, 'relationName']));
+            $foreignId = is_string($foreign) ? $foreign : $foreign->get('id');
+
             $keySet = $this->getMapper()->getKeys($entity, $relationName);
+            $linkDefs = $this->getEntityManager()->getEspoMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $relationName]);
 
-            $where = [
-                $keySet['nearKey']    => $entity->get('id'),
-                $keySet['distantKey'] => is_string($foreign) ? $foreign : $foreign->get('id')
-            ];
-
-            $relEntity = $this->getEntityManager()->getRepository($relationEntityName)
-                ->select(['id'])
-                ->where($where)
-                ->findOne();
-
-            if (!empty($relEntity)) {
-                // delete already deleted
-                $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
-                $qb->delete($this->getEntityManager()->getConnection()->quoteIdentifier($this->getMapper()->toDb($relationEntityName)), 't2');
-                $qb->where('t2.deleted = :true');
-                $qb->setParameter("true", true, ParameterType::BOOLEAN);
-                foreach ($where as $f => $val){
-                    $qb->andWhere("t2.{$this->getMapper()->toDb($f)} = :{$f}Val");
-                    $qb->setParameter("{$f}Val", $val, Mapper::getParameterType($val));
-                }
-                $qb->executeQuery();
-
-                $this->getEntityManager()->removeEntity($relEntity);
+            if (empty($linkDefs['relationName'])) {
+                $relEntity = $this->getEntityManager()->getRepository($linkDefs['entity'])->get($foreignId);
+                $relEntity->set($keySet['foreignKey'], null);
+                $this->getEntityManager()->saveEntity($relEntity);
                 $result = true;
+            } else {
+                $where = [$keySet['nearKey'] => $entity->get('id'), $keySet['distantKey'] => $foreignId];
+                $relEntity = $this->getEntityManager()->getRepository(ucfirst($linkDefs['relationName']))
+                    ->select(['id'])
+                    ->where($where)
+                    ->findOne();
+
+                if (!empty($relEntity)) {
+                    // delete already deleted
+                    $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
+                    $qb->delete($this->getEntityManager()->getConnection()->quoteIdentifier($this->getMapper()->toDb($relationEntityName)), 't2');
+                    $qb->where('t2.deleted = :true');
+                    $qb->setParameter("true", true, ParameterType::BOOLEAN);
+                    foreach ($where as $f => $val) {
+                        $qb->andWhere("t2.{$this->getMapper()->toDb($f)} = :{$f}Val");
+                        $qb->setParameter("{$f}Val", $val, Mapper::getParameterType($val));
+                    }
+                    $qb->executeQuery();
+
+                    $this->getEntityManager()->removeEntity($relEntity);
+                    $result = true;
+                }
             }
         }
 
