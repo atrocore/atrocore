@@ -344,7 +344,6 @@ class Hierarchy extends Record
     {
         $result = [];
         $selectParams = $this->getSelectParams($params);
-        $GLOBALS['debugSQL']= [];
         $records = $this->getRepository()->getChildrenArray($parentId, true, $params['offset'], $params['maxSize'], $selectParams);
         if (empty($records)) {
             return $result;
