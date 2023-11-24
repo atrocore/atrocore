@@ -875,5 +875,9 @@ class Util
     {
         return !array_diff_key(array_flip($keys), $array);
     }
+
+    static public function isFloatEquals(float  $value1, float $value2, $epsilon = PHP_FLOAT_EPSILON) : bool {
+        return abs($value1 - $value2) < $epsilon ;
+    }
 }
 
