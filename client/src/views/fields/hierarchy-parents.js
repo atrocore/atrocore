@@ -50,7 +50,8 @@ Espo.define('views/fields/hierarchy-parents', 'views/fields/link-multiple',
         },
 
         afterAddLink: function (id) {
-            console.log(this.ids)
+            if (this.linkMultiple) return
+
             if (this.ids.length > 1) {
                 // remove all previous elements
                 const idsToDelete = this.ids.slice(0, -1)
