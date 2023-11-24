@@ -592,8 +592,20 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             }, () => {
                 let model = this.collection.get(id);
                 this.notify('Unlinking...');
+
+                let url = this.collection.url;
+
+                let relationName = this.getMetadata().get(['entityDefs', this.model.urlRoot, 'links', this.panelName, 'relationName']);
+                if (relationName) {
+                    let relEntity = relationName.charAt(0).toUpperCase() + relationName.slice(1);
+                    let relId = model.get(relEntity + '__id');
+                    if (relId) {
+                        url = `${relEntity}/${relId}`;
+                    }
+                }
+
                 $.ajax({
-                    url: this.collection.url,
+                    url: url,
                     type: 'DELETE',
                     data: JSON.stringify({
                         id: id
