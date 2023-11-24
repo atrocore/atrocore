@@ -57,7 +57,6 @@ Espo.define('views/fields/hierarchy-parents', 'views/fields/link-multiple',
                 const idsToDelete = this.ids.slice(0, -1)
                 idsToDelete.forEach(id => {
                     this.deleteLink(id)
-                    console.log('delete', id)
                 })
             }
         },
