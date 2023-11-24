@@ -18,5 +18,10 @@
   "hasTeam": true,
   "hasAccount": false,
   "multiParents": false,
-  "dragAndDrop": true
+  "dragAndDrop": true,
+  "fieldValueInheritance": true,
+  "unInheritedFields": [
+    "name"
+  ],
+  "relationInheritance": true
 }
