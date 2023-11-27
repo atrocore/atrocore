@@ -43,7 +43,9 @@ class Language extends AbstractListener
                         case 'link':
                             if (!isset($data[$locale][$entity]['fields'][$field])) {
                                 $entityType = $this->getMetadata()->get(['entityDefs', $entity, 'links', $field, 'entity']);
-                                if (isset($data[$locale]['Global']['scopeNames'][$entityType])) {
+                                if (isset($data[$locale]['Global']['fields'][$field])) {
+                                    $data[$locale][$entity]['fields'][$field] = $data[$locale]['Global']['fields'][$field];
+                                } else if (isset($data[$locale]['Global']['scopeNames'][$entityType])) {
                                     $data[$locale][$entity]['fields'][$field] = $data[$locale]['Global']['scopeNames'][$entityType];
                                 }
                             }
