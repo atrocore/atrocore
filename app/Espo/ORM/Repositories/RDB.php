@@ -345,14 +345,14 @@ class RDB extends \Espo\ORM\Repository
 
     public function findOne(array $params = [])
     {
-        if (!empty($params['noCache']) || empty($params)) {
+        if (empty($params) || empty($params['noCache'])) {
             $entity = $this->findInCache();
             if ($entity !== null) {
                 return $entity;
             }
         }
 
-        $canBeCached = empty($this->listParams['select']) && empty($params['select']);
+        $canBeCached = empty($this->listParams['select']) && empty($params['select']) && empty($params['noCache']);
 
         $collection = $this->limit(0, 1)->find($params);
 
