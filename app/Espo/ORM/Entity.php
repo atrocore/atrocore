@@ -631,28 +631,32 @@ abstract class Entity implements IEntity
                 $default = $defs['default'];
 
                 // default for enum and multiEnum
-                if (!empty($fieldData['type']) && !empty($fieldData['options']) && !empty($fieldData['optionsIds'])) {
-                    switch ($fieldData['type']) {
-                        case 'enum':
-                            $key = array_search($default, $fieldData['options']);
-                            if ($key !== false) {
-                                $default = $fieldData['optionsIds'][$key];
-                            }
-                            break;
-                        case 'multiEnum':
-                            $default = $fieldData['default'];
-                            if (!empty($default) && (is_array($default) || is_object($default))) {
-                                foreach ($default as $v) {
-                                    $key = array_search($v, $fieldData['options']);
-                                    if ($key !== false) {
-                                        $ids[] = $fieldData['optionsIds'][$key];
+                if (!empty($fieldData['type'])) {
+                    if ($fieldData['type'] === 'multiEnum') {
+                        $default = $fieldData['default'];
+                    }
+                    if (!empty($fieldData['options']) && !empty($fieldData['optionsIds'])) {
+                        switch ($fieldData['type']) {
+                            case 'enum':
+                                $key = array_search($default, $fieldData['options']);
+                                if ($key !== false) {
+                                    $default = $fieldData['optionsIds'][$key];
+                                }
+                                break;
+                            case 'multiEnum':
+                                if (!empty($default) && (is_array($default) || is_object($default))) {
+                                    foreach ($default as $v) {
+                                        $key = array_search($v, $fieldData['options']);
+                                        if ($key !== false) {
+                                            $ids[] = $fieldData['optionsIds'][$key];
+                                        }
+                                    }
+                                    if (!empty($ids)) {
+                                        $default = $ids;
                                     }
                                 }
-                                if (!empty($ids)) {
-                                    $default = $ids;
-                                }
-                            }
-                            break;
+                                break;
+                        }
                     }
                 }
 
