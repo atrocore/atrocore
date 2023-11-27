@@ -115,9 +115,7 @@ class Mapper implements MapperInterface
         }
 
         if (!empty($queryData['groupBy'])) {
-            echo '2023-10-17 TODO: group by' . PHP_EOL;
-            print_r($queryData);
-            die();
+            $qb->groupBy($queryData['groupBy']);
         }
 
         if (!empty($queryData['having'])) {
