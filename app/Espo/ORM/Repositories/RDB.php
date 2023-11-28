@@ -234,7 +234,7 @@ class RDB extends \Espo\ORM\Repository
                 ->setParameter('false', false, Mapper::getParameterType(false))
                 ->setParameter('id', $entity->id);
 
-            foreach ($parameters as $name => $value){
+            foreach ($parameters as $name => $value) {
                 $qb->setParameter($name, $value, Mapper::getParameterType($value));
             }
 
@@ -316,6 +316,7 @@ class RDB extends \Espo\ORM\Repository
 
     /**
      * @param array $params
+     *
      * @return EntityCollection
      */
     public function find(array $params = [])
@@ -369,6 +370,9 @@ class RDB extends \Espo\ORM\Repository
     public function findInCache(): ?Entity
     {
         foreach ($this->cachedEntities as $id => $entity) {
+            if ($entity === null) {
+                continue;
+            }
             foreach ($this->whereClause as $field => $value) {
                 // exit if field is array
                 if (is_array($field)) {
@@ -491,13 +495,17 @@ class RDB extends \Espo\ORM\Repository
 
         if ($foreign instanceof Entity) {
             $id = $foreign->id;
-        } else if (is_string($foreign)) {
-            $id = $foreign;
         } else {
-            return;
+            if (is_string($foreign)) {
+                $id = $foreign;
+            } else {
+                return;
+            }
         }
 
-        if (!$id) return;
+        if (!$id) {
+            return;
+        }
 
         return !!$this->countRelated($entity, $relationName, array(
             'whereClause' => array(
@@ -1012,10 +1020,13 @@ class RDB extends \Espo\ORM\Repository
                                 }
                             } else {
                                 // if there aren't blockers then show transition error
-                                throw new Forbidden(sprintf(
-                                    'Transition "%s" is not defined for workflow "%s".',
-                                    $from->get($field) . '_' . $to->get($field),
-                                    $name . '_' . $field));
+                                throw new Forbidden(
+                                    sprintf(
+                                        'Transition "%s" is not defined for workflow "%s".',
+                                        $from->get($field) . '_' . $to->get($field),
+                                        $name . '_' . $field
+                                    )
+                                );
                             }
                         }
                     }
