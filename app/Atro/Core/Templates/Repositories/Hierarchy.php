@@ -208,26 +208,6 @@ class Hierarchy extends RDB
         return $this->getUnInheritableRelations();
     }
 
-    public function fetchById(string $id): array
-    {
-        $result = $this->getConnection()->createQueryBuilder()
-            ->select('*')
-            ->from($this->tableName)
-            ->where('id = :id')
-            ->setParameter('id', $id)
-            ->andWhere('deleted = :false')
-            ->setParameter('false', false, Mapper::getParameterType(false))
-            ->fetchAssociative();
-
-        if (empty($result)) {
-            return [];
-        }
-
-        $this->pushLinkMultipleFields($result);
-
-        return $result;
-    }
-
     public function pushLinkMultipleFields(array &$result): void
     {
         foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields']) as $field => $fieldData) {
@@ -241,7 +221,7 @@ class Hierarchy extends RDB
                 if (empty($entity)) {
                     $entity = $this->get($result['id']);
                 }
-                $result["{$field}_ids"] = array_column($entity->get($field)->toArray(), 'id');
+                $result["{$field}_ids"] = $entity->getLinkMultipleIdList($field);
                 sort($result["{$field}_ids"]);
             }
         }
