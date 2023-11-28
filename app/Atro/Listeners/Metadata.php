@@ -442,7 +442,8 @@ class Metadata extends AbstractListener
             'importDisabled'       => true,
             'exportDisabled'       => true,
             'emHidden'             => true,
-            'isCustom'             => false
+            'isCustom'             => false,
+            'filterDisabled'       => true
         ];
 
         foreach ($res as $entityName => $entityDefs) {
