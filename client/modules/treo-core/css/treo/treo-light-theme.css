@@ -20599,6 +20599,10 @@ tr.list-row.main-image.global-main-image > .cell:first-child {
   border-left-color: red;
 }
 
+tr.list-row.main-category > .cell:first-child {
+  border-left: solid 4px red;
+}
+
 @media screen and (min-width: 768px) {
   .search-row .input-group {
     margin-left: 14px;
