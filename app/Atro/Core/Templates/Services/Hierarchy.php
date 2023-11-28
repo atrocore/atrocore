@@ -449,8 +449,13 @@ class Hierarchy extends Record
         }
 
         try {
-            $entityData = $this->getRepository()->fetchById($id);
+            $fetchedEntity = $this->getRepository()->get($id);
+
             $result = parent::updateEntity($id, $data);
+
+            $entityData= Util::arrayKeysToUnderScore($fetchedEntity->toArray());
+            $this->getRepository()->pushLinkMultipleFields($entityData);
+
             $this->createPseudoTransactionJobs($entityData, clone $data);
             if ($inTransaction) {
                 $this->getEntityManager()->getPDO()->commit();
