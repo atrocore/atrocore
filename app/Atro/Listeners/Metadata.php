@@ -443,7 +443,8 @@ class Metadata extends AbstractListener
             'exportDisabled'       => true,
             'emHidden'             => true,
             'isCustom'             => false,
-            'filterDisabled'       => true
+            'filterDisabled'       => true,
+            'unique'               => false
         ];
 
         foreach ($res as $entityName => $entityDefs) {
