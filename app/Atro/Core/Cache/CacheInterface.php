@@ -13,8 +13,20 @@ namespace Atro\Core\Cache;
 
 interface CacheInterface
 {
+    /**
+     * @param string $key
+     * @param mixed  $value
+     * @param int    $expiration (seconds)
+     *
+     * @return void
+     */
     public function set(string $key, $value, int $expiration = 0): void;
 
+    /**
+     * @param string $key
+     *
+     * @return mixed
+     */
     public function get(string $key);
 
     public function has(string $key): bool;
