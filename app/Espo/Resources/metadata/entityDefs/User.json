@@ -228,6 +228,7 @@
         "teams": {
             "type": "hasMany",
             "entity": "Team",
+            "relationName": "TeamUser",
             "foreign": "users",
             "additionalColumns": {
                 "role": {
@@ -244,6 +245,7 @@
         "roles": {
             "type": "hasMany",
             "entity": "Role",
+            "relationName": "RoleUser",
             "foreign": "users",
             "layoutRelationshipsDisabled": true
         },
