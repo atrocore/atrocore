@@ -127,11 +127,15 @@ class RDB extends \Espo\ORM\Repository
             return null;
         }
 
-        $key = $this->getCacheKey($id);
+        $params = [];
+        $this->handleSelectParams($params);
 
+        if (!$this->cacheable) {
+            return $this->getMapper()->selectById($entity, $id, $params);
+        }
+
+        $key = $this->getCacheKey($id);
         if (!$this->getEntityManager()->getCache()->has($key)) {
-            $params = [];
-            $this->handleSelectParams($params);
             $this->putToCache($id, $this->getMapper()->selectById($entity, $id, $params));
         }
 
@@ -140,6 +144,10 @@ class RDB extends \Espo\ORM\Repository
 
     public function putToCache(string $id, ?Entity $entity): void
     {
+        if (!$this->cacheable) {
+            return;
+        }
+
         $this->getEntityManager()->getCache()->set($this->getCacheKey($id), $entity, $this->cacheExpiration);
     }
 
@@ -350,14 +358,16 @@ class RDB extends \Espo\ORM\Repository
 
     public function findOne(array $params = [])
     {
-        if (empty($params) || empty($params['noCache'])) {
-            $entity = $this->findInCache();
-            if ($entity !== null) {
-                return $entity;
+        if ($this->cacheable) {
+            if (empty($params) || empty($params['noCache'])) {
+                $entity = $this->findInCache();
+                if ($entity !== null) {
+                    return $entity;
+                }
             }
         }
 
-        $canBeCached = empty($this->listParams['select']) && empty($params['select']) && empty($params['noCache']);
+        $canBeCached = $this->cacheable && empty($this->listParams['select']) && empty($params['select']) && empty($params['noCache']);
 
         $collection = $this->limit(0, 1)->find($params);
 
