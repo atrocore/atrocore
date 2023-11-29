@@ -13,6 +13,8 @@ namespace Atro\Core\Cache;
 
 use Atro\Core\Container;
 use Espo\Core\Utils\Config;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
 
 class Memcached implements CacheInterface
 {
@@ -20,8 +22,12 @@ class Memcached implements CacheInterface
 
     private string $keysName = '_memcached_keys';
 
+    private EntityManager $entityManager;
+
     public function __construct(Container $container)
     {
+        $this->entityManager = $container->get('entityManager');
+
         /** @var Config $config */
         $config = $container->get('config');
 
@@ -33,6 +39,10 @@ class Memcached implements CacheInterface
 
     public function set(string $key, $value, int $expiration = 0): void
     {
+        if ($value instanceof Entity) {
+            $value = ['entityType' => $value->getEntityType(), 'entityData' => $value->toArray()];
+        }
+
         $this->memcached->set($key, $value, $expiration);
 
         $keys = $this->memcached->get($this->keysName);
@@ -42,7 +52,13 @@ class Memcached implements CacheInterface
 
     public function get(string $key)
     {
-        return $this->memcached->get($key);
+        $value = $this->memcached->get($key);
+
+        if (isset($value['entityType']) && isset($value['entityData'])) {
+            $value = $this->buildEntityFromArray($value['entityType'], $value['entityData']);
+        }
+
+        return $value;
     }
 
     public function has(string $key): bool
@@ -70,5 +86,15 @@ class Memcached implements CacheInterface
         $this->memcached->set($this->keysName, $res);
 
         return array_keys($res);
+    }
+
+    protected function buildEntityFromArray(string $entityType, array $dataArray): Entity
+    {
+        $entity = $this->entityManager->getEntity($entityType);
+        $entity->rowData = $dataArray;
+        $entity->set($dataArray);
+        $entity->setAsFetched();
+
+        return $entity;
     }
 }
