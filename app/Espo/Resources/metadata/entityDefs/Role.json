@@ -41,12 +41,14 @@
         "users": {
             "type": "hasMany",
             "entity": "User",
-            "foreign": "roles"
+            "foreign": "roles",
+            "relationName": "RoleUser"
         },
         "teams": {
             "type": "hasMany",
             "entity": "Team",
-            "foreign": "roles"
+            "foreign": "roles",
+            "relationName": "RoleTeam"
         }
     },
     "collection": {

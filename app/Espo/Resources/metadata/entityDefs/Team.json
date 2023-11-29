@@ -27,12 +27,14 @@
         "users": {
             "type": "hasMany",
             "entity": "User",
+            "relationName": "TeamUser",
             "foreign": "teams"
         },
         "roles": {
             "type": "hasMany",
             "entity": "Role",
-            "foreign": "teams"
+            "foreign": "teams",
+            "relationName": "RoleTeam"
         },
         "notes": {
             "type": "hasMany",
