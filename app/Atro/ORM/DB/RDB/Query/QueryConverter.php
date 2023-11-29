@@ -978,7 +978,7 @@ class QueryConverter
                                     $whereParts[] = $leftPart . " " . $operator . " " . $this->convertComplexExpression($entity, $value);
                                 } else {
                                     $param = $this->sanitize($field) . '_w1_' . Util::generateId();
-                                    if (in_array($operator, ['LIKE', 'NOT LIKE'])) {
+                                    if (in_array($operator, ['LIKE', 'NOT LIKE']) && str_contains($value, '%')) {
                                         $whereParts[] = "LOWER($leftPart) $operator LOWER(:$param)";
                                     } else {
                                         $whereParts[] = "$leftPart $operator :$param";
