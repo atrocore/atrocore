@@ -17,5 +17,9 @@ interface CacheInterface
 
     public function get(string $key);
 
+    public function has(string $key): bool;
+
     public function delete(string $key): void;
+
+    public function getKeys(): array;
 }
