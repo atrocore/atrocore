@@ -25,10 +25,20 @@ class Memory implements CacheInterface
         return $this->cacheData[$key] ?? null;
     }
 
+    public function has(string $key): bool
+    {
+        return array_key_exists($key, $this->cacheData);
+    }
+
     public function delete(string $key): void
     {
         if (array_key_exists($key, $this->cacheData)) {
             unset($this->cacheData[$key]);
         }
+    }
+
+    public function getKeys(): array
+    {
+        return array_keys($this->cacheData);
     }
 }
