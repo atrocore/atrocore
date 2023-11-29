@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core\Factories;
 
+use Atro\Core\Cache\CacheInterface;
 use Atro\Core\Container;
 use Espo\Core\Utils\Config;
 
@@ -25,6 +26,12 @@ class Cache implements FactoryInterface
 
         $className = "\\Atro\\Core\\Cache\\" . $config->get('cacheSystem', 'Memory');
 
-        return new $className($container);
+        $cache = new $className($container);
+
+        if (!$cache instanceof CacheInterface) {
+            throw new \Error("$className must be instance of CacheInterface");
+        }
+
+        return $cache;
     }
 }
