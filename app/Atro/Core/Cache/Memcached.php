@@ -18,6 +18,8 @@ class Memcached implements CacheInterface
 {
     private \Memcached $memcached;
 
+    private string $keysName = '_memcached_keys';
+
     public function __construct(Container $container)
     {
         /** @var Config $config */
@@ -32,6 +34,10 @@ class Memcached implements CacheInterface
     public function set(string $key, $value, int $expiration = 0): void
     {
         $this->memcached->set($key, $value, $expiration);
+
+        $keys = $this->memcached->get($this->keysName);
+        $keys[$key] = true;
+        $this->memcached->set($this->keysName, $keys);
     }
 
     public function get(string $key)
@@ -39,8 +45,30 @@ class Memcached implements CacheInterface
         return $this->memcached->get($key);
     }
 
+    public function has(string $key): bool
+    {
+        return !($this->memcached->get($key) === false && $this->memcached->getResultCode() === \Memcached::RES_NOTFOUND);
+    }
+
     public function delete(string $key): void
     {
         $this->memcached->delete($key);
+    }
+
+    public function getKeys(): array
+    {
+        $keys = $this->memcached->get($this->keysName) ?? [];
+
+        $res = [];
+
+        foreach ($keys as $key => $true) {
+            if ($this->has($key)) {
+                $res[$key] = $true;
+            }
+        }
+
+        $this->memcached->set($this->keysName, $res);
+
+        return array_keys($res);
     }
 }
