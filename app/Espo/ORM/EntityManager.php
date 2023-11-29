@@ -33,6 +33,7 @@
 
 namespace Espo\ORM;
 
+use Atro\Core\Cache\CacheInterface;
 use Atro\Core\Container;
 use Atro\ORM\DB\MapperInterface;
 use Doctrine\DBAL\Connection;
@@ -88,6 +89,11 @@ class EntityManager
         $this->repositoryFactory = new $repositoryFactoryClassName($this, $this->entityFactory);
 
         $this->init();
+    }
+
+    public function getCache(): CacheInterface
+    {
+        return $this->container->get('cache');
     }
 
     public function getMapper(string $name = 'RDB'): MapperInterface
