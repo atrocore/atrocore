@@ -1294,6 +1294,7 @@ class Record extends Base
         if (empty($entity)) {
             throw new NotFound();
         }
+        $entity->_fetchedEntity = clone $entity;
 
         // skip required field if we are doing massUpdate
         if (property_exists($data, '_isMassUpdate')) {
