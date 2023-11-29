@@ -21620,6 +21620,10 @@ tr.list-row.main-image.global-main-image > .cell:first-child {
     border-left-color: red;
 }
 
+tr.list-row.main-category > .cell:first-child {
+    border-left: solid 4px red;
+}
+
 .search-row .input-group {
     border-bottom: solid 1px #e0e0e0;
 }

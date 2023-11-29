@@ -35,11 +35,7 @@ Espo.define('views/fields/range-float', ['views/fields/range-int', 'views/fields
     return Dep.extend({
 
         type: 'rangeFloat',
-
-        setup: function () {
-            Dep.prototype.setup.call(this);
-            this.validations = ['required', 'float', 'range', 'order'];
-        },
+        validations: ['required', 'float', 'range', 'order'],
 
         validateFloat: function () {
             let validateFromField = Float.prototype.validateFloatByValue.call(this, this.$el.find('[name="' + this.fromField + '"]').val());

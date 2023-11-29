@@ -42,6 +42,8 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
 
         editTemplate: 'fields/range-int/edit',
 
+        validations: ['required', 'int', 'range', 'order'],
+
         data: function () {
             var data = Dep.prototype.data.call(this);
             data.name = this.name;
@@ -105,8 +107,6 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
                     this.thousandSeparator = this.getConfig().get('thousandSeparator');
                 }
             }
-
-            this.validations = ['required', 'int', 'range', 'order'];
 
             if (this.measureId) {
                 this.unitFieldName = this.name + 'UnitId';
