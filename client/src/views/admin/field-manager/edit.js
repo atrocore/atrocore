@@ -91,8 +91,11 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                 this.model.set('name', this.field);
 
                 if (this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'tooltip'])) {
-                    this.model.set('tooltipText', this.getLanguage().translate(this.field, 'tooltips', this.scope));
-                    this.model.set('tooltipLink', this.getLanguage().translate(this.field, 'tooltipLink', this.scope));
+                    const tooltipTextRaw = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'tooltipText']);
+                    const tooltipLink = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'tooltipLink']);
+                    const tooltipText = this.getLanguage().translate(this.field, 'tooltips', this.scope);
+                    this.model.set('tooltipText', tooltipTextRaw ? tooltipText : null);
+                    this.model.set('tooltipLink', tooltipLink || null);
                 }
             } else {
                 this.model.set('type', this.type);
@@ -188,8 +191,6 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                     this.paramList = [];
                     var paramList = Espo.Utils.clone(this.getFieldManager().getParams(this.type) || []);
 
-
-
                     if (!this.isNew) {
                         (this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'fieldManagerAdditionalParamList']) || []).forEach(function (item) {
                             paramList.push(item);
@@ -265,11 +266,6 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                     }
 
                     this.createFieldView('text', 'tooltipText', null, {
-                        trim: true,
-                        rows: 1
-                    });
-
-                    this.createFieldView('url', 'tooltipLink', null, {
                         trim: true,
                         rows: 1
                     });
@@ -485,6 +481,11 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
             this.$el.find('[data-action="resetToDefault"]').removeAttr('disabled').removeClass('disabled');
         },
 
+        getTooltipStatus: function () {
+            return (this.model.get('tooltipText') && this.model.get('tooltipText') !== '') ||
+                (this.model.get('tooltipLink') && this.model.get('tooltipLink') !== '');
+        },
+
         save: function () {
             this.disableButtons();
 
@@ -507,11 +508,7 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                 return;
             }
 
-            if (this.model.get('tooltipText') && this.model.get('tooltipText') !== '') {
-                this.model.set('tooltip', true);
-            } else {
-                this.model.set('tooltip', false);
-            }
+            this.model.set('tooltip', this.getTooltipStatus());
 
             this.listenToOnce(this.model, 'sync', function () {
                 Espo.Ui.notify(false);
