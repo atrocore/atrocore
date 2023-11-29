@@ -85,12 +85,14 @@ class Note extends RDB
 
     /**
      * @param Entity $entity
-     * @param array $options
+     * @param array  $options
      */
     protected function afterSave(Entity $entity, array $options = [])
     {
-        $this->notifyAboutMention($entity);
-        $this->sendNotifications($entity);
+        if (empty($GLOBALS['importJobId'])) {
+            $this->notifyAboutMention($entity);
+            $this->sendNotifications($entity);
+        }
 
         parent::afterSave($entity, $options);
     }
