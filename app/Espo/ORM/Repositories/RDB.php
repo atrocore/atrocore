@@ -47,7 +47,6 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\ORM\IEntity;
 use Symfony\Component\Workflow\Exception\LogicException;
 
-
 class RDB extends \Espo\ORM\Repository
 {
     /**
@@ -69,8 +68,6 @@ class RDB extends \Espo\ORM\Repository
      * @var array Parameters to be used in further find operations.
      */
     protected $listParams = [];
-
-    protected array $cachedEntities = [];
 
     public function __construct($entityType, EntityManager $entityManager, EntityFactory $entityFactory)
     {
@@ -130,18 +127,25 @@ class RDB extends \Espo\ORM\Repository
             return null;
         }
 
-        if (!isset($this->cachedEntities[$id])) {
+        $key = $this->getCacheKey($id);
+
+        if (!$this->getEntityManager()->getCache()->has($key)) {
             $params = [];
             $this->handleSelectParams($params);
             $this->putToCache($id, $this->getMapper()->selectById($entity, $id, $params));
         }
 
-        return $this->cachedEntities[$id];
+        return $this->getEntityManager()->getCache()->get($key);
     }
 
     public function putToCache(string $id, ?Entity $entity): void
     {
-        $this->cachedEntities[$id] = $entity;
+        $this->getEntityManager()->getCache()->set($this->getCacheKey($id), $entity, $this->cacheExpiration);
+    }
+
+    public function getCacheKey(string $id): string
+    {
+        return "entity_{$this->entityType}_{$id}";
     }
 
     public function get($id = null)
@@ -369,7 +373,15 @@ class RDB extends \Espo\ORM\Repository
 
     public function findInCache(): ?Entity
     {
-        foreach ($this->cachedEntities as $id => $entity) {
+        $cachedEntities = [];
+        foreach ($this->getEntityManager()->getCache()->getKeys() as $key) {
+            if (!preg_match_all("/^entity_{$this->entityType}_(.*)$/", $key, $matches)) {
+                continue;
+            }
+            $cachedEntities[$matches[1][0]] = $this->getEntityManager()->getCache()->get($key);
+        }
+
+        foreach ($cachedEntities as $entity) {
             if ($entity === null) {
                 continue;
             }
