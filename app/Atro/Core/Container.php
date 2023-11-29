@@ -39,6 +39,7 @@ class Container
             EventManager::class        => \Atro\Core\Factories\EventManager::class,
             'connection'               => \Atro\Core\Factories\Connection::class,
             Connection::class          => \Atro\Core\Factories\Connection::class,
+            'cache'                    => \Atro\Core\Factories\Cache::class,
             'crypt'                    => \Espo\Core\Utils\Crypt::class,
             'cronManager'              => \Espo\Core\CronManager::class,
             'slim'                     => \Espo\Core\Utils\Api\Slim::class,
