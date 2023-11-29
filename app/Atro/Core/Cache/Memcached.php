@@ -22,11 +22,11 @@ class Memcached implements CacheInterface
 
     private string $keysName = '_memcached_keys';
 
-    private EntityManager $entityManager;
+    private Container $container;
 
     public function __construct(Container $container)
     {
-        $this->entityManager = $container->get('entityManager');
+        $this->container = $container;
 
         /** @var Config $config */
         $config = $container->get('config');
@@ -54,7 +54,7 @@ class Memcached implements CacheInterface
     {
         $value = $this->memcached->get($key);
 
-        if (isset($value['entityType']) && isset($value['entityData'])) {
+        if (is_array($value) && isset($value['entityType']) && isset($value['entityData'])) {
             $value = $this->buildEntityFromArray($value['entityType'], $value['entityData']);
         }
 
@@ -73,7 +73,11 @@ class Memcached implements CacheInterface
 
     public function getKeys(): array
     {
-        $keys = $this->memcached->get($this->keysName) ?? [];
+        $keys = $this->memcached->get($this->keysName);
+
+        if (empty($keys)) {
+            return [];
+        }
 
         $res = [];
 
@@ -90,7 +94,7 @@ class Memcached implements CacheInterface
 
     protected function buildEntityFromArray(string $entityType, array $dataArray): Entity
     {
-        $entity = $this->entityManager->getEntity($entityType);
+        $entity = $this->container->get('entityManager')->getEntity($entityType);
         $entity->rowData = $dataArray;
         $entity->set($dataArray);
         $entity->setAsFetched();

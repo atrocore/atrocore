@@ -45,6 +45,8 @@ class ActionHistoryRecord extends \Espo\Core\ORM\Repositories\RDB
 
     protected $processFieldsAfterRemoveDisabled = true;
 
+    protected bool $cacheable = false;
+
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if ($entity->isNew()) {
