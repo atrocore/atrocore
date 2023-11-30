@@ -63,8 +63,6 @@ abstract class Repository
 
     protected bool $cacheable = true;
 
-    protected int $cacheExpiration = 2 * 60; // 2 min
-
     public function __construct($entityName, EntityManager $entityManager, EntityFactory $entityFactory)
     {
         $this->entityName = $entityName;
