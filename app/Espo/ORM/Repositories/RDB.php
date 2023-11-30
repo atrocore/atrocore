@@ -33,6 +33,7 @@
 
 namespace Espo\ORM\Repositories;
 
+use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\ORM\DB\RDB\Mapper;
 use Atro\ORM\DB\RDB\Query\QueryConverter;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -135,11 +136,16 @@ class RDB extends \Espo\ORM\Repository
         }
 
         $key = $this->getCacheKey($id);
-        if (!$this->getEntityManager()->getMemoryStorage()->has($key)) {
+        if (!$this->getMemoryStorage()->has($key)) {
             $this->putToCache($id, $this->getMapper()->selectById($entity, $id, $params));
         }
 
-        return $this->getEntityManager()->getMemoryStorage()->get($key);
+        return $this->getMemoryStorage()->get($key);
+    }
+
+    public function getMemoryStorage(): StorageInterface
+    {
+        return $this->getEntityManager()->getMemoryStorage();
     }
 
     public function putToCache(string $id, ?Entity $entity): void
@@ -148,7 +154,7 @@ class RDB extends \Espo\ORM\Repository
             return;
         }
 
-        $this->getEntityManager()->getMemoryStorage()->set($this->getCacheKey($id), $entity);
+        $this->getMemoryStorage()->set($this->getCacheKey($id), $entity);
     }
 
     public function getCacheKey(string $id): string
@@ -384,11 +390,11 @@ class RDB extends \Espo\ORM\Repository
     public function findInCache(): ?Entity
     {
         $cachedEntities = [];
-        foreach ($this->getEntityManager()->getMemoryStorage()->getKeys() as $key) {
+        foreach ($this->getMemoryStorage()->getKeys() as $key) {
             if (!preg_match_all("/^entity_{$this->entityType}_(.*)$/", $key, $matches)) {
                 continue;
             }
-            $cachedEntities[$matches[1][0]] = $this->getEntityManager()->getMemoryStorage()->get($key);
+            $cachedEntities[$matches[1][0]] = $this->getMemoryStorage()->get($key);
         }
 
         foreach ($cachedEntities as $entity) {

@@ -34,6 +34,7 @@
 namespace Espo\Services;
 
 use Atro\Core\Exceptions\NotUnique;
+use Atro\Core\KeyValueStorages\StorageInterface;
 use Espo\Core\Services\Base;
 use Atro\Core\Templates\Repositories\Relation;
 use Atro\ORM\DB\RDB\Mapper;
@@ -73,7 +74,8 @@ class Record extends Base
         'fieldManagerUtil',
         'eventManager',
         'language',
-        'pseudoTransactionManager'
+        'pseudoTransactionManager',
+        'memoryStorage'
     );
 
     protected $entityName;
@@ -167,6 +169,11 @@ class Record extends Base
     public function isPseudoTransaction(): bool
     {
         return !empty($this->getPseudoTransactionId());
+    }
+
+    public function getMemoryStorage(): StorageInterface
+    {
+        return $this->getInjection('memoryStorage');
     }
 
     protected function getServiceFactory()
