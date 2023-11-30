@@ -357,7 +357,7 @@ class Base implements Injectable
         foreach ($this->getRelationEntities($entity->getEntityType()) as $link => $scope) {
             $relEntity = $entity->get($link);
 
-            if ($relEntity && !$this->getAclManager()->checkEntity($user, $entity->get($link), $action)) {
+            if ($relEntity && !$this->getAclManager()->checkEntity($user, $relEntity, $action)) {
                 return false;
             }
         }

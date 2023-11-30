@@ -224,9 +224,10 @@ class AclManager
             $relAction = $action == 'read' ? $action : 'edit';
 
             foreach ($impl->getRelationEntities($scope) as $relEntityName) {
+                $relImpl = $this->getImplementation($relEntityName);
                 $data = $this->getTable($user)->getScopeData($relEntityName);
 
-                if (!$impl->checkScope($user, $data, $relAction)) {
+                if (!$relImpl->checkScope($user, $data, $relAction)) {
                     return false;
                 }
             }
