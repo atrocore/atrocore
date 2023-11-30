@@ -33,7 +33,7 @@
 
 namespace Espo\ORM;
 
-use Atro\Core\Cache\CacheInterface;
+use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Core\Container;
 use Atro\ORM\DB\MapperInterface;
 use Doctrine\DBAL\Connection;
@@ -91,9 +91,9 @@ class EntityManager
         $this->init();
     }
 
-    public function getCache(): CacheInterface
+    public function getMemoryStorage(): StorageInterface
     {
-        return $this->container->get('cache');
+        return $this->container->get('memoryStorage');
     }
 
     public function getMapper(string $name = 'RDB'): MapperInterface

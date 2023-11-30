@@ -9,9 +9,9 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-namespace Atro\Core\Cache;
+namespace Atro\Core\KeyValueStorages;
 
-class Memory implements CacheInterface
+class MemoryStorage implements StorageInterface
 {
     private array $cacheData = [];
 

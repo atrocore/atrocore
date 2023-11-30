@@ -135,11 +135,11 @@ class RDB extends \Espo\ORM\Repository
         }
 
         $key = $this->getCacheKey($id);
-        if (!$this->getEntityManager()->getCache()->has($key)) {
+        if (!$this->getEntityManager()->getMemoryStorage()->has($key)) {
             $this->putToCache($id, $this->getMapper()->selectById($entity, $id, $params));
         }
 
-        return $this->getEntityManager()->getCache()->get($key);
+        return $this->getEntityManager()->getMemoryStorage()->get($key);
     }
 
     public function putToCache(string $id, ?Entity $entity): void
@@ -148,7 +148,7 @@ class RDB extends \Espo\ORM\Repository
             return;
         }
 
-        $this->getEntityManager()->getCache()->set($this->getCacheKey($id), $entity, $this->cacheExpiration);
+        $this->getEntityManager()->getMemoryStorage()->set($this->getCacheKey($id), $entity);
     }
 
     public function getCacheKey(string $id): string
@@ -384,11 +384,11 @@ class RDB extends \Espo\ORM\Repository
     public function findInCache(): ?Entity
     {
         $cachedEntities = [];
-        foreach ($this->getEntityManager()->getCache()->getKeys() as $key) {
+        foreach ($this->getEntityManager()->getMemoryStorage()->getKeys() as $key) {
             if (!preg_match_all("/^entity_{$this->entityType}_(.*)$/", $key, $matches)) {
                 continue;
             }
-            $cachedEntities[$matches[1][0]] = $this->getEntityManager()->getCache()->get($key);
+            $cachedEntities[$matches[1][0]] = $this->getEntityManager()->getMemoryStorage()->get($key);
         }
 
         foreach ($cachedEntities as $entity) {

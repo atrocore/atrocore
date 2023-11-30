@@ -9,9 +9,9 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-namespace Atro\Core\Cache;
+namespace Atro\Core\KeyValueStorages;
 
-interface CacheInterface
+interface StorageInterface
 {
     /**
      * @param string $key

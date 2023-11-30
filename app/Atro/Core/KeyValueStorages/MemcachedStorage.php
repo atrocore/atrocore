@@ -9,14 +9,13 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-namespace Atro\Core\Cache;
+namespace Atro\Core\KeyValueStorages;
 
 use Atro\Core\Container;
 use Espo\Core\Utils\Config;
 use Espo\ORM\Entity;
-use Espo\ORM\EntityManager;
 
-class Memcached implements CacheInterface
+class MemcachedStorage implements StorageInterface
 {
     private \Memcached $memcached;
 
