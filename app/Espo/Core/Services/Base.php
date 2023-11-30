@@ -33,6 +33,7 @@
 
 namespace Espo\Core\Services;
 
+use Atro\Core\KeyValueStorages\StorageInterface;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Interfaces\Injectable;
 use Espo\Core\Utils\Config;
@@ -47,7 +48,7 @@ abstract class Base implements Injectable
     /**
      * @var string[]
      */
-    protected $dependencies = ['config', 'entityManager', 'user', 'language'];
+    protected $dependencies = ['config', 'entityManager', 'user', 'language', 'memoryStorage'];
 
     /**
      * @var array
@@ -186,6 +187,11 @@ abstract class Base implements Injectable
     protected function getUser()
     {
         return $this->getInjection('user');
+    }
+
+    public function getMemoryStorage(): StorageInterface
+    {
+        return $this->getInjection('memoryStorage');
     }
 }
 
