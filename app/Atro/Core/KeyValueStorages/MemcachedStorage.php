@@ -12,7 +12,6 @@
 namespace Atro\Core\KeyValueStorages;
 
 use Atro\Core\Container;
-use Espo\Core\Utils\Config;
 use Espo\ORM\Entity;
 
 class MemcachedStorage implements StorageInterface
@@ -23,17 +22,12 @@ class MemcachedStorage implements StorageInterface
 
     private Container $container;
 
-    public function __construct(Container $container)
+    public function __construct(Container $container, string $host, int $port)
     {
         $this->container = $container;
 
-        /** @var Config $config */
-        $config = $container->get('config');
-
-        $memcachedConf = $config->get('memcached');
-
         $this->memcached = new \Memcached();
-        $this->memcached->addServer($memcachedConf['host'] ?? 'localhost', $memcachedConf['port'] ?? 11211);
+        $this->memcached->addServer($host, $port);
     }
 
     public function set(string $key, $value, int $expiration = 0): void

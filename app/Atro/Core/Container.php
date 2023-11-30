@@ -40,7 +40,7 @@ class Container
             'connection'               => \Atro\Core\Factories\Connection::class,
             Connection::class          => \Atro\Core\Factories\Connection::class,
             'memoryStorage'            => \Atro\Core\KeyValueStorages\MemoryStorage::class,
-            'memcachedStorage'         => \Atro\Core\KeyValueStorages\MemcachedStorage::class,
+            'memcachedStorage'         => \Atro\Core\Factories\MemcachedStorage::class,
             'crypt'                    => \Espo\Core\Utils\Crypt::class,
             'cronManager'              => \Espo\Core\CronManager::class,
             'slim'                     => \Espo\Core\Utils\Api\Slim::class,
