@@ -61,6 +61,8 @@ abstract class Repository
      */
     protected $entityType;
 
+    protected bool $cacheable = true;
+
     public function __construct($entityName, EntityManager $entityManager, EntityFactory $entityFactory)
     {
         $this->entityName = $entityName;

@@ -531,7 +531,7 @@ class Mapper implements MapperInterface
                 $this->connection->executeQuery($sql, $qb->getParameters(), $qb->getParameterTypes());
             } catch (\Throwable $e) {
                 $sql = $qb->getSQL();
-                $GLOBALS['log']->error("RDB INSERT failed for SQL: $sql");
+                $GLOBALS['log']->error("RDB INSERT failed for SQL: $sql. Message: {$e->getMessage()}");
                 throw $e;
             }
         }

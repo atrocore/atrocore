@@ -33,6 +33,7 @@
 
 namespace Espo\ORM\Repositories;
 
+use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\ORM\DB\RDB\Mapper;
 use Atro\ORM\DB\RDB\Query\QueryConverter;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -46,7 +47,6 @@ use Espo\ORM\Entity;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\ORM\IEntity;
 use Symfony\Component\Workflow\Exception\LogicException;
-
 
 class RDB extends \Espo\ORM\Repository
 {
@@ -69,8 +69,6 @@ class RDB extends \Espo\ORM\Repository
      * @var array Parameters to be used in further find operations.
      */
     protected $listParams = [];
-
-    protected array $cachedEntities = [];
 
     public function __construct($entityType, EntityManager $entityManager, EntityFactory $entityFactory)
     {
@@ -130,18 +128,38 @@ class RDB extends \Espo\ORM\Repository
             return null;
         }
 
-        if (!isset($this->cachedEntities[$id])) {
-            $params = [];
-            $this->handleSelectParams($params);
+        $params = [];
+        $this->handleSelectParams($params);
+
+        if (!$this->cacheable) {
+            return $this->getMapper()->selectById($entity, $id, $params);
+        }
+
+        $key = $this->getCacheKey($id);
+        if (!$this->getMemoryStorage()->has($key)) {
             $this->putToCache($id, $this->getMapper()->selectById($entity, $id, $params));
         }
 
-        return $this->cachedEntities[$id];
+        return $this->getMemoryStorage()->get($key);
+    }
+
+    public function getMemoryStorage(): StorageInterface
+    {
+        return $this->getEntityManager()->getMemoryStorage();
     }
 
     public function putToCache(string $id, ?Entity $entity): void
     {
-        $this->cachedEntities[$id] = $entity;
+        if (!$this->cacheable) {
+            return;
+        }
+
+        $this->getMemoryStorage()->set($this->getCacheKey($id), $entity);
+    }
+
+    public function getCacheKey(string $id): string
+    {
+        return "entity_{$this->entityType}_{$id}";
     }
 
     public function get($id = null)
@@ -346,14 +364,16 @@ class RDB extends \Espo\ORM\Repository
 
     public function findOne(array $params = [])
     {
-        if (empty($params) || empty($params['noCache'])) {
-            $entity = $this->findInCache();
-            if ($entity !== null) {
-                return $entity;
+        if ($this->cacheable) {
+            if (empty($params) || empty($params['noCache'])) {
+                $entity = $this->findInCache();
+                if ($entity !== null) {
+                    return $entity;
+                }
             }
         }
 
-        $canBeCached = empty($this->listParams['select']) && empty($params['select']) && empty($params['noCache']);
+        $canBeCached = $this->cacheable && empty($this->listParams['select']) && empty($params['select']) && empty($params['noCache']);
 
         $collection = $this->limit(0, 1)->find($params);
 
@@ -369,7 +389,15 @@ class RDB extends \Espo\ORM\Repository
 
     public function findInCache(): ?Entity
     {
-        foreach ($this->cachedEntities as $id => $entity) {
+        $cachedEntities = [];
+        foreach ($this->getMemoryStorage()->getKeys() as $key) {
+            if (!preg_match_all("/^entity_{$this->entityType}_(.*)$/", $key, $matches)) {
+                continue;
+            }
+            $cachedEntities[$matches[1][0]] = $this->getMemoryStorage()->get($key);
+        }
+
+        foreach ($cachedEntities as $entity) {
             if ($entity === null) {
                 continue;
             }

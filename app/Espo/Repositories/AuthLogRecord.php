@@ -44,4 +44,6 @@ class AuthLogRecord extends \Espo\Core\ORM\Repositories\RDB
     protected $processFieldsBeforeSaveDisabled = true;
 
     protected $processFieldsAfterRemoveDisabled = true;
+
+    protected bool $cacheable = false;
 }
