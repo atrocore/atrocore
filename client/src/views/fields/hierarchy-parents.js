@@ -39,13 +39,17 @@ Espo.define('views/fields/hierarchy-parents', 'views/fields/link-multiple',
             this.linkMultiple = this.getMetadata().get(['scopes', this.model.urlRoot, 'multiParents']) || false;
 
             if (this.model.isNew()) {
-                this.listenTo(this.model, 'change:parentsIds', () => {
-                    let parentsIds = Espo.Utils.clone(this.model.get('parentsIds'));
-                    if (!this.linkMultiple && parentsIds && parentsIds.length > 1) {
-                        this.model.set('parentsIds', [parentsIds.pop()]);
-                    }
-                    this.loadParentData();
-                });
+                let fieldValueInheritance = this.getMetadata().get(['scopes', this.model.name, 'fieldValueInheritance']) || false;
+
+                if (fieldValueInheritance) {
+                    this.listenTo(this.model, 'change:parentsIds', () => {
+                        let parentsIds = Espo.Utils.clone(this.model.get('parentsIds'));
+                        if (!this.linkMultiple && parentsIds && parentsIds.length > 1) {
+                            this.model.set('parentsIds', [parentsIds.pop()]);
+                        }
+                        this.loadParentData();
+                    });
+                }
             }
         },
 

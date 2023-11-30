@@ -19,6 +19,7 @@ use Atro\ORM\DB\RDB\QueryCallbacks\JoinManyToMany;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\Core\Utils\Util;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\IEntity;
@@ -58,6 +59,30 @@ class Mapper implements MapperInterface
     }
 
     public function select(IEntity $entity, array $params): array
+    {
+        $qb = $this->createSelectQueryBuilder($entity, $params);
+
+        $this->debugSql($qb->getSQL());
+
+        try {
+            $rows = $qb->fetchAllAssociative();
+        } catch (\Throwable $e) {
+            $sql = $qb->getSQL();
+            $GLOBALS['log']->error("RDB SELECT failed for SQL: $sql");
+            throw $e;
+        }
+
+        $result = [];
+        foreach ($rows as $k => $row) {
+            foreach ($row as $field => $value) {
+                $result[$k][$this->getQueryConverter()->aliasToField($field)] = $value;
+            }
+        }
+
+        return $result;
+    }
+
+    public function createSelectQueryBuilder(IEntity $entity, array $params): QueryBuilder
     {
         try {
             $queryData = $this->getQueryConverter()->createSelectQuery($entity->getEntityType(), $params, !empty($params['withDeleted']));
@@ -130,24 +155,7 @@ class Mapper implements MapperInterface
             }
         }
 
-        $this->debugSql($qb->getSQL());
-
-        try {
-            $rows = $qb->fetchAllAssociative();
-        } catch (\Throwable $e) {
-            $sql = $qb->getSQL();
-            $GLOBALS['log']->error("RDB SELECT failed for SQL: $sql");
-            throw $e;
-        }
-
-        $result = [];
-        foreach ($rows as $k => $row) {
-            foreach ($row as $field => $value) {
-                $result[$k][$this->getQueryConverter()->aliasToField($field)] = $value;
-            }
-        }
-
-        return $result;
+        return $qb;
     }
 
     public function count(IEntity $entity, array $params = []): int
