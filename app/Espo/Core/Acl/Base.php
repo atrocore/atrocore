@@ -265,10 +265,65 @@ class Base implements Injectable
         return false;
     }
 
+    public function checkEntityRead(User $user, Entity $entity, $data)
+    {
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        if ($this->isRelationEntity($entity->getEntityType())) {
+            return $this->checkEntityRelation($user, $entity, 'read');
+        }
+
+        if ($this->checkEntity($user, $entity, $data, 'read')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function checkEntityCreate(User $user, Entity $entity, $data)
+    {
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        if ($this->isRelationEntity($entity->getEntityType())) {
+            return $this->checkEntityRelation($user, $entity, 'edit');
+        }
+
+        if ($this->checkEntity($user, $entity, $data, 'create')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function checkEntityEdit(User $user, Entity $entity, $data)
+    {
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        if ($this->isRelationEntity($entity->getEntityType())) {
+            return $this->checkEntityRelation($user, $entity, 'edit');
+        }
+
+        if ($this->checkEntity($user, $entity, $data, 'edit')) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function checkEntityDelete(User $user, Entity $entity, $data)
     {
         if ($user->isAdmin()) {
             return true;
+        }
+
+        if ($this->isRelationEntity($entity->getEntityType())) {
+            return $this->checkEntityRelation($user, $entity, 'edit');
         }
 
         if ($this->checkEntity($user, $entity, $data, 'delete')) {
@@ -295,5 +350,42 @@ class Base implements Injectable
         if ($entity->hasAttribute('createdById')) {
             return 'createdById';
         }
+    }
+
+    protected function checkEntityRelation(User $user, $entity, $action): bool
+    {
+        foreach ($this->getRelationEntities($entity->getEntityType()) as $link => $scope) {
+            $relEntity = $entity->get($link);
+
+            if ($relEntity && !$this->getAclManager()->checkEntity($user, $entity->get($link), $action)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public function isRelationEntity(string $entityName): bool
+    {
+        return $this->getEntityManager()->getEspoMetadata()->get(['scopes', $entityName, 'type'], 'Base') == 'Relation';
+    }
+
+    public function getRelationEntities(string $entityName): array
+    {
+        $result = [];
+
+        $metadata = $this->getEntityManager()->getEspoMetadata();
+
+        foreach ($metadata->get(['entityDefs', $entityName, 'fields']) as $field => $defs) {
+            if (array_key_exists('relationField', $defs)) {
+                $relationEntityName = $metadata->get(['entityDefs', $entityName, 'links', $field, 'entity']);
+
+                if (!empty($relationEntityName)) {
+                    $result[$field] = $relationEntityName;
+                }
+            }
+        }
+
+        return $result;
     }
 }

@@ -218,8 +218,25 @@ class AclManager
 
     public function checkScope(User $user, $scope, $action = null)
     {
+        $impl = $this->getImplementation($scope);
+
+        if ($impl->isRelationEntity($scope)) {
+            $relAction = $action == 'read' ? $action : 'edit';
+
+            foreach ($impl->getRelationEntities($scope) as $relEntityName) {
+                $data = $this->getTable($user)->getScopeData($relEntityName);
+
+                if (!$impl->checkScope($user, $data, $relAction)) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+
         $data = $this->getTable($user)->getScopeData($scope);
-        return $this->getImplementation($scope)->checkScope($user, $data, $action);
+        return $impl->checkScope($user, $data, $action);
     }
 
     public function checkUser(User $user, $permission, User $entity)
