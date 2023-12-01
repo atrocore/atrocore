@@ -286,7 +286,6 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                     tooltipTextValue = this.options.tooltipText || tooltipDefaultTranslate;
                 }
 
-                // tooltipTextValue = tooltipText ? (this.options.tooltipText || tooltipTextTranslate) : null;
                 const tooltipLinkElement = tooltipLinkValue ? '<div class="popover-footer" style="border-top: 1px solid #dcdcdc52; display:block;margin-top:3px!important;padding-top:2px;"><a href=' + tooltipLinkValue + ' target="_blank"> <u>' + this.translate('Read more') + '</u> </a></div>' : '';
 
                 this.once('after:render', function () {
