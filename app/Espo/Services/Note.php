@@ -130,7 +130,7 @@ class Note extends Record
 
     public function checkAssignment(Entity $entity)
     {
-        if ($this->isImport) {
+        if (!empty($this->getMemoryStorage()->get('importJobId'))) {
             return true;
         }
 

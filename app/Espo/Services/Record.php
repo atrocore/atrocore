@@ -116,7 +116,6 @@ class Record extends Base
 
     protected string $pseudoTransactionId = '';
 
-    public bool $isImport = false;
     public bool $isExport = false;
 
     /**
@@ -226,7 +225,7 @@ class Record extends Base
 
     protected function processActionHistoryRecord($action, Entity $entity)
     {
-        if ($this->actionHistoryDisabled || $this->isImport) return;
+        if ($this->actionHistoryDisabled || !empty($this->getMemoryStorage()->get('importJobId'))) return;
         if ($this->getConfig()->get('actionHistoryDisabled')) return;
 
         // skip if import
@@ -504,7 +503,7 @@ class Record extends Base
 
     public function loadPreview(Entity $entity): void
     {
-        if ($this->isImport) {
+        if (!empty($this->getMemoryStorage()->get('importJobId'))) {
             return;
         }
 
@@ -566,7 +565,7 @@ class Record extends Base
             $message = $lang->translate('notUniqueValue', 'exceptions');
             $message .= ' <a href="javascript:" class="show-hidden">' . $lang->translate('Details') . '</a><textarea class="hidden">' . $e->getMessage() . '</textarea>';
 
-            if ($this->isImport) {
+            if (!empty($this->getMemoryStorage()->get('importJobId'))) {
                 $message = $e->getMessage();
             }
 
@@ -671,7 +670,7 @@ class Record extends Base
 
     public function checkAssignment(Entity $entity)
     {
-        if ($this->isImport) {
+        if (!empty($this->getMemoryStorage()->get('importJobId'))) {
             return true;
         }
 
@@ -1156,7 +1155,7 @@ class Record extends Base
 
     protected function processDuplicateCheck(Entity $entity, $data)
     {
-        if ($this->isImport) {
+        if (!empty($this->getMemoryStorage()->get('importJobId'))) {
             return;
         }
 
@@ -1258,7 +1257,7 @@ class Record extends Base
             $this->linkHierarchically($entity, $attachment);
             $this->afterCreateEntity($entity, $attachment);
             $this->afterCreateProcessDuplicating($entity, $attachment);
-            if (!$this->isImport) {
+            if (empty($this->getMemoryStorage()->get('importJobId'))) {
                 $this->prepareEntityForOutput($entity);
                 $this->loadPreview($entity);
                 $this->updateRelationEntity($entity, $attachment);
@@ -1320,7 +1319,7 @@ class Record extends Base
 
         // check if record has been changed by someone else
         $skipCheckForConflicts = property_exists($data, '_skipCheckForConflicts') && !empty($data->_skipCheckForConflicts);
-        if (!$this->isImport && !$skipCheckForConflicts && $this->getConfig()->get('checkForConflicts', true)) {
+        if (empty($this->getMemoryStorage()->get('importJobId')) && !$skipCheckForConflicts && $this->getConfig()->get('checkForConflicts', true)) {
             $conflicts = $this->getFieldsThatConflict($entity, $data);
             if (!empty($conflicts)) {
                 $message = $this->getInjection('language')->translate('editedByAnotherUser', 'exceptions', 'Global');
@@ -1354,14 +1353,14 @@ class Record extends Base
         }
 
         if ($this->storeEntity($entity)) {
-            if (!$this->isImport && $this->isRelationPanelChanges($data)) {
+            if (empty($this->getMemoryStorage()->get('importJobId')) && $this->isRelationPanelChanges($data)) {
                 $this->updateRelationEntity($entity, $data);
                 $this->updateRelationData($entity, $data);
             }
 
             $this->afterUpdateEntity($entity, $data);
 
-            if (!$this->isImport) {
+            if (empty($this->getMemoryStorage()->get('importJobId'))) {
                 $this->prepareEntityForOutput($entity);
             }
 
@@ -2064,7 +2063,6 @@ class Record extends Base
         $input->{$keySet['distantKey']} = $foreignEntity->get('id');
 
         $relService = $this->getServiceFactory()->create(ucfirst($relationName));
-        $relService->isImport = $this->isImport;
         $relService->isExport = $this->isExport;
 
         try {
@@ -2616,7 +2614,7 @@ class Record extends Base
 
     public function prepareEntityForOutput(Entity $entity)
     {
-        if ($this->isImport) {
+        if (!empty($this->getMemoryStorage()->get('importJobId'))) {
             return;
         }
 
@@ -2941,7 +2939,7 @@ class Record extends Base
 
     protected function afterCreateProcessDuplicating(Entity $entity, $data)
     {
-        if (!isset($data->_duplicatingEntityId) || $this->isImport) return;
+        if (!isset($data->_duplicatingEntityId) || !empty($this->getMemoryStorage()->get('importJobId'))) return;
 
         $duplicatingEntityId = $data->_duplicatingEntityId;
         if (!$duplicatingEntityId) return;
@@ -3279,7 +3277,7 @@ class Record extends Base
      */
     protected function getFieldsThatConflict(Entity $entity, \stdClass $data): array
     {
-        if ($this->isImport) {
+        if (!empty($this->getMemoryStorage()->get('importJobId'))) {
             return [];
         }
 
