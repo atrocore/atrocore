@@ -637,7 +637,7 @@ class Hierarchy extends Record
             return;
         }
 
-        if (!$this->isExport){
+        if (empty($this->getMemoryStorage()->get('exportJobId'))){
             $entity->set('isRoot', $this->getRepository()->isRoot($entity->get('id')));
             $entity->set('hasChildren', !empty($children = $entity->get('children')) && count($children) > 0);
 

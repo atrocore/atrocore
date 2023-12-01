@@ -117,8 +117,6 @@ class Record extends Base
 
     protected string $pseudoTransactionId = '';
 
-    public bool $isExport = false;
-
     /**
      * @var bool|array
      */
@@ -2064,7 +2062,6 @@ class Record extends Base
         $input->{$keySet['distantKey']} = $foreignEntity->get('id');
 
         $relService = $this->getServiceFactory()->create(ucfirst($relationName));
-        $relService->isExport = $this->isExport;
 
         try {
             $relService->createEntity($input);

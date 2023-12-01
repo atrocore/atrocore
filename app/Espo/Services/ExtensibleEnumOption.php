@@ -57,7 +57,7 @@ class ExtensibleEnumOption extends Base
     {
         parent::prepareEntityForOutput($entity);
 
-        if (!$this->isExport && empty($this->getMemoryStorage()->get('importJobId')) && !empty($entity->get('extensibleEnumId')) && $entity->get('listMultilingual') === null) {
+        if (empty($this->getMemoryStorage()->get('exportJobId')) && empty($this->getMemoryStorage()->get('importJobId')) && !empty($entity->get('extensibleEnumId')) && $entity->get('listMultilingual') === null) {
             $extensibleEnum = $this->getEntityManager()->getRepository('ExtensibleEnum')->get($entity->get('extensibleEnumId'));
             if (!empty($extensibleEnum)) {
                 $entity->set('listMultilingual', !empty($extensibleEnum->get('multilingual')));
