@@ -171,6 +171,6 @@ class Entity extends AbstractListener
 
     private function skipHooks(): bool
     {
-        return !empty($GLOBALS['skipHooks']) || !empty($this->getEntityManager()->getMemoryStorage()->get('skipHooks'));
+        return !empty($this->getEntityManager()->getMemoryStorage()->get('skipHooks'));
     }
 }

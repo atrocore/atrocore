@@ -89,7 +89,7 @@ class Note extends RDB
      */
     protected function afterSave(Entity $entity, array $options = [])
     {
-        if (empty($GLOBALS['importJobId'])) {
+        if (empty($this->getMemoryStorage()->get('importJobId'))) {
             $this->notifyAboutMention($entity);
             $this->sendNotifications($entity);
         }

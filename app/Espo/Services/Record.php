@@ -230,7 +230,7 @@ class Record extends Base
         if ($this->getConfig()->get('actionHistoryDisabled')) return;
 
         // skip if import
-        if (!empty($GLOBALS['importJobId'])) {
+        if (!empty($this->getMemoryStorage()->get('importJobId'))) {
             return;
         }
 

@@ -293,7 +293,7 @@ class Attachment extends Record
     protected function createThumbnails(Entity $entity): void
     {
         // do not create thumbnails when import
-        if (!empty($GLOBALS['importJobId'])) {
+        if (!empty($this->getMemoryStorage()->get('importJobId'))) {
             return;
         }
 
