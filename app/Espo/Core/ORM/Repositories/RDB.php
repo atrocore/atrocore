@@ -920,7 +920,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             return;
         }
 
-        if (!empty($GLOBALS['skipAssignmentNotifications'])) {
+        if (!empty($GLOBALS['skipAssignmentNotifications']) || !empty($this->getMemoryStorage()->get('skipAssignmentNotifications'))) {
             return;
         }
 
