@@ -23,7 +23,7 @@ class Entity extends AbstractListener
     {
         $this->dispatch($event->getArgument('entityType') . 'Entity', 'beforeSave', $event);
 
-        if (empty($event->getArgument('hooksDisabled')) && empty($event->getArgument('options')['skipHooks']) && empty($GLOBALS['skipHooks'])) {
+        if (empty($event->getArgument('hooksDisabled')) && empty($event->getArgument('options')['skipHooks']) && !$this->skipHooks()) {
             $this
                 ->createHook(Common\CurrencyConverted::class)
                 ->beforeSave($event->getArgument('entity'), $event->getArgument('options'));
@@ -37,7 +37,7 @@ class Entity extends AbstractListener
     {
         $this->dispatch($event->getArgument('entityType') . 'Entity', 'afterSave', $event);
 
-        if (empty($event->getArgument('hooksDisabled')) && empty($event->getArgument('options')['skipHooks']) && empty($GLOBALS['skipHooks'])) {
+        if (empty($event->getArgument('hooksDisabled')) && empty($event->getArgument('options')['skipHooks']) && !$this->skipHooks()) {
             $this
                 ->createHook(Common\Stream::class)
                 ->afterSave($event->getArgument('entity'), $event->getArgument('options'));
@@ -57,7 +57,7 @@ class Entity extends AbstractListener
     {
         $this->dispatch($event->getArgument('entityType') . 'Entity', 'afterRemove', $event);
 
-        if (empty($event->getArgument('hooksDisabled')) && empty($event->getArgument('options')['skipHooks']) && empty($GLOBALS['skipHooks'])) {
+        if (empty($event->getArgument('hooksDisabled')) && empty($event->getArgument('options')['skipHooks']) && !$this->skipHooks()) {
             $this
                 ->createHook(Common\Stream::class)
                 ->afterRemove($event->getArgument('entity'), $event->getArgument('options'));
@@ -83,7 +83,7 @@ class Entity extends AbstractListener
     {
         $this->dispatch($event->getArgument('entityType') . 'Entity', 'afterRelate', $event);
 
-        if (empty($event->getArgument('hooksDisabled')) && empty($event->getArgument('options')['skipHooks']) && empty($GLOBALS['skipHooks'])) {
+        if (empty($event->getArgument('hooksDisabled')) && empty($event->getArgument('options')['skipHooks']) && !$this->skipHooks()) {
             $this
                 ->createHook(Common\Stream::class)
                 ->afterRelate(
@@ -103,7 +103,7 @@ class Entity extends AbstractListener
     {
         $this->dispatch($event->getArgument('entityType') . 'Entity', 'afterUnrelate', $event);
 
-        if (empty($event->getArgument('hooksDisabled')) && empty($event->getArgument('options')['skipHooks']) && empty($GLOBALS['skipHooks'])) {
+        if (empty($event->getArgument('hooksDisabled')) && empty($event->getArgument('options')['skipHooks']) && !$this->skipHooks()) {
             $this
                 ->createHook(Common\Stream::class)
                 ->afterUnrelate(
@@ -167,5 +167,10 @@ class Entity extends AbstractListener
             'relationData'  => $event->getArgument('relationData'),
             'foreignEntity' => $foreign,
         ];
+    }
+
+    private function skipHooks(): bool
+    {
+        return !empty($GLOBALS['skipHooks']) || !empty($this->getEntityManager()->getMemoryStorage()->get('skipHooks'));
     }
 }
