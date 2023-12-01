@@ -275,14 +275,24 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             if ((this.mode == 'detail' || this.mode == 'edit') && this.tooltip) {
                 const tooltipLinkValue = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'tooltipLink']);
                 let tooltipText = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'tooltipText']);
+                const tooltipDefaultTranslate = this.translate(this.name, 'tooltips', this.model.name);
+                const tooltipTextTranslate = this.translate(tooltipText, 'tooltips', this.model.name);
+                let tooltipTextValue = null;
 
-                const tooltipTextValue = tooltipText ? (this.options.tooltipText || this.translate(tooltipText, 'tooltips', this.model.name)) : null;
+                console.log('here');
+                if (tooltipText) {
+                    tooltipTextValue = tooltipTextTranslate;
+                } else if (this.name != (this.options.tooltipText || tooltipDefaultTranslate)) {
+                    tooltipTextValue = this.options.tooltipText || tooltipDefaultTranslate;
+                }
+
+                // tooltipTextValue = tooltipText ? (this.options.tooltipText || tooltipTextTranslate) : null;
                 const tooltipLinkElement = tooltipLinkValue ? '<div class="popover-footer" style="border-top: 1px solid #dcdcdc52; display:block;margin-top:3px!important;padding-top:2px;"><a href=' + tooltipLinkValue + ' target="_blank"> <u>' + this.translate('Read more') + '</u> </a></div>' : '';
 
                 this.once('after:render', function () {
                     $a = $('<a href="javascript:" class="text-muted field-info"><span class="fas fa-info-circle"></span></a>');
 
-                    if (!tooltipTextValue) {
+                    if (!tooltipTextValue && tooltipLinkValue) {
                         $a = $('<a href=' + tooltipLinkValue + ' target="_blank" class="text-muted field-info"><span class="fas fa-info-circle"></span></a>');
                     }
 
