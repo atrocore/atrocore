@@ -73,7 +73,8 @@ class Record extends Base
         'fieldManagerUtil',
         'eventManager',
         'language',
-        'pseudoTransactionManager'
+        'pseudoTransactionManager',
+        'memoryStorage'
     );
 
     protected $entityName;

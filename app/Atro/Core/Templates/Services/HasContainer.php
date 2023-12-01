@@ -28,7 +28,7 @@ class HasContainer extends Base
     /**
      * @var string[]
      */
-    protected $dependencies = ['container'];
+    protected $dependencies = ['container', 'memoryStorage'];
 
     protected function getContainer(): Container
     {
