@@ -67,16 +67,7 @@ class Language extends AbstractListener
                             break;
                     }
 
-                    if (!empty($fieldDefs['relationshipFilterField'])) {
-
-                        if (!empty($data[$locale][$entity]['fields'][$fieldDefs['relationshipFilterField']])) {
-                            $filterRelationshipEntity = $data[$locale][$entity]['fields'][$fieldDefs['relationshipFilterField']];
-                        } elseif (!empty($data['en_US'][$entity]['fields'][$fieldDefs['relationshipFilterField']])) {
-                            $filterRelationshipEntity = $data['en_US'][$entity]['fields'][$fieldDefs['relationshipFilterField']];
-                        } else {
-                            $filterRelationshipEntity = $fieldDefs['relationshipFilterField'];
-                        }
-
+                    if (!empty($fieldDefs['relationshipFilterField']) && empty($data[$locale][$entity]['fields'][$field])) {
                         if (!empty($data[$locale]['Global']['scopeNamesPlural'][$fieldDefs['entity']])) {
                             $filterEntity = $data[$locale]['Global']['scopeNamesPlural'][$fieldDefs['entity']];
                         } elseif (!empty($data['en_US']['Global']['scopeNamesPlural'][$fieldDefs['entity']])) {
@@ -85,7 +76,7 @@ class Language extends AbstractListener
                             $filterEntity = $fieldDefs['entity'];
                         }
 
-                        $data[$locale][$entity]['fields'][$field] = $filterRelationshipEntity . ' / ' . $filterEntity;
+                        $data[$locale][$entity]['fields'][$field] = $filterEntity;
                     }
 
                     if (!empty($fieldDefs['relationVirtualField'])) {
