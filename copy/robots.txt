@@ -1,3 +1,2 @@
 User-agent: *
-User-agent: AdsBot
 Disallow: /
