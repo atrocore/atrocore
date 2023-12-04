@@ -444,7 +444,8 @@ class Metadata extends AbstractListener
             'emHidden'             => true,
             'isCustom'             => false,
             'filterDisabled'       => true,
-            'unique'               => false
+            'unique'               => false,
+            'required'             => false,
         ];
 
         foreach ($res as $entityName => $entityDefs) {
