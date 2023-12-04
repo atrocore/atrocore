@@ -220,10 +220,10 @@ class Stream extends \Espo\Core\Services\Base
         $connection = $this->getEntityManager()->getConnection();
 
         $connection->createQueryBuilder()
-            ->delete($connection->quoteIdentifier('subscription'), 's')
-            ->where('s.entity_id = :entityId')
+            ->delete($connection->quoteIdentifier('subscription'))
+            ->where('entity_id = :entityId')
             ->setParameter('entityId', $entity->id)
-            ->andWhere('s.user_id IN (:userIds)')
+            ->andWhere('user_id IN (:userIds)')
             ->setParameter('userIds', $userIdList, Mapper::getParameterType($userIdList))
             ->executeQuery();
 
@@ -273,12 +273,12 @@ class Stream extends \Espo\Core\Services\Base
         $connection = $this->getEntityManager()->getConnection();
 
         $connection->createQueryBuilder()
-            ->delete($connection->quoteIdentifier('subscription'), 's')
-            ->where('s.entity_id = :entityId')
+            ->delete($connection->quoteIdentifier('subscription'))
+            ->where('entity_id = :entityId')
             ->setParameter('entityId', $entity->id)
-            ->andWhere('s.entity_type = :entityType')
+            ->andWhere('entity_type = :entityType')
             ->setParameter('entityType', $entity->getEntityName())
-            ->andWhere('s.user_id = :userId')
+            ->andWhere('user_id = :userId')
             ->setParameter('userId', $userId)
             ->executeQuery();
 
@@ -294,10 +294,10 @@ class Stream extends \Espo\Core\Services\Base
         $connection = $this->getEntityManager()->getConnection();
 
         $connection->createQueryBuilder()
-            ->delete($connection->quoteIdentifier('subscription'), 's')
-            ->where('s.entity_id = :entityId')
+            ->delete($connection->quoteIdentifier('subscription'))
+            ->where('entity_id = :entityId')
             ->setParameter('entityId', $entity->id)
-            ->andWhere('s.entity_type = :entityType')
+            ->andWhere('entity_type = :entityType')
             ->setParameter('entityType', $entity->getEntityName())
             ->executeQuery();
     }
