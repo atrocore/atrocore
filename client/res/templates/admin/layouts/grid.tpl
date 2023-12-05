@@ -131,7 +131,7 @@
             <header>{{translate 'Available Fields' scope='Admin'}}</header>
             <ul class="disabled cells clearfix">
                 {{#each disabledFields}}
-                    <li class="cell" data-name="{{./this}}">{{translate this scope=../scope category='fields'}}
+                    <li class="cell" data-name="{{name}}">{{label}}
                         &nbsp;<a href="javascript:" data-action="removeField" class="remove-field"><i class="fas fa-times"></i></a>
                     </li>
                 {{/each}}

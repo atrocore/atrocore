@@ -291,7 +291,9 @@ Espo.define('views/admin/layouts/grid', 'views/admin/layouts/base', function (De
                 }
                 for (var i in row) {
                     if (row[i] != false) {
-                        row[i].label = this.getLanguage().translate(row[i].name, 'fields', this.scope);
+                        if (!row[i].label) {
+                            row[i].label = this.getLanguage().translate(row[i].name, 'fields', this.scope);
+                        }
                         if ('customLabel' in row[i]) {
                             row[i].customLabel = row[i].customLabel;
                             row[i].hasCustomLabel = true;
