@@ -142,12 +142,15 @@ Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (
 
         readDataFromLayout: function (model, layout) {
             var allFields = [];
+            const labels = [];
             for (var field in model.defs.fields) {
                 if (this.isFieldEnabled(model, field)) {
+                    labels.push(this.getLanguage().translate(field, 'fields', this.scope));
                     allFields.push(field);
                 }
             }
 
+            const duplicatedLabels = labels.filter((label, index) => labels.indexOf(label) !== index);
             this.enabledFields = [];
             this.disabledFields = [];
 
@@ -160,7 +163,14 @@ Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (
                             if (i == this.columnCount) {
                                 return;
                             }
-                            this.enabledFields.push(cell.name);
+                            let label = this.getLanguage().translate(cell.name, 'fields', this.scope);
+                            if (~duplicatedLabels.indexOf(label)) {
+                                label += ' (' + cell.name + ')';
+                            }
+                            this.enabledFields.push({
+                                name: cell.name,
+                                label: label
+                            });
                         }.bind(this));
                     }
                 }.bind(this));
@@ -173,7 +183,15 @@ Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (
 
             for (var i in allFields) {
                 if (!_.contains(this.enabledFields, allFields[i])) {
-                    this.disabledFields.push(allFields[i]);
+                    const field = allFields[i];
+                    let label = this.getLanguage().translate(field, 'fields', this.scope);
+                    if (~duplicatedLabels.indexOf(label)) {
+                        label += ' (' + field + ')';
+                    }
+                    this.disabledFields.push({
+                        name: field,
+                        label: label
+                    });
                 }
             }
         },
