@@ -67,7 +67,7 @@ class Language extends AbstractListener
                             break;
                     }
 
-                    if (!empty($fieldDefs['relationshipFilterField'])) {
+                    if (!empty($fieldDefs['relationshipFilterField']) && empty($data[$locale][$entity]['fields'][$field])) {
                         if (!empty($data[$locale]['Global']['scopeNamesPlural'][$fieldDefs['entity']])) {
                             $filterEntity = $data[$locale]['Global']['scopeNamesPlural'][$fieldDefs['entity']];
                         } elseif (!empty($data['en_US']['Global']['scopeNamesPlural'][$fieldDefs['entity']])) {
