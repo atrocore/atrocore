@@ -455,7 +455,7 @@ class Record extends Base
     {
         $this->dispatchEvent('loadPreviewForCollection', new Event(['collection' => $collection, 'service' => $this]));
 
-        if (empty($collection[0])) {
+        if (!empty($this->getMemoryStorage()->get('exportJobId')) || empty($collection[0])) {
             return;
         }
 
