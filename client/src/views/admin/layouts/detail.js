@@ -156,8 +156,8 @@ Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (
 
             this.panels = layout;
 
-            layout.forEach(function (panel) {
-                panel.rows.forEach(function (row) {
+            layout.forEach(function (panel, panelNum) {
+                panel.rows.forEach(function (row, rowNum) {
                     if (row) {
                         row.forEach(function (cell, i) {
                             if (i == this.columnCount) {
@@ -171,6 +171,7 @@ Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (
                                 name: cell.name,
                                 label: label
                             });
+                            this.panels[panelNum].rows[rowNum][i].label = label;
                         }.bind(this));
                     }
                 }.bind(this));
