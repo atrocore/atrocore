@@ -183,7 +183,7 @@ Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (
 
 
             for (var i in allFields) {
-                if (!_.contains(this.enabledFields, allFields[i])) {
+                if (!this.hasField(allFields[i], this.enabledFields)) {
                     const field = allFields[i];
                     let label = this.getLanguage().translate(field, 'fields', this.scope);
                     if (~duplicatedLabels.indexOf(label)) {
@@ -195,6 +195,10 @@ Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (
                     });
                 }
             }
+        },
+
+        hasField: function(name, list) {
+            return list.filter(field => field.name == name).length > 0;
         },
 
         isFieldEnabled: function (model, name) {
