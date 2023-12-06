@@ -33,7 +33,7 @@
 
 namespace Espo\Entities;
 
-use Espo\Core\Templates\Entities\Base;
+use Atro\Core\Templates\Entities\Base;
 use Espo\Core\Utils\Json;
 
 class Connection extends Base
@@ -60,6 +60,12 @@ class Connection extends Base
 
         $this->valuesContainer[$name] = $value;
         $this->set('data', $data);
+    }
+
+    public function populateDefaults()
+    {
+        parent::populateDefaults();
+        parent::setFieldValue('data', null);
     }
 
     public function getDataField(string $name)

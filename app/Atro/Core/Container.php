@@ -83,6 +83,7 @@ class Container
             Utils\Metadata::class      => \Espo\Core\Factories\Metadata::class,
             'config'                   => \Espo\Core\Utils\Config::class,
             'internalAclManager'       => \Espo\Core\Factories\InternalAclManager::class,
+            'chatgpt'                  => \Atro\Core\ChatGpt\ChatGptClient::class
         ];
 
     public function __construct()

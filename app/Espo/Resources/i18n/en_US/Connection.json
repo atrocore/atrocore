@@ -25,7 +25,11 @@
     "linkUrl": "Link Url",
     "apiTestUrl": "Test api url",
     "payload": "Payload",
-    "loginUrl": "Login URL"
+    "loginUrl": "Login URL",
+    "openAiOrganizationId": "Organization ID",
+    "openAiApiKey": "Api Key",
+    "openAiModel": "Model",
+    "openAiTemperature": "Temperature"
   },
   "labels": {
     "connectionSuccess": "Connection is successfully established",
@@ -40,10 +44,10 @@
     "cookie": "Cookie Session",
     "client_credentials": "Client Credentials",
     "Create Connection": "Create Connection",
-    "orders" : "Orders",
-    "shipments" : "Shipments",
-    "quantities":  "Quantities",
-    "returns":  "Returns",
+    "orders": "Orders",
+    "shipments": "Shipments",
+    "quantities": "Quantities",
+    "returns": "Returns",
     "products": "Products",
     "receipts": "Receipts",
     "price-reduction": "Price reduction",
