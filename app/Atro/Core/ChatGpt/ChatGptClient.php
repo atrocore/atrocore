@@ -37,15 +37,6 @@ class ChatGptClient
         $this->connection = $connection;
     }
 
-    /**
-     * @return EntityManager
-     **/
-    protected function getEntityManager()
-    {
-        return $this->container->get('entityManager');
-    }
-
-
     public function createCompletion(string $prompt): ?string
     {
         /**@var $connectionEntity Connection * */
@@ -65,7 +56,7 @@ class ChatGptClient
         return $result['choices'][0]['message']['content'];
     }
 
-    public function makeRequest(string $url, array $data, array $headers)
+    protected function makeRequest(string $url, array $data, array $headers)
     {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -88,5 +79,13 @@ class ChatGptClient
 
         // process error
         throw new BadRequest("Chatgpt error");
+    }
+
+    /**
+     * @return EntityManager
+     **/
+    protected function getEntityManager()
+    {
+        return $this->container->get('entityManager');
     }
 }
