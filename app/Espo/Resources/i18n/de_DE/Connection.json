@@ -17,7 +17,8 @@
     "connectionSuccess": "Verbindung wurde erfolgreich hergestellt",
     "testConnection": "Verbindung testen",
     "Create Connection": "Verbindung erstellen",
-    "cookie": "Cookie-Sitzung"
+    "cookie": "Cookie-Sitzung",
+    "chatgpt": "ChatGpt"
   },
   "exceptions": {
     "sqlsrvMissing": "PHP MSSQL-Erweiterung ist nicht installiert.",

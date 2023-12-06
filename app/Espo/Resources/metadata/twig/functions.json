@@ -6,6 +6,5 @@
   "findEntity": "\\Atro\\TwigFunction\\FindEntity",
   "findRecord": "\\Atro\\TwigFunction\\FindEntity",
   "findEntities": "\\Atro\\TwigFunction\\FindEntities",
-  "findRecords": "\\Atro\\TwigFunction\\FindEntities",
-  "chatgpt": "\\Atro\\TwigFunction\\Chatgpt"
+  "findRecords": "\\Atro\\TwigFunction\\FindEntities"
 }

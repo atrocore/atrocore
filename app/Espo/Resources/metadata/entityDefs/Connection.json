@@ -13,8 +13,7 @@
         "oauth2",
         "oauth1",
         "otto",
-        "cookie",
-        "chatgpt"
+        "cookie"
       ],
       "options": [
         "mysql",
@@ -25,8 +24,7 @@
         "oauth2",
         "oauth1",
         "otto",
-        "cookie",
-        "chatgpt"
+        "cookie"
       ],
       "default": "mysql"
     },
