@@ -45,13 +45,8 @@ class ChatGptClient
         return $this->container->get('entityManager');
     }
 
-    public function getHeaders(): array
-    {
 
-
-    }
-
-    public function createCompletion($prompt): ?string
+    public function createCompletion(string $prompt): ?string
     {
         /**@var $connectionEntity Connection * */
         $connectionEntity = $this->getEntityManager()->getRepository('Connection')->where(['type=' => 'chatgpt'])->findOne();
