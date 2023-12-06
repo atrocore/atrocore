@@ -213,7 +213,7 @@
               "type": "in",
               "attribute": "type",
               "value": [
-               "otto"
+                "otto"
               ]
             }
           ]
@@ -429,6 +429,91 @@
               "attribute": "type",
               "value": [
                 "cookie"
+              ]
+            }
+          ]
+        }
+      },
+      "openAiOrganizationId": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "chatgpt"
+              ]
+            }
+          ]
+        }
+      },
+      "openAiApiKey": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "chatgpt"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "chatgpt"
+              ]
+            }
+          ]
+        }
+      },
+      "openAiModel": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "chatgpt"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "chatgpt"
+              ]
+            }
+          ]
+        }
+      },
+      "openAiTemperature": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "chatgpt"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "chatgpt"
               ]
             }
           ]

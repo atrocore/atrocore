@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core;
 
+use Atro\Core\ChatGpt\ChatGptClient;
 use Atro\Core\EventManager\Manager as EventManager;
 use Atro\Core\Factories\FactoryInterface as Factory;
 use Espo\Core\Interfaces\Injectable;
@@ -83,6 +84,7 @@ class Container
             Utils\Metadata::class      => \Espo\Core\Factories\Metadata::class,
             'config'                   => \Espo\Core\Utils\Config::class,
             'internalAclManager'       => \Espo\Core\Factories\InternalAclManager::class,
+            'chatgpt'                  => ChatGptClient::class
         ];
 
     public function __construct()

@@ -13,7 +13,8 @@
         "oauth2",
         "oauth1",
         "otto",
-        "cookie"
+        "cookie",
+        "chatgpt"
       ],
       "options": [
         "mysql",
@@ -24,7 +25,8 @@
         "oauth2",
         "oauth1",
         "otto",
-        "cookie"
+        "cookie",
+        "chatgpt"
       ],
       "default": "mysql"
     },
@@ -245,6 +247,37 @@
       "required": false,
       "trim": true,
       "default": "https://staging.davidsonsinc.com/rest/V1/products/011418204"
+    },
+    "openAiOrganizationId": {
+      "type": "varchar",
+      "notStorable": true,
+      "dataField": true,
+      "required": false,
+      "trim": true
+    },
+    "openAiApiKey": {
+      "type": "password",
+      "notStorable": true,
+      "dataField": true,
+      "required": false,
+      "trim": true
+    },
+    "openAiModel": {
+      "type": "varchar",
+      "notStorable": true,
+      "dataField": true,
+      "required": false,
+      "trim": true,
+      "default": "gpt-3.5-turbo"
+    },
+    "openAiTemperature": {
+      "type": "float",
+      "min": 0,
+      "max": 1,
+      "notStorable": true,
+      "dataField": true,
+      "required": false,
+      "default": 0.7
     },
     "data": {
       "type": "jsonObject",
