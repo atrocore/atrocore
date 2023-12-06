@@ -33,6 +33,7 @@
 
 namespace Espo\Core;
 
+use Atro\Core\KeyValueStorages\StorageInterface;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Metadata;
@@ -165,7 +166,11 @@ class DataManager
             return null;
         }
 
-        return @json_decode(file_get_contents(self::CACHE_DIR_PATH . "/{$name}.json"), $isArray);
+        if (!$this->getMemoryStorage()->has($name)) {
+            $this->getMemoryStorage()->set($name, @json_decode(file_get_contents(self::CACHE_DIR_PATH . "/{$name}.json"), $isArray));
+        }
+
+        return $this->getMemoryStorage()->get($name);
     }
 
     /**
@@ -314,5 +319,10 @@ class DataManager
     private function getModuleManager(): ModuleManager
     {
         return $this->container->get('moduleManager');
+    }
+
+    public function getMemoryStorage(): StorageInterface
+    {
+        return $this->container->get('memoryStorage');
     }
 }
