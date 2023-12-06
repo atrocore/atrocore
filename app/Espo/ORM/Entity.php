@@ -627,10 +627,6 @@ abstract class Entity implements IEntity
                 continue;
             }
 
-            if ($this->entityType === 'Connection' && $field === 'data') {
-                $a = 0;
-            }
-
             if (array_key_exists('default', $defs)) {
                 $default = $defs['default'];
 
