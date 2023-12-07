@@ -107,6 +107,8 @@ class Application
         // set timezone
         date_default_timezone_set('UTC');
 
+        $GLOBALS['track']['start'] = microtime(true);
+
         // set container
         $this->container = new Container();
 

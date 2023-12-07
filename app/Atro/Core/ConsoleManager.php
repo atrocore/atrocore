@@ -102,6 +102,7 @@ class ConsoleManager
             "store --refresh"              => Console\StoreRefresh::class,
             "migrate <module> <from> <to>" => Console\Migrate::class,
             "qm <stream> --run"            => Console\QueueManager::class,
+            "qm <stream> <id> --run"       => Console\QueueManager::class,
             "qm item <id> --run"           => Console\QueueItem::class,
             "notifications --refresh"      => Console\Notification::class,
             "kill daemons"                 => Console\KillDaemons::class,

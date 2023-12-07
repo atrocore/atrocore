@@ -36,9 +36,9 @@ class QueueManager
         $this->container = $container;
     }
 
-    public function run(int $stream): bool
+    public function run(int $stream, string $itemId): bool
     {
-        return $this->runJob($stream);
+        return $this->runJob($stream, $itemId);
     }
 
     /**
@@ -160,7 +160,7 @@ class QueueManager
         return true;
     }
 
-    protected function getItemId(): ?string
+    public static function getItemId(): ?string
     {
         $queueDir = self::QUEUE_DIR_PATH;
         if (!file_exists($queueDir)) {
@@ -206,13 +206,8 @@ class QueueManager
         return null;
     }
 
-    protected function runJob(int $stream): bool
+    protected function runJob(int $stream, string $itemId): bool
     {
-        $itemId = $this->getItemId();
-        if (empty($itemId)) {
-            return false;
-        }
-
         /**
          * Trying to find needed job in 10 sec, because DB could create job too long
          */
