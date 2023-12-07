@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Console;
 
 use Atro\Core\Application;
+use Atro\Core\QueueManager;
 use Espo\ORM\EntityManager;
 
 /**
@@ -98,6 +99,9 @@ class Cron extends AbstractConsole
         // find pending jobs without queue files and create them
         $this->createQueueFiles();
 
+        // delete empty queue folders
+        $this->deleteEmptyQueueFolders();
+
         // find and close queue item that doe not running
         $this->closeFailedQueueItems();
 
@@ -180,7 +184,7 @@ class Cron extends AbstractConsole
         $created = false;
         foreach ($items as $item) {
             $filePath = $repository->getFilePath($item->get('sortOrder'), $item->get('priority'));
-            if (!file_exists($filePath)) {
+            if (!empty($filePath) && !file_exists($filePath)) {
                 file_put_contents($filePath, $item->get('id'));
                 $created = true;
             }
@@ -188,6 +192,28 @@ class Cron extends AbstractConsole
 
         if ($created) {
             file_put_contents(\Atro\Core\QueueManager::FILE_PATH, '1');
+        }
+    }
+
+    private function deleteEmptyQueueFolders(): void
+    {
+        $main = QueueManager::QUEUE_DIR_PATH;
+        if (is_dir($main)) {
+            foreach (scandir($main) as $item) {
+                if (in_array($item, ['0', '000001', '88888888888888', '99999999999999', '.', '..'])) {
+                    continue;
+                }
+
+                $subFolder = $main . '/' . $item;
+                if (!is_dir($subFolder)) {
+                    continue;
+                }
+
+                if (count(scandir($subFolder)) === 2) {
+                    rmdir($subFolder);
+                    break;
+                }
+            }
         }
     }
 
