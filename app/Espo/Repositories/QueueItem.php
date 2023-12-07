@@ -68,7 +68,7 @@ class QueueItem extends Base
             $sortOrder = $this->get($entity->get('id'))->get('sortOrder');
             $priority = $entity->get('priority');
 
-            $filePath = $this->getFilePath($sortOrder, $priority);
+            $filePath = $this->getFilePath($sortOrder, $priority, $entity->get('id'));
             if (!empty($filePath)) {
                 file_put_contents($filePath, $entity->get('id'));
             }
@@ -93,7 +93,7 @@ class QueueItem extends Base
         }
     }
 
-    public function getFilePath(float $sortOrder, string $priority): ?string
+    public function getFilePath(float $sortOrder, string $priority, string $itemId): ?string
     {
         $filesInDir = 4000;
         $dirName = (int)($sortOrder / $filesInDir);
@@ -134,9 +134,7 @@ class QueueItem extends Base
             return null;
         }
 
-        $fileName .= '(' . microtime(true) . ')';
-
-        return $dirPath . '/' . $fileName . '.txt';
+        return $dirPath . '/' . $fileName . '(' . $itemId . ')' . '.txt';
     }
 
     protected function preparePublicDataForMassDelete(Entity $entity): void
@@ -164,7 +162,7 @@ class QueueItem extends Base
     {
         parent::afterRemove($entity, $options);
 
-        $fileName = $this->getFilePath($entity->get('sortOrder'), $entity->get('priority'));
+        $fileName = $this->getFilePath($entity->get('sortOrder'), $entity->get('priority'), $entity->get('id'));
         if (!empty($fileName) && file_exists($fileName)) {
             unlink($fileName);
         }
