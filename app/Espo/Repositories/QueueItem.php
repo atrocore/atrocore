@@ -127,6 +127,8 @@ class QueueItem extends Base
             mkdir($dirPath, 0777, true);
         }
 
+        $fileName .= '(' . microtime(true) . ')';
+
         return $dirPath . '/' . $fileName . '.txt';
     }
 
