@@ -107,7 +107,7 @@ class Entity extends \Espo\ORM\Entity
             }
         }
 
-        $defs['select'] = ['id', $this->getRelationParam($field, 'nameField') ?? 'name'];
+        $defs['select'] = ['id', 'name'];
 
         $hasType = false;
         if ($this->hasField($field . 'Types')) {
