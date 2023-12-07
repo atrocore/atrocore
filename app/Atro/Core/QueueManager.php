@@ -213,17 +213,12 @@ class QueueManager
             return false;
         }
 
-        /**
-         * Trying to find needed job in 10 sec, because DB could create job too long
-         */
-        $count = 0;
-        while (empty($item = $this->getRepository()->get($itemId))) {
-            $count++;
-            if ($count === 10) {
-                $GLOBALS['log']->error("QM failed: No such QM item '$itemId' in DB.");
-                return false;
-            }
-            sleep(1);
+        $item = $this->getRepository()
+            ->where(['id' => $itemId, 'status' => 'Pending'])
+            ->findOne();
+
+        if (empty($item)) {
+            return false;
         }
 
         // auth
