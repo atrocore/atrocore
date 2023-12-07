@@ -47,7 +47,7 @@ class Entity extends \Espo\ORM\Entity
 
     public function loadParentNameField($field)
     {
-        if (!$this->hasAttribute($field . 'Id') || !$this->hasAttribute($field . 'Type')) return;
+        if (!$this->hasAttribute($field. 'Id') || !$this->hasAttribute($field . 'Type')) return;
 
         $parentId = $this->get($field . 'Id');
         $parentType = $this->get($field . 'Type');
@@ -117,10 +117,10 @@ class Entity extends \Espo\ORM\Entity
 
         $collection = $this->get($field, $defs);
         $ids = [];
-        $names = (object)[];
-        $types = (object)[];
+        $names = (object) [];
+        $types = (object) [];
         if (!empty($columns)) {
-            $columnsData = (object)[];
+            $columnsData = (object) [];
         }
 
         if ($collection) {
@@ -209,13 +209,13 @@ class Entity extends \Espo\ORM\Entity
         }
         $object = $this->get($columnsField);
         if (!isset($object) || !($object instanceof \StdClass)) {
-            $object = (object)[];
+            $object = (object) [];
         }
         if (!isset($object->$id)) {
-            $object->$id = (object)[];
+            $object->$id = (object) [];
         }
         if (!isset($object->$id->$column)) {
-            $object->$id->$column = (object)[];
+            $object->$id->$column = (object) [];
         }
 
         $object->$id->$column = $value;

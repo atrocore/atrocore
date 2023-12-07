@@ -76,19 +76,19 @@ class RelationManager
     }
 
     /**
-     * Get foreign Link
-     *
-     * @param string $parentLinkName
-     * @param array  $parentLinkParams
-     * @param array  $currentEntityDefs
-     *
-     * @return array - in format array('name', 'params')
-     */
+    * Get foreign Link
+    *
+    * @param string $parentLinkName
+    * @param array $parentLinkParams
+    * @param array $currentEntityDefs
+    *
+    * @return array - in format array('name', 'params')
+    */
     private function getForeignLink($parentLinkName, $parentLinkParams, $currentEntityDefs)
     {
         if (isset($parentLinkParams['foreign']) && isset($currentEntityDefs['links'][$parentLinkParams['foreign']])) {
             return array(
-                'name'   => $parentLinkParams['foreign'],
+                'name' => $parentLinkParams['foreign'],
                 'params' => $currentEntityDefs['links'][$parentLinkParams['foreign']],
             );
         }
@@ -98,9 +98,6 @@ class RelationManager
 
     public function convert($linkName, $linkParams, $entityName, $ormMetadata)
     {
-        if ($linkName === 'j65707337eaf724f9_extensibleEnum') {
-            $a = 0;
-        }
         $entityDefs = $this->entityDefs;
 
         $foreignEntityName = $this->getLinkEntityName($entityName, $linkParams);
@@ -110,7 +107,7 @@ class RelationManager
             $foreignLink = $this->getForeignLink($linkName, $linkParams, $entityDefs[$foreignEntityName]);
         }
 
-        if (empty($linkParams['type'])) {
+        if (empty($linkParams['type'])){
             return null;
         }
 
@@ -122,8 +119,7 @@ class RelationManager
         }
         $relType = Util::toCamelCase($relType);
 
-        $relationName = $this->isRelationExists($relType) ? $relType /*hasManyHasMany*/ : $currentType /*hasMany*/
-        ;
+        $relationName = $this->isRelationExists($relType) ? $relType /*hasManyHasMany*/ : $currentType /*hasMany*/;
 
         //relationDefs defined in separate file
         if (isset($linkParams['relationName'])) {
