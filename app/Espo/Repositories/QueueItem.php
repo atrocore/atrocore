@@ -68,7 +68,10 @@ class QueueItem extends Base
             $sortOrder = $this->get($entity->get('id'))->get('sortOrder');
             $priority = $entity->get('priority');
 
-            file_put_contents($this->getFilePath($sortOrder, $priority), $entity->get('id'));
+            $filePath = $this->getFilePath($sortOrder, $priority);
+            if (!empty($filePath)) {
+                file_put_contents($filePath, $entity->get('id'));
+            }
             file_put_contents(QueueManager::FILE_PATH, '1');
         }
 
@@ -90,9 +93,9 @@ class QueueItem extends Base
         }
     }
 
-    public function getFilePath(float $sortOrder, string $priority): string
+    public function getFilePath(float $sortOrder, string $priority): ?string
     {
-        $filesInDir = 7000;
+        $filesInDir = 2000;
         $dirName = (int)($sortOrder / $filesInDir);
 
         $fileName = str_pad((string)($sortOrder % $filesInDir), 4, '0', STR_PAD_LEFT);
@@ -127,6 +130,10 @@ class QueueItem extends Base
             mkdir($dirPath, 0777, true);
         }
 
+        if (file_exists($dirPath) && count(scandir($dirPath)) > 502) {
+            return null;
+        }
+
         $fileName .= '(' . microtime(true) . ')';
 
         return $dirPath . '/' . $fileName . '.txt';
@@ -158,7 +165,7 @@ class QueueItem extends Base
         parent::afterRemove($entity, $options);
 
         $fileName = $this->getFilePath($entity->get('sortOrder'), $entity->get('priority'));
-        if (file_exists($fileName)) {
+        if (!empty($fileName) && file_exists($fileName)) {
             unlink($fileName);
         }
 
