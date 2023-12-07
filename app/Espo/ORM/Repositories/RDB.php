@@ -548,10 +548,6 @@ class RDB extends \Espo\ORM\Repository
             return;
         }
 
-        if ($relationName == 'teams') {
-            $data = ['entityType' => $entity->getEntityType()];
-        }
-
         $this->beforeRelate($entity, $relationName, $foreign, $data, $options);
         $beforeMethodName = 'beforeRelate' . ucfirst($relationName);
         if (method_exists($this, $beforeMethodName)) {
