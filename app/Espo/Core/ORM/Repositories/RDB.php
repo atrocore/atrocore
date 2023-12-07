@@ -612,7 +612,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     /**
      * @param Entity $entity
-     * @param array $options
+     * @param array  $options
      */
     protected function beforeSave(Entity $entity, array $options = [])
     {
@@ -634,7 +634,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     /**
      * @param Entity $entity
-     * @param array $options
+     * @param array  $options
      */
     protected function afterSave(Entity $entity, array $options = [])
     {
@@ -851,6 +851,9 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                                 if (!empty($columns) && isset($columnData->$id)) {
                                     $data = $columnData->$id;
                                 }
+                                if ($name === 'teams') {
+                                    $data = ['entityType' => $entity->getEntityType()];
+                                }
                                 $this->relate($entity, $name, $id, $data);
                             }
                         }
@@ -1010,10 +1013,10 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
      *
      * @param string $action
      * @param Entity $entity
-     * @param array $options
-     * @param mixed $arg1
-     * @param mixed $arg2
-     * @param mixed $arg3
+     * @param array  $options
+     * @param mixed  $arg1
+     * @param mixed  $arg2
+     * @param mixed  $arg3
      */
     private function dispatch(string $action, Entity $entity, $options, $arg1 = null, $arg2 = null, $arg3 = null)
     {
