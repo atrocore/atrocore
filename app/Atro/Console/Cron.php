@@ -211,8 +211,8 @@ class Cron extends AbstractConsole
 
                 if (count(scandir($subFolder)) === 2) {
                     rmdir($subFolder);
-                    break;
                 }
+                break;
             }
         }
     }
