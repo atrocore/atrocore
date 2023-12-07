@@ -178,7 +178,7 @@ class Cron extends AbstractConsole
             ->select(['id', 'sortOrder', 'priority'])
             ->where(['status' => 'Pending'])
             ->order('sortOrder')
-            ->limit(0, 40)
+            ->limit(0, 300)
             ->find();
 
         $created = false;
