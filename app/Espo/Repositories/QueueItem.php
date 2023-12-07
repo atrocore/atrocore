@@ -95,7 +95,7 @@ class QueueItem extends Base
 
     public function getFilePath(float $sortOrder, string $priority): ?string
     {
-        $filesInDir = 2000;
+        $filesInDir = 4000;
         $dirName = (int)($sortOrder / $filesInDir);
 
         $fileName = str_pad((string)($sortOrder % $filesInDir), 4, '0', STR_PAD_LEFT);
@@ -130,7 +130,7 @@ class QueueItem extends Base
             mkdir($dirPath, 0777, true);
         }
 
-        if (file_exists($dirPath) && count(scandir($dirPath)) > 502) {
+        if (file_exists($dirPath) && count(scandir($dirPath)) > $filesInDir) {
             return null;
         }
 
