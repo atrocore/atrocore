@@ -353,7 +353,8 @@ class Config
 
     public function getCachedLocales(): array
     {
-        if (!empty($data = $this->container->get('dataManager')->getCacheData('locales'))) {
+        $data = $this->container->get('dataManager')->getCacheData('locales');
+        if (is_array($data)) {
             return $data;
         }
 
@@ -378,9 +379,7 @@ class Config
             $result[$row['id']]['weekStart'] = $result[$row['id']]['weekStart'] === 'monday' ? 1 : 0;
         }
 
-        if (!empty($result)) {
-            $this->container->get('dataManager')->setCacheData('locales', $result);
-        }
+        $this->container->get('dataManager')->setCacheData('locales', $result);
 
         return $result;
     }

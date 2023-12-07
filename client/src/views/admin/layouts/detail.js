@@ -142,25 +142,36 @@ Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (
 
         readDataFromLayout: function (model, layout) {
             var allFields = [];
+            const labels = [];
             for (var field in model.defs.fields) {
                 if (this.isFieldEnabled(model, field)) {
+                    labels.push(this.getLanguage().translate(field, 'fields', this.scope));
                     allFields.push(field);
                 }
             }
 
+            const duplicatedLabels = labels.filter((label, index) => labels.indexOf(label) !== index);
             this.enabledFields = [];
             this.disabledFields = [];
 
             this.panels = layout;
 
-            layout.forEach(function (panel) {
-                panel.rows.forEach(function (row) {
+            layout.forEach(function (panel, panelNum) {
+                panel.rows.forEach(function (row, rowNum) {
                     if (row) {
                         row.forEach(function (cell, i) {
                             if (i == this.columnCount) {
                                 return;
                             }
-                            this.enabledFields.push(cell.name);
+                            let label = this.getLanguage().translate(cell.name, 'fields', this.scope);
+                            if (~duplicatedLabels.indexOf(label)) {
+                                label += ' (' + cell.name + ')';
+                            }
+                            this.enabledFields.push({
+                                name: cell.name,
+                                label: label
+                            });
+                            this.panels[panelNum].rows[rowNum][i].label = label;
                         }.bind(this));
                     }
                 }.bind(this));
@@ -172,10 +183,22 @@ Espo.define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (
 
 
             for (var i in allFields) {
-                if (!_.contains(this.enabledFields, allFields[i])) {
-                    this.disabledFields.push(allFields[i]);
+                if (!this.hasField(allFields[i], this.enabledFields)) {
+                    const field = allFields[i];
+                    let label = this.getLanguage().translate(field, 'fields', this.scope);
+                    if (~duplicatedLabels.indexOf(label)) {
+                        label += ' (' + field + ')';
+                    }
+                    this.disabledFields.push({
+                        name: field,
+                        label: label
+                    });
                 }
             }
+        },
+
+        hasField: function(name, list) {
+            return list.filter(field => field.name == name).length > 0;
         },
 
         isFieldEnabled: function (model, name) {

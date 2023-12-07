@@ -279,7 +279,6 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 const tooltipTextTranslate = this.translate(tooltipText, 'tooltips', this.model.name);
                 let tooltipTextValue = null;
 
-                console.log('here');
                 if (tooltipText) {
                     tooltipTextValue = tooltipTextTranslate;
                 } else if (this.name != (this.options.tooltipText || tooltipDefaultTranslate)) {

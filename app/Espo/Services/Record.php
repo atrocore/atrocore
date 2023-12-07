@@ -455,7 +455,7 @@ class Record extends Base
     {
         $this->dispatchEvent('loadPreviewForCollection', new Event(['collection' => $collection, 'service' => $this]));
 
-        if (empty($collection[0])) {
+        if (!empty($this->getMemoryStorage()->get('exportJobId')) || empty($collection[0])) {
             return;
         }
 
@@ -473,12 +473,19 @@ class Record extends Base
         $ids = [];
         foreach ($fields as $field) {
             foreach ($collection as $entity) {
-                $ids[] = $entity->get("{$field}Id");
+                $id = $entity->get("{$field}Id");
+                if (!empty($id)) {
+                    $ids[] = $id;
+                }
             }
         }
 
+        if (empty($ids)) {
+            return;
+        }
+
         $attachmentRepository = $this->getEntityManager()->getRepository('Attachment');
-        foreach ($attachmentRepository->where(['id' => $ids])->find(["withDeleted" => count($ids) > 0 ? $collection[0]->get('deleted') : false]) as $attachment) {
+        foreach ($attachmentRepository->where(['id' => $ids])->find(["withDeleted" => true]) as $attachment) {
             $attachments[$attachment->get('id')] = [
                 'name'      => $attachment->get('name'),
                 'pathsData' => $attachmentRepository->getAttachmentPathsData($attachment),
