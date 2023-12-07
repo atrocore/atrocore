@@ -43,7 +43,7 @@ use Atro\Core\QueueManager;
 
 class QueueItem extends Base
 {
-   protected function beforeSave(Entity $entity, array $options = [])
+    protected function beforeSave(Entity $entity, array $options = [])
     {
         // update sort order
         if ($entity->isNew()) {
