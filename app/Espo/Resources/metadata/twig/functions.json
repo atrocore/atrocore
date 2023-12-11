@@ -6,5 +6,6 @@
   "findEntity": "\\Atro\\TwigFunction\\FindEntity",
   "findRecord": "\\Atro\\TwigFunction\\FindEntity",
   "findEntities": "\\Atro\\TwigFunction\\FindEntities",
-  "findRecords": "\\Atro\\TwigFunction\\FindEntities"
+  "findRecords": "\\Atro\\TwigFunction\\FindEntities",
+  "convertAssetToBase64FromUrl": "\\Atro\\TwigFunction\\ConvertAssetToBase64FromUrl"
 }
