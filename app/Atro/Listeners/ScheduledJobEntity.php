@@ -31,5 +31,14 @@ class ScheduledJobEntity extends AbstractListener
             $job->set('name', 'Delete Notifications');
             $collection->append($job);
         }
+
+        if (empty($this->getConfig()->get('keepQueueItems'))) {
+            $job = $this->getEntityManager()->getEntity('ScheduledJob');
+            $job->id = 'delete_queue_items';
+            $job->set('scheduling', '42 1 * * *');
+            $job->set('job', 'DeleteQueueItems');
+            $job->set('name', 'Delete Queue Items');
+            $collection->append($job);
+        }
     }
 }
