@@ -100,7 +100,7 @@ class EntityManager
     {
         $className = "\\Atro\\ORM\\DB\\$name\\Mapper";
         if (empty($this->mappers[$className])) {
-            $this->mappers[$className] = new $className($this->connection, $this->entityFactory, $this->getContainer()->get('metadata'), $this->getContainer()->get('config'));
+            $this->mappers[$className] = new $className($this->connection, $this->entityFactory, $this->getContainer()->get('metadata'));
         }
 
         return $this->mappers[$className];

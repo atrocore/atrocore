@@ -20,7 +20,6 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\DBAL\Query\QueryBuilder;
-use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Util;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\IEntity;
@@ -31,15 +30,13 @@ class Mapper implements MapperInterface
     protected Connection $connection;
     protected EntityFactory $entityFactory;
     protected Metadata $metadata;
-    protected Config $config;
     protected QueryConverter $queryConverter;
 
-    public function __construct(Connection $connection, EntityFactory $entityFactory, Metadata $metadata, Config $config)
+    public function __construct(Connection $connection, EntityFactory $entityFactory, Metadata $metadata)
     {
         $this->connection = $connection;
         $this->entityFactory = $entityFactory;
         $this->metadata = $metadata;
-        $this->config = $config;
         $this->queryConverter = new QueryConverter($this->entityFactory, $this->connection);
     }
 
@@ -711,7 +708,7 @@ class Mapper implements MapperInterface
 
     private function error(string $message): void
     {
-        if ($this->config->get('debug')) {
+        if (!empty($GLOBALS['debug'])) {
             $GLOBALS['log']->error($message);
         }
     }
