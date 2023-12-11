@@ -18,6 +18,7 @@ use Atro\Core\PseudoTransactionManager;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
 use Espo\Services\Composer;
+use Atro\Core\QueueManager;
 
 /**
  * Class Daemon
@@ -117,20 +118,56 @@ class Daemon extends AbstractConsole
         /** @var string $stream */
         $stream = explode('-', $id)[0];
 
+        $queueManagerWorkersCount = $this->getConfig()->get('queueManagerWorkersCount', 4) + 1;
+
+        // for queue composer
+        if ($stream == 0) {
+            while (true) {
+                if (file_exists(Cron::DAEMON_KILLER)) {
+                    break;
+                }
+
+                if (!file_exists(QueueManager::FILE_PATH)) {
+                    continue;
+                }
+
+                $i = 1;
+                while ($i <= $queueManagerWorkersCount) {
+                    $streamFile = 'data/qm_stream_' . $i;
+                    if (!file_exists($streamFile)) {
+                        $itemId = QueueManager::getItemId();
+                        if (!empty($itemId)) {
+                            file_put_contents($streamFile, $itemId);
+                        }
+                    }
+
+                    $i++;
+                }
+
+                usleep(1000000 / 10);
+            }
+
+            return;
+        }
+
+        // for queue workers
         while (true) {
             if (file_exists(Cron::DAEMON_KILLER)) {
                 break;
             }
 
-            $expectedStream = time() % (int)$this->getConfig()->get('queueManagerWorkersCount', 4);
-            if (file_exists(\Atro\Core\QueueManager::FILE_PATH) && $expectedStream == $stream) {
-                $itemId = \Atro\Core\QueueManager::getItemId();
-                if (!empty($itemId)){
+            $streamFile = 'data/qm_stream_' . $stream;
+            if (file_exists($streamFile)) {
+                $itemId = file_get_contents($streamFile);
+                if (empty($itemId)) {
+                    unlink($streamFile);
+                } else {
+                    file_put_contents($streamFile, '');
                     exec($this->getPhpBin() . " index.php qm $stream $itemId --run");
                 }
             }
 
-            sleep(1);
+            usleep(1000000 / 5);
         }
     }
 
