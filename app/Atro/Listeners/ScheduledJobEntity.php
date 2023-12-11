@@ -23,11 +23,13 @@ class ScheduledJobEntity extends AbstractListener
         /** @var EntityCollection $collection */
         $collection = $event->getArgument('collection');
 
-        $job = $this->getEntityManager()->getEntity('ScheduledJob');
-        $job->id = 'delete_notifications';
-        $job->set('scheduling', '20 1 * * *');
-        $job->set('job', 'DeleteNotifications');
-        $job->set('name', 'Delete Notifications');
-        $collection->append($job);
+        if (empty($this->getConfig()->get('keepNotifications'))) {
+            $job = $this->getEntityManager()->getEntity('ScheduledJob');
+            $job->id = 'delete_notifications';
+            $job->set('scheduling', '20 1 * * *');
+            $job->set('job', 'DeleteNotifications');
+            $job->set('name', 'Delete Notifications');
+            $collection->append($job);
+        }
     }
 }
