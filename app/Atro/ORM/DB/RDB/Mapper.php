@@ -20,6 +20,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Util;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\IEntity;
@@ -30,13 +31,15 @@ class Mapper implements MapperInterface
     protected Connection $connection;
     protected EntityFactory $entityFactory;
     protected Metadata $metadata;
+    protected Config $config;
     protected QueryConverter $queryConverter;
 
-    public function __construct(Connection $connection, EntityFactory $entityFactory, Metadata $metadata)
+    public function __construct(Connection $connection, EntityFactory $entityFactory, Metadata $metadata, Config $config)
     {
         $this->connection = $connection;
         $this->entityFactory = $entityFactory;
         $this->metadata = $metadata;
+        $this->config = $config;
         $this->queryConverter = new QueryConverter($this->entityFactory, $this->connection);
     }
 
@@ -68,7 +71,7 @@ class Mapper implements MapperInterface
             $rows = $qb->fetchAllAssociative();
         } catch (\Throwable $e) {
             $sql = $qb->getSQL();
-            $GLOBALS['log']->error("RDB SELECT failed for SQL: $sql");
+            $this->error("RDB SELECT failed for SQL: $sql");
             throw $e;
         }
 
@@ -87,7 +90,7 @@ class Mapper implements MapperInterface
         try {
             $queryData = $this->getQueryConverter()->createSelectQuery($entity->getEntityType(), $params, !empty($params['withDeleted']));
         } catch (\Throwable $e) {
-            $GLOBALS['log']->error("RDB QUERY failed: {$e->getMessage()}");
+            $this->error("RDB QUERY failed: {$e->getMessage()}");
             throw $e;
         }
 
@@ -399,7 +402,7 @@ class Mapper implements MapperInterface
             $qb->executeQuery();
         } catch (\Throwable $e) {
             $sql = $qb->getSQL();
-            $GLOBALS['log']->error("RDB addRelation failed for SQL: $sql");
+            $this->error("RDB addRelation failed for SQL: $sql");
             throw $e;
         }
 
@@ -474,7 +477,7 @@ class Mapper implements MapperInterface
             $qb1->executeQuery();
         } catch (\Throwable $e) {
             $sql = $qb1->getSQL();
-            $GLOBALS['log']->error("RDB removeRelation failed for SQL: $sql");
+            $this->error("RDB removeRelation failed for SQL: $sql");
             throw $e;
         }
 
@@ -494,7 +497,7 @@ class Mapper implements MapperInterface
             $qb2->executeQuery();
         } catch (\Throwable $e) {
             $sql = $qb2->getSQL();
-            $GLOBALS['log']->error("RDB removeRelation failed for SQL: $sql");
+            $this->error("RDB removeRelation failed for SQL: $sql");
             throw $e;
         }
 
@@ -531,7 +534,7 @@ class Mapper implements MapperInterface
                 $this->connection->executeQuery($sql, $qb->getParameters(), $qb->getParameterTypes());
             } catch (\Throwable $e) {
                 $sql = $qb->getSQL();
-                $GLOBALS['log']->error("RDB INSERT failed for SQL: $sql. Message: {$e->getMessage()}");
+                $this->error("RDB INSERT failed for SQL: $sql. Message: {$e->getMessage()}");
                 throw $e;
             }
         }
@@ -582,7 +585,7 @@ class Mapper implements MapperInterface
             $qb->executeQuery();
         } catch (\Throwable $e) {
             $sql = $qb->getSQL();
-            $GLOBALS['log']->error("RDB UPDATE failed for SQL: $sql");
+            $this->error("RDB UPDATE failed for SQL: $sql");
             throw $e;
         }
 
@@ -603,7 +606,7 @@ class Mapper implements MapperInterface
             $qb->executeQuery();
         } catch (\Throwable $e) {
             $sql = $qb->getSQL();
-            $GLOBALS['log']->error("RDB DELETE failed for SQL: $sql");
+            $this->error("RDB DELETE failed for SQL: $sql");
             throw $e;
         }
 
@@ -703,6 +706,13 @@ class Mapper implements MapperInterface
     {
         if (isset($GLOBALS['debugSQL'])) {
             $GLOBALS['debugSQL'][] = $sql;
+        }
+    }
+
+    private function error(string $message): void
+    {
+        if ($this->config->get('debug')) {
+            $GLOBALS['log']->error($message);
         }
     }
 }
