@@ -75,8 +75,9 @@ class Cron extends AbstractConsole
         }
 
         // open daemon queue manager streams
+        $queueManagerWorkersCount = $this->getConfig()->get('queueManagerWorkersCount', 4) + 1;
         $i = 0;
-        while ($i < $this->getConfig()->get('queueManagerWorkersCount', 4)) {
+        while ($i <= $queueManagerWorkersCount) {
             if (empty(strpos($processes, "index.php daemon qm $i-$id"))) {
                 exec("$php index.php daemon qm $i-$id >/dev/null 2>&1 &");
             }
@@ -178,7 +179,7 @@ class Cron extends AbstractConsole
             ->select(['id', 'sortOrder', 'priority'])
             ->where(['status' => 'Pending'])
             ->order('sortOrder')
-            ->limit(0, 300)
+            ->limit(0, 200)
             ->find();
 
         $created = false;
@@ -191,7 +192,7 @@ class Cron extends AbstractConsole
         }
 
         if ($created) {
-            file_put_contents(\Atro\Core\QueueManager::FILE_PATH, '1');
+            file_put_contents(QueueManager::FILE_PATH, '1');
         }
     }
 
