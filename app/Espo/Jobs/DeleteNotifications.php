@@ -31,29 +31,39 @@
  * and "AtroCore" word.
  */
 
-namespace Espo\Repositories;
+declare(strict_types=1);
 
-use Espo\Core\EventManager\Event;
-use Espo\ORM\EntityCollection;
-use Espo\Core\ORM\Repositories\RDB;
+namespace Espo\Jobs;
 
-class ScheduledJob extends RDB
+use Doctrine\DBAL\ParameterType;
+use Espo\Core\Jobs\Base;
+
+class DeleteNotifications extends Base
 {
-    protected $hooksDisabled = true;
-
-    protected $processFieldsBeforeSaveDisabled = true;
-
-    protected $processFieldsAfterRemoveDisabled = true;
-
-    public function getActiveScheduledJobList(): EntityCollection
+    public function run(): bool
     {
-        $res = $this->select(['id', 'scheduling', 'job', 'name'])
-            ->where(['status' => 'Active'])
+        // delete
+        $days = $this->getConfig()->get('notificationsMaxDays', 21);
+        $toDelete = $this->getEntityManager()->getRepository('Notification')
+            ->where(['createdAt<' => (new \DateTime())->modify("-$days days")->format('Y-m-d H:i:s')])
+            ->limit(0, 2000)
+            ->order('createdAt')
             ->find();
+        foreach ($toDelete as $entity) {
+            $this->getEntityManager()->removeEntity($entity);
+        }
 
-        $event = $this->getInjection('eventManager')
-            ->dispatch('ScheduledJobEntity', 'afterGetActiveScheduledJobList', new Event(['collection' => $res]));
+        // delete forever
+        $daysToDeleteForever = $days + 14;
+        $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
+        $qb
+            ->delete('notification')
+            ->where('created_at < :maxDate')
+            ->andWhere('deleted = :true')
+            ->setParameter('maxDate', (new \DateTime())->modify("-$daysToDeleteForever days")->format('Y-m-d H:i:s'))
+            ->setParameter('true', true, ParameterType::BOOLEAN)
+            ->executeQuery();
 
-        return $event->getArgument('collection');
+        return true;
     }
 }

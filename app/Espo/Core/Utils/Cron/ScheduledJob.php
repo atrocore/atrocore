@@ -65,11 +65,7 @@ class ScheduledJob
      */
     public function getActiveScheduledJobList()
     {
-        return $this->getEntityManager()->getRepository('ScheduledJob')->select([
-            'id', 'scheduling', 'job', 'name'
-        ])->where([
-            'status' => 'Active'
-        ])->find();
+        return $this->getEntityManager()->getRepository('ScheduledJob')->getActiveScheduledJobList();
     }
 
     /**

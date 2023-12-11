@@ -15,9 +15,6 @@ namespace Atro\Listeners;
 
 use Atro\Core\EventManager\Event;
 
-/**
- * Class JobController
- */
 class JobEntity extends AbstractListener
 {
     /**

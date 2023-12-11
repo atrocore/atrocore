@@ -59,7 +59,6 @@ class DeleteForever extends Base
         $this->cleanupScheduledJobLog();
         $this->cleanupAuthLog();
         $this->cleanupActionHistory();
-        $this->cleanupNotifications();
         $this->cleanupAttachments();
         $this->cleanupDeleted();
         $this->cleanupDbSchema();
@@ -183,19 +182,6 @@ class DeleteForever extends Base
         $connection = $this->getEntityManager()->getConnection();
         $connection->createQueryBuilder()
             ->delete($connection->quoteIdentifier('action_history_record'), 't')
-            ->where('DATE(t.created_at) < :date')
-            ->setParameter('date', $this->date)
-            ->executeQuery();
-    }
-
-    /**
-     * Cleanup notifications
-     */
-    protected function cleanupNotifications(): void
-    {
-        $connection = $this->getEntityManager()->getConnection();
-        $connection->createQueryBuilder()
-            ->delete($connection->quoteIdentifier('notification'), 't')
             ->where('DATE(t.created_at) < :date')
             ->setParameter('date', $this->date)
             ->executeQuery();
