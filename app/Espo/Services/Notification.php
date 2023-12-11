@@ -34,6 +34,7 @@
 namespace Espo\Services;
 
 use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
 use Espo\Repositories\Notification as NotificationRepository;
@@ -44,6 +45,37 @@ use Espo\Repositories\Notification as NotificationRepository;
 class Notification extends \Espo\Services\Record
 {
     protected $actionHistoryDisabled = true;
+
+    public function deleteOld(): bool
+    {
+        $days = $this->getConfig()->get('notificationsMaxDays', 21);
+        if ($days === 0) {
+            return true;
+        }
+
+        // delete
+        $toDelete = $this->getEntityManager()->getRepository('Notification')
+            ->where(['createdAt<' => (new \DateTime())->modify("-$days days")->format('Y-m-d H:i:s')])
+            ->limit(0, 2000)
+            ->order('createdAt')
+            ->find();
+        foreach ($toDelete as $entity) {
+            $this->getEntityManager()->removeEntity($entity);
+        }
+
+        // delete forever
+        $daysToDeleteForever = $days + 14;
+        $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
+        $qb
+            ->delete('notification')
+            ->where('created_at < :maxDate')
+            ->andWhere('deleted = :true')
+            ->setParameter('maxDate', (new \DateTime())->modify("-$daysToDeleteForever days")->format('Y-m-d H:i:s'))
+            ->setParameter('true', true, ParameterType::BOOLEAN)
+            ->executeQuery();
+
+        return true;
+    }
 
     public function notifyAboutMentionInPost(string $userId, string $noteId): void
     {

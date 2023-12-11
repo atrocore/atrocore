@@ -44,6 +44,8 @@ return [
         'password' => ''
     ],
     'queueManagerWorkersCount'              => 4,
+    'notificationsMaxDays'                  => 21,
+    'queueItemsMaxDays'                     => 21,
     'currencyRates'                         => [],
     'outboundEmailFromAddress'              => '',
     'smtpServer'                            => '',

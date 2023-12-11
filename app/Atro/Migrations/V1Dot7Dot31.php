@@ -19,6 +19,10 @@ class V1Dot7Dot31 extends Base
     public function up(): void
     {
         file_put_contents(Cron::DAEMON_KILLER, '1');
+
+        $this->getConfig()->set('notificationsMaxDays', 21);
+        $this->getConfig()->set('queueItemsMaxDays', 21);
+        $this->getConfig()->save();
     }
 
     public function down(): void

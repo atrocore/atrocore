@@ -33,7 +33,7 @@
 
 namespace Espo\Core;
 
-use Doctrine\DBAL\Connection;
+use Espo\Core\EventManager\Event;
 use Espo\Core\Utils\Json;
 use Espo\Core\Exceptions\NotFound;
 use Espo\ORM\Entity;
@@ -315,5 +315,9 @@ class CronManager extends Injectable
             ));
             $this->getEntityManager()->saveEntity($jobEntity);
         }
+
+        $this->getContainer()
+            ->get('eventManager')
+            ->dispatch('ScheduledJobEntity', 'afterCreateJobsFromScheduledJobs', new Event());
     }
 }

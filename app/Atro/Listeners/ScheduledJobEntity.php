@@ -14,31 +14,45 @@ declare(strict_types=1);
 namespace Atro\Listeners;
 
 use Atro\Core\EventManager\Event;
-use Espo\ORM\EntityCollection;
+use Espo\Core\CronManager;
 
 class ScheduledJobEntity extends AbstractListener
 {
-    public function afterGetActiveScheduledJobList(Event $event): void
+    public function afterCreateJobsFromScheduledJobs(Event $event): void
     {
-        /** @var EntityCollection $collection */
-        $collection = $event->getArgument('collection');
+        if ($this->getConfig()->get('notificationsMaxDays') !== 0) {
+            $this->createJob('Delete Notifications', '20 1 * * *', 'Notification', 'deleteOld');
+        }
+        if ($this->getConfig()->get('queueItemsMaxDays') !== 0) {
+            $this->createJob('Delete Queue Items', '42 1 * * *', 'QueueItem', 'deleteOld');
+        }
+    }
 
-        if (empty($this->getConfig()->get('keepNotifications'))) {
-            $job = $this->getEntityManager()->getEntity('ScheduledJob');
-            $job->id = 'delete_notifications';
-            $job->set('scheduling', '20 1 * * *');
-            $job->set('job', 'DeleteNotifications');
-            $job->set('name', 'Delete Notifications');
-            $collection->append($job);
+    public function createJob(string $name, string $scheduling, string $serviceName, string $methodName): void
+    {
+        $cronExpression = \Cron\CronExpression::factory($scheduling);
+        $nextDate = $cronExpression->getNextRunDate()->format('Y-m-d H:i:s');
+
+        $existingJob = $this->getEntityManager()->getRepository('Job')
+            ->where([
+                'serviceName' => $serviceName,
+                'methodName'  => $methodName,
+                'executeTime' => $nextDate,
+            ])
+            ->findOne();
+
+        if (!empty($existingJob)) {
+            return;
         }
 
-        if (empty($this->getConfig()->get('keepQueueItems'))) {
-            $job = $this->getEntityManager()->getEntity('ScheduledJob');
-            $job->id = 'delete_queue_items';
-            $job->set('scheduling', '42 1 * * *');
-            $job->set('job', 'DeleteQueueItems');
-            $job->set('name', 'Delete Queue Items');
-            $collection->append($job);
-        }
+        $jobEntity = $this->getEntityManager()->getEntity('Job');
+        $jobEntity->set([
+            'name'        => $name,
+            'status'      => CronManager::PENDING,
+            'serviceName' => $serviceName,
+            'methodName'  => $methodName,
+            'executeTime' => $nextDate
+        ]);
+        $this->getEntityManager()->saveEntity($jobEntity);
     }
 }
