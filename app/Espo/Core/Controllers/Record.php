@@ -564,8 +564,12 @@ class Record extends Base
         if (!$this->getAcl()->check($this->name, 'read')) {
             throw new Forbidden();
         }
+
+        $seed = $this->getEntityManager()->getRepository($this->name)->get();
+        // remove virtual fields
+        $seed->set('data', null);
         
-        return $this->getEntityManager()->getRepository($this->name)->get()->getValueMap();
+        return $seed->getValueMap();
     }
 
     protected function prepareWhereQuery($where)
