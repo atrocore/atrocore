@@ -33,7 +33,6 @@
 
 namespace Espo\Repositories;
 
-use Espo\Core\EventManager\Event;
 use Espo\ORM\EntityCollection;
 use Espo\Core\ORM\Repositories\RDB;
 
@@ -47,13 +46,8 @@ class ScheduledJob extends RDB
 
     public function getActiveScheduledJobList(): EntityCollection
     {
-        $res = $this->select(['id', 'scheduling', 'job', 'name'])
+        return $this->select(['id', 'scheduling', 'job', 'name'])
             ->where(['status' => 'Active'])
             ->find();
-
-        $event = $this->getInjection('eventManager')
-            ->dispatch('ScheduledJobEntity', 'afterGetActiveScheduledJobList', new Event(['collection' => $res]));
-
-        return $event->getArgument('collection');
     }
 }
