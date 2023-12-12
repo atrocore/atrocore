@@ -255,7 +255,11 @@ class Base
     protected function getTextFilterFieldList()
     {
         $result = [];
-        $textFilterFields = $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'textFilterFields'], ['name']);
+        $defaultFilterField = ['name'];
+        $textFilterFields = $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'textFilterFields'], $defaultFilterField);
+        if (empty($textFilterFields)) {
+            $textFilterFields = $defaultFilterField;
+        }
         $fields = array_keys($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []));
 
         foreach ($textFilterFields as $field) {
