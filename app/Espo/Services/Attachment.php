@@ -33,6 +33,7 @@
 
 namespace Espo\Services;
 
+use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
@@ -49,6 +50,36 @@ class Attachment extends Record
     protected $attachmentFieldTypeList = ['file', 'image', 'attachmentMultiple', 'asset'];
 
     protected $inlineAttachmentFieldTypeList = ['text', 'wysiwyg', 'wysiwygMultiLang'];
+
+    public function deleteOld(): bool
+    {
+        $days = $this->getConfig()->get('deletedAttachmentsMaxDays', 14);
+        if ($days === 0) {
+            return true;
+        }
+        $date = (new \DateTime())->modify("-$days days")->format('Y-m-d H:i:s');
+        $fileManager = $this->getContainer()->get('fileStorageManager');
+        $repository = $this->getEntityManager()->getRepository('Attachment');
+        $attachments = $repository
+            ->where([
+                'deleted' => 1,
+                'createdAt<=' => $date
+            ])
+            ->find(["withDeleted" => true]);
+        foreach ($attachments as $entity){
+            $fileManager->unlink($entity);
+        }
+
+        $connection = $this->getEntityManager()->getConnection();
+        $connection->createQueryBuilder()
+            ->delete('attachment')
+            ->where('created_at < :date')
+            ->andWhere('deleted = :deleted')
+            ->setParameter('date', $date)
+            ->setParameter('deleted', true,  Mapper::getParameterType(true))
+            ->executeStatement();
+        return true;
+    }
 
     public function upload($fileData)
     {

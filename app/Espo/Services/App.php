@@ -35,6 +35,8 @@ declare(strict_types=1);
 
 namespace Espo\Services;
 
+use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\Schema\Column;
 use Espo\Core\Application;
 use Espo\Core\DataManager;
 use Espo\Core\Services\Base;
@@ -46,6 +48,102 @@ class App extends Base
     public static function createRebuildNotification(): void
     {
         DataManager::pushPublicData('isNeedToRebuildDatabase', true);
+    }
+
+    protected function cleanupDeleted(): bool
+    {
+        $days = $this->getConfig()->get('deletedItemsMaxDays', 21);
+        if ($days === 0) {
+            return true;
+        }
+
+        $date = (new \DateTime())->modify("-$days days")->format('Y-m-d');
+        $connection = $this->getEntityManager()->getConnection();
+        $tables = $connection->createSchemaManager()->listTableNames();
+        foreach ($tables as $table) {
+            if($table == 'attachment'){
+                continue 1;
+            }
+
+            $columns = $connection->createSchemaManager()->listTableColumns($table);
+            $columnNames = array_map(function(Column  $table){
+                return $table->getName();
+            }, $columns);
+
+            if (!in_array('deleted', $columnNames)) {
+                continue 1;
+            }
+
+            $qb = $connection->createQueryBuilder()
+                ->delete($connection->quoteIdentifier($table), 't')
+                ->where('t.deleted = :true')
+                ->setParameter('true', true, Mapper::getParameterType(true));;
+
+            if(in_array('created_at', $columnNames) && !in_array('modified_at', $columnNames)){
+                $qb->andWhere('DATE(t.created_at) < :date')
+                    ->setParameter('date', $date);
+            }
+
+            if(!in_array('created_at', $columnNames) && in_array('modified_at', $columnNames)){
+                $qb->andWhere('DATE(t.modified_at) < :date')
+                    ->setParameter('date', $date);
+            }
+
+            try {
+                $qb->executeQuery();
+            } catch (\Throwable $e) {
+                var_dump("Remove Deleted Items: {$e->getMessage()}");
+            }
+        }
+
+        return true;
+    }
+
+    public function cleanDbSchema(): bool
+    {
+        $needToClean = $this->getConfig()->get('cleanDbSchema', true);
+        if ($needToClean === false) {
+            return true;
+        }
+
+        try {
+            $queries = $this->getContainer()->get('schema')->getDiffQueries();
+        } catch (\Throwable $e) {
+            $queries = [];
+        }
+
+        foreach ($queries as $query) {
+            try {
+                $this->getEntityManager()->getPDO()->exec($query);
+            } catch (\PDOException $e) {
+                $GLOBALS['log']->error('Clean DB Schema: ' . $e->getMessage() . ' | ' . $query);
+            }
+        }
+
+        return true;
+    }
+
+    public function cleanupEntityTeam(): bool
+    {
+        $needToClean = $this->getConfig()->get('cleanEntityTeam', true);
+        if ($needToClean === false) {
+            return true;
+        }
+
+        $connection = $this->getEntityManager()->getConnection();
+        foreach ($this->getMetadata()->get('entityDefs', []) as $scope => $data) {
+            try {
+                $connection->createQueryBuilder()
+                    ->delete('entity_team')
+                    ->where('entity_type = :entityType AND entity_id NOT IN (SELECT id FROM ' . $connection->quoteIdentifier(Util::toUnderScore($scope)) . ' WHERE deleted=:false)')
+                    ->setParameter('entityType', $scope)
+                    ->setParameter('false', false, Mapper::getParameterType(false))
+                    ->executeQuery();
+            } catch (\Throwable $e) {
+            }
+        }
+
+        return true;
     }
 
     public function rebuild($data = null, $targetId = null, $targetType = null): void

@@ -33,6 +33,7 @@
 
 namespace Espo\Services;
 
+use Doctrine\DBAL\ParameterType;
 use \Espo\Core\Exceptions\Forbidden;
 use \Espo\Core\Exceptions\Error;
 use \Espo\Core\Exceptions\NotFound;
@@ -60,6 +61,37 @@ class ActionHistoryRecord extends Record
                 }
             }
         }
+    }
+
+    public function deleteOld(): bool
+    {
+        $days = $this->getConfig()->get('actionHistoryMaxDays', 21);
+        if ($days === 0) {
+            return true;
+        }
+
+        // delete
+        $toDelete = $this->getEntityManager()->getRepository('ActionHistoryRecord')
+            ->where(['createdAt<' => (new \DateTime())->modify("-$days days")->format('Y-m-d H:i:s')])
+            ->limit(0, 2000)
+            ->order('createdAt')
+            ->find();
+        foreach ($toDelete as $entity) {
+            $this->getEntityManager()->removeEntity($entity);
+        }
+
+        // delete forever
+        $daysToDeleteForever = $days + 14;
+        $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
+        $qb
+            ->delete('action_history_record')
+            ->where('created_at < :maxDate')
+            ->andWhere('deleted = :true')
+            ->setParameter('maxDate', (new \DateTime())->modify("-$daysToDeleteForever days")->format('Y-m-d H:i:s'))
+            ->setParameter('true', true, ParameterType::BOOLEAN)
+            ->executeStatement();
+
+        return true;
     }
 }
 
