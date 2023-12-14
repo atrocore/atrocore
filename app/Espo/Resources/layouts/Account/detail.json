@@ -12,8 +12,10 @@
       ],
       [
         {
-          "name": "description",
-          "fullWidth": true
+          "name": "role"
+        },
+        {
+          "name": "description"
         }
       ],
       [

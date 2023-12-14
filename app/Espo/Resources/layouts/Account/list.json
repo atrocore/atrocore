@@ -8,5 +8,8 @@
   },
   {
     "name": "type"
+  },
+  {
+    "name": "role"
   }
 ]

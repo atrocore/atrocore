@@ -4,12 +4,17 @@
     "emailAddress": "Correo electrónico",
     "phoneNumber": "Teléfono",
     "description": "Descripción",
-    "type": "tipo"
+    "type": "tipo",
+    "role": "papel"
   },
   "options": {
     "type": {
       "individual": "individual",
       "company": "Compañía"
+    },
+    "role": {
+      "supplier": "Proveedor",
+      "customer": "Cliente"
     }
   },
   "links": {

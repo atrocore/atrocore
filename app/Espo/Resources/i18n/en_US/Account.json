@@ -4,12 +4,17 @@
     "emailAddress": "Email",
     "phoneNumber": "Phone",
     "description": "Description",
-    "type": "Type"
+    "type": "Type",
+    "role": "Role"
   },
   "options": {
     "type": {
       "individual": "Individual",
       "company": "Company"
+    },
+    "role": {
+      "supplier": "Supplier",
+      "customer": "Customer"
     }
   },
   "links": {
