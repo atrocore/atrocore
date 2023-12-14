@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Atro\Listeners;
 
 use Atro\Core\Container;
-use Espo\Core\CronManager;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config;

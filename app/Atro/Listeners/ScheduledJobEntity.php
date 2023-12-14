@@ -42,7 +42,7 @@ class ScheduledJobEntity extends AbstractListener
             $this->createJob('Delete Old Attachments', '0 3 * * 0', 'Attachment', 'deleteOld');
         }
         if ($this->getConfig()->get('deletedItemsMaxDays') !== 0) {
-            $this->createJob('Remove Deleted Items', '20 3 * * 0', 'App', 'deleteOld');
+            $this->createJob('Remove Deleted Items', '20 3 * * 0', 'App', 'cleanupDeleted');
         }
         if ($this->getConfig()->get('cleanDbSchema') !== false) {
             $this->createJob('Clean DB Schema', '50 3 * * 0', 'App', 'cleanDbSchema');
