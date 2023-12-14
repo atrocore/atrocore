@@ -14,7 +14,7 @@ namespace Atro\Migrations;
 use Atro\Console\Cron;
 use Atro\Core\Migration\Base;
 
-class V1Dot7Dot34 extends Base
+class V1Dot7Dot35 extends Base
 {
     public function up(): void
     {
