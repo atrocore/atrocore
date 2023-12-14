@@ -128,6 +128,7 @@ class Daemon extends AbstractConsole
                 }
 
                 if (!file_exists(QueueManager::FILE_PATH)) {
+                    sleep(1);
                     continue;
                 }
 
