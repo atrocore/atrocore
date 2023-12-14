@@ -35,6 +35,7 @@ declare(strict_types=1);
 
 namespace Espo\Controllers;
 
+use Atro\Core\QueueManager;
 use Espo\Core\DataManager;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Utils\Auth;
@@ -104,6 +105,29 @@ class App extends Base
         }
 
         DataManager::pushPublicData($data->key, $data->value);
+
+        return true;
+    }
+
+    public function postActionQueueManagerUpdate($params, $data, $request): bool
+    {
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
+
+        if (!property_exists($data, 'pause')) {
+            return false;
+        }
+
+        if (!empty($data->pause)) {
+            file_put_contents(QueueManager::PAUSE_FILE, '1');
+        } else {
+            if (file_exists(QueueManager::PAUSE_FILE)) {
+                unlink(QueueManager::PAUSE_FILE);
+            }
+        }
+
+        DataManager::pushPublicData('qmPaused', file_exists(QueueManager::PAUSE_FILE));
 
         return true;
     }
