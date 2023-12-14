@@ -22,6 +22,19 @@
         "company"
       ]
     },
+    "role":  {
+      "type": "enum",
+      "required": false,
+      "prohibitedEmptyValue": false,
+      "options": [
+        "supplier",
+        "customer"
+      ],
+      "optionsIds": [
+        "supplier",
+        "customer"
+      ]
+    },
     "emailAddress": {
       "type": "email"
     },

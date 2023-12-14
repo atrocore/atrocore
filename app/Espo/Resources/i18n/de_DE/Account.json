@@ -3,12 +3,17 @@
     "emailAddress": "E-Mail",
     "phoneNumber": "Telefon",
     "description": "Beschreibung",
-    "type": "Typ"
+    "type": "Typ",
+    "role": "Rolle"
   },
   "options": {
     "type": {
       "individual": "Person",
       "company": "Unternehmen"
+    },
+    "role": {
+      "supplier": "Lieferant",
+      "customer": "Kunde"
     }
   },
   "links": {

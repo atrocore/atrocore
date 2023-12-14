@@ -4,12 +4,17 @@
     "emailAddress": "Адреса ел. пошти",
     "phoneNumber": "Телефон",
     "description": "Опис",
-    "type": "типовий"
+    "type": "типовий",
+    "role": "Роль"
   },
   "options": {
     "type": {
       "individual": "індивідуальний",
       "company": "Компанія"
+    },
+    "role": {
+      "supplier": "Постачальник",
+      "customer": "Замовник"
     }
   },
   "links": {
