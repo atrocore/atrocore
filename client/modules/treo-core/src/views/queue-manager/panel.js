@@ -34,6 +34,22 @@ Espo.define('treo-core:views/queue-manager/panel', 'view', function (Dep) {
 
                 this.getRouter().navigate($(e.target).attr('href'), {trigger: true});
                 this.trigger('closeQueue');
+            },
+            'click [data-action="start-qm"]': function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                this.ajaxPostRequest('App/action/QueueManagerUpdate', {pause: false}).then(() => {
+                    this.notify('Done', 'success');
+                });
+            },
+            'click [data-action="pause-qm"]': function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                this.ajaxPostRequest('App/action/QueueManagerUpdate', {pause: true}).then(() => {
+                    this.notify('Done', 'success');
+                });
             }
         }, Dep.prototype.events),
 
@@ -67,10 +83,23 @@ Espo.define('treo-core:views/queue-manager/panel', 'view', function (Dep) {
 
                 this.wait(false);
             });
+
+            this.listenTo(Backbone.Events, 'publicData', data => {
+                this.$el.find('.qm-button').hide();
+                if (this.getUser().isAdmin()) {
+                    if (data.qmPaused) {
+                        this.$el.find('.qm-button[data-action="start-qm"]').show();
+                    } else {
+                        this.$el.find('.qm-button[data-action="pause-qm"]').show();
+                    }
+                }
+            });
         },
 
         afterRender() {
             this.$showDone = this.$el.find('input[name="showDone"]');
+
+            this.$el.find('.qm-button').hide();
 
             this.listenToOnce(this.collection, 'sync', () => {
                 let viewName = 'views/record/list';

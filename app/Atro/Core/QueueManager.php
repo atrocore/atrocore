@@ -28,6 +28,7 @@ class QueueManager
 {
     const QUEUE_DIR_PATH = 'data/queue';
     const FILE_PATH = 'data/queue-exist.log';
+    const PAUSE_FILE = 'data/qm-pause.txt';
 
     protected Container $container;
 
@@ -162,6 +163,10 @@ class QueueManager
 
     public static function getItemId(): ?string
     {
+        if (file_exists(self::PAUSE_FILE)) {
+            return null;
+        }
+
         $queueDir = self::QUEUE_DIR_PATH;
         if (!file_exists($queueDir)) {
             return null;
