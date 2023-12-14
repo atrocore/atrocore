@@ -34,7 +34,44 @@
 namespace Espo\Services;
 
 
+use Atro\ORM\DB\RDB\Mapper;
+
 class Job extends Record
 {
     protected $forceSelectAllAttributes = true;
+
+    public function deleteOld(): bool
+    {
+        $statuses = ['Success', 'Failed'];
+        $days = $this->getConfig()->get('jobsMaxDays', 21);
+        if ($days === 0) {
+            return true;
+        }
+
+        // delete
+        $toDelete = $this->getEntityManager()->getRepository('Job')
+            ->where([
+                'createdAt<' => (new \DateTime())->modify("-$days days")->format('Y-m-d H:i:s'),
+                'status' => $statuses
+            ])
+            ->limit(0, 2000)
+            ->order('createdAt')
+            ->find();
+        foreach ($toDelete as $entity) {
+            $this->getEntityManager()->removeEntity($entity);
+        }
+
+        // delete forever
+        $daysToDeleteForever = $days + 14;
+        $connection = $this->getEntityManager()->getConnection();
+        $connection->createQueryBuilder()
+            ->delete('job')
+            ->where('execute_time < :executeTime')
+            ->andWhere('status IN (:statuses)')
+            ->setParameter('executeTime', (new \DateTime())->modify("-$daysToDeleteForever days")->format('Y-m-d H:i:s'))
+            ->setParameter('statuses', $statuses, Mapper::getParameterType($statuses))
+            ->executeStatement();
+
+        return true;
+    }
 }
