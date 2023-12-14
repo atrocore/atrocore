@@ -24,25 +24,28 @@ class V1Dot7Dot33 extends Base
         $this->getConfig()->set('actionHistoryMaxDays', 21);
         $this->getConfig()->set('deletedAttachmentsMaxDays', 14);
         $this->getConfig()->set('deletedItemsMaxDays', 14);
-        $this->getConfig()->set('cleanDbSchema', 21);
-        $this->getConfig()->set('cleanEntityTeam', 21);
+        $this->getConfig()->set('cleanDbSchema', true);
+        $this->getConfig()->set('cleanEntityTeam', true);
         $this->getConfig()->save();
 
         // remove DeleteForever job
-        $this->exec("DELETE FROM scheduled_job WHERE id = 'DeleteForever'");
-        $this->exec("DELETE FROM job WHERE scheduled_job_id = 'DeleteForever'");
+        $connection = $this->getConnection();
+        $connection
+            ->createQueryBuilder()
+            ->delete('job')
+            ->where('scheduled_job_id = :id')
+            ->setParameter('id', 'DeleteForever')
+            ->executeStatement();
+        $connection
+            ->createQueryBuilder()
+            ->delete('scheduled_job')
+            ->where('id = :id')
+            ->setParameter('id', 'DeleteForever')
+            ->executeStatement();
     }
 
     public function down(): void
     {
-        $this->exec("INSERT INTO scheduled_job (id, name, job, minimum_age, status, scheduling) VALUES ('DeleteForever','Delete data forever','DeleteForever',90,'Active','0 0 1 * *')");
-    }
-
-    protected function exec(string $query): void
-    {
-        try {
-            $this->getPDO()->exec($query);
-        } catch (\Throwable $e) {
-        }
+        throw new \Error("Downgrade is prohibited.");
     }
 }

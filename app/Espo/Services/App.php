@@ -52,7 +52,7 @@ class App extends Base
 
     protected function cleanupDeleted(): bool
     {
-        $days = $this->getConfig()->get('deletedItemsMaxDays', 21);
+        $days = $this->getConfig()->get('deletedItemsMaxDays', 14);
         if ($days === 0) {
             return true;
         }

@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Listeners;
 
 use Atro\Core\EventManager\Event;
+use Espo\Core\CronManager;
 
 class ScheduledJobEntity extends AbstractListener
 {
@@ -49,5 +50,33 @@ class ScheduledJobEntity extends AbstractListener
         if ($this->getConfig()->get('cleanEntityTeam') !== false) {
             $this->createJob('Clean Entity Team', '0 4 * * 0', 'App', 'cleanupEntityTeam');
         }
+    }
+
+    public function createJob(string $name, string $scheduling, string $serviceName, string $methodName): void
+    {
+        $cronExpression = \Cron\CronExpression::factory($scheduling);
+        $nextDate = $cronExpression->getNextRunDate()->format('Y-m-d H:i:s');
+
+        $existingJob = $this->getEntityManager()->getRepository('Job')
+            ->where([
+                'serviceName' => $serviceName,
+                'methodName'  => $methodName,
+                'executeTime' => $nextDate,
+            ])
+            ->findOne();
+
+        if (!empty($existingJob)) {
+            return;
+        }
+
+        $jobEntity = $this->getEntityManager()->getEntity('Job');
+        $jobEntity->set([
+            'name'        => $name,
+            'status'      => CronManager::PENDING,
+            'serviceName' => $serviceName,
+            'methodName'  => $methodName,
+            'executeTime' => $nextDate
+        ]);
+        $this->getEntityManager()->saveEntity($jobEntity);
     }
 }
