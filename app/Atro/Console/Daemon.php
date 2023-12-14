@@ -127,25 +127,22 @@ class Daemon extends AbstractConsole
                     break;
                 }
 
-                if (!file_exists(QueueManager::FILE_PATH)) {
-                    sleep(1);
-                    continue;
-                }
-
-                $i = 1;
-                while ($i <= $queueManagerWorkersCount) {
-                    $streamFile = 'data/qm_stream_' . $i;
-                    if (!file_exists($streamFile)) {
-                        $itemId = QueueManager::getItemId();
-                        if (!empty($itemId)) {
-                            file_put_contents($streamFile, $itemId);
+                if (file_exists(QueueManager::FILE_PATH)) {
+                    $i = 1;
+                    while ($i <= $queueManagerWorkersCount) {
+                        $streamFile = 'data/qm_stream_' . $i;
+                        if (!file_exists($streamFile)) {
+                            $itemId = QueueManager::getItemId();
+                            if (!empty($itemId)) {
+                                file_put_contents($streamFile, $itemId);
+                            }
                         }
-                    }
 
-                    $i++;
+                        $i++;
+                    }
                 }
 
-                usleep(1000000 / 10);
+                usleep(1000000 / 2);
             }
 
             return;
@@ -168,7 +165,7 @@ class Daemon extends AbstractConsole
                 }
             }
 
-            usleep(1000000 / 5);
+            sleep(1);
         }
     }
 
