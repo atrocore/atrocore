@@ -38,12 +38,9 @@ namespace Espo\Services;
 use Espo\Core\DataManager;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
-use Espo\ORM\EntityFactory;
 
 class MassRestore extends QueueManagerBase
 {
-
-
     public function run(array $data = []): bool
     {
         if (empty($data['entityType'])) {
