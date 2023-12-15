@@ -87,10 +87,6 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
                 });
             }
 
-            if (this.model.get('isPortalUser')) {
-                this.layoutName = 'detailPortal';
-            }
-
             if (this.model.id == this.getUser().id) {
                 this.on('after:save', function () {
                     var data = this.model.toJSON();
@@ -99,7 +95,7 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
                 }, this);
             }
 
-            if (!this.getUser().isAdmin() || this.model.get('isPortalUser')) {
+            if (!this.getUser().isAdmin()) {
                 this.hideField('dashboardLayout');
             }
 

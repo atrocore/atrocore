@@ -142,10 +142,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
             this.placeholderText = this.translate('writeYourCommentHere', 'messages');
 
-            this.allowInternalNotes = false;
-            if (!this.getUser().get('isPortalUser')) {
-                this.allowInternalNotes = this.getMetadata().get(['clientDefs', this.scope, 'allowInternalNotes']);
-            }
+            this.allowInternalNotes = this.getMetadata().get(['clientDefs', this.scope, 'allowInternalNotes']);
 
             this.isInternalNoteMode = false;
 

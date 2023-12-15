@@ -50,8 +50,6 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
 
         layoutName: 'kanban',
 
-        portalLayoutDisabled: false,
-
         itemViewName: 'views/record/kanban-item',
 
         rowActionsView: 'views/record/row-actions/default-kanban',
@@ -170,12 +168,6 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             if ('displayTotalCount' in this.options) {
                 this.displayTotalCount = this.options.displayTotalCount;
-            }
-
-            if (this.getUser().isPortal() && !this.portalLayoutDisabled) {
-                if (this.getMetadata().get(['clientDefs', this.scope, 'additionalLayouts', this.layoutName + 'Portal'])) {
-                    this.layoutName += 'Portal';
-                }
             }
 
             this.statusField = this.getMetadata().get(['scopes', this.scope, 'statusField']);

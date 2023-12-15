@@ -129,8 +129,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         inlineEditDisabled: false,
 
-        portalLayoutDisabled: false,
-
         fetchOnModelAfterSaveError: true,
 
         panelNavigationView: 'views/record/panel-navigation',
@@ -1200,12 +1198,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             this.recordHelper = new ViewRecordHelper(this.defaultFieldStates, this.defaultFieldStates);
 
-            if (this.getUser().isPortal() && !this.portalLayoutDisabled) {
-                if (this.getMetadata().get(['clientDefs', this.scope, 'additionalLayouts', this.layoutName + 'Portal'])) {
-                    this.layoutName += 'Portal';
-                }
-            }
-
             this.once('remove', function () {
                 if (this.isChanged) {
                     this.resetModelChanges();
@@ -1256,7 +1248,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.inlineEditDisabled = this.inlineEditDisabled || this.getMetadata().get(['clientDefs', this.scope, 'inlineEditDisabled']) || false;
 
             this.inlineEditDisabled = this.options.inlineEditDisabled || this.inlineEditDisabled;
-            this.portalLayoutDisabled = this.options.portalLayoutDisabled || this.portalLayoutDisabled;
 
             if (!this.getAcl().check(this.entityType, 'create') || !this.getAcl().check(this.entityType, 'edit')) {
                 this.buttonEditList = (this.buttonEditList || []).filter(item => {
@@ -1964,8 +1955,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 type: this.type,
                 inlineEditDisabled: this.inlineEditDisabled,
                 recordHelper: this.recordHelper,
-                recordViewObject: this,
-                portalLayoutDisabled: this.portalLayoutDisabled
+                recordViewObject: this
             }, view => {
                 this.listenToOnce(view, 'after:render', () => {
                     let middlePanels = [];

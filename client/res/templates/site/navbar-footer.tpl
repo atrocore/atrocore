@@ -9,7 +9,7 @@
         <a target="_blank" href="https://help.atrocore.com">Help Center</a>
     </li>
     <li>
-        <a target="_blank" href="https://my.atrocore.com/customerportal">Support</a>
+        <a target="_blank" href="https://my.atrocore.com">Support</a>
     </li>
     <li>
         <a target="_blank" href="https://atrocore.com/contact">Сontact Us</a>

@@ -44,7 +44,7 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
                     'users': [
                         {
                             action: 'hide',
-                            fields: ['teams', 'portal']
+                            fields: ['teams']
                         },
                         {
                             action: 'show',
@@ -52,7 +52,7 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
                         },
                         {
                             action: 'setNotRequired',
-                            fields: ['teams', 'portal']
+                            fields: ['teams']
                         },
                         {
                             action: 'setRequired',
@@ -62,7 +62,7 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
                     'teams': [
                         {
                             action: 'hide',
-                            fields: ['users', 'portal']
+                            fields: ['users']
                         },
                         {
                             action: 'show',
@@ -74,36 +74,18 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
                         },
                         {
                             action: 'setNotRequired',
-                            fields: ['users', 'portal']
-                        }
-                    ],
-                    'portal': [
-                        {
-                            action: 'hide',
-                            fields: ['users', 'teams']
-                        },
-                        {
-                            action: 'show',
-                            fields: ['portal']
-                        },
-                        {
-                            action: 'setRequired',
-                            fields: ['portal']
-                        },
-                        {
-                            action: 'setNotRequired',
-                            fields: ['users', 'teams']
+                            fields: ['users']
                         }
                     ]
                 },
                 default: [
                     {
                         action: 'hide',
-                        fields: ['teams', 'users', 'portal']
+                        fields: ['teams', 'users']
                     },
                     {
                         action: 'setNotRequired',
-                        fields: ['teams', 'users', 'portal']
+                        fields: ['teams', 'users']
                     }
                 ]
             }
@@ -145,7 +127,6 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
             this.model.set('targetType', 'self');
 
             var assignmentPermission = this.getAcl().get('assignmentPermission');
-            var portalPermission = this.getAcl().get('portalPermission');
 
             if (assignmentPermission === 'team' || assignmentPermission === 'all') {
                 optionList.push('users');
@@ -154,9 +135,6 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
             if (assignmentPermission === 'all') {
                 optionList.push('all');
             }
-            if (portalPermission === 'yes') {
-                optionList.push('portal');
-            }
 
             this.createField('targetType', 'views/fields/enum', {
                 options: optionList
@@ -164,7 +142,6 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
 
             this.createField('users', 'views/fields/users', {});
             this.createField('teams', 'views/fields/teams', {});
-            this.createField('portal', 'views/fields/link', {});
             this.createField('post', 'views/note/fields/post', {required: true, rows: 1});
             this.createField('attachments', 'views/stream/fields/attachment-multiple', {});
 
