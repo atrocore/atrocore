@@ -34,7 +34,6 @@
     "assignmentNotifications": "Notifications upon assignment",
     "assignmentEmailNotifications": "Notifications upon assignment",
     "streamEmailNotifications": "Notifications about updates in Stream for internal users",
-    "portalStreamEmailNotifications": "Notifications about updates in Stream for portal users",
     "avatarsDisabled": "Disable Avatars",
     "followCreatedEntities": "Follow created records",
     "displayListViewRecordCount": "Display Total Count (on List View)",

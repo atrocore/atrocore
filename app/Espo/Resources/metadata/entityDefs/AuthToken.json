@@ -21,10 +21,6 @@
             "type": "link",
             "readOnly": true
         },
-        "portal": {
-            "type": "link",
-            "readOnly": true
-        },
         "ipAddress": {
             "type": "varchar",
             "maxLength": "45",
@@ -59,10 +55,6 @@
         "user": {
             "type": "belongsTo",
             "entity": "User"
-        },
-        "portal": {
-            "type": "belongsTo",
-            "entity": "Portal"
         },
         "actionHistoryRecords": {
             "type": "hasMany",

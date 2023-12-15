@@ -88,22 +88,18 @@
     },
     "valuePermissionList": [
         "assignmentPermission",
-        "portalPermission",
         "dataPrivacyPermission"
     ],
     "valuePermissionHighestLevels": {
         "assignmentPermission": "all",
-        "portalPermission": "yes",
         "dataPrivacyPermission": "yes"
     },
     "permissionsDefaults": {
         "assignmentPermission": "all",
-        "portalPermission": "no",
         "dataPrivacyPermission": "no"
     },
     "permissionsStrictDefaults": {
         "assignmentPermission": "all",
-        "portalPermission": "no",
         "dataPrivacyPermission": "no"
     },
     "scopeLevelTypesDefaults": {

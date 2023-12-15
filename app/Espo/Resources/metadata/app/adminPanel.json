@@ -122,24 +122,9 @@
     ],
     "order": 20
   },
-  "portal": {
-    "label": "Portal",
+  "account": {
+    "label": "Account",
     "itemList": [
-      {
-        "url": "#Portal",
-        "label": "Portals",
-        "description": "portals"
-      },
-      {
-        "url": "#PortalUser",
-        "label": "Portal Users",
-        "description": "portalUsers"
-      },
-      {
-        "url": "#PortalRole",
-        "label": "Portal Roles",
-        "description": "portalRoles"
-      },
       {
         "url": "#Account",
         "label": "Accounts",

@@ -9,7 +9,6 @@
     "emailAddress": "Email",
     "phoneNumber": "Phone",
     "roles": "Roles",
-    "portalRoles": "Portal Roles",
     "teamRole": "Position",
     "password": "Password",
     "currentPassword": "Current Password",
@@ -21,7 +20,6 @@
     "isPortalUser": "Is Portal User",
     "account": "Account",
     "sendAccessInfo": "Send Email with Access Info to User",
-    "portal": "Portal",
     "gender": "Gender",
     "position": "Position in Team",
     "ipAddress": "IP Address",
@@ -34,8 +32,6 @@
     "teams": "Teams",
     "roles": "Roles",
     "notes": "Notes",
-    "portal": "Portal",
-    "portalRoles": "Portal Roles",
     "account": "Account",
     "tasks": "Tasks"
   },
@@ -61,7 +57,6 @@
     "isActive": "If unchecked then user won't be able to login.",
     "teams": "Teams which this user belongs to. Access control level is inherited from team's roles.",
     "roles": "Additional access roles. Use it if user doesn't belong to any team or you need to extend access control level exclusively for this user.",
-    "portalRoles": "Additional portal roles. Use it to extend access control level exclusively for this user.",
     "password": "Leave this field empty if you want to keep the old password.",
     "passwordConfirm": "Leave this field empty if you want to keep the old password."
   },
