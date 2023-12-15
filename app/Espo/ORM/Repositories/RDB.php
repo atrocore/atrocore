@@ -38,6 +38,7 @@ use Atro\ORM\DB\RDB\Mapper;
 use Atro\ORM\DB\RDB\Query\QueryConverter;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\ParameterType;
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
 use Espo\ORM\EntityManager;
@@ -583,6 +584,10 @@ class RDB extends \Espo\ORM\Repository
 
             if (!empty($d)) {
                 $fieldsData = array_merge($fieldsData, $d);
+            }
+
+            if (empty($relEntity)) {
+                throw new Error('$relEntity is null. ' . json_encode($linkDefs));
             }
 
             $relEntity->set($fieldsData);
