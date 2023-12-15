@@ -96,7 +96,6 @@ return array (    'defaultPermissions' =>
         'cryptKey',
         'restrictedMode',
         'userLimit',
-        'portalUserLimit',
         'stylesheet',
         'userItems'
     ),

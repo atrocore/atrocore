@@ -52,11 +52,6 @@ class Notification extends RDB
      */
     protected $htmlizer = null;
 
-    /**
-     * @var array
-     */
-    protected $userIdPortalCacheMap = [];
-
     public static function refreshNotReadCount(Connection $connection): void
     {
         $data = $connection->createQueryBuilder()
@@ -366,14 +361,8 @@ class Notification extends RDB
             return;
         }
 
-        if ($user->get('isPortalUser')) {
-            if (empty($this->getConfig()->get('portalStreamEmailNotifications'))) {
-                return;
-            }
-        } else {
-            if (empty($this->getConfig()->get('streamEmailNotifications'))) {
-                return;
-            }
+        if (empty($this->getConfig()->get('streamEmailNotifications'))) {
+            return;
         }
 
         if (empty($emailAddress = $user->get('emailAddress'))) {
@@ -446,37 +435,6 @@ class Notification extends RDB
 
     protected function getSiteUrl(\Espo\Entities\User $user): string
     {
-        if ($user->get('isPortalUser')) {
-            if (!array_key_exists($user->id, $this->userIdPortalCacheMap)) {
-                $this->userIdPortalCacheMap[$user->id] = null;
-
-                $portalIdList = $user->getLinkMultipleIdList('portals');
-                $defaultPortalId = $this->getConfig()->get('defaultPortalId');
-
-                $portalId = null;
-
-                if (in_array($defaultPortalId, $portalIdList)) {
-                    $portalId = $defaultPortalId;
-                } else {
-                    if (count($portalIdList)) {
-                        $portalId = $portalIdList[0];
-                    }
-                }
-
-                if ($portalId) {
-                    $portal = $this->getEntityManager()->getEntity('Portal', $portalId);
-                    $this->getEntityManager()->getRepository('Portal')->loadUrlField($portal);
-                    $this->userIdPortalCacheMap[$user->id] = $portal;
-                }
-            } else {
-                $portal = $this->userIdPortalCacheMap[$user->id];
-            }
-
-            if ($portal) {
-                return rtrim($portal->get('url'), '/');
-            }
-        }
-
         return $this->getConfig()->getSiteUrl();
     }
 

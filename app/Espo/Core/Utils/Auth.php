@@ -38,7 +38,6 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Utils\Authentication\AbstractAuthentication;
 use Espo\Entities\AuthLogRecord;
-use Espo\Entities\Portal;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
 use Espo\Core\Slim\Http\Request;
@@ -61,11 +60,6 @@ class Auth
      * @var bool
      */
     private $allowAnyAccess;
-
-    /**
-     * @var Portal|null
-     */
-    private $portal;
 
     /**
      * @var Request
@@ -113,7 +107,7 @@ class Auth
             throw new Error('Not all modules are loaded. Please try later.');
         }
 
-        $isByTokenOnly = $this->request->getResourceUri() !== '/api/v1/App/user' && !preg_match('/^\/api\/v1\/portal-access\/(.*)\/App\/user$/', $this->request->getResourceUri());
+        $isByTokenOnly = $this->request->getResourceUri() !== '/api/v1/App/user';
 
         if (!$isByTokenOnly) {
             $this->checkFailedAttemptsLimit();
@@ -124,27 +118,6 @@ class Auth
             ->getRepository('AuthToken')
             ->where(['token' => $password, 'isActive' => true])
             ->findOne();
-
-        if (!empty($authToken)) {
-            if (!$this->allowAnyAccess) {
-                if ($this->isPortal() && $authToken->get('portalId') !== $this->getPortal()->id) {
-                    $GLOBALS['log']->info("AUTH: Trying to login to portal with a token not related to portal.");
-                    return false;
-                }
-                if (!$this->isPortal() && $authToken->get('portalId')) {
-                    $GLOBALS['log']->info("AUTH: Trying to login to crm with a token related to portal.");
-                    return false;
-                }
-            }
-            if ($this->allowAnyAccess) {
-                if ($authToken->get('portalId') && !$this->isPortal()) {
-                    $portal = $this->getEntityManager()->getEntity('Portal', $authToken->get('portalId'));
-                    if ($portal) {
-                        $this->portal = $portal;
-                    }
-                }
-            }
-        }
 
         if ($isByTokenOnly && empty($authToken)) {
             $GLOBALS['log']->info("AUTH: Trying to login as user '{$username}' by token but token is not found.");
@@ -181,28 +154,7 @@ class Auth
             return false;
         }
 
-        if (!$user->isAdmin() && !$this->isPortal() && $user->get('isPortalUser')) {
-            $GLOBALS['log']->info("AUTH: Trying to login to crm as a portal user '" . $user->get('userName') . "'.");
-            $this->logDenied($authLogRecord, 'IS_PORTAL_USER');
-            return false;
-        }
-
-        if (!$user->isAdmin() && $this->isPortal() && !$user->get('isPortalUser')) {
-            $GLOBALS['log']->info("AUTH: Trying to login to portal as user '" . $user->get('userName') . "' which is not portal user.");
-            $this->logDenied($authLogRecord, 'IS_NOT_PORTAL_USER');
-            return false;
-        }
-
-        if ($this->isPortal()) {
-            if (!$user->isAdmin() && !$this->getEntityManager()->getRepository('Portal')->isRelated($this->getPortal(), 'users', $user)) {
-                $GLOBALS['log']->info("AUTH: Trying to login to portal as user '" . $user->get('userName') . "' which is portal user but does not belongs to portal.");
-                $this->logDenied($authLogRecord, 'USER_IS_NOT_IN_PORTAL');
-                return false;
-            }
-            $user->set('portalId', $this->getPortal()->id);
-        } else {
-            $user->loadLinkMultipleField('teams');
-        }
+        $user->loadLinkMultipleField('teams');
 
         $user->set('ipAddress', $_SERVER['REMOTE_ADDR']);
 
@@ -217,9 +169,6 @@ class Auth
             $authToken->set('hash', $user->get('password'));
             $authToken->set('ipAddress', $_SERVER['REMOTE_ADDR']);
             $authToken->set('userId', $user->id);
-            if ($this->isPortal()) {
-                $authToken->set('portalId', $this->getPortal()->id);
-            }
 
             $tokenLifeTime = $this->request->headers('HTTP_AUTHORIZATION_TOKEN_LIFETIME');
             if ($tokenLifeTime !== null) {
@@ -348,10 +297,6 @@ class Auth
             ]
         );
 
-        if ($this->isPortal()) {
-            $authLogRecord->set('portalId', $this->getPortal()->id);
-        }
-
         if ($user) {
             $authLogRecord->set('userId', $user->id);
         } else {
@@ -371,23 +316,6 @@ class Auth
 
         $authLogRecord->set('denialReason', $denialReason);
         $this->getEntityManager()->saveEntity($authLogRecord);
-    }
-
-    protected function isPortal(): bool
-    {
-        if ($this->portal) {
-            return true;
-        }
-        return !!$this->container->get('portal');
-    }
-
-    protected function getPortal(): Portal
-    {
-        if ($this->portal) {
-            return $this->portal;
-        }
-
-        return $this->container->get('portal');
     }
 
     protected function getConfig(): Config

@@ -73,7 +73,6 @@ return [
     'adminNotificationsNewExtensionVersion' => true,
     'assignmentNotifications'               => true,
     'assignmentEmailNotifications'          => false,
-    "portalStreamEmailNotifications"        => true,
     'disabledCountQueryEntityList'          => [],
     'followCreatedEntities'                 => false,
     'b2cMode'                               => false,
