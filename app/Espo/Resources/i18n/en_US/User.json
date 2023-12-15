@@ -17,7 +17,6 @@
     "newPasswordConfirm": "Confirm New Password",
     "avatar": "Avatar",
     "isActive": "Is Active",
-    "isPortalUser": "Is Portal User",
     "account": "Account",
     "sendAccessInfo": "Send Email with Access Info to User",
     "gender": "Gender",
@@ -46,9 +45,7 @@
     "Password Change Request": "Password Change Request",
     "Email Address": "Email Address",
     "External Accounts": "External Accounts",
-    "Email Accounts": "Email Accounts",
-    "Portal": "Portal",
-    "Create Portal User": "Create Portal User"
+    "Email Accounts": "Email Accounts"
   },
   "tooltips": {
     "defaultTeam": "All records created by this user will be related to this team by default.",
@@ -89,7 +86,6 @@
     "onlyMyTeam": "My Team"
   },
   "presetFilters": {
-    "active": "Active",
-    "activePortal": "Portal Active"
+    "active": "Active"
   }
 }

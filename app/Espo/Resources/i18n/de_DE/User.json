@@ -16,7 +16,6 @@
     "passwordConfirm": "Passwort bestätigen",
     "newPassword": "Neues Passwort",
     "newPasswordConfirm": "Neues Passwort bestätigen",
-    "isPortalUser": "Ist Portal Benutzer",
     "account": "Benutzerkonto",
     "sendAccessInfo": "E-Mail mit Zugangsinformationen an Benutzer senden",
     "gender": "Geschlecht",
@@ -44,8 +43,7 @@
     "Password Change Request": "Anforderung zur Passwortänderung",
     "Email Address": "E-Mail Adresse",
     "External Accounts": "Externe Konten",
-    "Email Accounts": "E-Mail Konten",
-    "Create Portal User": "Portalbenutzer erstellen"
+    "Email Accounts": "E-Mail Konten"
   },
   "tooltips": {
     "defaultTeam": "Alle Datensätze dieses Benutzers werden standardmäßig seinem Team zugeordnet.",
@@ -78,8 +76,7 @@
     "onlyMyTeam": "Mein Team"
   },
   "presetFilters": {
-    "active": "Aktiv",
-    "activePortal": "Portal Aktiv"
+    "active": "Aktiv"
   },
   "options": {
     "gender": {

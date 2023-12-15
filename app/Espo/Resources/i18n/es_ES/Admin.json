@@ -67,11 +67,6 @@
     "sidePanelsEdit": "Paneles laterales (editar)",
     "sidePanelsDetailSmall": "Paneles laterales (detalle pequeño)",
     "sidePanelsEditSmall": "Paneles laterales (editar pequeño)",
-    "detailPortal": "Detail (Portal)",
-    "detailSmallPortal": "Detail (Small, Portal)",
-    "listSmallPortal": "List (Small, Portal)",
-    "listPortal": "List (Portal)",
-    "relationshipsPortal": "Relationship Panels (Portal)",
     "kanban": "Kanban",
     "listForAccount": "List (for Account)"
   },

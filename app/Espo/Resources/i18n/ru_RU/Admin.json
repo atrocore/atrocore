@@ -30,9 +30,6 @@
     "rebuildDb": "Обновить структуру БД",
     "Teams": "Группы",
     "Roles": "Роли",
-    "Portal": "Управление порталами",
-    "Portals": "Порталы",
-    "Portal Roles": "Роли порталов",
     "Outbound Emails": "Исходящая эл. почта",
     "Group Email Accounts": "Учетные записи эл. почты групп",
     "Personal Email Accounts": "Учетные записи эл. почты пользователей",
@@ -65,7 +62,6 @@
     "Jobs": "Задания",
     "Reset to Default": "Восстановить настройки по умолчанию",
     "Email Filters": "Фильтры эл. почты",
-    "Portal Users": "Пользователи порталов",
     "Action History": "История действий",
     "Label Manager": "Надписи",
     "Auth Log": "Лог Аутентификации",
@@ -93,12 +89,7 @@
     "sidePanelsDetail": "Боковые панели (Детали)",
     "sidePanelsEdit": "Боковые панели (Редактирование)",
     "sidePanelsDetailSmall": "Боковые панели (Детали сжатые)",
-    "sidePanelsEditSmall": "Боковые панели (Редактирование сжатые)",
-    "detailPortal": "Детали (Портал)",
-    "detailSmallPortal": "Детали (Cжатые, Портал)",
-    "listSmallPortal": "Список (Сжатые, Портал)",
-    "listPortal": "Список (Портал)",
-    "relationshipsPortal": "Связи (Портал)"
+    "sidePanelsEditSmall": "Боковые панели (Редактирование сжатые)"
   },
   "fieldTypes": {
   },

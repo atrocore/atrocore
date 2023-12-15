@@ -17,9 +17,6 @@
       "customer": "Замовник"
     }
   },
-  "links": {
-    "portalUsers": "Користувачі порталу"
-  },
   "labels": {
     "Create Account": "Створити контрагента"
   }
