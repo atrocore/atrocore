@@ -5,9 +5,6 @@
     "phoneNumber": "Телефон",
     "description": "Описание"
   },
-  "links": {
-    "portalUsers": "Пользователи портала"
-  },
   "labels": {
     "Create Account": "Создать контрагента"
   }

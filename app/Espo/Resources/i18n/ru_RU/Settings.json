@@ -36,7 +36,6 @@
     "applicationName": "Название приложения",
     "assignmentEmailNotifications": "Оповещать по эл. почте при назначении",
     "streamEmailNotifications": "Уведомления об обновлениях в ленте для внутренних пользователей",
-    "portalStreamEmailNotifications": "Уведомления об обновлениях в ленте для пользователей портала",
     "calendarEntityList": "Список объектов календаря",
     "mentionEmailNotifications": "Отправить уведомления по эл. почте об упоминаниях в сообщениях",
     "activitiesEntityList": "Список объектов действий",
