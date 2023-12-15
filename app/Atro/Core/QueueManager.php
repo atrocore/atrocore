@@ -239,10 +239,6 @@ class QueueManager
         $this->container->setUser($user);
         $this->getEntityManager()->setUser($user);
 
-        if (!empty($user->get('portalId'))) {
-            $this->container->setPortal($user->get('portal'));
-        }
-
         // reload language
         $this->container->reload('language');
 

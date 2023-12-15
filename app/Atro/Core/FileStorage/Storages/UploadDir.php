@@ -95,11 +95,6 @@ class UploadDir extends Base
         }
         $url .= "&id={$attachment->get('id')}";
 
-        // for portal
-        if (!empty($user = $this->getInjection('entityManager')->getUser()) && !empty($user->get('portalId'))) {
-            $url .= '&portalId=' . $user->get('portalId');
-        }
-
         return $url;
     }
 

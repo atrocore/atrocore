@@ -16,7 +16,6 @@ namespace Atro\Core;
 use Atro\Core\EventManager\Manager as EventManager;
 use Atro\Core\Factories\FactoryInterface as Factory;
 use Espo\Core\Interfaces\Injectable;
-use Espo\Entities\Portal;
 use Espo\Entities\User;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
 use Espo\ORM\EntityManager;
@@ -166,35 +165,6 @@ class Container
     public function setUser(User $user): Container
     {
         $this->set('user', $user);
-
-        return $this;
-    }
-
-    /**
-     * Set portal
-     *
-     * @param Portal $portal
-     *
-     * @return Container
-     */
-    public function setPortal(Portal $portal): Container
-    {
-        $this->set('portal', $portal);
-
-        $data = [];
-        foreach ($this->get('portal')->getSettingsAttributeList() as $attribute) {
-            $data[$attribute] = $this->get('portal')->get($attribute);
-        }
-        if (empty($data['theme'])) {
-            unset($data['theme']);
-        }
-        if (empty($data['defaultCurrency'])) {
-            unset($data['defaultCurrency']);
-        }
-
-        foreach ($data as $attribute => $value) {
-            $this->get('config')->set($attribute, $value, true);
-        }
 
         return $this;
     }

@@ -52,10 +52,6 @@ class QueueItem extends AbstractConsole
         $this->getContainer()->setUser($user);
         $entityManager->setUser($user);
 
-        if (!empty($user->get('portalId'))) {
-            $this->getContainer()->setPortal($user->get('portal'));
-        }
-
         // create service
         $service = $this->getContainer()->get('serviceFactory')->create($item->get('serviceName'));
 
