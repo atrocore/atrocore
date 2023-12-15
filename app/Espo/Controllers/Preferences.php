@@ -119,7 +119,6 @@ class Preferences extends \Espo\Core\Controllers\Base
         }
 
         $entity->set('name', $user->get('name'));
-        $entity->set('isPortalUser', $user->get('isPortalUser'));
 
         foreach ($this->getAcl()->getScopeForbiddenAttributeList('Preferences', 'read') as $attribute) {
             $entity->clear($attribute);
@@ -143,8 +142,6 @@ class Preferences extends \Espo\Core\Controllers\Base
         $preferences = $this->getEntityManager()->getEntity('Preferences', $userId);
         if (!$user)  throw new NotFound();
         if (!$preferences)  throw new NotFound();
-
-        if ($user->isPortal()) throw new Forbidden();
 
         if ($this->getAcl()->getLevel('Preferences', 'edit') === 'no') {
             throw new Forbidden();

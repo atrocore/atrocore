@@ -63,14 +63,6 @@ class Layout extends Injectable
      */
     public function concatPath($folderPath, $filePath = null)
     {
-        // for portal
-        if ($this->isPortal()) {
-            $portalPath = Util::concatPath($folderPath, 'portal/' . $filePath);
-            if (file_exists($portalPath)) {
-                return $portalPath;
-            }
-        }
-
         return Util::concatPath($folderPath, $filePath);
     }
 
@@ -503,7 +495,6 @@ class Layout extends Injectable
                 case 'filters':
                 case 'massUpdate':
                     $data = array_values(array_intersect($data, $fields));
-
                     break;
                 case 'detail':
                 case 'detailSmall':
@@ -511,16 +502,9 @@ class Layout extends Injectable
                         foreach ($data[0]['rows'][$key] as $fieldKey => $fieldData) {
                             if (isset($fieldData['name']) && !in_array($fieldData['name'], $fields)) {
                                 $data[0]['rows'][$key][$fieldKey] = false;
-
-//                                if (empty(array_diff($data[0]['rows'][$key], [false]))) {
-//                                    array_splice($data[0]['rows'], $key, 1);
-//                                    $key--;
-//                                    continue 2;
-//                                }
                             }
                         }
                     }
-
                     break;
                 case 'list':
                 case 'listSmall':
@@ -529,7 +513,6 @@ class Layout extends Injectable
                             array_splice($data, $key, 1);
                         }
                     }
-
                     break;
             }
         }
@@ -540,11 +523,6 @@ class Layout extends Injectable
     protected function sanitizeInput(string $name): string
     {
         return preg_replace("([\.]{2,})", '', $name);
-    }
-
-    protected function isPortal(): bool
-    {
-        return !empty($this->getContainer()->get('portal'));
     }
 
     protected function getContainer(): Container

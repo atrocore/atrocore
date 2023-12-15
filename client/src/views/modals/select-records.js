@@ -48,7 +48,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
 
         scope: null,
 
-        noCreateScopeList: ['User', 'Team', 'Role', 'Portal'],
+        noCreateScopeList: ['User', 'Team', 'Role'],
 
         className: 'dialog dialog-record',
 

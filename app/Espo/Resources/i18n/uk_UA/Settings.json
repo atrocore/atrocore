@@ -37,7 +37,6 @@
     "applicationName": "Назва програми",
     "assignmentEmailNotifications": "Сповіщати по ел. пошті при призначенні",
     "streamEmailNotifications": "Повідомлення про оновлення в стрічці для внутрішніх користувачів",
-    "portalStreamEmailNotifications": "Повідомлення про оновлення в стрічці для користувачів порталу",
     "calendarEntityList": "Список об'єктів календаря",
     "mentionEmailNotifications": "Надіслати сповіщення ел. поштою про згадки в повідомленнях",
     "activitiesEntityList": "Список об'єктів дій",

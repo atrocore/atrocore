@@ -62,7 +62,7 @@ class StreamNotesAcl extends \Espo\Core\Hooks\Base
 
         $entityType = $entity->getEntityType();
 
-        if (in_array($entityType, ['Note', 'User', 'Team', 'Role', 'Portal', 'PortalRole'])) return;
+        if (in_array($entityType, ['Note', 'User', 'Team', 'Role'])) return;
 
         if (!$this->getMetadata()->get(['scopes', $entityType, 'acl'])) return;
         if (!$this->getMetadata()->get(['scopes', $entityType, 'object'])) return;

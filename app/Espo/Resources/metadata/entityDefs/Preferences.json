@@ -94,10 +94,6 @@
             "type": "array",
             "view": "views/preferences/fields/tab-list"
         },
-        "isPortalUser": {
-            "type": "bool",
-            "notStorable": true
-        },
         "followEntityOnStreamPost": {
             "type": "bool",
             "default": true

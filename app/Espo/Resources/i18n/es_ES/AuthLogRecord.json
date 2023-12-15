@@ -6,7 +6,6 @@
         "createdAt": "Requested At",
         "isDenied": "Is Denied",
         "denialReason": "Denial Reason",
-        "portal": "Portal",
         "user": "User",
         "authToken": "Auth Token Created",
         "requestUrl": "Request URL",
@@ -16,7 +15,6 @@
     "links": {
         "authToken": "Auth Token Created",
         "user": "User",
-        "portal": "Portal",
         "actionHistoryRecords": "Action History"
     },
     "presetFilters": {
@@ -26,10 +24,7 @@
     "options": {
         "denialReason": {
             "CREDENTIALS": "Invalid credentials",
-            "INACTIVE_USER": "Inactive user",
-            "IS_PORTAL_USER": "Portal user",
-            "IS_NOT_PORTAL_USER": "Not a portal user",
-            "USER_IS_NOT_IN_PORTAL": "User is not related to the portal"
+            "INACTIVE_USER": "Inactive user"
         }
     }
 }

@@ -7,12 +7,6 @@
                 "delete": "own",
                 "create": "yes"
             },
-            "Portal": {
-                "read": "all",
-                "edit": "no",
-                "delete": "no",
-                "create": "no"
-            },
             "Attachment": {
                 "read": "own",
                 "edit": "own",
@@ -37,8 +31,7 @@
                 "delete": "no",
                 "create": "no"
             },
-            "Role": false,
-            "PortalRole": false
+            "Role": false
         },
         "fieldLevel": {
         },
@@ -88,22 +81,18 @@
     },
     "valuePermissionList": [
         "assignmentPermission",
-        "portalPermission",
         "dataPrivacyPermission"
     ],
     "valuePermissionHighestLevels": {
         "assignmentPermission": "all",
-        "portalPermission": "yes",
         "dataPrivacyPermission": "yes"
     },
     "permissionsDefaults": {
         "assignmentPermission": "all",
-        "portalPermission": "no",
         "dataPrivacyPermission": "no"
     },
     "permissionsStrictDefaults": {
         "assignmentPermission": "all",
-        "portalPermission": "no",
         "dataPrivacyPermission": "no"
     },
     "scopeLevelTypesDefaults": {

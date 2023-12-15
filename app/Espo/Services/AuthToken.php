@@ -47,7 +47,6 @@ class AuthToken extends Record
         'token',
         'hash',
         'userId',
-        'portalId',
         'ipAddress',
         'lastAccess',
         'createdAt',

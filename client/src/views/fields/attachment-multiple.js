@@ -232,17 +232,11 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             if (size) {
                 url += '&size=' + size;
             }
-            if (this.getUser().get('portalId')) {
-                url += '&portalId=' + this.getUser().get('portalId');
-            }
             return url;
         },
 
         getDownloadUrl: function (id) {
             var url = this.getBasePath() + '?entryPoint=download&id=' + id;
-            if (this.getUser().get('portalId')) {
-                url += '&portalId=' + this.getUser().get('portalId');
-            }
             return url;
         },
 

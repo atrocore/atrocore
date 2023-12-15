@@ -123,11 +123,7 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
                         "layout": []
                     }
                 ];
-                if (this.getUser().get('portalId')) {
-                    this.dashboardLayout = this.getConfig().get('dashboardLayout') || [];
-                } else {
-                    this.dashboardLayout = this.getPreferences().get('dashboardLayout') || defaultLayout;
-                }
+                this.dashboardLayout = this.getPreferences().get('dashboardLayout') || defaultLayout;
 
                 if (this.dashboardLayout.length == 0 || Object.prototype.toString.call(this.dashboardLayout) !== '[object Array]') {
                     this.dashboardLayout = defaultLayout;
@@ -174,17 +170,12 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
 
             this.dashletIdList = [];
 
-            if (this.getUser().get('portalId')) {
+            var forbiddenPreferencesFieldList = this.getAcl().getScopeForbiddenFieldList('Preferences', 'edit');
+            if (~forbiddenPreferencesFieldList.indexOf('dashboardLayout')) {
                 this.layoutReadOnly = true;
+            }
+            if (~forbiddenPreferencesFieldList.indexOf('dashletsOptions')) {
                 this.dashletsReadOnly = true;
-            } else {
-                var forbiddenPreferencesFieldList = this.getAcl().getScopeForbiddenFieldList('Preferences', 'edit');
-                if (~forbiddenPreferencesFieldList.indexOf('dashboardLayout')) {
-                    this.layoutReadOnly = true;
-                }
-                if (~forbiddenPreferencesFieldList.indexOf('dashletsOptions')) {
-                    this.dashletsReadOnly = true;
-                }
             }
 
             this.once('remove', function () {
@@ -208,18 +199,6 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
             var resizable = false;
             var disableDrag = false;
             var disableResize = false;
-
-            if (this.getUser().isPortal()) {
-                draggable = {
-                    handle: '.dashlet-container .panel-heading',
-                };
-                resizable = {
-                    handles: 'se',
-                    helper: false
-                };
-                disableDrag = true;
-                disableResize = true;
-            }
 
             $gridstack.gridstack({
                 minWidth: 4,

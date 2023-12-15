@@ -130,8 +130,6 @@ Espo.define('views/record/search', 'view', function (Dep) {
             this.boolFilterList = Espo.Utils.clone(this.getMetadata().get('clientDefs.' + this.scope + '.boolFilterList') || []).filter(function (item) {
                 if (typeof item === 'string') return true;
                 item = item || {};
-                if (item.inPortalDisabled && this.getUser().isPortal()) return false;
-                if (item.isPortalOnly && !this.getUser().isPortal()) return false;
                 if (item.accessDataList) {
                     if (!Espo.Utils.checkAccessDataList(item.accessDataList, this.getAcl(), this.getUser())) {
                         return false;
@@ -158,8 +156,6 @@ Espo.define('views/record/search', 'view', function (Dep) {
             this.presetFilterList = (Espo.Utils.clone(this.getMetadata().get('clientDefs.' + this.scope + '.filterList') || [])).filter(function (item) {
                 if (typeof item === 'string') return true;
                 item = item || {};
-                if (item.inPortalDisabled && this.getUser().isPortal()) return false;
-                if (item.isPortalOnly && !this.getUser().isPortal()) return false;
                 if (item.accessDataList) {
                     if (!Espo.Utils.checkAccessDataList(item.accessDataList, this.getAcl(), this.getUser())) {
                         return false;

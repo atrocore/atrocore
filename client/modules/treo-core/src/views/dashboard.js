@@ -19,15 +19,7 @@ Espo.define('treo-core:views/dashboard', 'class-replace!treo-core:views/dashboar
                         "layout": []
                     }
                 ];
-                if (this.getUser().get('portalId')) {
-                    this.dashboardLayout = this.getConfig().get('dashboardLayout') || [];
-                } else {
-                    this.dashboardLayout = this.getPreferences().get('dashboardLayout') || defaultLayout;
-                    var activeDashlets = this.getMetadata().get('dashlets');
-                    this.dashboardLayout.forEach(tab => {
-                        tab.layout = tab.layout.filter(dashlet => dashlet.name in activeDashlets);
-                    });
-                }
+                this.dashboardLayout = this.getConfig().get('dashboardLayout') || [];
 
                 if (this.dashboardLayout.length == 0 || Object.prototype.toString.call(this.dashboardLayout) !== '[object Array]') {
                     this.dashboardLayout = defaultLayout;

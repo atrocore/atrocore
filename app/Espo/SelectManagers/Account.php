@@ -35,21 +35,4 @@ namespace Espo\SelectManagers;
 
 class Account extends \Espo\Core\SelectManagers\Base
 {
-    /**
-     * @param $result
-     */
-    protected function accessPortalOnlyAccount(&$result)
-    {
-        $accountId = $this->getUser()->get('accountId');
-
-        if (!empty($accountId)) {
-            $result['whereClause'][] = array(
-                'id' => $accountId
-            );
-        } else {
-            $result['whereClause'][] = array(
-                'id' => null
-            );
-        }
-    }
 }

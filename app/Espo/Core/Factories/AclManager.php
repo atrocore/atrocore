@@ -38,27 +38,16 @@ namespace Espo\Core\Factories;
 use Espo\Core\AclManager as MainAclManager;
 use Atro\Core\Container;
 use Atro\Core\Factories\FactoryInterface as Factory;
-use Espo\Core\Portal\AclManager as PortalAclManager;
-use Espo\Entities\Portal;
 
 class AclManager implements Factory
 {
     public function create(Container $container)
     {
-        if (!empty($container->get('portal'))) {
-            return self::createPortalAclManager($container, $container->get('portal'));
-        }
-
         return self::createAclManager($container);
     }
 
     public static function createAclManager(Container $container): MainAclManager
     {
         return new MainAclManager($container);
-    }
-
-    public static function createPortalAclManager(Container $container, Portal $portal): PortalAclManager
-    {
-        return new PortalAclManager($container, $portal);
     }
 }

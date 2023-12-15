@@ -375,10 +375,6 @@
       "type": "bool",
       "default": false
     },
-    "portalStreamEmailNotifications": {
-      "type": "bool",
-      "default": true
-    },
     "b2cMode": {
       "type": "bool",
       "default": false,

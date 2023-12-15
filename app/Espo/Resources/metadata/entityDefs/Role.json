@@ -14,14 +14,6 @@
             "tooltip": true,
             "translation": "Role.options.levelList"
         },
-        "portalPermission": {
-            "type": "enum",
-            "optionsIds": ["not-set", "yes", "no"],
-            "options": ["not-set", "yes", "no"],
-            "default": "not-set",
-            "tooltip": true,
-            "translation": "Role.options.levelList"
-        },
         "dataPrivacyPermission": {
             "type": "enum",
             "optionsIds": ["not-set", "yes", "no"],

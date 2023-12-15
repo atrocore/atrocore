@@ -17,9 +17,6 @@
       "customer": "Cliente"
     }
   },
-  "links": {
-    "portalUsers": "Usuarios del portal"
-  },
   "labels": {
     "Create Account": "Crear cuenta"
   }

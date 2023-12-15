@@ -90,30 +90,6 @@ Espo.define('utils', [], function () {
                         if (!inTeam) return false;
                     }
                 }
-                if (item.portalIdList) {
-                    if (user && !(allowAllForAdmin && user.isAdmin())) {
-                        var inPortal = false;
-                        user.getLinkMultipleIdList('portals').forEach(function (portalId) {
-                            if (~item.portalIdList.indexOf(portalId)) {
-                                inPortal = true;
-                            }
-                        });
-                        if (!inPortal) return false;
-                    }
-                }
-                if (item.isPortalOnly) {
-                    if (user && !(allowAllForAdmin && user.isAdmin())) {
-                        if (!user.isPortal()) {
-                            return false;
-                        }
-                    }
-                } else if (item.inPortalDisabled) {
-                    if (user && !(allowAllForAdmin && user.isAdmin())) {
-                        if (user.isPortal()) {
-                            return false;
-                        }
-                    }
-                }
 
                 if (item.isAdminOnly) {
                     if (user) {

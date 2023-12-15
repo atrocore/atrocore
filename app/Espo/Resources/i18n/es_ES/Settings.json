@@ -35,7 +35,6 @@
     "applicationName": "Nombre de la aplicación",
     "assignmentEmailNotifications": "Se enviará un correo cuando reciba una asignación",
     "streamEmailNotifications": "Se enviará un correo sobre las actualizaciones en la historia para los usuarios internos",
-    "portalStreamEmailNotifications": "Se enviará un correo sobre actualizaciones en la historia a los usuarios del portal",
     "calendarEntityList": "Lista de entidades calendario",
     "mentionEmailNotifications": "Se enviará un correo cuando sean mencionados en los mensajes",
     "activitiesEntityList": "Lista de entidades de actividades",

@@ -25,9 +25,6 @@
         <div class="cell" data-name="teams">
             <div class="field" data-name="teams">{{{teamsField}}}</div>
         </div>
-        <div class="cell" data-name="portals">
-            <div class="field" data-name="portals">{{{portalsField}}}</div>
-        </div>
         </div>
     </div>
 </div>

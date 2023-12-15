@@ -71,26 +71,6 @@
   "iconClass": "fas fa-user-circle",
   "dynamicLogic": {
     "fields": {
-      "portals": {
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "isTrue",
-              "attribute": "isPortalUser"
-            }
-          ]
-        }
-      },
-      "portal": {
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "isTrue",
-              "attribute": "isPortalUser"
-            }
-          ]
-        }
-      },
       "password": {
         "required": {
           "conditionGroup": [

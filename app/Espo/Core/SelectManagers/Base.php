@@ -502,35 +502,16 @@ class Base
         }
     }
 
-    protected function checkIsPortal()
-    {
-        return !!$this->getUser()->get('portalId');
-    }
-
     protected function access(&$result)
     {
-        if (!$this->checkIsPortal()) {
-            if ($this->getAcl()->checkReadOnlyOwn($this->getEntityType())) {
-                $this->accessOnlyOwn($result);
-            } else {
-                if (!$this->getUser()->isAdmin()) {
-                    if ($this->getAcl()->checkReadOnlyTeam($this->getEntityType())) {
-                        $this->accessOnlyTeam($result);
-                    } else if ($this->getAcl()->checkReadNo($this->getEntityType())) {
-                        $this->accessNo($result);
-                    }
-                }
-            }
+        if ($this->getAcl()->checkReadOnlyOwn($this->getEntityType())) {
+            $this->accessOnlyOwn($result);
         } else {
-            if ($this->getAcl()->checkReadOnlyOwn($this->getEntityType())) {
-                $this->accessOnlyOwn($result);
-            } else {
-                if ($this->getAcl()->checkReadOnlyAccount($this->getEntityType())) {
-                    $this->accessPortalOnlyAccount($result);
-                } else {
-                    if ($this->getAcl()->checkReadNo($this->getEntityType())) {
-                        $this->accessNo($result);
-                    }
+            if (!$this->getUser()->isAdmin()) {
+                if ($this->getAcl()->checkReadOnlyTeam($this->getEntityType())) {
+                    $this->accessOnlyTeam($result);
+                } else if ($this->getAcl()->checkReadNo($this->getEntityType())) {
+                    $this->accessNo($result);
                 }
             }
         }
@@ -595,48 +576,6 @@ class Base
         $qb->setParameter('teamsIds', $this->getUser()->getLinkMultipleIdList('teams'), Connection::PARAM_STR_ARRAY);
         $qb->setParameter('entityType', $this->entityType);
         $qb->setParameter('false', false, ParameterType::BOOLEAN);
-    }
-
-    protected function accessPortalOnlyAccount(&$result)
-    {
-        $d = [];
-
-        $accountId = $this->getUser()->get('accountId');
-
-        if (!empty($accountId)) {
-            if ($this->getSeed()->hasAttribute('accountId')) {
-                $d['accountId'] = $accountId;
-            }
-            if ($this->getSeed()->hasRelation('assignedAccounts')) {
-                $this->addLeftJoin(['assignedAccounts', 'accountsAccess'], $result);
-                $this->setDistinct(true, $result);
-                $d['accountsAccess.id'] = $accountId;
-            } elseif ($this->getSeed()->hasRelation('accounts')) {
-                $this->addLeftJoin(['accounts', 'accountsAccess'], $result);
-                $this->setDistinct(true, $result);
-                $d['accountsAccess.id'] = $accountId;
-            }
-            if ($this->getSeed()->hasAttribute('parentId') && $this->getSeed()->hasRelation('parent')) {
-                $d[] = array(
-                    'parentType' => 'Account',
-                    'parentId' => $accountId
-                );
-            }
-        }
-
-        if ($this->getSeed()->hasAttribute('createdById')) {
-            $d['createdById'] = $this->getUser()->id;
-        }
-
-        if (!empty($d)) {
-            $result['whereClause'][] = array(
-                'OR' => $d
-            );
-        } else {
-            $result['whereClause'][] = array(
-                'id' => null
-            );
-        }
     }
 
     /**
@@ -1778,29 +1717,23 @@ class Base
      */
     protected function boolFilterOnlyMy(&$result)
     {
-        if (!$this->checkIsPortal()) {
-            $where = [];
+        $where = [];
 
-            if ($this->hasOwnerUserField()) {
-                $where[] = ['ownerUserId' => $this->getUser()->id];
-            }
-
-            if ($this->hasAssignedUserField()) {
-                $where[] = ['assignedUserId' => $this->getUser()->id];
-            }
-
-            if (!$this->hasOwnerUserField() && !$this->hasAssignedUserField()) {
-                $where[] = ['createdById' => $this->getUser()->id];
-            }
-
-            $result['whereClause'][] = [
-                'OR' => $where
-            ];
-        } else {
-            $result['whereClause'][] = [
-                'createdById' => $this->getUser()->id
-            ];
+        if ($this->hasOwnerUserField()) {
+            $where[] = ['ownerUserId' => $this->getUser()->id];
         }
+
+        if ($this->hasAssignedUserField()) {
+            $where[] = ['assignedUserId' => $this->getUser()->id];
+        }
+
+        if (!$this->hasOwnerUserField() && !$this->hasAssignedUserField()) {
+            $where[] = ['createdById' => $this->getUser()->id];
+        }
+
+        $result['whereClause'][] = [
+            'OR' => $where
+        ];
     }
 
     /**
@@ -1810,16 +1743,10 @@ class Base
      */
     protected function boolFilterOwnedByMe(&$result)
     {
-        if (!$this->checkIsPortal()) {
-            if ($this->hasOwnerUserField()) {
-                $result['whereClause'][] = [
-                    'ownerUserId' => $this->getUser()->id
-                ];
-            } else {
-                $result['whereClause'][] = [
-                    'createdById' => $this->getUser()->id
-                ];
-            }
+        if ($this->hasOwnerUserField()) {
+            $result['whereClause'][] = [
+                'ownerUserId' => $this->getUser()->id
+            ];
         } else {
             $result['whereClause'][] = [
                 'createdById' => $this->getUser()->id
@@ -1834,16 +1761,10 @@ class Base
      */
     protected function boolFilterAssignedToMe(&$result)
     {
-        if (!$this->checkIsPortal()) {
-            if ($this->hasAssignedUserField()) {
-                $result['whereClause'][] = [
-                    'assignedUserId' => $this->getUser()->id
-                ];
-            } else {
-                $result['whereClause'][] = [
-                    'createdById' => $this->getUser()->id
-                ];
-            }
+        if ($this->hasAssignedUserField()) {
+            $result['whereClause'][] = [
+                'assignedUserId' => $this->getUser()->id
+            ];
         } else {
             $result['whereClause'][] = [
                 'createdById' => $this->getUser()->id

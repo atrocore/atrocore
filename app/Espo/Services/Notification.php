@@ -228,8 +228,6 @@ class Notification extends \Espo\Services\Record
                                 if ($targetType !== 'users') {
                                     if (!$targetType || $targetType === 'teams') {
                                         $note->loadLinkMultipleField('teams');
-                                    } else if ($targetType === 'portals') {
-                                        $note->loadLinkMultipleField('portals');
                                     }
                                 }
                             }

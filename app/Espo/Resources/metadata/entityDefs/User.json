@@ -10,9 +10,6 @@
                 "Token"
             ]
         },
-        "account": {
-            "type": "link"
-        },
         "isAdmin": {
             "type": "bool",
             "tooltip": true
@@ -66,10 +63,6 @@
             "type": "bool",
             "tooltip": true,
             "default": true
-        },
-        "isPortalUser": {
-            "type": "bool",
-            "massUpdateDisabled": true
         },
         "isSuperAdmin": {
             "type": "bool",
@@ -171,13 +164,6 @@
             "type": "linkMultiple",
             "tooltip": true
         },
-        "portal": {
-            "type": "link"
-        },
-        "portalRoles": {
-            "type": "linkMultiple",
-            "tooltip": true
-        },
         "avatar": {
             "type": "image",
             "view": "views/user/fields/avatar",
@@ -215,12 +201,6 @@
         }
     },
     "links": {
-        "account": {
-            "type": "belongsTo",
-            "entity": "Account",
-            "foreign": "portalUsers",
-            "relationName": "AccountPortalUser"
-        },
         "defaultTeam": {
             "type": "belongsTo",
             "entity": "Team"
@@ -246,17 +226,6 @@
             "type": "hasMany",
             "entity": "Role",
             "relationName": "RoleUser",
-            "foreign": "users",
-            "layoutRelationshipsDisabled": true
-        },
-        "portal": {
-            "type": "belongsTo",
-            "entity": "Portal",
-            "foreign": "users"
-        },
-        "portalRoles": {
-            "type": "hasMany",
-            "entity": "PortalRole",
             "foreign": "users",
             "layoutRelationshipsDisabled": true
         },

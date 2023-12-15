@@ -58,20 +58,16 @@ class User extends Record
         'userName',
         'isActive',
         'isAdmin',
-        'isPortalUser',
         'teamsIds',
         'teamsColumns',
         'teamsNames',
         'rolesIds',
         'rolesNames',
         'password',
-        'portalId',
-        'portalRolesIds',
         'accountId'
     ];
 
     protected $mandatorySelectAttributeList = [
-        'isPortalUser',
         'isActive',
         'userName',
         'isAdmin'
@@ -300,7 +296,6 @@ class User extends Record
 
         if ($id == $this->getUser()->id) {
             unset($data->isActive);
-            unset($data->isPortalUser);
         }
 
         $user = parent::updateEntity($id, $data);
@@ -321,33 +316,16 @@ class User extends Record
         return $this->getEntityManager()->getRepository('User')->where(array(
             'isActive' => true,
             'isSuperAdmin' => false,
-            'isPortalUser' => false,
-            'id!=' => 'system'
-        ))->count();
-    }
-
-    protected function getPortalUserCount()
-    {
-        return $this->getEntityManager()->getRepository('User')->where(array(
-            'isActive' => true,
-            'isSuperAdmin' => false,
-            'isPortalUser' => true,
             'id!=' => 'system'
         ))->count();
     }
 
     protected function beforeCreateEntity(Entity $entity, $data)
     {
-        if ($this->getConfig()->get('userLimit') && !$this->getUser()->get('isSuperAdmin') && !$entity->get('isPortalUser')) {
+        if ($this->getConfig()->get('userLimit') && !$this->getUser()->get('isSuperAdmin')) {
             $userCount = $this->getInternalUserCount();
             if ($userCount >= $this->getConfig()->get('userLimit')) {
                 throw new Forbidden('User limit '.$this->getConfig()->get('userLimit').' is reached.');
-            }
-        }
-        if ($this->getConfig()->get('portalUserLimit') && !$this->getUser()->get('isSuperAdmin') && $entity->get('isPortalUser')) {
-            $portalUserCount = $this->getPortalUserCount();
-            if ($portalUserCount >= $this->getConfig()->get('portalUserLimit')) {
-                throw new Forbidden('Portal user limit '.$this->getConfig()->get('portalUserLimit').' is reached.');
             }
         }
     }
@@ -355,26 +333,10 @@ class User extends Record
     protected function beforeUpdateEntity(Entity $user, $data)
     {
         if ($this->getConfig()->get('userLimit') && !$this->getUser()->get('isSuperAdmin')) {
-            if (
-                ($user->get('isActive') && $user->isAttributeChanged('isActive') && !$user->get('isPortalUser'))
-                ||
-                (!$user->get('isPortalUser') && $user->isAttributeChanged('isPortalUser'))
-            ) {
+            if ($user->get('isActive') && $user->isAttributeChanged('isActive')) {
                 $userCount = $this->getInternalUserCount();
                 if ($userCount >= $this->getConfig()->get('userLimit')) {
                     throw new Forbidden('User limit '.$this->getConfig()->get('userLimit').' is reached.');
-                }
-            }
-        }
-        if ($this->getConfig()->get('portalUserLimit') && !$this->getUser()->get('isSuperAdmin')) {
-            if (
-                ($user->get('isActive') && $user->isAttributeChanged('isActive') && $user->get('isPortalUser'))
-                ||
-                ($user->get('isPortalUser') && $user->isAttributeChanged('isPortalUser'))
-            ) {
-                $portalUserCount = $this->getPortalUserCount();
-                if ($portalUserCount >= $this->getConfig()->get('portalUserLimit')) {
-                    throw new Forbidden('Portal user limit '.$this->getConfig()->get('portalUserLimit').' is reached.');
                 }
             }
         }
@@ -400,18 +362,6 @@ class User extends Record
 
         $siteUrl = $this->getConfig()->getSiteUrl() . '/';
 
-        if ($user->get('isPortalUser')) {
-            $portal = $user->get('portal');
-
-            if (empty($portal) || !$portal->get('isActive')) {
-                return;
-            }
-
-            $portalsUrls = App::getPortalUrlFileData();
-            if (empty($siteUrl = $portalsUrls[$portal->id])) {
-                return;
-            }
-        }
         $body = str_replace('{siteUrl}', $siteUrl, $body);
 
         $this->getMailSender()->send(
@@ -473,12 +423,6 @@ class User extends Record
     protected function clearRoleCache($id)
     {
         $this->getFileManager()->removeFile('data/cache/application/acl/' . $id . '.php');
-    }
-
-    public function massUpdate($data, array $params)
-    {
-        unset($data->isPortalUser);
-        return parent::massUpdate($data, $params);
     }
 
     public function loadAdditionalFields(Entity $entity)

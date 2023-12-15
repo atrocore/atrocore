@@ -314,7 +314,6 @@ class Record extends Base
 
     protected function loadFollowers(Entity $entity)
     {
-        if ($this->getUser()->isPortal()) return;
         if (!$this->getMetadata()->get(['scopes', $entity->getEntityType(), 'stream'])) return;
 
         $data = $this->getStreamService()->getEntityFollowers($entity, 0, self::FOLLOWERS_LIMIT);
@@ -703,12 +702,6 @@ class Record extends Base
             return true;
         }
 
-        if ($this->getUser()->isPortal()) {
-            if (count($entity->getLinkMultipleIdList('assignedUsers')) === 0) {
-                return true;
-            }
-        }
-
         $assignmentPermission = $this->getAcl()->get('assignmentPermission');
 
         if ($assignmentPermission === true || $assignmentPermission === 'yes' || !in_array($assignmentPermission, ['team', 'no'])) {
@@ -771,12 +764,6 @@ class Record extends Base
 
         $ownerUserId = $entity->get('ownerUserId');
 
-        if ($this->getUser()->isPortal()) {
-            if (!$entity->isAttributeChanged('ownerUserId') && empty($ownerUserId)) {
-                return true;
-            }
-        }
-
         $assignmentPermission = $this->getAcl()->get('assignmentPermission');
 
         if ($assignmentPermission === true || $assignmentPermission === 'yes' || !in_array($assignmentPermission, ['team', 'no'])) {
@@ -820,12 +807,6 @@ class Record extends Base
         }
 
         $assignedUserId = $entity->get('assignedUserId');
-
-        if ($this->getUser()->isPortal()) {
-            if (!$entity->isAttributeChanged('assignedUserId') && empty($assignedUserId)) {
-                return true;
-            }
-        }
 
         $assignmentPermission = $this->getAcl()->get('assignmentPermission');
 
@@ -1179,31 +1160,29 @@ class Record extends Base
 
     public function populateDefaults(Entity $entity, $data)
     {
-        if (!$this->getUser()->isPortal()) {
-            $forbiddenFieldList = null;
-            if ($entity->hasAttribute('assignedUserId')) {
-                $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->entityType, 'edit');
-                if (in_array('assignedUser', $forbiddenFieldList)) {
-                    $entity->set('assignedUserId', $this->getUser()->id);
-                    $entity->set('assignedUserName', $this->getUser()->get('name'));
-                }
+        $forbiddenFieldList = null;
+        if ($entity->hasAttribute('assignedUserId')) {
+            $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->entityType, 'edit');
+            if (in_array('assignedUser', $forbiddenFieldList)) {
+                $entity->set('assignedUserId', $this->getUser()->id);
+                $entity->set('assignedUserName', $this->getUser()->get('name'));
             }
+        }
 
-            if ($entity->hasLinkMultipleField('teams')) {
-                if (is_null($forbiddenFieldList)) {
-                    $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->entityType, 'edit');
-                }
-                if (in_array('teams', $forbiddenFieldList)) {
-                    if ($this->getUser()->get('defaultTeamId')) {
-                        $defaultTeamId = $this->getUser()->get('defaultTeamId');
-                        $entity->addLinkMultipleId('teams', $defaultTeamId);
-                        $teamsNames = $entity->get('teamsNames');
-                        if (!$teamsNames || !is_object($teamsNames)) {
-                            $teamsNames = (object)[];
-                        }
-                        $teamsNames->$defaultTeamId = $this->getUser()->get('defaultTeamName');
-                        $entity->set('teamsNames', $teamsNames);
+        if ($entity->hasLinkMultipleField('teams')) {
+            if (is_null($forbiddenFieldList)) {
+                $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->entityType, 'edit');
+            }
+            if (in_array('teams', $forbiddenFieldList)) {
+                if ($this->getUser()->get('defaultTeamId')) {
+                    $defaultTeamId = $this->getUser()->get('defaultTeamId');
+                    $entity->addLinkMultipleId('teams', $defaultTeamId);
+                    $teamsNames = $entity->get('teamsNames');
+                    if (!$teamsNames || !is_object($teamsNames)) {
+                        $teamsNames = (object)[];
                     }
+                    $teamsNames->$defaultTeamId = $this->getUser()->get('defaultTeamName');
+                    $entity->set('teamsNames', $teamsNames);
                 }
             }
         }
@@ -3075,10 +3054,6 @@ class Record extends Base
                 $attributeList[] = 'id';
             }
             $aclAttributeList = ['assignedUserId', 'createdById'];
-
-            if ($this->getUser()->isPortal()) {
-                $aclAttributeList[] = 'accountId';
-            }
 
             foreach ($aclAttributeList as $attribute) {
                 if (!in_array($attribute, $passedAttributeList) && $seed->hasAttribute($attribute)) {

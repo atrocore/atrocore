@@ -101,11 +101,6 @@
       "relationName": "entityTeam",
       "layoutRelationshipsDisabled": true
     },
-    "portalUsers": {
-      "type": "hasMany",
-      "entity": "User",
-      "foreign": "account"
-    },
     "contacts": {
       "type": "hasMany",
       "relationName": "contactAccount",

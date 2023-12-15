@@ -3,7 +3,6 @@
     "name": "Name",
     "roles": "Roles",
     "assignmentPermission": "Assignment Permission",
-    "portalPermission": "Portal Permission",
     "dataPrivacyPermission": "Data Privacy Permission"
   },
   "links": {
@@ -12,7 +11,6 @@
   },
   "tooltips": {
     "assignmentPermission": "Allows to restrict an ability to assign records and post messages to other users.\n\nall - no restriction\n\nteam - can assign and post only to teammates\n\nno - can assign and post only to self",
-    "portalPermission": "Defines an access to portal information, ability to post messages to portal users.",
     "dataPrivacyPermission": "Allows to view and erase personal data."
   },
   "labels": {

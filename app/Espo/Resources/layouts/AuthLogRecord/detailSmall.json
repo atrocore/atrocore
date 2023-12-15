@@ -7,7 +7,7 @@
             [{"name":"createdAt"}, false],
             [{"name":"requestUrl"}, {"name":"requestMethod"}],
             [{"name":"user"}, {"name":"authToken"}],
-            [{"name":"portal"}, {"name":"authTokenIsActive"}]
+            [{"name":"authTokenIsActive"}, false]
         ]
     }
 ]

@@ -36,10 +36,6 @@ Espo.define('views/user/record/detail-side', 'views/record/detail-side', functio
 
         setupPanels: function () {
             Dep.prototype.setupPanels.call(this);
-
-            if (this.model.get('isPortalUser')) {
-                this.hidePanel('tasks');
-            }
         }
 
     });

@@ -44,13 +44,11 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
             this.setupNonAdminFieldsAccess();
 
             if (this.model.id == this.getUser().id || this.getUser().isAdmin()) {
-                if (!this.model.get('isPortalUser')) {
-                    this.buttonList.push({
-                        name: 'access',
-                        label: 'Access',
-                        style: 'default'
-                    });
-                }
+                this.buttonList.push({
+                    name: 'access',
+                    label: 'Access',
+                    style: 'default'
+                });
 
                 if (this.model.id == this.getUser().id) {
                     this.dropdownItemList.push({
@@ -77,12 +75,9 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
                 'userName',
                 'isActive',
                 'isAdmin',
-                'isPortalUser',
                 'teams',
                 'roles',
                 'password',
-                'portal',
-                'portalRoles',
                 'account'
             ];
 
@@ -100,45 +95,15 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
             this.listenTo(this.model, 'change', function () {
                 this.controlFieldAppearance();
             }, this);
-
-            var isAdminView = this.getFieldView('isAdmin');
-            if (isAdminView) {
-                this.listenTo(isAdminView, 'change', function () {
-                    if (this.model.get('isAdmin')) {
-                        this.model.set('isPortalUser', false, {silent: true});
-                    }
-                }, this);
-            }
         },
 
         controlFieldAppearance: function () {
-            if (this.model.get('isAdmin')) {
-                this.hideField('isPortalUser');
-            } else {
-                this.showField('isPortalUser');
-            }
-
-            if (this.model.get('isPortalUser')) {
-                this.hideField('isAdmin');
-                this.hideField('roles');
-                this.hideField('teams');
-                this.hideField('defaultTeam');
-                this.showField('portal');
-                this.showField('portalRoles');
-                this.showField('account');
-                this.showPanel('portal');
-                this.hideField('title');
-            } else {
-                this.showField('isAdmin');
-                this.showField('roles');
-                this.showField('teams');
-                this.showField('defaultTeam');
-                this.hideField('portals');
-                this.hideField('portalRoles');
-                this.hideField('account');
-                this.hidePanel('portal');
-                this.showField('title');
-            }
+            this.showField('isAdmin');
+            this.showField('roles');
+            this.showField('teams');
+            this.showField('defaultTeam');
+            this.hideField('account');
+            this.showField('title');
         },
 
         actionChangePassword: function () {
@@ -195,25 +160,15 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
             this._helper.layoutManager.get(this.model.name, this.options.layoutName || this.layoutName, function (simpleLayout) {
                 var layout = Espo.Utils.cloneDeep(simpleLayout);
 
-                if (!this.getUser().isPortal()) {
-                    layout.push({
-                        "label": "Teams and Access Control",
-                        "name": "accessControl",
-                        "rows": [
-                            [{"name":"isActive"}, {"name":"isAdmin"}],
-                            [{"name":"teams"}, {"name":"isPortalUser"}],
-                            [{"name":"roles"}, {"name":"defaultTeam"}]
-                        ]
-                    });
-                    layout.push({
-                        "label": "Portal",
-                        "name": "portal",
-                        "rows": [
-                            [{"name":"portal"}, false],
-                            [{"name":"portalRoles"}, {"name":"account"}]
-                        ]
-                    });
-                }
+                layout.push({
+                    "label": "Teams and Access Control",
+                    "name": "accessControl",
+                    "rows": [
+                        [{"name":"isActive"}, {"name":"isAdmin"}],
+                        [{"name":"teams"}, false],
+                        [{"name":"roles"}, {"name":"defaultTeam"}]
+                    ]
+                });
 
                 var gridLayout = {
                     type: 'record',

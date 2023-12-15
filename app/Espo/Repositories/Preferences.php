@@ -53,7 +53,6 @@ class Preferences extends \Espo\Core\ORM\Repository
             'metadata',
             'config',
             'entityManager',
-            'portal',
             'connection'
         ]);
     }
@@ -139,9 +138,6 @@ class Preferences extends \Espo\Core\ORM\Repository
             $entity->set($this->data[$id]);
 
             $localeId = null;
-            if (!empty($this->getInjection('portal'))) {
-                $localeId = $this->getInjection('portal')->get('localeId');
-            }
             if (!empty($entity->get('locale'))) {
                 $localeId = $entity->get('locale');
             }
@@ -264,7 +260,7 @@ class Preferences extends \Espo\Core\ORM\Repository
             ->executeQuery();
 
         $user = $this->getEntityManger()->getEntity('User', $entity->id);
-        if ($user && !$user->get('isPortalUser')) {
+        if ($user) {
             $this->storeAutoFollowEntityTypeList($entity);
         }
 

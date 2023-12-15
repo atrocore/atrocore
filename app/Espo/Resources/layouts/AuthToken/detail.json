@@ -4,7 +4,7 @@
         "rows":[
             [{"name":"user"}, {"name":"isActive"}],
             [{"name":"ipAddress"}, {"name":"createdAt"}],
-            [{"name":"lastAccess"}, {"name":"portal"}]
+            [{"name":"lastAccess"}, false]
         ]
     }
 ]

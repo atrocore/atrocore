@@ -7,11 +7,6 @@
     "read",
     "delete"
   ],
-  "aclPortal": true,
-  "aclPortalActionList": [
-    "read",
-    "delete"
-  ],
   "type": "Base",
   "object": true,
   "hasAssignedUser": true,

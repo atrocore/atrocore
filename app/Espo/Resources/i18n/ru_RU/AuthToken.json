@@ -4,8 +4,7 @@
     "ipAddress": "IP адрес",
     "lastAccess": "Дата последнего подключения",
     "createdAt": "Дата входа",
-    "isActive": "Активен",
-    "portal": "Портал"
+    "isActive": "Активен"
   },
   "links": {
     "actionHistoryRecords": "История действий"

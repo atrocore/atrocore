@@ -3,7 +3,6 @@
     "data": "Daten",
     "roles": "Rollen",
     "assignmentPermission": "Zuweisungsberechtigung",
-    "portalPermission": "Portal Berechtigungen",
     "dataPrivacyPermission": "Datenschutz Erlaubnis"
   },
   "links": {
@@ -11,7 +10,6 @@
   },
   "tooltips": {
     "assignmentPermission": "Ermöglicht das Recht der Zuweisung von Datensätzen und das Senden von Nachrichten an andere Benutzer zu beschränken\n\nAlle - Keine Einschränkung\n\nTeam - Kann an Benutzer des eigenen Teams zuweisen/senden\n\nNein - Kann nur sich selbst zuweisen/senden",
-    "portalPermission": "Gibt Zugang zu Portalinformationen, die Möglichkeit Kontakte zu Portalbenutzern zu konvertieren und erlaubt das Senden von Nachrichten an Portalbenutzer",
     "dataPrivacyPermission": "Ermöglicht das Anzeigen und Löschen persönlicher Daten."
   },
   "labels": {

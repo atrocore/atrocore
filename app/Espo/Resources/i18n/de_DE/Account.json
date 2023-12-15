@@ -16,9 +16,6 @@
       "customer": "Kunde"
     }
   },
-  "links": {
-    "portalUsers": "Portal Benutzer"
-  },
   "labels": {
     "Create Account": "Account erstellen"
   }

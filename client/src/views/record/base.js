@@ -644,41 +644,12 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
             this.model.populateDefaults();
 
             var defaultHash = {};
-
-            if (!this.getUser().get('portalId')) {
-                var defaultTeamId = this.getUser().get('defaultTeamId');
-                if (defaultTeamId) {
-                    if (this.model.hasField('teams') && !this.model.getFieldParam('teams', 'default')) {
-                        defaultHash['teamsIds'] = [defaultTeamId];
-                        defaultHash['teamsNames'] = {};
-                        defaultHash['teamsNames'][defaultTeamId] = this.getUser().get('defaultTeamName');
-                    }
-                }
-            }
-
-            if (this.getUser().get('portalId')) {
-                if (this.model.hasField('account') && ~['belongsTo', 'hasOne'].indexOf(this.model.getLinkType('account'))) {
-                    if (this.getUser().get('accountId')) {
-                        defaultHash['accountId'] =  this.getUser().get('accountId');
-                        defaultHash['accountName'] = this.getUser().get('accountName');
-                    }
-                }
-                if (this.model.hasField('parent') && this.model.getLinkType('parent') === 'belongsToParent') {
-                    if (!this.getConfig().get('b2cMode')) {
-                        if (this.getUser().get('accountId')) {
-                            if (~(this.model.getFieldParam('parent', 'entityList') || []).indexOf('Account')) {
-                                defaultHash['parentId'] = this.getUser().get('accountId');
-                                defaultHash['parentName'] = this.getUser().get('accountName');
-                                defaultHash['parentType'] = 'Account';
-                            }
-                        }
-                    }
-                }
-                if (this.model.hasField('accounts') && this.model.getLinkType('accounts') === 'hasMany') {
-                    if (this.getUser().get('accountsIds')) {
-                        defaultHash['accountsIds'] = this.getUser().get('accountsIds');
-                        defaultHash['accountsNames'] = this.getUser().get('accountsNames');
-                    }
+            var defaultTeamId = this.getUser().get('defaultTeamId');
+            if (defaultTeamId) {
+                if (this.model.hasField('teams') && !this.model.getFieldParam('teams', 'default')) {
+                    defaultHash['teamsIds'] = [defaultTeamId];
+                    defaultHash['teamsNames'] = {};
+                    defaultHash['teamsNames'][defaultTeamId] = this.getUser().get('defaultTeamName');
                 }
             }
 

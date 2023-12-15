@@ -42,10 +42,6 @@ class Acl implements Factory
 {
     public function create(Container $container)
     {
-        if (!empty($container->get('portal'))) {
-            return new \Espo\Core\Portal\Acl($container->get('aclManager'), $container->get('user'));
-        }
-
         return new \Espo\Core\Acl($container->get('aclManager'), $container->get('user'));
     }
 }

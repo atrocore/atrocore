@@ -69,8 +69,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         massActionsDisabled: false,
 
-        portalLayoutDisabled: false,
-
         enabledFixedHeader: false,
 
         checkedAll: false,
@@ -379,7 +377,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.showMore = _.isUndefined(this.options.showMore) ? this.showMore : this.options.showMore;
 
             this.massActionsDisabled = this.options.massActionsDisabled || this.massActionsDisabled;
-            this.portalLayoutDisabled = this.options.portalLayoutDisabled || this.portalLayoutDisabled;
 
             if (this.massActionsDisabled && !this.selectable) {
                 this.checkboxes = false;
@@ -918,12 +915,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             if (!this.massActionList.length && !this.selectable) {
                 this.checkboxes = false;
-            }
-
-            if (this.getUser().isPortal() && !this.portalLayoutDisabled) {
-                if (this.getMetadata().get(['clientDefs', this.scope, 'additionalLayouts', this.layoutName + 'Portal'])) {
-                    this.layoutName += 'Portal';
-                }
             }
 
             this.listenTo(this.collection, 'sync', function (c, r, options) {

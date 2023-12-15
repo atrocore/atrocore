@@ -5,7 +5,6 @@
     "targetType": "Target",
     "teams": "Teams",
     "users": "Users",
-    "portals": "Portals",
     "type": "Type",
     "isGlobal": "Is Global",
     "isInternal": "Is Internal (for internal users)",
@@ -24,8 +23,7 @@
       "self": "to myself",
       "users": "to particular user(s)",
       "teams": "to particular team(s)",
-      "all": "to all internal users",
-      "portals": "to portal users"
+      "all": "to all internal users"
     },
     "type": {
       "Post": "Post"

@@ -15,8 +15,8 @@
                 false
             ],
             [
-                {"name": "portalPermission"},
-                {"name": "dataPrivacyPermission"}
+                {"name": "dataPrivacyPermission"},
+                false
             ]
         ]
     }

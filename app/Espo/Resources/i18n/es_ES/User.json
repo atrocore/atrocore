@@ -7,7 +7,6 @@
     "defaultTeam": "Equipo por defecto",
     "emailAddress": "Correo electrónico",
     "phoneNumber": "Teléfono",
-    "portalRoles": "Roles del portal",
     "teamRole": "Puesto",
     "password": "Contraseña",
     "currentPassword": "Contraseña Actual",
@@ -15,7 +14,6 @@
     "newPassword": "Nueva Contraseña",
     "newPasswordConfirm": "Confirmar Contraseña Nueva",
     "isActive": "Está activo",
-    "isPortalUser": "Es usuario del portal",
     "account": "Cuenta",
     "sendAccessInfo": "Enviar información de acceso al usuario",
     "gender": "Sexo",
@@ -25,14 +23,11 @@
     "isSuperAdmin": "Es superadministrador",
     "roles": "Roles",
     "avatar": "Avatar",
-    "portal": "Portal",
     "lastAccess": "Last Access"
   },
   "links": {
     "teams": "Equipos",
     "notes": "Notas",
-    "portal": "Portal",
-    "portalRoles": "Roles del portal",
     "account": "Cuenta",
     "tasks": "Tareas",
     "roles": "Roles"
@@ -48,9 +43,7 @@
     "Password Change Request": "Solicitar Cambio de Contraseña",
     "Email Address": "Correo electrónico",
     "External Accounts": "Cuentas externas",
-    "Email Accounts": "Cuentas de correo",
-    "Create Portal User": "Crear usuario del portal",
-    "Portal": "Portal"
+    "Email Accounts": "Cuentas de correo"
   },
   "tooltips": {
     "defaultTeam": "Todos los registros creados por este usuario serán relacionados a este equipo por defecto.",
@@ -59,7 +52,6 @@
     "isActive": "Si lo desmarca, el usuario no podrá iniciar sesión.",
     "teams": "Equipos a los que este usuario pertenece. Nivel de control de acceso se hereda de los roles de equipo.",
     "roles": "Roles de acceso adicionales. Úsalo si el usuario no pertenece a ningún equipo o si necesita ampliar el nivel de control de acceso solo para este usuario.",
-    "portalRoles": "Roles adicionales del portal. Utilícelos para extender el nivel de acceso exclusivamente para este usuario.",
     "password": "Deje este campo vacío si desea mantener la contraseña anterior.",
     "passwordConfirm": "Deje este campo vacío si desea mantener la contraseña anterior."
   },
@@ -92,7 +84,6 @@
     "onlyMyTeam": "Solo de mi equipo"
   },
   "presetFilters": {
-    "active": "Activo",
-    "activePortal": "Portales activos"
+    "active": "Activo"
   }
 }

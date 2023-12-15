@@ -15,21 +15,17 @@ namespace Atro\Core;
 
 use Espo\Core\EntryPointManager;
 use Espo\Core\Utils\Api\Auth as ApiAuth;
-use Espo\Core\Utils\Api\Output;
 use Espo\Core\Utils\Auth;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Route;
-use Espo\Entities\Portal;
 use Espo\ORM\EntityManager;
 use Espo\Services\Composer;
 use Espo\Services\Installer;
 
 class Application
 {
-    public const CONFIG_PATH = 'data/portals.json';
-
     public const COMPOSER_LOG_FILE = 'data/composer.log';
 
     /**
@@ -41,48 +37,6 @@ class Application
      * @var Container
      */
     protected $container;
-
-    /**
-     * @var Portal|null
-     */
-    protected $portal = null;
-
-    /**
-     * @var string|null
-     */
-    protected $clientPortalId = null;
-
-    /**
-     * Get portals url config file data
-     *
-     * @return array
-     */
-    public static function getPortalUrlFileData(): array
-    {
-        if (is_null(self::$urls)) {
-            // prepare result
-            self::$urls = [];
-
-            if (file_exists(self::CONFIG_PATH)) {
-                $json = file_get_contents(self::CONFIG_PATH);
-                if (!empty($json)) {
-                    self::$urls = Json::decode($json, true);
-                }
-            }
-        }
-
-        return self::$urls;
-    }
-
-    /**
-     * Set data to portal url config file
-     *
-     * @param array $data
-     */
-    public static function savePortalUrlFile(array $data): void
-    {
-        file_put_contents(self::CONFIG_PATH, Json::encode($data));
-    }
 
     /**
      * Is system updating?
@@ -134,13 +88,6 @@ class Application
             // generate openapi json
             if (preg_match('/^openapi\.json$/', $query)) {
                 $this->showOpenApiJson();
-            }
-
-            // for portal
-            $portalId = array_search($this->getConfig()->get('siteUrl', '') . '/' . $query, self::getPortalUrlFileData());
-            if (!empty($portalId)) {
-                $show404 = false;
-                $this->clientPortalId = $portalId;
             }
 
             if ($show404) {
@@ -224,18 +171,6 @@ class Application
         // prepare base route
         $baseRoute = '/api/v1';
 
-        // for portal api
-        if (preg_match('/^api\/v1\/portal-access\/(.*)\/.*$/', $url)) {
-            // parse uri
-            $matches = explode('/', str_replace('api/v1/portal-access/', '', $url));
-
-            // init portal container
-            $this->initPortalContainer($matches[0]);
-
-            // prepare base route
-            $baseRoute = '/api/v1/portal-access';
-        }
-
         $this->routeHooks();
         $this->initRoutes($baseRoute);
         $this->getSlim()->run();
@@ -295,17 +230,6 @@ class Application
             'year'            => date('Y')
         ];
 
-        if (!empty($this->clientPortalId)) {
-            // init portal container
-            $this->initPortalContainer($this->clientPortalId);
-
-            // prepare client vars
-            $vars['portalId'] = $this->clientPortalId;
-
-            // load client
-            $this->display('client/html/portal.html', $vars);
-        }
-
         $this->display('client/html/main.html', $vars);
     }
 
@@ -319,28 +243,6 @@ class Application
     {
         if (empty($entryPoint)) {
             throw new \Error();
-        }
-
-        // get portal id
-        $portalId = null;
-        if (!empty($_GET['portalId'])) {
-            $portalId = $_GET['portalId'];
-        }
-        if (!empty($_COOKIE['auth-token'])) {
-            $token = $this
-                ->getEntityManager()
-                ->getRepository('AuthToken')
-                ->where(['token' => $_COOKIE['auth-token']])
-                ->findOne();
-            if ($token && $token->get('portalId')) {
-                $portalId = $token->get('portalId');
-            }
-        }
-
-        // for portal
-        if (!empty($portalId)) {
-            // init portal container
-            $this->initPortalContainer((string)$portalId);
         }
 
         $slim = $this->getSlim();
@@ -378,18 +280,6 @@ class Application
     {
         $routes = new Route($this->getContainer()->get('fileManager'), $this->getContainer()->get('moduleManager'), $this->getContainer()->get('dataManager'));
         $routeList = $routes->getAll();
-
-        if (!empty($this->getContainer()->get('portal'))) {
-            foreach ($routeList as $i => $route) {
-                if (isset($route['route'])) {
-                    if ($route['route'][0] !== '/') {
-                        $route['route'] = '/' . $route['route'];
-                    }
-                    $route['route'] = '/:portalId' . $route['route'];
-                }
-                $routeList[$i] = $route;
-            }
-        }
 
         return $routeList;
     }
@@ -577,26 +467,6 @@ class Application
     protected function getMetadata(): Metadata
     {
         return $this->getContainer()->get('metadata');
-    }
-
-    /**
-     * @param string $portalId
-     *
-     * @throws \Exception
-     */
-    private function initPortalContainer(string $portalId): void
-    {
-        // find portal
-        $portal = $this
-            ->getContainer()
-            ->get('entityManager')
-            ->getEntity('Portal', $portalId);
-
-        if (!empty($portal) && $portal->get('isActive')) {
-            $this->getContainer()->setPortal($portal);
-        } else {
-            throw new \Exception('No such portal');
-        }
     }
 
     /**
