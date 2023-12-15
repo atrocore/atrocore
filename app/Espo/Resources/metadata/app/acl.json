@@ -7,12 +7,6 @@
                 "delete": "own",
                 "create": "yes"
             },
-            "Portal": {
-                "read": "all",
-                "edit": "no",
-                "delete": "no",
-                "create": "no"
-            },
             "Attachment": {
                 "read": "own",
                 "edit": "own",
@@ -37,8 +31,7 @@
                 "delete": "no",
                 "create": "no"
             },
-            "Role": false,
-            "PortalRole": false
+            "Role": false
         },
         "fieldLevel": {
         },

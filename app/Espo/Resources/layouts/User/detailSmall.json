@@ -39,12 +39,6 @@
         {
           "name": "isActive"
         }
-      ],
-      [
-        {
-          "name": "isPortalUser"
-        },
-        false
       ]
     ]
   }

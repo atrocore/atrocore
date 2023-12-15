@@ -3,7 +3,6 @@
   "layouts": true,
   "tab": true,
   "acl": true,
-  "aclPortal": true,
   "type": "Base",
   "object": true,
   "hasOwner": false,
