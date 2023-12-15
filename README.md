@@ -46,7 +46,6 @@ Here is a AtroCore package description in detail:
 | Data import and export      | You can import or export any data to any and from any entity in the system, even those you have just created. |
 | Advanced mass updates       | Choose the entries to be updated, set the new values and perform a mass update. |
 | Advanced search and filters | You can configure the filters and search criteria as you wish, and save them, if you want to use the saved filters later. |
-| Portals                     | Use this additional layer to give access to third parties to your system. Use portal roles to restrict their access. |
 | Change Log and Stream       | See all changes to the entries (who, old and new value, when) and add your own posts with a timestamp and attachments. |
 | Queue Manager               | Use it if you want to run or control processes in the background. |
 | Access Control Lists (ACL)  | Enterprise Level ACL based on Teams and Roles, with access level (own, team, all). You can edit permissions even for each field separately. |
