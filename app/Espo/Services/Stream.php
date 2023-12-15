@@ -337,85 +337,62 @@ class Stream extends \Espo\Core\Services\Base
             ]
         ];
 
-        if ($this->getUser()->isPortal()) {
-            $where = [
-                'OR' => [
-                    [
-                        'parentType' => $scope,
-                        'parentId' => $id
-                    ]
-                ]
-            ];
-            $notAllEntityTypeList = $this->getNotAllEntityTypeList($this->getUser());
+        if (count($onlyTeamEntityTypeList) || count($onlyOwnEntityTypeList)) {
+            $selectParams['leftJoins'] = [['teams', 'teamsMiddle'], ['users', 'usersMiddle']];
+            $selectParams['distinct'] = true;
             $where[] = [
                 'OR' => [
-                    [
-                        'relatedId' => null
+                    'OR' => [
+                        [
+                            'relatedId!=' => null,
+                            'relatedType!=' => array_merge($onlyTeamEntityTypeList, $onlyOwnEntityTypeList)
+                        ],
+                        [
+                            'relatedId=' => null,
+                            'superParentId' => $id,
+                            'superParentType' => $scope,
+                            'parentId!=' => null,
+                            'parentType!=' => array_merge($onlyTeamEntityTypeList, $onlyOwnEntityTypeList)
+                        ],
+                        [
+                            'relatedId=' => null,
+                            'parentType=' => $scope,
+                            'parentId=' => $id
+                        ]
                     ],
                     [
-                        'relatedId!=' => null,
-                        'relatedType!=' => $notAllEntityTypeList
-                    ]
-                ]
-            ];
-        } else {
-            if (count($onlyTeamEntityTypeList) || count($onlyOwnEntityTypeList)) {
-                $selectParams['leftJoins'] = [['teams', 'teamsMiddle'], ['users', 'usersMiddle']];
-                $selectParams['distinct'] = true;
-                $where[] = [
-                    'OR' => [
                         'OR' => [
                             [
                                 'relatedId!=' => null,
-                                'relatedType!=' => array_merge($onlyTeamEntityTypeList, $onlyOwnEntityTypeList)
+                                'relatedType=' => $onlyTeamEntityTypeList
                             ],
                             [
                                 'relatedId=' => null,
-                                'superParentId' => $id,
-                                'superParentType' => $scope,
-                                'parentId!=' => null,
-                                'parentType!=' => array_merge($onlyTeamEntityTypeList, $onlyOwnEntityTypeList)
-                            ],
-                            [
-                                'relatedId=' => null,
-                                'parentType=' => $scope,
-                                'parentId=' => $id
+                                'parentType=' => $onlyTeamEntityTypeList
                             ]
                         ],
                         [
                             'OR' => [
-                                [
-                                    'relatedId!=' => null,
-                                    'relatedType=' => $onlyTeamEntityTypeList
-                                ],
-                                [
-                                    'relatedId=' => null,
-                                    'parentType=' => $onlyTeamEntityTypeList
-                                ]
-                            ],
-                            [
-                                'OR' => [
-                                    'teamsMiddle.teamId' => $this->getUser()->getTeamIdList(),
-                                    'usersMiddle.userId' => $this->getUser()->id
-                                ]
+                                'teamsMiddle.teamId' => $this->getUser()->getTeamIdList(),
+                                'usersMiddle.userId' => $this->getUser()->id
                             ]
-                        ],
-                        [
-                            'OR' => [
-                                [
-                                    'relatedId!=' => null,
-                                    'relatedType=' => $onlyOwnEntityTypeList
-                                ],
-                                [
-                                    'relatedId=' => null,
-                                    'parentType=' => $onlyOwnEntityTypeList
-                                ]
-                            ],
-                            'usersMiddle.userId' => $this->getUser()->id
                         ]
+                    ],
+                    [
+                        'OR' => [
+                            [
+                                'relatedId!=' => null,
+                                'relatedType=' => $onlyOwnEntityTypeList
+                            ],
+                            [
+                                'relatedId=' => null,
+                                'parentType=' => $onlyOwnEntityTypeList
+                            ]
+                        ],
+                        'usersMiddle.userId' => $this->getUser()->id
                     ]
-                ];
-            }
+                ]
+            ];
         }
 
         if (!empty($params['after'])) {
@@ -460,12 +437,6 @@ class Stream extends \Espo\Core\Services\Base
                     'type!=' => ['EmailReceived', 'EmailSent']
                 ];
             }
-        }
-
-        if ($this->getUser()->get('isPortalUser')) {
-            $where[] = [
-                'isInternal' => false
-            ];
         }
 
         $selectParams['whereClause'] = $where;
@@ -920,8 +891,6 @@ class Stream extends \Espo\Core\Services\Base
 
     protected function getOnlyTeamEntityTypeList(\Espo\Entities\User $user)
     {
-        if ($user->isPortal()) return [];
-
         $list = [];
         $scopes = $this->getMetadata()->get('scopes', []);
         foreach ($scopes as $scope => $item) {
@@ -940,8 +909,6 @@ class Stream extends \Espo\Core\Services\Base
 
     protected function getOnlyOwnEntityTypeList(\Espo\Entities\User $user)
     {
-        if ($user->isPortal()) return [];
-
         $list = [];
         $scopes = $this->getMetadata()->get('scopes', []);
         foreach ($scopes as $scope => $item) {
@@ -959,8 +926,6 @@ class Stream extends \Espo\Core\Services\Base
 
     protected function getNotAllEntityTypeList(\Espo\Entities\User $user)
     {
-        if (!$user->isPortal()) return [];
-
         $list = [];
         $scopes = $this->getMetadata()->get('scopes', []);
         foreach ($scopes as $scope => $item) {
@@ -1020,11 +985,9 @@ class Stream extends \Espo\Core\Services\Base
                 continue;
             }
 
-            if (!$user->get('isPortalUser')) {
-                if (!$this->getAclManager()->check($user, $entity, 'stream')) {
-                    $this->unfollowEntity($entity, $user->id);
-                    continue;
-                }
+            if (!$this->getAclManager()->check($user, $entity, 'stream')) {
+                $this->unfollowEntity($entity, $user->id);
+                continue;
             }
         }
     }

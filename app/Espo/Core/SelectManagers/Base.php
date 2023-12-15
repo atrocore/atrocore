@@ -504,28 +504,14 @@ class Base
 
     protected function access(&$result)
     {
-        if (!$this->checkIsPortal()) {
-            if ($this->getAcl()->checkReadOnlyOwn($this->getEntityType())) {
-                $this->accessOnlyOwn($result);
-            } else {
-                if (!$this->getUser()->isAdmin()) {
-                    if ($this->getAcl()->checkReadOnlyTeam($this->getEntityType())) {
-                        $this->accessOnlyTeam($result);
-                    } else if ($this->getAcl()->checkReadNo($this->getEntityType())) {
-                        $this->accessNo($result);
-                    }
-                }
-            }
+        if ($this->getAcl()->checkReadOnlyOwn($this->getEntityType())) {
+            $this->accessOnlyOwn($result);
         } else {
-            if ($this->getAcl()->checkReadOnlyOwn($this->getEntityType())) {
-                $this->accessOnlyOwn($result);
-            } else {
-                if ($this->getAcl()->checkReadOnlyAccount($this->getEntityType())) {
-
-                } else {
-                    if ($this->getAcl()->checkReadNo($this->getEntityType())) {
-                        $this->accessNo($result);
-                    }
+            if (!$this->getUser()->isAdmin()) {
+                if ($this->getAcl()->checkReadOnlyTeam($this->getEntityType())) {
+                    $this->accessOnlyTeam($result);
+                } else if ($this->getAcl()->checkReadNo($this->getEntityType())) {
+                    $this->accessNo($result);
                 }
             }
         }
