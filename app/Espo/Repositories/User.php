@@ -106,24 +106,6 @@ class User extends \Espo\Core\ORM\Repositories\RDB
                 }
             }
         }
-
-        if ($entity->has('isAdmin') && $entity->get('isAdmin')) {
-            $entity->set('isPortalUser', false);
-            $entity->set('portalRolesIds', []);
-            $entity->set('portalRolesNames', (object)[]);
-            $entity->set('portalId', null);
-            $entity->set('portalName', null);
-        }
-
-        if ($entity->has('isPortalUser') && $entity->get('isPortalUser')) {
-            $entity->set('isAdmin', false);
-            $entity->set('rolesIds', []);
-            $entity->set('rolesNames', (object)[]);
-            $entity->set('teamsIds', []);
-            $entity->set('teamsNames', (object)[]);
-            $entity->set('defaultTeamId', null);
-            $entity->set('defaultTeamName', null);
-        }
     }
 
     public function checkBelongsToAnyOfTeams($userId, array $teamIds)

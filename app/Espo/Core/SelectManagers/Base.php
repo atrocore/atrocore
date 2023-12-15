@@ -1717,29 +1717,23 @@ class Base
      */
     protected function boolFilterOnlyMy(&$result)
     {
-        if (!$this->checkIsPortal()) {
-            $where = [];
+        $where = [];
 
-            if ($this->hasOwnerUserField()) {
-                $where[] = ['ownerUserId' => $this->getUser()->id];
-            }
-
-            if ($this->hasAssignedUserField()) {
-                $where[] = ['assignedUserId' => $this->getUser()->id];
-            }
-
-            if (!$this->hasOwnerUserField() && !$this->hasAssignedUserField()) {
-                $where[] = ['createdById' => $this->getUser()->id];
-            }
-
-            $result['whereClause'][] = [
-                'OR' => $where
-            ];
-        } else {
-            $result['whereClause'][] = [
-                'createdById' => $this->getUser()->id
-            ];
+        if ($this->hasOwnerUserField()) {
+            $where[] = ['ownerUserId' => $this->getUser()->id];
         }
+
+        if ($this->hasAssignedUserField()) {
+            $where[] = ['assignedUserId' => $this->getUser()->id];
+        }
+
+        if (!$this->hasOwnerUserField() && !$this->hasAssignedUserField()) {
+            $where[] = ['createdById' => $this->getUser()->id];
+        }
+
+        $result['whereClause'][] = [
+            'OR' => $where
+        ];
     }
 
     /**
@@ -1749,16 +1743,10 @@ class Base
      */
     protected function boolFilterOwnedByMe(&$result)
     {
-        if (!$this->checkIsPortal()) {
-            if ($this->hasOwnerUserField()) {
-                $result['whereClause'][] = [
-                    'ownerUserId' => $this->getUser()->id
-                ];
-            } else {
-                $result['whereClause'][] = [
-                    'createdById' => $this->getUser()->id
-                ];
-            }
+        if ($this->hasOwnerUserField()) {
+            $result['whereClause'][] = [
+                'ownerUserId' => $this->getUser()->id
+            ];
         } else {
             $result['whereClause'][] = [
                 'createdById' => $this->getUser()->id
@@ -1773,16 +1761,10 @@ class Base
      */
     protected function boolFilterAssignedToMe(&$result)
     {
-        if (!$this->checkIsPortal()) {
-            if ($this->hasAssignedUserField()) {
-                $result['whereClause'][] = [
-                    'assignedUserId' => $this->getUser()->id
-                ];
-            } else {
-                $result['whereClause'][] = [
-                    'createdById' => $this->getUser()->id
-                ];
-            }
+        if ($this->hasAssignedUserField()) {
+            $result['whereClause'][] = [
+                'assignedUserId' => $this->getUser()->id
+            ];
         } else {
             $result['whereClause'][] = [
                 'createdById' => $this->getUser()->id

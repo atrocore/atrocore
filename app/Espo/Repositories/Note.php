@@ -229,15 +229,6 @@ class Note extends RDB
                         continue;
                     }
 
-                    if ($user->isPortal()) {
-                        if ($entity->get('relatedType')) {
-                            continue;
-                        } else {
-                            $notifyUserIdList[] = $user->id;
-                        }
-                        continue;
-                    }
-
                     $level = $this->getInternalAclManager()->getLevel($user, $targetType, 'read');
 
                     if ($level === 'all') {
@@ -314,37 +305,19 @@ class Note extends RDB
                             }
                         }
                     } else {
-                        if ($targetType === 'portals') {
-                            if (!empty($entity->get('portalId') && !empty($portal = $this->getEntityManager()->getEntity('Portal', $entity->get('portalId'))))) {
-                                $targetUserList = $this
-                                    ->getEntityManager()
-                                    ->getRepository('Portal')
-                                    ->findRelated($portal, 'users', ['whereClause' => ['isActive' => true]]);
-                                foreach ($targetUserList as $user) {
-                                    if ($user->id === $this->getUser()->id) {
-                                        continue;
-                                    }
-                                    if (in_array($user->id, $notifyUserIdList)) {
-                                        continue;
-                                    }
-                                    $notifyUserIdList[] = $user->id;
-                                }
-                            }
-                        } else {
-                            if ($targetType === 'all') {
-                                $targetUserList = $this->getEntityManager()->getRepository('User')->find(
-                                    array(
-                                        'whereClause' => array(
-                                            'isActive' => true
-                                        )
+                        if ($targetType === 'all') {
+                            $targetUserList = $this->getEntityManager()->getRepository('User')->find(
+                                array(
+                                    'whereClause' => array(
+                                        'isActive' => true
                                     )
-                                );
-                                foreach ($targetUserList as $user) {
-                                    if ($user->id === $this->getUser()->id) {
-                                        continue;
-                                    }
-                                    $notifyUserIdList[] = $user->id;
+                                )
+                            );
+                            foreach ($targetUserList as $user) {
+                                if ($user->id === $this->getUser()->id) {
+                                    continue;
                                 }
+                                $notifyUserIdList[] = $user->id;
                             }
                         }
                     }
@@ -383,10 +356,7 @@ class Note extends RDB
             ->setParameter('entityType', $parentType);
 
         if ($isInternal) {
-            $qb
-                ->innerJoin('s', $connection->quoteIdentifier('user'), 'u', 'u.id = s.user_id')
-                ->andWhere('u.is_portal_user = :isPortalUser')
-                ->setParameter('isPortalUser', false, Mapper::getParameterType(false));
+            $qb->innerJoin('s', $connection->quoteIdentifier('user'), 'u', 'u.id = s.user_id');
         }
 
         return $this->getEntityManager()->getRepository('User')
@@ -415,22 +385,7 @@ class Note extends RDB
 
     protected function checkByAclManager(User $user, Entity $parent, string $action): bool
     {
-        if (!$user->isPortalUser()) {
-            return (AclManagerFactory::createAclManager($this->getInjection('container')))->check($user, $parent, $action);
-        }
-
-        $result = false;
-        $portals = $user->get('portals');
-        if (count($portals) > 0) {
-            foreach ($portals as $portal) {
-                $result = (AclManagerFactory::createPortalAclManager($this->getInjection('container'), $portal))->check($user, $parent, $action);
-                if ($result) {
-                    return $result;
-                }
-            }
-        }
-
-        return $result;
+        return (AclManagerFactory::createAclManager($this->getInjection('container')))->check($user, $parent, $action);
     }
 
     protected function getNotificationService(): \Espo\Services\Notification
