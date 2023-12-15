@@ -133,6 +133,7 @@
         },
         "teams": {
             "type": "hasMany",
+            "relationName": "noteTeam",
             "entity": "Team",
             "foreign": "notes"
         },
