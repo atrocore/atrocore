@@ -43,7 +43,6 @@
     "assignmentNotifications": "Benachrichtigungen bei Zuweisungen senden",
     "assignmentEmailNotifications": "E-Mail Benachrichtigungen bei Zuweisungen senden",
     "streamEmailNotifications": "Benachrichtigungen über Änderungen im Aktivitätenpanel für interne Benutzer",
-    "portalStreamEmailNotifications": "Benachrichtigungen über Änderungen in Aktivitätenpanel für Portalnutzer",
     "calendarEntityList": "Kalenderentitätsliste",
     "mentionEmailNotifications": "Benachrichtigungen für Erwähnungen in Beträgen",
     "activitiesEntityList": "Aktivitätenentitätsliste",

@@ -11,8 +11,6 @@
     "emailAddress": "E-Mail",
     "phoneNumber": "Telefon",
     "roles": "Rollen",
-    "portal": "Portal",
-    "portalRoles": "Portal Rollen",
     "password": "Passwort",
     "currentPassword": "Aktuelles Passwort",
     "passwordConfirm": "Passwort bestätigen",
@@ -33,8 +31,6 @@
     "account": "Benutzerkonto",
     "roles": "Rollen",
     "notes": "Notizen",
-    "portal": "Portal",
-    "portalRoles": "Portal Rollen",
     "tasks": "Aufgaben"
   },
   "labels": {
@@ -58,7 +54,6 @@
     "isActive": "Wenn nicht markiert kann der Benutzer sich nicht einloggen",
     "teams": "Das Team zu dem dieser Benutzer gehört. Die Zugriffsberechtigung wird von der Team Rolle vererbt.",
     "roles": "Zusätzliche Zugriffsrollen. Wenn ein Benutzer zu keinem Team gehört oder wenn Sie die Zugriffsberechtigung nur für diesen Benutzer erweitern wollen.",
-    "portalRoles": "Zusätzliche Portal Rollen. Benutzen Sie diese wenn Sie die Zugriffsberechtigung nur für diesen Benutzer erweitern wollen.",
     "password": "Lassen Sie dieses Feld leer, wenn Sie das alte Password behalten wollen.",
     "passwordConfirm": "Lassen Sie dieses Feld leer, wenn Sie das alte Password behalten wollen."
   },

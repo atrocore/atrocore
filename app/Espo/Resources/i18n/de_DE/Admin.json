@@ -15,7 +15,6 @@
     "Disabled": "Inaktiv",
     "AccessManagement": "Zugriffsverwaltung",
     "Users": "Benutzer",
-    "Portal": "Portalverwaltung",
     "Email": "E-Mail",
     "Data": "Daten",
     "Customization": "Anpassung",
@@ -29,8 +28,7 @@
     "Clear Cache": "Cache leeren",
     "rebuildDb": "Datenbankstruktur aktualisieren",
     "Roles": "Rollen",
-    "Portals": "Portale",
-    "Portal Roles": "Portal-Rollen",
+    "Account": "Account Management",
     "Outbound Emails": "Ausgehende E-Mails",
     "User Interface": "Benutzeroberfläche",
     "Authentication": "Authentifizierung",
@@ -48,7 +46,6 @@
     "Edit Link": "Relation bearbeiten",
     "Notifications": "Benachrichtigungen",
     "Reset to Default": "Auf Standardwert zurücksetzen",
-    "Portal Users": "Portal-Benutzer",
     "Action History": "Aktionsverlauf",
     "Auth Log": "Auth-Protokoll",
     "Attachments": "Anhänge",
@@ -63,8 +60,6 @@
     "or": "ODER"
   },
   "layouts": {
-    "detailSmallPortal": "Detail (Klein, Portal)",
-    "listSmallPortal": "List (Klein, Portal)",
     "relationships": "Relations-Paneele",
     "list": "Liste",
     "listSmall": "Liste (Klein)",
@@ -74,8 +69,6 @@
     "sidePanelsEdit": "Seitenpanel (Bearbeiten)",
     "sidePanelsDetailSmall": "Seitenpanel (Detail klein)",
     "sidePanelsEditSmall": "Seitenpanel (Bearbeiten klein)",
-    "listPortal": "Liste (Portal)",
-    "relationshipsPortal": "Relationen (Portal)",
     "listForAccount": "Liste (für Firma)"
   },
   "fieldTypes": {
@@ -199,9 +192,6 @@
     "users": "Verwalten Sie Systembenutzer, ihre Präferenzen, Rollen und Teams und validieren Sie ihre Zugriffsebene und Berechtigungen für alle Entitäten.",
     "teams": "Verwalten Sie Teams und Benutzerzuweisungen zu Teams.",
     "roles": "Verwalten Sie Rollen – legen Sie Berechtigungen fürs Erstellen, Lesen, Aktualisieren und Löschen der Datensätze. Bestimmen Sie die Zugriffsebenen (eigene, teambezogene oder alle Datensätze) für alle Entitäten im System fest, definieren Sie spezifische Berechtigungen für einzelne Felder.",
-    "portals": "Verwalten Sie Portale, um externen Partnern – Fotografen, Übersetzern, Lieferanten, Distributoren, Kunden, Einzelhändlern und anderen einen eingeschränkten Zugriff auf Ihr System und Ihre Daten zu gewähren.",
-    "portalRoles": "Verwalten Sie Portalrollen – legen Sie Berechtigungen fürs Erstellen, Lesen, Aktualisieren und Löschen der Datensätze. Bestimmen Sie die Zugriffsebenen (eigene, kontobezogene oder alle Datensätze) für Entitäten fest, die in einem Portal verfügbar sind, definieren Sie spezifische Berechtigungen für einzelne Felder.",
-    "portalUsers": "Verwalten Sie Portalbenutzer, ihre Präferenzen, Portalrollen, Portale und Accounts (Firmen).",
     "outboundEmails": "Legen Sie die SMTP-Servereinstellungen für ausgehende E-Mails fest.",
     "layoutManager": "Verwalten Sie Standardsystemlayouts für (seitliche) Listenansicht, (seitliche) Detailansicht, Relations-Paneele und deren Sortierreihenfolge, Massenaktualisierung usw.",
     "userInterface": "Wählen Sie Ihr Theme aus, konfigurieren Sie Hauptnavigationselemente, Standard-Dashboards und Entitäten, die für eine schnelle Datensatz-Erstellung verfügbar sind, und legen Sie andere Einstellungen fest.",
