@@ -38,9 +38,12 @@ namespace Espo\Services;
 use Espo\Core\DataManager;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityFactory;
 
 class MassRestore extends QueueManagerBase
 {
+
+
     public function run(array $data = []): bool
     {
         if (empty($data['entityType'])) {
@@ -57,18 +60,18 @@ class MassRestore extends QueueManagerBase
         if (array_key_exists('where', $data)) {
             $selectManager = $this->getContainer()->get('selectManagerFactory')->create($entityType);
             $selectParams = $selectManager->getSelectParams(['where' => $data['where']], true, true);
+
             $this->getEntityManager()->getRepository($entityType)->handleSelectParams($selectParams);
 
-            $query = $this
-                ->getEntityManager()
-                ->getQuery()
-                ->createSelectQuery($entityType, array_merge($selectParams, ['select' => ['id']]));
+            $result = $this->getEntityManager()
+                ->getRepository($entityType)
+                ->getMapper()
+                ->select(
+                    $this->getEntityManager()->getRepository($entityType)->get(),
+                    array_merge($selectParams, ['select' => ['id']])
+                );
 
-            $ids = $this
-                ->getEntityManager()
-                ->getPDO()
-                ->query($query)
-                ->fetchAll(\PDO::FETCH_COLUMN);
+            $ids = array_column($result,'id');
         }
 
         if (empty($ids)) {
