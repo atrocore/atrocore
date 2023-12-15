@@ -212,8 +212,6 @@ class Stream extends \Espo\Core\Hooks\Base
                     $createdById === $this->getUser()->id
                     &&
                     (
-                        $this->getUser()->isPortalUser()
-                        ||
                         $this->getPreferences()->get('followCreatedEntities')
                         ||
                         (

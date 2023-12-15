@@ -502,11 +502,6 @@ class Base
         }
     }
 
-    protected function checkIsPortal()
-    {
-        return !!$this->getUser()->get('portalId');
-    }
-
     protected function access(&$result)
     {
         if (!$this->checkIsPortal()) {

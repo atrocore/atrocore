@@ -314,7 +314,6 @@ class Record extends Base
 
     protected function loadFollowers(Entity $entity)
     {
-        if ($this->getUser()->isPortal()) return;
         if (!$this->getMetadata()->get(['scopes', $entity->getEntityType(), 'stream'])) return;
 
         $data = $this->getStreamService()->getEntityFollowers($entity, 0, self::FOLLOWERS_LIMIT);

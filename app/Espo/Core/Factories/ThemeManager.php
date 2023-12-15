@@ -42,11 +42,6 @@ class ThemeManager implements Factory
 {
     public function create(Container $container)
     {
-        $portal = $container->get('portal');
-        if (!empty($portal)) {
-            return new \Espo\Core\Portal\Utils\ThemeManager($container->get('config'), $container->get('metadata'), $portal);
-        }
-
         return new \Espo\Core\Utils\ThemeManager($container->get('config'), $container->get('metadata'));
     }
 }
