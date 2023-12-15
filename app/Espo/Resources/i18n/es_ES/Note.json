@@ -5,7 +5,6 @@
     "targetType": "Objetivo",
     "teams": "Equipos",
     "users": "Usuarios",
-    "portals": "Portales",
     "type": "Tipo",
     "isGlobal": "Es global",
     "isInternal": "Es Interno (para usuarios internos)",
@@ -24,8 +23,7 @@
       "self": "Para mí",
       "users": "Para determinado/s usuario/s",
       "teams": "Para determinado/s equipo/s",
-      "all": "Para todos los usuarios",
-      "portals": "Para los usuarios del portal"
+      "all": "Para todos los usuarios"
     },
     "type": {
       "Post": "Post"

@@ -2,7 +2,6 @@
   "fields": {
     "name": "Nombre",
     "assignmentPermission": "Asignación de permisos",
-    "portalPermission": "Permisos del portal",
     "roles": "Roles",
     "dataPrivacyPermission": "Data Privacy Permission"
   },
@@ -12,7 +11,6 @@
   },
   "tooltips": {
     "assignmentPermission": "Permite restringir la capacidad de los usuarios para que asignen registros y publicaciones a otros usuarios.\n\ntodo - sin restricción\n\nequipo - puede asignar a usuarios de su propio equipo\n\nno - solo puede asignarse a sí mismo",
-    "portalPermission": "Define un acceso a la información del portal, la capacidad de publicar mensajes a los usuarios del portal.\n",
     "dataPrivacyPermission": "Allows to view and erase personal data."
   },
   "labels": {
