@@ -44,14 +44,6 @@ class User extends \Espo\Core\SelectManagers\Base
                 'isActive' => true
             );
         }
-        if ($this->getAcl()->get('portalPermission') !== 'yes') {
-            $result['whereClause'][] = array(
-                'OR' => [
-                    ['isPortalUser' => false],
-                    ['id' => $this->getUser()->id]
-                ]
-            );
-        }
         $result['whereClause'][] = array(
             'isSuperAdmin' => false
         );
@@ -62,28 +54,6 @@ class User extends \Espo\Core\SelectManagers\Base
         $result['whereClause'][] = [
             'isActive' => true
         ];
-    }
-
-    protected function filterActivePortal(&$result)
-    {
-        $result['whereClause'][] = array(
-            'isActive' => true,
-            'isPortalUser' => true
-        );
-    }
-
-    protected function filterPortal(&$result)
-    {
-        $result['whereClause'][] = array(
-            'isPortalUser' => true
-        );
-    }
-
-    protected function filterInternal(&$result)
-    {
-        $result['whereClause'][] = array(
-            'isPortalUser' => false
-        );
     }
 
     protected function boolFilterOnlyMyTeam(&$result)

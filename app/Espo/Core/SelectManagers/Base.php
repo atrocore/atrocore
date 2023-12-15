@@ -526,7 +526,7 @@ class Base
                 $this->accessOnlyOwn($result);
             } else {
                 if ($this->getAcl()->checkReadOnlyAccount($this->getEntityType())) {
-                    $this->accessPortalOnlyAccount($result);
+
                 } else {
                     if ($this->getAcl()->checkReadNo($this->getEntityType())) {
                         $this->accessNo($result);
@@ -595,48 +595,6 @@ class Base
         $qb->setParameter('teamsIds', $this->getUser()->getLinkMultipleIdList('teams'), Connection::PARAM_STR_ARRAY);
         $qb->setParameter('entityType', $this->entityType);
         $qb->setParameter('false', false, ParameterType::BOOLEAN);
-    }
-
-    protected function accessPortalOnlyAccount(&$result)
-    {
-        $d = [];
-
-        $accountId = $this->getUser()->get('accountId');
-
-        if (!empty($accountId)) {
-            if ($this->getSeed()->hasAttribute('accountId')) {
-                $d['accountId'] = $accountId;
-            }
-            if ($this->getSeed()->hasRelation('assignedAccounts')) {
-                $this->addLeftJoin(['assignedAccounts', 'accountsAccess'], $result);
-                $this->setDistinct(true, $result);
-                $d['accountsAccess.id'] = $accountId;
-            } elseif ($this->getSeed()->hasRelation('accounts')) {
-                $this->addLeftJoin(['accounts', 'accountsAccess'], $result);
-                $this->setDistinct(true, $result);
-                $d['accountsAccess.id'] = $accountId;
-            }
-            if ($this->getSeed()->hasAttribute('parentId') && $this->getSeed()->hasRelation('parent')) {
-                $d[] = array(
-                    'parentType' => 'Account',
-                    'parentId' => $accountId
-                );
-            }
-        }
-
-        if ($this->getSeed()->hasAttribute('createdById')) {
-            $d['createdById'] = $this->getUser()->id;
-        }
-
-        if (!empty($d)) {
-            $result['whereClause'][] = array(
-                'OR' => $d
-            );
-        } else {
-            $result['whereClause'][] = array(
-                'id' => null
-            );
-        }
     }
 
     /**
