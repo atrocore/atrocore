@@ -216,7 +216,9 @@ class RDB extends \Espo\ORM\Repository
                     $entity->updateFetchedValues();
                 }
             }
-            $this->putToCache($entity->get('id'), $entity);
+            if ($entity->get('id') !== null) {
+                $this->putToCache($entity->get('id'), $entity);
+            }
         }
         $entity->setAsNotBeingSaved();
 
