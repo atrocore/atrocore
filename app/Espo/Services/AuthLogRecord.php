@@ -48,7 +48,6 @@ class AuthLogRecord extends Record
 
     protected $readOnlyAttributeList = [
         "username",
-        "portalId",
         "userId",
         "authTokenId",
         "ipAddress",

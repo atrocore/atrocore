@@ -702,12 +702,6 @@ class Record extends Base
             return true;
         }
 
-        if ($this->getUser()->isPortal()) {
-            if (count($entity->getLinkMultipleIdList('assignedUsers')) === 0) {
-                return true;
-            }
-        }
-
         $assignmentPermission = $this->getAcl()->get('assignmentPermission');
 
         if ($assignmentPermission === true || $assignmentPermission === 'yes' || !in_array($assignmentPermission, ['team', 'no'])) {

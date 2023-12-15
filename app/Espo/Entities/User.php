@@ -50,16 +50,6 @@ class User extends \Espo\Core\ORM\Entity
         return $this->get('isActive');
     }
 
-    public function isPortal()
-    {
-        return $this->isPortalUser();
-    }
-
-    public function isPortalUser()
-    {
-        return $this->get('isPortalUser');
-    }
-
     public function getTeamIdList()
     {
         if (!$this->has('teamsIds')) {
