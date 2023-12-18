@@ -34,6 +34,7 @@
 return [
     'isInstalled'                           => false,
     'passwordSalt'                          => 'some-salt',
+    'amountOfDbDumps'                       => 14,
     'database'                              => [
         'driver'   => 'pdo_mysql',
         'host'     => 'localhost',
