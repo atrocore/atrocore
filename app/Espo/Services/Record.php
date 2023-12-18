@@ -1340,7 +1340,6 @@ class Record extends Base
         if ($this->storeEntity($entity)) {
             if (empty($this->getMemoryStorage()->get('importJobId')) && $this->isRelationPanelChanges($data)) {
                 $this->updateRelationEntity($entity, $data);
-                $this->updateRelationData($entity, $data);
             }
 
             $this->afterUpdateEntity($entity, $data);
@@ -1382,40 +1381,6 @@ class Record extends Base
         foreach ($attachment->$field as $foreignId) {
             $foreignService->createPseudoTransactionLinkJobs($foreignId, $attachment->_relationName, $entity->get('id'));
         }
-    }
-
-    /**
-     * @deprecated
-     */
-    protected function updateRelationData(Entity $entity, \stdClass $data): void
-    {
-        if (!$this->isRelationPanelChanges($data)) {
-            return;
-        }
-
-        $linkData = $this->getMetadata()->get(['entityDefs', $data->_relationEntity, 'links', $data->_relationName]);
-
-        if (empty($linkData['additionalColumns']) || empty($linkData['relationName']) || empty($linkData['entity'])) {
-            return;
-        }
-
-        $setData = [];
-        foreach ($linkData['additionalColumns'] as $field => $fieldData) {
-            if (property_exists($data, $field)) {
-                $setData[$field] = $data->$field;
-            }
-        }
-
-        if (empty($setData)) {
-            return;
-        }
-
-        $rel1 = !empty($linkData['midKeys'][1]) ? $linkData['midKeys'][1] : $data->_relationEntity . 'Id';
-        $rel2 = !empty($linkData['midKeys'][0]) ? $linkData['midKeys'][0] : $entity->getEntityType() . 'Id';
-
-        $this
-            ->getRepository()
-            ->updateRelationData($linkData['relationName'], $setData, $rel1, $data->_relationEntityId, $rel2, $entity->get('id'));
     }
 
     protected function updateRelationEntity(Entity $entity, \stdClass $input): void
