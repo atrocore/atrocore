@@ -509,7 +509,7 @@ class Metadata extends AbstractListener
             $relationEntityName = ucfirst($data['entityDefs'][$scope]['links']['children']['relationName']);
 
             $data['entityDefs'][$relationEntityName]['fields']['hierarchySortOrder'] = [
-                'type' => 'int'
+                'type'                      => 'int'
             ];
 
             if (!isset($data['entityDefs'][$scope]['fields']['parents']['view'])) {

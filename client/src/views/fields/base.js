@@ -551,23 +551,6 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             if (this.mode === 'edit' || this.mode === 'search') {
                 this.initElement();
             }
-            this.hideRelationField();
-        },
-
-        hideRelationField: function () {
-            let scope = this.model && this.model.urlRoot ? this.model.urlRoot : null;
-            if (scope) {
-                let relatingEntities = this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'relatingEntityField']);
-                if (relatingEntities) {
-                    if (this.mode === 'edit' || this.mode === 'detail') {
-                        let entityType = window.location.hash.split('/').shift().replace('#', '');
-                        if (relatingEntities.includes(entityType)) {
-                            return;
-                        }
-                        this.hide();
-                    }
-                }
-            }
         },
 
         setup: function () {
