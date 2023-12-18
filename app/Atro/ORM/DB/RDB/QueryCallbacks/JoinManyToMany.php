@@ -66,11 +66,6 @@ class JoinManyToMany
             }
         }
 
-        foreach ($params['additionalColumnsConditions'] ?? [] as $f => $v) {
-            $condition .= " AND {$relAlias}.{$mapper->toDb($f)} = :{$f}_mm4";
-            $qb->setParameter("{$f}_mm4", $v, Mapper::getParameterType($v));
-        }
-
         // put additional select
         if (empty($params['aggregation']) && !empty($params['select'])) {
             $additionalSelect = [];
