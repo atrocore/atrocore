@@ -99,7 +99,11 @@ class PostUpdate
             self::onSuccess();
         } catch (\Throwable $e) {
             self::renderLine('Failed! ' . $e->getMessage());
-            exec(self::getPhpBin() . " composer.phar restore --force --auto >> data/composer.log 2>&1");
+          
+            self::renderLine('Restoring database');
+            exec(self::getPhpBin() . " composer.phar restore --force --auto 2>/dev/null");
+            self::renderLine('Done!');
+
             exit(1);
         }
     }
