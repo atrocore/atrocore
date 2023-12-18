@@ -39,6 +39,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\ServiceFactory;
 
 class EntityManager
 {
@@ -189,6 +190,7 @@ class EntityManager
             throw new Conflict('Entity name \''.$name.'\' is not allowed.');
         }
 
+        /** @var ServiceFactory $serviceFactory */
         $serviceFactory = $this->getServiceFactory();
         if ($serviceFactory && $serviceFactory->checKExists($name)) {
             throw new Conflict('Entity name \''.$name.'\' is not allowed.');
