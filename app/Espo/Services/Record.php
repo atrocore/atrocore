@@ -1274,7 +1274,8 @@ class Record extends Base
             throw new BadRequest();
         }
 
-        $entity = $this->getRepository()->get($id);
+        $entity = $this->getRepository()->where(["id" => $id])->findOne(['noCache' => true]);
+
         if (empty($entity)) {
             throw new NotFound();
         }
