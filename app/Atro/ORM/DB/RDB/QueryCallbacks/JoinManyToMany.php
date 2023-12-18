@@ -76,7 +76,7 @@ class JoinManyToMany
             $additionalSelect = [];
             foreach ($params['select'] as $item) {
                 if (!empty($data = Relation::isVirtualRelationField($item))) {
-                    if ($relOpt['relationName'] === lcfirst($data['relationName'])) {
+                    if (lcfirst($relOpt['relationName']) === lcfirst($data['relationName'])) {
                         $foreignEntity = $mapper->getMetadata()->get(['entityDefs', $data['relationName'], 'links', $data['fieldName'], 'entity']);
                         if (!empty($foreignEntity)) {
                             $relationColumn = $mapper->toDb("{$data['fieldName']}Id");
