@@ -67,26 +67,6 @@
 	</div>
 </div>
 <div class="row">
-    <div class="cell form-group col-md-4" data-name="relationshipField">
-        <label class="control-label" data-name="relationshipField">{{translate 'relationshipField' category='fields' scope='EntityManager'}}</label>
-        <div class="field" data-name="relationshipField">
-            {{{relationshipField}}}
-        </div>
-    </div>
-	<div class="cell form-group col-md-4"></div>
-    <div class="cell form-group col-md-4"></div>
-</div>
-<div class="row">
-	<div class="cell form-group col-md-4" data-name="mainRelationshipEntity">
-		<label class="control-label" data-name="mainRelationshipEntity">{{translate 'mainRelationshipEntity' category='fields' scope='EntityManager'}}</label>
-		<div class="field" data-name="mainRelationshipEntity">
-			{{{mainRelationshipEntity}}}
-		</div>
-	</div>
-	<div class="cell form-group col-md-4"></div>
-	<div class="cell form-group col-md-4"></div>
-</div>
-<div class="row">
 	<div class="cell form-group col-md-4" data-name="auditedForeign">
 		<label class="control-label" data-name="auditedForeign">{{translate 'audited' category='fields' scope='EntityManager'}}</label>
 		<div class="field" data-name="auditedForeign">
