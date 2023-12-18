@@ -465,7 +465,8 @@ class Metadata extends AbstractListener
                 });
                 foreach ($relFields as $relField => $relDefs) {
                     $relEntity = $entityDefs['links'][$relField]['entity'];
-                    $data['entityDefs'][$relEntity]['fields'][Relation::buildVirtualFieldName($entityName, 'id')] = array_merge(['type' => 'varchar', 'relId' => true], $virtualFieldDefs);
+                    $data['entityDefs'][$relEntity]['fields'][Relation::buildVirtualFieldName($entityName, 'id')] = array_merge(['type' => 'varchar', 'relId' => true],
+                        $virtualFieldDefs);
                     foreach ($additionalFields as $additionalField => $additionalFieldDefs) {
                         if (!empty($additionalFieldDefs['notStorable'])) {
                             continue;
@@ -476,7 +477,9 @@ class Metadata extends AbstractListener
                         if ($additionalFieldDefs['type'] === 'link') {
                             $additionalFieldDefs['entity'] = $current['links'][$additionalField]['entity'];
                         }
-                        $data['entityDefs'][$relEntity]['fields'][Relation::buildVirtualFieldName($entityName, $additionalField)] = array_merge($additionalFieldDefs, $virtualFieldDefs);
+                        $data['entityDefs'][$relEntity]['fields'][Relation::buildVirtualFieldName($entityName, $additionalField)] = array_merge(
+                            $additionalFieldDefs, $virtualFieldDefs
+                        );
                     }
                 }
             }
@@ -502,6 +505,12 @@ class Metadata extends AbstractListener
             if (!isset($data['scopes'][$scope]['type']) || $data['scopes'][$scope]['type'] !== 'Hierarchy') {
                 continue;
             }
+
+            $relationEntityName = ucfirst($data['entityDefs'][$scope]['links']['children']['relationName']);
+
+            $data['entityDefs'][$relationEntityName]['fields']['hierarchySortOrder'] = [
+                'type' => 'int'
+            ];
 
             if (!isset($data['entityDefs'][$scope]['fields']['parents']['view'])) {
                 $data['entityDefs'][$scope]['fields']['parents']['view'] = 'views/fields/hierarchy-parents';
