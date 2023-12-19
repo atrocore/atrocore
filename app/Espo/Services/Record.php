@@ -1295,8 +1295,7 @@ class Record extends Base
             throw new BadRequest();
         }
 
-        $entity = $this->getRepository()->where(["id" => $id])->findOne(['noCache' => true]);
-
+        $entity = $this->getRepository()->get($id);
         if (empty($entity)) {
             throw new NotFound();
         }
@@ -3231,7 +3230,9 @@ class Record extends Base
                     $data->$field = array_unique($data->$field);
                     sort($data->$field);
                 }
-            } else {
+            } elseif (isset($entity->_technicalFieldValues[$field])) {
+                $value = $entity->_technicalFieldValues[$field];
+            } else  {
                 $value = $entity->get($field);
             }
 
