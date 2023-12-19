@@ -62,8 +62,8 @@
     "linkConflict": "Eine Relation mit diesem Namen existiert bereits"
   },
   "exceptions": {
-    "manyToManyIsBlockedForRelationEntity": "Eine n:n-Beziehung ist für den Entitätstyp „Relation“ nicht möglich.",
-    "oneToManyIsBlockedForRelationEntity": "Eine 1:n-Beziehung ist für den Entitätstyp „Relation“ nicht möglich."
+    "manyToManyIsBlockedForRelationEntity": "Eine n:n Beziehung ist für Entitäten vom Typ „Beziehung“ nicht möglich.",
+    "oneToManyIsBlockedForRelationEntity": "Eine 1:n Beziehung ist für Entitäten vom Typ „Beziehung“ nicht möglich."
   },
   "tooltips": {
     "dragAndDrop": "Diese Option aktiviert die Hierarchiesortierung, sodass keine andere Sortierung in der Hierarchienavigation möglich ist.",

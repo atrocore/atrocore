@@ -49,11 +49,9 @@
   },
   "options": {
     "linkType": {
-      "parentToChildren": "Батьківська-до-дочірнього",
-      "manyToMany": "Багато-багато-багато",
-      "oneToMany": "Один-ко-многим",
-      "manyToOne": "Багато-до-одного",
-      "childrenToParent": "Від дочірнього до батьківського"
+      "manyToMany": "n:n",
+      "oneToMany": "1:n",
+      "manyToOne": "n:1"
     },
     "sortDirection": {
       "asc": "За зростанням",

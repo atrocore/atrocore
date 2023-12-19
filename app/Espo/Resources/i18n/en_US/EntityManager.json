@@ -66,8 +66,8 @@
     "linkConflict": "Name conflict: link or field with the same name already exists."
   },
   "exceptions": {
-    "manyToManyIsBlockedForRelationEntity": "Many-to-Many relationship is not possible for Relation Entity type.",
-    "oneToManyIsBlockedForRelationEntity": "One-to-Many relationship is not possible for Relation Entity type."
+    "manyToManyIsBlockedForRelationEntity": "Many-to-Many relationship is not possible for entity of type Relation.",
+    "oneToManyIsBlockedForRelationEntity": "One-to-Many relationship is not possible for entity of type Relation"
   },
   "tooltips": {
     "dragAndDrop": "This option activates hierarchy sort order, so no other sorting is possible in hierarchy navigation.",
