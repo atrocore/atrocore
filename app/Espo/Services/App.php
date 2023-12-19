@@ -50,7 +50,7 @@ class App extends Base
         DataManager::pushPublicData('isNeedToRebuildDatabase', true);
     }
 
-    protected function cleanupDeleted(): bool
+    public function cleanupDeleted(): bool
     {
         $days = $this->getConfig()->get('deletedItemsMaxDays', 14);
         if ($days === 0) {
@@ -107,7 +107,7 @@ class App extends Base
         }
 
         try {
-            $queries = $this->getContainer()->get('schema')->getDiffQueries();
+            $queries = $this->getEntityManager()->getContainer()->get('schema')->getDiffQueries();
         } catch (\Throwable $e) {
             $queries = [];
         }
@@ -131,7 +131,7 @@ class App extends Base
         }
 
         $connection = $this->getEntityManager()->getConnection();
-        foreach ($this->getMetadata()->get('entityDefs', []) as $scope => $data) {
+        foreach ($this->getEntityManager()->getMetadata()->get('entityDefs', []) as $scope => $data) {
             try {
                 $connection->createQueryBuilder()
                     ->delete('entity_team')

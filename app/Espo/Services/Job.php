@@ -49,16 +49,21 @@ class Job extends Record
         }
 
         // delete
-        $toDelete = $this->getEntityManager()->getRepository('Job')
-            ->where([
-                'createdAt<' => (new \DateTime())->modify("-$days days")->format('Y-m-d H:i:s'),
-                'status' => $statuses
-            ])
-            ->limit(0, 2000)
-            ->order('createdAt')
-            ->find();
-        foreach ($toDelete as $entity) {
-            $this->getEntityManager()->removeEntity($entity);
+        while (true) {
+            $toDelete = $this->getEntityManager()->getRepository('Job')
+                ->where([
+                    'createdAt<' => (new \DateTime())->modify("-$days days")->format('Y-m-d H:i:s'),
+                    'status' => $statuses
+                ])
+                ->limit(0, 2000)
+                ->order('createdAt')
+                ->find();
+            if (empty($toDelete[0])) {
+                break;
+            }
+            foreach ($toDelete as $entity) {
+                $this->getEntityManager()->removeEntity($entity);
+            }
         }
 
         // delete forever
