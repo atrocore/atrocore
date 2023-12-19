@@ -107,7 +107,7 @@ class App extends Base
         }
 
         try {
-            $queries = $this->getEntityManager()->getContainer()->get('schema')->getDiffQueries();
+            $queries = $this->getInjection('container')->get('schema')->getDiffQueries();
         } catch (\Throwable $e) {
             $queries = [];
         }
@@ -131,7 +131,7 @@ class App extends Base
         }
 
         $connection = $this->getEntityManager()->getConnection();
-        foreach ($this->getEntityManager()->getMetadata()->get('entityDefs', []) as $scope => $data) {
+        foreach ($this->getInjection('metadata')->get('entityDefs', []) as $scope => $data) {
             try {
                 $connection->createQueryBuilder()
                     ->delete('entity_team')
@@ -279,5 +279,6 @@ class App extends Base
         $this->addDependency('metadata');
         $this->addDependency('mailSender');
         $this->addDependency('dataManager');
+        $this->addDependency('container');
     }
 }
