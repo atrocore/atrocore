@@ -1610,12 +1610,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             let filteredListLayout = [];
 
             listLayout.forEach(item => {
-                let relatingEntityField = this.getMetadata().get(['entityDefs', this.entityType, 'fields', item.name, 'relatingEntityField']);
-                if (relatingEntityField && entityType) {
-                    if (relatingEntityField.includes(entityType) && entityId) {
-                        filteredListLayout.push(item);
-                    }
-                } else if (this.layoutName === 'listSmall' && this.getMetadata().get(`entityDefs.${this.entityType}.links.${item.name}.type`) === 'belongsTo') {
+                 if (this.layoutName === 'listSmall' && this.getMetadata().get(`entityDefs.${this.entityType}.links.${item.name}.type`) === 'belongsTo') {
                     if (this.getMetadata().get(`entityDefs.${this.entityType}.links.${item.name}.entity`) !== entityType) {
                         filteredListLayout.push(item);
                     }

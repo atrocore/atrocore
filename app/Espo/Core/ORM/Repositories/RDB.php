@@ -220,30 +220,10 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
         if ($result) {
             $entity = $this->get($id);
-            $this->restoreLinkedRelationshipEntities($entity);
             $this->afterRestore($entity);
         }
 
         return $entity ?? false;
-    }
-
-    protected function restoreLinkedRelationshipEntities(Entity $entity): void
-    {
-        foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links'], []) as $linkDefs) {
-
-            if (!empty($linkDefs['entity']) && !empty($linkDefs['foreign'])) {
-                if (!empty($this->getMetadata()->get(['entityDefs', $linkDefs['entity'], 'fields', $linkDefs['foreign'], 'relationshipField']))) {
-                    $this->getConnection()
-                        ->createQueryBuilder()
-                        ->update($this->getConnection()->quoteIdentifier(Util::toUnderScore(lcfirst($linkDefs['entity']))))
-                        ->set('deleted', ':false')
-                        ->where(Util::toUnderScore(lcfirst($linkDefs['foreign'])) . '_id = :id')
-                        ->setParameter('false', false, Mapper::getParameterType(false))
-                        ->setParameter('id', $entity->get('id'))
-                        ->executeQuery();
-                }
-            }
-        }
     }
 
     protected function beforeRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])

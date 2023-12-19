@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core\Templates\Services;
 
 use Atro\Core\EventManager\Event;
+use Atro\Core\Templates\Repositories\Relation;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Error;
@@ -26,6 +27,26 @@ use Atro\Core\Exceptions\NotModified;
 
 class Hierarchy extends Record
 {
+    public function getHierarchySortOrderFieldName(): string
+    {
+        $relationEntityName = ucfirst($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'links', 'children', 'relationName']));
+
+        return Relation::buildVirtualFieldName($relationEntityName, 'hierarchySortOrder');
+    }
+
+    public function getSelectAttributeList($params)
+    {
+        $res = parent::getSelectAttributeList($params);
+        if (is_array($res)) {
+            $hierarchySortOrderField = $this->getHierarchySortOrderFieldName();
+            if (!in_array($hierarchySortOrderField, $res)) {
+                $res[] = $hierarchySortOrderField;
+            }
+        }
+
+        return $res;
+    }
+
     public function inheritAllForChildren(string $id): bool
     {
         $parent = parent::getEntity($id);
@@ -644,8 +665,10 @@ class Hierarchy extends Record
             if ($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']) !== true) {
                 $entity->set('hierarchyRoute', $this->getRepository()->getHierarchyRoute($entity->get('id')));
             }
-            if ($entity->has('hierarchySortOrder')) {
-                $entity->set('sortOrder', $entity->get('hierarchySortOrder'));
+
+            $hierarchySortOrderField = $this->getHierarchySortOrderFieldName();
+            if ($entity->has($hierarchySortOrderField)) {
+                $entity->set('sortOrder', $entity->get($hierarchySortOrderField));
             }
         }
     }

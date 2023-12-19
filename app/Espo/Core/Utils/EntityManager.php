@@ -39,6 +39,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\ServiceFactory;
 
 class EntityManager
 {
@@ -54,7 +55,11 @@ class EntityManager
 
     private $container;
 
-    private $reservedWordList = ['__halt_compiler', 'abstract', 'and', 'array', 'as', 'break', 'callable', 'case', 'catch', 'class', 'clone', 'const', 'continue', 'declare', 'default', 'die', 'do', 'echo', 'else', 'elseif', 'empty', 'enddeclare', 'endfor', 'endforeach', 'endif', 'endswitch', 'endwhile', 'eval', 'exit', 'extends', 'final', 'for', 'foreach', 'function', 'global', 'goto', 'if', 'implements', 'include', 'include_once', 'instanceof', 'insteadof', 'interface', 'isset', 'list', 'namespace', 'new', 'or', 'print', 'private', 'protected', 'public', 'require', 'require_once', 'return', 'static', 'switch', 'throw', 'trait', 'try', 'unset', 'use', 'var', 'while', 'xor', 'common'];
+    private $reservedWordList
+        = ['__halt_compiler', 'abstract', 'and', 'array', 'as', 'break', 'callable', 'case', 'catch', 'class', 'clone', 'const', 'continue', 'declare', 'default', 'die', 'do',
+           'echo', 'else', 'elseif', 'empty', 'enddeclare', 'endfor', 'endforeach', 'endif', 'endswitch', 'endwhile', 'eval', 'exit', 'extends', 'final', 'for', 'foreach',
+           'function', 'global', 'goto', 'if', 'implements', 'include', 'include_once', 'instanceof', 'insteadof', 'interface', 'isset', 'list', 'namespace', 'new', 'or', 'print',
+           'private', 'protected', 'public', 'require', 'require_once', 'return', 'static', 'switch', 'throw', 'trait', 'try', 'unset', 'use', 'var', 'while', 'xor', 'common'];
 
     public function __construct(Metadata $metadata, Language $language, File\Manager $fileManager, Config $config, Container $container = null)
     {
@@ -78,7 +83,9 @@ class EntityManager
      */
     protected function getEntityManager()
     {
-        if (!$this->container) return;
+        if (!$this->container) {
+            return;
+        }
 
         return $this->container->get('entityManager');
     }
@@ -113,7 +120,9 @@ class EntityManager
 
     protected function getServiceFactory()
     {
-        if (!$this->container) return;
+        if (!$this->container) {
+            return;
+        }
 
         return $this->container->get('serviceFactory');
     }
@@ -150,10 +159,16 @@ class EntityManager
 
         foreach ($scopeList as $entityType) {
             $relationsDefs = $this->getEntityManager()->getMetadata()->get($entityType, 'relations');
-            if (empty($relationsDefs)) continue;
+            if (empty($relationsDefs)) {
+                continue;
+            }
             foreach ($relationsDefs as $link => $item) {
-                if (empty($item['type'])) continue;
-                if (empty($item['relationName'])) continue;
+                if (empty($item['type'])) {
+                    continue;
+                }
+                if (empty($item['relationName'])) {
+                    continue;
+                }
                 if ($item['type'] === 'manyMany') {
                     if (ucfirst($item['relationName']) === $name) {
                         return true;
@@ -182,24 +197,25 @@ class EntityManager
         }
 
         if ($this->getMetadata()->get('scopes.' . $name)) {
-            throw new Conflict('Entity \''.$name.'\' already exists.');
+            throw new Conflict('Entity \'' . $name . '\' already exists.');
         }
 
         if ($this->checkControllerExists($name)) {
-            throw new Conflict('Entity name \''.$name.'\' is not allowed.');
+            throw new Conflict('Entity name \'' . $name . '\' is not allowed.');
         }
 
+        /** @var ServiceFactory $serviceFactory */
         $serviceFactory = $this->getServiceFactory();
         if ($serviceFactory && $serviceFactory->checKExists($name)) {
-            throw new Conflict('Entity name \''.$name.'\' is not allowed.');
+            throw new Conflict('Entity name \'' . $name . '\' is not allowed.');
         }
 
         if (in_array(strtolower($name), $this->reservedWordList)) {
-            throw new Conflict('Entity name \''.$name.'\' is not allowed.');
+            throw new Conflict('Entity name \'' . $name . '\' is not allowed.');
         }
 
         if ($this->checkRelationshipExists($name)) {
-            throw new Conflict('Relationship with the same name \''.$name.'\' exists.');
+            throw new Conflict('Relationship with the same name \'' . $name . '\' exists.');
         }
 
         $normalizedName = Util::normilizeClassName($name);
@@ -207,46 +223,46 @@ class EntityManager
         $templateNamespace = "\Atro\Core\Templates";
         $templatePath = CORE_PATH . "/Atro/Core/Templates";
 
-        $contents = "<" . "?" . "php\n\n".
-            "namespace Espo\Custom\Entities;\n\n".
-            "class {$normalizedName} extends {$templateNamespace}\Entities\\{$type}\n".
-            "{\n".
-            "    protected \$entityType = \"$name\";\n".
+        $contents = "<" . "?" . "php\n\n" .
+            "namespace Espo\Custom\Entities;\n\n" .
+            "class {$normalizedName} extends {$templateNamespace}\Entities\\{$type}\n" .
+            "{\n" .
+            "    protected \$entityType = \"$name\";\n" .
             "}\n";
 
         $filePath = "custom/Espo/Custom/Entities/{$normalizedName}.php";
         $this->getFileManager()->putContents($filePath, $contents);
 
-        $contents = "<" . "?" . "php\n\n".
-            "namespace Espo\Custom\Controllers;\n\n".
-            "class {$normalizedName} extends {$templateNamespace}\Controllers\\{$type}\n".
-            "{\n".
+        $contents = "<" . "?" . "php\n\n" .
+            "namespace Espo\Custom\Controllers;\n\n" .
+            "class {$normalizedName} extends {$templateNamespace}\Controllers\\{$type}\n" .
+            "{\n" .
             "}\n";
         $filePath = "custom/Espo/Custom/Controllers/{$normalizedName}.php";
         $this->getFileManager()->putContents($filePath, $contents);
 
-        $contents = "<" . "?" . "php\n\n".
-            "namespace Espo\Custom\Services;\n\n".
-            "class {$normalizedName} extends {$templateNamespace}\Services\\{$type}\n".
-            "{\n".
+        $contents = "<" . "?" . "php\n\n" .
+            "namespace Espo\Custom\Services;\n\n" .
+            "class {$normalizedName} extends {$templateNamespace}\Services\\{$type}\n" .
+            "{\n" .
             "}\n";
         $filePath = "custom/Espo/Custom/Services/{$normalizedName}.php";
         $this->getFileManager()->putContents($filePath, $contents);
 
-        $contents = "<" . "?" . "php\n\n".
-            "namespace Espo\Custom\Repositories;\n\n".
-            "class {$normalizedName} extends {$templateNamespace}\Repositories\\{$type}\n".
-            "{\n".
+        $contents = "<" . "?" . "php\n\n" .
+            "namespace Espo\Custom\Repositories;\n\n" .
+            "class {$normalizedName} extends {$templateNamespace}\Repositories\\{$type}\n" .
+            "{\n" .
             "}\n";
 
         $filePath = "custom/Espo/Custom/Repositories/{$normalizedName}.php";
         $this->getFileManager()->putContents($filePath, $contents);
 
         if (file_exists($templatePath . '/SelectManagers/' . $type . '.php')) {
-            $contents = "<" . "?" . "php\n\n".
-                "namespace Espo\Custom\SelectManagers;\n\n".
-                "class {$normalizedName} extends {$templateNamespace}\SelectManagers\\{$type}\n".
-                "{\n".
+            $contents = "<" . "?" . "php\n\n" .
+                "namespace Espo\Custom\SelectManagers;\n\n" .
+                "class {$normalizedName} extends {$templateNamespace}\SelectManagers\\{$type}\n" .
+                "{\n" .
                 "}\n";
 
             $filePath = "custom/Espo/Custom/SelectManagers/{$normalizedName}.php";
@@ -273,12 +289,14 @@ class EntityManager
         $languageList = $this->getConfig()->get('languageList', []);
         foreach ($languageList as $language) {
             $filePath = $templatePath . '/i18n/' . $language . '/' . $type . '.json';
-            if (!file_exists($filePath)) continue;
+            if (!file_exists($filePath)) {
+                continue;
+            }
             $languageContents = $this->getFileManager()->getContents($filePath);
             $languageContents = str_replace('{entityType}', $name, $languageContents);
             $languageContents = str_replace('{entityTypeTranslated}', $labelSingular, $languageContents);
             foreach ($replaceData as $key => $value) {
-                $languageContents = str_replace('{'.$key.'}', $value, $languageContents);
+                $languageContents = str_replace('{' . $key . '}', $value, $languageContents);
             }
             $languageContents = Json::decode($languageContents, true);
 
@@ -303,7 +321,7 @@ class EntityManager
         $scopesDataContents = $this->getFileManager()->getContents($filePath);
         $scopesDataContents = str_replace('{entityType}', $name, $scopesDataContents);
         foreach ($replaceData as $key => $value) {
-            $scopesDataContents = str_replace('{'.$key.'}', $value, $scopesDataContents);
+            $scopesDataContents = str_replace('{' . $key . '}', $value, $scopesDataContents);
         }
 
         $scopesData = Json::decode($scopesDataContents, true);
@@ -337,7 +355,7 @@ class EntityManager
         $entityDefsDataContents = str_replace('{entityType}', $name, $entityDefsDataContents);
         $entityDefsDataContents = str_replace('{tableName}', $this->getEntityManager()->getMapper()->toDb($name), $entityDefsDataContents);
         foreach ($replaceData as $key => $value) {
-            $entityDefsDataContents = str_replace('{'.$key.'}', $value, $entityDefsDataContents);
+            $entityDefsDataContents = str_replace('{' . $key . '}', $value, $entityDefsDataContents);
         }
         $entityDefsData = Json::decode($entityDefsDataContents, true);
         $this->getMetadata()->set('entityDefs', $name, $entityDefsData);
@@ -346,7 +364,7 @@ class EntityManager
         $clientDefsContents = $this->getFileManager()->getContents($filePath);
         $clientDefsContents = str_replace('{entityType}', $name, $clientDefsContents);
         foreach ($replaceData as $key => $value) {
-            $clientDefsContents = str_replace('{'.$key.'}', $value, $clientDefsContents);
+            $clientDefsContents = str_replace('{' . $key . '}', $value, $clientDefsContents);
         }
         $clientDefsData = Json::decode($clientDefsContents, true);
 
@@ -382,7 +400,7 @@ class EntityManager
     public function update($name, $data)
     {
         if (!$this->getMetadata()->get('scopes.' . $name)) {
-            throw new Error('Entity ['.$name.'] does not exist.');
+            throw new Error('Entity [' . $name . '] does not exist.');
         }
 
         if (isset($data['stream']) || isset($data['disabled'])) {
@@ -439,7 +457,7 @@ class EntityManager
             $entityDefsData = array(
                 'collection' => array(
                     'sortBy' => $data['sortBy'],
-                    'asc' => !empty($data['asc'])
+                    'asc'    => !empty($data['asc'])
                 )
             );
             $this->getMetadata()->set('entityDefs', $name, $entityDefsData);
@@ -504,7 +522,7 @@ class EntityManager
         $isNotRemovable = $this->getMetadata()->get(['scopes', $name, 'isNotRemovable']);
 
         if ($isNotRemovable && empty($params['forceRemove'])) {
-            throw new Error('Type \''.$type.'\' is not removable.');
+            throw new Error('Type \'' . $type . '\' is not removable.');
         }
 
         $unsets = array(
@@ -519,7 +537,8 @@ class EntityManager
         foreach ($this->getMetadata()->get(['entityDefs', $name, 'links'], []) as $link => $item) {
             try {
                 $this->deleteLink(['entity' => $name, 'link' => $link]);
-            } catch (\Exception $e) {}
+            } catch (\Exception $e) {
+            }
         }
 
         $this->getFileManager()->removeFile("custom/Espo/Custom/Resources/metadata/entityDefs/{$name}.json");
@@ -556,7 +575,8 @@ class EntityManager
 
             $this->getBaseLanguage()->delete('Global', 'scopeNames', $name);
             $this->getBaseLanguage()->delete('Global', 'scopeNamesPlural', $name);
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+        }
 
         $this->getMetadata()->save();
         $this->getLanguage()->save();
@@ -588,6 +608,27 @@ class EntityManager
 
         $label = $params['label'];
         $labelForeign = $params['labelForeign'];
+
+        $entityType = $this->getMetadata()->get(['scopes', $entity, 'type']);
+        $entityForeignType = $this->getMetadata()->get(['scopes', $entityForeign, 'type']);
+
+        if ($entityType === 'Relation') {
+            if ($linkType === 'manyToMany') {
+                throw new BadRequest($this->getLanguage()->translate('manyToManyIsBlockedForRelationEntity', 'exceptions', 'EntityManager'));
+            }
+            if ($linkType === 'oneToMany') {
+                throw new BadRequest($this->getLanguage()->translate('oneToManyIsBlockedForRelationEntity', 'exceptions', 'EntityManager'));
+            }
+        }
+
+        if ($entityForeignType === 'Relation') {
+            if ($linkType === 'manyToMany') {
+                throw new BadRequest($this->getLanguage()->translate('manyToManyIsBlockedForRelationEntity', 'exceptions', 'EntityManager'));
+            }
+            if ($linkType === 'manyToOne') {
+                throw new BadRequest($this->getLanguage()->translate('oneToManyIsBlockedForRelationEntity', 'exceptions', 'EntityManager'));
+            }
+        }
 
         if ($linkType === 'manyToMany') {
             if (!empty($params['relationName'])) {
@@ -650,10 +691,10 @@ class EntityManager
         }
 
         if ($this->getMetadata()->get('entityDefs.' . $entity . '.links.' . $link)) {
-            throw new Conflict('Link ['.$entity.'::'.$link.'] already exists.');
+            throw new Conflict('Link [' . $entity . '::' . $link . '] already exists.');
         }
         if ($this->getMetadata()->get('entityDefs.' . $entityForeign . '.links.' . $linkForeign)) {
-            throw new Conflict('Link ['.$entityForeign.'::'.$linkForeign.'] already exists.');
+            throw new Conflict('Link [' . $entityForeign . '::' . $linkForeign . '] already exists.');
         }
 
         if ($entity === $entityForeign) {
@@ -665,30 +706,30 @@ class EntityManager
         switch ($linkType) {
             case 'oneToMany':
                 if ($this->getMetadata()->get('entityDefs.' . $entityForeign . '.fields.' . $linkForeign)) {
-                    throw new Conflict('Field ['.$entityForeign.'::'.$linkForeign.'] already exists.');
+                    throw new Conflict('Field [' . $entityForeign . '::' . $linkForeign . '] already exists.');
                 }
                 if ($this->getMetadata()->get('entityDefs.' . $entityForeign . '.fields.' . $linkForeign . 'Id')) {
-                    throw new Conflict('Field ['.$entityForeign.'::'.$linkForeign.'Id] already exists.');
+                    throw new Conflict('Field [' . $entityForeign . '::' . $linkForeign . 'Id] already exists.');
                 }
                 if ($this->getMetadata()->get('entityDefs.' . $entityForeign . '.fields.' . $linkForeign . 'Name')) {
-                    throw new Conflict('Field ['.$entityForeign.'::'.$linkForeign.'Name] already exists.');
+                    throw new Conflict('Field [' . $entityForeign . '::' . $linkForeign . 'Name] already exists.');
                 }
                 $dataLeft = array(
                     'fields' => array(
                         $link => array(
-                            "type" => "linkMultiple",
-                            "layoutDetailDisabled"  => !$linkMultipleField,
-                            "massUpdateDisabled"  => !$linkMultipleField,
-                            "noLoad"  => !$linkMultipleField,
-                            'isCustom' => true
+                            "type"                 => "linkMultiple",
+                            "layoutDetailDisabled" => !$linkMultipleField,
+                            "massUpdateDisabled"   => !$linkMultipleField,
+                            "noLoad"               => !$linkMultipleField,
+                            'isCustom'             => true
                         )
                     ),
-                    'links' => array(
+                    'links'  => array(
                         $link => array(
-                            'type' => 'hasMany',
-                            'foreign' => $linkForeign,
-                            'entity' => $entityForeign,
-                            'audited' => $auditedForeign,
+                            'type'     => 'hasMany',
+                            'foreign'  => $linkForeign,
+                            'entity'   => $entityForeign,
+                            'audited'  => $auditedForeign,
                             'isCustom' => true
                         )
                     )
@@ -699,12 +740,12 @@ class EntityManager
                             'type' => 'link'
                         )
                     ),
-                    'links' => array(
+                    'links'  => array(
                         $linkForeign => array(
-                            'type' => 'belongsTo',
-                            'foreign' => $link,
-                            'entity' => $entity,
-                            'audited' => $audited,
+                            'type'     => 'belongsTo',
+                            'foreign'  => $link,
+                            'entity'   => $entity,
+                            'audited'  => $audited,
                             'isCustom' => true
                         )
                     )
@@ -712,13 +753,13 @@ class EntityManager
                 break;
             case 'manyToOne':
                 if ($this->getMetadata()->get('entityDefs.' . $entity . '.fields.' . $link)) {
-                    throw new Conflict('Field ['.$entity.'::'.$link.'] already exists.');
+                    throw new Conflict('Field [' . $entity . '::' . $link . '] already exists.');
                 }
                 if ($this->getMetadata()->get('entityDefs.' . $entity . '.fields.' . $link . 'Id')) {
-                    throw new Conflict('Field ['.$entity.'::'.$link.'Id] already exists.');
+                    throw new Conflict('Field [' . $entity . '::' . $link . 'Id] already exists.');
                 }
                 if ($this->getMetadata()->get('entityDefs.' . $entity . '.fields.' . $link . 'Name')) {
-                    throw new Conflict('Field ['.$entity.'::'.$link.'Name] already exists.');
+                    throw new Conflict('Field [' . $entity . '::' . $link . 'Name] already exists.');
                 }
                 $dataLeft = array(
                     'fields' => array(
@@ -726,52 +767,33 @@ class EntityManager
                             'type' => 'link'
                         )
                     ),
-                    'links' => array(
+                    'links'  => array(
                         $link => array(
-                            'type' => 'belongsTo',
-                            'foreign' => $linkForeign,
-                            'entity' => $entityForeign,
-                            'audited' => $auditedForeign,
+                            'type'     => 'belongsTo',
+                            'foreign'  => $linkForeign,
+                            'entity'   => $entityForeign,
+                            'audited'  => $auditedForeign,
                             'isCustom' => true
                         )
                     )
                 );
 
-                if (isset($params['mainRelationshipEntity'])) {
-                    $dataLeft['fields'][$link]['mainRelationshipEntity'] = !empty($params['mainRelationshipEntity']);
-                    if ($dataLeft['fields'][$link]['mainRelationshipEntity']) {
-                        $dataLeft['fields'][$link]['relationshipField'] = true;
-                        foreach ($this->getMetadata()->get(['entityDefs', $entity, 'fields']) as $field => $fieldDefs) {
-                            if (!empty($fieldDefs['mainRelationshipEntity']) && $field !== $link) {
-                                throw new BadRequest($this->getLanguage()->translate('mainRelationshipEntityExists', 'exceptions', 'EntityManager'));
-                            }
-                        }
-                    }
-                }
-
-                if (isset($params['relationshipField'])) {
-                    $dataLeft['fields'][$link]['relationshipField'] = !empty($params['relationshipField']);
-                    if (!$dataLeft['fields'][$link]['relationshipField']) {
-                        $dataLeft['fields'][$link]['mainRelationshipEntity'] = false;
-                    }
-                }
-
                 $dataRight = array(
                     'fields' => array(
                         $linkForeign => array(
-                            "type" => "linkMultiple",
-                            "layoutDetailDisabled"  => !$linkMultipleFieldForeign,
-                            "massUpdateDisabled"  => !$linkMultipleFieldForeign,
-                            "noLoad"  => !$linkMultipleFieldForeign,
-                            'isCustom' => true
+                            "type"                 => "linkMultiple",
+                            "layoutDetailDisabled" => !$linkMultipleFieldForeign,
+                            "massUpdateDisabled"   => !$linkMultipleFieldForeign,
+                            "noLoad"               => !$linkMultipleFieldForeign,
+                            'isCustom'             => true
                         )
                     ),
-                    'links' => array(
+                    'links'  => array(
                         $linkForeign => array(
-                            'type' => 'hasMany',
-                            'foreign' => $link,
-                            'entity' => $entity,
-                            'audited' => $audited,
+                            'type'     => 'hasMany',
+                            'foreign'  => $link,
+                            'entity'   => $entity,
+                            'audited'  => $audited,
                             'isCustom' => true
                         )
                     )
@@ -781,42 +803,42 @@ class EntityManager
                 $dataLeft = array(
                     'fields' => array(
                         $link => array(
-                            "type" => "linkMultiple",
-                            "layoutDetailDisabled"  => !$linkMultipleField,
-                            "massUpdateDisabled"  => !$linkMultipleField,
-                            "noLoad"  => !$linkMultipleField,
-                            'isCustom' => true
+                            "type"                 => "linkMultiple",
+                            "layoutDetailDisabled" => !$linkMultipleField,
+                            "massUpdateDisabled"   => !$linkMultipleField,
+                            "noLoad"               => !$linkMultipleField,
+                            'isCustom'             => true
                         )
                     ),
-                    'links' => array(
+                    'links'  => array(
                         $link => array(
-                            'type' => 'hasMany',
+                            'type'         => 'hasMany',
                             'relationName' => $relationName,
-                            'foreign' => $linkForeign,
-                            'entity' => $entityForeign,
-                            'audited' => $auditedForeign,
-                            'isCustom' => true
+                            'foreign'      => $linkForeign,
+                            'entity'       => $entityForeign,
+                            'audited'      => $auditedForeign,
+                            'isCustom'     => true
                         )
                     )
                 );
                 $dataRight = array(
                     'fields' => array(
                         $linkForeign => array(
-                            "type" => "linkMultiple",
-                            "layoutDetailDisabled"  => !$linkMultipleFieldForeign,
-                            "massUpdateDisabled"  => !$linkMultipleFieldForeign,
-                            "noLoad"  => !$linkMultipleFieldForeign,
-                            'isCustom' => true
+                            "type"                 => "linkMultiple",
+                            "layoutDetailDisabled" => !$linkMultipleFieldForeign,
+                            "massUpdateDisabled"   => !$linkMultipleFieldForeign,
+                            "noLoad"               => !$linkMultipleFieldForeign,
+                            'isCustom'             => true
                         )
                     ),
-                    'links' => array(
+                    'links'  => array(
                         $linkForeign => array(
-                            'type' => 'hasMany',
+                            'type'         => 'hasMany',
                             'relationName' => $relationName,
-                            'foreign' => $link,
-                            'entity' => $entity,
-                            'audited' => $audited,
-                            'isCustom' => true
+                            'foreign'      => $link,
+                            'entity'       => $entity,
+                            'audited'      => $audited,
+                            'isCustom'     => true
                         )
                     )
                 );
@@ -864,49 +886,20 @@ class EntityManager
 
         $isCustom = $this->getMetadata()->get("entityDefs.{$entity}.links.{$link}.isCustom");
 
-        if ($this->getMetadata()->get("entityDefs.{$entity}.links.{$link}.type") === 'belongsTo') {
-            $dataLeft = [];
-
-            if (isset($params['mainRelationshipEntity'])) {
-                $dataLeft['fields'][$link]['mainRelationshipEntity'] = !empty($params['mainRelationshipEntity']);
-                if ($dataLeft['fields'][$link]['mainRelationshipEntity']) {
-                    $dataLeft['fields'][$link]['relationshipField'] = true;
-                    foreach ($this->getMetadata()->get(['entityDefs', $entity, 'fields']) as $field => $fieldDefs) {
-                        if (!empty($fieldDefs['mainRelationshipEntity']) && $field !== $link) {
-                            throw new BadRequest($this->getLanguage()->translate('mainRelationshipEntityExists', 'exceptions', 'EntityManager'));
-                        }
-                    }
-                }
-            }
-
-            if (isset($params['relationshipField'])) {
-                $dataLeft['fields'][$link]['relationshipField'] = !empty($params['relationshipField']);
-                if (!$dataLeft['fields'][$link]['relationshipField']) {
-                    $dataLeft['fields'][$link]['mainRelationshipEntity'] = false;
-                }
-            }
-
-            if (!empty($dataLeft)) {
-                $this->getMetadata()->set('entityDefs', $entity, $dataLeft);
-                $this->getMetadata()->save();
-            }
-        }
-
         if (
             $this->getMetadata()->get("entityDefs.{$entity}.links.{$link}.type") == 'hasMany'
-            &&
-            $this->getMetadata()->get("entityDefs.{$entity}.links.{$link}.isCustom")
+            && $this->getMetadata()->get("entityDefs.{$entity}.links.{$link}.isCustom")
         ) {
             if (array_key_exists('linkMultipleField', $params)) {
                 $linkMultipleField = $params['linkMultipleField'];
                 $dataLeft = array(
                     'fields' => array(
                         $link => array(
-                            "type" => "linkMultiple",
-                            "layoutDetailDisabled"  => !$linkMultipleField,
-                            "massUpdateDisabled"  => !$linkMultipleField,
-                            "noLoad"  => !$linkMultipleField,
-                            'isCustom' => true
+                            "type"                 => "linkMultiple",
+                            "layoutDetailDisabled" => !$linkMultipleField,
+                            "massUpdateDisabled"   => !$linkMultipleField,
+                            "noLoad"               => !$linkMultipleField,
+                            'isCustom'             => true
                         )
                     )
                 );
@@ -917,19 +910,18 @@ class EntityManager
 
         if (
             $this->getMetadata()->get("entityDefs.{$entityForeign}.links.{$linkForeign}.type") == 'hasMany'
-            &&
-            $this->getMetadata()->get("entityDefs.{$entityForeign}.links.{$linkForeign}.isCustom")
+            && $this->getMetadata()->get("entityDefs.{$entityForeign}.links.{$linkForeign}.isCustom")
         ) {
             if (array_key_exists('linkMultipleFieldForeign', $params)) {
                 $linkMultipleFieldForeign = $params['linkMultipleFieldForeign'];
                 $dataRight = array(
                     'fields' => array(
                         $linkForeign => array(
-                            "type" => "linkMultiple",
-                            "layoutDetailDisabled"  => !$linkMultipleFieldForeign,
-                            "massUpdateDisabled"  => !$linkMultipleFieldForeign,
-                            "noLoad"  => !$linkMultipleFieldForeign,
-                            'isCustom' => true
+                            "type"                 => "linkMultiple",
+                            "layoutDetailDisabled" => !$linkMultipleFieldForeign,
+                            "massUpdateDisabled"   => !$linkMultipleFieldForeign,
+                            "noLoad"               => !$linkMultipleFieldForeign,
+                            'isCustom'             => true
                         )
                     )
                 );
@@ -1052,9 +1044,13 @@ class EntityManager
     protected function processHook($methodName, $type, $name, &$params = null)
     {
         $hook = $this->getHook($type);
-        if (!$hook) return;
+        if (!$hook) {
+            return;
+        }
 
-        if (!method_exists($hook, $methodName)) return;
+        if (!method_exists($hook, $methodName)) {
+            return;
+        }
 
         $hook->$methodName($name, $params);
     }

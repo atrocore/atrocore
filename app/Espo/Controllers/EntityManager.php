@@ -259,12 +259,6 @@ class EntityManager extends \Espo\Core\Controllers\Base
         if (array_key_exists('linkMultipleFieldForeign', $data)) {
             $params['linkMultipleFieldForeign'] = $data['linkMultipleFieldForeign'];
         }
-        if (array_key_exists('relationshipField', $data)) {
-            $params['relationshipField'] = $data['relationshipField'];
-        }
-        if (array_key_exists('mainRelationshipEntity', $data)) {
-            $params['mainRelationshipEntity'] = $data['mainRelationshipEntity'];
-        }
 
         if (array_key_exists('audited', $data)) {
             $params['audited'] = $data['audited'];
@@ -319,12 +313,6 @@ class EntityManager extends \Espo\Core\Controllers\Base
         }
         if (array_key_exists('linkMultipleFieldForeign', $data)) {
             $params['linkMultipleFieldForeign'] = $data['linkMultipleFieldForeign'];
-        }
-        if (array_key_exists('relationshipField', $data)) {
-            $params['relationshipField'] = $data['relationshipField'];
-        }
-        if (array_key_exists('mainRelationshipEntity', $data)) {
-            $params['mainRelationshipEntity'] = $data['mainRelationshipEntity'];
         }
 
         if (array_key_exists('audited', $data)) {

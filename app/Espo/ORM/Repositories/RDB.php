@@ -298,30 +298,12 @@ class RDB extends \Espo\ORM\Repository
     {
     }
 
-    protected function deleteLinkedRelationshipEntities(Entity $entity): void
-    {
-        foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links'], []) as $link => $linkDefs) {
-            if (!empty($linkDefs['entity']) && !empty($linkDefs['foreign'])) {
-                if (!empty($this->getMetadata()->get(['entityDefs', $linkDefs['entity'], 'fields', $linkDefs['foreign'], 'relationshipField']))) {
-                    $this
-                        ->getEntityManager()
-                        ->getRepository($linkDefs['entity'])
-                        ->where([
-                            $linkDefs['foreign'] . 'Id' => $entity->get('id')
-                        ])
-                        ->removeCollection();
-                }
-            }
-        }
-    }
-
     public function remove(Entity $entity, array $options = [])
     {
         $this->beforeRemove($entity, $options);
         $entity->set('deleted', true);
         $result = $this->getMapper()->update($entity);
         if ($result) {
-            $this->deleteLinkedRelationshipEntities($entity);
             $this->afterRemove($entity, $options);
         }
         return $result;
@@ -611,34 +593,6 @@ class RDB extends \Espo\ORM\Repository
         }
 
         return $result;
-    }
-
-    public function updateRelationData(string $relationName, array $setData, string $re1, string $re1Id, string $re2, string $re2Id): void
-    {
-        if (empty($setData)) {
-            return;
-        }
-
-        $connection = $this->getEntityManager()->getConnection();
-
-        $qb = $connection->createQueryBuilder();
-        $qb->update($connection->quoteIdentifier(Util::toUnderScore($relationName)));
-        foreach ($setData as $field => $value) {
-            $qb->set(Util::toUnderScore($field), ":{$field}_a");
-            $qb->setParameter("{$field}_a", is_array($value) ? Json::encode($value) : $value);
-        }
-        $qb->where('deleted = :false');
-        $qb->setParameter('false', false, Mapper::getParameterType(false));
-
-        $re1 = lcfirst($re1);
-        $qb->andWhere(Util::toUnderScore($re1) . " = :$re1");
-        $qb->setParameter($re1, $re1Id, Mapper::getParameterType($re1Id));
-
-        $re2 = lcfirst($re2);
-        $qb->andWhere(Util::toUnderScore($re2) . " = :$re2");
-        $qb->setParameter($re2, $re2Id, Mapper::getParameterType($re2Id));
-
-        $qb->executeQuery();
     }
 
     public function unrelate(Entity $entity, $relationName, $foreign, array $options = [])
