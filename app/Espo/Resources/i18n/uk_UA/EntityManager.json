@@ -64,8 +64,8 @@
     "linkConflict": "Зв'язок (link) з такою назвою вже існує."
   },
   "exceptions": {
-    "manyToManyIsBlockedForRelationEntity": "Many-to-Many зв'язок заборонено для сутності типу Relation.",
-    "oneToManyIsBlockedForRelationEntity": "One-to-Many зв'язок заборонено для сутності типу Relation."
+    "manyToManyIsBlockedForRelationEntity": "n:n зв'язок заборонено для сутності типу Relation.",
+    "oneToManyIsBlockedForRelationEntity": "1:n зв'язок заборонено для сутності типу Relation."
   },
   "tooltips": {
     "dragAndDrop": "Цей параметр активує ієрархічний порядок сортування, тому ніяке інше сортування неможливе під час навігації по ієрархії.",
