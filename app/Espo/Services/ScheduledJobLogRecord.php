@@ -12,13 +12,18 @@ class ScheduledJobLogRecord extends Record
         }
 
         // delete
-        $toDelete = $this->getEntityManager()->getRepository('ScheduledJobLogRecord')
-            ->where(['executionTime<' => (new \DateTime())->modify("-$days days")->format('Y-m-d H:i:s')])
-            ->limit(0, 2000)
-            ->order('executionTime')
-            ->find();
-        foreach ($toDelete as $entity) {
-            $this->getEntityManager()->removeEntity($entity);
+        while (true) {
+            $toDelete = $this->getEntityManager()->getRepository('ScheduledJobLogRecord')
+                ->where(['executionTime<' => (new \DateTime())->modify("-$days days")->format('Y-m-d H:i:s')])
+                ->limit(0, 2000)
+                ->order('executionTime')
+                ->find();
+            if (empty($toDelete[0])) {
+                break;
+            }
+            foreach ($toDelete as $entity) {
+                $this->getEntityManager()->removeEntity($entity);
+            }
         }
 
         // delete forever
