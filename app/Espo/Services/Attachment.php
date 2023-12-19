@@ -34,6 +34,7 @@
 namespace Espo\Services;
 
 use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
@@ -58,14 +59,17 @@ class Attachment extends Record
             return true;
         }
         $date = (new \DateTime())->modify("-$days days")->format('Y-m-d H:i:s');
-        $fileManager = $this->getContainer()->get('fileStorageManager');
+
         $repository = $this->getEntityManager()->getRepository('Attachment');
         $attachments = $repository
             ->where([
                 'deleted' => 1,
                 'createdAt<=' => $date
             ])
+            ->limit(0, 3000)
             ->find(["withDeleted" => true]);
+
+        $fileManager = $this->getInjection('fileStorageManager');
         foreach ($attachments as $entity){
             $fileManager->unlink($entity);
         }
@@ -76,8 +80,9 @@ class Attachment extends Record
             ->where('created_at < :date')
             ->andWhere('deleted = :deleted')
             ->setParameter('date', $date)
-            ->setParameter('deleted', true,  Mapper::getParameterType(true))
+            ->setParameter('deleted', true,  ParameterType::BOOLEAN)
             ->executeStatement();
+
         return true;
     }
 
