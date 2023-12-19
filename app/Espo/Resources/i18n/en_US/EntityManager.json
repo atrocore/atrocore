@@ -65,6 +65,10 @@
     "linkAlreadyExists": "Link name conflict.",
     "linkConflict": "Name conflict: link or field with the same name already exists."
   },
+  "exceptions": {
+    "manyToManyIsBlockedForRelationEntity": "Many-to-Many relationship is not possible for Relation Entity type.",
+    "oneToManyIsBlockedForRelationEntity": "One-to-Many relationship is not possible for Relation Entity type."
+  },
   "tooltips": {
     "dragAndDrop": "This option activates hierarchy sort order, so no other sorting is possible in hierarchy navigation.",
     "unInheritedFields": "Values for these fields will not be inherited from parent item.",
