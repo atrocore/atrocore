@@ -110,6 +110,24 @@ class AclManager
 
     protected function getTable(User $user)
     {
+        // @todo this is quick fix. For some reasons we don't have user id here in some cases. Needs to be fixed.
+        if (empty($user->id)) {
+            /** @var \Doctrine\DBAL\Connection $conn */
+            $conn = $this->getContainer()->get('connection');
+
+            $res = $conn->createQueryBuilder()
+                ->select('u.id')
+                ->from($conn->quoteIdentifier('user'), 'u')
+                ->where('u.user_name = :userName AND deleted = :false')
+                ->setParameter('userName', $user->get('userName'))
+                ->setParameter('false', false, \Doctrine\DBAL\ParameterType::BOOLEAN)
+                ->fetchAssociative();
+
+            if (isset($res['id'])) {
+                $user->id = $res['id'];
+            }
+        }
+
         $key = $user->id;
         if (empty($key)) {
             $key = spl_object_hash($user);
