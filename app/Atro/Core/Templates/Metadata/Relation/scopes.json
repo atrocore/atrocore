@@ -3,7 +3,22 @@
   "entity": true,
   "layouts": true,
   "tab": true,
-  "acl": false,
+  "acl": true,
+  "aclActionList": [
+    "create",
+    "edit",
+    "delete"
+  ],
+  "aclActionLevelListMap": {
+    "edit": [
+      "yes",
+      "no"
+    ],
+    "delete": [
+      "yes",
+      "no"
+    ]
+  },
   "customizable": true,
   "importable": true,
   "notifications": true

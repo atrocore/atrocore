@@ -489,6 +489,10 @@ class Metadata extends AbstractListener
             $current = $data['scopes'][$entityName] ?? [];
             $data['scopes'][$entityName] = empty($current) ? $defaultScopes : Util::merge($defaultScopes, $current);
 
+            if (!empty($data['scopes'][$entityName]['isHierarchyEntity'])) {
+                $data['scopes'][$entityName]['acl'] = false;
+            }
+
             $data['scopes'][$entityName]['tab'] = false;
             $data['scopes'][$entityName]['layouts'] = false;
             $data['scopes'][$entityName]['customizable'] = false;
@@ -508,6 +512,7 @@ class Metadata extends AbstractListener
 
             $relationEntityName = ucfirst($data['entityDefs'][$scope]['links']['children']['relationName']);
 
+            $data['scopes'][$relationEntityName]['isHierarchyEntity'] = true;
             $data['entityDefs'][$relationEntityName]['fields']['hierarchySortOrder'] = [
                 'type'                      => 'int'
             ];
