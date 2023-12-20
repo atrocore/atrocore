@@ -110,6 +110,20 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 }
             }
 
+            let canSelect = true;
+            let canUnlink = true;
+
+            let relationName = this.getMetadata().get(['entityDefs', this.model.urlRoot, 'links', this.link, 'relationName']);
+            if (relationName) {
+                let relationEntityName = relationName.charAt(0).toUpperCase() + relationName.slice(1);
+                canSelect = this.getAcl().check(relationEntityName, 'create');
+                canUnlink = this.getAcl().check(relationEntityName, 'delete');
+            }
+
+            if (!canUnlink) {
+                this.rowActionsView = 'views/record/row-actions/relationship-no-unlink';
+            }
+
             this.filterList = this.defs.filterList || this.filterList || null;
 
             if (this.filterList && this.filterList.length) {
@@ -117,7 +131,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             }
 
             if (this.defs.create) {
-                if (this.getAcl().check(this.scope, 'create') && !~['User', 'Team'].indexOf()) {
+                if (canSelect && this.getAcl().check(this.scope, 'create') && !~['User', 'Team'].indexOf()) {
                     this.buttonList.push({
                         title: 'Create',
                         action: this.defs.createAction || 'createRelated',
@@ -141,16 +155,18 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     data.boolFilterList = this.defs.selectBoolFilterList;
                 }
 
-                this.actionList.unshift({
-                    label: 'Select',
-                    action: this.defs.selectAction || 'selectRelated',
-                    data: data,
-                    acl: 'edit',
-                    aclScope: this.model.name
-                });
+                if (canSelect) {
+                    this.actionList.unshift({
+                        label: 'Select',
+                        action: this.defs.selectAction || 'selectRelated',
+                        data: data,
+                        acl: 'edit',
+                        aclScope: this.model.name
+                    });
+                }
             }
 
-            if (this.isInheritingRelation() && this.model.get('isRoot') !== true) {
+            if (canSelect && this.isInheritingRelation() && this.model.get('isRoot') !== true) {
                 this.actionList.push({
                     label: 'inheritAll',
                     action: 'inheritAll',
@@ -160,7 +176,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 });
             }
 
-            if (this.defs.select === true && this.defs.unlinkAll !== false) {
+            if (canUnlink && this.defs.select === true && this.defs.unlinkAll !== false) {
                 this.actionList.push({
                     label: 'unlinkAll',
                     action: 'unlinkAllRelated',
