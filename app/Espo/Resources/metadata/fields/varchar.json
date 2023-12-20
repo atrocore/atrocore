@@ -15,6 +15,11 @@
       "type": "varchar"
     },
     {
+      "name": "setDefaultOnlyIfRequired",
+      "type": "bool",
+      "view": "views/admin/field-manager/fields/set-default-on-user-interaction"
+    },
+    {
       "name": "defaultUnit",
       "type": "varchar",
       "view": "views/admin/field-manager/fields/default-unit"

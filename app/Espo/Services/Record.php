@@ -621,7 +621,7 @@ class Record extends Base
     /**
      * @param Entity $entity
      * @param string $field
-     * @param array $defs
+     * @param array  $defs
      *
      * @throws BadRequest
      * @throws Error
@@ -643,7 +643,7 @@ class Record extends Base
     }
 
     /**
-     * @param Entity $entity
+     * @param Entity    $entity
      * @param \stdClass $data
      *
      * @return array
@@ -1186,6 +1186,15 @@ class Record extends Base
                 }
             }
         }
+
+        foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields']) as $field => $defs) {
+            if ($defs['type'] === 'varchar' && !empty($defs['setDefaultOnlyIfRequired']) && !empty($defs['default'])) {
+                $isRequired = !empty($defs['required']) || $this->isRequiredField($field, $entity, 'required');
+                if ($entity->has($field) && !property_exists($data, $field) && !$isRequired) {
+                    $entity->set($field, null);
+                }
+            }
+        }
     }
 
     public function createEntity($attachment)
@@ -1478,7 +1487,7 @@ class Record extends Base
             $relInput->_skipCheckForConflicts = true;
             try {
                 $this->getServiceFactory()->create($relEntityType)->updateEntity($relId, $relInput);
-            }catch (NotModified $e){
+            } catch (NotModified $e) {
             }
         }
     }
@@ -1521,7 +1530,7 @@ class Record extends Base
 
     /**
      * @param Entity $entity
-     * @param $data
+     * @param        $data
      */
     protected function checkForSkipComplete(Entity $entity, $data): void
     {
@@ -1948,7 +1957,7 @@ class Record extends Base
      *
      * @param Entity $entity
      * @param string $link
-     * @param array $params
+     * @param array  $params
      *
      * @return array
      */
@@ -2144,7 +2153,7 @@ class Record extends Base
             ])
             ->findOne();
 
-        if (!empty($relEntity)){
+        if (!empty($relEntity)) {
             $result = $this->getServiceFactory()->create($relEntityType)->deleteEntity($relEntity->get('id'));
         }
 
@@ -3250,7 +3259,7 @@ class Record extends Base
     }
 
     /**
-     * @param Entity $entity
+     * @param Entity    $entity
      * @param \stdClass $data
      *
      * @return array
@@ -3357,7 +3366,7 @@ class Record extends Base
     /**
      * @param string $field
      * @param Entity $entity
-     * @param $typeResult
+     * @param        $typeResult
      *
      * @return bool
      * @throws Error
@@ -3407,7 +3416,7 @@ class Record extends Base
 
     /**
      * @param Entity $entity
-     * @param $field
+     * @param        $field
      * @return bool
      */
     private function isNullField(Entity $entity, $field): bool
@@ -3428,7 +3437,7 @@ class Record extends Base
 
     /**
      * @param string $action
-     * @param Event $event
+     * @param Event  $event
      *
      * @return Event
      */
