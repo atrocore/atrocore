@@ -53,8 +53,8 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
                 this.updateTextCounter();
             },
             'focus input': function () {
-                console.log('click')
-                if (this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'setDefaultOnlyIfRequired']) && !this.model.get(this.name) && this.model.defaults[this.name]) {
+                if (this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'setDefaultOnlyIfRequired'])
+                    && !this.model.get(this.name) && this.model.defaults[this.name]) {
                     this.model.set(this.name, this.model.defaults[this.name])
                 }
             }

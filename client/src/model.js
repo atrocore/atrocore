@@ -119,7 +119,7 @@ Espo.define('model', [], function () {
                         defaultValue = seed[field]
                     }
 
-                    if (defaultValue != null && this.getFieldParam(field, 'setDefaultOnlyIfRequired')) {
+                    if (defaultValue != null && !this.getFieldParam(field, 'required') && this.getFieldParam(field, 'setDefaultOnlyIfRequired')) {
                         this.defaults[field] = defaultValue
                         defaultValue = null
                     }
