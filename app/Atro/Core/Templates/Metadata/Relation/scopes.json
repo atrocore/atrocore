@@ -6,16 +6,21 @@
   "acl": true,
   "aclActionList": [
     "create",
+    "read",
     "edit",
     "delete"
   ],
   "aclActionLevelListMap": {
+    "read": [
+      "all",
+      "no"
+    ],
     "edit": [
-      "yes",
+      "all",
       "no"
     ],
     "delete": [
-      "yes",
+      "all",
       "no"
     ]
   },
