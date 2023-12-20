@@ -50,6 +50,7 @@ use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
+use Espo\ORM\IEntity;
 
 class Base
 {
@@ -233,16 +234,20 @@ class Base
             $type = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'type']);
             if (in_array($type, ['link', 'file', 'image'])) {
                 $result['orderBy'] .= 'Name';
-            } else if ($type === 'linkParent') {
-                $result['orderBy'] .= 'Type';
-            } else if ($type === 'address') {
-                if (!$desc) {
-                    $orderPart = 'ASC';
+            } else {
+                if ($type === 'linkParent') {
+                    $result['orderBy'] .= 'Type';
                 } else {
-                    $orderPart = 'DESC';
+                    if ($type === 'address') {
+                        if (!$desc) {
+                            $orderPart = 'ASC';
+                        } else {
+                            $orderPart = 'DESC';
+                        }
+                        $result['orderBy'] = [[$sortBy . 'Country', $orderPart], [$sortBy . 'City', $orderPart], [$sortBy . 'Street', $orderPart]];
+                        return;
+                    }
                 }
-                $result['orderBy'] = [[$sortBy . 'Country', $orderPart], [$sortBy . 'City', $orderPart], [$sortBy . 'Street', $orderPart]];
-                return;
             }
         }
         if (!$desc) {
@@ -291,8 +296,9 @@ class Base
         $this->prepareRelationshipFilterField($where);
 
         foreach ($where as $item) {
-            if (!isset($item['type']))
+            if (!isset($item['type'])) {
                 continue;
+            }
 
             if ($item['type'] == 'bool' && !empty($item['value']) && is_array($item['value'])) {
                 foreach ($item['value'] as $filter) {
@@ -302,12 +308,16 @@ class Base
                     }
                     $this->applyBoolFilter($filter, $result);
                 }
-            } else if ($item['type'] == 'textFilter') {
-                if (isset($item['value']) || $item['value'] !== '') {
-                    $this->textFilter($item['value'], $result);
+            } else {
+                if ($item['type'] == 'textFilter') {
+                    if (isset($item['value']) || $item['value'] !== '') {
+                        $this->textFilter($item['value'], $result);
+                    }
+                } else {
+                    if ($item['type'] == 'primary' && !empty($item['value'])) {
+                        $this->applyPrimaryFilter($item['value'], $result);
+                    }
                 }
-            } else if ($item['type'] == 'primary' && !empty($item['value'])) {
-                $this->applyPrimaryFilter($item['value'], $result);
             }
         }
 
@@ -333,13 +343,13 @@ class Base
                 case 'linkedWith':
                 case 'notLinkedWith':
                     $where[$k] = [
-                        'type' => $item['type'],
+                        'type'      => $item['type'],
                         'attribute' => $defs['relationshipFilterField'],
-                        'subQuery' => [
+                        'subQuery'  => [
                             [
-                                'type' => 'in',
+                                'type'      => 'in',
                                 'attribute' => $defs['relationshipFilterForeignField'] . 'Id',
-                                'value' => $item['value']
+                                'value'     => $item['value']
                             ]
                         ]
                     ];
@@ -347,7 +357,7 @@ class Base
                 case 'isNotLinked':
                 case 'isLinked':
                     $where[$k] = [
-                        'type' => $item['type'],
+                        'type'      => $item['type'],
                         'attribute' => 'productChannels'
                     ];
                     break;
@@ -362,8 +372,9 @@ class Base
         $ignoreTypeList = ['bool', 'primary'];
 
         foreach ($where as $item) {
-            if (!isset($item['type']))
+            if (!isset($item['type'])) {
                 continue;
+            }
 
             $type = $item['type'];
             if (!in_array($type, $ignoreTypeList)) {
@@ -406,8 +417,9 @@ class Base
 
         $seed = $this->getSeed();
 
-        if (!$seed->hasRelation($link))
+        if (!$seed->hasRelation($link)) {
             return;
+        }
 
         $relDefs = $this->getSeed()->getRelations();
 
@@ -422,21 +434,27 @@ class Base
                 $key = $midKeys[1];
                 $part[$link . 'Filter' . 'Middle.' . $key] = $idsValue;
             }
-        } else if ($relationType == 'hasMany') {
-            $alias = $link . 'Filter';
-            $this->addLeftJoin([$link, $alias], $result);
-
-            $part[$alias . '.id'] = $idsValue;
-        } else if ($relationType == 'belongsTo') {
-            $key = $seed->getRelationParam($link, 'key');
-            if (!empty($key)) {
-                $part[$key] = $idsValue;
-            }
-        } else if ($relationType == 'hasOne') {
-            $this->addJoin([$link, $link . 'Filter'], $result);
-            $part[$link . 'Filter' . '.id'] = $idsValue;
         } else {
-            return;
+            if ($relationType == 'hasMany') {
+                $alias = $link . 'Filter';
+                $this->addLeftJoin([$link, $alias], $result);
+
+                $part[$alias . '.id'] = $idsValue;
+            } else {
+                if ($relationType == 'belongsTo') {
+                    $key = $seed->getRelationParam($link, 'key');
+                    if (!empty($key)) {
+                        $part[$key] = $idsValue;
+                    }
+                } else {
+                    if ($relationType == 'hasOne') {
+                        $this->addJoin([$link, $link . 'Filter'], $result);
+                        $part[$link . 'Filter' . '.id'] = $idsValue;
+                    } else {
+                        return;
+                    }
+                }
+            }
         }
 
         if (!empty($part)) {
@@ -504,14 +522,20 @@ class Base
 
     protected function access(&$result)
     {
+        if (!$this->getUser()->isAdmin() && $this->getMetadata()->get(['scopes', $this->getEntityType(), 'type'], 'Base') == 'Relation') {
+            $result['callbacks'][] = [$this, 'accessForRelationEntity'];
+        }
+
         if ($this->getAcl()->checkReadOnlyOwn($this->getEntityType())) {
             $this->accessOnlyOwn($result);
         } else {
             if (!$this->getUser()->isAdmin()) {
                 if ($this->getAcl()->checkReadOnlyTeam($this->getEntityType())) {
                     $this->accessOnlyTeam($result);
-                } else if ($this->getAcl()->checkReadNo($this->getEntityType())) {
-                    $this->accessNo($result);
+                } else {
+                    if ($this->getAcl()->checkReadNo($this->getEntityType())) {
+                        $this->accessNo($result);
+                    }
                 }
             }
         }
@@ -522,6 +546,36 @@ class Base
         $result['whereClause'][] = array(
             'id' => null
         );
+    }
+
+    public function accessForRelationEntity(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
+    {
+        $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
+
+        foreach ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields']) as $field => $fieldDefs) {
+            if (array_key_exists('relationField', $fieldDefs)) {
+                $entityName = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'links', $field, 'entity']);
+                if (empty($entityName)) {
+                    continue;
+                }
+
+                if (!$this->getAcl()->checkReadOnlyOwn($entityName) && !$this->getAcl()->checkReadOnlyTeam($entityName)) {
+                    continue;
+                }
+
+                $sp = $this->createSelectManager($entityName)->getSelectParams([], true, true);
+                $sp['select'] = ['id'];
+
+                $qb1 = $mapper->createSelectQueryBuilder($this->getEntityManager()->getRepository($entityName)->get(), $sp);
+
+                $column = $mapper->getQueryConverter()->toDb("{$field}Id");
+
+                $qb->andWhere("{$tableAlias}.{$column} IN ({$qb1->getSql()})");
+                foreach ($qb1->getParameters() as $param => $val) {
+                    $qb->setParameter($param, $val, Mapper::getParameterType($val));
+                }
+            }
+        }
     }
 
     protected function accessOnlyOwn(&$result)
@@ -632,7 +686,7 @@ class Base
         $result['whereClause'][] = [
             "deleted" => true
         ];
-        $result['additionalSelectColumns'][QueryConverter::TABLE_ALIAS.".deleted"] = "deleted";
+        $result['additionalSelectColumns'][QueryConverter::TABLE_ALIAS . ".deleted"] = "deleted";
     }
 
     /**
@@ -726,9 +780,11 @@ class Base
         // check if entity has hasArchive activated
         if ($this->metadata->get(['scopes', $this->entityType, 'hasArchive'])) {
             //filter only if boolean filter not activated
-            $hasArchivedFilterInWhere = count(array_filter($result['whereClause'], function ($row) {
-                return isset($row['isArchived=']) || isset($row['isArchived']);
-            })) > 0;
+            $hasArchivedFilterInWhere = count(
+                    array_filter($result['whereClause'], function ($row) {
+                        return isset($row['isArchived=']) || isset($row['isArchived']);
+                    })
+                ) > 0;
 
             if (!isset($result['withArchived']) && !$hasArchivedFilterInWhere) {
                 $result['whereClause'][] = [
@@ -1169,7 +1225,7 @@ class Base
                     $dt = new \DateTime();
                     $part['AND'] = [
                         $attribute . '>=' => $dt->modify('first day of this month')->format('Y-m-d'),
-                        $attribute . '<' => $dt->add(new \DateInterval('P1M'))->format('Y-m-d'),
+                        $attribute . '<'  => $dt->add(new \DateInterval('P1M'))->format('Y-m-d'),
                     ];
                     break;
 
@@ -1177,7 +1233,7 @@ class Base
                     $dt = new \DateTime();
                     $part['AND'] = [
                         $attribute . '>=' => $dt->modify('first day of last month')->format('Y-m-d'),
-                        $attribute . '<' => $dt->add(new \DateInterval('P1M'))->format('Y-m-d'),
+                        $attribute . '<'  => $dt->add(new \DateInterval('P1M'))->format('Y-m-d'),
                     ];
                     break;
 
@@ -1185,7 +1241,7 @@ class Base
                     $dt = new \DateTime();
                     $part['AND'] = [
                         $attribute . '>=' => $dt->modify('first day of next month')->format('Y-m-d'),
-                        $attribute . '<' => $dt->add(new \DateInterval('P1M'))->format('Y-m-d'),
+                        $attribute . '<'  => $dt->add(new \DateInterval('P1M'))->format('Y-m-d'),
                     ];
                     break;
 
@@ -1195,7 +1251,7 @@ class Base
                     $dt->modify('first day of January this year');
                     $part['AND'] = [
                         $attribute . '>=' => $dt->add(new \DateInterval('P' . (($quarter - 1) * 3) . 'M'))->format('Y-m-d'),
-                        $attribute . '<' => $dt->add(new \DateInterval('P3M'))->format('Y-m-d'),
+                        $attribute . '<'  => $dt->add(new \DateInterval('P3M'))->format('Y-m-d'),
                     ];
                     break;
 
@@ -1210,7 +1266,7 @@ class Base
                     }
                     $part['AND'] = [
                         $attribute . '>=' => $dt->add(new \DateInterval('P' . (($quarter - 1) * 3) . 'M'))->format('Y-m-d'),
-                        $attribute . '<' => $dt->add(new \DateInterval('P3M'))->format('Y-m-d'),
+                        $attribute . '<'  => $dt->add(new \DateInterval('P3M'))->format('Y-m-d'),
                     ];
                     break;
 
@@ -1218,7 +1274,7 @@ class Base
                     $dt = new \DateTime();
                     $part['AND'] = [
                         $attribute . '>=' => $dt->modify('first day of January this year')->format('Y-m-d'),
-                        $attribute . '<' => $dt->add(new \DateInterval('P1Y'))->format('Y-m-d'),
+                        $attribute . '<'  => $dt->add(new \DateInterval('P1Y'))->format('Y-m-d'),
                     ];
                     break;
 
@@ -1226,7 +1282,7 @@ class Base
                     $dt = new \DateTime();
                     $part['AND'] = [
                         $attribute . '>=' => $dt->modify('first day of January last year')->format('Y-m-d'),
-                        $attribute . '<' => $dt->add(new \DateInterval('P1Y'))->format('Y-m-d'),
+                        $attribute . '<'  => $dt->add(new \DateInterval('P1Y'))->format('Y-m-d'),
                     ];
                     break;
 
@@ -1251,30 +1307,49 @@ class Base
                     $columnKey = $alias . 'Middle.' . $column;
                     if ($type === 'columnIn') {
                         $part[$columnKey] = $value;
-                    } else if ($type === 'columnNotIn') {
-                        $part[$columnKey . '!='] = $value;
-                    } else if ($type === 'columnIsNull') {
-                        $part[$columnKey] = null;
-                    } else if ($type === 'columnIsNotNull') {
-                        $part[$columnKey . '!='] = null;
-                    } else if ($type === 'columnLike') {
-                        $part[$columnKey . '*'] = $value;
-                    } else if ($type === 'columnStartsWith') {
-                        $part[$columnKey . '*'] = $value . '%';
-                    } else if ($type === 'columnEndsWith') {
-                        $part[$columnKey . '*'] = '%' . $value;
-                    } else if ($type === 'columnContains') {
-                        $part[$columnKey . '*'] = '%' . $value . '%';
-                    } else if ($type === 'columnEquals') {
-                        $part[$columnKey . '='] = $value;
-                    } else if ($type === 'columnNotEquals') {
-                        $part[$columnKey . '!='] = $value;
+                    } else {
+                        if ($type === 'columnNotIn') {
+                            $part[$columnKey . '!='] = $value;
+                        } else {
+                            if ($type === 'columnIsNull') {
+                                $part[$columnKey] = null;
+                            } else {
+                                if ($type === 'columnIsNotNull') {
+                                    $part[$columnKey . '!='] = null;
+                                } else {
+                                    if ($type === 'columnLike') {
+                                        $part[$columnKey . '*'] = $value;
+                                    } else {
+                                        if ($type === 'columnStartsWith') {
+                                            $part[$columnKey . '*'] = $value . '%';
+                                        } else {
+                                            if ($type === 'columnEndsWith') {
+                                                $part[$columnKey . '*'] = '%' . $value;
+                                            } else {
+                                                if ($type === 'columnContains') {
+                                                    $part[$columnKey . '*'] = '%' . $value . '%';
+                                                } else {
+                                                    if ($type === 'columnEquals') {
+                                                        $part[$columnKey . '='] = $value;
+                                                    } else {
+                                                        if ($type === 'columnNotEquals') {
+                                                            $part[$columnKey . '!='] = $value;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                     break;
 
                 case 'isNotLinked':
-                    if (!$result)
+                    if (!$result) {
                         break;
+                    }
                     $alias = $attribute . 'IsNotLinkedFilter' . strval(rand(10000, 99999));
                     $part[$alias . '.id'] = null;
                     $this->setDistinct(true, $result);
@@ -1282,8 +1357,9 @@ class Base
                     break;
 
                 case 'isLinked':
-                    if (!$result)
+                    if (!$result) {
                         break;
+                    }
                     $alias = $attribute . 'IsLinkedFilter' . strval(rand(10000, 99999));
                     $part[$alias . '.id!='] = null;
                     $this->setDistinct(true, $result);
@@ -1293,13 +1369,15 @@ class Base
                 case 'linkedWith':
                     $seed = $this->getSeed();
                     $link = $attribute;
-                    if (!$seed->hasRelation($link))
+                    if (!$seed->hasRelation($link)) {
                         break;
+                    }
 
                     $alias = $link . 'Filter' . strval(rand(10000, 99999));
 
-                    if (is_null($value) || !$value && !is_array($value))
+                    if (is_null($value) || !$value && !is_array($value)) {
                         break;
+                    }
 
                     $relationType = $seed->getRelationType($link);
 
@@ -1311,20 +1389,26 @@ class Base
                             $key = $midKeys[1];
                             $part[$alias . 'Middle.' . $key] = $value;
                         }
-                    } else if ($relationType == 'hasMany') {
-                        $this->addLeftJoin([$link, $alias], $result);
-
-                        $part[$alias . '.id'] = $value;
-                    } else if ($relationType == 'belongsTo') {
-                        $key = $seed->getRelationParam($link, 'key');
-                        if (!empty($key)) {
-                            $part[$key] = $value;
-                        }
-                    } else if ($relationType == 'hasOne') {
-                        $this->addLeftJoin([$link, $alias], $result);
-                        $part[$alias . '.id'] = $value;
                     } else {
-                        break;
+                        if ($relationType == 'hasMany') {
+                            $this->addLeftJoin([$link, $alias], $result);
+
+                            $part[$alias . '.id'] = $value;
+                        } else {
+                            if ($relationType == 'belongsTo') {
+                                $key = $seed->getRelationParam($link, 'key');
+                                if (!empty($key)) {
+                                    $part[$key] = $value;
+                                }
+                            } else {
+                                if ($relationType == 'hasOne') {
+                                    $this->addLeftJoin([$link, $alias], $result);
+                                    $part[$alias . '.id'] = $value;
+                                } else {
+                                    break;
+                                }
+                            }
+                        }
                     }
                     $this->setDistinct(true, $result);
                     break;
@@ -1332,11 +1416,13 @@ class Base
                 case 'notLinkedWith':
                     $seed = $this->getSeed();
                     $link = $attribute;
-                    if (!$seed->hasRelation($link))
+                    if (!$seed->hasRelation($link)) {
                         break;
+                    }
 
-                    if (is_null($value))
+                    if (is_null($value)) {
                         break;
+                    }
 
                     $relationType = $seed->getRelationType($link);
 
@@ -1351,20 +1437,26 @@ class Base
                             $result['joinConditions'][$alias] = [$key => $value];
                             $part[$alias . 'Middle.' . $key] = null;
                         }
-                    } else if ($relationType == 'hasMany') {
-                        $this->addLeftJoin([$link, $alias], $result);
-                        $result['joinConditions'][$alias] = ['id' => $value];
-                        $part[$alias . '.id'] = null;
-                    } else if ($relationType == 'belongsTo') {
-                        $key = $seed->getRelationParam($link, 'key');
-                        if (!empty($key)) {
-                            $part[$key . '!='] = $value;
-                        }
-                    } else if ($relationType == 'hasOne') {
-                        $this->addLeftJoin([$link, $alias], $result);
-                        $part[$alias . '.id!='] = $value;
                     } else {
-                        break;
+                        if ($relationType == 'hasMany') {
+                            $this->addLeftJoin([$link, $alias], $result);
+                            $result['joinConditions'][$alias] = ['id' => $value];
+                            $part[$alias . '.id'] = null;
+                        } else {
+                            if ($relationType == 'belongsTo') {
+                                $key = $seed->getRelationParam($link, 'key');
+                                if (!empty($key)) {
+                                    $part[$key . '!='] = $value;
+                                }
+                            } else {
+                                if ($relationType == 'hasOne') {
+                                    $this->addLeftJoin([$link, $alias], $result);
+                                    $part[$alias . '.id!='] = $value;
+                                } else {
+                                    break;
+                                }
+                            }
+                        }
                     }
                     $this->setDistinct(true, $result);
                     break;
@@ -1606,7 +1698,7 @@ class Base
 
     public function setDistinct($distinct, &$result)
     {
-        $result['distinct'] = (bool) $distinct;
+        $result['distinct'] = (bool)$distinct;
     }
 
     public function addAndWhere($whereClause, &$result)
@@ -1656,13 +1748,10 @@ class Base
             if (!$skipWidlcards) {
                 if (
                     mb_strlen($textFilter) >= $textFilterContainsMinLength
-                    &&
-                    (
+                    && (
                         $attributeType == 'text'
-                        ||
-                        in_array($field, $this->textFilterUseContainsAttributeList)
-                        ||
-                        $attributeType == 'varchar' && $this->getConfig()->get('textFilterUseContainsForVarchar')
+                        || in_array($field, $this->textFilterUseContainsAttributeList)
+                        || $attributeType == 'varchar' && $this->getConfig()->get('textFilterUseContainsForVarchar')
                     )
                 ) {
                     $expression = '%' . $textFilter . '%';
