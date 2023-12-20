@@ -1773,6 +1773,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                                     if (relEntity !== parts[0]) {
                                         continue;
                                     }
+                                } else {
+                                    continue;
                                 }
                             } else {
                                 if (!this.model.has(name) && !this.model.has(name + 'Id')) {
