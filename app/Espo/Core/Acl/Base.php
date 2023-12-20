@@ -272,7 +272,7 @@ class Base implements Injectable
         }
 
         if ($this->isRelationEntity($entity->getEntityType())) {
-            return $this->checkEntityRelation($user, $entity, 'read');
+            return $this->checkEntityRelation($user, $entity, 'read') && $this->checkEntity($user, $entity, $data, 'read');
         }
 
         if ($this->checkEntity($user, $entity, $data, 'read')) {
@@ -286,10 +286,6 @@ class Base implements Injectable
     {
         if ($user->isAdmin()) {
             return true;
-        }
-
-        if ($this->isRelationEntity($entity->getEntityType())) {
-            return $this->checkEntityRelation($user, $entity, 'edit');
         }
 
         if ($this->checkEntity($user, $entity, $data, 'create')) {
@@ -306,7 +302,7 @@ class Base implements Injectable
         }
 
         if ($this->isRelationEntity($entity->getEntityType())) {
-            return $this->checkEntityRelation($user, $entity, 'edit');
+            return $this->checkEntityRelation($user, $entity, 'read') && $this->checkEntity($user, $entity, $data, 'edit');
         }
 
         if ($this->checkEntity($user, $entity, $data, 'edit')) {
@@ -323,7 +319,7 @@ class Base implements Injectable
         }
 
         if ($this->isRelationEntity($entity->getEntityType())) {
-            return $this->checkEntityRelation($user, $entity, 'edit');
+            return $this->checkEntityRelation($user, $entity, 'read') && $this->checkEntity($user, $entity, $data, 'delete');
         }
 
         if ($this->checkEntity($user, $entity, $data, 'delete')) {
