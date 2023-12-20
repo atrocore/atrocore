@@ -44,6 +44,8 @@ Espo.define('model', [], function () {
 
         defs: null,
 
+        defaults: {},
+
         initialize: function () {
             this.urlRoot = this.urlRoot || this.name;
 
@@ -115,6 +117,11 @@ Espo.define('model', [], function () {
 
                     if (seed && seed[field] != null) {
                         defaultValue = seed[field]
+                    }
+
+                    if (defaultValue != null && !this.getFieldParam(field, 'required') && this.getFieldParam(field, 'setDefaultOnlyIfRequired')) {
+                        this.defaults[field] = defaultValue
+                        defaultValue = null
                     }
 
                     if (defaultValue != null) {

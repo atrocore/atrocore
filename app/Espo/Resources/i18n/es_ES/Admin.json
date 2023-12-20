@@ -162,7 +162,8 @@
     "strip": "Strip",
     "pattern": "Regex Pattern",
     "unique": "Unique",
-    "index": "Índice de base de datos"
+    "index": "Índice de base de datos",
+    "setDefaultOnlyIfRequired": "Aplicar el valor predeterminado solo si es necesario"
   },
   "messages": {
     "selectEntityType": "Seleccione el tipo de entidad en el menú de la izquierda.",

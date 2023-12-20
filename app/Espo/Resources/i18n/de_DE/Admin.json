@@ -169,7 +169,8 @@
     "unique": "Einheitlich",
     "index": "Datenbankindex",
     "foreignName": "Fremdfeld",
-    "useDisabledTextareaInViewMode": "Deaktiviertes Textfeld im Ansichtsmodus verwenden"
+    "useDisabledTextareaInViewMode": "Deaktiviertes Textfeld im Ansichtsmodus verwenden",
+    "setDefaultOnlyIfRequired": "Nur wenn Pflichtfeld anwenden"
   },
   "messages": {
     "selectEntityType": "Entitätstyp im linken Menü auswählen.",
