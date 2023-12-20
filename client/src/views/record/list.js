@@ -1585,10 +1585,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
             // remove relation virtual fields
             if (this.layoutName === 'listSmall') {
                 let toRemove = [];
-                listLayout.forEach((item, k) => {
+                listLayout.forEach(item => {
                     let parts = item.name.split('__');
                     if (parts.length === 2) {
-                        toRemove.push({number: k, relEntity: parts[0]});
+                        toRemove.push({name: item.name, relEntity: parts[0]});
                     }
                 });
 
@@ -1602,7 +1602,15 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
                 toRemove.forEach(item => {
                     if (!relEntity || item.relEntity !== relEntity) {
-                        listLayout.splice(item.number, 1);
+                        let number = null;
+                        listLayout.forEach((v, k) => {
+                            if (v.name === item.name) {
+                                number = k;
+                            }
+                        });
+                        if (number !== null) {
+                            listLayout.splice(number, 1);
+                        }
                     }
                 });
             }
