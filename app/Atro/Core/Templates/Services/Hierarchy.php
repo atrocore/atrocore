@@ -474,7 +474,7 @@ class Hierarchy extends Record
 
             $result = parent::updateEntity($id, $data);
 
-            $entityData= Util::arrayKeysToUnderScore($fetchedEntity->toArray());
+            $entityData = Util::arrayKeysToUnderScore($fetchedEntity->toArray());
             $this->getRepository()->pushLinkMultipleFields($entityData);
 
             $this->createPseudoTransactionJobs($entityData, clone $data);
@@ -658,7 +658,7 @@ class Hierarchy extends Record
             return;
         }
 
-        if (empty($this->getMemoryStorage()->get('exportJobId'))){
+        if (empty($this->getMemoryStorage()->get('exportJobId'))) {
             $entity->set('isRoot', $this->getRepository()->isRoot($entity->get('id')));
             $entity->set('hasChildren', !empty($children = $entity->get('children')) && count($children) > 0);
 
@@ -694,18 +694,58 @@ class Hierarchy extends Record
          * Mark records as inherited
          */
         if (!in_array($link, $this->getRepository()->getUnInheritedRelations())) {
-            $parents = $entity->get('parents');
-            if (!empty($parents[0])) {
-                $parentsRelatedIds = [];
-                foreach ($parents as $parent) {
-                    $ids = $parent->getLinkMultipleIdList($link);
-                    if (!empty($ids)) {
-                        $parentsRelatedIds = array_merge($parentsRelatedIds, $ids);
+            $parentsRelatedIds = [];
+
+            $relationName = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $link, 'relationName']);
+            if (!empty($relationName)) {
+                $relationEntityName = ucfirst($relationName);
+                $parentsIds = $entity->getLinkMultipleIdList('parents');
+                if (!empty($parentsIds)) {
+                    $additionalFields = array_filter($this->getMetadata()->get(['entityDefs', $relationEntityName, 'fields']), function ($row) {
+                        return empty($row['relationField']);
+                    });
+
+                    $keySet = $this->getRepository()->getMapper()->getKeys($entity, $link);
+
+                    $parentsCollection = $this->getEntityManager()->getRepository($relationEntityName)
+                        ->where([$keySet['nearKey'] => $parentsIds])
+                        ->find();
+
+                    foreach ($result['collection'] as $item) {
+                        foreach ($parentsCollection as $parentItem) {
+                            if ($parentItem->get($keySet['distantKey']) !== $item->get('id')) {
+                                continue;
+                            }
+
+                            $inherited = true;
+
+                            foreach ($additionalFields as $additionalField => $additionalFieldDefs) {
+                                $additionalFieldName = $additionalField;
+                                if (in_array($additionalFieldDefs['type'], ['link', 'asset'])) {
+                                    $additionalFieldName .= 'Id';
+                                }
+
+                                $virtualFieldName = Relation::buildVirtualFieldName($relationEntityName, $additionalField);
+                                if (!$item->has($virtualFieldName)) {
+                                    continue;
+                                }
+
+                                if ($item->get($virtualFieldName) !== $parentItem->get($additionalFieldName)) {
+                                    $inherited = false;
+                                    break;
+                                }
+                            }
+
+                            if ($inherited) {
+                                $parentsRelatedIds[] = $item->get('id');
+                            }
+                        }
                     }
                 }
-                foreach ($result['collection'] as $item) {
-                    $item->isInherited = in_array($item->get('id'), $parentsRelatedIds);
-                }
+            }
+
+            foreach ($result['collection'] as $item) {
+                $item->isInherited = in_array($item->get('id'), $parentsRelatedIds);
             }
         }
 
