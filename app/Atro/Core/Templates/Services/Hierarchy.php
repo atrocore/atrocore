@@ -689,6 +689,11 @@ class Hierarchy extends Record
             return $result;
         }
 
+        $ids = array_column($result['collection']->toArray(), 'id');
+        if (empty($ids)) {
+            return $result;
+        }
+
         $entity = $this->getRepository()->get($id);
         if (empty($entity)) {
             return $result;
@@ -699,7 +704,6 @@ class Hierarchy extends Record
          */
         if (!in_array($link, $this->getRepository()->getUnInheritedRelations())) {
             $parentsRelatedIds = [];
-
             $relationName = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $link, 'relationName']);
             if (!empty($relationName)) {
                 $relationEntityName = ucfirst($relationName);
@@ -708,20 +712,26 @@ class Hierarchy extends Record
                     $keySet = $this->getRepository()->getMapper()->getKeys($entity, $link);
 
                     $parentsCollection = $this->getEntityManager()->getRepository($relationEntityName)
-                        ->where([$keySet['nearKey'] => $parentsIds])
+                        ->where([
+                            $keySet['nearKey']    => $parentsIds,
+                            $keySet['distantKey'] => $ids
+                        ])
                         ->find();
 
                     $itemCollection = $this->getEntityManager()->getRepository($relationEntityName)
-                        ->where([$keySet['nearKey'] => $entity->get('id')])
+                        ->where([
+                            $keySet['nearKey']    => $entity->get('id'),
+                            $keySet['distantKey'] => $ids
+                        ])
                         ->find();
 
                     $additionalFields = array_filter($this->getMetadata()->get(['entityDefs', $relationEntityName, 'fields']), function ($row) {
                         return !empty($row['additionalField']);
                     });
 
-                    foreach ($itemCollection as $v) {
+                    foreach ($itemCollection as $item) {
                         foreach ($parentsCollection as $parentItem) {
-                            if ($parentItem->get($keySet['distantKey']) !== $v->get($keySet['distantKey'])) {
+                            if ($parentItem->get($keySet['distantKey']) !== $item->get($keySet['distantKey'])) {
                                 continue;
                             }
 
@@ -733,14 +743,14 @@ class Hierarchy extends Record
                                     $additionalFieldName .= 'Id';
                                 }
 
-                                if ($v->get($additionalFieldName) !== $parentItem->get($additionalFieldName)) {
+                                if ($item->get($additionalFieldName) !== $parentItem->get($additionalFieldName)) {
                                     $inherited = false;
                                     break;
                                 }
                             }
 
                             if ($inherited) {
-                                $parentsRelatedIds[] = $v->get($keySet['distantKey']);
+                                $parentsRelatedIds[] = $item->get($keySet['distantKey']);
                             }
                         }
                     }
