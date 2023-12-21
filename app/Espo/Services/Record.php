@@ -1254,7 +1254,11 @@ class Record extends Base
             if (empty($this->getMemoryStorage()->get('importJobId'))) {
                 $this->prepareEntityForOutput($entity);
                 $this->loadPreview($entity);
-                $this->updateRelationEntity($entity, $attachment);
+                try {
+                    $this->updateRelationEntity($entity, $attachment);
+                } catch (Forbidden $e) {
+                    // ignore 403
+                }
             }
             $this->processActionHistoryRecord('create', $entity);
 
@@ -1452,7 +1456,6 @@ class Record extends Base
             $relInput->_skipCheckForConflicts = true;
             try {
                 $this->getServiceFactory()->create($relEntityType)->updateEntity($relId, $relInput);
-            } catch (Forbidden $e) {
             } catch (NotModified $e) {
             }
         }
