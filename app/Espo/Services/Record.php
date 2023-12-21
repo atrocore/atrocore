@@ -1452,6 +1452,7 @@ class Record extends Base
             $relInput->_skipCheckForConflicts = true;
             try {
                 $this->getServiceFactory()->create($relEntityType)->updateEntity($relId, $relInput);
+            } catch (Forbidden $e) {
             } catch (NotModified $e) {
             }
         }
