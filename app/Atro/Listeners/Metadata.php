@@ -477,6 +477,7 @@ class Metadata extends AbstractListener
                         if ($additionalFieldDefs['type'] === 'link') {
                             $additionalFieldDefs['entity'] = $current['links'][$additionalField]['entity'];
                         }
+                        $current['fields'][$additionalField]['additionalField'] = true;
                         $data['entityDefs'][$relEntity]['fields'][Relation::buildVirtualFieldName($entityName, $additionalField)] = array_merge(
                             $additionalFieldDefs, $virtualFieldDefs
                         );

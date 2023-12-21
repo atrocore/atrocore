@@ -701,10 +701,6 @@ class Hierarchy extends Record
                 $relationEntityName = ucfirst($relationName);
                 $parentsIds = $entity->getLinkMultipleIdList('parents');
                 if (!empty($parentsIds)) {
-                    $additionalFields = array_filter($this->getMetadata()->get(['entityDefs', $relationEntityName, 'fields']), function ($row) {
-                        return empty($row['relationField']);
-                    });
-
                     $keySet = $this->getRepository()->getMapper()->getKeys($entity, $link);
 
                     $parentsCollection = $this->getEntityManager()->getRepository($relationEntityName)
@@ -715,15 +711,15 @@ class Hierarchy extends Record
                         ->where([$keySet['nearKey'] => $entity->get('id')])
                         ->find();
 
-                    foreach ($itemCollection as $item) {
+                    $additionalFields = array_filter($this->getMetadata()->get(['entityDefs', $relationEntityName, 'fields']), function ($row) {
+                        return !empty($row['additionalField']);
+                    });
+
+                    foreach ($itemCollection as $v) {
                         foreach ($parentsCollection as $parentItem) {
-                            if ($parentItem->get($keySet['distantKey']) !== $item->get($keySet['distantKey'])) {
+                            if ($parentItem->get($keySet['distantKey']) !== $v->get($keySet['distantKey'])) {
                                 continue;
                             }
-
-                            echo '<pre>';
-                            print_r($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields']));
-                            die();
 
                             $inherited = true;
 
@@ -733,19 +729,14 @@ class Hierarchy extends Record
                                     $additionalFieldName .= 'Id';
                                 }
 
-//                                $virtualFieldName = Relation::buildVirtualFieldName($relationEntityName, $additionalField);
-//                                if (!$item->has($virtualFieldName)) {
-//                                    continue;
-//                                }
-
-                                if ($item->get($additionalFieldName) !== $parentItem->get($additionalFieldName)) {
+                                if ($v->get($additionalFieldName) !== $parentItem->get($additionalFieldName)) {
                                     $inherited = false;
                                     break;
                                 }
                             }
 
                             if ($inherited) {
-                                $parentsRelatedIds[] = $item->get('id');
+                                $parentsRelatedIds[] = $v->get($keySet['distantKey']);
                             }
                         }
                     }
