@@ -207,6 +207,10 @@ class PostUpdate
         $i = new \DirectoryIterator($src);
         foreach ($i as $f) {
             if ($f->isFile()) {
+                // do not replace index.php condition
+                if ($f->getFilename() === 'index.php' && file_exists($f->getFilename())) {
+                    continue;
+                }
                 copy($f->getRealPath(), "$dest/" . $f->getFilename());
             } else {
                 if (!$f->isDot() && $f->isDir()) {
