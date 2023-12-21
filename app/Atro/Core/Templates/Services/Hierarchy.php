@@ -677,6 +677,10 @@ class Hierarchy extends Record
     {
         $result = parent::findLinkedEntities($id, $link, $params);
 
+        if (!empty($this->getMemoryStorage()->get('exportJobId'))) {
+            return $result;
+        }
+
         if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy') {
             return $result;
         }
