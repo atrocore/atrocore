@@ -703,7 +703,7 @@ class Hierarchy extends Record
          * Mark records as inherited
          */
         if (!in_array($link, $this->getRepository()->getUnInheritedRelations())) {
-            $parentsRelatedIds = [];
+            $skipIds = [];
             $relationName = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $link, 'relationName']);
             if (!empty($relationName)) {
                 $relationEntityName = ucfirst($relationName);
@@ -734,9 +734,6 @@ class Hierarchy extends Record
                             if ($parentItem->get($keySet['distantKey']) !== $item->get($keySet['distantKey'])) {
                                 continue;
                             }
-
-                            $inherited = true;
-
                             foreach ($additionalFields as $additionalField => $additionalFieldDefs) {
                                 $additionalFieldName = $additionalField;
                                 if (in_array($additionalFieldDefs['type'], ['link', 'asset'])) {
@@ -744,13 +741,9 @@ class Hierarchy extends Record
                                 }
 
                                 if ($item->get($additionalFieldName) !== $parentItem->get($additionalFieldName)) {
-                                    $inherited = false;
+                                    $skipIds[] = $item->get($keySet['distantKey']);
                                     break;
                                 }
-                            }
-
-                            if ($inherited) {
-                                $parentsRelatedIds[] = $item->get($keySet['distantKey']);
                             }
                         }
                     }
@@ -758,7 +751,7 @@ class Hierarchy extends Record
             }
 
             foreach ($result['collection'] as $item) {
-                $item->isInherited = in_array($item->get('id'), $parentsRelatedIds);
+                $item->isInherited = !in_array($item->get('id'), $skipIds);
             }
         }
 
