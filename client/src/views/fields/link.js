@@ -427,32 +427,36 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         this.addLinkOneOfHtml(id, this.searchData.oneOfNameHash[id]);
                     }, this);
 
-                    this.getCollectionFactory().create(this.foreignScope, function (collection) {
-                        collection.where = [
-                            {
-                                'type': 'in',
-                                'attribute': 'id',
-                                'value': this.searchData.oneOfIdList
-                            }
-                        ];
-                        collection.fetch().then(res => {
-                            for (const idItem of this.searchData.oneOfIdList) {
-                                const model = collection.get(idItem);
-                                if (model && model.has('name')) {
-                                    this.replaceNameOneOf(idItem, model.get('name'))
+                    if (Array.isArray(this.searchData.oneOfIdList) && this.searchData.oneOfIdList.length > 0) {
+                        this.getCollectionFactory().create(this.foreignScope, function (collection) {
+                            const whereCondition = [
+                                {
+                                    'type': 'in',
+                                    'attribute': 'id',
+                                    'value': this.searchData.oneOfIdList
                                 }
-                            }
-                        });
-                    }, this);
+                            ];
+                            collection.fetch({ data: $.param({ silent: true, where: whereCondition }) }).then(res => {
+                                for (const idItem of this.searchData.oneOfIdList) {
+                                    const model = collection.get(idItem);
+                                    if (model && model.has('name')) {
+                                        this.replaceNameOneOf(idItem, model.get('name'))
+                                    }
+                                }
+                            });
+                        }, this);
+                    }
                 }
 
                 if (~['is', 'isNot'].indexOf(type)) {
-                    this.getModelFactory().create(this.foreignScope, function (model) {
-                        model.set('id', this.searchData.idValue);
-                        model.fetch().then(() => {
-                            this.select(model);
-                        });
-                    }, this);
+                    if (this.searchData.idValue) {
+                        this.getModelFactory().create(this.foreignScope, function (model) {
+                            model.set('id', this.searchData.idValue);
+                            model.fetch({ data: $.param({ silent: true }) }).then(() => {
+                                this.select(model);
+                            });
+                        }, this);
+                    }
                 }
             }
         },
