@@ -711,11 +711,19 @@ class Hierarchy extends Record
                         ->where([$keySet['nearKey'] => $parentsIds])
                         ->find();
 
-                    foreach ($result['collection'] as $item) {
+                    $itemCollection = $this->getEntityManager()->getRepository($relationEntityName)
+                        ->where([$keySet['nearKey'] => $entity->get('id')])
+                        ->find();
+
+                    foreach ($itemCollection as $item) {
                         foreach ($parentsCollection as $parentItem) {
-                            if ($parentItem->get($keySet['distantKey']) !== $item->get('id')) {
+                            if ($parentItem->get($keySet['distantKey']) !== $item->get($keySet['distantKey'])) {
                                 continue;
                             }
+
+                            echo '<pre>';
+                            print_r($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields']));
+                            die();
 
                             $inherited = true;
 
@@ -725,12 +733,12 @@ class Hierarchy extends Record
                                     $additionalFieldName .= 'Id';
                                 }
 
-                                $virtualFieldName = Relation::buildVirtualFieldName($relationEntityName, $additionalField);
-                                if (!$item->has($virtualFieldName)) {
-                                    continue;
-                                }
+//                                $virtualFieldName = Relation::buildVirtualFieldName($relationEntityName, $additionalField);
+//                                if (!$item->has($virtualFieldName)) {
+//                                    continue;
+//                                }
 
-                                if ($item->get($virtualFieldName) !== $parentItem->get($additionalFieldName)) {
+                                if ($item->get($additionalFieldName) !== $parentItem->get($additionalFieldName)) {
                                     $inherited = false;
                                     break;
                                 }
