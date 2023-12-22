@@ -18,6 +18,7 @@ use Doctrine\DBAL\ParameterType;
 use Espo\Core\ORM\Repositories\RDB;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 
 class Relation extends RDB
 {
@@ -119,5 +120,43 @@ class Relation extends RDB
         }
 
         return $res;
+    }
+
+    public function getChildren(Entity $entity): ?EntityCollection
+    {
+        $link = $this->getHierarchicalRelation();
+        if (empty($link)) {
+            return null;
+        }
+
+        $hierarchicalEntity = $entity->get($link);
+        if (empty($hierarchicalEntity)) {
+            return null;
+        }
+
+        $childrenIds = $hierarchicalEntity->getLinkMultipleIdList('children');
+        if (empty($childrenIds[0])) {
+            return null;
+        }
+
+        $additionalFields = $this->getAdditionalFieldsNames();
+
+        $where = [];
+        foreach ($childrenIds as $childId) {
+            foreach ($this->getRelationFields() as $relField) {
+                if ($relField === $link) {
+                    $where["{$relField}Id"][] = $childId;
+                } else {
+                    $where["{$relField}Id"] = $entity->get("{$relField}Id");
+                }
+            }
+            foreach ($additionalFields as $additionalField) {
+                $where[$additionalField] = $entity->get($additionalField);
+            }
+        }
+
+        return $this
+            ->where($where)
+            ->find();
     }
 }
