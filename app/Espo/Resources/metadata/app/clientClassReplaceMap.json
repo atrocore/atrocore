@@ -29,9 +29,6 @@
   "views/list": [
     "treo-core"
   ],
-  "views/dashboard": [
-    "treo-core"
-  ],
   "views/dashlets/options/base": [
     "treo-core"
   ],
