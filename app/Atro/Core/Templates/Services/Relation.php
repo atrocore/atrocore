@@ -60,11 +60,68 @@ class Relation extends Record
         }
     }
 
+    protected function afterUpdateEntity(Entity $entity, $data)
+    {
+        $this->updateHierarchical($entity, $data);
+
+        parent::afterUpdateEntity($entity, $data);
+    }
+
     protected function afterDeleteEntity(Entity $entity)
     {
         $this->deleteHierarchical($entity);
 
         parent::afterDeleteEntity($entity);
+    }
+
+    public function updateHierarchical(Entity $entity, \stdClass $data): void
+    {
+        $link = $this->getRepository()->getHierarchicalRelation();
+        if (empty($link)) {
+            return;
+        }
+
+        if (!property_exists($entity, '_fetchedEntity')) {
+            return;
+        }
+
+        $fetchedEntity = $entity->_fetchedEntity;
+
+        $hierarchicalEntity = $entity->get($link);
+        if (empty($hierarchicalEntity)) {
+            return;
+        }
+
+        $childrenIds = $hierarchicalEntity->getLinkMultipleIdList('children');
+        if (empty($childrenIds[0])) {
+            return;
+        }
+
+        $additionalFields = $this->getRepository()->getAdditionalFieldsNames();
+
+        $where = [];
+        foreach ($childrenIds as $childId) {
+            foreach ($this->getRepository()->getRelationFields() as $relField) {
+                if ($relField === $link) {
+                    $where["{$relField}Id"][] = $childId;
+                } else {
+                    $where["{$relField}Id"] = $fetchedEntity->get("{$relField}Id");
+                }
+            }
+            foreach ($additionalFields as $additionalField) {
+                $where[$additionalField] = $fetchedEntity->get($additionalField);
+            }
+        }
+
+        $childrenRecords = $this->getRepository()->select(['id'])->where($where)->find();
+        foreach ($childrenRecords as $childrenRecord) {
+            try {
+                $this->updateEntity($childrenRecord->get('id'), clone $data);
+            } catch (Forbidden $e) {
+            } catch (NotFound $e) {
+            } catch (BadRequest $e) {
+            }
+        }
     }
 
     public function deleteHierarchical(Entity $entity): void

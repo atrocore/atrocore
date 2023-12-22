@@ -760,7 +760,7 @@ class Hierarchy extends Record
                 }
             }
         }
-        
+
         foreach ($result['collection'] as $item) {
             $item->isInherited = !in_array($item->get('id'), $skipIds);
         }
