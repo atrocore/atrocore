@@ -717,41 +717,47 @@ class Hierarchy extends Record
             return;
         }
 
-        $skipIds = [];
         $relationName = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $link, 'relationName']);
-        if (!empty($relationName)) {
-            $relationEntityName = ucfirst($relationName);
-            $parentsIds = $entity->getLinkMultipleIdList('parents');
-            if (!empty($parentsIds)) {
-                $keySet = $this->getRepository()->getMapper()->getKeys($entity, $link);
+        if (empty($relationName)) {
+            return;
+        }
 
-                $parentsCollection = $this->getEntityManager()->getRepository($relationEntityName)
-                    ->where([
-                        $keySet['nearKey']    => $parentsIds,
-                        $keySet['distantKey'] => $ids
-                    ])
-                    ->find();
+        $relationEntityName = ucfirst($relationName);
 
-                $itemCollection = $this->getEntityManager()->getRepository($relationEntityName)
-                    ->where([
-                        $keySet['nearKey']    => $entity->get('id'),
-                        $keySet['distantKey'] => $ids
-                    ])
-                    ->find();
+        $parentsIds = $entity->getLinkMultipleIdList('parents');
+        if (empty($parentsIds)) {
+            return;
+        }
 
-                $additionalFields = $this->getAdditionalFieldsNames($entity->getEntityType(), $link);
+        $skipIds = [];
 
-                foreach ($itemCollection as $item) {
-                    foreach ($parentsCollection as $parentItem) {
-                        if ($parentItem->get($keySet['distantKey']) !== $item->get($keySet['distantKey'])) {
-                            continue;
-                        }
-                        foreach ($additionalFields as $additionalFieldName) {
-                            if ($item->get($additionalFieldName) !== $parentItem->get($additionalFieldName)) {
-                                $skipIds[] = $item->get($keySet['distantKey']);
-                                break;
-                            }
-                        }
+        $keySet = $this->getRepository()->getMapper()->getKeys($entity, $link);
+
+        $parentsCollection = $this->getEntityManager()->getRepository($relationEntityName)
+            ->where([
+                $keySet['nearKey']    => $parentsIds,
+                $keySet['distantKey'] => $ids
+            ])
+            ->find();
+
+        $itemCollection = $this->getEntityManager()->getRepository($relationEntityName)
+            ->where([
+                $keySet['nearKey']    => $entity->get('id'),
+                $keySet['distantKey'] => $ids
+            ])
+            ->find();
+
+        $additionalFields = $this->getAdditionalFieldsNames($entity->getEntityType(), $link);
+
+        foreach ($itemCollection as $item) {
+            foreach ($parentsCollection as $parentItem) {
+                if ($parentItem->get($keySet['distantKey']) !== $item->get($keySet['distantKey'])) {
+                    continue;
+                }
+                foreach ($additionalFields as $additionalFieldName) {
+                    if ($item->get($additionalFieldName) !== $parentItem->get($additionalFieldName)) {
+                        $skipIds[] = $item->get($keySet['distantKey']);
+                        break;
                     }
                 }
             }
