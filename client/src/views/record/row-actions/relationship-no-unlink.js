@@ -44,16 +44,24 @@ Espo.define('views/record/row-actions/relationship-no-unlink', 'views/record/row
                 link: '#' + this.model.name + '/view/' + this.model.id
             }];
             if (this.options.acl.edit) {
-                list = list.concat([
-                    {
-                        action: 'quickEdit',
-                        label: 'Edit',
+                list.push({
+                    action: 'quickEdit',
+                    label: 'Edit',
+                    data: {
+                        id: this.model.id
+                    },
+                    link: '#' + this.model.name + '/edit/' + this.model.id
+                });
+
+                if (this.model.has('isInherited') && !this.model.get('isInherited')) {
+                    list.push({
+                        action: 'inheritRelated',
+                        label: 'inherit',
                         data: {
                             id: this.model.id
-                        },
-                        link: '#' + this.model.name + '/edit/' + this.model.id
-                    }
-                ]);
+                        }
+                    });
+                }
             }
             if (this.options.acl.delete) {
                 list.push({
