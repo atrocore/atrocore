@@ -14,7 +14,23 @@ declare(strict_types=1);
 namespace Atro\Core\Templates\Controllers;
 
 use Espo\Core\Controllers\Record;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
 
 class Relation extends Record
 {
+    public function actionInheritRelation($params, $data, $request)
+    {
+        if (!$request->isPut()) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($this->name, 'edit')) {
+            throw new Forbidden();
+        }
+
+        $entity = $this->getRecordService()->inheritRelation($data);
+
+        return $entity->toArray();
+    }
 }

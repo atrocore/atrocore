@@ -44,6 +44,15 @@ Espo.define('views/record/row-actions/relationship-edit-and-remove', 'views/reco
                         id: this.model.id
                     }
                 });
+                if (this.model.has('isInherited') && !this.model.get('isInherited')) {
+                    list.push({
+                        action: 'inheritRelated',
+                        label: 'inherit',
+                        data: {
+                            id: this.model.id
+                        }
+                    });
+                }
             }
             if (this.options.acl.delete) {
                 list.push({

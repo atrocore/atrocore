@@ -591,6 +591,25 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             }.bind(this));
         },
 
+        actionInheritRelated: function (data) {
+            let id = data.id;
+
+            let relationName = this.getMetadata().get(['entityDefs', this.model.urlRoot, 'links', this.panelName, 'relationName']);
+            let relEntity = relationName.charAt(0).toUpperCase() + relationName.slice(1);
+
+            this.notify('Saving...');
+            this.ajaxPutRequest(`${relEntity}/action/inheritRelation`, {
+                entityType: this.model.urlRoot,
+                entityId: this.model.get('id'),
+                relation: this.panelName,
+                relId: id
+            }).then(() => {
+                this.notify('Saved', 'success');
+                this.collection.get(id).trigger('after:save');
+                this.collection.fetch();
+            });
+        },
+
         actionUnlinkRelated: function (data) {
             let id = data.id;
             let scope = this.collection.url.split('/').shift();
