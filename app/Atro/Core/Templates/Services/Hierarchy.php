@@ -707,8 +707,7 @@ class Hierarchy extends Record
             return;
         }
 
-        $ids = array_column($result['collection']->toArray(), 'id');
-        if (empty($ids)) {
+        if (empty($result['collection'][0])) {
             return;
         }
 
@@ -722,15 +721,13 @@ class Hierarchy extends Record
             return;
         }
 
-        $relationEntityName = ucfirst($relationName);
-
         $parentsIds = $entity->getLinkMultipleIdList('parents');
         if (empty($parentsIds)) {
             return;
         }
 
-        $skipIds = [];
-
+        $relationEntityName = ucfirst($relationName);
+        $ids = array_column($result['collection']->toArray(), 'id');
         $keySet = $this->getRepository()->getMapper()->getKeys($entity, $link);
 
         $parentsCollection = $this->getEntityManager()->getRepository($relationEntityName)
@@ -749,6 +746,7 @@ class Hierarchy extends Record
 
         $additionalFields = $this->getAdditionalFieldsNames($entity->getEntityType(), $link);
 
+        $skipIds = [];
         foreach ($itemCollection as $item) {
             foreach ($parentsCollection as $parentItem) {
                 if ($parentItem->get($keySet['distantKey']) !== $item->get($keySet['distantKey'])) {
@@ -762,7 +760,7 @@ class Hierarchy extends Record
                 }
             }
         }
-
+        
         foreach ($result['collection'] as $item) {
             $item->isInherited = !in_array($item->get('id'), $skipIds);
         }
