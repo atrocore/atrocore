@@ -18,6 +18,7 @@ use Doctrine\DBAL\ParameterType;
 use Espo\Core\ORM\Repositories\RDB;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 
 class Relation extends RDB
 {
@@ -64,5 +65,98 @@ class Relation extends RDB
         parent::beforeRemove($entity, $options);
 
         $this->deleteAlreadyDeleted($entity);
+    }
+
+    public function getHierarchicalRelation(): ?string
+    {
+        foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields']) as $field => $fieldDefs) {
+            if (empty($fieldDefs['relationField'])) {
+                continue;
+            }
+
+            $entity = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $field, 'entity']);
+            if (empty($entity)) {
+                continue;
+            }
+
+            if ($this->getMetadata()->get(['scopes', $entity, 'type']) !== 'Hierarchy') {
+                continue;
+            }
+
+            return $field;
+        }
+
+        return null;
+    }
+
+    public function getRelationFields(): array
+    {
+        $res = [];
+        foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields']) as $field => $fieldDefs) {
+            if (empty($fieldDefs['relationField'])) {
+                continue;
+            }
+            $res[] = $field;
+        }
+
+        return $res;
+    }
+
+
+    public function getAdditionalFieldsNames(): array
+    {
+        $res = [];
+        foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields']) as $field => $fieldDefs) {
+            if (empty($fieldDefs['additionalField'])) {
+                continue;
+            }
+
+            $name = $field;
+            if (in_array($fieldDefs['type'], ['link', 'asset'])) {
+                $name .= 'Id';
+            }
+
+            $res[] = $name;
+        }
+
+        return $res;
+    }
+
+    public function getChildren(Entity $entity): ?EntityCollection
+    {
+        $link = $this->getHierarchicalRelation();
+        if (empty($link)) {
+            return null;
+        }
+
+        $hierarchicalEntity = $entity->get($link);
+        if (empty($hierarchicalEntity)) {
+            return null;
+        }
+
+        $childrenIds = $hierarchicalEntity->getLinkMultipleIdList('children');
+        if (empty($childrenIds[0])) {
+            return null;
+        }
+
+        $additionalFields = $this->getAdditionalFieldsNames();
+
+        $where = [];
+        foreach ($childrenIds as $childId) {
+            foreach ($this->getRelationFields() as $relField) {
+                if ($relField === $link) {
+                    $where["{$relField}Id"][] = $childId;
+                } else {
+                    $where["{$relField}Id"] = $entity->get("{$relField}Id");
+                }
+            }
+            foreach ($additionalFields as $additionalField) {
+                $where[$additionalField] = $entity->get($additionalField);
+            }
+        }
+
+        return $this
+            ->where($where)
+            ->find();
     }
 }

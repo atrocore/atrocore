@@ -52,6 +52,16 @@ Espo.define('views/record/row-actions/relationship-view-and-edit', 'views/record
                     },
                     link: '#' + this.model.name + '/edit/' + this.model.id
                 });
+
+                if (this.model.has('isInherited') && !this.model.get('isInherited')) {
+                    list.push({
+                        action: 'inheritRelated',
+                        label: 'inherit',
+                        data: {
+                            id: this.model.id
+                        }
+                    });
+                }
             }
             return list;
         },

@@ -35,19 +35,18 @@ Espo.define('views/record/row-actions/relationship-unlink-only', 'views/record/r
     return Dep.extend({
 
         getActionList: function () {
+            let list = [];
             if (this.options.acl.edit) {
-                let list = [
-                    {
-                        action: 'unlinkRelated',
-                        label: 'Unlink',
-                        data: {
-                            id: this.model.id
-                        }
+                list.push({
+                    action: 'unlinkRelated',
+                    label: 'Unlink',
+                    data: {
+                        id: this.model.id
                     }
-                ];
-
-                return list;
+                });
             }
+
+            return list;
         }
     });
 

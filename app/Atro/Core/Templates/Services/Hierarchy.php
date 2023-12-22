@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core\Templates\Services;
 
 use Atro\Core\EventManager\Event;
+use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Templates\Repositories\Relation;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Conflict;
@@ -212,7 +213,8 @@ class Hierarchy extends Record
             throw new BadRequest("'id' and 'link' is required parameters.");
         }
 
-        if (empty($entity = $this->getRepository()->get($id))) {
+        $entity = $this->getRepository()->get($id);
+        if (empty($entity)) {
             throw new NotFound();
         }
 
@@ -224,47 +226,52 @@ class Hierarchy extends Record
             throw new BadRequest("Relations inheriting is disabled.");
         }
 
-        if (empty($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $link, 'relationName']))) {
+        $relationName = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $link, 'relationName']);
+        if (empty($relationName)) {
             return false;
         }
+
+        $relationEntityName = ucfirst($relationName);
 
         if (in_array($link, $this->getRepository()->getUnInheritedRelations())) {
             return false;
         }
 
-        if (!$this->getAcl()->check($entity, 'edit')) {
-            throw new Forbidden();
-        }
-
-        if (empty($foreignEntityType = $entity->getRelationParam($link, 'entity'))) {
-            throw new Error();
-        }
-
-        if (!$this->getAcl()->check($foreignEntityType, in_array($link, $this->noEditAccessRequiredLinkList) ? 'read' : 'edit')) {
-            throw new Forbidden();
-        }
-
-        $parents = $entity->get('parents');
-        if (empty($parents[0])) {
+        $parentsIds = $entity->getLinkMultipleIdList('parents');
+        if (empty($parentsIds[0])) {
             throw new NotFound();
         }
 
-        $foreignIds = [];
-        foreach ($parents as $parent) {
-            $foreignIds = array_merge($foreignIds, $parent->getLinkMultipleIdList($link));
-        }
-        $foreignIds = array_unique($foreignIds);
+        $keySet = $this->getRepository()->getMapper()->getKeys($entity, $link);
 
-        if (empty($foreignIds)) {
+        $parentsCollection = $this->getEntityManager()->getRepository($relationEntityName)
+            ->where([$keySet['nearKey'] => $parentsIds])
+            ->find();
+
+        if (empty($parentsCollection[0])) {
             throw new BadRequest($this->getInjection('language')->translate('nothingToInherit', 'exceptions'));
         }
 
-        foreach ($foreignIds as $k => $foreignId) {
-            if ($k < $this->maxMassLinkCount) {
-                $this->linkEntity($id, $link, $foreignId);
+        $additionalFields = $this->getAdditionalFieldsNames($entity->getEntityType(), $link);
+
+        $maxMassLinkCount = $this->getConfig()->get('maxMassLinkCount', 20);
+
+        foreach ($parentsCollection as $k => $parentItem) {
+            $input = new \stdClass();
+            $input->{$keySet['nearKey']} = $id;
+            $input->{$keySet['distantKey']} = $parentItem->get($keySet['distantKey']);
+            foreach ($additionalFields as $additionalField) {
+                $input->{$additionalField} = $parentItem->get($additionalField);
+            }
+
+            if ($k < $maxMassLinkCount) {
+                try {
+                    $this->getServiceFactory()->create($relationEntityName)->createEntity($input);
+                } catch (NotUnique $e) {
+                } catch (Forbidden $e) {
+                }
             } else {
-                $this->getPseudoTransactionManager()->pushLinkEntityJob($this->entityType, $id, $link, $foreignId);
-                $this->createPseudoTransactionLinkJobs($id, $link, $foreignId);
+                $this->getPseudoTransactionManager()->pushCreateEntityJob($relationEntityName, $input);
             }
         }
 
@@ -474,7 +481,7 @@ class Hierarchy extends Record
 
             $result = parent::updateEntity($id, $data);
 
-            $entityData= Util::arrayKeysToUnderScore($fetchedEntity->toArray());
+            $entityData = Util::arrayKeysToUnderScore($fetchedEntity->toArray());
             $this->getRepository()->pushLinkMultipleFields($entityData);
 
             $this->createPseudoTransactionJobs($entityData, clone $data);
@@ -658,7 +665,7 @@ class Hierarchy extends Record
             return;
         }
 
-        if (empty($this->getMemoryStorage()->get('exportJobId'))){
+        if (empty($this->getMemoryStorage()->get('exportJobId'))) {
             $entity->set('isRoot', $this->getRepository()->isRoot($entity->get('id')));
             $entity->set('hasChildren', !empty($children = $entity->get('children')) && count($children) > 0);
 
@@ -677,39 +684,96 @@ class Hierarchy extends Record
     {
         $result = parent::findLinkedEntities($id, $link, $params);
 
+        $this->markInheritedRecords($result, $id, $link);
+
+        return $result;
+    }
+
+    public function markInheritedRecords(array &$result, string $id, string $link): void
+    {
+        if (!empty($this->getMemoryStorage()->get('exportJobId'))) {
+            return;
+        }
+
         if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy') {
-            return $result;
+            return;
         }
 
         if (in_array($link, ['parents', 'children'])) {
-            return $result;
+            return;
+        }
+
+        if (in_array($link, $this->getRepository()->getUnInheritedRelations())) {
+            return;
+        }
+
+        if (empty($result['collection'][0])) {
+            return;
         }
 
         $entity = $this->getRepository()->get($id);
         if (empty($entity)) {
-            return $result;
+            return;
         }
 
-        /**
-         * Mark records as inherited
-         */
-        if (!in_array($link, $this->getRepository()->getUnInheritedRelations())) {
-            $parents = $entity->get('parents');
-            if (!empty($parents[0])) {
-                $parentsRelatedIds = [];
-                foreach ($parents as $parent) {
-                    $ids = $parent->getLinkMultipleIdList($link);
-                    if (!empty($ids)) {
-                        $parentsRelatedIds = array_merge($parentsRelatedIds, $ids);
-                    }
+        $relationName = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $link, 'relationName']);
+        if (empty($relationName)) {
+            return;
+        }
+
+        $parentsIds = $entity->getLinkMultipleIdList('parents');
+        if (empty($parentsIds)) {
+            return;
+        }
+
+        $relationEntityName = ucfirst($relationName);
+        $ids = array_column($result['collection']->toArray(), 'id');
+        $keySet = $this->getRepository()->getMapper()->getKeys($entity, $link);
+
+        $parentsCollection = $this->getEntityManager()->getRepository($relationEntityName)
+            ->where([
+                $keySet['nearKey']    => $parentsIds,
+                $keySet['distantKey'] => $ids
+            ])
+            ->find();
+
+        $itemCollection = $this->getEntityManager()->getRepository($relationEntityName)
+            ->where([
+                $keySet['nearKey']    => $entity->get('id'),
+                $keySet['distantKey'] => $ids
+            ])
+            ->find();
+
+        $additionalFields = $this->getAdditionalFieldsNames($entity->getEntityType(), $link);
+
+        $skipIds = [];
+        foreach ($itemCollection as $item) {
+            foreach ($parentsCollection as $parentItem) {
+                if ($parentItem->get($keySet['distantKey']) !== $item->get($keySet['distantKey'])) {
+                    continue;
                 }
-                foreach ($result['collection'] as $item) {
-                    $item->isInherited = in_array($item->get('id'), $parentsRelatedIds);
+                foreach ($additionalFields as $additionalFieldName) {
+                    if ($item->get($additionalFieldName) !== $parentItem->get($additionalFieldName)) {
+                        $skipIds[] = $item->get($keySet['distantKey']);
+                        break;
+                    }
                 }
             }
         }
 
-        return $result;
+        foreach ($result['collection'] as $item) {
+            $item->isInherited = !in_array($item->get('id'), $skipIds);
+        }
+    }
+
+    protected function getAdditionalFieldsNames(string $entityType, string $link): array
+    {
+        $relationName = $this->getMetadata()->get(['entityDefs', $entityType, 'links', $link, 'relationName']);
+
+        return $this
+            ->getEntityManager()
+            ->getRepository(ucfirst($relationName))
+            ->getAdditionalFieldsNames();
     }
 
     protected function duplicateParents($entity, $duplicatingEntity): void

@@ -44,23 +44,32 @@ Espo.define('views/record/row-actions/relationship-no-remove', 'views/record/row
                 link: '#' + this.model.name + '/view/' + this.model.id
             }];
             if (this.options.acl.edit) {
-                list = list.concat([
-                    {
-                        action: 'quickEdit',
-                        label: 'Edit',
-                        data: {
-                            id: this.model.id
-                        },
-                        link: '#' + this.model.name + '/edit/' + this.model.id
+                list.push({
+                    action: 'quickEdit',
+                    label: 'Edit',
+                    data: {
+                        id: this.model.id
                     },
-                    {
-                        action: 'unlinkRelated',
-                        label: 'Unlink',
+                    link: '#' + this.model.name + '/edit/' + this.model.id
+                });
+
+                if (this.model.has('isInherited') && !this.model.get('isInherited')) {
+                    list.push({
+                        action: 'inheritRelated',
+                        label: 'inherit',
                         data: {
                             id: this.model.id
                         }
+                    });
+                }
+
+                list.push({
+                    action: 'unlinkRelated',
+                    label: 'Unlink',
+                    data: {
+                        id: this.model.id
                     }
-                ]);
+                });
             }
             return list;
         }
