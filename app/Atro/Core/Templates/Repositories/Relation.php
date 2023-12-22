@@ -65,4 +65,59 @@ class Relation extends RDB
 
         $this->deleteAlreadyDeleted($entity);
     }
+
+    public function getHierarchicalRelation(): ?string
+    {
+        foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields']) as $field => $fieldDefs) {
+            if (empty($fieldDefs['relationField'])) {
+                continue;
+            }
+
+            $entity = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $field, 'entity']);
+            if (empty($entity)) {
+                continue;
+            }
+
+            if ($this->getMetadata()->get(['scopes', $entity, 'type']) !== 'Hierarchy') {
+                continue;
+            }
+
+            return $field;
+        }
+
+        return null;
+    }
+
+    public function getRelationFields(): array
+    {
+        $res = [];
+        foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields']) as $field => $fieldDefs) {
+            if (empty($fieldDefs['relationField'])) {
+                continue;
+            }
+            $res[] = $field;
+        }
+
+        return $res;
+    }
+
+
+    public function getAdditionalFieldsNames(): array
+    {
+        $res = [];
+        foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields']) as $field => $fieldDefs) {
+            if (empty($fieldDefs['additionalField'])) {
+                continue;
+            }
+
+            $name = $field;
+            if (in_array($fieldDefs['type'], ['link', 'asset'])) {
+                $name .= 'Id';
+            }
+
+            $res[] = $name;
+        }
+
+        return $res;
+    }
 }

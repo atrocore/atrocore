@@ -766,20 +766,10 @@ class Hierarchy extends Record
     {
         $relationName = $this->getMetadata()->get(['entityDefs', $entityType, 'links', $link, 'relationName']);
 
-        $res = [];
-        foreach ($this->getMetadata()->get(['entityDefs', ucfirst($relationName), 'fields']) as $field => $fieldDefs) {
-            if (empty($fieldDefs['additionalField'])) {
-                continue;
-            }
-
-            $name = $field;
-            if (in_array($fieldDefs['type'], ['link', 'asset'])) {
-                $name .= 'Id';
-            }
-            $res[] = $name;
-        }
-
-        return $res;
+        return $this
+            ->getEntityManager()
+            ->getRepository(ucfirst($relationName))
+            ->getAdditionalFieldsNames();
     }
 
     protected function duplicateParents($entity, $duplicatingEntity): void
