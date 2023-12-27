@@ -1384,6 +1384,14 @@ class Record extends Base
             return;
         }
 
+        if (empty($this->getMetadata()->get(['scopes', $attachment->_relationEntity, 'relationInheritance']))) {
+            return;
+        }
+
+        if (in_array($attachment->_relationName, $this->getEntityManager()->getRepository($attachment->_relationEntity)->getUnInheritedRelations())) {
+            return;
+        }
+
         $field = $this->getMetadata()->get(['entityDefs', $attachment->_relationEntity, 'links', $attachment->_relationName, 'foreign'], '') . 'Ids';
         if (!property_exists($attachment, $field) || !is_array($attachment->$field)) {
             return;

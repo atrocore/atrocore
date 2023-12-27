@@ -703,10 +703,6 @@ class Hierarchy extends Record
             return;
         }
 
-        if (in_array($link, ['parents', 'children'])) {
-            return;
-        }
-
         if (in_array($link, $this->getRepository()->getUnInheritedRelations())) {
             return;
         }
