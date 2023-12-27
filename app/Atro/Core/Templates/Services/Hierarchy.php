@@ -699,6 +699,10 @@ class Hierarchy extends Record
             return;
         }
 
+        if (empty($this->getMetadata()->get(['scopes', $this->entityType, 'relationInheritance']))) {
+            return;
+        }
+
         if (in_array($link, ['parents', 'children'])) {
             return;
         }

@@ -83,6 +83,10 @@ class Relation extends Record
 
     public function createHierarchical(Entity $entity): void
     {
+        if (!$this->getRepository()->isInheritedRelation()) {
+            return;
+        }
+
         $link = $this->getRepository()->getHierarchicalRelation();
         if (empty($link)) {
             return;
@@ -129,6 +133,10 @@ class Relation extends Record
 
     public function updateHierarchical(Entity $entity, \stdClass $data): void
     {
+        if (!$this->getRepository()->isInheritedRelation()) {
+            return;
+        }
+
         $childrenRecords = $this->getRepository()->getChildren($entity->_fetchedEntity);
         if ($childrenRecords === null) {
             return;
@@ -148,6 +156,10 @@ class Relation extends Record
 
     public function deleteHierarchical(Entity $entity): void
     {
+        if (!$this->getRepository()->isInheritedRelation()) {
+            return;
+        }
+
         $childrenRecords = $this->getRepository()->getChildren($entity);
         if ($childrenRecords === null) {
             return;

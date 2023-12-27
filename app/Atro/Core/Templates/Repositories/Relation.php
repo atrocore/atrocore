@@ -89,6 +89,39 @@ class Relation extends RDB
         return null;
     }
 
+    public function getHierarchicalEntity(): ?string
+    {
+        foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields']) as $field => $fieldDefs) {
+            if (empty($fieldDefs['relationField'])) {
+                continue;
+            }
+
+            $entity = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $field, 'entity']);
+            if (empty($entity)) {
+                continue;
+            }
+
+            if ($this->getMetadata()->get(['scopes', $entity, 'type']) !== 'Hierarchy') {
+                continue;
+            }
+
+            return $entity;
+        }
+
+        return null;
+    }
+
+    public function getHierarchicalEntityLink(string $hierarchicalEntity): ?string
+    {
+        foreach ($this->getMetadata()->get(['entityDefs', $hierarchicalEntity, 'links']) as $link => $linkDefs) {
+            if (!empty($linkDefs['relationName']) && $linkDefs['relationName'] === lcfirst($this->entityType)) {
+                return $link;
+            }
+        }
+
+        return null;
+    }
+
     public function getRelationFields(): array
     {
         $res = [];
@@ -120,6 +153,29 @@ class Relation extends RDB
         }
 
         return $res;
+    }
+
+    public function isInheritedRelation(): bool
+    {
+        $hierarchicalEntity = $this->getHierarchicalEntity();
+        if (empty($hierarchicalEntity)) {
+            return false;
+        }
+
+        if (empty($this->getMetadata()->get(['scopes', $hierarchicalEntity, 'relationInheritance']))) {
+            return false;
+        }
+
+        $hierarchicalEntityLink = $this->getHierarchicalEntityLink($hierarchicalEntity);
+        if (empty($hierarchicalEntityLink)) {
+            return false;
+        }
+
+        if (in_array($hierarchicalEntityLink, $this->getEntityManager()->getRepository($hierarchicalEntity)->getUnInheritedRelations())) {
+            return false;
+        }
+
+        return true;
     }
 
     public function getChildren(Entity $entity): ?EntityCollection
