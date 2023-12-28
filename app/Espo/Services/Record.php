@@ -621,7 +621,7 @@ class Record extends Base
     /**
      * @param Entity $entity
      * @param string $field
-     * @param array  $defs
+     * @param array $defs
      *
      * @throws BadRequest
      * @throws Error
@@ -643,7 +643,7 @@ class Record extends Base
     }
 
     /**
-     * @param Entity    $entity
+     * @param Entity $entity
      * @param \stdClass $data
      *
      * @return array
@@ -1186,15 +1186,6 @@ class Record extends Base
                 }
             }
         }
-
-        foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields']) as $field => $defs) {
-            if ($defs['type'] === 'varchar' && !empty($defs['setDefaultOnlyIfRequired']) && !empty($defs['default'])) {
-                $isRequired = !empty($defs['required']) || $this->isRequiredField($field, $entity, 'required');
-                if ($entity->has($field) && !property_exists($data, $field) && !$isRequired) {
-                    $entity->set($field, null);
-                }
-            }
-        }
     }
 
     public function createEntity($attachment)
@@ -1254,11 +1245,7 @@ class Record extends Base
             if (empty($this->getMemoryStorage()->get('importJobId'))) {
                 $this->prepareEntityForOutput($entity);
                 $this->loadPreview($entity);
-                try {
-                    $this->updateRelationEntity($entity, $attachment);
-                } catch (Forbidden $e) {
-                    // ignore 403
-                }
+                $this->updateRelationEntity($entity, $attachment);
             }
             $this->processActionHistoryRecord('create', $entity);
 
@@ -1456,7 +1443,7 @@ class Record extends Base
             $relInput->_skipCheckForConflicts = true;
             try {
                 $this->getServiceFactory()->create($relEntityType)->updateEntity($relId, $relInput);
-            } catch (NotModified $e) {
+            }catch (NotModified $e){
             }
         }
     }
@@ -1499,7 +1486,7 @@ class Record extends Base
 
     /**
      * @param Entity $entity
-     * @param        $data
+     * @param $data
      */
     protected function checkForSkipComplete(Entity $entity, $data): void
     {
@@ -1926,7 +1913,7 @@ class Record extends Base
      *
      * @param Entity $entity
      * @param string $link
-     * @param array  $params
+     * @param array $params
      *
      * @return array
      */
@@ -2122,7 +2109,7 @@ class Record extends Base
             ])
             ->findOne();
 
-        if (!empty($relEntity)) {
+        if (!empty($relEntity)){
             $result = $this->getServiceFactory()->create($relEntityType)->deleteEntity($relEntity->get('id'));
         }
 
@@ -3065,12 +3052,6 @@ class Record extends Base
                 $sortByField = $params['sortBy'];
                 $sortByFieldType = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortByField, 'type']);
 
-                if ($sortByFieldType === 'currency') {
-                    if (!in_array($sortByField . 'Converted', $attributeList)) {
-                        $attributeList[] = $sortByField . 'Converted';
-                    }
-                }
-
                 $sortByAttributeList = $this->getFieldManagerUtil()->getAttributeList($this->getEntityType(), $sortByField);
                 foreach ($sortByAttributeList as $attribute) {
                     if (!in_array($attribute, $attributeList) && $seed->hasAttribute($attribute)) {
@@ -3230,7 +3211,7 @@ class Record extends Base
     }
 
     /**
-     * @param Entity    $entity
+     * @param Entity $entity
      * @param \stdClass $data
      *
      * @return array
@@ -3272,11 +3253,11 @@ class Record extends Base
             }
 
             if ($entity->has($field) && array_key_exists($field, $prev) && Util::toMd5($entity->get($field)) != Util::toMd5($prev[$field])) {
-                foreach (['Id', 'Ids', 'Currency', 'Unit'] as $suffix) {
+                foreach (['Id', 'Ids', 'Unit'] as $suffix) {
                     $name = $this->removeSuffix($field, $suffix);
                     $type = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $name, 'type'], '');
 
-                    if (!empty($type) && in_array($type, ['link', 'linkMultiple', 'currency', 'unit'])) {
+                    if (!empty($type) && in_array($type, ['link', 'linkMultiple', 'unit'])) {
                         $field = $name;
                     }
 
@@ -3337,7 +3318,7 @@ class Record extends Base
     /**
      * @param string $field
      * @param Entity $entity
-     * @param        $typeResult
+     * @param $typeResult
      *
      * @return bool
      * @throws Error
@@ -3387,7 +3368,7 @@ class Record extends Base
 
     /**
      * @param Entity $entity
-     * @param        $field
+     * @param $field
      * @return bool
      */
     private function isNullField(Entity $entity, $field): bool
@@ -3408,7 +3389,7 @@ class Record extends Base
 
     /**
      * @param string $action
-     * @param Event  $event
+     * @param Event $event
      *
      * @return Event
      */

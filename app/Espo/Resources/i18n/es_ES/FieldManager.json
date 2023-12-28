@@ -81,10 +81,6 @@
     "unit": {
       "unit": "(Unit)"
     },
-    "currency": {
-      "converted": "(Convertido)",
-      "currency": "(Currency)"
-    },
     "datetimeOptional": {
       "date": "Date"
     }

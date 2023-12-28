@@ -70,16 +70,17 @@ class V1Dot8Dot3 extends Base
             if (in_array($file, array(".", ".."))) {
                 continue;
             }
-            $entity = str_split($file, ".")[0];
+            $entity = explode(".", $file)[0];
             $data = $metadata->getCustom("entityDefs", $entity);
             foreach ($data['fields'] as $field => $fieldDef) {
-                if (!empty($fieldDef['isCustom']) && $fieldDef['type'] === 'currency') {
+                $type = $fieldDef['type'];
+                if (!empty($fieldDef['isCustom']) && in_array($type, ['currency', 'rangeCurrency'])) {
                     try {
-                        $this->migrateCurrencyField($this, $entity, $field, $units);
+                        $this->migrateCurrencyField($this, $entity, $field, $units, $type);
                     } catch (\Exception $exception) {
-
+                        $a = 0;
                     }
-                    $data['fields'][$field]['type'] = "float";
+                    $data['fields'][$field]['type'] = $type === 'rangeCurrency' ? 'rangeFloat' : 'float';
                     $data['fields'][$field]['measureId'] = "currency";
                 }
             }
@@ -91,11 +92,12 @@ class V1Dot8Dot3 extends Base
     {
     }
 
-    public static function migrateCurrencyField(Base $migration, $entity, $field, $units)
+    public static function migrateCurrencyField(Base $migration, string $entity, string $field, array $units, string $type = "currency")
     {
         $table = Util::toUnderScore($entity);
         $unitField = Util::toUnderScore($field . 'UnitId');
-        $currencyField = Util::toUnderScore($field . 'Currency');
+        $currencyField = Util::toUnderScore($type === 'currency' ? $field . 'Currency' : $field . "FromCurrency");
+
         $fromSchema = $migration->getCurrentSchema();
         $toSchema = clone $fromSchema;
 
@@ -142,11 +144,17 @@ class V1Dot8Dot3 extends Base
         $toSchema = clone $fromSchema;
 
         $migration->dropColumn($toSchema, $table, $currencyField);
+        if ($type === 'rangeCurrency') {
+            $migration->dropColumn($toSchema, $table, Util::toUnderScore($field . "ToCurrency"));
+        }
 
         foreach ($migration->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
             $migration->getPDO()->exec($sql);
         }
 
+        if ($type === 'rangeCurrency') {
+            return;
+        }
         // change currency field in layouts
         $dir = "custom/Espo/Custom/Resources/layouts/$entity";
         $files = scandir($dir);

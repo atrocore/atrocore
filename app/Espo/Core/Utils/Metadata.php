@@ -396,7 +396,7 @@ class Metadata
         $fileContent = $this->getFileManager()->getContents($filePath);
 
         if ($fileContent) {
-            return Json::decode($fileContent);
+            return Json::decode($fileContent, true);
         }
 
         return $default;

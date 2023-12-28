@@ -36,7 +36,6 @@
     "Country": "Страна",
     "MeasuringUnit": "Кдиница измерения",
     "Composer": "Програма-компоновщик",
-    "Currency": "Валюта",
     "Dashlet": "Мини-панель",
     "Multilang": "Многоязычный",
     "Note": "Заметка",
@@ -75,7 +74,6 @@
     "KnowledgeBaseCategory": "Категории базы знаний",
     "QueueItem": "Элементы очереди",
     "MeasuringUnit": "Единицы измерения",
-    "Currency": "Валюты",
     "Note": "Примечания",
     "Notification": "Уведомления",
     "Preferences": "Настройки"
