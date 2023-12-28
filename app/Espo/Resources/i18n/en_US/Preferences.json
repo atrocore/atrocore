@@ -3,7 +3,6 @@
     "locale": "Locale",
     "assignmentNotifications": "Notifications upon assignment",
     "defaultCurrency": "Default Currency",
-    "currencyList": "Currency List",
     "emailAddress": "Email",
     "receiveAssignmentEmailNotifications": "Notifications upon assignment",
     "receiveMentionEmailNotifications": "Notifications about mentions in posts",

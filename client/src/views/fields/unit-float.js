@@ -37,7 +37,13 @@ Espo.define('views/fields/unit-float', ['views/fields/float', 'views/fields/unit
         setup() {
             Dep.prototype.setup.call(this);
             Varchar.prototype.prepareOriginalName.call(this);
+
             Varchar.prototype.afterSetup.call(this);
+        },
+
+        setMode(mode) {
+            Varchar.prototype.setTemplateFromMeasureFormat.call(this);
+            Dep.prototype.setMode.call(this, mode)
         },
 
         init() {
@@ -70,7 +76,6 @@ Espo.define('views/fields/unit-float', ['views/fields/float', 'views/fields/unit
             let data = Dep.prototype.fetch.call(this);
             Varchar.prototype.addMeasureDataOnFetch.call(this, data)
             return data;
-        },
-
+        }
     });
 });

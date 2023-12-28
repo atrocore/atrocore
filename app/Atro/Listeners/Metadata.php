@@ -515,7 +515,7 @@ class Metadata extends AbstractListener
 
             $data['scopes'][$relationEntityName]['isHierarchyEntity'] = true;
             $data['entityDefs'][$relationEntityName]['fields']['hierarchySortOrder'] = [
-                'type'                      => 'int'
+                'type' => 'int'
             ];
 
             if (!isset($data['entityDefs'][$scope]['fields']['parents']['view'])) {
@@ -584,7 +584,7 @@ class Metadata extends AbstractListener
                     continue 1;
                 }
 
-                if (in_array($fieldData['type'], ['currencyConverted', 'autoincrement'])) {
+                if ($fieldData['type'] === 'autoincrement') {
                     if (!isset($data['scopes'][$scope]['mandatoryUnInheritedFields'])) {
                         $data['scopes'][$scope]['mandatoryUnInheritedFields'] = [];
                     }

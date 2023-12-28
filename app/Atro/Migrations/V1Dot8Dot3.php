@@ -20,39 +20,52 @@ class V1Dot8Dot3 extends Base
 {
     public function up(): void
     {
-//        $this->getConnection()->createQueryBuilder()
-//            ->insert('measure')
-//            ->values([
-//                'name' => '?',
-//                'id'   => '?',
-//                'code' => '?'
-//            ])
-//            ->setParameter(0, 'Currency')
-//            ->setParameter(1, 'currency')
-//            ->setParameter(2, 'currency')
-//            ->executeStatement();
-//
-//        $currencies = ["EUR", "USD", "CHF", "GBP"];
-//        $rates = UpdateCurrencyExchangeViaECB::getExchangeRates();
-//        foreach ($currencies as $currency) {
-//            $this->getConnection()->createQueryBuilder()
-//                ->insert('unit')
-//                ->values([
-//                    'id'         => '?',
-//                    'name'       => '?',
-//                    'measure_id' => '?',
-//                    'is_default' => '?',
-//                    'multiplier' => '?',
-//                    'code'       => '?'
-//                ])
-//                ->setParameter(0, Util::generateId())
-//                ->setParameter(1, $currency)
-//                ->setParameter(2, 'currency')
-//                ->setParameter(3, $currency === 'EUR', ParameterType::BOOLEAN)
-//                ->setParameter(4, $currency === 'EUR' ? 1 : $rates[$currency])
-//                ->setParameter(5, $currency)
-//                ->executeStatement();
-//        }
+        $fromSchema = $this->getCurrentSchema();
+        $toSchema = clone $fromSchema;
+
+        $this->addColumn($toSchema, 'measure', 'display_format', ['type' => 'string', 'default' => null]);
+        $this->addColumn($toSchema, 'unit', 'symbol', ['type' => 'string', 'default' => null]);
+
+        foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
+            $this->getPDO()->exec($sql);
+        }
+
+        $this->getConnection()->createQueryBuilder()
+            ->insert('measure')
+            ->values([
+                'name' => '?',
+                'id'   => '?',
+                'code' => '?'
+            ])
+            ->setParameter(0, 'Currency')
+            ->setParameter(1, 'currency')
+            ->setParameter(2, 'currency')
+            ->executeStatement();
+
+        $symbols = ["EUR" => "€", "USD" => "$", "CHF" => "Fr.", "GBP", "£"];
+
+        $rates = UpdateCurrencyExchangeViaECB::getExchangeRates();
+        foreach ($symbols as $currency => $symbol) {
+            $this->getConnection()->createQueryBuilder()
+                ->insert('unit')
+                ->values([
+                    'id'         => '?',
+                    'name'       => '?',
+                    'measure_id' => '?',
+                    'is_default' => '?',
+                    'multiplier' => '?',
+                    'code'       => '?',
+                    'symbol'     => '?'
+                ])
+                ->setParameter(0, $currency)
+                ->setParameter(1, $currency)
+                ->setParameter(2, 'currency')
+                ->setParameter(3, $currency === 'EUR', ParameterType::BOOLEAN)
+                ->setParameter(4, $currency === 'EUR' ? 1 : $rates[$currency])
+                ->setParameter(5, $currency)
+                ->setParameter(6, $symbol)
+                ->executeStatement();
+        }
 
         $units = $this->getConnection()->createQueryBuilder()
             ->select(['name', 'id'])

@@ -12,6 +12,10 @@
       "type": "varchar",
       "unique": true
     },
+    "symbol": {
+      "type": "varchar",
+      "unique": true
+    },
     "description": {
       "type": "text",
       "isMultilang": true

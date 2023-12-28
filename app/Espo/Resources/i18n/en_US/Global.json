@@ -408,7 +408,6 @@
     "export": "Export",
     "follow": "Follow",
     "unfollow": "Unfollow",
-    "convertCurrency": "Convert Currency",
     "restore": "Restore"
   },
   "fields": {

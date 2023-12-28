@@ -89,8 +89,6 @@ return [
     'cleanupJobPeriod'                      => '1 month',
     'cleanupActionHistoryPeriod'            => '15 days',
     'cleanupAuthTokenPeriod'                => '1 month',
-    'currencyFormat'                        => 2,
-    'currencyDecimalPlaces'                 => 2,
     'aclStrictMode'                         => false,
     'inlineAttachmentUploadMaxSize'         => 20,
     'textFilterUseContainsForVarchar'       => false,
@@ -117,11 +115,6 @@ return [
         'de_DE',
         'uk_UA'
     ],
-    'currencyList'                          => [
-        0 => 'EUR'
-    ],
-    'defaultCurrency'                       => 'EUR',
-    'baseCurrency'                          => 'EUR',
     'globalSearchEntityList'                => [],
     'tabList'                               => [],
     'quickCreateList'                       => [],

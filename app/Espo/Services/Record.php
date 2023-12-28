@@ -1611,8 +1611,6 @@ class Record extends Base
         $selectParams = $this->getSelectParams($params);
 
         $selectParams['maxTextColumnsLength'] = $this->getMaxSelectTextAttributeLength();
-        $selectParams['skipCurrencyConvertedParams']
-            = isset($params['skipCurrencyConvertedParams']) ? $params['skipCurrencyConvertedParams'] : false;
 
         $selectAttributeList = $this->getSelectAttributeList($params);
         if ($selectAttributeList) {

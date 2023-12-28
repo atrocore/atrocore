@@ -308,15 +308,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
     }
 
-    protected function validateCurrency(Entity $entity, string $fieldName, array $fieldData): void
-    {
-        if (!$entity->isAttributeChanged($fieldName)) {
-            return;
-        }
-
-        $this->validateFloat($entity, $fieldName, $fieldData);
-    }
-
     protected function validateEnum(Entity $entity, string $fieldName, array $fieldData): void
     {
         if (!$entity->isAttributeChanged($fieldName)) {
