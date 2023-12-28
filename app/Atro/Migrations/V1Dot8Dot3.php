@@ -20,42 +20,146 @@ class V1Dot8Dot3 extends Base
 {
     public function up(): void
     {
-        $this->getConnection()->createQueryBuilder()
-            ->insert('measure')
-            ->values([
-                'name' => '?',
-                'id'   => '?',
-                'code' => '?'
-            ])
-            ->setParameter(0, 'Currency')
-            ->setParameter(1, 'currency')
-            ->setParameter(2, 'currency')
-            ->executeStatement();
+//        $this->getConnection()->createQueryBuilder()
+//            ->insert('measure')
+//            ->values([
+//                'name' => '?',
+//                'id'   => '?',
+//                'code' => '?'
+//            ])
+//            ->setParameter(0, 'Currency')
+//            ->setParameter(1, 'currency')
+//            ->setParameter(2, 'currency')
+//            ->executeStatement();
+//
+//        $currencies = ["EUR", "USD", "CHF", "GBP"];
+//        $rates = UpdateCurrencyExchangeViaECB::getExchangeRates();
+//        foreach ($currencies as $currency) {
+//            $this->getConnection()->createQueryBuilder()
+//                ->insert('unit')
+//                ->values([
+//                    'id'         => '?',
+//                    'name'       => '?',
+//                    'measure_id' => '?',
+//                    'is_default' => '?',
+//                    'multiplier' => '?',
+//                    'code'       => '?'
+//                ])
+//                ->setParameter(0, Util::generateId())
+//                ->setParameter(1, $currency)
+//                ->setParameter(2, 'currency')
+//                ->setParameter(3, $currency === 'EUR', ParameterType::BOOLEAN)
+//                ->setParameter(4, $currency === 'EUR' ? 1 : $rates[$currency])
+//                ->setParameter(5, $currency)
+//                ->executeStatement();
+//        }
 
-        $currencies = ["EUR", "USD", "CHF", "GBP"];
-        $rates = UpdateCurrencyExchangeViaECB::getExchangeRates();
-        foreach ($currencies as $currency) {
-            $this->getConnection()->createQueryBuilder()
-                ->insert('unit')
-                ->values([
-                    'id'         => '?',
-                    'name'       => '?',
-                    'measure_id' => '?',
-                    'is_default' => '?',
-                    'multiplier' => '?',
-                    'code'       => '?'
-                ])
-                ->setParameter(0, Util::generateId())
-                ->setParameter(1, $currency)
-                ->setParameter(2, 'currency')
-                ->setParameter(3, $currency === 'EUR', ParameterType::BOOLEAN)
-                ->setParameter(4, $currency === 'EUR' ? 1 : $rates[$currency])
-                ->setParameter(5, $currency)
-                ->executeStatement();
+        $units = $this->getConnection()->createQueryBuilder()
+            ->select(['name', 'id'])
+            ->from('unit')
+            ->where('measure_id=:id')
+            ->setParameter('id', 'currency')
+            ->fetchAllKeyValue();
+
+        /** @var \Espo\Core\Utils\Metadata $metadata */
+        $metadata = (new \Atro\Core\Application())->getContainer()->get('metadata');
+
+        $dir = "custom/Espo/Custom/Resources/metadata/entityDefs";
+        $files = scandir($dir);
+        foreach ($files as $file) {
+            if (in_array($file, array(".", ".."))) {
+                continue;
+            }
+            $entity = str_split($file, ".")[0];
+            $data = $metadata->getCustom("entityDefs", $entity);
+            foreach ($data['fields'] as $field => $fieldDef) {
+                if (!empty($fieldDef['isCustom']) && $fieldDef['type'] === 'currency') {
+                    try {
+                        $this->migrateCurrencyField($this, $entity, $field, $units);
+                    } catch (\Exception $exception) {
+
+                    }
+                    $data['fields'][$field]['type'] = "float";
+                    $data['fields'][$field]['measureId'] = "currency";
+                }
+            }
+            $metadata->saveCustom('entityDefs', $entity, $data);
         }
     }
 
     public function down(): void
     {
+    }
+
+    public static function migrateCurrencyField(Base $migration, $entity, $field, $units)
+    {
+        $table = Util::toUnderScore($entity);
+        $unitField = Util::toUnderScore($field . 'UnitId');
+        $currencyField = Util::toUnderScore($field . 'Currency');
+        $fromSchema = $migration->getCurrentSchema();
+        $toSchema = clone $fromSchema;
+
+        $migration->addColumn($toSchema, $table, $unitField, ['type' => 'string', 'default' => null]);
+
+        foreach ($migration->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
+            $migration->getPDO()->exec($sql);
+        }
+
+        // migrate currency data
+        $limit = 2000;
+        $offset = 0;
+
+        while (true) {
+
+            $entities = $migration->getConnection()->createQueryBuilder()
+                ->from($table)
+                ->select(['id', $currencyField])
+                ->where("$currencyField is not null")
+                ->setMaxResults($limit)
+                ->setFirstResult($offset)
+                ->fetchAllAssociative();
+
+            if (empty($entities)) {
+                break;
+            }
+
+            $offset = $offset + $limit;
+
+            foreach ($entities as $entity) {
+                $unitId = $units[$entity[$currencyField]] ?? $entity[$currencyField];
+
+                $migration->getConnection()->createQueryBuilder()
+                    ->update($table)
+                    ->set($unitField, ':value')
+                    ->where('id = :id')
+                    ->setParameter('id', $entity['id'])
+                    ->setParameter('value', $unitId)
+                    ->executeStatement();
+            }
+        }
+        // remove currency column
+        $fromSchema = $migration->getCurrentSchema();
+        $toSchema = clone $fromSchema;
+
+        $migration->dropColumn($toSchema, $table, $currencyField);
+
+        foreach ($migration->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
+            $migration->getPDO()->exec($sql);
+        }
+
+        // change currency field in layouts
+        $dir = "custom/Espo/Custom/Resources/layouts/$entity";
+        $files = scandir($dir);
+        foreach ($files as $file) {
+            if (in_array($file, array(".", ".."))) {
+                continue;
+            }
+            $path = "$dir/$file";
+            if (file_exists($path)) {
+                $contents = file_get_contents($path);
+                $contents = str_replace("\"$field\"", '"unit' . lcfirst($field) . '"', $contents);
+                file_put_contents($path, $contents);
+            }
+        }
     }
 }
