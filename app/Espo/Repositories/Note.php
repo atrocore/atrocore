@@ -111,7 +111,7 @@ class Note extends RDB
             }
         }
 
-        preg_match_all('/(@[\w@.-]+)/', $post, $matches);
+        preg_match_all('/(@[\w@.-]+)/', $post ?? '', $matches);
 
         $mentionCount = 0;
 
