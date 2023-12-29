@@ -737,6 +737,8 @@ class Hierarchy extends Record
             ])
             ->find();
 
+        $parentsDistantIds = array_column($parentsCollection->toArray(), $keySet['distantKey']);
+
         $itemCollection = $this->getEntityManager()->getRepository($relationEntityName)
             ->where([
                 $keySet['nearKey']    => $entity->get('id'),
@@ -748,6 +750,11 @@ class Hierarchy extends Record
 
         $skipIds = [];
         foreach ($itemCollection as $item) {
+            if (!in_array($item->get($keySet['distantKey']), $parentsDistantIds)) {
+                $skipIds[] = $item->get($keySet['distantKey']);
+                continue;
+            }
+
             foreach ($parentsCollection as $parentItem) {
                 if ($parentItem->get($keySet['distantKey']) !== $item->get($keySet['distantKey'])) {
                     continue;
