@@ -809,6 +809,10 @@ class Hierarchy extends Record
 
     public function createPseudoTransactionLinkJobs(string $id, string $link, string $foreignId, string $parentTransactionId = null): void
     {
+        if (empty($this->getMetadata()->get(['scopes', $this->entityType, 'relationInheritance']))) {
+            return;
+        }
+
         if (in_array($link, $this->getRepository()->getUnInheritedRelations())) {
             return;
         }
