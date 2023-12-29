@@ -42,7 +42,7 @@ class V1Dot8Dot3 extends Base
             ->setParameter(2, 'currency')
             ->executeStatement();
 
-        $symbols = ["EUR" => "€", "USD" => "$", "CHF" => "Fr.", "GBP", "£"];
+        $symbols = ["EUR" => "€", "USD" => "$", "CHF" => "Fr.", "GBP" => "£"];
 
         $rates = UpdateCurrencyExchangeViaECB::getExchangeRates();
         foreach ($symbols as $currency => $symbol) {
