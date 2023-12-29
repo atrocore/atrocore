@@ -1186,6 +1186,15 @@ class Record extends Base
                 }
             }
         }
+
+        foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields']) as $field => $defs) {
+            if ($defs['type'] === 'varchar' && !empty($defs['setDefaultOnlyIfRequired']) && !empty($defs['default'])) {
+                $isRequired = !empty($defs['required']) || $this->isRequiredField($field, $entity, 'required');
+                if ($entity->has($field) && !property_exists($data, $field) && !$isRequired) {
+                    $entity->set($field, null);
+                }
+            }
+        }
     }
 
     public function createEntity($attachment)
@@ -1244,7 +1253,11 @@ class Record extends Base
             if (empty($this->getMemoryStorage()->get('importJobId'))) {
                 $this->prepareEntityForOutput($entity);
                 $this->loadPreview($entity);
-                $this->updateRelationEntity($entity, $attachment);
+                try {
+                    $this->updateRelationEntity($entity, $attachment);
+                } catch (Forbidden $e) {
+                    // ignore 403
+                }
             }
             $this->processActionHistoryRecord('create', $entity);
 
