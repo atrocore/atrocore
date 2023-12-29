@@ -13,6 +13,7 @@ namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
 use Doctrine\DBAL\ParameterType;
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Util;
 use Espo\Jobs\UpdateCurrencyExchangeViaECB;
 
@@ -92,10 +93,40 @@ class V1Dot8Dot3 extends Base
             }
             $metadata->saveCustom('entityDefs', $entity, $data);
         }
+
+        // create scheduled job
+        $this->getConnection()->createQueryBuilder()
+            ->insert('scheduled_job')
+            ->values([
+                'id'             => '?',
+                'name'           => '?',
+                'job'            => '?',
+                'scheduling'     => '?',
+                'created_at'     => '?',
+                'modified_at'    => '?',
+                'created_by_id'  => '?',
+                'modified_by_id' => '?',
+                'is_internal'    => '?',
+                'status'         => '?'
+            ])
+            ->setParameter(0, Util::generateId())
+            ->setParameter(1, 'UpdateCurrencyExchangeViaECB')
+            ->setParameter(2, 'UpdateCurrencyExchangeViaECB')
+            ->setParameter(3, '0 2 * * *')
+            ->setParameter(4, date('Y-m-d H:i:s'))
+            ->setParameter(5, date('Y-m-d H:i:s'))
+            ->setParameter(6, 'system')
+            ->setParameter(7, 'system')
+            ->setParameter(8, true, ParameterType::BOOLEAN)
+            ->setParameter(9, 'Active')
+            ->executeStatement();
+
+        $this->updateComposer('atrocore/core', '^1.8.3');
     }
 
     public function down(): void
     {
+        throw new Error("Downgrade prohibited");
     }
 
     public static function migrateCurrencyField(Base $migration, string $entity, string $field, string $type = "currency")
