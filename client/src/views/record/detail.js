@@ -1766,20 +1766,18 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         // remove relation virtual fields
                         let parts = name.split('__');
                         if (parts.length === 2) {
+                            let relEntity = null;
                             if (this.model._relateData) {
-                                let relationName = this.getMetadata().get(['entityDefs', this.model._relateData.model.urlRoot, 'links', this.model._relateData.panelName, 'relationName']);
-                                if (relationName) {
-                                    let relEntity = relationName.charAt(0).toUpperCase() + relationName.slice(1);
-                                    if (relEntity !== parts[0]) {
-                                        continue;
-                                    }
-                                } else {
-                                    continue;
+                                relEntity = this.getRelEntity(this.model._relateData.model.urlRoot, this.model._relateData.panelName);
+                            }
+                            if (this.model.defs['_relationName']) {
+                                let hashParts = window.location.hash.split('/view/');
+                                if (typeof hashParts[1] !== 'undefined' && this.model.defs._relationName) {
+                                    relEntity = this.getRelEntity(hashParts[0].replace('#', ''), this.model.defs._relationName);
                                 }
-                            } else {
-                                if (!this.model.has(name) && !this.model.has(name + 'Id')) {
-                                    continue;
-                                }
+                            }
+                            if (relEntity !== parts[0]) {
+                                continue;
                             }
                         }
 
@@ -1869,6 +1867,15 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 layout.push(panel);
             }
             return this.prepareLayoutAfterConverting(layout);
+        },
+
+        getRelEntity(entityType, link) {
+            let relationName = this.getMetadata().get(['entityDefs', entityType, 'links', link, 'relationName']);
+            if (relationName) {
+                return relationName.charAt(0).toUpperCase() + relationName.slice(1);
+            }
+
+            return null;
         },
 
         prepareLayoutAfterConverting(layout) {

@@ -358,8 +358,13 @@ class Hierarchy extends RDB
 
         $qb = $this->getConnection()
             ->createQueryBuilder()
-            ->from($quotedTableName, 'e')
-            ->select('e.*', "({$selectCountQuery->where('e.id = r1.parent_id')->getSQL()}) as children_count");
+            ->from($quotedTableName, 'e');
+
+        if ($withChildrenCount) {
+            $qb->select('e.*', "({$selectCountQuery->where('e.id = r1.parent_id')->getSQL()}) as children_count");
+        } else {
+            $qb->select('e.*');
+        }
 
         if (!$withDeleted) {
             $qb->where('e.deleted = :deleted');

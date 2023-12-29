@@ -1239,7 +1239,6 @@ class Record extends Base
         $this->processDuplicateCheck($entity, $attachment);
 
         if ($this->storeEntity($entity)) {
-            $this->linkHierarchically($entity, $attachment);
             $this->afterCreateEntity($entity, $attachment);
             $this->afterCreateProcessDuplicating($entity, $attachment);
             if (empty($this->getMemoryStorage()->get('importJobId'))) {
@@ -1363,24 +1362,6 @@ class Record extends Base
     protected function isRelationPanelChanges(\stdClass $data): bool
     {
         return property_exists($data, '_relationName') && property_exists($data, '_relationEntity') && property_exists($data, '_relationEntityId');
-    }
-
-    protected function linkHierarchically(Entity $entity, \stdClass $attachment): void
-    {
-        if (!$this->isRelationPanelChanges($attachment) || $this->getMetadata()->get(['scopes', $attachment->_relationEntity, 'type']) !== 'Hierarchy') {
-            return;
-        }
-
-        $field = $this->getMetadata()->get(['entityDefs', $attachment->_relationEntity, 'links', $attachment->_relationName, 'foreign'], '') . 'Ids';
-        if (!property_exists($attachment, $field) || !is_array($attachment->$field)) {
-            return;
-        }
-
-        $foreignService = $this->getServiceFactory()->create($attachment->_relationEntity);
-
-        foreach ($attachment->$field as $foreignId) {
-            $foreignService->createPseudoTransactionLinkJobs($foreignId, $attachment->_relationName, $entity->get('id'));
-        }
     }
 
     protected function updateRelationEntity(Entity $entity, \stdClass $input): void

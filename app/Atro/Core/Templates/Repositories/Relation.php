@@ -15,6 +15,9 @@ namespace Atro\Core\Templates\Repositories;
 
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
 use Espo\Core\ORM\Repositories\RDB;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
@@ -22,6 +25,8 @@ use Espo\ORM\EntityCollection;
 
 class Relation extends RDB
 {
+
+
     public static function buildVirtualFieldName(string $relationName, string $fieldName): string
     {
         return "{$relationName}__{$fieldName}";
@@ -60,11 +65,126 @@ class Relation extends RDB
         $qb->executeQuery();
     }
 
+    public function createHierarchical(Entity $entity): void
+    {
+        if (!$this->isInheritedRelation()) {
+            return;
+        }
+
+        $link = $this->getHierarchicalRelation();
+        if (empty($link)) {
+            return;
+        }
+
+        $hierarchicalEntity = $entity->get($link);
+        if (empty($hierarchicalEntity)) {
+            return;
+        }
+
+        $children = $this->getEntityManager()->getRepository($hierarchicalEntity->getEntityType())->getChildrenArray($hierarchicalEntity->get('id'), false);
+        if (empty($children)) {
+            return;
+        }
+
+        $additionalFields = $this->getAdditionalFieldsNames();
+
+        /** @var \Atro\Core\Templates\Services\Relation $service */
+        $service = $this->getInjection('container')->get('serviceFactory')->create($this->entityType);
+
+        foreach ($children as $child) {
+            $input = new \stdClass();
+            foreach ($this->getRelationFields() as $relField) {
+                $input->{"{$relField}Id"} = $relField === $link ? $child['id'] : $entity->get("{$relField}Id");
+            }
+            foreach ($additionalFields as $additionalField) {
+                $input->{$additionalField} = $entity->get($additionalField);
+            }
+
+            try {
+                $service->createEntity($input);
+            } catch (Forbidden $e) {
+            } catch (BadRequest $e) {
+            } catch (\Throwable $e) {
+                $GLOBALS['log']->error('updateHierarchical failed: ' . $e->getMessage());
+            }
+        }
+    }
+
+    public function updateHierarchical(Entity $entity): void
+    {
+        if (!$this->isInheritedRelation()) {
+            return;
+        }
+
+        $childrenRecords = $this->getChildren($entity->_fetchedEntity);
+        if ($childrenRecords === null) {
+            return;
+        }
+
+        /** @var \Atro\Core\Templates\Services\Relation $service */
+        $service = $this->getInjection('container')->get('serviceFactory')->create($this->entityType);
+
+        foreach ($childrenRecords as $childrenRecord) {
+            try {
+                $service->updateEntity($childrenRecord->get('id'), clone $entity->_input);
+            } catch (Forbidden $e) {
+            } catch (NotFound $e) {
+            } catch (BadRequest $e) {
+            } catch (\Throwable $e) {
+                $GLOBALS['log']->error('updateHierarchical failed: ' . $e->getMessage());
+            }
+        }
+    }
+
+    public function deleteHierarchical(Entity $entity): void
+    {
+        if (!$this->isInheritedRelation()) {
+            return;
+        }
+
+        $childrenRecords = $this->getChildren($entity);
+        if ($childrenRecords === null) {
+            return;
+        }
+
+        /** @var \Atro\Core\Templates\Services\Relation $service */
+        $service = $this->getInjection('container')->get('serviceFactory')->create($this->entityType);
+
+        foreach ($childrenRecords as $childrenRecord) {
+            try {
+                $service->deleteEntity($childrenRecord->get('id'));
+            } catch (Forbidden $e) {
+            } catch (NotFound $e) {
+            } catch (BadRequest $e) {
+            } catch (\Throwable $e) {
+                $GLOBALS['log']->error('deleteHierarchical failed: ' . $e->getMessage());
+            }
+        }
+    }
+
+    protected function afterSave(Entity $entity, array $options = [])
+    {
+        parent::afterSave($entity, $options);
+
+        if ($entity->isNew()) {
+            $this->createHierarchical($entity);
+        } else {
+            $this->updateHierarchical($entity);
+        }
+    }
+
     protected function beforeRemove(Entity $entity, array $options = [])
     {
         parent::beforeRemove($entity, $options);
 
         $this->deleteAlreadyDeleted($entity);
+    }
+
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        parent::afterRemove($entity, $options);
+
+        $this->deleteHierarchical($entity);
     }
 
     public function getHierarchicalRelation(): ?string
@@ -84,6 +204,39 @@ class Relation extends RDB
             }
 
             return $field;
+        }
+
+        return null;
+    }
+
+    public function getHierarchicalEntity(): ?string
+    {
+        foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields']) as $field => $fieldDefs) {
+            if (empty($fieldDefs['relationField'])) {
+                continue;
+            }
+
+            $entity = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $field, 'entity']);
+            if (empty($entity)) {
+                continue;
+            }
+
+            if ($this->getMetadata()->get(['scopes', $entity, 'type']) !== 'Hierarchy') {
+                continue;
+            }
+
+            return $entity;
+        }
+
+        return null;
+    }
+
+    public function getHierarchicalEntityLink(string $hierarchicalEntity): ?string
+    {
+        foreach ($this->getMetadata()->get(['entityDefs', $hierarchicalEntity, 'links']) as $link => $linkDefs) {
+            if (!empty($linkDefs['relationName']) && $linkDefs['relationName'] === lcfirst($this->entityType)) {
+                return $link;
+            }
         }
 
         return null;
@@ -120,6 +273,29 @@ class Relation extends RDB
         }
 
         return $res;
+    }
+
+    public function isInheritedRelation(): bool
+    {
+        $hierarchicalEntity = $this->getHierarchicalEntity();
+        if (empty($hierarchicalEntity)) {
+            return false;
+        }
+
+        if (empty($this->getMetadata()->get(['scopes', $hierarchicalEntity, 'relationInheritance']))) {
+            return false;
+        }
+
+        $hierarchicalEntityLink = $this->getHierarchicalEntityLink($hierarchicalEntity);
+        if (empty($hierarchicalEntityLink)) {
+            return false;
+        }
+
+        if (in_array($hierarchicalEntityLink, $this->getEntityManager()->getRepository($hierarchicalEntity)->getUnInheritedRelations())) {
+            return false;
+        }
+
+        return true;
     }
 
     public function getChildren(Entity $entity): ?EntityCollection
