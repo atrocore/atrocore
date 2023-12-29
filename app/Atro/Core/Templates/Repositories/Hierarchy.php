@@ -543,7 +543,9 @@ class Hierarchy extends RDB
 
     protected function prepareSortOrder(Entity $entity): void
     {
-        if ($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'type']) !== 'Hierarchy') {
+        if ($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'type']) !== 'Hierarchy'
+            || $this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)
+        ) {
             return;
         }
 

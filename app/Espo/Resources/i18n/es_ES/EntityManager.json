@@ -34,7 +34,8 @@
     "color": "Color",
     "kanbanViewMode": "Kanban View",
     "kanbanStatusIgnoreList": "Ignored groups in Kanban view",
-    "iconClass": "Icon"
+    "iconClass": "Icon",
+    "disableHierarchy": "Deshabilitar jerarquía"
   },
   "options": {
     "linkType": {

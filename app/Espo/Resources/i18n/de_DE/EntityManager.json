@@ -41,7 +41,8 @@
     "beforeSaveCustomScript": "vor dem Speicher benutzerdefiniertes Script",
     "color": "Farbe",
     "kanbanViewMode": "Kanban-Ansicht",
-    "kanbanStatusIgnoreList": "Ignorierte Gruppen in der Kanban-Ansicht"
+    "kanbanStatusIgnoreList": "Ignorierte Gruppen in der Kanban-Ansicht",
+    "disableHierarchy": "Hierarchie deaktivieren"
   },
   "options": {
     "linkType": {

@@ -269,7 +269,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             }
 
-            if (this.getMetadata().get(`scopes.${this.entityType}.type`) === 'Hierarchy' && !this.model.isNew()) {
+            if (this.isHierarchical() && !this.model.isNew()) {
                 if (this.getAcl().check(this.entityType, 'edit')) {
                     this.dropdownItemList.push({
                         'label': 'inheritAllForChildren',
@@ -355,6 +355,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     };
                 }
             }, this);
+        },
+
+        isHierarchical() {
+            return this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
+                && this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true ;
         },
 
         disableActionItems: function () {
@@ -922,7 +927,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         delete: function () {
             let message = 'Global.messages.removeRecordConfirmation';
-            if (this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy') {
+            if (this.isHierarchical()) {
                 message = 'Global.messages.removeRecordConfirmationHierarchically';
             }
 
