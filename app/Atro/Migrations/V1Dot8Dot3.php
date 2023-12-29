@@ -67,13 +67,6 @@ class V1Dot8Dot3 extends Base
                 ->executeStatement();
         }
 
-        $units = $this->getConnection()->createQueryBuilder()
-            ->select(['name', 'id'])
-            ->from('unit')
-            ->where('measure_id=:id')
-            ->setParameter('id', 'currency')
-            ->fetchAllKeyValue();
-
         /** @var \Espo\Core\Utils\Metadata $metadata */
         $metadata = (new \Atro\Core\Application())->getContainer()->get('metadata');
 
@@ -89,7 +82,7 @@ class V1Dot8Dot3 extends Base
                 $type = $fieldDef['type'];
                 if (!empty($fieldDef['isCustom']) && in_array($type, ['currency', 'rangeCurrency'])) {
                     try {
-                        $this->migrateCurrencyField($this, $entity, $field, $units, $type);
+                        $this->migrateCurrencyField($this, $entity, $field, $type);
                     } catch (\Exception $exception) {
                         $a = 0;
                     }
@@ -105,8 +98,15 @@ class V1Dot8Dot3 extends Base
     {
     }
 
-    public static function migrateCurrencyField(Base $migration, string $entity, string $field, array $units, string $type = "currency")
+    public static function migrateCurrencyField(Base $migration, string $entity, string $field, string $type = "currency")
     {
+        $units = $migration->getConnection()->createQueryBuilder()
+            ->select(['name', 'id'])
+            ->from('unit')
+            ->where('measure_id=:id')
+            ->setParameter('id', 'currency')
+            ->fetchAllKeyValue();
+
         $table = Util::toUnderScore($entity);
         $unitField = Util::toUnderScore($field . 'UnitId');
         $currencyField = Util::toUnderScore($type === 'currency' ? $field . 'Currency' : $field . "FromCurrency");

@@ -37,19 +37,27 @@ class UpdateCurrencyExchangeViaECB extends Base
         $currencyRates = $this->getConfig()->get('currencyRates');
         $baseCurrency = $this->getConfig()->get('baseCurrency');
 
-        if(empty($baseCurrency) || empty($currencyRates)){
+        if (empty($baseCurrency) || empty($currencyRates)) {
             return true;
         }
 
         $ecbRates = self::getExchangeRates();
         $ecbRates['EUR'] = 1;
-        if(empty($ecbRates) || empty($ecbRates[$baseCurrency])){
+        if (empty($ecbRates) || empty($ecbRates[$baseCurrency])) {
             return true;
         }
 
-        foreach($currencyRates as $rateKey => $rateValue){
-            if(array_key_exists($rateKey, $ecbRates) && !empty($ecbRates[$rateKey])){
-                $currencyRates[$rateKey] = $ecbRates[$baseCurrency]/$ecbRates[$rateKey];
+        foreach ($currencyRates as $rateKey => $rateValue) {
+            if (array_key_exists($rateKey, $ecbRates) && !empty($ecbRates[$rateKey])) {
+                $currencyRates[$rateKey] = $ecbRates[$baseCurrency] / $ecbRates[$rateKey];
+            }
+        }
+
+        $units = $this->getEntityManager()->getRepository('Unit')->where(['measureId' => 'currency'])->find();
+        foreach ($units as $unit) {
+            if (!empty($currencyRates[$unit['name']])) {
+                $unit->set('multiplier', $currencyRates[$unit['name']]);
+                $this->getEntityManager()->saveEntity($unit);
             }
         }
 
