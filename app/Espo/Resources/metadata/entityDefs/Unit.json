@@ -13,8 +13,7 @@
       "unique": true
     },
     "symbol": {
-      "type": "varchar",
-      "unique": true
+      "type": "varchar"
     },
     "description": {
       "type": "text",
