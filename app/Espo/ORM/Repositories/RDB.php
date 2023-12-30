@@ -342,8 +342,13 @@ class RDB extends \Espo\ORM\Repository
 
     public function removeCollection(array $options = [])
     {
+        $where = $this->whereClause;
+        if (empty($where)) {
+            return;
+        }
+
         while (true) {
-            $collection = $this->limit(0, $this->getConfig()->get('removeCollectionPart', 2000))->find();
+            $collection = $this->where($where)->limit(0, $this->getConfig()->get('removeCollectionPart', 2000))->find();
             if (empty($collection[0])) {
                 break;
             }
