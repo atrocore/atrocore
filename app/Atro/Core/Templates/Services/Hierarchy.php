@@ -38,7 +38,7 @@ class Hierarchy extends Record
     public function getSelectAttributeList($params)
     {
         $res = parent::getSelectAttributeList($params);
-        if (is_array($res)) {
+        if (is_array($res) && $this->getMetadata()->get(['scopes', $this->getEntityType(), 'type']) == 'Hierarchy') {
             $hierarchySortOrderField = $this->getHierarchySortOrderFieldName();
             if (!in_array($hierarchySortOrderField, $res)) {
                 $res[] = $hierarchySortOrderField;
@@ -682,9 +682,11 @@ class Hierarchy extends Record
                 $entity->set('hierarchyRoute', $this->getRepository()->getHierarchyRoute($entity->get('id')));
             }
 
-            $hierarchySortOrderField = $this->getHierarchySortOrderFieldName();
-            if ($entity->has($hierarchySortOrderField)) {
-                $entity->set('sortOrder', $entity->get($hierarchySortOrderField));
+            if ($this->getMetadata()->get(['scopes', $this->getEntityType(), 'type']) == 'Hierarchy') {
+                $hierarchySortOrderField = $this->getHierarchySortOrderFieldName();
+                if ($entity->has($hierarchySortOrderField)) {
+                    $entity->set('sortOrder', $entity->get($hierarchySortOrderField));
+                }
             }
         }
     }
