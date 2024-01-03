@@ -548,23 +548,8 @@ class Hierarchy extends Record
             return parent::linkEntity($id, $link, $foreignId);
         }
 
-        $inTransaction = false;
-        if (!$this->getEntityManager()->getPDO()->inTransaction()) {
-            $this->getEntityManager()->getPDO()->beginTransaction();
-            $inTransaction = true;
-        }
-        try {
-            $result = parent::linkEntity($id, $link, $foreignId);
-            $this->createPseudoTransactionLinkJobs($id, $link, $foreignId);
-            if ($inTransaction) {
-                $this->getEntityManager()->getPDO()->commit();
-            }
-        } catch (\Throwable $e) {
-            if ($inTransaction) {
-                $this->getEntityManager()->getPDO()->rollBack();
-            }
-            throw $e;
-        }
+        $result = parent::linkEntity($id, $link, $foreignId);
+        $this->createPseudoTransactionLinkJobs($id, $link, $foreignId);
 
         return $result;
     }
@@ -614,23 +599,8 @@ class Hierarchy extends Record
             return parent::unlinkEntity($id, $link, $foreignId);
         }
 
-        $inTransaction = false;
-        if (!$this->getEntityManager()->getPDO()->inTransaction()) {
-            $this->getEntityManager()->getPDO()->beginTransaction();
-            $inTransaction = true;
-        }
-        try {
-            $result = parent::unlinkEntity($id, $link, $foreignId);
-            $this->createPseudoTransactionUnlinkJobs($id, $link, $foreignId);
-            if ($inTransaction) {
-                $this->getEntityManager()->getPDO()->commit();
-            }
-        } catch (\Throwable $e) {
-            if ($inTransaction) {
-                $this->getEntityManager()->getPDO()->rollBack();
-            }
-            throw $e;
-        }
+        $result = parent::unlinkEntity($id, $link, $foreignId);
+        $this->createPseudoTransactionUnlinkJobs($id, $link, $foreignId);
 
         return $result;
     }
