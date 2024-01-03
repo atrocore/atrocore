@@ -1,0 +1,54 @@
+[
+  {
+    "label": "Overview",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "isActive"
+        }
+      ],
+      [
+        {
+          "name": "type"
+        },
+        false
+      ],
+      [
+        {
+          "name": "listener"
+        },
+        false
+      ],
+      [
+        {
+          "name": "payload",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "entityType"
+        },
+        {
+          "name": "selfUpdate"
+        }
+      ],
+      [
+        {
+          "name": "updateType"
+        },
+        false
+      ],
+      [
+        {
+          "name": "updateScript",
+          "fullWidth": true
+        }
+      ]
+    ]
+  }
+]

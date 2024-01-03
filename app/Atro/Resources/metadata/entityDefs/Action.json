@@ -1,0 +1,125 @@
+{
+  "fields": {
+    "isActive": {
+      "type": "bool",
+      "default": false
+    },
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true
+    },
+    "type": {
+      "type": "enum",
+      "required": true,
+      "prohibitedEmptyValue": false,
+      "optionsIds": [
+        "dataExchange",
+        "update"
+      ],
+      "options": [
+        "dataExchange",
+        "update"
+      ]
+    },
+    "data": {
+      "type": "jsonObject"
+    },
+    "entityType": {
+      "type": "varchar",
+      "view": "views/fields/entity-type",
+      "notStorable": true,
+      "virtualField": true,
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "selfUpdate": {
+      "type": "bool",
+      "view": "workflows:views/workflow-action/fields/self-update",
+      "notStorable": true,
+      "virtualField": true,
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "updateType": {
+      "type": "enum",
+      "notStorable": true,
+      "virtualField": true,
+      "filterDisabled": true,
+      "prohibitedEmptyValue": true,
+      "optionsIds": [
+        "basic",
+        "script"
+      ],
+      "options": [
+        "basic",
+        "script"
+      ]
+    },
+    "updateScript": {
+      "type": "text",
+      "view": "views/fields/script",
+      "default": "{# { \"description\": \" Triggered Entity ID: {{ triggeredEntityId }}\\n Entity Name: {{ entity.name }}\" } #}",
+      "notStorable": true,
+      "virtualField": true,
+      "filterDisabled": true
+    },
+    "listener": {
+      "type": "linkParent",
+      "entityList": [
+        "ExportFeed",
+        "ImportFeed"
+      ]
+    },
+    "payload": {
+      "type": "wysiwyg",
+      "view": "views/fields/text",
+      "useDisabledTextareaInViewMode": true,
+      "tooltip": true
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    }
+  },
+  "links": {
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    }
+  },
+  "collection": {
+    "sortBy": "createdAt",
+    "asc": true
+  },
+  "indexes": {
+    "createdAt": {
+      "columns": [
+        "createdAt",
+        "deleted"
+      ]
+    }
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "controller": "controllers/record",
+  "recordViews": {
+    "detail": "workflows:views/workflow-action/record/detail",
+    "list": "workflows:views/workflow-action/record/list"
+  },
+  "bottomPanels": {
+    "detail": [
+      {
+        "name": "fieldsPanel",
+        "label": "fieldsPanel",
+        "view": "workflows:views/workflow-action/record/panels/fields",
+        "notRefreshable": true
+      },
+      {
+        "name": "searchPanel",
+        "label": "searchPanel",
+        "view": "workflows:views/workflow-action/record/panels/search",
+        "notRefreshable": true
+      }
+    ]
+  },
+  "dynamicLogic": {
+    "fields": {
+      "workflow": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      },
+      "type": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      },
+      "listener": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "dataExchange"
+            }
+          ]
+        }
+      },
+      "payload": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "dataExchange"
+            }
+          ]
+        }
+      },
+      "entityType": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "update"
+            }
+          ]
+        },
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "selfUpdate"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "selfUpdate"
+            },
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "update"
+            }
+          ]
+        }
+      },
+      "selfUpdate": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "update"
+            }
+          ]
+        }
+      },
+      "updateType": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "update"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "update"
+            }
+          ]
+        }
+      },
+      "updateScript": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "update"
+            },
+            {
+              "type": "equals",
+              "attribute": "updateType",
+              "value": "script"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

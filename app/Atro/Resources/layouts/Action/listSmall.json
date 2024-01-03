@@ -1,0 +1,12 @@
+[
+  {
+    "name": "name",
+    "link": true
+  },
+  {
+    "name": "type"
+  },
+  {
+    "name": "isActive"
+  }
+]
