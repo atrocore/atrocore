@@ -110,7 +110,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                 this.multiple = this.options.multiple;
             }
 
-            if (this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy' && this.getMetadata().get(`scopes.${this.scope}.multiParents`) !== true) {
+            if (this.isHierarchical() && this.getMetadata().get(`scopes.${this.scope}.multiParents`) !== true) {
                 if (this.options.boolFilterList && this.options.boolFilterList.includes('notChildren')) {
                     this.multiple = false;
                 }
@@ -416,7 +416,8 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
         },
 
         isHierarchical() {
-            return this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy';
+            return this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
+                && this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true ;
         },
 
         getSelectedViewType() {

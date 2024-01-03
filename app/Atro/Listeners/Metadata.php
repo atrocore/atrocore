@@ -507,7 +507,7 @@ class Metadata extends AbstractListener
                 continue;
             }
 
-            if (!isset($data['scopes'][$scope]['type']) || $data['scopes'][$scope]['type'] !== 'Hierarchy') {
+            if (!isset($data['scopes'][$scope]['type']) || $data['scopes'][$scope]['type'] !== 'Hierarchy' ||  !empty($data['scopes'][$scope]['disableHierarchy'])) {
                 continue;
             }
 
