@@ -324,18 +324,22 @@ class Stream extends \Espo\Core\Services\Base
             'order' => 'DESC'
         ];
 
-        $where = [
-            'OR' => [
-                [
-                    'parentType' => $scope,
-                    'parentId' => $id
-                ],
-                [
-                    'superParentType' => $scope,
-                    'superParentId' => $id
+        if ($scope == 'User' && $id == null) {
+            $where = [];
+        } else {
+            $where = [
+                'OR' => [
+                    [
+                        'parentType' => $scope,
+                        'parentId' => $id
+                    ],
+                    [
+                        'superParentType' => $scope,
+                        'superParentId' => $id
+                    ]
                 ]
-            ]
-        ];
+            ];
+        }
 
         if (count($onlyTeamEntityTypeList) || count($onlyOwnEntityTypeList)) {
             $selectParams['leftJoins'] = [['teams', 'teamsMiddle'], ['users', 'usersMiddle']];
