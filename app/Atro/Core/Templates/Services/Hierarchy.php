@@ -222,6 +222,10 @@ class Hierarchy extends Record
             throw new BadRequest("Inheriting available only for entities type Hierarchy.");
         }
 
+        if ($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'disableHierarchy'], false) ) {
+            throw new BadRequest("Inheriting available on enable Hierarchy, hierarchy feature is disable.");
+        }
+
         if (!$this->getMetadata()->get(['scopes', $entity->getEntityType(), 'relationInheritance'])) {
             throw new BadRequest("Relations inheriting is disabled.");
         }
@@ -442,7 +446,8 @@ class Hierarchy extends Record
 
     public function updateEntity($id, $data)
     {
-        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy') {
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy'
+            || $this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)) {
             return parent::updateEntity($id, $data);
         }
 
@@ -500,7 +505,8 @@ class Hierarchy extends Record
 
     public function linkEntity($id, $link, $foreignId)
     {
-        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy') {
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy'
+            || $this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)) {
             return parent::linkEntity($id, $link, $foreignId);
         }
 
@@ -565,7 +571,8 @@ class Hierarchy extends Record
 
     public function unlinkEntity($id, $link, $foreignId)
     {
-        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy') {
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy'
+            || $this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false) ) {
             return parent::unlinkEntity($id, $link, $foreignId);
         }
 
@@ -630,7 +637,8 @@ class Hierarchy extends Record
 
     public function deleteEntity($id)
     {
-        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy') {
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy'
+            || $this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)) {
             return parent::deleteEntity($id);
         }
 
@@ -661,7 +669,8 @@ class Hierarchy extends Record
     {
         parent::prepareEntityForOutput($entity);
 
-        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy') {
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy'
+            || $this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)) {
             return;
         }
 
@@ -695,7 +704,8 @@ class Hierarchy extends Record
             return;
         }
 
-        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy') {
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy'
+        || $this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)) {
             return;
         }
 

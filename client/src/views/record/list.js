@@ -801,7 +801,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             this.entityType = this.collection.name || null;
             this.scope = this.options.scope || this.entityType;
-
             this.events = Espo.Utils.clone(this.events);
             this.massActionList = Espo.Utils.clone(this.massActionList);
             this.buttonList = Espo.Utils.clone(this.buttonList);
@@ -1091,7 +1090,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         parent.on('scroll', parent, function () {
                             if (this.collection.total > this.collection.length + this.collection.lengthCorrection && parent.scrollTop() + parent.outerHeight() >= parent.get(0).scrollHeight - 50) {
                                 let type = 'list';
-                                if (this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy') {
+                                if (this.isHierarchical()) {
                                     type = this.getStorage().get('list-small-view-type', this.scope) || 'tree'
                                 }
 
@@ -1128,6 +1127,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
         },
 
+        isHierarchical() {
+
+            return this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
+                && this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true ;
+        },
         loadMore(btn) {
             if (btn.length && !btn.hasClass('disabled')) {
                 btn.click();
@@ -2250,7 +2254,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             let message = 'Global.messages.removeRecordConfirmation';
-            if (this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy') {
+            if (this.isHierarchical()) {
                 message = 'Global.messages.removeRecordConfirmationHierarchically';
             }
 
