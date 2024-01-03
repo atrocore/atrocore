@@ -157,7 +157,7 @@ class Route
         }
 
         // for core
-        $data = $this->getAddData($data, CORE_PATH . '/Espo/Resources/routes.json');
+        $data = $this->getAddData($data, CORE_PATH . '/Atro/Resources/routes.json');
 
         return $data;
     }

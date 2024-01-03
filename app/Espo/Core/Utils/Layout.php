@@ -248,19 +248,6 @@ class Layout extends Injectable
             $data = Json::decode($fileData, true);
         }
 
-        // from espo core data
-        if (empty($data)) {
-            $filePath = $this->concatPath(CORE_PATH . '/Espo/Resources/layouts', $scope);
-            $fileFullPath = $this->concatPath($filePath, $name . '.json');
-            if (file_exists($fileFullPath)) {
-                // get file data
-                $fileData = $this->getFileManager()->getContents($fileFullPath);
-
-                // prepare data
-                $data = Json::decode($fileData, true);
-            }
-        }
-
         // from modules data
         foreach ($this->getMetadata()->getModules() as $module) {
             $module->loadLayouts($scope, $name, $data);
