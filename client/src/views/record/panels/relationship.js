@@ -466,8 +466,9 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
         },
 
         isHierarchical() {
-            return this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
-                && this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true ;
+            const scope = this.model.urlRoot;
+            return this.getMetadata().get(`scopes.${scope}.type`) === 'Hierarchy'
+                && this.getMetadata().get(`scopes.${scope}.disableHierarchy`) !== true;
         },
 
         getStoredFilter: function () {
