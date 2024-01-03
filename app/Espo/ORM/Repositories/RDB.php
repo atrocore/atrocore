@@ -252,7 +252,7 @@ class RDB extends \Espo\ORM\Repository
                 ->where('deleted = :true')
                 ->andWhere('id != :id')
                 ->andWhere(implode(' OR ', $uniques))
-                ->setParameter('true', true, Mapper::getParameterType(true))
+                ->setParameter('true', true, ParameterType::BOOLEAN)
                 ->setParameter('id', $entity->id);
 
             foreach ($parameters as $name => $value) {
