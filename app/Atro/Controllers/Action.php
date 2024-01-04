@@ -21,12 +21,12 @@ class Action extends Base
 {
     public function actionExecuteNow($params, $data, $request): bool
     {
-        if (!$request->isPost()) {
+        if (!$request->isPost() || !property_exists($data, 'actionId')) {
             throw new BadRequest();
         }
 
         return $this
             ->getRecordService()
-            ->executeNow($data);
+            ->executeNow((string)$data->actionId, $data);
     }
 }

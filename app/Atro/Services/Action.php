@@ -13,22 +13,33 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Templates\Services\Base;
+use Atro\ActionTypes\TypeInterface;
 
 class Action extends Base
 {
     protected $mandatorySelectAttributeList = ['data'];
 
-    public function executeNow(\stdClass $input): bool
+    public function executeNow(string $id, \stdClass $input): bool
     {
-        echo '<pre>';
-        print_r($input);
-        die();
-
         $action = $this->getRepository()->get($id);
+        if (empty($action)) {
+            throw new NotFound();
+        }
 
-        echo '<pre>';
-        print_r($action->toArray());
-        die();
+        return $this->getActionType($action->get('type'))->executeNow($action, $input);
+    }
+
+    protected function getActionType(string $type): TypeInterface
+    {
+        return $this->getInjection('container')->get("\\Atro\\ActionTypes\\" . ucfirst($type));
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('container');
     }
 }
