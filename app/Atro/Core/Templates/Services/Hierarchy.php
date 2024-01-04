@@ -37,6 +37,10 @@ class Hierarchy extends Record
 
     public function getSelectAttributeList($params)
     {
+        if( $this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)){
+            return parent::getSelectAttributeList($params);
+        }
+
         $res = parent::getSelectAttributeList($params);
         if (is_array($res) && $this->getMetadata()->get(['scopes', $this->getEntityType(), 'type']) == 'Hierarchy') {
             $hierarchySortOrderField = $this->getHierarchySortOrderFieldName();
