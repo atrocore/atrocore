@@ -37,7 +37,6 @@
     },
     "selfUpdate": {
       "type": "bool",
-      "view": "views/action/fields/self-update",
       "notStorable": true,
       "virtualField": true,
       "filterDisabled": true,
