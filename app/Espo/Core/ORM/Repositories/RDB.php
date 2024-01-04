@@ -179,6 +179,16 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     {
         parent::afterRemove($entity, $options);
 
+        // unlink on all many-many relations
+        foreach ($entity->getRelations() as $name => $defs) {
+            if (!empty($defs['relationName'])) {
+                $relEntities = $entity->get($name, ['select' => ['id']]);
+                foreach ($relEntities as $relEntity) {
+                    $this->unrelate($entity, $name, $relEntity->get('id'));
+                }
+            }
+        }
+
         // dispatch an event
         $this->dispatch('afterRemove', $entity, $options);
     }
