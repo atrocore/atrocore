@@ -16,6 +16,7 @@ namespace Atro\Listeners;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Templates\Repositories\Relation;
 use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Database\Orm\RelationManager;
 use Espo\Core\Utils\Util;
 use Espo\Core\Templates\Services\Relationship;
@@ -73,7 +74,6 @@ class Metadata extends AbstractListener
 
     public function pushDynamicActions(array &$data): void
     {
-        return;
         if (!$this->getConfig()->get('isInstalled', false)) {
             return;
         }
@@ -89,15 +89,24 @@ class Metadata extends AbstractListener
                     ->from($connection->quoteIdentifier('action'), 't')
                     ->where('t.deleted = :false')
                     ->andWhere('t.type = :updateType')
-                    ->andWhere('t.type = :updateType')
-                    ->setParameter('true', true, Mapper::getParameterType(true))
-                    ->setParameter('false', false, Mapper::getParameterType(false))
+                    ->andWhere('t.self_targeted = :true')
+                    ->andWhere('t.is_active = :true')
+                    ->setParameter('updateType', 'update')
+                    ->setParameter('true', true, ParameterType::BOOLEAN)
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
                     ->fetchAllAssociative();
             } catch (\Throwable $e) {
-                $attributes = [];
+                $actions = [];
             }
 
             $dataManager->setCacheData('dynamic_action', $actions);
+        }
+
+        foreach ($actions as $action) {
+            $data['clientDefs'][$action['entity_type']]['dynamicActions'][] = [
+                'id'   => $action['id'],
+                'name' => $action['name']
+            ];
         }
     }
 
@@ -540,7 +549,7 @@ class Metadata extends AbstractListener
                 continue;
             }
 
-            if (!isset($data['scopes'][$scope]['type']) || $data['scopes'][$scope]['type'] !== 'Hierarchy' ||  !empty($data['scopes'][$scope]['disableHierarchy'])) {
+            if (!isset($data['scopes'][$scope]['type']) || $data['scopes'][$scope]['type'] !== 'Hierarchy' || !empty($data['scopes'][$scope]['disableHierarchy'])) {
                 continue;
             }
 
@@ -548,7 +557,7 @@ class Metadata extends AbstractListener
 
             $data['scopes'][$relationEntityName]['isHierarchyEntity'] = true;
             $data['entityDefs'][$relationEntityName]['fields']['hierarchySortOrder'] = [
-                'type'                      => 'int'
+                'type' => 'int'
             ];
 
             if (!isset($data['entityDefs'][$scope]['fields']['parents']['view'])) {

@@ -28,12 +28,8 @@
     "entityType": {
       "type": "varchar",
       "view": "views/fields/entity-type",
-      "notStorable": true,
-      "virtualField": true,
-      "filterDisabled": true,
       "massUpdateDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
+      "importDisabled": true
     },
     "selfTargeted": {
       "type": "bool"

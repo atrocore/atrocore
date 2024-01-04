@@ -11,24 +11,22 @@
 
 declare(strict_types=1);
 
-namespace Atro\Services;
+namespace Atro\Controllers;
 
-use Espo\Core\Templates\Services\Base;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Templates\Controllers\Base;
 
 class Action extends Base
 {
-    protected $mandatorySelectAttributeList = ['data'];
-
-    public function executeNow(\stdClass $input): bool
+    public function actionExecuteNow($params, $data, $request): bool
     {
-        echo '<pre>';
-        print_r($input);
-        die();
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
 
-        $action = $this->getRepository()->get($id);
-
-        echo '<pre>';
-        print_r($action->toArray());
-        die();
+        return $this
+            ->getRecordService()
+            ->executeNow($data);
     }
 }
