@@ -252,30 +252,25 @@ class Hierarchy extends Record
             ->where([$keySet['nearKey'] => $parentsIds])
             ->find();
 
-        if (empty($parentsCollection[0])) {
-            throw new BadRequest($this->getInjection('language')->translate('nothingToInherit', 'exceptions'));
-        }
-
-        $additionalFields = $this->getAdditionalFieldsNames($entity->getEntityType(), $link);
-
-        $maxMassLinkCount = $this->getConfig()->get('maxMassLinkCount', 20);
-
-        foreach ($parentsCollection as $k => $parentItem) {
-            $input = new \stdClass();
-            $input->{$keySet['nearKey']} = $id;
-            $input->{$keySet['distantKey']} = $parentItem->get($keySet['distantKey']);
-            foreach ($additionalFields as $additionalField) {
-                $input->{$additionalField} = $parentItem->get($additionalField);
-            }
-
-            if ($k < $maxMassLinkCount) {
-                try {
-                    $this->getServiceFactory()->create($relationEntityName)->createEntity($input);
-                } catch (NotUnique $e) {
-                } catch (Forbidden $e) {
+        if (!empty($parentsCollection[0])) {
+            $additionalFields = $this->getAdditionalFieldsNames($entity->getEntityType(), $link);
+            $maxMassLinkCount = $this->getConfig()->get('maxMassLinkCount', 20);
+            foreach ($parentsCollection as $k => $parentItem) {
+                $input = new \stdClass();
+                $input->{$keySet['nearKey']} = $id;
+                $input->{$keySet['distantKey']} = $parentItem->get($keySet['distantKey']);
+                foreach ($additionalFields as $additionalField) {
+                    $input->{$additionalField} = $parentItem->get($additionalField);
                 }
-            } else {
-                $this->getPseudoTransactionManager()->pushCreateEntityJob($relationEntityName, $input);
+                if ($k < $maxMassLinkCount) {
+                    try {
+                        $this->getServiceFactory()->create($relationEntityName)->createEntity($input);
+                    } catch (NotUnique $e) {
+                    } catch (Forbidden $e) {
+                    }
+                } else {
+                    $this->getPseudoTransactionManager()->pushCreateEntityJob($relationEntityName, $input);
+                }
             }
         }
 
