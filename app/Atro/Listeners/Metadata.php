@@ -165,6 +165,7 @@ class Metadata extends AbstractListener
                     "mainField"   => $field,
                     "required"    => !empty($fieldDefs['required']),
                     "audited"     => !empty($fieldDefs['audited']),
+                    "notStorable" => !empty($fieldDefs['notStorable']),
                     "emHidden"    => true
                 ];
 
@@ -173,8 +174,9 @@ class Metadata extends AbstractListener
                 }
 
                 $data['entityDefs'][$entityType]['links'][$unitFieldName] = [
-                    "type"   => "belongsTo",
-                    "entity" => "Unit"
+                    "type"        => "belongsTo",
+                    "entity"      => "Unit",
+                    "skipOrmDefs" => !empty($fieldDefs['notStorable']),
                 ];
 
                 if ($visibleLogic = $this->getMetadata()->get(['clientDefs', $entityType, 'dynamicLogic', 'fields', $field, 'visible'])) {
