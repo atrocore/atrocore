@@ -78,7 +78,7 @@
           "conditionGroup": [
             {
               "type": "isTrue",
-              "attribute": "selfUpdate"
+              "attribute": "selfTargeted"
             }
           ]
         },
@@ -86,7 +86,7 @@
           "conditionGroup": [
             {
               "type": "isFalse",
-              "attribute": "selfUpdate"
+              "attribute": "selfTargeted"
             },
             {
               "type": "equals",
@@ -96,7 +96,7 @@
           ]
         }
       },
-      "selfUpdate": {
+      "selfTargeted": {
         "visible": {
           "conditionGroup": [
             {

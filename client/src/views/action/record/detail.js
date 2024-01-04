@@ -31,7 +31,7 @@ Espo.define('views/action/record/detail', 'views/record/detail',
         },
 
         isButtonsDisabled() {
-            return !this.model.get('isActive') || (this.model.get('selfUpdate') && this.model.get('type') === 'update');
+            return !this.model.get('isActive') || (this.model.get('selfTargeted') && this.model.get('type') === 'update');
         },
 
         handleButtonsDisability() {

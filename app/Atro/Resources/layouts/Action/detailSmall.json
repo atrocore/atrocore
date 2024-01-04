@@ -34,7 +34,7 @@
           "name": "entityType"
         },
         {
-          "name": "selfUpdate"
+          "name": "selfTargeted"
         }
       ],
       [

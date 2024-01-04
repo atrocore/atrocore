@@ -15,6 +15,7 @@ namespace Atro\Listeners;
 
 use Atro\Core\EventManager\Event;
 use Atro\Core\Templates\Repositories\Relation;
+use Atro\ORM\DB\RDB\Mapper;
 use Espo\Core\Utils\Database\Orm\RelationManager;
 use Espo\Core\Utils\Util;
 use Espo\Core\Templates\Services\Relationship;
@@ -56,6 +57,8 @@ class Metadata extends AbstractListener
 
         $this->prepareScriptField($data);
 
+        $this->pushDynamicActions($data);
+
         $event->setArgument('data', $data);
     }
 
@@ -66,6 +69,36 @@ class Metadata extends AbstractListener
         $this->prepareRelationEntities($data);
 
         $event->setArgument('data', $data);
+    }
+
+    public function pushDynamicActions(array &$data): void
+    {
+        return;
+        if (!$this->getConfig()->get('isInstalled', false)) {
+            return;
+        }
+
+        $dataManager = $this->getContainer()->get('dataManager');
+
+        $actions = $dataManager->getCacheData('dynamic_action');
+        if ($actions === null) {
+            $connection = $this->getEntityManager()->getConnection();
+            try {
+                $actions = $connection->createQueryBuilder()
+                    ->select('t.*')
+                    ->from($connection->quoteIdentifier('action'), 't')
+                    ->where('t.deleted = :false')
+                    ->andWhere('t.type = :updateType')
+                    ->andWhere('t.type = :updateType')
+                    ->setParameter('true', true, Mapper::getParameterType(true))
+                    ->setParameter('false', false, Mapper::getParameterType(false))
+                    ->fetchAllAssociative();
+            } catch (\Throwable $e) {
+                $attributes = [];
+            }
+
+            $dataManager->setCacheData('dynamic_action', $actions);
+        }
     }
 
     public function setTranslationRequiredLanguage(array &$data)

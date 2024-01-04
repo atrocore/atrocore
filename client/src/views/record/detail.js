@@ -203,6 +203,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             });
         },
 
+        actionDynamicAction: function (data) {
+            this.notify(this.translate('pleaseWait', 'messages'));
+            this.ajaxPostRequest('Action/action/executeDynamicAction', {id: data.id}).success(() => {
+                this.notify('Done', 'success');
+            });
+        },
+
         actionDelete: function () {
             this.delete();
         },
@@ -276,6 +283,14 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         'name': 'inheritAllForChildren'
                     });
                 }
+            }
+
+            if (this.getAcl().check(this.entityType, 'edit')) {
+                // this.dropdownItemList.push({
+                //     label: "Qwe 123",
+                //     name: "dynamicAction",
+                //     id: "qwe321"
+                // });
             }
 
             if (this.selfAssignAction) {

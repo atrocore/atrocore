@@ -6,7 +6,7 @@
     "type": "Type",
     "data": "Data",
     "entityType": "Target Entity",
-    "selfUpdate": "Self-Targeted",
+    "selfTargeted": "Self-Targeted",
     "updateType": "Update Type",
     "updateScript": "Script"
   },

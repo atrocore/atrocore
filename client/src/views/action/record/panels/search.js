@@ -32,7 +32,7 @@ Espo.define('views/action/record/panels/search', 'views/record/panels/search',
                 this.setupSearchPanel();
             });
 
-            this.listenTo(this.model, 'change:selfUpdate', () => {
+            this.listenTo(this.model, 'change:selfTargeted', () => {
                 this.reRender();
             });
         },
@@ -40,7 +40,7 @@ Espo.define('views/action/record/panels/search', 'views/record/panels/search',
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            if (this.model.get('type') === 'update' && !this.model.get('selfUpdate')) {
+            if (this.model.get('type') === 'update' && !this.model.get('selfTargeted')) {
                 this.$el.parent().show();
             } else {
                 this.$el.parent().hide();

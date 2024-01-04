@@ -35,14 +35,8 @@
       "importDisabled": true,
       "emHidden": true
     },
-    "selfUpdate": {
-      "type": "bool",
-      "notStorable": true,
-      "virtualField": true,
-      "filterDisabled": true,
-      "massUpdateDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
+    "selfTargeted": {
+      "type": "bool"
     },
     "updateType": {
       "type": "enum",
