@@ -37,7 +37,7 @@
     },
     "selfUpdate": {
       "type": "bool",
-      "view": "workflows:views/workflow-action/fields/self-update",
+      "view": "views/action/fields/self-update",
       "notStorable": true,
       "virtualField": true,
       "filterDisabled": true,

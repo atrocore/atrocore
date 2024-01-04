@@ -1,21 +1,21 @@
 {
   "controller": "controllers/record",
   "recordViews": {
-    "detail": "workflows:views/workflow-action/record/detail",
-    "list": "workflows:views/workflow-action/record/list"
+    "detail": "views/action/record/detail",
+    "list": "views/action/record/list"
   },
   "bottomPanels": {
     "detail": [
       {
         "name": "fieldsPanel",
         "label": "fieldsPanel",
-        "view": "workflows:views/workflow-action/record/panels/fields",
+        "view": "views/action/record/panels/fields",
         "notRefreshable": true
       },
       {
         "name": "searchPanel",
         "label": "searchPanel",
-        "view": "workflows:views/workflow-action/record/panels/search",
+        "view": "views/action/record/panels/search",
         "notRefreshable": true
       }
     ]
