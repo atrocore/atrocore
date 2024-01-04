@@ -13,6 +13,7 @@ namespace Atro\ActionTypes;
 
 use Atro\Core\Container;
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\ServiceFactory;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
@@ -33,41 +34,50 @@ class Update implements TypeInterface
             echo '<pre>';
             print_r('not self targeted');
             die();
-        } else {
-            if (!property_exists($input, 'entityId')) {
-                throw new BadRequest('entityId is required.');
-            }
+        }
 
-            $inputData = null;
-            switch ($actionData->field->updateType) {
-                case 'basic':
-                    $inputData = $actionData->fieldData ?? null;
-                    break;
-                case 'script':
-                    if (!empty($actionData->field->updateScript)) {
-                        $entity = $this->getEntityManager()->getRepository($action->get('entityType'))->get($input->entityId);
-                        if (!empty($entity)) {
-                            $outputJson = $this->container->get('twig')->renderTemplate($actionData->field->updateScript, ['entity' => $entity]);
-                            $input = @json_decode((string)$outputJson);
-                            if ($input !== null) {
-                                $inputData = $input;
-                            }
-                        }
-                    }
-                    break;
-            }
+        if (!property_exists($input, 'entityId')) {
+            throw new BadRequest('entityId is required.');
+        }
 
-            if ($inputData !== null) {
-                $this->container->get('serviceFactory')->create($action->get('entityType'))->updateEntity($entity->get('id'), $inputData);
-                return true;
-            }
-
+        $entity = $this->getEntityManager()->getRepository($action->get('entityType'))->get($input->entityId);
+        if (empty($entity)) {
             return false;
         }
+
+        $inputData = null;
+        switch ($actionData->field->updateType) {
+            case 'basic':
+                $inputData = $actionData->fieldData ?? null;
+                break;
+            case 'script':
+                if (!empty($actionData->field->updateScript)) {
+                    $outputJson = $this->container->get('twig')->renderTemplate($actionData->field->updateScript, ['entity' => $entity]);
+                    $input = @json_decode((string)$outputJson);
+                    if ($input !== null) {
+                        $inputData = $input;
+                    }
+                }
+                break;
+        }
+
+        if ($inputData === null) {
+            return false;
+
+        }
+
+        $this->getServiceFactory()->create($action->get('entityType'))->updateEntity($entity->get('id'), $inputData);
+
+        return true;
     }
 
     protected function getEntityManager(): EntityManager
     {
         return $this->container->get('entityManager');
+    }
+
+    protected function getServiceFactory(): ServiceFactory
+    {
+        return $this->container->get('serviceFactory');
     }
 }
