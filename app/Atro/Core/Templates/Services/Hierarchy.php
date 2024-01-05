@@ -247,7 +247,7 @@ class Hierarchy extends Record
 
         $parentsIds = $entity->getLinkMultipleIdList('parents');
         if (empty($parentsIds[0])) {
-            throw new NotFound();
+            return false;
         }
 
         $keySet = $this->getRepository()->getMapper()->getKeys($entity, $link);
