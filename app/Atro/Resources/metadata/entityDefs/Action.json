@@ -16,6 +16,9 @@
       "optionsIds": [],
       "options": []
     },
+    "data": {
+      "type": "jsonObject"
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
