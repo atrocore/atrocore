@@ -1,31 +1,10 @@
 {
   "fields": {
     "isActive": "Active",
-    "listener": "Listener",
-    "payload": "Payload",
-    "type": "Type",
-    "data": "Data",
-    "entityType": "Target Entity",
-    "selfTargeted": "Self-Targeted",
-    "updateType": "Update Type",
-    "updateScript": "Script"
-  },
-  "options": {
-    "type": {
-      "dataExchange": "Data exchange",
-      "update": "Update"
-    },
-    "updateType": {
-      "basic": "Basic",
-      "script": "Script"
-    }
-  },
-  "tooltips": {
-    "payload": "Additional information to be transmitted to the listener."
+    "type": "Type"
   },
   "labels": {
     "Create Action": "Create Action",
-    "fieldsPanel": "Update",
     "execute": "Execute"
   },
   "massActions": {

@@ -16,38 +16,6 @@
           "name": "type"
         },
         false
-      ],
-      [
-        {
-          "name": "listener"
-        },
-        false
-      ],
-      [
-        {
-          "name": "payload",
-          "fullWidth": true
-        }
-      ],
-      [
-        {
-          "name": "entityType"
-        },
-        {
-          "name": "selfTargeted"
-        }
-      ],
-      [
-        {
-          "name": "updateType"
-        },
-        false
-      ],
-      [
-        {
-          "name": "updateScript",
-          "fullWidth": true
-        }
       ]
     ]
   }

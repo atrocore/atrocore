@@ -13,62 +13,8 @@
       "type": "enum",
       "required": true,
       "prohibitedEmptyValue": false,
-      "optionsIds": [
-        "dataExchange",
-        "update"
-      ],
-      "options": [
-        "dataExchange",
-        "update"
-      ]
-    },
-    "data": {
-      "type": "jsonObject"
-    },
-    "entityType": {
-      "type": "varchar",
-      "view": "views/fields/entity-type",
-      "massUpdateDisabled": true,
-      "importDisabled": true
-    },
-    "selfTargeted": {
-      "type": "bool"
-    },
-    "updateType": {
-      "type": "enum",
-      "notStorable": true,
-      "virtualField": true,
-      "filterDisabled": true,
-      "prohibitedEmptyValue": true,
-      "optionsIds": [
-        "basic",
-        "script"
-      ],
-      "options": [
-        "basic",
-        "script"
-      ]
-    },
-    "updateScript": {
-      "type": "text",
-      "view": "views/fields/script",
-      "default": "{# { \"description\": \" Triggered Entity ID: {{ triggeredEntityId }}\\n Entity Name: {{ entity.name }}\" } #}",
-      "notStorable": true,
-      "virtualField": true,
-      "filterDisabled": true
-    },
-    "listener": {
-      "type": "linkParent",
-      "entityList": [
-        "ExportFeed",
-        "ImportFeed"
-      ]
-    },
-    "payload": {
-      "type": "wysiwyg",
-      "view": "views/fields/text",
-      "useDisabledTextareaInViewMode": true,
-      "tooltip": true
+      "optionsIds": [],
+      "options": []
     },
     "createdAt": {
       "type": "datetime",

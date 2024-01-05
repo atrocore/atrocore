@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Templates\Services\Base;
 use Atro\ActionTypes\TypeInterface;
@@ -31,15 +32,19 @@ class Action extends Base
         return $this->getActionType($action->get('type'))->executeNow($action, $input);
     }
 
-    protected function getActionType(string $type): TypeInterface
-    {
-        return $this->getInjection('container')->get("\\Atro\\ActionTypes\\" . ucfirst($type));
-    }
-
     protected function init()
     {
         parent::init();
 
         $this->addDependency('container');
+    }
+
+    protected function getActionType(string $type): TypeInterface
+    {
+        $className = $this->getMetadata()->get(['action', 'types', $type]);
+        if (empty($className)) {
+            throw new Error("No such action type '$type'.");
+        }
+        return $this->getInjection('container')->get($className);
     }
 }
