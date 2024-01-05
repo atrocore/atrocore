@@ -31,7 +31,7 @@ Espo.define('views/action/record/detail', 'views/record/detail',
         },
 
         isButtonsDisabled() {
-            return !this.model.get('isActive') || (this.model.get('selfTargeted') && this.model.get('type') === 'update');
+            return !this.model.get('isActive');
         },
 
         handleButtonsDisability() {
@@ -48,18 +48,9 @@ Espo.define('views/action/record/detail', 'views/record/detail',
             }
 
             this.confirm(this.translate('executeNow', 'messages', 'Action'), () => {
-                let where = [
-                    {
-                        type: "equals",
-                        attribute: "id",
-                        value: this.model.get('id')
-                    }
-                ];
                 this.notify('Please wait...');
-                this.ajaxPostRequest('Action/action/executeNow', {where: where}).then(response => {
-                    if (response) {
-                        this.notify('Done', 'success');
-                    }
+                this.ajaxPostRequest('Action/action/executeNow', {actionId: this.model.get('id')}).success(() => {
+                    this.notify('Done', 'success');
                 });
             });
         },
