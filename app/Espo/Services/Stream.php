@@ -185,7 +185,7 @@ class Stream extends \Espo\Core\Services\Base
         $connection = $this->getEntityManager()->getConnection();
         $res = $connection->createQueryBuilder()
             ->select('s.id')
-            ->from($connection->quoteIdentifier('subscription'), 's')
+            ->from($connection->quoteIdentifier('user_followed_record'), 's')
             ->where('s.entity_id = :entityId')
             ->setParameter('entityId', $entity->id)
             ->andWhere('s.entity_type = :entityType')
@@ -220,7 +220,7 @@ class Stream extends \Espo\Core\Services\Base
         $connection = $this->getEntityManager()->getConnection();
 
         $connection->createQueryBuilder()
-            ->delete($connection->quoteIdentifier('subscription'))
+            ->delete($connection->quoteIdentifier('user_followed_record'))
             ->where('entity_id = :entityId')
             ->setParameter('entityId', $entity->id)
             ->andWhere('user_id IN (:userIds)')
@@ -229,7 +229,7 @@ class Stream extends \Espo\Core\Services\Base
 
         foreach ($userIdList as $userId) {
             $connection->createQueryBuilder()
-                ->insert($connection->quoteIdentifier('subscription'))
+                ->insert($connection->quoteIdentifier('user_followed_record'))
                 ->setValue('entity_id', ':entityId')
                 ->setParameter('entityId', $entity->id)
                 ->setValue('entity_type', ':entityType')
@@ -252,7 +252,7 @@ class Stream extends \Espo\Core\Services\Base
         if (!$this->checkIsFollowed($entity, $userId)) {
             $connection = $this->getEntityManager()->getConnection();
             $connection->createQueryBuilder()
-                ->insert($connection->quoteIdentifier('subscription'))
+                ->insert($connection->quoteIdentifier('user_followed_record'))
                 ->setValue('entity_id', ':entityId')
                 ->setParameter('entityId', $entity->id)
                 ->setValue('entity_type', ':entityType')
@@ -273,7 +273,7 @@ class Stream extends \Espo\Core\Services\Base
         $connection = $this->getEntityManager()->getConnection();
 
         $connection->createQueryBuilder()
-            ->delete($connection->quoteIdentifier('subscription'))
+            ->delete($connection->quoteIdentifier('user_followed_record'))
             ->where('entity_id = :entityId')
             ->setParameter('entityId', $entity->id)
             ->andWhere('entity_type = :entityType')
@@ -294,7 +294,7 @@ class Stream extends \Espo\Core\Services\Base
         $connection = $this->getEntityManager()->getConnection();
 
         $connection->createQueryBuilder()
-            ->delete($connection->quoteIdentifier('subscription'))
+            ->delete($connection->quoteIdentifier('user_followed_record'))
             ->where('entity_id = :entityId')
             ->setParameter('entityId', $entity->id)
             ->andWhere('entity_type = :entityType')
@@ -846,7 +846,7 @@ class Stream extends \Espo\Core\Services\Base
             ->from($connection->quoteIdentifier('user'), 'u')
             ->where('u.is_active = :isActive')
             ->setParameter('isActive', true, Mapper::getParameterType(true))
-            ->innerJoin('u', $connection->quoteIdentifier('subscription'), 's', $condition)
+            ->innerJoin('u', $connection->quoteIdentifier('user_followed_record'), 's', $condition)
             ->setParameter('entityId', $entity->id)
             ->setParameter('entityType', $entity->getEntityType())
             ->fetchAllAssociative();
@@ -865,7 +865,7 @@ class Stream extends \Espo\Core\Services\Base
         $res = $connection->createQueryBuilder()
             ->select('u.id, u.name')
             ->from($connection->quoteIdentifier('user'), 'u')
-            ->innerJoin('u', $connection->quoteIdentifier('subscription'), 's', $condition)
+            ->innerJoin('u', $connection->quoteIdentifier('user_followed_record'), 's', $condition)
             ->setParameter('entityId', $entity->id)
             ->setParameter('entityType', $entity->getEntityType())
             ->where('u.is_active = :isActive')

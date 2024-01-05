@@ -26,6 +26,7 @@ class V1Dot8Dot3 extends Base
 
         $this->addColumn($toSchema, 'measure', 'display_format', ['type' => 'string', 'default' => null]);
         $this->addColumn($toSchema, 'unit', 'symbol', ['type' => 'string', 'default' => null]);
+        $toSchema->renameTable('subscription','user_followed_record');
 
         foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
             $this->getPDO()->exec($sql);
