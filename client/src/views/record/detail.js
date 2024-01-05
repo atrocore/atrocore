@@ -203,7 +203,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             });
         },
 
-        actionDynamicAction: function (data) {
+        actionDynamicUpdateAction: function (data) {
             this.notify(this.translate('pleaseWait', 'messages'));
             this.ajaxPostRequest('Action/action/executeNow', {actionId: data.id, entityId: this.model.get('id')}).success(() => {
                 this.notify('Done', 'success');
@@ -286,16 +286,15 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             }
 
-            if (this.getAcl().check(this.entityType, 'edit')) {
-                let dynamicActions = this.getMetadata().get(['clientDefs', this.entityType, 'dynamicActions']) || [];
-                dynamicActions.forEach(dynamicAction => {
+            (this.getMetadata().get(['clientDefs', this.entityType, 'updateActions']) || []).forEach(updateAction => {
+                if (this.getAcl().check(updateAction.targetEntity, 'edit')) {
                     this.dropdownItemList.push({
-                        label: dynamicAction.name,
-                        name: "dynamicAction",
-                        id: dynamicAction.id
+                        id: updateAction.id,
+                        label: updateAction.name,
+                        name: "dynamicUpdateAction"
                     });
-                });
-            }
+                }
+            });
 
             if (this.selfAssignAction) {
                 if (

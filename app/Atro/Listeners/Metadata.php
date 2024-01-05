@@ -58,8 +58,6 @@ class Metadata extends AbstractListener
 
         $this->prepareScriptField($data);
 
-        $this->pushDynamicActions($data);
-
         $event->setArgument('data', $data);
     }
 
@@ -70,44 +68,6 @@ class Metadata extends AbstractListener
         $this->prepareRelationEntities($data);
 
         $event->setArgument('data', $data);
-    }
-
-    public function pushDynamicActions(array &$data): void
-    {
-        if (!$this->getConfig()->get('isInstalled', false)) {
-            return;
-        }
-
-        $dataManager = $this->getContainer()->get('dataManager');
-
-        $actions = $dataManager->getCacheData('dynamic_action');
-        if ($actions === null) {
-            $connection = $this->getEntityManager()->getConnection();
-            try {
-                $actions = $connection->createQueryBuilder()
-                    ->select('t.*')
-                    ->from($connection->quoteIdentifier('action'), 't')
-                    ->where('t.deleted = :false')
-                    ->andWhere('t.type = :updateType')
-                    ->andWhere('t.self_targeted = :true')
-                    ->andWhere('t.is_active = :true')
-                    ->setParameter('updateType', 'update')
-                    ->setParameter('true', true, ParameterType::BOOLEAN)
-                    ->setParameter('false', false, ParameterType::BOOLEAN)
-                    ->fetchAllAssociative();
-            } catch (\Throwable $e) {
-                $actions = [];
-            }
-
-            $dataManager->setCacheData('dynamic_action', $actions);
-        }
-
-        foreach ($actions as $action) {
-            $data['clientDefs'][$action['entity_type']]['dynamicActions'][] = [
-                'id'   => $action['id'],
-                'name' => $action['name']
-            ];
-        }
     }
 
     public function setTranslationRequiredLanguage(array &$data)
