@@ -17,7 +17,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Util;
 use Espo\Jobs\UpdateCurrencyExchangeViaECB;
 
-class V1Dot8Dot3 extends Base
+class V1Dot8Dot6 extends Base
 {
     public function up(): void
     {
