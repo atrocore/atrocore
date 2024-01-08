@@ -50,9 +50,10 @@ class Unit extends Base
 
     protected function boolFilterFromMeasure(array &$result)
     {
-        if (!empty($measureId = $this->getBoolFilterParameter('fromMeasure'))) {
+        $data = $this->getBoolFilterParameter('fromMeasure');
+        if (!empty($data['measureId'])) {
             $result['whereClause'][] = [
-                'measureId' => $measureId
+                'measureId' => $data['measureId']
             ];
         }
     }
