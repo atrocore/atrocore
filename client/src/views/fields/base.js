@@ -871,8 +871,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         getMeasureFormat() {
-            console.log(this.measureId)
-            return this.getMeasureData(this.measureId).displayFormat
+            return (this.getMeasureData(this.measureId) || {displayFormat: null}).displayFormat;
         },
 
         loadUnitOptions() {
