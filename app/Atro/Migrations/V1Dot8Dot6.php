@@ -31,11 +31,11 @@ class V1Dot8Dot6 extends Base
             $this->getPDO()->exec($sql);
         }
 
-        if (!$toSchema->hasTable('user_followed_record')) {
-            $this->getPDO()->exec('alter table subscription rename to user_followed_record;');
-        }
-
         try {
+            if (!$toSchema->hasTable('user_followed_record')) {
+                $this->getPDO()->exec('alter table subscription rename to user_followed_record;');
+            }
+
             $this->getConnection()->createQueryBuilder()
                 ->insert('measure')
                 ->values([
