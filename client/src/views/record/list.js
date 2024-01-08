@@ -192,7 +192,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
                 var method = 'massAction' + Espo.Utils.upperCaseFirst(action);
                 if (method in this) {
-                    this[method]();
+                    this[method]($el.data());
                 } else {
                     this.massAction(action);
                 }
@@ -518,6 +518,24 @@ Espo.define('views/record/list', 'view', function (Dep) {
             } else {
                 proceed.call(this);
             }
+        },
+
+        massActionDynamicMassUpdateAction: function (data) {
+            let where;
+            if (this.allResultIsChecked) {
+                where = this.collection.getWhere();
+            } else {
+                where = [{type: "in", attribute: "id", value: this.checkedList}];
+            }
+
+            this.notify(this.translate('pleaseWait', 'messages'));
+            this.ajaxPostRequest('Action/action/executeNow', {
+                actionId: data.id,
+                where: where
+            }).success(() => {
+                Backbone.trigger('showQueuePanel');
+                this.notify('Done', 'success');
+            });
         },
 
         massActionRemove: function () {
@@ -846,6 +864,18 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }
             }, this);
             this.checkAllResultMassActionList = checkAllResultMassActionList;
+
+            (this.getMetadata().get(['clientDefs', this.entityType, 'updateActions']) || []).forEach(updateAction => {
+                if (this.getAcl().check(updateAction.targetEntity, 'edit')) {
+                    let obj = {
+                        action: "dynamicMassUpdateAction",
+                        label: updateAction.name,
+                        id: updateAction.id
+                    };
+                    this.massActionList.push(obj);
+                    this.checkAllResultMassActionList.push(obj);
+                }
+            });
 
             (this.getMetadata().get(['clientDefs', this.scope, 'checkAllResultMassActionList']) || []).forEach(function (item) {
                 if (~this.massActionList.indexOf(item)) {
