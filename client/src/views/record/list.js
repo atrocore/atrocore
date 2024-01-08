@@ -2234,6 +2234,17 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
         },
 
+        actionDynamicUpdateAction: function (data) {
+            this.notify(this.translate('pleaseWait', 'messages'));
+            this.ajaxPostRequest('Action/action/executeNow', {
+                actionId: data.action_id,
+                entityId: data.entity_id
+            }).success(() => {
+                this.notify('Done', 'success');
+                this.collection.fetch();
+            });
+        },
+
         getRowSelector: function (id) {
             return 'tr[data-id="' + id + '"]';
         },

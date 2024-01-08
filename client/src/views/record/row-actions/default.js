@@ -88,9 +88,9 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
         },
 
         getActionList: function () {
-            const scope = this.options.scope ;
+            const scope = this.options.scope;
             const filters = this.getStorage().get('listSearch', scope);
-            if(filters && filters.bool['onlyDeleted'] === true){
+            if (filters && filters.bool['onlyDeleted'] === true) {
                 if (this.options.acl.delete) {
                     return [{
                         action: 'quickRestore',
@@ -119,6 +119,20 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                     link: '#' + this.model.name + '/edit/' + this.model.id
                 });
             }
+
+            (this.getMetadata().get(['clientDefs', scope, 'updateActions']) || []).forEach(updateAction => {
+                if (this.getAcl().check(updateAction.targetEntity, 'edit')) {
+                    list.push({
+                        action: "dynamicUpdateAction",
+                        label: updateAction.name,
+                        data: {
+                            action_id: updateAction.id,
+                            entity_id: this.model.id
+                        },
+                    });
+                }
+            });
+
             if (this.options.acl.delete) {
                 list.push({
                     action: 'quickRemove',
