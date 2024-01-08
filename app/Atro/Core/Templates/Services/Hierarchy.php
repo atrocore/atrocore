@@ -324,10 +324,6 @@ class Hierarchy extends Record
                     $field = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'multilangField'], $field);
                     $input->$field = $parent->get($field);
                     break;
-                case 'currency':
-                    $input->$field = $parent->get($field);
-                    $input->{$field . 'Currency'} = $parent->get($field . 'Currency');
-                    break;
                 case 'rangeInt':
                 case 'rangeFloat':
                     $input->{$field . 'From'} = $parent->get($field . 'From');
@@ -887,14 +883,6 @@ class Hierarchy extends Record
                 case 'image':
                 case 'link':
                     if ($this->areValuesEqual($this->getRepository()->get(), $field . 'Id', $parent->get($field . 'Id'), $child->get($field . 'Id'))) {
-                        $inheritedFields[] = $field;
-                    }
-                    break;
-                case 'currency':
-                    if (
-                        $this->areValuesEqual($this->getRepository()->get(), $field, $parent->get($field), $child->get($field))
-                        && $this->areValuesEqual($this->getRepository()->get(), $field . 'Currency', $parent->get($field . 'Currency'), $child->get($field . 'Currency'))
-                    ) {
                         $inheritedFields[] = $field;
                     }
                     break;

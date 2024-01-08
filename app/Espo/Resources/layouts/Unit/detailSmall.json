@@ -20,6 +20,12 @@
       ],
       [
         {
+          "name": "symbol"
+        },
+        false
+      ],
+      [
+        {
           "name": "multiplier"
         },
         {

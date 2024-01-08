@@ -39,8 +39,6 @@
     "mentionEmailNotifications": "Se enviará un correo cuando sean mencionados en los mensajes",
     "activitiesEntityList": "Lista de entidades de actividades",
     "historyEntityList": "Lista de entidades de historia",
-    "currencyFormat": "Formato de Moneda",
-    "currencyDecimalPlaces": "Lugares decimales en la moneda",
     "aclStrictMode": "ACL en modo estricto",
     "followCreatedEntities": "Seguir los registros creados",
     "adminNotifications": "Notificaciones del sistema en el panel de administración",
@@ -76,12 +74,6 @@
     "information": "Información",
     "error": "Error"
   },
-  "options": {
-    "currencyFormat": {
-      "1": "10 USD",
-      "2": "$10"
-    }
-  },
   "tooltips": {
     "recordsPerPage": "Número de registros a mostrar inicialmente en las vistas.",
     "recordsPerPageSmall": "Número de registros a mostrar inicialmente en los paneles relacionados",
@@ -106,8 +98,6 @@
     "Configuration": "Configuración",
     "In-app Notifications": "Notificaciones del sistema",
     "Email Notifications": "Notificaciones de correo",
-    "Currency Settings": "Ajustes de moneda",
-    "Currency Rates": "Tasas de conversión de divisas",
     "Test Connection": "Probar conexión",
     "Connecting": "Conectando...",
     "Activities": "Actividades planeadas",

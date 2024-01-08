@@ -224,6 +224,11 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 }
             }, this);
 
+            this.measureId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'measureId']);
+            if (this.params.measureId) {
+                this.measureId = this.params.measureId;
+            }
+
             this.mode = this.options.mode || this.mode;
 
             this.readOnly = this.readOnly || this.name === 'id' || this.params.readOnly || this.model.getFieldParam(this.name, 'readOnly') || this.model.getFieldParam(this.name, 'clientReadOnly');
@@ -554,11 +559,6 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         setup: function () {
-            this.measureId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'measureId']);
-            if (this.params.measureId) {
-                this.measureId = this.params.measureId;
-            }
-
             this.defaultUnit = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'defaultUnit']);
             if (this.params.defaultUnit) {
                 this.defaultUnit = this.params.defaultUnit;
@@ -783,7 +783,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         clearSearch: function () {
-            const field = this.$element || this.$el.find('[name="'+this.name+'"]');
+            const field = this.$element || this.$el.find('[name="' + this.name + '"]');
             field.val('');
         },
 
@@ -843,9 +843,42 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             return Espo[key];
         },
 
+        getMeasureData(measureId) {
+            if (!measureId) {
+                return {};
+            }
+
+            let key = 'measure_data_' + measureId;
+
+            if (!Espo[key]) {
+                Espo[key] = [];
+                this.ajaxGetRequest(`Measure`, {
+                    where: [
+                        {
+                            type: "equals",
+                            attribute: "id",
+                            value: measureId
+                        }
+                    ]
+                }, {async: false}).then(res => {
+                    if (res.list) {
+                        Espo[key] = res.list[0];
+                    }
+                });
+            }
+
+            return Espo[key];
+        },
+
+        getMeasureFormat() {
+            console.log(this.measureId)
+            return this.getMeasureData(this.measureId).displayFormat
+        },
+
         loadUnitOptions() {
             this.unitList = [''];
             this.unitListTranslates = {'': ''};
+            this.unitListSymbols = {'': ''};
 
             if (this.measureId) {
                 let nameField = 'name'
@@ -856,6 +889,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 this.getMeasureUnits(this.measureId).forEach(unit => {
                     this.unitList.push(unit.id);
                     this.unitListTranslates[unit.id] = unit[nameField] || unit.name;
+                    this.unitListSymbols[unit.id] = unit.symbol
                 });
             }
         },

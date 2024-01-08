@@ -349,7 +349,7 @@ class Note extends RDB
         $qb = $connection->createQueryBuilder();
         $qb
             ->select('s.user_id')
-            ->from($connection->quoteIdentifier('subscription'), 's')
+            ->from($connection->quoteIdentifier('user_followed_record'), 's')
             ->where('s.entity_id = :entityId')
             ->setParameter('entityId', $parentId)
             ->andWhere('s.entity_type = :entityType')

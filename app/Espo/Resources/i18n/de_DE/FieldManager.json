@@ -81,10 +81,6 @@
     "foreignName": "In der Relation anzuzeigendes Feld."
   },
   "fieldParts": {
-    "currency": {
-      "converted": "(Konvertiert)",
-      "currency": "(Währung)"
-    },
     "datetimeOptional": {
       "date": "Datum"
     },

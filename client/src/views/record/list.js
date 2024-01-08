@@ -1589,10 +1589,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
             // remove relation virtual fields
             if (this.layoutName === 'listSmall') {
                 let toRemove = [];
-                listLayout.forEach(item => {
+                listLayout.forEach((item, k) => {
                     let parts = item.name.split('__');
                     if (parts.length === 2) {
-                        toRemove.push({name: item.name, relEntity: parts[0]});
+                        toRemove.push({number: k, relEntity: parts[0]});
                     }
                 });
 
@@ -1606,15 +1606,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
                 toRemove.forEach(item => {
                     if (!relEntity || item.relEntity !== relEntity) {
-                        let number = null;
-                        listLayout.forEach((v, k) => {
-                            if (v.name === item.name) {
-                                number = k;
-                            }
-                        });
-                        if (number !== null) {
-                            listLayout.splice(number, 1);
-                        }
+                        listLayout.splice(item.number, 1);
                     }
                 });
             }
@@ -1764,7 +1756,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             let model = this.collection.model.prototype;
             defs.forEach(item => {
-                if (hasDragDrop || item.name && ['currency', 'wysiwyg', 'wysiwygMultiLang'].includes(model.getFieldType(item.name))) {
+                if (hasDragDrop || item.name && ['wysiwyg', 'wysiwygMultiLang'].includes(model.getFieldType(item.name))) {
                     item.sortable = false;
                 }
             });

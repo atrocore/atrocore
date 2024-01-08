@@ -85,10 +85,6 @@
     "unit": {
       "unit": "(Unit)"
     },
-    "currency": {
-      "converted": "(Сконвертована)",
-      "currency": "(Валюта)"
-    },
     "datetimeOptional": {
       "date": "Дата"
     }

@@ -302,7 +302,7 @@ class Converter
                     ]
                 ]
             ],
-            'Subscription' => [
+            'UserFollowedRecord' => [
                 'fields' => [
                     'id'         => [
                         'type'          => 'id',

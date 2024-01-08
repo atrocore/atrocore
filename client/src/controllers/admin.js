@@ -132,20 +132,6 @@ Espo.define('controllers/admin', ['controller', 'search-manager'], function (Dep
             model.fetch();
         },
 
-        currency: function () {
-            var model = this.getSettingsModel();
-
-            model.once('sync', function () {
-                model.id = '1';
-                this.main('views/settings/edit', {
-                    model: model,
-                    headerTemplate: 'admin/settings/headers/currency',
-                    recordView: 'views/admin/currency'
-                });
-            }, this);
-            model.fetch();
-        },
-
         authTokens: function () {
             this.collectionFactory.create('AuthToken', function (collection) {
                 var searchManager = new SearchManager(collection, 'list', this.getStorage(), this.getDateTime());

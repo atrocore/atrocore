@@ -7,7 +7,6 @@
     "Locale": "Gebietsschema",
     "Connection": "Verbindung",
     "Stream": "Stream",
-    "Currency": "Währung",
     "Composer": "Composer",
     "Dashlet": "Dashlet",
     "KnowledgeBaseCategory": "Knowledge Base Kategorie",
@@ -47,7 +46,6 @@
     "Measure": "Maße",
     "Unit": "Einheiten",
     "ActionHistoryRecord": "Aktionsgeschichte",
-    "Currency": "Währungen",
     "Dashboard": "Dashboards",
     "AssetVariant": "Asset Varianten",
     "DocumentFolder": "Documentenordner",
@@ -432,7 +430,6 @@
     "addRelation": "Beziehung hinzufügen",
     "removeRelation": "Beziehung entfernen",
     "massUpdate": "Massenänderung",
-    "convertCurrency": "Währung umrechnen",
     "restore": "Wiederherstellen"
   },
   "fields": {
@@ -449,7 +446,6 @@
     "oneGeoType": "OneGeo Typ",
     "parent": "Parent",
     "price": "Preis",
-    "priceCurrency": "Währung",
     "productSerie": "Produktserie",
     "billingAddressCity": "Ort (Rechnungsadresse)",
     "billingAddressCountry": "Land (Rechnungsadresse)",
