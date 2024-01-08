@@ -26,51 +26,56 @@ class V1Dot8Dot6 extends Base
 
         $this->addColumn($toSchema, 'measure', 'display_format', ['type' => 'string', 'default' => null]);
         $this->addColumn($toSchema, 'unit', 'symbol', ['type' => 'string', 'default' => null]);
-        try {
-            $toSchema->renameTable('subscription', 'user_followed_record');
-        } catch (\Exception $exception) {
 
-        }
         foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
             $this->getPDO()->exec($sql);
         }
 
-        $this->getConnection()->createQueryBuilder()
-            ->insert('measure')
-            ->values([
-                'name' => '?',
-                'id'   => '?',
-                'code' => '?'
-            ])
-            ->setParameter(0, 'Currency')
-            ->setParameter(1, 'currency')
-            ->setParameter(2, 'currency')
-            ->executeStatement();
-
-        $symbols = ["EUR" => "€", "USD" => "$", "CHF" => "Fr.", "GBP" => "£"];
-
-        $rates = UpdateCurrencyExchangeViaECB::getExchangeRates();
-        foreach ($symbols as $currency => $symbol) {
-            $this->getConnection()->createQueryBuilder()
-                ->insert('unit')
-                ->values([
-                    'id'         => '?',
-                    'name'       => '?',
-                    'measure_id' => '?',
-                    'is_default' => '?',
-                    'multiplier' => '?',
-                    'code'       => '?',
-                    'symbol'     => '?'
-                ])
-                ->setParameter(0, $currency)
-                ->setParameter(1, $currency)
-                ->setParameter(2, 'currency')
-                ->setParameter(3, $currency === 'EUR', ParameterType::BOOLEAN)
-                ->setParameter(4, $currency === 'EUR' ? 1 : $rates[$currency])
-                ->setParameter(5, $currency)
-                ->setParameter(6, $symbol)
-                ->executeStatement();
+        if (!$toSchema->hasTable('user_followed_record')) {
+            $this->getPDO()->exec('alter table subscription rename to user_followed_record;');
         }
+
+        try {
+            $this->getConnection()->createQueryBuilder()
+                ->insert('measure')
+                ->values([
+                    'name' => '?',
+                    'id'   => '?',
+                    'code' => '?'
+                ])
+                ->setParameter(0, 'Currency')
+                ->setParameter(1, 'currency')
+                ->setParameter(2, 'currency')
+                ->executeStatement();
+
+            $symbols = ["EUR" => "€", "USD" => "$", "CHF" => "Fr.", "GBP" => "£"];
+
+            $rates = UpdateCurrencyExchangeViaECB::getExchangeRates();
+            foreach ($symbols as $currency => $symbol) {
+                $this->getConnection()->createQueryBuilder()
+                    ->insert('unit')
+                    ->values([
+                        'id'         => '?',
+                        'name'       => '?',
+                        'measure_id' => '?',
+                        'is_default' => '?',
+                        'multiplier' => '?',
+                        'code'       => '?',
+                        'symbol'     => '?'
+                    ])
+                    ->setParameter(0, $currency)
+                    ->setParameter(1, $currency)
+                    ->setParameter(2, 'currency')
+                    ->setParameter(3, $currency === 'EUR', ParameterType::BOOLEAN)
+                    ->setParameter(4, $currency === 'EUR' ? 1 : $rates[$currency])
+                    ->setParameter(5, $currency)
+                    ->setParameter(6, $symbol)
+                    ->executeStatement();
+            }
+        } catch (\Exception $exception) {
+
+        }
+
 
         /** @var \Espo\Core\Utils\Metadata $metadata */
         $metadata = (new \Atro\Core\Application())->getContainer()->get('metadata');
