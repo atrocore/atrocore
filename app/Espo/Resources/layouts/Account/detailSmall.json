@@ -30,7 +30,9 @@
         {
           "name": "channel"
         },
-        false
+        {
+          "name": "language"
+        }
       ]
     ]
   }
