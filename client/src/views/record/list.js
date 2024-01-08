@@ -2151,6 +2151,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
         },
 
+        actionOpenInTab: function (data) {
+            window.open(data.url, "_blank");
+        },
+
         actionQuickEdit: function (data) {
             data = data || {}
             var id = data.id;
