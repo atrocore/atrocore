@@ -318,6 +318,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
         data: function () {
             var paginationTop = this.pagination === 'both' || this.pagination === true || this.pagination === 'top';
             var paginationBottom = this.pagination === 'both' || this.pagination === true || this.pagination === 'bottom';
+
+            let parent = this.getParentView();
+
             return {
                 scope: this.scope,
                 header: this.header,
@@ -337,7 +340,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 buttonList: this.buttonList,
                 displayTotalCount: this.displayTotalCount,
                 countLabel: this.getShowMoreLabel(),
-                relationshipPanelNotData: !this.collection.total && this.relationName
+                showNoData: !this.collection.total && parent && !(parent.$el.is('.modal-container') || parent.$el.is('#main'))
             };
         },
 

@@ -1,4 +1,4 @@
-{{#unless relationshipPanelNotData}}
+{{#unless showNoData}}
 
 {{#if topBar}}
 <div class="list-buttons-container clearfix">
