@@ -535,6 +535,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }).success(() => {
                 Backbone.trigger('showQueuePanel');
                 this.notify('Done', 'success');
+                setTimeout(() => {
+                    this.collection.fetch();
+                }, 3000);
             });
         },
 
