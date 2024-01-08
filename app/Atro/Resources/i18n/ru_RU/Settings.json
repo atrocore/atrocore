@@ -40,7 +40,6 @@
     "mentionEmailNotifications": "Отправить уведомления по эл. почте об упоминаниях в сообщениях",
     "activitiesEntityList": "Список объектов действий",
     "historyEntityList": "Список объектов истории",
-    "currencyFormat": "Формат валюты",
     "currencyDecimalPlaces": "Знаки после десятичной запятой",
     "followCreatedEntities": "Подписываться на создаваемые объекты",
     "adminNotifications": "Системные уведомления на панели администрирования",
@@ -78,12 +77,6 @@
     "information": "Информация",
     "error": "Ошибка"
   },
-  "options": {
-    "currencyFormat": {
-      "1": "10 USD",
-      "2": "$10"
-    }
-  },
   "tooltips": {
     "recordsPerPage": "Число изначально отображаемых записей в виде списка",
     "recordsPerPageSmall": "Число записей в связанных панелях.",
@@ -108,8 +101,6 @@
     "Configuration": "Конфигурация",
     "In-app Notifications": "Оповещения в приложении",
     "Email Notifications": "Оповещения по эл. почте",
-    "Currency Settings": "Настройки валют",
-    "Currency Rates": "Курсы обмена валют",
     "Test Connection": "Проверка соединения",
     "Connecting": "Подключение...",
     "Activities": "Действия",

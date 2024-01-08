@@ -28,11 +28,6 @@
         "description": "scheduledJob"
       },
       {
-        "url": "#Currency/view",
-        "label": "Currency",
-        "description": "currency"
-      },
-      {
         "url": "#Measure",
         "label": "Measure",
         "description": "measure"

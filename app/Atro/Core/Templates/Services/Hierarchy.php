@@ -37,6 +37,10 @@ class Hierarchy extends Record
 
     public function getSelectAttributeList($params)
     {
+        if( $this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)){
+            return parent::getSelectAttributeList($params);
+        }
+
         $res = parent::getSelectAttributeList($params);
         if (is_array($res) && $this->getMetadata()->get(['scopes', $this->getEntityType(), 'type']) == 'Hierarchy') {
             $hierarchySortOrderField = $this->getHierarchySortOrderFieldName();
@@ -243,7 +247,7 @@ class Hierarchy extends Record
 
         $parentsIds = $entity->getLinkMultipleIdList('parents');
         if (empty($parentsIds[0])) {
-            throw new NotFound();
+            return false;
         }
 
         $keySet = $this->getRepository()->getMapper()->getKeys($entity, $link);
@@ -319,10 +323,6 @@ class Hierarchy extends Record
                 case 'enum':
                     $field = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'multilangField'], $field);
                     $input->$field = $parent->get($field);
-                    break;
-                case 'currency':
-                    $input->$field = $parent->get($field);
-                    $input->{$field . 'Currency'} = $parent->get($field . 'Currency');
                     break;
                 case 'rangeInt':
                 case 'rangeFloat':
@@ -883,14 +883,6 @@ class Hierarchy extends Record
                 case 'image':
                 case 'link':
                     if ($this->areValuesEqual($this->getRepository()->get(), $field . 'Id', $parent->get($field . 'Id'), $child->get($field . 'Id'))) {
-                        $inheritedFields[] = $field;
-                    }
-                    break;
-                case 'currency':
-                    if (
-                        $this->areValuesEqual($this->getRepository()->get(), $field, $parent->get($field), $child->get($field))
-                        && $this->areValuesEqual($this->getRepository()->get(), $field . 'Currency', $parent->get($field . 'Currency'), $child->get($field . 'Currency'))
-                    ) {
                         $inheritedFields[] = $field;
                     }
                     break;

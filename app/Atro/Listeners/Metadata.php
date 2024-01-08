@@ -167,6 +167,7 @@ class Metadata extends AbstractListener
                     "mainField"   => $field,
                     "required"    => !empty($fieldDefs['required']),
                     "audited"     => !empty($fieldDefs['audited']),
+                    "notStorable" => !empty($fieldDefs['notStorable']),
                     "emHidden"    => true
                 ];
 
@@ -175,8 +176,9 @@ class Metadata extends AbstractListener
                 }
 
                 $data['entityDefs'][$entityType]['links'][$unitFieldName] = [
-                    "type"   => "belongsTo",
-                    "entity" => "Unit"
+                    "type"        => "belongsTo",
+                    "entity"      => "Unit",
+                    "skipOrmDefs" => !empty($fieldDefs['notStorable']),
                 ];
 
                 if ($visibleLogic = $this->getMetadata()->get(['clientDefs', $entityType, 'dynamicLogic', 'fields', $field, 'visible'])) {
@@ -586,7 +588,7 @@ class Metadata extends AbstractListener
                     continue 1;
                 }
 
-                if (in_array($fieldData['type'], ['currencyConverted', 'autoincrement'])) {
+                if ($fieldData['type'] === 'autoincrement') {
                     if (!isset($data['scopes'][$scope]['mandatoryUnInheritedFields'])) {
                         $data['scopes'][$scope]['mandatoryUnInheritedFields'] = [];
                     }

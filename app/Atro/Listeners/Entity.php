@@ -25,9 +25,6 @@ class Entity extends AbstractListener
 
         if (empty($event->getArgument('hooksDisabled')) && empty($event->getArgument('options')['skipHooks']) && !$this->skipHooks()) {
             $this
-                ->createHook(Common\CurrencyConverted::class)
-                ->beforeSave($event->getArgument('entity'), $event->getArgument('options'));
-            $this
                 ->createHook(Common\NextNumber::class)
                 ->beforeSave($event->getArgument('entity'), $event->getArgument('options'));
         }

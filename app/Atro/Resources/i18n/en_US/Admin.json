@@ -36,7 +36,6 @@
     "Auth Tokens": "Auth tokens",
     "Auth Log": "Auth log",
     "Authentication": "Authentication",
-    "Currency": "Currencies",
     "Upload": "Upload",
     "Installing...": "Installing...",
     "Upgrading...": "Upgrading...",
@@ -82,8 +81,6 @@
     "password": "Password",
     "autoincrement": "Auto-increment",
     "bool": "Boolean",
-    "currency": "Currency",
-    "currencyConverted": "Currency (converted)",
     "date": "Date",
     "datetime": "Date-time",
     "datetimeOptional": "Date/date-time",
@@ -110,7 +107,6 @@
     "attachmentMultiple": "Multiple attachment",
     "rangeInt": "Integer Range",
     "rangeFloat": "Float Range",
-    "rangeCurrency": "Currency Range",
     "wysiwyg": "HTML",
     "map": "Map",
     "colorpicker": "Color picker",
@@ -186,8 +182,7 @@
     "foreignName": "Foreign field",
     "unique": "Unique",
     "index": "Database Index",
-    "useDisabledTextareaInViewMode": "Use disabled textarea in view mode",
-    "setDefaultOnlyIfRequired": "Apply default value only if required"
+    "useDisabledTextareaInViewMode": "Use disabled textarea in view mode"
   },
   "messages": {
     "thousandSeparatorEqualsDecimalMark": "The thousands separator character can not be the same as the decimal point character.",
@@ -216,7 +211,6 @@
     "userInterface": "Select your theme, configure main navigation items, default dashboards and entities, available for quick create as well as manage other settings for user interfaces.",
     "authTokens": "Investigate active authorization sessions, including users' IP address and last access date and time.",
     "authentication": "Manage authentication methods and settings.",
-    "currency": "Select currencies to be used, set default currency settings, define base currency and currency exchange rates",
     "notifications": "Manage settings for in-app and email notifications.",
     "actionHistory": "See the history of all user actions in the system, including username, target data record, action type, IP address, access date and time.",
     "labelManager": "Manage label translations for pre-selected languages, push your translations for the review by AtroCore team as well as reset your translations to default values.",

@@ -10,10 +10,7 @@
     "isStreamSide": "Is stream in side",
     "isStreamPanelFirst": "Is stream panel first",
     "useCache": "Use Cache",
-    "defaultCurrency": "Default Currency",
-    "baseCurrency": "Base Currency",
     "currencyRates": "Rate Values",
-    "currencyList": "Currency List",
     "companyLogo": "Header Logo",
     "favicon": "Favicon",
     "smtpServer": "Server",
@@ -52,8 +49,6 @@
     "activitiesEntityList": "Activities Entity List",
     "historyEntityList": "History Entity List",
     "b2cMode": "B2C Mode",
-    "currencyFormat": "Currency Format",
-    "currencyDecimalPlaces": "Currency Decimal Places",
     "aclStrictMode": "ACL Strict Mode",
     "adminNotifications": "System notifications in administration panel",
     "textFilterUseContainsForVarchar": "Use 'contains' operator when filtering varchar fields",
@@ -87,10 +82,7 @@
     "variables": "Variables"
   },
   "options": {
-    "currencyFormat": {
-      "1": "10 USD",
-      "2": "$10"
-    },
+
     "smtpAuthMechanism": {
       "login": "Login",
       "plain": "Plain",
@@ -107,7 +99,6 @@
     "authTokenMaxIdleTime": "Defines how long since the last access tokens can exist.\n0 means no expiration.",
     "userThemesDisabled": "If checked then users won't be able to select another theme.",
     "b2cMode": "By default AtroCore is adapted for B2B. You can switch it to B2C.",
-    "currencyDecimalPlaces": "Number of decimal places. If empty then all nonempty decimal places will be displayed.",
     "aclStrictMode": "Enabled: Access to scopes will be forbidden if it's not specified in roles.\n\nDisabled: Access to scopes will be allowed if it's not specified in roles.",
     "textFilterUseContainsForVarchar": "If not checked then 'starts with' operator is used. You can use the wildcard '%'.",
     "authTokenPreventConcurrent": "Users won't be able to be logged in on multiple devices simultaneously.",
@@ -129,7 +120,6 @@
     "Configuration": "Configuration",
     "In-app Notifications": "In-app Notifications",
     "Email Notifications": "Email Notifications",
-    "Currency Settings": "Currency Settings",
     "Currency Rates": "Currency Rates",
     "Test Connection": "Test Connection",
     "Connecting": "Connecting...",

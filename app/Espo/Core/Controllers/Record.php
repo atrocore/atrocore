@@ -148,10 +148,6 @@ class Record extends Base
 
         $this->fetchListParamsFromRequest($params, $request, $data);
 
-        if (isset($params['select']) && !empty($params['select'])) {
-            $params['skipCurrencyConvertedParams'] = true;
-        }
-
         $result = $this->getRecordService()->findEntities($params);
 
         return array(

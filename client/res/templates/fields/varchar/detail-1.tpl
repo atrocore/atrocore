@@ -1,5 +1,5 @@
 {{#if isNotEmpty}}
-    {{value}} {{currencyValue}}
+    {{value}}{{unitSymbol}}
 {{else}}
     {{#if valueIsSet}}{{{translate 'None'}}}{{else}}...{{/if}}
 {{/if}}

@@ -202,12 +202,6 @@ class FieldManagerController extends AbstractListener
                     $sql = "SELECT COUNT(*) FROM $table WHERE $table.{$field}_id IS NOT NULL AND deleted = :deleted GROUP BY $table.{$field}_id HAVING COUNT($table.{$field}_id) > 1";
                     $result = $this->fetch($sql, [':deleted' => false]);
                     break;
-                case 'currency':
-                    $this->removeDeletedDuplicate($table, [$field, $field . '_currency']);
-
-                    $sql = "SELECT COUNT(*) FROM $table WHERE $table.$field IS NOT NULL AND {$field}_currency IS NOT NULL AND deleted = :deleted GROUP BY $table.$field, {$field}_currency HAVING COUNT($table.$field) > 1 AND COUNT({$field}_currency) > 1";
-                    $result = $this->fetch($sql, [':deleted' => false]);
-                    break;
                 case 'unit':
                     $this->removeDeletedDuplicate($table, [$field, $field . '_unit']);
 

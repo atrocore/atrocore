@@ -2,7 +2,6 @@
   "fields": {
     "locale": "Локаль",
     "defaultCurrency": "Валюта за замовчуванням",
-    "currencyList": "Список валют",
     "emailAddress": "Адреса ел. пошти",
     "dashboardTabList": "Список вкладок",
     "tabList": "Меню навігації",

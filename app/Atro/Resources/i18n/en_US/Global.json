@@ -12,7 +12,6 @@
     "DocumentFolder": "Document Folder",
     "KnowledgeBaseCategory": "Knowledge Base Category",
     "Composer": "Composer",
-    "Currency": "Currency",
     "Dashlet": "Dashlet",
     "Multilang": "Multilingual",
     "Note": "Note",
@@ -65,7 +64,6 @@
     "KnowledgeBaseCategory": "Knowledge Base Categories",
     "AuthFailLogRecord": "Auth Fail Log Records",
     "AuthLogRecord": "Auth Log Records",
-    "Currency": "Currencies",
     "Dashboard": "Dashboards",
     "Note": "Notes",
     "Notification": "Notifications",
@@ -412,7 +410,6 @@
     "export": "Export",
     "follow": "Follow",
     "unfollow": "Unfollow",
-    "convertCurrency": "Convert Currency",
     "restore": "Restore"
   },
   "fields": {

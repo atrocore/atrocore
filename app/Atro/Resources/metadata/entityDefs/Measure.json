@@ -15,6 +15,17 @@
     "description": {
       "type": "text"
     },
+    "displayFormat": {
+      "type": "enum",
+      "options": [
+        "1",
+        "2"
+      ],
+      "optionsIds": [
+        "1",
+        "2"
+      ]
+    },
     "units": {
       "type": "linkMultiple",
       "noLoad": true
