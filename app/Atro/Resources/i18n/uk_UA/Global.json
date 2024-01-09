@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "Action": "Дія",
     "ExtensibleEnum": "Список",
     "ExtensibleEnumOption": "Опція списку",
     "Sharing": "Шеринг",
@@ -49,6 +50,7 @@
     "TreoStore": "Магазин"
   },
   "scopeNamesPlural": {
+    "Action": "Дії",
     "ExtensibleEnum": "Списки",
     "ExtensibleEnumOption": "Опції списку",
     "Sharing": "Шеринги",

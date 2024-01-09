@@ -11,6 +11,6 @@
     "execute": "Execute"
   },
   "messages": {
-    "executeNow": "Are you sure you want to execute selected workflow action?"
+    "executeNow": "Are you sure you want to execute selected action?"
   }
 }
