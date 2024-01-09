@@ -87,6 +87,11 @@ class Base
         return $this->getComparator()->compareSchemas($fromSchema, $toSchema)->toSql($this->getConnection()->getDatabasePlatform());
     }
 
+    protected function isPgSQL(): bool
+    {
+        return $this->getSchemaConverter()::isPgSQL($this->getConnection());
+    }
+
     protected function rebuild()
     {
         App::createRebuildNotification();
