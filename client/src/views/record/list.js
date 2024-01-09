@@ -319,7 +319,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             var paginationTop = this.pagination === 'both' || this.pagination === true || this.pagination === 'top';
             var paginationBottom = this.pagination === 'both' || this.pagination === true || this.pagination === 'bottom';
 
-            let parent = this.getParentView();
+            const fixedHeaderRow = this.isFixedListHeaderRow();
 
             return {
                 scope: this.scope,
@@ -335,13 +335,29 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 checkboxes: this.checkboxes,
                 massActionList: this.massActionList,
                 rowList: this.rowList,
-                topBar: paginationTop || this.checkboxes || (this.buttonList.length && !this.buttonsDisabled),
+                topBar: paginationTop || this.checkboxes || (this.buttonList.length && !this.buttonsDisabled) || fixedHeaderRow,
                 bottomBar: paginationBottom,
                 buttonList: this.buttonList,
                 displayTotalCount: this.displayTotalCount,
                 countLabel: this.getShowMoreLabel(),
-                showNoData: !this.collection.total && parent && !(parent.$el.is('.modal-container') || parent.$el.is('#main'))
+                showNoData: !this.collection.total && !fixedHeaderRow
             };
+        },
+
+        isFixedListHeaderRow() {
+            let parent = this.getParentView();
+
+            if (!parent) {
+                return false;
+            }
+
+            // check for entity list view
+            if (parent.$el.is('#main') && this.checkboxes) {
+                return true;
+            }
+
+            // check for entity list modal view
+            return parent.$el.is('.modal-container') || parent.$el.is('.modal-body');
         },
 
         getShowMoreLabel() {
