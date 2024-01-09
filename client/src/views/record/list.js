@@ -318,6 +318,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
         data: function () {
             var paginationTop = this.pagination === 'both' || this.pagination === true || this.pagination === 'top';
             var paginationBottom = this.pagination === 'both' || this.pagination === true || this.pagination === 'bottom';
+
+            let parent = this.getParentView();
+
             return {
                 scope: this.scope,
                 header: this.header,
@@ -335,8 +338,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 topBar: paginationTop || this.checkboxes || (this.buttonList.length && !this.buttonsDisabled),
                 bottomBar: paginationBottom,
                 buttonList: this.buttonList,
-                displayTotalCount: this.displayTotalCount && this.collection.total > 0,
-                countLabel: this.getShowMoreLabel()
+                displayTotalCount: this.displayTotalCount,
+                countLabel: this.getShowMoreLabel(),
+                showNoData: !this.collection.total && parent && !(parent.$el.is('.modal-container') || parent.$el.is('#main'))
             };
         },
 
@@ -2149,6 +2153,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
             } else {
                 this.getRouter().navigate('#' + scope + '/view/' + id, {trigger: true});
             }
+        },
+
+        actionOpenInTab: function (data) {
+            window.open(data.url, "_blank");
         },
 
         actionQuickEdit: function (data) {
