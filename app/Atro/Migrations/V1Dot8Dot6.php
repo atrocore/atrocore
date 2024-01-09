@@ -41,11 +41,13 @@ class V1Dot8Dot6 extends Base
                 ->values([
                     'name' => '?',
                     'id'   => '?',
-                    'code' => '?'
+                    'code' => '?',
+                    'display_format' => '?'
                 ])
                 ->setParameter(0, 'Currency')
                 ->setParameter(1, 'currency')
                 ->setParameter(2, 'currency')
+                ->setParameter(3, '2')
                 ->executeStatement();
 
             $symbols = ["EUR" => "€", "USD" => "$", "CHF" => "Fr.", "GBP" => "£"];
