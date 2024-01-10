@@ -135,6 +135,7 @@
         },
         "users": {
             "type": "hasMany",
+            "relationName": "noteUser",
             "entity": "User",
             "foreign": "notes"
         }
