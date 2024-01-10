@@ -21,7 +21,16 @@
       "view": "views/fields/entity-type"
     },
     "data": {
-      "type": "jsonObject"
+      "type": "jsonObject",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
     },
     "createdAt": {
       "type": "datetime",
