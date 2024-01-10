@@ -16,6 +16,10 @@
       "optionsIds": [],
       "options": []
     },
+    "sourceEntity": {
+      "type": "varchar",
+      "view": "views/fields/entity-type"
+    },
     "data": {
       "type": "jsonObject"
     },

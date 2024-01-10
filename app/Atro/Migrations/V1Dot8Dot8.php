@@ -17,7 +17,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Util;
 use Espo\Jobs\UpdateCurrencyExchangeViaECB;
 
-class V1Dot8Dot7 extends Base
+class V1Dot8Dot8 extends Base
 {
     public function up(): void
     {
@@ -32,6 +32,8 @@ class V1Dot8Dot7 extends Base
         }else{
             $this->exec("CREATE TABLE action (id VARCHAR(24) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted TINYINT(1) DEFAULT '0', is_active TINYINT(1) DEFAULT '0' NOT NULL, type VARCHAR(255) DEFAULT NULL, data LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, created_by_id VARCHAR(24) DEFAULT NULL, modified_by_id VARCHAR(24) DEFAULT NULL, INDEX IDX_ACTION_CREATED_BY_ID (created_by_id), INDEX IDX_ACTION_CREATED_BY_ID_DELETED (created_by_id, deleted), INDEX IDX_ACTION_MODIFIED_BY_ID (modified_by_id), INDEX IDX_ACTION_MODIFIED_BY_ID_DELETED (modified_by_id, deleted), INDEX IDX_ACTION_CREATED_AT (created_at, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
         }
+
+        $this->exec("ALTER TABLE action ADD source_entity VARCHAR(255) DEFAULT NULL");
     }
 
     public function down(): void

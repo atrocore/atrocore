@@ -1,7 +1,8 @@
 {
   "fields": {
     "isActive": "Aktiv",
-    "type": "Typ"
+    "type": "Typ",
+    "sourceEntity": "Quell-Entität"
   },
   "labels": {
     "Create Action": "Aktion erstellen",

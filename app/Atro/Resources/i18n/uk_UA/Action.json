@@ -1,7 +1,8 @@
 {
   "fields": {
     "isActive": "Активний",
-    "type": "Тип"
+    "type": "Тип",
+    "sourceEntity": "Вихідна сутність"
   },
   "labels": {
     "Create Action": "Створити дію",

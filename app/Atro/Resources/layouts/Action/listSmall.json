@@ -7,6 +7,9 @@
     "name": "type"
   },
   {
+    "name": "sourceEntity"
+  },
+  {
     "name": "isActive"
   }
 ]
