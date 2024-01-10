@@ -1,0 +1,88 @@
+{
+  "labels": {
+    "Fields": "Fields",
+    "Relationships": "Relationships",
+    "Schedule": "Schedule",
+    "Log": "Log",
+    "accessManagement": "Access management",
+    "hierarchyManagement": "Hierarchy Management",
+    "other": "Other"
+  },
+  "fields": {
+    "multiParents": "Multiple Parents",
+    "dragAndDrop": "Drag & Drop",
+    "fieldValueInheritance": "Field Value Inheritance",
+    "unInheritedFields": "Uninherited Fields",
+    "relationInheritance": "Relation Inheritance",
+    "unInheritedRelations": "Uninherited Relations",
+    "hasAssignedUser": "Assigned User",
+    "hasTeam": "Teams",
+    "hasAccount": "Accounts",
+    "hasOwner": "Owner",
+    "hasArchive": "Has Archive",
+    "name": "Name",
+    "type": "Type",
+    "labelSingular": "Label Singular",
+    "labelPlural": "Label Plural",
+    "stream": "Has Stream",
+    "label": "Label",
+    "linkType": "Link Type",
+    "entityForeign": "Foreign Entity",
+    "linkForeign": "Foreign Link",
+    "link": "Link",
+    "labelForeign": "Foreign Label",
+    "sortBy": "Default Order (field)",
+    "sortDirection": "Default Order (direction)",
+    "relationName": "Middle Table Name",
+    "linkMultipleField": "Link Multiple Field",
+    "linkMultipleFieldForeign": "Foreign Link Multiple Field",
+    "disabled": "Disabled",
+    "textFilterFields": "Text Filter Fields",
+    "audited": "Track changes",
+    "auditedForeign": "Foreign Audited",
+    "statusField": "Status Field",
+    "beforeSaveCustomScript": "Before Save Custom Script",
+    "color": "Color",
+    "kanbanViewMode": "Kanban View",
+    "kanbanStatusIgnoreList": "Ignored groups in Kanban view",
+    "iconClass": "Icon",
+    "disableHierarchy": "Disable Hierarchy"
+  },
+  "options": {
+    "linkType": {
+      "manyToMany": "Many-to-Many",
+      "oneToMany": "One-to-Many",
+      "manyToOne": "Many-to-One",
+      "parentToChildren": "Parent-to-Children",
+      "childrenToParent": "Children-to-Parent"
+    },
+    "sortDirection": {
+      "asc": "Ascending",
+      "desc": "Descending"
+    }
+  },
+  "messages": {
+    "entityCreated": "Entity has been created",
+    "linkAlreadyExists": "Link name conflict.",
+    "linkConflict": "Name conflict: link or field with the same name already exists."
+  },
+  "exceptions": {
+    "manyToManyIsBlockedForRelationEntity": "Many-to-Many relationship is not possible for entity of type Relation.",
+    "oneToManyIsBlockedForRelationEntity": "One-to-Many relationship is not possible for entity of type Relation"
+  },
+  "tooltips": {
+    "dragAndDrop": "This option activates hierarchy sort order, so no other sorting is possible in hierarchy navigation.",
+    "unInheritedFields": "Values for these fields will not be inherited from parent item.",
+    "unInheritedRelations": "Relations with these entities will not be inherited from parent item.",
+    "hasAssignedUser": "Show Assigned User in Access Management",
+    "hasTeam": "Show Teams in Access Management",
+    "hasAccount": "Show Accounts in Access Management",
+    "hasOwner": "Show Owner in Access Management",
+    "statusField": "Updates of this field are logged in stream.",
+    "textFilterFields": "Fields used by text search.",
+    "stream": "Stream is used to show change history and add posts with attachments.",
+    "disabled": "Check if you don't need this entity in your system.",
+    "linkAudited": "Creating related record and linking with existing record will be logged in Stream.",
+    "linkMultipleField": "Link Multiple field provides a handy way to edit relations. Don't use it if you can have a large number of related records."
+  }
+}

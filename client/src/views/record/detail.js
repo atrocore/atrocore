@@ -203,6 +203,14 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             });
         },
 
+        actionDynamicUpdateAction: function (data) {
+            this.notify(this.translate('pleaseWait', 'messages'));
+            this.ajaxPostRequest('Action/action/executeNow', {actionId: data.id, entityId: this.model.get('id')}).success(() => {
+                this.notify('Done', 'success');
+                this.model.fetch();
+            });
+        },
+
         actionDelete: function () {
             this.delete();
         },
@@ -269,7 +277,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             }
 
-            if (this.getMetadata().get(`scopes.${this.entityType}.type`) === 'Hierarchy' && !this.model.isNew()) {
+            if (this.isHierarchical() && !this.model.isNew()) {
                 if (this.getAcl().check(this.entityType, 'edit')) {
                     this.dropdownItemList.push({
                         'label': 'inheritAllForChildren',
@@ -277,6 +285,16 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     });
                 }
             }
+
+            (this.getMetadata().get(['clientDefs', this.entityType, 'updateActions']) || []).forEach(updateAction => {
+                if (this.getAcl().check(updateAction.targetEntity, 'edit')) {
+                    this.dropdownItemList.push({
+                        id: updateAction.id,
+                        label: updateAction.name,
+                        name: "dynamicUpdateAction"
+                    });
+                }
+            });
 
             if (this.selfAssignAction) {
                 if (
@@ -355,6 +373,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     };
                 }
             }, this);
+        },
+
+        isHierarchical() {
+            return this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
+                && this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true ;
         },
 
         disableActionItems: function () {
@@ -922,7 +945,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         delete: function () {
             let message = 'Global.messages.removeRecordConfirmation';
-            if (this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy') {
+            if (this.isHierarchical()) {
                 message = 'Global.messages.removeRecordConfirmationHierarchically';
             }
 

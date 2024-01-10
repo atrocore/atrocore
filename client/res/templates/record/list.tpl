@@ -1,4 +1,4 @@
-{{#if collection.models.length}}
+{{#unless showNoData}}
 
 {{#if topBar}}
 <div class="list-buttons-container clearfix">
@@ -9,19 +9,25 @@
     {{/if}}
 
     {{#if checkboxes}}
-    {{#if massActionList}}
-    <div class="btn-group actions">
-        <button type="button" class="btn btn-default dropdown-toggle actions-button" data-toggle="dropdown" disabled>
-        {{translate 'Actions'}}
-        <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu">
-            {{#each massActionList}}
-            <li><a href="javascript:" data-action="{{./this}}" class='mass-action'>{{translate this category="massActions" scope=../scope}}</a></li>
-            {{/each}}
-        </ul>
-    </div>
-    {{/if}}
+        {{#if collection.models.length }}
+            {{#if massActionList}}
+                <div class="btn-group actions">
+                    <button type="button" class="btn btn-default dropdown-toggle actions-button" data-toggle="dropdown" disabled>
+                    {{translate 'Actions'}}
+                    <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        {{#each massActionList}}
+                        {{#if action}}
+                        <li><a href="javascript:" data-action="{{action}}" data-id="{{id}}" class='mass-action'>{{label}}</a></li>
+                        {{else}}
+                        <li><a href="javascript:" data-action="{{./this}}" class='mass-action'>{{translate this category="massActions" scope=../scope}}</a></li>
+                        {{/if}}
+                        {{/each}}
+                    </ul>
+                </div>
+            {{/if}}
+        {{/if}}
     {{/if}}
 
     {{#if displayTotalCount}}
@@ -105,11 +111,13 @@
         </thead>
         {{/if}}
         <tbody>
-        {{#each rowList}}
-            <tr data-id="{{./this}}" class="list-row">
-            {{{var this ../this}}}
-            </tr>
-        {{/each}}
+            {{#if collection.models.length}}
+                {{#each rowList}}
+                    <tr data-id="{{./this}}" class="list-row">
+                        {{{var this ../this}}}
+                    </tr>
+                {{/each}}
+            {{/if}}
         </tbody>
     </table>
     {{#unless paginationEnabled}}
@@ -132,4 +140,4 @@
 
 {{else}}
     {{translate 'No Data'}}
-{{/if}}
+{{/unless}}

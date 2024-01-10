@@ -1,0 +1,36 @@
+{
+  "fields": {
+    "locale": "Locale",
+    "assignmentNotifications": "Notifications upon assignment",
+    "defaultCurrency": "Default Currency",
+    "emailAddress": "Email",
+    "receiveAssignmentEmailNotifications": "Notifications upon assignment",
+    "receiveMentionEmailNotifications": "Notifications about mentions in posts",
+    "receiveStreamEmailNotifications": "Notifications about updates in Stream",
+    "autoFollowEntityTypeList": "Global Auto-Follow",
+    "dashboardTabList": "Tab List",
+    "theme": "Theme",
+    "useCustomTabList": "Custom Tab List",
+    "tabList": "Navigation menu",
+    "dashboardLayout": "Dashboard Layout",
+    "followEntityOnStreamPost": "Auto-follow record after posting in Stream",
+    "followCreatedEntities": "Auto-follow created records",
+    "followCreatedEntityTypeList": "Auto-follow created records of specific entity types",
+    "scopeColorsDisabled": "Disable scope colors",
+    "tabColorsDisabled": "Disable tab icons colors"
+  },
+  "links": {
+  },
+  "labels": {
+    "Notifications": "Notifications",
+    "User Interface": "User Interface",
+    "General": "General",
+    "Locale": "Locale",
+    "Reset Dashboard to Default": "Reset Dashboard to Default"
+  },
+  "tooltips": {
+    "autoFollowEntityTypeList": "Automatically follow ALL new records (created by any user) of the selected entity types. To be able to see information in the stream and receive notifications about all records in the system.",
+    "followCreatedEntities": "When creating new records, they will automatically be followed, even if assigned to a different user.",
+    "followCreatedEntityTypeList": "When creating new records of selected entity types, they will automatically be followed, even if assigned to a different user."
+  }
+}

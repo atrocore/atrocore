@@ -39,13 +39,12 @@ use Atro\ORM\DB\RDB\Query\QueryConverter;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\Exceptions\Error;
-use Espo\Core\Utils\Json;
-use Espo\Core\Utils\Util;
-use Espo\ORM\EntityManager;
-use Espo\ORM\EntityFactory;
-use Espo\ORM\EntityCollection;
-use Espo\ORM\Entity;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Utils\Util;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
+use Espo\ORM\EntityFactory;
+use Espo\ORM\EntityManager;
 use Espo\ORM\IEntity;
 use Symfony\Component\Workflow\Exception\LogicException;
 
@@ -237,6 +236,7 @@ class RDB extends \Espo\ORM\Repository
                 if (is_array($unique)) {
                     $sqlCondition = [];
                     foreach ($unique as $field) {
+                        if($field === 'deleted') continue;
                         $sqlCondition[] = $connection->quoteIdentifier(Util::toUnderScore($field)) . " = :{$field}_un";
                         $parameters["{$field}_un"] = $entity->get($field);
                     }
@@ -249,15 +249,16 @@ class RDB extends \Espo\ORM\Repository
 
             $qb = $connection->createQueryBuilder()
                 ->delete($connection->quoteIdentifier(Util::toUnderScore($entity->getEntityType())))
-                ->where('deleted = :false')
+                ->where('deleted = :true')
                 ->andWhere('id != :id')
                 ->andWhere(implode(' OR ', $uniques))
-                ->setParameter('false', false, Mapper::getParameterType(false))
+                ->setParameter('true', true, ParameterType::BOOLEAN)
                 ->setParameter('id', $entity->id);
 
             foreach ($parameters as $name => $value) {
                 $qb->setParameter($name, $value, Mapper::getParameterType($value));
             }
+
 
             $qb->executeQuery();
         }
@@ -285,6 +286,10 @@ class RDB extends \Espo\ORM\Repository
                     $result[] = $field;
                 }
             }
+        }
+
+        foreach($metadata->get(['entityDefs', $entity->getEntityType(), 'uniqueIndexes'], []) as $keys => $indexes){
+            $result[] = array_map(function($index) {return Util::toCamelCase($index);},$indexes);
         }
 
         return $result;
@@ -342,8 +347,13 @@ class RDB extends \Espo\ORM\Repository
 
     public function removeCollection(array $options = [])
     {
+        $where = $this->whereClause;
+        if (empty($where)) {
+            return;
+        }
+
         while (true) {
-            $collection = $this->limit(0, $this->getConfig()->get('removeCollectionPart', 2000))->find();
+            $collection = $this->where($where)->limit(0, $this->getConfig()->get('removeCollectionPart', 2000))->find();
             if (empty($collection[0])) {
                 break;
             }

@@ -1,0 +1,39 @@
+[
+  {
+    "label": "",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "type"
+        }
+      ],
+      [
+        {
+          "name": "role"
+        },
+        {
+          "name": "description"
+        }
+      ],
+      [
+        {
+          "name": "emailAddress"
+        },
+        {
+          "name": "phoneNumber"
+        }
+      ],
+      [
+        {
+          "name": "channel"
+        },
+        {
+          "name": "language"
+        }
+      ]
+    ]
+  }
+]

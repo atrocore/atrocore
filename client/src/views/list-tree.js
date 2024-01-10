@@ -48,7 +48,7 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
             this.collection.isFetched = false;
             this.clearView('list');
 
-            if (this.getStorage().get('reSetupSearchManager', treePanelView.treeScope)) {
+            if (treePanelView && this.getStorage().get('reSetupSearchManager', treePanelView.treeScope)) {
                 this.getStorage().clear('reSetupSearchManager', treePanelView.treeScope);
                 this.setupSearchManager();
             }
@@ -81,7 +81,7 @@ Espo.define('views/list-tree', 'views/list', function (Dep) {
         },
 
         setupTreePanel(scope) {
-            if (!this.isTreeAllowed()) {
+            if (!this.isTreeAllowed() || this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`)) {
                 return;
             }
 

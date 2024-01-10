@@ -138,6 +138,14 @@ class ServiceFactory
         }
 
         if (!class_exists($this->classNames[$name])) {
+            $this->classNames[$name] = "\\Atro\\Services\\$name";
+        }
+
+        if (!class_exists($this->classNames[$name])) {
+            $this->classNames[$name] = "\\Espo\\Services\\$name";
+        }
+
+        if (!class_exists($this->classNames[$name])) {
             $type = $this->getMetadata()->get(['scopes', $name, 'type']);
             $this->classNames[$name] = "\\Atro\\Core\\Templates\\Services\\$type";
         }

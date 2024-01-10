@@ -169,6 +169,10 @@ class Base implements Injectable
         }
 
         if (!isset($data->$action)) {
+            if ($action === 'stream') {
+                return true;
+            }
+
             return false;
         }
 

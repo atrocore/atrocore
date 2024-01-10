@@ -303,7 +303,7 @@ class Metadata
     protected function loadData()
     {
         // load core
-        $content = DataUtil::merge($this->unify(CORE_PATH . '/Espo/Resources/metadata'), $this->unify(CORE_PATH . '/Atro/Resources/metadata'));
+        $content = $this->unify(CORE_PATH . '/Atro/Resources/metadata');
 
         // load modules
         foreach ($this->getModules() as $module) {
@@ -396,7 +396,7 @@ class Metadata
         $fileContent = $this->getFileManager()->getContents($filePath);
 
         if ($fileContent) {
-            return Json::decode($fileContent);
+            return Json::decode($fileContent, true);
         }
 
         return $default;

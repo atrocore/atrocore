@@ -1,0 +1,76 @@
+{
+  "fields": {
+    "isActive": {
+      "type": "bool",
+      "default": false
+    },
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true
+    },
+    "type": {
+      "type": "enum",
+      "required": true,
+      "prohibitedEmptyValue": false,
+      "optionsIds": [],
+      "options": []
+    },
+    "sourceEntity": {
+      "type": "varchar",
+      "view": "views/fields/entity-type"
+    },
+    "data": {
+      "type": "jsonObject",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    }
+  },
+  "links": {
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    }
+  },
+  "collection": {
+    "sortBy": "createdAt",
+    "asc": true
+  },
+  "indexes": {
+    "createdAt": {
+      "columns": [
+        "createdAt",
+        "deleted"
+      ]
+    }
+  }
+}

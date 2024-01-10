@@ -1,0 +1,37 @@
+[
+  {
+    "label": "Overview",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "code"
+        }
+      ],
+      [
+        {
+          "name": "isDefault"
+        },
+        {
+          "name": "measure"
+        }
+      ],
+      [
+        {
+          "name": "symbol"
+        },
+        false
+      ],
+      [
+        {
+          "name": "multiplier"
+        },
+        {
+          "name": "convertTo"
+        }
+      ]
+    ]
+  }
+]

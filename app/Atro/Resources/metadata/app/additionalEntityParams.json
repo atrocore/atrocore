@@ -1,0 +1,151 @@
+{
+  "fields": {
+    "hasArchive": {
+      "type": "bool",
+      "view": "views/admin/entity-manager/fields/bool-for-type",
+      "types": [
+        "Base",
+        "Hierarchy"
+      ],
+      "default": false
+    },
+    "multiParents": {
+      "type": "bool",
+      "view": "views/admin/entity-manager/fields/bool-for-type",
+      "types": [
+        "Hierarchy"
+      ],
+      "default": true
+    },
+    "dragAndDrop": {
+      "type": "bool",
+      "view": "views/admin/entity-manager/fields/bool-for-type",
+      "types": [
+        "Hierarchy"
+      ],
+      "default": true,
+      "tooltip": true
+    },
+    "fieldValueInheritance": {
+      "type": "bool",
+      "view": "views/admin/entity-manager/fields/bool-for-type",
+      "types": [
+        "Hierarchy"
+      ],
+      "default": false
+    },
+    "unInheritedFields": {
+      "type": "array",
+      "view": "views/admin/entity-manager/fields/un-inherited-fields",
+      "tooltip": true
+    },
+    "relationInheritance": {
+      "type": "bool",
+      "view": "views/admin/entity-manager/fields/bool-for-type",
+      "types": [
+        "Hierarchy"
+      ],
+      "default": false
+    },
+    "disableHierarchy": {
+      "type": "bool",
+      "view": "views/admin/entity-manager/fields/bool-for-type",
+      "types": [
+        "Hierarchy"
+      ],
+      "default": false
+    },
+    "unInheritedRelations": {
+      "type": "array",
+      "view": "views/admin/entity-manager/fields/un-inherited-relations",
+      "tooltip": true
+    },
+    "hasAssignedUser": {
+      "type": "bool",
+      "view": "views/admin/entity-manager/fields/bool-for-type",
+      "types": [
+        "Base",
+        "Hierarchy"
+      ],
+      "default": false,
+      "tooltip": true
+    },
+    "hasTeam": {
+      "type": "bool",
+      "view": "views/admin/entity-manager/fields/bool-for-type",
+      "types": [
+        "Base",
+        "Hierarchy"
+      ],
+      "default": false,
+      "tooltip": true
+    },
+    "hasAccount": {
+      "type": "bool",
+      "view": "views/admin/entity-manager/fields/bool-for-type",
+      "types": [
+        "Base",
+        "Hierarchy"
+      ],
+      "default": false,
+      "tooltip": true
+    },
+    "hasOwner": {
+      "type": "bool",
+      "view": "views/admin/entity-manager/fields/bool-for-type",
+      "types": [
+        "Base",
+        "Hierarchy"
+      ],
+      "default": false,
+      "tooltip": true
+    }
+  },
+  "layout": {
+    "accessManagement": {
+      "title": "accessManagement",
+      "types": [
+        "Base",
+        "Hierarchy"
+      ],
+      "fields": [
+        [
+          "hasOwner",
+          "hasAssignedUser"
+        ],
+        [
+          "hasTeam",
+          "hasAccount"
+        ]
+      ]
+    },
+    "hierarchyManagement": {
+      "types": [
+        "Hierarchy"
+      ],
+      "title": "hierarchyManagement",
+      "fields": [
+        [
+          "multiParents",
+          "dragAndDrop"
+        ],
+        [
+          "fieldValueInheritance",
+          "unInheritedFields"
+        ],
+        [
+          "relationInheritance",
+          "unInheritedRelations"
+        ],
+        [
+          "disableHierarchy"
+        ]
+      ]
+    },
+    "other": {
+      "types": [],
+      "title": "other",
+      "fields": []
+    }
+  }
+}

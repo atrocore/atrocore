@@ -1,0 +1,19 @@
+{
+  "fields": {
+    "name": "Name",
+    "description": "Description",
+    "units": "Units"
+  },
+  "links": {
+    "units": "Units"
+  },
+  "labels": {
+    "Create Measure": "Create Measure"
+  },
+  "options": {
+    "displayFormat": {
+      "1": "10 USD",
+      "2": "$10"
+    }
+  }
+}

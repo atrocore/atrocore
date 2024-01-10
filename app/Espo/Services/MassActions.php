@@ -36,6 +36,7 @@ declare(strict_types=1);
 namespace Espo\Services;
 
 use Dam\Entities\ValidationRule;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Services\HasContainer;
 use Espo\Core\Utils\Metadata;
@@ -211,6 +212,7 @@ class MassActions extends HasContainer
                     $related++;
                     try {
                         $repository->relate($entity, $link, $foreignEntity);
+                    } catch (UniqueConstraintViolationException $e){
                     } catch (BadRequest $e) {
                         $related--;
                         $notRelated[] = [

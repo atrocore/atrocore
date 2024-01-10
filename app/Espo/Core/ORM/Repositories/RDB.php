@@ -122,38 +122,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     {
     }
 
-    public function handleSelectParams(&$params)
-    {
-        if (empty($params['skipCurrencyConvertedParams'])) {
-            $this->handleCurrencyParams($params);
-        }
-    }
-
-    protected function handleCurrencyParams(&$params)
-    {
-        $entityType = $this->entityType;
-
-        $metadata = $this->getMetadata();
-
-        if (!$metadata) {
-            return;
-        }
-
-        $fields = $metadata->get(['entityDefs', $entityType, 'fields'], []);
-
-        foreach ($fields as $field => $d) {
-            if (isset($d['type']) && $d['type'] == 'currency') {
-                if (!empty($d['notStorable'])) continue;
-                if (empty($params['leftJoins'])) $params['leftJoins'] = [];
-                $alias = $field . 'CurrencyRate';
-
-                $params['leftJoins'][] = ['Currency', $alias, [
-                    $alias . '.id:' => $field . 'Currency'
-                ]];
-            }
-        }
-    }
-
     protected function beforeRemove(Entity $entity, array $options = [])
     {
         parent::beforeRemove($entity, $options);
@@ -348,15 +316,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             $roundValue = $this->roundValueUsingAmountOfDigitsAfterComma($entity->get($fieldName), $fieldData['amountOfDigitsAfterComma']);
             $entity->set($fieldName, (float)$roundValue);
         }
-    }
-
-    protected function validateCurrency(Entity $entity, string $fieldName, array $fieldData): void
-    {
-        if (!$entity->isAttributeChanged($fieldName)) {
-            return;
-        }
-
-        $this->validateFloat($entity, $fieldName, $fieldData);
     }
 
     protected function validateEnum(Entity $entity, string $fieldName, array $fieldData): void
@@ -616,10 +575,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
         // dispatch an event
         $this->dispatch('beforeSave', $entity, $options);
-
-        if (!$this->processFieldsBeforeSaveDisabled) {
-            $this->processCurrencyFieldsBeforeSave($entity);
-        }
     }
 
     /**
@@ -679,23 +634,6 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     protected function getFieldByTypeList($type)
     {
         return $this->getFieldManagerUtil()->getFieldByTypeList($this->entityType, $type);
-    }
-
-    protected function processCurrencyFieldsBeforeSave(Entity $entity)
-    {
-        foreach ($this->getFieldByTypeList('currency') as $field) {
-            $currencyAttribute = $field . 'Currency';
-            $defaultCurrency = $this->getConfig()->get('defaultCurrency');
-            if ($entity->isNew()) {
-                if ($entity->get($field) && !$entity->get($currencyAttribute)) {
-                    $entity->set($currencyAttribute, $defaultCurrency);
-                }
-            } else {
-                if ($entity->isAttributeChanged($field) && $entity->has($currencyAttribute) && !$entity->get($currencyAttribute)) {
-                    $entity->set($currencyAttribute, $defaultCurrency);
-                }
-            }
-        }
     }
 
     protected function processFileFieldsSave(Entity $entity)

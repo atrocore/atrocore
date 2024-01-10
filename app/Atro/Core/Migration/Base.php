@@ -11,6 +11,7 @@
 
 namespace Atro\Core\Migration;
 
+use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Atro\Core\Utils\Database\Schema\Schema;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Schema as DoctrineSchema;
@@ -61,9 +62,14 @@ class Base
         return $this->schema->getCurrentSchema();
     }
 
+    protected function getSchemaConverter(): Converter
+    {
+        return $this->schema->getSchemaConverter();
+    }
+
     protected function addColumn(DoctrineSchema $schema, string $tableName, string $columnName, array $params): void
     {
-        $this->schema->getSchemaConverter()->addColumn($schema, $schema->getTable($tableName), $columnName, $this->schema->getOrmConverter()->convertField($params));
+        $this->getSchemaConverter()->addColumn($schema, $schema->getTable($tableName), $columnName, $this->schema->getOrmConverter()->convertField($params));
     }
 
     protected function dropColumn(DoctrineSchema $schema, string $tableName, string $columnName): void
@@ -79,6 +85,11 @@ class Base
     protected function schemasDiffToSql(DoctrineSchema $fromSchema, DoctrineSchema $toSchema): array
     {
         return $this->getComparator()->compareSchemas($fromSchema, $toSchema)->toSql($this->getConnection()->getDatabasePlatform());
+    }
+
+    protected function isPgSQL(): bool
+    {
+        return $this->getSchemaConverter()::isPgSQL($this->getConnection());
     }
 
     protected function rebuild()

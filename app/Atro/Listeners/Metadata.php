@@ -15,6 +15,8 @@ namespace Atro\Listeners;
 
 use Atro\Core\EventManager\Event;
 use Atro\Core\Templates\Repositories\Relation;
+use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Database\Orm\RelationManager;
 use Espo\Core\Utils\Util;
 use Espo\Core\Templates\Services\Relationship;
@@ -64,6 +66,11 @@ class Metadata extends AbstractListener
         $data = $event->getArgument('data');
 
         $this->prepareRelationEntities($data);
+
+        if (!empty($data['action']['types'])) {
+            $data['entityDefs']['Action']['fields']['type']['optionsIds'] = array_keys($data['action']['types']);
+            $data['entityDefs']['Action']['fields']['type']['options'] = array_keys($data['action']['types']);
+        }
 
         $event->setArgument('data', $data);
     }
@@ -165,6 +172,7 @@ class Metadata extends AbstractListener
                     "mainField"   => $field,
                     "required"    => !empty($fieldDefs['required']),
                     "audited"     => !empty($fieldDefs['audited']),
+                    "notStorable" => !empty($fieldDefs['notStorable']),
                     "emHidden"    => true
                 ];
 
@@ -173,8 +181,9 @@ class Metadata extends AbstractListener
                 }
 
                 $data['entityDefs'][$entityType]['links'][$unitFieldName] = [
-                    "type"   => "belongsTo",
-                    "entity" => "Unit"
+                    "type"        => "belongsTo",
+                    "entity"      => "Unit",
+                    "skipOrmDefs" => !empty($fieldDefs['notStorable']),
                 ];
 
                 if ($visibleLogic = $this->getMetadata()->get(['clientDefs', $entityType, 'dynamicLogic', 'fields', $field, 'visible'])) {
@@ -507,7 +516,7 @@ class Metadata extends AbstractListener
                 continue;
             }
 
-            if (!isset($data['scopes'][$scope]['type']) || $data['scopes'][$scope]['type'] !== 'Hierarchy') {
+            if (!isset($data['scopes'][$scope]['type']) || $data['scopes'][$scope]['type'] !== 'Hierarchy' || !empty($data['scopes'][$scope]['disableHierarchy'])) {
                 continue;
             }
 
@@ -515,7 +524,7 @@ class Metadata extends AbstractListener
 
             $data['scopes'][$relationEntityName]['isHierarchyEntity'] = true;
             $data['entityDefs'][$relationEntityName]['fields']['hierarchySortOrder'] = [
-                'type'                      => 'int'
+                'type' => 'int'
             ];
 
             if (!isset($data['entityDefs'][$scope]['fields']['parents']['view'])) {
@@ -584,7 +593,7 @@ class Metadata extends AbstractListener
                     continue 1;
                 }
 
-                if (in_array($fieldData['type'], ['currencyConverted', 'autoincrement'])) {
+                if ($fieldData['type'] === 'autoincrement') {
                     if (!isset($data['scopes'][$scope]['mandatoryUnInheritedFields'])) {
                         $data['scopes'][$scope]['mandatoryUnInheritedFields'] = [];
                     }

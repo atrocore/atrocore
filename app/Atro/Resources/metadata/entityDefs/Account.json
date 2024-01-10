@@ -1,0 +1,156 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "maxLength": 249,
+      "required": true,
+      "trim": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "language": {
+      "type": "enum",
+      "required": false,
+      "options": [
+        "English",
+        "German"
+      ],
+      "optionsIds": [
+        "en",
+        "de"
+      ]
+    },
+    "type": {
+      "type": "enum",
+      "required": false,
+      "prohibitedEmptyValue": false,
+      "options": [
+        "individual",
+        "company"
+      ],
+      "optionsIds": [
+        "individual",
+        "company"
+      ]
+    },
+    "role":  {
+      "type": "enum",
+      "required": false,
+      "prohibitedEmptyValue": false,
+      "options": [
+        "supplier",
+        "customer"
+      ],
+      "optionsIds": [
+        "supplier",
+        "customer"
+      ]
+    },
+    "emailAddress": {
+      "type": "email"
+    },
+    "phoneNumber": {
+      "type": "varchar"
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "assignedUser": {
+      "type": "link",
+      "view": "views/fields/assigned-user"
+    },
+    "teams": {
+      "type": "linkMultiple",
+      "view": "views/fields/teams"
+    },
+    "contacts": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true
+    },
+    "addresses": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true
+    }
+  },
+  "links": {
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "assignedUser": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "teams": {
+      "type": "hasMany",
+      "entity": "Team",
+      "relationName": "entityTeam",
+      "layoutRelationshipsDisabled": true
+    },
+    "contacts": {
+      "type": "hasMany",
+      "relationName": "contactAccount",
+      "foreign": "accounts",
+      "entity": "Contact"
+    },
+    "addresses": {
+      "type": "hasMany",
+      "foreign": "account",
+      "entity": "Address"
+    }
+  },
+  "collection": {
+    "sortBy": "createdAt",
+    "asc": false,
+    "textFilterFields": [
+      "name",
+      "emailAddress"
+    ]
+  },
+  "indexes": {
+    "createdAt": {
+      "columns": [
+        "createdAt",
+        "deleted"
+      ]
+    },
+    "name": {
+      "columns": [
+        "name",
+        "deleted"
+      ]
+    },
+    "assignedUser": {
+      "columns": [
+        "assignedUserId",
+        "deleted"
+      ]
+    }
+  }
+}

@@ -37,8 +37,12 @@ class Hierarchy extends Record
 
     public function getSelectAttributeList($params)
     {
+        if( $this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)){
+            return parent::getSelectAttributeList($params);
+        }
+
         $res = parent::getSelectAttributeList($params);
-        if (is_array($res)) {
+        if (is_array($res) && $this->getMetadata()->get(['scopes', $this->getEntityType(), 'type']) == 'Hierarchy') {
             $hierarchySortOrderField = $this->getHierarchySortOrderFieldName();
             if (!in_array($hierarchySortOrderField, $res)) {
                 $res[] = $hierarchySortOrderField;
@@ -222,6 +226,10 @@ class Hierarchy extends Record
             throw new BadRequest("Inheriting available only for entities type Hierarchy.");
         }
 
+        if ($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'disableHierarchy'], false)) {
+            throw new BadRequest("Inheriting available on enable Hierarchy, hierarchy feature is disable.");
+        }
+
         if (!$this->getMetadata()->get(['scopes', $entity->getEntityType(), 'relationInheritance'])) {
             throw new BadRequest("Relations inheriting is disabled.");
         }
@@ -239,7 +247,7 @@ class Hierarchy extends Record
 
         $parentsIds = $entity->getLinkMultipleIdList('parents');
         if (empty($parentsIds[0])) {
-            throw new NotFound();
+            return false;
         }
 
         $keySet = $this->getRepository()->getMapper()->getKeys($entity, $link);
@@ -248,30 +256,25 @@ class Hierarchy extends Record
             ->where([$keySet['nearKey'] => $parentsIds])
             ->find();
 
-        if (empty($parentsCollection[0])) {
-            throw new BadRequest($this->getInjection('language')->translate('nothingToInherit', 'exceptions'));
-        }
-
-        $additionalFields = $this->getAdditionalFieldsNames($entity->getEntityType(), $link);
-
-        $maxMassLinkCount = $this->getConfig()->get('maxMassLinkCount', 20);
-
-        foreach ($parentsCollection as $k => $parentItem) {
-            $input = new \stdClass();
-            $input->{$keySet['nearKey']} = $id;
-            $input->{$keySet['distantKey']} = $parentItem->get($keySet['distantKey']);
-            foreach ($additionalFields as $additionalField) {
-                $input->{$additionalField} = $parentItem->get($additionalField);
-            }
-
-            if ($k < $maxMassLinkCount) {
-                try {
-                    $this->getServiceFactory()->create($relationEntityName)->createEntity($input);
-                } catch (NotUnique $e) {
-                } catch (Forbidden $e) {
+        if (!empty($parentsCollection[0])) {
+            $additionalFields = $this->getAdditionalFieldsNames($entity->getEntityType(), $link);
+            $maxMassLinkCount = $this->getConfig()->get('maxMassLinkCount', 20);
+            foreach ($parentsCollection as $k => $parentItem) {
+                $input = new \stdClass();
+                $input->{$keySet['nearKey']} = $id;
+                $input->{$keySet['distantKey']} = $parentItem->get($keySet['distantKey']);
+                foreach ($additionalFields as $additionalField) {
+                    $input->{$additionalField} = $parentItem->get($additionalField);
                 }
-            } else {
-                $this->getPseudoTransactionManager()->pushCreateEntityJob($relationEntityName, $input);
+                if ($k < $maxMassLinkCount) {
+                    try {
+                        $this->getServiceFactory()->create($relationEntityName)->createEntity($input);
+                    } catch (NotUnique $e) {
+                    } catch (Forbidden $e) {
+                    }
+                } else {
+                    $this->getPseudoTransactionManager()->pushCreateEntityJob($relationEntityName, $input);
+                }
             }
         }
 
@@ -320,10 +323,6 @@ class Hierarchy extends Record
                 case 'enum':
                     $field = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'multilangField'], $field);
                     $input->$field = $parent->get($field);
-                    break;
-                case 'currency':
-                    $input->$field = $parent->get($field);
-                    $input->{$field . 'Currency'} = $parent->get($field . 'Currency');
                     break;
                 case 'rangeInt':
                 case 'rangeFloat':
@@ -416,13 +415,29 @@ class Hierarchy extends Record
 
     public function createEntity($attachment)
     {
-        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy') {
+        if (
+            $this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy'
+            || $this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)
+        ) {
             return parent::createEntity($attachment);
         }
 
         $this->prepareChildInputData($attachment);
 
-        return parent::createEntity($attachment);
+        $entity = parent::createEntity($attachment);
+
+        // run inherit all for child relations
+        if (!empty($entity) && !empty($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'relationInheritance']))) {
+            foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links']) as $link => $linkDefs) {
+                $relationName = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $link, 'relationName']);
+                if (!empty($relationName) && !in_array($link, $this->getRepository()->getUnInheritedRelations())) {
+                    $this->unlinkAll($entity->get('id'), $link);
+                    $this->inheritAllForLink($entity->get('id'), $link);
+                }
+            }
+        }
+
+        return $entity;
     }
 
     public function prepareChildInputData(\stdClass $attachment): void
@@ -442,7 +457,8 @@ class Hierarchy extends Record
 
     public function updateEntity($id, $data)
     {
-        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy') {
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy'
+            || $this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)) {
             return parent::updateEntity($id, $data);
         }
 
@@ -500,7 +516,8 @@ class Hierarchy extends Record
 
     public function linkEntity($id, $link, $foreignId)
     {
-        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy') {
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy'
+            || $this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)) {
             return parent::linkEntity($id, $link, $foreignId);
         }
 
@@ -542,30 +559,16 @@ class Hierarchy extends Record
             return parent::linkEntity($id, $link, $foreignId);
         }
 
-        $inTransaction = false;
-        if (!$this->getEntityManager()->getPDO()->inTransaction()) {
-            $this->getEntityManager()->getPDO()->beginTransaction();
-            $inTransaction = true;
-        }
-        try {
-            $result = parent::linkEntity($id, $link, $foreignId);
-            $this->createPseudoTransactionLinkJobs($id, $link, $foreignId);
-            if ($inTransaction) {
-                $this->getEntityManager()->getPDO()->commit();
-            }
-        } catch (\Throwable $e) {
-            if ($inTransaction) {
-                $this->getEntityManager()->getPDO()->rollBack();
-            }
-            throw $e;
-        }
+        $result = parent::linkEntity($id, $link, $foreignId);
+        $this->createPseudoTransactionLinkJobs($id, $link, $foreignId);
 
         return $result;
     }
 
     public function unlinkEntity($id, $link, $foreignId)
     {
-        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy') {
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy'
+            || $this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)) {
             return parent::unlinkEntity($id, $link, $foreignId);
         }
 
@@ -607,30 +610,16 @@ class Hierarchy extends Record
             return parent::unlinkEntity($id, $link, $foreignId);
         }
 
-        $inTransaction = false;
-        if (!$this->getEntityManager()->getPDO()->inTransaction()) {
-            $this->getEntityManager()->getPDO()->beginTransaction();
-            $inTransaction = true;
-        }
-        try {
-            $result = parent::unlinkEntity($id, $link, $foreignId);
-            $this->createPseudoTransactionUnlinkJobs($id, $link, $foreignId);
-            if ($inTransaction) {
-                $this->getEntityManager()->getPDO()->commit();
-            }
-        } catch (\Throwable $e) {
-            if ($inTransaction) {
-                $this->getEntityManager()->getPDO()->rollBack();
-            }
-            throw $e;
-        }
+        $result = parent::unlinkEntity($id, $link, $foreignId);
+        $this->createPseudoTransactionUnlinkJobs($id, $link, $foreignId);
 
         return $result;
     }
 
     public function deleteEntity($id)
     {
-        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy') {
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy'
+            || $this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)) {
             return parent::deleteEntity($id);
         }
 
@@ -661,7 +650,8 @@ class Hierarchy extends Record
     {
         parent::prepareEntityForOutput($entity);
 
-        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy') {
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy'
+            || $this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)) {
             return;
         }
 
@@ -673,9 +663,11 @@ class Hierarchy extends Record
                 $entity->set('hierarchyRoute', $this->getRepository()->getHierarchyRoute($entity->get('id')));
             }
 
-            $hierarchySortOrderField = $this->getHierarchySortOrderFieldName();
-            if ($entity->has($hierarchySortOrderField)) {
-                $entity->set('sortOrder', $entity->get($hierarchySortOrderField));
+            if ($this->getMetadata()->get(['scopes', $this->getEntityType(), 'type']) == 'Hierarchy') {
+                $hierarchySortOrderField = $this->getHierarchySortOrderFieldName();
+                if ($entity->has($hierarchySortOrderField)) {
+                    $entity->set('sortOrder', $entity->get($hierarchySortOrderField));
+                }
             }
         }
     }
@@ -695,7 +687,8 @@ class Hierarchy extends Record
             return;
         }
 
-        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy') {
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy'
+            || $this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)) {
             return;
         }
 
@@ -890,14 +883,6 @@ class Hierarchy extends Record
                 case 'image':
                 case 'link':
                     if ($this->areValuesEqual($this->getRepository()->get(), $field . 'Id', $parent->get($field . 'Id'), $child->get($field . 'Id'))) {
-                        $inheritedFields[] = $field;
-                    }
-                    break;
-                case 'currency':
-                    if (
-                        $this->areValuesEqual($this->getRepository()->get(), $field, $parent->get($field), $child->get($field))
-                        && $this->areValuesEqual($this->getRepository()->get(), $field . 'Currency', $parent->get($field . 'Currency'), $child->get($field . 'Currency'))
-                    ) {
                         $inheritedFields[] = $field;
                     }
                     break;

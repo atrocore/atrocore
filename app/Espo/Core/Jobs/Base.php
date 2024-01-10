@@ -34,6 +34,7 @@
 namespace Espo\Core\Jobs;
 
 use Atro\Core\Container;
+use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\EntityManager;
@@ -57,7 +58,7 @@ abstract class Base
         return $this->getContainer()->get('entityManager');
     }
 
-    protected function getServiceFactory()
+    protected function getServiceFactory(): ServiceFactory
     {
         return $this->getContainer()->get('serviceFactory');
     }

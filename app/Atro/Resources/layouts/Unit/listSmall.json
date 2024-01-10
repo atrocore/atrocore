@@ -1,0 +1,24 @@
+[
+  {
+    "name": "name",
+    "link": true
+  },
+  {
+    "name": "code"
+  },
+  {
+    "name": "measure"
+  },
+  {
+    "name": "isDefault"
+  },
+  {
+    "name": "multiplier"
+  },
+  {
+    "name": "symbol"
+  },
+  {
+    "name": "convertTo"
+  }
+]

@@ -1,0 +1,100 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "requiredForMultilang": false,
+      "trim": true,
+      "isMultilang": true,
+      "maxLength": 255
+    },
+    "code": {
+      "type": "varchar",
+      "unique": true
+    },
+    "symbol": {
+      "type": "varchar"
+    },
+    "description": {
+      "type": "text",
+      "isMultilang": true
+    },
+    "measure": {
+      "type": "link",
+      "required": true
+    },
+    "isDefault": {
+      "type": "bool"
+    },
+    "multiplier": {
+      "type": "float",
+      "required": true,
+      "default": 1,
+      "view": "views/unit/fields/multiplier"
+    },
+    "convertTo": {
+      "type": "link",
+      "view": "views/unit/fields/convert-to"
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    }
+  },
+  "links": {
+    "measure": {
+      "type": "belongsTo",
+      "entity": "Measure",
+      "foreign": "units"
+    },
+    "convertTo": {
+      "type": "belongsTo",
+      "entity": "Unit"
+    },
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    }
+  },
+  "collection": {
+    "sortBy": "createdAt",
+    "asc": false,
+    "textFilterFields": [
+      "name",
+      "code"
+    ]
+  },
+  "uniqueIndexes": {
+    "unique_measure_unit": [
+      "measure_id",
+      "name",
+      "deleted"
+    ]
+  },
+  "indexes": {
+    "name": {
+      "columns": [
+        "name",
+        "deleted"
+      ]
+    }
+  }
+}

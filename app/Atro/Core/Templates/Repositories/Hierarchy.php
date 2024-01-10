@@ -39,7 +39,11 @@ class Hierarchy extends RDB
 
     public function findRelated(Entity $entity, $relationName, array $params = [])
     {
-        if ($relationName === 'children') {
+        if($this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)){
+            return parent::findRelated($entity, $relationName, $params);
+        }
+
+        if ( $relationName === 'children') {
             $params['orderBy'] = $this->hierarchyTableName . '_mm.hierarchy_sort_order';
             $params['order'] = "ASC";
         }
@@ -548,7 +552,9 @@ class Hierarchy extends RDB
 
     protected function prepareSortOrder(Entity $entity): void
     {
-        if ($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'type']) !== 'Hierarchy') {
+        if ($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'type']) !== 'Hierarchy'
+            || $this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)
+        ) {
             return;
         }
 

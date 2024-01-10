@@ -39,7 +39,7 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
             Dep.prototype.setup.call(this);
 
             if (!this.isWide && this.type !== 'editSmall' && this.type !== 'detailSmall') {
-                this.isTreePanel = true;
+                this.isTreePanel = this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true;
                 this.setupTreePanel();
             }
         },
@@ -81,7 +81,7 @@ Espo.define('views/record/detail-tree', 'views/record/detail',
         },
 
         setupTreePanel() {
-            if (!this.isTreeAllowed()) {
+            if (!this.isTreeAllowed()  || this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`)) {
                 return;
             }
 

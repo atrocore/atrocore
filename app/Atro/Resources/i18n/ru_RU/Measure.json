@@ -1,0 +1,19 @@
+{
+  "fields": {
+    "name": "Название",
+    "description": "Описание",
+    "units": "Единицы измерения"
+  },
+  "links": {
+    "units": "Единицы измерения"
+  },
+  "labels": {
+    "Create Measure": "Создать меру"
+  },
+  "options": {
+    "displayFormat": {
+      "1": "10 USD",
+      "2": "$10"
+    }
+  }
+}

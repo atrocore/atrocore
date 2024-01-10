@@ -1,4 +1,3 @@
-
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -36,7 +35,10 @@ Espo.define('views/settings/fields/default-currency', 'views/fields/enum', funct
     return Dep.extend({
 
         setupOptions: function () {
-            this.params.options = Espo.Utils.clone(this.getConfig().get('currencyList') || []);
+            this.getMeasureUnits('currency').forEach(option => {
+                this.params.options.push(option.id);
+                this.translatedOptions[option.id] = option.name ? option.name : ' ';
+            });
         }
 
     });

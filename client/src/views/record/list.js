@@ -192,7 +192,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
                 var method = 'massAction' + Espo.Utils.upperCaseFirst(action);
                 if (method in this) {
-                    this[method]();
+                    this[method]($el.data());
                 } else {
                     this.massAction(action);
                 }
@@ -318,6 +318,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
         data: function () {
             var paginationTop = this.pagination === 'both' || this.pagination === true || this.pagination === 'top';
             var paginationBottom = this.pagination === 'both' || this.pagination === true || this.pagination === 'bottom';
+
+            const fixedHeaderRow = this.isFixedListHeaderRow();
+
             return {
                 scope: this.scope,
                 header: this.header,
@@ -332,12 +335,29 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 checkboxes: this.checkboxes,
                 massActionList: this.massActionList,
                 rowList: this.rowList,
-                topBar: paginationTop || this.checkboxes || (this.buttonList.length && !this.buttonsDisabled),
+                topBar: paginationTop || this.checkboxes || (this.buttonList.length && !this.buttonsDisabled) || fixedHeaderRow,
                 bottomBar: paginationBottom,
                 buttonList: this.buttonList,
-                displayTotalCount: this.displayTotalCount && this.collection.total > 0,
-                countLabel: this.getShowMoreLabel()
+                displayTotalCount: this.displayTotalCount,
+                countLabel: this.getShowMoreLabel(),
+                showNoData: !this.collection.total && !fixedHeaderRow
             };
+        },
+
+        isFixedListHeaderRow() {
+            let parent = this.getParentView();
+
+            if (!parent) {
+                return false;
+            }
+
+            // check for entity list view
+            if (parent.$el.is('#main') && this.checkboxes) {
+                return true;
+            }
+
+            // check for entity list modal view
+            return parent.$el.is('.modal-container') || parent.$el.is('.modal-body');
         },
 
         getShowMoreLabel() {
@@ -518,6 +538,27 @@ Espo.define('views/record/list', 'view', function (Dep) {
             } else {
                 proceed.call(this);
             }
+        },
+
+        massActionDynamicMassUpdateAction: function (data) {
+            let where;
+            if (this.allResultIsChecked) {
+                where = this.collection.getWhere();
+            } else {
+                where = [{type: "in", attribute: "id", value: this.checkedList}];
+            }
+
+            this.notify(this.translate('pleaseWait', 'messages'));
+            this.ajaxPostRequest('Action/action/executeNow', {
+                actionId: data.id,
+                where: where
+            }).success(() => {
+                Backbone.trigger('showQueuePanel');
+                this.notify('Done', 'success');
+                setTimeout(() => {
+                    this.collection.fetch();
+                }, 3000);
+            });
         },
 
         massActionRemove: function () {
@@ -801,7 +842,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             this.entityType = this.collection.name || null;
             this.scope = this.options.scope || this.entityType;
-
             this.events = Espo.Utils.clone(this.events);
             this.massActionList = Espo.Utils.clone(this.massActionList);
             this.buttonList = Espo.Utils.clone(this.buttonList);
@@ -847,6 +887,18 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }
             }, this);
             this.checkAllResultMassActionList = checkAllResultMassActionList;
+
+            (this.getMetadata().get(['clientDefs', this.entityType, 'updateActions']) || []).forEach(updateAction => {
+                if (this.getAcl().check(updateAction.targetEntity, 'edit')) {
+                    let obj = {
+                        action: "dynamicMassUpdateAction",
+                        label: updateAction.name,
+                        id: updateAction.id
+                    };
+                    this.massActionList.push(obj);
+                    this.checkAllResultMassActionList.push(obj);
+                }
+            });
 
             (this.getMetadata().get(['clientDefs', this.scope, 'checkAllResultMassActionList']) || []).forEach(function (item) {
                 if (~this.massActionList.indexOf(item)) {
@@ -1091,7 +1143,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         parent.on('scroll', parent, function () {
                             if (this.collection.total > this.collection.length + this.collection.lengthCorrection && parent.scrollTop() + parent.outerHeight() >= parent.get(0).scrollHeight - 50) {
                                 let type = 'list';
-                                if (this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy') {
+                                if (this.isHierarchical()) {
                                     type = this.getStorage().get('list-small-view-type', this.scope) || 'tree'
                                 }
 
@@ -1128,6 +1180,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
         },
 
+        isHierarchical() {
+
+            return this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
+                && this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true ;
+        },
         loadMore(btn) {
             if (btn.length && !btn.hasClass('disabled')) {
                 btn.click();
@@ -1585,10 +1642,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
             // remove relation virtual fields
             if (this.layoutName === 'listSmall') {
                 let toRemove = [];
-                listLayout.forEach(item => {
+                listLayout.forEach((item, k) => {
                     let parts = item.name.split('__');
                     if (parts.length === 2) {
-                        toRemove.push({name: item.name, relEntity: parts[0]});
+                        toRemove.push({number: k, relEntity: parts[0]});
                     }
                 });
 
@@ -1602,15 +1659,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
                 toRemove.forEach(item => {
                     if (!relEntity || item.relEntity !== relEntity) {
-                        let number = null;
-                        listLayout.forEach((v, k) => {
-                            if (v.name === item.name) {
-                                number = k;
-                            }
-                        });
-                        if (number !== null) {
-                            listLayout.splice(number, 1);
-                        }
+                        listLayout.splice(item.number, 1);
                     }
                 });
             }
@@ -1760,7 +1809,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             let model = this.collection.model.prototype;
             defs.forEach(item => {
-                if (hasDragDrop || item.name && ['currency', 'wysiwyg', 'wysiwygMultiLang'].includes(model.getFieldType(item.name))) {
+                if (hasDragDrop || item.name && ['wysiwyg', 'wysiwygMultiLang'].includes(model.getFieldType(item.name))) {
                     item.sortable = false;
                 }
             });
@@ -2155,6 +2204,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
         },
 
+        actionOpenInTab: function (data) {
+            window.open(data.url, "_blank");
+        },
+
         actionQuickEdit: function (data) {
             data = data || {}
             var id = data.id;
@@ -2234,6 +2287,17 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
         },
 
+        actionDynamicUpdateAction: function (data) {
+            this.notify(this.translate('pleaseWait', 'messages'));
+            this.ajaxPostRequest('Action/action/executeNow', {
+                actionId: data.action_id,
+                entityId: data.entity_id
+            }).success(() => {
+                this.notify('Done', 'success');
+                this.collection.fetch();
+            });
+        },
+
         getRowSelector: function (id) {
             return 'tr[data-id="' + id + '"]';
         },
@@ -2250,7 +2314,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             let message = 'Global.messages.removeRecordConfirmation';
-            if (this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy') {
+            if (this.isHierarchical()) {
                 message = 'Global.messages.removeRecordConfirmationHierarchically';
             }
 

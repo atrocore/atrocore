@@ -82,7 +82,7 @@ class Language
     /**
      * @var string
      */
-    private $corePath = CORE_PATH . '/Espo/Resources/i18n';
+    private $corePath = CORE_PATH . '/Atro/Resources/i18n';
 
     /**
      * @var string

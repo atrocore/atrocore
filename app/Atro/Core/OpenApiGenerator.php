@@ -289,10 +289,6 @@ class OpenApiGenerator
                     case "jsonObject":
                         $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'object'];
                         break;
-                    case "currency":
-                        $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'string'];
-                        $result['components']['schemas'][$entityName]['properties']["{$fieldName}Currency"] = ['type' => 'string'];
-                        break;
                     case "array":
                     case "multiEnum":
                         $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'array', 'items' => ['type' => 'string']];

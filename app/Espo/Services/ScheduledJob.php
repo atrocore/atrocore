@@ -36,6 +36,7 @@ declare(strict_types=1);
 namespace Espo\Services;
 
 use Cron\CronExpression;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\CronManager;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
@@ -110,12 +111,12 @@ class ScheduledJob extends \Espo\Core\Templates\Services\Base
             ->select(['id'])
             ->from('job')
             ->where('deleted = :deleted')
-            ->setParameter('deleted', false)
             ->andWhere('scheduled_job_id = :scheduledJobId')
-            ->setParameter('scheduledJobId', $id)
             ->andWhere("execute_time >= :start")
-            ->setParameter('start', $start)
             ->andWhere("execute_time <= :end")
+            ->setParameter('scheduledJobId', $id)
+            ->setParameter('deleted', false, ParameterType::BOOLEAN)
+            ->setParameter('start', $start)
             ->setParameter('end', $end)
             ->fetchAllAssociative();
 

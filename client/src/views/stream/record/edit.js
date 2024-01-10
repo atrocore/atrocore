@@ -196,10 +196,16 @@ Espo.define('views/stream/record/edit', 'views/record/base', function (Dep) {
         validate: function () {
             var notValid = Dep.prototype.validate.call(this);
 
-            if (this.model.get('post') === '' && !(this.model.get('attachmentsIds') || []).length) {
+            if (!this.postIsFilled() && !(this.model.get('attachmentsIds') || []).length) {
                 notValid = true;
             }
             return notValid;
+        },
+
+        postIsFilled: function () {
+            const postValue = this.model.get('post');
+
+            return !!postValue && postValue.trim().length;
         },
 
         post: function () {

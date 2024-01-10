@@ -125,7 +125,7 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
                     model.fetch();
                 } else {
                     if (
-                        this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
+                        this.isHierarchical()
                         && this.getMetadata().get(`scopes.${this.scope}.fieldValueInheritance`) === true
                         && this.options.relate
                         && this.options.relate.model
@@ -172,6 +172,11 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
                     this.applyOverviewFilters();
                 });
             }
+        },
+
+        isHierarchical() {
+            return this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
+                && this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true ;
         },
 
         getNonInheritedFields: function () {

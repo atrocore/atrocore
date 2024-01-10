@@ -619,7 +619,7 @@ class Mapper implements MapperInterface
         if (is_array($value)) {
             $res = Connection::PARAM_INT_ARRAY;
             if (!empty($value[0]) && is_string($value[0])) {
-                $res = Connection::PARAM_STR_ARRAY;;
+                $res = Connection::PARAM_STR_ARRAY;
             }
             return $res;
         }

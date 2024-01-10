@@ -465,7 +465,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             let path = [];
             path.push(headerIconHtml + '<a href="' + rootUrl + '" class="action" data-action="navigateToRoot">' + this.getLanguage().translate(this.scope, 'scopeNamesPlural') + '</a>');
 
-            if (this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy' && this.getMetadata().get(`scopes.${this.scope}.multiParents`) !== true && this.model.get('hierarchyRoute')) {
+            if (this.isHierarchical() && this.getMetadata().get(`scopes.${this.scope}.multiParents`) !== true && this.model.get('hierarchyRoute')) {
                 $.each(this.model.get('hierarchyRoute'), (id, name) => {
                     path.push('<a href="' + rootUrl + '/view/' + id + '" class="action">' + name + '</a>');
                 });
@@ -474,6 +474,11 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             path.push(name);
 
             return this.buildHeaderHtml(path);
+        },
+
+        isHierarchical() {
+            return this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
+                && this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true ;
         },
 
         updatePageTitle: function () {
