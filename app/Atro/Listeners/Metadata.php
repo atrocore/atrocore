@@ -15,6 +15,8 @@ namespace Atro\Listeners;
 
 use Atro\Core\EventManager\Event;
 use Atro\Core\Templates\Repositories\Relation;
+use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Database\Orm\RelationManager;
 use Espo\Core\Utils\Util;
 use Espo\Core\Templates\Services\Relationship;
@@ -64,6 +66,11 @@ class Metadata extends AbstractListener
         $data = $event->getArgument('data');
 
         $this->prepareRelationEntities($data);
+
+        if (!empty($data['action']['types'])) {
+            $data['entityDefs']['Action']['fields']['type']['optionsIds'] = array_keys($data['action']['types']);
+            $data['entityDefs']['Action']['fields']['type']['options'] = array_keys($data['action']['types']);
+        }
 
         $event->setArgument('data', $data);
     }
@@ -509,7 +516,7 @@ class Metadata extends AbstractListener
                 continue;
             }
 
-            if (!isset($data['scopes'][$scope]['type']) || $data['scopes'][$scope]['type'] !== 'Hierarchy' ||  !empty($data['scopes'][$scope]['disableHierarchy'])) {
+            if (!isset($data['scopes'][$scope]['type']) || $data['scopes'][$scope]['type'] !== 'Hierarchy' || !empty($data['scopes'][$scope]['disableHierarchy'])) {
                 continue;
             }
 

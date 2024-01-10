@@ -1,0 +1,26 @@
+<?php
+/**
+ * AtroCore Software
+ *
+ * This source file is available under GNU General Public License version 3 (GPLv3).
+ * Full copyright and license information is available in LICENSE.txt, located in the root directory.
+ *
+ * @copyright  Copyright (c) AtroCore UG (https://www.atrocore.com)
+ * @license    GPLv3 (https://www.gnu.org/licenses/)
+ */
+
+declare(strict_types=1);
+
+namespace Atro\SelectManagers;
+
+use Espo\Core\SelectManagers\Base;
+
+class Action extends Base
+{
+    protected function boolFilterNotActionSet(array &$result): void
+    {
+        $result['whereClause'][] = [
+            'type!=' => 'set'
+        ];
+    }
+}

@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "isActive": "Активний",
+    "type": "Тип",
+    "sourceEntity": "Вихідна сутність"
+  },
+  "labels": {
+    "Create Action": "Створити дію",
+    "execute": "Виконати"
+  },
+  "massActions": {
+    "execute": "Виконати"
+  },
+  "messages": {
+    "executeNow": "Ви впевнені, що хочете виконати обрану дію?"
+  }
+}

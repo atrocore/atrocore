@@ -1,0 +1,24 @@
+[
+  {
+    "label": "",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "isActive"
+        }
+      ],
+      [
+        {
+          "name": "type"
+        },
+        {
+          "name": "sourceEntity"
+        }
+      ]
+    ]
+  }
+]

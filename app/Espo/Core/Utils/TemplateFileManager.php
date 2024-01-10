@@ -67,28 +67,18 @@ class TemplateFileManager
         $language = $this->getConfig()->get('language');
 
         if ($entityType) {
-            $moduleName = $this->getMetadata()->getScopeModuleName($entityType);
-
             $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
             if (file_exists($fileName)) return $fileName;
 
-            if ($moduleName) {
-                $fileName = CORE_PATH . "/Espo/Modules/{$moduleName}/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
-                if (file_exists($fileName)) return $fileName;
-            }
-
-            $fileName = CORE_PATH . "/Espo/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
+            $fileName = CORE_PATH . "/Atro/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
             if (file_exists($fileName)) return $fileName;
         }
 
         $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$name}.tpl";
         if (file_exists($fileName)) return $fileName;
 
-        if ($defaultModuleName) {
-            $fileName = CORE_PATH . "/Espo/Modules/{$defaultModuleName}/Resources/templates/{$type}/{$language}/{$name}.tpl";
-        } else {
-            $fileName = CORE_PATH . "/Espo/Resources/templates/{$type}/{$language}/{$name}.tpl";
-        }
+        $fileName = CORE_PATH . "/Atro/Resources/templates/{$type}/{$language}/{$name}.tpl";
+
         if (file_exists($fileName)) return $fileName;
 
         $language = 'en_US';
@@ -97,23 +87,14 @@ class TemplateFileManager
             $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
             if (file_exists($fileName)) return $fileName;
 
-            if ($moduleName) {
-                $fileName = CORE_PATH . "/Espo/Modules/{$moduleName}/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
-                if (file_exists($fileName)) return $fileName;
-            }
-
-            $fileName = CORE_PATH . "/Espo/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
+            $fileName = CORE_PATH . "/Atro/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
             if (file_exists($fileName)) return $fileName;
         }
 
         $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$name}.tpl";
         if (file_exists($fileName)) return $fileName;
 
-        if ($defaultModuleName) {
-            $fileName = CORE_PATH . "/Espo/Modules/{$defaultModuleName}/Resources/templates/{$type}/{$language}/{$name}.tpl";
-        } else {
-            $fileName = CORE_PATH . "/Espo/Resources/templates/{$type}/{$language}/{$name}.tpl";
-        }
+        $fileName = CORE_PATH . "/Atro/Resources/templates/{$type}/{$language}/{$name}.tpl";
 
         return $fileName;
     }

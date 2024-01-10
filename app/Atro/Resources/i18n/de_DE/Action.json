@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "isActive": "Aktiv",
+    "type": "Typ",
+    "sourceEntity": "Quell-Entität"
+  },
+  "labels": {
+    "Create Action": "Aktion erstellen",
+    "execute": "Ausführen"
+  },
+  "massActions": {
+    "execute": "Ausführen"
+  },
+  "messages": {
+    "executeNow": "Sind Sie sicher, dass Sie die ausgewählte Aktion ausführen möchten?"
+  }
+}
