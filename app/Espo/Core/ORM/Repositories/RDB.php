@@ -149,20 +149,9 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
         // unlink on all many-many relations
         foreach ($entity->getRelations() as $name => $defs) {
-            if (!empty($defs['relationName'])) {
-                $limit = 2000;
-
-                while (true) {
-                    $relatedEntities = $this->findRelated($entity, $name, ['select' => ['id'], 'limit' => $limit]);
-
-                    if (count($relatedEntities) === 0) {
-                        break;
-                    }
-
-                    foreach ($relatedEntities as $relatedEntity) {
-                        $this->unrelate($entity, $name, $relatedEntity->get('id'));
-                    }
-                }
+            if (!empty($defs['relationName']) && $defs['type'] === 'manyMany') {
+                $this->getEntityManager()->getRepository(ucfirst($defs['relationName']))
+                    ->where([$defs['midKeys'][0] => $entity->get($defs['key'])])->removeCollection();
             }
         }
 
