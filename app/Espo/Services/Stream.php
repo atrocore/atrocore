@@ -459,7 +459,20 @@ class Stream extends \Espo\Core\Services\Base
                 ) {
                     $e->loadParentNameField('parent');
                 }
+            } else {
+                if (!$e->get('isGlobal')) {
+                    $targetType = $e->get('targetType');
+                    if (!$targetType || $targetType === 'users' || $targetType === 'self') {
+                        $e->loadLinkMultipleField('users');
+                    }
+                    if ($targetType !== 'users' && $targetType !== 'self') {
+                        if (!$targetType || $targetType === 'teams') {
+                            $e->loadLinkMultipleField('teams');
+                        }
+                    }
+                }
             }
+
             if ($e->get('relatedId') && $e->get('relatedType')) {
                 $e->loadParentNameField('related');
             }
