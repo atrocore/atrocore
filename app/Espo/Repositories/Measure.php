@@ -121,11 +121,11 @@ class Measure extends Base
     protected function beforeRemove(Entity $entity, array $options = [])
     {
         // check if measure is used by some field
-        foreach ($this->getEntityManager()->getMetadata()->get(['entityDefs']) as $entityName => $defs) {
+        foreach ($this->getInjection('metadata')->get(['entityDefs']) as $entityName => $defs) {
             foreach ($defs['fields'] as $field => $fieldDef) {
                 if (!empty($fieldDef['measureId']) && $fieldDef['measureId'] === $entity->get('id')) {
                     throw new BadRequest(sprintf($this->getInjection('language')->translate('measureIsUsed', 'exceptions', 'Measure'),
-                        $this->getLanguage()->translate($field, 'fields', $entity->getEntityType()), $entity->getEntityType()));
+                        $this->getLanguage()->translate($field, 'fields', $entity->getEntityType()), $entityName));
                 }
             }
         }
@@ -147,5 +147,6 @@ class Measure extends Base
 
         $this->addDependency('dataManager');
         $this->addDependency('language');
+        $this->addDependency('metadata');
     }
 }
