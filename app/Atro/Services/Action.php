@@ -32,38 +32,6 @@ class Action extends Base
         return $this->getActionType($action->get('type'))->executeNow($action, $input);
     }
 
-    public function updateEntity($id, $data)
-    {
-        if (property_exists($data, '_link') && $data->_link === 'actions' && !empty($data->_id) && !empty($data->_sortedIds)) {
-            $collection = $this->getEntityManager()->getRepository('ActionSetLinker')
-                ->where([
-                    'setId'    => $data->_id,
-                    'actionId' => $data->_sortedIds
-                ])
-                ->find();
-            if (!empty($collection[0])) {
-                $service = $this->getServiceFactory()->create('ActionSetLinker');
-                foreach ($data->_sortedIds as $k => $id) {
-                    foreach ($collection as $entity) {
-                        if ($entity->get('actionId') === $id) {
-                            $input = new \stdClass();
-                            $input->sortOrder = $k;
-                            try {
-                                $service->updateEntity($entity->get('id'), $input);
-                            } catch (\Throwable $e) {
-                            }
-                            continue 2;
-                        }
-                    }
-                }
-            }
-
-            return $this->getEntity($id);
-        }
-
-        return parent::updateEntity($id, $data);
-    }
-
     protected function init()
     {
         parent::init();
