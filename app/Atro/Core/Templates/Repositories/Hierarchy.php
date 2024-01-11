@@ -685,7 +685,7 @@ class Hierarchy extends RDB
                 $qb->andWhere(
                     $expr->notIn(
                         "$tableAlias.id",
-                        "SELECT entity_id FROM $quotedHierarchyTableName qh WHERE qh.deleted = :deleted"
+                        "SELECT entity_id FROM $quotedHierarchyTableName qh". (!$withDeleted ? " WHERE qh.deleted = :deleted" : "")
                     ))
                     ->orderBy("$tableAlias.sort_order")
                     ->orderBy("$tableAlias.$sortBy", $sortOrder)
