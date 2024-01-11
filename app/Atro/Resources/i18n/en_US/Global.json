@@ -407,7 +407,6 @@
     "remove": "Delete",
     "merge": "Merge",
     "massUpdate": "Mass Update",
-    "export": "Export",
     "follow": "Follow",
     "unfollow": "Unfollow",
     "restore": "Restore"

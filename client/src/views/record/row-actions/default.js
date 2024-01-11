@@ -120,13 +120,13 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                 });
             }
 
-            (this.getMetadata().get(['clientDefs', scope, 'updateActions']) || []).forEach(updateAction => {
-                if (this.getAcl().check(updateAction.targetEntity, 'edit')) {
+            (this.getMetadata().get(['clientDefs', scope, 'dynamicActions']) || []).forEach(dynamicAction => {
+                if (this.getAcl().check(dynamicAction.acl.scope, dynamicAction.acl.action)) {
                     list.push({
                         action: "dynamicUpdateAction",
-                        label: updateAction.name,
+                        label: dynamicAction.name,
                         data: {
-                            action_id: updateAction.id,
+                            action_id: dynamicAction.id,
                             entity_id: this.model.id
                         },
                     });

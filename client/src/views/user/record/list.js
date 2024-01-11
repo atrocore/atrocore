@@ -36,15 +36,14 @@ Espo.define('views/user/record/list', 'views/record/list', function (Dep) {
 
         quickEditDisabled: true,
 
-        massActionList: ['remove', 'massUpdate', 'export'],
+        massActionList: ['remove', 'massUpdate'],
 
-        checkAllResultMassActionList: ['massUpdate', 'export'],
+        checkAllResultMassActionList: ['massUpdate'],
 
         setupMassActionItems: function () {
             Dep.prototype.setupMassActionItems.call(this);
             if (!this.getUser().isAdmin()) {
                 this.removeMassAction('massUpdate');
-                this.removeMassAction('export');
             }
         },
 

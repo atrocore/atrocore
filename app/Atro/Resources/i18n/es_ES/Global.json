@@ -346,7 +346,6 @@
     "remove": "Eliminar",
     "merge": "Unir",
     "massUpdate": "Actualización masiva",
-    "export": "Exportar",
     "follow": "Seguir",
     "unfollow": "Dejar de seguir",
     "massUpdatePartial": "Mass Update (Part %s)",

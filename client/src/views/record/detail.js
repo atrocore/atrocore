@@ -286,11 +286,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             }
 
-            (this.getMetadata().get(['clientDefs', this.entityType, 'updateActions']) || []).forEach(updateAction => {
-                if (this.getAcl().check(updateAction.targetEntity, 'edit')) {
+            (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicActions']) || []).forEach(dynamicAction => {
+                if (this.getAcl().check(dynamicAction.acl.scope, dynamicAction.acl.action)) {
                     this.dropdownItemList.push({
-                        id: updateAction.id,
-                        label: updateAction.name,
+                        id: dynamicAction.id,
+                        label: dynamicAction.name,
                         name: "dynamicUpdateAction"
                     });
                 }
