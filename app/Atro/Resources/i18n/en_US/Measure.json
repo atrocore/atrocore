@@ -15,5 +15,8 @@
       "1": "10 USD",
       "2": "$10"
     }
+  },
+  "exceptions": {
+    "measureIsUsed": "This measure is used by field '%s' in entity '%s'."
   }
 }

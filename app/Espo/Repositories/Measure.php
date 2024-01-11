@@ -36,6 +36,8 @@ declare(strict_types=1);
 namespace Espo\Repositories;
 
 use Espo\Core\DataManager;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Exception;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Templates\Repositories\Base;
 use Espo\Core\Utils\Util;
@@ -118,11 +120,25 @@ class Measure extends Base
      */
     protected function beforeRemove(Entity $entity, array $options = [])
     {
-        foreach ($entity->get('units') as $unit) {
-            $this->getEntityManager()->removeEntity($unit, ['skipIsDefaultValidation' => true]);
+        // check if measure is used by some field
+        foreach ($this->getEntityManager()->getMetadata()->get(['entityDefs']) as $entityName => $defs) {
+            foreach ($defs['fields'] as $field => $fieldDef) {
+                if (!empty($fieldDef['measureId']) && $fieldDef['measureId'] === $entity->get('id')) {
+                    throw new BadRequest(sprintf($this->getInjection('language')->translate('measureIsUsed', 'exceptions', 'Measure'),
+                        $this->getLanguage()->translate($field, 'fields', $entity->getEntityType()), $entity->getEntityType()));
+                }
+            }
         }
 
         parent::beforeRemove($entity, $options);
+    }
+
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        foreach ($entity->get('units') as $unit) {
+            $this->getEntityManager()->removeEntity($unit, ['skipIsDefaultValidation' => true]);
+        }
+        parent::afterRemove($entity, $options);
     }
 
     protected function init()
@@ -130,5 +146,6 @@ class Measure extends Base
         parent::init();
 
         $this->addDependency('dataManager');
+        $this->addDependency('language');
     }
 }
