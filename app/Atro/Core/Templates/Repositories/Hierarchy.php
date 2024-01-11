@@ -682,6 +682,7 @@ class Hierarchy extends RDB
             $qb->select("$tableAlias.*", "({$selectCountQuery->where("$tableAlias.id = r1.parent_id")->getSQL()}) as children_count");
 
             if (empty($parentId)) {
+
                 $qb->andWhere(
                     $expr->notIn(
                         "$tableAlias.id",
@@ -691,6 +692,7 @@ class Hierarchy extends RDB
                     ->orderBy("$tableAlias.$sortBy", $sortOrder)
                     ->orderBy("$tableAlias.id");
             } else {
+                $qb->addSelect('h.hierarchy_sort_order');
                 $qb->leftJoin($tableAlias, $quotedHierarchyTableName, 'h', "h.entity_id = $tableAlias.id")
                     ->andWhere('h.parent_id = :parentId')
                     ->orderBy('h.hierarchy_sort_order')
