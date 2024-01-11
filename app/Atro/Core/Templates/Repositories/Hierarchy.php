@@ -117,7 +117,7 @@ class Hierarchy extends RDB
                             WHERE t.deleted=:deleted
                               AND h.entity_id IS NULL
                             ORDER BY t.sort_order ASC, t.$sortBy $sortOrder, t.id ASC) x
-                      WHERE x.id=:id";
+                      JOIN (select id from product where id=:id) y ON x.id = y.id";
             } else {
                 $query = "SELECT x.position
                       FROM (SELECT t.id, @rownum:=@rownum + 1 AS position
@@ -130,7 +130,7 @@ class Hierarchy extends RDB
                               AND t.deleted=:deleted
                               AND t1.deleted=:deleted
                             ORDER BY h.hierarchy_sort_order ASC, t.$sortBy $sortOrder, t.id ASC) x
-                      WHERE x.id=:id";
+                      JOIN (select id from product where id=:id) y ON x.id = y.id";
             }
         }
 
@@ -688,8 +688,8 @@ class Hierarchy extends RDB
                         "SELECT entity_id FROM $quotedHierarchyTableName qh WHERE qh.deleted = :deleted"
                     ))
                     ->orderBy("$tableAlias.sort_order")
-                    ->orderBy("$tableAlias.$sortBy", $sortOrder)
-                    ->orderBy("$tableAlias.id");
+                    ->addOrderBy("$tableAlias.$sortBy", $sortOrder)
+                    ->addOrderBy("$tableAlias.id");
             } else {
                 $qb->leftJoin($tableAlias, $quotedHierarchyTableName, 'h', "h.entity_id = $tableAlias.id")
                     ->andWhere('h.parent_id = :parentId')
