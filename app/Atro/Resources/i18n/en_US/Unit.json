@@ -18,6 +18,6 @@
   "exceptions": {
     "defaultIsRequired": "The measure must have a default unit.",
     "newUnitCanNotBeDefault": "Unit to be added cannot be set as default.",
-    "isUsedUnit": "This unit is in use for some locale or conversion."
+    "unitCannotBeDeleted": "Unit cannot be deleted"
   }
 }

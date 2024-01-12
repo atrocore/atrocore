@@ -849,9 +849,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }
 
             let key = 'measure_data_' + measureId;
-
             if (!Espo[key]) {
-                Espo[key] = [];
+                Espo[key] = {};
                 this.ajaxGetRequest(`Measure`, {
                     where: [
                         {
@@ -861,7 +860,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                         }
                     ]
                 }, {async: false}).then(res => {
-                    if (res.list) {
+                    if (res.list && res.list[0]) {
                         Espo[key] = res.list[0];
                     }
                 });

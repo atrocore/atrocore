@@ -18,6 +18,6 @@
   "exceptions": {
     "defaultIsRequired": "Das Maß soll eine Standardeinheit haben.",
     "newUnitCanNotBeDefault": "Die hinzuzufügende Einheit kann nicht als Standardwert eingestellt werden.",
-    "isUsedUnit": "Diese Einheit wird für ein Gebietsschema oder eine Konvertierung verwendet."
+    "unitCannotBeDeleted": "Einheit kann nicht gelöscht werden"
   }
 }

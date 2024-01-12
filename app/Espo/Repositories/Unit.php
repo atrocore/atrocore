@@ -97,21 +97,12 @@ class Unit extends Base
 
     protected function beforeRemove(Entity $entity, array $options = [])
     {
-        if ($entity->get('isDefault') && empty($options['skipIsDefaultValidation'])) {
-            throw new BadRequest($this->getInjection('language')->translate('defaultIsRequired', 'exceptions', 'Unit'));
+        if (empty($options['skipIsDefaultValidation'])) {
+            if ($entity->get('isDefault')) {
+                throw new BadRequest($this->getInjection('language')->translate('defaultIsRequired', 'exceptions', 'Unit'));
+            }
+            throw new BadRequest($this->getInjection('language')->translate('unitCannotBeDeleted', 'exceptions', 'Unit'));
         }
-
-        $measure = $this
-            ->getEntityManager()
-            ->getRepository('Measure')
-            ->select(['id'])
-            ->where(['data*' => '%"' . $entity->get('id') . '"%'])
-            ->findOne();
-
-        if (!empty($measure)) {
-            throw new BadRequest($this->getInjection('language')->translate('isUsedUnit', 'exceptions', 'Unit'));
-        }
-
         parent::beforeRemove($entity, $options);
     }
 
