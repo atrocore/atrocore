@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Listeners;
 
 use Atro\Core\EventManager\Event;
+use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Core\Templates\Repositories\Relation;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
@@ -58,6 +59,8 @@ class Metadata extends AbstractListener
 
         $this->prepareScriptField($data);
 
+        $this->pushDynamicActions($data);
+
         $event->setArgument('data', $data);
     }
 
@@ -73,6 +76,42 @@ class Metadata extends AbstractListener
         }
 
         $event->setArgument('data', $data);
+    }
+
+    public function pushDynamicActions(array &$data): void
+    {
+        if (!$this->getConfig()->get('isInstalled', false)) {
+            return;
+        }
+
+        $dataManager = $this->getContainer()->get('dataManager');
+
+        $actions = $dataManager->getCacheData('dynamic_action');
+        if ($actions === null) {
+            $connection = $this->getEntityManager()->getConnection();
+            try {
+                $actions = $connection->createQueryBuilder()
+                    ->select('t.*')
+                    ->from($connection->quoteIdentifier('action'), 't')
+                    ->where('t.deleted = :false')
+                    ->andWhere('t.is_active = :true')
+                    ->andWhere('t.source_entity IS NOT NULL')
+                    ->setParameter('true', true, ParameterType::BOOLEAN)
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->fetchAllAssociative();
+            } catch (\Throwable $e) {
+                $actions = [];
+            }
+
+            $dataManager->setCacheData('dynamic_action', $actions);
+        }
+
+        $this->getMemoryStorage()->set('dynamic_action', $actions);
+    }
+
+    protected function getMemoryStorage(): StorageInterface
+    {
+        return $this->getContainer()->get('memoryStorage');
     }
 
     public function setTranslationRequiredLanguage(array &$data)

@@ -604,6 +604,10 @@ class Metadata
         $path = implode($delim, [$path, 'Entities', Util::normilizeClassName(ucfirst($entityName))]);
 
         if (!class_exists($path)) {
+            $path = implode($delim, ['Atro', 'Entities', Util::normilizeClassName(ucfirst($entityName))]);
+        }
+
+        if (!class_exists($path)) {
             $path = implode($delim, ['Espo', 'Entities', Util::normilizeClassName(ucfirst($entityName))]);
         }
 
@@ -620,6 +624,10 @@ class Metadata
         $path = $this->getScopePath($entityName, $delim);
 
         $path = implode($delim, [$path, 'Repositories', Util::normilizeClassName(ucfirst($entityName))]);
+
+        if (!class_exists($path)) {
+            $path = implode($delim, ['Atro', 'Repositories', Util::normilizeClassName(ucfirst($entityName))]);
+        }
 
         if (!class_exists($path)) {
             $path = implode($delim, ['Espo', 'Repositories', Util::normilizeClassName(ucfirst($entityName))]);

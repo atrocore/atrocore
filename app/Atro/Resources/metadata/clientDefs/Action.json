@@ -1,4 +1,5 @@
 {
+  "iconClass": "fas fa-play-circle",
   "controller": "controllers/record",
   "recordViews": {
     "detail": "views/action/record/detail"
