@@ -15,7 +15,7 @@ namespace Atro\Services;
 
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Templates\Services\Base;
+use Atro\Core\Templates\Services\Base;
 use Atro\ActionTypes\TypeInterface;
 
 class Action extends Base
