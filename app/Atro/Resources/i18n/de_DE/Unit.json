@@ -5,7 +5,8 @@
     "measure": "Maß",
     "isDefault": "Standard",
     "multiplier": "Multiplikator",
-    "convertTo": "Konvertieren zu"
+    "convertTo": "Konvertieren zu",
+    "symbol": "Symbol"
   },
   "links": {
     "measure": "Maß",

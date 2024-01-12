@@ -2,7 +2,8 @@
   "fields": {
     "name": "Назва",
     "description": "Опис",
-    "units": "Одиниці виміру"
+    "units": "Одиниці виміру",
+    "displayFormat": "Формат відображення"
   },
   "links": {
     "units": "Одиниці виміру"

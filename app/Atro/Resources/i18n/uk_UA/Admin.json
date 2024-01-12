@@ -153,7 +153,8 @@
     "unique": "Unique",
     "index": "Індекс бази даних",
     "foreignName": "Поле пов'язаної сутності",
-    "useDisabledTextareaInViewMode": "Використовувати нередаговану текстову область у режимі перегляду"
+    "useDisabledTextareaInViewMode": "Використовувати нередаговану текстову область у режимі перегляду",
+    "setDefaultOnlyIfRequired": "Застосовуйте значення за замовчуванням лише за потреби"
   },
   "messages": {
     "selectEntityType": "Виберіть тип сутності в лівому меню.",

@@ -2,7 +2,8 @@
   "fields": {
     "name": "Name",
     "description": "Beschreibung",
-    "units": "Einheiten"
+    "units": "Einheiten",
+    "displayFormat": "Anzeigeformat"
   },
   "links": {
     "units": "Einheiten"

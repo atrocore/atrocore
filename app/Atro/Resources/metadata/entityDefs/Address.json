@@ -2,7 +2,7 @@
   "fields": {
     "name": {
       "type": "varchar",
-      "required": true,
+      "required": false,
       "trim": true
     },
     "description": {
@@ -47,7 +47,8 @@
       "type": "varchar"
     },
     "account": {
-      "type": "link"
+      "type": "link",
+      "required": true
     },
     "createdAt": {
       "type": "datetime",
