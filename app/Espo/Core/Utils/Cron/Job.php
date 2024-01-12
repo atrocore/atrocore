@@ -80,33 +80,14 @@ class Job
 
     public function getPendingJobList()
     {
-        $limit = intval($this->getConfig()->get('jobMaxPortion', 0));
-
-        $selectParams = [
-            'select'      => [
-                'id',
-                'scheduledJobId',
-                'scheduledJobJob',
-                'executeTime',
-                'targetId',
-                'targetType',
-                'methodName',
-                'method', // TODO remove deprecated
-                'serviceName',
-                'data'
-            ],
-            'whereClause' => [
+        return $this
+            ->getEntityManager()
+            ->getRepository('Job')
+            ->where([
                 'status'        => CronManager::PENDING,
                 'executeTime<=' => date('Y-m-d H:i:s')
-            ],
-            'orderBy'     => 'executeTime'
-        ];
-        if ($limit) {
-            $selectParams['offset'] = 0;
-            $selectParams['limit'] = $limit;
-        }
-
-        return $this->getEntityManager()->getRepository('Job')->find($selectParams);
+            ])
+            ->find();
     }
 
     public function isScheduledJobRunning($scheduledJobId, $targetId = null, $targetType = null)
