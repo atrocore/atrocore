@@ -19,5 +19,9 @@
   },
   "labels": {
     "Create Account": "Створити контрагента"
+  },
+  "links": {
+    "addresses": "Адреси",
+    "contacts": "Контакти"
   }
 }

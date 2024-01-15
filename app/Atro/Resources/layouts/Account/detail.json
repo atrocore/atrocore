@@ -4,18 +4,16 @@
     "rows": [
       [
         {
-          "name": "name"
-        },
-        {
-          "name": "type"
+          "name": "name",
+          "fullWidth": true
         }
       ],
       [
         {
-          "name": "role"
+          "name": "type"
         },
         {
-          "name": "description"
+          "name": "role"
         }
       ],
       [
@@ -32,6 +30,12 @@
         },
         {
           "name": "language"
+        }
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
         }
       ]
     ]

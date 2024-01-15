@@ -19,5 +19,9 @@
   },
   "labels": {
     "Create Account": "Create Account"
+  },
+  "links": {
+    "addresses": "Addresses",
+    "contacts": "Contacts"
   }
 }
