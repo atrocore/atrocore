@@ -235,14 +235,14 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
         showPanel: function (name) {
             this.recordHelper.setPanelStateParam(name, 'hidden', false);
             if (this.isRendered()) {
-                this.$el.find('.panel[data-name="'+name+'"]').removeClass('hidden');
+                this.$el.find('.panel[data-name="' + name + '"]').removeClass('hidden');
             }
         },
 
         hidePanel: function (name) {
             this.recordHelper.setPanelStateParam(name, 'hidden', true);
             if (this.isRendered()) {
-                this.$el.find('.panel[data-name="'+name+'"]').addClass('hidden');
+                this.$el.find('.panel[data-name="' + name + '"]').addClass('hidden');
             }
         },
 
@@ -266,7 +266,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
         },
 
         getFieldView: function (name) {
-            var view =  this.getView(name + 'Field') || null;
+            var view = this.getView(name + 'Field') || null;
 
             // TODO remove
             if (!view) {
@@ -469,7 +469,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
             let model = this.model;
 
             $.each(model.getClonedAttributes(), (name, value) => {
-                if (!data[name] && !this.getMetadata().get(['entityDefs', model.urlRoot, 'fields', name, 'relationVirtualField'])) {
+                if (!(name in data) && !this.getMetadata().get(['entityDefs', model.urlRoot, 'fields', name, 'relationVirtualField'])) {
                     data[name] = value;
                 }
             });
@@ -552,7 +552,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
                 Espo.Ui.confirm(confirmMessage, {
                     confirmText: self.translate('Apply'),
                     cancelText: self.translate('Cancel'),
-                    cancelCallback(){
+                    cancelCallback() {
                         self.enableButtons();
                         self.trigger('cancel:save');
                     }
@@ -636,7 +636,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
                         _.extend(data, view.fetch());
                     }
                 }
-            };
+            }
             return data;
         },
 
@@ -788,7 +788,8 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
             }
         },
 
-        exit: function (after) {}
+        exit: function (after) {
+        }
 
     });
 
