@@ -34,6 +34,8 @@ Espo.define('views/fields/unit-varchar', 'views/fields/varchar', Dep => {
 
     return Dep.extend({
 
+        listLinkTemplate: 'fields/varchar/list-link',
+
         setup() {
             Dep.prototype.setup.call(this);
             this.prepareOriginalName()
@@ -119,20 +121,18 @@ Espo.define('views/fields/unit-varchar', 'views/fields/varchar', Dep => {
                 detailTemplate1: 'fields/varchar/detail-1',
                 detailTemplate2: 'fields/varchar/detail-2',
                 listTemplate1: 'fields/varchar/list-1',
-                listTemplate2: 'fields/varchar/list-2'
+                listTemplate2: 'fields/varchar/list-2',
+                listLinkTemplate1: 'fields/varchar/list-link-1',
+                listLinkTemplate2: 'fields/varchar/list-link-2'
             }
 
-            if (this.mode === 'detail' || this.mode === 'list') {
-                let prop
-                if (this.mode === 'list') {
-                    prop = 'listTemplate' + this.getMeasureFormat();
-                } else {
-                    prop = 'detailTemplate' + this.getMeasureFormat();
-                }
-
+            if (['detail', 'list', 'listLink'].includes(this.mode)) {
+                let prop = this.mode + 'Template' + this.getMeasureFormat();
                 if (prop in templates) {
                     if (this.mode === 'list') {
                         this.listTemplate = templates[prop]
+                    } else if (this.mode === 'listLink') {
+                        this.listLinkTemplate = templates[prop]
                     } else {
                         this.detailTemplate = templates[prop]
                     }
