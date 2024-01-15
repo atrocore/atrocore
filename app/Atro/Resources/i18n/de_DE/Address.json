@@ -10,7 +10,8 @@
     "country": "Land",
     "countryCode": "Landesvorwahl",
     "type": "Typ",
-    "account": "Konto"
+    "account": "Konto",
+    "contactName": "Kontaktname"
   },
   "options": {
     "type": {
