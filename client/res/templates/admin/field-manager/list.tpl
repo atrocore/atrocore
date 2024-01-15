@@ -19,7 +19,12 @@
     <tbody>
     {{#each fieldDefsArray}}
     <tr>
-        <td><a href="#Admin/fieldManager/scope={{../scope}}&field={{name}}" class="field-link" data-scope="{{../scope}}" data-field="{{name}}">{{name}}</td>
+        {{#if emDisabled}}
+        <td><span class="field-link" data-scope="{{../../scope}}" data-field="{{name}}">{{name}}</td>
+        {{/if}}
+        {{#unless emDisabled}}
+        <td><a href="#Admin/fieldManager/scope={{../../scope}}&field={{name}}" class="field-link" data-scope="{{../../scope}}" data-field="{{name}}">{{name}}</td>
+        {{/unless}}
         <td>{{label}}</td>
         <td>{{translate type category='fieldTypes' scope='Admin'}}</td>
         <td align="right">{{#if isCustom}}<a href="javascript:" data-action="removeField" data-name="{{name}}">remove</a>{{/if}}</td>

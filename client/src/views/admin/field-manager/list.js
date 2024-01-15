@@ -47,6 +47,7 @@ Espo.define('views/admin/field-manager/list', 'view', function (Dep) {
                 if (scopeFields[v.name].labelField) {
                     v.label = this.getLanguage().translate(scopeFields[v.name].labelField, 'fields', this.scope);
                 }
+                v.emDisabled = scopeFields[v.name].emDisabled ?? false;
                 if (!scopeFields[v.name].emHidden) {
                     fieldDefsArray.push(v);
                 }

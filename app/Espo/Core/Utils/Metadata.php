@@ -260,6 +260,7 @@ class Metadata
                 }
                 $data->entityDefs->{$entityType}->fields->id = new \stdClass();
                 $data->entityDefs->{$entityType}->fields->id->type = 'varchar';
+                $data->entityDefs->{$entityType}->fields->id->emDisabled = true;
             }
         }
 
@@ -688,6 +689,7 @@ class Metadata
             'tooltip',
             'notStorable',
             'emHidden',
+            'emDisabled',
             'importDisabled',
             'exportDisabled',
             'massUpdateDisabled',
