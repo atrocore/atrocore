@@ -28,6 +28,9 @@
         "delivery"
       ]
     },
+    "contactName": {
+      "type": "varchar"
+    },
     "street": {
       "type": "text"
     },

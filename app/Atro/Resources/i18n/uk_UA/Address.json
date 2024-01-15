@@ -9,7 +9,8 @@
     "country": "провінційний",
     "countryCode": "код країни",
     "type": "типовий",
-    "account": "лічильний"
+    "account": "лічильний",
+    "contactName": "Контактна Особа"
   },
   "options": {
     "type": {

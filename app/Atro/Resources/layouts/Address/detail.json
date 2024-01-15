@@ -5,7 +5,9 @@
         {
           "name": "name"
         },
-        false
+        {
+          "name": "contactName"
+        }
       ],
       [
         {

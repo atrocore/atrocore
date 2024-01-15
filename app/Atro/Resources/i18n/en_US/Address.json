@@ -10,7 +10,8 @@
     "country": "Country",
     "countryCode": "Country Code",
     "type": "Type",
-    "account": "Account"
+    "account": "Account",
+    "contactName": "Contact Name"
   },
   "options": {
     "type": {
