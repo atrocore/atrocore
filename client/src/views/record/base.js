@@ -637,7 +637,6 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
                     }
                 }
             }
-            ;
             return data;
         },
 
