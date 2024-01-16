@@ -5,7 +5,8 @@
     "sourceEntity": "Quell-Entität",
     "inBackground": "Im Hintergrund ausführen",
     "usage": "Verwendung",
-    "massAction": "Massenaktion"
+    "massAction": "Massenaktion",
+    "display": "Anzeige"
   },
   "labels": {
     "Create Action": "Aktion erstellen",
@@ -21,6 +22,10 @@
     "usage": {
       "entity": "Entität",
       "record": "Datensatz"
+    },
+    "display": {
+      "dropdown": "Auswahlliste",
+      "single": "Einzeln"
     }
   },
   "tooltips": {

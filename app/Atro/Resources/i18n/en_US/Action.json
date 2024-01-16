@@ -5,7 +5,8 @@
     "sourceEntity": "Source Entity",
     "inBackground": "Execute in Background",
     "usage": "Usage",
-    "massAction": "Mass Action"
+    "massAction": "Mass Action",
+    "display": "Display"
   },
   "labels": {
     "Create Action": "Create Action",
@@ -21,6 +22,10 @@
     "usage": {
       "entity": "Entity",
       "record": "Record"
+    },
+    "display": {
+      "dropdown": "Dropdown",
+      "single": "Single"
     }
   },
   "tooltips": {

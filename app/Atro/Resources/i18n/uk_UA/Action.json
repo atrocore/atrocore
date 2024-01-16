@@ -5,7 +5,8 @@
     "sourceEntity": "Вихідна сутність",
     "inBackground": "Виконати у фоновому режимі",
     "usage": "Використання",
-    "massAction": "Масова дія"
+    "massAction": "Масова дія",
+    "display": "Відображання"
   },
   "labels": {
     "Create Action": "Створити дію",
@@ -21,6 +22,10 @@
     "usage": {
       "entity": "Сутність",
       "record": "Запис сутності"
+    },
+    "display": {
+      "dropdown": "Спадний список",
+      "single": "Поодиноко"
     }
   },
   "tooltips": {

@@ -52,6 +52,18 @@
       ],
       "tooltip": true
     },
+    "display": {
+      "type": "enum",
+      "prohibitedEmptyValue": false,
+      "optionsIds": [
+        "dropdown",
+        "single"
+      ],
+      "options": [
+        "dropdown",
+        "single"
+      ]
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
