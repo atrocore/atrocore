@@ -23,6 +23,14 @@
               "type": "in",
               "attribute": "type",
               "value": []
+            },
+            {
+              "type": "in",
+              "attribute": "usage",
+              "value": [
+                "entity",
+                "record"
+              ]
             }
           ]
         }
@@ -34,6 +42,37 @@
               "type": "in",
               "attribute": "type",
               "value": []
+            }
+          ]
+        }
+      },
+      "massAction": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "usage",
+              "value": [
+                "record"
+              ]
+            },
+            {
+              "type": "isNotEmpty",
+              "attribute": "sourceEntity"
+            }
+          ]
+        }
+      },
+      "display": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "usage",
+              "value": [
+                "entity",
+                "record"
+              ]
             }
           ]
         }
