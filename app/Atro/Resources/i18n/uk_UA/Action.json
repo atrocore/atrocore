@@ -4,7 +4,8 @@
     "type": "Тип",
     "sourceEntity": "Вихідна сутність",
     "inBackground": "Виконати у фоновому режимі",
-    "usage": "Використання"
+    "usage": "Використання",
+    "massAction": "Масова дія"
   },
   "labels": {
     "Create Action": "Створити дію",

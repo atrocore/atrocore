@@ -4,7 +4,8 @@
     "type": "Typ",
     "sourceEntity": "Quell-Entität",
     "inBackground": "Im Hintergrund ausführen",
-    "usage": "Verwendung"
+    "usage": "Verwendung",
+    "massAction": "Massenaktion"
   },
   "labels": {
     "Create Action": "Aktion erstellen",

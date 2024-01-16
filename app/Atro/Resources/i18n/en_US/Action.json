@@ -4,7 +4,8 @@
     "type": "Type",
     "sourceEntity": "Source Entity",
     "inBackground": "Execute in Background",
-    "usage": "Usage"
+    "usage": "Usage",
+    "massAction": "Mass Action"
   },
   "labels": {
     "Create Action": "Create Action",
