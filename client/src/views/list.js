@@ -153,6 +153,17 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
                             }
                         });
                     }
+
+                    if (dynamicAction.display === 'single') {
+                        (this.menu.buttons || []).unshift({
+                            label: dynamicAction.name,
+                            action: "dynamicEntityAction",
+                            iconHtml: '',
+                            data:{
+                                id: dynamicAction.id
+                            }
+                        });
+                    }
                 }
             });
 
@@ -162,10 +173,11 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
         actionDynamicEntityAction(data) {
             this.notify(this.translate('pleaseWait', 'messages'));
             this.ajaxPostRequest('Action/action/executeNow', {actionId: data.id}).success(response => {
-                if (response.inBackground){
+                if (response.inBackground) {
                     this.translate('jobAdded', 'messages');
+                } else {
+                    this.notify('Done', 'success');
                 }
-                this.notify('Done', 'success');
             });
         },
 

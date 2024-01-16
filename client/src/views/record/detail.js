@@ -206,10 +206,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         actionDynamicAction: function (data) {
             this.notify(this.translate('pleaseWait', 'messages'));
             this.ajaxPostRequest('Action/action/executeNow', {actionId: data.id, entityId: this.model.get('id')}).success(response => {
-                if (response.inBackground){
+                if (response.inBackground) {
                     this.translate('jobAdded', 'messages');
+                } else {
+                    this.notify('Done', 'success');
                 }
-                this.notify('Done', 'success');
                 this.model.fetch();
             });
         },

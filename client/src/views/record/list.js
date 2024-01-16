@@ -525,10 +525,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 actionId: data.id,
                 where: where
             }).success(() => {
-                if (response.inBackground){
+                if (response.inBackground) {
                     this.translate('jobAdded', 'messages');
+                } else {
+                    this.notify('Done', 'success');
                 }
-                this.notify('Done', 'success');
                 setTimeout(() => {
                     this.collection.fetch();
                 }, 3000);
@@ -2258,10 +2259,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 actionId: data.action_id,
                 entityId: data.entity_id
             }).success(response => {
-                if (response.inBackground){
+                if (response.inBackground) {
                     this.translate('jobAdded', 'messages');
+                } else {
+                    this.notify('Done', 'success');
                 }
-                this.notify('Done', 'success');
                 this.collection.fetch();
             });
         },
