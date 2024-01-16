@@ -16,14 +16,24 @@
           "name": "type"
         },
         {
+          "name": "inBackground"
+        }
+      ],
+      [
+        {
+          "name": "usage"
+        },
+        {
           "name": "sourceEntity"
         }
       ],
       [
         {
-          "name": "inBackground"
+          "name": "massAction"
         },
-        false
+        {
+          "name": "display"
+        }
       ]
     ]
   }

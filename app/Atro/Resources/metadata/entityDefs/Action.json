@@ -37,7 +37,8 @@
       "tooltip": true
     },
     "massAction": {
-      "type": "bool"
+      "type": "bool",
+      "default": true
     },
     "usage": {
       "type": "enum",

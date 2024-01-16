@@ -21,7 +21,7 @@ class V1Dot8Dot12 extends Base
         $toSchema = clone $fromSchema;
 
         $this->addColumn($toSchema, 'action', 'in_background', ['type' => 'bool']);
-        $this->addColumn($toSchema, 'action', 'mass_action', ['type' => 'bool']);
+        $this->addColumn($toSchema, 'action', 'mass_action', ['type' => 'bool', 'default' => true]);
         $this->addColumn($toSchema, 'action', 'usage', ['type' => 'enum']);
         $this->addColumn($toSchema, 'action', 'display', ['type' => 'enum']);
 
