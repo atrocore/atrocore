@@ -25,6 +25,11 @@ class Action extends Base
 
     public function executeNow(string $id, \stdClass $input): array
     {
+        $event = $this->dispatchEvent('beforeExecuteNow', new Event(['id' => $id, 'input' => $input]));
+
+        $id = $event->getArgument('id');
+        $input = $event->getArgument('input');
+
         $action = $this->getRepository()->get($id);
         if (empty($action)) {
             throw new NotFound();
