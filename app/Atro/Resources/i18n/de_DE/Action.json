@@ -3,7 +3,8 @@
     "isActive": "Aktiv",
     "type": "Typ",
     "sourceEntity": "Quell-Entität",
-    "inBackground": "Im Hintergrund ausführen"
+    "inBackground": "Im Hintergrund ausführen",
+    "usage": "Verwendung"
   },
   "labels": {
     "Create Action": "Aktion erstellen",
@@ -15,7 +16,14 @@
   "messages": {
     "executeNow": "Sind Sie sicher, dass Sie die ausgewählte Aktion ausführen möchten?"
   },
+  "options": {
+    "usage": {
+      "entity": "Entität",
+      "record": "Datensatz"
+    }
+  },
   "tooltips": {
-    "inBackground": "Die Aktion wird im Hintergrund ausgeführt, ohne dass eine direkte Erfolgs-/Fehlermeldung erscheint. Verwenden Sie diese Option, wenn die Ausführung der Aktion mehr als 30 Sekunden dauern soll."
+    "inBackground": "Die Aktion wird im Hintergrund ausgeführt, ohne dass eine direkte Erfolgs-/Fehlermeldung erscheint. Verwenden Sie diese Option, wenn die Ausführung der Aktion mehr als 30 Sekunden dauern soll.",
+    "usage": "Die Verwendung schreibt die Platzierung der Aktion vor. Bei einer Record Action müssen die betroffenen Datensätze vorausgewählt werden."
   }
 }

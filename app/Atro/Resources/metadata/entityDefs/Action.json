@@ -36,6 +36,19 @@
       "type": "bool",
       "tooltip": true
     },
+    "usage": {
+      "type": "enum",
+      "prohibitedEmptyValue": false,
+      "optionsIds": [
+        "entity",
+        "record"
+      ],
+      "options": [
+        "entity",
+        "record"
+      ],
+      "tooltip": true
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true

@@ -3,7 +3,8 @@
     "isActive": "Active",
     "type": "Type",
     "sourceEntity": "Source Entity",
-    "inBackground": "Execute in Background"
+    "inBackground": "Execute in Background",
+    "usage": "Usage"
   },
   "labels": {
     "Create Action": "Create Action",
@@ -15,7 +16,14 @@
   "messages": {
     "executeNow": "Are you sure you want to execute selected action?"
   },
+  "options": {
+    "usage": {
+      "entity": "Entity",
+      "record": "Record"
+    }
+  },
   "tooltips": {
-    "inBackground": "Action will be executed in background with no direct success/error message. Use it, if the action's execution till take more than 30 seconds."
+    "inBackground": "Action will be executed in background with no direct success/error message. Use it, if the action's execution till take more than 30 seconds.",
+    "usage": "Usage prescribes placement of the action. A Record Action requires the effected records to be preselected."
   }
 }
