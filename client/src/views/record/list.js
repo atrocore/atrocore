@@ -525,7 +525,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 actionId: data.id,
                 where: where
             }).success(() => {
-                Backbone.trigger('showQueuePanel');
+                if (response.inBackground){
+                    Backbone.trigger('showQueuePanel');
+                }
                 this.notify('Done', 'success');
                 setTimeout(() => {
                     this.collection.fetch();
@@ -2255,7 +2257,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.ajaxPostRequest('Action/action/executeNow', {
                 actionId: data.action_id,
                 entityId: data.entity_id
-            }).success(() => {
+            }).success(response => {
+                if (response.inBackground){
+                    Backbone.trigger('showQueuePanel');
+                }
                 this.notify('Done', 'success');
                 this.collection.fetch();
             });

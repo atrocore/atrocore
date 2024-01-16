@@ -22,14 +22,17 @@ class Action extends Base
 {
     protected $mandatorySelectAttributeList = ['data'];
 
-    public function executeNow(string $id, \stdClass $input): bool
+    public function executeNow(string $id, \stdClass $input): array
     {
         $action = $this->getRepository()->get($id);
         if (empty($action)) {
             throw new NotFound();
         }
 
-        return $this->getActionType($action->get('type'))->executeNow($action, $input);
+        return [
+            'inBackground' => $action->get('inBackground'),
+            'success'      => $this->getActionType($action->get('type'))->executeNow($action, $input),
+        ];
     }
 
     protected function init()

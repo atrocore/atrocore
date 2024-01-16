@@ -49,7 +49,10 @@ Espo.define('views/action/record/detail', 'views/record/detail',
 
             this.confirm(this.translate('executeNow', 'messages', 'Action'), () => {
                 this.notify('Please wait...');
-                this.ajaxPostRequest('Action/action/executeNow', {actionId: this.model.get('id')}).success(() => {
+                this.ajaxPostRequest('Action/action/executeNow', {actionId: this.model.get('id')}).success(response => {
+                    if (response.inBackground){
+                        Backbone.trigger('showQueuePanel');
+                    }
                     this.notify('Done', 'success');
                 });
             });

@@ -19,7 +19,7 @@ use Espo\Core\Templates\Controllers\Base;
 
 class Action extends Base
 {
-    public function actionExecuteNow($params, $data, $request): bool
+    public function actionExecuteNow($params, $data, $request): array
     {
         if (!$request->isPost() || !property_exists($data, 'actionId')) {
             throw new BadRequest();
