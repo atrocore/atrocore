@@ -35,7 +35,16 @@ class UpdateCurrencyExchangeViaECB extends Base
         }
 
         $currencyRates = $this->getConfig()->get('currencyRates');
-        $baseCurrency = $this->getConfig()->get('baseCurrency');
+        $baseCurrency = '';
+        $units = $this->getEntityManager()->getRepository('Unit')->where(['measureId' => 'currency'])->find();
+        foreach ($units as $unit) {
+            if (!array_key_exists($unit->get('code'), $currencyRates)) {
+                $currencyRates[$unit->get('code')] = 1;
+            }
+            if (!empty($unit->get('isDefault'))) {
+                $baseCurrency = $unit->get('code');
+            }
+        }
 
         if (empty($baseCurrency) || empty($currencyRates)) {
             return true;
@@ -53,10 +62,10 @@ class UpdateCurrencyExchangeViaECB extends Base
             }
         }
 
-        $units = $this->getEntityManager()->getRepository('Unit')->where(['measureId' => 'currency'])->find();
+
         foreach ($units as $unit) {
-            if (!empty($currencyRates[$unit['name']])) {
-                $unit->set('multiplier', $currencyRates[$unit['name']]);
+            if (!empty($currencyRates[$unit->get('name')])) {
+                $unit->set('multiplier', $currencyRates[$unit->get('name')]);
                 $this->getEntityManager()->saveEntity($unit);
             }
         }
