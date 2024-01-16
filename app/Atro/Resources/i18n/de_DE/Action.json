@@ -2,7 +2,8 @@
   "fields": {
     "isActive": "Aktiv",
     "type": "Typ",
-    "sourceEntity": "Quell-Entität"
+    "sourceEntity": "Quell-Entität",
+    "inBackground": "Im Hintergrund ausführen"
   },
   "labels": {
     "Create Action": "Aktion erstellen",
@@ -13,5 +14,8 @@
   },
   "messages": {
     "executeNow": "Sind Sie sicher, dass Sie die ausgewählte Aktion ausführen möchten?"
+  },
+  "tooltips": {
+    "inBackground": "Die Aktion wird im Hintergrund ausgeführt, ohne dass eine direkte Erfolgs-/Fehlermeldung erscheint. Verwenden Sie diese Option, wenn die Ausführung der Aktion mehr als 30 Sekunden dauern soll."
   }
 }

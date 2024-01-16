@@ -3,5 +3,41 @@
   "controller": "controllers/record",
   "recordViews": {
     "detail": "views/action/record/detail"
+  },
+  "dynamicLogic": {
+    "fields": {
+      "type": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      },
+      "sourceEntity": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": []
+            }
+          ]
+        }
+      },
+      "inBackground": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": []
+            }
+          ]
+        }
+      }
+    }
   }
 }
