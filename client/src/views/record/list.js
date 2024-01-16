@@ -853,8 +853,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }, this);
             this.checkAllResultMassActionList = checkAllResultMassActionList;
 
-            (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicActions']) || []).forEach(dynamicAction => {
-                if (this.getAcl().check(dynamicAction.acl.scope, dynamicAction.acl.action)) {
+            (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicRecordActions']) || []).forEach(dynamicAction => {
+                if (this.getAcl().check(dynamicAction.acl.scope, dynamicAction.acl.action) && dynamicAction.massAction) {
                     let obj = {
                         action: "dynamicMassUpdateAction",
                         label: dynamicAction.name,

@@ -289,13 +289,22 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             }
 
-            (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicActions']) || []).forEach(dynamicAction => {
+            (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicRecordActions']) || []).forEach(dynamicAction => {
                 if (this.getAcl().check(dynamicAction.acl.scope, dynamicAction.acl.action)) {
-                    this.dropdownItemList.push({
-                        id: dynamicAction.id,
-                        label: dynamicAction.name,
-                        name: "dynamicUpdateAction"
-                    });
+                    if (dynamicAction.display === 'dropdown') {
+                        this.dropdownItemList.push({
+                            id: dynamicAction.id,
+                            label: dynamicAction.name,
+                            name: "dynamicUpdateAction"
+                        });
+                    }
+                    if (dynamicAction.display === 'single') {
+                        this.additionalButtons.push({
+                            id: dynamicAction.id,
+                            label: dynamicAction.name,
+                            action: "dynamicUpdateAction"
+                        });
+                    }
                 }
             });
 
