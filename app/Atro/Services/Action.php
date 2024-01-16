@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Espo\Core\EventManager\Event;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Services\Base;
@@ -29,10 +30,14 @@ class Action extends Base
             throw new NotFound();
         }
 
-        return [
+        $result = [
             'inBackground' => $action->get('inBackground'),
             'success'      => $this->getActionType($action->get('type'))->executeNow($action, $input),
         ];
+
+        return $this
+            ->dispatchEvent('afterExecuteNow', new Event(['result' => $result, 'action' => $action, 'input' => $input]))
+            ->getArgument('result');
     }
 
     protected function init()

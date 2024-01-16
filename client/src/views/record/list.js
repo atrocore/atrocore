@@ -523,16 +523,18 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.notify(this.translate('pleaseWait', 'messages'));
             this.ajaxPostRequest('Action/action/executeNow', {
                 actionId: data.id,
-                where: where
-            }).success(() => {
+                where: where,
+                massAction: true
+            }).success(response => {
                 if (response.inBackground) {
                     this.notify(this.translate('jobAdded', 'messages'), 'success');
+                    setTimeout(() => {
+                        this.collection.fetch();
+                    }, 3000);
                 } else {
                     this.notify('Done', 'success');
-                }
-                setTimeout(() => {
                     this.collection.fetch();
-                }, 3000);
+                }
             });
         },
 
