@@ -53,7 +53,11 @@ Espo.define('views/action/record/detail', 'views/record/detail',
                     if (response.inBackground) {
                         this.notify(this.translate('jobAdded', 'messages'), 'success');
                     } else {
-                        this.notify('Done', 'success');
+                        if (response.success) {
+                            this.notify(response.message, 'success');
+                        } else {
+                            this.notify(response.message, 'error');
+                        }
                     }
                 });
             });

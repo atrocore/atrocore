@@ -35,9 +35,17 @@ class Action extends Base
             throw new NotFound();
         }
 
+        $success = $this->getActionType($action->get('type'))->executeNow($action, $input);
+        if ($success) {
+            $message = sprintf($this->getInjection('container')->get('language')->translate('actionExecuted', 'messages'), $action->get('name'));
+        } else {
+            $message = 'Something wrong';
+        }
+
         $result = [
             'inBackground' => $action->get('inBackground'),
-            'success'      => $this->getActionType($action->get('type'))->executeNow($action, $input),
+            'success'      => $success,
+            'message'      => $message,
         ];
 
         return $this

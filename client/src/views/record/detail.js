@@ -209,7 +209,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 if (response.inBackground) {
                     this.notify(this.translate('jobAdded', 'messages'), 'success');
                 } else {
-                    this.notify('Done', 'success');
+                    if (response.success) {
+                        this.notify(response.message, 'success');
+                    } else {
+                        this.notify(response.message, 'error');
+                    }
                 }
                 this.model.fetch();
             });

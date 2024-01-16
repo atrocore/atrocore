@@ -176,7 +176,11 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
                 if (response.inBackground) {
                     this.notify(this.translate('jobAdded', 'messages'), 'success');
                 } else {
-                    this.notify('Done', 'success');
+                    if (response.success) {
+                        this.notify(response.message, 'success');
+                    } else {
+                        this.notify(response.message, 'error');
+                    }
                 }
             });
         },

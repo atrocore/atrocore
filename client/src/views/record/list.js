@@ -532,7 +532,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         this.collection.fetch();
                     }, 3000);
                 } else {
-                    this.notify('Done', 'success');
+                    if (response.success) {
+                        this.notify(response.message, 'success');
+                    } else {
+                        this.notify(response.message, 'error');
+                    }
                     this.collection.fetch();
                 }
             });
@@ -2264,7 +2268,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 if (response.inBackground) {
                     this.notify(this.translate('jobAdded', 'messages'), 'success');
                 } else {
-                    this.notify('Done', 'success');
+                    if (response.success) {
+                        this.notify(response.message, 'success');
+                    } else {
+                        this.notify(response.message, 'error');
+                    }
                 }
                 this.collection.fetch();
             });
