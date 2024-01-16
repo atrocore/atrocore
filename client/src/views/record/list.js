@@ -526,7 +526,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 where: where
             }).success(() => {
                 if (response.inBackground) {
-                    this.translate('jobAdded', 'messages');
+                    this.notify(this.translate('jobAdded', 'messages'), 'success');
                 } else {
                     this.notify('Done', 'success');
                 }
@@ -2260,7 +2260,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 entityId: data.entity_id
             }).success(response => {
                 if (response.inBackground) {
-                    this.translate('jobAdded', 'messages');
+                    this.notify(this.translate('jobAdded', 'messages'), 'success');
                 } else {
                     this.notify('Done', 'success');
                 }

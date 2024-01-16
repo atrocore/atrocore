@@ -51,7 +51,7 @@ Espo.define('views/action/record/detail', 'views/record/detail',
                 this.notify('Please wait...');
                 this.ajaxPostRequest('Action/action/executeNow', {actionId: this.model.get('id')}).success(response => {
                     if (response.inBackground) {
-                        this.translate('jobAdded', 'messages');
+                        this.notify(this.translate('jobAdded', 'messages'), 'success');
                     } else {
                         this.notify('Done', 'success');
                     }

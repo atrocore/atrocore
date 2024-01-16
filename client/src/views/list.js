@@ -174,7 +174,7 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
             this.notify(this.translate('pleaseWait', 'messages'));
             this.ajaxPostRequest('Action/action/executeNow', {actionId: data.id}).success(response => {
                 if (response.inBackground) {
-                    this.translate('jobAdded', 'messages');
+                    this.notify(this.translate('jobAdded', 'messages'), 'success');
                 } else {
                     this.notify('Done', 'success');
                 }
