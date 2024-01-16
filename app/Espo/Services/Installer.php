@@ -753,7 +753,7 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
             ->setParameter(3, '2')
             ->executeStatement();
 
-        $symbols = ["EUR" => "€", "USD" => "$", "CHF" => "Fr.", "GBP" => "£"];
+        $symbols = ["EUR" => "€"];
 
         $rates = UpdateCurrencyExchangeViaECB::getExchangeRates();
         foreach ($symbols as $currency => $symbol) {
