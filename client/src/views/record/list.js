@@ -295,9 +295,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         showMore: true,
 
-        massActionList: ['remove', 'merge', 'massUpdate', 'export'],
+        massActionList: ['remove', 'merge', 'massUpdate'],
 
-        checkAllResultMassActionList: ['remove', 'massUpdate', 'export'],
+        checkAllResultMassActionList: ['remove', 'massUpdate'],
 
         quickDetailDisabled: false,
 
@@ -455,34 +455,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
         },
 
-        export: function () {
-            let data = {};
-            if (this.allResultIsChecked) {
-                data.where = this.collection.getWhere();
-                data.selectData = this.collection.data || {};
-                data.byWhere = true;
-            } else {
-                data.ids = this.checkedList;
-            }
-
-            let o = {
-                scope: this.entityType,
-                entityFilterData: data
-            };
-
-            var layoutFieldList = [];
-            (this.listLayout || []).forEach(function (item) {
-                if (item.name) {
-                    layoutFieldList.push(item.name);
-                }
-            }, this);
-            o.fieldList = layoutFieldList;
-
-            this.createView('dialogExport', 'views/export/modals/export', o, function (view) {
-                view.render();
-            }, this);
-        },
-
         massAction: function (name) {
             var bypassConfirmation = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name, 'bypassConfirmation']);
             var confirmationMsg = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name, 'confirmationMessage']) || 'confirmation';
@@ -540,7 +512,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
         },
 
-        massActionDynamicMassUpdateAction: function (data) {
+        massActionDynamicMassAction: function (data) {
             let where;
             if (this.allResultIsChecked) {
                 where = this.collection.getWhere();
@@ -551,13 +523,18 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.notify(this.translate('pleaseWait', 'messages'));
             this.ajaxPostRequest('Action/action/executeNow', {
                 actionId: data.id,
-                where: where
-            }).success(() => {
-                Backbone.trigger('showQueuePanel');
-                this.notify('Done', 'success');
-                setTimeout(() => {
+                where: where,
+                massAction: true
+            }).success(response => {
+                if (response.inBackground) {
+                    this.notify(this.translate('jobAdded', 'messages'), 'success');
+                    setTimeout(() => {
+                        this.collection.fetch();
+                    }, 3000);
+                } else {
+                    this.notify('Done', 'success');
                     this.collection.fetch();
-                }, 3000);
+                }
             });
         },
 
@@ -813,10 +790,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }.bind(this));
         },
 
-        massActionExport: function () {
-            this.export();
-        },
-
         removeMassAction: function (item) {
             var index = this.massActionList.indexOf(item);
             if (~index) {
@@ -856,11 +829,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.removeMassAction('merge');
             }
 
-            if (!this.getMetadata().get('scopes.ExportFeed') || !this.getAcl().checkScope('ExportFeed', 'read')) {
-                this.removeMassAction('export');
-                this.removeMassAction('export');
-            }
-
             (this.getMetadata().get(['clientDefs', this.scope, 'massActionList']) || []).forEach(function (item) {
                 var defs = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', item]) || {};
                 var acl = defs.acl;
@@ -888,12 +856,12 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }, this);
             this.checkAllResultMassActionList = checkAllResultMassActionList;
 
-            (this.getMetadata().get(['clientDefs', this.entityType, 'updateActions']) || []).forEach(updateAction => {
-                if (this.getAcl().check(updateAction.targetEntity, 'edit')) {
+            (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicRecordActions']) || []).forEach(dynamicAction => {
+                if (this.getAcl().check(dynamicAction.acl.scope, dynamicAction.acl.action) && dynamicAction.massAction) {
                     let obj = {
-                        action: "dynamicMassUpdateAction",
-                        label: updateAction.name,
-                        id: updateAction.id
+                        action: "dynamicMassAction",
+                        label: dynamicAction.name,
+                        id: dynamicAction.id
                     };
                     this.massActionList.push(obj);
                     this.checkAllResultMassActionList.push(obj);
@@ -2292,8 +2260,12 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.ajaxPostRequest('Action/action/executeNow', {
                 actionId: data.action_id,
                 entityId: data.entity_id
-            }).success(() => {
-                this.notify('Done', 'success');
+            }).success(response => {
+                if (response.inBackground) {
+                    this.notify(this.translate('jobAdded', 'messages'), 'success');
+                } else {
+                    this.notify('Done', 'success');
+                }
                 this.collection.fetch();
             });
         },

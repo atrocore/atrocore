@@ -16,7 +16,23 @@
           "name": "type"
         },
         {
+          "name": "inBackground"
+        }
+      ],
+      [
+        {
+          "name": "usage"
+        },
+        {
           "name": "sourceEntity"
+        }
+      ],
+      [
+        {
+          "name": "massAction"
+        },
+        {
+          "name": "display"
         }
       ]
     ]

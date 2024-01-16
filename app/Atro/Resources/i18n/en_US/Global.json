@@ -298,6 +298,7 @@
     "Dashboard": "Dashboard"
   },
   "messages": {
+    "jobAdded": "Job was successfully added to Queue Manager",
     "confirmInheritAllForChildren": "Are you sure you want all child items to inherit field (and attribute) values as well as relations from this parent item? Existing values will not be replaced.",
     "massDeleting": "Deleting: {{deleted}} from {{total}}",
     "massUpdating": "Updating: {{deleted}} from {{total}}",
@@ -407,7 +408,6 @@
     "remove": "Delete",
     "merge": "Merge",
     "massUpdate": "Mass Update",
-    "export": "Export",
     "follow": "Follow",
     "unfollow": "Unfollow",
     "restore": "Restore"

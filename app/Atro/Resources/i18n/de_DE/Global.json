@@ -280,6 +280,7 @@
     "Dashboard": "Dashboard"
   },
   "messages": {
+    "jobAdded": "Auftrag wurde erfolgreich zum Warteschlangenmanager hinzugefügt",
     "confirmInheritAllForChildren": "Sind Sie sicher, dass alle untergeordneten Elemente Feld- (und Attribut-) Werte sowie auch Beziehungen von diesem übergeordneten Element erben sollen? Vorhandene Werte werden nicht ersetzt.",
     "massDeleting": "Entferne: {{deleted}} vom {{total}}",
     "massUpdating": "Aktualisieren: {{deleted}} vom {{total}}",
@@ -425,7 +426,6 @@
     "removePartial": "Löschen (Anteil %s)",
     "unfollow": "Nicht abonnieren",
     "follow": "Abonnieren",
-    "export": "Exportieren",
     "merge": "Zusammenführen",
     "cancel": "Stornieren",
     "remove": "Löschen",

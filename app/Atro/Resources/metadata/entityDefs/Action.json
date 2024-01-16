@@ -32,6 +32,39 @@
       "importDisabled": true,
       "emHidden": true
     },
+    "inBackground": {
+      "type": "bool",
+      "tooltip": true
+    },
+    "massAction": {
+      "type": "bool",
+      "default": true
+    },
+    "usage": {
+      "type": "enum",
+      "prohibitedEmptyValue": false,
+      "optionsIds": [
+        "entity",
+        "record"
+      ],
+      "options": [
+        "entity",
+        "record"
+      ],
+      "tooltip": true
+    },
+    "display": {
+      "type": "enum",
+      "prohibitedEmptyValue": false,
+      "optionsIds": [
+        "dropdown",
+        "single"
+      ],
+      "options": [
+        "dropdown",
+        "single"
+      ]
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true

@@ -49,8 +49,12 @@ Espo.define('views/action/record/detail', 'views/record/detail',
 
             this.confirm(this.translate('executeNow', 'messages', 'Action'), () => {
                 this.notify('Please wait...');
-                this.ajaxPostRequest('Action/action/executeNow', {actionId: this.model.get('id')}).success(() => {
-                    this.notify('Done', 'success');
+                this.ajaxPostRequest('Action/action/executeNow', {actionId: this.model.get('id')}).success(response => {
+                    if (response.inBackground) {
+                        this.notify(this.translate('jobAdded', 'messages'), 'success');
+                    } else {
+                        this.notify('Done', 'success');
+                    }
                 });
             });
         },

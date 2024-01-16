@@ -203,10 +203,14 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             });
         },
 
-        actionDynamicUpdateAction: function (data) {
+        actionDynamicAction: function (data) {
             this.notify(this.translate('pleaseWait', 'messages'));
-            this.ajaxPostRequest('Action/action/executeNow', {actionId: data.id, entityId: this.model.get('id')}).success(() => {
-                this.notify('Done', 'success');
+            this.ajaxPostRequest('Action/action/executeNow', {actionId: data.id, entityId: this.model.get('id')}).success(response => {
+                if (response.inBackground) {
+                    this.notify(this.translate('jobAdded', 'messages'), 'success');
+                } else {
+                    this.notify('Done', 'success');
+                }
                 this.model.fetch();
             });
         },
@@ -286,13 +290,22 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             }
 
-            (this.getMetadata().get(['clientDefs', this.entityType, 'updateActions']) || []).forEach(updateAction => {
-                if (this.getAcl().check(updateAction.targetEntity, 'edit')) {
-                    this.dropdownItemList.push({
-                        id: updateAction.id,
-                        label: updateAction.name,
-                        name: "dynamicUpdateAction"
-                    });
+            (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicRecordActions']) || []).forEach(dynamicAction => {
+                if (this.getAcl().check(dynamicAction.acl.scope, dynamicAction.acl.action)) {
+                    if (dynamicAction.display === 'dropdown') {
+                        this.dropdownItemList.push({
+                            id: dynamicAction.id,
+                            label: dynamicAction.name,
+                            name: "dynamicAction"
+                        });
+                    }
+                    if (dynamicAction.display === 'single') {
+                        this.additionalButtons.push({
+                            id: dynamicAction.id,
+                            label: dynamicAction.name,
+                            action: "dynamicAction"
+                        });
+                    }
                 }
             });
 

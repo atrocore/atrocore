@@ -13,23 +13,36 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Espo\Core\EventManager\Event;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Templates\Services\Base;
+use Atro\Core\Templates\Services\Base;
 use Atro\ActionTypes\TypeInterface;
 
 class Action extends Base
 {
     protected $mandatorySelectAttributeList = ['data'];
 
-    public function executeNow(string $id, \stdClass $input): bool
+    public function executeNow(string $id, \stdClass $input): array
     {
+        $event = $this->dispatchEvent('beforeExecuteNow', new Event(['id' => $id, 'input' => $input]));
+
+        $id = $event->getArgument('id');
+        $input = $event->getArgument('input');
+
         $action = $this->getRepository()->get($id);
         if (empty($action)) {
             throw new NotFound();
         }
 
-        return $this->getActionType($action->get('type'))->executeNow($action, $input);
+        $result = [
+            'inBackground' => $action->get('inBackground'),
+            'success'      => $this->getActionType($action->get('type'))->executeNow($action, $input),
+        ];
+
+        return $this
+            ->dispatchEvent('afterExecuteNow', new Event(['result' => $result, 'action' => $action, 'input' => $input]))
+            ->getArgument('result');
     }
 
     protected function init()
