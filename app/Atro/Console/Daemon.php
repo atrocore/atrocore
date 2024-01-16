@@ -89,8 +89,10 @@ class Daemon extends AbstractConsole
                     file_put_contents($log, "Failed! The new version of the composer can't be copied.");
                 }
 
+                /**
+                 * Create Composer Note
+                 */
                 try {
-                    // create note
                     $note = $em->getEntity('Note');
                     $note->set('type', 'composerUpdate');
                     $note->set('parentType', 'ModuleManager');
