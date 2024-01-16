@@ -136,6 +136,15 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="cell form-group col-md-6" data-name="modifiedExtendedRelations">
+                <label class="control-label"
+                       data-name="modifiedExtendedRelations">{{translate 'modifiedExtendedRelations' category='fields' scope='EntityManager'}}</label>
+                <div class="field" data-name="modifiedExtendedRelations">
+                    {{{modifiedExtendedRelations}}}
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {{#each additionalParamsLayout}}
