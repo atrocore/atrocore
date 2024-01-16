@@ -95,7 +95,6 @@ class Metadata extends AbstractListener
                     ->from($connection->quoteIdentifier('action'), 't')
                     ->where('t.deleted = :false')
                     ->andWhere('t.is_active = :true')
-                    ->andWhere('t.source_entity IS NOT NULL')
                     ->setParameter('true', true, ParameterType::BOOLEAN)
                     ->setParameter('false', false, ParameterType::BOOLEAN)
                     ->fetchAllAssociative();
