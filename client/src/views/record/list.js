@@ -512,7 +512,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
         },
 
-        massActionDynamicMassUpdateAction: function (data) {
+        massActionDynamicMassAction: function (data) {
             let where;
             if (this.allResultIsChecked) {
                 where = this.collection.getWhere();
@@ -856,7 +856,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicRecordActions']) || []).forEach(dynamicAction => {
                 if (this.getAcl().check(dynamicAction.acl.scope, dynamicAction.acl.action) && dynamicAction.massAction) {
                     let obj = {
-                        action: "dynamicMassUpdateAction",
+                        action: "dynamicMassAction",
                         label: dynamicAction.name,
                         id: dynamicAction.id
                     };

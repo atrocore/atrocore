@@ -123,7 +123,7 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
             (this.getMetadata().get(['clientDefs', scope, 'dynamicRecordActions']) || []).forEach(dynamicAction => {
                 if (this.getAcl().check(dynamicAction.acl.scope, dynamicAction.acl.action)) {
                     list.push({
-                        action: "dynamicUpdateAction",
+                        action: "dynamicAction",
                         label: dynamicAction.name,
                         data: {
                             action_id: dynamicAction.id,

@@ -141,7 +141,32 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
                 }
             }
 
+            (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicEntityActions']) || []).forEach(dynamicAction => {
+                if (this.getAcl().check(dynamicAction.acl.scope, dynamicAction.acl.action)) {
+                    if (dynamicAction.display === 'dropdown') {
+                        (this.menu.dropdown || []).push({
+                            label: dynamicAction.name,
+                            action: "dynamicEntityAction",
+                            iconHtml: '',
+                            data:{
+                                id: dynamicAction.id
+                            }
+                        });
+                    }
+                }
+            });
+
             this.getStorage().set('list-view', this.scope, this.viewMode);
+        },
+
+        actionDynamicEntityAction(data) {
+            this.notify(this.translate('pleaseWait', 'messages'));
+            this.ajaxPostRequest('Action/action/executeNow', {actionId: data.id}).success(response => {
+                if (response.inBackground){
+                    this.translate('jobAdded', 'messages');
+                }
+                this.notify('Done', 'success');
+            });
         },
 
         setupModes: function () {

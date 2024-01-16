@@ -203,7 +203,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             });
         },
 
-        actionDynamicUpdateAction: function (data) {
+        actionDynamicAction: function (data) {
             this.notify(this.translate('pleaseWait', 'messages'));
             this.ajaxPostRequest('Action/action/executeNow', {actionId: data.id, entityId: this.model.get('id')}).success(response => {
                 if (response.inBackground){
@@ -295,14 +295,14 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         this.dropdownItemList.push({
                             id: dynamicAction.id,
                             label: dynamicAction.name,
-                            name: "dynamicUpdateAction"
+                            name: "dynamicAction"
                         });
                     }
                     if (dynamicAction.display === 'single') {
                         this.additionalButtons.push({
                             id: dynamicAction.id,
                             label: dynamicAction.name,
-                            action: "dynamicUpdateAction"
+                            action: "dynamicAction"
                         });
                     }
                 }
