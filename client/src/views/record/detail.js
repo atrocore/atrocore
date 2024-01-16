@@ -207,7 +207,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.notify(this.translate('pleaseWait', 'messages'));
             this.ajaxPostRequest('Action/action/executeNow', {actionId: data.id, entityId: this.model.get('id')}).success(response => {
                 if (response.inBackground){
-                    Backbone.trigger('showQueuePanel');
+                    this.translate('jobAdded', 'messages');
                 }
                 this.notify('Done', 'success');
                 this.model.fetch();

@@ -526,7 +526,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 where: where
             }).success(() => {
                 if (response.inBackground){
-                    Backbone.trigger('showQueuePanel');
+                    this.translate('jobAdded', 'messages');
                 }
                 this.notify('Done', 'success');
                 setTimeout(() => {
@@ -2259,7 +2259,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 entityId: data.entity_id
             }).success(response => {
                 if (response.inBackground){
-                    Backbone.trigger('showQueuePanel');
+                    this.translate('jobAdded', 'messages');
                 }
                 this.notify('Done', 'success');
                 this.collection.fetch();
