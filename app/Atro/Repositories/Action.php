@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\Templates\Repositories\Base;
+use Espo\Core\DataManager;
 use Espo\ORM\Entity;
 
 class Action extends Base
@@ -35,14 +36,15 @@ class Action extends Base
     public function deleteCacheFile(): void
     {
         if (empty($this->getMemoryStorage()->get('importJobId'))) {
-            $this->getInjection('dataManager')->clearCache();
+            $file = DataManager::CACHE_DIR_PATH . '/dynamic_action.json';
+            if (file_exists($file)) {
+                unlink($file);
+            }
+
+            $this->getConfig()->remove('cacheTimestamp');
+            $this->getConfig()->save();
+
+            DataManager::pushPublicData('dataTimestamp', (new \DateTime())->getTimestamp());
         }
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('dataManager');
     }
 }

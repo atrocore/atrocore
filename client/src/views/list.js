@@ -144,25 +144,43 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
             (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicEntityActions']) || []).forEach(dynamicAction => {
                 if (this.getAcl().check(dynamicAction.acl.scope, dynamicAction.acl.action)) {
                     if (dynamicAction.display === 'dropdown') {
-                        (this.menu.dropdown || []).push({
-                            label: dynamicAction.name,
-                            action: "dynamicEntityAction",
-                            iconHtml: '',
-                            data:{
-                                id: dynamicAction.id
+                        let skip = false;
+                        (this.menu.dropdown || []).forEach(item => {
+                            if (item.data && item.data.id && item.data.id === dynamicAction.id) {
+                                skip = true;
                             }
                         });
+
+                        if (!skip) {
+                            (this.menu.dropdown || []).push({
+                                label: dynamicAction.name,
+                                action: "dynamicEntityAction",
+                                iconHtml: '',
+                                data: {
+                                    id: dynamicAction.id
+                                }
+                            });
+                        }
                     }
 
                     if (dynamicAction.display === 'single') {
-                        (this.menu.buttons || []).unshift({
-                            label: dynamicAction.name,
-                            action: "dynamicEntityAction",
-                            iconHtml: '',
-                            data:{
-                                id: dynamicAction.id
+                        let skip = false;
+                        (this.menu.buttons || []).forEach(item => {
+                            if (item.data && item.data.id && item.data.id === dynamicAction.id) {
+                                skip = true;
                             }
                         });
+
+                        if (!skip) {
+                            (this.menu.buttons || []).unshift({
+                                label: dynamicAction.name,
+                                action: "dynamicEntityAction",
+                                iconHtml: '',
+                                data: {
+                                    id: dynamicAction.id
+                                }
+                            });
+                        }
                     }
                 }
             });

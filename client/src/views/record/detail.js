@@ -297,18 +297,35 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicRecordActions']) || []).forEach(dynamicAction => {
                 if (this.getAcl().check(dynamicAction.acl.scope, dynamicAction.acl.action)) {
                     if (dynamicAction.display === 'dropdown') {
-                        this.dropdownItemList.push({
-                            id: dynamicAction.id,
-                            label: dynamicAction.name,
-                            name: "dynamicAction"
+                        let skip = false;
+                        (this.dropdownItemList || []).forEach(item => {
+                            if (item.id && item.id === dynamicAction.id) {
+                                skip = true;
+                            }
                         });
+                        if (!skip) {
+                            (this.dropdownItemList || []).push({
+                                id: dynamicAction.id,
+                                label: dynamicAction.name,
+                                name: "dynamicAction"
+                            });
+                        }
                     }
                     if (dynamicAction.display === 'single') {
-                        this.additionalButtons.push({
-                            id: dynamicAction.id,
-                            label: dynamicAction.name,
-                            action: "dynamicAction"
+                        let skip = false;
+                        (this.additionalButtons || []).forEach(item => {
+                            if (item.id && item.id === dynamicAction.id) {
+                                skip = true;
+                            }
                         });
+
+                        if (!skip) {
+                            (this.additionalButtons || []).push({
+                                id: dynamicAction.id,
+                                label: dynamicAction.name,
+                                action: "dynamicAction"
+                            });
+                        }
                     }
                 }
             });
