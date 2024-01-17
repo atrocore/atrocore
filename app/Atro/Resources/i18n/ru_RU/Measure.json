@@ -12,7 +12,7 @@
   },
   "options": {
     "displayFormat": {
-      "format1": "10 USD",
+      "format1": "10$",
       "format2": "$10"
     }
   }
