@@ -171,6 +171,8 @@ class Relation extends RDB
         } else {
             $this->updateHierarchical($entity);
         }
+
+        $this->updateModifiedAtForRelatedEntity($entity);
     }
 
     protected function beforeRemove(Entity $entity, array $options = [])
@@ -185,6 +187,8 @@ class Relation extends RDB
         parent::afterRemove($entity, $options);
 
         $this->deleteHierarchical($entity);
+
+        $this->updateModifiedAtForRelatedEntity($entity);
     }
 
     public function getHierarchicalRelation(): ?string
@@ -334,5 +338,38 @@ class Relation extends RDB
         return $this
             ->where($where)
             ->find();
+    }
+
+    protected function updateModifiedAtForRelatedEntity(Entity $entity)
+    {
+        $isHierarchyEntity = $this->getMetadata()->get(['scopes', $this->entityType, 'isHierarchyEntity'], false);
+
+        foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'links'], []) as $link => $defs) {
+            if (array_key_exists('entity', $defs) && !empty($defs['entity'])) {
+                $relEntityName = $defs['entity'];
+                $modifiedExtendedRelations = $this->getMetadata()->get(['scopes', $relEntityName, 'modifiedExtendedRelations'], []);
+
+                if (!empty($modifiedExtendedRelations)) {
+                    foreach ($modifiedExtendedRelations as $relation) {
+                        $relDefs = $this->getMetadata()->get(['entityDefs', $relEntityName, 'links', $relation]);
+
+                        if (!empty($relDefs['relationName']) && $relDefs['relationName'] == lcfirst($this->entityType)) {
+                            if ($isHierarchyEntity) {
+                                if (empty($relDefs['midKeys']) || !is_array($relDefs['midKeys']) || count($relDefs['midKeys']) < 2) {
+                                    continue;
+                                }
+
+                                if ($link . 'Id' != $relDefs['midKeys'][1]) {
+                                    continue;
+                                }
+                            }
+
+                            $relEntity = $entity->get($link);
+                            $this->getEntityManager()->saveEntity($relEntity);
+                        }
+                    }
+                }
+            }
+        }
     }
 }

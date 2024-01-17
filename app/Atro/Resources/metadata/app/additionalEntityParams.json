@@ -99,6 +99,11 @@
       ],
       "default": false,
       "tooltip": true
+    },
+    "modifiedExtendedRelations": {
+      "type": "array",
+      "view": "views/admin/entity-manager/fields/modified-extended-relations",
+      "tooltip": true
     }
   },
   "layout": {

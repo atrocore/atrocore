@@ -42,7 +42,8 @@
     "color": "Farbe",
     "kanbanViewMode": "Kanban-Ansicht",
     "kanbanStatusIgnoreList": "Ignorierte Gruppen in der Kanban-Ansicht",
-    "disableHierarchy": "Hierarchie deaktivieren"
+    "disableHierarchy": "Hierarchie deaktivieren",
+    "modifiedExtendedRelations": "Relationen mit Auswirkungen auf Änderungsdatum/-Zeit"
   },
   "options": {
     "linkType": {
@@ -79,6 +80,7 @@
     "textFilterFields": "Von der Textsuche verwendete Felder.",
     "stream": "Aktivitätenpanel wird verwendet, um den Änderungsverlauf anzuzeigen und Beiträge mit Anhängen hinzuzufügen.",
     "linkAudited": "Das Erstellen eines verknüpften Datensatzes und das Verknüpfen mit dem vorhandenen Datensatz wird in Stream protokolliert.",
-    "linkMultipleField": "verlinken mehrere Felder bietet eine praktische Möglichkeit Beziehungen zu bearbeiten. Nicht benutzen wenn Sie eine große Anzahl von Verknüpfungen haben."
+    "linkMultipleField": "verlinken mehrere Felder bietet eine praktische Möglichkeit Beziehungen zu bearbeiten. Nicht benutzen wenn Sie eine große Anzahl von Verknüpfungen haben.",
+    "modifiedExtendedRelations": "Änderungen in diesen Beziehungen führen zur Aktualisierung von \"Verändert\" Datum und Uhrzeit."
   }
 }

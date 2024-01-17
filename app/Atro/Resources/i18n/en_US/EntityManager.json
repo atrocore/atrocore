@@ -46,7 +46,8 @@
     "kanbanViewMode": "Kanban View",
     "kanbanStatusIgnoreList": "Ignored groups in Kanban view",
     "iconClass": "Icon",
-    "disableHierarchy": "Disable Hierarchy"
+    "disableHierarchy": "Disable Hierarchy",
+    "modifiedExtendedRelations": "Relations effecting modification date/time"
   },
   "options": {
     "linkType": {
@@ -83,6 +84,7 @@
     "stream": "Stream is used to show change history and add posts with attachments.",
     "disabled": "Check if you don't need this entity in your system.",
     "linkAudited": "Creating related record and linking with existing record will be logged in Stream.",
-    "linkMultipleField": "Link Multiple field provides a handy way to edit relations. Don't use it if you can have a large number of related records."
+    "linkMultipleField": "Link Multiple field provides a handy way to edit relations. Don't use it if you can have a large number of related records.",
+    "modifiedExtendedRelations": "Changes in these relations will cause the update of \"Modified At\" date and time."
   }
 }
