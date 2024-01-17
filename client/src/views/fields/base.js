@@ -870,7 +870,11 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         getMeasureFormat() {
-            return (this.getMeasureData(this.measureId) || {displayFormat: null}).displayFormat;
+            const measure = this.getMeasureData(this.measureId);
+            if (measure && measure.displayFormat) {
+                return measure.displayFormat.slice(6)
+            }
+            return null
         },
 
         loadUnitOptions() {
