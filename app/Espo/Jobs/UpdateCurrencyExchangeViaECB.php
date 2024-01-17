@@ -34,6 +34,13 @@ class UpdateCurrencyExchangeViaECB extends Base
             return true;
         }
 
+        $this->updateCurrencyRates();
+
+        return true;
+    }
+
+    public function updateCurrencyRates()
+    {
         $currencyRates = $this->getConfig()->get('currencyRates');
         $baseCurrency = '';
         $units = $this->getEntityManager()->getRepository('Unit')->where(['measureId' => 'currency'])->find();
@@ -58,7 +65,7 @@ class UpdateCurrencyExchangeViaECB extends Base
 
         foreach ($currencyRates as $rateKey => $rateValue) {
             if (array_key_exists($rateKey, $ecbRates) && !empty($ecbRates[$rateKey])) {
-                $currencyRates[$rateKey] = $ecbRates[$baseCurrency] / $ecbRates[$rateKey];
+                $currencyRates[$rateKey] = round($ecbRates[$baseCurrency] / $ecbRates[$rateKey], 4);
             }
         }
 
@@ -72,8 +79,6 @@ class UpdateCurrencyExchangeViaECB extends Base
 
         $this->getConfig()->set('currencyRates', $currencyRates);
         $this->getConfig()->save();
-
-        return true;
     }
 
     public static function getExchangeRates(): array
