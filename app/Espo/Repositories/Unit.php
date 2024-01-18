@@ -131,8 +131,8 @@ class Unit extends Base
                     if (!empty($record)) {
                         throw new BadRequest(
                             sprintf(
-                                $entity->get('name'),
                                 $this->getLanguage()->translate('unitIsUsed', 'exceptions', 'Unit'),
+                                $entity->get('name'),
                                 $this->getLanguage()->translate($field, 'fields', $entity->getEntityType()),
                                 $entityName,
                                 $record['name'] ?? ''
