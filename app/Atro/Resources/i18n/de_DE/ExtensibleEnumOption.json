@@ -10,5 +10,8 @@
   },
   "labels": {
     "Create ExtensibleEnumOption": "Auswahloption erstellen"
+  },
+  "exceptions": {
+    "extensibleEnumOptionIsUsed": "Die Auswahloption '%s' wird im Feld '%s' aus der Entität '%s' für den Datensatz '%s' verwendet."
   }
 }

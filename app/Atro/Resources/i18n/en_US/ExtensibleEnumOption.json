@@ -10,5 +10,8 @@
   },
   "labels": {
     "Create ExtensibleEnumOption": "Create List Option"
+  },
+  "exceptions": {
+    "extensibleEnumOptionIsUsed": "The List Option '%s' is used by the field '%s' in the Entity '%s' for the Record '%s'."
   }
 }

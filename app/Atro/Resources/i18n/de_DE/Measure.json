@@ -18,6 +18,6 @@
     }
   },
   "exceptions": {
-    "measureIsUsed": "Dieses Maß wird vom Feld '%s' in der Entität '%s' verwendet."
+    "measureIsUsed": "Das Maß '%s' wird im Feld '%s' aus der Entität '%s' verwendet."
   }
 }

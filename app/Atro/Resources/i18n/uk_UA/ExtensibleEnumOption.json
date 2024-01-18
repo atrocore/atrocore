@@ -10,5 +10,8 @@
   },
   "labels": {
     "Create ExtensibleEnumOption": "Створити опцію списку"
+  },
+  "exceptions": {
+    "extensibleEnumOptionIsUsed": "Опція списку '%s' використовується полем '%s' в сутності '%s' для запису '%s'."
   }
 }

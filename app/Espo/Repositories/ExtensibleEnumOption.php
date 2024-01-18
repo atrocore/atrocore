@@ -35,6 +35,7 @@ declare(strict_types=1);
 
 namespace Espo\Repositories;
 
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Repositories\Base;
 use Espo\Core\Utils\Util;
@@ -139,6 +140,54 @@ class ExtensibleEnumOption extends Base
                 }
                 $entity->set('sortOrder', $sortOrder);
                 $this->save($entity);
+            }
+        }
+    }
+
+    protected function beforeRemove(Entity $entity, array $options = [])
+    {
+        $this->validateBeforeRemove($entity);
+
+        parent::beforeRemove($entity, $options);
+    }
+
+    public function validateBeforeRemove(Entity $entity): void
+    {
+        foreach ($this->getMetadata()->get(['entityDefs']) as $entityName => $entityDefs) {
+            if (empty($entityDefs['fields'])) {
+                continue;
+            }
+            foreach ($entityDefs['fields'] as $field => $fieldDef) {
+                if (empty($fieldDef['notStorable']) && !empty($fieldDef['extensibleEnumId']) && $fieldDef['extensibleEnumId'] === $entity->get('extensibleEnumId')) {
+                    $column = Util::toUnderScore($field);
+
+                    $qb = $this->getConnection()->createQueryBuilder();
+                    $qb->select('t.*')
+                        ->from($this->getConnection()->quoteIdentifier(Util::toUnderScore(lcfirst($entityName))), 't');
+                    if ($fieldDef['type'] === 'extensibleEnum') {
+                        $qb->where("t.$column = :itemId")
+                            ->setParameter('itemId', $entity->get('id'));
+                    } else {
+                        $qb->where("t.$column LIKE :itemId")
+                            ->setParameter('itemId', "%\"{$entity->get('id')}\"%");
+                    }
+                    $qb->andWhere('t.deleted = :false')
+                        ->setParameter('false', false, ParameterType::BOOLEAN);
+
+                    $record = $qb->fetchAssociative();
+
+                    if (!empty($record)) {
+                        throw new BadRequest(
+                            sprintf(
+                                $this->getLanguage()->translate('extensibleEnumOptionIsUsed', 'exceptions', 'ExtensibleEnumOption'),
+                                $entity->get('name'),
+                                $this->getLanguage()->translate($field, 'fields', $entity->getEntityType()),
+                                $entityName,
+                                $record['name'] ?? ''
+                            )
+                        );
+                    }
+                }
             }
         }
     }

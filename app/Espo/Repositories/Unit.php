@@ -35,9 +35,11 @@ declare(strict_types=1);
 
 namespace Espo\Repositories;
 
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Templates\Repositories\Base;
+use Espo\Core\Utils\Util;
 use Espo\Jobs\UpdateCurrencyExchangeViaECB;
 use Espo\ORM\Entity;
 
@@ -98,13 +100,54 @@ class Unit extends Base
 
     protected function beforeRemove(Entity $entity, array $options = [])
     {
+        $this->validateBeforeRemove($entity);
+
         if (empty($options['skipIsDefaultValidation'])) {
             if ($entity->get('isDefault')) {
                 throw new BadRequest($this->getInjection('language')->translate('defaultIsRequired', 'exceptions', 'Unit'));
             }
-            throw new BadRequest($this->getInjection('language')->translate('unitCannotBeDeleted', 'exceptions', 'Unit'));
         }
+
         parent::beforeRemove($entity, $options);
+    }
+
+    public function validateBeforeRemove(Entity $entity): void
+    {
+        foreach ($this->getMetadata()->get(['entityDefs']) as $entityName => $entityDefs) {
+            if (empty($entityDefs['fields'])) {
+                continue;
+            }
+            foreach ($entityDefs['fields'] as $field => $fieldDef) {
+                if (
+                    empty($fieldDef['notStorable'])
+                    && empty($fieldDef['unitIdField'])
+                    && empty($fieldDef['unitField'])
+                    && !empty($fieldDef['measureId'])
+                    && $fieldDef['measureId'] === $entity->get('measureId')
+                ) {
+                    $record = $this->getConnection()->createQueryBuilder()
+                        ->select('t.*')
+                        ->from($this->getConnection()->quoteIdentifier(Util::toUnderScore(lcfirst($entityName))), 't')
+                        ->where('t.' . Util::toUnderScore($field) . '_unit_id = :unitId')
+                        ->andWhere('t.deleted = :false')
+                        ->setParameter('unitId', $entity->get('id'))
+                        ->setParameter('false', false, ParameterType::BOOLEAN)
+                        ->fetchAssociative();
+
+                    if (!empty($record)) {
+                        throw new BadRequest(
+                            sprintf(
+                                $this->getLanguage()->translate('unitIsUsed', 'exceptions', 'Unit'),
+                                $entity->get('name'),
+                                $this->getLanguage()->translate($field, 'fields', $entity->getEntityType()),
+                                $entityName,
+                                $record['name'] ?? ''
+                            )
+                        );
+                    }
+                }
+            }
+        }
     }
 
     protected function afterRemove(Entity $entity, array $options = [])
