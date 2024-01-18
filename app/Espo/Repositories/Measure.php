@@ -133,7 +133,9 @@ class Measure extends Base
                     throw new BadRequest(
                         sprintf(
                             $this->getLanguage()->translate('measureIsUsed', 'exceptions', 'Measure'),
-                            $this->getLanguage()->translate($field, 'fields', $entity->getEntityType()), $entityName
+                            $entity->get('name'),
+                            $this->getLanguage()->translate($field, 'fields', $entity->getEntityType()),
+                            $entityName
                         )
                     );
                 }

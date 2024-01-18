@@ -113,7 +113,6 @@ class Unit extends Base
 
     public function validateBeforeRemove(Entity $entity): void
     {
-//        throw new BadRequest($this->getInjection('language')->translate('unitCannotBeDeleted', 'exceptions', 'Unit'));
         foreach ($this->getMetadata()->get(['entityDefs']) as $entityName => $entityDefs) {
             if (empty($entityDefs['fields'])) {
                 continue;
@@ -129,22 +128,17 @@ class Unit extends Base
                         ->setParameter('false', false, ParameterType::BOOLEAN)
                         ->fetchAssociative();
 
-                    if (!empty($record)){
-
+                    if (!empty($record)) {
+                        throw new BadRequest(
+                            sprintf(
+                                $entity->get('name'),
+                                $this->getLanguage()->translate('unitIsUsed', 'exceptions', 'Unit'),
+                                $this->getLanguage()->translate($field, 'fields', $entity->getEntityType()),
+                                $entityName,
+                                $record['name'] ?? ''
+                            )
+                        );
                     }
-
-                    echo '<pre>';
-                    print_r($entityName);
-                    print_r($field);
-                    print_r($record);
-                    die();
-
-                    throw new BadRequest(
-                        sprintf(
-                            $this->getLanguage()->translate('measureIsUsed', 'exceptions', 'Measure'),
-                            $this->getLanguage()->translate($field, 'fields', $entity->getEntityType()), $entityName
-                        )
-                    );
                 }
             }
         }
