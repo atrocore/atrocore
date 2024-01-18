@@ -35,6 +35,7 @@ declare(strict_types=1);
 
 namespace Espo\Repositories;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
 
@@ -50,6 +51,34 @@ class ExtensibleEnum extends Base
 
         if ($entity->isAttributeChanged('multilingual') && empty($entity->get('multilingual'))) {
             $this->clearLingualOptions($entity);
+        }
+    }
+
+    protected function beforeRemove(Entity $entity, array $options = [])
+    {
+        $this->validateBeforeRemove($entity);
+
+        parent::beforeRemove($entity, $options);
+    }
+
+    public function validateBeforeRemove(Entity $entity): void
+    {
+        foreach ($this->getMetadata()->get(['entityDefs']) as $entityName => $entityDefs) {
+            if (empty($entityDefs['fields'])) {
+                continue;
+            }
+            foreach ($entityDefs['fields'] as $field => $fieldDef) {
+                if (empty($fieldDef['notStorable']) && !empty($fieldDef['extensibleEnumId']) && $fieldDef['extensibleEnumId'] === $entity->get('id')) {
+                    throw new BadRequest(
+                        sprintf(
+                            $this->getLanguage()->translate('extensibleEnumIsUsed', 'exceptions', 'ExtensibleEnum'),
+                            $entity->get('name'),
+                            $this->getLanguage()->translate($field, 'fields', $entity->getEntityType()),
+                            $entityName
+                        )
+                    );
+                }
+            }
         }
     }
 

@@ -129,7 +129,7 @@ class Measure extends Base
                 continue;
             }
             foreach ($entityDefs['fields'] as $field => $fieldDef) {
-                if (!empty($fieldDef['measureId']) && $fieldDef['measureId'] === $entity->get('id')) {
+                if (empty($fieldDef['notStorable']) && !empty($fieldDef['measureId']) && $fieldDef['measureId'] === $entity->get('id')) {
                     throw new BadRequest(
                         sprintf(
                             $this->getLanguage()->translate('measureIsUsed', 'exceptions', 'Measure'),
