@@ -2911,15 +2911,23 @@ class Record extends Base
         // get all links
         $allLinks = $this->getEntityLinks($entity);
 
+        $nonDuplicatableRelations = $this->getMetadata()->get(['app', 'nonDuplicatableRelations'], []);
+
         // prepare links
         foreach ($allLinks as $field => $row) {
-            if (!empty($row['type']) && $row['type'] == 'hasMany') {
+            if (!empty($row['type']) && $row['type'] == 'hasMany' && !in_array($field, $nonDuplicatableRelations)) {
                 $links[] = $field;
             }
         }
 
         if (!empty($links)) {
+            $duplicatableRelations = $this->getMetadata()->get(['scopes', $this->getEntityType(), 'duplicatableRelations'], []);
+
             foreach ($links as $link) {
+                if (!in_array($link, $duplicatableRelations)) {
+                    continue;
+                }
+
                 // prepare method name
                 $methodName = 'duplicate' . ucfirst($link);
 
@@ -2949,34 +2957,6 @@ class Record extends Base
                     continue 1;
                 }
 
-                /**
-                 * Duplicate Relationship entity
-                 */
-                $foreignEntity = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $link, 'entity']);
-                if (!empty($foreignEntity)) {
-                    $foreignEntityType = $this->getMetadata()->get(['scopes', $foreignEntity, 'type']);
-                    $foreign = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $link, 'foreign']);
-                    if ($foreignEntityType === 'Relationship' && !empty($foreign)) {
-                        foreach ($duplicatingEntity->get($link) as $item) {
-                            $record = $this->getEntityManager()->getEntity($foreignEntity);
-                            $record->set($item->toArray());
-                            $record->id = null;
-                            $record->clear('createdAt');
-                            $record->clear('modifiedAt');
-                            $record->clear('createdById');
-                            $record->clear('modifiedById');
-                            $record->set($foreign . 'Id', $entity->get('id'));
-                            $record->set($foreign . 'Name', $entity->get('name'));
-                            try {
-                                $this->getEntityManager()->saveEntity($record);
-                            } catch (\PDOException $e) {
-                                $GLOBALS['log']->error("Creating '$foreignEntity' failed: {$e->getMessage()}");
-                            }
-                        }
-                        continue 1;
-                    }
-                }
-
                 if (!empty($allLinks[$link]['relationName'])) {
                     $data = $duplicatingEntity->get($link);
                     if (count($data) > 0) {
@@ -2985,6 +2965,29 @@ class Record extends Base
                                 $this->getEntityManager()->getRepository($entity->getEntityType())->relate($entity, $link, $item);
                             } catch (\Throwable $e) {
                                 $GLOBALS['log']->error($e->getMessage());
+                            }
+                        }
+                    }
+                } else {
+                    $foreignEntity = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $link, 'entity']);
+                    if (!empty($foreignEntity)) {
+                        $foreign = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $link, 'foreign']);
+                        if (!empty($foreign)) {
+                            foreach ($duplicatingEntity->get($link) as $item) {
+                                $record = $this->getEntityManager()->getEntity($foreignEntity);
+                                $record->set($item->toArray());
+                                $record->id = null;
+                                $record->clear('createdAt');
+                                $record->clear('modifiedAt');
+                                $record->clear('createdById');
+                                $record->clear('modifiedById');
+                                $record->set($foreign . 'Id', $entity->get('id'));
+                                $record->set($foreign . 'Name', $entity->get('name'));
+                                try {
+                                    $this->getEntityManager()->saveEntity($record);
+                                } catch (\Throwable $e) {
+                                    $GLOBALS['log']->error("Creating '$foreignEntity' failed: {$e->getMessage()}");
+                                }
                             }
                         }
                     }

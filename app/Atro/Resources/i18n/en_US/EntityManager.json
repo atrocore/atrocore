@@ -47,7 +47,8 @@
     "kanbanStatusIgnoreList": "Ignored groups in Kanban view",
     "iconClass": "Icon",
     "disableHierarchy": "Disable Hierarchy",
-    "modifiedExtendedRelations": "Relations effecting modification date/time"
+    "modifiedExtendedRelations": "Relations effecting modification date/time",
+    "duplicatableRelations": "Duplicatable Relations"
   },
   "options": {
     "linkType": {

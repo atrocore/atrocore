@@ -427,7 +427,7 @@ class Hierarchy extends Record
         $entity = parent::createEntity($attachment);
 
         // run inherit all for child relations
-        if (!empty($entity) && !empty($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'relationInheritance']))) {
+        if ((!property_exists($attachment, '_duplicatingEntityId') || empty($attachment->_duplicatingEntityId)) && !empty($entity) && !empty($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'relationInheritance']))) {
             foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links']) as $link => $linkDefs) {
                 $relationName = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $link, 'relationName']);
                 if (!empty($relationName) && !in_array($link, $this->getRepository()->getUnInheritedRelations())) {
@@ -778,7 +778,28 @@ class Hierarchy extends Record
 
     protected function duplicateParents($entity, $duplicatingEntity): void
     {
-        // ignore duplicating for link 'parents'
+        $defs = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', 'parents'], []);
+
+        if (!array_key_exists('relationName', $defs) || empty($defs['relationName'])) {
+            return;
+        }
+
+        $relationEntityName = ucfirst($defs['relationName']);
+
+        $children = $this->getEntityManager()->getRepository($relationEntityName)->where([
+            'entityId' => $duplicatingEntity->get('id')
+        ])->find();
+
+        if (count($children) > 0) {
+            $service = $this->getInjection('serviceFactory')->create($relationEntityName);
+
+            foreach ($children->toArray() as $child) {
+                $data = $service->getDuplicateAttributes($child['id']);
+                $data->entityId = $entity->get('id');
+
+                $service->createEntity($data);
+            }
+        }
     }
 
     protected function duplicateChildren($entity, $duplicatingEntity): void
