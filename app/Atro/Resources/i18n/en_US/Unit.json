@@ -18,6 +18,6 @@
   "exceptions": {
     "defaultIsRequired": "The measure must have a default unit.",
     "newUnitCanNotBeDefault": "Unit to be added cannot be set as default.",
-    "unitIsUsed": "The unit '%s' is used by the field '%s' in the Entity '%s' for Record '%s'."
+    "unitIsUsed": "The unit '%s' is used by the field '%s' in the Entity '%s' for the Record '%s'."
   }
 }
