@@ -118,7 +118,7 @@ class Unit extends Base
                 continue;
             }
             foreach ($entityDefs['fields'] as $field => $fieldDef) {
-                if (!empty($fieldDef['measureId']) && $fieldDef['measureId'] === $entity->get('measureId')) {
+                if (empty($fieldDef['unitIdField']) && empty($fieldDef['unitField']) && !empty($fieldDef['measureId']) && $fieldDef['measureId'] === $entity->get('measureId')) {
                     $record = $this->getConnection()->createQueryBuilder()
                         ->select('t.*')
                         ->from($this->getConnection()->quoteIdentifier(Util::toUnderScore(lcfirst($entityName))), 't')
