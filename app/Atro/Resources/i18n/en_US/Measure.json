@@ -18,6 +18,7 @@
     }
   },
   "exceptions": {
-    "measureIsUsed": "This measure is used by field '%s' in entity '%s'."
+    "measureIsUsed": "The measure '%s' is used by the field '%s' in the Entity '%s'.",
+    "unitIsUsed": "The unit '%s' is used by the field '%s' in the Entity '%s'."
   }
 }

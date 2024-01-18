@@ -18,6 +18,7 @@
     }
   },
   "exceptions": {
-    "measureIsUsed": "Ця міра використовується полем '%s' в сутності '%s'."
+    "measureIsUsed": "Ця міра використовується полем '%s' в сутності '%s'.",
+    "unitIsUsed": "The unit is used by field '%s' in entity '%s'."
   }
 }
