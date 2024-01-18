@@ -431,8 +431,11 @@ class Hierarchy extends Record
             foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links']) as $link => $linkDefs) {
                 $relationName = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links', $link, 'relationName']);
                 if (!empty($relationName) && !in_array($link, $this->getRepository()->getUnInheritedRelations())) {
-                    $this->unlinkAll($entity->get('id'), $link);
-                    $this->inheritAllForLink($entity->get('id'), $link);
+                    $parentsIds = $entity->getLinkMultipleIdList('parents');
+                    if (!empty($parentsIds[0])) {
+                        $this->unlinkAll($entity->get('id'), $link);
+                        $this->inheritAllForLink($entity->get('id'), $link);
+                    }
                 }
             }
         }
