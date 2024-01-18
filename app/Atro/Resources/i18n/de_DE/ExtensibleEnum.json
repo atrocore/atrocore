@@ -10,6 +10,6 @@
     "Create ExtensibleEnum": "Liste erstellen"
   },
   "exceptions": {
-    "extensibleEnumIsUsed": "Das Liste '%s' wird im Feld '%s' aus der Entität '%s' verwendet."
+    "extensibleEnumIsUsed": "Die Liste '%s' wird im Feld '%s' aus der Entität '%s' verwendet."
   }
 }
