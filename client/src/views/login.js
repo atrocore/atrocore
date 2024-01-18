@@ -206,7 +206,7 @@ Espo.define('views/login', 'view', function (Dep) {
                     let localeId = $("#locale option:selected").val();
 
                     let requestData = {};
-                    requestData['locale'] = localeId === 'default' ? data.preferences.locale : localeId;
+                    requestData['locale'] = localeId === 'default' ? (data.preferences?.locale ?? null) : localeId;
                     requestData['localeId'] = requestData['locale'];
 
                     if (this.theme !== 'default' && data.preferences.theme !== this.theme) {
