@@ -47,7 +47,8 @@
     "kanbanStatusIgnoreList": "Групи, які не відображаються в поданні Канбан",
     "iconClass": "Значок",
     "disableHierarchy": "Вимкнути ієрархію",
-    "modifiedExtendedRelations": "Зв'язки, що впливають на дату/час зміни"
+    "modifiedExtendedRelations": "Зв'язки, що впливають на дату/час зміни",
+    "duplicatableRelations": "Зв'язки, що дублюються"
   },
   "options": {
     "linkType": {

@@ -145,6 +145,15 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="cell form-group col-md-6" data-name="duplicatableRelations">
+                <label class="control-label"
+                       data-name="duplicatableRelations">{{translate 'duplicatableRelations' category='fields' scope='EntityManager'}}</label>
+                <div class="field" data-name="duplicatableRelations">
+                    {{{duplicatableRelations}}}
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {{#each additionalParamsLayout}}

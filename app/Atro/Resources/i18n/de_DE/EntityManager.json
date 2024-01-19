@@ -43,7 +43,8 @@
     "kanbanViewMode": "Kanban-Ansicht",
     "kanbanStatusIgnoreList": "Ignorierte Gruppen in der Kanban-Ansicht",
     "disableHierarchy": "Hierarchie deaktivieren",
-    "modifiedExtendedRelations": "Relationen mit Auswirkungen auf Änderungsdatum/-Zeit"
+    "modifiedExtendedRelations": "Relationen mit Auswirkungen auf Änderungsdatum/-Zeit",
+    "duplicatableRelations": "Duplizierbare Beziehungen"
   },
   "options": {
     "linkType": {
