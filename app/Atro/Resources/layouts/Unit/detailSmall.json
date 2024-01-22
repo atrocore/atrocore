@@ -22,8 +22,11 @@
         {
           "name": "symbol"
         },
-        false
+        {
+          "name": "isActive"
+        }
       ],
+
       [
         {
           "name": "multiplier"

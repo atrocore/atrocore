@@ -6,7 +6,8 @@
     "isDefault": "За замовчуванням",
     "multiplier": "Мультиплікатор",
     "convertTo": "Конвертувати в",
-    "symbol": "знак"
+    "symbol": "знак",
+    "isActive": "активний"
   },
   "links": {
     "measure": "Міра"

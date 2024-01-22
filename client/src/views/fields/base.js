@@ -831,6 +831,10 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                             type: "equals",
                             attribute: "measureId",
                             value: measureId
+                        },
+                        {
+                            type: 'isTrue',
+                            attribute: 'isActive'
                         }
                     ]
                 }, {async: false}).then(res => {

@@ -28,6 +28,12 @@
       ],
       [
         {
+          "name": "isActive"
+        },
+        false
+      ],
+      [
+        {
           "name": "multiplier"
         },
         {
