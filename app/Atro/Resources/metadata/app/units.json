@@ -1,0 +1,29 @@
+[
+  {
+    "id": "eur",
+    "name": "EUR",
+    "measureId": "currency",
+    "symbol": "€",
+    "isDefault": true,
+    "isActive": true
+  },
+  {
+    "id": "usd",
+    "name": "USD",
+    "measureId": "currency",
+    "symbol": "$",
+    "isActive": true
+  },
+  {
+    "id": "chf",
+    "name": "CHF",
+    "measureId": "currency",
+    "isActive": false
+  },
+  {
+    "id": "gbp",
+    "name": "GBP",
+    "measureId": "currency",
+    "isActive": false
+  }
+]

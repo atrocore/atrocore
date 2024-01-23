@@ -91,6 +91,9 @@ class PostUpdate
             // init events
             self::initEvents();
 
+            // refresh measures
+            self::refreshMeasures();
+
             // refresh translations
             self::refreshTranslations();
 
@@ -589,6 +592,20 @@ class PostUpdate
                 $migration->run($id, self::prepareVersion($data[$id]['from']), self::prepareVersion($data[$id]['to']));
             }
         }
+    }
+
+    private static function refreshMeasures()
+    {
+        if (!self::isInstalled()) {
+            return;
+        }
+
+        if (!self::isChanged()) {
+            return;
+        }
+
+        self::renderLine('Refreshing measures');
+        exec(self::getPhpBin() . " index.php refresh measures >/dev/null");
     }
 
     private static function refreshTranslations()
