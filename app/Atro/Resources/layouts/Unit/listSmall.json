@@ -13,6 +13,9 @@
     "name": "isDefault"
   },
   {
+    "name": "isActive"
+  },
+  {
     "name": "multiplier"
   },
   {

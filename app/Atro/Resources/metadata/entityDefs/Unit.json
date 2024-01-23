@@ -15,6 +15,10 @@
     "symbol": {
       "type": "varchar"
     },
+    "isActive": {
+      "type": "bool",
+      "default": true
+    },
     "description": {
       "type": "text",
       "isMultilang": true
