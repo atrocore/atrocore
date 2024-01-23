@@ -94,6 +94,9 @@ class PostUpdate
             // regenerate measures
             self::regenerateMeasures();
 
+            // regenerate lists
+            self::regenerateLists();
+
             // refresh translations
             self::refreshTranslations();
 
@@ -606,6 +609,20 @@ class PostUpdate
 
         self::renderLine('Regenerating measures');
         exec(self::getPhpBin() . " index.php regenerate measures >/dev/null");
+    }
+
+    private static function regenerateLists()
+    {
+        if (!self::isInstalled()) {
+            return;
+        }
+
+        if (!self::isChanged()) {
+            return;
+        }
+
+        self::renderLine('Regenerating lists');
+        exec(self::getPhpBin() . " index.php regenerate lists >/dev/null");
     }
 
     private static function refreshTranslations()
