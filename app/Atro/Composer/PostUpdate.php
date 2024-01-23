@@ -91,8 +91,8 @@ class PostUpdate
             // init events
             self::initEvents();
 
-            // refresh measures
-            self::refreshMeasures();
+            // regenerate measures
+            self::regenerateMeasures();
 
             // refresh translations
             self::refreshTranslations();
@@ -594,7 +594,7 @@ class PostUpdate
         }
     }
 
-    private static function refreshMeasures()
+    private static function regenerateMeasures()
     {
         if (!self::isInstalled()) {
             return;
@@ -604,8 +604,8 @@ class PostUpdate
             return;
         }
 
-        self::renderLine('Refreshing measures');
-        exec(self::getPhpBin() . " index.php refresh measures >/dev/null");
+        self::renderLine('Regenerating measures');
+        exec(self::getPhpBin() . " index.php regenerate measures >/dev/null");
     }
 
     private static function refreshTranslations()

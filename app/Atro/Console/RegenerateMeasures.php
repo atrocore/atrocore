@@ -15,11 +15,11 @@ namespace Atro\Console;
 
 use Espo\ORM\EntityManager;
 
-class RefreshMeasures extends AbstractConsole
+class RegenerateMeasures extends AbstractConsole
 {
     public static function getDescription(): string
     {
-        return 'Refresh measures.';
+        return 'Regenerate system measures.';
     }
 
     public function run(array $data): void
@@ -27,7 +27,7 @@ class RefreshMeasures extends AbstractConsole
         $this->refresh();
         $this->getContainer()->get('dataManager')->clearCache();
 
-        self::show('Measures refreshed successfully.', self::SUCCESS);
+        self::show('Measures regenerated successfully.', self::SUCCESS);
     }
 
     public function refresh(): void
