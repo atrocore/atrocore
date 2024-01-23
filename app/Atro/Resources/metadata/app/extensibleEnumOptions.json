@@ -1,26 +1,2 @@
 [
-  {
-    "id": "Low",
-    "extensibleEnumId": "qi_priority",
-    "name": "Low",
-    "sortOrder": 0
-  },
-  {
-    "id": "Normal",
-    "extensibleEnumId": "qi_priority",
-    "name": "Normal",
-    "sortOrder": 10
-  },
-  {
-    "id": "Crucial",
-    "extensibleEnumId": "qi_priority",
-    "name": "Crucial",
-    "sortOrder": 20
-  },
-  {
-    "id": "High",
-    "extensibleEnumId": "qi_priority",
-    "name": "High",
-    "sortOrder": 30
-  }
 ]
