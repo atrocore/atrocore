@@ -369,6 +369,7 @@ class RDB extends \Espo\ORM\Repository
             if (empty($params) || empty($params['noCache'])) {
                 $entity = $this->findInCache();
                 if ($entity !== null) {
+                    $this->reset();
                     return $entity;
                 }
             }
