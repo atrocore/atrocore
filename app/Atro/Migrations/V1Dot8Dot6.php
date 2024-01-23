@@ -39,9 +39,9 @@ class V1Dot8Dot6 extends Base
             $this->getConnection()->createQueryBuilder()
                 ->insert('measure')
                 ->values([
-                    'name' => '?',
-                    'id'   => '?',
-                    'code' => '?',
+                    'name'           => '?',
+                    'id'             => '?',
+                    'code'           => '?',
                     'display_format' => '?'
                 ])
                 ->setParameter(0, 'Currency')
@@ -91,15 +91,17 @@ class V1Dot8Dot6 extends Base
             $entity = explode(".", $file)[0];
             $data = $metadata->getCustom("entityDefs", $entity);
             foreach ($data['fields'] as $field => $fieldDef) {
-                $type = $fieldDef['type'];
-                if (!empty($fieldDef['isCustom']) && in_array($type, ['currency', 'rangeCurrency'])) {
-                    try {
-                        V1Dot8Dot3::migrateCurrencyField($this, $entity, $field, $type);
-                    } catch (\Exception $exception) {
-                        $a = 0;
+                if (!empty($fieldDef['type'])) {
+                    $type = $fieldDef['type'];
+                    if (!empty($fieldDef['isCustom']) && in_array($type, ['currency', 'rangeCurrency'])) {
+                        try {
+                            V1Dot8Dot3::migrateCurrencyField($this, $entity, $field, $type);
+                        } catch (\Exception $exception) {
+                            $a = 0;
+                        }
+                        $data['fields'][$field]['type'] = $type === 'rangeCurrency' ? 'rangeFloat' : 'float';
+                        $data['fields'][$field]['measureId'] = "currency";
                     }
-                    $data['fields'][$field]['type'] = $type === 'rangeCurrency' ? 'rangeFloat' : 'float';
-                    $data['fields'][$field]['measureId'] = "currency";
                 }
             }
             $metadata->saveCustom('entityDefs', $entity, $data);
