@@ -738,46 +738,6 @@ class Installer extends \Espo\Core\Templates\Services\HasContainer
             ])
             ->executeQuery();
 
-        // create currency measure
-       $connection->createQueryBuilder()
-            ->insert('measure')
-            ->values([
-                'name' => '?',
-                'id'   => '?',
-                'code' => '?',
-                'display_format' => '?'
-            ])
-            ->setParameter(0, 'Currency')
-            ->setParameter(1, 'currency')
-            ->setParameter(2, 'currency')
-            ->setParameter(3, '2')
-            ->executeStatement();
-
-        $symbols = ["EUR" => "€"];
-
-        $rates = UpdateCurrencyExchangeViaECB::getExchangeRates();
-        foreach ($symbols as $currency => $symbol) {
-            $connection->createQueryBuilder()
-                ->insert('unit')
-                ->values([
-                    'id'         => '?',
-                    'name'       => '?',
-                    'measure_id' => '?',
-                    'is_default' => '?',
-                    'multiplier' => '?',
-                    'code'       => '?',
-                    'symbol'     => '?'
-                ])
-                ->setParameter(0, $currency)
-                ->setParameter(1, $currency)
-                ->setParameter(2, 'currency')
-                ->setParameter(3, $currency === 'EUR', ParameterType::BOOLEAN)
-                ->setParameter(4, $currency === 'EUR' ? 1 : $rates[$currency])
-                ->setParameter(5, $currency)
-                ->setParameter(6, $symbol)
-                ->executeStatement();
-        }
-
         // create scheduled job to update rates
         $connection->createQueryBuilder()
             ->insert('scheduled_job')
