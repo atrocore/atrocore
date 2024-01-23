@@ -31,19 +31,8 @@
     "priority": {
       "type": "enum",
       "readOnly": true,
-      "default": "Normal",
-      "optionsIds": [
-        "Low",
-        "Normal",
-        "Crucial",
-        "High"
-      ],
-      "options": [
-        "Low",
-        "Normal",
-        "Crucial",
-        "High"
-      ]
+      "extensibleEnumId": "qi_priority",
+      "default": "Normal"
     },
     "pid": {
       "type": "varchar",
