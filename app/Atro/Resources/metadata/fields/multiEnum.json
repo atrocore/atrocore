@@ -31,7 +31,7 @@
    ],
    "filter": true,
    "multilingual": true,
-   "notCreatable": false,
+   "notCreatable": true,
    "notSortable": true,
    "fieldDefs":{
       "type":"jsonArray"
