@@ -40,6 +40,7 @@
       }
    ],
    "filter": true,
+   "notCreatable": true,
    "multilingual": true,
    "fieldDefs":{
       "type":"varchar"

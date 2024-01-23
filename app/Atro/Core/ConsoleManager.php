@@ -91,7 +91,8 @@ class ConsoleManager
     public static function loadRoutes(): array
     {
         return [
-            "regenerate measures"             => Console\RegenerateMeasures::class,
+            "regenerate lists"             => Console\RegenerateExtensibleEnums::class,
+            "regenerate measures"          => Console\RegenerateMeasures::class,
             "refresh translations"         => Console\RefreshTranslations::class,
             "list"                         => Console\ListCommand::class,
             "install demo-project"         => Console\InstallDemoProject::class,
