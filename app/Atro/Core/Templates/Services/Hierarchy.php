@@ -819,13 +819,14 @@ class Hierarchy extends Record
     {
         $children = $this->getRepository()->getChildrenArray($parent['id']);
         foreach ($children as $child) {
-            $this->getRepository()->pushLinkMultipleFields($child);
-            $inputData = $this->createInputDataForPseudoTransactionJob($parent, $child, clone $data);
+            $childData = Util::arrayKeysToUnderScore($child);
+            $this->getRepository()->pushLinkMultipleFields($childData);
+            $inputData = $this->createInputDataForPseudoTransactionJob($parent, $childData, clone $data);
             if (!empty((array)$inputData)) {
                 $inputData->_fieldValueInheritance = true;
                 $transactionId = $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->entityType, $child['id'], $inputData, $parentTransactionId);
                 if ($child['childrenCount'] > 0) {
-                    $this->createPseudoTransactionJobs($child, clone $inputData, $transactionId);
+                    $this->createPseudoTransactionJobs($childData, clone $inputData, $transactionId);
                 }
             }
         }
@@ -889,7 +890,7 @@ class Hierarchy extends Record
             $parentValue = $parent[$underScoredField];
             $childValue = $child[$underScoredField];
 
-            if ($this->areValuesEqual($this->getRepository()->get(), $field, $parentValue, $childValue)) {
+            if (!$this->areValuesEqual($this->getRepository()->get(), $field, $parentValue, $childValue)) {
                 $inputData->$field = $value;
             }
         }
