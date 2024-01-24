@@ -1,58 +1,55 @@
 {
-  "fields": {
-    "actions": "Aktionen",
-    "serviceName": "Bedienung",
-    "stream": "Warteschlange",
-    "isWriting": "Ist Update Job?",
-    "data": "Daten",
-    "pid": "Pid",
-    "sortOrder": "Sortierreihenfolge",
-    "status": "Status",
-    "message": "Nachricht",
-    "priority": "Priorität"
-  },
-  "links": {
-  },
-  "labels": {
-    "Create QueueItem": "Warteschlangenelement erstellen",
-    "showDone": "Erledigt anzeigen",
-    "showMessage": "Meldung anzeigen",
-    "message": "Meldung",
-    "cancel": "Abbrechen",
-    "close": "Schließen",
-    "download": "Herunterladen",
-    "queueManager": "Warteschlangenmanager",
-    "Pending": "Steht aus",
-    "Success": "Erfolg",
-    "Running": "In Arbeit",
-    "Failed": "Fehlgeschlagen",
-    "Canceled": "Abgebrochen",
-    "Closed": "Geschlossen"
-  },
-  "options": {
-    "status": {
-      "Pending": "Steht aus",
-      "Success": "Erfolg",
-      "Running": "In Arbeit",
-      "Failed": "Fehlgeschlagen",
-      "Canceled": "Abgebrochen",
-      "Closed": "Geschlossen"
+    "fields": {
+        "serviceName": "Bedienung",
+        "stream": "Warteschlange",
+        "isWriting": "Ist Update Job?",
+        "data": "Daten",
+        "pid": "Pid",
+        "sortOrder": "Sortierreihenfolge",
+        "status": "Status",
+        "message": "Nachricht",
+        "priority": "Priorität"
     },
-    "priority": {
-      "Low": "Niedrig",
-      "Normal": "Normal",
-      "Crucial": "Wesentlich",
-      "High": "Hoch"
+    "labels": {
+        "Create QueueItem": "Warteschlangenelement erstellen",
+        "showDone": "Erledigt anzeigen",
+        "showMessage": "Meldung anzeigen",
+        "message": "Meldung",
+        "cancel": "Abbrechen",
+        "close": "Schließen",
+        "download": "Herunterladen",
+        "queueManager": "Warteschlangenmanager",
+        "Pending": "Steht aus",
+        "Success": "Erfolg",
+        "Running": "In Arbeit",
+        "Failed": "Fehlgeschlagen",
+        "Canceled": "Abgebrochen",
+        "Closed": "Geschlossen"
+    },
+    "options": {
+        "status": {
+            "Pending": "Steht aus",
+            "Success": "Erfolg",
+            "Running": "In Arbeit",
+            "Failed": "Fehlgeschlagen",
+            "Canceled": "Abgebrochen",
+            "Closed": "Geschlossen"
+        },
+        "priority": {
+            "Low": "Niedrig",
+            "Normal": "Normal",
+            "Crucial": "Wesentlich",
+            "High": "Hoch"
+        }
+    },
+    "exceptions": {
+        "jobExist": "Dieser Job wurde bereits zur Warteschlange hinzugefügt.",
+        "queueItemCannotBeChanged": "Warteschlangenelement kann nicht geändert werden.",
+        "jobIsRunning": "Ein laufendes Warteschlangenelement kann nicht entfernt werden."
+    },
+    "notificationMessages": {
+        "error": "%  ist fehlgeschlagen",
+        "success": "%  wurde erfolgreich abgeschlossen",
+        "queueItemDone": "Das Warteschlangenelement \"%s\" wurde mit dem Status \"%s\" ausgeführt."
     }
-  },
-  "exceptions": {
-    "jobExist": "Dieser Job wurde bereits zur Warteschlange hinzugefügt.",
-    "queueItemCannotBeChanged": "Warteschlangenelement kann nicht geändert werden.",
-    "jobIsRunning": "Ein laufendes Warteschlangenelement kann nicht entfernt werden."
-  },
-  "notificationMessages": {
-    "error": "%  ist fehlgeschlagen",
-    "success": "%  wurde erfolgreich abgeschlossen",
-    "queueItemDone": "Das Warteschlangenelement \"%s\" wurde mit dem Status \"%s\" ausgeführt."
-  }
 }
