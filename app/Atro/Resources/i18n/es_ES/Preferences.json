@@ -1,42 +1,33 @@
 {
-  "fields": {
-    "defaultCurrency": "Moneda por defecto",
-    "currencyList": "Lista de monedas",
-    "emailAddress": "Correo electrónico",
-    "dashboardTabList": "Lista de pestañas",
-    "tabList": "Menú de Navegación",
-    "theme": "Tema",
-    "useCustomTabList": "Lista de pestañas personalizadas",
-    "receiveAssignmentEmailNotifications": "Recibir notificaciones por correo electrónico al ser asignado",
-    "receiveMentionEmailNotifications": "Notificaciones por correo electrónico acerca de menciones en los mensajes",
-    "receiveStreamEmailNotifications": "Notificaciones por correo electrónico sobre los mensajes y actualizaciones de estado",
-    "dashboardLayout": "Diseño del escritorio",
-    "autoFollowEntityTypeList": "Seguir automaticamente (global)",
-    "followEntityOnStreamPost": "Seguimiento automático después de publicar en la historia",
-    "followCreatedEntities": "Seguimiento automático de registros creados",
-    "followCreatedEntityTypeList": "Seguimiento automático de registros creados de tipos de entidades específicos",
-    "assignmentNotifications": "Notifications upon assignment",
-    "scopeColorsDisabled": "Disable scope colors",
-    "tabColorsDisabled": "Disable tab icons colors"
-  },
-  "links": {
-  },
-  "options": {
-    "weekStart": {
-      "0": "Domingo",
-      "1": "Lunes"
+    "fields": {
+        "defaultCurrency": "Moneda por defecto",
+        "emailAddress": "Correo electrónico",
+        "dashboardTabList": "Lista de pestañas",
+        "tabList": "Menú de Navegación",
+        "theme": "Tema",
+        "useCustomTabList": "Lista de pestañas personalizadas",
+        "receiveAssignmentEmailNotifications": "Recibir notificaciones por correo electrónico al ser asignado",
+        "receiveMentionEmailNotifications": "Notificaciones por correo electrónico acerca de menciones en los mensajes",
+        "receiveStreamEmailNotifications": "Notificaciones por correo electrónico sobre los mensajes y actualizaciones de estado",
+        "dashboardLayout": "Diseño del escritorio",
+        "autoFollowEntityTypeList": "Seguir automaticamente (global)",
+        "followEntityOnStreamPost": "Seguimiento automático después de publicar en la historia",
+        "followCreatedEntities": "Seguimiento automático de registros creados",
+        "followCreatedEntityTypeList": "Seguimiento automático de registros creados de tipos de entidades específicos",
+        "assignmentNotifications": "Notifications upon assignment",
+        "scopeColorsDisabled": "Disable scope colors",
+        "tabColorsDisabled": "Disable tab icons colors"
+    },
+    "labels": {
+        "Notifications": "Notificaciones",
+        "User Interface": "Interfaz de usuario",
+        "Locale": "Localización",
+        "General": "General",
+        "Reset Dashboard to Default": "Reset Dashboard to Default"
+    },
+    "tooltips": {
+        "autoFollowEntityTypeList": "Siguirá automáticamente todos los registros nuevos (creados por cualquier usuario) de los tipos de entidad seleccionados. Para poder ver información en la historia y recibir notificaciones sobre todos los registros en el sistema.",
+        "followCreatedEntities": "When creating new records, they will automatically be followed, even if assigned to a different user.",
+        "followCreatedEntityTypeList": "When creating new records of selected entity types, they will automatically be followed, even if assigned to a different user."
     }
-  },
-  "labels": {
-    "Notifications": "Notificaciones",
-    "User Interface": "Interfaz de usuario",
-    "Locale": "Localización",
-    "General": "General",
-    "Reset Dashboard to Default": "Reset Dashboard to Default"
-  },
-  "tooltips": {
-    "autoFollowEntityTypeList": "Siguirá automáticamente todos los registros nuevos (creados por cualquier usuario) de los tipos de entidad seleccionados. Para poder ver información en la historia y recibir notificaciones sobre todos los registros en el sistema.",
-    "followCreatedEntities": "When creating new records, they will automatically be followed, even if assigned to a different user.",
-    "followCreatedEntityTypeList": "When creating new records of selected entity types, they will automatically be followed, even if assigned to a different user."
-  }
 }
