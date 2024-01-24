@@ -1,32 +1,26 @@
 {
-  "fields": {
-    "queueItem": "Warteschlangeeinheit",
-    "executeTime": "Ausführen um",
-    "attempts": "Verbleibende Versuche",
-    "failedAttempts": "Fehlgeschlagene Versuche",
-    "methodName": "Methode",
-    "scheduledJob": "Geplante Aufgabe",
-    "data": "Daten",
-    "method": "Methode",
-    "scheduledJobJob": "Geplante Aufgabe Name"
-  },
-  "options": {
-    "status": {
-      "Pending": "Schwebend",
-      "Success": "Erfolg",
-      "Running": "Läuft",
-      "Failed": "Fehlgeschlagen"
+    "fields": {
+        "executeTime": "Ausführen um",
+        "attempts": "Verbleibende Versuche",
+        "failedAttempts": "Fehlgeschlagene Versuche",
+        "methodName": "Methode",
+        "scheduledJob": "Geplante Aufgabe",
+        "data": "Daten",
+        "method": "Methode",
+        "scheduledJobJob": "Geplante Aufgabe Name"
+    },
+    "options": {
+        "status": {
+            "Pending": "Schwebend",
+            "Success": "Erfolg",
+            "Running": "Läuft",
+            "Failed": "Fehlgeschlagen"
+        }
+    },
+    "labels": {
+        "Pending": "Steht aus",
+        "Success": "Erfolg",
+        "Running": "In Arbeit",
+        "Failed": "Fehlgeschlagen"
     }
-  },
-  "labels": {
-    "Create Job": "Aufgabe erstellen",
-    "Pending": "Steht aus",
-    "Success": "Erfolg",
-    "Running": "In Arbeit",
-    "Failed": "Fehlgeschlagen"
-  },
-  "links": {
-    "queueItem": "Warteschlangeeinheit",
-    "scheduledJob": "geplante Aufgabe"
-  }
 }
