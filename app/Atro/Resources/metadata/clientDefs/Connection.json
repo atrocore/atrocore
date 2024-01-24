@@ -3,11 +3,13 @@
   "iconClass": "fas fa-database",
   "boolFilterList": [
     "notEntity",
-    "connectionType"
+    "connectionType",
+    "httpConnection"
   ],
   "hiddenBoolFilterList": [
     "notEntity",
-    "connectionType"
+    "connectionType",
+    "httpConnection"
   ],
   "recordViews": {
     "detail": "views/connection/record/detail"

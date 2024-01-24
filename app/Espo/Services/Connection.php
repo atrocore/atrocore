@@ -59,12 +59,11 @@ class Connection extends Base
     {
         $this->getRepository()->setDataFields($connectionEntity);
 
-        $type = $connectionEntity->get('type');
-        $connectionClass = $this->getMetadata()->get(['app', 'connectionTypes', $type]);
-
+        $connectionClass = $this->getMetadata()->get(['app', 'connectionTypes', $connectionEntity->get('type')]);
         if (empty($connectionClass)) {
-            $connectionClass = '\\Atro\\ConnectionType\\Connection' . ucfirst($type);
+            throw new BadRequest(sprintf($this->exception('connectionFailed'), $this->exception('noSuchType')));
         }
+
         $connection = $this->getInjection('container')->get($connectionClass);
 
         if (empty($connection) || !$connection instanceof ConnectionInterface) {
