@@ -45,7 +45,7 @@ class Connection extends Base
 
     public function testConnection(string $id): bool
     {
-        $connection = $this->getRepository()->get($id);
+        $connection = $this->getEntity($id);
         if (empty($connection)) {
             throw new NotFound();
         }

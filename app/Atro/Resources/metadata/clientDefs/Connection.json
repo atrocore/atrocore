@@ -518,6 +518,54 @@
             }
           ]
         }
+      },
+      "atrocoreUrl": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "atrocore"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "atrocore"
+              ]
+            }
+          ]
+        }
+      },
+      "atrocoreToken": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "atrocore"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "atrocore"
+              ]
+            }
+          ]
+        }
       }
     }
   }

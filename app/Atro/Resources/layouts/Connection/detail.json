@@ -130,6 +130,14 @@
         {
           "name": "openAiTemperature"
         }
+      ],
+      [
+        {
+          "name": "atrocoreUrl"
+        },
+        {
+          "name": "atrocoreToken"
+        }
       ]
     ]
   }
