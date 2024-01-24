@@ -1,36 +1,34 @@
 {
-  "fields": {
-    "isInternal": "Ist intern",
-    "job": "Aufgabe",
-    "lastRun": "Zuletzt ausgeführt",
-    "scheduling": "Planung",
-    "minimum_age": "Mindestalter (in Tagen) der Daten"
-  },
-  "links": {
-    "log": "Protokoll"
-  },
-  "labels": {
-    "Create ScheduledJob": "Geplante Aufgabe erstellen",
-    "executeNow": "Jetzt ausführen"
-  },
-  "messages": {
-    "jobLaunched": "Der Job wurde erstellt",
-    "jobAlreadyExist": "Ein Job wurde vor weniger als einer Minute erstellt"
-  },
-  "options": {
-    "job": {
-      "ComposerAutoUpdate": "Alle installierten Module automatisch aktualisieren",
-      "DeleteForever": "Unwiederuflich löschen"
+    "fields": {
+        "job": "Aufgabe",
+        "scheduling": "Planung",
+        "minimum_age": "Mindestalter (in Tagen) der Daten"
     },
-    "status": {
-      "Active": "Aktiv",
-      "Inactive": "Inaktiv"
+    "links": {
+        "log": "Protokoll"
+    },
+    "labels": {
+        "Create ScheduledJob": "Geplante Aufgabe erstellen",
+        "executeNow": "Jetzt ausführen"
+    },
+    "messages": {
+        "jobLaunched": "Der Job wurde erstellt",
+        "jobAlreadyExist": "Ein Job wurde vor weniger als einer Minute erstellt"
+    },
+    "options": {
+        "job": {
+            "ComposerAutoUpdate": "Alle installierten Module automatisch aktualisieren",
+            "DeleteForever": "Unwiederuflich löschen"
+        },
+        "status": {
+            "Active": "Aktiv",
+            "Inactive": "Inaktiv"
+        }
+    },
+    "tooltips": {
+        "scheduling": "Definiert wann und wie oft ein Job läuft\n\n*/5 * * * * - alle 5 Minuten\n\n0 */2 * * * - alle 2 Stunden\n\n30 1 * * * - um 01:30 einmal am Tag\n\n0 0 1 * * - am ersten Tag des Monats"
+    },
+    "exceptions": {
+        "wrongCrontabConfiguration": "Falsche Crontab-Konfiguration"
     }
-  },
-  "tooltips": {
-    "scheduling": "Definiert wann und wie oft ein Job läuft\n\n*/5 * * * * - alle 5 Minuten\n\n0 */2 * * * - alle 2 Stunden\n\n30 1 * * * - um 01:30 einmal am Tag\n\n0 0 1 * * - am ersten Tag des Monats"
-  },
-  "exceptions": {
-    "wrongCrontabConfiguration": "Falsche Crontab-Konfiguration"
-  }
 }
