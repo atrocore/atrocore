@@ -498,9 +498,10 @@ class Hierarchy extends Record
         try {
             $fetchedEntity = $this->getRepository()->get($id);
 
+            $entityData = Util::arrayKeysToUnderScore($fetchedEntity->toArray());
+
             $result = parent::updateEntity($id, $data);
 
-            $entityData = Util::arrayKeysToUnderScore($fetchedEntity->toArray());
             $this->getRepository()->pushLinkMultipleFields($entityData);
 
             $this->createPseudoTransactionJobs($entityData, clone $data);
@@ -818,14 +819,16 @@ class Hierarchy extends Record
     public function createPseudoTransactionJobs(array $parent, \stdClass $data, string $parentTransactionId = null): void
     {
         $children = $this->getRepository()->getChildrenArray($parent['id']);
-        foreach ($children as $child) {
-            $childData = Util::arrayKeysToUnderScore($child);
+        foreach ($children as $childArray) {
+            $child = $this->getRepository()->get();
+            $child->set($childArray);
+            $childData = Util::arrayKeysToUnderScore($child->toArray());
             $this->getRepository()->pushLinkMultipleFields($childData);
             $inputData = $this->createInputDataForPseudoTransactionJob($parent, $childData, clone $data);
             if (!empty((array)$inputData)) {
                 $inputData->_fieldValueInheritance = true;
-                $transactionId = $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->entityType, $child['id'], $inputData, $parentTransactionId);
-                if ($child['childrenCount'] > 0) {
+                $transactionId = $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->entityType, $childData['id'], $inputData, $parentTransactionId);
+                if ($childArray['childrenCount'] > 0) {
                     $this->createPseudoTransactionJobs($childData, clone $inputData, $transactionId);
                 }
             }
@@ -890,7 +893,7 @@ class Hierarchy extends Record
             $parentValue = $parent[$underScoredField];
             $childValue = $child[$underScoredField];
 
-            if (!$this->areValuesEqual($this->getRepository()->get(), $field, $parentValue, $childValue)) {
+            if ($this->areValuesEqual($this->getRepository()->get(), $field, $parentValue, $childValue)) {
                 $inputData->$field = $value;
             }
         }
