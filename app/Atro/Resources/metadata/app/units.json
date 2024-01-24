@@ -2,6 +2,7 @@
   {
     "id": "eur",
     "name": "EUR",
+    "code": "EUR",
     "measureId": "currency",
     "symbol": "€",
     "isDefault": true,
@@ -10,6 +11,7 @@
   {
     "id": "usd",
     "name": "USD",
+    "code": "USD",
     "measureId": "currency",
     "symbol": "$",
     "isActive": true
@@ -17,6 +19,7 @@
   {
     "id": "chf",
     "name": "CHF",
+    "code": "CHF",
     "measureId": "currency",
     "symbol": "Fr.",
     "isActive": false
@@ -24,6 +27,7 @@
   {
     "id": "gbp",
     "name": "GBP",
+    "code": "GBP",
     "measureId": "currency",
     "symbol": "£",
     "isActive": false

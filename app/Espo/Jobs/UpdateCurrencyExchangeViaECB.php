@@ -41,7 +41,7 @@ class UpdateCurrencyExchangeViaECB extends Base
         return true;
     }
 
-    public function updateCurrencyRates(Entity $unit = null): void
+    public function updateCurrencyRates(Entity $toUpdateUnit = null): void
     {
         $units = $this->getEntityManager()->getRepository('Unit')
             ->where(['measureId' => 'currency'])
@@ -49,23 +49,25 @@ class UpdateCurrencyExchangeViaECB extends Base
 
         foreach ($units as $unit) {
             if (!empty($unit->get('isDefault'))) {
-                $baseCurrency = strtoupper($unit->get('id'));
+                $baseCurrency = $unit->get('code');
             }
         }
 
         $ecbRates = self::getExchangeRates();
         $ecbRates['EUR'] = 1;
+
         if (empty($baseCurrency) || empty($ecbRates) || empty($ecbRates[$baseCurrency])) {
             return;
         }
 
-        $toUpdate = empty($unit) ? $units : new EntityCollection([$unit], 'Unit');
+        $toUpdateUnits = empty($toUpdateUnit) ? $units : new EntityCollection([$toUpdateUnit], 'Unit');
 
-        foreach ($toUpdate as $unit) {
-            if (!isset($ecbRates[strtoupper($unit->get('id'))])) {
+        foreach ($toUpdateUnits as $unit) {
+            if (!isset($ecbRates[$unit->get('code')])) {
                 continue;
             }
-            $unit->set('multiplier', round($ecbRates[$baseCurrency] / $ecbRates[strtoupper($unit->get('id'))], 4));
+            $unit->set('multiplier', round($ecbRates[$baseCurrency] / $ecbRates[$unit->get('code')], 4));
+
             $this->getEntityManager()->saveEntity($unit);
         }
     }
