@@ -1,75 +1,77 @@
 {
-    "fields": {
-        "token": {
-            "type": "varchar",
-            "maxLength": "36",
-            "index": true,
-            "readOnly": true
-        },
-        "hash": {
-            "type": "varchar",
-            "maxLength": 150,
-            "index": true,
-            "readOnly": true
-        },
-        "userId": {
-            "type": "varchar",
-            "maxLength": "36",
-            "readOnly": true
-        },
-        "user": {
-            "type": "link",
-            "readOnly": true
-        },
-        "ipAddress": {
-            "type": "varchar",
-            "maxLength": "45",
-            "readOnly": true
-        },
-        "isActive": {
-            "type": "bool",
-            "default": true
-        },
-        "lastAccess": {
-            "type": "datetime",
-            "readOnly": true
-        },
-        "createdAt": {
-            "type": "datetime",
-            "readOnly": true
-        },
-        "modifiedAt": {
-            "type": "datetime",
-            "readOnly": true
-        },
-        "lifetime": {
-            "type": "int",
-            "default": null
-        },
-        "idleTime": {
-            "type": "int",
-            "default": null
-        }
+  "fields": {
+    "token": {
+      "type": "varchar",
+      "maxLength": "36",
+      "index": true,
+      "readOnly": true
     },
-    "links": {
-        "user": {
-            "type": "belongsTo",
-            "entity": "User"
-        },
-        "actionHistoryRecords": {
-            "type": "hasMany",
-            "entity": "ActionHistoryRecord",
-            "foreign": "authToken"
-        }
+    "hash": {
+      "type": "varchar",
+      "maxLength": 150,
+      "index": true,
+      "readOnly": true
     },
-    "collection": {
-        "sortBy": "lastAccess",
-        "asc": false,
-        "textFilterFields": ["ipAddress", "userName"]
+    "user": {
+      "type": "link"
     },
-    "indexes": {
-        "token": {
-            "columns": ["token", "deleted"]
-        }
+    "ipAddress": {
+      "type": "varchar",
+      "maxLength": "45",
+      "readOnly": true
+    },
+    "isActive": {
+      "type": "bool",
+      "default": true
+    },
+    "lastAccess": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "lifetime": {
+      "type": "int",
+      "default": null,
+      "tooltip": true
+    },
+    "idleTime": {
+      "type": "int",
+      "default": null,
+      "tooltip": true
     }
+  },
+  "links": {
+    "user": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "actionHistoryRecords": {
+      "type": "hasMany",
+      "entity": "ActionHistoryRecord",
+      "foreign": "authToken"
+    }
+  },
+  "collection": {
+    "sortBy": "lastAccess",
+    "asc": false,
+    "textFilterFields": [
+      "ipAddress",
+      "userName"
+    ]
+  },
+  "indexes": {
+    "token": {
+      "columns": [
+        "token",
+        "deleted"
+      ]
+    }
+  }
 }

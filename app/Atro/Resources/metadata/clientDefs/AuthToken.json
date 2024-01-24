@@ -14,5 +14,19 @@
       "select": false,
       "rowActionsView": "views/record/row-actions/relationship-view-only"
     }
+  },
+  "dynamicLogic": {
+    "fields": {
+      "user": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    }
   }
 }

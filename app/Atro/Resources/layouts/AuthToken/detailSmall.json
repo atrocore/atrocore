@@ -1,10 +1,37 @@
 [
-    {
-        "label":"",
-        "rows":[
-            [{"name":"user"}, {"name":"isActive"}],
-            [{"name":"ipAddress"}, {"name":"createdAt"}],
-            [{"name":"lastAccess"}, false]
-        ]
-    }
+  {
+    "label": "",
+    "rows": [
+      [
+        {
+          "name": "user"
+        },
+        {
+          "name": "isActive"
+        }
+      ],
+      [
+        {
+          "name": "lifetime"
+        },
+        {
+          "name": "idleTime"
+        }
+      ],
+      [
+        {
+          "name": "ipAddress"
+        },
+        {
+          "name": "createdAt"
+        }
+      ],
+      [
+        {
+          "name": "lastAccess"
+        },
+        false
+      ]
+    ]
+  }
 ]

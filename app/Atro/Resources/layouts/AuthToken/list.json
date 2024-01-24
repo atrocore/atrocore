@@ -1,7 +1,17 @@
 [
-    {"name":"user"},
-    {"name":"isActive", "widthPx": "100"},
-    {"name":"ipAddress", "width": "17"},
-    {"name":"createdAt", "width": "19"},
-    {"name":"lastAccess", "width": "19"}
+  {
+    "name": "user"
+  },
+  {
+    "name": "isActive"
+  },
+  {
+    "name": "ipAddress"
+  },
+  {
+    "name": "createdAt"
+  },
+  {
+    "name": "lastAccess"
+  }
 ]
