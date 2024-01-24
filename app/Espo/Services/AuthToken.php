@@ -33,6 +33,8 @@
 
 namespace Espo\Services;
 
+use Espo\ORM\Entity;
+
 class AuthToken extends Record
 {
     protected $internalAttributeList = ['hash', 'token'];
@@ -52,6 +54,33 @@ class AuthToken extends Record
                 }
             }
         }
+    }
+
+    public function prepareEntityForOutput(Entity $entity)
+    {
+        parent::prepareEntityForOutput($entity);
+
+        if ($this->getUser()->isAdmin()) {
+            $entity->set('authToken', $this->getAuthorizationToken($entity->get('id')));
+        }
+    }
+
+    public function getAuthorizationToken(string $authTokenId): ?string
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $record = $conn->createQueryBuilder()
+            ->select('at.token, u.user_name')
+            ->from('auth_token', 'at')
+            ->join('at', $conn->quoteIdentifier('user'), 'u', 'at.user_id = u.id')
+            ->where('at.id = :id')
+            ->setParameter('id', $authTokenId)
+            ->fetchAssociative();
+
+        if (empty($record)) {
+            return null;
+        }
+
+        return base64_encode("{$record['user_name']}:{$record['token']}");
     }
 }
 

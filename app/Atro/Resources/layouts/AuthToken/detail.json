@@ -37,6 +37,12 @@
           "name": "lastAccess"
         },
         false
+      ],
+      [
+        {
+          "name": "authToken",
+          "fullWidth": true
+        }
       ]
     ]
   }

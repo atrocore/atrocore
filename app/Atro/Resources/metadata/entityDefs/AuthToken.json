@@ -50,6 +50,13 @@
       "type": "int",
       "default": null,
       "tooltip": true
+    },
+    "authToken": {
+      "type": "text",
+      "notStorable": true,
+      "readOnly": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true
     }
   },
   "links": {

@@ -6,7 +6,8 @@
     "createdAt": "Login Date",
     "isActive": "Active",
     "lifetime": "Life Time",
-    "idleTime": "Idle Time"
+    "idleTime": "Idle Time",
+    "authToken": "Authorization-Token"
   },
   "links": {
     "actionHistoryRecords": "Action History"
