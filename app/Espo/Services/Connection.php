@@ -45,7 +45,7 @@ class Connection extends Base
 
     public function testConnection(string $id): bool
     {
-        $connection = $this->getEntity($id);
+        $connection = $this->getRepository()->get($id);
         if (empty($connection)) {
             throw new NotFound();
         }
@@ -57,6 +57,8 @@ class Connection extends Base
 
     public function connect(Entity $connectionEntity)
     {
+        $this->getRepository()->setDataFields($connectionEntity);
+
         $type = $connectionEntity->get('type');
         $connectionClass = $this->getMetadata()->get(['app', 'connectionTypes', $type]);
 
@@ -100,12 +102,11 @@ class Connection extends Base
     {
         parent::prepareEntityForOutput($entity);
 
-        foreach ($entity->getDataFields() as $name => $value) {
-            $entity->set($name, $value);
-        }
-        if($entity->get('type') === 'oauth1'){
-            $callbackUrl  = $this->getConfig()->get('siteUrl') . '?entryPoint=oauth1Callback&connectionId=' . $this->encryptPassword($entity->get('id')).'&type=callback';
-            $linkUrl = $this->getConfig()->get('siteUrl') . '?entryPoint=oauth1Callback&connectionId=' . $this->encryptPassword($entity->get('id')).'&type=link';
+        $this->getRepository()->setDataFields($entity);
+
+        if ($entity->get('type') === 'oauth1') {
+            $callbackUrl = $this->getConfig()->get('siteUrl') . '?entryPoint=oauth1Callback&connectionId=' . $this->encryptPassword($entity->get('id')) . '&type=callback';
+            $linkUrl = $this->getConfig()->get('siteUrl') . '?entryPoint=oauth1Callback&connectionId=' . $this->encryptPassword($entity->get('id')) . '&type=link';
             $entity->set('callbackUrl', $callbackUrl);
             $entity->set('linkUrl', $linkUrl);
         }
@@ -165,6 +166,4 @@ class Connection extends Base
     {
         return $this->getInjection('language')->translate($name, 'exceptions', $scope);
     }
-
-
 }
