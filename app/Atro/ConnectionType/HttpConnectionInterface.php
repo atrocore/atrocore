@@ -13,9 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\ConnectionType;
 
-use Espo\ORM\Entity;
-
-interface ConnectionInterface
+interface HttpConnectionInterface
 {
-    public function connect(Entity $connection);
+    public function getHeaders(array $connectionData);
 }

@@ -38,9 +38,4 @@ abstract class AbstractConnection implements ConnectionInterface
     public function setData(array $data) {
         $this->data = $data;
     }
-
-    public function getHeaders(array $connectionData) : array
-    {
-        return [];
-    }
 }

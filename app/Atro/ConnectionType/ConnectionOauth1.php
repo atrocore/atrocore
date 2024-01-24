@@ -6,7 +6,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 use Espo\Services\Connection;
 
-class ConnectionOauth1 extends AbstractConnection
+class ConnectionOauth1 extends AbstractConnection implements HttpConnectionInterface
 {
 
     public function connect(Entity $connection)
