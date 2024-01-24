@@ -1,62 +1,59 @@
 {
-  "fields": {
-    "status": "Status",
-    "settingVersion": "Setting Version",
-    "currentVersion": "Current Version",
-    "availableVersions": "Available Versions"
-  },
-  "options": {
-    "status": {
-      "install": "Install",
-      "update": "Update",
-      "delete": "Remove"
+    "fields": {
+        "status": "Status",
+        "settingVersion": "Setting Version",
+        "currentVersion": "Current Version",
+        "availableVersions": "Available Versions"
+    },
+    "options": {
+        "status": {
+            "install": "Install",
+            "update": "Update",
+            "delete": "Remove"
+        }
+    },
+    "exceptions": {
+        "hasRequireds": "Module has not satisfied requireds",
+        "hasRequiredsDelete": "You cann't delete required module",
+        "suchModuleIsAlreadyInstalled": "Such module is already installed",
+        "suchModuleVersionAlreadyInstalled": "Such module version already installed",
+        "noSuchModuleVersion": "No such module version",
+        "versionIsInvalid": "Version is invalid"
+    },
+    "labels": {
+        "available": "available",
+        "Installed": "Installed",
+        "Store": "Store",
+        "removeModule": "Remove",
+        "cancelModule": "Cancel",
+        "username": "Username",
+        "password": "Password",
+        "anotherActionInProgress": "An another action is in progress. Wait until it get finished",
+        "updating": "Updating...",
+        "updateStarted": "Update has been started",
+        "canceling": "Canceling...",
+        "canceled": "Canceled",
+        "dependencies": "Dependencies",
+        "version": "Version",
+        "Run Update": "Update",
+        "updateFailed": "Update failed. Can't create connect to modules server. Please, try again",
+        "settingModuleForRemoving": "Setting module for removing...",
+        "settingModuleForInstalling": "Setting module for installing...",
+        "settingModuleForUpdating": "Setting module for updating...",
+        "cancelingModuleInstall": "Canceling module install...",
+        "canceledModuleInstall": "Module install has been canceled",
+        "Log": "Log",
+        "confirmRun": "After update action all users would logout from system. Are you sure you want to update you system?",
+        "daemonDisabled": "<b>The composer daemon is not running!</b><br>Probably the daemon is reloading now and you should wait a minute or the crontab is not configured. Instructions on how to configure the crontab you can find <a href=\"https://github.com/atrocore/atrocore-docs/blob/master/en/administration/installation.md#4-configure-the-crontab\" class=\"alert-link\" target=\"_blank\">here</a>.",
+        "queueManagerRunning": "<b>The Queue Manager is running!</b><br>The ability to update modules is blocked. Please try later."
+    },
+    "notifications": {
+        "Module update": "Module {module} has been updated. From version {from} to {to}",
+        "System update": "System has been updated. From version {from} to {to}",
+        "Module install": "Module {module} v.{version} has been installed",
+        "Module delete": "Module {module} has been removed",
+        "Module downgrade": "Module {module} has been downgraded. From version {from} to {to}",
+        "System downgrade": "System has been downgraded. From version {from} to {to}",
+        "Composer updated!": "Module manager dependencies has been updated! <a href=\"/#Composer/list\">See details</a>"
     }
-  },
-  "exceptions": {
-    "hasRequireds": "Module has not satisfied requireds",
-    "hasRequiredsDelete": "You cann't delete required module",
-    "suchModuleIsAlreadyInstalled": "Such module is already installed",
-    "suchModuleVersionAlreadyInstalled": "Such module version already installed",
-    "noSuchModuleVersion": "No such module version",
-    "versionIsInvalid": "Version is invalid"
-  },
-  "labels": {
-    "available": "available",
-    "Installed": "Installed",
-    "Store": "Store",
-    "removeModule": "Remove",
-    "cancelModule": "Cancel",
-    "username": "Username",
-    "password": "Password",
-    "anotherActionInProgress": "An another action is in progress. Wait until it get finished",
-    "updating": "Updating...",
-    "updateStarted": "Update has been started",
-    "canceling": "Canceling...",
-    "canceled": "Canceled",
-    "dependencies": "Dependencies",
-    "version": "Version",
-    "Run Update": "Update",
-    "updateFailed": "Update failed. Can't create connect to modules server. Please, try again",
-    "settingModuleForRemoving": "Setting module for removing...",
-    "settingModuleForInstalling": "Setting module for installing...",
-    "settingModuleForUpdating": "Setting module for updating...",
-    "settedModuleForUpdating": "Module has been set for updating",
-    "cancelingModuleUpdate": "Canceling module update...",
-    "canceledModuleUpdate": "Module update has been canceled",
-    "cancelingModuleInstall": "Canceling module install...",
-    "canceledModuleInstall": "Module install has been canceled",
-    "Log": "Log",
-    "confirmRun": "After update action all users would logout from system. Are you sure you want to update you system?",
-    "daemonDisabled": "<b>The composer daemon is not running!</b><br>Probably the daemon is reloading now and you should wait a minute or the crontab is not configured. Instructions on how to configure the crontab you can find <a href=\"https://github.com/atrocore/atrocore-docs/blob/master/en/administration/installation.md#4-configure-the-crontab\" class=\"alert-link\" target=\"_blank\">here</a>.",
-    "queueManagerRunning": "<b>The Queue Manager is running!</b><br>The ability to update modules is blocked. Please try later."
-  },
-  "notifications": {
-    "Module update": "Module {module} has been updated. From version {from} to {to}",
-    "System update": "System has been updated. From version {from} to {to}",
-    "Module install": "Module {module} v.{version} has been installed",
-    "Module delete": "Module {module} has been removed",
-    "Module downgrade": "Module {module} has been downgraded. From version {from} to {to}",
-    "System downgrade": "System has been downgraded. From version {from} to {to}",
-    "Composer updated!": "Module manager dependencies has been updated! <a href=\"/#Composer/list\">See details</a>"
-  }
 }

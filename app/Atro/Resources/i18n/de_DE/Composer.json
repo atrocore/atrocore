@@ -1,74 +1,67 @@
 {
-  "fields": {
-    "status": "Status",
-    "settingVersion": "Version einstellen",
-    "availableVersions": "Verfügbare Versionen",
-    "currentVersion": "Aktuelle Version",
-    "latestVersion": "Letzte Version",
-    "isActive": "Aktiv",
-    "required": "Erforderlich"
-  },
-  "exceptions": {
-    "hasRequiredsDelete": "Sie dürfen das gewünschte Modul nicht löschen, da dieses mit einem anderen verknüpft ist.",
-    "suchModuleIsAlreadyInstalled": "Dieses Modul ist schon installiert",
-    "suchModuleVersionAlreadyInstalled": "Diese Modul-Version ist schon installiert",
-    "noSuchModuleVersion": "Es gibt diese Modul-Version nicht",
-    "versionIsInvalid": "Version ist ungültig",
-    "hasRequireds": "Modul hat die Anforderungen nicht erfüllt"
-  },
-  "labels": {
-    "purchased": "Erworben ",
-    "rented": "Gemietet",
-    "purchasedUntil": "Erworben, Updates bis",
-    "rentUntil": "Gemietet, Updates bis",
-    "Installed": "Installiert",
-    "Store": "Store",
-    "cancelModule": "Stornieren",
-    "settings": "Einstellungen",
-    "password": "Passwort",
-    "updateStarted": "Update wurde gestartet",
-    "version": "Version",
-    "updateFailed": "Update fehlgeschlagen. Es kann keine Verbindung zum Modulserver hergestellt werden. Bitte versuchen Sie es erneut",
-    "cancelingModuleInstall": "Abbrechen der Modulinstallation...",
-    "canceledModuleInstall": "Die Installation des Moduls wurde abgebrochen",
-    "confirmRun": "Nach der Aktualisierung werden alle Benutzer vom System abgemeldet. Möchten Sie Ihr System wirklich aktualisieren?",
-    "anotherActionInProgress": "ein anderer Workflow ist gerade in Arbeit. Warten Sie bitte ab, bis dieser abgeschlossen ist",
-    "available": "verfügbar",
-    "canceled": "abgebrochen",
-    "canceling": "stornieren...",
-    "dependencies": "Abhängigkeiten",
-    "failed": "die Aktualisierung des Moduls ist fehlgeschlagen. Weitere Informationen finden Sie im Protokoll",
-    "Log": "Protokoll",
-    "removeModule": "Modul löschen",
-    "Run Update": "Update",
-    "settingModuleForInstalling": "Einstellung des Moduls für die Installation",
-    "settingModuleForUpdating": "Einstellung des Moduls für die Aktualisierung",
-    "settingModuleForRemoving": "Einstellung des Moduls für das Entfernen",
-    "settingsText": "Sie müssen registriert sein, um AtroCORE Module installieren oder aktualisieren zu können...",
-    "updated": "wurde aktualisiert. Die Seite wird in {value} Sekunden neu geladen",
-    "updating": "wird aktualisiert...",
-    "username": "Benutzername",
-    "setModuleForInstalling": "Das Modul wurde für die Installation vorbereitet. Klicken Sie auf die Schaltfläche „Update“, um die Modulinstallation oder -entfernung anzuwenden.",
-    "setModuleForUpdating": "Das Modul wurde für die Aktualisierung vorbereitet. Klicken Sie auf die Schaltfläche „Update“, um die Modulinstallation oder -entfernung anzuwenden.",
-    "setModuleForRemoving": "Das Modul wurde zum Entfernen vorbereitet. Klicken Sie auf die Schaltfläche „Update“, um die Modulinstallation oder -entfernung anzuwenden.",
-    "installModule": "das Modul",
-    "daemonDisabled": "<b>Der Composer Daemon läuft nicht!</b><br>Wahrscheinlich wird der Daemon gerade neu geladen und Sie sollten eine Minute warten, oder die crontab ist nicht konfiguriert. Eine Anleitung zur Konfiguration der Crontab finden Sie <a href=\"https://github.com/atrocore/atrocore-docs/blob/master/en/administration/installation.md#4-configure-the-crontab\" class=\"alert-link\" target=\"_blank\">hier</a>.",
-    "queueManagerRunning": "<b>Der Warteschlangenmanager wird ausgeführt!</b><br>Die Möglichkeit zur Aktualisierung von Modulen ist gesperrt. Bitte versuch es später."
-  },
-  "notifications": {
-    "Module update": "Das {module} wurde aktualisiert. Von Version {from} zu {to}",
-    "System update": "System wurde aktualisiert. Von Version {from} zu {to}",
-    "Module downgrade": "Das {module} wurde heruntergestuft. Von Version {from} zu {to}",
-    "System downgrade": "Das System wurde heruntergestuft. Ab Version {from} zu {to}",
-    "Module install": "Das {module} v.{version} wurde installiert",
-    "Module delete": "Das {module} wurde gelöscht",
-    "Composer updated!": "Abhängigkeiten des Modulmanagers wurden aktualisiert! <a href=\"/#Composer/list\">Siehe Einzelheiten</a>"
-  },
-  "options": {
-    "status": {
-      "install": "installieren",
-      "update": "aktualisieren",
-      "delete": "löschen"
+    "fields": {
+        "status": "Status",
+        "settingVersion": "Version einstellen",
+        "availableVersions": "Verfügbare Versionen",
+        "currentVersion": "Aktuelle Version",
+        "latestVersion": "Letzte Version"
+    },
+    "exceptions": {
+        "hasRequiredsDelete": "Sie dürfen das gewünschte Modul nicht löschen, da dieses mit einem anderen verknüpft ist.",
+        "suchModuleIsAlreadyInstalled": "Dieses Modul ist schon installiert",
+        "suchModuleVersionAlreadyInstalled": "Diese Modul-Version ist schon installiert",
+        "noSuchModuleVersion": "Es gibt diese Modul-Version nicht",
+        "versionIsInvalid": "Version ist ungültig",
+        "hasRequireds": "Modul hat die Anforderungen nicht erfüllt"
+    },
+    "labels": {
+        "purchased": "Erworben ",
+        "rented": "Gemietet",
+        "purchasedUntil": "Erworben, Updates bis",
+        "rentUntil": "Gemietet, Updates bis",
+        "Installed": "Installiert",
+        "Store": "Store",
+        "cancelModule": "Stornieren",
+        "password": "Passwort",
+        "updateStarted": "Update wurde gestartet",
+        "version": "Version",
+        "updateFailed": "Update fehlgeschlagen. Es kann keine Verbindung zum Modulserver hergestellt werden. Bitte versuchen Sie es erneut",
+        "cancelingModuleInstall": "Abbrechen der Modulinstallation...",
+        "canceledModuleInstall": "Die Installation des Moduls wurde abgebrochen",
+        "confirmRun": "Nach der Aktualisierung werden alle Benutzer vom System abgemeldet. Möchten Sie Ihr System wirklich aktualisieren?",
+        "anotherActionInProgress": "ein anderer Workflow ist gerade in Arbeit. Warten Sie bitte ab, bis dieser abgeschlossen ist",
+        "available": "verfügbar",
+        "canceled": "abgebrochen",
+        "canceling": "stornieren...",
+        "dependencies": "Abhängigkeiten",
+        "Log": "Protokoll",
+        "removeModule": "Modul löschen",
+        "Run Update": "Update",
+        "settingModuleForInstalling": "Einstellung des Moduls für die Installation",
+        "settingModuleForUpdating": "Einstellung des Moduls für die Aktualisierung",
+        "settingModuleForRemoving": "Einstellung des Moduls für das Entfernen",
+        "updating": "wird aktualisiert...",
+        "username": "Benutzername",
+        "setModuleForInstalling": "Das Modul wurde für die Installation vorbereitet. Klicken Sie auf die Schaltfläche „Update“, um die Modulinstallation oder -entfernung anzuwenden.",
+        "setModuleForUpdating": "Das Modul wurde für die Aktualisierung vorbereitet. Klicken Sie auf die Schaltfläche „Update“, um die Modulinstallation oder -entfernung anzuwenden.",
+        "setModuleForRemoving": "Das Modul wurde zum Entfernen vorbereitet. Klicken Sie auf die Schaltfläche „Update“, um die Modulinstallation oder -entfernung anzuwenden.",
+        "daemonDisabled": "<b>Der Composer Daemon läuft nicht!</b><br>Wahrscheinlich wird der Daemon gerade neu geladen und Sie sollten eine Minute warten, oder die crontab ist nicht konfiguriert. Eine Anleitung zur Konfiguration der Crontab finden Sie <a href=\"https://github.com/atrocore/atrocore-docs/blob/master/en/administration/installation.md#4-configure-the-crontab\" class=\"alert-link\" target=\"_blank\">hier</a>.",
+        "queueManagerRunning": "<b>Der Warteschlangenmanager wird ausgeführt!</b><br>Die Möglichkeit zur Aktualisierung von Modulen ist gesperrt. Bitte versuch es später."
+    },
+    "notifications": {
+        "Module update": "Das {module} wurde aktualisiert. Von Version {from} zu {to}",
+        "System update": "System wurde aktualisiert. Von Version {from} zu {to}",
+        "Module downgrade": "Das {module} wurde heruntergestuft. Von Version {from} zu {to}",
+        "System downgrade": "Das System wurde heruntergestuft. Ab Version {from} zu {to}",
+        "Module install": "Das {module} v.{version} wurde installiert",
+        "Module delete": "Das {module} wurde gelöscht",
+        "Composer updated!": "Abhängigkeiten des Modulmanagers wurden aktualisiert! <a href=\"/#Composer/list\">Siehe Einzelheiten</a>"
+    },
+    "options": {
+        "status": {
+            "install": "installieren",
+            "update": "aktualisieren",
+            "delete": "löschen"
+        }
     }
-  }
 }
