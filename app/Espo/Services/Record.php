@@ -2822,6 +2822,8 @@ class Record extends Base
 
         $fieldManager = new \Espo\Core\Utils\FieldManagerUtil($this->getMetadata());
 
+        $duplicatableRelations = $this->getMetadata()->get(['scopes', $this->getEntityType(), 'duplicatableRelations'], []);
+
         foreach ($fields as $field => $item) {
             if (empty($item['type'])) continue;
             $type = $item['type'];
@@ -2871,15 +2873,10 @@ class Record extends Base
                     $attributes->{$field . 'Types'} = $typeHash;
                 }
             } else if ($type === 'linkMultiple') {
-                $foreignLink = $entity->getRelationParam($field, 'foreign');
-                $foreignEntityType = $entity->getRelationParam($field, 'entity');
-                if ($foreignEntityType && $foreignLink) {
-                    $foreignRelationType = $this->getMetadata()->get(['entityDefs', $foreignEntityType, 'links', $foreignLink, 'type']);
-                    if ($foreignRelationType !== 'hasMany') {
-                        unset($attributes->{$field . 'Ids'});
-                        unset($attributes->{$field . 'Names'});
-                        unset($attributes->{$field . 'Columns'});
-                    }
+                if (!in_array($field, $duplicatableRelations)) {
+                    unset($attributes->{$field . 'Ids'});
+                    unset($attributes->{$field . 'Names'});
+                    unset($attributes->{$field . 'Columns'});
                 }
             }
         }
