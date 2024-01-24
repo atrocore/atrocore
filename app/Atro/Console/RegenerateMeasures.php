@@ -36,6 +36,10 @@ class RegenerateMeasures extends AbstractConsole
         $em = $this->getContainer()->get('entityManager');
 
         foreach ($this->getMetadata()->get(['app', 'measures'], []) as $measureData) {
+            $measure = $em->getRepository('Measure')->get($measureData['id']);
+            if (!empty($measure)) {
+                continue;
+            }
             $measure = $em->getRepository('Measure')->get();
             $measure->id = $measureData['id'];
             $measure->set($measureData);
@@ -48,6 +52,11 @@ class RegenerateMeasures extends AbstractConsole
         }
 
         foreach ($this->getMetadata()->get(['app', 'units'], []) as $unitData) {
+            $unit = $em->getRepository('Unit')->get($unitData['id']);
+            if (!empty($unit)) {
+                continue;
+            }
+            
             $unit = $em->getRepository('Unit')->get();
             $unit->id = $unitData['id'];
             $unit->set($unitData);

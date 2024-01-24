@@ -36,6 +36,10 @@ class RegenerateExtensibleEnums extends AbstractConsole
         $em = $this->getContainer()->get('entityManager');
 
         foreach ($this->getMetadata()->get(['app', 'extensibleEnums'], []) as $extensibleEnumData) {
+            $extensibleEnum = $em->getRepository('ExtensibleEnum')->get($extensibleEnumData['id']);
+            if (!empty($extensibleEnum)) {
+                continue;
+            }
             $extensibleEnum = $em->getRepository('ExtensibleEnum')->get();
             $extensibleEnum->id = $extensibleEnumData['id'];
             $extensibleEnum->set($extensibleEnumData);
@@ -48,6 +52,10 @@ class RegenerateExtensibleEnums extends AbstractConsole
         }
 
         foreach ($this->getMetadata()->get(['app', 'extensibleEnumOptions'], []) as $extensibleEnumOptionData) {
+            $extensibleEnumOption = $em->getRepository('ExtensibleEnumOption')->get($extensibleEnumOptionData['id']);
+            if (!empty($extensibleEnumOption)) {
+                continue;
+            }
             $extensibleEnumOption = $em->getRepository('ExtensibleEnumOption')->get();
             $extensibleEnumOption->id = $extensibleEnumOptionData['id'];
             $extensibleEnumOption->set($extensibleEnumOptionData);
