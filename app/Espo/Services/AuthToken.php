@@ -33,9 +33,8 @@
 
 namespace Espo\Services;
 
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Utils\Auth;
 
 class AuthToken extends Record
 {
@@ -43,14 +42,29 @@ class AuthToken extends Record
 
     protected $actionHistoryDisabled = true;
 
-    protected $readOnlyAttributeList = [
-        'token',
-        'hash',
-        'userId',
-        'ipAddress',
-        'lastAccess',
-        'createdAt',
-        'modifiedAt'
-    ];
+    protected $readOnlyAttributeList = ['lastAccess'];
+
+    protected function handleInput(\stdClass $data, ?string $id = null): void
+    {
+        parent::handleInput($data, $id);
+
+        if ($id !== null) {
+            foreach (['userId', 'token', 'hash', 'ipAddress'] as $field) {
+                if (property_exists($data, $field)) {
+                    unset($data->$field);
+                }
+            }
+        } else {
+            if (property_exists($data, 'userId')) {
+                $user = $this->getEntityManager()->getRepository('User')->get($data->userId);
+                if (empty($user)) {
+                    throw new BadRequest('User is required');
+                }
+                $data->token = Auth::generateToken();
+                $data->ipAddress = $_SERVER['REMOTE_ADDR'];
+                $data->hash = $user->get('password');
+            }
+        }
+    }
 }
 

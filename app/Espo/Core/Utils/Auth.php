@@ -165,7 +165,7 @@ class Auth
             $this->preventConcurrent($user->id);
 
             $authToken = $this->getEntityManager()->getEntity('AuthToken');
-            $authToken->set('token', $this->generateToken());
+            $authToken->set('token', self::generateToken());
             $authToken->set('hash', $user->get('password'));
             $authToken->set('ipAddress', $_SERVER['REMOTE_ADDR']);
             $authToken->set('userId', $user->id);
@@ -220,7 +220,7 @@ class Auth
         return false;
     }
 
-    protected function generateToken(): string
+    public static function generateToken(): string
     {
         $length = 16;
 
