@@ -15,7 +15,7 @@ namespace Atro\ConnectionType;
 
 use Atro\Core\Container;
 
-abstract class AbstractConnection implements ConnectionInterface
+abstract class AbstractConnection
 {
     protected Container $container;
     protected array $data;

@@ -16,7 +16,7 @@ namespace Atro\ConnectionType;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
-class ConnectionAtrocore extends AbstractConnection implements HttpConnectionInterface
+class ConnectionAtrocore extends AbstractConnection implements ConnectionInterface, HttpConnectionInterface
 {
     public function connect(Entity $connection)
     {

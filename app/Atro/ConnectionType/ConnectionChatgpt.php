@@ -17,7 +17,7 @@ use Atro\Core\Twig\Twig;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
-class ConnectionChatgpt extends AbstractConnection implements HttpConnectionInterface
+class ConnectionChatgpt extends AbstractConnection implements ConnectionInterface, HttpConnectionInterface
 {
 
     public function getConnectionData(Entity $connection): array
