@@ -294,38 +294,38 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             }
 
+            let dropdownItemList = [];
+            (this.dropdownItemList || []).forEach(item => {
+                if (!item.name || item.name !== 'dynamicAction') {
+                    dropdownItemList.push(item);
+                }
+            });
+            this.dropdownItemList = dropdownItemList;
+
+            let additionalButtons = [];
+            (this.additionalButtons || []).forEach(item => {
+                if (!item.action || item.action !== 'dynamicAction') {
+                    additionalButtons.push(item);
+                }
+            });
+            this.additionalButtons = additionalButtons;
+
             (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicRecordActions']) || []).forEach(dynamicAction => {
                 if (this.getAcl().check(dynamicAction.acl.scope, dynamicAction.acl.action)) {
                     if (dynamicAction.display === 'dropdown') {
-                        let skip = false;
-                        (this.dropdownItemList || []).forEach(item => {
-                            if (item.id && item.id === dynamicAction.id) {
-                                skip = true;
-                            }
+                        this.dropdownItemList.push({
+                            id: dynamicAction.id,
+                            label: dynamicAction.name,
+                            name: "dynamicAction"
                         });
-                        if (!skip) {
-                            (this.dropdownItemList || []).push({
-                                id: dynamicAction.id,
-                                label: dynamicAction.name,
-                                name: "dynamicAction"
-                            });
-                        }
                     }
-                    if (dynamicAction.display === 'single') {
-                        let skip = false;
-                        (this.additionalButtons || []).forEach(item => {
-                            if (item.id && item.id === dynamicAction.id) {
-                                skip = true;
-                            }
-                        });
 
-                        if (!skip) {
-                            (this.additionalButtons || []).push({
-                                id: dynamicAction.id,
-                                label: dynamicAction.name,
-                                action: "dynamicAction"
-                            });
-                        }
+                    if (dynamicAction.display === 'single') {
+                        this.additionalButtons.push({
+                            id: dynamicAction.id,
+                            label: dynamicAction.name,
+                            action: "dynamicAction"
+                        });
                     }
                 }
             });
