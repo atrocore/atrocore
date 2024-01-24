@@ -1,34 +1,33 @@
 {
-  "fields": {
-    "autorefreshInterval": "Auto-Refresh-Intervall",
-    "boolFilterList": "Bool Filterliste",
-    "dateFilter": "Datum Filter",
-    "dateFrom": "vom Datum",
-    "dateTo": "bis Datum",
-    "displayRecords": "Datensätze anzeigen",
-    "enabledScopeList": "aktivierte Scope Liste",
-    "entityType": "Entitätstyp",
-    "expandedLayout": "erweitertes Layout",
-    "futureDays": "nächste Tage",
-    "isDoubleHeight": "zweifache Höhe",
-    "primaryFilter": "primärer Filter",
-    "sortBy": "sortieren nach",
-    "sortDirection": "Bestellung (Richtung)",
-    "title": "Titel",
-    "mode": "Modus",
-    "users": "Benutzer"
-  },
-  "options": {
-    "mode": {
-      "agendaWeek": "Woche (Agenda)",
-      "basicWeek": "Woche",
-      "month": "Monat",
-      "basicDay": "Tag",
-      "agendaDay": "Tag (Agenda)",
-      "timeline": "Zeitachse"
+    "fields": {
+        "autorefreshInterval": "Auto-Refresh-Intervall",
+        "boolFilterList": "Bool Filterliste",
+        "dateFilter": "Datum Filter",
+        "dateFrom": "vom Datum",
+        "dateTo": "bis Datum",
+        "displayRecords": "Datensätze anzeigen",
+        "enabledScopeList": "aktivierte Scope Liste",
+        "entityType": "Entitätstyp",
+        "expandedLayout": "erweitertes Layout",
+        "isDoubleHeight": "zweifache Höhe",
+        "primaryFilter": "primärer Filter",
+        "sortBy": "sortieren nach",
+        "sortDirection": "Bestellung (Richtung)",
+        "title": "Titel",
+        "mode": "Modus",
+        "users": "Benutzer"
+    },
+    "options": {
+        "mode": {
+            "agendaWeek": "Woche (Agenda)",
+            "basicWeek": "Woche",
+            "month": "Monat",
+            "basicDay": "Tag",
+            "agendaDay": "Tag (Agenda)",
+            "timeline": "Zeitachse"
+        }
+    },
+    "messages": {
+        "selectEntityType": "Wählen Sie Entitätstyp in Dashlet-Optionen"
     }
-  },
-  "messages": {
-    "selectEntityType": "Wählen Sie Entitätstyp in Dashlet-Optionen"
-  }
 }
