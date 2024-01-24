@@ -8,15 +8,5 @@
   },
   "links": {
     "actionHistoryRecords": "История действий"
-  },
-  "presetFilters": {
-    "active": "Активный",
-    "inactive": "Неактивный"
-  },
-  "labels": {
-    "Set Inactive": "Сделать неактивным"
-  },
-  "massActions": {
-    "setInactive": "Сделать неактивным"
   }
 }
