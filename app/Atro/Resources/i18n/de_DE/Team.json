@@ -1,19 +1,18 @@
 {
-  "fields": {
-    "userRole": "Benutzer Rolle",
-    "roles": "Rollen",
-    "positionList": "Positionsbezeichnungen"
-  },
-  "links": {
-    "users": "Benutzer",
-    "notes": "Notizen",
-    "roles": "Rollen"
-  },
-  "tooltips": {
-    "roles": "Benutzer dieses Teams erben alle Zugriffsberechtigungen von der ausgewählten Rollen.",
-    "positionList": "Verfügbare Positionen in diesem Team. Z.B. Verkäufer, Manager etc."
-  },
-  "labels": {
-    "Create Team": "Team erstellen"
-  }
+    "fields": {
+        "roles": "Rollen",
+        "positionList": "Positionsbezeichnungen"
+    },
+    "links": {
+        "users": "Benutzer",
+        "notes": "Notizen",
+        "roles": "Rollen"
+    },
+    "tooltips": {
+        "roles": "Benutzer dieses Teams erben alle Zugriffsberechtigungen von der ausgewählten Rollen.",
+        "positionList": "Verfügbare Positionen in diesem Team. Z.B. Verkäufer, Manager etc."
+    },
+    "labels": {
+        "Create Team": "Team erstellen"
+    }
 }
