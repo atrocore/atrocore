@@ -1,5 +1,10 @@
 {
   "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true
+    },
     "token": {
       "type": "varchar",
       "maxLength": "36",

@@ -26,9 +26,26 @@ class V1Dot8Dot15 extends Base
             ->setParameter('true', true, ParameterType::BOOLEAN)
             ->setParameter('jobName', 'UpdateCurrencyExchangeViaECB')
             ->executeStatement();
+
+        $fromSchema = $this->getCurrentSchema();
+        $toSchema = clone $fromSchema;
+
+        $this->addColumn($toSchema, 'auth_token', 'name', ['type' => 'varchar']);
+
+        foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
+            $this->exec($sql);
+        }
     }
 
     public function down(): void
     {
+    }
+
+    protected function exec(string $query): void
+    {
+        try {
+            $this->getPDO()->exec($query);
+        } catch (\Throwable $e) {
+        }
     }
 }

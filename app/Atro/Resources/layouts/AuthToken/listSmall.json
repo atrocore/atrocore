@@ -1,9 +1,19 @@
 [
   {
+    "name": "name",
+    "link": true
+  },
+  {
     "name": "user"
   },
   {
     "name": "isActive"
+  },
+  {
+    "name": "lifetime"
+  },
+  {
+    "name": "idleTime"
   },
   {
     "name": "ipAddress"

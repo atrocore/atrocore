@@ -1,14 +1,20 @@
 [
   {
-    "label": "",
+    "label": "Overview",
     "rows": [
       [
         {
-          "name": "user"
+          "name": "name"
         },
         {
           "name": "isActive"
         }
+      ],
+      [
+        {
+          "name": "user"
+        },
+        false
       ],
       [
         {

@@ -165,9 +165,6 @@ class Auth
             $this->preventConcurrent($user->id);
 
             $authToken = $this->getEntityManager()->getEntity('AuthToken');
-            $authToken->set('token', self::generateToken());
-            $authToken->set('hash', $user->get('password'));
-            $authToken->set('ipAddress', $_SERVER['REMOTE_ADDR']);
             $authToken->set('userId', $user->id);
 
             $tokenLifeTime = $this->request->headers('HTTP_AUTHORIZATION_TOKEN_LIFETIME');

@@ -33,9 +33,12 @@
 
 namespace Espo\Repositories;
 
+use Espo\Core\ORM\Repositories\RDB;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Utils\Auth;
 use Espo\ORM\Entity;
 
-class AuthToken extends \Espo\Core\ORM\Repositories\RDB
+class AuthToken extends RDB
 {
     protected $hooksDisabled = true;
 
@@ -44,4 +47,28 @@ class AuthToken extends \Espo\Core\ORM\Repositories\RDB
     protected $processFieldsBeforeSaveDisabled = true;
 
     protected $processFieldsAfterRemoveDisabled = true;
+
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        parent::beforeSave($entity, $options);
+
+        if ($entity->isNew()) {
+            if (empty($entity->get('userId'))) {
+                throw new BadRequest('User ID is required');
+            }
+
+            $user = $this->getEntityManager()->getRepository('User')->get($entity->get('userId'));
+            if (empty($user)) {
+                throw new BadRequest('User is required');
+            }
+
+            $entity->set('token', Auth::generateToken());
+            $entity->set('ipAddress', $_SERVER['REMOTE_ADDR'] ?? null);
+            $entity->set('hash', $user->get('password'));
+
+            if (empty($entity->get('name'))) {
+                $entity->set('name', 'Login at ' . date('Y-m-d H:i:s'));
+            }
+        }
+    }
 }
