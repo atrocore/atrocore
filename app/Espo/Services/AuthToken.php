@@ -34,6 +34,7 @@
 namespace Espo\Services;
 
 use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 
 class AuthToken extends Record
 {
@@ -56,11 +57,20 @@ class AuthToken extends Record
         }
     }
 
+    public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
+    {
+        parent::prepareCollectionForOutput($collection, $selectParams);
+
+        foreach ($collection as $entity) {
+            $entity->skipAuthTokenGeneration = true;
+        }
+    }
+
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);
 
-        if ($this->getUser()->isAdmin()) {
+        if (empty($entity->skipAuthTokenGeneration) && $this->getUser()->isAdmin()) {
             $entity->set('authToken', $this->getAuthorizationToken($entity->get('id')));
         }
     }
