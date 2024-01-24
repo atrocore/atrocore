@@ -1,19 +1,16 @@
 {
-  "fields": {
-    "packageId": "Package ID",
-    "url": "URL",
-    "status": "Status",
-    "versions": "Versionen",
-    "tags": "Stichworte"
-  },
-  "options": {
-    "status": {
-      "buyable": "käuflich",
-      "available": "verfügbar"
+    "fields": {
+        "status": "Status",
+        "versions": "Versionen",
+        "tags": "Stichworte"
+    },
+    "options": {
+        "status": {
+            "buyable": "käuflich",
+            "available": "verfügbar"
+        }
+    },
+    "labels": {
+        "installModule": "Modul installieren"
     }
-  },
-  "labels": {
-    "Create TreoStore": "AtroShop erstellen",
-    "installModule": "Modul installieren"
-  }
 }
