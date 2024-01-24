@@ -75,7 +75,7 @@ class Unit extends Base
 
         if ($entity->isNew()) {
             if ($entity->get('isDefault') && !empty($this->where(['measureId' => $entity->get('measureId'), 'isDefault' => true])->findOne())) {
-                throw new BadRequest($this->getInjection('language')->translate('newUnitCanNotBeDefault', 'exceptions', 'Unit'));
+                $entity->set('isDefault', false);
             }
 
             if (empty($this->where(['measureId' => $entity->get('measureId')])->findOne())) {

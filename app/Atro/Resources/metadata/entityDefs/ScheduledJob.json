@@ -78,10 +78,6 @@
         "CheckUpdates": {
             "isSystem": true,
             "scheduling": "0 2 * * *"
-        },
-        "UpdateCurrencyExchangeViaECB": {
-            "isSystem": true,
-            "scheduling": "0 2 * * *"
         }
     }
 }

@@ -23,6 +23,8 @@ declare(strict_types=1);
 namespace Espo\Jobs;
 
 use Espo\Core\Jobs\Base;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 
 class UpdateCurrencyExchangeViaECB extends Base
 {
@@ -39,46 +41,33 @@ class UpdateCurrencyExchangeViaECB extends Base
         return true;
     }
 
-    public function updateCurrencyRates()
+    public function updateCurrencyRates(Entity $unit = null): void
     {
-        $currencyRates = $this->getConfig()->get('currencyRates');
-        $baseCurrency = '';
-        $units = $this->getEntityManager()->getRepository('Unit')->where(['measureId' => 'currency'])->find();
-        foreach ($units as $unit) {
-            if (!array_key_exists($unit->get('code'), $currencyRates)) {
-                $currencyRates[$unit->get('code')] = 1;
-            }
-            if (!empty($unit->get('isDefault'))) {
-                $baseCurrency = $unit->get('code');
-            }
-        }
+        $units = $this->getEntityManager()->getRepository('Unit')
+            ->where(['measureId' => 'currency'])
+            ->find();
 
-        if (empty($baseCurrency) || empty($currencyRates)) {
-            return true;
+        foreach ($units as $unit) {
+            if (!empty($unit->get('isDefault'))) {
+                $baseCurrency = strtoupper($unit->get('id'));
+            }
         }
 
         $ecbRates = self::getExchangeRates();
         $ecbRates['EUR'] = 1;
-        if (empty($ecbRates) || empty($ecbRates[$baseCurrency])) {
-            return true;
+        if (empty($baseCurrency) || empty($ecbRates) || empty($ecbRates[$baseCurrency])) {
+            return;
         }
 
-        foreach ($currencyRates as $rateKey => $rateValue) {
-            if (array_key_exists($rateKey, $ecbRates) && !empty($ecbRates[$rateKey])) {
-                $currencyRates[$rateKey] = round($ecbRates[$baseCurrency] / $ecbRates[$rateKey], 4);
+        $toUpdate = empty($unit) ? $units : new EntityCollection([$unit], 'Unit');
+
+        foreach ($toUpdate as $unit) {
+            if (!isset($ecbRates[strtoupper($unit->get('id'))])) {
+                continue;
             }
+            $unit->set('multiplier', round($ecbRates[$baseCurrency] / $ecbRates[strtoupper($unit->get('id'))], 4));
+            $this->getEntityManager()->saveEntity($unit);
         }
-
-
-        foreach ($units as $unit) {
-            if (!empty($currencyRates[$unit->get('name')])) {
-                $unit->set('multiplier', $currencyRates[$unit->get('name')]);
-                $this->getEntityManager()->saveEntity($unit);
-            }
-        }
-
-        $this->getConfig()->set('currencyRates', $currencyRates);
-        $this->getConfig()->save();
     }
 
     public static function getExchangeRates(): array

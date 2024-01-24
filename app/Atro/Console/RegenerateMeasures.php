@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Console;
 
+use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
 class RegenerateMeasures extends AbstractConsole
@@ -56,16 +57,25 @@ class RegenerateMeasures extends AbstractConsole
             if (!empty($unit)) {
                 continue;
             }
-            
+
             $unit = $em->getRepository('Unit')->get();
             $unit->id = $unitData['id'];
             $unit->set($unitData);
 
             try {
                 $em->saveEntity($unit);
+                if ($unit->get('measureId') === 'currency') {
+                    $this->calculateMultiplier($unit);
+                }
             } catch (\Throwable $e) {
                 // ignore all
             }
         }
+    }
+
+    protected function calculateMultiplier(Entity $unit): void
+    {
+        $job = new \Espo\Jobs\UpdateCurrencyExchangeViaECB($this->getContainer());
+        $job->updateCurrencyRates($unit);
     }
 }
