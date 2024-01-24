@@ -2,7 +2,6 @@
   "fields": {
     "locale": "Локаль",
     "defaultCurrency": "Валюта по умолчанию",
-    "currencyList": "Список валют",
     "emailAddress": "Адрес эл. почты",
     "dashboardTabList": "Список вкладок",
     "tabList": "Меню навигации",
@@ -19,8 +18,6 @@
     "scopeColorsDisabled": "Отключить цвета границ",
     "tabColorsDisabled": "Отключить цвета вкладок",
     "assignmentNotifications": "Notifications upon assignment"
-  },
-  "links": {
   },
   "labels": {
     "Notifications": "Оповещения",
