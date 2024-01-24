@@ -1,28 +1,5 @@
 {
-  "labels": {
-    "Field": "Поле"
-  },
-  "options": {
-    "оператори": {
-      "equals": "Дорівнює",
-      "notEquals": "Не дорівнює",
-      "greaterThan": "Більше ніж",
-      "lessThan": "Менше ніж",
-      "greaterThanOrEquals": "Більше ніж або дорівнює",
-      "lessThanOrEquals": "Менше ніж або дорівнює",
-      "in": "У",
-      "notIn": "Не в",
-      "inPast": "У Минулому",
-      "inFuture": "У Майбутньому",
-      "isToday": "Сьогодні",
-      "isTrue": "Правда",
-      "isFalse": "Невірно",
-      "isEmpty": "Пусто",
-      "isNotEmpty": "Не порожньо",
-      "contains": "Містить",
-      "has": "Містить",
-      "notContains": "Не містить",
-      "notHas": "Не містить у собі"
+    "labels": {
+        "Field": "Поле"
     }
-  }
 }
