@@ -1,47 +1,46 @@
 {
-  "fields": {
-    "data": "Daten",
-    "roles": "Rollen",
-    "assignmentPermission": "Zuweisungsberechtigung",
-    "dataPrivacyPermission": "Datenschutz Erlaubnis"
-  },
-  "links": {
-    "users": "Benutzer"
-  },
-  "tooltips": {
-    "assignmentPermission": "Ermöglicht das Recht der Zuweisung von Datensätzen und das Senden von Nachrichten an andere Benutzer zu beschränken\n\nAlle - Keine Einschränkung\n\nTeam - Kann an Benutzer des eigenen Teams zuweisen/senden\n\nNein - Kann nur sich selbst zuweisen/senden",
-    "dataPrivacyPermission": "Ermöglicht das Anzeigen und Löschen persönlicher Daten."
-  },
-  "labels": {
-    "Access": "Berechtigungen",
-    "Create Role": "Rolle erstellen",
-    "Scope Level": "Berechtigungsumfang",
-    "Field Level": "Feldebene"
-  },
-  "options": {
-    "accessList": {
-      "not-set": "nicht gesetzt",
-      "enabled": "Aktiv",
-      "disabled": "Inaktiv"
+    "fields": {
+        "roles": "Rollen",
+        "assignmentPermission": "Zuweisungsberechtigung",
+        "dataPrivacyPermission": "Datenschutz Erlaubnis"
     },
-    "levelList": {
-      "all": "Alle",
-      "team": "Team",
-      "account": "Firma",
-      "own": "Eigene",
-      "no": "Nein",
-      "yes": "Ja",
-      "not-set": "nicht gesetzt"
+    "links": {
+        "users": "Benutzer"
+    },
+    "tooltips": {
+        "assignmentPermission": "Ermöglicht das Recht der Zuweisung von Datensätzen und das Senden von Nachrichten an andere Benutzer zu beschränken\n\nAlle - Keine Einschränkung\n\nTeam - Kann an Benutzer des eigenen Teams zuweisen/senden\n\nNein - Kann nur sich selbst zuweisen/senden",
+        "dataPrivacyPermission": "Ermöglicht das Anzeigen und Löschen persönlicher Daten."
+    },
+    "labels": {
+        "Access": "Berechtigungen",
+        "Create Role": "Rolle erstellen",
+        "Scope Level": "Berechtigungsumfang",
+        "Field Level": "Feldebene"
+    },
+    "options": {
+        "accessList": {
+            "not-set": "nicht gesetzt",
+            "enabled": "Aktiv",
+            "disabled": "Inaktiv"
+        },
+        "levelList": {
+            "all": "Alle",
+            "team": "Team",
+            "account": "Firma",
+            "own": "Eigene",
+            "no": "Nein",
+            "yes": "Ja",
+            "not-set": "nicht gesetzt"
+        }
+    },
+    "actions": {
+        "read": "Lesen",
+        "edit": "Bearbeiten",
+        "delete": "Löschen",
+        "stream": "Aktivitäten",
+        "create": "Erstellen"
+    },
+    "messages": {
+        "changesAfterClearCache": "Alle Änderungen werden erst nach Leeren des Caches wirksam."
     }
-  },
-  "actions": {
-    "read": "Lesen",
-    "edit": "Bearbeiten",
-    "delete": "Löschen",
-    "stream": "Aktivitäten",
-    "create": "Erstellen"
-  },
-  "messages": {
-    "changesAfterClearCache": "Alle Änderungen werden erst nach Leeren des Caches wirksam."
-  }
 }
