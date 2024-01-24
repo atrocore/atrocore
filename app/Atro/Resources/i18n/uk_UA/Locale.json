@@ -1,22 +1,19 @@
 {
-  "fields": {
-    "language": "Мова",
-    "timeZone": "Часовий пояс",
-    "dateFormat": "Формат дати",
-    "weekStart": "Перший день тижня",
-    "timeFormat": "Формат часу",
-    "thousandSeparator": "Тисячний роздільник",
-    "decimalMark": "Десятковий роздільник"
-  },
-  "links": {
-    "measures": "Заходи"
-  },
-  "labels": {
-    "sunday": "Неділя",
-    "monday": "Понеділок",
-    "Create Locale": "Створити локаль"
-  },
-  "exceptions": {
-    "localeIsUsed": "Локаль використовується і не може бути видалена."
-  }
+    "fields": {
+        "language": "Мова",
+        "timeZone": "Часовий пояс",
+        "dateFormat": "Формат дати",
+        "weekStart": "Перший день тижня",
+        "timeFormat": "Формат часу",
+        "thousandSeparator": "Тисячний роздільник",
+        "decimalMark": "Десятковий роздільник"
+    },
+    "labels": {
+        "sunday": "Неділя",
+        "monday": "Понеділок",
+        "Create Locale": "Створити локаль"
+    },
+    "exceptions": {
+        "localeIsUsed": "Локаль використовується і не може бути видалена."
+    }
 }

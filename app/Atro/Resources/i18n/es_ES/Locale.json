@@ -1,19 +1,16 @@
 {
-  "fields": {
-    "language": "Idioma",
-    "dateFormat": "Formato de fecha",
-    "timeFormat": "Formato de hora",
-    "timeZone": "Zona horaria",
-    "weekStart": "Primer día de la semana",
-    "thousandSeparator": "Separador de miles",
-    "decimalMark": "Separador decimal"
-  },
-  "links": {
-    "users": "Users"
-  },
-  "labels": {
-    "sunday": "Domingo",
-    "monday": "Lunes",
-    "Create Locale": "Create Locale"
-  }
+    "fields": {
+        "language": "Idioma",
+        "dateFormat": "Formato de fecha",
+        "timeFormat": "Formato de hora",
+        "timeZone": "Zona horaria",
+        "weekStart": "Primer día de la semana",
+        "thousandSeparator": "Separador de miles",
+        "decimalMark": "Separador decimal"
+    },
+    "labels": {
+        "sunday": "Domingo",
+        "monday": "Lunes",
+        "Create Locale": "Create Locale"
+    }
 }
