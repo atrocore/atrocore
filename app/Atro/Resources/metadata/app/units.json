@@ -18,12 +18,14 @@
     "id": "chf",
     "name": "CHF",
     "measureId": "currency",
+    "symbol": "Fr.",
     "isActive": false
   },
   {
     "id": "gbp",
     "name": "GBP",
     "measureId": "currency",
+    "symbol": "£",
     "isActive": false
   }
 ]
