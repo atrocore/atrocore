@@ -4,19 +4,16 @@
     "ipAddress": "IP Address",
     "lastAccess": "Last Access Date",
     "createdAt": "Login Date",
-    "isActive": "Is Active"
+    "isActive": "Active",
+    "lifetime": "Life Time",
+    "idleTime": "Idle Time",
+    "authToken": "Authorization-Token"
   },
   "links": {
     "actionHistoryRecords": "Action History"
   },
-  "presetFilters": {
-    "active": "Active",
-    "inactive": "Inactive"
-  },
-  "labels": {
-    "Set Inactive": "Set Inactive"
-  },
-  "massActions": {
-    "setInactive": "Set Inactive"
+  "tooltips": {
+    "lifetime": "Life Time should be set in hours. Zero means no expiration.",
+    "idleTime": "Idle Time should be set in hours. Zero means no expiration."
   }
 }

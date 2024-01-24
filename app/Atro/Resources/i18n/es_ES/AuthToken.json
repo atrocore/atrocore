@@ -8,15 +8,5 @@
   },
   "links": {
     "actionHistoryRecords": "Histórico"
-  },
-  "presetFilters": {
-    "active": "Activo",
-    "inactive": "Inactivo"
-  },
-  "labels": {
-    "Set Inactive": "Establecer Inactivo"
-  },
-  "massActions": {
-    "setInactive": "Establecer Inactivo"
   }
 }

@@ -1,23 +1,30 @@
 {
-    "controller": "controllers/record",
-    "recordViews": {
-        "list": "views/admin/auth-token/record/list",
-        "detail": "views/admin/auth-token/record/detail",
-        "detailSmall": "views/admin/auth-token/record/detail-small"
-    },
-    "modalViews": {
-        "detail": "views/admin/auth-token/modals/detail"
-    },
-    "filterList": [
-        "active",
-        "inactive"
-    ],
-    "createDisabled": true,
-    "relationshipPanels": {
-        "actionHistoryRecords": {
-            "create": false,
-            "select": false,
-            "rowActionsView": "views/record/row-actions/relationship-view-only"
-        }
+  "controller": "controllers/record",
+  "recordViews": {
+    "list": "views/admin/auth-token/record/list"
+  },
+  "modalViews": {
+    "detail": "views/admin/auth-token/modals/detail"
+  },
+  "relationshipPanels": {
+    "actionHistoryRecords": {
+      "create": false,
+      "select": false,
+      "rowActionsView": "views/record/row-actions/relationship-view-only"
     }
+  },
+  "dynamicLogic": {
+    "fields": {
+      "user": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    }
+  }
 }

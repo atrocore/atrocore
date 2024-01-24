@@ -1,10 +1,49 @@
 [
-    {
-        "label":"",
-        "rows":[
-            [{"name":"user"}, {"name":"isActive"}],
-            [{"name":"ipAddress"}, {"name":"createdAt"}],
-            [{"name":"lastAccess"}, false]
-        ]
-    }
+  {
+    "label": "",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "isActive"
+        }
+      ],
+      [
+        {
+          "name": "user"
+        },
+        false
+      ],
+      [
+        {
+          "name": "lifetime"
+        },
+        {
+          "name": "idleTime"
+        }
+      ],
+      [
+        {
+          "name": "ipAddress"
+        },
+        {
+          "name": "createdAt"
+        }
+      ],
+      [
+        {
+          "name": "lastAccess"
+        },
+        false
+      ],
+      [
+        {
+          "name": "authToken",
+          "fullWidth": true
+        }
+      ]
+    ]
+  }
 ]

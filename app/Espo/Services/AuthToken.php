@@ -33,9 +33,8 @@
 
 namespace Espo\Services;
 
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\Error;
-use \Espo\Core\Exceptions\NotFound;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 
 class AuthToken extends Record
 {
@@ -43,14 +42,55 @@ class AuthToken extends Record
 
     protected $actionHistoryDisabled = true;
 
-    protected $readOnlyAttributeList = [
-        'token',
-        'hash',
-        'userId',
-        'ipAddress',
-        'lastAccess',
-        'createdAt',
-        'modifiedAt'
-    ];
+    protected $readOnlyAttributeList = ['lastAccess', 'token', 'hash', 'ipAddress'];
+
+    protected function handleInput(\stdClass $data, ?string $id = null): void
+    {
+        parent::handleInput($data, $id);
+
+        if ($id !== null) {
+            foreach (['userId'] as $field) {
+                if (property_exists($data, $field)) {
+                    unset($data->$field);
+                }
+            }
+        }
+    }
+
+    public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
+    {
+        parent::prepareCollectionForOutput($collection, $selectParams);
+
+        foreach ($collection as $entity) {
+            $entity->skipAuthTokenGeneration = true;
+        }
+    }
+
+    public function prepareEntityForOutput(Entity $entity)
+    {
+        parent::prepareEntityForOutput($entity);
+
+        if (empty($entity->skipAuthTokenGeneration) && $this->getUser()->isAdmin()) {
+            $entity->set('authToken', $this->getAuthorizationToken($entity->get('id')));
+        }
+    }
+
+    public function getAuthorizationToken(string $authTokenId): ?string
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $record = $conn->createQueryBuilder()
+            ->select('at.token, u.user_name')
+            ->from('auth_token', 'at')
+            ->join('at', $conn->quoteIdentifier('user'), 'u', 'at.user_id = u.id')
+            ->where('at.id = :id')
+            ->setParameter('id', $authTokenId)
+            ->fetchAssociative();
+
+        if (empty($record)) {
+            return null;
+        }
+
+        return base64_encode("{$record['user_name']}:{$record['token']}");
+    }
 }
 

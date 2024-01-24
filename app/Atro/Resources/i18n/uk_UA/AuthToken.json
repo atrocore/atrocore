@@ -8,15 +8,5 @@
   },
   "links": {
     "actionHistoryRecords": "Історія дій"
-  },
-  "presetFilters": {
-    "active": "Активний",
-    "inactive": "Неактивний"
-  },
-  "labels": {
-    "Set Inactive": "Зробити неактивним"
-  },
-  "massActions": {
-    "setInactive": "Зробити неактивним"
   }
 }
