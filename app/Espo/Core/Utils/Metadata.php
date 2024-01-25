@@ -258,9 +258,12 @@ class Metadata
                 if (!property_exists($entityDefs, 'fields') || property_exists($entityDefs->fields, 'id')) {
                     continue;
                 }
-                $data->entityDefs->{$entityType}->fields->id = new \stdClass();
-                $data->entityDefs->{$entityType}->fields->id->type = 'varchar';
-                $data->entityDefs->{$entityType}->fields->id->emDisabled = true;
+
+                $id = new \stdClass();
+                $id->type = 'varchar';
+                $id->emDisabled = true;
+
+                $data->entityDefs->{$entityType}->fields = (object)array_merge(['id' => $id], (array)$data->entityDefs->{$entityType}->fields);
             }
         }
 
