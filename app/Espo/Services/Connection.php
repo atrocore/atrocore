@@ -57,13 +57,7 @@ class Connection extends Base
 
     public function connect(Entity $connectionEntity)
     {
-        $connectionClass = $this->getMetadata()->get(['app', 'connectionTypes', $connectionEntity->get('type')]);
-        if (empty($connectionClass)) {
-            throw new BadRequest(sprintf($this->exception('connectionFailed'), $this->exception('noSuchType')));
-        }
-
-        $connection = $this->getInjection('container')->get($connectionClass);
-
+        $connection = $this->getInjection('container')->get('connectionFactory')->create($connectionEntity);
         if (empty($connection) || !$connection instanceof ConnectionInterface) {
             throw new BadRequest(sprintf($this->exception('connectionFailed'), $this->exception('noSuchType')));
         }

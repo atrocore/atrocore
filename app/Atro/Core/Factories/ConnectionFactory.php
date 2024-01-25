@@ -11,11 +11,17 @@
 
 declare(strict_types=1);
 
-namespace Atro\ConnectionType;
+namespace Atro\Core\Factories;
 
-use Espo\ORM\Entity;
+use Atro\Core\Container;
+use Atro\Core\Utils\Database\DBAL\FieldTypes\JsonArrayType;
+use Atro\Core\Utils\Database\DBAL\FieldTypes\JsonObjectType;
+use Doctrine\DBAL\Types\Type;
 
-interface HttpConnectionInterface
+class ConnectionFactory implements FactoryInterface
 {
-    public function request(string $url, string $method = 'GET', array $headers = [], string $body = null): string;
+    public function create(Container $container)
+    {
+        return new \Atro\Core\ConnectionFactory($container);
+    }
 }

@@ -20,7 +20,7 @@ class ConnectionAtrocore extends AbstractConnection implements ConnectionInterfa
 {
     public function connect(Entity $connection)
     {
-        $output = $this->request($connection, "{$connection->get('atrocoreUrl')}/api/v1/User");
+        $output = $this->request("{$this->connectionEntity->get('atrocoreUrl')}/api/v1/User");
         if (is_array(@json_decode($output, true))) {
             return true;
         }
@@ -28,11 +28,11 @@ class ConnectionAtrocore extends AbstractConnection implements ConnectionInterfa
         throw new BadRequest('Invalid credentials');
     }
 
-    public function request(?Entity $connection, string $url, string $method = 'GET', array $headers = [], string $body = null): string
+    public function request(string $url, string $method = 'GET', array $headers = [], string $body = null): string
     {
         $connectionHeaders = [
             "Content-Type: application/json",
-            "Authorization-Token: {$this->decryptPassword($connection->get('atrocoreToken'))}"
+            "Authorization-Token: {$this->decryptPassword($this->connectionEntity->get('atrocoreToken'))}"
         ];
 
         $ch = curl_init($url);

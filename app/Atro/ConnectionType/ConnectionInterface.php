@@ -18,4 +18,6 @@ use Espo\ORM\Entity;
 interface ConnectionInterface
 {
     public function connect(Entity $connection);
+
+    public function setConnectionEntity(Entity $connectionEntity): void;
 }
