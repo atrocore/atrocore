@@ -1,6 +1,6 @@
 {
   "atrocore": "\\Atro\\ConnectionType\\ConnectionAtrocore",
-  "chatgpt": "\\Atro\\ConnectionType\\ConnectionChatgpt",
+  "chatgpt": "\\Atro\\ConnectionType\\ConnectionChatGPT",
   "mysql": "\\Atro\\ConnectionType\\ConnectionMysql",
   "psql": "\\Atro\\ConnectionType\\ConnectionPsql",
   "msql": "\\Atro\\ConnectionType\\ConnectionMsql",
