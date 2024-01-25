@@ -1,0 +1,30 @@
+{
+  "fields": {
+    "username": "",
+    "ipAddress": "",
+    "requestTime": "",
+    "createdAt": "",
+    "isDenied": "",
+    "denialReason": "",
+    "user": "",
+    "authToken": "",
+    "requestUrl": "",
+    "requestMethod": "",
+    "authTokenIsActive": ""
+  },
+  "links": {
+    "authToken": "",
+    "user": "",
+    "actionHistoryRecords": ""
+  },
+  "presetFilters": {
+    "denied": "",
+    "accepted": ""
+  },
+  "options": {
+    "denialReason": {
+      "CREDENTIALS": "",
+      "INACTIVE_USER": ""
+    }
+  }
+}
