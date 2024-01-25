@@ -5,7 +5,8 @@
     "host": "Хост",
     "port": "Порт",
     "user": "Користувач",
-    "password": "Пароль"
+    "password": "Пароль",
+    "msqlTrustServerCertificate": "Trust server certificate"
   },
   "labels": {
     "connectionSuccess": "З'єднання успішно встановлено",

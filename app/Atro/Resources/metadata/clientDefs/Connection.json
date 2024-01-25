@@ -518,6 +518,19 @@
             }
           ]
         }
+      },
+      "msqlTrustServerCertificate": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "msql"
+              ]
+            }
+          ]
+        }
       }
     }
   }

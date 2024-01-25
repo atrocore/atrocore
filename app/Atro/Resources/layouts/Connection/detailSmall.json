@@ -70,6 +70,12 @@
         {
           "name": "openAiTemperature"
         }
+      ],
+      [
+        {
+          "name": "msqlTrustServerCertificate"
+        },
+        false
       ]
     ]
   }
