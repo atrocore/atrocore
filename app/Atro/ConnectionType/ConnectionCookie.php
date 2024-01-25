@@ -17,7 +17,7 @@ use Atro\Core\Twig\Twig;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
-class ConnectionCookie extends AbstractConnection implements ConnectionInterface, HttpConnectionInterface
+class ConnectionCookie extends AbstractConnection implements ConnectionInterface
 {
     public function buildBody(Entity $connection): array
     {

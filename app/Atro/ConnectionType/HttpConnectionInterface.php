@@ -13,7 +13,9 @@ declare(strict_types=1);
 
 namespace Atro\ConnectionType;
 
+use Espo\ORM\Entity;
+
 interface HttpConnectionInterface
 {
-    public function getHeaders(array $connectionData);
+    public function request(?Entity $connection, string $url, string $method = 'GET', array $headers = [], string $body = null): string;
 }

@@ -38,6 +38,14 @@ use Espo\ORM\Entity;
 
 class Connection extends Base
 {
+    public function get($id = null)
+    {
+        $entity = parent::get($id);
+        $this->setDataFields($entity);
+
+        return $entity;
+    }
+
     public function setDataFields(Entity $entity): void
     {
         foreach ($entity->getDataFields() as $name => $value) {

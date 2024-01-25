@@ -57,8 +57,6 @@ class Connection extends Base
 
     public function connect(Entity $connectionEntity)
     {
-        $this->getRepository()->setDataFields($connectionEntity);
-
         $connectionClass = $this->getMetadata()->get(['app', 'connectionTypes', $connectionEntity->get('type')]);
         if (empty($connectionClass)) {
             throw new BadRequest(sprintf($this->exception('connectionFailed'), $this->exception('noSuchType')));
