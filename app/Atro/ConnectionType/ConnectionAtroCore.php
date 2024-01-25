@@ -16,7 +16,7 @@ namespace Atro\ConnectionType;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
-class ConnectionAtrocore extends AbstractConnection implements ConnectionInterface, HttpConnectionInterface
+class ConnectionAtroCore extends AbstractConnection implements ConnectionInterface, HttpConnectionInterface
 {
     public function connect(Entity $connection)
     {
@@ -30,11 +30,6 @@ class ConnectionAtrocore extends AbstractConnection implements ConnectionInterfa
 
     public function request(string $url, string $method = 'GET', array $headers = [], string $body = null): string
     {
-        $connectionHeaders = [
-            "Content-Type: application/json",
-            "Authorization-Token: {$this->decryptPassword($this->connectionEntity->get('atrocoreToken'))}"
-        ];
-
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLINFO_HEADER_OUT, true);
@@ -42,7 +37,7 @@ class ConnectionAtrocore extends AbstractConnection implements ConnectionInterfa
         if (!empty($body)) {
             curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
         }
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array_merge($headers, $connectionHeaders));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array_merge($headers, $this->getHeaders()));
         $output = curl_exec($ch);
         if ($output === false) {
             throw new BadRequest('Curl error: ' . curl_error($ch));
@@ -55,5 +50,13 @@ class ConnectionAtrocore extends AbstractConnection implements ConnectionInterfa
         }
 
         return $output;
+    }
+
+    protected function getHeaders(): array
+    {
+        return [
+            "Content-Type: application/json",
+            "Authorization-Token: {$this->decryptPassword($this->connectionEntity->get('atrocoreToken'))}"
+        ];
     }
 }
