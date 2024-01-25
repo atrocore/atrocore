@@ -4,7 +4,7 @@
     "emailAddress": "Адреса ел. пошти",
     "phoneNumber": "Телефон",
     "description": "Опис",
-    "type": "типовий",
+    "type": "Тип",
     "role": "Роль"
   },
   "options": {
