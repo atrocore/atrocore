@@ -13,7 +13,9 @@ declare(strict_types=1);
 
 namespace Atro\TwigFilter;
 
-class BackslashNToBr extends EscapeString
+use Atro\Core\Twig\AbstractTwigFilter;
+
+class EscapeString extends AbstractTwigFilter
 {
     public function filter($value)
     {
@@ -21,6 +23,16 @@ class BackslashNToBr extends EscapeString
             return null;
         }
 
-        return $this->backslashNToBr($value);
+        return $this->escapeDoubleQuote($this->backslashNToBr($value));
+    }
+
+    protected function escapeDoubleQuote(string $value): string
+    {
+        return str_replace('"', '\"', $value);
+    }
+
+    protected function backslashNToBr(string $value): string
+    {
+        return str_replace("\n", '<br>', $value);
     }
 }
