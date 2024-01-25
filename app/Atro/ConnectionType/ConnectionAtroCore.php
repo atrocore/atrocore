@@ -20,7 +20,7 @@ class ConnectionAtroCore extends AbstractConnection implements ConnectionInterfa
 {
     public function connect(Entity $connection)
     {
-        $output = $this->request("{$this->connectionEntity->get('atrocoreUrl')}/api/v1/User");
+        $output = $this->request("{$this->connectionEntity->get('atrocoreUrl')}/api/v1/User?offset=0&maxSize=1");
         if (is_array(@json_decode($output, true))) {
             return true;
         }
