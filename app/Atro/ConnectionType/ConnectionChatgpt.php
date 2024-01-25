@@ -16,7 +16,7 @@ namespace Atro\ConnectionType;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
-class ConnectionChatGPT extends ConnectionAtroCore
+class ConnectionChatgpt extends ConnectionAtroCore
 {
     public function getConnectionData(Entity $connection): array
     {
