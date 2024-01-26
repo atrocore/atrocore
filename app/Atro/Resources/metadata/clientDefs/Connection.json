@@ -541,7 +541,6 @@
               "type": "in",
               "attribute": "type",
               "value": [
-                "msql",
                 "atrocore"
               ]
             }
