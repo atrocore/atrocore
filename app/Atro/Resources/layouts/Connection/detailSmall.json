@@ -73,6 +73,12 @@
       ],
       [
         {
+          "name": "msqlTrustServerCertificate"
+        },
+        false
+      ],
+      [
+        {
           "name": "atrocoreUrl"
         },
         {

@@ -29,7 +29,8 @@ class ConnectionMsql extends AbstractConnection implements ConnectionInterface
             "Database"     => $connection->get('dbName'),
             "Uid"          => $connection->get('user'),
             "PWD"          => $this->decryptPassword($connection->get('password')),
-            "LoginTimeout" => 5
+            "LoginTimeout" => 5,
+            "TrustServerCertificate" => $connection->get('msqlTrustServerCertificate')
         ];
         $result = \sqlsrv_connect($serverName, $connectionInfo);
 

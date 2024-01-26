@@ -31,7 +31,8 @@
     "openAiOrganizationId": "Organization ID",
     "openAiApiKey": "Api Key",
     "openAiModel": "Model",
-    "openAiTemperature": "Temperature"
+    "openAiTemperature": "Temperature",
+    "msqlTrustServerCertificate": "Trust server certificate"
   },
   "labels": {
     "connectionSuccess": "Connection is successfully established",

@@ -521,6 +521,19 @@
           ]
         }
       },
+      "msqlTrustServerCertificate": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "msql"
+              ]
+            }
+          ]
+        }
+      },
       "atrocoreUrl": {
         "visible": {
           "conditionGroup": [

@@ -321,6 +321,12 @@
       "type": "link",
       "readOnly": true,
       "view": "views/fields/user"
+    },
+    "msqlTrustServerCertificate": {
+      "type": "bool",
+      "notStorable": true,
+      "dataField": true,
+      "default": false
     }
   },
   "links": {
