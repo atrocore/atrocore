@@ -20,7 +20,7 @@ use Lazzard\FtpClient\Connection\FtpSSLConnection;
 use Lazzard\FtpClient\Config\FtpConfig;
 use Lazzard\FtpClient\FtpClient;
 
-class ConnectionFtp extends AbstractConnection
+class ConnectionFtp extends AbstractConnection implements ConnectionInterface
 {
     public function connect(Entity $connection): FtpClient
     {

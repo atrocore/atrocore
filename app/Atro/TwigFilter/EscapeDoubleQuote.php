@@ -13,9 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\TwigFilter;
 
-use Atro\Core\Twig\AbstractTwigFilter;
-
-class EscapeDoubleQuote extends AbstractTwigFilter
+class EscapeDoubleQuote extends EscapeString
 {
     public function filter($value)
     {
@@ -23,6 +21,6 @@ class EscapeDoubleQuote extends AbstractTwigFilter
             return null;
         }
 
-        return str_replace('"', '\"', (string)$value);
+        return $this->escapeDoubleQuote($value);
     }
 }

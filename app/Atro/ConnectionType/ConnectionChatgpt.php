@@ -13,13 +13,11 @@ declare(strict_types=1);
 
 namespace Atro\ConnectionType;
 
-use Atro\Core\Twig\Twig;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
-class ConnectionChatgpt extends AbstractConnection
+class ConnectionChatgpt extends ConnectionAtroCore
 {
-
     public function getConnectionData(Entity $connection): array
     {
         $orgId = $connection->get('openAiOrganizationId');
@@ -57,12 +55,15 @@ class ConnectionChatgpt extends AbstractConnection
         throw new BadRequest('Invalid credentials');
     }
 
-    public function getHeaders(array $connectionData): array
+    public function getHeaders(): array
     {
+        $connectionData = $this->connect($this->connectionEntity);
+
         $headers = ["Content-Type: application/json", "Authorization: Bearer {$connectionData['apiKey']}"];
         if (!empty($connectionData['organizationId'])) {
             $headers[] = "OpenAI-Organization: {$connectionData['organizationId']}";
         }
+
         return $headers;
     }
 }

@@ -1,0 +1,13 @@
+{
+  "atrocore": "\\Atro\\ConnectionType\\ConnectionAtroCore",
+  "chatgpt": "\\Atro\\ConnectionType\\ConnectionChatgpt",
+  "mysql": "\\Atro\\ConnectionType\\ConnectionMysql",
+  "psql": "\\Atro\\ConnectionType\\ConnectionPsql",
+  "msql": "\\Atro\\ConnectionType\\ConnectionMsql",
+  "ftp": "\\Atro\\ConnectionType\\ConnectionFtp",
+  "sftp": "\\Atro\\ConnectionType\\ConnectionSftp",
+  "oauth2": "\\Atro\\ConnectionType\\ConnectionOauth2",
+  "oauth1": "\\Atro\\ConnectionType\\ConnectionOauth1",
+  "otto": "\\Atro\\ConnectionType\\ConnectionOtto",
+  "cookie": "\\Atro\\ConnectionType\\ConnectionCookie"
+}

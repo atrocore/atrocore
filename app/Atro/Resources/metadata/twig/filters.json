@@ -2,5 +2,6 @@
   "prepareEntity": "\\Atro\\TwigFilter\\PrepareEntity",
   "isImage": "\\Atro\\TwigFilter\\IsImage",
   "escapeDoubleQuote": "\\Atro\\TwigFilter\\EscapeDoubleQuote",
+  "escapeStr": "\\Atro\\TwigFilter\\EscapeString",
   "backslashNToBr": "\\Atro\\TwigFilter\\BackslashNToBr"
 }

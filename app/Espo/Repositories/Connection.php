@@ -34,7 +34,22 @@
 namespace Espo\Repositories;
 
 use Espo\Core\Templates\Repositories\Base;
+use Espo\ORM\Entity;
 
 class Connection extends Base
 {
+    public function get($id = null)
+    {
+        $entity = parent::get($id);
+        $this->setDataFields($entity);
+
+        return $entity;
+    }
+
+    public function setDataFields(Entity $entity): void
+    {
+        foreach ($entity->getDataFields() as $name => $value) {
+            $entity->set($name, $value);
+        }
+    }
 }

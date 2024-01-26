@@ -16,7 +16,7 @@ namespace Atro\ConnectionType;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
-class ConnectionOauth2 extends AbstractConnection
+class ConnectionOauth2 extends ConnectionAtroCore implements ConnectionInterface
 {
     public function connect(Entity $connection)
     {
@@ -52,8 +52,10 @@ class ConnectionOauth2 extends AbstractConnection
         throw new BadRequest(sprintf($this->exception('connectionFailed'), 'Connection failed.'));
     }
 
-    public function getHeaders(array $connectionData): array
+    public function getHeaders(): array
     {
+        $connectionData = $this->connect($this->connectionEntity);
+
         return ["Authorization: {$connectionData['token_type']} {$connectionData['access_token']}"];
     }
 }

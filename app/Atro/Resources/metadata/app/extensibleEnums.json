@@ -1,2 +1,7 @@
 [
+  {
+    "id": "gender",
+    "name": "Gender",
+    "multilingual": false
+  }
 ]

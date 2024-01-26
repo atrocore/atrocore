@@ -34,6 +34,7 @@ class Container
             'twig'                     => \Atro\Core\Twig\Twig::class,
             'queueManager'             => \Atro\Core\QueueManager::class,
             'pseudoTransactionManager' => \Atro\Core\PseudoTransactionManager::class,
+            'connectionFactory'        => \Atro\Core\Factories\ConnectionFactory::class,
             'eventManager'             => \Atro\Core\Factories\EventManager::class,
             EventManager::class        => \Atro\Core\Factories\EventManager::class,
             'connection'               => \Atro\Core\Factories\Connection::class,

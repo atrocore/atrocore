@@ -3,6 +3,7 @@
     "name": "Name",
     "firstName": "Vorname",
     "secondName": "Zweitname",
+    "gender": "Geschlecht",
     "title": "Titel",
     "jobPosition": "Berufliche Stellung",
     "email": "Email",

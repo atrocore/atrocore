@@ -17,7 +17,7 @@ use Atro\Core\Twig\Twig;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
-class ConnectionCookie extends AbstractConnection
+class ConnectionCookie extends ConnectionAtroCore implements ConnectionInterface
 {
     public function buildBody(Entity $connection): array
     {
@@ -80,8 +80,10 @@ class ConnectionCookie extends AbstractConnection
         return join("; ", $cookies);
     }
 
-    public function getHeaders(array $connectionData): array
+    public function getHeaders(): array
     {
+        $connectionData = $this->connect($this->connectionEntity);
+
         return ["Cookie: {$connectionData['cookie']}"];
     }
 
