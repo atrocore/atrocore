@@ -41,6 +41,10 @@
     "countryCode": {
       "type": "varchar"
     },
+    "gender": {
+      "type": "extensibleEnum",
+      "extensibleEnumId": "gender"
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true

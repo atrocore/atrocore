@@ -175,10 +175,8 @@
             "disabled": true
         },
         "gender": {
-            "type": "enum",
-            "optionsIds": ["", "Male", "Female", "Neutral"],
-            "options": ["", "Male", "Female", "Neutral"],
-            "default": ""
+            "type": "extensibleEnum",
+            "extensibleEnumId": "gender"
         },
         "createdAt": {
             "type": "datetime",

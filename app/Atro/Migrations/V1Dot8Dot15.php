@@ -31,6 +31,7 @@ class V1Dot8Dot15 extends Base
         $toSchema = clone $fromSchema;
 
         $this->addColumn($toSchema, 'auth_token', 'name', ['type' => 'varchar']);
+        $this->addColumn($toSchema, 'contact', 'gender', ['type' => 'varchar']);
 
         foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
             $this->exec($sql);

@@ -3,6 +3,7 @@
     "name": "Ім'я",
     "firstName": "Ім'я",
     "secondName": "Прізвище",
+    "gender": "Стать",
     "title": "титульний",
     "jobPosition": "Посада",
     "email": "Електронна пошта",

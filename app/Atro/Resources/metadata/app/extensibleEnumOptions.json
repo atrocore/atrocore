@@ -1,2 +1,20 @@
 [
+  {
+    "id": "Male",
+    "extensibleEnumId": "gender",
+    "name": "Male",
+    "sortOrder": 0
+  },
+  {
+    "id": "Female",
+    "extensibleEnumId": "gender",
+    "name": "Female",
+    "sortOrder": 10
+  },
+  {
+    "id": "Neutral",
+    "extensibleEnumId": "gender",
+    "name": "Neutral",
+    "sortOrder": 20
+  }
 ]
