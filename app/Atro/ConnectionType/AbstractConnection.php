@@ -14,15 +14,27 @@ declare(strict_types=1);
 namespace Atro\ConnectionType;
 
 use Atro\Core\Container;
+use Espo\ORM\Entity;
 
-abstract class AbstractConnection implements ConnectionInterface
+abstract class AbstractConnection
 {
     protected Container $container;
     protected array $data;
+    protected Entity $connectionEntity;
 
     public function __construct(Container $container)
     {
         $this->container = $container;
+    }
+
+    public function setData(array $data)
+    {
+        $this->data = $data;
+    }
+
+    public function setConnectionEntity(Entity $connectionEntity): void
+    {
+        $this->connectionEntity = $connectionEntity;
     }
 
     protected function decryptPassword(string $hash): string
@@ -33,14 +45,5 @@ abstract class AbstractConnection implements ConnectionInterface
     protected function exception(string $name, string $scope = 'Connection'): string
     {
         return $this->container->get('language')->translate($name, 'exceptions', 'Connection');
-    }
-
-    public function setData(array $data) {
-        $this->data = $data;
-    }
-
-    public function getHeaders(array $connectionData) : array
-    {
-        return [];
     }
 }

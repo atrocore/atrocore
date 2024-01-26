@@ -5,6 +5,7 @@
       "required": true,
       "prohibitedEmptyValue": true,
       "optionsIds": [
+        "atrocore",
         "mysql",
         "psql",
         "msql",
@@ -16,6 +17,7 @@
         "cookie"
       ],
       "options": [
+        "atrocore",
         "mysql",
         "psql",
         "msql",
@@ -26,7 +28,7 @@
         "otto",
         "cookie"
       ],
-      "default": "mysql"
+      "default": "atrocore"
     },
     "payload": {
       "type": "text",
@@ -38,6 +40,18 @@
     },
     "loginUrl": {
       "type": "url",
+      "notStorable": true,
+      "dataField": true,
+      "required": false
+    },
+    "atrocoreUrl": {
+      "type": "url",
+      "notStorable": true,
+      "dataField": true,
+      "required": false
+    },
+    "atrocoreToken": {
+      "type": "password",
       "notStorable": true,
       "dataField": true,
       "required": false

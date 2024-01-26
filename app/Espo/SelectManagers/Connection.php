@@ -35,6 +35,7 @@ declare(strict_types=1);
 
 namespace Espo\SelectManagers;
 
+use Atro\ConnectionType\HttpConnectionInterface;
 use Espo\Core\SelectManagers\Base;
 
 class Connection extends Base
@@ -55,5 +56,19 @@ class Connection extends Base
                 'type' => $type
             ];
         }
+    }
+
+    protected function boolFilterHttpConnection(array &$result)
+    {
+        $types = [];
+        foreach ($this->getMetadata()->get(['app', 'connectionTypes'], []) as $type => $className) {
+            if (is_a($className, HttpConnectionInterface::class, true)) {
+                $types[] = $type;
+            }
+        }
+
+        $result['whereClause'][] = [
+            'type' => $types
+        ];
     }
 }

@@ -3,11 +3,13 @@
   "iconClass": "fas fa-database",
   "boolFilterList": [
     "notEntity",
-    "connectionType"
+    "connectionType",
+    "httpConnection"
   ],
   "hiddenBoolFilterList": [
     "notEntity",
-    "connectionType"
+    "connectionType",
+    "httpConnection"
   ],
   "recordViews": {
     "detail": "views/connection/record/detail"
@@ -514,6 +516,54 @@
               "attribute": "type",
               "value": [
                 "chatgpt"
+              ]
+            }
+          ]
+        }
+      },
+      "atrocoreUrl": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "atrocore"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "atrocore"
+              ]
+            }
+          ]
+        }
+      },
+      "atrocoreToken": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "atrocore"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "atrocore"
               ]
             }
           ]

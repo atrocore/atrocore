@@ -26,6 +26,8 @@
     "apiTestUrl": "Test api url",
     "payload": "Payload",
     "loginUrl": "Login URL",
+    "atrocoreUrl": "URL",
+    "atrocoreToken": "Authorization Token",
     "openAiOrganizationId": "Organization ID",
     "openAiApiKey": "Api Key",
     "openAiModel": "Model",
@@ -34,6 +36,7 @@
   "labels": {
     "connectionSuccess": "Connection is successfully established",
     "testConnection": "Test Connection",
+    "atrocore": "AtroCore",
     "mysql": "MySQL Server",
     "psql": "PostgreSQL Server",
     "msql": "Microsoft SQL Server",

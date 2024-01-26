@@ -6,9 +6,8 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 use Espo\Services\Connection;
 
-class ConnectionOauth1 extends AbstractConnection
+class ConnectionOauth1 extends ConnectionAtroCore implements ConnectionInterface
 {
-
     public function connect(Entity $connection)
     {
         if (empty($connection->get('oauthToken')) || empty($connection->get('oauthTokenSecret'))) {
@@ -55,8 +54,10 @@ class ConnectionOauth1 extends AbstractConnection
         }
     }
 
-    public function getHeaders(array $connectionData) : array
+    public function getHeaders() : array
     {
+        $connectionData = $this->connect($this->connectionEntity);
+
         return ["Authorization: {$connectionData['token_type']} {$connectionData['access_token']}"];
     }
 
