@@ -25,7 +25,6 @@ AtroCore is the best fit **for businesses**, who want to:
 The following full-fledged software products are already available on the AtroCore basis:
 * [AtroPIM (Product Information Management)](https://github.com/atrocore/atropim)
 * [AtroDAM (Digital Asset Management)](https://github.com/atrocore/atrodam)
-* [AtroPM (Project Management)](https://github.com/atrocore/atropm)
 
 
 ### What is on Board?
