@@ -15,15 +15,9 @@ namespace Atro\ConnectionType;
 
 use Atro\DTO\HttpResponseDTO;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\ORM\Entity;
 
-class ConnectionHttp extends AbstractConnection implements ConnectionInterface, HttpConnectionInterface
+class ConnectionHttp extends AbstractConnection implements HttpConnectionInterface
 {
-    public function connect(Entity $connection)
-    {
-        return true;
-    }
-
     public function request(string $url, string $method = 'GET', array $headers = [], string $body = null): HttpResponseDTO
     {
         $ch = curl_init($url);
