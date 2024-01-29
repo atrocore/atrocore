@@ -671,6 +671,9 @@ abstract class Entity implements IEntity
                         $this->setFieldValue($field, $default);
                     }
                 }
+            } else if (!empty($fieldData['defaultId'])) {
+                // load extensibleEnum default value
+                $this->setFieldValue($field, $fieldData['defaultId']);
             }
 
             // default for unit
