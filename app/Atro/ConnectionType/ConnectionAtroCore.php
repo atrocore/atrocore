@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\ConnectionType;
 
+use Atro\DTO\HttpResponseDTO;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
@@ -20,15 +21,15 @@ class ConnectionAtroCore extends AbstractConnection implements ConnectionInterfa
 {
     public function connect(Entity $connection)
     {
-        $output = $this->request("{$this->connectionEntity->get('atrocoreUrl')}/api/v1/User?offset=0&maxSize=1");
-        if (is_array(@json_decode($output, true))) {
+        $response = $this->request("{$this->connectionEntity->get('atrocoreUrl')}/api/v1/User?offset=0&maxSize=1");
+        if (is_array(@json_decode($response->getOutput(), true))) {
             return true;
         }
 
         throw new BadRequest('Invalid credentials');
     }
 
-    public function request(string $url, string $method = 'GET', array $headers = [], string $body = null): string
+    public function request(string $url, string $method = 'GET', array $headers = [], string $body = null): HttpResponseDTO
     {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -45,11 +46,11 @@ class ConnectionAtroCore extends AbstractConnection implements ConnectionInterfa
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
-        if (!in_array($httpCode, [200, 201, 204])) {
+        if ($httpCode < 200 || $httpCode >= 300) {
             throw new BadRequest("Response Code: $httpCode Body: $output");
         }
 
-        return $output;
+        return new HttpResponseDTO($httpCode, $output);
     }
 
     protected function getHeaders(): array

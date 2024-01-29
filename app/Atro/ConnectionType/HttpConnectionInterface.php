@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Atro\ConnectionType;
 
-use Espo\ORM\Entity;
+use Atro\DTO\HttpResponseDTO;
 
 interface HttpConnectionInterface
 {
-    public function request(string $url, string $method = 'GET', array $headers = [], string $body = null): string;
+    public function request(string $url, string $method = 'GET', array $headers = [], string $body = null): HttpResponseDTO;
 }
