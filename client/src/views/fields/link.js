@@ -131,13 +131,14 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             // prepare default value
             let foreignId = this.model.get(this.idName);
             const fieldDefs = this.model.defs.fields[this.name] || null;
-            if ((this.model.get(this.name + 'HasDefaultAttributes') || (fieldDefs && fieldDefs.defaultAttributes)) && this.mode === 'edit' && !this.model.get('id') && foreignId && this.foreignScope) {
+            if ((this.model.get(this.name + 'HasDefaultAttributes') || (fieldDefs && (fieldDefs.defaultAttributes || fieldDefs.defaultId))) && this.mode === 'edit' && !this.model.get('id') && foreignId && this.foreignScope) {
                 this.model.set(this.idName, null);
                 this.model.set(this.nameName, null);
                 this.ajaxGetRequest(this.foreignScope + '/' + foreignId, {silent: true})
                     .done(function (response) {
                         this.model.set(this.idName, response.id);
                         this.model.set(this.nameName, response.name);
+                        this.reRender();
                     }.bind(this))
                     .always(function (error) {
                         this.trigger('linkLoaded');
