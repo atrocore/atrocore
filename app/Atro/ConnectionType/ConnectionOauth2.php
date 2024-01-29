@@ -16,7 +16,7 @@ namespace Atro\ConnectionType;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
-class ConnectionOauth2 extends ConnectionAtroCore implements ConnectionInterface
+class ConnectionOauth2 extends ConnectionHttp implements ConnectionInterface
 {
     public function connect(Entity $connection)
     {
