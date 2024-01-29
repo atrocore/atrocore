@@ -40,6 +40,7 @@ use Espo\Core\Interfaces\Injectable;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Util;
+use Espo\Entities\User;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\EntityManager;
@@ -887,14 +888,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $notification->set('relatedType', $entity->getEntityType());
         $notification->set('relatedId', $entity->get('id'));
         $notification->set('userId', $userId);
-        $notification->set(
-            'data', [
-                'entityName' => $entity->get('name'),
-                'entityType' => $entity->getEntityType(),
-                'entityId'   => $entity->get('id'),
-                'changedBy'  => $this->getEntityManager()->getUser()->get('id'),
-            ]
-        );
+        $notification->set('data', $this->getOwnNotificationMessageData($entity));
         $this->getEntityManager()->saveEntity($notification);
     }
 
@@ -923,15 +917,23 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $notification->set('relatedType', $entity->getEntityType());
         $notification->set('relatedId', $entity->get('id'));
         $notification->set('userId', $userId);
-        $notification->set(
-            'data', [
-                'entityName' => $entity->get('name'),
-                'entityType' => $entity->getEntityType(),
-                'entityId'   => $entity->get('id'),
-                'changedBy'  => $this->getEntityManager()->getUser()->get('id'),
-            ]
-        );
+        $notification->set('data', $this->getAssignmentNotificationMessageData($entity));
         $this->getEntityManager()->saveEntity($notification);
+    }
+
+    protected function getOwnNotificationMessageData(Entity $entity): array
+    {
+        return [
+            'entityName' => $entity->get('name'),
+            'entityType' => $entity->getEntityType(),
+            'entityId'   => $entity->get('id'),
+            'changedBy'  => $this->getEntityManager()->getUser()->get('id')
+        ];
+    }
+
+    protected function getAssignmentNotificationMessageData(Entity $entity): array
+    {
+        return $this->getOwnNotificationMessageData($entity);
     }
 
     /**
