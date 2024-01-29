@@ -37,6 +37,7 @@ namespace Espo\Core\Utils;
 
 use Atro\Console\RefreshTranslations;
 use Atro\Core\Container;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\EventManager\Event;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\File\Unifier;
@@ -376,15 +377,32 @@ class Language
     {
         $data = [];
         $languageList = $this->getMetadata()->get('multilang.languageList', []);
-        $dbData = $this->getEntityManager()->getRepository('Translation')->find();
+        $dbData = $this->getEntityManager()->getConnection()->createQueryBuilder()
+            ->select('*')
+            ->from('translation')
+            ->where('deleted = :false')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAllAssociative();
+
         foreach ($dbData as $record) {
+            $record = Util::arrayKeysToCamelCase($record);
             foreach ($languageList as $locale) {
                 $row = [];
                 $field = Util::toCamelCase(strtolower($locale));
-                if ($record->get($field) !== null) {
+                if (isset($record[$field]) && $record[$field] !== null) {
                     $insideRow = [];
-                    $this->prepareTreeValue(explode('.', $record->get('name')), $insideRow, $record->get($field));
-                    $row[$record->get('module')][$locale] = $insideRow;
+
+                    $hasDots = strpos($record['name'], '...') !== false;
+                    $parts = explode('.', $record['name']);
+                    if ($hasDots) {
+                        array_pop($parts);
+                        array_pop($parts);
+                        array_pop($parts);
+                        $parts[] = array_pop($parts) . '...';
+                    }
+
+                    $this->prepareTreeValue($parts, $insideRow, $record[$field]);
+                    $row[$record['module']][$locale] = $insideRow;
                     $data = Util::merge($data, $row);
                 }
             }
