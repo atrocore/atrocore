@@ -2655,6 +2655,13 @@ class Record extends Base
         }
 
         // modify entity if header language exist
+        $this->modifyEntityBasedOnHeaderLanguage($entity);
+
+        $this->dispatchEvent('prepareEntityForOutput', new Event(['entity' => $entity, 'service' => $this]));
+    }
+
+    protected function modifyEntityBasedOnHeaderLanguage(Entity $entity)
+    {
         if (!empty($language = $this->getHeaderLanguage())) {
             foreach ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields'], []) as $fieldName => $fieldData) {
                 if (!empty($fieldData['isMultilang']) && $language !== 'main') {
@@ -2669,8 +2676,6 @@ class Record extends Base
                 }
             }
         }
-
-        $this->dispatchEvent('prepareEntityForOutput', new Event(['entity' => $entity, 'service' => $this]));
     }
 
     public function merge($id, array $sourceIdList, \stdClass $attributes)

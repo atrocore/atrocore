@@ -36,6 +36,7 @@ declare(strict_types=1);
 namespace Espo\Services;
 
 use Espo\Core\Templates\Services\Base;
+use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 
@@ -61,6 +62,26 @@ class ExtensibleEnumOption extends Base
             $extensibleEnum = $this->getEntityManager()->getRepository('ExtensibleEnum')->get($entity->get('extensibleEnumId'));
             if (!empty($extensibleEnum)) {
                 $entity->set('listMultilingual', !empty($extensibleEnum->get('multilingual')));
+            }
+        }
+    }
+
+    protected function modifyEntityBasedOnHeaderLanguage($entity)
+    {
+        if (!empty($language = $this->getHeaderLanguage())) {
+            $extensibleEnum = $entity->get('extensibleEnum');
+
+            foreach ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields'], []) as $fieldName => $fieldData) {
+                if (!empty($fieldData['isMultilang']) && $extensibleEnum->get('multilingual') && $language !== 'main') {
+                    $langField = $fieldName . ucfirst(Util::toCamelCase(strtolower($language)));
+                    $entity->set($fieldName, $entity->get($langField));
+                }
+            }
+
+            foreach ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields'], []) as $fieldName => $fieldData) {
+                if (!empty($fieldData['multilangLocale'])) {
+                    $entity->clear($fieldName);
+                }
             }
         }
     }
