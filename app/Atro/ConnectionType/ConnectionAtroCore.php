@@ -20,12 +20,17 @@ class ConnectionAtroCore extends ConnectionHttp implements ConnectionInterface, 
 {
     public function connect(Entity $connection)
     {
-        $response = $this->request("{$this->connectionEntity->get('atrocoreUrl')}/api/v1/User?offset=0&maxSize=1");
+        $response = $this->request(rtrim($this->connectionEntity->get('atrocoreUrl'), '/') . "/api/v1/User?offset=0&maxSize=1");
         if (is_array(@json_decode($response->getOutput(), true))) {
             return true;
         }
 
         throw new BadRequest('Invalid credentials');
+    }
+
+    public function generateUrlForEntity(string $entityName): string
+    {
+        return rtrim($this->connectionEntity->get('atrocoreUrl'), '/') . "/api/v1/$entityName?maxSize={{ limit }}&offset={{ offset }}&sortBy=createdAt&asc=false{% if payload.entityId is not empty %}&where[0][type]=equals&where[0][attribute]=id&where[0][value]={{ payload.entityId }}{% endif %}";
     }
 
     protected function getHeaders(): array

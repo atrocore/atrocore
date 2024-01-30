@@ -18,4 +18,6 @@ use Atro\DTO\HttpResponseDTO;
 interface HttpConnectionInterface
 {
     public function request(string $url, string $method = 'GET', array $headers = [], string $body = null): HttpResponseDTO;
+
+    public function generateUrlForEntity(string $entityName): string;
 }
