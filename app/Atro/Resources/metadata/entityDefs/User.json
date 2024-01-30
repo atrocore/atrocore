@@ -32,19 +32,33 @@
             "trim": true
         },
         "password": {
-            "type": "password",
-            "maxLength": 150,
-            "internal": true,
-            "disabled": true,
-            "tooltip": true
+          "type": "password",
+          "maxLength": 150,
+          "internal": true,
+          "layoutListDisabled": true,
+          "layoutListSmallDisabled": true,
+          "layoutDetailDisabled": true,
+          "layoutDetailSmallDisabled": true,
+          "massUpdateDisabled": true,
+          "filterDisabled": true,
+          "exportDisabled": true,
+          "importDisabled": false,
+          "tooltip": true
         },
         "passwordConfirm": {
-            "type": "password",
-            "maxLength": 150,
-            "internal": true,
-            "disabled": true,
-            "notStorable": true,
-            "tooltip": true
+          "type": "password",
+          "maxLength": 150,
+          "internal": true,
+          "layoutListDisabled": true,
+          "layoutListSmallDisabled": true,
+          "layoutDetailDisabled": true,
+          "layoutDetailSmallDisabled": true,
+          "massUpdateDisabled": true,
+          "filterDisabled": true,
+          "exportDisabled": true,
+          "importDisabled": false,
+          "notStorable": true,
+          "tooltip": true
         },
         "firstName": {
             "type": "varchar",
