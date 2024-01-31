@@ -136,96 +136,100 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
             var aclData = this.acl.data;
             var aclDataList = [];
 
-            this.scopeList.forEach(function (scope) {
-                var o = {};
+            this.scopeList
+                .filter(scope => {
+                    return !this.getMetadata().get('scopes.' + scope).emHidden
+                })
+                .forEach(function (scope) {
+                    var o = {};
 
-                var access = 'not-set';
+                    var access = 'not-set';
 
-                if (this.final) {
-                    access = 'enabled';
-                }
-
-                if (scope in aclData) {
-                    if (aclData[scope] === false) {
-                        access = 'disabled';
-                    } else {
+                    if (this.final) {
                         access = 'enabled';
                     }
-                }
-                var list = [];
-                var type = this.aclTypeMap[scope];
 
-                if (this.aclTypeMap[scope] != 'boolean') {
-                    this.actionList.forEach(function (action, j) {
-                        var allowedActionList = this.getMetadata().get(['scopes', scope, this.type + 'ActionList']);
-
-                        if (allowedActionList) {
-                            if (!~allowedActionList.indexOf(action)) {
-                                list.push({
-                                    action: action,
-                                    levelList: false,
-                                    level: null
-                                });
-                                return;
-                            }
+                    if (scope in aclData) {
+                        if (aclData[scope] === false) {
+                            access = 'disabled';
+                        } else {
+                            access = 'enabled';
                         }
+                    }
+                    var list = [];
+                    var type = this.aclTypeMap[scope];
 
-                        if (action === 'stream') {
-                            if (!this.getMetadata().get('scopes.' + scope + '.stream')) {
-                                list.push({
-                                    action: 'stream',
-                                    levelList: false,
-                                    level: null
-                                });
-                                return;
-                            }
-                        }
+                    if (this.aclTypeMap[scope] != 'boolean') {
+                        this.actionList.forEach(function (action, j) {
+                            var allowedActionList = this.getMetadata().get(['scopes', scope, this.type + 'ActionList']);
 
-                        var level = 'no';
-                        if (~this.booleanActionList.indexOf(action)) {
-                            level = 'no';
-                        }
-                        if (scope in aclData) {
-                            if (access == 'enabled') {
-                                if (aclData[scope] !== true) {
-                                    if (action in aclData[scope]) {
-                                        level = aclData[scope][action];
-                                    }
+                            if (allowedActionList) {
+                                if (!~allowedActionList.indexOf(action)) {
+                                    list.push({
+                                        action: action,
+                                        levelList: false,
+                                        level: null
+                                    });
+                                    return;
                                 }
-                            } else {
+                            }
+
+                            if (action === 'stream') {
+                                if (!this.getMetadata().get('scopes.' + scope + '.stream')) {
+                                    list.push({
+                                        action: 'stream',
+                                        levelList: false,
+                                        level: null
+                                    });
+                                    return;
+                                }
+                            }
+
+                            var level = 'no';
+                            if (~this.booleanActionList.indexOf(action)) {
                                 level = 'no';
                             }
-                        }
-                        var levelList =
-                            this.getMetadata().get(['scopes', scope, this.type + 'ActionLevelListMap', action]) ||
-                            this.getMetadata().get(['scopes', scope, this.type + 'LevelList']) ||
-                            this.levelListMap[type] ||
-                            [];
+                            if (scope in aclData) {
+                                if (access == 'enabled') {
+                                    if (aclData[scope] !== true) {
+                                        if (action in aclData[scope]) {
+                                            level = aclData[scope][action];
+                                        }
+                                    }
+                                } else {
+                                    level = 'no';
+                                }
+                            }
+                            var levelList =
+                                this.getMetadata().get(['scopes', scope, this.type + 'ActionLevelListMap', action]) ||
+                                this.getMetadata().get(['scopes', scope, this.type + 'LevelList']) ||
+                                this.levelListMap[type] ||
+                                [];
 
-                        if (~this.booleanActionList.indexOf(action)) {
-                            levelList = this.booleanLevelList;
-                        }
+                            if (~this.booleanActionList.indexOf(action)) {
+                                levelList = this.booleanLevelList;
+                            }
 
-                        levelList = levelList.filter(v => {
-                            return v !== 'contact'
-                        });
+                            levelList = levelList.filter(v => {
+                                return v !== 'contact'
+                            });
 
-                        list.push({
-                            level: level,
-                            name: scope + '-' + action,
-                            action: action,
-                            levelList: levelList
-                        });
-                    }, this);
-                }
+                            list.push({
+                                level: level,
+                                name: scope + '-' + action,
+                                action: action,
+                                levelList: levelList
+                            });
+                        }, this);
+                    }
 
-                aclDataList.push({
-                    list: list,
-                    access: access,
-                    name: scope,
-                    type: type
-                });
-            }, this);
+                    aclDataList.push({
+                        list: list,
+                        access: access,
+                        name: scope,
+                        type: type
+                    });
+                }, this);
 
             return aclDataList;
         },
@@ -277,7 +281,7 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
             this.scopeList = [];
 
             var scopeListAll = Object.keys(this.getMetadata().get('scopes')).sort(function (v1, v2) {
-                 return this.translate(v1, 'scopeNamesPlural').localeCompare(this.translate(v2, 'scopeNamesPlural'));
+                return this.translate(v1, 'scopeNamesPlural').localeCompare(this.translate(v2, 'scopeNamesPlural'));
             }.bind(this));
 
             scopeListAll.forEach(function (scope) {
@@ -308,7 +312,8 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
                         return;
                     }
                     return;
-                };
+                }
+                ;
                 var scopeData = this.acl.fieldData[scope];
 
                 var fieldList = this.getFieldManager().getScopeFieldList(scope);
@@ -382,7 +387,7 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
                     var field = fieldData.name;
                     var fieldObj = {};
                     this.fieldActionList.forEach(function (action) {
-                        var $select = this.$el.find('select[data-scope="'+scope+'"][data-field="'+field+'"][data-action="'+action+'"]');
+                        var $select = this.$el.find('select[data-scope="' + scope + '"][data-field="' + field + '"][data-action="' + action + '"]');
                         if (!$select.size()) return;
                         fieldObj[action] = $select.val();
                     }, this);
@@ -397,7 +402,7 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
         afterRender: function () {
             if (this.mode == 'edit') {
                 this.scopeList.forEach(function (scope) {
-                    var $read = this.$el.find('select[name="'+scope+'-read"]');
+                    var $read = this.$el.find('select[name="' + scope + '-read"]');
                     $read.on('change', function () {
                         var value = $read.val();
                         this.controlEditSelect(scope, value);
@@ -405,7 +410,7 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
                         this.controlStreamSelect(scope, value);
                     }.bind(this));
 
-                    var $edit = this.$el.find('select[name="'+scope+'-edit"]');
+                    var $edit = this.$el.find('select[name="' + scope + '-edit"]');
                     $edit.on('change', function () {
                         var value = $edit.val();
                         this.controlDeleteSelect(scope, value);
@@ -421,7 +426,7 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
                     o.list.forEach(function (f) {
                         var field = f.name;
 
-                        var $read = this.$el.find('select[data-scope="'+scope+'"][data-field="'+field+'"][data-action="read"]');
+                        var $read = this.$el.find('select[data-scope="' + scope + '"][data-field="' + field + '"][data-action="read"]');
                         $read.on('change', function () {
                             var value = $read.val();
                             this.controlFieldEditSelect(scope, field, value);
@@ -435,7 +440,7 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
         },
 
         controlFieldEditSelect: function (scope, field, value, dontChange) {
-            var $edit = this.$el.find('select[data-scope="'+scope+'"][data-field="'+field+'"][data-action="edit"]');
+            var $edit = this.$el.find('select[data-scope="' + scope + '"][data-field="' + field + '"][data-action="edit"]');
 
             if (!dontChange) {
                 if (this.fieldLevelList.indexOf($edit.val()) < this.fieldLevelList.indexOf(value)) {
@@ -454,7 +459,7 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
         },
 
         controlEditSelect: function (scope, value, dontChange) {
-            var $edit = this.$el.find('select[name="'+scope+'-edit"]');
+            var $edit = this.$el.find('select[name="' + scope + '-edit"]');
 
             if (!dontChange) {
                 if (this.levelList.indexOf($edit.val()) < this.levelList.indexOf(value)) {
@@ -473,7 +478,7 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
         },
 
         controlStreamSelect: function (scope, value, dontChange) {
-            var $stream = this.$el.find('select[name="'+scope+'-stream"]');
+            var $stream = this.$el.find('select[name="' + scope + '-stream"]');
 
             if (!dontChange) {
                 if (this.levelList.indexOf($stream.val()) < this.levelList.indexOf(value)) {
@@ -492,7 +497,7 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
         },
 
         controlDeleteSelect: function (scope, value, dontChange) {
-            var $delete = this.$el.find('select[name="'+scope+'-delete"]');
+            var $delete = this.$el.find('select[name="' + scope + '-delete"]');
 
             if (!dontChange) {
                 if (this.levelList.indexOf($delete.val()) < this.levelList.indexOf(value)) {
@@ -568,7 +573,8 @@ Espo.define('views/role/record/table', 'view', function (Dep) {
                 if (~index) {
                     scopeData.list.splice(index, 1);
                     this.reRender();
-                };
+                }
+                ;
 
             }, this);
         },
