@@ -61,7 +61,11 @@ Espo.define('views/admin/layouts/index', 'view', function (Dep) {
                 scope: this.scope,
                 layoutScopeDataList: (function () {
                     var dataList = [];
-                    this.scopeList.forEach(function (scope) {
+                    this.scopeList
+                        .filter(scope => {
+                            return !this.getMetadata().get('scopes.' + scope).emHidden
+                        })
+                        .forEach(function (scope) {
                         var d = {};
                         d.scope = scope;
                         d.typeList = _.clone(this.typeList);
