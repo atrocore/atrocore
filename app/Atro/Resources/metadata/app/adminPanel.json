@@ -28,6 +28,11 @@
         "description": "scheduledJob"
       },
       {
+        "url": "#Action",
+        "label": "Action",
+        "description": "action"
+      },
+      {
         "url": "#Measure",
         "label": "Measure",
         "description": "measure"
