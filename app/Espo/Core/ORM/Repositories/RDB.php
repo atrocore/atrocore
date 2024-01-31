@@ -34,10 +34,10 @@
 namespace Espo\Core\ORM\Repositories;
 
 use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\EventManager\Event;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Interfaces\Injectable;
-use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
@@ -605,6 +605,18 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         if ($entity->isNew()) {
             if (!$entity->has('id')) {
                 $entity->set('id', Util::generateId());
+            } else {
+                // delete deleted record
+                $qb = $this->getConnection()->createQueryBuilder()
+                    ->delete($this->getConnection()->quoteIdentifier($this->getMapper()->toDb($entity->getEntityType())))
+                    ->where('id = :id')
+                    ->andWhere('deleted = :true')
+                    ->setParameter('id', $entity->id)
+                    ->setParameter('true', true, ParameterType::BOOLEAN);
+                try {
+                    $qb->executeQuery();
+                } catch (\Throwable $e) {
+                }
             }
             if ($entity->hasAttribute('createdAt')) {
                 $entity->set('createdAt', $nowString);
