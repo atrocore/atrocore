@@ -66,9 +66,13 @@ Espo.define('views/admin/entity-manager/index', 'view', function (Dep) {
         setupScopeData: function () {
             this.scopeDataList = [];
 
-            var scopeList = Object.keys(this.getMetadata().get('scopes')).sort(function (v1, v2) {
-                return v1.localeCompare(v2);
-            }.bind(this));
+            var scopeList = Object.keys(this.getMetadata().get('scopes'))
+                .filter(scope => {
+                    return !this.getMetadata().get('scopes.' + scope).emHidden
+                })
+                .sort(function (v1, v2) {
+                    return v1.localeCompare(v2);
+                }.bind(this));
 
             var scopeListSorted = [];
 
@@ -157,7 +161,7 @@ Espo.define('views/admin/entity-manager/index', 'view', function (Dep) {
                     name: scope
                 })
             }).done(function () {
-                this.$el.find('table tr[data-scope="'+scope+'"]').remove();
+                this.$el.find('table tr[data-scope="' + scope + '"]').remove();
                 this.getMetadata().load(function () {
                     this.getConfig().load(function () {
                         this.setupScopeData();
