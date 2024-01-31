@@ -33,6 +33,7 @@
 
 namespace Espo\ORM\Repositories;
 
+use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\ORM\DB\RDB\Mapper;
 use Atro\ORM\DB\RDB\Query\QueryConverter;
@@ -188,7 +189,11 @@ class RDB extends \Espo\ORM\Repository
         if ($entity->isNew() && !$entity->isSaved()) {
             // check workflow init states if it needs
             $this->workflowInitStates($entity);
-            $result = $this->getMapper()->insert($entity, !empty($options['ignoreDuplicate']));
+            try {
+                $result = $this->getMapper()->insert($entity, !empty($options['ignoreDuplicate']));
+            } catch (UniqueConstraintViolationException $e) {
+                throw new NotUnique('The record cannot be created due to database constraints.');
+            }
         } else {
             // run workflow method "can()" if it needs
             $this->workflowCan($entity);
