@@ -86,7 +86,8 @@ class ExtensibleEnumOption extends Base
                     $select[] = 'eeo.description';
                 }
                 $select[] = 'ee.multilingual AS multilingual';
-                $data = $this
+
+                $records = $this
                     ->getConnection()
                     ->createQueryBuilder()
                     ->select(implode(',', $select))
@@ -98,15 +99,10 @@ class ExtensibleEnumOption extends Base
                     ->setParameter('id', $extensibleEnumId)
                     ->fetchAllAssociative();
 
-                foreach ($data as $item) {
-                    $dataArr = [];
-                    foreach ($item as $key => $val) {
-                        $dataArr[Util::toCamelCase($key)] = $val;
-                    }
-
-                    $row = $dataArr;
+                foreach ($records as $item) {
+                    $row = Util::arrayKeysToCamelCase($item);
                     $row['preparedName'] = !empty($row['multilingual']) ? $row[$this->getOptionName()] : $row['name'];
-                    $this->cachedOptions[$dataArr['id']] = $row;
+                    $this->cachedOptions[$row['id']] = $row;
                 }
             }
             $res[] = $this->cachedOptions[$id];
