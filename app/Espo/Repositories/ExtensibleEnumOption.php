@@ -77,10 +77,19 @@ class ExtensibleEnumOption extends Base
                     'notExistingOption' => true
                 ];
 
+                // prepare select
+                $select = ['eeo.id ', 'eeo.code', 'eeo.color', 'eeo.name','eeo.sort_order'];
+                foreach ($this->getLingualFields('name') as $lingualField) {
+                    $select[] = 'eeo.' . Util::toUnderScore($lingualField);
+                }
+                if ($this->getMetadata()->get(['entityDefs', 'ExtensibleEnumOption', 'fields', 'description'])) {
+                    $select[] = 'eeo.description';
+                }
+                $select[] = 'ee.multilingual AS multilingual';
                 $data = $this
                     ->getConnection()
                     ->createQueryBuilder()
-                    ->select('eeo.*, ee.multilingual AS multilingual')
+                    ->select(implode(',', $select))
                     ->from('extensible_enum_option', 'eeo')
                     ->innerJoin('eeo', 'extensible_enum', 'ee', 'ee.id = eeo.extensible_enum_id AND ee.deleted = :false')
                     ->where('eeo.deleted = :false')
