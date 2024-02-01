@@ -854,10 +854,6 @@ class Metadata extends AbstractListener
                 if (!isset($data['entityDefs'][$scope]['links']['ownerUser']['entity'])) {
                     $data['entityDefs'][$scope]['links']['ownerUser']['entity'] = 'User';
                 }
-
-                if (!isset($data['entityDefs'][$scope]['indexes']['ownerUser']['columns'])) {
-                    $data['entityDefs'][$scope]['indexes']['ownerUser']['columns'] = ["ownerUserId", "deleted"];
-                }
             }
 
             // for assigned user
@@ -880,10 +876,6 @@ class Metadata extends AbstractListener
 
                 if (!isset($data['entityDefs'][$scope]['links']['assignedUser']['entity'])) {
                     $data['entityDefs'][$scope]['links']['assignedUser']['entity'] = 'User';
-                }
-
-                if (!isset($data['entityDefs'][$scope]['indexes']['assignedUser']['columns'])) {
-                    $data['entityDefs'][$scope]['indexes']['assignedUser']['columns'] = ["assignedUserId", "deleted"];
                 }
             }
 

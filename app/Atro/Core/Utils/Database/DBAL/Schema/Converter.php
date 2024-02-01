@@ -224,7 +224,6 @@ class Converter
                         $tableIndexName = self::generateIndexName($entityName, $columnName);
                         $indexList[$entityName][$tableIndexName]['columns'] = array($columnName);
                         if (array_key_exists('deleted', $entityParams['fields'])) {
-                            $tableIndexName = self::generateIndexName($entityName, $columnName . '_deleted');
                             $indexList[$entityName][$tableIndexName]['columns'] = [$columnName, 'deleted'];
                         }
                     } else {

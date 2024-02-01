@@ -49,7 +49,6 @@ class Link extends Base
                     ],
                     $fieldName . 'Id'   => [
                         'type'           => 'foreignId',
-                        'index'          => $fieldName,
                         'isLinkEntityId' => true
                     ],
                     $fieldName . 'Name' => [
