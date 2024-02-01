@@ -1335,7 +1335,7 @@ class Record extends Base
             }
         }
 
-        if (!$this->isEntityUpdated($entity, $data)) {
+        if (empty($data->_skipIsEntityUpdated) && !$this->isEntityUpdated($entity, $data)) {
             throw new NotModified();
         }
 

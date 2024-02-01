@@ -41,6 +41,7 @@ use Espo\Core\Interfaces\Injectable;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\EntityManager;
 
@@ -593,8 +594,29 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             $this->processWysiwygFieldsSave($entity);
         }
 
+        $this->updateModifiedAtForIntermediateEntities($entity);
+
         // dispatch an event
         $this->dispatch('afterSave', $entity, $options);
+    }
+
+    protected function updateModifiedAtForIntermediateEntities(Entity $entity)
+    {
+        foreach ($this->getMetadata()->get(['scopes', $this->entityType, 'modifiedExtendedIntermediateRelations'], []) as $relation) {
+            $foreigns = $entity->get($relation);
+
+            if ($foreigns instanceof EntityCollection && count($foreigns) > 0) {
+                $foreignEntity = $foreigns->getEntityName();
+
+                $data = new \stdClass();
+                $data->modifiedAt = $entity->get('modifiedAt');
+                $data->_skipIsEntityUpdated = true;
+
+                foreach ($foreigns as $foreign) {
+                    $this->getInjection('container')->get('pseudoTransactionManager')->pushUpdateEntityJob($foreignEntity, $foreign->id, $data);
+                }
+            }
+        }
     }
 
     public function save(Entity $entity, array $options = [])

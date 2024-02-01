@@ -59,6 +59,8 @@ class Metadata extends AbstractListener
 
         $this->prepareScriptField($data);
 
+        $this->prepareModifiedIntermediateEntities($data);
+
         $this->pushDynamicActions($data);
 
         $event->setArgument('data', $data);
@@ -174,6 +176,30 @@ class Metadata extends AbstractListener
                         default:
                             $data['entityDefs'][$entityType]['fields'][$field]['view'] = "views/fields/text";
                             $data['entityDefs'][$entityType]['fields'][$field]['useDisabledTextareaInViewMode'] = true;
+                    }
+                }
+            }
+        }
+    }
+
+    protected function prepareModifiedIntermediateEntities(array &$data): void
+    {
+        foreach ($data['scopes'] as $scope => $defs) {
+            if (array_key_exists('modifiedExtendedRelations', $defs)
+                && is_array($defs['modifiedExtendedRelations'])
+                && !empty($defs['modifiedExtendedRelations'])) {
+                foreach ($defs['modifiedExtendedRelations'] as $relation) {
+                    $relationDefs = $data['entityDefs'][$scope]['links'][$relation] ?? [];
+
+                    if (!empty($relationDefs) && array_key_exists('entity', $relationDefs) && array_key_exists('foreign', $relationDefs)) {
+                        $foreignEntity = $relationDefs['entity'];
+
+                        if (!isset($data['scopes'][$foreignEntity]['modifiedExtendedIntermediateRelations'])
+                            || !is_array($data['scopes'][$foreignEntity]['modifiedExtendedIntermediateRelations'])) {
+                            $data['scopes'][$foreignEntity]['modifiedExtendedIntermediateRelations'] = [];
+                        }
+
+                        $data['scopes'][$foreignEntity]['modifiedExtendedIntermediateRelations'][] = $relationDefs['foreign'];
                     }
                 }
             }
