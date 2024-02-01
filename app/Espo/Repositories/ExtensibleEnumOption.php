@@ -78,7 +78,7 @@ class ExtensibleEnumOption extends Base
                 ];
 
                 // prepare select
-                $select = ['eeo.id ', 'eeo.code', 'eeo.color', 'eeo.name','eeo.sort_order'];
+                $select = ['eeo.id', 'eeo.code', 'eeo.color', 'eeo.name','eeo.sort_order'];
                 foreach ($this->getLingualFields('name') as $lingualField) {
                     $select[] = 'eeo.' . Util::toUnderScore($lingualField);
                 }
