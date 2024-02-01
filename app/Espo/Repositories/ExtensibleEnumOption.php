@@ -78,17 +78,35 @@ class ExtensibleEnumOption extends Base
                 ];
 
                 // prepare select
-                $select = ['id', 'code', 'color', 'name','sortOrder'];
+                $select = ['eeo.id', 'eeo.code', 'eeo.color', 'eeo.name','eeo.sort_order'];
                 foreach ($this->getLingualFields('name') as $lingualField) {
-                    $select[] = $lingualField;
+                    $select[] = 'eeo.' . Util::toUnderScore($lingualField);
                 }
                 if ($this->getMetadata()->get(['entityDefs', 'ExtensibleEnumOption', 'fields', 'description'])) {
-                    $select[] = 'description';
+                    $select[] = 'eeo.description';
                 }
-                foreach ($this->select($select)->order('sortOrder')->where(['extensibleEnumId' => $extensibleEnumId])->find() as $item) {
-                    $row = $item->toArray();
-                    $row['preparedName'] = $row[$this->getOptionName()];
-                    $this->cachedOptions[$item->get('id')] = $row;
+                $select[] = 'ee.multilingual AS multilingual';
+                $data = $this
+                    ->getConnection()
+                    ->createQueryBuilder()
+                    ->select(implode(',', $select))
+                    ->from('extensible_enum_option', 'eeo')
+                    ->innerJoin('eeo', 'extensible_enum', 'ee', 'ee.id = eeo.extensible_enum_id AND ee.deleted = :false')
+                    ->where('eeo.deleted = :false')
+                    ->andWhere('ee.id = :id')
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->setParameter('id', $extensibleEnumId)
+                    ->fetchAllAssociative();
+
+                foreach ($data as $item) {
+                    $dataArr = [];
+                    foreach ($item as $key => $val) {
+                        $dataArr[Util::toCamelCase($key)] = $val;
+                    }
+
+                    $row = $dataArr;
+                    $row['preparedName'] = !empty($row['multilingual']) ? $row[$this->getOptionName()] : $row['name'];
+                    $this->cachedOptions[$dataArr['id']] = $row;
                 }
             }
             $res[] = $this->cachedOptions[$id];
