@@ -42,7 +42,7 @@
       "massUpdateDisabled": true,
       "filterDisabled": true
     },
-    "mainImage": {
+    "image": {
       "type": "image",
       "required": false,
       "previewSize": "medium"
@@ -99,7 +99,7 @@
         "entityId"
       ]
     },
-    "mainImage": {
+    "image": {
       "type": "belongsTo",
       "entity": "Attachment",
       "skipOrmDefs": true

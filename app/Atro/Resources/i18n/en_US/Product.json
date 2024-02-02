@@ -2,7 +2,7 @@
   "fields": {
     "sku": "SKU",
     "isActive": "Active",
-    "mainImage": "Image",
+    "image": "Image",
     "price": "Price",
     "longDescription": "Long Description",
     "children": "Child Products",

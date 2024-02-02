@@ -34,7 +34,7 @@ class V1Dot8Dot26 extends Base
             $table->addColumn('sku', 'string', ['notnull' => false]);
             $table->addColumn('price', 'float', ['notnull' => false]);
             $table->addColumn('price_unit_id', 'string', ['notnull' => false, 'length' => 24]);
-            $table->addColumn('main_image_id', 'string', ['notnull' => false, 'length' => 24]);
+            $table->addColumn('image_id', 'string', ['notnull' => false, 'length' => 24]);
             $table->addColumn('is_active', 'boolean', ['default' => false]);
             $table->addColumn('deleted', 'boolean', ['default' => false]);
             $table->setPrimaryKey(['id']);

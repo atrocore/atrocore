@@ -2,7 +2,7 @@
   "fields": {
     "sku": "Артикул",
     "isActive": "Активний",
-    "mainImage": "відображення",
+    "image": "відображення",
     "price": "вартість",
     "longDescription": "Довгий опис",
     "children": "Дочірні продукти",
