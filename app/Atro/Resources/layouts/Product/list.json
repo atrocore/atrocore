@@ -1,0 +1,21 @@
+[
+    {
+        "name": "mainImage"
+    },
+    {
+        "name": "name",
+        "link": true
+    },
+    {
+        "name": "sku"
+    },
+    {
+        "name": "unitPrice"
+    },
+    {
+        "name": "isActive"
+    },
+    {
+        "name": "modifiedAt"
+    }
+]
