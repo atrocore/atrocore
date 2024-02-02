@@ -41,6 +41,7 @@ use Espo\Core\Interfaces\Injectable;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\EntityManager;
 
@@ -593,8 +594,35 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             $this->processWysiwygFieldsSave($entity);
         }
 
+        $this->updateModifiedAtForIntermediateEntities($entity);
+
         // dispatch an event
         $this->dispatch('afterSave', $entity, $options);
+    }
+
+    protected function updateModifiedAtForIntermediateEntities(Entity $entity)
+    {
+        foreach ($this->getMetadata()->get(['scopes', $this->entityType, 'modifiedExtendedIntermediateRelations'], []) as $relation) {
+            $defs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $relation], []);
+
+            if (is_array($defs) && !empty($defs['entity']) && !empty($defs['foreign'])) {
+                $data = new \stdClass();
+                $data->modifiedAt = $entity->get('modifiedAt');
+                $data->_skipIsEntityUpdated = true;
+
+                $params = [
+                    'where' => [
+                        [
+                            'type' => 'linkedWith',
+                            'attribute' => $defs['foreign'],
+                            'value' => [$entity->id]
+                        ]
+                    ]
+                ];
+
+                $this->getInjection('container')->get('pseudoTransactionManager')->pushMassUpdateEntityJob($defs['entity'], $data, $params);
+            }
+        }
     }
 
     public function save(Entity $entity, array $options = [])
