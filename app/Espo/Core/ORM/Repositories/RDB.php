@@ -603,18 +603,24 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     protected function updateModifiedAtForIntermediateEntities(Entity $entity)
     {
         foreach ($this->getMetadata()->get(['scopes', $this->entityType, 'modifiedExtendedIntermediateRelations'], []) as $relation) {
-            $foreigns = $entity->get($relation);
+            $defs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $relation], []);
 
-            if ($foreigns instanceof EntityCollection && count($foreigns) > 0) {
-                $foreignEntity = $foreigns->getEntityName();
-
+            if (is_array($defs) && !empty($defs['entity']) && !empty($defs['foreign'])) {
                 $data = new \stdClass();
                 $data->modifiedAt = $entity->get('modifiedAt');
                 $data->_skipIsEntityUpdated = true;
 
-                foreach ($foreigns as $foreign) {
-                    $this->getInjection('container')->get('pseudoTransactionManager')->pushUpdateEntityJob($foreignEntity, $foreign->id, $data);
-                }
+                $params = [
+                    'where' => [
+                        [
+                            'type' => 'linkedWith',
+                            'attribute' => $defs['foreign'],
+                            'value' => [$entity->id]
+                        ]
+                    ]
+                ];
+
+                $this->getInjection('container')->get('pseudoTransactionManager')->pushMassUpdateEntityJob($defs['entity'], $data, $params);
             }
         }
     }

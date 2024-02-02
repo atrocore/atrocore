@@ -185,21 +185,16 @@ class Metadata extends AbstractListener
     protected function prepareModifiedIntermediateEntities(array &$data): void
     {
         foreach ($data['scopes'] as $scope => $defs) {
-            if (array_key_exists('modifiedExtendedRelations', $defs)
-                && is_array($defs['modifiedExtendedRelations'])
-                && !empty($defs['modifiedExtendedRelations'])) {
+            if (array_key_exists('modifiedExtendedRelations', $defs) && is_array($defs['modifiedExtendedRelations'])) {
                 foreach ($defs['modifiedExtendedRelations'] as $relation) {
                     $relationDefs = $data['entityDefs'][$scope]['links'][$relation] ?? [];
 
-                    if (!empty($relationDefs) && array_key_exists('entity', $relationDefs) && array_key_exists('foreign', $relationDefs)) {
-                        $foreignEntity = $relationDefs['entity'];
-
-                        if (!isset($data['scopes'][$foreignEntity]['modifiedExtendedIntermediateRelations'])
-                            || !is_array($data['scopes'][$foreignEntity]['modifiedExtendedIntermediateRelations'])) {
-                            $data['scopes'][$foreignEntity]['modifiedExtendedIntermediateRelations'] = [];
+                    if (is_array($relationDefs) && !empty($relationDefs['entity']) && !empty($relationDefs['foreign'])) {
+                        if (!isset($data['scopes'][$relationDefs['entity']]['modifiedExtendedIntermediateRelations'])) {
+                            $data['scopes'][$relationDefs['entity']]['modifiedExtendedIntermediateRelations'] = [];
                         }
 
-                        $data['scopes'][$foreignEntity]['modifiedExtendedIntermediateRelations'][] = $relationDefs['foreign'];
+                        $data['scopes'][$relationDefs['entity']]['modifiedExtendedIntermediateRelations'][] = $relationDefs['foreign'];
                     }
                 }
             }
