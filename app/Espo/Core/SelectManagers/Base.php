@@ -691,7 +691,6 @@ class Base
 
     protected function boolFilterNotActive(array &$result): void
     {
-
         $result['whereClause'][] = [
             'isActive' => false
         ];
