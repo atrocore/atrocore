@@ -26,6 +26,14 @@ class V1Dot8Dot27 extends Base
             $table->addColumn('id', 'string', ['length' => 24]);
             $table->addColumn('name', 'string', ['notnull' => false]);
             $table->addColumn('long_description', 'text', ['notnull' => false]);
+            if ($this->getConfig()->get('isMultilangActive', false)) {
+                foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
+                    $locale = strtolower($locale);
+
+                    $table->addColumn("name_$locale", 'string', ['notnull' => false]);
+                    $table->addColumn("long_description_$locale", 'text', ['notnull' => false]);
+                }
+            }
             $table->addColumn('created_at', 'datetime', ['notnull' => false]);
             $table->addColumn('modified_at', 'datetime', ['notnull' => false]);
             $table->addColumn('modified_by_id', 'string', ['notnull' => false, 'length' => 24]);
