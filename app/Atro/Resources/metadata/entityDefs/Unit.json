@@ -16,7 +16,6 @@
       "type": "varchar"
     },
     "isActive": {
-      "type": "bool",
       "default": true
     },
     "description": {

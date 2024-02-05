@@ -135,6 +135,7 @@
                     {{{hasArchive}}}
                 </div>
             </div>
+            {{#unless isActiveUnavailable}}
             <div class="cell form-group col-md-6" data-name="hasActive">
                 <label class="control-label"
                        data-name="hasArchive">{{translate 'hasActive' category='fields' scope='EntityManager'}}</label>
@@ -142,6 +143,7 @@
                     {{{hasActive}}}
                 </div>
             </div>
+            {{/unless}}
         </div>
         <div class="row">
             <div class="cell form-group col-md-6" data-name="modifiedExtendedRelations">

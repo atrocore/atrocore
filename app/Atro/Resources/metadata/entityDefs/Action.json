@@ -1,9 +1,5 @@
 {
   "fields": {
-    "isActive": {
-      "type": "bool",
-      "default": false
-    },
     "name": {
       "type": "varchar",
       "required": true,

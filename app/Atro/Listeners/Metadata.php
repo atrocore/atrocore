@@ -849,7 +849,7 @@ class Metadata extends AbstractListener
     public function addActive(array $data)
     {
         foreach ($data['scopes'] as $scope => $row) {
-            if (!empty($row['hasActive'])) {
+            if (!empty($row['hasActive']) && empty($row['isActiveUnavailable'])) {
                 $data['entityDefs'][$scope]['fields']['isActive']['type'] = 'bool';
                 $data['clientDefs'][$scope]['boolFilterList'][] = 'onlyActive';
                 $data['clientDefs'][$scope]['boolFilterList'][] = 'notActive';

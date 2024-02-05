@@ -16,5 +16,5 @@
   "customizable": true,
   "importable": true,
   "object": true,
-  "hasActive": true
+  "isActiveUnavailable": true
 }
