@@ -33,6 +33,7 @@
 Espo.define('views/fields/unit-int', ['views/fields/int', 'views/fields/unit-varchar'], (Dep, Varchar) => {
 
     return Dep.extend({
+        listLinkTemplate: 'fields/varchar/list-link',
 
         setup() {
             Dep.prototype.setup.call(this);
