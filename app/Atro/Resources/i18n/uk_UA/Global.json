@@ -465,7 +465,8 @@
     "measure": "Вимірювання",
     "units": "Одиниці",
     "id": "ID",
-    "ids": "IDs"
+    "ids": "IDs",
+    "dropdown": "Список"
   },
   "links": {
     "assignedAccounts": "Контрагенти",

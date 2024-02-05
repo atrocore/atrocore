@@ -19,6 +19,11 @@
       "default": false
     },
     {
+      "name": "dropdown",
+      "type": "bool",
+      "default": false
+    },
+    {
       "name": "extensibleEnum",
       "required": true,
       "entity": "ExtensibleEnum",
