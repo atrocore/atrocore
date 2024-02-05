@@ -22,8 +22,7 @@
   },
   "options": {
     "job": {
-      "ComposerAutoUpdate": "Автооновлення модулів",
-      "DeleteForever": "Видалити назавжди"
+      "ComposerAutoUpdate": "Автооновлення модулів"
     },
     "status": {
       "Active": "Активно",

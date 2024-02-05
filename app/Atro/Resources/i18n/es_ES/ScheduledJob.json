@@ -22,8 +22,7 @@
   },
   "options": {
     "job": {
-      "ComposerAutoUpdate": "Actualización automática del sistema",
-      "DeleteForever": "Borrar para siempre"
+      "ComposerAutoUpdate": "Actualización automática del sistema"
     },
     "status": {
       "Active": "Activo",
