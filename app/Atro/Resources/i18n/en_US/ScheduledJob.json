@@ -23,8 +23,7 @@
   "options": {
     "job": {
       "TreoCleanup": "Old data cleanup",
-      "ComposerAutoUpdate": "Automatic system update",
-      "DeleteForever": "Delete forever"
+      "ComposerAutoUpdate": "Automatic system update"
     },
     "status": {
       "Active": "Active",

@@ -27,26 +27,6 @@
                         }
                     ]
                }
-           },
-           "minimum_age": {
-               "visible": {
-                   "conditionGroup": [
-                       {
-                           "type":"equals",
-                           "attribute": "job",
-                           "value": "DeleteForever"
-                       }
-                   ]
-               },
-               "required": {
-                   "conditionGroup": [
-                       {
-                           "type":"equals",
-                           "attribute": "job",
-                           "value": "DeleteForever"
-                       }
-                   ]
-               }
            }
        }
     }

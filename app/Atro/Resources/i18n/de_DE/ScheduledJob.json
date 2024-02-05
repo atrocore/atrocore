@@ -19,8 +19,7 @@
   },
   "options": {
     "job": {
-      "ComposerAutoUpdate": "Alle installierten Module automatisch aktualisieren",
-      "DeleteForever": "Unwiederuflich löschen"
+      "ComposerAutoUpdate": "Alle installierten Module automatisch aktualisieren"
     },
     "status": {
       "Active": "Aktiv",

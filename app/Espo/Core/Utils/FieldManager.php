@@ -216,10 +216,6 @@ class FieldManager extends Injectable
         if ($metadataToBeSaved) {
             $result &= $this->getMetadata()->save();
 
-            if (isset($oldFieldDefs['isMultilang']) && $oldFieldDefs['isMultilang'] == true && !$this->getMetadata()->get(['entityDefs', $scope, 'fields', $name, 'isMultilang'], false)) {
-                (new \Espo\Jobs\DeleteForever($this->getInjection('container')))->run();
-            }
-
             $event = new Event(['scope' => $scope, 'field' => $name, 'oldFieldDefs' => $oldFieldDefs]);
 
             $this->dispatch('FieldManager', 'afterSave', $event);
