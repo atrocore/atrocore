@@ -38,6 +38,11 @@ class V1Dot8Dot27 extends Base
             $table->addColumn('is_active', 'boolean', ['default' => false]);
             $table->addColumn('deleted', 'boolean', ['default' => false]);
             $table->setPrimaryKey(['id']);
+        } else {
+            $table = $toSchema->getTable('product');
+            if (!$table->hasColumn('image_id')) {
+                $table->addColumn('image_id', 'string', ['notnull' => false, 'length' => 24]);
+            }
         }
 
         if (!$toSchema->hasTable('product_hierarchy')) {

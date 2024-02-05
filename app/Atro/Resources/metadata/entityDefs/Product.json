@@ -3,10 +3,13 @@
     "name": {
       "type": "varchar",
       "required": true,
-      "trim": true
+      "trim": true,
+      "isMultilang": true
     },
     "longDescription": {
-      "type": "text"
+      "type": "wysiwyg",
+      "trim": true,
+      "isMultilang": true
     },
     "createdAt": {
       "type": "datetime",
@@ -49,17 +52,11 @@
     },
     "sku": {
       "type": "varchar",
-      "required": false,
       "trim": true,
-      "audited": true,
-      "unique": true
+      "massUpdateDisabled": true
     },
     "price": {
-      "notNull": false,
       "type": "float",
-      "required": false,
-      "min": 0,
-      "audited": true,
       "measureId": "currency"
     },
     "isActive": {
@@ -83,6 +80,7 @@
       "foreign": "parents",
       "entity": "Product",
       "audited": false,
+      "disableMassRelation": true,
       "midKeys": [
         "entityId",
         "parentId"
@@ -94,6 +92,7 @@
       "foreign": "children",
       "entity": "Product",
       "audited": false,
+      "disableMassRelation": true,
       "midKeys": [
         "parentId",
         "entityId"
