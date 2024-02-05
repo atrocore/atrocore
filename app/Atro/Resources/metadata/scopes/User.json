@@ -15,5 +15,6 @@
   },
   "customizable": true,
   "importable": true,
-  "object": true
+  "object": true,
+  "hasActive": true
 }

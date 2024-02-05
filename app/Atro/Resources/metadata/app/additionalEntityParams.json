@@ -108,6 +108,10 @@
     "duplicatableRelations": {
       "type": "array",
       "view": "views/admin/entity-manager/fields/duplicatable-relations"
+    },
+    "hasActive": {
+      "type": "bool",
+      "default": false
     }
   },
   "layout": {

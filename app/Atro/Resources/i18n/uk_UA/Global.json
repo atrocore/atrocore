@@ -387,7 +387,8 @@
     "emptyMultilangOptions": "Список опцій не може бути порожнім, доки активована багатомовна опція."
   },
   "boolFilters": {
-    "onlyActive": "Активний",
+    "onlyActive": "Активні",
+    "notActive": "Неактивні",
     "assignedToMe": "Призначений мені",
     "ownedByMe": "Належить мені",
     "onlyMy": "Тільки мої",

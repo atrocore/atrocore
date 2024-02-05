@@ -37,6 +37,8 @@ class Metadata extends AbstractListener
         $data = $this->addOnlyDeletedFilter($data);
         // add archive
         $data = $this->addArchive($data);
+
+        $data = $this->addActive($data);
         // set thumbs sizes to options of asset field type
         $data = $this->setAssetThumbSize($data);
 
@@ -838,6 +840,19 @@ class Metadata extends AbstractListener
                 $data['entityDefs'][$scope]['fields']['isArchived']['notNull'] = true;
                 $data['clientDefs'][$scope]['boolFilterList'][] = 'onlyArchived';
                 $data['clientDefs'][$scope]['boolFilterList'][] = 'withArchived';
+            }
+        }
+
+        return $data;
+    }
+
+    public function addActive(array $data)
+    {
+        foreach ($data['scopes'] as $scope => $row) {
+            if (!empty($row['hasActive'])) {
+                $data['entityDefs'][$scope]['fields']['isActive']['type'] = 'bool';
+                $data['clientDefs'][$scope]['boolFilterList'][] = 'onlyActive';
+                $data['clientDefs'][$scope]['boolFilterList'][] = 'notActive';
             }
         }
 
