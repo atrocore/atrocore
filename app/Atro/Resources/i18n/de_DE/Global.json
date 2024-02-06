@@ -488,7 +488,8 @@
     "names": "Namen",
     "emailAddressIsOptedOut": "E-Mail-Adresse ist Opt-Out gesetzt",
     "targetListIsOptedOut": "Ist Opt-Out gesetzt (Kontaktliste)",
-    "type": "Typ"
+    "type": "Typ",
+    "dropdown": "Auswahlliste"
   },
   "links": {
     "parent": "Parent",
