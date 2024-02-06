@@ -1,0 +1,43 @@
+[
+  {
+    "label": "",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "isActive"
+        }
+      ],
+      [
+        {
+          "name": "type"
+        },
+        false
+      ],
+      [
+        {
+          "name": "entity"
+        },
+        {
+          "name": "field"
+        }
+      ],
+      [
+        {
+          "name": "conditionsType",
+          "inlineEditDisabled": true
+        },
+        false
+      ],
+      [
+        {
+          "name": "conditions",
+          "fullWidth": true
+        }
+      ]
+    ]
+  }
+]

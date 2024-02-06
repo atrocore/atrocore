@@ -3,5 +3,10 @@
     "id": "gender",
     "name": "Gender",
     "multilingual": false
+  },
+  {
+    "id": "dynamic_logic_type",
+    "name": "Dynamic Logic Type",
+    "multilingual": false
   }
 ]

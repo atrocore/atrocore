@@ -1,0 +1,12 @@
+{
+  "entity": true,
+  "importable": true,
+  "layouts": false,
+  "tab": true,
+  "acl": true,
+  "customizable": false,
+  "disabled": false,
+  "type": "Base",
+  "object": true,
+  "hasActive": true
+}

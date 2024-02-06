@@ -1,4 +1,5 @@
 {
+    "controller": "controllers/record",
     "itemTypes": {
         "and": {
             "view": "views/admin/dynamic-logic/conditions-string/group-base",
