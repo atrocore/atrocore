@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/workflow/fields/conditions', 'views/fields/base',
+Espo.define('views/workflow/fields/conditions', ['views/fields/base', 'lib!Twig'],
     Dep => Dep.extend({
 
         listTemplate: 'fields/field-value-container',
