@@ -689,6 +689,13 @@ class Base
         $result['additionalSelectColumns'][QueryConverter::TABLE_ALIAS . ".deleted"] = "deleted";
     }
 
+    protected function boolFilterNotActive(array &$result): void
+    {
+        $result['whereClause'][] = [
+            'isActive' => false
+        ];
+    }
+
     /**
      * @return bool
      */

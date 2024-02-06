@@ -7,5 +7,6 @@
   "customizable": false,
   "disabled": false,
   "type": "Base",
-  "object": true
+  "object": true,
+  "hasActive": true
 }

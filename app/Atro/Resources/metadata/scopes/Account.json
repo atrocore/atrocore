@@ -10,5 +10,6 @@
     "object": true,
     "type": "Base",
     "hasPersonalData": true,
-    "hasAssignedUser": true
+    "hasAssignedUser": true,
+    "hasActive": true
 }
