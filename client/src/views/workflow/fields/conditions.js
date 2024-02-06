@@ -27,7 +27,11 @@ Espo.define('views/workflow/fields/conditions', 'views/fields/base',
         },
 
         clearValue() {
-            this.model.set('conditions', null);
+            if (this.model.get('conditionsType') === 'script') {
+                this.model.set('conditions', "{% set proceed = true %}" + "\n{{ proceed }}");
+            } else {
+                this.model.set('conditions', null);
+            }
         },
 
         afterRender() {

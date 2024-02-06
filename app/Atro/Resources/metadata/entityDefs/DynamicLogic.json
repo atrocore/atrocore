@@ -15,7 +15,8 @@
       "view": "views/fields/entity-type"
     },
     "field": {
-      "type": "varchar"
+      "type": "varchar",
+      "view": "views/fields/entity-field"
     },
     "conditionsType": {
       "type": "enum",
