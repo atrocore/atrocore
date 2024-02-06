@@ -1,0 +1,42 @@
+[
+    {
+        "rows": [
+            [
+                {
+                    "name": "name",
+                    "fullWidth": true
+                }
+            ],
+            [
+                {
+                    "name": "description",
+                    "fullWidth": true
+                }
+            ],
+            [
+                {
+                    "name": "isActive"
+                },
+                {
+                    "name": "image"
+                }
+            ],
+            [
+                {
+                    "name": "sku"
+                },
+                {
+                    "name": "unitPrice"
+                }
+            ],
+            [
+                false,
+                {
+                    "name": "sortOrder"
+                }
+            ]
+        ],
+        "style": "default",
+        "label": "Overview"
+    }
+]

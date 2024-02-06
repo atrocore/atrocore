@@ -1,0 +1,131 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true,
+      "isMultilang": true
+    },
+    "longDescription": {
+      "type": "wysiwyg",
+      "trim": true,
+      "isMultilang": true
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "children": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "noLoad": true
+    },
+    "parents": {
+      "type": "linkMultiple",
+      "view": "views/fields/hierarchy-parents",
+      "noLoad": true
+    },
+    "sortOrder": {
+      "type": "int",
+      "default": null,
+      "massUpdateDisabled": true,
+      "filterDisabled": true
+    },
+    "image": {
+      "type": "image",
+      "required": false,
+      "previewSize": "medium"
+    },
+    "sku": {
+      "type": "varchar",
+      "trim": true,
+      "massUpdateDisabled": true
+    },
+    "price": {
+      "type": "float",
+      "measureId": "currency"
+    },
+    "isActive": {
+      "notNull": true,
+      "type": "bool",
+      "default": false
+    }
+  },
+  "links": {
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "children": {
+      "type": "hasMany",
+      "relationName": "ProductHierarchy",
+      "foreign": "parents",
+      "entity": "Product",
+      "audited": false,
+      "disableMassRelation": true,
+      "midKeys": [
+        "entityId",
+        "parentId"
+      ]
+    },
+    "parents": {
+      "type": "hasMany",
+      "relationName": "ProductHierarchy",
+      "foreign": "children",
+      "entity": "Product",
+      "audited": false,
+      "disableMassRelation": true,
+      "midKeys": [
+        "parentId",
+        "entityId"
+      ]
+    },
+    "image": {
+      "type": "belongsTo",
+      "entity": "Attachment",
+      "skipOrmDefs": true
+    }
+  },
+  "collection": {
+    "sortBy": "createdAt",
+    "asc": false
+  },
+  "indexes": {
+    "name": {
+      "columns": [
+        "name",
+        "deleted"
+      ]
+    },
+    "createdAt": {
+      "columns": [
+        "createdAt",
+        "deleted"
+      ]
+    },
+    "modifiedAt": {
+      "columns": [
+        "modifiedAt",
+        "deleted"
+      ]
+    }
+  }
+}

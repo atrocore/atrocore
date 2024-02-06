@@ -1,0 +1,18 @@
+{
+  "fields": {
+    "sku": "SKU",
+    "isActive": "Active",
+    "image": "Image",
+    "price": "Price",
+    "longDescription": "Long Description",
+    "children": "Child Products",
+    "parents": "Parent Products"
+  },
+  "labels": {
+    "Create Product": "Create Product"
+  },
+  "links": {
+    "children": "Child Products",
+    "parents": "Parent Products"
+  }
+}
