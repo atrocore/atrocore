@@ -467,7 +467,8 @@
     "units": "Одиниці",
     "id": "ID",
     "ids": "IDs",
-    "dropdown": "Список"
+    "dropdown": "Список",
+    "isActive": "Активний"
   },
   "links": {
     "assignedAccounts": "Контрагенти",
