@@ -490,7 +490,8 @@
     "emailAddressIsOptedOut": "E-Mail-Adresse ist Opt-Out gesetzt",
     "targetListIsOptedOut": "Ist Opt-Out gesetzt (Kontaktliste)",
     "type": "Typ",
-    "dropdown": "Auswahlliste"
+    "dropdown": "Auswahlliste",
+    "isActive": "Aktiv"
   },
   "links": {
     "parent": "Parent",
