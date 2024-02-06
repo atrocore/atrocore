@@ -6,6 +6,12 @@
     "conditionsType": "Conditions Type",
     "conditions": "Conditions"
   },
+  "options": {
+    "conditionsType": {
+      "basic": "Basic",
+      "script": "Script"
+    }
+  },
   "labels": {
     "Create ScreenLogic": "Create Screen Logic"
   }
