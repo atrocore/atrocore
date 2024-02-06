@@ -1,0 +1,12 @@
+{
+  "fields": {
+    "type": "Type",
+    "entityType": "Entity",
+    "field": "Field",
+    "conditionsType": "Conditions Type",
+    "conditions": "Conditions"
+  },
+  "labels": {
+    "Create ScreenLogic": "Create Screen Logic"
+  }
+}
