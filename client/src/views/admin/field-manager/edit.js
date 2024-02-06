@@ -146,19 +146,6 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
                 }
             }, this);
 
-            this.listenTo(this.model, 'change:dropdown', function () {
-                const type = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'type']);
-                if (this.model.get('dropdown')) {
-                    if (type === 'extensibleEnum') {
-                        this.model.set('view', 'views/fields/extensible-enum-dropdown');
-                    } else if (type === 'extensibleMultiEnum') {
-                        this.model.set('view', 'views/fields/extensible-multi-enum-dropdown');
-                    }
-                } else {
-                    this.model.set('view', this.getFieldManager().getViewName(type));
-                }
-            }, this);
-
             var hasRequired = false;
 
             this.getModelFactory().create(this.scope, function (model) {
