@@ -13,11 +13,13 @@
     },
     "entityType": {
       "type": "varchar",
-      "view": "views/fields/entity-type"
+      "view": "views/fields/entity-type",
+      "required": true
     },
     "field": {
       "type": "varchar",
-      "view": "views/fields/entity-field"
+      "view": "views/fields/entity-field",
+      "required": true
     },
     "conditionsType": {
       "type": "enum",
