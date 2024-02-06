@@ -8,6 +8,7 @@
     "type": {
       "type": "extensibleEnum",
       "extensibleEnumId": "dynamic_logic_type",
+      "required": true,
       "dropdown": true
     },
     "entityType": {
