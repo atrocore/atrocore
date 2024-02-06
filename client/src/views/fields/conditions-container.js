@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/workflow/fields/conditions', ['views/fields/base', 'lib!Twig'],
+Espo.define('views/fields/conditions-container', 'views/fields/base',
     Dep => Dep.extend({
 
         listTemplate: 'fields/field-value-container',
@@ -34,11 +34,15 @@ Espo.define('views/workflow/fields/conditions', ['views/fields/base', 'lib!Twig'
             }
         },
 
+        getEntityType() {
+            return this.model.get('entityType');
+        },
+
         afterRender() {
             Dep.prototype.setup.call(this);
 
             this.hide();
-            if (this.model.get('conditionsType') && this.model.get('entityType')) {
+            if (this.model.get('conditionsType') && this.getEntityType()) {
                 let options = {
                     el: `${this.options.el} > .field[data-name="valueField"]`,
                     name: this.name,
@@ -53,7 +57,7 @@ Espo.define('views/workflow/fields/conditions', ['views/fields/base', 'lib!Twig'
                 let view;
                 if (this.model.get('conditionsType') === 'basic') {
                     view = 'views/admin/field-manager/fields/dynamic-logic-conditions';
-                    options.scope = this.model.get('entityType');
+                    options.scope = this.getEntityType();
                 } else if (this.model.get('conditionsType') === 'script') {
                     view = 'views/fields/script'
                     options.params.required = true;
