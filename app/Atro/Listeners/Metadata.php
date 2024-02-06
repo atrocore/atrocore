@@ -65,6 +65,8 @@ class Metadata extends AbstractListener
 
         $this->pushDynamicActions($data);
 
+        $this->prepareExtensibleEnum($data);
+
         $event->setArgument('data', $data);
     }
 
@@ -80,6 +82,27 @@ class Metadata extends AbstractListener
         }
 
         $event->setArgument('data', $data);
+    }
+
+    protected function prepareExtensibleEnum(array &$data): void
+    {
+        foreach ($data['entityDefs'] as $entityType => $entityDefs) {
+            if (empty($entityDefs['fields'])) {
+                continue;
+            }
+
+            foreach ($entityDefs['fields'] as $field => $fieldDefs) {
+                if (!empty($fieldDefs['type']) && in_array($fieldDefs['type'], ['extensibleEnum', 'extensibleMultiEnum']) && empty($fieldDefs['view'])) {
+                    if (!empty($fieldDefs['dropdown'])) {
+                        if ($fieldDefs['type'] == 'extensibleMultiEnum') {
+                            $data['entityDefs'][$entityType]['fields'][$field]['view'] = 'views/fields/extensible-multi-enum-dropdown';
+                        } else {
+                            $data['entityDefs'][$entityType]['fields'][$field]['view'] = 'views/fields/extensible-enum-dropdown';
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public function pushDynamicActions(array &$data): void
