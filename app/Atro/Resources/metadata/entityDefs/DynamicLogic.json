@@ -10,7 +10,7 @@
       "extensibleEnumId": "dynamic_logic_type",
       "dropdown": true
     },
-    "entity": {
+    "entityType": {
       "type": "varchar",
       "view": "views/fields/entity-type"
     },
@@ -30,7 +30,8 @@
       ]
     },
     "conditions": {
-      "type": "wysiwyg"
+      "type": "wysiwyg",
+      "view": "views/workflow/fields/conditions"
     },
     "createdAt": {
       "type": "datetime",
