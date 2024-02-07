@@ -33,6 +33,11 @@
         "description": "action"
       },
       {
+        "url": "#UiHandler",
+        "label": "UiHandler",
+        "description": "uiHandler"
+      },
+      {
         "url": "#Measure",
         "label": "Measure",
         "description": "measure"
