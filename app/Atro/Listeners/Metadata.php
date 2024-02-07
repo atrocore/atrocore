@@ -67,6 +67,8 @@ class Metadata extends AbstractListener
 
         $this->prepareExtensibleEnum($data);
 
+        $this->pushUiHandlers($data);
+
         $event->setArgument('data', $data);
     }
 
@@ -102,6 +104,44 @@ class Metadata extends AbstractListener
                     }
                 }
             }
+        }
+    }
+
+    protected function pushUiHandlers(array &$data): void
+    {
+        if (!$this->getConfig()->get('isInstalled', false)) {
+            return;
+        }
+
+        $dataManager = $this->getContainer()->get('dataManager');
+
+        $res = $dataManager->getCacheData('ui_handler');
+        if ($res === null) {
+            $connection = $this->getEntityManager()->getConnection();
+            try {
+                $res = $connection->createQueryBuilder()
+                    ->select('t.*')
+                    ->from($connection->quoteIdentifier('ui_handler'), 't')
+                    ->where('t.deleted = :false')
+                    ->andWhere('t.is_active = :true')
+                    ->setParameter('true', true, ParameterType::BOOLEAN)
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->fetchAllAssociative();
+            } catch (\Throwable $e) {
+                $res = [];
+            }
+
+            $dataManager->setCacheData('ui_handler', $res);
+        }
+
+        foreach ($res as $v) {
+            $data['clientDefs'][$v['entity_type']]['uiHandler'][] = [
+                'id'             => $v['id'],
+                'field'          => $v['field'],
+                'type'           => $v['type'],
+                'conditionsType' => $v['conditions_type'],
+                'conditions'     => @json_decode((string)$v['conditions'], true),
+            ];
         }
     }
 
