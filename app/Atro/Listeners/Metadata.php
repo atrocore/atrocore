@@ -109,7 +109,7 @@ class Metadata extends AbstractListener
 
     protected function pushUiHandlers(array &$data): void
     {
-        if (!$this->getConfig()->get('isInstalled', false)) {
+        if (!$this->getConfig()->get('isInstalled', false) || !empty($this->getMemoryStorage()->get('ignorePushUiHandler'))) {
             return;
         }
 
@@ -120,8 +120,9 @@ class Metadata extends AbstractListener
             $connection = $this->getEntityManager()->getConnection();
             try {
                 $res = $connection->createQueryBuilder()
-                    ->select('t.*')
+                    ->select('t.*, t1.code as option_code')
                     ->from($connection->quoteIdentifier('ui_handler'), 't')
+                    ->innerJoin('t', 'extensible_enum_option', 't1', 't1.id=t.type AND t1.deleted = :false')
                     ->where('t.deleted = :false')
                     ->andWhere('t.is_active = :true')
                     ->setParameter('true', true, ParameterType::BOOLEAN)
@@ -135,13 +136,13 @@ class Metadata extends AbstractListener
         }
 
         foreach ($res as $v) {
-            $data['clientDefs'][$v['entity_type']]['uiHandler'][] = [
-                'id'             => $v['id'],
-                'field'          => $v['field'],
-                'type'           => $v['type'],
-                'conditionsType' => $v['conditions_type'],
-                'conditions'     => @json_decode((string)$v['conditions'], true),
-            ];
+            $conditions = ['type' => $v['conditions_type']];
+            if ($v['conditions_type'] === 'basic') {
+                $conditions = array_merge($conditions, @json_decode((string)$v['conditions'], true));
+            } else {
+                $conditions['script'] = (string)$v['conditions'];
+            }
+            $data['clientDefs'][$v['entity_type']]['dynamicLogic']['fields'][$v['field']][$v['option_code']] = $conditions;
         }
     }
 

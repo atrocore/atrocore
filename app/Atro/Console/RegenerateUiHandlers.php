@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Console;
 
+use Atro\Core\KeyValueStorages\StorageInterface;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
@@ -33,10 +34,14 @@ class RegenerateUiHandlers extends AbstractConsole
 
     public function refresh(): void
     {
+        $this->getMemoryStorage()->set('ignorePushUiHandler', true);
+        $clientDefsData = $this->getMetadata()->get('clientDefs', []);
+        $this->getMemoryStorage()->set('ignorePushUiHandler', false);
+
         /** @var EntityManager $em */
         $em = $this->getContainer()->get('entityManager');
 
-        foreach ($this->getMetadata()->get('clientDefs', []) as $entityType => $clientDefs) {
+        foreach ($clientDefsData as $entityType => $clientDefs) {
             if (empty($clientDefs['dynamicLogic']['fields'])) {
                 continue;
             }
@@ -88,5 +93,10 @@ class RegenerateUiHandlers extends AbstractConsole
                 }
             }
         }
+    }
+
+    protected function getMemoryStorage(): StorageInterface
+    {
+        return $this->getContainer()->get('memoryStorage');
     }
 }
