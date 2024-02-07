@@ -20,7 +20,7 @@ class RegenerateUiHandlers extends AbstractConsole
 {
     public static function getDescription(): string
     {
-        return 'Regenerate ui handlers.';
+        return 'Regenerate UI handlers.';
     }
 
     public function run(array $data): void
