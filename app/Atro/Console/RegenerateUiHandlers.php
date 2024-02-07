@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Atro\Console;
 
 use Atro\Core\KeyValueStorages\StorageInterface;
-use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
 class RegenerateUiHandlers extends AbstractConsole
