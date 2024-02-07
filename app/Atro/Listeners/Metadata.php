@@ -118,9 +118,8 @@ class Metadata extends AbstractListener
             $connection = $this->getEntityManager()->getConnection();
             try {
                 $res = $connection->createQueryBuilder()
-                    ->select('t.*, t1.code as option_code')
+                    ->select('t.*')
                     ->from($connection->quoteIdentifier('ui_handler'), 't')
-                    ->innerJoin('t', 'extensible_enum_option', 't1', 't1.id=t.type AND t1.deleted = :false')
                     ->where('t.deleted = :false')
                     ->andWhere('t.is_active = :true')
                     ->setParameter('true', true, ParameterType::BOOLEAN)
@@ -134,13 +133,27 @@ class Metadata extends AbstractListener
         }
 
         foreach ($res as $v) {
+            switch ($v['type']) {
+                case 'ui_read_only':
+                    $type = 'readOnly';
+                    break;
+                case 'ui_visible':
+                    $type = 'visible';
+                    break;
+                case 'ui_required':
+                    $type = 'required';
+                    break;
+                default:
+                    continue 2;
+            }
+
             $conditions = ['type' => $v['conditions_type']];
             if ($v['conditions_type'] === 'basic') {
                 $conditions = array_merge($conditions, @json_decode((string)$v['conditions'], true));
             } else {
                 $conditions['script'] = (string)$v['conditions'];
             }
-            $data['clientDefs'][$v['entity_type']]['dynamicLogic']['fields'][$v['field']][$v['option_code']] = $conditions;
+            $data['clientDefs'][$v['entity_type']]['dynamicLogic']['fields'][$v['field']][$type] = $conditions;
         }
     }
 
