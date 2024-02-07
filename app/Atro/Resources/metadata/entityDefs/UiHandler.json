@@ -7,7 +7,7 @@
     },
     "type": {
       "type": "extensibleEnum",
-      "extensibleEnumId": "dynamic_logic_type",
+      "extensibleEnumId": "ui_handler_type",
       "required": true,
       "dropdown": true
     },

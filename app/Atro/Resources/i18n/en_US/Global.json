@@ -1,6 +1,6 @@
 {
   "scopeNames": {
-    "ScreenLogic": "Screen Logic",
+    "UiHandler": "UI Handler",
     "Action": "Action",
     "ExtensibleEnum": "List",
     "ExtensibleEnumOption": "List Option",
@@ -50,7 +50,7 @@
     "AuthFailLogRecord": "Auth Fail Log Record"
   },
   "scopeNamesPlural": {
-    "ScreenLogic": "Screen Logics",
+    "UiHandler": "UI Handlers",
     "Action": "Actions",
     "ExtensibleEnum": "Lists",
     "ExtensibleEnumOption": "List Options",

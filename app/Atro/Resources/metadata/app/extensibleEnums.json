@@ -5,8 +5,8 @@
     "multilingual": false
   },
   {
-    "id": "dynamic_logic_type",
-    "name": "Dynamic Logic Type",
+    "id": "ui_handler_type",
+    "name": "UI Handler Type",
     "multilingual": false
   }
 ]

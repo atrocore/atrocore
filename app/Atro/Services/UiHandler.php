@@ -16,7 +16,7 @@ namespace Atro\Services;
 use Espo\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
 
-class DynamicLogic extends Base
+class UiHandler extends Base
 {
     protected $mandatorySelectAttributeList = ["conditionsType", "conditions"];
 

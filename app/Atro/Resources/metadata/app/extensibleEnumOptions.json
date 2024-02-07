@@ -18,20 +18,20 @@
     "sortOrder": 20
   },
   {
-    "id": "dl_visible",
-    "extensibleEnumId": "dynamic_logic_type",
+    "id": "ui_visible",
+    "extensibleEnumId": "ui_handler_type",
     "name": "Visible",
     "sortOrder": 0
   },
   {
-    "id": "dl_required",
-    "extensibleEnumId": "dynamic_logic_type",
+    "id": "ui_required",
+    "extensibleEnumId": "ui_handler_type",
     "name": "Required",
     "sortOrder": 10
   },
   {
-    "id": "dl_read_only",
-    "extensibleEnumId": "dynamic_logic_type",
+    "id": "ui_read_only",
+    "extensibleEnumId": "ui_handler_type",
     "name": "Read-only",
     "sortOrder": 20
   }
