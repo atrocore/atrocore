@@ -32,9 +32,10 @@
 
 Espo.define('dynamic-logic', [], function () {
 
-    var DynamicLogic = function (defs, recordView) {
+    var DynamicLogic = function (defs, recordView, twig) {
         this.defs = defs || {};
         this.recordView = recordView;
+        this.twig = twig;
 
         this.fieldTypeList = ['visible', 'required', 'readOnly'];
         this.panelTypeList = ['visible'];
@@ -53,10 +54,16 @@ Espo.define('dynamic-logic', [], function () {
                     if (!(type in item)) return;
                     if (!item[type]) return;
                     var typeItem = (item[type] || {});
-                    var conditionGroup = typeItem.conditionGroup;
-                    var conditionGroup = (item[type] || {}).conditionGroup;
-                    if (!typeItem.conditionGroup) return;
-                    var result = this.checkConditionGroup(typeItem.conditionGroup);
+
+                    if (!typeItem.type) return;
+
+                    var result = false;
+                    if (typeItem.type === 'basic' && typeItem.conditionGroup) {
+                        result = this.checkConditionGroup(typeItem.conditionGroup);
+                    } else if (typeItem.type === 'script' && typeItem.script) {
+                        var contents = this.twig.twig({data: typeItem.script}).render({entity: this.recordView.model.attributes});
+                        result = contents.trim() === 'true';
+                    }
                     var methodName;
                     if (result) {
                         methodName = 'makeField' + Espo.Utils.upperCaseFirst(type) + 'True';
