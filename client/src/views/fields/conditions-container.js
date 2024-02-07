@@ -27,10 +27,15 @@ Espo.define('views/fields/conditions-container', 'views/fields/base',
         },
 
         clearValue() {
-            if (this.model.get('conditionsType') === 'script') {
-                this.model.set('conditions', "{% set proceed = true %}" + "\n{{ proceed }}");
+            if (!this.getView('valueField')) {
+                // try later
+                setTimeout(() => this.clearValue(), 100);
             } else {
-                this.model.set('conditions', null);
+                if (this.model.get('conditionsType') === 'script') {
+                    this.model.set('conditions', "{% set proceed = true %}" + "\n{{ proceed }}");
+                } else {
+                    this.model.set('conditions', null);
+                }
             }
         },
 
