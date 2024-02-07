@@ -35,7 +35,7 @@
     },
     "conditions": {
       "type": "wysiwyg",
-      "view": "views/workflow/fields/conditions"
+      "view": "views/fields/conditions-container"
     },
     "createdAt": {
       "type": "datetime",

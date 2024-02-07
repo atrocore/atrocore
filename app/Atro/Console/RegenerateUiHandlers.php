@@ -47,10 +47,10 @@ class RegenerateUiHandlers extends AbstractConsole
                         continue;
                     }
 
-                    $id = strtolower("g_{$entityType}_{$field}_{$type}");
+                    $id = strtolower("ui_{$entityType}_{$field}_{$type}");
 
-                    $entity = $em->getRepository('ScreenLogic')->get($id);
-                    if (!empty($measure)) {
+                    $entity = $em->getRepository('UiHandler')->get($id);
+                    if (!empty($entity)) {
                         continue;
                     }
 
@@ -58,17 +58,17 @@ class RegenerateUiHandlers extends AbstractConsole
 
                     switch ($type) {
                         case 'readOnly':
-                            $typeId = 'dl_read_only';
+                            $typeId = 'ui_read_only';
                             break;
                         case 'visible':
-                            $typeId = 'dl_visible';
+                            $typeId = 'ui_visible';
                             break;
                         case 'required':
-                            $typeId = 'dl_required';
+                            $typeId = 'ui_required';
                             break;
                     }
 
-                    $entity = $em->getRepository('ScreenLogic')->get();
+                    $entity = $em->getRepository('UiHandler')->get();
                     $entity->id = $id;
                     $entity->set([
                         'name'           => "Make field '{$field}' {$type}",
@@ -76,68 +76,17 @@ class RegenerateUiHandlers extends AbstractConsole
                         'field'          => $field,
                         'type'           => $typeId,
                         'conditionsType' => 'basic',
-                        'conditions'     => json_encode($fieldData['conditionGroup'])
+                        'conditions'     => json_encode($fieldData),
+                        'isActive'       => true
                     ]);
-
-                    echo '<pre>';
-                    print_r($entity->toArray());
-                    die();
 
                     try {
                         $em->saveEntity($entity);
                     } catch (\Throwable $e) {
                         // ignore all
                     }
-
-                    echo '<pre>';
-                    print_r($fieldData);
-                    die();
                 }
             }
-
-            echo '<pre>';
-            print_r($clientDefs['dynamicLogic']);
-            die();
-
         }
-
-//        /** @var EntityManager $em */
-//        $em = $this->getContainer()->get('entityManager');
-//
-//        foreach ($this->getMetadata()->get(['app', 'measures'], []) as $measureData) {
-//            $measure = $em->getRepository('Measure')->get($measureData['id']);
-//            if (!empty($measure)) {
-//                continue;
-//            }
-//            $measure = $em->getRepository('Measure')->get();
-//            $measure->id = $measureData['id'];
-//            $measure->set($measureData);
-//
-//            try {
-//                $em->saveEntity($measure);
-//            } catch (\Throwable $e) {
-//                // ignore all
-//            }
-//        }
-//
-//        foreach ($this->getMetadata()->get(['app', 'units'], []) as $unitData) {
-//            $unit = $em->getRepository('Unit')->get($unitData['id']);
-//            if (!empty($unit)) {
-//                continue;
-//            }
-//
-//            $unit = $em->getRepository('Unit')->get();
-//            $unit->id = $unitData['id'];
-//            $unit->set($unitData);
-//
-//            try {
-//                $em->saveEntity($unit);
-//                if ($unit->get('measureId') === 'currency') {
-//                    $this->calculateMultiplier($unit);
-//                }
-//            } catch (\Throwable $e) {
-//                // ignore all
-//            }
-//        }
     }
 }
