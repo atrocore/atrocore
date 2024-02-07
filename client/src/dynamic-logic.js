@@ -61,7 +61,11 @@ Espo.define('dynamic-logic', [], function () {
                     if (typeItem.type === 'basic' && typeItem.conditionGroup) {
                         result = this.checkConditionGroup(typeItem.conditionGroup);
                     } else if (typeItem.type === 'script' && typeItem.script) {
-                        var contents = this.twig.twig({data: typeItem.script}).render({entity: this.recordView.model.attributes});
+                        var contents = 'false';
+                        try {
+                            contents = this.twig.twig({data: typeItem.script}).render({entity: this.recordView.model.attributes});
+                        } catch (error) {
+                        }
                         result = contents.trim() === 'true';
                     }
                     var methodName;
