@@ -12,7 +12,7 @@ RewriteRule ^ apidocs/index.html [QSA,L]
 RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^(.*)$ index.php?atroq=$1 [L,QSA]
+RewriteRule ^(.*)$ index.php?atroq=$1 [L,QSA,BCTLS]
 
 <FilesMatch "(publicData\.json|composer\.log)$">
   Allow from all
