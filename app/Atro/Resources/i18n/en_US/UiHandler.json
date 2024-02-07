@@ -12,6 +12,9 @@
       "script": "Script"
     }
   },
+  "exceptions": {
+    "systemHandler": "The '%s' Handler is required for the system and can't be changed or deleted."
+  },
   "labels": {
     "Create UiHandler": "Create UI Handler"
   }
