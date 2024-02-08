@@ -78,7 +78,7 @@ class ExtensibleEnumOption extends Base
                 ];
 
                 // prepare select
-                $select = ['eeo.id', 'eeo.code', 'eeo.color', 'eeo.name','eeo.sort_order'];
+                $select = ['eeo.id', 'eeo.code', 'eeo.color', 'eeo.name', 'eeo.sort_order'];
                 foreach ($this->getLingualFields('name') as $lingualField) {
                     $select[] = 'eeo.' . Util::toUnderScore($lingualField);
                 }
@@ -108,9 +108,9 @@ class ExtensibleEnumOption extends Base
             $res[] = $this->cachedOptions[$id];
         }
 
-        if(count($res) > 1){
-            usort($res, function($option1, $option2){
-                return ($option1['sortOrder'] < $option2['sortOrder']) ?  -1 : 1;
+        if (count($res) > 1) {
+            usort($res, function ($option1, $option2) {
+                return ($option1['sortOrder'] < $option2['sortOrder']) ? -1 : 1;
             });
         }
         return $res;
@@ -160,19 +160,23 @@ class ExtensibleEnumOption extends Base
 
     protected function beforeRemove(Entity $entity, array $options = [])
     {
-        $this->validateBeforeRemove($entity);
+        $this->validateSystemOptions($entity);
+        $this->validateOptionsBeforeRemove($entity);
 
         parent::beforeRemove($entity, $options);
     }
 
-    public function validateBeforeRemove(Entity $entity): void
+    public function validateSystemOptions(Entity $entity): void
     {
         foreach ($this->getMetadata()->get(['app', 'extensibleEnumOptions']) as $v) {
             if ($entity->get('id') === $v['id']) {
                 throw new BadRequest(sprintf($this->getLanguage()->translate('extensibleEnumOptionIsSystem', 'exceptions', 'ExtensibleEnumOption'), $entity->get('name')));
             }
         }
+    }
 
+    public function validateOptionsBeforeRemove(Entity $entity): void
+    {
         foreach ($this->getMetadata()->get(['entityDefs']) as $entityName => $entityDefs) {
             if (empty($entityDefs['fields'])) {
                 continue;
