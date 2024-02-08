@@ -66,7 +66,7 @@ Espo.define('dynamic-logic', [], function () {
                             contents = this.twig.twig({data: typeItem.script}).render({entity: this.recordView.model.attributes});
                         } catch (error) {
                         }
-                        result = contents.trim() === 'true';
+                        result = ['true', '1'].includes(contents.trim());
                     }
                     var methodName;
                     if (result) {
