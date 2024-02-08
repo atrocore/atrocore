@@ -23,7 +23,7 @@ class UiHandler extends Base
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if (!$entity->isNew()) {
-            foreach (['type', 'entityType', 'fields', 'conditionsType', 'conditions'] as $field) {
+            foreach (['type', 'isActive', 'entityType', 'fields', 'conditionsType', 'conditions'] as $field) {
                 if ($entity->isAttributeChanged($field)) {
                     $this->validateSystemHandler($entity);
                 }
