@@ -51,7 +51,7 @@ class RegenerateUiHandlers extends AbstractConsole
                         continue;
                     }
 
-                    $id = strtolower("ui_{$entityType}_{$field}_{$type}");
+                    $id = 'ui_' . substr(md5("{$entityType}{$field}{$type}"), 0, 20);
 
                     $entity = $em->getRepository('UiHandler')->get($id);
                     if (!empty($entity)) {

@@ -5,6 +5,9 @@
       "required": true,
       "trim": true
     },
+    "isActive": {
+      "type": "bool"
+    },
     "type": {
       "type": "extensibleEnum",
       "extensibleEnumId": "ui_handler_type",
