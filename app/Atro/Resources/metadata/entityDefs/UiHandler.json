@@ -16,9 +16,9 @@
       "view": "views/fields/entity-type",
       "required": true
     },
-    "field": {
-      "type": "varchar",
-      "view": "views/fields/entity-field",
+    "fields": {
+      "type": "array",
+      "view": "views/fields/entity-fields",
       "required": true
     },
     "conditionsType": {

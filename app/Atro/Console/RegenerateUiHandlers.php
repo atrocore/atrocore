@@ -77,7 +77,7 @@ class RegenerateUiHandlers extends AbstractConsole
                     $entity->set([
                         'name'           => "Make field '{$field}' {$type}",
                         'entityType'     => $entityType,
-                        'field'          => $field,
+                        'fields'         => [$field],
                         'type'           => $typeId,
                         'conditionsType' => 'basic',
                         'conditions'     => json_encode($fieldData),

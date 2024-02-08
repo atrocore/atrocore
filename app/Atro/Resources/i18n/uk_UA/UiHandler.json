@@ -2,7 +2,7 @@
   "fields": {
     "type": "Тип",
     "entityType": "Сутність",
-    "field": "Поле",
+    "fields": "Поля",
     "conditionsType": "Тип умови",
     "conditions": "Умови"
   },

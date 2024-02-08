@@ -2,7 +2,7 @@
   "fields": {
     "type": "Typ",
     "entityType": "Entität",
-    "field": "Feld",
+    "fields": "Felder",
     "conditionsType": "Bedingungen Typ",
     "conditions": "Bedingungen"
   },
