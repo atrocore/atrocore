@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "UiHandler": "Обробник інтерфейсу",
     "Action": "Дія",
     "ExtensibleEnum": "Список",
     "ExtensibleEnumOption": "Опція списку",
@@ -50,6 +51,7 @@
     "TreoStore": "Магазин"
   },
   "scopeNamesPlural": {
+    "UiHandler": "Обробники інтерфейсу",
     "Action": "Дії",
     "ExtensibleEnum": "Списки",
     "ExtensibleEnumOption": "Опції списку",

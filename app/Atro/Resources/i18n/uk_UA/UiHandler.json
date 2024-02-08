@@ -1,0 +1,21 @@
+{
+  "fields": {
+    "type": "Тип",
+    "entityType": "Сутність",
+    "field": "Поле",
+    "conditionsType": "Тип умови",
+    "conditions": "Умови"
+  },
+  "options": {
+    "conditionsType": {
+      "basic": "Базовий",
+      "script": "Скрипт"
+    }
+  },
+  "exceptions": {
+    "systemHandler": "Обробник '%s' обов'язковий для системи і не може бути змінений чи видалений."
+  },
+  "labels": {
+    "Create UiHandler": "Створити обробник інтерфейсу"
+  }
+}

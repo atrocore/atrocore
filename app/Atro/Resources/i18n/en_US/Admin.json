@@ -1,5 +1,6 @@
 {
   "labels": {
+    "UiHandler": "UI Handlers",
     "multiLanguagesSettings": "Languages",
     "multiLanguages": "Languages",
     "Composer": "Modules",
@@ -25,7 +26,6 @@
     "Settings": "Settings",
     "Scheduled Jobs": "Scheduled jobs",
     "Action": "Actions",
-    "UiHandler": "UI Handlers",
     "Locale": "Locale",
     "Clear Cache": "Clear cache",
     "rebuildDb": "Rebuild database",
@@ -196,6 +196,7 @@
     "rebuildDb": "Are you sure you want to rebuild the database structure? All unused columns and tables will be removed."
   },
   "descriptions": {
+    "uiHandler": "",
     "locale": "Manage locale settings such as language, date and time format, decimal separator, thousand separator, as well as locale-specific measure units.",
     "multiLanguagesSettings": "Configure languages to be used.",
     "composer": "Update the system and all installed modules, install or remove publicly or privately available modules. Module version dependency is automatically considered.",
@@ -204,7 +205,6 @@
     "settings": "Manage general system settings such as default system locale, search preferences, active interface languages, cache usage and more...",
     "scheduledJob": "Manage scheduled system jobs, like a cron job, executed in the background and see their logs.",
     "action": "Configure actions that can be executed manually, by clicking buttons added to the user interface, or fully automatically via a Schedule Manager job.",
-    "uiHandler": "uiHandler descr",
     "clearCache": "Clear metadata cache and other system cache, use this option if you have errors while working with the system.",
     "rebuildDb": "Align the database structure in accordance with the configured metadata.",
     "users": "Manage system users, their preferences, roles and teams as well as validate their access level and permissions for all entities.",
