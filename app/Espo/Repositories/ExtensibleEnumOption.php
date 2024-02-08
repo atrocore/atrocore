@@ -167,6 +167,12 @@ class ExtensibleEnumOption extends Base
 
     public function validateBeforeRemove(Entity $entity): void
     {
+        foreach ($this->getMetadata()->get(['app', 'extensibleEnumOptions']) as $v) {
+            if ($entity->get('id') === $v['id']) {
+                throw new BadRequest(sprintf($this->getLanguage()->translate('extensibleEnumOptionIsSystem', 'exceptions', 'ExtensibleEnumOption'), $entity->get('name')));
+            }
+        }
+
         foreach ($this->getMetadata()->get(['entityDefs']) as $entityName => $entityDefs) {
             if (empty($entityDefs['fields'])) {
                 continue;
