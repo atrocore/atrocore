@@ -39,6 +39,7 @@ Espo.define('views/settings/fields/quick-create-list', 'views/fields/array', fun
 
             this.params.options =  Object.keys(this.getMetadata().get('scopes')).filter(function (scope) {
                 if (this.getMetadata().get('scopes.' + scope + '.disabled')) return;
+                if (this.getMetadata().get('scopes.' + scope + '.emHidden')) return;
                 return this.getMetadata().get('scopes.' + scope + '.entity') && this.getMetadata().get('scopes.' + scope + '.object');
             }, this).sort(function (v1, v2) {
                 return this.translate(v1, 'scopeNamesPlural').localeCompare(this.translate(v2, 'scopeNamesPlural'));
