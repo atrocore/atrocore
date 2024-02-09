@@ -48,9 +48,6 @@ class ConnectionCookie extends ConnectionHttp implements ConnectionInterface
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($body));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-
         $response = curl_exec($ch);
         if ($response === false) {
             $message = curl_error($ch);
