@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -31,17 +30,28 @@
  * and "AtroCore" word.
  */
 
-declare(strict_types=1);
+Espo.define('views/ui-handler/fields/entity-relationships', 'views/fields/entity-relationships', Dep => {
 
-namespace Espo\Core\Factories;
+    return Dep.extend({
 
-use Atro\Core\Container;
-use Atro\Core\Factories\FactoryInterface as Factory;
+        setup() {
+            Dep.prototype.setup.call(this);
 
-class Metadata implements Factory
-{
-    public function create(Container $container)
-    {
-        return new \Espo\Core\Utils\Metadata($container);
-    }
-}
+            this.listenTo(this.model, 'change:type', () => {
+                this.reRender();
+            });
+        },
+
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            if (this.model.get('type') === 'ui_visible') {
+                this.$el.parent().show();
+            } else {
+                this.$el.parent().hide();
+            }
+        },
+
+    });
+});
+

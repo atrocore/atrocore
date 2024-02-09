@@ -1,4 +1,3 @@
-<?php
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -31,17 +30,48 @@
  * and "AtroCore" word.
  */
 
-declare(strict_types=1);
+Espo.define('views/fields/entity-relationships', ['views/fields/multi-enum', 'views/fields/entity-field'], (Dep, Field) => {
 
-namespace Espo\Core\Factories;
+    return Dep.extend({
 
-use Atro\Core\Container;
-use Atro\Core\Factories\FactoryInterface as Factory;
+        setup() {
+            this.prepareEnumOptions();
+            Dep.prototype.setup.call(this);
 
-class Metadata implements Factory
-{
-    public function create(Container $container)
-    {
-        return new \Espo\Core\Utils\Metadata($container);
-    }
-}
+            this.listenTo(this.model, 'change:entityType', () => {
+                this.model.set(this.name, null);
+                this.prepareEnumOptions();
+                this.reRender();
+            });
+        },
+
+        prepareEnumOptions() {
+            this.params.options = [];
+            this.translatedOptions = {};
+
+            $.each((this.getEntityLinks() || []), field => {
+                this.params.options.push(field);
+                this.translatedOptions[field] = this.translate(field, 'links', this.getEntityType());
+            });
+        },
+
+        getEntityLinks() {
+            let entity = this.getEntityType();
+            let result = {};
+            if (entity) {
+                let links = this.getMetadata().get(['entityDefs', entity, 'links']) || {};
+                Object.keys(links).forEach(name => {
+                    result[name] = links[name];
+                });
+            }
+
+            return result;
+        },
+
+        getEntityType() {
+            return Field.prototype.getEntityType.call(this);
+        },
+
+    });
+});
+

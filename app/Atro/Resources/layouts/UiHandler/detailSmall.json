@@ -1,0 +1,49 @@
+[
+  {
+    "label": "",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "isActive"
+        }
+      ],
+      [
+        {
+          "name": "type"
+        },
+        false
+      ],
+      [
+        {
+          "name": "entityType"
+        },
+        false
+      ],
+      [
+        {
+          "name": "fields"
+        },
+        {
+          "name": "relationships"
+        }
+      ],
+      [
+        {
+          "name": "conditionsType",
+          "inlineEditDisabled": true
+        },
+        false
+      ],
+      [
+        {
+          "name": "conditions",
+          "fullWidth": true
+        }
+      ]
+    ]
+  }
+]

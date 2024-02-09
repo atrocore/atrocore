@@ -16,11 +16,9 @@ namespace Atro\Listeners;
 use Atro\Core\EventManager\Event;
 use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Core\Templates\Repositories\Relation;
-use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Database\Orm\RelationManager;
 use Espo\Core\Utils\Util;
-use Espo\Core\Templates\Services\Relationship;
 
 class Metadata extends AbstractListener
 {

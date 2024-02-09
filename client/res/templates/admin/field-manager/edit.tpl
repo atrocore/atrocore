@@ -40,37 +40,4 @@
                 </div>
         </div>
     </div>
-
-    {{#if hasDynamicLogicPanel}}
-    <div class="panel panel-default">
-        <div class="panel-heading"><h4 class="panel-title">{{translate 'Dynamic Logic' scope='FieldManager'}}</h4></div>
-            <div class="panel-body panel-body-form">
-                {{#if dynamicLogicVisible}}
-                <div class="cell form-group" data-name="dynamicLogicVisible">
-                    <label class="control-label" data-name="dynamicLogicVisible">{{translate 'dynamicLogicVisible' scope='Admin' category='fields'}}</label>
-                    <div class="field" data-name="dynamicLogicVisible">{{{dynamicLogicVisible}}}</div>
-                </div>
-                {{/if}}
-                {{#if dynamicLogicRequired}}
-                <div class="cell form-group" data-name="dynamicLogicRequired">
-                    <label class="control-label" data-name="dynamicLogicRequired">{{translate 'dynamicLogicRequired' scope='Admin' category='fields'}}</label>
-                    <div class="field" data-name="dynamicLogicRequired">{{{dynamicLogicRequired}}}</div>
-                </div>
-                {{/if}}
-                {{#if dynamicLogicReadOnly}}
-                <div class="cell form-group" data-name="dynamicLogicReadOnly">
-                    <label class="control-label" data-name="dynamicLogicReadOnly">{{translate 'dynamicLogicReadOnly' scope='Admin' category='fields'}}</label>
-                    <div class="field" data-name="dynamicLogicReadOnly">{{{dynamicLogicReadOnly}}}</div>
-                </div>
-                {{/if}}
-                {{#if dynamicLogicOptions}}
-                <div class="cell form-group" data-name="dynamicLogicOptions">
-                    <label class="control-label" data-name="dynamicLogicOptions">{{translate 'dynamicLogicOptions' scope='Admin' category='fields'}}</label>
-                    <div class="field" data-name="dynamicLogicOptions">{{{dynamicLogicOptions}}}</div>
-                </div>
-                {{/if}}
-            </div>
-        </div>
-    </div>
-    {{/if}}
 </div>

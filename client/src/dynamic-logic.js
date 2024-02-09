@@ -32,9 +32,10 @@
 
 Espo.define('dynamic-logic', [], function () {
 
-    var DynamicLogic = function (defs, recordView) {
+    var DynamicLogic = function (defs, recordView, twig) {
         this.defs = defs || {};
         this.recordView = recordView;
+        this.twig = twig;
 
         this.fieldTypeList = ['visible', 'required', 'readOnly'];
         this.panelTypeList = ['visible'];
@@ -53,10 +54,20 @@ Espo.define('dynamic-logic', [], function () {
                     if (!(type in item)) return;
                     if (!item[type]) return;
                     var typeItem = (item[type] || {});
-                    var conditionGroup = typeItem.conditionGroup;
-                    var conditionGroup = (item[type] || {}).conditionGroup;
-                    if (!typeItem.conditionGroup) return;
-                    var result = this.checkConditionGroup(typeItem.conditionGroup);
+
+                    if (!typeItem.type) return;
+
+                    var result = false;
+                    if (typeItem.type === 'basic' && typeItem.conditionGroup) {
+                        result = this.checkConditionGroup(typeItem.conditionGroup);
+                    } else if (typeItem.type === 'script' && typeItem.script) {
+                        var contents = 'false';
+                        try {
+                            contents = this.twig.twig({data: typeItem.script}).render({entity: this.recordView.model.attributes});
+                        } catch (error) {
+                        }
+                        result = ['true', '1'].includes(contents.trim());
+                    }
                     var methodName;
                     if (result) {
                         methodName = 'makeField' + Espo.Utils.upperCaseFirst(type) + 'True';
@@ -65,6 +76,11 @@ Espo.define('dynamic-logic', [], function () {
                     }
                     this[methodName](field);
                 }, this);
+            }, this);
+
+            var links = this.defs.links || {};
+            Object.keys(links).forEach(function (link) {
+                this.processLink(link);
             }, this);
 
             var panels = this.defs.panels || {};
@@ -92,14 +108,43 @@ Espo.define('dynamic-logic', [], function () {
             }, this);
         },
 
+        processLink: function (panel) {
+            const type = 'visible';
+
+            var links = this.defs.links || {};
+            var item = (links[panel] || {});
+
+            if (!(type in item)) return;
+
+            var typeItem = (item[type] || {});
+
+            var result = false;
+            if (typeItem.type === 'basic' && typeItem.conditionGroup) {
+                result = this.checkConditionGroup(typeItem.conditionGroup);
+            } else if (typeItem.type === 'script' && typeItem.script) {
+                var contents = 'false';
+                try {
+                    contents = this.twig.twig({data: typeItem.script}).render({entity: this.recordView.model.attributes});
+                } catch (error) {
+                }
+                result = ['true', '1'].includes(contents.trim());
+            }
+
+            var methodName;
+            if (result) {
+                methodName = 'makePanel' + Espo.Utils.upperCaseFirst(type) + 'True';
+            } else {
+                methodName = 'makePanel' + Espo.Utils.upperCaseFirst(type) + 'False';
+            }
+            this[methodName](panel);
+        },
+
         processPanel: function (panel, type) {
             var panels = this.defs.panels || {};
             var item = (panels[panel] || {});
 
             if (!(type in item)) return;
             var typeItem = (item[type] || {});
-            var conditionGroup = typeItem.conditionGroup;
-            var conditionGroup = (item[type] || {}).conditionGroup;
             if (!typeItem.conditionGroup) return;
             var result = this.checkConditionGroup(typeItem.conditionGroup);
             var methodName;

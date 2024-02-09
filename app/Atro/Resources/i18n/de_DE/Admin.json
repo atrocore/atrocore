@@ -1,5 +1,6 @@
 {
   "labels": {
+    "UiHandler": "UI-Handler",
     "Locale": "Gebietsschema",
     "multiLanguagesSettings": "Sprachen",
     "multiLanguages": "Sprachen",
@@ -178,6 +179,7 @@
     "rebuildDb": "Möchten Sie die Datenbankstruktur wirklich anpassen? Alle unbenutzten Spalten und Tabellen werden entfernt."
   },
   "descriptions": {
+    "uiHandler": "Verwalten Sie das Verhalten der Benutzeroberflächen basierend auf der Grundlage einer konfigurierbaren bedingten Logik.",
     "locale": "Verwalten Sie Gebietsschemaeinstellungen wie Sprache, Datums- und Uhrzeitformat, Dezimaltrennzeichen, Tausendertrennzeichen sowie gebietsschemaspezifische Maßeinheiten.",
     "multiLanguagesSettings": "Konfigurieren Sie die zu verwendenden Sprachen.",
     "composer": "Aktualisieren Sie das System und alle installierten Module, installieren oder entfernen Sie öffentlich oder privat verfügbare Module. Modulversionsabhängigkeit wird automatisch berücksichtigt.",

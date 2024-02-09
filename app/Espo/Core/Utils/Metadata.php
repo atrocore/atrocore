@@ -35,6 +35,9 @@ declare(strict_types=1);
 
 namespace Espo\Core\Utils;
 
+use Atro\Core\Container;
+use Atro\Repositories\UiHandler;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\DataManager;
 use Espo\Core\EventManager\Event;
 use Espo\Core\EventManager\Manager as EventManager;
@@ -42,30 +45,13 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\File\Unifier;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
 
-/**
- * Class Metadata
- */
 class Metadata
 {
-    /**
-     * @var File\Manager
-     */
-    private $fileManager;
-
-    /**
-     * @var ModuleManager
-     */
-    private $moduleManager;
-
-    /**
-     * @var EventManager
-     */
-    private $eventManager;
-
-    /**
-     * @var DataManager
-     */
-    private $dataManager;
+    private Container $container;
+    private File\Manager $fileManager;
+    private ModuleManager $moduleManager;
+    private EventManager $eventManager;
+    private DataManager $dataManager;
 
     /**
      * @var null|array
@@ -107,21 +93,13 @@ class Metadata
      */
     private $changedData = [];
 
-    /**
-     * Metadata constructor.
-     *
-     * @param File\Manager  $fileManager
-     * @param DataManager   $dataManager
-     * @param ModuleManager $moduleManager
-     * @param EventManager  $eventManager
-     */
-    public function __construct(File\Manager $fileManager, DataManager $dataManager, ModuleManager $moduleManager, EventManager $eventManager)
+    public function __construct(Container $container)
     {
-        $this->fileManager = $fileManager;
-
-        $this->dataManager = $dataManager;
-        $this->moduleManager = $moduleManager;
-        $this->eventManager = $eventManager;
+        $this->container = $container;
+        $this->fileManager = $container->get('fileManager');
+        $this->dataManager = $container->get('dataManager');
+        $this->moduleManager = $container->get('moduleManager');
+        $this->eventManager = $container->get('eventManager');
     }
 
     public function isCached(): bool
@@ -292,6 +270,8 @@ class Metadata
             $this->dataManager->setCacheData('metadata', $this->objData);
         }
 
+        $this->loadUiHandlers();
+
         $data = $this->getEventManager()->dispatch('Metadata', 'modify', new Event(['data' => $this->objData]))->getArgument('data');
         $data = $this->getEventManager()->dispatch('Metadata', 'afterInit', new Event(['data' => $data]))->getArgument('data');
 
@@ -302,6 +282,80 @@ class Metadata
 
         // clearing metadata
         $this->clearingMetadata();
+    }
+
+    protected function loadUiHandlers(): void
+    {
+        if (!$this->container->get('config')->get('isInstalled', false)) {
+            return;
+        }
+
+        // remove dynamic logic from data
+        foreach ($this->objData['clientDefs'] as $entity => $defs) {
+            if (isset($defs['dynamicLogic'])) {
+                unset($this->objData['clientDefs'][$entity]['dynamicLogic']);
+            }
+        }
+
+        $file = UiHandler::CACHE_FILE;
+        if (!file_exists($file)) {
+            $connection = $this->container->get('connection');
+            try {
+                $res = $connection->createQueryBuilder()
+                    ->select('t.*')
+                    ->from($connection->quoteIdentifier('ui_handler'), 't')
+                    ->where('t.deleted = :false')
+                    ->andWhere('t.is_active = :true')
+                    ->setParameter('true', true, ParameterType::BOOLEAN)
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->fetchAllAssociative();
+            } catch (\Throwable $e) {
+                $res = [];
+            }
+
+            $data = [];
+            foreach ($res as $v) {
+                switch ($v['type']) {
+                    case 'ui_read_only':
+                        $type = 'readOnly';
+                        break;
+                    case 'ui_visible':
+                        $type = 'visible';
+                        break;
+                    case 'ui_required':
+                        $type = 'required';
+                        break;
+                    default:
+                        continue 2;
+                }
+
+                $conditions = ['type' => $v['conditions_type']];
+                if ($v['conditions_type'] === 'basic') {
+                    $conditions = array_merge($conditions, @json_decode((string)$v['conditions'], true));
+                } else {
+                    $conditions['script'] = (string)$v['conditions'];
+                }
+
+                $fields = @json_decode((string)$v['fields'], true);
+                if (!empty($fields)) {
+                    foreach ($fields as $field) {
+                        $data['clientDefs'][$v['entity_type']]['dynamicLogic']['fields'][$field][$type] = $conditions;
+                    }
+                }
+
+                $links = @json_decode((string)$v['relationships'], true);
+                if (!empty($links)) {
+                    foreach ($links as $link) {
+                        $data['clientDefs'][$v['entity_type']]['dynamicLogic']['links'][$link][$type] = $conditions;
+                    }
+                }
+            }
+            file_put_contents($file, json_encode($data));
+        } else {
+            $data = json_decode(file_get_contents($file), true);
+        }
+
+        $this->objData = Util::merge($this->objData, $data);
     }
 
     protected function loadData()

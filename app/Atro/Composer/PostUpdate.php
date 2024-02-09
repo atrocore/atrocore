@@ -97,6 +97,9 @@ class PostUpdate
             // regenerate lists
             self::regenerateLists();
 
+            // regenerate ui handlers
+            self::regenerateUiHandlers();
+
             // refresh translations
             self::refreshTranslations();
 
@@ -623,6 +626,20 @@ class PostUpdate
 
         self::renderLine('Regenerating lists');
         exec(self::getPhpBin() . " index.php regenerate lists >/dev/null");
+    }
+
+    private static function regenerateUiHandlers()
+    {
+        if (!self::isInstalled()) {
+            return;
+        }
+
+        if (!self::isChanged()) {
+            return;
+        }
+
+        self::renderLine('Regenerating UI handlers');
+        exec(self::getPhpBin() . " index.php regenerate ui handlers >/dev/null");
     }
 
     private static function refreshTranslations()

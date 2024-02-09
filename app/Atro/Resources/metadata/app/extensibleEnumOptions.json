@@ -16,5 +16,26 @@
     "extensibleEnumId": "gender",
     "name": "Neutral",
     "sortOrder": 20
+  },
+  {
+    "id": "ui_visible",
+    "extensibleEnumId": "ui_handler_type",
+    "name": "Visible",
+    "code": "visible",
+    "sortOrder": 0
+  },
+  {
+    "id": "ui_required",
+    "extensibleEnumId": "ui_handler_type",
+    "name": "Required",
+    "code": "required",
+    "sortOrder": 10
+  },
+  {
+    "id": "ui_read_only",
+    "extensibleEnumId": "ui_handler_type",
+    "name": "Read-only",
+    "code": "readOnly",
+    "sortOrder": 20
   }
 ]

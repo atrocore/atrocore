@@ -1,0 +1,21 @@
+[
+  {
+    "name": "name",
+    "link": true
+  },
+  {
+    "name": "type"
+  },
+  {
+    "name": "entityType"
+  },
+  {
+    "name": "fields"
+  },
+  {
+    "name": "relationships"
+  },
+  {
+    "name": "isActive"
+  }
+]

@@ -135,70 +135,6 @@ class FieldManager extends Injectable
 
         $clientDefs = array();
 
-        if (array_key_exists('dynamicLogicVisible', $fieldDefs)) {
-            if (!is_null($fieldDefs['dynamicLogicVisible'])) {
-                $this->prepareClientDefsFieldsDynamicLogic($clientDefs, $name);
-                $clientDefs['dynamicLogic']['fields'][$name]['visible'] = $fieldDefs['dynamicLogicVisible'];
-                $metadataToBeSaved = true;
-                $clientDefsToBeSet = true;
-            } else {
-                if ($this->getMetadata()->get(['clientDefs', $scope, 'dynamicLogic', 'fields', $name, 'visible'])) {
-                    $this->prepareClientDefsFieldsDynamicLogic($clientDefs, $name);
-                    $clientDefs['dynamicLogic']['fields'][$name]['visible'] = null;
-                    $metadataToBeSaved = true;
-                    $clientDefsToBeSet = true;
-                }
-            }
-        }
-
-        if (array_key_exists('dynamicLogicReadOnly', $fieldDefs)) {
-            if (!is_null($fieldDefs['dynamicLogicReadOnly'])) {
-                $this->prepareClientDefsFieldsDynamicLogic($clientDefs, $name);
-                $clientDefs['dynamicLogic']['fields'][$name]['readOnly'] = $fieldDefs['dynamicLogicReadOnly'];
-                $metadataToBeSaved = true;
-                $clientDefsToBeSet = true;
-            } else {
-                if ($this->getMetadata()->get(['clientDefs', $scope, 'dynamicLogic', 'fields', $name, 'readOnly'])) {
-                    $this->prepareClientDefsFieldsDynamicLogic($clientDefs, $name);
-                    $clientDefs['dynamicLogic']['fields'][$name]['readOnly'] = null;
-                    $metadataToBeSaved = true;
-                    $clientDefsToBeSet = true;
-                }
-            }
-        }
-
-        if (array_key_exists('dynamicLogicRequired', $fieldDefs)) {
-            if (!is_null($fieldDefs['dynamicLogicRequired'])) {
-                $this->prepareClientDefsFieldsDynamicLogic($clientDefs, $name);
-                $clientDefs['dynamicLogic']['fields'][$name]['required'] = $fieldDefs['dynamicLogicRequired'];
-                $metadataToBeSaved = true;
-                $clientDefsToBeSet = true;
-            } else {
-                if ($this->getMetadata()->get(['clientDefs', $scope, 'dynamicLogic', 'fields', $name, 'required'])) {
-                    $this->prepareClientDefsFieldsDynamicLogic($clientDefs, $name);
-                    $clientDefs['dynamicLogic']['fields'][$name]['required'] = null;
-                    $metadataToBeSaved = true;
-                    $clientDefsToBeSet = true;
-                }
-            }
-        }
-
-        if (array_key_exists('dynamicLogicOptions', $fieldDefs)) {
-            if (!is_null($fieldDefs['dynamicLogicOptions'])) {
-                $this->prepareClientDefsOptionsDynamicLogic($clientDefs, $name);
-                $clientDefs['dynamicLogic']['options'][$name] = $fieldDefs['dynamicLogicOptions'];
-                $metadataToBeSaved = true;
-                $clientDefsToBeSet = true;
-            } else {
-                if ($this->getMetadata()->get(['clientDefs', $scope, 'dynamicLogic', 'options', $name])) {
-                    $this->prepareClientDefsOptionsDynamicLogic($clientDefs, $name);
-                    $clientDefs['dynamicLogic']['options'][$name] = null;
-                    $metadataToBeSaved = true;
-                    $clientDefsToBeSet = true;
-                }
-            }
-        }
-
         if ($clientDefsToBeSet) {
             $this->getMetadata()->set('clientDefs', $scope, $clientDefs);
         }
@@ -224,32 +160,6 @@ class FieldManager extends Injectable
         }
 
         return (bool)$result;
-    }
-
-    protected function prepareClientDefsFieldsDynamicLogic(&$clientDefs, $name)
-    {
-        if (!array_key_exists('dynamicLogic', $clientDefs)) {
-            $clientDefs['dynamicLogic'] = array();
-        }
-        if (!array_key_exists('fields', $clientDefs['dynamicLogic'])) {
-            $clientDefs['dynamicLogic']['fields'] = array();
-        }
-        if (!array_key_exists($name, $clientDefs['dynamicLogic']['fields'])) {
-            $clientDefs['dynamicLogic']['fields'][$name] = array();
-        }
-    }
-
-    protected function prepareClientDefsOptionsDynamicLogic(&$clientDefs, $name)
-    {
-        if (!array_key_exists('dynamicLogic', $clientDefs)) {
-            $clientDefs['dynamicLogic'] = array();
-        }
-        if (!array_key_exists('options', $clientDefs['dynamicLogic'])) {
-            $clientDefs['dynamicLogic']['options'] = array();
-        }
-        if (!array_key_exists($name, $clientDefs['dynamicLogic']['options'])) {
-            $clientDefs['dynamicLogic']['options'][$name] = array();
-        }
     }
 
     public function delete($scope, $name)

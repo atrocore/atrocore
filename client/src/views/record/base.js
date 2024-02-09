@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], function (Dep, ViewRecordHelper, DynamicLogic) {
+Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic', 'lib!Twig'], function (Dep, ViewRecordHelper, DynamicLogic) {
 
     return Dep.extend({
 
@@ -377,7 +377,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
             this.dynamicLogicDefs.fields = Espo.Utils.clone(this.dynamicLogicDefs.fields);
             this.dynamicLogicDefs.panels = Espo.Utils.clone(this.dynamicLogicDefs.panels);
 
-            this.dynamicLogic = new DynamicLogic(this.dynamicLogicDefs, this);
+            this.dynamicLogic = new DynamicLogic(this.dynamicLogicDefs, this, Twig);
 
             this.listenTo(this.model, 'change', this.processDynamicLogic, this);
             this.processDynamicLogic();

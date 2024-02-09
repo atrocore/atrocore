@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "UiHandler": "UI-Handler",
     "Action": "Aktion",
     "ExtensibleEnum": "Liste",
     "ExtensibleEnumOption": "Auswahloption",
@@ -38,6 +39,7 @@
     "AuthFailLogRecord": "Auth-Fehlerprotokoll Datensatz"
   },
   "scopeNamesPlural": {
+    "UiHandler": "UI-Handler",
     "Action": "Aktionen",
     "ExtensibleEnum": "Listen",
     "ExtensibleEnumOption": "Auswahloptionen",

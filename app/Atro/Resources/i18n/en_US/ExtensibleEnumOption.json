@@ -12,6 +12,7 @@
     "Create ExtensibleEnumOption": "Create List Option"
   },
   "exceptions": {
+    "extensibleEnumOptionIsSystem": "The List Option '%s' is required by the system.",
     "extensibleEnumOptionIsUsed": "The List Option '%s' is used by the field '%s' in the Entity '%s' for the Record '%s'."
   }
 }

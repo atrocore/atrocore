@@ -35,8 +35,8 @@ Espo.define('views/fields/entity-type', 'views/fields/enum', function (Dep) {
     return Dep.extend({
 
         checkAvailability: function (entityType) {
-            var defs = this.scopesMetadataDefs[entityType] || {};
-            if (defs.entity && defs.object) {
+            let defs = this.scopesMetadataDefs[entityType] || {};
+            if (defs.entity && defs.object && this.model.urlRoot !== entityType) {
                 return true;
             }
         },
@@ -48,7 +48,7 @@ Espo.define('views/fields/entity-type', 'views/fields/enum', function (Dep) {
                     return true;
                 }
             }.bind(this)).sort(function (v1, v2) {
-                 return this.translate(v1, 'scopeNames').localeCompare(this.translate(v2, 'scopeNames'));
+                return this.translate(v1, 'scopeNames').localeCompare(this.translate(v2, 'scopeNames'));
             }.bind(this));
             this.params.options.unshift('');
         },

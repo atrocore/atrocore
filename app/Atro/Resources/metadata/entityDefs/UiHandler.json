@@ -1,0 +1,87 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true
+    },
+    "isActive": {
+      "type": "bool"
+    },
+    "type": {
+      "type": "extensibleEnum",
+      "extensibleEnumId": "ui_handler_type",
+      "required": true,
+      "dropdown": true
+    },
+    "entityType": {
+      "type": "varchar",
+      "view": "views/fields/entity-type",
+      "required": true
+    },
+    "fields": {
+      "type": "array",
+      "view": "views/fields/entity-fields"
+    },
+    "relationships": {
+      "type": "array",
+      "view": "views/ui-handler/fields/entity-relationships"
+    },
+    "conditionsType": {
+      "type": "enum",
+      "required": true,
+      "optionsIds": [
+        "basic",
+        "script"
+      ],
+      "options": [
+        "basic",
+        "script"
+      ]
+    },
+    "conditions": {
+      "type": "wysiwyg",
+      "view": "views/fields/conditions-container"
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    }
+  },
+  "links": {
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    }
+  },
+  "collection": {
+    "sortBy": "createdAt",
+    "asc": true
+  },
+  "indexes": {
+    "createdAt": {
+      "columns": [
+        "createdAt",
+        "deleted"
+      ]
+    }
+  }
+}

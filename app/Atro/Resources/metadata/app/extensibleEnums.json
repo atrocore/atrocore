@@ -3,5 +3,10 @@
     "id": "gender",
     "name": "Gender",
     "multilingual": false
+  },
+  {
+    "id": "ui_handler_type",
+    "name": "UI Handler Type",
+    "multilingual": false
   }
 ]

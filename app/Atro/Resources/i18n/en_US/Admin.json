@@ -1,5 +1,6 @@
 {
   "labels": {
+    "UiHandler": "UI Handlers",
     "multiLanguagesSettings": "Languages",
     "multiLanguages": "Languages",
     "Composer": "Modules",
@@ -195,6 +196,7 @@
     "rebuildDb": "Are you sure you want to rebuild the database structure? All unused columns and tables will be removed."
   },
   "descriptions": {
+    "uiHandler": "Manage the behavior of the user interface based on configurable conditional logic.",
     "locale": "Manage locale settings such as language, date and time format, decimal separator, thousand separator, as well as locale-specific measure units.",
     "multiLanguagesSettings": "Configure languages to be used.",
     "composer": "Update the system and all installed modules, install or remove publicly or privately available modules. Module version dependency is automatically considered.",
