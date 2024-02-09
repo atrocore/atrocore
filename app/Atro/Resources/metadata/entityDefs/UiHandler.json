@@ -25,7 +25,7 @@
     },
     "relationships": {
       "type": "array",
-      "view": "views/fields/entity-relationships"
+      "view": "views/ui-handler/fields/entity-relationships"
     },
     "conditionsType": {
       "type": "enum",
