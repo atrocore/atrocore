@@ -4,6 +4,7 @@
     "type": "Тип",
     "entityType": "Сутність",
     "fields": "Поля",
+    "relationships": "Панелі зв'язків",
     "conditionsType": "Тип умови",
     "conditions": "Умови"
   },

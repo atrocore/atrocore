@@ -4,6 +4,7 @@
     "type": "Type",
     "entityType": "Entity",
     "fields": "Fields",
+    "relationships": "Relation panels",
     "conditionsType": "Conditions Type",
     "conditions": "Conditions"
   },
