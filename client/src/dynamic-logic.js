@@ -78,6 +78,11 @@ Espo.define('dynamic-logic', [], function () {
                 }, this);
             }, this);
 
+            var links = this.defs.links || {};
+            Object.keys(links).forEach(function (link) {
+                this.processLink(link);
+            }, this);
+
             var panels = this.defs.panels || {};
             Object.keys(panels).forEach(function (panel) {
                 this.panelTypeList.forEach(function (type) {
@@ -103,14 +108,43 @@ Espo.define('dynamic-logic', [], function () {
             }, this);
         },
 
+        processLink: function (panel) {
+            const type = 'visible';
+
+            var links = this.defs.links || {};
+            var item = (links[panel] || {});
+
+            if (!(type in item)) return;
+
+            var typeItem = (item[type] || {});
+
+            var result = false;
+            if (typeItem.type === 'basic' && typeItem.conditionGroup) {
+                result = this.checkConditionGroup(typeItem.conditionGroup);
+            } else if (typeItem.type === 'script' && typeItem.script) {
+                var contents = 'false';
+                try {
+                    contents = this.twig.twig({data: typeItem.script}).render({entity: this.recordView.model.attributes});
+                } catch (error) {
+                }
+                result = ['true', '1'].includes(contents.trim());
+            }
+
+            var methodName;
+            if (result) {
+                methodName = 'makePanel' + Espo.Utils.upperCaseFirst(type) + 'True';
+            } else {
+                methodName = 'makePanel' + Espo.Utils.upperCaseFirst(type) + 'False';
+            }
+            this[methodName](panel);
+        },
+
         processPanel: function (panel, type) {
             var panels = this.defs.panels || {};
             var item = (panels[panel] || {});
 
             if (!(type in item)) return;
             var typeItem = (item[type] || {});
-            var conditionGroup = typeItem.conditionGroup;
-            var conditionGroup = (item[type] || {}).conditionGroup;
             if (!typeItem.conditionGroup) return;
             var result = this.checkConditionGroup(typeItem.conditionGroup);
             var methodName;
