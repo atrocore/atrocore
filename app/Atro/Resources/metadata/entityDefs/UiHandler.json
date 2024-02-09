@@ -21,8 +21,11 @@
     },
     "fields": {
       "type": "array",
-      "view": "views/fields/entity-fields",
-      "required": true
+      "view": "views/fields/entity-fields"
+    },
+    "relationships": {
+      "type": "array",
+      "view": "views/fields/entity-relationships"
     },
     "conditionsType": {
       "type": "enum",

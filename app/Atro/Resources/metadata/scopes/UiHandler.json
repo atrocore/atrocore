@@ -3,10 +3,10 @@
   "importable": true,
   "layouts": false,
   "tab": true,
-  "acl": true,
+  "acl": false,
   "customizable": false,
   "disabled": false,
   "type": "Base",
   "object": true,
-  "hasActive": true
+  "isActiveUnavailable": true
 }

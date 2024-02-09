@@ -1,5 +1,6 @@
 {
   "fields": {
+    "isActive": "Активний",
     "type": "Тип",
     "entityType": "Сутність",
     "fields": "Поля",

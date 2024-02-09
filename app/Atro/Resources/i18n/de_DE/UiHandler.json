@@ -1,5 +1,6 @@
 {
   "fields": {
+    "isActive": "Aktiv",
     "type": "Typ",
     "entityType": "Entität",
     "fields": "Felder",

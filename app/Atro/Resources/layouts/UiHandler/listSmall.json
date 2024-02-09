@@ -13,6 +13,9 @@
     "name": "fields"
   },
   {
+    "name": "relationships"
+  },
+  {
     "name": "isActive"
   }
 ]

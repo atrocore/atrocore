@@ -21,8 +21,14 @@
         {
           "name": "entityType"
         },
+        false
+      ],
+      [
         {
           "name": "fields"
+        },
+        {
+          "name": "relationships"
         }
       ],
       [

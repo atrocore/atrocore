@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/fields/entity-fields', ['views/fields/multi-enum', 'views/fields/entity-field'], (Dep, Field) => {
+Espo.define('views/fields/entity-relationships', ['views/fields/multi-enum', 'views/fields/entity-field'], (Dep, Field) => {
 
     return Dep.extend({
 
@@ -49,10 +49,23 @@ Espo.define('views/fields/entity-fields', ['views/fields/multi-enum', 'views/fie
             this.params.options = [];
             this.translatedOptions = {};
 
-            $.each((Field.prototype.getEntityFields.call(this) || []), field => {
+            $.each((this.getEntityLinks() || []), field => {
                 this.params.options.push(field);
-                this.translatedOptions[field] = this.translate(field, 'fields', this.getEntityType());
+                this.translatedOptions[field] = this.translate(field, 'links', this.getEntityType());
             });
+        },
+
+        getEntityLinks() {
+            let entity = this.getEntityType();
+            let result = {};
+            if (entity) {
+                let links = this.getMetadata().get(['entityDefs', entity, 'links']) || {};
+                Object.keys(links).forEach(name => {
+                    result[name] = links[name];
+                });
+            }
+
+            return result;
         },
 
         getEntityType() {
