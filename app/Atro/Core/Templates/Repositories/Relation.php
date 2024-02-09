@@ -366,7 +366,9 @@ class Relation extends RDB
 
                             $relEntity = $entity->get($link);
                             if ($relEntity) {
-                                $this->getEntityManager()->saveEntity($relEntity);
+                                try {
+                                    $this->getEntityManager()->saveEntity($relEntity);
+                                } catch (\Throwable $e) {}
                             }
                         }
                     }
