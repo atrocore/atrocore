@@ -290,6 +290,13 @@ class Metadata
             return;
         }
 
+        // remove dynamic logic from data
+        foreach ($this->objData['clientDefs'] as $entity => $defs) {
+            if (isset($defs['dynamicLogic'])) {
+                unset($this->objData['clientDefs'][$entity]['dynamicLogic']);
+            }
+        }
+
         $file = UiHandler::CACHE_FILE;
         if (!file_exists($file)) {
             $connection = $this->container->get('connection');
