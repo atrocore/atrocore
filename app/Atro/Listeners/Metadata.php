@@ -65,8 +65,6 @@ class Metadata extends AbstractListener
 
         $this->prepareExtensibleEnum($data);
 
-        $this->pushUiHandlers($data);
-
         $event->setArgument('data', $data);
     }
 
@@ -100,71 +98,6 @@ class Metadata extends AbstractListener
                             $data['entityDefs'][$entityType]['fields'][$field]['view'] = 'views/fields/extensible-enum-dropdown';
                         }
                     }
-                }
-            }
-        }
-    }
-
-    protected function pushUiHandlers(array &$data): void
-    {
-        if (!$this->getConfig()->get('isInstalled', false) || !empty($this->getMemoryStorage()->get('ignorePushUiHandler'))) {
-            return;
-        }
-
-        $dataManager = $this->getContainer()->get('dataManager');
-
-        $res = $dataManager->getCacheData('ui_handler');
-        if ($res === null) {
-            $connection = $this->getEntityManager()->getConnection();
-            try {
-                $res = $connection->createQueryBuilder()
-                    ->select('t.*')
-                    ->from($connection->quoteIdentifier('ui_handler'), 't')
-                    ->where('t.deleted = :false')
-                    ->andWhere('t.is_active = :true')
-                    ->setParameter('true', true, ParameterType::BOOLEAN)
-                    ->setParameter('false', false, ParameterType::BOOLEAN)
-                    ->fetchAllAssociative();
-            } catch (\Throwable $e) {
-                $res = [];
-            }
-
-            $dataManager->setCacheData('ui_handler', $res);
-        }
-
-        foreach ($res as $v) {
-            switch ($v['type']) {
-                case 'ui_read_only':
-                    $type = 'readOnly';
-                    break;
-                case 'ui_visible':
-                    $type = 'visible';
-                    break;
-                case 'ui_required':
-                    $type = 'required';
-                    break;
-                default:
-                    continue 2;
-            }
-
-            $conditions = ['type' => $v['conditions_type']];
-            if ($v['conditions_type'] === 'basic') {
-                $conditions = array_merge($conditions, @json_decode((string)$v['conditions'], true));
-            } else {
-                $conditions['script'] = (string)$v['conditions'];
-            }
-
-            $fields = @json_decode((string)$v['fields'], true);
-            if (!empty($fields)) {
-                foreach ($fields as $field) {
-                    $data['clientDefs'][$v['entity_type']]['dynamicLogic']['fields'][$field][$type] = $conditions;
-                }
-            }
-
-            $links = @json_decode((string)$v['relationships'], true);
-            if (!empty($links)) {
-                foreach ($links as $link) {
-                    $data['clientDefs'][$v['entity_type']]['dynamicLogic']['links'][$link][$type] = $conditions;
                 }
             }
         }

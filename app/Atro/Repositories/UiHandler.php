@@ -20,6 +20,8 @@ use Espo\ORM\Entity;
 
 class UiHandler extends Base
 {
+    public const CACHE_FILE = DataManager::CACHE_DIR_PATH . '/ui_handler.json';
+
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if (!$entity->isNew()) {
@@ -66,7 +68,7 @@ class UiHandler extends Base
     public function deleteCacheFile(): void
     {
         if (empty($this->getMemoryStorage()->get('importJobId'))) {
-            $file = DataManager::CACHE_DIR_PATH . '/ui_handler.json';
+            $file = self::CACHE_FILE;
             if (file_exists($file)) {
                 unlink($file);
             }

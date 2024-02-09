@@ -42,6 +42,6 @@ class Metadata implements Factory
 {
     public function create(Container $container)
     {
-        return new \Espo\Core\Utils\Metadata($container->get('fileManager'), $container->get('dataManager'), $container->get('moduleManager'), $container->get('eventManager'));
+        return new \Espo\Core\Utils\Metadata($container);
     }
 }
