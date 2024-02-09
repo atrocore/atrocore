@@ -144,7 +144,7 @@ class Stream extends \Espo\Core\Services\Base
 
         foreach ($userIdList as $i => $userId) {
             $user = $this->getEntityManager()->getEntity('User', $userId);
-            if (!$user){
+            if (!$user) {
                 continue;
             }
             if (!$this->getAclManager()->check($user, $entity, 'stream')) {
@@ -168,7 +168,7 @@ class Stream extends \Espo\Core\Services\Base
 
         $noteList = $this->getEntityManager()->getRepository('Note')->where(array(
             'parentType' => $entityType,
-            'parentId' => $entityId
+            'parentId'   => $entityId
         ))->order('number', 'ASC')->find();
 
         foreach ($noteList as $note) {
@@ -318,10 +318,10 @@ class Stream extends \Espo\Core\Services\Base
         }
 
         $selectParams = [
-            'offset' => $params['offset'],
-            'limit' => $params['maxSize'],
+            'offset'  => $params['offset'],
+            'limit'   => $params['maxSize'],
             'orderBy' => $params['orderBy'],
-            'order' => 'DESC'
+            'order'   => 'DESC'
         ];
 
         if ($scope == 'User' && $id == null) {
@@ -331,11 +331,11 @@ class Stream extends \Espo\Core\Services\Base
                 'OR' => [
                     [
                         'parentType' => $scope,
-                        'parentId' => $id
+                        'parentId'   => $id
                     ],
                     [
                         'superParentType' => $scope,
-                        'superParentId' => $id
+                        'superParentId'   => $id
                     ]
                 ]
             ];
@@ -348,30 +348,30 @@ class Stream extends \Espo\Core\Services\Base
                 'OR' => [
                     'OR' => [
                         [
-                            'relatedId!=' => null,
+                            'relatedId!='   => null,
                             'relatedType!=' => array_merge($onlyTeamEntityTypeList, $onlyOwnEntityTypeList)
                         ],
                         [
-                            'relatedId=' => null,
-                            'superParentId' => $id,
+                            'relatedId='      => null,
+                            'superParentId'   => $id,
                             'superParentType' => $scope,
-                            'parentId!=' => null,
-                            'parentType!=' => array_merge($onlyTeamEntityTypeList, $onlyOwnEntityTypeList)
+                            'parentId!='      => null,
+                            'parentType!='    => array_merge($onlyTeamEntityTypeList, $onlyOwnEntityTypeList)
                         ],
                         [
-                            'relatedId=' => null,
+                            'relatedId='  => null,
                             'parentType=' => $scope,
-                            'parentId=' => $id
+                            'parentId='   => $id
                         ]
                     ],
                     [
                         'OR' => [
                             [
-                                'relatedId!=' => null,
+                                'relatedId!='  => null,
                                 'relatedType=' => $onlyTeamEntityTypeList
                             ],
                             [
-                                'relatedId=' => null,
+                                'relatedId='  => null,
                                 'parentType=' => $onlyTeamEntityTypeList
                             ]
                         ],
@@ -383,13 +383,13 @@ class Stream extends \Espo\Core\Services\Base
                         ]
                     ],
                     [
-                        'OR' => [
+                        'OR'                 => [
                             [
-                                'relatedId!=' => null,
+                                'relatedId!='  => null,
                                 'relatedType=' => $onlyOwnEntityTypeList
                             ],
                             [
-                                'relatedId=' => null,
+                                'relatedId='  => null,
                                 'parentType=' => $onlyOwnEntityTypeList
                             ]
                         ],
@@ -426,13 +426,13 @@ class Stream extends \Espo\Core\Services\Base
         if (!empty($ignoreScopeList)) {
             $where[] = [
                 'OR' => [
-                    'relatedType' => null,
+                    'relatedType'   => null,
                     'relatedType!=' => $ignoreScopeList
                 ]
             ];
             $where[] = [
                 'OR' => [
-                    'parentType' => null,
+                    'parentType'   => null,
                     'parentType!=' => $ignoreScopeList
                 ]
             ];
@@ -488,7 +488,7 @@ class Stream extends \Espo\Core\Services\Base
         $count = $this->getEntityManager()->getRepository('Note')->count($selectParams);
 
         return array(
-            'total' => $count,
+            'total'      => $count,
             'collection' => $collection,
         );
     }
@@ -594,6 +594,24 @@ class Stream extends \Espo\Core\Services\Base
                                 $data->attributes->became->{$field} = $values;
                             }
                             break;
+                        case 'measure':
+                            if (empty($fieldDefs['measureId'])) {
+                                break;
+                            }
+                            if (!empty($data->attributes->was->{$field})) {
+                                $unit = $this->getEntityManager()->getEntity('Unit', $data->attributes->was->{$field});
+                                if (!empty($unit)) {
+                                    $data->attributes->was->{$field . 'Name'} = $unit->get('name');
+                                }
+                            }
+
+                            if (!empty($data->attributes->became->{$field})) {
+                                $unit = $this->getEntityManager()->getEntity('Unit', $data->attributes->became->{$field});
+                                if (!empty($unit)) {
+                                    $data->attributes->became->{$field . 'Name'} = $unit->get('name');
+                                }
+                            }
+                            break;
                         case 'extensibleEnum':
                             if (empty($fieldDefs['extensibleEnumId'])) {
                                 break;
@@ -629,7 +647,7 @@ class Stream extends \Espo\Core\Services\Base
                                 }
                                 $options = $repository->getPreparedOptions($fieldDefs['extensibleEnumId'], $wasIds);
                                 if (isset($options[0])) {
-                                    $data->attributes->was->{$field . 'Names'} =  array_column($options, 'name', 'id');
+                                    $data->attributes->was->{$field . 'Names'} = array_column($options, 'name', 'id');
                                     $data->attributes->was->{$field . 'OptionsData'} = $options;
                                 }
                             }
@@ -753,7 +771,7 @@ class Stream extends \Espo\Core\Services\Base
         $note->set('parentType', $parentType);
         $note->set([
             'relatedType' => $entityType,
-            'relatedId' => $entity->id
+            'relatedId'   => $entity->id
         ]);
 
         $this->processNoteTeamsUsers($note, $entity);
@@ -839,9 +857,9 @@ class Stream extends \Espo\Core\Services\Base
             $note->set('parentType', $entity->getEntityType());
 
             $note->set('data', [
-                'fields' => $updatedFieldList,
+                'fields'     => $updatedFieldList,
                 'attributes' => [
-                    'was' => $was,
+                    'was'    => $was,
                     'became' => $became
                 ]
             ]);

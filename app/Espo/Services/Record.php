@@ -2635,6 +2635,19 @@ class Record extends Base
                         }
                     }
                     break;
+                case 'measure':
+                    $measureId = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $name, 'measureId']);
+                    $unitEntity = null;
+                    foreach ($this->getMeasureUnits($measureId) as $unit) {
+                        if ($unit->get('id') === $entity->get($name)) {
+                            $unitEntity = $unit;
+                            break;
+                        }
+                    }
+                    if (!empty($unitEntity)) {
+                        $entity->set($name . 'Name', $unitEntity->get('name'));
+                    }
+                    break;
                 case 'extensibleEnum':
                     $extensibleEnumId = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $name, 'extensibleEnumId']);
                     $option = $this->getEntityManager()->getRepository('ExtensibleEnumOption')->getPreparedOption($extensibleEnumId, $entity->get($name));
@@ -3043,7 +3056,7 @@ class Record extends Base
                         $attributeList[] = $fieldDefs['multilangField'];
                     }
 
-                    if (!empty($fieldDefs['measureId'])) {
+                    if (!empty($fieldDefs['measureId']) && !empty($fieldDefs['type']) && in_array($fieldDefs['type'], ['int', 'float', 'varchar'])) {
                         $attributeName = $fieldDefs['mainField'] ?? $attribute;
                         $attributeList[] = $attributeName;
                         $attributeList[] = $attributeName . 'UnitId';

@@ -114,7 +114,8 @@
     "jsonArray": "JSON array",
     "jsonObject": "JSON object",
     "language": "Language",
-    "multiLanguage": "Languages"
+    "multiLanguage": "Languages",
+    "measure": "Measure"
   },
   "fields": {
     "script": "Script",

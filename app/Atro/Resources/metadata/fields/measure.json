@@ -1,0 +1,55 @@
+{
+  "params": [
+    {
+      "name": "required",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "audited",
+      "type": "bool"
+    },
+    {
+      "name": "readOnly",
+      "type": "bool"
+    },
+    {
+      "name": "prohibitedEmptyValue",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "measure",
+      "required": true,
+      "entity": "Measure",
+      "type": "link",
+      "view": "views/admin/field-manager/fields/link/measure"
+    },
+    {
+      "name": "default",
+      "type": "varchar",
+      "view": "views/admin/field-manager/fields/default-unit"
+    }
+  ],
+  "filter": true,
+  "fieldDefs": {
+    "type": "varchar"
+  },
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "notStorable": true,
+      "readOnly": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true,
+      "emHidden": true
+    }
+  },
+  "view": "views/fields/measure"
+}

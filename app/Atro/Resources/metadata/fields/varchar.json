@@ -8,7 +8,8 @@
     {
       "name": "measure",
       "type": "link",
-      "entity": "Measure"
+      "entity": "Measure",
+      "view": "views/admin/field-manager/fields/link/measure"
     },
     {
       "name": "default",
