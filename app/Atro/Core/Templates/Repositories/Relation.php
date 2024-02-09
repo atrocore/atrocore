@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core\Templates\Repositories;
 
+use Atro\Core\Exceptions\NotUnique;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\Exceptions\BadRequest;
@@ -366,7 +367,9 @@ class Relation extends RDB
 
                             $relEntity = $entity->get($link);
                             if ($relEntity) {
-                                $this->getEntityManager()->saveEntity($relEntity);
+                                try {
+                                    $this->getEntityManager()->saveEntity($relEntity);
+                                } catch (NotUnique $e) {}
                             }
                         }
                     }
