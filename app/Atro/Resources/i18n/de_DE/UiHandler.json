@@ -5,8 +5,8 @@
     "entityType": "Entität",
     "fields": "Felder",
     "relationships": "Relations-Paneele",
-    "conditionsType": "Bedingungen Typ",
-    "conditions": "Bedingungen"
+    "conditionsType": "Konditionstyp",
+    "conditions": "Konditionen"
   },
   "options": {
     "conditionsType": {
