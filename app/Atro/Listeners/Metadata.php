@@ -154,8 +154,11 @@ class Metadata extends AbstractListener
                 $conditions['script'] = (string)$v['conditions'];
             }
 
-            foreach (@json_decode((string)$v['fields'], true) as $field) {
-                $data['clientDefs'][$v['entity_type']]['dynamicLogic']['fields'][$field][$type] = $conditions;
+            $fields = @json_decode((string)$v['fields'], true);
+            if (!empty($fields)) {
+                foreach ($fields as $field) {
+                    $data['clientDefs'][$v['entity_type']]['dynamicLogic']['fields'][$field][$type] = $conditions;
+                }
             }
         }
     }
