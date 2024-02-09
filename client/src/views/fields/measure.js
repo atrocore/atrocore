@@ -55,7 +55,7 @@ Espo.define('views/fields/measure', 'views/fields/link', (Dep) => {
         getMeasureId() {
             let measureId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'measureId']);
             if (this.params.measureId) {
-                measureId = this.measureId.measureId;
+                measureId = this.params.measureId;
             }
 
             return measureId;
