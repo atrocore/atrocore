@@ -160,6 +160,13 @@ class Metadata extends AbstractListener
                     $data['clientDefs'][$v['entity_type']]['dynamicLogic']['fields'][$field][$type] = $conditions;
                 }
             }
+
+            $links = @json_decode((string)$v['relationships'], true);
+            if (!empty($links)) {
+                foreach ($links as $link) {
+                    $data['clientDefs'][$v['entity_type']]['dynamicLogic']['links'][$link][$type] = $conditions;
+                }
+            }
         }
     }
 

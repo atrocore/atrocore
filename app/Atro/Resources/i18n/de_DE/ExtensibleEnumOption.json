@@ -12,7 +12,7 @@
     "Create ExtensibleEnumOption": "Auswahloption erstellen"
   },
   "exceptions": {
-    "extensibleEnumOptionIsSystem": "Die Auswahloption '%s' wird vom System verwendet.",
+    "extensibleEnumOptionIsSystem": "Die Auswahloption '%s' ist für das System erforderlich.",
     "extensibleEnumOptionIsUsed": "Die Auswahloption '%s' wird im Feld '%s' aus der Entität '%s' für den Datensatz '%s' verwendet."
   }
 }

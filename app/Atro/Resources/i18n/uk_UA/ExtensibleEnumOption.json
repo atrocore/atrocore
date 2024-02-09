@@ -12,7 +12,7 @@
     "Create ExtensibleEnumOption": "Створити опцію списку"
   },
   "exceptions": {
-    "extensibleEnumOptionIsSystem": "Опція списку '%s' використовується системою.",
+    "extensibleEnumOptionIsSystem": "Опція списку '%s' вимагається системою.",
     "extensibleEnumOptionIsUsed": "Опція списку '%s' використовується полем '%s' в сутності '%s' для запису '%s'."
   }
 }
