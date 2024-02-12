@@ -63,5 +63,15 @@
     "path": "client/lib/twig.min.js",
     "exportsTo": "$",
     "exportsAs": "twig"
+  },
+  "Extendext": {
+    "path": "client/lib/jquery-extendext.min.js",
+    "exportsTo": "$",
+    "exportsAs": "extendext"
+  },
+  "QueryBuilder": {
+    "path": "client/lib/query-builder.min.js",
+    "exportsTo": "$",
+    "exportsAs": "queryBuilder"
   }
 }
