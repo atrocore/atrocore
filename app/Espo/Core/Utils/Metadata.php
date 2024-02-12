@@ -290,6 +290,10 @@ class Metadata
             return;
         }
 
+        if (!empty($this->container->get('memoryStorage')->get('ignorePushUiHandler'))){
+            return;
+        }
+
         // remove dynamic logic from data
         foreach ($this->objData['clientDefs'] as $entity => $defs) {
             if (isset($defs['dynamicLogic'])) {
