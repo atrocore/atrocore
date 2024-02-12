@@ -47,7 +47,7 @@ class RegenerateExtensibleEnums extends AbstractConsole
             try {
                 $em->saveEntity($extensibleEnum);
             } catch (\Throwable $e) {
-                // ignore all
+                $GLOBALS['log']->error("ExtensibleEnum generation failed: {$e->getMessage()}");
             }
         }
 
@@ -63,7 +63,7 @@ class RegenerateExtensibleEnums extends AbstractConsole
             try {
                 $em->saveEntity($extensibleEnumOption);
             } catch (\Throwable $e) {
-                // ignore all
+                $GLOBALS['log']->error("ExtensibleEnumOption generation failed: {$e->getMessage()}");
             }
         }
     }
