@@ -297,13 +297,13 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
             return this.searchParams.typeFront || this.searchParams.type;
         },
 
-        getQueryBuilderFilterData(scope) {
-            return {
-                id: this.name,
-                label: this.getLanguage().translate(this.name, 'fields', scope),
-                type: 'integer'
-            };
-        },
+        // getQueryBuilderFilterData(scope) {
+        //     return {
+        //         id: this.name,
+        //         label: this.getLanguage().translate(this.name, 'fields', scope),
+        //         type: 'integer'
+        //     };
+        // },
 
     });
 });

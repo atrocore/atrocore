@@ -125,13 +125,13 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
             return value;
         },
 
-        getQueryBuilderFilterData(scope) {
-            return {
-                id: this.name,
-                label: this.getLanguage().translate(this.name, 'fields', scope),
-                type: 'double'
-            };
-        },
+        // getQueryBuilderFilterData(scope) {
+        //     return {
+        //         id: this.name,
+        //         label: this.getLanguage().translate(this.name, 'fields', scope),
+        //         type: 'double'
+        //     };
+        // },
 
     });
 });

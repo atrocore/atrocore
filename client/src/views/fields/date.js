@@ -373,13 +373,13 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
             }
         },
 
-        getQueryBuilderFilterData(scope) {
-            return {
-                id: this.name,
-                label: this.getLanguage().translate(this.name, 'fields', scope),
-                type: 'date'
-            };
-        },
+        // getQueryBuilderFilterData(scope) {
+        //     return {
+        //         id: this.name,
+        //         label: this.getLanguage().translate(this.name, 'fields', scope),
+        //         type: 'date'
+        //     };
+        // },
     });
 });
 
