@@ -272,12 +272,8 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
                 operators: [
                     'contains',
                     'not_contains',
-                    'begins_with',
-                    'ends_with',
                     'equal',
                     'not_equal',
-                    'is_empty',
-                    'is_not_empty',
                     'is_null',
                     'is_not_null'
                 ]
