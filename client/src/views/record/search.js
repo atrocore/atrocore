@@ -684,32 +684,35 @@ Espo.define('views/record/search', ['view', 'lib!Extendext', 'lib!QueryBuilder']
                 return;
             }
 
-            let filters = [
-            ];
-
+            let filters = [];
+            let promiseList = [];
             $.each(this.getMetadata().get(['entityDefs', this.collection.name, 'fields']), (field, fieldDefs) => {
                 if (fieldDefs.filterDisabled) {
                     return;
                 }
-                let qbFilterType = this.getMetadata().get(['fields', fieldDefs.type, 'qbFilterType']);
-                if (qbFilterType) {
-                    filters.push({
-                        id: field,
-                        label: this.getLanguage().translate(field, 'fields', this.collection.name),
-                        type: qbFilterType
+
+                const fieldType = Espo.Utils.camelCaseToHyphen(fieldDefs.type);
+                const view = this.getMetadata().get(['fields', fieldType, 'view'], `views/fields/${fieldType}`);
+
+                promiseList.push(new Promise(resolve => {
+                    this.createView(field, view, {name: field, model: this.model}, view => {
+                        let filterData = view.getQueryBuilderFilterData(this.collection.name);
+                        if (filterData) {
+                            filters.push(filterData);
+                        }
+                        resolve();
                     });
-                }
-                // console.log(fieldDefs);
+                }));
             });
 
-            console.log(filters);
-
-            if (filters.length > 0) {
-                this.$el.find('.query-builder').queryBuilder({
-                    rules: null,
-                    filters: filters
-                });
-            }
+            Promise.all(promiseList).then(() => {
+                if (filters.length > 0) {
+                    this.$el.find('.query-builder').queryBuilder({
+                        rules: null,
+                        filters: filters
+                    });
+                }
+            });
         },
 
         getTextFilterPlaceholder() {

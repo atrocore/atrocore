@@ -906,6 +906,11 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         disable() {
             this.$el.find(`[name="${this.name}"]`).prop('disabled', true)
-        }
+        },
+
+        getQueryBuilderFilterData(scope) {
+            return null;
+        },
+
     });
 });

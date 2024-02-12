@@ -261,7 +261,15 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
             }
 
             return null;
-        }
+        },
+
+        getQueryBuilderFilterData(scope) {
+            return {
+                id: this.name,
+                label: this.getLanguage().translate(this.name, 'fields', scope),
+                type: 'string'
+            };
+        },
 
     });
 });
