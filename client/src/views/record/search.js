@@ -707,6 +707,10 @@ Espo.define('views/record/search', ['view', 'lib!Extendext', 'lib!QueryBuilder']
 
             Promise.all(promiseList).then(() => {
                 if (filters.length > 0) {
+                    // set translates
+                    $.fn.queryBuilder.regional['main'] = this.getLanguage().data.Global.queryBuilderFilter;
+                    $.fn.queryBuilder.defaults({lang_code: 'main'});
+                    // init
                     this.$el.find('.query-builder').queryBuilder({
                         rules: null,
                         filters: filters
