@@ -203,6 +203,14 @@ Espo.define('views/fields/datetime', 'views/fields/date', function (Dep) {
             return data;
         },
 
+        getQueryBuilderFilterData(scope) {
+            return {
+                id: this.name,
+                label: this.getLanguage().translate(this.name, 'fields', scope),
+                type: 'datetime'
+            };
+        },
+
     });
 });
 

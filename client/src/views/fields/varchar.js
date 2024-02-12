@@ -267,7 +267,8 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
             return {
                 id: this.name,
                 label: this.getLanguage().translate(this.name, 'fields', scope),
-                type: 'string'
+                type: 'string',
+                input: 'text'
             };
         },
 

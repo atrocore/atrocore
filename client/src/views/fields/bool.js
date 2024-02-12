@@ -72,7 +72,16 @@ Espo.define('views/fields/bool', 'views/fields/base', function (Dep) {
 
         populateSearchDefaults: function () {
             this.$element.get(0).checked = true;
-        }
+        },
+
+        getQueryBuilderFilterData(scope) {
+            return {
+                id: this.name,
+                label: this.getLanguage().translate(this.name, 'fields', scope),
+                type: 'bool'
+            };
+        },
+
     });
 });
 

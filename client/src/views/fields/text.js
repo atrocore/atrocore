@@ -311,7 +311,16 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
 
         getSearchType: function () {
             return this.getSearchParamsData().type || this.searchParams.typeFront || this.searchParams.type;
-        }
+        },
+
+        getQueryBuilderFilterData(scope) {
+            return {
+                id: this.name,
+                label: this.getLanguage().translate(this.name, 'fields', scope),
+                type: 'string',
+                input: 'textarea'
+            };
+        },
 
     });
 });
