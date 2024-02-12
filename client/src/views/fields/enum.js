@@ -493,7 +493,28 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
 
         getSearchType: function () {
             return this.getSearchParamsData().type || 'anyOf';
-        }
+        },
+
+        getQueryBuilderFilterData(scope) {
+            let values = [];
+            (this.params.options || []).forEach(option => {
+                if (option !== '') {
+                    values.push({
+                        value: option,
+                        label: option
+                    });
+                }
+            });
+
+            return {
+                id: this.name,
+                label: this.getLanguage().translate(this.name, 'fields', scope),
+                type: 'string',
+                input: 'select',
+                values: values,
+                operators: ['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null']
+            };
+        },
 
     });
 });

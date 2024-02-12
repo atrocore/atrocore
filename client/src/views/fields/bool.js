@@ -78,7 +78,18 @@ Espo.define('views/fields/bool', 'views/fields/base', function (Dep) {
             return {
                 id: this.name,
                 label: this.getLanguage().translate(this.name, 'fields', scope),
-                type: 'bool'
+                type: 'boolean',
+                input: 'radio',
+                values: [
+                    {
+                        value: false,
+                        label: this.getLanguage().translate('No')
+                    },
+                    {
+                        value: true,
+                        label: this.getLanguage().translate('Yes')
+                    }
+                ]
             };
         },
 
