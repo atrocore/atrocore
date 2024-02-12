@@ -367,6 +367,8 @@ class Base
 
     public function convertWhere(array $where, $ignoreAdditionaFilterTypes = false, &$result = null)
     {
+        $this->mutateWhereQuery($where);
+
         $whereClause = [];
 
         $ignoreTypeList = ['bool', 'primary'];
@@ -405,6 +407,74 @@ class Base
         }
 
         return $whereClause;
+    }
+
+    public function mutateWhereQuery(array &$where): void
+    {
+        foreach ($where as &$item) {
+            if (isset($item['rules'])) {
+                $this->mutateWhereQuery($item['rules']);
+                $item = ['type' => $this->qbConditionToType((string)$item['condition']), 'value' => $item['rules']];
+            } else {
+                $item = [
+                    'attribute' => $item['id'],
+                    'type'      => $this->qbOperatorToType((string)$item['operator']),
+                    'value'     => $item['value'],
+                ];
+            }
+        }
+    }
+
+    public function qbConditionToType(string $condition): string
+    {
+        return strtolower($condition) === 'or' ? 'or' : 'and';
+    }
+
+    public function qbOperatorToType(string $operator): string
+    {
+        switch ($operator) {
+            case 'equal':
+                $operator = 'equals';
+                break;
+            case 'not_equal':
+                $operator = 'notEquals';
+                break;
+            case 'begins_with':
+                $operator = 'startsWith';
+                break;
+            case 'ends_with':
+                $operator = 'endsWith';
+                break;
+            case 'not_contains':
+                $operator = 'notContains';
+                break;
+            case 'less':
+                $operator = 'lessThan';
+                break;
+            case 'less_or_equal':
+                $operator = 'lessThanOrEquals';
+                break;
+            case 'greater':
+                $operator = 'greaterThan';
+                break;
+            case 'greater_or_equal':
+                $operator = 'greaterThanOrEquals';
+                break;
+            case 'in':
+                // how 'in' works?
+                break;
+            case 'not_in':
+                $operator = 'notIn';
+                break;
+            case 'is_null':
+                $operator = 'isNull';
+                break;
+            case 'is_not_null':
+                $operator = 'isNotNull';
+                break;
+        }
+
+        return $operator;
     }
 
     protected function applyLinkedWith($link, $idsValue, &$result)
