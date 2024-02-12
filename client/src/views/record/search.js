@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/record/search', 'view', function (Dep) {
+Espo.define('views/record/search', ['view', 'lib!Extendext', 'lib!QueryBuilder'], function (Dep) {
 
     return Dep.extend({
 
@@ -675,6 +675,32 @@ Espo.define('views/record/search', 'view', function (Dep) {
                     this.$el.find('.filter-actions').removeClass('hidden');
                 }
             }
+
+            this.renderQueryBuilder();
+        },
+
+        renderQueryBuilder() {
+            if (!this.getMetadata().get(['scopes', this.collection.name, 'hasAdvancedFilter'])) {
+                return;
+            }
+
+            let filters = [];
+
+            $.each(this.getMetadata().get(['entityDefs', this.collection.name, 'fields']), (field, fieldDefs) => {
+                if (fieldDefs.filterDisabled) {
+                    return;
+                }
+                console.log(fieldDefs);
+            });
+
+            this.$el.find('.query-builder').queryBuilder({
+                rules: null,
+                filters: [{
+                    id: 'id',
+                    label: 'ID',
+                    type: 'string'
+                }]
+            });
         },
 
         getTextFilterPlaceholder() {

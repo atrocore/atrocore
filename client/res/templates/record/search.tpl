@@ -84,3 +84,4 @@
     <span class="pipeline">|</span>
     <button class="btn-link btn" data-action="reset-filter"><div>{{translate 'Reset filter'}}</div></button>
 </div>
+<div class="query-builder"></div>
