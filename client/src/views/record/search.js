@@ -991,6 +991,11 @@ Espo.define('views/record/search', ['view', 'lib!Extendext', 'lib!QueryBuilder']
                 }
             }
 
+            const qbRules = this.$el.find('.query-builder').queryBuilder('getRules');
+            if (qbRules) {
+                where.push(qbRules);
+            }
+
             this.collection.where = where;
             this.collection.fetch().then(() => Backbone.trigger('after:search', this.collection));
         },
