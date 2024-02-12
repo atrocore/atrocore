@@ -48,7 +48,7 @@ class RegenerateMeasures extends AbstractConsole
             try {
                 $em->saveEntity($measure);
             } catch (\Throwable $e) {
-                // ignore all
+                $GLOBALS['log']->error("Measure generation failed: {$e->getMessage()}");
             }
         }
 
@@ -68,7 +68,7 @@ class RegenerateMeasures extends AbstractConsole
                     $this->calculateMultiplier($unit);
                 }
             } catch (\Throwable $e) {
-                // ignore all
+                $GLOBALS['log']->error("Unit generation failed: {$e->getMessage()}");
             }
         }
     }

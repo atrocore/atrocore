@@ -87,7 +87,7 @@ class RegenerateUiHandlers extends AbstractConsole
                     try {
                         $em->saveEntity($entity);
                     } catch (\Throwable $e) {
-                        // ignore all
+                        $GLOBALS['log']->error("UI Handler generation failed: {$e->getMessage()}");
                     }
                 }
             }
