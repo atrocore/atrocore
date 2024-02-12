@@ -684,23 +684,32 @@ Espo.define('views/record/search', ['view', 'lib!Extendext', 'lib!QueryBuilder']
                 return;
             }
 
-            let filters = [];
+            let filters = [
+            ];
 
             $.each(this.getMetadata().get(['entityDefs', this.collection.name, 'fields']), (field, fieldDefs) => {
                 if (fieldDefs.filterDisabled) {
                     return;
                 }
-                console.log(fieldDefs);
+                let qbFilterType = this.getMetadata().get(['fields', fieldDefs.type, 'qbFilterType']);
+                if (qbFilterType) {
+                    filters.push({
+                        id: field,
+                        label: this.getLanguage().translate(field, 'fields', this.collection.name),
+                        type: qbFilterType
+                    });
+                }
+                // console.log(fieldDefs);
             });
 
-            this.$el.find('.query-builder').queryBuilder({
-                rules: null,
-                filters: [{
-                    id: 'id',
-                    label: 'ID',
-                    type: 'string'
-                }]
-            });
+            console.log(filters);
+
+            if (filters.length > 0) {
+                this.$el.find('.query-builder').queryBuilder({
+                    rules: null,
+                    filters: filters
+                });
+            }
         },
 
         getTextFilterPlaceholder() {

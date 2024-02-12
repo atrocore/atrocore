@@ -50,6 +50,7 @@
       }
    ],
    "filter": true,
+   "qbFilterType": "double",
    "fieldDefs":{
       "notNull":false
    }

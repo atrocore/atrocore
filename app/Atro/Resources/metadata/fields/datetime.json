@@ -39,6 +39,7 @@
       }
    ],
    "filter": true,
+   "qbFilterType": "datetime",
    "fieldDefs":{
       "notNull":false
    },

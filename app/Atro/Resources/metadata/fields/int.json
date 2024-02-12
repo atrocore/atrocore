@@ -49,6 +49,7 @@
     }
   ],
   "filter": true,
+  "qbFilterType": "integer",
   "textFilter": true,
   "personalData": true
 }

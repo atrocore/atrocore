@@ -39,6 +39,7 @@
       }
    ],
    "filter": true,
+   "qbFilterType": "string",
    "fieldDefs":{
       "type":"varchar"
    },
