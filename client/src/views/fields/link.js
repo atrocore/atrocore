@@ -699,7 +699,47 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
         getSearchType: function () {
             return this.getSearchParamsData().type || this.searchParams.typeFront || this.searchParams.type;
-        }
+        },
+
+        // getQueryBuilderFilterData(scope) {
+        //     const Input = (rule, inputName) => {
+        //         this.getModelFactory().create(null, model => {
+        //             this.createView(inputName, 'views/fields/link', {
+        //                 name: 'value',
+        //                 el: `#${rule.id} .container-${inputName}`,
+        //                 model: model,
+        //                 mode: 'edit',
+        //                 foreignScope: this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity']) || this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity'])
+        //             }, view => {
+        //                 view.listenTo(model, `change:value`, () => {
+        //                     console.log(1, model);
+        //                 });
+        //
+        //                 setTimeout(() => view.render(), 1000);
+        //                 console.log(view);
+        //             });
+        //         });
+        //
+        //         return `<div class="container-${inputName}"></div>`;
+        //     };
+        //
+        //
+        //
+        //     return {
+        //         id: this.name,
+        //         label: this.getLanguage().translate(this.name, 'fields', scope),
+        //         type: 'string',
+        //         operators: [
+        //             'equal',
+        //             'not_equal',
+        //             'in',
+        //             'not_in',
+        //             'is_null',
+        //             'is_not_null'
+        //         ],
+        //         input: Input
+        //     };
+        // },
 
     });
 });
