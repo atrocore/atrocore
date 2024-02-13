@@ -26,12 +26,23 @@ class ConnectionMsql extends AbstractConnection implements ConnectionInterface
 
         $serverName = "{$connection->get('host')},{$connection->get('port')}";
         $connectionInfo = [
-            "Database"     => $connection->get('dbName'),
-            "Uid"          => $connection->get('user'),
-            "PWD"          => $this->decryptPassword($connection->get('password')),
-            "LoginTimeout" => 5,
-            "TrustServerCertificate" => $connection->get('msqlTrustServerCertificate')
+            "Database"               => $connection->get('dbName'),
+            "Uid"                    => $connection->get('user'),
+            "PWD"                    => $this->decryptPassword($connection->get('password')),
+            "LoginTimeout"           => 5
         ];
+
+        if (!empty($connection->get('additionalParameters'))) {
+            foreach (preg_split(";", $connection->get('additionalParameters')) as $part) {
+                if (!empty($part)) {
+                    $values = preg_split("=", $part);
+                    if (!empty($values) && count($values) == 2) {
+                        $connectionInfo[$values[0]] = $values[1];
+                    }
+                }
+            }
+        }
+
         $result = \sqlsrv_connect($serverName, $connectionInfo);
 
         if ($result === false) {
