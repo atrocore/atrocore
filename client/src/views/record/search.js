@@ -684,9 +684,11 @@ Espo.define('views/record/search', ['view', 'lib!Extendext', 'lib!QueryBuilder']
                 return;
             }
 
+            const scope = this.collection.name;
+
             let filters = [];
             let promiseList = [];
-            $.each(this.getMetadata().get(['entityDefs', this.collection.name, 'fields']), (field, fieldDefs) => {
+            $.each(this.getMetadata().get(['entityDefs', scope, 'fields']), (field, fieldDefs) => {
                 if (fieldDefs.filterDisabled) {
                     return;
                 }
@@ -696,7 +698,7 @@ Espo.define('views/record/search', ['view', 'lib!Extendext', 'lib!QueryBuilder']
 
                 promiseList.push(new Promise(resolve => {
                     this.createView(field, view, {name: field, model: this.model}, view => {
-                        let filterData = view.getQueryBuilderFilterData(this.collection.name);
+                        let filterData = view.getQueryBuilderFilterData(scope);
                         if (filterData) {
                             filters.push(filterData);
                         }
@@ -710,6 +712,7 @@ Espo.define('views/record/search', ['view', 'lib!Extendext', 'lib!QueryBuilder']
                     // set translates
                     $.fn.queryBuilder.regional['main'] = this.getLanguage().data.Global.queryBuilderFilter;
                     $.fn.queryBuilder.defaults({lang_code: 'main'});
+
                     // init
                     this.$el.find('.query-builder').queryBuilder({
                         rules: null,

@@ -701,45 +701,63 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             return this.getSearchParamsData().type || this.searchParams.typeFront || this.searchParams.type;
         },
 
-        // getQueryBuilderFilterData(scope) {
-        //     const Input = (rule, inputName) => {
-        //         this.getModelFactory().create(null, model => {
-        //             this.createView(inputName, 'views/fields/link', {
-        //                 name: 'value',
-        //                 el: `#${rule.id} .container-${inputName}`,
-        //                 model: model,
-        //                 mode: 'edit',
-        //                 foreignScope: this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity']) || this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity'])
-        //             }, view => {
-        //                 view.listenTo(model, `change:value`, () => {
-        //                     console.log(1, model);
-        //                 });
-        //
-        //                 setTimeout(() => view.render(), 1000);
-        //                 console.log(view);
-        //             });
-        //         });
-        //
-        //         return `<div class="container-${inputName}"></div>`;
-        //     };
-        //
-        //
-        //
-        //     return {
-        //         id: this.name,
-        //         label: this.getLanguage().translate(this.name, 'fields', scope),
-        //         type: 'string',
-        //         operators: [
-        //             'equal',
-        //             'not_equal',
-        //             'in',
-        //             'not_in',
-        //             'is_null',
-        //             'is_not_null'
-        //         ],
-        //         input: Input
-        //     };
-        // },
+        getQueryBuilderFilterData(scope) {
+            const Input = (rule, inputName) => {
+                if (!rule) {
+                    return '';
+                }
+
+                const containerEl = `container-${inputName}`;
+
+                this.qbFilterValue = null;
+
+                this.getModelFactory().create(null, model => {
+                    this.createView(inputName, 'views/fields/link-multiple', {
+                        name: 'value',
+                        el: `#${rule.id} .container-${inputName}`,
+                        model: model,
+                        mode: 'edit',
+                        foreignScope: this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity']) || this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity'])
+                    }, view => {
+                        this.listenTo(view, 'change', () => {
+                            this.qbFilterValue = model.get('valueIds');
+                            $(`#${rule.id} input[name="${inputName}"]`).trigger('change');
+                        });
+                        this.renderQueryBuilderFilterField(view, containerEl);
+                    });
+                });
+
+                return `<div class="${containerEl}"></div><input type="hidden" name="${inputName}" />`;
+            };
+
+            const ValueGetter = (rule) => {
+                return this.qbFilterValue;
+            }
+
+            return {
+                id: this.name + 'Id',
+                label: this.getLanguage().translate(this.name, 'fields', scope),
+                type: 'string',
+                operators: [
+                    'in',
+                    'not_in',
+                    'is_null',
+                    'is_not_null'
+                ],
+                input: Input,
+                valueGetter: ValueGetter
+            };
+        },
+
+        renderQueryBuilderFilterField(view, containerEl) {
+            setTimeout(() => {
+                if ($(`.${containerEl}`).length) {
+                    view.render();
+                } else {
+                    this.renderQueryBuilderFilterField(view, containerEl);
+                }
+            }, 100);
+        },
 
     });
 });
