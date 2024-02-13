@@ -185,7 +185,8 @@
     "unique": "Unique",
     "index": "Database Index",
     "useDisabledTextareaInViewMode": "Use disabled textarea in view mode",
-    "setDefaultOnlyIfRequired": "Apply default value only if required"
+    "setDefaultOnlyIfRequired": "Apply default value only if required",
+    "dropdown": "Dropdown"
   },
   "messages": {
     "thousandSeparatorEqualsDecimalMark": "The thousands separator character can not be the same as the decimal point character.",

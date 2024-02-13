@@ -168,7 +168,8 @@
     "index": "Datenbankindex",
     "foreignName": "Fremdfeld",
     "useDisabledTextareaInViewMode": "Deaktiviertes Textfeld im Ansichtsmodus verwenden",
-    "setDefaultOnlyIfRequired": "Apply default value only if required"
+    "setDefaultOnlyIfRequired": "Wenden Sie den Standardwert nur bei Bedarf an",
+    "dropdown": "Runterfallen"
   },
   "messages": {
     "selectEntityType": "Entitätstyp im linken Menü auswählen.",
