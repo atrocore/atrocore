@@ -53,7 +53,8 @@ class Unit extends Base
         $data = $this->getBoolFilterParameter('fromMeasure');
         if (!empty($data['measureId'])) {
             $result['whereClause'][] = [
-                'measureId' => $data['measureId']
+                'measureId' => $data['measureId'],
+                'isActive'  => true
             ];
         }
     }
