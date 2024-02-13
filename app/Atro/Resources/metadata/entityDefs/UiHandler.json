@@ -12,7 +12,7 @@
       "type": "extensibleEnum",
       "extensibleEnumId": "ui_handler_type",
       "required": true,
-      "dropdown": false
+      "dropdown": true
     },
     "entityType": {
       "type": "varchar",

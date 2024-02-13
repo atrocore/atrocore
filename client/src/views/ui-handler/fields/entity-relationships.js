@@ -45,10 +45,12 @@ Espo.define('views/ui-handler/fields/entity-relationships', 'views/fields/entity
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            if (this.model.get('type') === 'ui_visible') {
-                this.$el.parent().show();
-            } else {
-                this.$el.parent().hide();
+            if (this.mode !== 'list') {
+                if (this.model.get('type') === 'ui_visible') {
+                    this.$el.parent().show();
+                } else {
+                    this.$el.parent().hide();
+                }
             }
         },
 
