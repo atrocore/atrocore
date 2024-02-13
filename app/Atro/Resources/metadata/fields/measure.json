@@ -19,6 +19,11 @@
       "default": false
     },
     {
+      "name": "dropdown",
+      "type": "bool",
+      "default": false
+    },
+    {
       "name": "measure",
       "required": true,
       "entity": "Measure",
@@ -28,7 +33,7 @@
     {
       "name": "default",
       "type": "varchar",
-      "view": "views/admin/field-manager/fields/default-unit"
+      "view": "views/admin/field-manager/fields/link/measure-default"
     }
   ],
   "filter": true,

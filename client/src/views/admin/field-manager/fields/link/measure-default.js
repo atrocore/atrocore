@@ -30,40 +30,54 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/fields/measure', ['views/fields/extensible-enum', 'views/fields/link'], (Dep, Link) => {
+Espo.define('views/admin/field-manager/fields/link/measure-default', 'views/fields/link', Dep => {
 
     return Dep.extend({
 
         selectBoolFilterList: ['fromMeasure'],
 
+        createDisabled: true,
+
         boolFilterData: {
             fromMeasure() {
+                let measureId = null;
+                if (this.model.defs.fields[this.name] && this.model.defs.fields[this.name].measureId) {
+                    measureId = this.model.defs.fields[this.name].measureId;
+                } else if (this.getParentView().getView('measure')) {
+                    measureId = this.getParentView().getView('measure').fetch().measureId
+                }
                 return {
-                    measureId: this.getMeasureId()
+                    measureId: measureId
                 };
             }
         },
 
         setup: function () {
-            this.idName = this.name;
-            this.nameName = this.name + 'Name';
+            this.idName = 'default';
+            this.nameName = 'defaultName';
             this.foreignScope = 'Unit';
 
-            Link.prototype.setup.call(this);
+            Dep.prototype.setup.call(this);
+
+
+            this.listenTo(this.model, 'change:measureId', () => {
+                this.model.set('default', null);
+                this.model.set('defaultName', null);
+                this.reRender();
+            });
         },
 
-        getMeasureId() {
-            let measureId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'measureId']);
-            if (this.params.measureId) {
-                measureId = this.params.measureId;
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            if (this.model.get('default')) {
+                this.ajaxGetRequest(`${this.foreignScope}/${this.model.get('default')}`).success(record => {
+                    if (this.model.get('defaultName') !== record.name) {
+                        this.model.set('defaultName', record.name);
+                    }
+                });
             }
-
-            return measureId;
         },
 
-        getOptionsData() {
-            return {}
-        }
     });
 });
-

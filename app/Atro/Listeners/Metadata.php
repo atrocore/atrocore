@@ -92,12 +92,14 @@ class Metadata extends AbstractListener
             }
 
             foreach ($entityDefs['fields'] as $field => $fieldDefs) {
-                if (!empty($fieldDefs['type']) && in_array($fieldDefs['type'], ['extensibleEnum', 'extensibleMultiEnum']) && empty($fieldDefs['view'])) {
+                if (!empty($fieldDefs['type']) && in_array($fieldDefs['type'], ['extensibleEnum', 'extensibleMultiEnum', 'measure']) && empty($fieldDefs['view'])) {
                     if (!empty($fieldDefs['dropdown'])) {
                         if ($fieldDefs['type'] == 'extensibleMultiEnum') {
                             $data['entityDefs'][$entityType]['fields'][$field]['view'] = 'views/fields/extensible-multi-enum-dropdown';
-                        } else {
+                        } else if ($fieldDefs['type'] == 'extensibleEnum') {
                             $data['entityDefs'][$entityType]['fields'][$field]['view'] = 'views/fields/extensible-enum-dropdown';
+                        } else {
+                            $data['entityDefs'][$entityType]['fields'][$field]['view'] = 'views/fields/measure-dropdown';
                         }
                     }
                 }

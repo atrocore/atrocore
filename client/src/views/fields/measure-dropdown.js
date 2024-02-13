@@ -30,26 +30,26 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/fields/measure', ['views/fields/extensible-enum', 'views/fields/link'], (Dep, Link) => {
+Espo.define('views/fields/measure-dropdown', 'views/fields/colored-enum', Dep => {
 
     return Dep.extend({
 
-        selectBoolFilterList: ['fromMeasure'],
-
-        boolFilterData: {
-            fromMeasure() {
-                return {
-                    measureId: this.getMeasureId()
-                };
-            }
+        setup() {
+            this.prepareOptionsList();
+            Dep.prototype.setup.call(this);
         },
 
-        setup: function () {
-            this.idName = this.name;
-            this.nameName = this.name + 'Name';
-            this.foreignScope = 'Unit';
+        prepareOptionsList() {
+            this.params.options = [''];
+            this.translatedOptions = {'': ''};
 
-            Link.prototype.setup.call(this);
+            const measureId = this.getMeasureId()
+            if (measureId) {
+                this.getMeasureUnits(measureId).forEach(option => {
+                    this.params.options.push(option.id);
+                    this.translatedOptions[option.id] = option.name ? option.name : ' ';
+                });
+            }
         },
 
         getMeasureId() {
@@ -60,10 +60,6 @@ Espo.define('views/fields/measure', ['views/fields/extensible-enum', 'views/fiel
 
             return measureId;
         },
-
-        getOptionsData() {
-            return {}
-        }
     });
-});
 
+});
