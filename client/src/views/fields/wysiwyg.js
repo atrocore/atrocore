@@ -516,14 +516,5 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
             this.$summernote.summernote('disable')
         },
 
-        // getQueryBuilderFilterData(scope) {
-        //     return {
-        //         id: this.name,
-        //         label: this.getLanguage().translate(this.name, 'fields', scope),
-        //         type: 'string',
-        //         input: 'textarea'
-        //     };
-        // },
-
     });
 });
