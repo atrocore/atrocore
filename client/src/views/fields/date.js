@@ -373,13 +373,25 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
             }
         },
 
-        // getQueryBuilderFilterData(scope) {
-        //     return {
-        //         id: this.name,
-        //         label: this.getLanguage().translate(this.name, 'fields', scope),
-        //         type: 'date'
-        //     };
-        // },
+        getQueryBuilderFilterData(scope) {
+            return {
+                id: this.name,
+                label: this.getLanguage().translate(this.name, 'fields', scope),
+                type: 'date',
+                operators: [
+                    'equal',
+                    'not_equal',
+                    'less',
+                    'less_or_equal',
+                    'greater',
+                    'greater_or_equal',
+                    'between',
+                    'is_null',
+                    'is_not_null'
+                ]
+            };
+        },
+
     });
 });
 
