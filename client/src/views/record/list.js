@@ -338,7 +338,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 topBar: paginationTop || this.checkboxes || (this.buttonList.length && !this.buttonsDisabled) || fixedHeaderRow,
                 bottomBar: paginationBottom,
                 buttonList: this.buttonList,
-                displayTotalCount: this.displayTotalCount,
+                displayTotalCount: this.displayTotalCount && this.collection.total >= 0,
                 countLabel: this.getShowMoreLabel(),
                 showNoData: !this.collection.total && !fixedHeaderRow
             };

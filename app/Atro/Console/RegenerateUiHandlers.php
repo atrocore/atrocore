@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Console;
 
 use Atro\Core\KeyValueStorages\StorageInterface;
+use Espo\Core\Utils\Util;
 use Espo\ORM\EntityManager;
 
 class RegenerateUiHandlers extends AbstractConsole
@@ -51,9 +52,9 @@ class RegenerateUiHandlers extends AbstractConsole
                         continue;
                     }
 
-                    $id = 'ui_' . substr(md5("{$entityType}{$field}{$type}"), 0, 20);
+                    $uniqueHash = md5("{$entityType}{$field}{$type}");
 
-                    $entity = $em->getRepository('UiHandler')->get($id);
+                    $entity = $em->getRepository('UiHandler')->where(['hash' => $uniqueHash])->findOne();
                     if (!empty($entity)) {
                         continue;
                     }
@@ -73,9 +74,10 @@ class RegenerateUiHandlers extends AbstractConsole
                     }
 
                     $entity = $em->getRepository('UiHandler')->get();
-                    $entity->id = $id;
+                    $entity->id = Util::generateId();
                     $entity->set([
                         'name'           => "Make field '{$field}' {$type}",
+                        'hash'           => $uniqueHash,
                         'entityType'     => $entityType,
                         'fields'         => [$field],
                         'type'           => $typeId,

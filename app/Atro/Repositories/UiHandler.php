@@ -58,7 +58,7 @@ class UiHandler extends Base
 
     public function validateSystemHandler(Entity $entity): void
     {
-        if (mb_substr($entity->get('id'), 0, 3) === 'ui_') {
+        if (!empty($entity->get('hash'))) {
             throw new BadRequest(
                 sprintf($this->getLanguage()->translate('systemHandler', 'exceptions', 'UiHandler'), $entity->get('name'))
             );

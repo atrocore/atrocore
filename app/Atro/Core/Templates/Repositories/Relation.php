@@ -117,7 +117,7 @@ class Relation extends RDB
             return;
         }
 
-        $childrenRecords = $this->getChildren($entity->_fetchedEntity);
+        $childrenRecords = $this->getChildren($entity->_fetchedEntity ?? $entity);
         if ($childrenRecords === null) {
             return;
         }

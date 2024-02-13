@@ -36,7 +36,7 @@ Espo.define('views/fields/entity-type', 'views/fields/enum', function (Dep) {
 
         checkAvailability: function (entityType) {
             let defs = this.scopesMetadataDefs[entityType] || {};
-            if (defs.entity && defs.object && this.model.urlRoot !== entityType) {
+            if (defs.entity && this.model.urlRoot !== entityType) {
                 return true;
             }
         },

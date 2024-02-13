@@ -26,9 +26,13 @@ class V1Dot8Dot32 extends Base
             $this->exec("COMMENT ON COLUMN ui_handler.fields IS '(DC2Type:jsonArray)'");
             $this->exec("ALTER TABLE ui_handler ADD relationships TEXT DEFAULT NULL");
             $this->exec("COMMENT ON COLUMN ui_handler.relationships IS '(DC2Type:jsonArray)'");
+            $this->exec("ALTER TABLE ui_handler ADD hash VARCHAR(255) DEFAULT NULL");
+            $this->exec("CREATE UNIQUE INDEX UNIQ_81D73A8CD1B862B8EB3B4E33 ON ui_handler (hash, deleted)");
         } else {
             $this->exec("CREATE TABLE ui_handler (id VARCHAR(24) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted TINYINT(1) DEFAULT '0', type VARCHAR(255) DEFAULT NULL, entity_type VARCHAR(255) DEFAULT NULL, fields LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonArray)', conditions_type VARCHAR(255) DEFAULT NULL, conditions LONGTEXT DEFAULT NULL, created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, is_active TINYINT(1) DEFAULT '0' NOT NULL, created_by_id VARCHAR(24) DEFAULT NULL, modified_by_id VARCHAR(24) DEFAULT NULL, INDEX IDX_UI_HANDLER_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_UI_HANDLER_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_UI_HANDLER_CREATED_AT (created_at, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
             $this->exec("ALTER TABLE ui_handler ADD relationships LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonArray)'");
+            $this->exec("ALTER TABLE ui_handler ADD hash VARCHAR(255) DEFAULT NULL");
+            $this->exec("CREATE UNIQUE INDEX UNIQ_81D73A8CD1B862B8EB3B4E33 ON ui_handler (hash, deleted)");
         }
     }
 

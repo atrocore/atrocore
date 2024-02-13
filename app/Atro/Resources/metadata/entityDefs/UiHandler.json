@@ -39,6 +39,20 @@
         "script"
       ]
     },
+    "hash": {
+      "type": "varchar",
+      "unique": true,
+      "readOnly": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
     "conditions": {
       "type": "wysiwyg",
       "view": "views/fields/conditions-container"
