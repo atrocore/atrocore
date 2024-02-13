@@ -33,9 +33,9 @@ class ConnectionMsql extends AbstractConnection implements ConnectionInterface
         ];
 
         if (!empty($connection->get('additionalParameters'))) {
-            foreach (preg_split(";", $connection->get('additionalParameters')) as $part) {
+            foreach (explode(";", $connection->get('additionalParameters')) as $part) {
                 if (!empty($part)) {
-                    $values = preg_split("=", $part);
+                    $values = explode("=", $part);
                     if (!empty($values) && count($values) == 2) {
                         $connectionInfo[$values[0]] = $values[1];
                     }
