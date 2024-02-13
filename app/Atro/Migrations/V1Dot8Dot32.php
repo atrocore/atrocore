@@ -34,10 +34,13 @@ class V1Dot8Dot32 extends Base
             $this->exec("ALTER TABLE ui_handler ADD hash VARCHAR(255) DEFAULT NULL");
             $this->exec("CREATE UNIQUE INDEX UNIQ_81D73A8CD1B862B8EB3B4E33 ON ui_handler (hash, deleted)");
         }
+
+        $this->updateComposer('atrocore/core', '^1.8.32');
     }
 
     public function down(): void
     {
+        throw new \Error("Downgrade is prohibited.");
     }
 
     protected function exec(string $query): void
