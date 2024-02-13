@@ -30,14 +30,9 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/fields/measure-dropdown', 'views/fields/colored-enum', Dep => {
+Espo.define('views/fields/measure-dropdown', 'views/fields/extensible-enum-dropdown', Dep => {
 
     return Dep.extend({
-
-        setup() {
-            this.prepareOptionsList();
-            Dep.prototype.setup.call(this);
-        },
 
         prepareOptionsList() {
             this.params.options = [''];

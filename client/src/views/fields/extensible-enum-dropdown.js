@@ -32,7 +32,13 @@
 
 Espo.define('views/fields/extensible-enum-dropdown', ['views/fields/colored-enum'], function (Dep) {
     return Dep.extend({
+
         setup: function () {
+           this.prepareOptionsList()
+            Dep.prototype.setup.call(this);
+        },
+
+        prepareOptionsList() {
             this.params.options = [];
             this.translatedOptions = {};
 
@@ -42,8 +48,6 @@ Espo.define('views/fields/extensible-enum-dropdown', ['views/fields/colored-enum
                     this.translatedOptions[option.id] = option.name || option.id;
                 }
             });
-
-            Dep.prototype.setup.call(this);
         },
 
         getExtensibleEnumId() {
