@@ -908,8 +908,18 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             this.$el.find(`[name="${this.name}"]`).prop('disabled', true)
         },
 
-        getQueryBuilderFilterData(scope) {
+        createQueryBuilderFilter() {
             return null;
+        },
+
+        renderAfterEl(view, el) {
+            setTimeout(() => {
+                if ($(el).length) {
+                    view.render();
+                } else {
+                    this.renderAfterEl(view, el);
+                }
+            }, 100);
         },
 
     });

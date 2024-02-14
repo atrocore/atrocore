@@ -701,36 +701,8 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             return this.getSearchParamsData().type || this.searchParams.typeFront || this.searchParams.type;
         },
 
-        getQueryBuilderFilterData(scope) {
-            const Input = (rule, inputName) => {
-                if (!rule || !inputName) {
-                    return '';
-                }
-
-                this.qbFilterValue = null;
-
-                this.getModelFactory().create(null, model => {
-                    this.createView(inputName, 'views/fields/link-multiple', {
-                        name: 'value',
-                        el: `#${rule.id} .field-container`,
-                        model: model,
-                        mode: 'edit',
-                        foreignScope: this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity']) || this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity'])
-                    }, view => {
-                        this.listenTo(view, 'change', () => {
-                            this.qbFilterValue = model.get('valueIds');
-                            rule.$el.find(`input[name="${inputName}"]`).trigger('change');
-                        });
-                        this.renderQueryBuilderFilterField(view, rule);
-                    });
-                });
-
-                return `<div class="field-container"></div><input type="hidden" name="${inputName}" />`;
-            };
-
-            const ValueGetter = (rule) => {
-                return this.qbFilterValue;
-            }
+        createQueryBuilderFilter() {
+            const scope = this.model.urlRoot;
 
             return {
                 id: this.name + 'Id',
@@ -742,19 +714,32 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                     'is_null',
                     'is_not_null'
                 ],
-                input: Input,
-                valueGetter: ValueGetter
-            };
-        },
-
-        renderQueryBuilderFilterField(view, rule) {
-            setTimeout(() => {
-                if (rule.$el.find('.field-container').length) {
-                    view.render();
-                } else {
-                    this.renderQueryBuilderFilterField(view, rule);
+                input: (rule, inputName) => {
+                    if (!rule || !inputName) {
+                        return '';
+                    }
+                    this.filterValue = null;
+                    this.getModelFactory().create(null, model => {
+                        this.createView(inputName, 'views/fields/link-multiple', {
+                            name: 'value',
+                            el: `#${rule.id} .field-container`,
+                            model: model,
+                            mode: 'edit',
+                            foreignScope: this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity']) || this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity'])
+                        }, view => {
+                            this.listenTo(view, 'change', () => {
+                                this.filterValue = model.get('valueIds');
+                                rule.$el.find(`input[name="${inputName}"]`).trigger('change');
+                            });
+                            this.renderAfterEl(view, `#${rule.id} .field-container`);
+                        });
+                    });
+                    return `<div class="field-container"></div><input type="hidden" name="${inputName}" />`;
+                },
+                valueGetter: (rule) => {
+                    return this.filterValue;
                 }
-            }, 100);
+            };
         },
 
     });

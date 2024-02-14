@@ -67,9 +67,9 @@ Espo.define('views/record/query-builder', ['view', 'lib!Extendext', 'lib!QueryBu
 
                 promiseList.push(new Promise(resolve => {
                     this.createView(field, view, {name: field, model: this.model}, view => {
-                        let filterData = view.getQueryBuilderFilterData(this.scope);
-                        if (filterData) {
-                            filters.push(filterData);
+                        let filter = view.createQueryBuilderFilter();
+                        if (filter) {
+                            filters.push(filter);
                         }
                         resolve();
                     });
