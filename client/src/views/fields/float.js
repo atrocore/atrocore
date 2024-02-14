@@ -129,7 +129,7 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
             return {
                 id: this.name,
                 label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),
-                type: 'float',
+                type: 'double',
                 operators: [
                     'equal',
                     'not_equal',
@@ -141,8 +141,8 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
                     'is_null',
                     'is_not_null'
                 ],
-                input: this.filterInput,
-                valueGetter: this.filterValueGetter
+                input: this.filterInput.bind(this),
+                valueGetter: this.filterValueGetter.bind(this)
             };
         },
 

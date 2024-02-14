@@ -85,8 +85,8 @@ Espo.define('views/fields/bool', 'views/fields/base', function (Dep) {
                     'is_null',
                     'is_not_null'
                 ],
-                input: this.filterInput,
-                valueGetter: this.filterValueGetter
+                input: this.filterInput.bind(this),
+                valueGetter: this.filterValueGetter.bind(this)
             };
         },
 
