@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/record/query-builder', ['view', 'lib!QueryBuilder'], function (Dep) {
+Espo.define('views/record/query-builder', ['view', 'lib!Interact', 'lib!QueryBuilder'], function (Dep) {
 
     return Dep.extend({
 
@@ -86,30 +86,35 @@ Espo.define('views/record/query-builder', ['view', 'lib!QueryBuilder'], function
                     this.$el.find('.query-builder').queryBuilder({
                         allow_empty: true,
                         operators: [
-                            { type: 'contains' },
-                            { type: 'not_contains' },
-                            { type: 'equal' },
-                            { type: 'not_equal' },
-                            { type: 'less' },
-                            { type: 'less_or_equal' },
-                            { type: 'greater' },
-                            { type: 'greater_or_equal' },
-                            { type: 'between' },
-                            { type: 'in' },
-                            { type: 'not_in' },
-                            { type: 'is_null' },
-                            { type: 'is_not_null' },
-                            { type: 'linked_with', nb_inputs: 1, multiple: true, apply_to: ['string'] },
-                            { type: 'not_linked_with', nb_inputs: 1, multiple: true, apply_to: ['string'] },
-                            { type: 'array_any_of', nb_inputs: 1, multiple: true, apply_to: ['string'] },
-                            { type: 'array_none_of', nb_inputs: 1, multiple: true, apply_to: ['string'] },
-                            { type: 'is_linked', nb_inputs: 0, apply_to: ['string'] },
-                            { type: 'is_not_linked', nb_inputs: 0, apply_to: ['string'] },
-                            { type: 'query_in', nb_inputs: 1, apply_to: ['string'] },
-                            { type: 'query_linked_with', nb_inputs: 1, apply_to: ['string'] },
+                            {type: 'contains'},
+                            {type: 'not_contains'},
+                            {type: 'equal'},
+                            {type: 'not_equal'},
+                            {type: 'less'},
+                            {type: 'less_or_equal'},
+                            {type: 'greater'},
+                            {type: 'greater_or_equal'},
+                            {type: 'between'},
+                            {type: 'in'},
+                            {type: 'not_in'},
+                            {type: 'is_null'},
+                            {type: 'is_not_null'},
+                            {type: 'linked_with', nb_inputs: 1, multiple: true, apply_to: ['string']},
+                            {type: 'not_linked_with', nb_inputs: 1, multiple: true, apply_to: ['string']},
+                            {type: 'array_any_of', nb_inputs: 1, multiple: true, apply_to: ['string']},
+                            {type: 'array_none_of', nb_inputs: 1, multiple: true, apply_to: ['string']},
+                            {type: 'is_linked', nb_inputs: 0, apply_to: ['string']},
+                            {type: 'is_not_linked', nb_inputs: 0, apply_to: ['string']},
+                            {type: 'query_in', nb_inputs: 1, apply_to: ['string']},
+                            {type: 'query_linked_with', nb_inputs: 1, apply_to: ['string']},
                         ],
                         rules: [],
-                        filters: filters
+                        filters: filters,
+                        plugins: {
+                            sortable: {
+                                icon: 'fas fa-sort'
+                            }
+                        }
                     });
 
                     this.$el.find('.query-builder').on('afterUpdateRuleOperator.queryBuilder', (e, rule) => {
