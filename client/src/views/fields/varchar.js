@@ -263,12 +263,11 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
             return null;
         },
 
-        getQueryBuilderFilterData(scope) {
+        createQueryBuilderFilter() {
             return {
                 id: this.name,
-                label: this.getLanguage().translate(this.name, 'fields', scope),
+                label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),
                 type: 'string',
-                input: 'text',
                 operators: [
                     'contains',
                     'not_contains',
@@ -276,7 +275,31 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
                     'not_equal',
                     'is_null',
                     'is_not_null'
-                ]
+                ],
+                input: (rule, inputName) => {
+                    if (!rule || !inputName) {
+                        return '';
+                    }
+                    this.filterValue = '';
+                    this.getModelFactory().create(null, model => {
+                        this.createView(inputName, 'views/fields/varchar', {
+                            name: 'value',
+                            el: `#${rule.id} .field-container`,
+                            model: model,
+                            mode: 'edit'
+                        }, view => {
+                            this.listenTo(view, 'change', () => {
+                                this.filterValue = model.get('value');
+                                rule.$el.find(`input[name="${inputName}"]`).trigger('change');
+                            });
+                            this.renderAfterEl(view, `#${rule.id} .field-container`);
+                        });
+                    });
+                    return `<div class="field-container"></div><input type="hidden" name="${inputName}" />`;
+                },
+                valueGetter: (rule) => {
+                    return this.filterValue;
+                }
             };
         },
 
