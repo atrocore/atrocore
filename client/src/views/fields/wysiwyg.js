@@ -46,6 +46,8 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
 
         seeMoreDisabled: true,
 
+        defaultFilterValue: '',
+
         setup: function () {
             Dep.prototype.setup.call(this);
 

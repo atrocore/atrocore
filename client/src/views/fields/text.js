@@ -58,6 +58,8 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
 
         useDisabledTextareaInViewMode: false,
 
+        defaultFilterValue: '',
+
         searchTypeList: ['contains', 'startsWith', 'equals', 'endsWith', 'like', 'notContains', 'notLike', 'isEmpty', 'isNotEmpty'],
 
         events: {

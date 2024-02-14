@@ -48,6 +48,8 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
 
         validationPattern: null,
 
+        defaultFilterValue: '',
+
         events: {
             'keyup input.with-text-length': function (e) {
                 this.updateTextCounter();

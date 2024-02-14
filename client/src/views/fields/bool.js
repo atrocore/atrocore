@@ -46,6 +46,8 @@ Espo.define('views/fields/bool', 'views/fields/base', function (Dep) {
 
         validations: [],
 
+        defaultFilterValue: false,
+
         data: function () {
             var data = Dep.prototype.data.call(this);
             data.valueIsSet = this.model.has(this.name);

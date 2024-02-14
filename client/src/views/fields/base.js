@@ -80,6 +80,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         inlineEditModeIsOn: false,
 
+        defaultFilterValue: null,
+
         isRequired: function () {
             return this.params.required;
         }, /**
@@ -926,7 +928,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             if (!rule || !inputName) {
                 return '';
             }
-            this.filterValue = '';
+            this.filterValue = this.defaultFilterValue;
             this.getModelFactory().create(null, model => {
                 this.createView(inputName, `views/fields/${this.type}`, {
                     name: 'value',
