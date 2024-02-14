@@ -1,6 +1,9 @@
 {
   "controller": "controllers/record",
   "iconClass": "fas fa-list",
+  "views": {
+    "detail": "views/extensible-enum/detail"
+  },
   "relationshipPanels": {
     "extensibleEnumOptions": {
       "select": false,
