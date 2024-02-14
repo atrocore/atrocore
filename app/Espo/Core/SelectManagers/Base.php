@@ -418,11 +418,33 @@ class Base
                 $this->mutateWhereQuery($item['rules']);
                 $item = ['type' => $this->qbConditionToType((string)$item['condition']), 'value' => $item['rules']];
             } else {
-                $item = [
-                    'attribute' => $item['id'],
-                    'type'      => $this->qbOperatorToType((string)$item['operator']),
-                    'value'     => $item['value'],
-                ];
+                if ($item['operator'] === 'query_in') {
+                    $subQuery = @json_decode((string)$item['value'], true);
+                    if (!empty($subQuery)) {
+                        $this->mutateWhereQuery($subQuery['rules']);
+                        $item = [
+                            'attribute' => $item['id'],
+                            'type'      => 'in',
+                            'subQuery'  => $subQuery['rules']
+                        ];
+                    }
+                } elseif ($item['operator'] === 'query_linked_with') {
+                    $subQuery = @json_decode((string)$item['value'], true);
+                    if (!empty($subQuery)) {
+                        $this->mutateWhereQuery($subQuery['rules']);
+                        $item = [
+                            'attribute' => $item['id'],
+                            'type'      => 'linkedWith',
+                            'subQuery'  => $subQuery['rules']
+                        ];
+                    }
+                } else {
+                    $item = [
+                        'attribute' => $item['id'],
+                        'type'      => $this->qbOperatorToType((string)$item['operator']),
+                        'value'     => $item['value'],
+                    ];
+                }
             }
         }
     }
@@ -1127,7 +1149,7 @@ class Base
                 $sp = $this->createSelectManager($foreignEntity)->getSelectParams(['where' => $item['subQuery']], true, true);
                 $sp['select'] = ['id'];
                 $collection = $this->getEntityManager()->getRepository($foreignEntity)->find($sp);
-                $item['value'] = array_column($collection->toArray(), 'id');
+                $item['value'] = array_merge(['no-such-id'], array_column($collection->toArray(), 'id'));
             }
             unset($item['subQuery']);
         }

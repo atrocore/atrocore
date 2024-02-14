@@ -105,7 +105,8 @@ Espo.define('views/record/query-builder', ['view', 'lib!QueryBuilder'], function
                             { type: 'array_none_of', nb_inputs: 1, multiple: true, apply_to: ['string'] },
                             { type: 'is_linked', nb_inputs: 0, apply_to: ['string'] },
                             { type: 'is_not_linked', nb_inputs: 0, apply_to: ['string'] },
-                            { type: 'query', nb_inputs: 1, apply_to: ['string'] },
+                            { type: 'query_in', nb_inputs: 1, apply_to: ['string'] },
+                            { type: 'query_linked_with', nb_inputs: 1, apply_to: ['string'] },
                         ],
                         rules: [],
                         filters: filters

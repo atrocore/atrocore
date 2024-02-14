@@ -1014,7 +1014,9 @@
       "is_null": "порожньо",
       "is_not_null": "не порожньо",
       "is_linked": "не порожньо",
-      "is_not_linked": "порожньо"
+      "is_not_linked": "порожньо",
+      "query_in": "запит",
+      "query_linked_with": "запит"
     },
     "errors": {
       "no_filter": "Фільтр не вибраний",

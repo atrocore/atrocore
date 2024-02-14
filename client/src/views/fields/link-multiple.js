@@ -501,7 +501,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             this.filterValue = null;
             this.getModelFactory().create(null, model => {
                 let operator = rule.$el.find('.rule-operator-container select').val();
-                if (operator === 'query') {
+                if (operator === 'query_linked_with') {
                     this.createView(inputName, 'views/fields/text', {
                         name: 'value',
                         el: `#${rule.id} .field-container`,
@@ -542,7 +542,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                     'not_linked_with',
                     'is_not_linked',
                     'is_linked',
-                    'query'
+                    'query_linked_with'
                 ],
                 input: (rule, inputName) => {
                     if (!rule || !inputName) {

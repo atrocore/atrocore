@@ -1078,7 +1078,9 @@
       "is_null": "is null",
       "is_not_null": "is not null",
       "is_linked": "is not empty",
-      "is_not_linked": "is empty"
+      "is_not_linked": "is empty",
+      "query_in": "query",
+      "query_linked_with": "query"
     },
     "errors": {
       "no_filter": "No filter selected",

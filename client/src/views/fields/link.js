@@ -707,7 +707,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             this.filterValue = null;
             this.getModelFactory().create(null, model => {
                 let operator = rule.$el.find('.rule-operator-container select').val();
-                if (operator === 'query') {
+                if (operator === 'query_in') {
                     this.createView(inputName, 'views/fields/text', {
                         name: 'value',
                         el: `#${rule.id} .field-container`,
@@ -748,7 +748,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                     'not_in',
                     'is_null',
                     'is_not_null',
-                    'query'
+                    'query_in'
                 ],
                 input: (rule, inputName) => {
                     if (!rule || !inputName) {
