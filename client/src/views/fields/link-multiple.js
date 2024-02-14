@@ -490,7 +490,48 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         getSearchType: function () {
             return this.getSearchParamsData().type || this.searchParams.typeFront || this.searchParams.type || 'anyOf';
-        }
+        },
+
+        createQueryBuilderFilter() {
+            const scope = this.model.urlRoot;
+
+            return {
+                id: this.name,
+                label: this.getLanguage().translate(this.name, 'fields', scope),
+                type: 'string',
+                operators: [
+                    'linked_with',
+                    'not_linked_with',
+                    'is_null',
+                    'is_not_null'
+                ],
+                input: (rule, inputName) => {
+                    if (!rule || !inputName) {
+                        return '';
+                    }
+                    this.filterValue = null;
+                    this.getModelFactory().create(null, model => {
+                        this.createView(inputName, 'views/fields/link-multiple', {
+                            name: 'value',
+                            el: `#${rule.id} .field-container`,
+                            model: model,
+                            mode: 'edit',
+                            foreignScope: this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity']) || this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity'])
+                        }, view => {
+                            this.listenTo(view, 'change', () => {
+                                this.filterValue = model.get('valueIds');
+                                rule.$el.find(`input[name="${inputName}"]`).trigger('change');
+                            });
+                            this.renderAfterEl(view, `#${rule.id} .field-container`);
+                        });
+                    });
+                    return `<div class="field-container"></div><input type="hidden" name="${inputName}" />`;
+                },
+                valueGetter: (rule) => {
+                    return this.filterValue;
+                }
+            };
+        },
 
     });
 });

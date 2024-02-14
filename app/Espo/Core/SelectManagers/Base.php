@@ -460,11 +460,14 @@ class Base
             case 'greater_or_equal':
                 $operator = 'greaterThanOrEquals';
                 break;
-            case 'in':
-                // how 'in' works?
-                break;
             case 'not_in':
                 $operator = 'notIn';
+                break;
+            case 'linked_with':
+                $operator = 'linkedWith';
+                break;
+            case 'not_linked_with':
+                $operator = 'notLinkedWith';
                 break;
             case 'is_null':
                 $operator = 'isNull';
