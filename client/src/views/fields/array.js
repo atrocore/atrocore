@@ -492,7 +492,45 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
 
         getSearchType: function () {
             return this.getSearchParamsData().type || 'anyOf';
-        }
+        },
+
+        createQueryBuilderFilter() {
+            const scope = this.model.urlRoot;
+
+            return {
+                id: this.name,
+                label: this.getLanguage().translate(this.name, 'fields', scope),
+                type: 'string',
+                operators: [
+                    'in',
+                    'not_in',
+                    'is_null',
+                    'is_not_null'
+                ],
+                input: (rule, inputName) => {
+                    if (!rule || !inputName) {
+                        return '';
+                    }
+                    this.filterValue = null;
+                    this.getModelFactory().create(null, model => {
+                        this.createView(inputName, 'views/fields/array', {
+                            name: 'value',
+                            el: `#${rule.id} .field-container`,
+                            model: model,
+                            mode: 'edit',
+                        }, view => {
+                            this.listenTo(view, 'change', () => {
+                                this.filterValue = model.get('value');
+                                rule.$el.find(`input[name="${inputName}"]`).trigger('change');
+                            });
+                            this.renderAfterEl(view, `#${rule.id} .field-container`);
+                        });
+                    });
+                    return `<div class="field-container"></div><input type="hidden" name="${inputName}" />`;
+                },
+                valueGetter: this.filterValueGetter.bind(this)
+            };
+        },
 
     });
 });
