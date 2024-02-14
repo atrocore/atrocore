@@ -521,7 +521,7 @@
           ]
         }
       },
-      "msqlTrustServerCertificate": {
+      "additionalParameters": {
         "visible": {
           "conditionGroup": [
             {

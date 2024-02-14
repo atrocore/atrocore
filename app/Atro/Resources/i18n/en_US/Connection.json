@@ -32,7 +32,7 @@
     "openAiApiKey": "Api Key",
     "openAiModel": "Model",
     "openAiTemperature": "Temperature",
-    "msqlTrustServerCertificate": "Trust server certificate"
+    "additionalParameters": "Additional Parameters"
   },
   "labels": {
     "connectionSuccess": "Connection is successfully established",

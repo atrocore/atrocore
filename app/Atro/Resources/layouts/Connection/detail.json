@@ -133,7 +133,7 @@
       ],
       [
         {
-          "name": "msqlTrustServerCertificate"
+          "name": "additionalParameters"
         },
         false
       ],
