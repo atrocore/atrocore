@@ -207,7 +207,7 @@ Espo.define('views/fields/datetime', 'views/fields/date', function (Dep) {
             return {
                 id: this.name,
                 label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),
-                type: 'date',
+                type: 'datetime',
                 operators: [
                     'equal',
                     'not_equal',
@@ -223,7 +223,7 @@ Espo.define('views/fields/datetime', 'views/fields/date', function (Dep) {
                     if (!rule || !inputName) {
                         return '';
                     }
-                    this.filterValue = false;
+                    this.filterValue = null;
                     this.getModelFactory().create(null, model => {
                         this.createView(inputName, 'views/fields/datetime', {
                             name: 'value',
