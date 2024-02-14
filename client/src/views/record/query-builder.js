@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/record/query-builder', ['view', 'lib!Extendext', 'lib!QueryBuilder'], function (Dep) {
+Espo.define('views/record/query-builder', ['view', 'lib!QueryBuilder'], function (Dep) {
 
     return Dep.extend({
 
@@ -43,6 +43,8 @@ Espo.define('views/record/query-builder', ['view', 'lib!Extendext', 'lib!QueryBu
             if (qbRules && qbRules.rules && qbRules.rules.length > 0) {
                 this.collection.where = [qbRules];
             }
+
+            console.log(qbRules);
 
             this.collection.fetch().then(() => Backbone.trigger('after:search', this.collection));
 
