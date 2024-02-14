@@ -675,51 +675,6 @@ Espo.define('views/record/search', ['view', 'lib!Extendext', 'lib!QueryBuilder']
                     this.$el.find('.filter-actions').removeClass('hidden');
                 }
             }
-
-            this.renderQueryBuilder();
-        },
-
-        renderQueryBuilder() {
-            if (!this.getMetadata().get(['scopes', this.collection.name, 'hasAdvancedFilter'])) {
-                return;
-            }
-
-            const scope = this.collection.name;
-
-            let filters = [];
-            let promiseList = [];
-            $.each(this.getMetadata().get(['entityDefs', scope, 'fields']), (field, fieldDefs) => {
-                if (fieldDefs.filterDisabled) {
-                    return;
-                }
-
-                const fieldType = Espo.Utils.camelCaseToHyphen(fieldDefs.type);
-                const view = this.getMetadata().get(['fields', fieldType, 'view'], `views/fields/${fieldType}`);
-
-                promiseList.push(new Promise(resolve => {
-                    this.createView(field, view, {name: field, model: this.model}, view => {
-                        let filterData = view.getQueryBuilderFilterData(scope);
-                        if (filterData) {
-                            filters.push(filterData);
-                        }
-                        resolve();
-                    });
-                }));
-            });
-
-            Promise.all(promiseList).then(() => {
-                if (filters.length > 0) {
-                    // set translates
-                    $.fn.queryBuilder.regional['main'] = this.getLanguage().data.Global.queryBuilderFilter;
-                    $.fn.queryBuilder.defaults({lang_code: 'main'});
-
-                    // init
-                    this.$el.find('.query-builder').queryBuilder({
-                        rules: null,
-                        filters: filters
-                    });
-                }
-            });
         },
 
         getTextFilterPlaceholder() {
@@ -998,12 +953,7 @@ Espo.define('views/record/search', ['view', 'lib!Extendext', 'lib!QueryBuilder']
                 }
             }
 
-            const qbRules = this.$el.find('.query-builder').queryBuilder('getRules');
-            if (qbRules) {
-                this.collection.where = [qbRules];
-            } else {
-                this.collection.where = where;
-            }
+            this.collection.where = where;
 
             this.collection.fetch().then(() => Backbone.trigger('after:search', this.collection));
         },
