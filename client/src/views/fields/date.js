@@ -278,7 +278,7 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
         fetchSearch: function () {
             var value = this.parseDate(this.$element.val());
 
-            var type = this.$el.find('[name="'+this.name+'-type"]').val();
+            var type = this.$el.find('[name="' + this.name + '-type"]').val();
             var data;
 
             if (type == 'between') {
@@ -348,7 +348,7 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
                 if (value && otherValue) {
                     if (moment(value).unix() <= moment(otherValue).unix()) {
                         var msg = this.translate('fieldShouldAfter', 'messages').replace('{field}', this.getLabelText())
-                                                                                .replace('{otherField}', this.translate(field, 'fields', this.model.name));
+                            .replace('{otherField}', this.translate(field, 'fields', this.model.name));
 
                         this.showValidationMessage(msg);
                         return true;
@@ -365,7 +365,7 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
                 if (value && otherValue) {
                     if (moment(value).unix() >= moment(otherValue).unix()) {
                         var msg = this.translate('fieldShouldBefore', 'messages').replace('{field}', this.getLabelText())
-                                                                                 .replace('{otherField}', this.translate(field, 'fields', this.model.name));
+                            .replace('{otherField}', this.translate(field, 'fields', this.model.name));
                         this.showValidationMessage(msg);
                         return true;
                     }
@@ -373,7 +373,9 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
             }
         },
 
-        getQueryBuilderFilterData(scope) {
+        createQueryBuilderFilter() {
+            const scope = this.model.urlRoot;
+
             return {
                 id: this.name,
                 label: this.getLanguage().translate(this.name, 'fields', scope),
@@ -388,7 +390,31 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
                     'between',
                     'is_null',
                     'is_not_null'
-                ]
+                ],
+                input: (rule, inputName) => {
+                    if (!rule || !inputName) {
+                        return '';
+                    }
+                    this.filterValue = false;
+                    this.getModelFactory().create(null, model => {
+                        this.createView(inputName, 'views/fields/date', {
+                            name: 'value',
+                            el: `#${rule.id} .field-container`,
+                            model: model,
+                            mode: 'edit'
+                        }, view => {
+                            this.listenTo(view, 'change', () => {
+                                this.filterValue = model.get('value');
+                                rule.$el.find(`input[name="${inputName}"]`).trigger('change');
+                            });
+                            this.renderAfterEl(view, `#${rule.id} .field-container`);
+                        });
+                    });
+                    return `<div class="field-container"></div><input type="hidden" name="${inputName}" />`;
+                },
+                valueGetter: (rule) => {
+                    return this.filterValue;
+                }
             };
         },
 
