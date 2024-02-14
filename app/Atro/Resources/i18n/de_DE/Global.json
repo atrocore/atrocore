@@ -983,8 +983,8 @@
       "is_not_empty": "ist nicht leer",
       "is_null": "ist null",
       "is_not_null": "ist nicht null",
-      "is_linked": "ist leer",
-      "is_not_linked": "ist nicht leer"
+      "is_linked": "ist nicht leer",
+      "is_not_linked": "ist leer"
     },
     "errors": {
       "no_filter": "Kein Filter ausgewählt",

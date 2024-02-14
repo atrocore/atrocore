@@ -44,8 +44,6 @@ Espo.define('views/record/query-builder', ['view', 'lib!QueryBuilder'], function
                 this.collection.where = [qbRules];
             }
 
-            console.log(qbRules);
-
             this.collection.fetch().then(() => Backbone.trigger('after:search', this.collection));
 
             Backbone.Events.trigger('search', this);
