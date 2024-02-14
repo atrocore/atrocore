@@ -321,6 +321,9 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
         },
 
         addLinkSubQuery: function (data) {
+            if (!this.searchData) {
+                return;
+            }
             let subQuery = data.where ?? [];
             this.searchData.subQuery = subQuery;
             this.addLinkSubQueryHtml(subQuery);
