@@ -1008,7 +1008,11 @@
       "is_empty": "порожній рядок",
       "is_not_empty": "не порожній рядок",
       "is_null": "порожньо",
-      "is_not_null": "не порожньо"
+      "is_not_null": "не порожньо",
+      "linked_with": "будь-який із",
+      "not_linked_with": "жоден із",
+      "is_linked": "не порожньо",
+      "is_not_linked": "порожньо"
     },
     "errors": {
       "no_filter": "Фільтр не вибраний",

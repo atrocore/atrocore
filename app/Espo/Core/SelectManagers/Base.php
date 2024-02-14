@@ -469,6 +469,12 @@ class Base
             case 'not_linked_with':
                 $operator = 'notLinkedWith';
                 break;
+            case 'is_linked':
+                $operator = 'isLinked';
+                break;
+            case 'is_not_linked':
+                $operator = 'isNotLinked';
+                break;
             case 'is_null':
                 $operator = 'isNull';
                 break;

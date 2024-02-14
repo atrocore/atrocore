@@ -1072,7 +1072,11 @@
       "is_empty": "is empty",
       "is_not_empty": "is not empty",
       "is_null": "is null",
-      "is_not_null": "is not null"
+      "is_not_null": "is not null",
+      "linked_with": "any of",
+      "not_linked_with": "none of",
+      "is_linked": "is empty",
+      "is_not_linked": "is not empty"
     },
     "errors": {
       "no_filter": "No filter selected",

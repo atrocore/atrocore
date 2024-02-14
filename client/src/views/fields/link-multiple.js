@@ -502,8 +502,8 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 operators: [
                     'linked_with',
                     'not_linked_with',
-                    'is_null',
-                    'is_not_null'
+                    'is_not_linked',
+                    'is_linked'
                 ],
                 input: (rule, inputName) => {
                     if (!rule || !inputName) {
