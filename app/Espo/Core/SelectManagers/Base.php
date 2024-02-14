@@ -418,23 +418,21 @@ class Base
                 $this->mutateWhereQuery($item['rules']);
                 $item = ['type' => $this->qbConditionToType((string)$item['condition']), 'value' => $item['rules']];
             } else {
-                if ($item['operator'] === 'query_in') {
-                    $subQuery = @json_decode((string)$item['value'], true);
+                if (in_array($item['operator'], ['query_in', 'query_linked_with'])) {
+                    $subQuery = is_array($item['value']) ? $item['value'] : @json_decode((string)$item['value'], true);
                     if (!empty($subQuery)) {
                         $this->mutateWhereQuery($subQuery['rules']);
+                        switch ($item['operator']) {
+                            case 'query_in':
+                                $type = 'in';
+                                break;
+                            case 'query_linked_with':
+                                $type = 'linkedWith';
+                                break;
+                        }
                         $item = [
                             'attribute' => $item['id'],
-                            'type'      => 'in',
-                            'subQuery'  => $subQuery['rules']
-                        ];
-                    }
-                } elseif ($item['operator'] === 'query_linked_with') {
-                    $subQuery = @json_decode((string)$item['value'], true);
-                    if (!empty($subQuery)) {
-                        $this->mutateWhereQuery($subQuery['rules']);
-                        $item = [
-                            'attribute' => $item['id'],
-                            'type'      => 'linkedWith',
+                            'type'      => $type,
                             'subQuery'  => $subQuery['rules']
                         ];
                     }
