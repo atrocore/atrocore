@@ -74,22 +74,43 @@ Espo.define('views/fields/bool', 'views/fields/base', function (Dep) {
             this.$element.get(0).checked = true;
         },
 
-        getQueryBuilderFilterData(scope) {
+        createQueryBuilderFilter() {
+            const scope = this.model.urlRoot;
+
             return {
                 id: this.name,
                 label: this.getLanguage().translate(this.name, 'fields', scope),
                 type: 'boolean',
-                input: 'radio',
-                values: [
-                    {
-                        value: false,
-                        label: this.getLanguage().translate('No')
-                    },
-                    {
-                        value: true,
-                        label: this.getLanguage().translate('Yes')
+                operators: [
+                    'equal',
+                    'not_equal',
+                    'is_null',
+                    'is_not_null'
+                ],
+                input: (rule, inputName) => {
+                    if (!rule || !inputName) {
+                        return '';
                     }
-                ]
+                    this.filterValue = false;
+                    this.getModelFactory().create(null, model => {
+                        this.createView(inputName, 'views/fields/bool', {
+                            name: 'value',
+                            el: `#${rule.id} .field-container`,
+                            model: model,
+                            mode: 'edit'
+                        }, view => {
+                            this.listenTo(view, 'change', () => {
+                                this.filterValue = model.get('value');
+                                rule.$el.find(`input[name="${inputName}"]`).trigger('change');
+                            });
+                            this.renderAfterEl(view, `#${rule.id} .field-container`);
+                        });
+                    });
+                    return `<div class="field-container"></div><input type="hidden" name="${inputName}" />`;
+                },
+                valueGetter: (rule) => {
+                    return this.filterValue;
+                }
             };
         },
 
