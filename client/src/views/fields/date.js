@@ -374,11 +374,9 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
         },
 
         createQueryBuilderFilter() {
-            const scope = this.model.urlRoot;
-
             return {
                 id: this.name,
-                label: this.getLanguage().translate(this.name, 'fields', scope),
+                label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),
                 type: 'date',
                 operators: [
                     'equal',
