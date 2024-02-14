@@ -75,11 +75,9 @@ Espo.define('views/fields/bool', 'views/fields/base', function (Dep) {
         },
 
         createQueryBuilderFilter() {
-            const scope = this.model.urlRoot;
-
             return {
                 id: this.name,
-                label: this.getLanguage().translate(this.name, 'fields', scope),
+                label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),
                 type: 'boolean',
                 operators: [
                     'equal',
