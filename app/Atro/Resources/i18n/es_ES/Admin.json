@@ -163,7 +163,8 @@
     "pattern": "Regex Pattern",
     "unique": "Unique",
     "index": "Índice de base de datos",
-    "setDefaultOnlyIfRequired": "Aplicar el valor predeterminado solo si es necesario"
+    "setDefaultOnlyIfRequired": "Aplicar el valor predeterminado solo si es necesario",
+    "dropdown": "Desplegable"
   },
   "messages": {
     "selectEntityType": "Seleccione el tipo de entidad en el menú de la izquierda.",

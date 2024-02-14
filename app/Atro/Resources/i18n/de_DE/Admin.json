@@ -111,7 +111,8 @@
     "datetime": "Datum-Uhrzeit",
     "datetimeOptional": "Datum/Datum-Uhrzeit",
     "language": "Sprache",
-    "multiLanguage": "Sprachen"
+    "multiLanguage": "Sprachen",
+    "measure": "Messen"
   },
   "fields": {
     "script": "Skript",
@@ -168,7 +169,8 @@
     "index": "Datenbankindex",
     "foreignName": "Fremdfeld",
     "useDisabledTextareaInViewMode": "Deaktiviertes Textfeld im Ansichtsmodus verwenden",
-    "setDefaultOnlyIfRequired": "Apply default value only if required"
+    "setDefaultOnlyIfRequired": "Wenden Sie den Standardwert nur bei Bedarf an",
+    "dropdown": "Runterfallen"
   },
   "messages": {
     "selectEntityType": "Entitätstyp im linken Menü auswählen.",

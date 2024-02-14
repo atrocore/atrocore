@@ -30,33 +30,31 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/fields/extensible-enum-dropdown', ['views/fields/colored-enum'], function (Dep) {
+Espo.define('views/fields/measure-dropdown', 'views/fields/extensible-enum-dropdown', Dep => {
+
     return Dep.extend({
 
-        setup: function () {
-           this.prepareOptionsList()
-            Dep.prototype.setup.call(this);
-        },
-
         prepareOptionsList() {
-            this.params.options = [];
-            this.translatedOptions = {};
+            this.params.options = [''];
+            this.translatedOptions = {'': ''};
 
-            this.getListOptionsData(this.getExtensibleEnumId()).forEach(option => {
-                if (option.id) {
+            const measureId = this.getMeasureId()
+            if (measureId) {
+                this.getMeasureUnits(measureId).forEach(option => {
                     this.params.options.push(option.id);
-                    this.translatedOptions[option.id] = option.name || option.id;
-                }
-            });
+                    this.translatedOptions[option.id] = option.name ? option.name : ' ';
+                });
+            }
         },
 
-        getExtensibleEnumId() {
-            let extensibleEnumId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'extensibleEnumId']);
-            if (this.params.extensibleEnumId) {
-                extensibleEnumId = this.params.extensibleEnumId;
+        getMeasureId() {
+            let measureId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'measureId']);
+            if (this.params.measureId) {
+                measureId = this.params.measureId;
             }
 
-            return extensibleEnumId;
-        }
+            return measureId;
+        },
     });
+
 });

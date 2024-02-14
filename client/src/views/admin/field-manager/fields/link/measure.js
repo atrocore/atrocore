@@ -30,33 +30,21 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/fields/extensible-enum-dropdown', ['views/fields/colored-enum'], function (Dep) {
+Espo.define('views/admin/field-manager/fields/link/measure', 'views/fields/link', Dep => {
+
     return Dep.extend({
 
-        setup: function () {
-           this.prepareOptionsList()
-            Dep.prototype.setup.call(this);
-        },
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
 
-        prepareOptionsList() {
-            this.params.options = [];
-            this.translatedOptions = {};
-
-            this.getListOptionsData(this.getExtensibleEnumId()).forEach(option => {
-                if (option.id) {
-                    this.params.options.push(option.id);
-                    this.translatedOptions[option.id] = option.name || option.id;
-                }
-            });
-        },
-
-        getExtensibleEnumId() {
-            let extensibleEnumId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'extensibleEnumId']);
-            if (this.params.extensibleEnumId) {
-                extensibleEnumId = this.params.extensibleEnumId;
+            if (this.model.get('measureId')) {
+                this.ajaxGetRequest(`${this.foreignScope}/${this.model.get('measureId')}`).success(record => {
+                    if (this.model.get('measureName') !== record.name) {
+                        this.model.set('measureName', record.name);
+                    }
+                });
             }
+        },
 
-            return extensibleEnumId;
-        }
     });
 });

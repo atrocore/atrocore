@@ -30,33 +30,40 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/fields/extensible-enum-dropdown', ['views/fields/colored-enum'], function (Dep) {
+Espo.define('views/fields/measure', ['views/fields/extensible-enum', 'views/fields/link'], (Dep, Link) => {
+
     return Dep.extend({
 
+        selectBoolFilterList: ['fromMeasure'],
+
+        boolFilterData: {
+            fromMeasure() {
+                return {
+                    measureId: this.getMeasureId()
+                };
+            }
+        },
+
         setup: function () {
-           this.prepareOptionsList()
-            Dep.prototype.setup.call(this);
+            this.idName = this.name;
+            this.nameName = this.name + 'Name';
+            this.foreignScope = 'Unit';
+
+            Link.prototype.setup.call(this);
         },
 
-        prepareOptionsList() {
-            this.params.options = [];
-            this.translatedOptions = {};
-
-            this.getListOptionsData(this.getExtensibleEnumId()).forEach(option => {
-                if (option.id) {
-                    this.params.options.push(option.id);
-                    this.translatedOptions[option.id] = option.name || option.id;
-                }
-            });
-        },
-
-        getExtensibleEnumId() {
-            let extensibleEnumId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'extensibleEnumId']);
-            if (this.params.extensibleEnumId) {
-                extensibleEnumId = this.params.extensibleEnumId;
+        getMeasureId() {
+            let measureId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'measureId']);
+            if (this.params.measureId) {
+                measureId = this.params.measureId;
             }
 
-            return extensibleEnumId;
+            return measureId;
+        },
+
+        getOptionsData() {
+            return {}
         }
     });
 });
+
