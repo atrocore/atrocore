@@ -393,7 +393,7 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
                     if (!rule || !inputName) {
                         return '';
                     }
-                    this.filterValue = false;
+                    this.filterValue = null;
                     this.getModelFactory().create(null, model => {
                         this.createView(inputName, 'views/fields/date', {
                             name: 'value',
