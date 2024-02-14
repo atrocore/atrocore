@@ -203,6 +203,49 @@ Espo.define('views/fields/datetime', 'views/fields/date', function (Dep) {
             return data;
         },
 
+        createQueryBuilderFilter() {
+            return {
+                id: this.name,
+                label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),
+                type: 'date',
+                operators: [
+                    'equal',
+                    'not_equal',
+                    'less',
+                    'less_or_equal',
+                    'greater',
+                    'greater_or_equal',
+                    'between',
+                    'is_null',
+                    'is_not_null'
+                ],
+                input: (rule, inputName) => {
+                    if (!rule || !inputName) {
+                        return '';
+                    }
+                    this.filterValue = false;
+                    this.getModelFactory().create(null, model => {
+                        this.createView(inputName, 'views/fields/datetime', {
+                            name: 'value',
+                            el: `#${rule.id} .field-container`,
+                            model: model,
+                            mode: 'edit'
+                        }, view => {
+                            this.listenTo(view, 'change', () => {
+                                this.filterValue = model.get('value');
+                                rule.$el.find(`input[name="${inputName}"]`).trigger('change');
+                            });
+                            this.renderAfterEl(view, `#${rule.id} .field-container`);
+                        });
+                    });
+                    return `<div class="field-container"></div><input type="hidden" name="${inputName}" />`;
+                },
+                valueGetter: (rule) => {
+                    return this.filterValue;
+                }
+            };
+        },
+
     });
 });
 
