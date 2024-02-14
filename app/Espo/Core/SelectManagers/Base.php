@@ -367,7 +367,9 @@ class Base
 
     public function convertWhere(array $where, $ignoreAdditionaFilterTypes = false, &$result = null)
     {
-        $this->mutateWhereQuery($where);
+        if (isset($where[0]['rules'])) {
+            $this->mutateWhereQuery($where);
+        }
 
         $whereClause = [];
 
@@ -480,6 +482,12 @@ class Base
                 break;
             case 'is_not_null':
                 $operator = 'isNotNull';
+                break;
+            case 'array_any_of':
+                $operator = 'arrayAnyOf';
+                break;
+            case 'array_none_of':
+                $operator = 'arrayNoneOf';
                 break;
         }
 

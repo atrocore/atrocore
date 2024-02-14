@@ -101,6 +101,8 @@ Espo.define('views/record/query-builder', ['view', 'lib!Extendext', 'lib!QueryBu
                             { type: 'is_not_null' },
                             { type: 'linked_with', nb_inputs: 1, multiple: true, apply_to: ['string'] },
                             { type: 'not_linked_with', nb_inputs: 1, multiple: true, apply_to: ['string'] },
+                            { type: 'array_any_of', nb_inputs: 1, multiple: true, apply_to: ['string'] },
+                            { type: 'array_none_of', nb_inputs: 1, multiple: true, apply_to: ['string'] },
                             { type: 'is_linked', nb_inputs: 0, apply_to: ['string'] },
                             { type: 'is_not_linked', nb_inputs: 0, apply_to: ['string'] },
                         ],
