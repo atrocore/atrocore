@@ -701,39 +701,66 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             return this.getSearchParamsData().type || this.searchParams.typeFront || this.searchParams.type;
         },
 
-        createQueryBuilderFilter() {
+        createFilterView(rule, inputName) {
             const scope = this.model.urlRoot;
 
+            this.filterValue = null;
+            this.getModelFactory().create(null, model => {
+                let operator = rule.$el.find('.rule-operator-container select').val();
+                if (operator === 'query') {
+                    this.createView(inputName, 'views/fields/text', {
+                        name: 'value',
+                        el: `#${rule.id} .field-container`,
+                        model: model,
+                        mode: 'edit'
+                    }, view => {
+                        this.listenTo(view, 'change', () => {
+                            this.filterValue = model.get('value');
+                            rule.$el.find(`input[name="${inputName}"]`).trigger('change');
+                        });
+                        this.renderAfterEl(view, `#${rule.id} .field-container`);
+                    });
+                } else if (['in', 'not_in'].includes(operator)) {
+                    this.createView(inputName, 'views/fields/link-multiple', {
+                        name: 'value',
+                        el: `#${rule.id} .field-container`,
+                        model: model,
+                        mode: 'edit',
+                        foreignScope: this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity']) || this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity'])
+                    }, view => {
+                        this.listenTo(view, 'change', () => {
+                            this.filterValue = model.get('valueIds');
+                            rule.$el.find(`input[name="${inputName}"]`).trigger('change');
+                        });
+                        this.renderAfterEl(view, `#${rule.id} .field-container`);
+                    });
+                }
+            });
+        },
+
+        createQueryBuilderFilter() {
             return {
                 id: this.name + 'Id',
-                label: this.getLanguage().translate(this.name, 'fields', scope),
+                label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),
                 type: 'string',
                 operators: [
                     'in',
                     'not_in',
                     'is_null',
-                    'is_not_null'
+                    'is_not_null',
+                    'query'
                 ],
                 input: (rule, inputName) => {
                     if (!rule || !inputName) {
                         return '';
                     }
-                    this.filterValue = null;
-                    this.getModelFactory().create(null, model => {
-                        this.createView(inputName, 'views/fields/link-multiple', {
-                            name: 'value',
-                            el: `#${rule.id} .field-container`,
-                            model: model,
-                            mode: 'edit',
-                            foreignScope: this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity']) || this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity'])
-                        }, view => {
-                            this.listenTo(view, 'change', () => {
-                                this.filterValue = model.get('valueIds');
-                                rule.$el.find(`input[name="${inputName}"]`).trigger('change');
-                            });
-                            this.renderAfterEl(view, `#${rule.id} .field-container`);
-                        });
+
+                    this.createFilterView(rule, inputName);
+                    this.listenTo(this.model, 'afterUpdateRuleOperator', rule => {
+                        this.clearView(inputName);
+                        this.createFilterView(rule, inputName);
                     });
+
                     return `<div class="field-container"></div><input type="hidden" name="${inputName}" />`;
                 },
                 valueGetter: this.filterValueGetter.bind(this)
