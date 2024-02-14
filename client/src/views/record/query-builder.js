@@ -36,8 +36,11 @@ Espo.define('views/record/query-builder', ['view', 'lib!Extendext', 'lib!QueryBu
         },
 
         search() {
+            this.collection.where = [];
+
             const qbRules = this.$el.find('.query-builder').queryBuilder('getRules');
-            if (qbRules) {
+
+            if (qbRules && qbRules.rules && qbRules.rules.length > 0) {
                 this.collection.where = [qbRules];
             }
 
@@ -47,7 +50,8 @@ Espo.define('views/record/query-builder', ['view', 'lib!Extendext', 'lib!QueryBu
         },
 
         resetFilters() {
-            console.log('resetFilters');
+            this.$el.find('.query-builder').queryBuilder('setRules', []);
+            this.search();
         },
 
         afterRender() {
@@ -80,7 +84,8 @@ Espo.define('views/record/query-builder', ['view', 'lib!Extendext', 'lib!QueryBu
 
                     // init
                     this.$el.find('.query-builder').queryBuilder({
-                        rules: null,
+                        allow_empty: true,
+                        rules: [],
                         filters: filters
                     });
                 }
