@@ -326,30 +326,8 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
                     'is_null',
                     'is_not_null'
                 ],
-                input: (rule, inputName) => {
-                    if (!rule || !inputName) {
-                        return '';
-                    }
-                    this.filterValue = '';
-                    this.getModelFactory().create(null, model => {
-                        this.createView(inputName, 'views/fields/text', {
-                            name: 'value',
-                            el: `#${rule.id} .field-container`,
-                            model: model,
-                            mode: 'edit'
-                        }, view => {
-                            this.listenTo(view, 'change', () => {
-                                this.filterValue = model.get('value');
-                                rule.$el.find(`input[name="${inputName}"]`).trigger('change');
-                            });
-                            this.renderAfterEl(view, `#${rule.id} .field-container`);
-                        });
-                    });
-                    return `<div class="field-container"></div><input type="hidden" name="${inputName}" />`;
-                },
-                valueGetter: (rule) => {
-                    return this.filterValue;
-                }
+                input: this.filterInput,
+                valueGetter: this.filterValueGetter
             };
         },
 

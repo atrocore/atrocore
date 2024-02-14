@@ -736,9 +736,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                     });
                     return `<div class="field-container"></div><input type="hidden" name="${inputName}" />`;
                 },
-                valueGetter: (rule) => {
-                    return this.filterValue;
-                }
+                valueGetter: this.filterValueGetter
             };
         },
 

@@ -922,5 +922,31 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }, 100);
         },
 
+        filterInput(rule, inputName) {
+            if (!rule || !inputName) {
+                return '';
+            }
+            this.filterValue = '';
+            this.getModelFactory().create(null, model => {
+                this.createView(inputName, `views/fields/${this.type}`, {
+                    name: 'value',
+                    el: `#${rule.id} .field-container`,
+                    model: model,
+                    mode: 'edit'
+                }, view => {
+                    this.listenTo(view, 'change', () => {
+                        this.filterValue = model.get('value');
+                        rule.$el.find(`input[name="${inputName}"]`).trigger('change');
+                    });
+                    this.renderAfterEl(view, `#${rule.id} .field-container`);
+                });
+            });
+            return `<div class="field-container"></div><input type="hidden" name="${inputName}" />`;
+        },
+
+        filterValueGetter(rule) {
+            return this.filterValue;
+        },
+
     });
 });

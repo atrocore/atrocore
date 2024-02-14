@@ -297,10 +297,10 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
             return this.searchParams.typeFront || this.searchParams.type;
         },
 
-        getQueryBuilderFilterData(scope) {
+        createQueryBuilderFilter() {
             return {
                 id: this.name,
-                label: this.getLanguage().translate(this.name, 'fields', scope),
+                label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),
                 type: 'integer',
                 operators: [
                     'equal',
@@ -312,7 +312,9 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
                     'between',
                     'is_null',
                     'is_not_null'
-                ]
+                ],
+                input: this.filterInput,
+                valueGetter: this.filterValueGetter
             };
         },
 

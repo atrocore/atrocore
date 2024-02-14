@@ -495,32 +495,32 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             return this.getSearchParamsData().type || 'anyOf';
         },
 
-        getQueryBuilderFilterData(scope) {
-            let values = [];
-            (this.params.options || []).forEach(option => {
-                if (option !== '') {
-                    values.push({
-                        value: option,
-                        label: option
-                    });
-                }
-            });
-
-            return {
-                id: this.name,
-                label: this.getLanguage().translate(this.name, 'fields', scope),
-                type: 'string',
-                input: 'select',
-                multiple: true,
-                values: values,
-                operators: [
-                    'in',
-                    'not_in',
-                    'is_null',
-                    'is_not_null'
-                ]
-            };
-        },
+        // getQueryBuilderFilterData(scope) {
+        //     let values = [];
+        //     (this.params.options || []).forEach(option => {
+        //         if (option !== '') {
+        //             values.push({
+        //                 value: option,
+        //                 label: option
+        //             });
+        //         }
+        //     });
+        //
+        //     return {
+        //         id: this.name,
+        //         label: this.getLanguage().translate(this.name, 'fields', scope),
+        //         type: 'string',
+        //         input: 'select',
+        //         multiple: true,
+        //         values: values,
+        //         operators: [
+        //             'in',
+        //             'not_in',
+        //             'is_null',
+        //             'is_not_null'
+        //         ]
+        //     };
+        // },
 
     });
 });

@@ -86,8 +86,15 @@ Espo.define('views/record/query-builder', ['view', 'lib!Extendext', 'lib!QueryBu
                     this.$el.find('.query-builder').queryBuilder({
                         allow_empty: true,
                         operators: [
+                            { type: 'contains' },
+                            { type: 'not_contains' },
                             { type: 'equal' },
                             { type: 'not_equal' },
+                            { type: 'less' },
+                            { type: 'less_or_equal' },
+                            { type: 'greater' },
+                            { type: 'greater_or_equal' },
+                            { type: 'between' },
                             { type: 'in' },
                             { type: 'not_in' },
                             { type: 'is_null' },
