@@ -172,7 +172,10 @@ Espo.define('views/fields/extensible-multi-enum', ['treo-core:views/fields/filte
                     if (!rule || !inputName) {
                         return '';
                     }
+                    const attribute = this.defs.params.attribute ?? null;
+
                     this.filterValue = null;
+
                     this.getModelFactory().create(null, model => {
                         this.createView(inputName, 'views/fields/extensible-multi-enum', {
                             name: 'value',
@@ -182,7 +185,7 @@ Espo.define('views/fields/extensible-multi-enum', ['treo-core:views/fields/filte
                             defs: {
                                 name: 'value',
                                 params: {
-                                    extensibleEnumId: this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'extensibleEnumId'])
+                                    extensibleEnumId: attribute ? attribute.get('extensibleEnumId') : this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'extensibleEnumId'])
                                 }
                             },
                         }, view => {

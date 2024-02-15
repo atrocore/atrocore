@@ -114,6 +114,9 @@ Espo.define('views/fields/extensible-enum', ['views/fields/link', 'views/fields/
                     if (!rule || !inputName) {
                         return '';
                     }
+
+                    const attribute = this.defs.params.attribute ?? null;
+
                     this.filterValue = null;
                     this.getModelFactory().create(null, model => {
                         this.createView(inputName, 'views/fields/extensible-multi-enum', {
@@ -124,7 +127,7 @@ Espo.define('views/fields/extensible-enum', ['views/fields/link', 'views/fields/
                             defs: {
                                 name: 'value',
                                 params: {
-                                    extensibleEnumId: this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'extensibleEnumId'])
+                                    extensibleEnumId: attribute ? attribute.get('extensibleEnumId') : this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'extensibleEnumId'])
                                 }
                             },
                         }, view => {

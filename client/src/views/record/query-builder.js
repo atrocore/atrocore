@@ -159,7 +159,13 @@ Espo.define('views/record/query-builder', ['view', 'lib!Interact', 'lib!QueryBui
 
                         this.createView(name, view, {
                             name: name,
-                            model: this.model
+                            model: this.model,
+                            defs: {
+                                name: name,
+                                params: {
+                                    attribute: attribute
+                                }
+                            },
                         }, view => {
                             let filter = view.createQueryBuilderFilter();
                             if (filter) {

@@ -721,12 +721,13 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         this.renderAfterEl(view, `#${rule.id} .field-container`);
                     });
                 } else if (['in', 'not_in'].includes(operator)) {
+                    const attribute = this.defs.params.attribute ?? null;
                     this.createView(inputName, 'views/fields/link-multiple', {
                         name: 'value',
                         el: `#${rule.id} .field-container`,
                         model: model,
                         mode: 'edit',
-                        foreignScope: this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity']) || this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity'])
+                        foreignScope: attribute ? attribute.get('entityType') : this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity']) || this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity'])
                     }, view => {
                         this.listenTo(view, 'change', () => {
                             this.filterValue = model.get('valueIds');
