@@ -222,6 +222,9 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
             });
 
             this.listenTo(this.model, 'change:hasQueryBuilderFilter', () => {
+                if (!this.model.get('hasQueryBuilderFilter')) {
+                    this.getStorage().set('queryBuilderRules', this.model.urlRoot, []);
+                }
                 this.getStorage().set('hasQueryBuilderFilter', this.model.urlRoot, this.model.get('hasQueryBuilderFilter'));
                 this.reRender();
             })
@@ -1116,8 +1119,6 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
                     advanced[field] = this.advanced[field];
                 }
             }
-
-            // console.log(this.searchManager.get());
 
             this.searchManager.set(_.extend(this.searchManager.get(), {advanced: advanced}));
 
