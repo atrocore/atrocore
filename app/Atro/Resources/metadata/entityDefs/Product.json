@@ -62,6 +62,11 @@
       "notNull": true,
       "type": "bool",
       "default": false
+    },
+    "quantity": {
+      "type": "float",
+      "min": 0,
+      "default": 0
     }
   },
   "links": {

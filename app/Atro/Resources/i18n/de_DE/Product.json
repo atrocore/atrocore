@@ -6,7 +6,8 @@
     "price": "Preis",
     "longDescription": "Lange Beschreibung",
     "children": "Kinderprodukte",
-    "parents": "Elternprodukte"
+    "parents": "Elternprodukte",
+    "quantity": "Menge"
   },
   "labels": {
     "Create Product": "Produkt erstellen"
