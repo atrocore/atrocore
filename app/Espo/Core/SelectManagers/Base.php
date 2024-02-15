@@ -442,6 +442,13 @@ class Base
                         'type'      => $this->qbOperatorToType((string)$item['operator']),
                         'value'     => $item['value'],
                     ];
+
+                    // for attributes
+                    if (strpos($item['id'], 'attr_') !== false) {
+                        $parts = explode('_', $item['id']);
+                        $item['attribute'] = array_pop($parts);
+                        $item['isAttribute'] = true;
+                    }
                 }
             }
         }
