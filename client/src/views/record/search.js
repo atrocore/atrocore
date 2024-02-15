@@ -702,6 +702,8 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
             this.textFilter = '';
             this.presetName = '';
 
+            this.$el.find('.query-builder').queryBuilder('setRules', []);
+
             this.selectPreset(this.presetName, true);
             this.toggleResetVisibility();
             this.toggleFilterActionsVisibility()
