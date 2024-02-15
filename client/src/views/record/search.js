@@ -199,7 +199,7 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
             this.model = new this.collection.model();
             this.model.clear();
 
-            this.model.set('hasQueryBuilderFilter', !!(this.getStorage().get('hasQueryBuilderFilter', this.model.urlRoot)));
+            this.model.set('hasQueryBuilderFilter', this.getStorage().get('hasQueryBuilderFilter', this.model.urlRoot) === 'true');
 
             this.createFilters();
 
@@ -722,7 +722,7 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
             this.textFilter = '';
             this.presetName = '';
 
-            this.$el.find('.query-builder').queryBuilder('setRules', []);
+            // this.$el.find('.query-builder').queryBuilder('setRules', []);
 
             this.selectPreset(this.presetName, true);
             this.toggleResetVisibility();
@@ -1111,13 +1111,14 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
             }
 
             let advanced = {};
-            if (!this.model.get('hasQueryBuilderFilter')) {
-                for (let field in this.advanced) {
-                    if (!('value' in this.advanced[field]) || ![null, ''].includes(this.advanced[field].value) || 'subQuery' in this.advanced[field] || this.pinned[field]) {
-                        advanced[field] = this.advanced[field];
-                    }
+            for (let field in this.advanced) {
+                if (!('value' in this.advanced[field]) || ![null, ''].includes(this.advanced[field].value) || 'subQuery' in this.advanced[field] || this.pinned[field]) {
+                    advanced[field] = this.advanced[field];
                 }
             }
+
+            // console.log(this.searchManager.get());
+
             this.searchManager.set(_.extend(this.searchManager.get(), {advanced: advanced}));
 
             this.collection.reset();
@@ -1149,13 +1150,6 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
                             this.collection.maxSize = maxForTree;
                         }
                     });
-                }
-            }
-
-            if (this.model.get('hasQueryBuilderFilter')) {
-                const rules = this.getStorage().get('queryBuilderRules', this.model.urlRoot) || [];
-                if (rules && rules.rules && rules.rules.length > 0) {
-                    where.push(rules);
                 }
             }
 
@@ -1322,6 +1316,7 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
             this.searchManager.set({
                 textFilter: this.textFilter,
                 advanced: this.advanced,
+                queryBuilder: this.getStorage().get('queryBuilderRules', this.model.urlRoot) || {},
                 bool: this.bool,
                 presetName: this.presetName,
                 primary: this.primary,
