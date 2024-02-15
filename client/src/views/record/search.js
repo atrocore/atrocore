@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/record/search', 'view', function (Dep) {
+Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'], function (Dep) {
 
     return Dep.extend({
 
@@ -71,6 +71,8 @@ Espo.define('views/record/search', 'view', function (Dep) {
 
         boolFilterData: {},
 
+        filters: [],
+
         data: function () {
             let data = {
                 scope: this.scope,
@@ -87,7 +89,9 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 viewMode: this.viewMode,
                 viewModeDataList: this.viewModeDataList || [],
                 hasViewModeSwitcher: this.viewModeList && this.viewModeList.length > 1,
-                additionalFilters: this.additionalFilters
+                additionalFilters: this.additionalFilters,
+                queryBuilderFilter: !!(this.model.get('hasQueryBuilderFilter')),
+                hasAttributeButton: this.model.urlRoot === 'Product'
             };
 
             data.boolFilterListLength = 0;
@@ -195,9 +199,171 @@ Espo.define('views/record/search', 'view', function (Dep) {
             this.model = new this.collection.model();
             this.model.clear();
 
+            this.model.set('hasQueryBuilderFilter', !!(this.getStorage().get('hasQueryBuilderFilter', this.model.urlRoot)));
+
             this.createFilters();
 
             this.setupViewModeDataList();
+
+            // set translates
+            $.fn.queryBuilder.regional['main'] = this.getLanguage().data.Global.queryBuilderFilter;
+            $.fn.queryBuilder.defaults({lang_code: 'main'});
+
+            /**
+             * Add filter toggle button
+             */
+            this.createView('hasQueryBuilderFilter', 'views/fields/bool', {
+                name: 'hasQueryBuilderFilter',
+                el: this.options.el + ' .new-filter-container .field',
+                model: this.model,
+                mode: 'edit'
+            }, view => {
+                // do something
+            });
+
+            this.listenTo(this.model, 'change:hasQueryBuilderFilter', () => {
+                this.getStorage().set('hasQueryBuilderFilter', this.model.urlRoot, this.model.get('hasQueryBuilderFilter'));
+                this.reRender();
+            })
+        },
+
+        initQueryBuilderFilter(rules = []) {
+            this.$el.find('.query-builder').queryBuilder({
+                allow_empty: true,
+                operators: [
+                    {type: 'contains'},
+                    {type: 'not_contains'},
+                    {type: 'equal'},
+                    {type: 'not_equal'},
+                    {type: 'less'},
+                    {type: 'less_or_equal'},
+                    {type: 'greater'},
+                    {type: 'greater_or_equal'},
+                    {type: 'between'},
+                    {type: 'in'},
+                    {type: 'not_in'},
+                    {type: 'is_null'},
+                    {type: 'is_not_null'},
+                    {type: 'linked_with', nb_inputs: 1, multiple: true, apply_to: ['string']},
+                    {type: 'not_linked_with', nb_inputs: 1, multiple: true, apply_to: ['string']},
+                    {type: 'array_any_of', nb_inputs: 1, multiple: true, apply_to: ['string']},
+                    {type: 'array_none_of', nb_inputs: 1, multiple: true, apply_to: ['string']},
+                    {type: 'is_linked', nb_inputs: 0, apply_to: ['string']},
+                    {type: 'is_not_linked', nb_inputs: 0, apply_to: ['string']},
+                    {type: 'query_in', nb_inputs: 1, apply_to: ['string']},
+                    {type: 'query_linked_with', nb_inputs: 1, apply_to: ['string']},
+                ],
+                rules: rules,
+                filters: this.filters,
+                plugins: {
+                    sortable: {
+                        icon: 'fas fa-sort'
+                    }
+                }
+            });
+
+            this.model.trigger('afterInitQueryBuilder');
+
+            this.$el.find('.query-builder').on('afterUpdateRuleOperator.queryBuilder', (e, rule) => {
+                this.model.trigger('afterUpdateRuleOperator', rule);
+            });
+
+            this.$el.find('.query-builder').on('afterAddRule.queryBuilder', (e, rule) => {
+                this.model.trigger('afterAddRule', rule);
+            });
+
+            this.$el.find('.query-builder').on('afterDeleteRule.queryBuilder', (e, rule) => {
+                this.model.trigger('afterDeleteRule', rule);
+            });
+        },
+
+        prepareFilters(callback) {
+            this.filters = [];
+            let promiseList = [];
+            $.each(this.getMetadata().get(['entityDefs', this.scope, 'fields']), (field, fieldDefs) => {
+                if (fieldDefs.filterDisabled) {
+                    return;
+                }
+
+                const fieldType = Espo.Utils.camelCaseToHyphen(fieldDefs.type);
+                const view = this.getMetadata().get(['fields', fieldType, 'view'], `views/fields/${fieldType}`);
+
+                promiseList.push(new Promise(resolve => {
+                    this.createView(field, view, {
+                        name: field,
+                        model: this.model,
+                        defs: {
+                            name: field,
+                            params: {
+                                attribute: null
+                            }
+                        },
+                    }, view => {
+                        let filter = view.createQueryBuilderFilter();
+                        if (filter) {
+                            this.filters.push(filter);
+                        }
+                        resolve();
+                    });
+                }));
+            });
+
+            Promise.all(promiseList).then(() => {
+                callback();
+            });
+        },
+
+        addAttributeFilter() {
+            const scope = 'Attribute';
+            if (this.getAcl().check(scope, 'read')) {
+                const viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', 'select']) || 'views/modals/select-records';
+                this.notify('Loading...');
+                this.createView('dialog', viewName, {
+                    scope: scope,
+                    multiple: false,
+                    createButton: false,
+                    massRelateEnabled: false
+                }, dialog => {
+                    dialog.render();
+                    this.notify(false);
+                    dialog.once('select', attribute => {
+                        let rules = this.$el.find('.query-builder').queryBuilder('getRules');
+
+                        const fieldType = Espo.Utils.camelCaseToHyphen(attribute.get('type'));
+                        const view = this.getMetadata().get(['fields', fieldType, 'view'], `views/fields/${fieldType}`);
+
+                        const name = `attr_${attribute.get('id')}`;
+
+                        this.createView(name, view, {
+                            name: name,
+                            model: this.model,
+                            defs: {
+                                name: name,
+                                params: {
+                                    attribute: attribute
+                                }
+                            },
+                        }, view => {
+                            let filter = view.createQueryBuilderFilter();
+                            if (filter) {
+                                filter.label = attribute.get('name');
+
+                                let ids = this.filters.map(item => {
+                                    return item.id
+                                });
+
+                                if (!ids.includes(name)) {
+                                    this.filters.push(filter);
+                                    const $qb = this.$el.find('.query-builder');
+                                    $qb.queryBuilder('destroy');
+                                    $qb.addClass('query-builder');
+                                    this.initQueryBuilderFilter(rules);
+                                }
+                            }
+                        });
+                    });
+                });
+            }
         },
 
         setupViewModeDataList: function () {
@@ -450,7 +616,7 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 return;
             }
 
-            if (Object.keys(this.advanced).length > 0) {
+            if (Object.keys(this.advanced).length > 0 || this.model.get('hasQueryBuilderFilter')) {
                 $filterActions.show();
                 return;
             }
@@ -674,6 +840,12 @@ Espo.define('views/record/search', 'view', function (Dep) {
                 } else {
                     this.$el.find('.filter-actions').removeClass('hidden');
                 }
+            }
+
+            if (this.model.get('hasQueryBuilderFilter')) {
+                this.prepareFilters(() => {
+                    this.initQueryBuilderFilter();
+                });
             }
         },
 
