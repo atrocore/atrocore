@@ -286,7 +286,6 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
             });
             $queryBuilder.on('afterUpdateRuleValue.queryBuilder', (e, rule) => {
                 this.model.trigger('afterUpdateRuleValue', rule);
-                console.log('afterUpdateRuleValue')
             });
             $queryBuilder.on('afterAddGroup.queryBuilder', (e, rule) => {
                 this.model.trigger('afterAddGroup', rule);
