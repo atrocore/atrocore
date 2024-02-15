@@ -133,10 +133,6 @@ Espo.define('search-manager', [], function () {
                 }
             }
 
-            if (this.data.queryBuilder) {
-                where.push(this.data.queryBuilder);
-            }
-
             return where;
         },
 
