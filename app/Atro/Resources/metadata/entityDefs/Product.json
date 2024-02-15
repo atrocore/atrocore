@@ -36,8 +36,7 @@
     },
     "parents": {
       "type": "linkMultiple",
-      "view": "views/fields/hierarchy-parents",
-      "noLoad": true
+      "view": "views/fields/hierarchy-parents"
     },
     "sortOrder": {
       "type": "int",
