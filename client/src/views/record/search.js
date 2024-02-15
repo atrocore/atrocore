@@ -225,9 +225,15 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
                 this.getStorage().set('hasQueryBuilderFilter', this.model.urlRoot, this.model.get('hasQueryBuilderFilter'));
                 this.reRender();
             })
+
+            this.listenTo(this.model, 'rulesChanged', () => {
+                this.getStorage().set('queryBuilderRules', this.model.urlRoot, this.$el.find('.query-builder').queryBuilder('getRules'));
+            })
         },
 
-        initQueryBuilderFilter(rules = []) {
+        initQueryBuilderFilter() {
+            let rules = this.getStorage().get('queryBuilderRules', this.model.urlRoot) || [];
+
             this.$el.find('.query-builder').queryBuilder({
                 allow_empty: true,
                 operators: [
@@ -264,14 +270,30 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
 
             this.model.trigger('afterInitQueryBuilder');
 
+            this.$el.find('.query-builder').on('rulesChanged.queryBuilder', (e, rule) => {
+                this.model.trigger('rulesChanged', rule);
+            });
+            this.$el.find('.query-builder').on('afterUpdateGroupCondition.queryBuilder', (e, rule) => {
+                this.model.trigger('afterUpdateGroupCondition', rule);
+            });
+            this.$el.find('.query-builder').on('afterUpdateRuleFilter.queryBuilder', (e, rule) => {
+                this.model.trigger('afterUpdateRuleFilter', rule);
+            });
             this.$el.find('.query-builder').on('afterUpdateRuleOperator.queryBuilder', (e, rule) => {
                 this.model.trigger('afterUpdateRuleOperator', rule);
             });
-
+            this.$el.find('.query-builder').on('afterUpdateRuleValue.queryBuilder', (e, rule) => {
+                this.model.trigger('afterUpdateRuleValue', rule);
+            });
+            this.$el.find('.query-builder').on('afterAddGroup.queryBuilder', (e, rule) => {
+                this.model.trigger('afterAddGroup', rule);
+            });
+            this.$el.find('.query-builder').on('afterDeleteGroup.queryBuilder', (e, rule) => {
+                this.model.trigger('afterDeleteGroup', rule);
+            });
             this.$el.find('.query-builder').on('afterAddRule.queryBuilder', (e, rule) => {
                 this.model.trigger('afterAddRule', rule);
             });
-
             this.$el.find('.query-builder').on('afterDeleteRule.queryBuilder', (e, rule) => {
                 this.model.trigger('afterDeleteRule', rule);
             });
@@ -327,8 +349,6 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
                     dialog.render();
                     this.notify(false);
                     dialog.once('select', attribute => {
-                        let rules = this.$el.find('.query-builder').queryBuilder('getRules');
-
                         const fieldType = Espo.Utils.camelCaseToHyphen(attribute.get('type'));
                         const view = this.getMetadata().get(['fields', fieldType, 'view'], `views/fields/${fieldType}`);
 
@@ -357,7 +377,7 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
                                     const $qb = this.$el.find('.query-builder');
                                     $qb.queryBuilder('destroy');
                                     $qb.addClass('query-builder');
-                                    this.initQueryBuilderFilter(rules);
+                                    this.initQueryBuilderFilter();
                                 }
                             }
                         });
@@ -1133,7 +1153,7 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
             }
 
             if (this.model.get('hasQueryBuilderFilter')) {
-                const rules = this.$el.find('.query-builder').queryBuilder('getRules');
+                const rules = this.getStorage().get('queryBuilderRules', this.model.urlRoot) || [];
                 if (rules && rules.rules && rules.rules.length > 0) {
                     where.push(rules);
                 }
