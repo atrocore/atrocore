@@ -45,7 +45,7 @@ Espo.define('views/record/query-builder', ['view', 'lib!Interact', 'lib!QueryBui
 
         data() {
             return {
-                hasAttributeButton: this.model.urlRoot === 'Foo'
+                hasAttributeButton: this.model.urlRoot === 'Product'
             };
         },
 
@@ -102,7 +102,16 @@ Espo.define('views/record/query-builder', ['view', 'lib!Interact', 'lib!QueryBui
                 const view = this.getMetadata().get(['fields', fieldType, 'view'], `views/fields/${fieldType}`);
 
                 promiseList.push(new Promise(resolve => {
-                    this.createView(field, view, {name: field, model: this.model}, view => {
+                    this.createView(field, view, {
+                        name: field,
+                        model: this.model,
+                        defs: {
+                            name: field,
+                            params: {
+                                attribute: null
+                            }
+                        },
+                    }, view => {
                         let filter = view.createQueryBuilderFilter();
                         if (filter) {
                             this.filters.push(filter);
