@@ -235,9 +235,9 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
         },
 
         initQueryBuilderFilter() {
-            let rules = this.getStorage().get('queryBuilderRules', this.model.urlRoot) || [];
+            const $queryBuilder = this.$el.find('.query-builder');
 
-            this.$el.find('.query-builder').queryBuilder({
+            $queryBuilder.queryBuilder({
                 allow_empty: true,
                 operators: [
                     {type: 'contains'},
@@ -262,7 +262,7 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
                     {type: 'query_in', nb_inputs: 1, apply_to: ['string']},
                     {type: 'query_linked_with', nb_inputs: 1, apply_to: ['string']},
                 ],
-                rules: rules,
+                rules: this.getStorage().get('queryBuilderRules', this.model.urlRoot) || [],
                 filters: this.filters,
                 plugins: {
                     sortable: {
@@ -272,32 +272,32 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
             });
 
             this.model.trigger('afterInitQueryBuilder');
-
-            this.$el.find('.query-builder').on('rulesChanged.queryBuilder', (e, rule) => {
+            $queryBuilder.on('rulesChanged.queryBuilder', (e, rule) => {
                 this.model.trigger('rulesChanged', rule);
             });
-            this.$el.find('.query-builder').on('afterUpdateGroupCondition.queryBuilder', (e, rule) => {
+            $queryBuilder.on('afterUpdateGroupCondition.queryBuilder', (e, rule) => {
                 this.model.trigger('afterUpdateGroupCondition', rule);
             });
-            this.$el.find('.query-builder').on('afterUpdateRuleFilter.queryBuilder', (e, rule) => {
+            $queryBuilder.on('afterUpdateRuleFilter.queryBuilder', (e, rule) => {
                 this.model.trigger('afterUpdateRuleFilter', rule);
             });
-            this.$el.find('.query-builder').on('afterUpdateRuleOperator.queryBuilder', (e, rule) => {
+            $queryBuilder.on('afterUpdateRuleOperator.queryBuilder', (e, rule) => {
                 this.model.trigger('afterUpdateRuleOperator', rule);
             });
-            this.$el.find('.query-builder').on('afterUpdateRuleValue.queryBuilder', (e, rule) => {
+            $queryBuilder.on('afterUpdateRuleValue.queryBuilder', (e, rule) => {
                 this.model.trigger('afterUpdateRuleValue', rule);
+                console.log('afterUpdateRuleValue')
             });
-            this.$el.find('.query-builder').on('afterAddGroup.queryBuilder', (e, rule) => {
+            $queryBuilder.on('afterAddGroup.queryBuilder', (e, rule) => {
                 this.model.trigger('afterAddGroup', rule);
             });
-            this.$el.find('.query-builder').on('afterDeleteGroup.queryBuilder', (e, rule) => {
+            $queryBuilder.on('afterDeleteGroup.queryBuilder', (e, rule) => {
                 this.model.trigger('afterDeleteGroup', rule);
             });
-            this.$el.find('.query-builder').on('afterAddRule.queryBuilder', (e, rule) => {
+            $queryBuilder.on('afterAddRule.queryBuilder', (e, rule) => {
                 this.model.trigger('afterAddRule', rule);
             });
-            this.$el.find('.query-builder').on('afterDeleteRule.queryBuilder', (e, rule) => {
+            $queryBuilder.on('afterDeleteRule.queryBuilder', (e, rule) => {
                 this.model.trigger('afterDeleteRule', rule);
             });
         },

@@ -507,27 +507,7 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                     'is_null',
                     'is_not_null'
                 ],
-                input: (rule, inputName) => {
-                    if (!rule || !inputName) {
-                        return '';
-                    }
-                    this.filterValue = null;
-                    this.getModelFactory().create(null, model => {
-                        this.createView(inputName, 'views/fields/array', {
-                            name: 'value',
-                            el: `#${rule.id} .field-container`,
-                            model: model,
-                            mode: 'edit',
-                        }, view => {
-                            this.listenTo(view, 'change', () => {
-                                this.filterValue = model.get('value');
-                                rule.$el.find(`input[name="${inputName}"]`).trigger('change');
-                            });
-                            this.renderAfterEl(view, `#${rule.id} .field-container`);
-                        });
-                    });
-                    return `<div class="field-container"></div><input type="hidden" name="${inputName}" />`;
-                },
+                input: this.filterInput.bind(this),
                 valueGetter: this.filterValueGetter.bind(this)
             };
         },

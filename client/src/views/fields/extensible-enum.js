@@ -137,6 +137,9 @@ Espo.define('views/fields/extensible-enum', ['views/fields/link', 'views/fields/
                             });
                             this.renderAfterEl(view, `#${rule.id} .field-container`);
                         });
+                        this.listenTo(this.model, 'afterInitQueryBuilder', () => {
+                            model.set('value', rule.value);
+                        });
                     });
                     return `<div class="field-container"></div><input type="hidden" name="${inputName}" />`;
                 },

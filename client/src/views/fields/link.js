@@ -735,6 +735,9 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         });
                         this.renderAfterEl(view, `#${rule.id} .field-container`);
                     });
+                    this.listenTo(this.model, 'afterInitQueryBuilder', () => {
+                        model.set('valueIds', rule.value);
+                    });
                 }
             });
         },

@@ -195,6 +195,9 @@ Espo.define('views/fields/extensible-multi-enum', ['treo-core:views/fields/filte
                             });
                             this.renderAfterEl(view, `#${rule.id} .field-container`);
                         });
+                        this.listenTo(this.model, 'afterInitQueryBuilder', () => {
+                            model.set('value', rule.value);
+                        });
                     });
                     return `<div class="field-container"></div><input type="hidden" name="${inputName}" />`;
                 },
