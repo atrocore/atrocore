@@ -6,7 +6,8 @@
     "price": "Price",
     "longDescription": "Long Description",
     "children": "Child Products",
-    "parents": "Parent Products"
+    "parents": "Parent Products",
+    "quantity": "Quantity"
   },
   "labels": {
     "Create Product": "Create Product"
