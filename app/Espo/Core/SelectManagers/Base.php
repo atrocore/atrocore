@@ -367,10 +367,6 @@ class Base
 
     public function convertWhere(array $where, $ignoreAdditionaFilterTypes = false, &$result = null)
     {
-        if (isset($where[0]['rules'])) {
-            $this->mutateWhereQuery($where);
-        }
-
         $whereClause = [];
 
         $ignoreTypeList = ['bool', 'primary'];
@@ -437,17 +433,19 @@ class Base
                         ];
                     }
                 } else {
-                    $item = [
-                        'attribute' => $item['id'],
-                        'type'      => $this->qbOperatorToType((string)$item['operator']),
-                        'value'     => $item['value'],
-                    ];
+                    if (isset($item['id'])) {
+                        $item = [
+                            'attribute' => $item['id'],
+                            'type'      => $this->qbOperatorToType((string)$item['operator']),
+                            'value'     => $item['value'],
+                        ];
 
-                    // for attributes
-                    if (strpos($item['id'], 'attr_') !== false) {
-                        $parts = explode('_', $item['id']);
-                        $item['attribute'] = array_pop($parts);
-                        $item['isAttribute'] = true;
+                        // for attributes
+                        if (strpos($item['attribute'], 'attr_') !== false) {
+                            $parts = explode('_', $item['attribute']);
+                            $item['attribute'] = array_pop($parts);
+                            $item['isAttribute'] = true;
+                        }
                     }
                 }
             }
@@ -886,6 +884,7 @@ class Base
         }
 
         if (!empty($params['where']) && is_array($params['where'])) {
+            $this->mutateWhereQuery($params['where']);
             if ($checkWherePermission) {
                 $this->checkWhere($params['where']);
             }
