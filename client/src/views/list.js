@@ -100,10 +100,6 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
 
             this.headerView = this.options.headerView || this.headerView;
             this.recordView = this.options.recordView || this.recordView;
-
-            if (this.getMetadata().get(['scopes', this.entityType, 'queryBuilderFilter'])) {
-                this.searchView = 'views/record/query-builder';
-            }
             this.searchView = this.options.searchView || this.searchView;
 
             this.setupHeader();
