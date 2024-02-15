@@ -459,6 +459,9 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
             'click button[data-action="reset-filter"]': function (e) {
                 this.resetFilters();
             },
+            'click button[data-action="add-attribute-filter"]': function (e) {
+                this.addAttributeFilter();
+            },
             'click button[data-action="refresh"]': function (e) {
                 this.refresh();
             },
@@ -1086,9 +1089,11 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
             }
 
             let advanced = {};
-            for (let field in this.advanced) {
-                if (!('value' in this.advanced[field]) || ![null, ''].includes(this.advanced[field].value) || 'subQuery' in this.advanced[field] || this.pinned[field]) {
-                    advanced[field] = this.advanced[field];
+            if (!this.model.get('hasQueryBuilderFilter')) {
+                for (let field in this.advanced) {
+                    if (!('value' in this.advanced[field]) || ![null, ''].includes(this.advanced[field].value) || 'subQuery' in this.advanced[field] || this.pinned[field]) {
+                        advanced[field] = this.advanced[field];
+                    }
                 }
             }
             this.searchManager.set(_.extend(this.searchManager.get(), {advanced: advanced}));
@@ -1122,6 +1127,13 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
                             this.collection.maxSize = maxForTree;
                         }
                     });
+                }
+            }
+
+            if (this.model.get('hasQueryBuilderFilter')) {
+                const rules = this.$el.find('.query-builder').queryBuilder('getRules');
+                if (rules && rules.rules && rules.rules.length > 0) {
+                    where.push(rules);
                 }
             }
 
@@ -1275,10 +1287,12 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
                 this.bool[name] = this.$el.find('input[name="' + name + '"]').prop('checked');
             }, this);
 
-            for (var field in this.advanced) {
-                var view = this.getView('filter-' + field).getView('field');
-                this.advanced[field] = view.fetchSearch();
-                view.searchParams = this.advanced[field];
+            if (!this.model.get('hasQueryBuilderFilter')) {
+                for (var field in this.advanced) {
+                    var view = this.getView('filter-' + field).getView('field');
+                    this.advanced[field] = view.fetchSearch();
+                    view.searchParams = this.advanced[field];
+                }
             }
         },
 
