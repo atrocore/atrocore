@@ -295,7 +295,28 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
 
         getSearchType: function () {
             return this.searchParams.typeFront || this.searchParams.type;
-        }
+        },
+
+        createQueryBuilderFilter() {
+            return {
+                id: this.name,
+                label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),
+                type: 'integer',
+                operators: [
+                    'equal',
+                    'not_equal',
+                    'less',
+                    'less_or_equal',
+                    'greater',
+                    'greater_or_equal',
+                    'between',
+                    'is_null',
+                    'is_not_null'
+                ],
+                input: this.filterInput.bind(this),
+                valueGetter: this.filterValueGetter.bind(this)
+            };
+        },
 
     });
 });

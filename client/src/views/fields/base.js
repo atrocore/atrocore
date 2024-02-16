@@ -80,6 +80,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         inlineEditModeIsOn: false,
 
+        defaultFilterValue: null,
+
         isRequired: function () {
             return this.params.required;
         }, /**
@@ -906,6 +908,50 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         disable() {
             this.$el.find(`[name="${this.name}"]`).prop('disabled', true)
-        }
+        },
+
+        createQueryBuilderFilter() {
+            return null;
+        },
+
+        renderAfterEl(view, el) {
+            setTimeout(() => {
+                if ($(el).length) {
+                    view.render();
+                } else {
+                    this.renderAfterEl(view, el);
+                }
+            }, 100);
+        },
+
+        filterInput(rule, inputName) {
+            if (!rule || !inputName) {
+                return '';
+            }
+            this.filterValue = this.defaultFilterValue;
+            this.getModelFactory().create(null, model => {
+                this.createView(inputName, `views/fields/${this.type}`, {
+                    name: 'value',
+                    el: `#${rule.id} .field-container`,
+                    model: model,
+                    mode: 'edit'
+                }, view => {
+                    this.listenTo(view, 'change', () => {
+                        this.filterValue = model.get('value');
+                        rule.$el.find(`input[name="${inputName}"]`).trigger('change');
+                    });
+                    this.renderAfterEl(view, `#${rule.id} .field-container`);
+                });
+                this.listenTo(this.model, 'afterInitQueryBuilder', () => {
+                    model.set('value', rule.value);
+                });
+            });
+            return `<div class="field-container"></div><input type="hidden" name="${inputName}" />`;
+        },
+
+        filterValueGetter(rule) {
+            return this.filterValue;
+        },
+
     });
 });

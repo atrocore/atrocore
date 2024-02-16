@@ -492,7 +492,25 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
 
         getSearchType: function () {
             return this.getSearchParamsData().type || 'anyOf';
-        }
+        },
+
+        createQueryBuilderFilter() {
+            const scope = this.model.urlRoot;
+
+            return {
+                id: this.name,
+                label: this.getLanguage().translate(this.name, 'fields', scope),
+                type: 'string',
+                operators: [
+                    'in',
+                    'not_in',
+                    'is_null',
+                    'is_not_null'
+                ],
+                input: this.filterInput.bind(this),
+                valueGetter: this.filterValueGetter.bind(this)
+            };
+        },
 
     });
 });

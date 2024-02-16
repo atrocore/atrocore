@@ -278,7 +278,7 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
         fetchSearch: function () {
             var value = this.parseDate(this.$element.val());
 
-            var type = this.$el.find('[name="'+this.name+'-type"]').val();
+            var type = this.$el.find('[name="' + this.name + '-type"]').val();
             var data;
 
             if (type == 'between') {
@@ -348,7 +348,7 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
                 if (value && otherValue) {
                     if (moment(value).unix() <= moment(otherValue).unix()) {
                         var msg = this.translate('fieldShouldAfter', 'messages').replace('{field}', this.getLabelText())
-                                                                                .replace('{otherField}', this.translate(field, 'fields', this.model.name));
+                            .replace('{otherField}', this.translate(field, 'fields', this.model.name));
 
                         this.showValidationMessage(msg);
                         return true;
@@ -365,13 +365,35 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
                 if (value && otherValue) {
                     if (moment(value).unix() >= moment(otherValue).unix()) {
                         var msg = this.translate('fieldShouldBefore', 'messages').replace('{field}', this.getLabelText())
-                                                                                 .replace('{otherField}', this.translate(field, 'fields', this.model.name));
+                            .replace('{otherField}', this.translate(field, 'fields', this.model.name));
                         this.showValidationMessage(msg);
                         return true;
                     }
                 }
             }
         },
+
+        createQueryBuilderFilter() {
+            return {
+                id: this.name,
+                label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),
+                type: 'date',
+                operators: [
+                    'equal',
+                    'not_equal',
+                    'less',
+                    'less_or_equal',
+                    'greater',
+                    'greater_or_equal',
+                    'between',
+                    'is_null',
+                    'is_not_null'
+                ],
+                input: this.filterInput.bind(this),
+                valueGetter: this.filterValueGetter.bind(this)
+            };
+        },
+
     });
 });
 

@@ -407,6 +407,118 @@ class Base
         return $whereClause;
     }
 
+    public function mutateWhereQuery(array &$where): void
+    {
+        foreach ($where as &$item) {
+            if (isset($item['rules'])) {
+                $this->mutateWhereQuery($item['rules']);
+                $item = ['type' => $this->qbConditionToType((string)$item['condition']), 'value' => $item['rules']];
+            } else {
+                if (in_array($item['operator'], ['query_in', 'query_linked_with'])) {
+                    $subQuery = is_array($item['value']) ? $item['value'] : @json_decode((string)$item['value'], true);
+                    if (!empty($subQuery)) {
+                        $this->mutateWhereQuery($subQuery['rules']);
+                        switch ($item['operator']) {
+                            case 'query_in':
+                                $type = 'in';
+                                break;
+                            case 'query_linked_with':
+                                $type = 'linkedWith';
+                                break;
+                        }
+                        $item = [
+                            'attribute' => $item['id'],
+                            'type'      => $type,
+                            'subQuery'  => $subQuery['rules']
+                        ];
+                    }
+                } else {
+                    if (isset($item['id'])) {
+                        $item = [
+                            'attribute' => $item['id'],
+                            'type'      => $this->qbOperatorToType((string)$item['operator']),
+                            'value'     => $item['value'],
+                        ];
+
+                        // for attributes
+                        if (strpos($item['attribute'], 'attr_') !== false) {
+                            $parts = explode('_', $item['attribute']);
+                            $item['attribute'] = array_pop($parts);
+                            $item['isAttribute'] = true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public function qbConditionToType(string $condition): string
+    {
+        return strtolower($condition) === 'or' ? 'or' : 'and';
+    }
+
+    public function qbOperatorToType(string $operator): string
+    {
+        switch ($operator) {
+            case 'equal':
+                $operator = 'equals';
+                break;
+            case 'not_equal':
+                $operator = 'notEquals';
+                break;
+            case 'begins_with':
+                $operator = 'startsWith';
+                break;
+            case 'ends_with':
+                $operator = 'endsWith';
+                break;
+            case 'not_contains':
+                $operator = 'notContains';
+                break;
+            case 'less':
+                $operator = 'lessThan';
+                break;
+            case 'less_or_equal':
+                $operator = 'lessThanOrEquals';
+                break;
+            case 'greater':
+                $operator = 'greaterThan';
+                break;
+            case 'greater_or_equal':
+                $operator = 'greaterThanOrEquals';
+                break;
+            case 'not_in':
+                $operator = 'notIn';
+                break;
+            case 'linked_with':
+                $operator = 'linkedWith';
+                break;
+            case 'not_linked_with':
+                $operator = 'notLinkedWith';
+                break;
+            case 'is_linked':
+                $operator = 'isLinked';
+                break;
+            case 'is_not_linked':
+                $operator = 'isNotLinked';
+                break;
+            case 'is_null':
+                $operator = 'isNull';
+                break;
+            case 'is_not_null':
+                $operator = 'isNotNull';
+                break;
+            case 'array_any_of':
+                $operator = 'arrayAnyOf';
+                break;
+            case 'array_none_of':
+                $operator = 'arrayNoneOf';
+                break;
+        }
+
+        return $operator;
+    }
+
     protected function applyLinkedWith($link, $idsValue, &$result)
     {
         $part = array();
@@ -772,6 +884,7 @@ class Base
         }
 
         if (!empty($params['where']) && is_array($params['where'])) {
+            $this->mutateWhereQuery($params['where']);
             if ($checkWherePermission) {
                 $this->checkWhere($params['where']);
             }
@@ -1040,7 +1153,7 @@ class Base
                 $sp = $this->createSelectManager($foreignEntity)->getSelectParams(['where' => $item['subQuery']], true, true);
                 $sp['select'] = ['id'];
                 $collection = $this->getEntityManager()->getRepository($foreignEntity)->find($sp);
-                $item['value'] = array_column($collection->toArray(), 'id');
+                $item['value'] = array_merge(['no-such-id'], array_column($collection->toArray(), 'id'));
             }
             unset($item['subQuery']);
         }

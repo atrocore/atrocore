@@ -264,6 +264,55 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
             });
         },
 
+        createQueryBuilderFilter() {
+            const scope = this.model.urlRoot;
+
+            return {
+                id: this.name,
+                label: this.getLanguage().translate(this.name, 'fields', scope),
+                type: 'string',
+                operators: [
+                    'in',
+                    'not_in',
+                    'is_null',
+                    'is_not_null'
+                ],
+                input: (rule, inputName) => {
+                    if (!rule || !inputName) {
+                        return '';
+                    }
+                    this.filterValue = null;
+                    this.getModelFactory().create(null, model => {
+                        this.createView(inputName, 'views/fields/multi-enum', {
+                            name: 'value',
+                            el: `#${rule.id} .field-container`,
+                            model: model,
+                            mode: 'edit',
+                            defs: {
+                                name: 'value',
+                                params: {
+                                    required: true,
+                                    optionsIds: this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'optionsIds']) || [],
+                                    options: this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'options']) || []
+                                }
+                            },
+                        }, view => {
+                            this.listenTo(view, 'change', () => {
+                                this.filterValue = model.get('value');
+                                rule.$el.find(`input[name="${inputName}"]`).trigger('change');
+                            });
+                            this.renderAfterEl(view, `#${rule.id} .field-container`);
+                        });
+                        this.listenTo(this.model, 'afterInitQueryBuilder', () => {
+                            model.set('value', rule.value);
+                        });
+                    });
+                    return `<div class="field-container"></div><input type="hidden" name="${inputName}" />`;
+                },
+                valueGetter: this.filterValueGetter.bind(this)
+            };
+        },
+
     });
 });
 

@@ -61,6 +61,7 @@
     }
   ],
   "filter": true,
+  "qbFilterType": "string",
   "multilingual": true,
   "personalData": true,
   "textFilter": true

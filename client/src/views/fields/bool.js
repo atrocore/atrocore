@@ -46,6 +46,8 @@ Espo.define('views/fields/bool', 'views/fields/base', function (Dep) {
 
         validations: [],
 
+        defaultFilterValue: false,
+
         data: function () {
             var data = Dep.prototype.data.call(this);
             data.valueIsSet = this.model.has(this.name);
@@ -72,7 +74,24 @@ Espo.define('views/fields/bool', 'views/fields/base', function (Dep) {
 
         populateSearchDefaults: function () {
             this.$element.get(0).checked = true;
-        }
+        },
+
+        createQueryBuilderFilter() {
+            return {
+                id: this.name,
+                label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),
+                type: 'boolean',
+                operators: [
+                    'equal',
+                    'not_equal',
+                    'is_null',
+                    'is_not_null'
+                ],
+                input: this.filterInput.bind(this),
+                valueGetter: this.filterValueGetter.bind(this)
+            };
+        },
+
     });
 });
 

@@ -125,5 +125,26 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
             return value;
         },
 
+        createQueryBuilderFilter() {
+            return {
+                id: this.name,
+                label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),
+                type: 'double',
+                operators: [
+                    'equal',
+                    'not_equal',
+                    'less',
+                    'less_or_equal',
+                    'greater',
+                    'greater_or_equal',
+                    'between',
+                    'is_null',
+                    'is_not_null'
+                ],
+                input: this.filterInput.bind(this),
+                valueGetter: this.filterValueGetter.bind(this)
+            };
+        },
+
     });
 });

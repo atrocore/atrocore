@@ -1,3 +1,4 @@
+
 <div class="row search-row">
     <div class="form-group {{#if isModalDialog}}col-md-12 col-sm-12{{/if}}">
         <div class="input-group">
@@ -18,6 +19,8 @@
                     <li class="preset-control remove-preset hidden"><a tabindex="-1" href="javascript:" data-action="removePreset">{{translate 'Remove Filter'}}</a></li>
                     <li class="preset-control save-preset hidden"><a tabindex="-1" href="javascript:" data-action="savePreset">{{translate 'Save Filter'}}</a></li>
 
+                    {{#if queryBuilderFilter}}
+                    {{else}}
                     {{#if advancedFields.length}}
                     <li class="divider"></li>
 
@@ -39,6 +42,7 @@
                         <a href="javascript:" data-filter-name="{{name}}" tabindex="-1">{{label}}</a>
                     </li>
                     {{/each}}
+                    {{/if}}
                     {{/if}}
                     {{#if boolFilterListLength}}
                     <li class="divider"></li>
@@ -72,6 +76,12 @@
 </div>
 
 <div class="advanced-filters-bar" style="margin-bottom: 12px;"></div>
+{{#if queryBuilderFilter}}
+{{#if hasAttributeButton}}
+<button class="btn-link btn" data-action="add-attribute-filter"><div>{{translate 'Add Attribute'}}</div></button>
+{{/if}}
+<div class="query-builder"></div>
+{{else}}
 <div class="row advanced-filters grid-auto-fill-sm">
     {{#each filterDataList}}
     <div class="filter filter-{{name}} col-sm-4 col-md-3" data-name="{{name}}">
@@ -79,6 +89,16 @@
     </div>
     {{/each}}
 </div>
+{{/if}}
+{{#if queryBuilderFilterAvailable}}
+<div class="row new-filter-container">
+    <div class="cell form-group">
+        <label class="control-label">{{translate 'Query Builder Filter'}}</label>
+        <div class="field">{{{hasQueryBuilderFilter}}}</div>
+    </div>
+</div>
+{{/if}}
+
 <div class="row filter-actions">
     <button class="btn-link btn" data-action="search"><div>{{translate 'Apply filter'}}</div></button>
     <span class="pipeline">|</span>

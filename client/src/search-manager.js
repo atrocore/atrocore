@@ -34,6 +34,7 @@
 Espo.define('search-manager', [], function () {
 
     var SearchManager = function (collection, type, storage, dateTime, defaultData, emptyOnReset) {
+
         this.collection = collection;
         this.scope = collection.name;
         this.storage = storage;
@@ -45,6 +46,7 @@ Espo.define('search-manager', [], function () {
             textFilter: '',
             bool: {},
             advanced: {},
+            queryBuilder: {},
             primary: null,
             pinned: {}
         };
@@ -70,6 +72,9 @@ Espo.define('search-manager', [], function () {
         sanitizeData: function () {
             if (!('advanced' in this.data)) {
                 this.data.advanced = {};
+            }
+            if (!('queryBuilder' in this.data)) {
+                this.data.queryBuilder = {};
             }
             if (!('bool' in this.data)) {
                 this.data.bool = {};
@@ -188,6 +193,11 @@ Espo.define('search-manager', [], function () {
         setAdvanced: function (advanced) {
             this.data = Espo.Utils.clone(this.data);
             this.data.advanced = advanced;
+        },
+
+        setQueryBuilder: function (queryBuilder) {
+            this.data = Espo.Utils.clone(this.data);
+            this.data.queryBuilder = queryBuilder;
         },
 
         setBool: function (bool) {

@@ -48,6 +48,8 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
 
         validationPattern: null,
 
+        defaultFilterValue: '',
+
         events: {
             'keyup input.with-text-length': function (e) {
                 this.updateTextCounter();
@@ -261,7 +263,25 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
             }
 
             return null;
-        }
+        },
+
+        createQueryBuilderFilter() {
+            return {
+                id: this.name,
+                label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),
+                type: 'string',
+                operators: [
+                    'contains',
+                    'not_contains',
+                    'equal',
+                    'not_equal',
+                    'is_null',
+                    'is_not_null'
+                ],
+                input: this.filterInput.bind(this),
+                valueGetter: this.filterValueGetter.bind(this)
+            };
+        },
 
     });
 });

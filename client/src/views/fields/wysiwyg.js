@@ -46,6 +46,8 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
 
         seeMoreDisabled: true,
 
+        defaultFilterValue: '',
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
@@ -514,6 +516,25 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
 
         disable() {
             this.$summernote.summernote('disable')
-        }
+        },
+
+        createQueryBuilderFilter() {
+            return {
+                id: this.name,
+                label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),
+                type: 'string',
+                operators: [
+                    'contains',
+                    'not_contains',
+                    'equal',
+                    'not_equal',
+                    'is_null',
+                    'is_not_null'
+                ],
+                input: this.filterInput.bind(this),
+                valueGetter: this.filterValueGetter.bind(this)
+            };
+        },
+
     });
 });

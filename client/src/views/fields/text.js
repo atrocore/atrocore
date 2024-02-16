@@ -58,6 +58,8 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
 
         useDisabledTextareaInViewMode: false,
 
+        defaultFilterValue: '',
+
         searchTypeList: ['contains', 'startsWith', 'equals', 'endsWith', 'like', 'notContains', 'notLike', 'isEmpty', 'isNotEmpty'],
 
         events: {
@@ -311,7 +313,25 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
 
         getSearchType: function () {
             return this.getSearchParamsData().type || this.searchParams.typeFront || this.searchParams.type;
-        }
+        },
+
+        createQueryBuilderFilter() {
+            return {
+                id: this.name,
+                label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),
+                type: 'string',
+                operators: [
+                    'contains',
+                    'not_contains',
+                    'equal',
+                    'not_equal',
+                    'is_null',
+                    'is_not_null'
+                ],
+                input: this.filterInput.bind(this),
+                valueGetter: this.filterValueGetter.bind(this)
+            };
+        },
 
     });
 });

@@ -63,5 +63,15 @@
     "path": "client/lib/twig.min.js",
     "exportsTo": "$",
     "exportsAs": "twig"
+  },
+  "QueryBuilder": {
+    "path": "client/lib/query-builder.standalone.min.js",
+    "exportsTo": "$",
+    "exportsAs": "queryBuilder"
+  },
+  "Interact": {
+    "path": "client/lib/interact.min.js",
+    "exportsTo": "$",
+    "exportsAs": "interact"
   }
 }

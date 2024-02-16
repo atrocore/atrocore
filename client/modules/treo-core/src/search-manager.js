@@ -51,7 +51,9 @@ Espo.define('treo-core:search-manager', 'class-replace!treo-core:search-manager'
                 }
             }
 
-            if (this.data.advanced) {
+            if (this.data.queryBuilder.condition) {
+                where.push(this.data.queryBuilder);
+            } else if (this.data.advanced) {
                 var groups = {};
                 for (var name in this.data.advanced) {
                     var defs = this.data.advanced[name];
