@@ -14,7 +14,8 @@
     "convertTo": "Convert to"
   },
   "labels": {
-    "Create Unit": "Create Unit"
+    "Create Unit": "Create Unit",
+    "unitSetDefault": "Set as default"
   },
   "exceptions": {
     "defaultIsRequired": "The measure must have a default unit.",
