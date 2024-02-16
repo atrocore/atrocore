@@ -431,11 +431,14 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
                     dialog.once('select', attribute => {
                         this.pushAttributeFilter(attribute.attributes, (pushed, filter) => {
                             if (pushed) {
-                                let rules = this.getStorage().get('queryBuilderRules', this.model.urlRoot) || {
-                                    condition: 'AND',
-                                    rules: [],
-                                    valid: true
-                                };
+                                let rules = this.getStorage().get('queryBuilderRules', this.model.urlRoot);
+                                if (!rules.condition) {
+                                    rules = {
+                                        condition: 'AND',
+                                        rules: [],
+                                        valid: true
+                                    };
+                                }
                                 rules.rules.push({
                                     id: filter.id,
                                     operator: filter.operators[0],
