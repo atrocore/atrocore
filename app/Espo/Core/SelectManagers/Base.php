@@ -1182,6 +1182,9 @@ class Base
             $type = $item['type'];
 
             switch ($type) {
+                case 'innerSql':
+                    $part['innerSql'] = $item['value'];
+                    break;
                 case 'or':
                 case 'and':
                 case 'not':

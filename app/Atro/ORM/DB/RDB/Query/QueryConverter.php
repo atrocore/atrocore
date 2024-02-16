@@ -1014,6 +1014,11 @@ class QueryConverter
                         }
                     }
                 }
+            } elseif (isset($value['innerSql'])) {
+                $whereParts[] = $value['innerSql']['sql'];
+                foreach ($value['innerSql']['parameters'] as $p => $v) {
+                    $this->parameters[$p] = $v;
+                }
             } else {
                 $internalPart = $this->getWhere($entity, $value, $field, $params, $level + 1);
                 if ($internalPart || $internalPart === ':false') {
