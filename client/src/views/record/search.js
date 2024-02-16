@@ -289,32 +289,6 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
             const $queryBuilder = this.$el.find('.query-builder');
             const rules = this.getStorage().get('queryBuilderRules', this.model.urlRoot) || [];
 
-            /**
-             * Load attributes filters
-             */
-            if (rules.rules) {
-                let attributesIds = [];
-                this.getRulesIds(rules.rules).forEach(id => {
-                    let parts = id.split('_');
-                    if (parts.length === 2 && parts[0] === 'attr') {
-                        attributesIds.push(parts[1]);
-                    }
-                })
-
-                if (attributesIds.length > 0) {
-                    const where = [{attribute: 'id', type: 'in', value: attributesIds}];
-                    this.ajaxGetRequest('Attribute', {where: where}, {async: false}).success(attrs => {
-                        if (attrs.list) {
-                            attrs.list.forEach(attribute => {
-                                this.pushAttributeFilter(attribute, (pushed, filter) => {
-                                    // do nothing
-                                })
-                            });
-                        }
-                    })
-                }
-            }
-
             $queryBuilder.queryBuilder({
                 allow_empty: true,
                 operators: [
@@ -409,6 +383,40 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
                     });
                 }));
             });
+
+            const rules = this.getStorage().get('queryBuilderRules', this.model.urlRoot);
+
+            /**
+             * Load attributes filters
+             */
+            if (rules.rules) {
+                promiseList.push(new Promise(resolve => {
+                    let attributesIds = [];
+                    this.getRulesIds(rules.rules).forEach(id => {
+                        let parts = id.split('_');
+                        if (parts.length === 2 && parts[0] === 'attr') {
+                            attributesIds.push(parts[1]);
+                        }
+                    })
+
+                    if (attributesIds.length > 0) {
+                        const where = [{attribute: 'id', type: 'in', value: attributesIds}];
+                        this.ajaxGetRequest('Attribute', {where: where}, {async: false}).success(attrs => {
+                            if (attrs.list) {
+                                attrs.list.forEach(attribute => {
+                                    this.pushAttributeFilter(attribute, (pushed, filter) => {
+                                        resolve();
+                                    })
+                                });
+                            } else {
+                                resolve();
+                            }
+                        })
+                    } else {
+                        resolve();
+                    }
+                }));
+            }
 
             Promise.all(promiseList).then(() => {
                 callback();
