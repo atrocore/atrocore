@@ -90,6 +90,7 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
                 viewModeDataList: this.viewModeDataList || [],
                 hasViewModeSwitcher: this.viewModeList && this.viewModeList.length > 1,
                 additionalFilters: this.additionalFilters,
+                queryBuilderFilterAvailable: !!(this.getConfig().get('hasQueryBuilderFilter')),
                 queryBuilderFilter: !!(this.model.get('hasQueryBuilderFilter')),
                 hasAttributeButton: this.model.urlRoot === 'Product'
             };

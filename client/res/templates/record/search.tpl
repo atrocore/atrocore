@@ -90,12 +90,14 @@
     {{/each}}
 </div>
 {{/if}}
+{{#if queryBuilderFilterAvailable}}
 <div class="row new-filter-container">
     <div class="cell form-group">
         <label class="control-label">{{translate 'Query Builder Filter'}}</label>
         <div class="field">{{{hasQueryBuilderFilter}}}</div>
     </div>
 </div>
+{{/if}}
 
 <div class="row filter-actions">
     <button class="btn-link btn" data-action="search"><div>{{translate 'Apply filter'}}</div></button>
