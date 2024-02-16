@@ -230,12 +230,90 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
             })
 
             this.listenTo(this.model, 'rulesChanged', () => {
-                this.getStorage().set('queryBuilderRules', this.model.urlRoot, this.$el.find('.query-builder').queryBuilder('getRules'));
+                try {
+                    const rules = this.$el.find('.query-builder').queryBuilder('getRules');
+                    this.getStorage().set('queryBuilderRules', this.model.urlRoot, rules);
+                } catch (err) {
+                }
             })
+        },
+
+        getRulesIds(rules) {
+            let ids = [];
+            rules.forEach(rule => {
+                if (rule.rules) {
+                    this.getRulesIds(rule.rules).forEach(innerId => {
+                        ids.push(innerId);
+                    });
+                } else if (rule.id) {
+                    ids.push(rule.id);
+                }
+            })
+
+            return ids;
+        },
+
+        pushAttributeFilter(attribute, callback) {
+            const fieldType = Espo.Utils.camelCaseToHyphen(attribute.type);
+            const view = this.getMetadata().get(['fields', fieldType, 'view'], `views/fields/${fieldType}`);
+
+            const name = `attr_${attribute.id}`;
+
+            this.createView(name, view, {
+                name: name,
+                model: this.model,
+                defs: {
+                    name: name,
+                    params: {
+                        attribute: attribute
+                    }
+                },
+            }, view => {
+                let filter = view.createQueryBuilderFilter();
+                if (filter) {
+                    filter.label = attribute.name;
+                    let ids = this.filters.map(item => {
+                        return item.id
+                    });
+                    if (!ids.includes(name)) {
+                        this.filters.push(filter);
+                        callback(true);
+                    } else {
+                        callback(false);
+                    }
+                }
+            });
         },
 
         initQueryBuilderFilter() {
             const $queryBuilder = this.$el.find('.query-builder');
+            const rules = this.getStorage().get('queryBuilderRules', this.model.urlRoot) || [];
+
+            /**
+             * Load attributes filters
+             */
+            if (rules.rules) {
+                let attributesIds = [];
+                this.getRulesIds(rules.rules).forEach(id => {
+                    let parts = id.split('_');
+                    if (parts.length === 2 && parts[0] === 'attr') {
+                        attributesIds.push(parts[1]);
+                    }
+                })
+
+                if (attributesIds.length > 0) {
+                    const where = [{attribute: 'id', type: 'in', value: attributesIds}];
+                    this.ajaxGetRequest('Attribute', {where: where}, {async: false}).success(attrs => {
+                        if (attrs.list) {
+                            attrs.list.forEach(attribute => {
+                                this.pushAttributeFilter(attribute, pushed => {
+                                    // do nothing
+                                })
+                            });
+                        }
+                    })
+                }
+            }
 
             $queryBuilder.queryBuilder({
                 allow_empty: true,
@@ -262,7 +340,7 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
                     {type: 'query_in', nb_inputs: 1, apply_to: ['string']},
                     {type: 'query_linked_with', nb_inputs: 1, apply_to: ['string']},
                 ],
-                rules: this.getStorage().get('queryBuilderRules', this.model.urlRoot) || [],
+                rules: rules,
                 filters: this.filters,
                 plugins: {
                     sortable: {
@@ -351,38 +429,14 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
                     dialog.render();
                     this.notify(false);
                     dialog.once('select', attribute => {
-                        const fieldType = Espo.Utils.camelCaseToHyphen(attribute.get('type'));
-                        const view = this.getMetadata().get(['fields', fieldType, 'view'], `views/fields/${fieldType}`);
-
-                        const name = `attr_${attribute.get('id')}`;
-
-                        this.createView(name, view, {
-                            name: name,
-                            model: this.model,
-                            defs: {
-                                name: name,
-                                params: {
-                                    attribute: attribute
-                                }
-                            },
-                        }, view => {
-                            let filter = view.createQueryBuilderFilter();
-                            if (filter) {
-                                filter.label = attribute.get('name');
-
-                                let ids = this.filters.map(item => {
-                                    return item.id
-                                });
-
-                                if (!ids.includes(name)) {
-                                    this.filters.push(filter);
-                                    const $qb = this.$el.find('.query-builder');
-                                    $qb.queryBuilder('destroy');
-                                    $qb.addClass('query-builder');
-                                    this.initQueryBuilderFilter();
-                                }
+                        this.pushAttributeFilter(attribute.attributes, pushed => {
+                            if (pushed){
+                                const $qb = this.$el.find('.query-builder');
+                                $qb.queryBuilder('destroy');
+                                $qb.addClass('query-builder');
+                                this.initQueryBuilderFilter();
                             }
-                        });
+                        })
                     });
                 });
             }
@@ -1316,7 +1370,7 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
             this.searchManager.set({
                 textFilter: this.textFilter,
                 advanced: this.advanced,
-                queryBuilder: this.getStorage().get('queryBuilderRules', this.model.urlRoot) || {},
+                queryBuilder: this.getStorage().get('queryBuilderRules', this.model.urlRoot) || [],
                 bool: this.bool,
                 presetName: this.presetName,
                 primary: this.primary,
