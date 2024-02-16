@@ -127,7 +127,7 @@ Espo.define('views/fields/extensible-enum', ['views/fields/link', 'views/fields/
                             defs: {
                                 name: 'value',
                                 params: {
-                                    extensibleEnumId: attribute ? attribute.get('extensibleEnumId') : this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'extensibleEnumId'])
+                                    extensibleEnumId: attribute ? attribute.extensibleEnumId : this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'extensibleEnumId'])
                                 }
                             },
                         }, view => {

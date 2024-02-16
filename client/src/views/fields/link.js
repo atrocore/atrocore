@@ -727,7 +727,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         el: `#${rule.id} .field-container`,
                         model: model,
                         mode: 'edit',
-                        foreignScope: attribute ? attribute.get('entityType') : this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity']) || this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity'])
+                        foreignScope: attribute ? attribute.entityType : this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity']) || this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity'])
                     }, view => {
                         this.listenTo(view, 'change', () => {
                             this.filterValue = model.get('valueIds');
