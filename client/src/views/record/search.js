@@ -277,9 +277,9 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
                     });
                     if (!ids.includes(name)) {
                         this.filters.push(filter);
-                        callback(true);
+                        callback(true, filter);
                     } else {
-                        callback(false);
+                        callback(false, filter);
                     }
                 }
             });
@@ -306,7 +306,7 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
                     this.ajaxGetRequest('Attribute', {where: where}, {async: false}).success(attrs => {
                         if (attrs.list) {
                             attrs.list.forEach(attribute => {
-                                this.pushAttributeFilter(attribute, pushed => {
+                                this.pushAttributeFilter(attribute, (pushed, filter) => {
                                     // do nothing
                                 })
                             });
@@ -429,8 +429,20 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
                     dialog.render();
                     this.notify(false);
                     dialog.once('select', attribute => {
-                        this.pushAttributeFilter(attribute.attributes, pushed => {
-                            if (pushed){
+                        this.pushAttributeFilter(attribute.attributes, (pushed, filter) => {
+                            if (pushed) {
+                                let rules = this.getStorage().get('queryBuilderRules', this.model.urlRoot) || {
+                                    condition: 'AND',
+                                    rules: [],
+                                    valid: true
+                                };
+                                rules.rules.push({
+                                    id: filter.id,
+                                    operator: filter.operators[0],
+                                    type: filter.type,
+                                });
+                                this.getStorage().set('queryBuilderRules', this.model.urlRoot, rules);
+
                                 const $qb = this.$el.find('.query-builder');
                                 $qb.queryBuilder('destroy');
                                 $qb.addClass('query-builder');
@@ -778,7 +790,7 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
             this.textFilter = '';
             this.presetName = '';
 
-            // this.$el.find('.query-builder').queryBuilder('setRules', []);
+            this.getStorage().set('queryBuilderRules', this.model.urlRoot, []);
 
             this.selectPreset(this.presetName, true);
             this.toggleResetVisibility();
@@ -1370,7 +1382,7 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
             this.searchManager.set({
                 textFilter: this.textFilter,
                 advanced: this.advanced,
-                queryBuilder: this.getStorage().get('queryBuilderRules', this.model.urlRoot) || [],
+                queryBuilder: this.getStorage().get('queryBuilderRules', this.model.urlRoot) || {},
                 bool: this.bool,
                 presetName: this.presetName,
                 primary: this.primary,
