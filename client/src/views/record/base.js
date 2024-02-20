@@ -194,7 +194,6 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic',
 
         setFieldRequired: function (name) {
             this.recordHelper.setFieldStateParam(name, 'required', true);
-
             var view = this.getFieldView(name);
             if (view) {
                 view.setRequired();
@@ -203,7 +202,6 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic',
 
         setFieldNotRequired: function (name) {
             this.recordHelper.setFieldStateParam(name, 'required', false);
-
             var view = this.getFieldView(name);
             if (view) {
                 view.setNotRequired();
