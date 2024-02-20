@@ -225,20 +225,16 @@ class FieldManagerController extends AbstractListener
             }
 
             if (!empty($res)) {
-                $where = [];
-                foreach ($res as $item) {
-                    $where[] = ['attribute' => $field, 'type' => 'equals', 'value' => $item[$column]];
-                }
-
-                if (!empty($where[1])) {
-                    $where = [['type' => 'or', 'value' => $where]];
-                }
-
-                $url = $this->getConfig()->get('siteUrl') . '/?where=' . htmlspecialchars(json_encode($where), ENT_QUOTES, 'UTF-8') . '#' . $scope;
-
                 $message = $this->getLanguage()->translate('someFieldNotUnique', 'exceptions', 'FieldManager');
-                $message .= ' <a href="' . $url . '" target="_blank">' . $this->getLanguage()->translate('See more') . '</a>.';
-
+                if ($this->getConfig()->get('hasQueryBuilderFilter')) {
+                    $rules = [];
+                    foreach ($res as $item) {
+                        $rules[] = ['id' => $field, 'operator' => 'equal', 'value' => $item[$column]];
+                    }
+                    $where = ['condition' => 'OR', 'rules' => $rules];
+                    $url = $this->getConfig()->get('siteUrl') . '/?where=' . htmlspecialchars(json_encode($where), ENT_QUOTES, 'UTF-8') . '#' . $scope;
+                    $message .= ' <a href="' . $url . '" target="_blank">' . $this->getLanguage()->translate('See more') . '</a>.';
+                }
                 throw new BadRequest($message);
             }
         }
