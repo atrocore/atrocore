@@ -122,13 +122,15 @@ class Unit extends Base
                     empty($fieldDef['notStorable'])
                     && empty($fieldDef['unitIdField'])
                     && empty($fieldDef['unitField'])
+                    && !empty($fieldDef['type'])
                     && !empty($fieldDef['measureId'])
                     && $fieldDef['measureId'] === $entity->get('measureId')
                 ) {
+                    $column = $fieldDef['type'] === 'measure' ? Util::toUnderScore($field) : Util::toUnderScore($field) . '_unit_id';
                     $record = $this->getConnection()->createQueryBuilder()
                         ->select('t.*')
                         ->from($this->getConnection()->quoteIdentifier(Util::toUnderScore(lcfirst($entityName))), 't')
-                        ->where('t.' . Util::toUnderScore($field) . '_unit_id = :unitId')
+                        ->where("t.$column = :unitId")
                         ->andWhere('t.deleted = :false')
                         ->setParameter('unitId', $entity->get('id'))
                         ->setParameter('false', false, ParameterType::BOOLEAN)
@@ -141,7 +143,7 @@ class Unit extends Base
                                 $entity->get('name'),
                                 $this->getLanguage()->translate($field, 'fields', $entity->getEntityType()),
                                 $entityName,
-                                $record['name'] ?? ''
+                                $record['name'] ?? $record['id']
                             )
                         );
                     }
