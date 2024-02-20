@@ -562,10 +562,19 @@ class Record extends Base
         }
 
         $seed = $this->getEntityManager()->getRepository($this->name)->get();
-        // remove virtual fields
-        $seed->set('data', null);
-        
-        return $seed->getValueMap();
+        $result = [];
+
+        foreach ($this->getMetadata()->get(['entityDefs', $seed->getEntityType(), 'fields'], []) as $name => $defs) {
+            // send only values renderer via twig
+            if (!empty($defs['type']) && $defs['type'] === 'varchar' && !empty($defs['default'])) {
+                $default = $defs['default'];
+                if (strpos($default, '{{') >= 0 && strpos($default, '}}') >= 0 && $seed->has($name)) {
+                    $result[$name] = $seed->get($name);
+                }
+            }
+        }
+
+        return $result;
     }
 
     protected function prepareWhereQuery($where)
