@@ -25,6 +25,9 @@
       "type": "link",
       "required": true
     },
+    "extensibleEnums": {
+      "type": "linkMultiple"
+    },
     "color": {
       "type": "color"
     },
@@ -51,10 +54,11 @@
     }
   },
   "links": {
-    "extensibleEnum": {
-      "type": "belongsTo",
+    "extensibleEnums": {
+      "type": "hasMany",
       "foreign": "extensibleEnumOptions",
-      "entity": "ExtensibleEnum"
+      "entity": "ExtensibleEnum",
+      "relationName": "ExtensibleEnumOptionExtensibleEnum"
     },
     "createdBy": {
       "type": "belongsTo",
