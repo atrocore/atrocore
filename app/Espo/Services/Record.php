@@ -1324,6 +1324,12 @@ class Record extends Base
             }
         }
 
+        if (empty($data->_skipIsEntityUpdated) && !$this->isEntityUpdated($entity, $data)) {
+            throw new NotModified();
+        }
+
+        $entity->set($data);
+
         // set default value for only required fields
         foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields']) as $field => $defs) {
             if ($defs['type'] === 'varchar' && !empty($defs['setDefaultOnlyIfRequired']) && !empty($defs['default'])) {
@@ -1331,15 +1337,10 @@ class Record extends Base
                 if (!property_exists($data, $field) && $isRequired && empty($entity->get($field))) {
                     $seed = $this->getRepository()->get();
                     $data->{$field} = $seed->get($field);
+                    $entity->set($field, $data->{$field});
                 }
             }
         }
-
-        if (empty($data->_skipIsEntityUpdated) && !$this->isEntityUpdated($entity, $data)) {
-            throw new NotModified();
-        }
-
-        $entity->set($data);
 
         $this->beforeUpdateEntity($entity, $data);
 
@@ -3364,7 +3365,34 @@ class Record extends Base
         }
 
         if (!empty($item)) {
-            $result = Condition::isCheck(Condition::prepare($entity, $item));
+            // Fix for enum conditions
+            if (!property_exists($entity, '_entityForConditions')) {
+                $entityForConditions = clone $entity;
+                foreach ($this->getMetadata()->get("entityDefs.{$entityForConditions->getEntityName()}.fields") as $field => $fieldDefs) {
+                    if (!empty($fieldDefs['type']) && !empty($fieldDefs['optionsIds']) && $fieldDefs['options']) {
+                        if ($fieldDefs['type'] === 'enum') {
+                            $key = array_search($entityForConditions->get($field), $fieldDefs['optionsIds']);
+                            if ($key !== false) {
+                                $entityForConditions->set($field, $fieldDefs['options'][$key]);
+                            }
+                        }
+                        if ($fieldDefs['type'] === 'multiEnum') {
+                            $preparedValues = [];
+                            foreach ($entityForConditions->get($field) as $v) {
+                                $key = array_search($v, $fieldDefs['optionsIds']);
+                                if ($key !== false) {
+                                    $preparedValues[] = $fieldDefs['options'][$key];
+                                }
+                            }
+                            $entityForConditions->set($field, $preparedValues);
+                        }
+                    }
+
+                }
+                $entity->_entityForConditions = $entityForConditions;
+            }
+
+            $result = Condition::isCheck(Condition::prepare($entity->_entityForConditions, $item));
         }
 
         return $result;
