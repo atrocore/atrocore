@@ -79,22 +79,6 @@ Espo.define('views/list', ['views/main', 'search-manager'], function (Dep, Searc
         },
 
         setup: function () {
-            // var vars = [], hash;
-            // var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-            // for(var i = 0; i < hashes.length; i++)
-            // {
-            //     hash = hashes[i].split('=');
-            //     vars.push(hash[0]);
-            //     vars[hash[0]] = hash[1];
-            // }
-
-            // var encodedStr = window.location.search;
-            // var decoded = $("<div/>").html(encodedStr).text();
-            // console.log(decoded);
-
-            // console.log(vars)
-
-
             this.collection.maxSize = this.getConfig().get('recordsPerPage') || this.collection.maxSize;
 
             this.collectionUrl = this.collection.url;
