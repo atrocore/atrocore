@@ -414,7 +414,7 @@ class Base
                 $this->mutateWhereQuery($item['rules']);
                 $item = ['type' => $this->qbConditionToType((string)$item['condition']), 'value' => $item['rules']];
             } else {
-                if (in_array($item['operator'], ['query_in', 'query_linked_with'])) {
+                if (!empty($item['operator']) && in_array($item['operator'], ['query_in', 'query_linked_with'])) {
                     $subQuery = is_array($item['value']) ? $item['value'] : @json_decode((string)$item['value'], true);
                     if (!empty($subQuery)) {
                         $this->mutateWhereQuery($subQuery['rules']);
