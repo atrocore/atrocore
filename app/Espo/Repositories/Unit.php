@@ -62,10 +62,10 @@ class Unit extends Base
         }
 
         // default disabling
-        if (empty($options['cascadeChange']) && $entity->getFetched('isDefault') === true && $entity->get('isDefault') === false) {
+        if (empty($options['cascadeChange']) && $entity->getFetched('isMain') === true && $entity->get('isMain') === false) {
             $unit = $this
                 ->select(['id'])
-                ->where(['measureId' => $entity->get('measureId'), 'isDefault' => true, 'id!=' => $entity->get('id')])
+                ->where(['measureId' => $entity->get('measureId'), 'isMain' => true, 'id!=' => $entity->get('id')])
                 ->findOne();
 
             if (empty($unit)) {
@@ -74,12 +74,12 @@ class Unit extends Base
         }
 
         if ($entity->isNew()) {
-            if ($entity->get('isDefault') && !empty($this->where(['measureId' => $entity->get('measureId'), 'isDefault' => true])->findOne())) {
-                $entity->set('isDefault', false);
+            if ($entity->get('isMain') && !empty($this->where(['measureId' => $entity->get('measureId'), 'isMain' => true])->findOne())) {
+                $entity->set('isMain', false);
             }
 
             if (empty($this->where(['measureId' => $entity->get('measureId')])->findOne())) {
-                $entity->set('isDefault', true);
+                $entity->set('isMain', true);
                 $entity->set('multiplier', 1);
             }
         }
@@ -87,11 +87,11 @@ class Unit extends Base
         parent::beforeSave($entity, $options);
 
         // recalculate multiplier
-        if ($entity->getFetched('isDefault') === false && $entity->get('isDefault') === true) {
+        if ($entity->getFetched('isMain') === false && $entity->get('isMain') === true) {
             $k = 1 / $entity->getFetched('multiplier');
             foreach ($this->where(['measureId' => $entity->get('measureId'), 'id!=' => $entity->get('id')])->find() as $unit) {
                 $unit->set('multiplier', round($k * $unit->get('multiplier'), 4));
-                $unit->set('isDefault', false);
+                $unit->set('isMain', false);
                 $this->getEntityManager()->saveEntity($unit, ['cascadeChange' => true]);
             }
             $entity->set('multiplier', 1);
@@ -102,8 +102,8 @@ class Unit extends Base
     {
         $this->validateBeforeRemove($entity);
 
-        if (empty($options['skipIsDefaultValidation'])) {
-            if ($entity->get('isDefault')) {
+        if (empty($options['skipIsMainValidation'])) {
+            if ($entity->get('isMain')) {
                 throw new BadRequest($this->getInjection('language')->translate('defaultIsRequired', 'exceptions', 'Unit'));
             }
         }

@@ -3,7 +3,7 @@
     "name": "Name",
     "description": "Beschreibung",
     "measure": "Maß",
-    "isDefault": "Standard",
+    "isMain": "Standard",
     "multiplier": "Multiplikator",
     "convertTo": "Konvertieren zu",
     "symbol": "Symbol",

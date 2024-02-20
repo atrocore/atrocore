@@ -146,7 +146,7 @@ class Measure extends Base
     protected function afterRemove(Entity $entity, array $options = [])
     {
         foreach ($entity->get('units') as $unit) {
-            $this->getEntityManager()->removeEntity($unit, ['skipIsDefaultValidation' => true]);
+            $this->getEntityManager()->removeEntity($unit, ['skipIsMainValidation' => true]);
         }
 
         parent::afterRemove($entity, $options);

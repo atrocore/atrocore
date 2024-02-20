@@ -30,16 +30,17 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/unit/fields/multiplier', 'views/fields/float', Dep => Dep.extend({
+Espo.define('views/measure/record/panels/units', 'views/record/panels/relationship',
+    Dep => Dep.extend({
+        rowActionView: "views/unit/row-actions/relationship-unit",
 
-    setup() {
-        Dep.prototype.setup.call(this);
-
-        this.listenTo(this.model, 'change:isMain', () => {
-            if (this.model.get('isMain') === true) {
-                this.model.set('multiplier', 1);
-            }
-        });
-    },
-
-}));
+        actionSetDefault: function (data) {
+            this.notify('Processing...');
+            this.ajaxPostRequest(`Unit/action/setDefault`, {
+                id: data.id
+            }).done(res => {
+                this.notify('Updated', 'success');
+            })
+        }
+    })
+);
