@@ -42,6 +42,20 @@ Espo.define('views/ui-handler/fields/entity-relationships', 'views/fields/entity
             });
         },
 
+        prepareEnumOptions() {
+            Dep.prototype.prepareEnumOptions.call(this);
+
+            // push attribute tabs
+            if (this.getEntityType() === 'Product') {
+                (this.getMetadata().get(['clientDefs', 'Product', 'bottomPanels', 'detail']) || []).forEach(item => {
+                    if (item.tabId) {
+                        this.params.options.push(item.name);
+                        this.translatedOptions[item.name] = item.label;
+                    }
+                })
+            }
+        },
+
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
