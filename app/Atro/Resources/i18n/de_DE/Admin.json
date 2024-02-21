@@ -53,7 +53,8 @@
     "Layout Manager": "Layouts",
     "Accounts": "Konto",
     "Contacts": "Kontakte",
-    "Addresses": "Adressen"
+    "Addresses": "Adressen",
+    "Currency": "Währungen"
   },
   "logicalOperators": {
     "and": "UND",
@@ -208,7 +209,8 @@
     "attachments": "Verwalten Sie alle im System gespeicherten Dateien (Anhänge).",
     "accounts": "Konten verwalten",
     "contacts": "Kontakte verwalten",
-    "addresses": "Adressen verwalten"
+    "addresses": "Adressen verwalten",
+    "currency": "Konfigurieren Sie die zu verwendenden Währungen"
   },
   "options": {
     "previewSize": {
