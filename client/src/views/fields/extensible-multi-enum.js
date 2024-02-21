@@ -52,6 +52,14 @@ Espo.define('views/fields/extensible-multi-enum', ['treo-core:views/fields/filte
 
             this.foreignScope = 'ExtensibleEnumOption';
 
+            if(this.options.customBoolFilterData){
+                this.boolFilterData = {...this.boolFilterData, ...this.options.customBoolFilterData}
+            }
+
+            if(this.options.customSelectBoolFilters){
+                this.selectBoolFilterList.push(...this.options.customSelectBoolFilters)
+            }
+
             Dep.prototype.setup.call(this);
         },
 
