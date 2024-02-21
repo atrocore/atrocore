@@ -3,8 +3,7 @@
     "name": "Nombre",
     "status": "Estado",
     "job": "Trabajo",
-    "scheduling": "Programación (notación CRONTab)",
-    "minimum_age": "Edad mínima (en días) de los datos"
+    "scheduling": "Programación (notación CRONTab)"
   },
   "links": {
     "log": "Registro"
