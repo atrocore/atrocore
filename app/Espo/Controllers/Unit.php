@@ -87,7 +87,7 @@ class Unit extends Base
 
         if ($needToSave) {
             $this->getMetadata()->save();
-            DataManager::pushPublicData('dataTimestamp', (new \DateTime())->getTimestamp());
+            $this->getContainer()->get('dataManager')->clearCache();
         }
 
         return true;
