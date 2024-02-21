@@ -3,8 +3,7 @@
     "name": "Name",
     "status": "Status",
     "job": "Job",
-    "scheduling": "Scheduling",
-    "minimum_age": "Minimum age (in days) of data"
+    "scheduling": "Scheduling"
   },
   "links": {
     "log": "Log"

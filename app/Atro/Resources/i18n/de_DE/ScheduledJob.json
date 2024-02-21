@@ -3,8 +3,7 @@
     "isInternal": "Ist intern",
     "job": "Aufgabe",
     "lastRun": "Zuletzt ausgeführt",
-    "scheduling": "Planung",
-    "minimum_age": "Mindestalter (in Tagen) der Daten"
+    "scheduling": "Planung"
   },
   "links": {
     "log": "Protokoll"
