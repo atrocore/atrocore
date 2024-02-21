@@ -436,6 +436,7 @@
     "addRelation": "Beziehung hinzufügen",
     "removeRelation": "Beziehung entfernen",
     "massUpdate": "Massenänderung",
+    "export": "Exportieren",
     "restore": "Wiederherstellen"
   },
   "fields": {
