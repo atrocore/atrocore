@@ -297,9 +297,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         showMore: true,
 
-        massActionList: ['remove', 'merge', 'massUpdate'],
+        massActionList: ['remove', 'merge', 'massUpdate', 'export'],
 
-        checkAllResultMassActionList: ['remove', 'massUpdate'],
+        checkAllResultMassActionList: ['remove', 'massUpdate', 'export'],
 
         quickDetailDisabled: false,
 
@@ -455,6 +455,34 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.$el.find(".pagination li").addClass('disabled');
                 this.$el.find("a.sort").addClass('disabled');
             }
+        },
+
+        massActionExport: function () {
+            let data = {};
+            if (this.allResultIsChecked) {
+                data.where = this.collection.getWhere();
+                data.selectData = this.collection.data || {};
+                data.byWhere = true;
+            } else {
+                data.ids = this.checkedList;
+            }
+
+            let o = {
+                scope: this.entityType,
+                entityFilterData: data
+            };
+
+            var layoutFieldList = [];
+            (this.listLayout || []).forEach(function (item) {
+                if (item.name) {
+                    layoutFieldList.push(item.name);
+                }
+            }, this);
+            o.fieldList = layoutFieldList;
+
+            this.createView('dialogExport', 'views/export/modals/export', o, function (view) {
+                view.render();
+            }, this);
         },
 
         massAction: function (name) {
