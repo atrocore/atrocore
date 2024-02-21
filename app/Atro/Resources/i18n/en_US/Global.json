@@ -88,6 +88,8 @@
     "Core": "AtroCore is a software ecosystem, designed for rapid development of web-based responsive business applications."
   },
   "labels": {
+    "jobCreated": "Job created successfully",
+    "jobNotCreated": "Job created failed",
     "Start": "Start",
     "Pause": "Pause",
     "searchPanel": "Search",
