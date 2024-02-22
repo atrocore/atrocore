@@ -21,12 +21,12 @@
           "conditionGroup": [
             {
               "type": "isTrue",
-              "attribute": "isDefault"
+              "attribute": "isMain"
             }
           ]
         }
       },
-      "isDefault": {
+      "isMain": {
         "visible": {
           "conditionGroup": [
             {
@@ -39,7 +39,7 @@
           "conditionGroup": [
             {
               "type": "isTrue",
-              "attribute": "isDefault"
+              "attribute": "isMain"
             }
           ]
         }

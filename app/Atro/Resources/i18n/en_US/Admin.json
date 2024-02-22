@@ -58,7 +58,8 @@
     "Attachments": "Attachments",
     "Accounts": "Accounts",
     "Contacts": "Contacts",
-    "Addresses": "Addresses"
+    "Addresses": "Addresses",
+    "Currency": "Currency"
   },
   "layouts": {
     "relationships": "Relation panels",
@@ -225,7 +226,8 @@
     "attachments": "Manage all files (attachments) stored in the system.",
     "accounts": "Manage accounts",
     "contacts": "Manage contacts",
-    "addresses": "Manage addresses"
+    "addresses": "Manage addresses",
+    "currency": "Configure currencies to be used"
   },
   "options": {
     "previewSize": {

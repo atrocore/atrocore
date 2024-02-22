@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Console;
 
 use Atro\Core\KeyValueStorages\StorageInterface;
+use Doctrine\DBAL\Connection;
 use Espo\Core\Utils\Util;
 use Espo\ORM\EntityManager;
 
@@ -38,6 +39,13 @@ class RegenerateUiHandlers extends AbstractConsole
         $clientDefsData = $this->getMetadata()->get('clientDefs', []);
         $this->getMemoryStorage()->set('ignorePushUiHandler', false);
 
+        /** @var Connection $conn */
+        $conn = $this->getContainer()->get('connection');
+        $conn->createQueryBuilder()
+            ->delete('ui_handler', 'q1')
+            ->where('q1.hash IS NOT NULL')
+            ->executeQuery();
+
         /** @var EntityManager $em */
         $em = $this->getContainer()->get('entityManager');
 
@@ -52,15 +60,6 @@ class RegenerateUiHandlers extends AbstractConsole
                         continue;
                     }
 
-                    $uniqueHash = md5("{$entityType}{$field}{$type}");
-
-                    $entity = $em->getRepository('UiHandler')->where(['hash' => $uniqueHash])->findOne();
-                    if (!empty($entity)) {
-                        continue;
-                    }
-
-                    $typeId = null;
-
                     switch ($type) {
                         case 'readOnly':
                             $typeId = 'ui_read_only';
@@ -71,13 +70,19 @@ class RegenerateUiHandlers extends AbstractConsole
                         case 'required':
                             $typeId = 'ui_required';
                             break;
+                        default:
+                            $typeId = null;
+                    }
+
+                    if (empty($typeId)){
+                        continue;
                     }
 
                     $entity = $em->getRepository('UiHandler')->get();
                     $entity->id = Util::generateId();
                     $entity->set([
                         'name'           => "Make field '{$field}' {$type}",
-                        'hash'           => $uniqueHash,
+                        'hash'           => md5("{$entityType}{$field}{$type}"),
                         'entityType'     => $entityType,
                         'fields'         => [$field],
                         'type'           => $typeId,

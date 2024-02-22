@@ -47,9 +47,6 @@
             "readOnly": true,
             "disabled": true,
             "default": false
-        },
-        "minimum_age": {
-            "type": "int"
         }
     },
     "links": {

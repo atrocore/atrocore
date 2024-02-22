@@ -51,6 +51,14 @@ Espo.define('views/fields/extensible-enum', ['views/fields/link', 'views/fields/
             this.nameName = this.name + 'Name';
             this.foreignScope = 'ExtensibleEnumOption';
 
+            if(this.options.customBoolFilterData){
+                this.boolFilterData = {...this.boolFilterData, ...this.options.customBoolFilterData}
+            }
+
+            if(this.options.customSelectBoolFilters){
+                this.selectBoolFilterList.push(...this.options.customSelectBoolFilters)
+            }
+
             Dep.prototype.setup.call(this);
         },
 

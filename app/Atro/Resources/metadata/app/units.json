@@ -5,7 +5,7 @@
     "code": "EUR",
     "measureId": "currency",
     "symbol": "€",
-    "isDefault": true,
+    "isMain": true,
     "isActive": true
   },
   {

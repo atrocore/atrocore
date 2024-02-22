@@ -44,10 +44,6 @@
       "type": "bool"
     },
     {
-      "name": "unique",
-      "type": "bool"
-    },
-    {
       "name": "index",
       "type": "bool"
     }

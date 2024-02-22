@@ -3,7 +3,7 @@
     "name": "Название",
     "description": "Описание",
     "measure": "Мера",
-    "isDefault": "По умолчанию",
+    "isMain": "По умолчанию",
     "multiplier": "Мультипликатор",
     "convertTo": "Конвертировать в"
   },

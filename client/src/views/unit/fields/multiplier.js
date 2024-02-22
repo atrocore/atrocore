@@ -35,8 +35,8 @@ Espo.define('views/unit/fields/multiplier', 'views/fields/float', Dep => Dep.ext
     setup() {
         Dep.prototype.setup.call(this);
 
-        this.listenTo(this.model, 'change:isDefault', () => {
-            if (this.model.get('isDefault') === true) {
+        this.listenTo(this.model, 'change:isMain', () => {
+            if (this.model.get('isMain') === true) {
                 this.model.set('multiplier', 1);
             }
         });

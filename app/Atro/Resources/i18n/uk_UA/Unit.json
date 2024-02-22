@@ -3,7 +3,7 @@
     "name": "Назва",
     "description": "Опис",
     "measure": "Міра",
-    "isDefault": "За замовчуванням",
+    "isMain": "Головний",
     "multiplier": "Мультиплікатор",
     "convertTo": "Конвертувати в",
     "symbol": "Знак",

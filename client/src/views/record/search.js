@@ -237,6 +237,19 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
                 } catch (err) {
                 }
             })
+
+            if (this.getConfig().get('hasQueryBuilderFilter')) {
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.has('where')) {
+                    const where = JSON.parse(urlParams.get('where'));
+                    if (where) {
+                        this.model.set('hasQueryBuilderFilter', true);
+                        this.getStorage().set('queryBuilderRules', this.model.urlRoot, where);
+                        this.search();
+                        window.history.replaceState({}, document.title, window.location.origin + '#' + this.model.urlRoot);
+                    }
+                }
+            }
         },
 
         getRulesIds(rules) {

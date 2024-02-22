@@ -43,6 +43,11 @@
         "description": "measure"
       },
       {
+        "url": "#Measure/view/currency",
+        "label": "Currency",
+        "description": "currency"
+      },
+      {
         "url": "#Admin/notifications",
         "label": "Notifications",
         "description": "notifications"

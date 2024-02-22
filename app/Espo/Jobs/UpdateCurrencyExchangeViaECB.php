@@ -48,7 +48,7 @@ class UpdateCurrencyExchangeViaECB extends Base
             ->find();
 
         foreach ($units as $unit) {
-            if (!empty($unit->get('isDefault'))) {
+            if (!empty($unit->get('isMain'))) {
                 $baseCurrency = $unit->get('code');
             }
         }

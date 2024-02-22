@@ -30,44 +30,44 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/ui-handler/fields/entity-relationships', 'views/fields/entity-relationships', Dep => {
+Espo.define('views/export/record/record', 'views/record/base', function (Dep) {
 
     return Dep.extend({
 
-        setup() {
+        template: 'export/record/record',
+
+        setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.listenTo(this.model, 'change:type', () => {
-                this.reRender();
-            });
-        },
+            this.scope = this.options.scope;
 
-        prepareEnumOptions() {
-            Dep.prototype.prepareEnumOptions.call(this);
-
-            // push attribute tabs
-            if (this.getEntityType() === 'Product') {
-                (this.getMetadata().get(['clientDefs', 'Product', 'bottomPanels', 'detail']) || []).forEach(item => {
-                    if (item.tabId) {
-                        this.params.options.push(item.name);
-                        this.translatedOptions[item.name] = item.label;
-                    }
-                })
-            }
-        },
-
-        afterRender() {
-            Dep.prototype.afterRender.call(this);
-
-            if (this.mode !== 'list') {
-                if (this.model.get('type') === 'ui_visible') {
-                    this.$el.parent().show();
-                } else {
-                    this.$el.parent().hide();
+            let exportFeedOptions = [];
+            let exportFeedTranslatedOptions = {};
+            this.options.exportFeeds.forEach(function (row) {
+                exportFeedOptions.push(row.id);
+                exportFeedTranslatedOptions[row.id] = row.name;
+                if (!this.model.get('exportFeed')) {
+                    this.model.set('exportFeed', row.id)
                 }
-            }
+            }, this);
+
+            this.createView('exportFeed', 'views/fields/enum', {
+                prohibitedEmptyValue: true,
+                model: this.model,
+                el: `${this.options.el} .field[data-name="exportFeed"]`,
+                defs: {
+                    name: 'exportFeed',
+                    params: {
+                        options: exportFeedOptions,
+                        translatedOptions: exportFeedTranslatedOptions
+                    }
+                },
+                mode: 'edit'
+            });
+
+            this.model.set('ignoreFilter', true);
         },
 
     });
-});
 
+});
