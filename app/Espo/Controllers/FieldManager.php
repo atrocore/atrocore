@@ -193,7 +193,7 @@ class FieldManager extends \Espo\Core\Controllers\Base
             return;
         }
 
-        $mainLanguage = $this->getConfig()->get('language');
+        $mainLanguage = $this->getConfig()->get('mainLanguage');
         foreach (array_merge([$mainLanguage], $this->getConfig()->get('inputLanguageList', [])) as $language) {
             $languageObj = new Language($this->getContainer(), $language);
 
