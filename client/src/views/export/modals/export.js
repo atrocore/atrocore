@@ -62,7 +62,17 @@ Espo.define('views/export/modals/export', ['views/modal', 'model'], function (De
 
             this.ajaxGetRequest('ExportFeed', {
                 select: 'id,name',
-                exportEntity: this.scope
+                where: [
+                    {
+                        attribute: "isActive",
+                        type: "isTrue"
+                    },
+                    {
+                        attribute: "data",
+                        type: "like",
+                        value: `%"entity":"${this.scope}"%`
+                    }
+                ]
             }, {async: false}).then(function (data) {
                 this.createView('record', 'views/export/record/record', {
                     scope: this.scope,
