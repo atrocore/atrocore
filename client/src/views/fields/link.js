@@ -242,8 +242,10 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         },
 
         clearLink: function () {
-            this.$elementName.val('');
-            this.$elementId.val('');
+            if (this.$elementName) {
+                this.$elementName.val('');
+                this.$elementId.val('');
+            }
             this.trigger('change');
         },
 
