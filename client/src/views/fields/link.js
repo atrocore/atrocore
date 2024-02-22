@@ -129,8 +129,8 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             this.foreignScope = this.foreignScope || this.model.getFieldParam(this.name, 'entity') || this.model.getLinkParam(this.name, 'entity');
 
             // prepare default value
-            let foreignId = this.model.get(this.idName);
             const fieldDefs = this.model.defs.fields[this.name] || null;
+            let foreignId = this.model.get(this.idName) || (fieldDefs?.defaultId);
             if ((this.model.get(this.name + 'HasDefaultAttributes') || (fieldDefs && (fieldDefs.defaultAttributes || fieldDefs.defaultId))) && this.mode === 'edit' && !this.model.get('id') && foreignId && this.foreignScope) {
                 this.model.set(this.idName, null);
                 this.model.set(this.nameName, null);
