@@ -60,7 +60,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
         searchTypeList: ['is', 'isEmpty', 'isNotEmpty', 'isNot', 'isOneOf', 'isNotOneOf'],
 
-        selectBoolFilterList:  [],
+        selectBoolFilterList: [],
 
         boolFilterData: {},
 
@@ -89,7 +89,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             }
 
             let idValue = this.model.get(this.idName);
-            if (this.options.isKanban){
+            if (this.options.isKanban) {
                 idValue = null;
             }
 
@@ -104,7 +104,8 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             }, Dep.prototype.data.call(this));
         },
 
-        getSelectFilters: function () {},
+        getSelectFilters: function () {
+        },
 
         getSelectBoolFilterList: function () {
             return this.selectBoolFilterList;
@@ -114,7 +115,8 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             return this.selectPrimaryFilterName;
         },
 
-        getCreateAttributes: function () {},
+        getCreateAttributes: function () {
+        },
 
         setup: function () {
             if (this.nameName === null) {
@@ -129,8 +131,8 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             this.foreignScope = this.foreignScope || this.model.getFieldParam(this.name, 'entity') || this.model.getLinkParam(this.name, 'entity');
 
             // prepare default value
-            let foreignId = this.model.get(this.idName);
             const fieldDefs = this.model.defs.fields[this.name] || null;
+            let foreignId = this.model.get(this.idName) || (fieldDefs?.defaultId);
             if ((this.model.get(this.name + 'HasDefaultAttributes') || (fieldDefs && (fieldDefs.defaultAttributes || fieldDefs.defaultId))) && this.mode === 'edit' && !this.model.get('id') && foreignId && this.foreignScope) {
                 this.model.set(this.idName, null);
                 this.model.set(this.nameName, null);
@@ -252,7 +254,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             this.searchData.oneOfNameHash = this.searchParams.oneOfNameHash || {};
             this.searchData.subQuery = this.searchParams.subQuery || [];
             this.searchData.idValue = this.getSearchParamsData().idValue || this.searchParams.idValue || this.searchParams.value;
-            this.searchData.nameValue = this.getSearchParamsData().nameValue ||  this.searchParams.valueName;
+            this.searchData.nameValue = this.getSearchParamsData().nameValue || this.searchParams.valueName;
 
             this.events = _.extend({
                 'change select.search-type': function (e) {
@@ -337,13 +339,13 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         paramName: 'q',
                         minChars: 1,
                         autoSelectFirst: true,
-                           formatResult: function (suggestion) {
+                        formatResult: function (suggestion) {
                             return suggestion.name;
                         },
                         transformResult: function (response) {
                             var response = JSON.parse(response);
                             var list = [];
-                            response.list.forEach(function(item) {
+                            response.list.forEach(function (item) {
                                 list.push({
                                     id: item.id,
                                     name: item.name,
@@ -381,13 +383,13 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                             }.bind(this),
                             minChars: 1,
                             paramName: 'q',
-                               formatResult: function (suggestion) {
+                            formatResult: function (suggestion) {
                                 return suggestion.name;
                             },
                             transformResult: function (response) {
                                 var response = JSON.parse(response);
                                 var list = [];
-                                response.list.forEach(function(item) {
+                                response.list.forEach(function (item) {
                                     list.push({
                                         id: item.id,
                                         name: item.name,
@@ -442,7 +444,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                                     'value': this.searchData.oneOfIdList
                                 }
                             ];
-                            collection.fetch({ data: $.param({ silent: true, where: whereCondition }) }).then(res => {
+                            collection.fetch({data: $.param({silent: true, where: whereCondition})}).then(res => {
                                 for (const idItem of this.searchData.oneOfIdList) {
                                     const model = collection.get(idItem);
                                     if (model && model.has('name')) {
@@ -458,7 +460,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                     if (this.searchData.idValue) {
                         this.getModelFactory().create(this.foreignScope, function (model) {
                             model.set('id', this.searchData.idValue);
-                            model.fetch({ data: $.param({ silent: true }) }).then(() => {
+                            model.fetch({data: $.param({silent: true})}).then(() => {
                                 this.select(model);
                             });
                         }, this);
@@ -541,7 +543,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         },
 
         addLinkSubQueryHtml: function (subQuery) {
-            if (!subQuery || subQuery.length === 0){
+            if (!subQuery || subQuery.length === 0) {
                 return;
             }
 
@@ -558,8 +560,8 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
         fetch: function () {
             var data = {};
-            data[this.nameName] = this.$el.find('[name="'+this.nameName+'"]').val() || null;
-            data[this.idName] = this.$el.find('[name="'+this.idName+'"]').val() || null;
+            data[this.nameName] = this.$el.find('[name="' + this.nameName + '"]').val() || null;
+            data[this.idName] = this.$el.find('[name="' + this.idName + '"]').val() || null;
 
             return data;
         },
@@ -645,7 +647,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                     }
                 };
                 return data;
-            }  else if (type == 'isNot') {
+            } else if (type == 'isNot') {
                 var nameValue = this.$el.find('[name="' + this.nameName + '"]').val();
                 var data = {
                     type: 'or',
