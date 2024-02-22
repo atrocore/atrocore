@@ -26,7 +26,7 @@ class V1Dot8Dot41 extends Base
 
         $this->createNonDuplicatedIntermediateItems();
 
-        $this->replaceAllOptionToDuplicateByChosenOption();
+        $this->replaceAllDuplicatedOptionsByChosenOption();
 
         // There is no more duplication in extensible_enum_option, so we can delete
         $this->addUniqueIndexToCodeAndDropBelongToField();
@@ -139,7 +139,7 @@ class V1Dot8Dot41 extends Base
         }
     }
 
-    protected function replaceAllOptionToDuplicateByChosenOption(): void
+    protected function replaceAllDuplicatedOptionsByChosenOption(): void
     {
           $duplicatedOptionsCode = $this->getConnection()
             ->createQueryBuilder()
