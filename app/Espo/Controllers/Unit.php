@@ -57,38 +57,11 @@ class Unit extends Base
         }
 
         $unit = $this->getEntityManager()->getEntity('Unit', $data->id);
-        $needToSave = false;
         if (!$unit) {
             throw new NotFound();
         }
 
-        $measureId = $unit->get('measureId');
-        foreach ($this->getMetadata()->get('entityDefs', []) as $entity => $entityDefs) {
-            if (empty($entityDefs['fields'])) {
-                continue;
-            }
-            foreach ($entityDefs['fields'] as $field => $fieldDefs) {
-                if (!empty($fieldDefs['measureId']) && $fieldDefs['measureId'] == $measureId) {
-                    if (!empty($fieldDefs['defaultUnit']) && $fieldDefs['defaultUnit'] == $data->id) {
-                        continue;
-                    }
-
-                    $needToSave = true;
-                    $this->getMetadata()->set('entityDefs', $entity, [
-                        'fields' => [
-                            "$field" => [
-                                'defaultUnit' => $data->id
-                            ]
-                        ]
-                    ]);
-                }
-            }
-        }
-
-        if ($needToSave) {
-            $this->getMetadata()->save();
-            $this->getContainer()->get('dataManager')->clearCache();
-        }
+        $this->getRecordService()->setUnitAsDefault($unit);
 
         return true;
     }
