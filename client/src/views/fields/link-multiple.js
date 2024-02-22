@@ -66,6 +66,20 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         searchTypeList: ['anyOf', 'isEmpty', 'isNotEmpty', 'noneOf'],
 
+        selectBoolFilterList:  [],
+
+        boolFilterData: {},
+
+        getBoolFilterData() {
+            let data = {};
+            this.selectBoolFilterList.forEach(item => {
+                if (typeof this.boolFilterData[item] === 'function') {
+                    data[item] = this.boolFilterData[item].call(this);
+                }
+            });
+            return data;
+        },
+
         data: function () {
             let ids = this.model.get(this.idsName);
             let nameHash = this.model.get(this.nameHashName);
@@ -147,6 +161,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                         createButton: !this.createDisabled && this.mode != 'search',
                         filters: this.getSelectFilters(),
                         boolFilterList: this.getSelectBoolFilterList(),
+                        boolFilterData: this.getBoolFilterData(),
                         primaryFilterName: this.getSelectPrimaryFilterName(),
                         multiple: this.linkMultiple,
                         massRelateEnabled: true,
