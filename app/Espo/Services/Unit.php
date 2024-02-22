@@ -35,11 +35,53 @@ declare(strict_types=1);
 
 namespace Espo\Services;
 
-use Espo\Core\Templates\Services\Base;
+use Atro\Core\Templates\Services\Base;
+use Espo\Core\EventManager\Event;
+use Espo\ORM\Entity;
 
 /**
  * Class Unit
  */
 class Unit extends Base
 {
+
+    public function setUnitAsDefault(Entity $unit): void
+    {
+        $needToSave = false;
+        $measureId = $unit->get('measureId');
+        foreach ($this->getMetadata()->get('entityDefs', []) as $entity => $entityDefs) {
+            if (empty($entityDefs['fields'])) {
+                continue;
+            }
+            foreach ($entityDefs['fields'] as $field => $fieldDefs) {
+                if (!empty($fieldDefs['measureId']) && $fieldDefs['measureId'] == $measureId) {
+                    if (!empty($fieldDefs['defaultUnit']) && $fieldDefs['defaultUnit'] == $unit->get('id')) {
+                        continue;
+                    }
+
+                    $needToSave = true;
+                    $this->getMetadata()->set('entityDefs', $entity, [
+                        'fields' => [
+                            "$field" => [
+                                'defaultUnit' => $unit->get('id')
+                            ]
+                        ]
+                    ]);
+                }
+            }
+        }
+
+        if ($needToSave) {
+            $this->getMetadata()->save();
+            $this->getInjection('dataManager')->clearCache();
+        }
+
+        $this->dispatchEvent('afterSetUnitAsDefault', new Event(['entity' => $unit, 'service' => $this]));
+    }
+
+    protected function init()
+    {
+        parent::init();
+        $this->addDependency('dataManager');
+    }
 }
