@@ -122,6 +122,7 @@ class ExtensibleEnumOption extends Base
             $entity->set('code', null);
         }
 
+
         if ($entity->isNew() && $entity->get('sortOrder') === null) {
             $entity->set('sortOrder', time() - (new \DateTime('2023-01-01'))->getTimestamp());
         }

@@ -6,16 +6,12 @@
   },
   "relationshipPanels": {
     "extensibleEnumOptions": {
-      "select": false,
-      "unlinkAll": false,
-      "rowActionsView": "views/record/row-actions/relationship-no-unlink",
-      "sortBy": "sortOrder",
-      "asc": true,
       "dragDrop": {
         "isActive": true,
-        "sortField": "sortOrder",
-        "maxSize": 20
-      }
+        "sortField": "extensible_enum_extensible_enum_option_mm.sorting"
+      },
+      "sortBy": "sorting",
+      "asc": true
     }
   }
 }

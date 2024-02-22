@@ -19,11 +19,9 @@
       "emHidden": true
     },
     "code": {
-      "type": "varchar"
-    },
-    "extensibleEnum": {
-      "type": "link",
-      "required": true
+      "type": "varchar",
+      "required": true,
+      "unique": true
     },
     "extensibleEnums": {
       "type": "linkMultiple"
@@ -58,7 +56,7 @@
       "type": "hasMany",
       "foreign": "extensibleEnumOptions",
       "entity": "ExtensibleEnum",
-      "relationName": "ExtensibleEnumOptionExtensibleEnum"
+      "relationName": "ExtensibleEnumExtensibleEnumOption"
     },
     "createdBy": {
       "type": "belongsTo",
@@ -74,13 +72,6 @@
     "asc": true,
     "textFilterFields": [
       "name",
-      "code"
-    ]
-  },
-  "uniqueIndexes": {
-    "unique_option": [
-      "deleted",
-      "extensible_enum_id",
       "code"
     ]
   },

@@ -3,10 +3,10 @@
     "name": "Значення опції",
     "color": "Колір",
     "sortOrder": "Порядок сортування",
-    "extensibleEnum": "Список"
+    "extensibleEnums": "Списки"
   },
   "links": {
-    "extensibleEnum": "Список"
+    "extensibleEnums": "Списки"
   },
   "labels": {
     "Create ExtensibleEnumOption": "Створити опцію списку"

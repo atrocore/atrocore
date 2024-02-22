@@ -19,10 +19,10 @@
       ],
       [
         {
-          "name": "sortOrder"
+          "name": "\"ExtensibleEnumExtensibleEnumOption__sorting"
         },
         {
-          "name": "extensibleEnum"
+          "name": "extensibleEnums"
         }
       ]
     ]

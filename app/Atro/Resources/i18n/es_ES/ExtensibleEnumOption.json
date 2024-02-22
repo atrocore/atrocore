@@ -1,0 +1,18 @@
+{
+  "fields": {
+    "name": "Valor de opción",
+    "color": "Color",
+    "sortOrder": "ordenar Orden",
+    "extensibleEnums": "Listas"
+  },
+  "links": {
+    "extensibleEnums": "Listas"
+  },
+  "labels": {
+    "Create ExtensibleEnumOption": "Crear Opción Lista"
+  },
+  "exceptions": {
+    "extensibleEnumOptionIsSystem": "La Opción de Lista '%s' es requerida por el sistema",
+    "extensibleEnumOptionIsUsed": "La Opción de Lista '%s' es utilizada por el campo '%s' en la Entidad '%s' para el Registro '%s'."
+  }
+}
