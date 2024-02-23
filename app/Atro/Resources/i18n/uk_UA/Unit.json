@@ -3,7 +3,7 @@
     "name": "Назва",
     "description": "Опис",
     "measure": "Міра",
-    "isMain": "Головний",
+    "isMain": "Основний",
     "multiplier": "Мультиплікатор",
     "convertTo": "Конвертувати в",
     "symbol": "Знак",
@@ -13,7 +13,8 @@
     "measure": "Міра"
   },
   "labels": {
-    "Create Unit": "Створити одиницю виміру"
+    "Create Unit": "Створити одиницю виміру",
+    "unitSetDefault": "Встановити як дефолтне"
   },
   "exceptions": {
     "defaultIsRequired": "Міра повинна мати одиницю виміру за замовчуванням.",
