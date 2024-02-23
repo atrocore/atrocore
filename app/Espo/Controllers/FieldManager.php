@@ -204,8 +204,13 @@ class FieldManager extends \Espo\Core\Controllers\Base
                 $label = Util::toCamelCase('label_' . strtolower($language));
             }
 
+            $name = $input->name;
+            if (property_exists($input, 'multilangField')) {
+                $name = $input->multilangField;
+            }
+
             if (property_exists($input, $label) && $input->$label !== null && $input->$label !== '') {
-                $languageObj->set($scope, 'fields', $input->name, $input->$label);
+                $languageObj->set($scope, 'fields', $name, $input->$label);
                 $needToSave = true;
             }
 
