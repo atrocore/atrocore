@@ -3,7 +3,7 @@
     "name": "Name",
     "description": "Beschreibung",
     "measure": "Maß",
-    "isMain": "Standard",
+    "isMain": "Primär",
     "multiplier": "Multiplikator",
     "convertTo": "Konvertieren zu",
     "symbol": "Symbol",
@@ -14,7 +14,8 @@
     "convertTo": "Konvertieren zu"
   },
   "labels": {
-    "Create Unit": "Maßeinheit erstellen"
+    "Create Unit": "Maßeinheit erstellen",
+    "unitSetDefault": "Als Default setzen"
   },
   "exceptions": {
     "defaultIsRequired": "Das Maß soll eine Standardeinheit haben.",
