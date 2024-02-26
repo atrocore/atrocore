@@ -44,41 +44,54 @@ class V1Dot8Dot41 extends Base
         try {
             $this->getPDO()->exec($sql);
         } catch (\Throwable $e) {
-            // ignore all
+
         }
     }
 
 
     protected function createIntermediateTable(): void
     {
-        $fromSchema = $this->getCurrentSchema();
-        $toSchema = clone $fromSchema;
+       if($this->isPgSQL()){
+            $this->execute("CREATE TABLE extensible_enum_extensible_enum_option (id VARCHAR(24) NOT NULL, deleted BOOLEAN DEFAULT 'false', created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, sorting INT DEFAULT NULL, created_by_id VARCHAR(24) DEFAULT NULL, modified_by_id VARCHAR(24) DEFAULT NULL, extensible_enum_id VARCHAR(24) DEFAULT NULL, extensible_enum_option_id VARCHAR(24) DEFAULT NULL, PRIMARY KEY(id));");
+            $this->execute("CREATE UNIQUE INDEX IDX_EXTENSIBLE_ENUM_EXTENSIBLE_ENUM_OPTION_UNIQUE_RELATION ON extensible_enum_extensible_enum_option (deleted, extensible_enum_id, extensible_enum_option_id);");
+            $this->execute("CREATE INDEX IDX_EXTENSIBLE_ENUM_EXTENSIBLE_ENUM_OPTION_CREATED_BY_ID ON extensible_enum_extensible_enum_option (created_by_id, deleted);");
+            $this->execute("CREATE INDEX IDX_EXTENSIBLE_ENUM_EXTENSIBLE_ENUM_OPTION_MODIFIED_BY_ID ON extensible_enum_extensible_enum_option (modified_by_id, deleted);");
+            $this->execute("CREATE INDEX IDX_50529C766F0CDC2EF0427B90BDB97B1C ON extensible_enum_extensible_enum_option (extensible_enum_id, deleted);");
+            $this->execute("CREATE INDEX IDX_E67BAD4E2BB69A9BBC26754190C14C9D ON extensible_enum_extensible_enum_option (extensible_enum_option_id, deleted);");
+            $this->execute("CREATE INDEX IDX_EXTENSIBLE_ENUM_EXTENSIBLE_ENUM_OPTION_CREATED_AT ON extensible_enum_extensible_enum_option (created_at, deleted);");
+            $this->execute("CREATE INDEX IDX_EXTENSIBLE_ENUM_EXTENSIBLE_ENUM_OPTION_MODIFIED_AT ON extensible_enum_extensible_enum_option (modified_at, deleted);");
 
-        $tableName = "extensible_enum_extensible_enum_option";
+            if($this->getCurrentSchema()->getTable('extensible_enum_option')->hasIndex('idx_extensible_enum_option_unique_option')){
+                $this->execute("DROP INDEX idx_extensible_enum_option_unique_option ON extensible_enum_option;");
+            }
 
-        $toSchema->createTable($tableName);
-        $this->addColumn($toSchema, $tableName, 'id', ['type' => 'varchar', 'len' => 24, 'notNull' => true]);
-        $this->addColumn($toSchema, $tableName, 'deleted', ['type' => 'bool', 'default' => false]);
-        $this->addColumn($toSchema, $tableName, 'created_at', ['type' => 'datetime', 'len' => 24, 'default' => null]);
-        $this->addColumn($toSchema, $tableName, 'modified_at', ['type' => 'datetime', 'default' => null]);
-        $this->addColumn($toSchema, $tableName, 'created_by_id', ['type' => 'varchar', 'len' => 24, 'default' => null]);
-        $this->addColumn($toSchema, $tableName, 'modified_by_id', ['type' => 'varchar', 'len' => 24, 'default' => null]);
-        $this->addColumn($toSchema, $tableName, 'sorting', ['type' => 'int', 'default' => null]);
-        $this->addColumn($toSchema, $tableName, 'extensible_enum_option_id', ['type' => 'varchar', 'len' => 24, 'default' => null]);
-        $this->addColumn($toSchema, $tableName, 'extensible_enum_id', ['type' => 'varchar', 'len' => 24, 'default' => null]);
+            if($this->getCurrentSchema()->getTable('extensible_enum_option')->hasIndex('idx_extensible_enum_option_extensible_enum_id')){
+                $this->execute("DROP INDEX idx_extensible_enum_option_unique_option ON extensible_enum_option;");
+            }
+       }else{
+           $this->execute("CREATE TABLE extensible_enum_extensible_enum_option 
+                    (id VARCHAR(24) NOT NULL, deleted TINYINT(1) DEFAULT '0', created_at DATETIME DEFAULT NULL, 
+                    modified_at DATETIME DEFAULT NULL, sorting INT DEFAULT NULL, created_by_id VARCHAR(24) DEFAULT NULL, 
+                    modified_by_id VARCHAR(24) DEFAULT NULL, extensible_enum_id VARCHAR(24) DEFAULT NULL,
+                     extensible_enum_option_id VARCHAR(24) DEFAULT NULL, 
+                     UNIQUE INDEX IDX_EXTENSIBLE_ENUM_EXTENSIBLE_ENUM_OPTION_UNIQUE_RELATION 
+                         (deleted, extensible_enum_id, extensible_enum_option_id), 
+                     INDEX IDX_EXTENSIBLE_ENUM_EXTENSIBLE_ENUM_OPTION_CREATED_BY_ID (created_by_id, deleted), 
+                     INDEX IDX_EXTENSIBLE_ENUM_EXTENSIBLE_ENUM_OPTION_MODIFIED_BY_ID (modified_by_id, deleted), 
+                     INDEX IDX_50529C766F0CDC2EF0427B90BDB97B1C (extensible_enum_id, deleted), 
+                     INDEX IDX_E67BAD4E2BB69A9BBC26754190C14C9D (extensible_enum_option_id, deleted), 
+                     INDEX IDX_EXTENSIBLE_ENUM_EXTENSIBLE_ENUM_OPTION_CREATED_AT (created_at, deleted), 
+                     INDEX IDX_EXTENSIBLE_ENUM_EXTENSIBLE_ENUM_OPTION_MODIFIED_AT (modified_at, deleted), 
+                     PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB;
+            ");
+           if($this->getCurrentSchema()->getTable('extensible_enum_option')->hasIndex('IDX_EXTENSIBLE_ENUM_OPTION_EXTENSIBLE_ENUM_ID')){
+               $this->execute("DROP INDEX IDX_EXTENSIBLE_ENUM_OPTION_EXTENSIBLE_ENUM_ID ON extensible_enum_option;");
+           }
 
-        $toSchema->getTable($tableName)->setPrimaryKey(['id']);
-        $toSchema->getTable($tableName)->addUniqueIndex(['deleted', 'extensible_enum_id', 'extensible_enum_option_id'], 'IDX_EXTENSIBLE_ENUM_OPTION_EXTENSIBLE_ENUM_UNIQUE_RELATION');
-        $toSchema->getTable($tableName)->addIndex(['created_by_id', 'deleted'], 'IDX_EXTENSIBLE_ENUM_OPTION_EXTENSIBLE_ENUM_CREATED_BY_ID');
-        $toSchema->getTable($tableName)->addIndex(['modified_by_id', 'deleted'], 'IDX_EXTENSIBLE_ENUM_OPTION_EXTENSIBLE_ENUM_MODIFIED_BY_ID');
-        $toSchema->getTable($tableName)->addIndex(['extensible_enum_option_id', 'deleted']);
-        $toSchema->getTable($tableName)->addIndex(['extensible_enum_id', 'deleted']);
-        $toSchema->getTable($tableName)->addIndex(['created_at', 'deleted'], 'IDX_EXTENSIBLE_ENUM_OPTION_EXTENSIBLE_ENUM_CREATED_AT');
-        $toSchema->getTable($tableName)->addIndex(['modified_at', 'deleted'], 'IDX_EXTENSIBLE_ENUM_OPTION_EXTENSIBLE_ENUM_MODIFIED_AT');
-
-        foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
-            $this->execute($sql);
-        }
+           if($this->getCurrentSchema()->getTable('extensible_enum_option')->hasIndex('IDX_EXTENSIBLE_ENUM_OPTION_UNIQUE_OPTION')){
+               $this->execute("DROP INDEX IDX_EXTENSIBLE_ENUM_OPTION_UNIQUE_OPTION ON extensible_enum_option;");
+           }
+       }
     }
 
     protected function createNonDuplicatedIntermediateItems(): void
@@ -123,20 +136,15 @@ class V1Dot8Dot41 extends Base
 
     protected function addUniqueIndexToCodeAndDropBelongToField(): void
     {
-        $fromSchema = $this->getCurrentSchema();
-        $toSchema = clone $fromSchema;
 
-        $tableName = 'extensible_enum_option';
-        $toSchema->getTable($tableName)->addUniqueIndex(['code', 'deleted']);
-
-        if ($toSchema->getTable($tableName)->hasIndex('IDX_EXTENSIBLE_ENUM_OPTION_UNIQUE_OPTION')) {
-            $toSchema->getTable($tableName)->dropIndex('IDX_EXTENSIBLE_ENUM_OPTION_UNIQUE_OPTION');
+        if($this->isPgSQL()){
+            $this->execute("CREATE UNIQUE INDEX UNIQ_6598AC4577153098EB3B4E33 ON extensible_enum_option (code, deleted);");
+            $this->execute("ALTER TABLE extensible_enum_option DROP extensible_enum_id;");
+        }else{
+            $this->execute("ALTER TABLE extensible_enum_option DROP extensible_enum_id;");
+            $this->execute("CREATE UNIQUE INDEX UNIQ_6598AC4577153098EB3B4E33 ON extensible_enum_option (code, deleted);");
         }
-        $this->dropColumn($toSchema, 'extensible_enum','extensible_enum_id');
 
-        foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
-            $this->execute($sql);
-        }
     }
 
     protected function replaceAllDuplicatedOptionsByChosenOption(): void
