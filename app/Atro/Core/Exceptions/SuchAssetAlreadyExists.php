@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 namespace Atro\Core\Exceptions;
 
-use Atro\Entities\Asset;
+use Espo\ORM\Entity;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\WithStatusReasonData;
 
 class SuchAssetAlreadyExists extends BadRequest implements WithStatusReasonData
 {
-    protected ?Asset $asset = null;
+    protected ?Entity $asset = null;
 
     public function getStatusReasonData(): string
     {
@@ -30,7 +30,7 @@ class SuchAssetAlreadyExists extends BadRequest implements WithStatusReasonData
         return $this->asset->get('id');
     }
 
-    public function setAsset(Asset $asset): SuchAssetAlreadyExists
+    public function setAsset(Entity $asset): SuchAssetAlreadyExists
     {
         $this->asset = $asset;
 
