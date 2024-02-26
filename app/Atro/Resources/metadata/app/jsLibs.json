@@ -73,5 +73,8 @@
     "path": "client/lib/interact.min.js",
     "exportsTo": "$",
     "exportsAs": "interact"
+  },
+  "crypto": {
+    "path": "client/modules/dam/lib/crypto-js.min.js"
   }
 }
