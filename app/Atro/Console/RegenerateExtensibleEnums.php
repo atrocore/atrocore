@@ -58,10 +58,21 @@ class RegenerateExtensibleEnums extends AbstractConsole
             }
             $extensibleEnumOption = $em->getRepository('ExtensibleEnumOption')->get();
             $extensibleEnumOption->id = $extensibleEnumOptionData['id'];
+
             $extensibleEnumOption->set($extensibleEnumOptionData);
+
+            $eeeeo = $em->getRepository('ExtensibleEnumExtensibleEnumOption')->get();
+            $eeeeo->set('extensibleEnumId', $extensibleEnumOptionData['extensibleEnumId']);
+            $eeeeo->set('extensibleEnumOptionId', $extensibleEnumOptionData['id']);
 
             try {
                 $em->saveEntity($extensibleEnumOption);
+            } catch (\Throwable $e) {
+                $GLOBALS['log']->error("ExtensibleEnumOption generation failed: {$e->getMessage()}");
+            }
+
+            try {
+                $em->saveEntity($eeeeo);
             } catch (\Throwable $e) {
                 $GLOBALS['log']->error("ExtensibleEnumOption generation failed: {$e->getMessage()}");
             }
