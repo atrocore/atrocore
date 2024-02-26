@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "validateBy": "Проверено",
+    "isActive": "Активный",
+    "assetType": "Тип ассета",
+    "type": "Тип",
+    "ratio": "Соотношение",
+    "pattern": "Шаблон",
+    "min": "Мин.",
+    "max": "Макс.",
+    "colorDepth": "Глубина цвета",
+    "colorSpace": "Цветовое пространство",
+    "minWidth": "Ширина",
+    "minHeight": "Высота",
+    "extension": "Расширение",
+    "mimeList": "Список"
+  },
+  "links": {
+    "assetType": "Тип ассета"
+  },
+  "labels": {
+    "Create ValidationRule": "Создать правило проверки",
+    "minSize": "Мин., Кб",
+    "maxSize": "Макс, Кб"
+  },
+  "confirmations": {
+    "recheckAllAssets": "Вы уверены, что хотите изменить правила проверки? Все связанные ассеты будут перепроверены и, в конечном итоге, отключены."
+  }
+}
