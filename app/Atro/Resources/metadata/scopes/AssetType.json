@@ -1,8 +1,12 @@
 {
-  "entity": true,
+  "entity": false,
   "layouts": false,
   "tab": false,
   "acl": false,
   "customizable": false,
+  "importable": false,
+  "notifications": false,
+  "type": "Base",
+  "object": true,
   "skipAssetSorting": true
 }

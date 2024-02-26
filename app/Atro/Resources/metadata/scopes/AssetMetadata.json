@@ -4,5 +4,11 @@
   "tab": false,
   "acl": false,
   "customizable": false,
+  "importable": false,
+  "notifications": false,
+  "stream": false,
+  "disabled": false,
+  "type": "Base",
+  "object": true,
   "skipAssetSorting": true
 }

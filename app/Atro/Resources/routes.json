@@ -16,6 +16,14 @@
     }
   },
   {
+    "route": "/DamConfig",
+    "method": "GET",
+    "params": {
+      "controller": "DamConfig",
+      "action": "read"
+    }
+  },
+  {
     "route": "/Composer/list",
     "method": "get",
     "params": {
