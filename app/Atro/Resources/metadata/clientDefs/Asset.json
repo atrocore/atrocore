@@ -1,5 +1,5 @@
 {
-  "controller": "dam:controllers/asset",
+  "controller": "controllers/asset",
   "iconClass": "fas fa-archive",
   "treeScopes": [
     "AssetCategory",
