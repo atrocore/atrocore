@@ -1,0 +1,60 @@
+{
+    "fields": {
+      "extensibleEnum": {
+        "type": "link",
+        "required": true,
+        "relationshipField": true,
+        "mainRelationshipEntity": true
+      },
+      "extensibleEnumOption": {
+        "type": "link",
+        "required": true,
+        "relationshipField": true
+      },
+      "sorting": {
+        "type": "int"
+      },
+      "createdAt": {
+        "type": "datetime",
+        "readOnly": true
+      },
+      "modifiedAt": {
+        "type": "datetime",
+        "readOnly": true
+      },
+      "createdBy": {
+        "type": "link",
+        "readOnly": true,
+        "view": "views/fields/user"
+      },
+      "modifiedBy": {
+        "type": "link",
+        "readOnly": true,
+        "view": "views/fields/user"
+      }
+    },
+  "links": {
+    "extensibleEnum": {
+      "type": "belongsTo",
+      "foreign": "productAssets",
+      "entity": "Product"
+    },
+    "extensibleEnumOption": {
+      "type": "belongsTo",
+      "foreign": "productAssets",
+      "entity": "Asset"
+    },
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    }
+  },
+  "collection": {
+    "sortBy": "createdAt",
+    "asc": false
+  }
+}

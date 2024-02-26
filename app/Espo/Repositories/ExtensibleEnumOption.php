@@ -92,7 +92,8 @@ class ExtensibleEnumOption extends Base
                     ->createQueryBuilder()
                     ->select(implode(',', $select))
                     ->from('extensible_enum_option', 'eeo')
-                    ->innerJoin('eeo', 'extensible_enum', 'ee', 'ee.id = eeo.extensible_enum_id AND ee.deleted = :false')
+                    ->innerjoin('eeo', 'extensible_enum_extensible_enum_option', 'eeeeo', 'eeeeo.extensible_enum_option_id = eeo.id AND eeeeo.deleted = :false')
+                    ->innerjoin('eeeeo', 'extensible_enum', 'ee', 'ee.id = eeeeo.extensible_enum_id AND ee.deleted = :false')
                     ->where('eeo.deleted = :false')
                     ->andWhere('ee.id = :id')
                     ->setParameter('false', false, ParameterType::BOOLEAN)
@@ -121,6 +122,7 @@ class ExtensibleEnumOption extends Base
         if ($entity->get('code') === '') {
             $entity->set('code', null);
         }
+
 
         if ($entity->isNew() && $entity->get('sortOrder') === null) {
             $entity->set('sortOrder', time() - (new \DateTime('2023-01-01'))->getTimestamp());

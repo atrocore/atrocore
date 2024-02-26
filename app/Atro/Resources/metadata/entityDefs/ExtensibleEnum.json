@@ -44,8 +44,9 @@
   "links": {
     "extensibleEnumOptions": {
       "type": "hasMany",
-      "foreign": "extensibleEnum",
-      "entity": "ExtensibleEnumOption"
+      "foreign": "extensibleEnums",
+      "entity": "ExtensibleEnumOption",
+      "relationName": "ExtensibleEnumExtensibleEnumOption"
     },
     "createdBy": {
       "type": "belongsTo",
