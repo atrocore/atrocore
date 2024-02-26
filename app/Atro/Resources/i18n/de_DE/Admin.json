@@ -1,5 +1,6 @@
 {
   "labels": {
+    "AssetTypes": "Asset-Typen",
     "UiHandler": "UI-Handler",
     "Locale": "Gebietsschema",
     "multiLanguagesSettings": "Sprachen",
@@ -182,6 +183,7 @@
     "rebuildDb": "Möchten Sie die Datenbankstruktur wirklich anpassen? Alle unbenutzten Spalten und Tabellen werden entfernt."
   },
   "descriptions": {
+    "listOfSupportedAssetsTypes": "Liste der unterstützten Asset-Typen",
     "uiHandler": "Verwalten Sie das Verhalten der Benutzeroberflächen basierend auf der Grundlage einer konfigurierbaren bedingten Logik.",
     "locale": "Verwalten Sie Gebietsschemaeinstellungen wie Sprache, Datums- und Uhrzeitformat, Dezimaltrennzeichen, Tausendertrennzeichen sowie gebietsschemaspezifische Maßeinheiten.",
     "multiLanguagesSettings": "Konfigurieren Sie die zu verwendenden Sprachen.",

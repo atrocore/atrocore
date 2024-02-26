@@ -1,5 +1,11 @@
 {
   "scopeNames": {
+    "AssetMetadata": "Asset-Metadaten",
+    "Asset": "Asset",
+    "Library": "Bibliothek",
+    "Rendition": "Derivat",
+    "AssetType": "Asset-Typ",
+    "ValidationRule": "Validierungsregel",
     "UiHandler": "UI-Handler",
     "Action": "Aktion",
     "ExtensibleEnum": "Liste",
@@ -39,6 +45,14 @@
     "AuthFailLogRecord": "Auth-Fehlerprotokoll Datensatz"
   },
   "scopeNamesPlural": {
+    "AssetMetadata": "Asset-Metadaten",
+    "Asset": "Assets",
+    "Library": "Bibliotheken",
+    "AssetVersion": "Asset Versionen",
+    "Rendition": "Derivate",
+    "RenditionVersion": "Derivatversionen",
+    "AssetType": "Asset-Typen",
+    "validationRules": "Validierungsregel",
     "UiHandler": "UI-Handler",
     "Action": "Aktionen",
     "ExtensibleEnum": "Listen",
@@ -76,6 +90,13 @@
     "Core": "AtroCore ist ein Software-Ökosystem, das für die schnelle Entwicklung webbasierter responsiver Geschäftsanwendungen entwickelt wurde."
   },
   "labels": {
+    "dragAndDropBtnText": "Drag & Drop",
+    "dragAndDropBtnTextSmall": "Ihre Assets hierher oder",
+    "upload": "Hochladen",
+    "Preview": "Vorschau",
+    "Download": "Herunterladen",
+    "attachFile": "Datei anhängen",
+    "noData": "Keine Daten",
     "jobCreated": "Job erfolgreich erstellt",
     "jobNotCreated": "Joberstellung fehlgeschlagen",
     "Start": "Start",
@@ -932,6 +953,15 @@
     "list": "Liste"
   },
   "exceptions": {
+    "colorDepthValidationFailed": "Die Farbtiefe dieses Assets ist nicht zulässig.",
+    "colorSpaceValidationFailed": "Der Farbraum dieses Assets ist nicht zulässig.",
+    "fileExtensionValidationFailed": "Nutzen Sie die Dateien nur mit folgenden Erweiterungen: %s.",
+    "mimeTypeValidationFailed": "Asset hat einen falschen MIME-Typ.",
+    "pdfValidationFailed": "Asset ist kein PDF-Dokument.",
+    "imageQualityValidationFailed": "Bildqualität sollte zwischen %s  und %s sein.",
+    "imageRatioValidationFailed": "Bild sollte ein Seitenverhältnis von %s haben.",
+    "imageScaleValidationFailed": "Bild sollte eine Breite mehr als %spx und eine Höhe mehr als %spx haben.",
+    "imageSizeValidationFailed": "Asset-Größe sollte zwischen %skb und %skb sein.",
     "childsMustBeArchived": "Der (übergeordnete) Datensatz kann nur archiviert werden, wenn auch alle untergeordneten Datensätzte archiviert sind.",
     "maxLengthIsExceeded": "Die zulässige maximale Länge für \"%s\" beträgt \"%s\" Symbole, Ihre aktuelle Länge beträgt \"%s\" Symbole.",
     "parentRecordsHaveDifferentValues": "Eltern-Datensätze haben unterschiedliche Werte, der zu vererbende Wert kann nicht bestimmt werden.",
