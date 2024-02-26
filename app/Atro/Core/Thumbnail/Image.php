@@ -14,14 +14,14 @@ declare(strict_types=1);
 namespace Atro\Core\Thumbnail;
 
 use Atro\Core\Container;
-use Dam\Core\Utils\PDFLib;
+use Atro\Core\Utils\PDFLib;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\File\Manager;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\Attachment;
 use Espo\ORM\EntityManager;
 use Gumlet\ImageResize;
-use Espo\Core\Utils\File\Manager;
 
 class Image
 {
