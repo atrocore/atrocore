@@ -1,0 +1,36 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "readOnly": true
+    },
+    "value": {
+      "type": "text",
+      "required": false,
+      "readOnly": true
+    },
+    "asset": {
+      "type": "link"
+    }
+  },
+  "links": {
+    "asset": {
+      "type": "belongsTo",
+      "foreign": "assetMetadata",
+      "entity": "Asset"
+    }
+  },
+  "collection": {
+    "sortBy": "name",
+    "asc": true
+  },
+  "indexes": {
+    "name": {
+      "columns": [
+        "name",
+        "deleted"
+      ]
+    }
+  }
+}

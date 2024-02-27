@@ -1,0 +1,219 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar"
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "isActive": {
+      "notNull": true,
+      "type": "bool",
+      "default": false,
+      "audited": false,
+      "readOnly": false,
+      "tooltip": false
+    },
+    "assetType": {
+      "type": "link"
+    },
+    "type": {
+      "type": "enum",
+      "required": true,
+      "optionsIds": [
+        "Color Depth",
+        "Color Space",
+        "Extension",
+        "Mime",
+        "PDF Validation",
+        "Quality",
+        "Ratio",
+        "Scale",
+        "Size"
+      ],
+      "options": [
+        "Color Depth",
+        "Color Space",
+        "Extension",
+        "Mime",
+        "PDF Validation",
+        "Quality",
+        "Ratio",
+        "Scale",
+        "Size"
+      ],
+      "default": "Mime",
+      "isSorted": false,
+      "audited": false,
+      "readOnly": false,
+      "isMultilang": false,
+      "tooltip": false,
+      "prohibitedEmptyValue": true
+    },
+    "ratio": {
+      "notNull": false,
+      "type": "float",
+      "required": false,
+      "audited": false,
+      "readOnly": false,
+      "tooltip": false
+    },
+    "validateBy": {
+      "type": "enum",
+      "required": true,
+      "optionsIds": [
+        "List",
+        "Pattern"
+      ],
+      "options": [
+        "List",
+        "Pattern"
+      ],
+      "default": "List",
+      "isSorted": false,
+      "audited": false,
+      "readOnly": false,
+      "isMultilang": false,
+      "tooltip": false,
+      "prohibitedEmptyValue": true
+    },
+    "pattern": {
+      "type": "varchar",
+      "required": false,
+      "trim": true,
+      "audited": false,
+      "readOnly": false,
+      "isMultilang": false,
+      "tooltip": false
+    },
+    "min": {
+      "notNull": false,
+      "type": "int",
+      "default": 0,
+      "min": 0,
+      "required": false,
+      "audited": false,
+      "readOnly": false,
+      "tooltip": false,
+      "view": "views/validation-rule/fields/int-size"
+    },
+    "max": {
+      "notNull": false,
+      "type": "int",
+      "min": 0,
+      "required": false,
+      "audited": false,
+      "readOnly": false,
+      "tooltip": false,
+      "view": "views/validation-rule/fields/int-size"
+    },
+    "colorDepth": {
+      "type": "array",
+      "storeArrayValues": true,
+      "required": false,
+      "noEmptyString": false,
+      "options": false,
+      "audited": false,
+      "readOnly": false,
+      "tooltip": false
+    },
+    "colorSpace": {
+      "type": "multiEnum",
+      "storeArrayValues": true,
+      "required": false,
+      "optionsIds": [
+        "RGB",
+        "SRGB"
+      ],
+      "options": [
+        "RGB",
+        "SRGB"
+      ],
+      "audited": false,
+      "readOnly": false,
+      "isMultilang": false,
+      "tooltip": false
+    },
+    "minWidth": {
+      "notNull": false,
+      "type": "int",
+      "min": 0,
+      "required": false,
+      "audited": false,
+      "readOnly": false,
+      "tooltip": false
+    },
+    "minHeight": {
+      "notNull": false,
+      "type": "int",
+      "min": 0,
+      "required": false,
+      "audited": false,
+      "readOnly": false,
+      "tooltip": false
+    },
+    "extension": {
+      "type": "array",
+      "storeArrayValues": true,
+      "required": false,
+      "noEmptyString": false,
+      "options": false,
+      "audited": false,
+      "readOnly": false,
+      "tooltip": false
+    },
+    "mimeList": {
+      "type": "array",
+      "storeArrayValues": true,
+      "required": false,
+      "noEmptyString": false,
+      "options": false,
+      "audited": false,
+      "readOnly": false,
+      "tooltip": false
+    }
+  },
+  "links": {
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "assetType": {
+      "type": "belongsTo",
+      "foreign": "validationRules",
+      "entity": "AssetType",
+      "audited": false
+    }
+  },
+  "collection": {
+    "sortBy": "createdAt",
+    "asc": false
+  },
+  "indexes": {
+    "name": {
+      "columns": [
+        "name",
+        "deleted"
+      ]
+    }
+  }
+}

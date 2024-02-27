@@ -1,5 +1,15 @@
 {
   "scopeNames": {
+    "Asset": "Ассет",
+    "Rendition": "Преобразование",
+    "RenditionMetaData": "Преобразование мета данные",
+    "Library": "Библиотека",
+    "AssetVariant": "Вариант ассета",
+    "AssetCategory": "Категория ассета",
+    "AssetMetadata": "Метаданные ассета",
+    "AssetVersion": "Версия ассета",
+    "AssetType": "Тип ассета",
+    "ValidationRule": "Правило проверки",
     "Sharing": "Шеринг",
     "Translation": "Надпись",
     "Locale": "Локаль",
@@ -47,6 +57,14 @@
     "TreoStore": "Магазин"
   },
   "scopeNamesPlural": {
+    "Library": "Библиотеки",
+    "Asset": "Ассеты",
+    "AssetVersion": "Версии ассета",
+    "AssetVariant": "Варианты ассета",
+    "AssetCategory": "Категория ассета",
+    "AssetMetadata": "Метаданные ассета",
+    "AssetType": "Типы ассета",
+    "validationRules": "Правила проверки",
     "Sharing": "Шеринги",
     "Translation": "Надписи",
     "Locale": "Локали",
@@ -82,6 +100,11 @@
     "Core": "AtroCore - это программная экосистема, предназначенная для быстрой разработки веб-приложений для бизнеса."
   },
   "labels": {
+    "dragAndDropBtnText": "Перетяните",
+    "dragAndDropBtnTextSmall": "Ваши ассеты или",
+    "upload": "Загрузка",
+    "attachFile": "Прикрепить файл",
+    "noData": "Нет данных",
     "jobCreated": "Задание успешно создано",
     "jobNotCreated": "Не удалось создать задание",
     "searchPanel": "Поиск",
@@ -923,6 +946,15 @@
     "cd": "Кд"
   },
   "exceptions": {
+    "colorDepthValidationFailed": "Глубина цвета этого ассета недопустима.",
+    "colorSpaceValidationFailed": "Цветовое пространство этого ассета недопустимо.",
+    "fileExtensionValidationFailed": "Используйте файлы только со след. расширением: %s.",
+    "mimeTypeValidationFailed": "У ассета неправильный тип MIME.",
+    "pdfValidationFailed": "Ассет не является PDF документом.",
+    "imageQualityValidationFailed": "Качество изображения должно быть между %s и %s.",
+    "imageRatioValidationFailed": "Изображение должно иметь соотношение сторон %s.",
+    "imageScaleValidationFailed": "Изображение должно иметь ширину более %spx и высоту более чем %spx.",
+    "imageSizeValidationFailed": "Размер ассета должен быть между %skb и %skb.",
     "maxLengthIsExceeded": "Разрешенная длина строки для \"%s\" \"%s\" символа, вы передаете \"%s\" символа.",
     "parentRecordsHaveDifferentValues": "Родительские элементы имеют различные значения, значение для наследования не может быть определено.",
     "hasMultipleParents": "Есть одна или больше записей с несколькими родительскими элементами.",

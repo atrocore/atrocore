@@ -344,6 +344,29 @@
     "error": {
       "type": "color"
     },
+    "attachmentDuplicates": {
+      "type": "enum",
+      "default": "notAllowByContentAndName",
+      "prohibitedEmptyValue": true,
+      "required": true,
+      "optionsIds": [
+        "notAllowByContentAndName",
+        "notAllowByContent",
+        "notAllowByName",
+        "allow"
+      ],
+      "options": [
+        "notAllowByContentAndName",
+        "notAllowByContent",
+        "notAllowByName",
+        "allow"
+      ]
+    },
+    "fileNameRegexPattern": {
+      "type": "varchar",
+      "default": "/^[^\\\\\\/:\\*\\\"\\?<>%|\\s,]{1,64}/",
+      "tooltip": true
+    },
     "variables": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,

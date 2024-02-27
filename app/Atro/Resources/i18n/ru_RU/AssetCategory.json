@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "code": "Код",
+    "isActive": "Активно",
+    "assets": "Ассеты"
+  },
+  "links": {
+    "assets": "Ассеты"
+  },
+  "labels": {
+    "Create AssetCategory": "Создать категорию ассета"
+  }
+}

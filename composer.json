@@ -17,6 +17,7 @@
     "ext-ftp": "*",
     "ext-exif": "*",
     "ext-imagick": "*",
+    "ext-fileinfo": "*",
     "gumlet/php-image-resize": "~1.9.2",
     "composer/semver": "~3.3.2",
     "doctrine/dbal": "~3.2.2",

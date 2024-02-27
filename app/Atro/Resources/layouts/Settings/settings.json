@@ -1,13 +1,57 @@
 [
-    {
-        "label": "System",
-        "rows": [
-            [{"name": "appId"}, {"name": "useCache"}],
-            [false, {"name": "siteUrl"}],
-            [{"name": "followCreatedEntities"}, {"name": "globalSearchEntityList"}],
-            [{"name": "aclStrictMode"}, false],
-            [{"name": "textFilterUseContainsForVarchar"}, {"name": "languageList"}],
-            [{"name": "locale"}, false]
-        ]
-    }
+  {
+    "label": "System",
+    "rows": [
+      [
+        {
+          "name": "appId"
+        },
+        {
+          "name": "useCache"
+        }
+      ],
+      [
+        false,
+        {
+          "name": "siteUrl"
+        }
+      ],
+      [
+        {
+          "name": "followCreatedEntities"
+        },
+        {
+          "name": "globalSearchEntityList"
+        }
+      ],
+      [
+        {
+          "name": "aclStrictMode"
+        },
+        false
+      ],
+      [
+        {
+          "name": "textFilterUseContainsForVarchar"
+        },
+        {
+          "name": "languageList"
+        }
+      ],
+      [
+        {
+          "name": "locale"
+        },
+        false
+      ],
+      [
+        {
+          "name": "attachmentDuplicates"
+        },
+        {
+          "name": "fileNameRegexPattern"
+        }
+      ]
+    ]
+  }
 ]

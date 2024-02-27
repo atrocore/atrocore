@@ -1,0 +1,21 @@
+{
+  "fields": {
+    "validationRules": "Правила проверки",
+    "sortOrder": "Порядок сортировки",
+    "assignAutomatically": "Назначать автоматически",
+    "typesToExclude": "Типы для исключения"
+  },
+  "links": {
+    "validationRules": "Правила проверки"
+  },
+  "exceptions": {
+    "assetTypeInUseRename": "Ассет тип используется и не может быть переименован.",
+    "assetTypeInUseDelete": "Ассет тип используется и не может быть удален."
+  },
+  "labels": {
+    "Create AssetType": "Создать тип ассета"
+  },
+  "tooltips": {
+    "typesToExclude": "Если текущий тип успешно назначен ассету, эти типы будут удалены из него."
+  }
+}

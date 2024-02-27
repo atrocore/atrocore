@@ -1,0 +1,15 @@
+[
+  {
+    "name": "name",
+    "link": true
+  },
+  {
+    "name": "assignAutomatically"
+  },
+  {
+    "name": "typesToExclude"
+  },
+  {
+    "name": "sortOrder"
+  }
+]

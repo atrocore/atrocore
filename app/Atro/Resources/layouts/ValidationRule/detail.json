@@ -1,0 +1,89 @@
+[
+  {
+    "rows": [
+      [
+        {
+          "name": "type"
+        },
+        {
+          "name": "isActive"
+        }
+      ],
+      [
+        {
+          "name": "validateBy"
+        },
+        false
+      ],
+      [
+        {
+          "name": "pattern"
+        },
+        false
+      ],
+      [
+        {
+          "name": "mimeList"
+        },
+        false
+      ],
+      [
+        {
+          "name": "ratio"
+        },
+        false
+      ],
+      [
+        {
+          "name": "min"
+        },
+        {
+          "name": "max"
+        }
+      ],
+      [
+        {
+          "name": "colorDepth"
+        },
+        false
+      ],
+      [
+        {
+          "name": "colorSpace"
+        },
+        false
+      ],
+      [
+        {
+          "name": "extension"
+        },
+        false
+      ]
+    ],
+    "style": "default",
+    "label": "Overview"
+  },
+  {
+    "rows": [
+      [
+        {
+          "name": "minWidth"
+        },
+        {
+          "name": "minHeight"
+        }
+      ]
+    ],
+    "style": "default",
+    "dynamicLogicVisible": {
+      "conditionGroup": [
+        {
+          "type": "equals",
+          "attribute": "type",
+          "value": "Scale"
+        }
+      ]
+    },
+    "customLabel": "Min"
+  }
+]
