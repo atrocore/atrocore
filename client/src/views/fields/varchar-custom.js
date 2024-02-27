@@ -11,7 +11,7 @@
 Espo.define('views/fields/varchar-custom', 'views/fields/varchar', function (Dep) {
     return Dep.extend({
 
-        editTemplate: "fields/varchar/varchar-custom",
+        editTemplate: "fields/varchar-custom/edit",
 
         data() {
             return _.extend({
