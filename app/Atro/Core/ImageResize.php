@@ -17,10 +17,6 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Imagick;
 
-/**
- * Class ImageResize
- * @package Dam\Core
- */
 class ImageResize
 {
     const CROP_TOP        = 1;

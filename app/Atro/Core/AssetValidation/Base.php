@@ -17,11 +17,6 @@ use Espo\Core\Utils\Util;
 use Espo\Core\Container;
 use Espo\Core\ORM\EntityManager;
 
-/**
- * Class Base
- *
- * @package Dam\Core\Validation
- */
 abstract class Base
 {
     /**

@@ -16,11 +16,6 @@ namespace Atro\Core\AssetValidation\Items;
 use Atro\Core\AssetValidation\Base;
 use Espo\Core\Exceptions\BadRequest;
 
-/**
- * Class Size
- *
- * @package Dam\Core\Validation\Items
- */
 class Size extends Base
 {
     /**

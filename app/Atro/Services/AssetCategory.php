@@ -15,10 +15,6 @@ namespace Atro\Services;
 
 use Atro\Core\Templates\Services\Hierarchy;
 
-/**
- * Class AssetCategory
- * @package Dam\Services
- */
 class AssetCategory extends Hierarchy
 {
     public function createEntity($attachment)

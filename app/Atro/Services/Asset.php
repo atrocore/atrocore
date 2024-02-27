@@ -21,11 +21,6 @@ use Espo\Core\Utils\Log;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 
-/**
- * Class Asset
- *
- * @package Dam\Services
- */
 class Asset extends Hierarchy
 {
     /**

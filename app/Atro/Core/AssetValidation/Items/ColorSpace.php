@@ -18,10 +18,6 @@ use Espo\Core\Exceptions\BadRequest;
 use ReflectionClass;
 use Espo\Core\Container;
 
-/**
- * Class ColorSpace
- * @package Dam\Core\Validation\Items
- */
 class ColorSpace extends Base
 {
     /**
