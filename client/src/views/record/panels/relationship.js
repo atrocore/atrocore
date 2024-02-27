@@ -233,6 +233,8 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     var searchManager = new SearchManager(collection, 'listRelationship', false, this.getDateTime());
                     searchManager.setAdvanced(this.defs.filters);
                     collection.where = searchManager.getWhere();
+                } else if (this.defs.where) {
+                    collection.where = this.defs.where;
                 }
 
                 collection.url = collection.urlRoot = url;
