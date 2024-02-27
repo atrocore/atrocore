@@ -38,8 +38,8 @@ namespace Espo\Services;
 use Cron\CronExpression;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\CronManager;
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\NotFound;
+use Atro\Core\Exceptions\Error;
+use Atro\Core\Exceptions\NotFound;
 use Espo\ORM\Entity;
 
 class ScheduledJob extends \Espo\Core\Templates\Services\Base

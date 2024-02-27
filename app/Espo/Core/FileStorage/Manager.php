@@ -34,7 +34,7 @@
 namespace Espo\Core\FileStorage;
 
 use Atro\Core\Container;
-use Espo\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Error;
 use Espo\Entities\Attachment;
 
 class Manager

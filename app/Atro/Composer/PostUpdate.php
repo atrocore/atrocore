@@ -110,27 +110,6 @@ class PostUpdate
         } catch (\Throwable $e) {
             self::renderLine('Failed! ' . $e->getMessage());
 
-            $logFile = Application::COMPOSER_LOG_FILE;
-
-            /**
-             * Create Composer Note
-             */
-            if (file_exists($logFile)) {
-                try {
-                    /** @var EntityManager $em */
-                    $em = self::$container->get('entityManager');
-
-                    $note = $em->getEntity('Note');
-                    $note->set('type', 'composerUpdate');
-                    $note->set('parentType', 'ModuleManager');
-                    $note->set('data', ['status' => 1, 'output' => file_get_contents($logFile)]);
-                    $note->set('createdById', 'system');
-                    $em->saveEntity($note);
-                } catch (\Throwable $noteE) {
-                    $GLOBALS['log']->error('Creating composer update log failed: ' . $noteE->getMessage());
-                }
-            }
-
             self::renderLine('Restoring database');
             exec(self::getPhpBin() . " composer.phar restore --force --auto 2>/dev/null");
             self::renderLine('Done!');

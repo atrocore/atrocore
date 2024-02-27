@@ -17,7 +17,7 @@ use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Atro\ORM\DB\RDB\Mapper;
 use Atro\ORM\DB\RDB\Query\QueryConverter;
 use Doctrine\DBAL\Query\QueryBuilder;
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Espo\Core\ORM\Repositories\RDB;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;

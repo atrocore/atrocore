@@ -47,15 +47,24 @@ Espo.define('views/fields/unit-varchar', 'views/fields/varchar', Dep => {
             Dep.prototype.setMode.call(this, mode)
         },
 
+        getAttributeList() {
+            return [this.unitFieldName].concat(Dep.prototype.getAttributeList.call(this))
+        },
+
 
         afterSetup() {
-
             if (this.measureId) {
                 this.unitFieldName = this.originalName + 'UnitId';
                 this.loadUnitOptions();
                 if (this.model.isNew() && this.defaultUnit) {
                     this.model.set(this.unitFieldName, this.defaultUnit);
                 }
+
+                this.events = _.extend({
+                    [`change [name="${this.unitFieldName}"]`]: function (e) {
+                        this.model.set({[this.unitFieldName]: $(e.target).val()}, {ui: true})
+                    },
+                }, this.events || {});
             }
         },
 

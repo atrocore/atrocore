@@ -1,0 +1,51 @@
+{
+  "controller": "controllers/record",
+  "iconClass": "fas fa-layer-group",
+  "boolFilterList": [
+    "notParents",
+    "notChildren"
+  ],
+  "hiddenBoolFilterList": [
+    "notParents",
+    "notChildren"
+  ],
+  "views": {
+    "list": "views/list-tree",
+    "detail": "views/detail-tree"
+  },
+  "recordViews": {
+    "detail": "views/record/detail-tree"
+  },
+  "relationshipPanels": {
+    "parents": {
+      "selectAction": "selectRelatedEntity",
+      "selectBoolFilterList": [
+        "notChildren"
+      ]
+    },
+    "children": {
+      "selectAction": "selectRelatedEntity",
+      "selectBoolFilterList": [
+        "notParents"
+      ],
+      "dragDrop": {
+        "isActive": true,
+        "sortField": "sortOrder"
+      }
+    }
+  },
+  "dynamicLogic": {
+    "fields": {
+      "sortOrder": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "isRoot"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

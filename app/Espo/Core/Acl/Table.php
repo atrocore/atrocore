@@ -33,7 +33,7 @@
 
 namespace Espo\Core\Acl;
 
-use \Espo\Core\Exceptions\Error;
+use \Atro\Core\Exceptions\Error;
 
 use \Espo\ORM\Entity;
 use \Espo\Entities\User;

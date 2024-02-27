@@ -34,7 +34,7 @@
 namespace Espo\Core;
 
 use Espo\Core\EventManager\Event;
-use Espo\Core\Exceptions\NotFound;
+use Atro\Core\Exceptions\NotFound;
 use Espo\Core\Utils\Util;
 
 class EntryPointManager

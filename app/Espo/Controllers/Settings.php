@@ -84,6 +84,10 @@ class Settings extends \Espo\Core\Controllers\Base
             throw new BadRequest();
         }
 
+        if (!empty($data->fileNameRegexPattern) && !preg_match('/^\/((?:(?:[^?+*{}()[\]\\\\|]+|\\\\.|\[(?:\^?\\\\.|\^[^\\\\]|[^\\\\^])(?:[^\]\\\\]+|\\\\.)*\]|\((?:\?[:=!]|\?<[=!]|\?>)?(?1)??\)|\(\?(?:R|[+-]?\d+)\))(?:(?:[?+*]|\{\d+(?:,\d*)?\})[?+]?)?|\|)*)\/[gmixsuAJD]*$/', $data->fileNameRegexPattern)) {
+            throw new BadRequest($this->getContainer()->get('language')->translate('regexNotValid', 'exceptions', 'FieldManager'));
+        }
+
         $this->getServiceFactory()->create('Settings')->validate($data);
 
         // clear cache

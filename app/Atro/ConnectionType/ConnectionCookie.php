@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\ConnectionType;
 
 use Atro\Core\Twig\Twig;
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
 class ConnectionCookie extends ConnectionHttp implements ConnectionInterface

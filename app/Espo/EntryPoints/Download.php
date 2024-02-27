@@ -33,9 +33,11 @@
 
 namespace Espo\EntryPoints;
 
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Download\Custom;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Entities\Attachment;
 
 class Download extends AbstractEntryPoint
 {
@@ -54,6 +56,10 @@ class Download extends AbstractEntryPoint
 
     public function run()
     {
+        if (!empty($_GET['type']) && $_GET['type'] === 'custom') {
+            $this->custom();
+        }
+
         if (empty($_GET['id'])) {
             throw new BadRequest();
         }
@@ -77,6 +83,37 @@ class Download extends AbstractEntryPoint
 
         header("Location: $fileName", true, 302);
         exit;
+    }
+
+    protected function custom(): void
+    {
+        $converter = $this
+            ->getContainer()
+            ->get(Custom::class)
+            ->setAttachment($this->getAttachment())
+            ->setParams($_GET)
+            ->convert();
+
+        header("Location: " . $converter->getFilePath(), true, 302);
+        exit;
+    }
+
+    protected function getAttachment(): Attachment
+    {
+        if (empty($_GET['id'])) {
+            throw new BadRequest();
+        }
+
+        $attachment = $this->getEntityManager()->getEntity('Attachment', $_GET['id']);
+        if (empty($attachment)) {
+            throw new NotFound();
+        }
+
+        if (!$this->getAcl()->checkEntity($attachment)) {
+            throw new Forbidden();
+        }
+
+        return $attachment;
     }
 }
 

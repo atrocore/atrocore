@@ -30,6 +30,7 @@ class Container
         = [
             'consoleManager'           => \Atro\Core\ConsoleManager::class,
             'thumbnail'                => \Atro\Core\Thumbnail\Image::class,
+            'validator'                => \Atro\Core\AssetValidation\Validator::class,
             'migration'                => \Atro\Core\Migration\Migration::class,
             'twig'                     => \Atro\Core\Twig\Twig::class,
             'queueManager'             => \Atro\Core\QueueManager::class,
@@ -41,6 +42,7 @@ class Container
             Connection::class          => \Atro\Core\Factories\Connection::class,
             'memoryStorage'            => \Atro\Core\KeyValueStorages\MemoryStorage::class,
             'memcachedStorage'         => \Atro\Core\Factories\MemcachedStorage::class,
+            'configManager'            => \Atro\Core\ConfigManager::class,
             'crypt'                    => \Espo\Core\Utils\Crypt::class,
             'cronManager'              => \Espo\Core\CronManager::class,
             'slim'                     => \Espo\Core\Utils\Api\Slim::class,

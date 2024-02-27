@@ -1,0 +1,31 @@
+{
+  "controller": "controllers/record",
+  "views": {
+    "list": "views/asset-type/list",
+    "detail": "views/asset-type/detail",
+    "edit": "views/asset-type/edit"
+  },
+  "boolFilterList": [
+    "onlyMy"
+  ],
+  "relationshipPanels": {
+    "validationRules": {
+      "select": false,
+      "rowActionsView": "views/record/row-actions/relationship-no-unlink"
+    }
+  },
+  "dynamicLogic": {
+    "fields": {
+      "name": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

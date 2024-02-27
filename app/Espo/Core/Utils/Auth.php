@@ -34,8 +34,8 @@
 namespace Espo\Core\Utils;
 
 use Atro\Core\Container;
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Forbidden;
 use Espo\Core\Utils\Authentication\AbstractAuthentication;
 use Espo\Entities\AuthLogRecord;
 use Espo\Entities\User;

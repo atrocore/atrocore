@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Core\Exceptions;
 
-use Espo\Core\Exceptions\Exception;
-
 class NotUnique extends Exception
 {
     protected $code = 400;

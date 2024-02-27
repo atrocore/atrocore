@@ -32,7 +32,7 @@
  */
 
 namespace Espo\Core\Utils\File;
-use Espo\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Error;
 
 class ZipArchive
 {

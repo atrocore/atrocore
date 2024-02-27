@@ -1,0 +1,36 @@
+[
+  {
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "isActive"
+        }
+      ],
+      [
+        {
+          "name": "code"
+        },
+        {
+          "name": "parents"
+        }
+      ],
+      [
+        {
+          "name": "sortOrder"
+        },
+        false
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
+        }
+      ]
+    ],
+    "style": "default",
+    "label": "Overview"
+  }
+]

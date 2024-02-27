@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\ConnectionType;
 
 use Atro\DTO\HttpResponseDTO;
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 
 class ConnectionHttp extends AbstractConnection implements HttpConnectionInterface
 {

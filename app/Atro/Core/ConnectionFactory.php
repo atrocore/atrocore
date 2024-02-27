@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core;
 
 use Atro\ConnectionType\ConnectionInterface;
-use Espo\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Error;
 use Espo\ORM\Entity;
 use Espo\Core\Utils\Metadata;
 

@@ -41,7 +41,7 @@ use Doctrine\DBAL\ParameterType;
 use Espo\Core\DataManager;
 use Espo\Core\EventManager\Event;
 use Espo\Core\EventManager\Manager as EventManager;
-use Espo\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Error;
 use Espo\Core\Utils\File\Unifier;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
 

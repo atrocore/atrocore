@@ -1,0 +1,69 @@
+{
+  "labels": {
+    "sort": "Сортировка",
+    "Image": "Изображение",
+    "File": "Файл",
+    "upload": "Загрузка",
+    "uploaded": "Загружено",
+    "retry": "Повторить попытку?",
+    "withoutAnyCategory": "Без категории",
+    "availableVideoFormats": "Доступные форматы для видео-плеера: <a>mp4</a>, <a>webm</a> и <a>ogv</a>.",
+    "typeCategoryToSearch": "Введите категорию для поиска",
+    "assetPreview": "Предварительный просмотр ассета",
+    "setAsMainImage": "Назначить основным изображением"
+  },
+  "fields": {
+    "url": "URL",
+    "isActive": "Активный",
+    "image": "Изображение",
+    "relatedAssets": "Связанные ассеты",
+    "assetCategories": "Категории ассетов",
+    "assetMetaDatas": "Метаданные ассета",
+    "assetVersions": "Версии ассета",
+    "type": "Типы",
+    "library": "Библиотека",
+    "colorDepth": "Глубина представления цвета",
+    "colorSpace": "Цветовое пространство",
+    "file": "Файл",
+    "files": "Файлы",
+    "height": "Высота",
+    "metaData": "Meta Data",
+    "orientation": "Ориентация",
+    "renditions": "Преобразование",
+    "size": "Размер",
+    "sizeUnit": "Ед. измерения размера",
+    "tags": "Теги",
+    "width": "Ширина",
+    "private": "Приватный",
+    "preview": "Предпросмотр"
+  },
+  "links": {
+    "assetCategories": "Категории ассета",
+    "assetMetaDatas": "Метаданные ассета",
+    "assetVersions": "Версии ассета",
+    "renditions": "Преобразование",
+    "relatedAssets": "Связанные ассеты"
+  },
+  "boolFilters": {
+    "onlyPrivate": "Приватный",
+    "onlyPublic": "Публичный"
+  },
+  "messages": {
+    "assetCouldNotBeUploaded": "Не удалось загрузить ассет.",
+    "notAllAssetsWereUploaded": "XX из YY ассетов не были загружены.",
+    "assetsAdded": "Ассеты добавлены и будут доступны через несколько минут."
+  },
+  "exceptions": {
+    "noAssetTypeProvided": "Тип ассета не указан.",
+    "assetExistWithOtherType": "Ассет '%s' уже существует с другим типом.",
+    "fileExtensionCannotBeChanged": "Расширение файла не может быть изменено.",
+    "urlDownloadFailed": "Загрузка для '%s' не удалась.",
+    "noAttachmentExist": "Ассет бес аттачмента существовать не может.",
+    "wrongUrl": "Неправильный URL '%s'.",
+    "suchAssetAlreadyExists": "Такой ассет уже существует",
+    "assetIsAlreadyLinkedWithEntity": "Сущность 'Asset' уже связна с сущностью '%s'. Вы не можете снова связать эти сущности.",
+    "fileNameNotValid": "Имя файла недействительно.",
+    "suchFileNameNotValid": "Имя файла '%s' недействительно.",
+    "fileNameNotValidByUserRegex": "Имя файла недействительно. Он должен соответствовать регулярному выражению '%s'."
+  }
+}

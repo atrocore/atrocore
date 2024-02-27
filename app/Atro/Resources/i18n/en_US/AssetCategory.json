@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "code": "Code",
+    "isActive": "Active",
+    "assets": "Assets"
+  },
+  "links": {
+    "assets": "Assets"
+  },
+  "labels": {
+    "Create AssetCategory": "Create Asset Category"
+  }
+}

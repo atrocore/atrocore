@@ -59,6 +59,10 @@ Espo.define('views/fields/unit-int', ['views/fields/int', 'views/fields/unit-var
             return Varchar.prototype.prepareMeasureData.call(this, this.setDataWithOriginalName());
         },
 
+        getAttributeList() {
+            return Varchar.prototype.getAttributeList.call(this)
+        },
+
         setDataWithOriginalName() {
             const data = Dep.prototype.data.call(this);
             const value = isNaN(this.model.get(this.originalName)) ? null : this.model.get(this.originalName);

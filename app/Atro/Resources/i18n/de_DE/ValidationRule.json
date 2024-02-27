@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "validateBy": "Validieren durch",
+    "isActive": "Aktiv",
+    "assetType": "Asset-Typ",
+    "type": "Typ",
+    "ratio": "Seitenverhältnis",
+    "pattern": "Muster",
+    "min": "Min",
+    "max": "Max",
+    "colorDepth": "Farbtiefe",
+    "colorSpace": "Farbraum",
+    "minWidth": "Breite",
+    "minHeight": "Höhe",
+    "extension": "Erweiterung",
+    "mimeList": "Liste"
+  },
+  "links": {
+    "assetType": "Asset-Typ"
+  },
+  "labels": {
+    "Create ValidationRule": "Validierungsregel erstellen",
+    "minSize": "Min, Kb",
+    "maxSize": "Max, Kb"
+  },
+  "confirmations": {
+    "recheckAllAssets": "Möchten Sie die Validierungsregeln wirklich ändern? Alle zugehörigen Assets werden erneut überprüft und eventuell wird die Verknüpfung mit dem Assettyp aufgehoben."
+  }
+}

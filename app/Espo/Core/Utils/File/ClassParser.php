@@ -115,7 +115,7 @@ class ClassParser extends Injectable
             if ($cacheFile && $this->getConfig()->get('useCache')) {
                 $result = $this->getFileManager()->putPhpContents($cacheFile, $data);
                 if ($result == false) {
-                    throw new \Espo\Core\Exceptions\Error();
+                    throw new \Atro\Core\Exceptions\Error();
                 }
             }
         }
