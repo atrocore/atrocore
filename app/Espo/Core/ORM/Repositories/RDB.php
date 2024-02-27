@@ -36,7 +36,7 @@ namespace Espo\Core\ORM\Repositories;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\EventManager\Event;
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Espo\Core\Interfaces\Injectable;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Util;

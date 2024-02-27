@@ -35,7 +35,7 @@ declare(strict_types=1);
 
 namespace Espo\Core;
 
-use Espo\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Error;
 use Espo\Core\Utils\Random;
 use Espo\Core\Utils\File\Manager;
 use Espo\Core\Utils\Util;

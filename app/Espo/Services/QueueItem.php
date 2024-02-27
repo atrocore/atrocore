@@ -38,8 +38,8 @@ namespace Espo\Services;
 use Atro\Core\Exceptions\NotModified;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\EventManager\Event;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Templates\Services\Base;
 
 class QueueItem extends Base

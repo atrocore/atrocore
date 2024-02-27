@@ -15,7 +15,7 @@ namespace Atro\Core\Thumbnail;
 
 use Atro\Core\Container;
 use Atro\Core\Utils\PDFLib;
-use Espo\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Error;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\File\Manager;
 use Espo\Core\Utils\Metadata;

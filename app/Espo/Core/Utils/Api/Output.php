@@ -33,7 +33,7 @@
 
 namespace Espo\Core\Utils\Api;
 
-use Espo\Core\Exceptions\WithStatusReasonData;
+use Atro\Core\Exceptions\WithStatusReasonData;
 
 class Output
 {

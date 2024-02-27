@@ -28,7 +28,7 @@ class AppController extends AbstractListener
      *
      * @param Event $event
      *
-     * @throws \Espo\Core\Exceptions\Error
+     * @throws \Atro\Core\Exceptions\Error
      */
     public function afterActionUser(Event $event)
     {
@@ -69,7 +69,7 @@ class AppController extends AbstractListener
      *
      * @param stdClass $preferences
      *
-     * @throws \Espo\Core\Exceptions\Error
+     * @throws \Atro\Core\Exceptions\Error
      */
     protected function hideDashletsWithEmptyEntity(stdClass &$preferences): void
     {

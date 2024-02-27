@@ -3,7 +3,7 @@
 namespace Atro\ConnectionType;
 
 use Atro\DTO\HttpResponseDTO;
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
 class ConnectionOauth1 extends ConnectionHttp implements ConnectionInterface

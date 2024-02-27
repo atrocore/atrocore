@@ -33,7 +33,7 @@
 
 namespace Espo\Core\ExternalAccount\Clients;
 
-use \Espo\Core\Exceptions\Error;
+use \Atro\Core\Exceptions\Error;
 
 class Google extends OAuth2Abstract
 {

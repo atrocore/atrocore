@@ -34,7 +34,7 @@
 namespace Espo\Core\Services;
 
 use Atro\Core\KeyValueStorages\StorageInterface;
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Espo\Core\Interfaces\Injectable;
 use Espo\Core\Utils\Config;
 use Espo\Entities\User;

@@ -33,7 +33,7 @@
 
 namespace Espo\Core\Utils\File;
 use Espo\Core\Utils,
-    Espo\Core\Exceptions\Error;
+    Atro\Core\Exceptions\Error;
 
 class Permission
 {

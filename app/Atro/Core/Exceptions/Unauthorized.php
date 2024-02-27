@@ -13,20 +13,9 @@ declare(strict_types=1);
 
 namespace Atro\Core\Exceptions;
 
-class Conflict extends Exception
+class Unauthorized extends Exception
 {
-    protected $code = 409;
-    protected array $fields = [];
-
-    public function setFields(array $fields): Conflict
-    {
-        $this->fields = $fields;
-        return $this;
-    }
-
-    public function getFields(): array
-    {
-        return $this->fields;
-    }
+    protected $code = 401;
 }
+
 

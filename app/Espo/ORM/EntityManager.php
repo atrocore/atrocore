@@ -37,7 +37,7 @@ use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Core\Container;
 use Atro\ORM\DB\MapperInterface;
 use Doctrine\DBAL\Connection;
-use Espo\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Error;
 
 class EntityManager
 {

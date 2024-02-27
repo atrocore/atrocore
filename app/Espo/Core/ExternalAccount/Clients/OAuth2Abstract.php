@@ -33,7 +33,7 @@
 
 namespace Espo\Core\ExternalAccount\Clients;
 
-use \Espo\Core\Exceptions\Error;
+use \Atro\Core\Exceptions\Error;
 
 use \Espo\Core\ExternalAccount\OAuth2\Client;
 

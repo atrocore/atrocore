@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core\Utils\Condition;
 
 use DateInterval;
-use Espo\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Error;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use DateTime;
