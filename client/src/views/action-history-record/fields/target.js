@@ -34,7 +34,7 @@ Espo.define('views/action-history-record/fields/target', 'views/fields/link-pare
 
     return Dep.extend({
 
-        ignoreScopeList: ['Preferences', 'ExternalAccount', 'Notification', 'Note'],
+        ignoreScopeList: ['Preferences', 'Notification', 'Note'],
 
         setup: function () {
             Dep.prototype.setup.call(this);

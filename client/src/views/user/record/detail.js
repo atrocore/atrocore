@@ -128,14 +128,6 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
             this.getRouter().navigate('#Preferences/edit/' + this.model.id, {trigger: true});
         },
 
-        actionEmailAccounts: function () {
-            this.getRouter().navigate('#EmailAccount/list/userId=' + this.model.id, {trigger: true});
-        },
-
-        actionExternalAccounts: function () {
-            this.getRouter().navigate('#ExternalAccount', {trigger: true});
-        },
-
         actionAccess: function () {
             this.notify('Loading...');
 
