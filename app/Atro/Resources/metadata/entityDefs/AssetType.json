@@ -42,7 +42,7 @@
     "typesToExclude": {
       "type": "array",
       "tooltip": true,
-      "view": "dam:views/asset-type/fields/types-to-exclude"
+      "view": "views/asset-type/fields/types-to-exclude"
     }
   },
   "links": {

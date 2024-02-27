@@ -110,7 +110,7 @@
       "audited": false,
       "readOnly": false,
       "tooltip": false,
-      "view": "dam:views/validation-rule/fields/int-size"
+      "view": "views/validation-rule/fields/int-size"
     },
     "max": {
       "notNull": false,
@@ -120,7 +120,7 @@
       "audited": false,
       "readOnly": false,
       "tooltip": false,
-      "view": "dam:views/validation-rule/fields/int-size"
+      "view": "views/validation-rule/fields/int-size"
     },
     "colorDepth": {
       "type": "array",

@@ -2,7 +2,7 @@
   "fields": {
     "preview": {
       "type": "varchar",
-      "view": "dam:views/asset/fields/preview",
+      "view": "views/asset/fields/preview",
       "notStorable": true,
       "layoutDetailDisabled": true,
       "layoutDetailSmallDisabled": true,
@@ -167,7 +167,7 @@
       "required": false,
       "trim": true,
       "isMultilang": false,
-      "view": "dam:views/asset/fields/name"
+      "view": "views/asset/fields/name"
     },
     "description": {
       "type": "text",
@@ -229,7 +229,7 @@
       "noAsset": true,
       "audited": true,
       "tooltip": false,
-      "view": "dam:views/asset/fields/file",
+      "view": "views/asset/fields/file",
       "layoutMassUpdateDisabled": true,
       "importDisabled": true,
       "exportDisabled": false
@@ -242,7 +242,7 @@
       "noAsset": true,
       "tooltip": false,
       "notStorable": true,
-      "view": "dam:views/asset/fields/files",
+      "view": "views/asset/fields/files",
       "importDisabled": true,
       "exportDisabled": true
     },

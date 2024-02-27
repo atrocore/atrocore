@@ -1,9 +1,9 @@
 {
   "controller": "controllers/record",
   "views": {
-    "list": "dam:views/asset-type/list",
-    "detail": "dam:views/asset-type/detail",
-    "edit": "dam:views/asset-type/edit"
+    "list": "views/asset-type/list",
+    "detail": "views/asset-type/detail",
+    "edit": "views/asset-type/edit"
   },
   "boolFilterList": [
     "onlyMy"

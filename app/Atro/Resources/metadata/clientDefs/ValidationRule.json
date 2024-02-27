@@ -4,8 +4,8 @@
     "onlyMy"
   ],
   "modalViews": {
-    "detail": "dam:views/validation-rule/modals/detail",
-    "edit": "dam:views/validation-rule/modals/edit"
+    "detail": "views/validation-rule/modals/detail",
+    "edit": "views/validation-rule/modals/edit"
   },
   "dynamicLogic": {
     "fields": {

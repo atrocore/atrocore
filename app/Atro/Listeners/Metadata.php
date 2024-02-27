@@ -95,7 +95,7 @@ class Metadata extends AbstractListener
             }
             foreach ($defs['links'] as $link => $linkData) {
                 if (!empty($linkData['entity']) && $linkData['entity'] == 'Asset' && !isset($data['clientDefs'][$scope]['relationshipPanels'][$link]['view'])) {
-                    $data['clientDefs'][$scope]['relationshipPanels'][$link]['view'] = "dam:views/record/panels/assets";
+                    $data['clientDefs'][$scope]['relationshipPanels'][$link]['view'] = "views/record/panels/assets";
                 }
             }
         }

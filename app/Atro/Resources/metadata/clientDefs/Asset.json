@@ -18,14 +18,14 @@
     "linkedWithAssetCategory"
   ],
   "views": {
-    "list": "dam:views/asset/list",
+    "list": "views/asset/list",
     "detail": "views/detail-tree",
-    "plate": "dam:views/asset/plate"
+    "plate": "views/asset/plate"
   },
   "recordViews": {
-    "plate": "dam:views/asset/record/plate",
-    "plateItem": "dam:views/asset/record/plate-item",
-    "detail": "dam:views/asset/record/detail"
+    "plate": "views/asset/record/plate",
+    "plateItem": "views/asset/record/plate-item",
+    "detail": "views/asset/record/detail"
   },
   "relationshipPanels": {
     "parents": {
@@ -45,7 +45,7 @@
       }
     },
     "assetMetadata": {
-      "view": "dam:views/asset/record/panels/asset-metadata",
+      "view": "views/asset/record/panels/asset-metadata",
       "create": false,
       "select": false,
       "rowActionsView": "views/record/row-actions/empty"
@@ -56,14 +56,14 @@
       {
         "name": "preview",
         "label": "assetPreview",
-        "view": "dam:views/asset/record/panels/side/preview/main"
+        "view": "views/asset/record/panels/side/preview/main"
       }
     ],
     "detail": [
       {
         "name": "preview",
         "label": "assetPreview",
-        "view": "dam:views/asset/record/panels/side/preview/main"
+        "view": "views/asset/record/panels/side/preview/main"
       },
       {
         "name": "sharing",
@@ -73,14 +73,14 @@
       {
         "name": "custom_download",
         "label": "Custom Download",
-        "view": "dam:views/asset/record/panels/side/download/main"
+        "view": "views/asset/record/panels/side/download/main"
       }
     ],
     "detailSmall": [
       {
         "name": "preview",
         "label": "assetPreview",
-        "view": "dam:views/asset/record/panels/side/preview/main"
+        "view": "views/asset/record/panels/side/preview/main"
       },
       {
         "name": "sharing",
@@ -92,13 +92,13 @@
       {
         "name": "preview",
         "label": "assetPreview",
-        "view": "dam:views/asset/record/panels/side/preview/main"
+        "view": "views/asset/record/panels/side/preview/main"
       }
     ]
   },
   "modalViews": {
-    "select": "dam:views/asset/modals/select-records",
-    "edit": "dam:views/asset/modals/edit"
+    "select": "views/asset/modals/select-records",
+    "edit": "views/asset/modals/edit"
   },
   "menu": {
     "list": {
