@@ -14,10 +14,8 @@ Espo.define('views/asset/record/panels/side/download/main', 'view', Dep => {
             active: "original",
             viewsLists: [
                 "original",
-                // "renditions",
                 "custom"
             ],
-            damConfig: null,
 
             events: {
                 'change input[name="downloadType"]': function (e) {
@@ -33,7 +31,6 @@ Espo.define('views/asset/record/panels/side/download/main', 'view', Dep => {
 
             setup() {
                 Dep.prototype.setup.call(this);
-                // this.damConfig = Config.prototype.init.call(this);
 
                 if (this.model.get("type")) {
                     this._buildViews();

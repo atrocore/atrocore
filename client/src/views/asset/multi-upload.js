@@ -12,7 +12,6 @@ Espo.define('views/asset/multi-upload', ["view", "lib!crypto"], function (Dep) {
     return Dep.extend({
         template      : "asset/multi-upload",
         size          : {},
-        damConfig     : null,
         attachmentHash: [],
         
         events: _.extend({
@@ -24,7 +23,6 @@ Espo.define('views/asset/multi-upload', ["view", "lib!crypto"], function (Dep) {
         setup() {
             this.attachmentHash = [];
             
-            // this.damConfig = Config.prototype.init.call(this);
             Dep.prototype.setup.call(this);
         },
         
@@ -51,16 +49,6 @@ Espo.define('views/asset/multi-upload', ["view", "lib!crypto"], function (Dep) {
         },
         
         _sizeValidate(size) {
-            let type       = this.damConfig.getType(this.model.get("type"));
-            let private    = this.model.get('private') ? "private" : "public";
-            let sizeParams = this.damConfig.getByType(`${type}.validations.size.${private}`);
-            
-            if (sizeParams && (
-                size > sizeParams.max || size < sizeParams.min
-            )) {
-                return false;
-            }
-            
             return true;
         },
         
@@ -105,12 +93,6 @@ Espo.define('views/asset/multi-upload', ["view", "lib!crypto"], function (Dep) {
         },
         
         _isDuplicate(e) {
-            let type = this.damConfig.getType(this.model.get("type"));
-            
-            if (this.damConfig.getByType(`${type}.validations.unique`) === null) {
-                return false;
-            }
-            
             let hash = CryptoJS.MD5(e.currentTarget.result).toString();
             
             if (this.attachmentHash.find(i => hash === i)) {

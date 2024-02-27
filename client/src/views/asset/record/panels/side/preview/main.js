@@ -13,8 +13,6 @@ Espo.define('views/asset/record/panels/side/preview/main', 'view', Dep => {
 
             template: "asset/record/panels/side/preview/main",
 
-            damConfig: null,
-
             events: {
                 'click a[data-action="showImagePreview"]': function (e) {
                     e.stopPropagation();
@@ -30,7 +28,6 @@ Espo.define('views/asset/record/panels/side/preview/main', 'view', Dep => {
             },
 
             setup() {
-                // this.damConfig = Config.prototype.init.call(this);
                 Dep.prototype.setup.call(this);
 
                 this.listenTo(this.model, "change:fileId", () => {

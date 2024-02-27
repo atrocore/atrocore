@@ -12,8 +12,7 @@ Espo.define('views/asset/modals/entity-asset-item', 'view', Dep => {
     return Dep.extend({
         template : "asset/modals/entity-asset-item",
         type     : null,
-        damConfig: null,
-        
+
         data() {
             let data = {};
 
@@ -23,9 +22,7 @@ Espo.define('views/asset/modals/entity-asset-item', 'view', Dep => {
         },
         
         setup() {
-            // this.damConfig = Config.prototype.init.call(this);
-            
-            this.type = this.damConfig.getType(this.options.assetType);
+            this.type = this.options.assetType;
             
             this.createView("entityAssetEdit", "views/asset/modals/entity-asset-form", {
                 model: this.model,
