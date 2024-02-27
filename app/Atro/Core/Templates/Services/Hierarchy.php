@@ -17,7 +17,7 @@ use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Templates\Repositories\Relation;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Conflict;
+use Atro\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;

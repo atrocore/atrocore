@@ -33,7 +33,7 @@
 
 namespace Espo\Core\Utils\FieldManager\Hooks;
 
-use Espo\Core\Exceptions\Conflict;
+use Atro\Core\Exceptions\Conflict;
 
 class AttachmentMultipleType extends Base
 {

@@ -36,7 +36,7 @@ namespace Espo\Core\Utils;
 use Atro\Console\RefreshTranslations;
 use Atro\Core\Container;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Conflict;
+use Atro\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\ServiceFactory;

@@ -31,52 +31,22 @@
  * and "AtroCore" word.
  */
 
-declare(strict_types=1);
+namespace Atro\Core\Exceptions;
 
-namespace Espo\Core\Exceptions;
-
-/**
- * Class Exception
- */
-class Exception extends \Exception
+class Conflict extends Exception
 {
-    /**
-     * @var array
-     */
-    protected $data = [];
+    protected $code = 409;
+    protected array $fields = [];
 
-    /**
-     * @inheritDoc
-     */
-    public function __construct($message = "", $code = 0, \Throwable $previous = null)
+    public function setFields(array $fields): Conflict
     {
-        // decode message to utf8
-        $message = mb_convert_encoding($message, 'utf-8', mb_detect_encoding($message));
-
-        parent::__construct($message, $code, $previous);
-    }
-
-    /**
-     * @param string $key
-     * @param mixed  $value
-     *
-     * @return Exception
-     */
-
-    public function setDataItem(string $key, $value): Exception
-    {
-        $this->data[$key] = $value;
-
+        $this->fields = $fields;
         return $this;
     }
 
-    /**
-     * @param string $key
-     *
-     * @return mixed
-     */
-    public function getDataItem(string $key)
+    public function getFields(): array
     {
-        return isset($this->data[$key]) ? $this->data[$key] : null;
+        return $this->fields;
     }
 }
+
