@@ -57,7 +57,7 @@ Espo.define('views/asset/record/panels/side/download/custom', 'view',
             },
             
             _createForm() {
-                this.createView("width", "views/fields/varchar", {
+                this.createView("width", "views/fields/varchar-custom", {
                     el    : `${this.options.el} .field[data-name="width"]`,
                     model : this.downloadModel,
                     name  : 'width',
@@ -68,7 +68,7 @@ Espo.define('views/asset/record/panels/side/download/custom', 'view',
                     }
                 });
                 
-                this.createView("height", "views/fields/varchar", {
+                this.createView("height", "views/fields/varchar-custom", {
                     el    : `${this.options.el} .field[data-name="height"]`,
                     model : this.downloadModel,
                     name  : 'height',
