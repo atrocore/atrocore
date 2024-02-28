@@ -1378,7 +1378,6 @@ class Record extends Base
                             break;
                         }
                     }
-
                 }
                 $this->prepareEntityForOutput($entity);
             }
