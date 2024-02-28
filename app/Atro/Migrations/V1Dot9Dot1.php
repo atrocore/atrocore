@@ -16,7 +16,7 @@ use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\Util;
 
-class V1Dot8Dot41 extends Base
+class V1Dot9Dot1 extends Base
 {
     public function up(): void
     {
@@ -28,6 +28,7 @@ class V1Dot8Dot41 extends Base
 
         $this->addUniqueIndexToCodeAndDropBelongToField();
 
+        $this->updateComposer('atrocore/core', '^1.9.1');
     }
 
     public function down(): void
