@@ -16,6 +16,8 @@ namespace Atro\Core\Templates\Repositories;
 use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Atro\ORM\DB\RDB\Mapper;
 use Atro\ORM\DB\RDB\Query\QueryConverter;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Atro\Core\Exceptions\BadRequest;
 use Espo\Core\ORM\Repositories\RDB;
@@ -451,20 +453,61 @@ class Hierarchy extends RDB
         return (int)$qb->fetchAssociative()['count'];
     }
 
-    public function isRoot(string $id): bool
+    public function isRoot(string $id, array $roots = null): bool
     {
-        $record = $this->getConnection()->createQueryBuilder()
-            ->select('h.id')
-            ->from($this->hierarchyTableName, 'h')
-            ->where('h.deleted = :false')
-            ->setParameter('false', false, Mapper::getParameterType(false))
-            ->andWhere('h.entity_id = :entityId')
-            ->setParameter('entityId', $id)
-            ->fetchAssociative();
+        if ($roots === null) {
+            $roots = $this->getEntitiesParents([$id]);
+        }
 
-        return empty($record);
+        return empty($roots[$id]);
     }
 
+    public function hasChildren(string $id, array $children = null): bool
+    {
+        if ($children === null) {
+            $children = $this->getEntitiesChildren([$id]);
+        }
+
+        return !empty($children[$id]);
+    }
+
+    public function getEntitiesParents(array $ids): array
+    {
+        $records = $this->getConnection()->createQueryBuilder()
+            ->select('h.entity_id, h.parent_id')
+            ->from($this->hierarchyTableName, 'h')
+            ->where('h.deleted = :false')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->andWhere('h.entity_id IN (:entityIds)')
+            ->setParameter('entityIds', $ids, Connection::PARAM_STR_ARRAY)
+            ->fetchAllAssociative();
+
+        $result = [];
+        foreach ($records as $record) {
+            $result[$record['entity_id']][] = $record['parent_id'];
+        }
+
+        return $result;
+    }
+
+    public function getEntitiesChildren(array $ids): array
+    {
+        $records = $this->getConnection()->createQueryBuilder()
+            ->select('h.entity_id, h.parent_id')
+            ->from($this->hierarchyTableName, 'h')
+            ->where('h.deleted = :false')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->andWhere('h.parent_id IN (:entityIds)')
+            ->setParameter('entityIds', $ids, Connection::PARAM_STR_ARRAY)
+            ->fetchAllAssociative();
+
+        $result = [];
+        foreach ($records as $record) {
+            $result[$record['parent_id']][] = $record['entity_id'];
+        }
+
+        return $result;
+    }
 
     public function getHierarchyRoute(string $id): array
     {
@@ -485,7 +528,7 @@ class Hierarchy extends RDB
             ->leftJoin('h', $this->tableName, 't', 't.id = h.parent_id')
             ->where('h.deleted = :false')
             ->andWhere('t.deleted = :false')
-            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->setParameter('false', false, ParameterType::BOOLEAN)
             ->andWhere('h.entity_id = :entityId')
             ->setParameter('entityId', $id)
             ->fetchAssociative();
