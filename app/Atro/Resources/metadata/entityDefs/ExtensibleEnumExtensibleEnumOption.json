@@ -2,14 +2,11 @@
     "fields": {
       "extensibleEnum": {
         "type": "link",
-        "required": true,
-        "relationshipField": true,
-        "mainRelationshipEntity": true
+        "required": true
       },
       "extensibleEnumOption": {
         "type": "link",
-        "required": true,
-        "relationshipField": true
+        "required": true
       },
       "sorting": {
         "type": "int"
