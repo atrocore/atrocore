@@ -35,9 +35,10 @@ declare(strict_types=1);
 
 namespace Espo\Repositories;
 
+use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Templates\Repositories\Base;
+use Atro\Core\Templates\Repositories\Base;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 
@@ -92,11 +93,12 @@ class ExtensibleEnumOption extends Base
                     ->createQueryBuilder()
                     ->select(implode(',', $select))
                     ->from('extensible_enum_option', 'eeo')
-                    ->innerJoin('eeo', 'extensible_enum', 'ee', 'ee.id = eeo.extensible_enum_id AND ee.deleted = :false')
+                    ->innerjoin('eeo', 'extensible_enum_extensible_enum_option', 'eeeeo', 'eeeeo.extensible_enum_option_id = eeo.id AND eeeeo.deleted = :false')
+                    ->innerjoin('eeeeo', 'extensible_enum', 'ee', 'ee.id = eeeeo.extensible_enum_id AND ee.deleted = :false')
                     ->where('eeo.deleted = :false')
                     ->andWhere('ee.id = :id')
-                    ->setParameter('false', false, ParameterType::BOOLEAN)
-                    ->setParameter('id', $extensibleEnumId)
+                    ->setParameter('false', false, Mapper::getParameterType(false))
+                    ->setParameter('id', $extensibleEnumId, Mapper::getParameterType($extensibleEnumId))
                     ->fetchAllAssociative();
 
                 foreach ($records as $item) {
@@ -122,19 +124,11 @@ class ExtensibleEnumOption extends Base
             $entity->set('code', null);
         }
 
+
         if ($entity->isNew() && $entity->get('sortOrder') === null) {
             $entity->set('sortOrder', time() - (new \DateTime('2023-01-01'))->getTimestamp());
         }
 
-        $extensibleEnum = $entity->get('extensibleEnum');
-
-        if (!empty($extensibleEnum)) {
-            foreach ($this->getLingualFields() as $field) {
-                if ($entity->isAttributeChanged($field) && $entity->get($field) !== null && empty($extensibleEnum->get('multilingual'))) {
-                    throw new BadRequest("List '{$extensibleEnum->get('name')}' is not multilingual.");
-                }
-            }
-        }
 
         parent::beforeSave($entity, $options);
     }
@@ -182,35 +176,38 @@ class ExtensibleEnumOption extends Base
                 continue;
             }
             foreach ($entityDefs['fields'] as $field => $fieldDef) {
-                if (empty($fieldDef['notStorable']) && !empty($fieldDef['extensibleEnumId']) && $fieldDef['extensibleEnumId'] === $entity->get('extensibleEnumId')) {
-                    $column = Util::toUnderScore($field);
+                foreach ($entity->get('extensibleEnums') as $extensibleEnum ) {
+                    if (empty($fieldDef['notStorable']) && !empty($fieldDef['extensibleEnumId']) && $fieldDef['extensibleEnumId'] === $extensibleEnum->get('id')) {
+                        $column = Util::toUnderScore($field);
 
-                    $qb = $this->getConnection()->createQueryBuilder();
-                    $qb->select('t.*')
-                        ->from($this->getConnection()->quoteIdentifier(Util::toUnderScore(lcfirst($entityName))), 't');
-                    if ($fieldDef['type'] === 'extensibleEnum') {
-                        $qb->where("t.$column = :itemId")
-                            ->setParameter('itemId', $entity->get('id'));
-                    } else {
-                        $qb->where("t.$column LIKE :itemId")
-                            ->setParameter('itemId', "%\"{$entity->get('id')}\"%");
+                        $qb = $this->getConnection()->createQueryBuilder();
+                        $qb->select('t.*')
+                            ->from($this->getConnection()->quoteIdentifier(Util::toUnderScore(lcfirst($entityName))), 't');
+                        if ($fieldDef['type'] === 'extensibleEnum') {
+                            $qb->where("t.$column = :itemId")
+                                ->setParameter('itemId', $entity->get('id'));
+                        } else {
+                            $qb->where("t.$column LIKE :itemId")
+                                ->setParameter('itemId', "%\"{$entity->get('id')}\"%");
+                        }
+                        $qb->andWhere('t.deleted = :false')
+                            ->setParameter('false', false, ParameterType::BOOLEAN);
+
+                        $record = $qb->fetchAssociative();
+
+                        if (!empty($record)) {
+                            throw new BadRequest(
+                                sprintf(
+                                    $this->getLanguage()->translate('extensibleEnumOptionIsUsed', 'exceptions', 'ExtensibleEnumOption'),
+                                    $entity->get('name'),
+                                    $this->getLanguage()->translate($field, 'fields', $entity->getEntityType()),
+                                    $entityName,
+                                    $record['name'] ?? ''
+                                )
+                            );
+                        }
                     }
-                    $qb->andWhere('t.deleted = :false')
-                        ->setParameter('false', false, ParameterType::BOOLEAN);
 
-                    $record = $qb->fetchAssociative();
-
-                    if (!empty($record)) {
-                        throw new BadRequest(
-                            sprintf(
-                                $this->getLanguage()->translate('extensibleEnumOptionIsUsed', 'exceptions', 'ExtensibleEnumOption'),
-                                $entity->get('name'),
-                                $this->getLanguage()->translate($field, 'fields', $entity->getEntityType()),
-                                $entityName,
-                                $record['name'] ?? ''
-                            )
-                        );
-                    }
                 }
             }
         }
@@ -239,4 +236,5 @@ class ExtensibleEnumOption extends Base
 
         return 'name';
     }
+
 }

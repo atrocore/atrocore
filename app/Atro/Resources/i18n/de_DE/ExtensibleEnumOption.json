@@ -3,10 +3,10 @@
     "name": "Optionswert",
     "color": "Farbe",
     "sortOrder": "Sortierreihenfolge",
-    "extensibleEnum": "Liste"
+    "extensibleEnum": "Listen"
   },
   "links": {
-    "extensibleEnum": "Liste"
+    "extensibleEnum": "Listen"
   },
   "labels": {
     "Create ExtensibleEnumOption": "Auswahloption erstellen"

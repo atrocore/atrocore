@@ -35,18 +35,18 @@ declare(strict_types=1);
 
 namespace Espo\Services;
 
-use Espo\Core\Templates\Services\Base;
+use Atro\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
-use Espo\ORM\EntityCollection;
 
 class ExtensibleEnumOption extends Base
 {
     protected $mandatorySelectAttributeList = ['extensibleEnumId'];
 
+
     public function updateEntity($id, $data)
     {
-        if (property_exists($data, '_sortedIds') && !empty($data->_sortedIds)) {
-            $this->getRepository()->updateSortOrder($data->_sortedIds);
+        if (property_exists($data, '_id') && property_exists($data, '_sortedIds') && property_exists($data, '_scope') && !empty($data->_sortedIds)) {
+            $this->getEntityManager()->getRepository('ExtensibleEnumExtensibleEnumOption')->updateSortOrder($data->_id, $data->_sortedIds);
             return $this->getEntity($id);
         }
 
