@@ -37,7 +37,7 @@ class Hierarchy extends Record
 
     public function getSelectAttributeList($params)
     {
-        if( $this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)){
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)) {
             return parent::getSelectAttributeList($params);
         }
 
@@ -489,31 +489,15 @@ class Hierarchy extends Record
             return parent::updateEntity($id, $data);
         }
 
-        $inTransaction = false;
-        if (!$this->getEntityManager()->getPDO()->inTransaction()) {
-            $this->getEntityManager()->getPDO()->beginTransaction();
-            $inTransaction = true;
-        }
+        $fetchedEntity = $this->getRepository()->get($id);
 
-        try {
-            $fetchedEntity = $this->getRepository()->get($id);
+        $entityData = Util::arrayKeysToUnderScore($fetchedEntity->toArray());
 
-            $entityData = Util::arrayKeysToUnderScore($fetchedEntity->toArray());
+        $result = parent::updateEntity($id, $data);
 
-            $result = parent::updateEntity($id, $data);
+        $this->getRepository()->pushLinkMultipleFields($entityData);
 
-            $this->getRepository()->pushLinkMultipleFields($entityData);
-
-            $this->createPseudoTransactionJobs($entityData, clone $data);
-            if ($inTransaction) {
-                $this->getEntityManager()->getPDO()->commit();
-            }
-        } catch (\Throwable $e) {
-            if ($inTransaction) {
-                $this->getEntityManager()->getPDO()->rollBack();
-            }
-            throw $e;
-        }
+        $this->createPseudoTransactionJobs($entityData, clone $data);
 
         return $result;
     }
