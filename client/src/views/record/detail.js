@@ -267,6 +267,20 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }.bind(this));
         },
 
+        actionCompare: function () {
+            if (!this.getAcl().check(this.entityType, 'read')) {
+                this.notify('Access denied', 'error');
+                return false;
+            }
+
+            var url = '#' + this.entityType + '/compare?id=' + this.model.get('id');
+            this.getRouter().navigate(url, {trigger: false});
+            this.getRouter().dispatch(this.entityType, 'compare', {
+                id: this.model.get('id'),
+                model: this.model
+            });
+        },
+
         getSelfAssignAttributes: function () {
         },
 
@@ -282,6 +296,26 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         'label': 'Duplicate',
                         'name': 'duplicate'
                     });
+                }
+            }
+
+            if (this.getMetadata().get(['clientDefs', this.entityType, 'showCompareAction'])) {
+                if (this.getAcl().check(this.entityType, 'create')) {
+                    let exists = false;
+
+                    for( const item of  (this.additionalButtons || [])){
+                        if (item.name === 'compare') {
+                           exists = true;
+                        }
+                    }
+
+                    if(!exists){
+                        this.additionalButtons.push({
+                            'label': 'Compare',
+                            'name': 'compare',
+                            'action': 'compare'
+                        });
+                    }
                 }
             }
 

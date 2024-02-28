@@ -30,22 +30,23 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/compare-record', 'views/main', function (Dep) {
+Espo.define('views/compare', 'views/main', function (Dep) {
 
     return Dep.extend({
 
-        template: 'compare-record',
+        template: 'compare',
 
         el: '#main',
 
         scope: null,
 
-        name: 'CompareRecord',
+        name: 'Compare',
 
         headerView: 'views/header',
 
 
         setup: function () {
+            this.model = this.options.model;
             this.setupHeader();
         },
 
@@ -55,16 +56,39 @@ Espo.define('views/compare-record', 'views/main', function (Dep) {
                 el: '#main > .page-header'
             });
         },
-
         getHeader: function () {
-            var html = '<a href="#TEST">' + this.getLanguage().translate("test", 'scopeNamesPlural') + '</a>';
-            html += ' &raquo ';
-            html += this.getLanguage().translate('compareRecord');
-            return html;
+            var html = '';
+
+            var headerIconHtml = this.getHeaderIconHtml();
+
+            var arr = [];
+
+            if (this.options.noHeaderLinks) {
+                arr.push(this.getLanguage().translate(this.scope, 'scopeNamesPlural'));
+            } else {
+                var rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
+                arr.push(headerIconHtml + '<a href="' + rootUrl + '" class="action" data-action="navigateToRoot">' + this.getLanguage().translate(this.scope, 'scopeNamesPlural') + '</a>');
+            }
+
+            var name = Handlebars.Utils.escapeExpression(this.model.get('name'));
+
+            if (name === '') {
+                name = this.model.id;
+            }
+
+            if (this.options.noHeaderLinks) {
+                arr.push(name);
+            } else {
+                arr.push('<a href="#' + this.scope + '/view/' + this.model.id + '" class="action">' + name + '</a>');
+            }
+            arr.push(this.getLanguage().translate('compare'));
+
+            return this.buildHeaderHtml(arr);
         },
 
+
         updatePageTitle: function () {
-            this.setPageTitle(this.getLanguage().translate('CompareRecord'));
+            this.setPageTitle(this.getLanguage().translate('compare'));
         },
     });
 });

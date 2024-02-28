@@ -293,7 +293,50 @@ Espo.define('controllers/record', 'controller', function (Dep) {
                     current.fetch();
                 }.bind(this));
             }.bind(this));
-        },/**
+        },
+        beforeCompare: function () {
+            this.handleCheckAccess('edit');
+        },
+
+        compare: function (options) {
+            var id = options.id
+
+            var createView = function (model) {
+                this.main('views/compare', {
+                    model: model,
+                    scope: this.name,
+                });
+            }.bind(this);
+            if ('model' in options) {
+                var model = options.model;
+                createView(model);
+
+                this.listenToOnce(model, 'sync', function () {
+                    this.hideLoadingNotification();
+                }, this);
+                this.showLoadingNotification();
+                model.fetch();
+
+                this.listenToOnce(this.baseController, 'action', function () {
+                    model.abortLastFetch();
+                }, this);
+            } else {
+                this.getModel(function (model) {
+                    model.id = id;
+                    this.showLoadingNotification();
+                    this.listenToOnce(model, 'sync', function () {
+                        createView(model);
+                        this.hideLoadingNotification();
+                    }, this);
+                    model.fetch({main: true});
+
+                    this.listenToOnce(this.baseController, 'action', function () {
+                        model.abortLastFetch();
+                    }, this);
+                });
+            }
+        },
+        /**
          * Get collection for the current controller.
          * @param {collection}.
          */
