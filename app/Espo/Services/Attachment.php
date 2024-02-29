@@ -42,6 +42,7 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\Core\FilePathBuilder;
+use Imagick;
 
 class Attachment extends Record
 {
