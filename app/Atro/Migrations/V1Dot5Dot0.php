@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Migrations;
 
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Espo\Core\ORM\Entity;
 use Espo\Core\Utils\Util;
 use Atro\Core\Migration\Base;

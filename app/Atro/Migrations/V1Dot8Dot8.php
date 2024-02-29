@@ -13,7 +13,7 @@ namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
 use Doctrine\DBAL\ParameterType;
-use Espo\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Error;
 use Espo\Core\Utils\Util;
 use Espo\Jobs\UpdateCurrencyExchangeViaECB;
 

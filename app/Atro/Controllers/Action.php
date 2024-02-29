@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Atro\Controllers;
 
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Forbidden;
 use Espo\Core\Templates\Controllers\Base;
 
 class Action extends Base

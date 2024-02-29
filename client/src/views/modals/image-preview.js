@@ -46,10 +46,11 @@ Espo.define('views/modals/image-preview', 'views/modal', function (Dep) {
 
         data: function () {
             return {
-                name: this.options.name,
+                name: this.model.get('name'),
                 url: this.getImageUrl(),
                 originalUrl: this.getOriginalImageUrl(),
-                size: this.size
+                size: this.size,
+                path: this.options.el
             };
         },
 
@@ -67,31 +68,11 @@ Espo.define('views/modals/image-preview', 'views/modal', function (Dep) {
         },
 
         getImageUrl: function () {
-            let path = null;
-
-            $.ajax({
-                url: 'Attachment/' + this.options.id,
-                type: 'GET',
-                async: false,
-            }).done(function (response) {
-                path = response.pathsData.thumbs['large'];
-            });
-
-            return this.getBasePath() + '/' + path;
+            return this.getBasePath() + '/' + this.model.get('filePathsData').thumbs.large;
         },
 
         getOriginalImageUrl: function () {
-            let path = null;
-
-            $.ajax({
-                url: 'Attachment/' + this.options.id,
-                type: 'GET',
-                async: false,
-            }).done(function (response) {
-                path = response.pathsData.download;
-            });
-
-            return this.getBasePath() + '/' + path;
+            return this.getBasePath() + '/' + this.model.get('filePathsData').download;
         },
 
         afterRender: function () {

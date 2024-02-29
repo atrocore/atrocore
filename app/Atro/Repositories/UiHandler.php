@@ -15,7 +15,7 @@ namespace Atro\Repositories;
 
 use Atro\Core\Templates\Repositories\Base;
 use Espo\Core\DataManager;
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
 class UiHandler extends Base

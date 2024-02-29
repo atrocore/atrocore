@@ -1,0 +1,23 @@
+[
+  {
+    "name": "name",
+    "link": true
+  },
+  {
+    "name": "preview",
+    "notSortable": true,
+    "align": "center"
+  },
+  {
+    "name": "type"
+  },
+  {
+    "name": "tags"
+  },
+  {
+    "name": "private"
+  },
+  {
+    "name": "isActive"
+  }
+]

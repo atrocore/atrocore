@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Atro\Core\Templates\Controllers;
 
 use Espo\Core\Controllers\Record;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Forbidden;
 
 class Hierarchy extends Record
 {

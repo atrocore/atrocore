@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\ConnectionType;
 
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
 class ConnectionSftp extends AbstractConnection implements ConnectionInterface

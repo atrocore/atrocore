@@ -34,7 +34,7 @@
 namespace Espo\Core\Utils\File;
 
 use Espo\Core\Utils;
-use Espo\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Error;
 
 class Manager
 {

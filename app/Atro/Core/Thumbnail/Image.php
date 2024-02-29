@@ -14,13 +14,14 @@ declare(strict_types=1);
 namespace Atro\Core\Thumbnail;
 
 use Atro\Core\Container;
-use Espo\Core\Exceptions\Error;
+use Atro\Core\Utils\PDFLib;
+use Atro\Core\Exceptions\Error;
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\File\Manager;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\Attachment;
 use Espo\ORM\EntityManager;
 use Gumlet\ImageResize;
-use Espo\Core\Utils\File\Manager;
 
 class Image
 {
@@ -88,7 +89,38 @@ class Image
 
     protected function getImageFilePath(Attachment $attachment): string
     {
+        if ($this->isPdf($attachment)) {
+            return $this->createImageFromPdf($attachment->getFilePath());
+        }
+
         return $attachment->getFilePath();
+    }
+
+    protected function isPdf(Attachment $attachment): bool
+    {
+        $parts = explode('.', $attachment->get('name'));
+
+        return strtolower(array_pop($parts)) === 'pdf';
+    }
+
+    protected function createImageFromPdf(string $pdfPath): string
+    {
+        $pathParts = explode('/', $pdfPath);
+        $fileName = array_pop($pathParts);
+        $dirPath = implode('/', $pathParts);
+
+        $original = $dirPath . '/page-1.png';
+        if (!file_exists($original)) {
+            $pdflib = new PDFLib($this->getConfig());
+            $pdflib->setPdfPath($pdfPath);
+            $pdflib->setOutputPath($dirPath);
+            $pdflib->setImageFormat(PDFLib::$IMAGE_FORMAT_PNG);
+            $pdflib->setPageRange(1, 1);
+            $pdflib->setFilePrefix('page-');
+            $pdflib->convert();
+        }
+
+        return $original;
     }
 
     protected function getMetadata(): Metadata

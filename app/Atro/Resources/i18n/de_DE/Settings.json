@@ -1,5 +1,7 @@
 {
   "fields": {
+    "attachmentDuplicates": "Asset-Duplikat",
+    "fileNameRegexPattern": "Dateiname Regex Pattern",
     "variables": "Variablen",
     "locale": "Gebietsschema",
     "isMultilangActive": "Mehrsprachig",
@@ -79,6 +81,7 @@
     "variables": "Variablen"
   },
   "tooltips": {
+    "fileNameRegexPattern": "Um nur die Kleinbuchstaben mit max. Länge von 24 Symbolen zu erlauben, verwenden Sie \"/^[a-z]{1,24}$/\".",
     "isStreamSide": "Wenn aktiviert, wird das Aktivitätenpanel seitlich angezeigt.",
     "isStreamPanelFirst": "Wenn aktiviert, wird das Aktivitätenpanel direkt nach der Übersicht angezeigt.",
     "recordsPerPage": "Anzahl Sätze In Listenansichten (Standard) ",

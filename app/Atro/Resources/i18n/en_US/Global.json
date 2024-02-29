@@ -1,5 +1,15 @@
 {
   "scopeNames": {
+    "Asset": "Asset",
+    "Rendition": "Rendition",
+    "Library": "Library",
+    "AssetVariant": "Asset Variant",
+    "AssetCategory": "Asset Category",
+    "AssetMetadata": "Asset Metadata",
+    "AssetVersion": "Asset Version",
+    "RenditionVersion": "Rendition Version",
+    "AssetType": "Asset Type",
+    "ValidationRule": "Validation Rule",
     "UiHandler": "UI Handler",
     "Action": "Action",
     "ExtensibleEnum": "List",
@@ -50,6 +60,15 @@
     "AuthFailLogRecord": "Auth Fail Log Record"
   },
   "scopeNamesPlural": {
+    "Library": "Libraries",
+    "Asset": "Assets",
+    "AssetVersion": "Asset Versions",
+    "AssetVariant": "Asset Variants",
+    "AssetCategory": "Asset Category",
+    "AssetMetadata": "Asset Metadata",
+    "RenditionVersion": "Rendition Version",
+    "AssetType": "Asset Types",
+    "validationRules": "Validation Rules",
     "UiHandler": "UI Handlers",
     "Action": "Actions",
     "ExtensibleEnum": "Lists",
@@ -88,6 +107,11 @@
     "Core": "AtroCore is a software ecosystem, designed for rapid development of web-based responsive business applications."
   },
   "labels": {
+    "dragAndDropBtnText": "Drag & Drop",
+    "dragAndDropBtnTextSmall": "your assets here or",
+    "upload": "Upload",
+    "attachFile": "Attach File",
+    "noData": "No Data",
     "jobCreated": "Job created successfully",
     "jobNotCreated": "Job created failed",
     "Start": "Start",
@@ -1021,6 +1045,15 @@
     "cd": "cd"
   },
   "exceptions": {
+    "colorDepthValidationFailed": "Color depth of this asset is not allowed.",
+    "colorSpaceValidationFailed": "Color space of this asset is not allowed.",
+    "fileExtensionValidationFailed": "Use only files with next extensions: %s.",
+    "mimeTypeValidationFailed": "Asset has incorrect MIME type.",
+    "pdfValidationFailed": "Asset is not a PDF document.",
+    "imageQualityValidationFailed": "Image quality must be between %s and %s.",
+    "imageRatioValidationFailed": "Image must have side ratio of %s.",
+    "imageScaleValidationFailed": "Image must have width more than %spx and height more than %spx.",
+    "imageSizeValidationFailed": "Asset size should be between %skb and %skb.",
     "childsMustBeArchived": "The (parent) item can be archived only if all child items are archived too.",
     "maxLengthIsExceeded": "The allowed maximum length for \"%s\" is %s symbols, you current length is \"%s\" symbols.",
     "parentRecordsHaveDifferentValues": "Parent records have different values, value to inherit cannot be determined.",

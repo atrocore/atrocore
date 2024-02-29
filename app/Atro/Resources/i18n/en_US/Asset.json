@@ -1,0 +1,70 @@
+{
+  "labels": {
+    "sort": "Sort",
+    "Image": "Image",
+    "File": "File",
+    "upload": "Upload",
+    "uploaded": "uploaded",
+    "retry": "Retry?",
+    "withoutAnyCategory": "Without any category",
+    "availableVideoFormats": "Available formats for video player: <a>mp4</a>, <a>webm</a> and <a>ogv</a>.",
+    "typeCategoryToSearch": "Type category to search",
+    "assetPreview": "Asset Preview",
+    "setAsMainImage": "Set as Main Image"
+  },
+  "fields": {
+    "url": "URL",
+    "isActive": "Active",
+    "image": "Image",
+    "relatedAssets": "Related Assets",
+    "assetCategories": "Asset Categories",
+    "assetMetadata": "Asset Metadata",
+    "assetVersions": "Asset Versions",
+    "type": "Types",
+    "library": "Library",
+    "colorDepth": "Color Depth",
+    "colorSpace": "Color Space",
+    "file": "File",
+    "files": "Files",
+    "height": "Height",
+    "metaData": "Meta Data",
+    "orientation": "Orientation",
+    "renditions": "Renditions",
+    "size": "Size",
+    "sizeUnit": "Size Unit",
+    "tags": "Tags",
+    "width": "Width",
+    "private": "Private",
+    "preview": "Preview"
+  },
+  "links": {
+    "assetCategories": "Asset Categories",
+    "assetMetadata": "Asset Metadata",
+    "assetVersions": "Asset Versions",
+    "renditions": "Renditions",
+    "relatedAssets": "Related Assets"
+  },
+  "boolFilters": {
+    "onlyPrivate": "Private",
+    "onlyPublic": "Public"
+  },
+  "messages": {
+    "assetCouldNotBeUploaded": "Asset could not be uploaded.",
+    "notAllAssetsWereUploaded": "XX of YY assets were not uploaded.",
+    "assetsAdded": "Assets have been added and will be available in a few moments."
+  },
+  "exceptions": {
+    "noAssetTypeProvided": "No asset type provided.",
+    "assetExistWithOtherType": "Asset '%s' exists already with other asset type.",
+    "fileExtensionCannotBeChanged": "File extension cannot be changed.",
+    "urlDownloadFailed": "Download for '%s' failed.",
+    "noAttachmentExist": "Asset without attachment cannot exist.",
+    "wrongUrl": "Wrong URL '%s'.",
+    "suchAssetAlreadyExists": "Such asset already exists.",
+    "assetIsAlreadyLinkedWithEntity": "Entity 'Asset' is already linked with entity '%s'. You can't link these entities again.",
+    "fileNameNotValid": "Filename is not valid.",
+    "suchFileNameNotValid": "Filename '%s' is not valid.",
+    "fileNameNotValidByUserRegex": "Filename is not valid. It should match the regex '%s'.",
+    "fileResourceWriteFailed": "Can't write any data to the file %s"
+  }
+}

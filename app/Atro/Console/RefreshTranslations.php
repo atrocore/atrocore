@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Console;
 
 use Atro\ORM\DB\RDB\Mapper;
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Util;
 use Espo\ORM\EntityManager;

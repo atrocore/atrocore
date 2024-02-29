@@ -41,7 +41,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\Core\Acl;
 use Espo\Core\AclManager;
 use Espo\Core\EventManager\Event;
-use Espo\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\InjectableFactory;
 use Espo\Core\ORM\Repositories\RDB;

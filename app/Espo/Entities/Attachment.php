@@ -74,4 +74,17 @@ class Attachment extends Base
     {
         return !empty($this->get('private'));
     }
+
+    public function setName($name)
+    {
+        $baseFileInfo = pathinfo($this->get("name"));
+        $this->set("name", $name . "." . $baseFileInfo['extension']);
+
+        return $this;
+    }
+
+    public function getAsset()
+    {
+        return $this->entityManager->getRepository($this->getEntityType())->getAsset($this);
+    }
 }

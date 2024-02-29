@@ -35,7 +35,7 @@ namespace Espo\Core;
 
 use Espo\Core\EventManager\Event;
 use Espo\Core\Utils\Json;
-use Espo\Core\Exceptions\NotFound;
+use Atro\Core\Exceptions\NotFound;
 use Espo\ORM\Entity;
 
 class CronManager extends Injectable

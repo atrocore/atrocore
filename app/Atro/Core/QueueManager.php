@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Atro\Core;
 
 use Atro\DTO\QueueItemDTO;
-use Espo\Core\Exceptions\Duplicate;
-use Espo\Core\Exceptions\Error;
+use Atro\Core\Exceptions\NotUnique as Duplicate;
+use Atro\Core\Exceptions\Error;
 use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\System;
 use Espo\Entities\User;

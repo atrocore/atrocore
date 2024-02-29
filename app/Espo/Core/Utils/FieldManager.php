@@ -34,9 +34,9 @@
 namespace Espo\Core\Utils;
 
 use Espo\Core\EventManager\Event;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Conflict;
-use Espo\Core\Exceptions\Error;
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Conflict;
+use Atro\Core\Exceptions\Error;
 use Espo\Core\Injectable;
 use Espo\Core\Utils\FieldManager\Hooks\Base as BaseHook;
 use Espo\Core\Utils\Metadata\Helper;

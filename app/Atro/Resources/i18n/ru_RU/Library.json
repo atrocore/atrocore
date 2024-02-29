@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "assets": "Ассеты",
+    "code": "Код",
+    "isActive": "Активный",
+    "assetCategories": "Категории ассета"
+  },
+  "links": {
+    "assets": "Ассеты",
+    "asset": "Ассет",
+    "assetCategories": "Категории ассета"
+  },
+  "exceptions": {
+    "libraryCanBeLinkedWithRootCategoryOnly": "Библиотеку можно связать только с корневой категорией.",
+    "defaultLibraryCantBeDeleted": "Библиотеку, используемую по умолчанию, нельзя удалить."
+  }
+}

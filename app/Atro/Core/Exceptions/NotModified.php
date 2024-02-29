@@ -15,8 +15,5 @@ namespace Atro\Core\Exceptions;
 
 class NotModified extends \Exception
 {
-    /**
-     * @var int
-     */
     protected $code = 304;
 }

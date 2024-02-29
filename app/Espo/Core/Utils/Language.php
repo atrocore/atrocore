@@ -39,7 +39,7 @@ use Atro\Console\RefreshTranslations;
 use Atro\Core\Container;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\EventManager\Event;
-use Espo\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Error;
 use Espo\Core\Utils\File\Unifier;
 use Espo\Entities\Preferences;
 

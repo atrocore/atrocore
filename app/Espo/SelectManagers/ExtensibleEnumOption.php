@@ -47,15 +47,23 @@ class ExtensibleEnumOption extends Base
             throw new BadRequest('For choosing default option, you need to select List.');
         }
 
-        $result['whereClause'][] = [
-            'extensibleEnumId' => $data['extensibleEnumId']
-        ];
+        $this->addExtensibleEnumIdWhere($data['extensibleEnumId'], $result);
     }
 
     protected function boolFilterOnlyForExtensibleEnum(array &$result): void
     {
-        $result['whereClause'][] = [
-            'extensibleEnumId' => $this->getBoolFilterParameter('onlyForExtensibleEnum')
-        ];
+        $this->addExtensibleEnumIdWhere($this->getBoolFilterParameter('onlyForExtensibleEnum'), $result);
+    }
+
+    private function addExtensibleEnumIdWhere($extensibleEnumId, &$result){
+        $where =[[
+            "type" => "linkedWith",
+            "attribute" => "extensibleEnums",
+            "value" => [$this->getBoolFilterParameter('onlyForExtensibleEnum')]
+        ]] ;
+
+        $this->prepareRelationshipFilterField($where);
+
+        $result['whereClause'][] = $this->convertWhere($where,false,$result);
     }
 }

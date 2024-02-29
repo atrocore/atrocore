@@ -1,0 +1,320 @@
+{
+  "controller": "controllers/record",
+  "boolFilterList": [
+    "onlyMy"
+  ],
+  "modalViews": {
+    "detail": "views/validation-rule/modals/detail",
+    "edit": "views/validation-rule/modals/edit"
+  },
+  "dynamicLogic": {
+    "fields": {
+      "colorDepth": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Color Depth"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Color Depth"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "isActive"
+            }
+          ]
+        }
+      },
+      "colorSpace": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Color Space"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Color Space"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "isActive"
+            }
+          ]
+        }
+      },
+      "type": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      },
+      "extension": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Extension"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Extension"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "isActive"
+            }
+          ]
+        }
+      },
+      "max": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Quality",
+                "Size"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Quality",
+                "Size"
+              ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "isActive"
+            }
+          ]
+        }
+      },
+      "min": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Quality",
+                "Size"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Quality",
+                "Size"
+              ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "isActive"
+            }
+          ]
+        }
+      },
+      "mimeList": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Mime"
+            },
+            {
+              "type": "equals",
+              "attribute": "validateBy",
+              "value": "List"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Mime"
+            },
+            {
+              "type": "equals",
+              "attribute": "validateBy",
+              "value": "List"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "isActive"
+            }
+          ]
+        }
+      },
+      "minHeight": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Scale"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Scale"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "isActive"
+            }
+          ]
+        }
+      },
+      "minWidth": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Scale"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Scale"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "isActive"
+            }
+          ]
+        }
+      },
+      "pattern": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Mime"
+            },
+            {
+              "type": "equals",
+              "attribute": "validateBy",
+              "value": "Pattern"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Mime"
+            },
+            {
+              "type": "equals",
+              "attribute": "validateBy",
+              "value": "Pattern"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "isActive"
+            }
+          ]
+        }
+      },
+      "validateBy": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Mime"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Mime"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "isActive"
+            }
+          ]
+        }
+      },
+      "ratio": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Ratio"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Ratio"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "isActive"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

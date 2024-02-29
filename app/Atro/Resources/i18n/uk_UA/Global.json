@@ -1,5 +1,15 @@
 {
   "scopeNames": {
+    "Asset": "Ассет",
+    "Rendition": "Перетворення",
+    "RenditionMetaData": "Перетворення мета даних",
+    "Library": "Бібліотека",
+    "AssetVariant": "Варіант асета",
+    "AssetCategory": "Категорія асету",
+    "AssetMetadata": "Метадані асету",
+    "AssetVersion": "Версія асету",
+    "AssetType": "Тип асету",
+    "ValidationRule": "Правило перевірки",
     "UiHandler": "Обробник інтерфейсу",
     "Action": "Дія",
     "ExtensibleEnum": "Список",
@@ -51,6 +61,14 @@
     "TreoStore": "Магазин"
   },
   "scopeNamesPlural": {
+    "Library": "Бібліотеки",
+    "Asset": "Асети",
+    "AssetVersion": "Версії асету",
+    "AssetVariant": "Варіанти асету",
+    "AssetCategory": "Категорія асету",
+    "AssetMetadata": "Метадані асету",
+    "AssetType": "Типи асету",
+    "validationRules": "Правила перевірки",
     "UiHandler": "Обробники інтерфейсу",
     "Action": "Дії",
     "ExtensibleEnum": "Списки",
@@ -90,6 +108,11 @@
     "Core": "AtroCore - це програмна екосистема, призначена для швидкої розробки веб-додатків для бізнесу."
   },
   "labels": {
+    "dragAndDropBtnText": "Перетягніть",
+    "dragAndDropBtnTextSmall": "Ваші асети або",
+    "upload": "Завантаження",
+    "attachFile": "Прикріпити файл",
+    "noData": "Немає даних",
     "jobCreated": "Завдання успішно створено",
     "jobNotCreated": "Не вдалося створити завдання",
     "Start": "Запустити",
@@ -958,6 +981,15 @@
     "cd": "Кд"
   },
   "exceptions": {
+    "colorDepthValidationFailed": "Глибина кольору цього ассета неприпустима.",
+    "colorSpaceValidationFailed": "Колірний простір цього асета неприпустимий.",
+    "fileExtensionValidationFailed": "Використовуйте файли тільки з наступним розширенням: %s.",
+    "mimeTypeValidationFailed": "У ассета неправильний тип MIME.",
+    "pdfValidationFailed": "Асет не є PDF документом.",
+    "imageQualityValidationFailed": "Якість зображення має бути між %s і %s.",
+    "imageRatioValidationFailed": "Зображення повинно мати співвідношення сторін %s.",
+    "imageScaleValidationFailed": "Зображення повинне мати ширину більше %spx і висоту більше ніж %spx.",
+    "imageSizeValidationFailed": "Розмір асету має бути між %skb і %skb.",
     "childsMustBeArchived": "(Батьківський) запис можна заархівувати, лише якщо заархівовано всі дочірні записи.",
     "maxLengthIsExceeded": "Дозволена довжина рядка для \"%s\"\"%s\" символу, ви передаєте \"%s\" символу.",
     "parentRecordsHaveDifferentValues": "Батьківські елементи мають різні значення, значення для спадкування не може бути визначене.",

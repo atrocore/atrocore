@@ -35,7 +35,6 @@ declare(strict_types=1);
 
 namespace Espo\Services;
 
-use Dam\Entities\ValidationRule;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Services\HasContainer;

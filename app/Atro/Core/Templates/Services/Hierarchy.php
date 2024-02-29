@@ -16,13 +16,14 @@ namespace Atro\Core\Templates\Services;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Templates\Repositories\Relation;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Conflict;
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\NotFound;
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Conflict;
+use Atro\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\NotFound;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 use Espo\Services\Record;
 use Atro\Core\Exceptions\NotModified;
 
@@ -634,6 +635,21 @@ class Hierarchy extends Record
         return $result;
     }
 
+    public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
+    {
+        parent::prepareCollectionForOutput($collection, $selectParams);
+
+        $ids = array_column($collection->toArray(), 'id');
+        $roots = $this->getRepository()->getEntitiesParents($ids);
+        $children = $this->getRepository()->getEntitiesChildren($ids);
+
+        foreach ($collection as $entity) {
+            $entity->set('isRoot', $this->getRepository()->isRoot($entity->get('id'), $roots));
+            $entity->set('hasChildren', $this->getRepository()->hasChildren($entity->get('id'), $children));
+            $entity->_skipHierarchyRoute = true;
+        }
+    }
+
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);
@@ -644,10 +660,15 @@ class Hierarchy extends Record
         }
 
         if (empty($this->getMemoryStorage()->get('exportJobId'))) {
-            $entity->set('isRoot', $this->getRepository()->isRoot($entity->get('id')));
-            $entity->set('hasChildren', !empty($children = $entity->get('children')) && count($children) > 0);
+            if (!$entity->has('isRoot')){
+                $entity->set('isRoot', $this->getRepository()->isRoot($entity->get('id')));
+            }
 
-            if ($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']) !== true) {
+            if (!$entity->has('hasChildren')){
+                $entity->set('hasChildren', $this->getRepository()->hasChildren($entity->get('id')));
+            }
+
+            if ($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']) !== true && empty($entity->_skipHierarchyRoute)) {
                 $entity->set('hierarchyRoute', $this->getRepository()->getHierarchyRoute($entity->get('id')));
             }
 

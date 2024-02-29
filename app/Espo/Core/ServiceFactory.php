@@ -36,7 +36,7 @@ declare(strict_types=1);
 namespace Espo\Core;
 
 use Atro\Core\Container;
-use Espo\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Error;
 use Espo\Core\Interfaces\Injectable;
 use Espo\Services\Record;
 

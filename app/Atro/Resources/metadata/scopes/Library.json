@@ -1,0 +1,18 @@
+{
+  "entity": true,
+  "layouts": true,
+  "tab": true,
+  "acl": true,
+  "customizable": true,
+  "importable": true,
+  "notifications": true,
+  "stream": false,
+  "disabled": false,
+  "type": "Base",
+  "object": true,
+  "hasAssignedUser": true,
+  "hasTeam": true,
+  "hasOwner": true,
+  "skipAssetSorting": true,
+  "hasActive": true
+}
