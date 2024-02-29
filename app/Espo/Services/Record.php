@@ -1369,16 +1369,10 @@ class Record extends Base
             $this->afterUpdateEntity($entity, $data);
 
             if (empty($this->getMemoryStorage()->get('importJobId'))) {
-                if (property_exists($entity, 'workflowJobsData') && !empty($entity->workflowJobsData)) {
-                    foreach ($entity->workflowJobsData as $data) {
-                        if (in_array($data['type'], ['update', 'set'])) {
-                            // get udpated entity directly from database
-                            $this->getRepository()->getMemoryStorage()->delete($this->getRepository()->getCacheKey($id));
-                            $entity = $this->getRepository()->get($id);
-                            break;
-                        }
-                    }
-                }
+                $entity = $this
+                    ->dispatchEvent('beforePrepareEntityForOutput', new Event(['id' => $id, 'data' => $data, 'entity' => $entity, 'service' => $this]))
+                    ->getArgument('entity');
+
                 $this->prepareEntityForOutput($entity);
             }
 
