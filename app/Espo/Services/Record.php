@@ -39,11 +39,11 @@ use Atro\Core\Templates\Repositories\Relation;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Espo\Core\EventManager\Event;
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Conflict;
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\NotFound;
+use Atro\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\NotFound;
 use Atro\Core\PseudoTransactionManager;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Language;
@@ -1370,7 +1370,7 @@ class Record extends Base
 
             if (empty($this->getMemoryStorage()->get('importJobId'))) {
                 $entity = $this
-                    ->dispatchEvent('beforePrepareEntityForOutput', new Event(['id' => $id, 'data' => $data, 'entity' => $entity, 'service' => $this]))
+                    ->dispatchEvent('loadEntityAfterUpdate', new Event(['id' => $id, 'data' => $data, 'entity' => $entity, 'service' => $this]))
                     ->getArgument('entity');
 
                 $this->prepareEntityForOutput($entity);
