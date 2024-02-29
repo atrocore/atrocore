@@ -3,18 +3,21 @@
     "id": "Male",
     "extensibleEnumId": "gender",
     "name": "Male",
+    "code": "male",
     "sortOrder": 0
   },
   {
     "id": "Female",
     "extensibleEnumId": "gender",
     "name": "Female",
+    "code": "female",
     "sortOrder": 10
   },
   {
     "id": "Neutral",
     "extensibleEnumId": "gender",
     "name": "Neutral",
+    "code": "neutral",
     "sortOrder": 20
   },
   {
