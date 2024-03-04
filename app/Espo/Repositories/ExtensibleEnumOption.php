@@ -41,11 +41,14 @@ use Espo\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\Base;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 
 class ExtensibleEnumOption extends Base
 {
     protected array $cachedOptions = [];
-
+    /**
+     * @var mixed
+     */
     public function getPreparedOption(string $extensibleEnumId, ?string $id): ?array
     {
         if ($id === null || $id === '') {
@@ -236,5 +239,4 @@ class ExtensibleEnumOption extends Base
 
         return 'name';
     }
-
 }
