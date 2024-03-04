@@ -57,7 +57,11 @@ Espo.define('views/fields/extensible-multi-enum', ['treo-core:views/fields/filte
             }
 
             if(this.options.customSelectBoolFilters){
-                this.selectBoolFilterList.push(...this.options.customSelectBoolFilters)
+                this.options.customSelectBoolFilters.forEach(item => {
+                    if (!this.selectBoolFilterList.includes(item)) {
+                        this.selectBoolFilterList.push(item);
+                    }
+                });
             }
 
             Dep.prototype.setup.call(this);

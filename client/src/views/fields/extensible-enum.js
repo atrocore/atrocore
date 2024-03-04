@@ -56,7 +56,11 @@ Espo.define('views/fields/extensible-enum', ['views/fields/link', 'views/fields/
             }
 
             if(this.options.customSelectBoolFilters){
-                this.selectBoolFilterList.push(...this.options.customSelectBoolFilters)
+                this.options.customSelectBoolFilters.forEach(item => {
+                    if (!this.selectBoolFilterList.includes(item)) {
+                        this.selectBoolFilterList.push(item);
+                    }
+                });
             }
 
             Dep.prototype.setup.call(this);

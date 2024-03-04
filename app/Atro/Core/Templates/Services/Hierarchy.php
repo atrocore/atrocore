@@ -38,7 +38,7 @@ class Hierarchy extends Record
 
     public function getSelectAttributeList($params)
     {
-        if( $this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)){
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)) {
             return parent::getSelectAttributeList($params);
         }
 
@@ -490,31 +490,15 @@ class Hierarchy extends Record
             return parent::updateEntity($id, $data);
         }
 
-        $inTransaction = false;
-        if (!$this->getEntityManager()->getPDO()->inTransaction()) {
-            $this->getEntityManager()->getPDO()->beginTransaction();
-            $inTransaction = true;
-        }
+        $fetchedEntity = $this->getRepository()->get($id);
 
-        try {
-            $fetchedEntity = $this->getRepository()->get($id);
+        $entityData = Util::arrayKeysToUnderScore($fetchedEntity->toArray());
 
-            $entityData = Util::arrayKeysToUnderScore($fetchedEntity->toArray());
+        $result = parent::updateEntity($id, $data);
 
-            $result = parent::updateEntity($id, $data);
+        $this->getRepository()->pushLinkMultipleFields($entityData);
 
-            $this->getRepository()->pushLinkMultipleFields($entityData);
-
-            $this->createPseudoTransactionJobs($entityData, clone $data);
-            if ($inTransaction) {
-                $this->getEntityManager()->getPDO()->commit();
-            }
-        } catch (\Throwable $e) {
-            if ($inTransaction) {
-                $this->getEntityManager()->getPDO()->rollBack();
-            }
-            throw $e;
-        }
+        $this->createPseudoTransactionJobs($entityData, clone $data);
 
         return $result;
     }
@@ -655,14 +639,16 @@ class Hierarchy extends Record
     {
         parent::prepareCollectionForOutput($collection, $selectParams);
 
-        $ids = array_column($collection->toArray(), 'id');
-        $roots = $this->getRepository()->getEntitiesParents($ids);
-        $children = $this->getRepository()->getEntitiesChildren($ids);
+        if (count($collection) > 0 && $collection[0]->hasAttribute('isRoot') && $collection[0]->hasAttribute('hasChildren')) {
+            $ids = array_column($collection->toArray(), 'id');
+            $roots = $this->getRepository()->getEntitiesParents($ids);
+            $children = $this->getRepository()->getEntitiesChildren($ids);
 
-        foreach ($collection as $entity) {
-            $entity->set('isRoot', $this->getRepository()->isRoot($entity->get('id'), $roots));
-            $entity->set('hasChildren', $this->getRepository()->hasChildren($entity->get('id'), $children));
-            $entity->_skipHierarchyRoute = true;
+            foreach ($collection as $entity) {
+                $entity->set('isRoot', $this->getRepository()->isRoot($entity->get('id'), $roots));
+                $entity->set('hasChildren', $this->getRepository()->hasChildren($entity->get('id'), $children));
+                $entity->_skipHierarchyRoute = true;
+            }
         }
     }
 
