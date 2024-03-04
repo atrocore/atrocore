@@ -43,6 +43,7 @@ Espo.define('views/compare', 'views/main', function (Dep) {
         name: 'Compare',
 
         headerView: 'views/header',
+        recordView: 'views/compare',
 
 
         setup: function () {
@@ -89,6 +90,16 @@ Espo.define('views/compare', 'views/main', function (Dep) {
 
         updatePageTitle: function () {
             this.setPageTitle(this.getLanguage().translate('compare'));
+        },
+        setupRecord: function () {
+            this.ajaxGetRequest(`Compare/${this.scope}`, null, {async: false}).success(attr => {
+
+                this.createView('body', this.recordView, {
+                    el: '#main > .body',
+                    models: this.models,
+                    collection: this.collection
+                });
+            });
         },
     });
 });

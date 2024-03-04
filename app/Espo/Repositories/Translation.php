@@ -34,7 +34,7 @@
 namespace Espo\Repositories;
 
 use Espo\Core\DataManager;
-use Espo\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\BadRequest;
 use Espo\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
 
@@ -53,6 +53,7 @@ class Translation extends Base
         if ($entity->isNew()) {
             $exist = $this->select(['id'])->where(['name' => $entity->get('name')])->findOne();
             if (!empty($exist)) {
+                $GLOBALS['log']->error('The key that exists :'.$entity->get('name'));
                 throw new BadRequest($this->getInjection('language')->translate('suchKeyAlreadyExist', 'exceptions', 'Translation'));
             }
         }

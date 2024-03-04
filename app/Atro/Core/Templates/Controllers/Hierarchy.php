@@ -13,12 +13,18 @@ declare(strict_types=1);
 
 namespace Atro\Core\Templates\Controllers;
 
+use Atro\Core\Container;
 use Espo\Core\Controllers\Record;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 
 class Hierarchy extends Record
 {
+    public function __construct(Container $container, $requestMethod = null, $controllerName = null)
+    {
+        parent::__construct($container, $requestMethod, $controllerName);
+    }
+
     public function actionInheritAllForChildren($params, $data, $request): bool
     {
         if (!$request->isPost() || !property_exists($data, 'id')) {
