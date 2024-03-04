@@ -109,6 +109,13 @@ Espo.define('views/fields/extensible-enum', ['views/fields/link', 'views/fields/
             return res;
         },
 
+        getCreateAttributes: function () {
+            return {
+                "extensibleEnumsIds": [this.getExtensibleEnumId()]
+            }
+        },
+
+
         createQueryBuilderFilter() {
             const scope = this.model.urlRoot;
 
