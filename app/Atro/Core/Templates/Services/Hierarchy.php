@@ -639,14 +639,16 @@ class Hierarchy extends Record
     {
         parent::prepareCollectionForOutput($collection, $selectParams);
 
-        $ids = array_column($collection->toArray(), 'id');
-        $roots = $this->getRepository()->getEntitiesParents($ids);
-        $children = $this->getRepository()->getEntitiesChildren($ids);
+        if (count($collection) > 0 && $collection[0]->hasAttribute('isRoot') && $collection[0]->hasAttribute('hasChildren')) {
+            $ids = array_column($collection->toArray(), 'id');
+            $roots = $this->getRepository()->getEntitiesParents($ids);
+            $children = $this->getRepository()->getEntitiesChildren($ids);
 
-        foreach ($collection as $entity) {
-            $entity->set('isRoot', $this->getRepository()->isRoot($entity->get('id'), $roots));
-            $entity->set('hasChildren', $this->getRepository()->hasChildren($entity->get('id'), $children));
-            $entity->_skipHierarchyRoute = true;
+            foreach ($collection as $entity) {
+                $entity->set('isRoot', $this->getRepository()->isRoot($entity->get('id'), $roots));
+                $entity->set('hasChildren', $this->getRepository()->hasChildren($entity->get('id'), $children));
+                $entity->_skipHierarchyRoute = true;
+            }
         }
     }
 
