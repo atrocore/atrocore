@@ -16,6 +16,12 @@
           "name": "type"
         },
         false
+      ],
+      [
+        {
+          "name": "path"
+        },
+        false
       ]
     ]
   }

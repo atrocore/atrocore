@@ -17,6 +17,12 @@
         "fileSystem"
       ]
     },
+    "path": {
+      "type": "varchar",
+      "maxLength": 260,
+      "unique": true,
+      "default": null
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true

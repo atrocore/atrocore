@@ -1,6 +1,7 @@
 {
   "fields": {
-    "type": "Type"
+    "type": "Type",
+    "path": "Path"
   },
   "options": {
     "storage": {
