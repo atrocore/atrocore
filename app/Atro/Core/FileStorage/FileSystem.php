@@ -12,6 +12,7 @@
 namespace Atro\Core\FileStorage;
 
 use Atro\Core\Container;
+use Atro\Core\Exceptions\NotUnique;
 use Atro\Entities\File;
 use Atro\Entities\Storage;
 use Doctrine\DBAL\Connection;
@@ -54,6 +55,7 @@ class FileSystem implements FileStorageInterface
             try {
                 $this->getEntityManager()->saveEntity($entity);
             } catch (UniqueConstraintViolationException $e) {
+            } catch (NotUnique $e) {
             }
 
             $collection->append($entity);
