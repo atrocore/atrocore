@@ -11,10 +11,32 @@
 
 namespace Atro\Core\FileStorage;
 
+use Atro\Core\Container;
 use Atro\Entities\File;
 
 class FileSystem implements FileStorageInterface
 {
+    protected Container $container;
+
+    private string $filesPath;
+    private string $thumbnailsPath;
+
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+        $this->filesPath = trim($this->container->get('config')->get('filesPath', 'upload/files'), '/');
+        $this->thumbnailsPath = trim($this->container->get('config')->get('thumbnailsPath', 'upload/thumbnails'), '/');
+    }
+
+    public function scan(string $path): void
+    {
+        $path = trim($path, '/');
+
+        echo '<pre>';
+        print_r($path);
+        die();
+    }
+
     public function delete(File $file): void
     {
         //@todo
