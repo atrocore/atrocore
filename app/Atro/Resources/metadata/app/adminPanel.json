@@ -18,6 +18,11 @@
         "description": "authentication"
       },
       {
+        "url": "#Storage",
+        "label": "Storage",
+        "description": "Storage"
+      },
+      {
         "url": "#Admin/outboundEmails",
         "label": "Email",
         "description": "outboundEmails"

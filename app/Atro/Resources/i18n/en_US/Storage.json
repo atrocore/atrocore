@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "type": "Type"
+  },
+  "options": {
+    "storage": {
+      "fileSystem": "File System"
+    }
+  },
+  "labels": {
+    "Create Storage": "Create Storage"
+  }
+}
