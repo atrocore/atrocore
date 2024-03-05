@@ -66,6 +66,17 @@ class RegenerateExtensibleEnums extends AbstractConsole
                 }
             }
 
+            $eeeeo = $em->getRepository('ExtensibleEnumExtensibleEnumOption')
+                ->where([
+                    "extensibleEnumId" => $extensibleEnumOptionData['extensibleEnumId'],
+                    "extensibleEnumOptionId" => $extensibleEnumOptionData['id']
+                ])
+                ->findOne();
+
+            if(!empty($eeeeo)){
+                continue;
+            }
+
             $eeeeo = $em->getRepository('ExtensibleEnumExtensibleEnumOption')->get();
             $eeeeo->set('extensibleEnumId', $extensibleEnumOptionData['extensibleEnumId']);
             $eeeeo->set('extensibleEnumOptionId', $extensibleEnumOptionData['id']);
