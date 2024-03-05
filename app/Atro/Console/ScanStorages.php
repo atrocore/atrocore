@@ -15,15 +15,18 @@ namespace Atro\Console;
 
 use Espo\ORM\EntityManager;
 
-class ScanFiles extends AbstractConsole
+class ScanStorages extends AbstractConsole
 {
     public static function getDescription(): string
     {
-        return 'Scan files. The scanner will automatically add or delete records from the File entity.';
+        return 'Scan storages. The scanner will automatically prepare records at the File entity.';
     }
 
     public function run(array $data): void
     {
+        $auth = new \Espo\Core\Utils\Auth($this->getContainer());
+        $auth->useNoAuth();
+
         /** @var EntityManager $em */
         $em = $this->getContainer()->get('entityManager');
 

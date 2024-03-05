@@ -14,6 +14,10 @@ namespace Atro\Core\FileStorage;
 use Atro\Core\Container;
 use Atro\Entities\File;
 use Atro\Entities\Storage;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\DBAL\ParameterType;
+use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
 
 class FileSystem implements FileStorageInterface
@@ -27,34 +31,64 @@ class FileSystem implements FileStorageInterface
 
     public function scan(Storage $storage): void
     {
+        $collection = new EntityCollection([], 'File');
+
         $files = $this->getDirFiles(trim($storage->get('path'), '/'));
+        foreach ($files as $fileName) {
+            $fileInfo = pathinfo($fileName);
 
-        echo '<pre>';
-        print_r($files);
-        die();
-
-//        foreach ($files as $file) {
-////            $this->getEntityManager()->getRepository('File')->get();
-////            echo '<pre>';
-////            print_r(pathinfo($file));
-////            die();
-//        }
-
-
-    }
-
-    public function getDirFiles(string $dir, &$results = [])
-    {
-        foreach (scandir($dir) as $value) {
-            if ($value === "." || $value === "..") {
+            if ($fileInfo['basename'] === 'lastCreated') {
                 continue;
             }
 
-            $path = $dir . DIRECTORY_SEPARATOR . $value;
-            if (is_file($path)) {
-                $results[] = $path;
-            } elseif (is_dir($path)) {
-                $this->getDirFiles($path, $results);
+            $entity = $this->getEntityManager()->getRepository('File')->get();
+            $entity->set([
+                'name'      => $fileInfo['basename'],
+                'path'      => ltrim($fileInfo['dirname'], trim($storage->get('path'), '/') . '/'),
+                'size'      => filesize($fileName),
+                'hash'      => md5_file($fileName),
+                'mimeType'  => mime_content_type($fileName),
+                'storageId' => $storage->get('id')
+            ]);
+
+            try {
+                $this->getEntityManager()->saveEntity($entity);
+            } catch (UniqueConstraintViolationException $e) {
+            }
+
+            $collection->append($entity);
+        }
+
+        /** @var Connection $conn */
+        $conn = $this->container->get('connection');
+
+        $conn->createQueryBuilder()
+            ->update('file')
+            ->set('deleted', ':true')
+            ->where('storage_id = :storageId')
+            ->andWhere('hash NOT IN (:hash)')
+            ->andWhere('deleted = :false')
+            ->setParameter('storageId', $storage->get('id'))
+            ->setParameter('true', true, ParameterType::BOOLEAN)
+            ->setParameter('hash', array_column($collection->toArray(), 'hash'), $conn::PARAM_STR_ARRAY)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->executeQuery();
+    }
+
+    public function getDirFiles(string $dir, &$results = []): array
+    {
+        if (is_dir($dir)) {
+            foreach (scandir($dir) as $value) {
+                if ($value === "." || $value === "..") {
+                    continue;
+                }
+
+                $path = $dir . DIRECTORY_SEPARATOR . $value;
+                if (is_file($path)) {
+                    $results[] = $path;
+                } elseif (is_dir($path)) {
+                    $this->getDirFiles($path, $results);
+                }
             }
         }
 

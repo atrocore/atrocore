@@ -61,7 +61,8 @@
     "unique_file": [
       "deleted",
       "name",
-      "path"
+      "path",
+      "storage_id"
     ]
   }
 }

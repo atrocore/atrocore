@@ -111,7 +111,7 @@ class ConsoleManager
             "daemon <name> <id>"           => Console\Daemon::class,
             "check updates"                => Console\CheckUpdates::class,
             "pt --run"                     => Console\PseudoTransactionManager::class,
-            "files --scan"                 => Console\ScanFiles::class,
+            "storages --scan"              => Console\ScanStorages::class,
         ];
     }
 
