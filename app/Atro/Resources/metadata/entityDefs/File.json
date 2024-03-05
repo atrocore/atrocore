@@ -1,0 +1,58 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true
+    },
+    "mimeType": {
+      "type": "varchar",
+      "importDisabled": true,
+      "exportDisabled": true
+    },
+    "private": {
+      "type": "bool",
+      "default": false,
+      "importDisabled": true,
+      "exportDisabled": true
+    },
+    "size": {
+      "type": "float",
+      "min": 0
+    },
+    "storage": {
+      "type": "varchar",
+      "maxLength": 24
+    },
+    "storageFilePath": {
+      "type": "varchar",
+      "maxLength": 260
+    },
+    "hash": {
+      "type": "varchar",
+      "index": true
+    },
+    "uniqueHash": {
+      "type": "varchar",
+      "unique": true
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true
+    }
+  },
+  "links": {
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    }
+  },
+  "collection": {
+    "sortBy": "createdAt",
+    "asc": false
+  }
+}
