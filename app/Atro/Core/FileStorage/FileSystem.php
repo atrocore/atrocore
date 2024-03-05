@@ -13,30 +13,26 @@ namespace Atro\Core\FileStorage;
 
 use Atro\Core\Container;
 use Atro\Entities\File;
+use Atro\Entities\Storage;
 use Espo\ORM\EntityManager;
 
 class FileSystem implements FileStorageInterface
 {
     protected Container $container;
 
-//    private string $filesPath;
-//    private string $thumbnailsPath;
-
     public function __construct(Container $container)
     {
         $this->container = $container;
-//        $this->filesPath = trim($this->container->get('config')->get('filesPath', 'upload/files'), '/');
-//        $this->thumbnailsPath = trim($this->container->get('config')->get('thumbnailsPath', 'upload/thumbnails'), '/');
     }
 
-    public function scan(string $path): void
+    public function scan(Storage $storage): void
     {
-//        $files = $this->getDirFiles(trim($path, '/'));
-//
-//        echo '<pre>';
-//        print_r($files);
-//        die();
-//
+        $files = $this->getDirFiles(trim($storage->get('path'), '/'));
+
+        echo '<pre>';
+        print_r($files);
+        die();
+
 //        foreach ($files as $file) {
 ////            $this->getEntityManager()->getRepository('File')->get();
 ////            echo '<pre>';

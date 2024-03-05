@@ -12,9 +12,12 @@
 namespace Atro\Core\FileStorage;
 
 use Atro\Entities\File;
+use Atro\Entities\Storage;
 
 interface FileStorageInterface
 {
+    public function scan(Storage $storage): void;
+
     public function delete(File $file): void;
 
     public function getLocalPath(File $file): string;

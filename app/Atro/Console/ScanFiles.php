@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Atro\Console;
 
+use Espo\ORM\EntityManager;
+
 class ScanFiles extends AbstractConsole
 {
     public static function getDescription(): string
@@ -22,8 +24,12 @@ class ScanFiles extends AbstractConsole
 
     public function run(array $data): void
     {
-        $this->getContainer()->get('fileSystemStorage')->scan($this->getConfig()->get('filesPath', 'upload/files'));
+        /** @var EntityManager $em */
+        $em = $this->getContainer()->get('entityManager');
 
-        self::show('Files has benn scanned successfully.', self::SUCCESS);
+        foreach ($em->getRepository('Storage')->find() as $storage) {
+            $this->getContainer()->get($storage->get('type') . 'Storage')->scan($storage);
+            self::show("Storage '{$storage->get('name')}' has been scanned successfully.", self::SUCCESS);
+        }
     }
 }
