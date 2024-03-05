@@ -13,28 +13,56 @@ namespace Atro\Core\FileStorage;
 
 use Atro\Core\Container;
 use Atro\Entities\File;
+use Espo\ORM\EntityManager;
 
 class FileSystem implements FileStorageInterface
 {
     protected Container $container;
 
-    private string $filesPath;
-    private string $thumbnailsPath;
+//    private string $filesPath;
+//    private string $thumbnailsPath;
 
     public function __construct(Container $container)
     {
         $this->container = $container;
-        $this->filesPath = trim($this->container->get('config')->get('filesPath', 'upload/files'), '/');
-        $this->thumbnailsPath = trim($this->container->get('config')->get('thumbnailsPath', 'upload/thumbnails'), '/');
+//        $this->filesPath = trim($this->container->get('config')->get('filesPath', 'upload/files'), '/');
+//        $this->thumbnailsPath = trim($this->container->get('config')->get('thumbnailsPath', 'upload/thumbnails'), '/');
     }
 
     public function scan(string $path): void
     {
-        $path = trim($path, '/');
+//        $files = $this->getDirFiles(trim($path, '/'));
+//
+//        echo '<pre>';
+//        print_r($files);
+//        die();
+//
+//        foreach ($files as $file) {
+////            $this->getEntityManager()->getRepository('File')->get();
+////            echo '<pre>';
+////            print_r(pathinfo($file));
+////            die();
+//        }
 
-        echo '<pre>';
-        print_r($path);
-        die();
+
+    }
+
+    public function getDirFiles(string $dir, &$results = [])
+    {
+        foreach (scandir($dir) as $value) {
+            if ($value === "." || $value === "..") {
+                continue;
+            }
+
+            $path = $dir . DIRECTORY_SEPARATOR . $value;
+            if (is_file($path)) {
+                $results[] = $path;
+            } elseif (is_dir($path)) {
+                $this->getDirFiles($path, $results);
+            }
+        }
+
+        return $results;
     }
 
     public function delete(File $file): void
@@ -58,5 +86,10 @@ class FileSystem implements FileStorageInterface
     {
         //@todo
         return '';
+    }
+
+    protected function getEntityManager(): EntityManager
+    {
+        return $this->container->get('entityManager');
     }
 }

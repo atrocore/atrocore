@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "notNull": true,
+      "required": true,
+      "trim": true
+    },
+    "type": {
+      "type": "enum",
+      "required": true,
+      "default": "fileSystem",
+      "optionsIds": [
+        "fileSystem"
+      ],
+      "options": [
+        "fileSystem"
+      ]
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true
+    }
+  },
+  "links": {
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    }
+  },
+  "collection": {
+    "sortBy": "createdAt",
+    "asc": false
+  }
+}
