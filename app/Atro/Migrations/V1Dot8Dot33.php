@@ -41,8 +41,8 @@ class V1Dot8Dot33 extends Base
                             $uniqueHash = md5("{$entityType}{$field}{$type}");
 
                             $this->getConnection()->createQueryBuilder()
-                                ->delete('ui_handler', 't')
-                                ->where('t.hash = :hash')
+                                ->delete('ui_handler')
+                                ->where('hash = :hash')
                                 ->setParameter('hash', $uniqueHash)
                                 ->executeQuery();
 
