@@ -1,0 +1,28 @@
+[
+  {
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "private"
+        }
+      ],
+      [
+        {
+          "name": "storage"
+        },
+        false
+      ],
+      [
+        {
+          "name": "mimeType"
+        },
+        {
+          "name": "size"
+        }
+      ]
+    ]
+  }
+]
